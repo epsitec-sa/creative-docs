@@ -112,6 +112,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewControllerPassive.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderSubscriptionViewController0FlagVerificationRequired.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController1FusionOnDrag.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController31ProcessParishDeparture.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />

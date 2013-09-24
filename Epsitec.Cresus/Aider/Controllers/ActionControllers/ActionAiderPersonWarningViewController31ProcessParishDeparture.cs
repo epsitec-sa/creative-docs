@@ -20,12 +20,24 @@ using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (3)]
-	public sealed class ActionAiderPersonWarningViewController3ProcessParishDeparture : ActionAiderPersonWarningViewControllerPassive
+	[ControllerSubType (31)]
+	public sealed class ActionAiderPersonWarningViewController31ProcessParishDeparture : ActionAiderPersonWarningViewControllerPassive
 	{
+		public override FormattedText GetTitle()
+		{
+			return Resources.FormattedText ("Marquer comme lu (tout le ménage)");
+		}
+
 		protected override void Execute()
 		{
 			this.ClearWarningAndRefreshCaches ();
+
+			var warning = this.Entity;
+			var person  = warning.Person;
+			var members = person.GetAllHouseholdMembers ();
+			var warnings = members.SelectMany (x => x.Warnings.Where (w => w.WarningType == WarningType.ParishDeparture)).ToList ();
+
+			warnings.ForEach (x => this.ClearWarningAndRefreshCaches (x));
 		}
 	}
 }

@@ -40,6 +40,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderPersonWarningEntity> wall)
 		{
 			var hasDisplayableHousehold = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).Any ();
+			
+			var warning = this.Entity;
+			var person  = warning.Person;
+			var members = person.GetAllHouseholdMembers ();
+
+			SimpleBrick<AiderPersonWarningEntity> brick;
 
 			switch (this.Entity.WarningType)
 			{
@@ -106,14 +112,25 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					break;
 				
 				case WarningType.ParishArrival:
-					this.AddDefaultBrick (wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController2ProcessParishArrival> ()
-						.EnableActionButton<ActionAiderPersonWarningViewController21ProcessParishArrival> ();
+					
+					brick = this.AddDefaultBrick (wall)
+								.EnableActionButton<ActionAiderPersonWarningViewController2ProcessParishArrival> ();
+
+					if (members.Count () > 1)
+					{
+						brick.EnableActionButton<ActionAiderPersonWarningViewController21ProcessParishArrival> ();
+					}
 					break;
 				
 				case WarningType.ParishDeparture:
-					this.AddDefaultBrick (wall)
+					
+					brick = this.AddDefaultBrick (wall)
 						.EnableActionButton<ActionAiderPersonWarningViewController3ProcessParishDeparture> ();
+
+					if (members.Count () > 1)
+					{
+						brick.EnableActionButton<ActionAiderPersonWarningViewController31ProcessParishDeparture> ();
+					}
 					break;
 				
 				default:
