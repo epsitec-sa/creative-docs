@@ -1734,10 +1734,14 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid eCH_Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62);
 				//	designer:cap/LVAR8
 				public static readonly global::Epsitec.Common.Support.Druid Groups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 283);
+				//	designer:cap/LVAFH
+				public static readonly global::Epsitec.Common.Support.Druid HouseholdContact = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 559);
 				//	designer:cap/LVALE
 				public static readonly global::Epsitec.Common.Support.Druid Households = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 469);
 				//	designer:cap/LVAO7
 				public static readonly global::Epsitec.Common.Support.Druid Language = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 248);
+				//	designer:cap/LVAEH
+				public static readonly global::Epsitec.Common.Support.Druid MainContact = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 558);
 				//	designer:cap/LVAT
 				public static readonly global::Epsitec.Common.Support.Druid MrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29);
 				//	designer:cap/LVAL2

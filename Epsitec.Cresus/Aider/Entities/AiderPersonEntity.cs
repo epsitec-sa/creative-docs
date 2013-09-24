@@ -249,11 +249,21 @@ namespace Epsitec.Aider.Entities
 			return this.GetParticipations ().Where (g => g.Group == group);
 		}
 
+		public IEnumerable<AiderPersonEntity> GetAllHouseholdMembers()
+		{
+			return this.Households.SelectMany (x => x.Members);
+		}
+
 		public AiderContactEntity GetMainContact()
 		{
 			var mainAddress = this.GetAddress ();
 
 			return this.Contacts.FirstOrDefault (c => c.GetAddress () == mainAddress);
+		}
+
+		public AiderContactEntity GetHouseholdContact()
+		{
+			return this.Contacts.Where (x => x.Household.IsNotNull ()).FirstOrDefault ();
 		}
 
 
@@ -328,6 +338,26 @@ namespace Epsitec.Aider.Entities
 		}
 
 		partial void SetAddress(AiderAddressEntity value)
+		{
+			throw new NotImplementedException ();
+		}
+
+		partial void GetMainContact(ref AiderContactEntity value)
+		{
+			value = this.GetMainContact ();
+		}
+
+		partial void SetMainContact(AiderContactEntity value)
+		{
+			throw new NotImplementedException ();
+		}
+
+		partial void GetHouseholdContact(ref AiderContactEntity value)
+		{
+			value = this.GetHouseholdContact ();
+		}
+
+		partial void SetHouseholdContact(AiderContactEntity value)
 		{
 			throw new NotImplementedException ();
 		}
