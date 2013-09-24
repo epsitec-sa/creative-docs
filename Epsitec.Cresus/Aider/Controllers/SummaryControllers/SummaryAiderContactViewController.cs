@@ -26,8 +26,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var household = this.Entity.Household;
 
 
-			wall.AddBrick ()
-					.EnableActionOnDrop<ActionAiderContactViewController1FusionOnDrag> ();
+//			wall.AddBrick ()
+//				.EnableActionOnDrop<ActionAiderContactViewController1FusionOnDrag> ();
 
 			if ((contact.Person.IsNull ()) &&
 				(contact.LegalPerson.IsNull ()))
@@ -36,7 +36,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableActionMenu<ActionAiderContactViewController0CreatePerson> ();
 			}
 
-			FormattedText contactSummary = this.GetPersonContactSummary (contact);
+			var contactSummary = SummaryAiderContactViewController.GetPersonContactSummary (contact);
 
 			//	TODO: add phone/...
 
@@ -125,7 +125,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			}
 		}
 
-		private FormattedText GetPersonContactSummary(AiderContactEntity contact)
+		public static FormattedText GetPersonContactSummary(AiderContactEntity contact)
 		{
 			var text = contact.Person.GetCompactSummary ();
 
