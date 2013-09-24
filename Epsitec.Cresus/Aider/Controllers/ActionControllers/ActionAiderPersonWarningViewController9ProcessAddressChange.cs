@@ -1,5 +1,5 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
 
@@ -29,7 +29,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool>(this.Execute);
+			return ActionExecutor.Create<bool>(this.Execute);
 		}
 
 		private void Execute(bool appliForAll)
@@ -53,21 +53,21 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				}
 			}
 
-            this.Entity.Person.RemoveWarningInternal(this.Entity);
-            this.BusinessContext.DeleteEntity(this.Entity);
-                   
+			this.Entity.Person.RemoveWarningInternal(this.Entity);
+			this.BusinessContext.DeleteEntity(this.Entity);
+				   
 		}
 
-        protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
-        {
-            form
-                .Title(this.GetTitle())
+		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
+		{
+			form
+				.Title(this.GetTitle())
 				.Field<bool> ()
 					.Title ("Appliquer à tous les membres du ménage")
 					.InitialValue (false)
 				.End ()
-            .End();
-        }
+			.End();
+		}
 	}
 }
 

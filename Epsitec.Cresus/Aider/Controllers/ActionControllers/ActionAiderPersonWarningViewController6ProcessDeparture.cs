@@ -1,5 +1,5 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
 
@@ -33,69 +33,69 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool,bool,bool,bool,bool>(this.Execute);
+			return ActionExecutor.Create<bool,bool,bool,bool,bool>(this.Execute);
 		}
 
 		private void Execute(bool setInvisible,bool isDecease,bool removeFromHousehold,bool suppressSubscription,bool appliForAll)
 		{
-            this.Entity.Person.RemoveWarningInternal(this.Entity);
-            this.BusinessContext.DeleteEntity(this.Entity);
+			this.Entity.Person.RemoveWarningInternal(this.Entity);
+			this.BusinessContext.DeleteEntity(this.Entity);
 
 
-            if (isDecease && appliForAll)
-            {
-                var message = "Impossible d'appliquer le décès a tout le ménage";
+			if (isDecease && appliForAll)
+			{
+				var message = "Impossible d'appliquer le décès a tout le ménage";
 
-                throw new BusinessRuleException(message);
-            }
+				throw new BusinessRuleException(message);
+			}
 
 			if (appliForAll)
 			{
-                foreach (var household in this.Entity.Person.Households)
+				foreach (var household in this.Entity.Person.Households)
 				{
-                    foreach (var member in household.Members)
-                    {
-                        foreach (var warn in member.Warnings)
-                        {
-                            if (warn.WarningType.Equals(WarningType.EChProcessDeparture))
-                            {
-                                member.RemoveWarningInternal(warn);
-                                this.BusinessContext.DeleteEntity(warn);
-                            }
-                        }
+					foreach (var member in household.Members)
+					{
+						foreach (var warn in member.Warnings)
+						{
+							if (warn.WarningType.Equals(WarningType.EChProcessDeparture))
+							{
+								member.RemoveWarningInternal(warn);
+								this.BusinessContext.DeleteEntity(warn);
+							}
+						}
 
-                        if (setInvisible)
-                        {
-                            member.Visibility = PersonVisibilityStatus.Hidden;
-                        }
+						if (setInvisible)
+						{
+							member.Visibility = PersonVisibilityStatus.Hidden;
+						}
 
-                        if (suppressSubscription)
-                        {
-                            var subscription = AiderSubscriptionEntity.FindSubscription(this.BusinessContext, household);
-                            if (subscription.IsNotNull())
-                            {
-                                AiderSubscriptionEntity.Delete(this.BusinessContext, subscription);
-                            }
-                        }
+						if (suppressSubscription)
+						{
+							var subscription = AiderSubscriptionEntity.FindSubscription(this.BusinessContext, household);
+							if (subscription.IsNotNull())
+							{
+								AiderSubscriptionEntity.Delete(this.BusinessContext, subscription);
+							}
+						}
 
-                        if (removeFromHousehold)
-                        {
-                            var person = member;
-                            var contacts = person.Contacts;
-                            var contact = contacts.FirstOrDefault(x => x.Household == household);
+						if (removeFromHousehold)
+						{
+							var person = member;
+							var contacts = person.Contacts;
+							var contact = contacts.FirstOrDefault(x => x.Household == household);
 
-                            if (contacts.Count == 1)
-                            {
-                                var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity>();
-                                AiderContactEntity.Create(this.BusinessContext, person, newHousehold, true);
-                            }
+							if (contacts.Count == 1)
+							{
+								var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity>();
+								AiderContactEntity.Create(this.BusinessContext, person, newHousehold, true);
+							}
 
-                            if (contact.IsNotNull())
-                            {
-                                AiderContactEntity.Delete(this.BusinessContext, contact);
-                            }
-                        }                   
-                    }
+							if (contact.IsNotNull())
+							{
+								AiderContactEntity.Delete(this.BusinessContext, contact);
+							}
+						}                   
+					}
 				}
 
 				//Auto-delete empty household
@@ -121,35 +121,35 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					throw new BusinessRuleException (message);
 				}
 
-                foreach (var household in this.Entity.Person.Households)
-                {
-                    if (removeFromHousehold)
-                    {
-                        var person = this.Entity.Person;
-                        var contacts = person.Contacts;
-                        var contact = contacts.FirstOrDefault(x => x.Household == household);
-                        
-                        if (contacts.Count == 1)
-                        {
-                            var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity>();
-                            AiderContactEntity.Create(this.BusinessContext, person, newHousehold, true);
-                        }
-                        
-                        if (contact.IsNotNull())
-                        {
-                            AiderContactEntity.Delete(this.BusinessContext, contact);
-                        }
-                    }
+				foreach (var household in this.Entity.Person.Households)
+				{
+					if (removeFromHousehold)
+					{
+						var person = this.Entity.Person;
+						var contacts = person.Contacts;
+						var contact = contacts.FirstOrDefault(x => x.Household == household);
+						
+						if (contacts.Count == 1)
+						{
+							var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity>();
+							AiderContactEntity.Create(this.BusinessContext, person, newHousehold, true);
+						}
+						
+						if (contact.IsNotNull())
+						{
+							AiderContactEntity.Delete(this.BusinessContext, contact);
+						}
+					}
 
-                    if (suppressSubscription)
-                    {
-                        var subscription = AiderSubscriptionEntity.FindSubscription(this.BusinessContext, household);
-                        if (subscription.IsNotNull())
-                        {
-                            AiderSubscriptionEntity.Delete(this.BusinessContext, subscription);
-                        }
-                    }
-                }
+					if (suppressSubscription)
+					{
+						var subscription = AiderSubscriptionEntity.FindSubscription(this.BusinessContext, household);
+						if (subscription.IsNotNull())
+						{
+							AiderSubscriptionEntity.Delete(this.BusinessContext, subscription);
+						}
+					}
+				}
 
 				//Auto-delete empty household
 				foreach (var household in this.Entity.Person.Households)
@@ -159,28 +159,28 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 						this.BusinessContext.DeleteEntity (household);
 					}
 				}
-                
+				
 			}
 		}
 
-        private AiderTownEntity GetAiderTownEntity(eCH_AddressEntity address)
-        {
-            var townExample = new AiderTownEntity()
-            {
-                SwissZipCodeId = address.SwissZipCodeId
-            };
+		private AiderTownEntity GetAiderTownEntity(eCH_AddressEntity address)
+		{
+			var townExample = new AiderTownEntity()
+			{
+				SwissZipCodeId = address.SwissZipCodeId
+			};
 
-            return this.BusinessContext.DataContext.GetByExample<AiderTownEntity>(townExample).FirstOrDefault();
-        }
+			return this.BusinessContext.DataContext.GetByExample<AiderTownEntity>(townExample).FirstOrDefault();
+		}
 
-        private eCH_ReportedPersonEntity GetNewHousehold()
-        {
-            var echHouseholdExample = new eCH_ReportedPersonEntity()
-            {
-                Adult1 = this.Entity.Person.eCH_Person
-            };
-            return this.BusinessContext.DataContext.GetByExample<eCH_ReportedPersonEntity>(echHouseholdExample).FirstOrDefault();
-        }
+		private eCH_ReportedPersonEntity GetNewHousehold()
+		{
+			var echHouseholdExample = new eCH_ReportedPersonEntity()
+			{
+				Adult1 = this.Entity.Person.eCH_Person
+			};
+			return this.BusinessContext.DataContext.GetByExample<eCH_ReportedPersonEntity>(echHouseholdExample).FirstOrDefault();
+		}
 
 		private eCH_ReportedPersonEntity GetEChHousehold(eCH_PersonEntity person)
 		{
@@ -191,8 +191,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return this.BusinessContext.DataContext.GetByExample<eCH_ReportedPersonEntity> (echHouseholdExample).FirstOrDefault ();
 		}
 
-        protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
-        {
+		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
+		{
 			form
 				.Title (this.GetTitle ())
 				.Field<bool> ()
@@ -203,19 +203,19 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Cette personne est décédée")
 					.InitialValue (false)
 				.End ()
-                .Field<bool>()
-                    .Title("Supprimer du ménage")
-                    .InitialValue(false)
-                .End()
-                .Field<bool>()
-                    .Title("Supprimer l'abonnement BN si existant")
-                    .InitialValue(false)
-                .End()
+				.Field<bool>()
+					.Title("Supprimer du ménage")
+					.InitialValue(false)
+				.End()
+				.Field<bool>()
+					.Title("Supprimer l'abonnement BN si existant")
+					.InitialValue(false)
+				.End()
 				.Field<bool> ()
 					.Title ("Appliquer à tous les membres du ménage")
 					.InitialValue (false)
 				.End ()
 			.End ();           
-        }
+		}
 	}
 }

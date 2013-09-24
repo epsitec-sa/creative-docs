@@ -1,9 +1,11 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
@@ -15,24 +17,18 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (1)]
-    public sealed class ActionAiderPersonWarningViewController1ProcessPersonMissing : ActionViewController<AiderPersonWarningEntity>
+	public sealed class ActionAiderPersonWarningViewController1ProcessPersonMissing : ActionAiderPersonWarningViewControllerInteractive
 	{
-		public override FormattedText GetTitle()
-		{
-			return Resources.FormattedText ("Traiter");
-		}
-
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool,bool,bool>(this.Execute);
+			return ActionExecutor.Create<bool, bool, bool> (this.Execute);
 		}
 
-        private void Execute(bool setInvisible,bool deleteFromHousehold, bool isDecease)
+		private void Execute(bool setInvisible, bool deleteFromHousehold, bool isDecease)
 		{
 			if (isDecease && !this.Entity.Person.IsDeceased)
 			{
@@ -41,37 +37,37 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
-            if (!isDecease && this.Entity.Person.IsDeceased)
-            {
-                var message = "Cette personne est décédée";
+			if (!isDecease && this.Entity.Person.IsDeceased)
+			{
+				var message = "Cette personne est décédée";
 
-                throw new BusinessRuleException(message);
-            }
+				throw new BusinessRuleException (message);
+			}
 
-            if (setInvisible)
-            {
-                this.Entity.Person.Visibility = PersonVisibilityStatus.Hidden;
-            }
+			if (setInvisible)
+			{
+				this.Entity.Person.Visibility = PersonVisibilityStatus.Hidden;
+			}
 
-            foreach (var household in this.Entity.Person.Households)
-            {
-                var subscription = AiderSubscriptionEntity.FindSubscription(this.BusinessContext, household);
-                if (subscription.IsNotNull())
-                {
-                    subscription.RefreshCache();
-                }
+			foreach (var household in this.Entity.Person.Households)
+			{
+				var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, household);
+				if (subscription.IsNotNull ())
+				{
+					subscription.RefreshCache ();
+				}
 
-                if (deleteFromHousehold)
-                {
-                    var contacts = this.Entity.Person.Contacts;
-                    var contact = contacts.FirstOrDefault(x => x.Household == household);
+				if (deleteFromHousehold)
+				{
+					var contacts = this.Entity.Person.Contacts;
+					var contact = contacts.FirstOrDefault (x => x.Household == household);
 
-                    if (contact.IsNotNull())
-                    {
-                        AiderContactEntity.Delete(this.BusinessContext, contact);
-                    }
-                }
-            }
+					if (contact.IsNotNull ())
+					{
+						AiderContactEntity.Delete (this.BusinessContext, contact);
+					}
+				}
+			}
 
 			//Auto-delete empty household
 			foreach (var household in this.Entity.Person.Households)
@@ -88,27 +84,26 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				}
 			}
 
-            this.Entity.Person.RemoveWarningInternal(this.Entity);
-            this.BusinessContext.DeleteEntity(this.Entity);
+			this.ClearWarningAndRefreshCaches ();
 		}
 
-        protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
-        {
-            form
-                .Title(this.GetTitle())
-                .Field<bool>()
-                    .Title("Je veux rendre invisible cette personne")
-                    .InitialValue(false)
-                .End()
-                .Field<bool>()
-                    .Title("Supprimer du ménage")
-                    .InitialValue(true)
-                .End()
-                .Field<bool>()
-                    .Title("Cette personne est décédée")
-                    .InitialValue(this.Entity.Person.IsDeceased)
-                .End()
-            .End();
-        }
+		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
+		{
+			form
+				.Title (this.GetTitle ())
+				.Field<bool> ()
+					.Title ("Je veux rendre invisible cette personne")
+					.InitialValue (false)
+				.End ()
+				.Field<bool> ()
+					.Title ("Supprimer du ménage")
+					.InitialValue (true)
+				.End ()
+				.Field<bool> ()
+					.Title ("Cette personne est décédée")
+					.InitialValue (this.Entity.Person.IsDeceased)
+				.End ()
+			.End ();
+		}
 	}
 }
