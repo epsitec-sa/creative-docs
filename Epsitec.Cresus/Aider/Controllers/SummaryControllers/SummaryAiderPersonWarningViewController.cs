@@ -31,6 +31,21 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				case WarningType.EChPersonDataChanged:
 					return new SpecializedSummaryAiderPersonWarningViewController_EChPersonDataChanged ();
+
+				case WarningType.EChPersonMissing:
+					return new SpecializedSummaryAiderPersonWarningViewController_EChPersonMissing ();
+
+				case WarningType.EChPersonNew:
+					return new SpecializedSummaryAiderPersonWarningViewController_EChPersonNew ();
+
+				case WarningType.EChProcessDeparture:
+					return new SpecializedSummaryAiderPersonWarningViewController_EChProcessDeparture ();
+
+				case WarningType.EChProcessArrival:
+					return new SpecializedSummaryAiderPersonWarningViewController_EChProcessArrival ();
+
+				case WarningType.EChHouseholdAdded:
+					return new SpecializedSummaryAiderPersonWarningViewController_EChHouseholdAdded ();
 			}
 			
 			return base.GetController ();
@@ -49,58 +64,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			switch (this.Entity.WarningType)
 			{
-				case WarningType.EChPersonMissing:
-					if (this.Entity.Person.Contacts.Count > 0)
-					{
-						wall.AddBrick (x => x.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ())
-							.Title ("Nouvelle adresse (si connue)")
-							.Icon ("Data.AiderAddress")
-							.Text ("(merci de saisir une adresse hors du canton)")
-							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
-					}
-
-					wall.AddBrick (x => x.Person)
-							.Title ("En cas de décès (entrer une date)")
-							.Icon (this.Entity.Person.GetIconName("Data"))
-							.WithSpecialController (typeof (EditionAiderPersonViewController0DeceaseDateController));
-
-					this.AddDefaultBrick (wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController1ProcessPersonMissing> ();
-					break;
-				
-				case WarningType.EChPersonNew:
-					this.AddDefaultBrick(wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController8ProcessNewPerson> ();
-					break;
-				
-				case WarningType.EChProcessDeparture:
-					if (this.Entity.Person.Contacts.Count > 0)
-					{
-						wall.AddBrick(x => x.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ())
-							.Title("Nouvelle adresse (si connue)")
-							.Icon("Data.AiderAddress")
-							.Text("(merci de saisir une adresse hors du canton)")
-							.WithSpecialController(typeof(EditionAiderContactViewController1Address));
-					}
-					wall.AddBrick (x => x.Person)
-							.Title ("En cas de décès (entrer une date)")
-							.Icon (this.Entity.Person.GetIconName ("Data"))
-							.WithSpecialController (typeof (EditionAiderPersonViewController0DeceaseDateController));
-
-					this.AddDefaultBrick (wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController6ProcessDeparture> ();
-					break;
-				
-				case WarningType.EChProcessArrival:
-					this.AddDefaultBrick (wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController7ProcessArrival> ();
-					break;
-				
-				case WarningType.EChHouseholdAdded:
-					this.AddDefaultBrick(wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController4ProcessNewHousehold> ();
-					break;
-
 				case WarningType.EChHouseholdChanged:
 					this.AddDefaultBrick(wall)
 						.EnableActionButton<ActionAiderPersonWarningViewController5ProcessHouseholdChange> ();
