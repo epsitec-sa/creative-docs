@@ -64,21 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		
 		public bool HasUserPowerLevel(UserPowerLevel level)
 		{
-			var manager = UserManager.Current;
-
-			if (manager == null)
-			{
-				return false;
-			}
-
-			var user = manager.AuthenticatedUser;
-
-			if (user == null)
-			{
-				return false;
-			}
-
-			return user.HasPowerLevel (level);
+			return UserManager.HasUserPowerLevel (level);
 		}
 		
 		

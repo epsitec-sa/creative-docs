@@ -6,15 +6,17 @@ using Epsitec.Aider.Entities;
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using Epsitec.Data.Platform;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.UserManagement;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Rules
 {
@@ -158,6 +160,7 @@ namespace Epsitec.Aider.Rules
 				(address.Town.SwissZipCodeAddOn.HasValue))
 			{
 				var street   = address.Street;
+				var townName = address.Town.Name;
 				var zipCode  = address.Town.SwissZipCode.Value;
 				var zipAddOn = address.Town.SwissZipCodeAddOn.Value;
 				var postBox  = address.PostBox;
@@ -192,6 +195,24 @@ namespace Epsitec.Aider.Rules
 					}
 					
 					//	The ZIP and street are not defined in MAT[CH]street
+
+					if (UserManager.HasUserPowerLevel (UserPowerLevel.Administrator))
+					{
+						//	Never mind if the administrator assigns invalid street addresses...
+						//	Let him do so, but send him a warning, nevertheless.
+
+						var user  = UserManager.Current.AuthenticatedUser;
+						var notif = NotificationManager.GetCurrentNotificationManager ();
+						var message = new NotificationMessage ()
+						{
+							Title = Resources.Text ("Avertissement - Règle métier non respectée"),
+							Body = string.Format (Resources.Text ("La rue \"{0}\" n'a pas été trouvée pour \"{1}\"."), street, townName)
+						};
+
+						notif.WarnUser (user.LoginName, message, NotificationTime.Now);
+
+						return;
+					}
 
 					Logic.BusinessRuleException (address, Resources.Text ("Le nom de la rue n'a pas été trouvé pour cette localité."));
 				}

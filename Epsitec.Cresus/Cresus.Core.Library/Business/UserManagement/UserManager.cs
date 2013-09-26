@@ -106,6 +106,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 
+
 		/// <summary>
 		/// Authenticates the specified user. This will display a dialog to query for the
 		/// user name and/or password.
@@ -424,6 +425,33 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		{
 			return new UserSummary (this.AuthenticatedUser);
 		}
+
+
+		/// <summary>
+		/// Determines whether the currently authenticated user (if any) has the specified
+		/// power level.
+		/// </summary>
+		/// <param name="level">The power level.</param>
+		/// <returns><c>true</c> if the user has the specified power level; otherwise, <c>false</c>.</returns>
+		public static bool HasUserPowerLevel(UserPowerLevel level)
+		{
+			var manager = UserManager.Current;
+			
+			if (manager == null)
+			{
+				return false;
+			}
+
+			var user = manager.AuthenticatedUser;
+
+			if (user == null)
+			{
+				return false;
+			}
+
+			return user.HasPowerLevel (level);
+		}
+
 
 
 		#region NotificationMode Enumeration
