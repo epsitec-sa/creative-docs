@@ -80,22 +80,29 @@ function() {
       if (epsitecConfig.featureContextualMenu) {
         if (!Ext.isEmpty(options.menuItems))
         {
-          contextMenu = this.createContextMenu(options);
-          contextMenu.add(this.createContextMenuDefaultItems())
-          newOptions.listeners.itemcontextmenu = function(v, r, n, i, e) {
-            e.stopEvent();
-            contextMenu.showAt(e.getXY());
-            return false;
-          };
+          if(epsitecConfig.featureEntityBag)
+          {
+            contextMenu = this.createContextMenu(options);
+            contextMenu.add(this.createContextMenuDefaultItems())
+              newOptions.listeners.itemcontextmenu = function(v, r, n, i, e) {
+              e.stopEvent();
+              contextMenu.showAt(e.getXY());
+              return false;
+            };
+          }
+          
         }
         else
         {          
-          contextMenu = this.createDefaultContextMenu();
-          newOptions.listeners.itemcontextmenu = function(v, r, n, i, e) {
-            e.stopEvent();
-            contextMenu.showAt(e.getXY());
-            return false;
-          };
+          if(epsitecConfig.featureEntityBag)
+          {
+            contextMenu = this.createDefaultContextMenu();
+              newOptions.listeners.itemcontextmenu = function(v, r, n, i, e) {
+                e.stopEvent();
+                contextMenu.showAt(e.getXY());
+                return false;
+            };
+          }          
         }
       }
 
