@@ -18,6 +18,37 @@ namespace Epsitec.Cresus.Bricks
 		{
 		}
 
+
+		public SimpleBrick<T> IfCondition(System.Func<bool> predicate)
+		{
+			if (predicate () == false)
+			{
+				this.BrickWall.Remove (this);
+			}
+
+			return this;
+		}
+
+		public SimpleBrick<T> IfTrue(bool value)
+		{
+			if (value == false)
+			{
+				this.BrickWall.Remove (this);
+			}
+
+			return this;
+		}
+
+		public SimpleBrick<T> IfFalse(bool value)
+		{
+			if (value == true)
+			{
+				this.BrickWall.Remove (this);
+			}
+
+			return this;
+		}
+
 		public SimpleBrick<T> Name(string value)
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Name, value));

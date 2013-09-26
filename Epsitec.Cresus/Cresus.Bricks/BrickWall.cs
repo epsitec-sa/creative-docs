@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -25,6 +25,11 @@ namespace Epsitec.Cresus.Bricks
 		protected void Add(Brick brick)
 		{
 			this.bricks.Add (brick);
+		}
+
+		internal void Remove(Brick brick)
+		{
+			this.bricks.Remove (brick);
 		}
 
 		internal void NotifyBrickAdded(System.Type fieldType, Brick brick)
