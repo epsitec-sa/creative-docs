@@ -5,9 +5,8 @@ namespace Epsitec.Cresus.Core.Library
 {
 	public interface INotificationHub
 	{
-		void NotifyAll(NotificationMessage message,bool onConnect);
-		void Notify(string userName, NotificationMessage message,bool onConnect);
-		void WarnUser(string userName, NotificationMessage message, bool onConnect);
+		void NotifyAll(NotificationMessage message, NotificationTime when);
+		void Notify(string userName, NotificationMessage message, NotificationTime when);
+		void WarnUser(string userName, NotificationMessage message, NotificationTime when);
 	}
 }
-

@@ -62,9 +62,9 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		#region INotificationHub Members
 
-		void INotificationHub.NotifyAll(NotificationMessage message, bool onConnect)
+		void INotificationHub.NotifyAll(NotificationMessage message, NotificationTime when)
 		{
-			if (onConnect)
+			if (when == NotificationTime.OnConnect)
 			{
 				using (this.queueLock.LockWrite ())
 				{
@@ -80,9 +80,9 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		}
 
-		void INotificationHub.Notify(string userName, NotificationMessage message, bool onConnect)
+		void INotificationHub.Notify(string userName, NotificationMessage message, NotificationTime when)
 		{
-			if (onConnect)
+			if (when == NotificationTime.OnConnect)
 			{
 				using (this.queueLock.LockWrite ())
 				{
@@ -97,9 +97,9 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			}
 		}
 
-		void INotificationHub.WarnUser(string userName, NotificationMessage message, bool onConnect)
+		void INotificationHub.WarnUser(string userName, NotificationMessage message, NotificationTime when)
 		{
-			if (onConnect)
+			if (when == NotificationTime.OnConnect)
 			{
 				using (this.queueLock.LockWrite ())
 				{

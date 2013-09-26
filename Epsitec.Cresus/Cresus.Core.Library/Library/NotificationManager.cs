@@ -15,31 +15,30 @@ namespace Epsitec.Cresus.Core.Library
 		public NotificationManager(CoreApp app)
 			: base (app)
 		{
-			
 		}
 
 
-		public void Notify(string userName, NotificationMessage message, bool onConnect)
+		public void Notify(string userName, NotificationMessage message, NotificationTime when)
 		{
 			if (NotificationManager.hub != null)
 			{
-				NotificationManager.hub.Notify (userName, message,onConnect);
+				NotificationManager.hub.Notify (userName, message, when);
 			}
 		}
 
-		public void WarnUser(string userName, NotificationMessage message,bool onConnect)
+		public void WarnUser(string userName, NotificationMessage message, NotificationTime when)
 		{
 			if (NotificationManager.hub != null)
 			{
-				NotificationManager.hub.WarnUser (userName, message,onConnect);
+				NotificationManager.hub.WarnUser (userName, message, when);
 			}
 		}
 
-		public void NotifyAll(NotificationMessage message,bool onConnect)
+		public void NotifyAll(NotificationMessage message, NotificationTime when)
 		{
 			if (NotificationManager.hub != null)
 			{
-				NotificationManager.hub.NotifyAll (message, onConnect);
+				NotificationManager.hub.NotifyAll (message, when);
 			}
 		}
 

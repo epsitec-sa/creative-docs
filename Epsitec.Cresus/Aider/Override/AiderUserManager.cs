@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Override
 {
@@ -53,54 +54,18 @@ namespace Epsitec.Aider.Override
 		{
 			this.UpdateUser (user.Code, u => u.LastLoginDate = System.DateTime.UtcNow);
 
-			var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager ();
+			var notif = NotificationManager.GetCurrentNotificationManager ();
 
-			notif.Notify (user.LoginName, new Cresus.Core.Library.NotificationMessage ()
-			{
-				Title = "Information AIDER",
-				Body = "Bienvenue!"
-
-			}, true);
-
-			notif.NotifyAll (new Cresus.Core.Library.NotificationMessage ()
-			{
-				Title = "Information AIDER",
-				Body = user.DisplayName + " viens de ce connecter."
-
-			}, false);
-
-			if (string.IsNullOrEmpty ((user as AiderUserEntity).Email))
-			{
-				notif.WarnUser (user.LoginName, new Cresus.Core.Library.NotificationMessage ()
-				{
-					Title = "Attention AIDER",
-					Body = "Merci de saisir votre adresse e-mail. Cliquez sur ce message pour accéder à votre profil...",
-					Dataset = Res.CommandIds.Base.ShowAiderUser,
-					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
-					HeaderErrorMessage = "Un e-mail est requis",
-					ErrorField = LambdaUtils.Convert ((AiderUserEntity e) => e.Email),
-					ErrorFieldMessage = "votre adresse e-mail"
-
-				}, true);
-			}
-
+			this.NotifyUserLogin (user as AiderUserEntity, notif);
+			this.NotifyMissingEMail (user as AiderUserEntity, notif);
 			base.NotifySusccessfulLogin (user);
 		}
 
 		public override void NotifyChangePassword(SoftwareUserEntity user)
 		{
-			var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager ();
+			var notif = NotificationManager.GetCurrentNotificationManager ();
 
-			notif.WarnUser (user.LoginName, new Cresus.Core.Library.NotificationMessage ()
-			{
-				Title = "Attention AIDER",
-				Body = "Merci de changer votre mot de passe! Cliquez sur ce message pour accéder à votre profil...",
-				Dataset = Res.CommandIds.Base.ShowAiderUser,
-				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
-				HeaderErrorMessage = "Réinitialisez votre mot de passe à l'aide du bouton d'action"
-
-			}, true);
-
+			this.NotifyChangePassword (user as AiderUserEntity, notif);
 			base.NotifyChangePassword (user);
 		}
 
@@ -112,7 +77,7 @@ namespace Epsitec.Aider.Override
 			{
 				AiderActivityLogger.Current.RecordAccess (aiderUser);
 
-				var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager ();
+				var notif = NotificationManager.GetCurrentNotificationManager ();
 
 				var now  = System.DateTime.UtcNow;
 				var last = aiderUser.LastActivityDate;
@@ -126,12 +91,68 @@ namespace Epsitec.Aider.Override
 						u =>
 						{
 							u.LastActivityDate = now;
-							u.LastSoftwareReleaseDate = Epsitec.Cresus.Core.Library.CoreContext.SoftwareReleaseDate;
+							u.LastSoftwareReleaseDate = CoreContext.SoftwareReleaseDate;
 						});
 				}
 			}
 
 			base.ChangeAuthenticatedUser (user);
+		}
+
+
+		private void NotifyUserLogin(AiderUserEntity user, NotificationManager notif)
+		{
+			notif.Notify (user.LoginName,
+				new NotificationMessage ()
+				{
+					Title = "Information AIDER",
+					Body = "Bienvenue..."
+				},
+				NotificationTime.OnConnect);
+
+			notif.NotifyAll (
+				new NotificationMessage ()
+				{
+					Title = "Information AIDER",
+					Body = user.DisplayName + " vient de se connecter."
+				},
+				NotificationTime.Now);
+		}
+
+		private void NotifyChangePassword(AiderUserEntity user, NotificationManager notif)
+		{
+			var message = new NotificationMessage ()
+			{
+				Title     = "Attention AIDER",
+				Body      = "Merci de changer votre mot de passe! Cliquez sur ce message pour accéder à votre profil...",
+				Dataset   = Res.CommandIds.Base.ShowAiderUser,
+				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
+				
+				HeaderErrorMessage = "Réinitialisez votre mot de passe à l'aide du bouton d'action"
+			};
+
+			notif.WarnUser (user.LoginName, message, NotificationTime.OnConnect);
+		}
+
+		private void NotifyMissingEMail(AiderUserEntity user, NotificationManager notif)
+		{
+			if (string.IsNullOrEmpty (user.Email))
+			{
+				var message = new NotificationMessage ()
+				{
+					Title     = "Attention AIDER",
+					Body      = "Merci de saisir votre adresse e-mail. Cliquez sur ce message pour accéder à votre profil...",
+					Dataset   = Res.CommandIds.Base.ShowAiderUser,
+					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
+					
+					HeaderErrorMessage = "Adresse e-mail manquante",
+					
+					ErrorField        = LambdaUtils.Convert ((AiderUserEntity e) => e.Email),
+					ErrorFieldMessage = "votre adresse e-mail"
+				};
+
+				notif.WarnUser (user.LoginName, message, NotificationTime.OnConnect);
+			}
 		}
 
 

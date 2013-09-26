@@ -37,13 +37,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
 				.Text (x => x.GetPersonalDataSummary ());
 
-			if (this.HasUserPowerLevel (UserPowerLevel.Administrator))
-			{
-				wall.AddBrick ()
-					.Icon (this.Entity.GetIconName ("Data"))
-					.Title (x => TextFormatter.FormatText ("Détails techniques"))
-					.Text (x => x.eCH_Person.GetSummary ());
-			}
+			wall.AddBrick ()
+				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator))
+				.Icon (this.Entity.GetIconName ("Data"))
+				.Title (x => TextFormatter.FormatText ("Détails techniques"))
+				.Text (x => x.eCH_Person.GetSummary ());
 
 			wall.AddBrick (x => x.ParishGroup)
 				.Icon ("Data.AiderGroup.Parish")
