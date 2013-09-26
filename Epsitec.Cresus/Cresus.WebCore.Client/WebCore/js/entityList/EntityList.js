@@ -523,15 +523,10 @@ function() {
     },
 
     createSecondaryToolbar: function() {
-      if (epsitecConfig.featureSearch) {
         return Ext.create('Ext.Toolbar', {
           dock: 'top',
           items: this.createSecondaryButtons()
         });
-      }
-      else {
-        return null;
-      }
     },
 
     createButtons: function(options) {

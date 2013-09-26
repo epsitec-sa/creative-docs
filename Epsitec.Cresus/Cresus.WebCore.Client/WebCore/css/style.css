@@ -6,9 +6,21 @@ html, body {
   height: 100%;
 }
 
-#tile-text:hover,#tile-text:active,#tile-text:focus{
-  font-style: italic;
+#tile-text:hover,#tile-text:active,#tile-text:focus {
+  color: #04408c;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  background-image: url('../images/Static/tile-arrow.png');
+  background-repeat: no-repeat;
+  background-position: 100%, 50%;
   cursor: pointer;
+}
+
+div.tile-selected #tile-text:hover {
+  color: #000;
+  text-shadow: none;
+  background-image: none;
+  background-repeat: no-repeat;
+  background-position: 100%, 50%;
 }
 
 
@@ -47,10 +59,10 @@ html, body {
      -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
           box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-.tile-button-over {
-  color: #333333;
-  background-color: #e6e6e6;
-  *background-color: #d9d9d9;
+
+.x-tile-button-over {
+  background-color: rgb(228, 243, 255);
+  background-image: -webkit-linear-gradient(top, rgb(228, 243, 255), rgb(217, 237, 255) 48%, rgb(194, 216, 242) 52%, rgb(198, 220, 246));
 }
 
 .tile {
@@ -66,7 +78,10 @@ html, body {
 }
 
 .tile-over .tile {
-  font-style: italic;
+  color: #04408c;
+  background-image: url('../images/Static/tile-arrow.png');
+  background-repeat: no-repeat;
+  background-position: 100%, 50%;
   cursor: pointer;
 }
 

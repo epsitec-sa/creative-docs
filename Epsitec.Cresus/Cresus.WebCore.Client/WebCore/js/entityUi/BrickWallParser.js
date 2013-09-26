@@ -135,6 +135,7 @@ function() {
           iconCls: tile.icon,
           subViewMode: tile.subViewMode,
           subViewId: tile.subViewId,
+          isRoot: tile.isRoot,
           hideRemoveButton: tile.hideRemoveButton,
           hideAddButton: tile.hideAddButton,
           propertyAccessorId: tile.propertyAccessorId,

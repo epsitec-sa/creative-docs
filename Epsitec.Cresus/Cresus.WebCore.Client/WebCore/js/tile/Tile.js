@@ -32,17 +32,45 @@ function() {
     /* Constructor */
 
     constructor: function(options) {
+      var column = options.column;
+
       var newOptions = {
         tools: this.createEntityTileTools(options),
         dockedItems: this.createEntityTileDockTools(options),   
       };
+
+      if(Ext.isDefined(options.isRoot))
+      {
+        if(column.columnId != 0 && options.isRoot==true)
+        {
+          newOptions.closable = true;
+        }
+      }
+      else
+      {
+        if(column.columnId != 0)
+        {
+          newOptions.closable = true;
+        }
+      }
+      
+      
       Ext.applyIf(newOptions, options);
 
       this.callParent([newOptions]);
+
+      this.on('close',this.closeTile,this);
+
       return this;
     },
 
     /* Methods */
+    closeTile: function() {
+      var columnManager = this.column.columnManager;
+      columnManager.removeColumns(this.column.columnId,columnManager.columns.length-1);
+      columnManager.columns[this.column.columnId-1].selectTile(null);
+    },
+
     createEntityTileDockTools: function(options) {
       var actions, toolbars;
       actions = options.actions;
@@ -73,7 +101,7 @@ function() {
           button.text = text;
           button.width = 400;
           button.cls = 'tile-button';
-          button.overCls = 'tile-button';
+          button.overCls = 'tile-button-over';
           button.textAlign = 'left';
 
           if(isLarge)
