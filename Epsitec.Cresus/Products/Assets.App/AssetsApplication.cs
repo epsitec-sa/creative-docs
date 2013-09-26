@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Assets.Data.Entities;
+
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
@@ -78,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App
 
 		private void InitializeApplication()
 		{
-			this.businessContext = new BusinessContext (this.Data, true);
+			this.businessContext = new BusinessContext (this.Data, enableReload: true);
 
 			var window = this.Window;
 			
@@ -87,6 +89,84 @@ namespace Epsitec.Cresus.Assets.App
 
 			window.Show ();
 			window.MakeActive ();
+
+			System.Diagnostics.Debug.WriteLine ("Ready");
+			System.Threading.Thread.Sleep (5*1000);
+
+//			this.TestWriteEntities ();
+			
+			this.TestReadEntities ("A1000");
+			System.Threading.Thread.Sleep (3*1000);
+
+			this.TestReadEntities ("A1002");
+		}
+
+		private void TestWriteEntities()
+		{
+			var coreData = this.Data;
+
+			for (int a = 1000; a < 1100; a++)
+			{
+				using (var context = new BusinessContext (coreData, enableReload: true))
+				{
+					System.Diagnostics.Debug.Write ("Asset " + a);
+					
+					var asset = context.CreateEntity<AssetEntity> ();
+
+					asset.AssetId = string.Format ("A{0}", a);
+
+					for (int i = 0; i < 50; i++)
+					{
+						var change = context.CreateEntity<AssetChangeSetEntity> ();
+						var prop1  = context.CreateEntity<AssetObjectPropertyEntity> ();
+						var val1   = context.CreateEntity<AssetObjectValueEntity> ();
+
+						prop1.ChangeSet = change;
+						val1.ChangeSet = change;
+
+						change.DateTime = new System.DateTime (2013, 1, 1).AddDays (i * 7);
+						change.Asset = asset;
+						change.Xxx = i.ToString ();
+					}
+
+					System.Diagnostics.Debug.Write ("Saving asset " + a);
+					context.SaveChanges (LockingPolicy.ReleaseLock);
+				}
+			}
+		}
+
+		private void TestReadEntities(string assetId)
+		{
+			var coreData = this.Data;
+
+			using (var context = new BusinessContext (coreData, enableReload: true))
+			{
+				var example = new AssetChangeSetEntity ();
+				example.Asset = new AssetEntity ();
+				example.Asset.AssetId = assetId;
+
+				System.Diagnostics.Debug.WriteLine ("Querying asset " + assetId);
+				
+				var changes = context.DataContext.GetByExample (example);
+
+				System.Diagnostics.Debug.WriteLine ("Got " + changes.Count + " items");
+
+				var ex2 = new AssetObjectPropertyEntity ();
+				var ex3 = new AssetObjectValueEntity ();
+
+				ex2.ChangeSet = new AssetChangeSetEntity ();
+				ex2.ChangeSet.Asset = new AssetEntity ();
+				ex2.ChangeSet.Asset.AssetId = assetId;
+
+				ex3.ChangeSet = new AssetChangeSetEntity ();
+				ex3.ChangeSet.Asset = new AssetEntity ();
+				ex3.ChangeSet.Asset.AssetId = assetId;
+
+				var props = context.DataContext.GetByExample (ex2).Where (x => x.ChangeSet.Asset.AssetId == assetId).ToList ();
+				var vals  = context.DataContext.GetByExample (ex3).Where (x => x.ChangeSet.Asset.AssetId == assetId).ToList ();
+
+				System.Diagnostics.Debug.WriteLine ("Found " + props.Count + " properties and " + vals.Count + " values");
+			}
 		}
 
 

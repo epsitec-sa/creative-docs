@@ -14,12 +14,19 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (9)]
-	public sealed class ActionAiderPersonWarningViewController9ProcessAddressChange : ActionAiderPersonWarningViewControllerPassive
+	[ControllerSubType (91)]
+	public sealed class ActionAiderPersonWarningViewController91ProcessAddressChange : ActionAiderPersonWarningViewControllerPassive
 	{
+		public override FormattedText GetTitle()
+		{
+			return Resources.FormattedText ("Marquer comme lu<br/>pour tout le ménage");
+		}
+
 		protected override void Execute()
 		{
 			this.ClearWarningAndRefreshCaches ();
+			this.ClearWarningAndRefreshCachesForAll (WarningType.EChAddressChanged);
 		}
 	}
 }
+

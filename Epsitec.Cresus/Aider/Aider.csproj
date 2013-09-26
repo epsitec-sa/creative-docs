@@ -105,6 +105,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController6ProcessDeparture.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController7ProcessArrival.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController8ProcessNewPerson.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController91ProcessAddressChange.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController9ProcessAddressChange.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController10ProcessPersonChanges.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController4AddHouseholdMemberOnDrag.cs" />

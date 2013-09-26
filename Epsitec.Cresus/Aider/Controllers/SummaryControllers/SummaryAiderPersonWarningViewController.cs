@@ -108,7 +108,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 				case WarningType.EChAddressChanged:
 					this.AddDefaultBrick (wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController9ProcessAddressChange> ();
+						.EnableActionButton<ActionAiderPersonWarningViewController9ProcessAddressChange> ()
+						.EnableActionButton<ActionAiderPersonWarningViewController91ProcessAddressChange> ();
 					break;
 				
 				case WarningType.ParishArrival:

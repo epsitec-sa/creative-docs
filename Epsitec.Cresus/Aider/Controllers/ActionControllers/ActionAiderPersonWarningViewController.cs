@@ -1,6 +1,7 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Support;
@@ -19,6 +20,16 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			var warning = this.Entity;
 			this.ClearWarningAndRefreshCaches (warning);
+		}
+
+		protected void ClearWarningAndRefreshCachesForAll(WarningType type)
+		{
+			var warning = this.Entity;
+			var person  = warning.Person;
+			var members = person.GetAllHouseholdMembers ();
+			var warnings = members.SelectMany (x => x.Warnings.Where (w => w.WarningType == type)).ToList ();
+
+			warnings.ForEach (x => this.ClearWarningAndRefreshCaches (x));
 		}
 
 		protected void ClearWarningAndRefreshCaches(AiderPersonWarningEntity warning)

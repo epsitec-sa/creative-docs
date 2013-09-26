@@ -25,13 +25,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void Execute()
 		{
 			this.ClearWarningAndRefreshCaches ();
-
-			var warning = this.Entity;
-			var person  = warning.Person;
-			var members = person.GetAllHouseholdMembers ();
-			var warnings = members.SelectMany (x => x.Warnings.Where (w => w.WarningType == WarningType.ParishArrival)).ToList ();
-
-			warnings.ForEach (x => this.ClearWarningAndRefreshCaches (x));
+			this.ClearWarningAndRefreshCachesForAll (WarningType.ParishArrival);
 		}
 	}
 }
