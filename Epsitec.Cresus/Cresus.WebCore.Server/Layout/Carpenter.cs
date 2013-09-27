@@ -856,6 +856,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			using (var controller = Mason.BuildController<IActionViewController> (this.businessContext, entity, null, viewMode, viewId))
 			{
+				if (controller.IsEnabled == false)
+				{
+					return null;
+				}
+
 				var templateController = controller as ITemplateActionViewController;
 
 				return new ActionItem ()

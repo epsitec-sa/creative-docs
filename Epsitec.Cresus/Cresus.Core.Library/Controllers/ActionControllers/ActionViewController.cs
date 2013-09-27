@@ -38,6 +38,14 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		#region IActionViewController Members
 
+		public virtual bool						IsEnabled
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public abstract FormattedText GetTitle();
 
 		#endregion
