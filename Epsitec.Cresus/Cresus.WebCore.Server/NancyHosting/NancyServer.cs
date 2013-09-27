@@ -60,6 +60,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			{
 				Tools.LogMessage ("Received http request: " + httpRequest.Url);
 
+				if (this.engine == null)
+				{
+					Tools.LogError ("Engine not initialized yet.");
+					return;
+				}
+
 				var stopwatch = Stopwatch.StartNew ();
 
 				var nancyRequest = this.ConvertHttpRequestToNancyRequest (httpRequest);
@@ -80,7 +86,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			}
 			catch (System.Exception e)
 			{
-				var message = "Uncaught exception while processing http request :\n"
+				var message = "Uncaught exception while processing http request:\n"
 					+ e.GetFullText ();
 
 				Tools.LogError (message);

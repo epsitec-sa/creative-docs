@@ -15,16 +15,16 @@ function() {
         {
           $.chat({
             user: {
-                        Id: 'tempid',
-                        Name: username,
-                        ProfilePictureUrl: ''
+               Id: 'tempid',
+               Name: username,
+               ProfilePictureUrl: ''
             },
             // text displayed when the other user is typing
-            typingText: ' tappe...',
+            typingText: ' écrit...',
             // the title for the user's list window
             titleText: 'Messagerie instantanée',
             // text displayed when there's no other users in the room
-            emptyRoomText: "Vous êtes actuellement seul :)",
+            emptyRoomText: "Aucun autre utilisateur connecté",
             // the adapter you are using
             adapter: new SignalRAdapter()
           });
@@ -34,7 +34,7 @@ function() {
         $.connection.hub.start(function() {
           toastrInstance.init(username, me);
           me.initHub(username);
-          $.connection.chatJSHub.server.updateMyInfo(username,"");
+          $.connection.chatHub.server.updateUserInfo(username,"");
         });
       });
     },

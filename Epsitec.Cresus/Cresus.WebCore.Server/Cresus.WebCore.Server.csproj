@@ -160,7 +160,12 @@
     <Compile Include="Core\Extraction\EntityExtractor.cs" />
     <Compile Include="Core\Extraction\EntityWriter.cs" />
     <Compile Include="Core\Extraction\ArrayWriter.cs" />
-    <Compile Include="Owin\Hubs\ChatJSHub.cs" />
+    <Compile Include="Owin\Hubs\ChatHub.cs" />
+    <Compile Include="Chat\ChatMessage.cs" />
+    <Compile Include="Chat\ChatUser.cs" />
+    <Compile Include="Chat\ChatUserStatusType.cs" />
+    <Compile Include="Gravatar\GravatarHelper.cs" />
+    <Compile Include="Gravatar\GravatarImageSize.cs" />
     <Compile Include="Owin\Hubs\NotificationHub.cs" />
     <Compile Include="Owin\Hubs\NotificationClient.cs" />
     <Compile Include="Owin\OwinServer.cs" />
