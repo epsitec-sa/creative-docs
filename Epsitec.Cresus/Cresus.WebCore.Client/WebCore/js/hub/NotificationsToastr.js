@@ -32,16 +32,21 @@ function NotificationsToastr() {
     };
 
     toastr.options = {
-      'debug': false,
-      'positionClass': 'toast-bottom-full-width',
-      'onclick': function() {
-        Epsitec.Cresus.Core.app.showEditableEntityWithError(path, error);
-      },
-      'fadeIn': 300,
-      'fadeOut': 1000,
-      'timeOut': 0,
-      'extendedTimeOut': 5000
+      debug: false,
+      positionClass: 'toast-bottom-full-width',
+      fadeIn: 300,
+      fadeOut: 1000,
+      timeOut: 0,
+      extendedTimeOut: 5000
     };
+
+    if(path.entityId!="-")
+    {
+      toastr.options.onclick = function() {
+        Epsitec.Cresus.Core.app.showEditableEntityWithError(path, error);
+      };
+    }
+
     toastr.warning(message, title);
   };
 
