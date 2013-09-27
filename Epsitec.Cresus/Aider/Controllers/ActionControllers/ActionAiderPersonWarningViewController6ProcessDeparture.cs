@@ -24,13 +24,17 @@ using Epsitec.Cresus.Core.Business.UserManagement;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (6)]
-	public sealed class ActionAiderPersonWarningViewController6ProcessDeparture : ActionViewController<AiderPersonWarningEntity>
+	public sealed class ActionAiderPersonWarningViewController6ProcessDeparture : ActionAiderPersonWarningViewControllerInteractive
 	{
-		public override FormattedText GetTitle()
+		public override bool IsEnabled
 		{
-			return Resources.FormattedText ("Traiter");
+			get
+			{
+				//	TODO: refactor and validate this implementation
+				return false;
+			}
 		}
-
+		
 		public override ActionExecutor GetExecutor()
 		{
 			return ActionExecutor.Create<bool,bool,bool,bool,bool>(this.Execute);

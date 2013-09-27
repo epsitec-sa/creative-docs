@@ -23,6 +23,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (1)]
 	public sealed class ActionAiderPersonWarningViewController1ProcessPersonMissing : ActionAiderPersonWarningViewControllerInteractive
 	{
+		public override bool IsEnabled
+		{
+			get
+			{
+				//	TODO: refactor and validate this implementation
+				return false;
+			}
+		}
+		
 		public override ActionExecutor GetExecutor()
 		{
 			return ActionExecutor.Create<bool, bool, bool> (this.Execute);

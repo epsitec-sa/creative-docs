@@ -23,11 +23,15 @@ using Epsitec.Aider.Data.ECh;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (5)]
-	public sealed class ActionAiderPersonWarningViewController5ProcessHouseholdChange : ActionViewController<AiderPersonWarningEntity>
+	public sealed class ActionAiderPersonWarningViewController5ProcessHouseholdChange : ActionAiderPersonWarningViewControllerInteractive
 	{
-		public override FormattedText GetTitle()
+		public override bool IsEnabled
 		{
-			return Resources.FormattedText ("Traiter");
+			get
+			{
+				//	TODO: refactor and validate this implementation
+				return false;
+			}
 		}
 
 		public override ActionExecutor GetExecutor()
