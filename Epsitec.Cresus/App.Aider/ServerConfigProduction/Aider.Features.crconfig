@@ -6,9 +6,9 @@
 
 ConfigureExperimentalFeature ("ContextualMenu");
 ConfigureExperimentalFeature ("Notifications");
-# ConfigureExperimentalFeature ("QuickSearch");
+ConfigureExperimentalFeature ("QuickSearch");
 # ConfigureExperimentalFeature ("Search");
-# ConfigureExperimentalFeature ("Warnings");
+ConfigureExperimentalFeature ("Warnings");
 # ConfigureExperimentalFeature ("EntityBag");
 # ConfigureExperimentalFeature ("DropZones");
 # ConfigureExperimentalFeature ("Chat");
