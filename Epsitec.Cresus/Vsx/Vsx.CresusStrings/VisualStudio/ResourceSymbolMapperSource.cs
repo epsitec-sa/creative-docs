@@ -16,6 +16,15 @@ namespace Epsitec.VisualStudio
 			this.Start ();
 		}
 
+
+		public ResourceSymbolMapper SymbolMapper
+		{
+			get
+			{
+				return this.SymbolMapperAsync (CancellationToken.None).Result;
+			}
+		}
+
 		public async Task<ResourceSymbolMapper> SymbolMapperAsync(CancellationToken cancellationToken)
 		{
 			cancellationToken.ThrowIfCancellationRequested ();

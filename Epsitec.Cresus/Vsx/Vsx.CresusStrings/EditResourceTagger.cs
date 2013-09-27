@@ -110,21 +110,18 @@ namespace Epsitec.Cresus.Strings
 				var cts = new CancellationTokenSource (Config.MaxSmartTagDelay);
 				try
 				{
-					this.ProcessTagAsync (point, cts.Token).Wait (cts.Token);
+					var task = this.CreateSymbolInfoAsync (point, cts.Token);
+					task.Wait (cts.Token);
+					var newSymbolInfo = task.Result;
+					if (newSymbolInfo != this.symbolInfo)
+					{
+						this.RemoveCurrentTag (point.Snapshot);
+						this.SetCurrentTag (newSymbolInfo, point.Snapshot);
+					}
 				}
 				catch (OperationCanceledException)
 				{
 				}
-			}
-		}
-
-		private async Task ProcessTagAsync(SnapshotPoint point, CancellationToken cancellationToken)
-		{
-			var newSymbolInfo = await this.CreateSymbolInfoAsync (point, cancellationToken);
-			if (newSymbolInfo != this.symbolInfo)
-			{
-				this.RemoveCurrentTag (point.Snapshot);
-				this.SetCurrentTag (newSymbolInfo, point.Snapshot);
 			}
 		}
 
@@ -159,7 +156,9 @@ namespace Epsitec.Cresus.Strings
 		private TagSpan<SmartTag> CreateTagSpan(ResourceSymbolInfo symbolInfo)
 		{
 			SnapshotSpan span = symbolInfo.SnapshotSpan;
-			return new TagSpan<SmartTag> (span, new SmartTag (SmartTagType.Factoid, EditResourceTagger.GetSmartTagActions (this.Engine.CresusDesigner, symbolInfo)));
+			var actions = EditResourceTagger.GetSmartTagActions (this.Engine.CresusDesigner, symbolInfo);
+			var smartTag = new SmartTag (SmartTagType.Factoid, actions);
+			return new TagSpan<SmartTag> (span, smartTag);
 		}
 
 		private static ReadOnlyCollection<SmartTagActionSet> GetSmartTagActions(CresusDesigner cresusDesigner, ResourceSymbolInfo symbolInfo)
@@ -180,9 +179,9 @@ namespace Epsitec.Cresus.Strings
 				}
 				else
 				{
-					foreach (var item in resources.OrderBy (map => map.SymbolName()))
+					foreach (var item in resources.OrderBy (item => item.SymbolName))
 					{
-						yield return new EditResourceSmartTagAction (cresusDesigner, item, Config.GetEditResourceSmartTagMenu (item.SymbolName ()));
+						yield return new EditResourceSmartTagAction (cresusDesigner, item, Config.GetEditResourceSmartTagMenu (item.SymbolName));
 					}
 				}
 			}

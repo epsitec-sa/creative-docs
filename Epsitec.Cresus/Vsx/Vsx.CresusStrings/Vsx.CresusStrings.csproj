@@ -90,13 +90,20 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Tool.Designer.Protocol.Contract\Addresses.cs">
+      <Link>Tools\Import\Addresses.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Tool.Designer.Protocol.Contract\INavigator.cs">
+      <Link>Tools\Import\INavigator.cs</Link>
+    </Compile>
     <Compile Include="Config.cs" />
+    <Compile Include="ResourceManagement\MultiCultureResourceItem.cs" />
     <Compile Include="Tools\CresusDesigner.cs" />
     <Compile Include="EditResourceTaggerProvider.cs" />
     <Compile Include="EditResourceTagger.cs" />
     <Compile Include="EditResourceSmartTag.cs" />
     <Compile Include="EditResourceSmartTagAction.cs" />
-    <Compile Include="ResourceManagement\Extensions.cs" />
+    <Compile Include="Tools\Import\Druid.cs" />
     <Compile Include="VisualStudio\DocumentSourceManager.cs" />
     <Compile Include="VisualStudio\ISolutionProvider.cs" />
     <Compile Include="VisualStudio\ResourceSymbolInfo.cs" />
@@ -113,6 +120,8 @@
     <Compile Include="ResourceManagement\ResourceElement.cs" />
     <Compile Include="ResourceManagement\ResourceItemError.cs" />
     <Compile Include="VisualStudio\Engine.cs" />
+    <None Include="Doc\Engine.cd" />
+    <None Include="Doc\ResourceManagement.cd" />
     <None Include="ResourceManagement\ResourceField.cs" />
     <Compile Include="ResourceManagement\ResourceModuleInfo.cs" />
     <Compile Include="ResourceManagement\ResourceNode.cs" />
@@ -123,7 +132,6 @@
     <Compile Include="ResourceManagement\ResourceVisitor.cs" />
     <Compile Include="ResourceManagement\ResourceMapper.cs" />
     <Compile Include="ViewModels\MultiCultureResourceItemCollectionViewModel.cs" />
-    <Compile Include="ViewModels\MultiCultureResourceItemViewModel.cs" />
     <Compile Include="Views\MultiCultureResourceItemCollectionView.xaml.cs">
       <DependentUpon>MultiCultureResourceItemCollectionView.xaml</DependentUpon>
     </Compile>
@@ -145,7 +153,9 @@
     <Compile Include="ResourceManagement\ResourceItem.cs" />
     <Compile Include="ResourceManagement\ProjectResource.cs" />
     <Compile Include="Windows\DummyConverter.cs" />
-    <Compile Include="Windows\TextLayout.cs" />
+    <Compile Include="Windows\Extensions.cs" />
+    <Compile Include="Windows\XLayout.Builder.cs" />
+    <Compile Include="Windows\XLayout.cs" />
     <Compile Include="Windows\ViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -167,16 +177,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Common\Common.csproj">
-      <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Tool.Designer.Protocol.Contract\Tool.Designer.Protocol.Contract.csproj">
-      <Project>{e5d2658f-7d33-48df-9263-d740f821ae20}</Project>
-      <Name>Tool.Designer.Protocol.Contract</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

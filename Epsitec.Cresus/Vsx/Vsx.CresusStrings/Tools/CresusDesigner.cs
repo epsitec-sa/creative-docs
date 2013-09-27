@@ -19,10 +19,16 @@ namespace Epsitec.Tools
 			this.NavigatorAsync ().ConfigureAwait(false);
 		}
 
-		public async Task NavigateToStringAsync(string id)
+		public async Task NavigateToDruidAsync(string bundleName, string druid)
 		{
-			var navigator = await this.NavigatorAsync ();
-			await Task.Run (() => this.NavigateToString (navigator, id), this.cts.Token);
+			if (bundleName == "Captions")
+			{
+				await this.NavigateToCaptionAsync (druid);
+			}
+			else
+			{
+				await this.NavigateToStringAsync (druid);
+			}
 		}
 
 		#region IDisposable Members
@@ -42,6 +48,18 @@ namespace Epsitec.Tools
 			return await this.EnsureNavigatorTask (factory, this.cts.Token);
 		}
 
+		private async Task NavigateToStringAsync(string id)
+		{
+			var navigator = await this.NavigatorAsync ();
+			await Task.Run (() => this.NavigateToString (navigator, id), this.cts.Token);
+		}
+
+		private async Task NavigateToCaptionAsync(string id)
+		{
+			var navigator = await this.NavigatorAsync ();
+			await Task.Run (() => this.NavigateToCaption (navigator, id), this.cts.Token);
+		}
+
 		private void DisposeTasks()
 		{
 			Interlocked.Exchange (ref this.navigatorTask, null).DisposeResult ().ForgetSafely ();
@@ -53,6 +71,18 @@ namespace Epsitec.Tools
 			try
 			{
 				navigator.NavigateToString (druid);
+			}
+			catch (CommunicationException)
+			{
+				this.DisposeTasks ();
+			}
+		}
+
+		private void NavigateToCaption(INavigator navigator, string druid)
+		{
+			try
+			{
+				navigator.NavigateToCaption (druid);
 			}
 			catch (CommunicationException)
 			{

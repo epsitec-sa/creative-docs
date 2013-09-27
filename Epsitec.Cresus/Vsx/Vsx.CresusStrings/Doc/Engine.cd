@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Epsitec.VisualStudio.Engine">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <Members>
+      <Method Name="Dispose" Hidden="true" />
+      <Method Name="Engine" Hidden="true" />
+      <Field Name="workspace" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EAQAABAAACAQAAAAQBEAAgAAAAAAAIAAQAwAAAAABAA=</HashCode>
+      <FileName>VisualStudio\Engine.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="resourceProvider" />
+      <Field Name="documentSourceManager" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.1" />
+  </Class>
+  <Class Name="Epsitec.VisualStudio.DocumentSourceManager">
+    <Position X="4.75" Y="0.5" Width="2" />
+    <Members>
+      <Field Name="activeDocument" Hidden="true" />
+      <Method Name="Dispose" Hidden="true" />
+      <Method Name="DocumentSourceManager" Hidden="true" />
+      <Field Name="solutionProvider" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQASAAAAAAABAAAAAAAQIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>VisualStudio\DocumentSourceManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ActiveDocumentSource" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="documents" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Epsitec.VisualStudio.DocumentSource">
+    <Position X="8.75" Y="0.5" Width="2.75" />
+    <Members>
+      <Method Name="CancelDocumentId" Hidden="true" />
+      <Method Name="CancelSyntaxAndSemantic" Hidden="true" />
+      <Method Name="CandidateChildNodes" Hidden="true" />
+      <Method Name="CreateDocumentIdTask" Hidden="true" />
+      <Method Name="CreateSemanticModelTask" Hidden="true" />
+      <Method Name="CreateSyntaxRootTask" Hidden="true" />
+      <Field Name="ctsDocumentId" Hidden="true" />
+      <Field Name="ctsSyntaxAndSemantic" Hidden="true" />
+      <Method Name="Dispose" Hidden="true" />
+      <Method Name="DocumentIdAsync" Hidden="true" />
+      <Field Name="documentIdTask" Hidden="true" />
+      <Method Name="DocumentSource" Hidden="true" />
+      <Method Name="FindSymbolSyntaxNode" Hidden="true" />
+      <Method Name="RestartDocumentId" Hidden="true" />
+      <Method Name="RestartSyntaxAndSemantic" Hidden="true" />
+      <Field Name="semanticModelTask" Hidden="true" />
+      <Property Name="Solution" Hidden="true" />
+      <Field Name="solutionProvider" Hidden="true" />
+      <Method Name="SpanRelatedChildNode" Hidden="true" />
+      <Method Name="SpanRelatedDescendantNodesAndSelf" Hidden="true" />
+      <Method Name="StartDocumentId" Hidden="true" />
+      <Method Name="StartSyntaxAndSemantic" Hidden="true" />
+      <Field Name="syntaxRootTask" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Method Name="UpdateActiveDocumentAsync" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EAAKABxQACACAgAGIQIAxSAAAAhAEAAQAAgAAACBCAA=</HashCode>
+      <FileName>VisualStudio\DocumentSource.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Epsitec.VisualStudio.ResourceSymbolMapperSource">
+    <Position X="4.75" Y="2.5" Width="2.5" />
+    <Members>
+      <Method Name="Cancel" Hidden="true" />
+      <Method Name="CreateSymbolMapperTask" Hidden="true" />
+      <Field Name="cts" Hidden="true" />
+      <Method Name="Dispose" Hidden="true" />
+      <Method Name="ResourceSymbolMapperSource" Hidden="true" />
+      <Method Name="Restart" Hidden="true" />
+      <Property Name="Solution" Hidden="true" />
+      <Field Name="solutionProvider" Hidden="true" />
+      <Method Name="Start" Hidden="true" />
+      <Field Name="symbolMapperTask" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EAAAABASQCAAAAAAAAAAEAAAABAAAAAAMAAAAAAAAAA=</HashCode>
+      <FileName>VisualStudio\ResourceSymbolMapperSource.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="symbolMapperTask" />
+      <Property Name="SymbolMapper" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Epsitec.Cresus.ResourceManagement.ResourceSymbolMapper">
+    <Position X="5" Y="4.25" Width="2" />
+    <Members>
+      <Field Name="bundle" Hidden="true" />
+      <Method Name="Find" Hidden="true" />
+      <Method Name="FindAll" Hidden="true" />
+      <Field Name="module" Hidden="true" />
+      <Field Name="project" Hidden="true" />
+      <Field Name="solution" Hidden="true" />
+      <Field Name="symbolTable" Hidden="true" />
+      <Method Name="VisitBundle" Hidden="true" />
+      <Method Name="VisitItem" Hidden="true" />
+      <Method Name="VisitModule" Hidden="true" />
+      <Method Name="VisitProject" Hidden="true" />
+      <Method Name="VisitSolution" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAQAEAAAASAAAAAIAQAQAAAIgIAAAAAEBAAACAAAg=</HashCode>
+      <FileName>ResourceManagement\ResourceSymbolMapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

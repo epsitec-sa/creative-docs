@@ -23,10 +23,10 @@ namespace Epsitec.Cresus.Strings.Views
 	/// </summary>
 	public partial class MultiCultureResourceItemCollectionView : UserControl
 	{
-		public MultiCultureResourceItemCollectionView (IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources)
+		public MultiCultureResourceItemCollectionView(IEnumerable<MultiCultureResourceItem> items)
 			: this ()
 		{
-			this.DataContext = new MultiCultureResourceItemCollectionViewModel (resources.OrderBy (map => map.SymbolName()));
+			this.DataContext = new MultiCultureResourceItemCollectionViewModel (items.OrderBy (i => i.SymbolName));
 		}
 
 		public MultiCultureResourceItemCollectionView()

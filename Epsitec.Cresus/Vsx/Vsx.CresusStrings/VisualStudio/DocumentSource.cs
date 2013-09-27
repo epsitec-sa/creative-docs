@@ -86,17 +86,36 @@ namespace Epsitec.VisualStudio
 				throw new InvalidOperationException ("TextBuffer not initialized");
 			}
 			var syntaxRoot = await this.SyntaxRootAsync (cancellationToken).ConfigureAwait (false);
-			var token = syntaxRoot.FindToken (point);
-			var node = DocumentSource.FindSymbolSyntaxNode (token, point);
-			if (node != null)
+			if (syntaxRoot.Span.Contains (point.Position))
 			{
-				var symbolName = node.RemoveTrivias ().ToString ();
-				symbolName = Regex.Replace (symbolName, @"^global::", string.Empty);
-				var resourceSymbolMapper = await resourceProvider.SymbolMapperAsync (cancellationToken);
-				var resources = resourceSymbolMapper.FindPartial (symbolName, cancellationToken).ToList ();
-				if (resources.Count > 0)
+				var token = syntaxRoot.FindToken (point);
+				var semanticModel = await this.SemanticModelAsync (cancellationToken).ConfigureAwait (false);
+				var node = DocumentSource.FindSymbolSyntaxNode (semanticModel, token, point);
+				if (node != null)
 				{
-					return new ResourceSymbolInfo (this.TextBuffer, token, node, symbolName, resources);
+					var symbolName = node.RemoveTrivias ().ToString ();
+					symbolName = Regex.Replace (symbolName, @"^global::", string.Empty);
+					var resourceSymbolMapper = await resourceProvider.SymbolMapperAsync (cancellationToken);
+					var resources = resourceSymbolMapper.FindPartial (symbolName, cancellationToken).ToList ();
+
+					while (resources.Count == 0)
+					{
+						// remove tail property
+						var symbolNameAtoms = symbolName.Split ('.');
+						if (symbolNameAtoms.Length <= 1)
+						{
+							break;
+						}
+						symbolName = string.Join (".", symbolNameAtoms.Take (symbolNameAtoms.Length - 1));
+						// adapt node
+						node = node.ChildNodes ().First ();
+						resources = resourceSymbolMapper.FindTail (symbolName, cancellationToken).ToList ();
+					}
+
+					if (resources.Count > 0)
+					{
+						return new ResourceSymbolInfo (this.TextBuffer, token, node, symbolName, resources);
+					}
 				}
 			}
 			return null;
@@ -129,13 +148,13 @@ namespace Epsitec.VisualStudio
 		#endregion
 
 
-		private static SyntaxNode FindSymbolSyntaxNode(CommonSyntaxToken token, SnapshotPoint point)
+		private static SyntaxNode FindSymbolSyntaxNode(ISemanticModel semanticModel, CommonSyntaxToken token, SnapshotPoint point)
 		{
 			token.ThrowIfNull ();
 			var node = token.Parent.AncestorsAndSelf ().SkipWhile (n => n is MemberAccessExpressionSyntax || n is IdentifierNameSyntax).FirstOrDefault ();
 			if (node != null)
 			{
-				var descendants = DocumentSource.SpanRelatedDescendantNodesAndSelf (node, token.Span).SkipWhile (n => !(n is MemberAccessExpressionSyntax)).ToList ();
+				var descendants = DocumentSource.SpanRelatedDescendantNodesAndSelf (semanticModel, node, token.Span).SkipWhile (n => !(n is MemberAccessExpressionSyntax)).ToList ();
 				node = descendants.FirstOrDefault ();
 				if (node != null)
 				{
@@ -143,30 +162,32 @@ namespace Epsitec.VisualStudio
 					{
 						node = descendants.Skip (1).FirstOrDefault ();
 					}
+					//var typeInfos = descendants.Select (n => semanticModel.GetTypeInfo (n)).ToList ();
+					//var symbolInfos = descendants.Select (n => semanticModel.GetSymbolInfo (n)).ToList ();
 					return node as SyntaxNode;
 				}
 			}
 			return null;
 		}
 
-		private static IEnumerable<CommonSyntaxNode> SpanRelatedDescendantNodesAndSelf(CommonSyntaxNode node, TextSpan span)
+		private static IEnumerable<CommonSyntaxNode> SpanRelatedDescendantNodesAndSelf(ISemanticModel semanticModel, CommonSyntaxNode node, TextSpan span)
 		{
 			if (node != null)
 			{
 				yield return node;
-				foreach (var n in DocumentSource.SpanRelatedDescendantNodesAndSelf (DocumentSource.SpanRelatedChildNode (node, span), span))
+				foreach (var n in DocumentSource.SpanRelatedDescendantNodesAndSelf (semanticModel, DocumentSource.SpanRelatedChildNode (semanticModel, node, span), span))
 				{
 					yield return n;
 				}
 			}
 		}
 
-		private static CommonSyntaxNode SpanRelatedChildNode(CommonSyntaxNode node, TextSpan span)
+		private static CommonSyntaxNode SpanRelatedChildNode(ISemanticModel semanticModel, CommonSyntaxNode node, TextSpan span)
 		{
-			return DocumentSource.CandidateChildNodes (node).Where (n => n.Span.OverlapsWith (span) || n.Span.ContiguousWith (span)).SingleOrDefault ();
+			return DocumentSource.CandidateChildNodes (node, semanticModel).Where (n => n.Span.OverlapsWith (span) || n.Span.ContiguousWith (span)).LastOrDefault ();
 		}
 
-		private static IEnumerable<CommonSyntaxNode> CandidateChildNodes(CommonSyntaxNode node)
+		private static IEnumerable<CommonSyntaxNode> CandidateChildNodes(CommonSyntaxNode node, ISemanticModel semanticModel)
 		{
 			if (node is MemberAccessExpressionSyntax || node.Parent is InvocationExpressionSyntax)
 			{

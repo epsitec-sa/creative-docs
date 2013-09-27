@@ -63,7 +63,7 @@
 	</DataTemplate>
 
 	<DataTemplate x:Key="ValueTemplate" DataType="{x:Type rm:ResourceItem}" >
-		<TextBlock w:TextLayout.Html="{Binding Value}" VerticalAlignment="Center" />
+		<TextBlock w:XLayout.Text="{Binding Value}" VerticalAlignment="Center" />
 	</DataTemplate>
 
 	
@@ -72,7 +72,7 @@
 	<!-- Culture 1 | Value 1 -->
 	<!-- Culture 2 | Value 2 -->
 
-	<!-- DataContext = vm:MultiCultureResourceItemViewModel -->
+	<!-- DataContext = rm:MultiCultureResourceItem -->
 	<DataTemplate x:Key="CompactTemplate">
 		<DockPanel>
 			<!-- Symbol Name -->
@@ -82,7 +82,7 @@
 			<!-- Item Type = rm:ResourceItem -->
 			<Border BorderBrush="Black" BorderThickness="0.5" >
 				<ListView
-					ItemsSource="{Binding NotifyOnTargetUpdated=True}"
+					ItemsSource="{Binding Values, NotifyOnTargetUpdated =True}"
 					TargetUpdated="ListView_TargetUpdated"
 					AlternationCount="2"
 					ItemContainerStyle="{StaticResource AlternationColorStyle}"
@@ -102,11 +102,11 @@
 	<!-- Symbol | Culture 1 | Value 1 -->
 	<!-- Symbol | Culture 2 | Value 2 -->
 
-	<!-- DataContext = vm:MultiCultureResourceItemViewModel -->
+	<!-- DataContext = rm:MultiCultureResourceItem -->
 	<DataTemplate x:Key="SymbolCultureValueTemplate">
 		<!-- Item Type = rm:ResourceItem -->
 		<ListView
-			ItemsSource="{Binding NotifyOnTargetUpdated=True}"
+			ItemsSource="{Binding Values, NotifyOnTargetUpdated=True}"
 			TargetUpdated="ListView_TargetUpdated"
 			AlternationCount="2"
 			ItemContainerStyle="{StaticResource AlternationColorStyle}"
@@ -129,11 +129,11 @@
 	<!-- Culture 1 | Value 1 -->
 	<!-- Culture 2 | Value 2 -->
 
-	<!-- DataContext = vm:MultiCultureResourceItemViewModel -->
+	<!-- DataContext = rm:MultiCultureResourceItem -->
 	<DataTemplate x:Key="EmbeddedCultureValueTemplate">
 		<!-- Item Type = rm:ResourceItem -->
 		<ListView
-			ItemsSource="{Binding NotifyOnTargetUpdated=True}"
+			ItemsSource="{Binding Values, NotifyOnTargetUpdated=True}"
 			TargetUpdated="ListView_TargetUpdated"
 			AlternationCount="2"
 			ItemContainerStyle="{StaticResource AlternationColorStyle}"

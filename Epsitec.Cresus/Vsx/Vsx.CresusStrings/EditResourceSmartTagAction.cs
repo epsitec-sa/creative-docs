@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Strings
 {
 	internal class EditResourceSmartTagAction : ISmartTagAction
 	{
-		public EditResourceSmartTagAction(CresusDesigner cresusDesigner, IReadOnlyDictionary<CultureInfo, ResourceItem> multiCultureResourceItem, string displayText)
+		public EditResourceSmartTagAction(CresusDesigner cresusDesigner, MultiCultureResourceItem multiCultureResourceItem, string displayText)
 		{
 			this.cresusDesigner = cresusDesigner;
 			this.multiCultureResourceItem = multiCultureResourceItem;
@@ -62,37 +62,15 @@ namespace Epsitec.Cresus.Strings
 
 		public void Invoke()
 		{
-			this.InvokeAsync ().ConfigureAwait(false);
+			this.InvokeAsync ().ConfigureAwait (false);
 		}
 
 		#endregion
 
 		private async Task InvokeAsync()
 		{
-			await this.cresusDesigner.NavigateToStringAsync (this.ResourceItem.Druid.ToString ());
+			await this.cresusDesigner.NavigateToDruidAsync (this.ResourceItem.Bundle.Name, this.ResourceItem.Druid.ToString ());
 		}
-
-		//private Task CreateInvokeTask(CancellationToken cancellationToken)
-		//{
-		//	return Task.Run (() =>
-		//	{
-		//		var binding = new NetNamedPipeBinding (NetNamedPipeSecurityMode.None);
-		//		cancellationToken.ThrowIfCancellationRequested ();
-		//		var address = new EndpointAddress (Addresses.DesignerAddress);
-		//		cancellationToken.ThrowIfCancellationRequested ();
-		//		using (var factory = new ChannelFactory<INavigator> (binding, address))
-		//		{
-		//			cancellationToken.ThrowIfCancellationRequested ();
-		//			INavigator proxy = factory.CreateChannel ();
-		//			cancellationToken.ThrowIfCancellationRequested ();
-		//			using (IClientChannel channel = proxy as IClientChannel)
-		//			{
-		//				cancellationToken.ThrowIfCancellationRequested ();
-		//				proxy.NavigateToString (this.ResourceItem.Druid.ToString ());
-		//			}
-		//		}
-		//	}, cancellationToken);
-		//}
 
 		private ResourceItem ResourceItem
 		{
@@ -104,6 +82,6 @@ namespace Epsitec.Cresus.Strings
 
 		private readonly CresusDesigner cresusDesigner;
 		private readonly string displayText;
-		private readonly IReadOnlyDictionary<CultureInfo, ResourceItem> multiCultureResourceItem;
+		private readonly MultiCultureResourceItem multiCultureResourceItem;
 	}
 }

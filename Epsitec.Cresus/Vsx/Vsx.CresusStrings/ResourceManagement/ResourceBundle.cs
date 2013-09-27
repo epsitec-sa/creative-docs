@@ -81,10 +81,11 @@ namespace Epsitec.Cresus.ResourceManagement
 			return this.module == null ? null : this.module.GetNeutralCultureBundle (this);
 		}
 
-		public string GetSymbolTail(ResourceItem item)
+		public IEnumerable<string> GetSymbolNames(ResourceItem item)
 		{
-			return item.Name;
+			return this.symbolNamesFactory(item);
 		}
+
 
 		#region Object Overrides
 
@@ -186,21 +187,37 @@ namespace Epsitec.Cresus.ResourceManagement
 		#endregion
 
 
-		private static XDocument Load(string filename)
+		private static XDocument LoadXmlDocument(string filename)
 		{
 			using (var reader = new StreamReader (filename))
 			{
-				//var text = reader.ReadToEnd ();
-				var text = ResourceBundle.FixAmpersands (reader.ReadToEnd ());
+				var text = reader.ReadToEnd ();
 				return XDocument.Parse (text, LoadOptions.SetLineInfo);
 			}
 		}
-		private static string FixAmpersands(string text)
+
+		private static IEnumerable<string> GetDefaultSymbolTails(ResourceItem item)
 		{
-			text = Regex.Replace (text, @"&(amp;)+", "&$1");
-			text = Regex.Replace (text, @"&amp;(\w+;)", "&$1");
-			return text;
+			return item.Name.AsSequence();
 		}
+
+		private static IEnumerable<string> GetCaptionSymbolTails(ResourceItem item)
+		{
+			var match = Regex.Match (item.Name, @"(?<=^(Cap|Cmd|Typ|Fld))\..*$");
+			if (match.Success)
+			{
+				var prefix = match.Groups[1].Value;
+				var suffix = match.Value;
+				return ResourceBundle.TranslatePrefix (prefix).Select(p => p + suffix);
+			}
+			return item.Name.AsSequence();
+		}
+
+		private static IEnumerable<string> TranslatePrefix(string prefix)
+		{
+			return ResourceBundle.prefixTranslationTable[prefix];
+		}
+
 
 		private static IEnumerable<ResourceItem> LoadItems(XElement element, ResourceBundle bundle, ResourceBundle neutralCultureBundle)
 		{
@@ -209,7 +226,7 @@ namespace Epsitec.Cresus.ResourceManagement
 
 
 		private ResourceBundle(string fileName, ResourceModule module = null, ResourceBundle neutralCultureBundle = null)
-			: this (fileName, ResourceBundle.Load (fileName).Root, module, neutralCultureBundle)
+			: this (fileName, ResourceBundle.LoadXmlDocument (fileName).Root, module, neutralCultureBundle)
 		{
 		}
 
@@ -228,6 +245,15 @@ namespace Epsitec.Cresus.ResourceManagement
 			this.byId					= byId;
 			this.byName					= new Lazy<IReadOnlyDictionary<string, ResourceItem>> (() => this.Values.ToDictionary (i => i.Name));
 
+			if (this.Name == "Captions")
+			{
+				this.symbolNamesFactory		= this.CaptionSymbolNames;
+			}
+			else
+			{
+				this.symbolNamesFactory		= this.DefaultSymbolNames;
+			}
+
 			if (string.IsNullOrEmpty (cultureName))
 			{
 				this.culture = CultureInfo.DefaultThreadCurrentUICulture;
@@ -238,12 +264,52 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
+		private IEnumerable<string> CaptionSymbolNames(ResourceItem item)
+		{
+			var prefix = string.Join(".", this.CaptionSymbolPrefixAtoms ());
+			return ResourceBundle.GetCaptionSymbolTails (item).Select (tail => string.Join(".", prefix, tail));
+		}
+
+		private IEnumerable<string> DefaultSymbolNames(ResourceItem item)
+		{
+			var prefix = string.Join (".", this.DefaultSymbolPrefixAtoms ());
+			return ResourceBundle.GetDefaultSymbolTails (item).Select (tail => string.Join (".", prefix, tail));
+		}
+
+		private IEnumerable<string> DefaultSymbolPrefixAtoms()
+		{
+			if (this.Module != null)
+			{
+				yield return this.Module.Info.ResourceNamespace;
+			}
+			yield return "Res";
+			yield return this.Name;
+		}
+
+		private IEnumerable<string> CaptionSymbolPrefixAtoms()
+		{
+			if (this.Module != null)
+			{
+				yield return this.Module.Info.ResourceNamespace;
+			}
+			yield return "Res";
+		}
+
 		private IEnumerable<string> ToStringAtoms()
 		{
 			yield return this.Name;
 			yield return this.Culture.Name;
 		}
 
+		private static readonly Dictionary<string, IEnumerable<string>> prefixTranslationTable = new Dictionary<string, IEnumerable<string>> ()
+		{
+			{"Cmd", new string[]{ "Commands", "CommandIds" }},
+			{"Cap", new string[]{ "Captions", "CaptionIds" }},
+			{"Typ", new string[]{ "Types" }},
+			{"Fld", new string[]{ "Fields" }},
+		};
+
+		private readonly Func<ResourceItem, IEnumerable<string>> symbolNamesFactory;
 		private readonly ResourceModule module;
 		private readonly string fileName;
 		private readonly CultureInfo culture;

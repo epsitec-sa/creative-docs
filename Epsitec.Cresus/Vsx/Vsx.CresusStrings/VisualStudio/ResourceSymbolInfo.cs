@@ -13,7 +13,7 @@ namespace Epsitec.VisualStudio
 {
 	public sealed class ResourceSymbolInfo : IEquatable<ResourceSymbolInfo>
 	{
-		public ResourceSymbolInfo(ITextBuffer textBuffer, CommonSyntaxToken syntaxToken, SyntaxNode syntaxNode, string symbolName, List<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources)
+		public ResourceSymbolInfo(ITextBuffer textBuffer, CommonSyntaxToken syntaxToken, SyntaxNode syntaxNode, string symbolName, List<MultiCultureResourceItem> resources)
 		{
 			this.textBuffer = textBuffer;
 			this.syntaxToken = syntaxToken;
@@ -87,7 +87,7 @@ namespace Epsitec.VisualStudio
 			}
 		}
 
-		public List<IReadOnlyDictionary<CultureInfo, ResourceItem>> Resources
+		public List<MultiCultureResourceItem>	Resources
 		{
 			get
 			{
@@ -146,6 +146,6 @@ namespace Epsitec.VisualStudio
 		private readonly CommonSyntaxToken syntaxToken;
 		private readonly SyntaxNode syntaxNode;
 		private readonly string symbolName;
-		private readonly List<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources;
+		private readonly List<MultiCultureResourceItem> resources;
 	}
 }

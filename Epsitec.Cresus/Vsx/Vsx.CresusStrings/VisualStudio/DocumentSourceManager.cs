@@ -26,11 +26,14 @@ namespace Epsitec.VisualStudio
 
 		internal void SetActiveDocument (EnvDTE.Document dteDocument, ITextBuffer textBuffer = null)
 		{
-			var id = dteDocument.FullName.ToLower ();
-			this.activeDocument = this.documents.GetOrAdd (id, _ => new DocumentSource (this.solutionProvider, dteDocument));
-			if (textBuffer != null)
+			if (dteDocument != null)
 			{
-				this.activeDocument.TextBuffer = textBuffer;
+				var id = dteDocument.FullName.ToLower ();
+				this.activeDocument = this.documents.GetOrAdd (id, _ => new DocumentSource (this.solutionProvider, dteDocument));
+				if (textBuffer != null)
+				{
+					this.activeDocument.TextBuffer = textBuffer;
+				}
 			}
 		}
 

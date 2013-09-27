@@ -32,7 +32,26 @@ namespace Epsitec.Cresus.Strings
 			var resources = mapper.FindTail ("Res.Strings.Message.MoreThanPiccolo", CancellationToken.None);
 			var view = new MultiCultureResourceItemView (resources.Single ())
 			{
-				Margin = new Thickness(12)
+				Margin = new Thickness (12)
+			};
+
+			var window = WpfHelper.CreateWindow ();
+			window.Content = view;
+			window.ShowDialog ();
+		}
+
+		[TestMethod]
+		[STAThread]
+		public void XmlView()
+		{
+			var bundle = ResourceBundle.Load (TestData.Captions00Path);
+			var mapper = new ResourceSymbolMapper ();
+			mapper.VisitBundle (bundle);
+
+			var resources = mapper.FindTail ("Res.Captions", CancellationToken.None);
+			var view = new MultiCultureResourceItemView (resources.Single ())
+			{
+				Margin = new Thickness (12)
 			};
 
 			var window = WpfHelper.CreateWindow ();

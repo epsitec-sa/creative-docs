@@ -49,6 +49,7 @@ namespace Epsitec.Cresus.ResourceManagement
 			this.bundle = bundle;
 			this.id = id;
 			this.name = name;
+			this.symbolNames = this.Bundle.GetSymbolNames (this).ToList ();
 		}
 
 		public SolutionResource					Solution
@@ -124,11 +125,11 @@ namespace Epsitec.Cresus.ResourceManagement
 				return this.Module.Info.ResourceNamespace;
 			}
 		}
-		public string							SymbolName
+		public IEnumerable<string>				SymbolNames
 		{
 			get
 			{
-				return string.Join (".", this.SymbolAtoms);
+				return this.symbolNames;
 			}
 		}
 		public bool								HasNeutralCulture
@@ -139,11 +140,11 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		public Epsitec.Common.Support.Druid		Druid
+		public Epsitec.Tools.Druid				Druid
 		{
 			get
 			{
-				return Epsitec.Common.Support.Druid.FromModuleString (this.Id, int.Parse (this.Module.Info.Id));
+				return Epsitec.Tools.Druid.FromModuleString (this.Id, int.Parse (this.Module.Info.Id));
 			}
 		}
 
@@ -151,7 +152,7 @@ namespace Epsitec.Cresus.ResourceManagement
 
 		public override string ToString()
 		{
-			return string.Format ("{0}[{1}] = {2}", this.SymbolName, this.CultureName, this.Value);
+			return string.Format ("{0}[{1}] = {2}", this.SymbolNames, this.CultureName, this.Value);
 			//return string.Join (" ", this.StringAtoms);
 		}
 
@@ -248,20 +249,6 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		private IEnumerable<string>				SymbolAtoms
-		{
-			get
-			{
-				if (this.Module != null)
-				{
-					yield return this.Module.Info.ResourceNamespace;
-				}
-				yield return "Res";
-				yield return this.Bundle.Name;
-				yield return this.Bundle.GetSymbolTail (this);
-			}
-		}
-
 		private IEnumerable<string>				StringAtoms
 		{
 			get
@@ -275,5 +262,6 @@ namespace Epsitec.Cresus.ResourceManagement
 		private readonly ResourceBundle bundle;
 		private readonly string id;
 		private readonly string name;
+		private readonly IEnumerable<string> symbolNames;
 	}
 }

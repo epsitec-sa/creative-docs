@@ -35,14 +35,6 @@ namespace Epsitec.Cresus.Strings
 			bundle3.Accept (mapper);
 		}
 
-		[TestMethod]
-		public void FixAmpersands()
-		{
-			var text = "&amp;amp;quot;TITI&amp;quot; &amp; &amp;amp;quot;TOTO&amp;quot;\r\n&amp;amp;quot;TITI&amp;quot; &amp; &amp;amp;quot;TOTO&amp;quot;";
-			text = Regex.Replace (text, @"&(amp;)+",    "&$1");
-			text = Regex.Replace (text, @"&amp;(\w+;)", "&$1");
-		}
-
 		private class ResourceBundleTracer : ResourceVisitor
 		{
 			public override ResourceNode VisitItem(ResourceItem item)

@@ -133,7 +133,10 @@ namespace Epsitec
 		public static Task ForgetSafely(this Task task)
 		{
 			// observe exceptions
-			task.ContinueWith (t => Extensions.HandleException (t), TaskContinuationOptions.ExecuteSynchronously);
+			if (task != null)
+			{
+				task.ContinueWith (t => Extensions.HandleException (t), TaskContinuationOptions.ExecuteSynchronously);
+			}
 			return task;
 		}
 
@@ -231,7 +234,15 @@ namespace Epsitec
 		{
 			return attribute == null ? string.Empty : (string) attribute;
 		}
-	
+
+		public static string ToShortPrefixName(this XName name, IReadOnlyDictionary<string, string> namespacePrefixMap)
+		{
+			var ns = name.NamespaceName;
+			var localName = name.LocalName;
+			string prefix;
+			return namespacePrefixMap.TryGetValue (ns, out prefix) ? (prefix + ':' + localName) : localName;
+		}
+
 		#endregion
 
 		#region Dictionary

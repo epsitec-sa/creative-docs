@@ -9,13 +9,13 @@ using Epsitec.Cresus.ResourceManagement;
 
 namespace Epsitec.Cresus.Strings.ViewModels
 {
-	public class MultiCultureResourceItemCollectionViewModel : ObservableCollection<MultiCultureResourceItemViewModel>
+	public class MultiCultureResourceItemCollectionViewModel : ObservableCollection<MultiCultureResourceItem>
 	{
-		public MultiCultureResourceItemCollectionViewModel (IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources)
+		public MultiCultureResourceItemCollectionViewModel(IEnumerable<MultiCultureResourceItem> items)
 		{
-			foreach (var cultureMap in resources)
+			foreach (var item in items)
 			{
-				this.Add (new MultiCultureResourceItemViewModel (cultureMap));
+				this.Add (item);
 			}
 		}
 	}

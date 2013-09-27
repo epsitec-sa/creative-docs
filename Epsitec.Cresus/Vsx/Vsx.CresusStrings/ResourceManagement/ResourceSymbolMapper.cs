@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -50,7 +51,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		/// </code>
 		/// </example>
 		/// </summary>
-		public IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> FindAll()
+		public IEnumerable<MultiCultureResourceItem> FindAll()
 		{
 			return this.symbolTable.Values;
 		}
@@ -65,7 +66,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		/// </code>
 		/// </example>
 		/// </summary>
-		public IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> FindPartial(string symbolPart, CancellationToken cancellationToken)
+		public IEnumerable<MultiCultureResourceItem> FindPartial(string symbolPart, CancellationToken cancellationToken)
 		{
 			// Prefix pattern
 			// (?<=			: match prefix but exclude it (throws away backtracking references)
@@ -76,15 +77,7 @@ namespace Epsitec.Cresus.ResourceManagement
 			//    \.|$		: dot character or end of string
 			// )
 			var pattern = @"(?<=\.|^)" + Regex.Escape (symbolPart) + @"(?=\.|$)";
-			foreach (var kv in this.symbolTable)
-			{
-				cancellationToken.ThrowIfCancellationRequested ();
-				if (Regex.IsMatch (kv.Key, pattern))
-				{
-					cancellationToken.ThrowIfCancellationRequested ();
-					yield return kv.Value;
-				}
-			}
+			return this.Find (pattern, cancellationToken);
 		}
 
 		/// <summary>
@@ -97,7 +90,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		/// </code>
 		/// </example>
 		/// </summary>
-		public IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> FindTail(string symbolTail, CancellationToken cancellationToken)
+		public IEnumerable<MultiCultureResourceItem> FindTail(string symbolTail, CancellationToken cancellationToken)
 		{
 			// Prefix pattern
 			// (?<=			: match prefix but exclude it (throws away backtracking references)
@@ -108,41 +101,45 @@ namespace Epsitec.Cresus.ResourceManagement
 			//    $			: end of string
 			// )
 			var pattern = @"(?<=\.|^)" + Regex.Escape (symbolTail) + @"(?=$)";
-			foreach (var kv in this.symbolTable)
-			{
-				cancellationToken.ThrowIfCancellationRequested ();
-				if (Regex.IsMatch (kv.Key, pattern))
-				{
-					cancellationToken.ThrowIfCancellationRequested ();
-					yield return kv.Value;
-				}
-			}
+			return this.Find (pattern, cancellationToken);
 		}
 
 		#region ResourceVisitor Overrides
 
 		public override ResourceNode VisitItem(ResourceItem item)
 		{
-			item = base.VisitItem (item) as ResourceItem;
-			var symbol = item.SymbolName;
+			//if (Regex.IsMatch (item.Name, "^(Cmd|Cap|Typ|Fld)"))
+			//{
+			//	Debugger.Break ();
+			//}
 
-			Dictionary<CultureInfo, ResourceItem> cultureTable = null;
-			if (!this.symbolTable.TryGetValue (symbol, out cultureTable))
+			item = base.VisitItem (item) as ResourceItem;
+
+			MultiCultureResourceItem mcItem;
+			Dictionary<CultureInfo, ResourceItem> cultureMap;
+			if (this.symbolTable.TryGetValue (item.SymbolNames.First (), out mcItem))
 			{
-				cultureTable = new Dictionary<CultureInfo, ResourceItem> ();
-				this.symbolTable[symbol] = cultureTable;
+				cultureMap = mcItem.CultureMap;
+			}
+			else
+			{
+				cultureMap = new Dictionary<CultureInfo, ResourceItem> ();
+				foreach (var symbolName in item.SymbolNames)
+				{
+					this.symbolTable[symbolName] = new MultiCultureResourceItem(symbolName, cultureMap);
+				}
 			}
 
 			var culture = this.bundle.Culture;
 			ResourceItem oldItem;
-			if (cultureTable.TryGetValue (culture, out oldItem))
+			if (cultureMap.TryGetValue (culture, out oldItem))
 			{
 				// TODO: process duplicate items
 				// add memo { project, module, bundle, item } to duplicateTable[symbol][culture] list
 			}
 			else
 			{
-				cultureTable[culture] = item;
+				cultureMap[culture] = item;
 			}
 
 			//if (item is ResourceItemError)
@@ -179,8 +176,22 @@ namespace Epsitec.Cresus.ResourceManagement
 
 		#endregion
 
+
+		private IEnumerable<MultiCultureResourceItem> Find(string pattern, CancellationToken cancellationToken)
+		{
+			foreach (var kv in this.symbolTable)
+			{
+				cancellationToken.ThrowIfCancellationRequested ();
+				if (Regex.IsMatch (kv.Key, pattern))
+				{
+					cancellationToken.ThrowIfCancellationRequested ();
+					yield return kv.Value;
+				}
+			}
+		}
+
 		// var resourceItemContext = this.symbolTable[symbol][culture]
-		private readonly Dictionary<string, Dictionary<CultureInfo, ResourceItem>> symbolTable = new Dictionary<string, Dictionary<CultureInfo, ResourceItem>> ();
+		private readonly Dictionary<string, MultiCultureResourceItem> symbolTable = new Dictionary<string, MultiCultureResourceItem> ();
 
 		private SolutionResource solution;
 		private ProjectResource project;

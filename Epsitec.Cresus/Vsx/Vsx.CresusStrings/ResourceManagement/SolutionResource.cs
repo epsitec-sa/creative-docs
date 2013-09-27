@@ -11,7 +11,6 @@ using Roslyn.Services;
 
 namespace Epsitec.Cresus.ResourceManagement
 {
-
 	public class SolutionResource : ResourceNode, IEnumerable<ProjectResource>
 	{
 		public SolutionResource(ISolution solution, CancellationToken cancellationToken = default(CancellationToken))

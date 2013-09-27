@@ -23,10 +23,10 @@ namespace Epsitec.Cresus.Strings.Views
 	/// </summary>
 	public partial class MultiCultureResourceItemView : UserControl
 	{
-		public MultiCultureResourceItemView (IReadOnlyDictionary<CultureInfo, ResourceItem> resources)
+		public MultiCultureResourceItemView (MultiCultureResourceItem viewModel)
 			: this ()
 		{
-			this.DataContext = new MultiCultureResourceItemViewModel (resources);
+			this.DataContext = viewModel;
 		}
 
 		public MultiCultureResourceItemView()

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Epsitec.Cresus.ResourceManagement;
 using Epsitec.Cresus.Strings.ViewModels;
 
 namespace Epsitec.Cresus.Strings.Views
@@ -24,7 +25,7 @@ namespace Epsitec.Cresus.Strings.Views
 
 		public override DataTemplate SelectTemplate(object item, DependencyObject container)
 		{
-			if (item is MultiCultureResourceItemViewModel)
+			if (item is MultiCultureResourceItem)
 			{
 				//var viewModel = item as MultiCultureResourceItemViewModel;
 				//if (viewModel.Count == 1)

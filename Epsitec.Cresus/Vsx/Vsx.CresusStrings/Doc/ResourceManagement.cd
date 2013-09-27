@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Epsitec.Cresus.ResourceManagement.ResourceNode" Collapsed="true">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ResourceManagement\ResourceNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Epsitec.Cresus.ResourceManagement.SolutionResource">
+    <Position X="1.75" Y="2.25" Width="1.5" />
+    <Members>
+      <Method Name="Accept" Hidden="true" />
+      <Method Name="GetEnumerator" Hidden="true" />
+      <Field Name="projectResourceMap" Hidden="true" />
+      <Field Name="solution" Hidden="true" />
+      <Method Name="SolutionResource" Hidden="true" />
+      <Method Name="System.Collections.IEnumerable.GetEnumerator" Hidden="true" />
+      <Property Name="this" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AKAAABAAAAAQABAACAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>ResourceManagement\SolutionResource.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Epsitec.Cresus.ResourceManagement.ProjectResource">
+    <Position X="4.25" Y="2.25" Width="1.5" />
+    <Members>
+      <Method Name="Accept" Hidden="true" />
+      <Method Name="GetEnumerator" Hidden="true" />
+      <Method Name="Load" Hidden="true" />
+      <Method Name="LoadModules" Hidden="true" />
+      <Field Name="modules" Hidden="true" />
+      <Field Name="project" Hidden="true" />
+      <Method Name="ProjectResource" Hidden="true" />
+      <Field Name="solution" Hidden="true" />
+      <Property Name="Solution" Hidden="true" />
+      <Method Name="System.Collections.IEnumerable.GetEnumerator" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AKAAgBAAAAAQABAEABAACAAAAAgAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>ResourceManagement\ProjectResource.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Epsitec.Cresus.ResourceManagement.ResourceModule">
+    <Position X="6.75" Y="2.25" Width="1.5" />
+    <Members>
+      <Method Name="Accept" Hidden="true" />
+      <Field Name="bundles" Hidden="true" />
+      <Field Name="byCultureFirst" Hidden="true" />
+      <Property Name="ByCultureFirst" Hidden="true" />
+      <Method Name="ByCultureFirstFactory" Hidden="true" />
+      <Field Name="byNameFirst" Hidden="true" />
+      <Property Name="ByNameFirst" Hidden="true" />
+      <Method Name="ByNameFirstFactory" Hidden="true" />
+      <Method Name="EnumerateBundles" Hidden="true" />
+      <Method Name="GetEnumerator" Hidden="true" />
+      <Method Name="GetNeutralCultureBundle" Hidden="true" />
+      <Field Name="info" Hidden="true" />
+      <Method Name="Load" Hidden="true" />
+      <Method Name="LoadBundles" Hidden="true" />
+      <Field Name="project" Hidden="true" />
+      <Property Name="Project" Hidden="true" />
+      <Method Name="ResourceModule" Hidden="true" />
+      <Method Name="System.Collections.IEnumerable.GetEnumerator" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AKAAgAAAAAAAgBCEAAAAGAAAAAiAgAQAQAAIQEAACAE=</HashCode>
+      <FileName>ResourceManagement\ResourceModule.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Epsitec.Cresus.ResourceManagement.ResourceBundle">
+    <Position X="9.25" Y="3" Width="1.5" />
+    <Members>
+      <Method Name="Accept" Hidden="true" />
+      <Field Name="byId" Hidden="true" />
+      <Field Name="byName" Hidden="true" />
+      <Property Name="ByName" Hidden="true" />
+      <Method Name="CaptionSymbolNames" Hidden="true" />
+      <Method Name="CaptionSymbolPrefixAtoms" Hidden="true" />
+      <Method Name="ContainsKey" Hidden="true" />
+      <Property Name="Count" Hidden="true" />
+      <Field Name="culture" Hidden="true" />
+      <Method Name="DefaultSymbolNames" Hidden="true" />
+      <Method Name="DefaultSymbolPrefixAtoms" Hidden="true" />
+      <Field Name="fileName" Hidden="true" />
+      <Method Name="GetCaptionSymbolTails" Hidden="true" />
+      <Method Name="GetDefaultSymbolTails" Hidden="true" />
+      <Method Name="GetEnumerator" Hidden="true" />
+      <Method Name="GetNeutralCultureBundle" Hidden="true" />
+      <Method Name="GetSymbolNames" Hidden="true" />
+      <Property Name="Keys" Hidden="true" />
+      <Method Name="Load" Hidden="true" />
+      <Method Name="LoadItems" Hidden="true" />
+      <Method Name="LoadXmlDocument" Hidden="true" />
+      <Field Name="module" Hidden="true" />
+      <Field Name="prefixTranslationTable" Hidden="true" />
+      <Method Name="ResourceBundle" Hidden="true" />
+      <Field Name="symbolNamesFactory" Hidden="true" />
+      <Method Name="System.Collections.IEnumerable.GetEnumerator" Hidden="true" />
+      <Property Name="this" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Method Name="ToStringAtoms" Hidden="true" />
+      <Method Name="TranslatePrefix" Hidden="true" />
+      <Method Name="TryGetValue" Hidden="true" />
+      <Property Name="Values" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>CKAAiAgBAAAeABAECAQDAQQACSCAQAAAAUAgiABQAAk=</HashCode>
+      <FileName>ResourceManagement\ResourceBundle.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Epsitec.Cresus.ResourceManagement.ResourceElement" Collapsed="true">
+    <Position X="10.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ResourceManagement\ResourceElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Epsitec.Cresus.ResourceManagement.ResourceItem">
+    <Position X="11.25" Y="3" Width="1.5" />
+    <Members>
+      <Method Name="Accept" Hidden="true" />
+      <Field Name="bundle" Hidden="true" />
+      <Property Name="CultureName" Hidden="true" />
+      <Method Name="GetErrors" Hidden="true" />
+      <Method Name="GetKeysErrors" Hidden="true" />
+      <Method Name="GetNeutralItem" Hidden="true" />
+      <Method Name="HasLineInfo" Hidden="true" />
+      <Field Name="id" Hidden="true" />
+      <Property Name="LineInfo" Hidden="true" />
+      <Property Name="LineNumber" Hidden="true" />
+      <Property Name="LinePosition" Hidden="true" />
+      <Method Name="Load" Hidden="true" />
+      <Property Name="Module" Hidden="true" />
+      <Field Name="name" Hidden="true" />
+      <Property Name="Project" Hidden="true" />
+      <Method Name="ResourceItem" Hidden="true" />
+      <Property Name="Solution" Hidden="true" />
+      <Property Name="StringAtoms" Hidden="true" />
+      <Field Name="symbolNames" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIACgBAAAAAAAAAFAAQICAQAAQKEICABEYAgCBCAAgQ=</HashCode>
+      <FileName>ResourceManagement\ResourceItem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Epsitec.Windows.XLayout">
+    <Position X="14" Y="3" Width="1.5" />
+    <NestedTypes>
+      <Class Name="Epsitec.Windows.XLayout.Builder" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Windows\XLayout.Builder.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAgAQAAAAAQAAAMAIAAAAAAIgABAAAAEAAAAAAADAA=</HashCode>
+      <FileName>Windows\XLayout.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
