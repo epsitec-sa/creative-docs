@@ -15,7 +15,7 @@ namespace Epsitec.Aider.Entities
 	{
 		public static FormattedText GetSummary(IAiderWarning warning)
 		{
-			return TextFormatter.FormatText (warning.Description);
+			return TextFormatter.FormatText (warning.Title, "~\n~", warning.Description);
 		}
 
 		public static FormattedText GetCompactSummary(IAiderWarning warning)
@@ -23,7 +23,12 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (warning.Description.Lines.FirstOrDefault ());
 		}
 
-		public static FormattedText GetTitle<T>(T warning)
+		public static FormattedText GetTitle(IAiderWarning warning)
+		{
+			return TextFormatter.FormatText (warning.WarningType);
+		}
+		
+		public static FormattedText GetTypeName<T>(T warning)
 			where T : AbstractEntity, IAiderWarning
 		{
 			if (warning.Title.IsNullOrEmpty ())

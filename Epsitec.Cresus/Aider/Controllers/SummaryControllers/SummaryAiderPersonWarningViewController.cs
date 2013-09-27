@@ -46,6 +46,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 				case WarningType.EChHouseholdAdded:
 					return new SpecializedSummaryAiderPersonWarningViewController_EChHouseholdAdded ();
+
+				case WarningType.EChHouseholdChanged:
+					return new SpecializedSummaryAiderPersonWarningViewController_EChHouseholdChanged ();
+
+				case WarningType.EChAddressChanged:
+					return new SpecializedSummaryAiderPersonWarningViewController_EChAddressChanged ();
+
+				case WarningType.ParishArrival:
+					return new SpecializedSummaryAiderPersonWarningViewController_ParishArrival ();
+
+				case WarningType.ParishDeparture:
+					return new SpecializedSummaryAiderPersonWarningViewController_ParishDeparture ();
 			}
 			
 			return base.GetController ();
@@ -54,84 +66,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 		protected override void CreateBricks(BrickWall<AiderPersonWarningEntity> wall)
 		{
-			var hasDisplayableHousehold = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).Any ();
-			
-			var warning = this.Entity;
-			var person  = warning.Person;
-			var members = person.GetAllHouseholdMembers ();
+			System.Diagnostics.Trace.WriteLine ("Unhandled warning: " + this.Entity.WarningType.GetQualifiedName ());
 
-			SimpleBrick<AiderPersonWarningEntity> brick;
-
-			switch (this.Entity.WarningType)
-			{
-				case WarningType.EChHouseholdChanged:
-					this.AddDefaultBrick(wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController5ProcessHouseholdChange> ();
-					break;
-
-				case WarningType.EChAddressChanged:
-					this.AddDefaultBrick (wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController9ProcessAddressChange> ()
-						.EnableActionButton<ActionAiderPersonWarningViewController91ProcessAddressChange> ();
-					break;
-				
-				case WarningType.ParishArrival:
-					
-					brick = this.AddDefaultBrick (wall)
-								.EnableActionButton<ActionAiderPersonWarningViewController2ProcessParishArrival> ();
-
-					if (members.Count () > 1)
-					{
-						brick.EnableActionButton<ActionAiderPersonWarningViewController21ProcessParishArrival> ();
-					}
-					break;
-				
-				case WarningType.ParishDeparture:
-					
-					brick = this.AddDefaultBrick (wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController3ProcessParishDeparture> ();
-
-					if (members.Count () > 1)
-					{
-						brick.EnableActionButton<ActionAiderPersonWarningViewController31ProcessParishDeparture> ();
-					}
-					break;
-				
-				default:
-					System.Diagnostics.Trace.WriteLine ("Unhandled warning: " + this.Entity.WarningType.GetQualifiedName ());
-					this.AddDefaultBrick (wall)
-					.EnableActionButton<ActionAiderPersonWarningViewController0DiscardWarning> ();
-					break;
-			}
-
-			if (hasDisplayableHousehold)
-			{
-				this.AddHouseholdBrick (wall);
-			}
-		}
-
-		private void AddHouseholdBrick(BrickWall<AiderPersonWarningEntity> wall)
-		{
-			wall.AddBrick (x => x.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household.Members)
-				.Attribute (BrickMode.HideAddButton)
-				.Attribute (BrickMode.HideRemoveButton)
-				.Attribute (BrickMode.DefaultToSummarySubView)
-				.Attribute (BrickMode.AutoGroup)
-				.Template ()
-					.Icon ("Data.AiderPersons")
-					.Title ("Membres du ménage")
-					.Text (p => p.GetCompactSummary (p.Households[0]))
-				.End ();
-		}
-		
-		private SimpleBrick<AiderPersonWarningEntity> AddDefaultBrick(BrickWall<AiderPersonWarningEntity> wall)
-		{
-			var brick = wall.AddBrick ()
-							.Title (x => x.WarningType);
-
-			wall.AddBrick (x => x.Person);
-
-			return brick;
+			wall.AddBrick ()
+				.Attribute (BrickMode.DefaultToSummarySubView);
 		}
 	}
 }

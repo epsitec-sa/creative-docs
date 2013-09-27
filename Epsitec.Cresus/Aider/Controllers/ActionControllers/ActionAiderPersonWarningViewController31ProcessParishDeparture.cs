@@ -23,6 +23,18 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (31)]
 	public sealed class ActionAiderPersonWarningViewController31ProcessParishDeparture : ActionAiderPersonWarningViewControllerPassive
 	{
+		public override bool IsEnabled
+		{
+			get
+			{
+				var warning = this.Entity;
+				var person  = warning.Person;
+				var members = person.GetAllHouseholdMembers ();
+
+				return members.Skip (1).Any ();
+			}
+		}
+
 		public override FormattedText GetTitle()
 		{
 			return Resources.FormattedText ("Marquer comme lu<br/>pour tout le ménage");
