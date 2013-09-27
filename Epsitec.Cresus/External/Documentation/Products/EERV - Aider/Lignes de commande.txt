@@ -9,6 +9,7 @@ Exportation Bonne Nouvelle
   -exportsubscriptions -output:export-2013-08-29.txt -error:error-2013-08-29.txt
   -uploadsubscriptions -input:export-2013-08-29.txt -publicationdate:2013-08-29 -response:tamedia-2013-08-29.log
 
+  -uploadsubscriptions -input:export-2013-09-26.txt -publicationdate:2013-09-26 -response:tamedia-2013-09-26.log
 
 
 
@@ -22,6 +23,5 @@ Aline Berthe André
 
 -echupdate -newechfile:S:\eerv\eerv-2013-08-22.xml -oldechfile:S:\Epsitec.Cresus\App.Aider\Samples\eerv.xml -output:S:\eerv\ech-diff.md
 -echupdate -newechfile:S:\eerv\eerv-2013-09-05.xml -oldechfile:S:\Epsitec.Cresus\App.Aider\Samples\eerv.xml -output:S:\eerv\ech-diff.md
-
--echupdate -newechfile:S:\eerv\eerv-new.xml -oldechfile:S:\eerv\eerv-old.xml -output:S:\eerv\ech-diff.md
+-echupdate -newechfile:S:\eerv\eerv-2013-09-12.xml -oldechfile:S:\eerv\eerv-2013-09-05.xml -output:S:\eerv\ech-diff.md
 
