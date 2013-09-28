@@ -79,35 +79,14 @@ function() {
       Ext.Array.each(actions, function(a) {   
         if(a.displayMode == "Button")
         {
-          var text;
-          var textLength = a.title.length;
-          var isLarge = false;
-          tile.maxCharForButtons = 40;
-          if(textLength>tile.maxCharForButtons)
-          {
-              isLarge = true;
-              var end = a.title.substring(tile.maxCharForButtons,textLength);
-              var sepPos = end.indexOf(' ') + tile.maxCharForButtons;
-              var start = a.title.substring(0,sepPos);
-              end = a.title.substring(sepPos,textLength);
-              text = start + '<br/>' + end;
-          }
-          else
-          {
-              text = a.title;
-          }
+          
           var button = {};
           button.xtype = 'button';
-          button.text = text;
+          button.text = a.title;
           button.width = 400;
           button.cls = 'tile-button';
           button.overCls = 'tile-button-over';
           button.textAlign = 'left';
-
-          if(isLarge)
-          {
-            button.scale = 'large';
-          }
           
           button.requiresAdditionalEntity = a.requiresAdditionalEntity;
           button.handler = function() { this.handleAction(a.viewId); };

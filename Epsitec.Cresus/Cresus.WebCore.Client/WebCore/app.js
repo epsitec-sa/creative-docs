@@ -237,7 +237,7 @@ function() {
 
     },
 
-    reloadCurrentDatabase: function() {
+    reloadCurrentDatabase: function(samePage) {
       var key = this.tabManager.currentTab;
       var columnManager = this.tabManager.entityTabs[key];
       if(Ext.isDefined(columnManager))
@@ -245,8 +245,12 @@ function() {
         var grid = columnManager.leftList.entityList;
         if(columnManager.leftList.entityList.getSelectionModel().selectNext(false,false))
         {
-          var currentSelection = columnManager.leftList.entityList.getSelectionModel().getSelection()
-          columnManager.leftList.entityList.reloadAndScrollToEntity(columnManager,currentSelection[0].internalId);
+          var currentSelection = columnManager.leftList.entityList.getSelectionModel().getSelection();
+          var dataTableView = columnManager.leftList.entityList.getView();
+          var scrollIndex = dataTableView.all.startIndex + 16; //+16 because index shift between server and store view
+          var selectionIndex = currentSelection[0].index;
+
+          columnManager.leftList.entityList.reloadAndScrollToEntity(columnManager,currentSelection[0].internalId,scrollIndex,selectionIndex,samePage);
         }
         else
         {

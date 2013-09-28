@@ -174,46 +174,47 @@ function() {
     },
 
 
-    reloadAndScrollToEntity: function(columnManager,entityId) {
+    reloadAndScrollToEntity: function(columnManager,entityId,scrollIndex,entityIndex,samePage) {
       this.resetStore(false);
       this.setLoading();
+      columnManager.removeAllColumns();
+      
+      if(!samePage)
+      {
+        var result = this.store.data.findBy(function(record) {
+            return record.getId() === entityId;
+        });
 
-      Ext.Ajax.request({
-        url: this.buildGetIndexUrl(entityId),
-        method: 'GET',
-        callback: function(options, success, response) {
-          this.executeReloadAndScroll(success, response, entityId, true);
-          columnManager.removeAllColumns();
-        },
-        scope: this
-      });
-    },
+        if (!result) {
+          Ext.Ajax.request({
+            url: this.buildGetIndexUrl(entityId),
+            method: 'GET',
+            callback: function(options, success, response) {
+              this.selectEntityCallback(success, response, entityId, false);
+            },
+            scope: this
+          });
 
-    executeReloadAndScroll: function(success, response, entityId, suppressEvent) {
-      var json, index;
-
-      this.setLoading(false);
-
-      json = Epsitec.Tools.processResponse(success, response);
-      if (json === null) {
-        return;
+          return;
+        }
       }
-
-      index = json.content.index;
+      
 
       this.store.load({
         callback: function() {
           this.view.bufferedRenderer.scrollTo(
-              index,
+              scrollIndex,
               false,
               function() {
-                this.getSelectionModel().deselect(index);
+                this.getSelectionModel().select(entityIndex, false);
+                this.setLoading(false);
               },
               this
           );
         },
         scope: this
       });
+      
     },
 
     selectEntity: function(entityId, suppressEvent) {
@@ -296,18 +297,18 @@ function() {
       // away from the index that we got. If that's the case, we'll still be
       // able to find it in the data that has been loaded by the call to the
       // scrollTo method.
-      var record = this.store.getById(entityId);
+      var result = this.store.data.findBy(function(record) {
+            return record.getId() === entityId;
+        });
 
-      if (record === null) {
-        // the record was not found, it is outside the range that was loaded by
-        // the call to the scrollTo method.. Therefore, we start again, hoping
-        // that this time the index won't change that much.
-        this.selectEntity(entityId, suppressEvent);
-        return;
+      if (!result) {
+          this.selectEntity(entityId, suppressEvent);
+          return;
       }
 
       // At last, we can select the entity record.
-      this.getSelectionModel().select(record, false, suppressEvent);
+      this.getSelectionModel().select(result, false, suppressEvent);
     }
+
   });
 });

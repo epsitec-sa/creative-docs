@@ -133,11 +133,11 @@ function() {
         
         this.handleSave(json);
 
-        Epsitec.Cresus.Core.app.reloadCurrentDatabase();
+        Epsitec.Cresus.Core.app.reloadCurrentDatabase(true);
       }
       else {
         Epsitec.ErrorHandler.handleFormError(action);
-        Epsitec.Cresus.Core.app.reloadCurrentDatabase();
+        Epsitec.Cresus.Core.app.reloadCurrentDatabase(true);
         
         businessError = json.content.businesserror;
         if (Ext.isDefined(businessError))

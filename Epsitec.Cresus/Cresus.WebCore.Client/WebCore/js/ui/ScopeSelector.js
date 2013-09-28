@@ -96,7 +96,7 @@ function() {
       });
 
       //Reload current database
-      Epsitec.Cresus.Core.app.reloadCurrentDatabase();
+      Epsitec.Cresus.Core.app.reloadCurrentDatabase(false);
     }
   });
 });

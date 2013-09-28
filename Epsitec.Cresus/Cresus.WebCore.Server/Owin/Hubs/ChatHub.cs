@@ -66,18 +66,21 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		public List<ChatMessage> GetMessageHistory(string otherConnectionId)
 		{
+
+			var callerUserInfo = this.FindUserInfo ();
+			var otherUserInfo = this.FindUserInfo (otherConnectionId);
 			lock (ChatHub.Messages)
 			{
-				//	SL: fix this
 				var messages = ChatHub.Messages
 								   .Where (
 									   m =>
-									   (m.UserTo == this.FindUserInfo () && m.UserFrom == this.FindUserInfo (otherConnectionId)) ||
-									   (m.UserTo == this.FindUserInfo (otherConnectionId) && m.UserFrom == this.FindUserInfo ()))
+									   (m.UserTo == callerUserInfo && m.UserFrom == otherUserInfo) ||
+									   (m.UserTo == otherUserInfo && m.UserFrom == callerUserInfo))
 								   .OrderByDescending (m => m.Timestamp).Take (30).ToList ();
-				
+
 				return messages;
 			}
+		
 		}
 
 		public void SendMessage(string otherConnectionId, string message, string clientGuid)
@@ -106,9 +109,6 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		
 		public override Task OnConnected()
 		{
-			//	SL: do not call GetGravatarUrl from inside the lock block!
-			//	SL: this might take too much time; locks should be as short as possible.
-
 			var chatUser = new ChatUser ()
 			{
 				Id     = this.Context.ConnectionId,

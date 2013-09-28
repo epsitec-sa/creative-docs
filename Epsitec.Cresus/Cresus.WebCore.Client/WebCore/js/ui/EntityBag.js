@@ -90,7 +90,7 @@ function() {
       if(Ext.isDefined(viewport))
       {
         this.width = 280;
-        this.height = (this.bagStore.count() * 35) + 70;
+        this.height = (this.bagStore.count() * 25) + 50;
         this.x = viewport.width - this.width;
         this.y = menu.el.lastBox.height;
         if(this.isVisible())
