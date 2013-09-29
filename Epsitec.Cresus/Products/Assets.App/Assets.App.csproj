@@ -76,6 +76,8 @@
     <Compile Include="Widgets\AbstractTimelineRow.cs" />
     <Compile Include="Widgets\ColorManager.cs" />
     <Compile Include="Widgets\ColorExtensions.cs" />
+    <Compile Include="Widgets\NavigationTimelineControler.cs" />
+    <Compile Include="Widgets\Essai.cs" />
     <Compile Include="Widgets\TimelineCellValue.cs" />
     <Compile Include="Widgets\TimelineCellGlyph.cs" />
     <Compile Include="Widgets\TimelineCellDate.cs" />

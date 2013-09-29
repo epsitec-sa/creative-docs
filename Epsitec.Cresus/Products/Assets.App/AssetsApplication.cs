@@ -172,6 +172,8 @@ namespace Epsitec.Cresus.Assets.App
 
 		private void CreateUI(Window window)
 		{
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+
 			var frame = new FrameBox
 			{
 				Parent    = window.Root,
@@ -179,13 +181,13 @@ namespace Epsitec.Cresus.Assets.App
 				BackColor = Color.FromBrightness (0.8),
 			};
 
-			this.CreateTestTimeLine (frame);
+			//?this.CreateTestTimelineBase (frame);
+			this.CreateTestTimelineController (frame);
+			//?this.CreateTestTimelineProvider (frame);
 		}
 
-		private void CreateTestTimeLine(Widget parent)
+		private void CreateTestTimelineBase(Widget parent)
 		{
-#if true
-			//	Test pour DR.
 			var timeline = new Timeline ()
 			{
 				Parent  = parent,
@@ -204,8 +206,34 @@ namespace Epsitec.Cresus.Assets.App
 					AssetsApplication.InitialiseTimeline (timeline, rank);
 				}
 			};
-#else
-			//	Test pour PA.
+		}
+
+		private void CreateTestTimelineController(Widget parent)
+		{
+			var c = new NavigationTimelineControler
+			{
+				MinDate = new Date (2013, 1, 1),
+				MaxDate = new Date (2014, 12, 31),
+			};
+
+			var frame = new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Bottom,
+				PreferredHeight = 200,
+				Margins         = new Margins (10),
+			};
+
+			c.CreateUI (frame);
+
+			c.Timeline.Pivot = 0.0;
+
+			c.Timeline.SetRows (AssetsApplication.GetRows ());
+			AssetsApplication.InitialiseTimeline (c.Timeline, -1);
+		}
+
+		private void CreateTestTimelineProvider(Widget parent)
+		{
 			var timeline = new Timeline ()
 			{
 				Parent  = parent,
@@ -232,7 +260,6 @@ namespace Epsitec.Cresus.Assets.App
 			button.Clicked += (o, e) => { provider.ChangeRandomSeed (); controller.ClearCache (); };
 
 			controller.Refresh ();
-#endif
 		}
 
 		private static List<AbstractTimelineRow> GetRows()
