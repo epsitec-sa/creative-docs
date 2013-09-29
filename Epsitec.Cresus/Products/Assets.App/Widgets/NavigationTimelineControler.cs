@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				Parent  = parent,
 				Dock    = DockStyle.Bottom,
-				Margins = new Margins (0, 0, 2, 0),
+//				Margins = new Margins (0, 0, 2, 0),
 			};
 
 			this.timeline.SizeChanged += delegate

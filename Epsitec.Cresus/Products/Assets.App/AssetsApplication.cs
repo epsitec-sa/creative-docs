@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Assets.App
 				Pivot   = 0.0,
 			};
 
-			timeline.SetRows (AssetsApplication.GetRows ());
+			timeline.SetRows (AssetsApplication.GetRows (true));
 			AssetsApplication.InitialiseTimeline (timeline, -1);
 
 			timeline.CellClicked += delegate (object sender, int row, int rank)
@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Bottom,
-				PreferredHeight = 200,
+				PreferredHeight = 70,
 				Margins         = new Margins (10),
 			};
 
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Assets.App
 
 			c.Timeline.Pivot = 0.0;
 
-			c.Timeline.SetRows (AssetsApplication.GetRows ());
+			c.Timeline.SetRows (AssetsApplication.GetRows (false));
 			AssetsApplication.InitialiseTimeline (c.Timeline, -1);
 		}
 
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Assets.App
 				Pivot   = 0.25,
 			};
 
-			timeline.SetRows (AssetsApplication.GetRows ());
+			timeline.SetRows (AssetsApplication.GetRows (true));
 
 			var button = new Button ()
 			{
@@ -264,10 +264,11 @@ namespace Epsitec.Cresus.Assets.App
 			controller.Refresh ();
 		}
 
-		private static List<AbstractTimelineRow> GetRows()
+		private static List<AbstractTimelineRow> GetRows(bool all)
 		{
 			var list = new List<AbstractTimelineRow> ();
 
+			if (all)
 			{
 				var row = new TimelineRowValues ()
 				{
@@ -279,6 +280,7 @@ namespace Epsitec.Cresus.Assets.App
 				list.Add (row);
 			}
 
+			if (all)
 			{
 				var row = new TimelineRowValues ()
 				{
@@ -311,6 +313,7 @@ namespace Epsitec.Cresus.Assets.App
 				list.Add (row);
 			}
 
+			if (all)
 			{
 				var row = new TimelineRowDaysOfWeek ()
 				{
@@ -320,6 +323,7 @@ namespace Epsitec.Cresus.Assets.App
 				list.Add (row);
 			}
 
+			if (all)
 			{
 				var row = new TimelineRowWeeksOfYear ()
 				{
