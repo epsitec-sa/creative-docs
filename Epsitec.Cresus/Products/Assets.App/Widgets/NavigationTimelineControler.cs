@@ -84,6 +84,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public System.DateTime					Date
+		{
+			get
+			{
+				return new System.DateTime ((long) this.scroller.Value);
+			}
+		}
+
 
 		private void UpdateScroller()
 		{
@@ -92,16 +100,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return;
 			}
 
-			this.scroller.MinValue = this.minDate.Ticks;
-			this.scroller.MaxValue = this.maxDate.Ticks;
+			this.scroller.MinValue = (decimal) this.minDate.Ticks;
+			this.scroller.MaxValue = (decimal) this.maxDate.Ticks;
 
-			var a = (decimal) (this.maxDate - this.minDate).Days;
-			var b = (decimal) this.timeline.VisibleCellCount;
+			var totalCount   = (decimal) (this.maxDate - this.minDate).Days;
+			var visibleCount = (decimal) this.timeline.VisibleCellCount;
 
-			this.scroller.VisibleRangeRatio = System.Math.Min (b/a, 1.0m);
+			this.scroller.VisibleRangeRatio = System.Math.Min (visibleCount/totalCount, 1.0m);
 
-			this.scroller.SmallChange = Time.TicksPerDay;
-			this.scroller.LargeChange = Time.TicksPerDay * b;
+			this.scroller.SmallChange = (decimal) Time.TicksPerDay;
+			this.scroller.LargeChange = (decimal) Time.TicksPerDay * visibleCount;
 		}
 
 
