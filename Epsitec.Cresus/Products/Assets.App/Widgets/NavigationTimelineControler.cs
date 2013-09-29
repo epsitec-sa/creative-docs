@@ -105,16 +105,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return;
 			}
 
-			this.scroller.MinValue = (decimal) this.minDate.Ticks;
-			this.scroller.MaxValue = (decimal) this.maxDate.Ticks;
-
 			var totalCount   = (decimal) (this.maxDate - this.minDate).Days;
 			var visibleCount = (decimal) this.timeline.VisibleCellCount;
+			var visibleTicks = (decimal) Time.TicksPerDay * (visibleCount-1);
 
 			this.scroller.VisibleRangeRatio = System.Math.Min (visibleCount/totalCount, 1.0m);
 
+			this.scroller.MinValue = (decimal) this.minDate.Ticks;
+			this.scroller.MaxValue = (decimal) this.maxDate.Ticks - visibleTicks;
+
 			this.scroller.SmallChange = (decimal) Time.TicksPerDay;
-			this.scroller.LargeChange = (decimal) Time.TicksPerDay * visibleCount;
+			this.scroller.LargeChange = visibleTicks;
 		}
 
 
