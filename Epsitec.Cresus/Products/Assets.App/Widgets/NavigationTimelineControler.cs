@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public NavigationTimelineControler()
 		{
-			this.minDate = new Date (System.DateTime.MinValue);
-			this.maxDate = new Date (System.DateTime.MaxValue);
+			this.minDate = System.DateTime.MinValue;
+			this.maxDate = System.DateTime.MaxValue;
 		}
 
 		public void CreateUI(Widget parent)
@@ -24,7 +24,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				Parent = parent,
 				Dock   = DockStyle.Fill,
 			};
-
 
 			this.scroller = new HScroller ()
 			{
@@ -45,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.UpdateScroller ();
 		}
 
-		public Timeline Timeline
+		public Timeline							Timeline
 		{
 			get
 			{
@@ -53,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public Date MinDate
+		public System.DateTime					MinDate
 		{
 			get
 			{
@@ -69,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public Date MaxDate
+		public System.DateTime					MaxDate
 		{
 			get
 			{
@@ -96,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.scroller.MinValue = this.minDate.Ticks;
 			this.scroller.MaxValue = this.maxDate.Ticks;
 
-			var a = (decimal) (this.maxDate.ToDateTime () - this.minDate.ToDateTime ()).Days;
+			var a = (decimal) (this.maxDate - this.minDate).Days;
 			var b = (decimal) this.timeline.VisibleCellCount;
 
 			this.scroller.VisibleRangeRatio = System.Math.Min (b/a, 1.0m);
@@ -109,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private Timeline timeline;
 		private HScroller scroller;
 
-		private Date minDate;
-		private Date maxDate;
+		private System.DateTime minDate;
+		private System.DateTime maxDate;
 	}
 }

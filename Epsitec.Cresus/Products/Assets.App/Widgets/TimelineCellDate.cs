@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineCellDate
 	{
-		public TimelineCellDate(Date date, bool isSelected = false, bool isError = false)
+		public TimelineCellDate(System.DateTime? date, bool isSelected = false, bool isError = false)
 		{
-			this.Date       = date;
+			this.date       = date;
 			this.IsSelected = isSelected;
 			this.IsError    = isError;
 		}
@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.Date.IsNull;
+				return !this.date.HasValue;
 			}
 		}
 
@@ -30,11 +30,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return !this.Date.IsNull;
+				return this.date.HasValue;
 			}
 		}
 
-		public readonly Date					Date;
+		public System.DateTime					Date
+		{
+			get
+			{
+				return this.date.GetValueOrDefault ();
+			}
+		}
+
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
 
@@ -60,8 +67,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public static bool IsSameWeeksOfYear(TimelineCellDate c1, TimelineCellDate c2)
 		{
-			int w1 = (c1.IsValid) ? c1.Date.WeekOfYear : -1;
-			int w2 = (c2.IsValid) ? c2.Date.WeekOfYear : -1;
+			int w1 = (c1.IsValid) ? TimelineCellDate.GetWeekOfYear (c1.Date) : -1;
+			int w2 = (c2.IsValid) ? TimelineCellDate.GetWeekOfYear (c2.Date) : -1;
 
 			return w1 == w2;
 		}
@@ -81,5 +88,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			return d1 == d2;
 		}
+
+
+		private static int GetWeekOfYear(System.DateTime date)
+		{
+			var d = new Date (date);
+			return d.WeekOfYear;
+		}
+
+
+		private readonly System.DateTime? date;
 	}
 }

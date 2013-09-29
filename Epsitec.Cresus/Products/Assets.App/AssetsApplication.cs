@@ -214,8 +214,8 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			var c = new NavigationTimelineControler
 			{
-				MinDate = new Date (2013, 1, 1),
-				MaxDate = new Date (2013, 12, 31),
+				MinDate = new System.DateTime (2013, 1, 1),
+				MaxDate = new System.DateTime (2013, 12, 31),
 			};
 
 			var frame = new FrameBox
@@ -461,9 +461,9 @@ namespace Epsitec.Cresus.Assets.App
 			}
 		}
 
-		private static Date AddDays(Date date, int numberOfDays)
+		private static System.DateTime AddDays(Date date, int numberOfDays)
 		{
-			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays);
+			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays).ToDateTime ();
 		}
 
 
