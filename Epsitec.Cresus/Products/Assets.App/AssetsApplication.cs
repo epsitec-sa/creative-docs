@@ -172,7 +172,9 @@ namespace Epsitec.Cresus.Assets.App
 
 		private void CreateUI(Window window)
 		{
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookSimply");
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookFlat");
 
 			var frame = new FrameBox
 			{
@@ -213,7 +215,7 @@ namespace Epsitec.Cresus.Assets.App
 			var c = new NavigationTimelineControler
 			{
 				MinDate = new Date (2013, 1, 1),
-				MaxDate = new Date (2014, 12, 31),
+				MaxDate = new Date (2013, 12, 31),
 			};
 
 			var frame = new FrameBox

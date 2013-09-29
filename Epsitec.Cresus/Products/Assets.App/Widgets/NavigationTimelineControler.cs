@@ -33,9 +33,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				Margins = new Margins (0, 0, 2, 0),
 			};
 
+			this.timeline.SizeChanged += delegate
+			{
+				this.UpdateScroller ();
+			};
+
 			this.scroller.ValueChanged += delegate
 			{
 			};
+
+			this.UpdateScroller ();
 		}
 
 		public Timeline Timeline
@@ -81,6 +88,21 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void UpdateScroller()
 		{
+			if (this.timeline == null || this.scroller == null)
+			{
+				return;
+			}
+
+			this.scroller.MinValue = this.minDate.Ticks;
+			this.scroller.MaxValue = this.maxDate.Ticks;
+
+			var a = (decimal) (this.maxDate.ToDateTime () - this.minDate.ToDateTime ()).Days;
+			var b = (decimal) this.timeline.VisibleCellCount;
+
+			this.scroller.VisibleRangeRatio = System.Math.Min (b/a, 1.0m);
+
+			this.scroller.SmallChange = Time.TicksPerDay;
+			this.scroller.LargeChange = Time.TicksPerDay * b;
 		}
 
 
