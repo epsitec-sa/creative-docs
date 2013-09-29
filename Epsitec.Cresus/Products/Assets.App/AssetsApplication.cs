@@ -202,13 +202,13 @@ namespace Epsitec.Cresus.Assets.App
 			var start = new System.DateTime (2013, 11, 20);
 
 			timeline.SetRows (AssetsApplication.GetRows (true));
-			AssetsApplication.InitialiseTimeline (timeline, start, -1);
+			AssetsApplication.InitialiseTimeline (timeline, start, System.DateTime.MaxValue, -1);
 
 			timeline.CellClicked += delegate (object sender, int row, int rank)
 			{
 				if (row == 2)
 				{
-					AssetsApplication.InitialiseTimeline (timeline, start, rank);
+					AssetsApplication.InitialiseTimeline (timeline, start, System.DateTime.MaxValue, rank);
 				}
 			};
 		}
@@ -219,6 +219,7 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				MinDate = new System.DateTime (2013, 1, 1),
 				MaxDate = new System.DateTime (2013, 12, 31),
+//?				MaxDate = new System.DateTime (2013, 1, 31),
 			};
 
 			var frame = new FrameBox
@@ -231,7 +232,7 @@ namespace Epsitec.Cresus.Assets.App
 
 			c.DateChanged += delegate
 			{
-				AssetsApplication.InitialiseTimeline (c.Timeline, c.Date, -1);
+				AssetsApplication.InitialiseTimeline (c.Timeline, c.Date, c.MaxDate, -1);
 			};
 
 			c.CreateUI (frame);
@@ -239,7 +240,7 @@ namespace Epsitec.Cresus.Assets.App
 			c.Timeline.Pivot = 0.0;
 
 			c.Timeline.SetRows (AssetsApplication.GetRows (false));
-			AssetsApplication.InitialiseTimeline (c.Timeline, c.Date, -1);
+			AssetsApplication.InitialiseTimeline (c.Timeline, c.Date, c.MaxDate, -1);
 		}
 
 		private void CreateTestTimelineProvider(Widget parent)
@@ -354,7 +355,7 @@ namespace Epsitec.Cresus.Assets.App
 			return list;
 		}
 
-		private static void InitialiseTimeline(Timeline timeline, System.DateTime start, int selection)
+		private static void InitialiseTimeline(Timeline timeline, System.DateTime start, System.DateTime maxDate, int selection)
 		{
 			var dates = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();
@@ -367,6 +368,13 @@ namespace Epsitec.Cresus.Assets.App
 
 			for (int i = 0; i < 100; i++)
 			{
+				var date = AssetsApplication.AddDays (start, i);
+
+				if (date > maxDate)
+				{
+					break;
+				}
+
 				int ii = (int) (start.Ticks / Time.TicksPerDay) + i;
 				var glyph = TimelineGlyph.Empty;
 
@@ -428,7 +436,7 @@ namespace Epsitec.Cresus.Assets.App
 					v3 = null;
 				}
 
-				var d = new TimelineCellDate (AssetsApplication.AddDays (start, i), isSelected: (i == selection));
+				var d = new TimelineCellDate (date, isSelected: (i == selection));
 				var g = new TimelineCellGlyph (glyph, isSelected: (i == selection));
 				var x1 = new TimelineCellValue (v1, isSelected: (i == selection));
 				var x2 = new TimelineCellValue (v2, v3, isSelected: (i == selection));
