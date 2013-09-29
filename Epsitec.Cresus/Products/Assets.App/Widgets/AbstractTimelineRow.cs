@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected void PaintLabel(Graphics graphics)
 		{
-			if (!string.IsNullOrEmpty (this.Description))
+			if (this.LabelWidth > 0 && !string.IsNullOrEmpty (this.Description))
 			{
 				var font = Font.DefaultFont;
 				graphics.Color = ColorManager.TextColor;

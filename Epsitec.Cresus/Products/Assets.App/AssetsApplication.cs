@@ -192,10 +192,11 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			var timeline = new Timeline ()
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (10, 10, 220, 10),
-				Pivot   = 0.0,
+				Parent     = parent,
+				Dock       = DockStyle.Fill,
+				Margins    = new Margins (10, 10, 220, 10),
+				Pivot      = 0.0,
+				ShowLabels = true,
 			};
 
 			var start = new System.DateTime (2013, 11, 20);
@@ -245,10 +246,11 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			var timeline = new Timeline ()
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (10, 10, 335, 10),
-				Pivot   = 0.25,
+				Parent     = parent,
+				Dock       = DockStyle.Fill,
+				Margins    = new Margins (10, 10, 335, 10),
+				Pivot      = 0.25,
+				ShowLabels = true,
 			};
 
 			timeline.SetRows (AssetsApplication.GetRows (true));

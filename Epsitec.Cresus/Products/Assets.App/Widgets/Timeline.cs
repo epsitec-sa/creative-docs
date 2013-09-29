@@ -69,6 +69,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public bool								ShowLabels
+		{
+			get
+			{
+				return this.showLabels;
+			}
+			set
+			{
+				if (this.showLabels != value)
+				{
+					this.showLabels = value;
+					this.UpdateLabelsWidth ();
+				}
+			}
+		}
+
 		private int								CellWidth
 		{
 			get
@@ -156,28 +172,31 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Met à jour la largeur nécessaire pour les labels de gauche.
 			this.labelsWidth = 0;
 
-			foreach (var children in this.Children)
+			if (this.showLabels)
 			{
-				var row = children as AbstractTimelineRow;
-				System.Diagnostics.Debug.Assert (row != null);
-
-				if (!string.IsNullOrEmpty (row.Description))
+				foreach (var children in this.Children)
 				{
-					this.labelsWidth = System.Math.Max (this.labelsWidth, this.GetTextWidth (row.Description));
+					var row = children as AbstractTimelineRow;
+					System.Diagnostics.Debug.Assert (row != null);
+
+					if (!string.IsNullOrEmpty (row.Description))
+					{
+						this.labelsWidth = System.Math.Max (this.labelsWidth, this.GetTextWidth (row.Description));
+					}
 				}
-			}
 
-			if (this.labelsWidth > 0)
-			{
-				this.labelsWidth += this.LabelMargin * 2;
-			}
+				if (this.labelsWidth > 0)
+				{
+					this.labelsWidth += this.LabelMargin * 2;
+				}
 
-			foreach (var children in this.Children)
-			{
-				var row = children as AbstractTimelineRow;
-				System.Diagnostics.Debug.Assert (row != null);
+				foreach (var children in this.Children)
+				{
+					var row = children as AbstractTimelineRow;
+					System.Diagnostics.Debug.Assert (row != null);
 
-				row.LabelWidth = this.labelsWidth;
+					row.LabelWidth = this.labelsWidth;
+				}
 			}
 		}
 
@@ -226,6 +245,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		private double							pivot;
+		private bool							showLabels;
 		private int								labelsWidth;
 	}
 }
