@@ -43,6 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.scroller.ValueChanged += delegate
 			{
+				this.OnDateChanged ();
 			};
 
 			this.UpdateScroller ();
@@ -115,6 +116,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.scroller.SmallChange = (decimal) Time.TicksPerDay;
 			this.scroller.LargeChange = (decimal) Time.TicksPerDay * visibleCount;
 		}
+
+
+		#region Events handler
+		private void OnDateChanged()
+		{
+			if (this.DateChanged != null)
+			{
+				this.DateChanged (this);
+			}
+		}
+
+		public delegate void DateChangedEventHandler(object sender);
+		public event DateChangedEventHandler DateChanged;
+		#endregion
 
 
 		private Timeline timeline;

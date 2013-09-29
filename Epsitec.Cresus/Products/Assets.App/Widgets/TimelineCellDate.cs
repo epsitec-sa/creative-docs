@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineCellDate
 	{
-		public TimelineCellDate(System.DateTime? date, bool isSelected = false, bool isError = false)
+		public TimelineCellDate(System.DateTime date, bool isSelected = false, bool isError = false)
 		{
 			this.date       = date;
 			this.IsSelected = isSelected;

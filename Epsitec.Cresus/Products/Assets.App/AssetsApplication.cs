@@ -198,14 +198,16 @@ namespace Epsitec.Cresus.Assets.App
 				Pivot   = 0.0,
 			};
 
+			var start = new System.DateTime (2013, 11, 20);
+
 			timeline.SetRows (AssetsApplication.GetRows (true));
-			AssetsApplication.InitialiseTimeline (timeline, -1);
+			AssetsApplication.InitialiseTimeline (timeline, start, -1);
 
 			timeline.CellClicked += delegate (object sender, int row, int rank)
 			{
 				if (row == 2)
 				{
-					AssetsApplication.InitialiseTimeline (timeline, rank);
+					AssetsApplication.InitialiseTimeline (timeline, start, rank);
 				}
 			};
 		}
@@ -226,12 +228,17 @@ namespace Epsitec.Cresus.Assets.App
 				Margins         = new Margins (10),
 			};
 
+			c.DateChanged += delegate
+			{
+				AssetsApplication.InitialiseTimeline (c.Timeline, c.Date, -1);
+			};
+
 			c.CreateUI (frame);
 
 			c.Timeline.Pivot = 0.0;
 
 			c.Timeline.SetRows (AssetsApplication.GetRows (false));
-			AssetsApplication.InitialiseTimeline (c.Timeline, -1);
+			AssetsApplication.InitialiseTimeline (c.Timeline, c.Date, -1);
 		}
 
 		private void CreateTestTimelineProvider(Widget parent)
@@ -345,35 +352,35 @@ namespace Epsitec.Cresus.Assets.App
 			return list;
 		}
 
-		private static void InitialiseTimeline(Timeline timeline, int selection)
+		private static void InitialiseTimeline(Timeline timeline, System.DateTime start, int selection)
 		{
 			var dates = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();
 			var values1 = new List<TimelineCellValue> ();
 			var values2 = new List<TimelineCellValue> ();
 
-			var start = new Date (2013, 11, 20);  // 20 novembre 2013
 			decimal? value1 = 10000.0m;
 			decimal? value2 = 15000.0m;
 			decimal? value3 = 25000.0m;
 
 			for (int i = 0; i < 100; i++)
 			{
+				int ii = (int) (start.Ticks / Time.TicksPerDay) + i;
 				var glyph = TimelineGlyph.Empty;
 
-				if (i%12 == 0)
+				if (ii%12 == 0)
 				{
 					glyph = TimelineGlyph.FilledCircle;
 				}
-				else if (i%12 == 1)
+				else if (ii%12 == 1)
 				{
 					glyph = TimelineGlyph.OutlinedCircle;
 				}
-				else if (i%12 == 6)
+				else if (ii%12 == 6)
 				{
 					glyph = TimelineGlyph.FilledSquare;
 				}
-				else if (i%12 == 7)
+				else if (ii%12 == 7)
 				{
 					glyph = TimelineGlyph.OutlinedSquare;
 				}
@@ -465,7 +472,7 @@ namespace Epsitec.Cresus.Assets.App
 			}
 		}
 
-		private static System.DateTime AddDays(Date date, int numberOfDays)
+		private static System.DateTime AddDays(System.DateTime date, int numberOfDays)
 		{
 			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays).ToDateTime ();
 		}
