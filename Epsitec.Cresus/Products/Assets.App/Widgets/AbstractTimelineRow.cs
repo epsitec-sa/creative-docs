@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			//	Retourne la position horizontale, avec une subile répartition du reste
 			//	pour que la cellule de droite touche toujours le bord droite.
-			double dim = this.ActualWidth / this.VisibleCellCount;
+			double dim = (this.ActualWidth - this.LabelWidth) / this.VisibleCellCount;
 			return this.LabelWidth + (int) (rank * dim);
 		}
 
