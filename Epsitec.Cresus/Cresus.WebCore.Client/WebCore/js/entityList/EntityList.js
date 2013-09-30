@@ -46,12 +46,18 @@ function() {
     isSearching: false,
     isReloading: false,
     beforeReloadEntityId: null,
+    selectedColumnId: null,
 
     /* Constructor */
 
     constructor: function(options) {
       var newOptions, contextMenu;
 
+      if(Ext.isDefined(options.sorterDefinitions[0]))
+      {
+        this.selectedColumnId = options.sorterDefinitions[0].name;
+      }
+      
       newOptions = {
         dockedItems: [
           this.createToolbar(options),
@@ -74,6 +80,7 @@ function() {
           columnhide: this.setupColumnParameter,
           columnshow: this.setupColumnParameterAndRefresh,
           reconfigure: this.reconfigureFiltersFeature,
+          headerclick: function(ct, column) { this.selectedColumnId = column.dataIndex; },
           scope: this
         },
         features: [{
@@ -655,9 +662,7 @@ function() {
 
     ///QUICK SEARCH
     onQuickSearchHandler: function(field, e) {
-      var columnName, config;
-
-      columnName = this.columnDefinitions[0].name;
+      var config, columnName = this.selectedColumnId;
 
       config = {
         type: 'string',
@@ -683,7 +688,7 @@ function() {
             this.filters.getFilter(columnName).setActive(true);
           }
           else {
-            this.filters.clearFilters();
+            this.filters.getFilter(columnName).setActive(false);
           }
         }
       }
