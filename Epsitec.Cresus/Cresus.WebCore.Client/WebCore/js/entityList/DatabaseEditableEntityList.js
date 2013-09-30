@@ -174,40 +174,39 @@ function() {
     },
 
 
-    reloadAndScrollToEntity: function(columnManager,entityId,scrollIndex,entityIndex,samePage) {
+    reloadAndScrollToEntity: function(columnManager,entityId,entityIndex,samePage) {
       this.resetStore(false);
       this.setLoading();
       columnManager.removeAllColumns();
+    
       
-      if(!samePage)
-      {
-        var result = this.store.data.findBy(function(record) {
-            return record.getId() === entityId;
+      var result = this.store.data.findBy(function(record) {
+          return record.getId() === entityId;
+      });
+
+      if (!result && !samePage) {
+        Ext.Ajax.request({
+          url: this.buildGetIndexUrl(entityId),
+          method: 'GET',
+          callback: function(options, success, response) {
+            this.selectEntityCallback(success, response, entityId, false);
+          },
+          scope: this
         });
 
-        if (!result) {
-          Ext.Ajax.request({
-            url: this.buildGetIndexUrl(entityId),
-            method: 'GET',
-            callback: function(options, success, response) {
-              this.selectEntityCallback(success, response, entityId, false);
-            },
-            scope: this
-          });
-
-          return;
-        }
+        return;
       }
-      
 
-      this.store.load({
+      var scroll = entityIndex;
+
+      this.store.reload({
         callback: function() {
           this.view.bufferedRenderer.scrollTo(
-              scrollIndex,
+              scroll,
               false,
               function() {
-                this.getSelectionModel().select(entityIndex, false);
                 this.setLoading(false);
+                this.getSelectionModel().select(entityIndex);           
               },
               this
           );
@@ -273,7 +272,7 @@ function() {
       // range of entities around the index, the selectEntityCallback2 will be
       // called and we'll be able to proceed.
 
-      this.store.load({
+      this.store.reload({
         callback: function() {
           this.view.bufferedRenderer.scrollTo(
               index,

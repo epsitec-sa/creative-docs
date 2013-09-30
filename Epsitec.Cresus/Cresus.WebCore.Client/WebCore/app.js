@@ -242,21 +242,10 @@ function() {
       var columnManager = this.tabManager.entityTabs[key];
       if(Ext.isDefined(columnManager))
       {   
-        var grid = columnManager.leftList.entityList;
-        if(columnManager.leftList.entityList.getSelectionModel().selectNext(false,false))
-        {
           var currentSelection = columnManager.leftList.entityList.getSelectionModel().getSelection();
-          var dataTableView = columnManager.leftList.entityList.getView();
-          var scrollIndex = dataTableView.all.startIndex + 16; //+16 because index shift between server and store view
           var selectionIndex = currentSelection[0].index;
 
-          columnManager.leftList.entityList.reloadAndScrollToEntity(columnManager,currentSelection[0].internalId,scrollIndex,selectionIndex,samePage);
-        }
-        else
-        {
-          columnManager.leftList.entityList.resetStore(true);
-        }
-        
+          columnManager.leftList.entityList.reloadAndScrollToEntity(columnManager,currentSelection[0].internalId,selectionIndex,samePage);    
       }
       
     },
