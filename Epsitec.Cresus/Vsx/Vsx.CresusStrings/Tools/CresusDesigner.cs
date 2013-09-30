@@ -35,8 +35,11 @@ namespace Epsitec.Tools
 
 		public void Dispose()
 		{
-			this.cts.Cancel ();
-			this.DisposeTasks ();
+			lock (this.syncRoot)
+			{
+				this.cts.Cancel ();
+				this.DisposeTasks ();
+			}
 		}
 
 		#endregion
@@ -44,8 +47,8 @@ namespace Epsitec.Tools
 
 		private async Task<INavigator> NavigatorAsync()
 		{
-			var factory = await this.EnsureChannelFactoryTask (this.cts.Token).ConfigureAwait (false);
-			return await this.EnsureNavigatorTask (factory, this.cts.Token);
+			var factory = await this.EnsureChannelFactoryTask ();
+			return await this.EnsureNavigatorTask (factory);
 		}
 
 		private async Task NavigateToStringAsync(string id)
@@ -62,8 +65,11 @@ namespace Epsitec.Tools
 
 		private void DisposeTasks()
 		{
-			Interlocked.Exchange (ref this.navigatorTask, null).DisposeResult ().ForgetSafely ();
-			Interlocked.Exchange (ref this.channelFactoryTask, null).DisposeResult ().ForgetSafely ();
+			lock (this.syncRoot)
+			{
+				Interlocked.Exchange (ref this.navigatorTask, null).DisposeResult ().ForgetSafely ();
+				Interlocked.Exchange (ref this.channelFactoryTask, null).DisposeResult ().ForgetSafely ();
+			}
 		}
 
 		private void NavigateToString(INavigator navigator, string druid)
@@ -90,34 +96,57 @@ namespace Epsitec.Tools
 			}
 		}
 
-		private Task<ChannelFactory<INavigator>> EnsureChannelFactoryTask(CancellationToken cancellationToken)
+		private CancellationTokenSource EnsureCts()
 		{
-			if (this.channelFactoryTask == null || this.channelFactoryTask.Status == TaskStatus.Canceled || this.channelFactoryTask.Status == TaskStatus.Faulted)
+			lock (this.syncRoot)
 			{
-				this.channelFactoryTask = Task.Run (() =>
+				if (this.cts.IsCancellationRequested)
 				{
-					var binding = new NetNamedPipeBinding (NetNamedPipeSecurityMode.None);
-					cancellationToken.ThrowIfCancellationRequested ();
-					var address = new EndpointAddress (Addresses.DesignerAddress);
-					cancellationToken.ThrowIfCancellationRequested ();
-					return new ChannelFactory<INavigator> (binding, address);
-				}, cancellationToken);
+					Interlocked.Exchange (ref this.cts, new CancellationTokenSource ());
+				}
+				return this.cts;
 			}
-			return this.channelFactoryTask;
 		}
 
-		private Task<INavigator> EnsureNavigatorTask(ChannelFactory<INavigator> factory, CancellationToken cancellationToken)
+		private Task<ChannelFactory<INavigator>> EnsureChannelFactoryTask()
 		{
-			if (this.navigatorTask == null || this.navigatorTask.Status == TaskStatus.Canceled || this.navigatorTask.Status == TaskStatus.Faulted)
+			lock (this.syncRoot)
 			{
-				this.navigatorTask = Task.Run (() =>
+				if (this.channelFactoryTask == null || this.channelFactoryTask.Status == TaskStatus.Canceled || this.channelFactoryTask.Status == TaskStatus.Faulted)
 				{
-					cancellationToken.ThrowIfCancellationRequested ();
-					return factory.CreateChannel();
-				}, cancellationToken);
+					var cancellationToken = this.EnsureCts ().Token;
+					this.channelFactoryTask = Task.Run (() =>
+					{
+						var binding = new NetNamedPipeBinding (NetNamedPipeSecurityMode.None);
+						cancellationToken.ThrowIfCancellationRequested ();
+						var address = new EndpointAddress (Addresses.DesignerAddress);
+						cancellationToken.ThrowIfCancellationRequested ();
+						return new ChannelFactory<INavigator> (binding, address);
+					}, cancellationToken);
+				}
+				return this.channelFactoryTask;
 			}
-			return this.navigatorTask;
 		}
+
+		private Task<INavigator> EnsureNavigatorTask(ChannelFactory<INavigator> factory)
+		{
+			lock (this.syncRoot)
+			{
+				if (this.navigatorTask == null || this.navigatorTask.Status == TaskStatus.Canceled || this.navigatorTask.Status == TaskStatus.Faulted)
+				{
+					var cancellationToken = this.EnsureCts ().Token;
+					this.navigatorTask = Task.Run (() =>
+					{
+						cancellationToken.ThrowIfCancellationRequested ();
+						return factory.CreateChannel ();
+					}, cancellationToken);
+				}
+				return this.navigatorTask;
+			}
+		}
+
+
+		private readonly object syncRoot = new object ();
 
 		private CancellationTokenSource cts;
 		private Task<ChannelFactory<INavigator>> channelFactoryTask;

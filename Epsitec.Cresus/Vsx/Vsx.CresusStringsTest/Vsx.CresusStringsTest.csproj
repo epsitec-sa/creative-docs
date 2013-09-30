@@ -47,6 +47,18 @@
     <Reference Include="Roslyn.Compilers.CSharp, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Roslyn.Services, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.Reactive.Core, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Reactive Extensions\v2.0\Binaries\.NETFramework\v4.5\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Reactive Extensions\v2.0\Binaries\.NETFramework\v4.5\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.0.20823.0, Culture=neutral, PublicKeyToken=f300afd708cefcd3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft SDKs\Reactive Extensions\v2.0\Binaries\.NETFramework\v4.5\System.Reactive.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
@@ -65,18 +77,22 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Framework\FileObject.cs" />
+    <Compile Include="Framework\TempFile.cs" />
     <Compile Include="MultiCultureResourceItemViewTest.cs" />
     <Compile Include="RoslynTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceBundleTest.cs" />
     <Compile Include="ResourceModuleTest.cs" />
     <Compile Include="ProjectResourceTest.cs" />
+    <Compile Include="SolutionResourceTest.cs" />
     <Compile Include="TestData.cs" />
     <Compile Include="CompositeDictionaryTest.cs" />
     <Compile Include="CompositeKeyTest.cs" />
     <Compile Include="ResourceSymbolMapperTest.cs" />
     <Compile Include="MultiCultureResourceItemCollectionViewTest.cs" />
     <Compile Include="Spikes.cs" />
+    <Compile Include="FileWatcherTest.cs" />
     <Compile Include="XLayoutTest.cs" />
     <Compile Include="WpfHelper.cs" />
   </ItemGroup>

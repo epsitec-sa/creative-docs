@@ -12,9 +12,16 @@ namespace Epsitec
 	{
 		public TimeTrace()
 		{
-			var methodInfo = new StackFrame(1).GetMethod ();
-			this.methodName = string.Format("{0}.{1}", methodInfo.DeclaringType.Name, methodInfo.Name);
-			Trace.WriteLine (string.Format("[{0}] .. {1} ...", Thread.CurrentThread.ManagedThreadId, this.methodName));
+			var methodInfo = new StackFrame (1).GetMethod ();
+			this.methodName = string.Format ("{0}.{1}", methodInfo.DeclaringType.Name, methodInfo.Name);
+			Trace.WriteLine (string.Format ("[{0}] .. {1} ...", Thread.CurrentThread.ManagedThreadId, this.methodName));
+			this.stopwatch = Stopwatch.StartNew ();
+		}
+
+		public TimeTrace(string methodName)
+		{
+			this.methodName = methodName;
+			Trace.WriteLine (string.Format ("[{0}] .. {1} ...", Thread.CurrentThread.ManagedThreadId, this.methodName));
 			this.stopwatch = Stopwatch.StartNew ();
 		}
 

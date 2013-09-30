@@ -60,6 +60,15 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
+		public IEnumerable<string> TouchedFilePathes()
+		{
+			yield return this.Info.FilePath;
+			foreach (var bundle in this)
+			{
+				yield return bundle.FilePath;
+			}
+		}
+
 		public IReadOnlyDictionary<string, Dictionary<CultureInfo, ResourceBundle>> ByNameFirst
 		{
 			get

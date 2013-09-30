@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Strings
 		private async Task<ResourceSymbolInfo> CreateSymbolInfoAsync(SnapshotPoint point, CancellationToken cancellationToken)
 		{
 			this.Engine.ActiveDocumentSource.TextBuffer = this.textBuffer;
-			return await this.Engine.GetResourceSymbolInfoAsync (point, cancellationToken).ConfigureAwait (false);
+			return await this.Engine.GetResourceSymbolInfoAsync (point, cancellationToken);
 		}
 
 		private TagSpan<SmartTag> CreateTagSpan(ResourceSymbolInfo symbolInfo)

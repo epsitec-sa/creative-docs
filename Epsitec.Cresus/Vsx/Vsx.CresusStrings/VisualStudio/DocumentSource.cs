@@ -68,14 +68,14 @@ namespace Epsitec.VisualStudio
 		{
 			this.ctsSyntaxAndSemantic.Token.ThrowIfCancellationRequested ();
 			cancellationToken.ThrowIfCancellationRequested ();
-			return await this.syntaxRootTask.ConfigureAwait(false);
+			return await this.syntaxRootTask;
 		}
 
 		public async Task<ISemanticModel>		SemanticModelAsync(CancellationToken cancellationToken)
 		{
 			this.ctsSyntaxAndSemantic.Token.ThrowIfCancellationRequested ();
 			cancellationToken.ThrowIfCancellationRequested ();
-			return await this.semanticModelTask.ConfigureAwait (false);
+			return await this.semanticModelTask;
 		}
 
 
@@ -211,7 +211,7 @@ namespace Epsitec.VisualStudio
 		public async Task<DocumentId>			DocumentIdAsync()
 		{
 			this.ctsDocumentId.Token.ThrowIfCancellationRequested ();
-			return await this.documentIdTask.ConfigureAwait (false);
+			return await this.documentIdTask;
 		}
 
 

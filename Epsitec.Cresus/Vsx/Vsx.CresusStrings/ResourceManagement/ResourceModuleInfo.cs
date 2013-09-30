@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		public ResourceModuleInfo(string filePath)
 		{
 			var doc = XDocument.Load (filePath);
-			this.filePath = filePath;
+			this.filePath = Path.GetFullPath(filePath);
 			this.element = doc.Root;
 			this.versions = new ResourceVersions (element.Element ("Versions"));
 		}

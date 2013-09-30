@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,16 @@ namespace Epsitec.Cresus.Strings
 		{
 			var module = ResourceModule.Load (TestData.ModuleInfoPath);
 			Assert.AreEqual (3, module.Count ());
+		}
+
+		[TestMethod]
+		public void TouchedFilePathes()
+		{
+			var module = ResourceModule.Load (TestData.ModuleInfoPath);
+			foreach (var filePath in module.TouchedFilePathes ().Select (fn => Path.GetFullPath (fn)))
+			{
+				Trace.WriteLine (filePath);
+			}
 		}
 
 		[TestMethod]

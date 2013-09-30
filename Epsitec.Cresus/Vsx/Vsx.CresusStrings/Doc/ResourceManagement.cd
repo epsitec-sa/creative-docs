@@ -67,12 +67,11 @@
       <Method Name="LoadBundles" Hidden="true" />
       <Field Name="project" Hidden="true" />
       <Property Name="Project" Hidden="true" />
-      <Method Name="ResourceModule" Hidden="true" />
       <Method Name="System.Collections.IEnumerable.GetEnumerator" Hidden="true" />
       <Method Name="ToString" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>AKAAgAAAAAAAgBCEAAAAGAAAAAiAgAQAQAAIQEAACAE=</HashCode>
+      <HashCode>AKAAgAAAAAAAgBCEAAAIGAAAAAiAgAQQQAAIQEAACAE=</HashCode>
       <FileName>ResourceManagement\ResourceModule.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -166,8 +165,8 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAgAQAAAAAQAAAMAIAAAAAAIgABAAAAEAAAAAAADAA=</HashCode>
-      <FileName>Windows\XLayout.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAIAIAAAAAAAgAAAAAAEAAACAAABAA=</HashCode>
+      <FileName>Windows\XLayout.Builder.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

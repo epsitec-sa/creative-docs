@@ -63,6 +63,12 @@ namespace Epsitec.Cresus.ResourceManagement
 		}
 
 
+		public IEnumerable<string> TouchedFilePathes()
+		{
+			return this.SelectMany (m => m.TouchedFilePathes ());
+		}
+
+
 		#region Object Overrides
 		public override string ToString()
 		{

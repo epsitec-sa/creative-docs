@@ -13,11 +13,11 @@ namespace Epsitec.Cresus.ResourceManagement
 {
 	public class ResourceBundle : ResourceElement, IResourceTable
 	{
-		public static ResourceBundle Load(string fileName, ResourceModule module = null, ResourceBundle neutralCultureBundle = null)
+		public static ResourceBundle Load(string filePath, ResourceModule module = null, ResourceBundle neutralCultureBundle = null)
 		{
 			try
 			{
-				return new ResourceBundle (fileName, module, neutralCultureBundle);
+				return new ResourceBundle (filePath, module, neutralCultureBundle);
 			}
 			catch
 			{
@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		}
 
 		public ResourceBundle(ResourceBundle bundle, IReadOnlyDictionary<string, ResourceItem> byId)
-			: this (bundle.fileName, bundle.Element, bundle.Module, byId)
+			: this (bundle.filePath, bundle.Element, bundle.Module, byId)
 		{
 		}
 
@@ -52,11 +52,11 @@ namespace Epsitec.Cresus.ResourceManagement
 				return this.Element.Attribute ("type").GetString ();
 			}
 		}
-		public string							FileName
+		public string							FilePath
 		{
 			get
 			{
-				return this.fileName;
+				return this.filePath;
 			}
 		}
 		public bool								HasNeutralCulture
@@ -225,22 +225,22 @@ namespace Epsitec.Cresus.ResourceManagement
 		}
 
 
-		private ResourceBundle(string fileName, ResourceModule module = null, ResourceBundle neutralCultureBundle = null)
-			: this (fileName, ResourceBundle.LoadXmlDocument (fileName).Root, module, neutralCultureBundle)
+		private ResourceBundle(string filePath, ResourceModule module = null, ResourceBundle neutralCultureBundle = null)
+			: this (filePath, ResourceBundle.LoadXmlDocument (filePath).Root, module, neutralCultureBundle)
 		{
 		}
 
-		private ResourceBundle(string fileName, XElement element, ResourceModule module, ResourceBundle neutralCultureBundle)
-			: this (fileName, element, module, default (IReadOnlyDictionary<string, ResourceItem>))
+		private ResourceBundle(string filePath, XElement element, ResourceModule module, ResourceBundle neutralCultureBundle)
+			: this (filePath, element, module, default (IReadOnlyDictionary<string, ResourceItem>))
 		{
 			this.byId = ResourceBundle.LoadItems (element, this, neutralCultureBundle).ToDictionary (i => i.Id);
 		}
 
-		private ResourceBundle(string fileName, XElement element, ResourceModule module, IReadOnlyDictionary<string, ResourceItem> byId)
+		private ResourceBundle(string filePath, XElement element, ResourceModule module, IReadOnlyDictionary<string, ResourceItem> byId)
 			: base(element)
 		{
 			this.module					= module;
-			this.fileName				= fileName;
+			this.filePath				= Path.GetFullPath(filePath);
 			var cultureName				= this.Element.Attribute ("culture").GetString ();
 			this.byId					= byId;
 			this.byName					= new Lazy<IReadOnlyDictionary<string, ResourceItem>> (() => this.Values.ToDictionary (i => i.Name));
@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.ResourceManagement
 
 		private readonly Func<ResourceItem, IEnumerable<string>> symbolNamesFactory;
 		private readonly ResourceModule module;
-		private readonly string fileName;
+		private readonly string filePath;
 		private readonly CultureInfo culture;
 		private readonly IReadOnlyDictionary<string, ResourceItem> byId;
 		private readonly Lazy<IReadOnlyDictionary<string, ResourceItem>> byName;

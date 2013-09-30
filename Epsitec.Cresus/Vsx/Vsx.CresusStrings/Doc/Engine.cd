@@ -75,19 +75,17 @@
   <Class Name="Epsitec.VisualStudio.ResourceSymbolMapperSource">
     <Position X="4.75" Y="2.5" Width="2.5" />
     <Members>
-      <Method Name="Cancel" Hidden="true" />
-      <Method Name="CreateSymbolMapperTask" Hidden="true" />
       <Field Name="cts" Hidden="true" />
       <Method Name="Dispose" Hidden="true" />
+      <Method Name="EnsureSymbolMapperTask" Hidden="true" />
       <Method Name="ResourceSymbolMapperSource" Hidden="true" />
       <Method Name="Restart" Hidden="true" />
       <Property Name="Solution" Hidden="true" />
       <Field Name="solutionProvider" Hidden="true" />
-      <Method Name="Start" Hidden="true" />
       <Field Name="symbolMapperTask" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>EAAAABASQCAAAAAAAAAAEAAAABAAAAAAMAAAAAAAAAA=</HashCode>
+      <HashCode>EAAAgBASACAAAAAQAAIAAAAAABEAAAAAMAAIAAAAAAA=</HashCode>
       <FileName>VisualStudio\ResourceSymbolMapperSource.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
