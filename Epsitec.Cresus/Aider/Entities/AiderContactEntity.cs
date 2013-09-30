@@ -255,6 +255,20 @@ namespace Epsitec.Aider.Entities
 			return contact;
 		}
 
+		public static void DeleteParticipations(BusinessContext businessContext, AiderContactEntity contact)
+		{
+			var example = new AiderGroupParticipantEntity ()
+			{
+				Contact = contact
+			};
+
+			var participations = businessContext.DataContext.GetByExample (example);
+
+			foreach (var participation in participations)
+			{
+				businessContext.DeleteEntity (participation);
+			}
+		}
 
 		public static void Delete(BusinessContext businessContext, AiderContactEntity contact)
 		{
@@ -281,6 +295,8 @@ namespace Epsitec.Aider.Entities
 				legalPerson.RemoveContactInternal (contact);
 			}
 
+			AiderContactEntity.DeleteParticipations (businessContext, contact);
+			
 			businessContext.DeleteEntity (contact);
 		}
 

@@ -46,6 +46,17 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			ActionAiderPersonWarningViewController.CleanUpEchPerson (person);
 		}
 
+		protected void DeleteEmptyHouseholds(IEnumerable<AiderHouseholdEntity> households)
+		{
+			foreach (var household in households)
+			{
+				if (household.Members.Count == 0)
+				{
+					AiderHouseholdEntity.Delete (this.BusinessContext, household);
+				}
+			}
+		}
+		
 		private static void CleanUpEchPerson(AiderPersonEntity person)
 		{
 			var reportedPersons = person.eCH_Person.ReportedPersons.ToArray ();
