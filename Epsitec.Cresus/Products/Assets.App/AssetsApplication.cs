@@ -217,6 +217,7 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			this.start = new System.DateTime (2013, 1, 1);
 			this.cellsCount = 365;
+			this.selectedCell = -1;
 
 			this.controller = new NavigationTimelineController
 			{
@@ -237,24 +238,33 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			this.controller.CreateUI (frame);
-
 			this.controller.Timeline.Pivot = 0.0;
-
 			this.controller.Timeline.SetRows (AssetsApplication.GetRows (false));
 			this.UpdateController ();
+
+			this.controller.Timeline.CellClicked += delegate (object sender, int row, int rank)
+			{
+				if (row == 0)
+				{
+					this.selectedCell = this.controller.LeftVisibleCell + rank;
+					this.UpdateController ();
+				}
+			};
 		}
 
 		private void UpdateController()
 		{
 			var date = AssetsApplication.AddDays (start, this.controller.LeftVisibleCell);
 			int cellsCount = System.Math.Min (this.cellsCount, this.controller.Timeline.VisibleCellsCount);
+			int selection = this.selectedCell - this.controller.LeftVisibleCell;
 
-			AssetsApplication.InitialiseTimeline (this.controller.Timeline, date, cellsCount, -1);
+			AssetsApplication.InitialiseTimeline (this.controller.Timeline, date, cellsCount, selection);
 		}
 
 		private NavigationTimelineController controller;
 		private System.DateTime start;
 		private int cellsCount;
+		private int selectedCell;
 
 		private void CreateTestTimelineProvider(Widget parent)
 		{
