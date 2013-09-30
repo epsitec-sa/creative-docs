@@ -64,6 +64,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color ArrowColor
+		{
+			get
+			{
+				return Color.FromBrightness (0.5);
+			}
+		}
+
 		public static Color ValueDotColor
 		{
 			get

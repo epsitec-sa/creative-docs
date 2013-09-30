@@ -575,7 +575,21 @@ namespace Epsitec.Cresus.Assets.App
 			var count = treeTable.VisibleRowsCount;
 			for (int i=0; i<count; i++)
 			{
-				var sf = new TreeTableCellFirst (0, TreeTableFirstType.Final, string.Format ("First {0}", i+1));
+				int level = 2;
+				var type = TreeTableFirstType.Final;
+
+				if (i == 0)
+				{
+					level = 0;
+					type = TreeTableFirstType.Extended;
+				}
+				else if (i == 1)
+				{
+					level = 1;
+					type = TreeTableFirstType.Compacted;
+				}
+
+				var sf = new TreeTableCellFirst (level, type, string.Format ("First {0}", i+1));
 				var s1 = new TreeTableCellString (true, string.Format ("Colonne 1.{0}", i+1));
 				var s2 = new TreeTableCellString (true, string.Format ("Colonne 2.{0}", i+1));
 				var s3 = new TreeTableCellString (true, string.Format ("Colonne 3.{0}", i+1));
