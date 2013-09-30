@@ -202,24 +202,25 @@ namespace Epsitec.Cresus.Assets.App
 			var start = new System.DateTime (2013, 11, 20);
 
 			timeline.SetRows (AssetsApplication.GetRows (true));
-			AssetsApplication.InitialiseTimeline (timeline, start, System.DateTime.MaxValue, -1);
+			AssetsApplication.InitialiseTimeline (timeline, start, 100, -1);
 
 			timeline.CellClicked += delegate (object sender, int row, int rank)
 			{
 				if (row == 2)
 				{
-					AssetsApplication.InitialiseTimeline (timeline, start, System.DateTime.MaxValue, rank);
+					AssetsApplication.InitialiseTimeline (timeline, start, 100, rank);
 				}
 			};
 		}
 
 		private void CreateTestTimelineController(Widget parent)
 		{
-			var c = new NavigationTimelineControler
+			this.start = new System.DateTime (2013, 1, 1);
+			this.cellsCount = 365;
+
+			this.controller = new NavigationTimelineController
 			{
-				MinDate = new System.DateTime (2013, 1, 1),
-				MaxDate = new System.DateTime (2013, 12, 31),
-//?				MaxDate = new System.DateTime (2013, 1, 31),
+				CellsCount = cellsCount,
 			};
 
 			var frame = new FrameBox
@@ -230,18 +231,30 @@ namespace Epsitec.Cresus.Assets.App
 				Margins         = new Margins (10),
 			};
 
-			c.DateChanged += delegate
+			this.controller.DateChanged += delegate
 			{
-				AssetsApplication.InitialiseTimeline (c.Timeline, c.Date, c.MaxDate, -1);
+				this.UpdateController ();
 			};
 
-			c.CreateUI (frame);
+			this.controller.CreateUI (frame);
 
-			c.Timeline.Pivot = 0.0;
+			this.controller.Timeline.Pivot = 0.0;
 
-			c.Timeline.SetRows (AssetsApplication.GetRows (false));
-			AssetsApplication.InitialiseTimeline (c.Timeline, c.Date, c.MaxDate, -1);
+			this.controller.Timeline.SetRows (AssetsApplication.GetRows (false));
+			this.UpdateController ();
 		}
+
+		private void UpdateController()
+		{
+			var date = AssetsApplication.AddDays (start, this.controller.LeftVisibleCell);
+			int cellsCount = System.Math.Min (this.cellsCount, this.controller.Timeline.VisibleCellsCount);
+
+			AssetsApplication.InitialiseTimeline (this.controller.Timeline, date, cellsCount, -1);
+		}
+
+		private NavigationTimelineController controller;
+		private System.DateTime start;
+		private int cellsCount;
 
 		private void CreateTestTimelineProvider(Widget parent)
 		{
@@ -355,7 +368,7 @@ namespace Epsitec.Cresus.Assets.App
 			return list;
 		}
 
-		private static void InitialiseTimeline(Timeline timeline, System.DateTime start, System.DateTime maxDate, int selection)
+		private static void InitialiseTimeline(Timeline timeline, System.DateTime start, int cellsCount, int selection)
 		{
 			var dates = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();
@@ -366,14 +379,9 @@ namespace Epsitec.Cresus.Assets.App
 			decimal? value2 = 15000.0m;
 			decimal? value3 = 25000.0m;
 
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < cellsCount; i++)
 			{
 				var date = AssetsApplication.AddDays (start, i);
-
-				if (date > maxDate)
-				{
-					break;
-				}
 
 				int ii = (int) (start.Ticks / Time.TicksPerDay) + i;
 				var glyph = TimelineGlyph.Empty;

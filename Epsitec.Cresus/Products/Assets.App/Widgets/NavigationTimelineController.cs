@@ -13,12 +13,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// Ce contrôleur inclut une Timeline et un ascenseur horizontal permettant la
 	/// navigation entre deux bornes spécifiées sous forme de dates.
 	/// </summary>
-	public class NavigationTimelineControler
+	public class NavigationTimelineController
 	{
-		public NavigationTimelineControler()
+		public NavigationTimelineController()
 		{
-			this.minDate = System.DateTime.MinValue;
-			this.maxDate = System.DateTime.MaxValue;
 		}
 
 		public void CreateUI(Widget parent)
@@ -57,43 +55,27 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public System.DateTime					MinDate
+		public int								CellsCount
 		{
 			get
 			{
-				return this.minDate;
+				return this.cellsCount;
 			}
 			set
 			{
-				if (this.minDate != value)
+				if (this.cellsCount != value)
 				{
-					this.minDate = value;
+					this.cellsCount = value;
 					this.UpdateScroller ();
 				}
 			}
 		}
 
-		public System.DateTime					MaxDate
+		public int								LeftVisibleCell
 		{
 			get
 			{
-				return this.maxDate;
-			}
-			set
-			{
-				if (this.maxDate != value)
-				{
-					this.maxDate = value;
-					this.UpdateScroller ();
-				}
-			}
-		}
-
-		public System.DateTime					Date
-		{
-			get
-			{
-				return new System.DateTime ((long) this.scroller.Value);
+				return (int) this.scroller.Value;
 			}
 		}
 
@@ -105,18 +87,32 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return;
 			}
 
-			var totalCell    = (decimal) (this.maxDate - this.minDate).Days + 1;
+			var totalCells   = (decimal) this.cellsCount;
+			var visibleCells = (decimal) this.timeline.VisibleCellsCount;
+
+			this.scroller.Resolution = 1.0m;
+			this.scroller.VisibleRangeRatio = System.Math.Min (visibleCells/totalCells, 1.0m);
+
+			this.scroller.MinValue = 0.0m;
+			this.scroller.MaxValue = System.Math.Max ((decimal) this.cellsCount - visibleCells, 0.0m);
+
+			this.scroller.SmallChange = 1.0m;
+			this.scroller.LargeChange = visibleCells;
+
+#if false
+			var totalCell    = (decimal) (this.maxDate - this.cellCount).Days + 1;
 			var visibleCell  = (decimal) this.timeline.VisibleCellCount;
 			var visibleTicks = (decimal) Time.TicksPerDay * (visibleCell-1);
 
 			this.scroller.Resolution = (decimal) Time.TicksPerDay;
 			this.scroller.VisibleRangeRatio = System.Math.Min (visibleCell/totalCell, 1.0m);
 
-			this.scroller.MinValue = (decimal) this.minDate.Ticks;
+			this.scroller.MinValue = (decimal) this.cellCount.Ticks;
 			this.scroller.MaxValue = System.Math.Max ((decimal) this.maxDate.Ticks - visibleTicks, this.scroller.MinValue);
 
 			this.scroller.SmallChange = (decimal) Time.TicksPerDay;
 			this.scroller.LargeChange = visibleTicks;
+#endif
 
 			this.OnDateChanged ();  // met à jour la timeline
 		}
@@ -138,8 +134,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private Timeline timeline;
 		private HScroller scroller;
-
-		private System.DateTime minDate;
-		private System.DateTime maxDate;
+		private int cellsCount;
 	}
 }

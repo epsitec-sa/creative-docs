@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public int								VisibleCellCount
+		public int								VisibleCellsCount
 		{
 			get
 			{
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				var num   = this.VisibleCellCount;
+				var num   = this.VisibleCellsCount;
 				var pivot = this.Pivot;
 
 				return (int) (num * pivot);
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.VisibleCellCount - this.BeforePivotCount;
+				return this.VisibleCellsCount - this.BeforePivotCount;
 			}
 		}
 
