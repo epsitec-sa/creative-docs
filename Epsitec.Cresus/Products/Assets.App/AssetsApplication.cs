@@ -90,6 +90,7 @@ namespace Epsitec.Cresus.Assets.App
 			window.Show ();
 			window.MakeActive ();
 
+#if false
 			System.Diagnostics.Debug.WriteLine ("Ready");
 			System.Threading.Thread.Sleep (5*1000);
 
@@ -99,6 +100,7 @@ namespace Epsitec.Cresus.Assets.App
 			System.Threading.Thread.Sleep (3*1000);
 
 			this.TestReadEntities ("A1002");
+#endif
 		}
 
 		private void TestWriteEntities()
@@ -184,8 +186,9 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			//?this.CreateTestTimelineBase (frame);
-			this.CreateTestTimelineController (frame);
+			//?this.CreateTestTimelineController (frame);
 			//?this.CreateTestTimelineProvider (frame);
+			this.CreateTestTreeTable (frame);
 		}
 
 		private void CreateTestTimelineBase(Widget parent)
@@ -500,6 +503,117 @@ namespace Epsitec.Cresus.Assets.App
 			}
 		}
 
+
+		private void CreateTestTreeTable(Widget parent)
+		{
+			var tt = new TreeTable ()
+			{
+				Parent     = parent,
+				Dock       = DockStyle.Fill,
+				Margins    = new Margins (10),
+			};
+
+			tt.SetColumns (AssetsApplication.GetColumns ());
+			AssetsApplication.InitializeTreeTable (tt);
+
+			tt.SizeChanged += delegate
+			{
+				AssetsApplication.InitializeTreeTable (tt);
+			};
+		}
+
+		private static List<AbstractTreeTableColumn> GetColumns()
+		{
+			var list = new List<AbstractTreeTableColumn> ();
+
+			{
+				var c = new TreeTableColumnString
+				{
+					PreferredWidth = 200,
+					HeaderDescription = "Colonne 1, en-tête",
+					FooterDescription = "Colonne 1, pied",
+				};
+
+				list.Add (c);
+			}
+
+			{
+				var c = new TreeTableColumnString
+				{
+					PreferredWidth = 200,
+					HeaderDescription = "Colonne 2, en-tête",
+					FooterDescription = "Colonne 2, pied",
+				};
+
+				list.Add (c);
+			}
+
+			{
+				var c = new TreeTableColumnString
+				{
+					PreferredWidth = 200,
+					HeaderDescription = "Colonne 3, en-tête",
+					FooterDescription = "Colonne 3, pied",
+				};
+
+				list.Add (c);
+			}
+
+			return list;
+		}
+
+		private static void InitializeTreeTable(TreeTable treeTable)
+		{
+			treeTable.ColumnFirst.HeaderDescription = "Liste, en-tête";
+			treeTable.ColumnFirst.FooterDescription = "Liste, pied";
+
+			var cf = new List<TreeTableCellFirst> ();
+			var c1 = new List<TreeTableCellString> ();
+			var c2 = new List<TreeTableCellString> ();
+			var c3 = new List<TreeTableCellString> ();
+
+			var count = treeTable.VisibleRowsCount;
+			for (int i=0; i<count; i++)
+			{
+				var sf = new TreeTableCellFirst (0, TreeTableFirstType.Final, string.Format ("First {0}", i+1));
+				var s1 = new TreeTableCellString (true, string.Format ("Colonne 1.{0}", i+1));
+				var s2 = new TreeTableCellString (true, string.Format ("Colonne 2.{0}", i+1));
+				var s3 = new TreeTableCellString (true, string.Format ("Colonne 3.{0}", i+1));
+
+				cf.Add (sf);
+				c1.Add (s1);
+				c2.Add (s2);
+				c3.Add (s3);
+			}
+
+			treeTable.ColumnFirst.SetCellFirsts (cf.ToArray ());
+
+			int cc = 0;
+			foreach (var c in treeTable.Columns)
+			{
+				if (c is TreeTableColumnString)
+				{
+					var column = c as TreeTableColumnString;
+
+					switch (cc)
+					{
+						case 0:
+							column.SetCellStrings (c1.ToArray ());
+							break;
+						case 1:
+							column.SetCellStrings (c2.ToArray ());
+							break;
+						case 2:
+							column.SetCellStrings (c3.ToArray ());
+							break;
+					}
+
+					cc++;
+				}
+			}
+		}
+	
+		
 		private static System.DateTime AddDays(System.DateTime date, int numberOfDays)
 		{
 			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays).ToDateTime ();

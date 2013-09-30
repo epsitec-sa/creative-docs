@@ -3,8 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Types;
+
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -15,10 +14,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class NavigationTimelineController
 	{
-		public NavigationTimelineController()
-		{
-		}
-
 		public void CreateUI(Widget parent)
 		{
 			this.timeline = new Timeline ()
@@ -98,21 +93,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.scroller.SmallChange = 1.0m;
 			this.scroller.LargeChange = visibleCells;
-
-#if false
-			var totalCell    = (decimal) (this.maxDate - this.cellCount).Days + 1;
-			var visibleCell  = (decimal) this.timeline.VisibleCellCount;
-			var visibleTicks = (decimal) Time.TicksPerDay * (visibleCell-1);
-
-			this.scroller.Resolution = (decimal) Time.TicksPerDay;
-			this.scroller.VisibleRangeRatio = System.Math.Min (visibleCell/totalCell, 1.0m);
-
-			this.scroller.MinValue = (decimal) this.cellCount.Ticks;
-			this.scroller.MaxValue = System.Math.Max ((decimal) this.maxDate.Ticks - visibleTicks, this.scroller.MinValue);
-
-			this.scroller.SmallChange = (decimal) Time.TicksPerDay;
-			this.scroller.LargeChange = visibleTicks;
-#endif
 
 			this.OnDateChanged ();  // met à jour la timeline
 		}

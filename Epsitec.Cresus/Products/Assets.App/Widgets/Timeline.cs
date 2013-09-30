@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
@@ -89,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return (int) (this.ActualBounds.Height / this.RelativeHeights);
+				return (int) (this.ActualHeight / this.RelativeHeights);
 			}
 		}
 
