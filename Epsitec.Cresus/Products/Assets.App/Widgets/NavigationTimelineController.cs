@@ -10,7 +10,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
 	/// Ce contrôleur inclut une Timeline et un ascenseur horizontal permettant la
-	/// navigation entre deux bornes spécifiées sous forme de dates.
+	/// navigation en fonction du nombre de cellules CellsCount.
+	/// Il cache complètement la Timeline sous-jacente à l'aide d'une Facade.
 	/// </summary>
 	public class NavigationTimelineController
 	{

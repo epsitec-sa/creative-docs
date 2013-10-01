@@ -8,6 +8,11 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Ce contrôleur inclut une TreeTable et un ascenseur vertical permettant la
+	/// navigation en fonction du nombre de lignes RowsCount.
+	/// Il cache complètement le TreeTable sous-jacent à l'aide d'une Facade.
+	/// </summary>
 	public class NavigationTreeTableController
 	{
 		public void CreateUI(Widget parent)

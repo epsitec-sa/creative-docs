@@ -10,6 +10,10 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Première colonne de TreeTable affichant des chaînes avec une indication
+	/// du niveau dans l'arborescence.
+	/// </summary>
 	public class TreeTableColumnFirst : AbstractTreeTableColumn
 	{
 		public void SetCellFirsts(TreeTableCellFirst[] cellFirsts)

@@ -10,9 +10,9 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
-	/// Timeline de base, constituée de lignes AbstractTimelineRow créées en fonction du
-	/// tableau de TimelineRowDescription. On ne gère ici aucun déplacement dans le temps.
-	/// On se contente d'afficher les TimelineCell passées avec SetCells.
+	/// Timeline de base, constituée de lignes AbstractTimelineRow créées créées avec SetRows.
+	/// On ne gère ici aucun déplacement dans le temps.
+	/// On se contente d'afficher les AbstractTimelineRow passées avec SetRows.
 	/// Un seul événement CellClicked permet de connaître la ligne et la cellule cliquée.
 	/// </summary>
 	public class Timeline : Widget

@@ -9,6 +9,14 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// TreeTable de base, constituée de lignes AbstractTreeTableColumn créées créées avec SetColumns.
+	/// La première colonne de gauche est spéciale; elle contient les informations sur l'arborescence
+	/// et elle ne fait pas partie des colonnes scrollables horizontalement.
+	/// On ne gère ici aucun déplacement vertical.
+	/// On se contente d'afficher les AbstractTreeTableColumn passées avec SetColumns.
+	/// Un seul événement RowClicked permet de connaître la colonne et la ligne cliquée.
+	/// </summary>
 	public class TreeTable : Widget
 	{
 		public TreeTable()

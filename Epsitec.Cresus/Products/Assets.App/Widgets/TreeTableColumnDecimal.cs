@@ -10,6 +10,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Colonne de TreeTable affichant des montants alignés à droite.
+	/// </summary>
 	public class TreeTableColumnDecimal : AbstractTreeTableColumn
 	{
 		public void SetCellDecimals(TreeTableCellDecimal[] cellDecimals)

@@ -10,6 +10,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Colonne de TreeTable affichant des chaînes alignées à gauche.
+	/// </summary>
 	public class TreeTableColumnString : AbstractTreeTableColumn
 	{
 		public void SetCellStrings(TreeTableCellString[] cellStrings)
