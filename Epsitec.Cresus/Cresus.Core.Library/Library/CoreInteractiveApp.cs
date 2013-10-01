@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Core.Library
 
 			return new Window
 			{
-				ClientSize = new Epsitec.Common.Drawing.Size (600, 400),
+				ClientSize = new Epsitec.Common.Drawing.Size (800, 600),
 				Icon       = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48)
 			};
 		}
