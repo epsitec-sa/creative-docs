@@ -169,6 +169,7 @@
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\ContactNameFixer.cs" />
+    <Compile Include="Data\Job\PersonDeathFixer.cs" />
     <Compile Include="Data\Job\DisplayValuesFixer.cs" />
     <Compile Include="Data\Job\SubscriptionAndRefusalFixer.cs" />
     <Compile Include="Data\Job\PrillySubscriptionFixer.cs" />

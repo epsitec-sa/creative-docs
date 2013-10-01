@@ -184,6 +184,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole(() => AiderProgram.FixWarningParishGroup(args));
 					return;
 				}
+
+				if (args.Contains ("-fixzombies"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixZombies(args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -412,6 +418,14 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData
 			(
 				coreData => WarningParishGroupPathFixer.StartJob(coreData)
+			);
+		}
+
+		private static void FixZombies(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => PersonDeathFixer.FixAll (coreData)
 			);
 		}
 
