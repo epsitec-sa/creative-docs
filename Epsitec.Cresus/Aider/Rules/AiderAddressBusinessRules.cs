@@ -15,6 +15,8 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Library;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,6 +35,11 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplyValidateRule(AiderAddressEntity address)
 		{
+			if (DataContext.IsUnchanged (address))
+			{
+				return;
+			}
+
 			AiderAddressBusinessRules.ValidateSwissPostAddress (address);
 			AiderAddressBusinessRules.ValidateWeb (address);
 			AiderAddressBusinessRules.ValidateEmail (address);
