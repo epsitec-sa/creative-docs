@@ -27,6 +27,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var contact = this.Entity;
 			var household = this.Entity.Household;
 
+			FormattedText personTitle;
+
+			if ((contact.Person.IsNotNull ()) &&
+				(contact.Person.eCH_Person.DataSource == Enumerations.DataSource.Government))
+			{
+				personTitle = "Personne (RCH)";
+			}
+			else
+			{
+				personTitle = "Personne";
+			}
+
 
 			if ((contact.Person.IsNull ()) &&
 				(contact.LegalPerson.IsNull ()))
@@ -45,6 +57,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					if (contact.Person.IsNotNull ())
 					{						
 						wall.AddBrick (x => x.Person)
+							.Title (personTitle)
 							.Icon (contact.Person.GetIconName ("Data"))
 							.Text (contactSummary)
 							.Attribute (BrickMode.DefaultToSummarySubView);
@@ -55,6 +68,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					if (contact.Person.IsNotNull ())
 					{						
 						wall.AddBrick (x => x.Person)
+							.Title (personTitle)
 							.Icon (contact.Person.GetIconName ("Data"))
 							.Text (contactSummary)
 							.Attribute (BrickMode.DefaultToSummarySubView);
@@ -91,6 +105,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					if (contact.Person.IsNotNull ())
 					{
 						wall.AddBrick (x => x.Person)
+							.Title (personTitle)
 							.Icon (contact.Person.GetIconName ("Data"))
 							.Text (contactSummary)
 							.Attribute (BrickMode.DefaultToSummarySubView);

@@ -170,7 +170,7 @@ function() {
       {
         return Ext.create('Ext.Action', {
           icon: '/images/Epsitec/Aider/Images/General/Bag/icon16.png',
-          text: 'Ajouter au panier',
+          text: 'Ajouter &agrave; l\'arche',
           disabled: false,
           handler: this.onEntityBagAddHandler,
           scope: this
@@ -192,7 +192,7 @@ function() {
       }
     },
 
-    //AJOUTER AU PANIER
+    //AJOUTER A L'ARCHE
     onEntityBagAddHandler: function(widget, event) {
       var rec,entity,app;
       app = Epsitec.Cresus.Core.getApplication();

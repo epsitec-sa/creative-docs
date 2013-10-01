@@ -29,12 +29,12 @@ function() {
 
       this.initStores();
       this.dropZones = [];
-      this.removeFromBagDropZone = Ext.create('Epsitec.DropZone', 'removezoneid','Enlever du panier', this.removeEntityFromBag, this);
+      this.removeFromBagDropZone = Ext.create('Epsitec.DropZone', 'removezoneid','Retirer de l\'arche', this.removeEntityFromBag, this);
       this.registerDropZone(this.removeFromBagDropZone);
 
       config = {
         headerPosition: 'left',
-        title: 'Panier',
+        title: 'Arche',
         cls: 'entitybag-window',
         iconCls: 'epsitec-aider-images-general-bag-icon16',
         autoHeight: true,
