@@ -628,6 +628,10 @@ namespace Epsitec.Cresus.Assets.App
 				var O = OO[firstRow+i];
 
 				var type = O.Level == 3 ? TreeTableFirstType.Final : TreeTableFirstType.Extended;
+				if (i == 0)
+				{
+					type = TreeTableFirstType.Compacted;  // juste pour en voir un !
+				}
 
 				var sf = new TreeTableCellFirst (O.Level, type, O.Nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString (true, O.Numéro, isSelected: (i == selection));

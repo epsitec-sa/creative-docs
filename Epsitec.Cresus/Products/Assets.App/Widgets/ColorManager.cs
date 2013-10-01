@@ -84,14 +84,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color TreeTableArrowColor
-		{
-			get
-			{
-				return Color.FromBrightness (0.6);
-			}
-		}
-
 		public static Color ValueDotColor
 		{
 			get
