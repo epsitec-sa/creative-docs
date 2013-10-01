@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			var person = this.Entity;
 
-			AiderPersonEntity.PersonDied (this.BusinessContext, person, date);
+			AiderPersonEntity.KillPerson (this.BusinessContext, person, date);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)

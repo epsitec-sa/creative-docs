@@ -18,15 +18,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (6)]
 	public sealed class ActionAiderPersonViewController6RemoveAlternateAddress : TemplateActionViewController<AiderPersonEntity, AiderContactEntity>
 	{
-		public override bool					RequiresAdditionalEntity
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		
 		public override FormattedText GetTitle()
 		{
 			return Resources.Text ("Supprimer l'adresse alternative");

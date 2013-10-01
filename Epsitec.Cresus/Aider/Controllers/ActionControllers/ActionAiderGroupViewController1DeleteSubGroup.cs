@@ -16,15 +16,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (1)]
 	public sealed class ActionAiderGroupViewController1DeleteSubGroup : TemplateActionViewController<AiderGroupEntity, AiderGroupEntity>
 	{
-		public override bool					RequiresAdditionalEntity
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		
 		public override FormattedText GetTitle()
 		{
 			return "Supprimer le sous groupe sélectionné";

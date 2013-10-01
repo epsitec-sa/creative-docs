@@ -49,7 +49,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var warning = this.Entity;
 			var person  = warning.Person;
 
-			AiderPersonEntity.PersonDied (this.BusinessContext, person, date);
+			AiderPersonEntity.KillPerson (this.BusinessContext, person, date);
 
 			this.ClearWarningAndRefreshCaches ();
 		}

@@ -21,14 +21,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (4)]
 	public sealed class ActionAiderHouseholdViewController4AddHouseholdMemberOnDrag : TemplateActionViewController<AiderHouseholdEntity,AiderContactEntity>
 	{
-		public override bool RequiresAdditionalEntity
-		{
-			get
-			{
-				return true;
-			}
-		}
-
 		public override FormattedText GetTitle()
 		{
 			return Resources.FormattedText ("Ajouter un contact au ménage");

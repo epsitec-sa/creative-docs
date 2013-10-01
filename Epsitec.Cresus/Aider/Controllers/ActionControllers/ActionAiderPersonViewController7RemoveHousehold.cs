@@ -19,15 +19,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (7)]
 	public sealed class ActionAiderPersonViewController7RemoveHousehold : TemplateActionViewController<AiderPersonEntity, AiderHouseholdEntity>
 	{
-		public override bool					RequiresAdditionalEntity
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		
 		public override FormattedText GetTitle()
 		{
 			return Resources.Text ("Retirer le ménage sélectionné");

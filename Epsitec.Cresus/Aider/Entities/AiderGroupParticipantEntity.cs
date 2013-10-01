@@ -176,6 +176,29 @@ namespace Epsitec.Aider.Entities
 			return request;
 		}
 
+		public static Request CreateParticipantRequest(DataContext dataContext, AiderContactEntity contact, bool current)
+		{
+			var participation = new AiderGroupParticipantEntity ()
+			{
+				Contact = new AiderContactEntity (),
+				Group = new AiderGroupEntity (),
+			};
+
+			var request = new Request ()
+			{
+				RootEntity = participation,
+			};
+
+			request.AddCondition (dataContext, participation, g => g.Contact == contact);
+
+			if (current)
+			{
+				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
+			}
+
+			return request;
+		}
+
 		public static Request CreateParticipantRequest(DataContext dataContext, AiderLegalPersonEntity legalPerson, bool current)
 		{
 			var participation = new AiderGroupParticipantEntity ()

@@ -1,5 +1,5 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
 
@@ -7,6 +7,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Entities;
@@ -19,23 +21,23 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (8)]
 	public sealed class ActionAiderPersonViewController8FusionOnDrag : TemplateActionViewController<AiderPersonEntity, AiderContactEntity>
 	{
-		public override bool RequiresAdditionalEntity
+		public override bool IsEnabled
 		{
 			get
 			{
-				return true;
+				return this.Entity.eCH_Person.DataSource == Enumerations.DataSource.Government;
 			}
 		}
-		
+
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Fusionner avec un contact non-ECh");
+			return Resources.Text ("Fusionner avec un contact manuel");
 		}
 
-        private string GetText()
-        {
-            return "Cette action va supprimer le contact non-ECh a ajouter les données sur le contact ECh";
-        }
+		private string GetText()
+		{
+			return "Cette action fusionne les données avec la personne définie par le registre cantonal des habitants (RCH).";
+		}
 
 		public override ActionExecutor GetExecutor()
 		{
@@ -44,42 +46,29 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(bool doFusion)
 		{
-            if (doFusion)
-            {
-                //group fusion
-                var groupToAdd = this.AdditionalEntity.Person.Groups.Where(g => !this.Entity.Groups.Select(gs => gs.Group).Contains(g.Group));
-                foreach (var group in groupToAdd)
-                {
-                    this.Entity.AddParticipationInternal(group);
-                    var participationData = new ParticipationData(this.Entity);
-                    AiderGroupParticipantEntity.StartParticipation(this.BusinessContext, group.Group, participationData, group.StartDate, FormattedText.FromSimpleText("Fusion"));
-                }
+			if (doFusion)
+			{
+				var businessContext = this.BusinessContext;
 
-                //household fusion
-				var defaultHousehold = this.Entity.MainContact.Household;
-				var householdMemberToAdd = this.AdditionalEntity.Household.Members.Where (m => !defaultHousehold.Members.Contains (m));
-                foreach (var member in householdMemberToAdd)
-                {
-                    //Remap contact
-                    var contact = member.Contacts.FirstOrDefault(c => c.Household == this.AdditionalEntity.Household);
-					contact.Household = defaultHousehold;
-                }
+				var officialPerson = this.Entity;
+				var otherContact   = this.AdditionalEntity;
+				var otherPerson    = otherContact.Person;
 
-                this.BusinessContext.DeleteEntity(this.AdditionalEntity);
-            }
+				AiderPersonEntity.MergePersons (businessContext, officialPerson, otherPerson);
+			}
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
-            if (!this.AdditionalEntity.Person.IsGovernmentDefined)
-            {
-                form.Title("Fusion de données")
+			if (!this.AdditionalEntity.Person.IsGovernmentDefined)
+			{
+				form.Title("Fusion de données")
 					.Text(this.GetText())
 					.Field<bool>()
 						.Title("Fusionner")
 					.End()
-                .End();
-            }
+				.End();
+			}
 		}
 	}
 }

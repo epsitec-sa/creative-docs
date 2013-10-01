@@ -20,15 +20,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (3)]
 	public sealed class ActionAiderHouseholdViewController3ChangeHeadOfHousehold : TemplateActionViewController<AiderHouseholdEntity, AiderPersonEntity>
 	{
-		public override bool					RequiresAdditionalEntity
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		
 		public override FormattedText GetTitle()
 		{
 			return Resources.FormattedText ("Modifier le statut de chef du ménage");

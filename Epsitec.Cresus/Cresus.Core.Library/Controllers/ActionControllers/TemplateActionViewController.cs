@@ -15,7 +15,20 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			this.additionalEntity = (TAdditionalEntity) EntityViewControllerFactory.Default.AdditionalEntity;
 		}
 
-		protected TAdditionalEntity AdditionalEntity
+		#region ITemplateActionViewController Members
+
+		public virtual bool						RequiresAdditionalEntity
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		#endregion
+
+		
+		protected TAdditionalEntity				AdditionalEntity
 		{
 			get
 			{
@@ -23,15 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 		
-		private readonly TAdditionalEntity additionalEntity;
+		private readonly TAdditionalEntity		additionalEntity;
 
-		#region ITemplateActionViewController Members
-
-		public abstract bool RequiresAdditionalEntity
-		{
-			get;
-		}
-
-		#endregion
 	}
 }

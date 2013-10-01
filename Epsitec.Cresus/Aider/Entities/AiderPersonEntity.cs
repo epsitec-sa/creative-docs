@@ -11,6 +11,7 @@ using Epsitec.Common.Text;
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -205,7 +206,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static void PersonDied(Cresus.Core.Business.BusinessContext businessContext, AiderPersonEntity person, Date date)
+		public static void KillPerson(BusinessContext businessContext, AiderPersonEntity person, Date date)
 		{
 			var contacts       = person.Contacts.ToList ();
 			var households     = person.Households.ToList ();
@@ -233,6 +234,78 @@ namespace Epsitec.Aider.Entities
 			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, households);
 		}
 
+		public static void MergePersons(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
+		{
+			if (officialPerson == otherPerson)
+			{
+				return;
+			}
+
+			if ((officialPerson.eCH_Person.DataSource == Enumerations.DataSource.Government) &&
+				(otherPerson.eCH_Person.DataSource == Enumerations.DataSource.Government))
+			{
+				Logic.BusinessRuleException (officialPerson, "Impossible de fusionner deux personnes provenant du RCH.");
+				
+				return;
+			}
+
+			if (otherPerson.eCH_Person.DataSource == Enumerations.DataSource.Government)
+			{
+				var swap = otherPerson;
+				
+				otherPerson    = officialPerson;
+				officialPerson = swap;
+			}
+
+			//	Now, we can start...
+
+			var officialContact = officialPerson.MainContact;
+			var officialGroups  = new HashSet<AiderGroupEntity> (officialPerson.Groups.Select (x => x.Group));
+
+			var otherGroupsAdd = otherPerson.Groups.Where (g => officialGroups.Contains (g.Group) == false).ToList ();
+			var otherContacts  = otherPerson.Contacts.ToList ();
+
+			//	Migrate groups to the 'official' person by re-affecting the participations...
+
+			foreach (var group in otherGroupsAdd)
+			{
+				officialPerson.AddParticipationInternal (group);
+				otherPerson.RemoveParticipationInternal (group);
+
+				group.Contact = officialContact;
+				group.Person  = officialPerson;
+			}
+
+			//	Migrate contacts...
+
+			foreach (var contact in otherContacts)
+			{
+				officialPerson.AddContactInternal (contact);
+				otherPerson.RemoveContactInternal (contact);
+
+				contact.Person = officialPerson;
+			}
+
+			AiderPersonEntity.Delete (businessContext, otherPerson);
+		}
+		
+		public static void Delete(BusinessContext businessContext, AiderPersonEntity person)
+		{
+			var contacts = person.Contacts.ToList ();
+			var groups   = person.Groups.ToList ();
+
+			foreach (var contact in contacts)
+			{
+				AiderContactEntity.Delete (businessContext, contact);
+			}
+
+			foreach (var group in groups)
+			{
+				group.Delete (businessContext);
+			}
+			
+			businessContext.DeleteEntity (person);
+		}
 
 		public FormattedText GetGroupTitle()
 		{

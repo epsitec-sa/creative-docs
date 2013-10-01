@@ -18,15 +18,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (3)]
 	public sealed class ActionAiderPersonViewController3RemoveFromGroup : TemplateActionViewController<AiderPersonEntity, AiderGroupParticipantEntity>
 	{
-		public override bool					RequiresAdditionalEntity
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		
 		public override FormattedText GetTitle()
 		{
 			return "Retirer du groupe";

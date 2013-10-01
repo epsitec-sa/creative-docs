@@ -2,12 +2,16 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
+
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
-using System;
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -165,9 +169,21 @@ namespace Epsitec.Aider.Entities
 					return this.Household.Address;
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
+
+
+		internal void AddParticipationInternal(AiderGroupParticipantEntity participation)
+		{
+			this.GetParticipations ().Add (participation);
+		}
+
+		internal void RemoveParticipationInternal(AiderGroupParticipantEntity participation)
+		{
+			this.GetParticipations ().Remove (participation);
+		}
+
 
 
 		partial void GetFullAddressTextSingleLine(ref string value)
@@ -177,22 +193,24 @@ namespace Epsitec.Aider.Entities
 			value = value.Replace ("\n", ", ");
 		}
 
-
 		partial void SetFullAddressTextSingleLine(string value)
 		{
-			throw new NotImplementedException ("Do not use this method");
+			throw new System.NotImplementedException ("Do not use this method");
 		}
-
 
 		partial void GetFullAddressTextMultiLine(ref string value)
 		{
 			value = this.GetAddressLabelText ().ToSimpleText ();
 		}
 
-
 		partial void SetFullAddressTextMultiLine(string value)
 		{
-			throw new NotImplementedException ("Do not use this method");
+			throw new System.NotImplementedException ("Do not use this method");
+		}
+
+		partial void GetGroups(ref IList<AiderGroupParticipantEntity> value)
+		{
+			value = this.GetParticipations ().AsReadOnlyCollection ();
 		}
 
 
@@ -284,18 +302,16 @@ namespace Epsitec.Aider.Entities
 			return contact;
 		}
 
+		
 		public static void DeleteParticipations(BusinessContext businessContext, AiderContactEntity contact)
 		{
-			var example = new AiderGroupParticipantEntity ()
-			{
-				Contact = contact
-			};
+			var groups = contact.Groups.ToList ();
 
-			var participations = businessContext.DataContext.GetByExample (example);
-
-			foreach (var participation in participations)
+			foreach (var group in groups)
 			{
-				businessContext.DeleteEntity (participation);
+				contact.RemoveParticipationInternal (group);
+
+				businessContext.DeleteEntity (group);
 			}
 		}
 
@@ -350,10 +366,11 @@ namespace Epsitec.Aider.Entities
 					return this.GetPersonHouseholdDisplayName ();
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
+		
 		private string GetNoneDisplayName()
 		{
 			return "—";
@@ -384,6 +401,31 @@ namespace Epsitec.Aider.Entities
 		private string GetPersonHouseholdDisplayName()
 		{
 			return this.Person.GetDisplayName ();
+		}
+
+
+		private IList<AiderGroupParticipantEntity> GetParticipations()
+		{
+			if (this.participations == null)
+			{
+				this.participations = this.ExecuteWithDataContext
+				(
+					d => this.FindParticipations (d),
+					() => new List<AiderGroupParticipantEntity> ()
+				);
+			}
+
+			return this.participations;
+		}
+		
+		private IList<AiderGroupParticipantEntity> FindParticipations(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true);
+
+			return dataContext
+				.GetByRequest<AiderGroupParticipantEntity> (request)
+				.OrderBy (g => g.GetSummaryWithHierarchicalGroupName ().ToString ())
+				.ToList ();
 		}
 
 
@@ -425,7 +467,7 @@ namespace Epsitec.Aider.Entities
 					return this.Person.ParishGroup;
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -438,5 +480,8 @@ namespace Epsitec.Aider.Entities
 
 			return contact;
 		}
+
+		
+		private IList<AiderGroupParticipantEntity>	participations;
 	}
 }
