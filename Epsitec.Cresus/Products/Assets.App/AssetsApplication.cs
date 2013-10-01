@@ -529,7 +529,7 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				var c = new TreeTableColumnString
 				{
-					PreferredWidth = 200,
+					PreferredWidth = 80,
 					HeaderDescription = "Numéro",
 					FooterDescription = "Colonne 1, pied",
 				};
@@ -540,7 +540,7 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				var c = new TreeTableColumnString
 				{
-					PreferredWidth = 200,
+					PreferredWidth = 120,
 					HeaderDescription = "Responsable",
 					FooterDescription = "Colonne 2, pied",
 				};
@@ -551,9 +551,20 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				var c = new TreeTableColumnString
 				{
-					PreferredWidth = 200,
+					PreferredWidth = 150,
 					HeaderDescription = "Couleur",
 					FooterDescription = "Colonne 3, pied",
+				};
+
+				list.Add (c);
+			}
+
+			{
+				var c = new TreeTableColumnString
+				{
+					PreferredWidth = 200,
+					HeaderDescription = "Numéro de série",
+					FooterDescription = "Colonne 4, pied",
 				};
 
 				list.Add (c);
@@ -564,13 +575,14 @@ namespace Epsitec.Cresus.Assets.App
 
 		private void InitializeTreeTable(TreeTable treeTable)
 		{
-			treeTable.ColumnFirst.HeaderDescription = "Objets";
+			treeTable.ColumnFirst.HeaderDescription = "Objet";
 			treeTable.ColumnFirst.FooterDescription = "Liste, pied";
 
 			var cf = new List<TreeTableCellFirst> ();
 			var c1 = new List<TreeTableCellString> ();
 			var c2 = new List<TreeTableCellString> ();
 			var c3 = new List<TreeTableCellString> ();
+			var c4 = new List<TreeTableCellString> ();
 
 			var OO = this.GetTreeTableObjects ();
 
@@ -585,11 +597,13 @@ namespace Epsitec.Cresus.Assets.App
 				var s1 = new TreeTableCellString (true, O.Numéro);
 				var s2 = new TreeTableCellString (true, O.Responsable);
 				var s3 = new TreeTableCellString (true, O.Couleur);
+				var s4 = new TreeTableCellString (true, O.NuméroSérie);
 
 				cf.Add (sf);
 				c1.Add (s1);
 				c2.Add (s2);
 				c3.Add (s3);
+				c4.Add (s4);
 			}
 
 			treeTable.ColumnFirst.SetCellFirsts (cf.ToArray ());
@@ -611,6 +625,9 @@ namespace Epsitec.Cresus.Assets.App
 							break;
 						case 2:
 							column.SetCellStrings (c3.ToArray ());
+							break;
+						case 3:
+							column.SetCellStrings (c4.ToArray ());
 							break;
 					}
 

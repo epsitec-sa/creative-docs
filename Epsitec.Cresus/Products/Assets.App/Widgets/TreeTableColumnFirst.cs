@@ -27,6 +27,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			foreach (var cellFirst in this.cellFirsts)
 			{
 				var rect = this.GetCellsRect (y);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (ColorManager.BackgroundFirstColor);
+
 				rect.Deflate (this.DescriptionMargin * (cellFirst.Level+1), 0, 0, 0);
 
 				if (cellFirst.Type == TreeTableFirstType.Compacted ||

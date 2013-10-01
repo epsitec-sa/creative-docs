@@ -64,6 +64,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color BackgroundFirstColor
+		{
+			get
+			{
+				return Color.FromBrightness (0.97);
+			}
+		}
+
 		public static Color ArrowColor
 		{
 			get
