@@ -19,6 +19,7 @@ namespace Epsitec.Aider.Enumerations
 		ParishMismatch  = 1001,
 		ParishArrival   = 1002,
 		ParishDeparture = 1003,
+		HouseholdWithoutSubscription = 1004,
 		
 		EChPersonNew         = 2000,
 		EChPersonMissing     = 2001,

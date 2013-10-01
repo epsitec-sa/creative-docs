@@ -190,6 +190,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixZombies(args));
 					return;
 				}
+
+				if (args.Contains ("-warngouseholdwithnosubscription"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.WarnHouseholdWithNoSubscription (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -418,6 +424,14 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData
 			(
 				coreData => WarningParishGroupPathFixer.StartJob(coreData)
+			);
+		}
+
+		private static void WarnHouseholdWithNoSubscription(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => SubscriptionAndRefusalFixer.WarnHouseholdWithNoSubscription (coreData)
 			);
 		}
 

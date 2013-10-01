@@ -1307,6 +1307,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 388));
 						}
 					}
+					//	designer:cap/LVO203
+					public static global::Epsitec.Common.Types.Caption HouseholdWithoutSubscription
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 2));
+						}
+					}
 					//	designer:cap/LVA5C
 					public static global::Epsitec.Common.Types.Caption MissingHousehold
 					{

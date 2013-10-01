@@ -7,6 +7,9 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Loader;
 
 using System;
+using System.Linq;
+using Epsitec.Aider.Enumerations;
+using Epsitec.Common.Types;
 
 
 namespace Epsitec.Aider.Data.Job
@@ -62,6 +65,30 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
+		public static void WarnHouseholdWithNoSubscription(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				var jobDateTime    = System.DateTime.Now;
+				var jobName        = "SubscriptionAndRefusalFixer.WarnHouseholdWithNoSubscription()";
+				var jobDescription = string.Format ("Avertissement des ménages sans Abo BN");
+
+				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
+
+				var subscription =	businessContext.GetAllEntities<AiderSubscriptionEntity> ().Select(s => s.Household).ToList();
+				var refusal =		businessContext.GetAllEntities<AiderSubscriptionRefusalEntity> ().Select(s => s.Household).ToList();
+				var households =	businessContext.GetAllEntities<AiderHouseholdEntity> ();
+
+				var householdWithoutSubscription = households.Where (h => !subscription.Contains (h) && refusal.Contains (h)).ToList();
+				foreach (var household in householdWithoutSubscription)
+				{
+					var person = household.Members.Where (m => household.IsHead (m)).FirstOrDefault ();
+
+					AiderPersonWarningEntity.Create (businessContext, person, person.ParishGroupPathCache, WarningType.HouseholdWithoutSubscription, "Ménage sans abo.", "Ce ménage n'est pas référencé dans les abonnements ou refus", warningSource);
+				}
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
 
 	}
 
