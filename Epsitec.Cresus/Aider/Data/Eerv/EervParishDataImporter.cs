@@ -481,50 +481,16 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void CombineComments(IComment entity, string text)
+		private static void CombineComments(IComment comment, string text)
 		{
-			if (string.IsNullOrWhiteSpace (text))
-			{
-				return;
-			}
-
-			// With the null reference virtualizer, we don't need to handle explicitely the case
-			// when there is no comment defined yet.
-
-			var comment = entity.Comment;
-			var combinedText = TextFormatter.FormatText (comment.Text, "~\n\n", text);
-
-			// HACK This is a temporary hack to avoid texts with 800 or more chars with are not
-			// allowed in this field. The type of the field should be corrected to allow texts of
-			// unlimited size.
-
-			if (combinedText.Length >= 800)
-			{
-				return;
-			}
-
-			comment.Text = combinedText;
+			AiderCommentEntity.CombineComments (comment, text);
 		}
 
-		private static void CombineSystemComments(IComment entity, string text)
+		private static void CombineSystemComments(IComment comment, string text)
 		{
-			// With the null reference virtualizer, we don't need to handle explicitely the case
-			// when there is no comment defined yet.
-
-			var comment = entity.Comment;
-			var combinedText = string.Concat (comment.SystemText ?? "", "\n\n", text).Trim ();
-
-			// HACK This is a temporary hack to avoid texts with 800 or more chars with are not
-			// allowed in this field. The type of the field should be corrected to allow texts of
-			// unlimited size.
-
-			if (combinedText.Length >= 800)
-			{
-				return;
-			}
-
-			comment.SystemText = combinedText;
+			AiderCommentEntity.CombineSystemComments (comment, text);
 		}
+
 
 
 		private static AiderPersonEntity CreateAiderPersonWithEervPerson(BusinessContext businessContext, EervPerson eervPerson)

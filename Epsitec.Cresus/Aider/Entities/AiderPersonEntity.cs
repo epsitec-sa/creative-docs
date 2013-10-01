@@ -302,6 +302,9 @@ namespace Epsitec.Aider.Entities
 				contact.Person = officialPerson;
 			}
 
+			AiderCommentEntity.CombineComments (officialPerson, otherPerson.Comment.Text.ToSimpleText ());
+			AiderCommentEntity.CombineSystemComments (officialPerson, otherPerson.Comment.SystemText);
+
 			AiderContactEntity.DeleteDuplicateContacts (businessContext, officialPerson.Contacts.ToList ());
 			AiderPersonEntity.Delete (businessContext, otherPerson);
 		}
