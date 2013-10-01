@@ -186,8 +186,8 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			this.CreateTestTimelineController (frame);
+			this.CreateTestTreeTableController (frame);
 			//?this.CreateTestTimelineProvider (frame);
-			//?this.CreateTestTreeTableController (frame);
 		}
 
 
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App
 				Parent          = parent,
 				Dock            = DockStyle.Bottom,
 				PreferredHeight = 70,
-				Margins         = new Margins (10),
+				Margins         = new Margins (10, 10, 0, 10),
 			};
 
 			this.timelineController.DateChanged += delegate
