@@ -166,6 +166,11 @@ namespace Epsitec.Aider.Rules
 		
 		private static void VerifyParish(BusinessContext context, AiderPersonEntity person)
 		{
+			if (person.IsDeceased)
+			{
+				return;
+			}
+
 			if (person.ParishGroup.IsNull ())
 			{
 				AiderPersonBusinessRules.AssignParish (context, person);

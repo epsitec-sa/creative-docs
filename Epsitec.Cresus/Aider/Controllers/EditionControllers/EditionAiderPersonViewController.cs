@@ -61,6 +61,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Icon (this.Entity.GetIconName ("Data"))
+				.EnableActionMenu<ActionAiderPersonViewController9Deceased> ()
 				.Input ()				
 					.HorizontalGroup ()
 						.Title ("Prénoms et nom selon le contrôle des habitants")
