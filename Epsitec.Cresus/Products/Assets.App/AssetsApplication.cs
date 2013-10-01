@@ -514,11 +514,11 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			tt.SetColumns (AssetsApplication.GetColumns ());
-			AssetsApplication.InitializeTreeTable (tt);
+			this.InitializeTreeTable (tt);
 
 			tt.SizeChanged += delegate
 			{
-				AssetsApplication.InitializeTreeTable (tt);
+				this.InitializeTreeTable (tt);
 			};
 		}
 
@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.Assets.App
 				var c = new TreeTableColumnString
 				{
 					PreferredWidth = 200,
-					HeaderDescription = "Colonne 1, en-tête",
+					HeaderDescription = "Numéro",
 					FooterDescription = "Colonne 1, pied",
 				};
 
@@ -541,7 +541,7 @@ namespace Epsitec.Cresus.Assets.App
 				var c = new TreeTableColumnString
 				{
 					PreferredWidth = 200,
-					HeaderDescription = "Colonne 2, en-tête",
+					HeaderDescription = "Responsable",
 					FooterDescription = "Colonne 2, pied",
 				};
 
@@ -552,7 +552,7 @@ namespace Epsitec.Cresus.Assets.App
 				var c = new TreeTableColumnString
 				{
 					PreferredWidth = 200,
-					HeaderDescription = "Colonne 3, en-tête",
+					HeaderDescription = "Couleur",
 					FooterDescription = "Colonne 3, pied",
 				};
 
@@ -562,9 +562,9 @@ namespace Epsitec.Cresus.Assets.App
 			return list;
 		}
 
-		private static void InitializeTreeTable(TreeTable treeTable)
+		private void InitializeTreeTable(TreeTable treeTable)
 		{
-			treeTable.ColumnFirst.HeaderDescription = "Liste, en-tête";
+			treeTable.ColumnFirst.HeaderDescription = "Objets";
 			treeTable.ColumnFirst.FooterDescription = "Liste, pied";
 
 			var cf = new List<TreeTableCellFirst> ();
@@ -572,27 +572,19 @@ namespace Epsitec.Cresus.Assets.App
 			var c2 = new List<TreeTableCellString> ();
 			var c3 = new List<TreeTableCellString> ();
 
+			var OO = this.GetTreeTableObjects ();
+
 			var count = treeTable.VisibleRowsCount;
 			for (int i=0; i<count; i++)
 			{
-				int level = 2;
-				var type = TreeTableFirstType.Final;
+				var O = OO[i];
 
-				if (i == 0)
-				{
-					level = 0;
-					type = TreeTableFirstType.Extended;
-				}
-				else if (i == 1)
-				{
-					level = 1;
-					type = TreeTableFirstType.Compacted;
-				}
+				var type = O.Level == 3 ? TreeTableFirstType.Final : TreeTableFirstType.Extended;
 
-				var sf = new TreeTableCellFirst (level, type, string.Format ("First {0}", i+1));
-				var s1 = new TreeTableCellString (true, string.Format ("Colonne 1.{0}", i+1));
-				var s2 = new TreeTableCellString (true, string.Format ("Colonne 2.{0}", i+1));
-				var s3 = new TreeTableCellString (true, string.Format ("Colonne 3.{0}", i+1));
+				var sf = new TreeTableCellFirst (O.Level, type, O.Nom);
+				var s1 = new TreeTableCellString (true, O.Numéro);
+				var s2 = new TreeTableCellString (true, O.Responsable);
+				var s3 = new TreeTableCellString (true, O.Couleur);
 
 				cf.Add (sf);
 				c1.Add (s1);
@@ -625,6 +617,368 @@ namespace Epsitec.Cresus.Assets.App
 					cc++;
 				}
 			}
+		}
+
+		private TreeTableObject[] GetTreeTableObjects()
+		{
+			var O = new TreeTableObject
+			{
+				Nom = "Immobilisations",
+				Level = 0,
+			};
+
+				var O1 = new TreeTableObject
+				{
+					Parent = O,
+					Level = 1,
+					Nom = "Bâtiments",
+					Numéro = "1",
+				};
+
+					var O11 = new TreeTableObject
+					{
+						Parent = O1,
+						Level = 2,
+						Nom = "Immeubles",
+						Numéro = "1.1",
+					};
+
+						var O111 = new TreeTableObject
+						{
+							Parent = O11,
+							Level = 3,
+							Nom = "Centre administratif",
+							Numéro = "1.1.1",
+							ValeurComptable = 2450000.0m,
+							ValeurAssurance = 3000000.0m,
+							Responsable = "Paul",
+						};
+
+						var O112 = new TreeTableObject
+						{
+							Parent = O11,
+							Level = 3,
+							Nom = "Centre logistique",
+							Numéro = "1.1.2",
+							ValeurComptable = 4550000.0m,
+							ValeurAssurance = 6000000.0m,
+							Responsable = "Paul",
+						};
+
+						var O113 = new TreeTableObject
+						{
+							Parent = O11,
+							Level = 3,
+							Nom = "Centre d'expédition",
+							Numéro = "1.1.3",
+							ValeurComptable = 2100000.0m,
+							ValeurAssurance = 3000000.0m,
+							Responsable = "Sandra",
+						};
+
+						var O114 = new TreeTableObject
+						{
+							Parent = O11,
+							Level = 3,
+							Nom = "Showroom",
+							Numéro = "1.1.4",
+							ValeurComptable = 8750000.0m,
+							ValeurAssurance = 5500000.0m,
+							Responsable = "Eric",
+						};
+
+					var O12 = new TreeTableObject
+					{
+						Parent = O1,
+						Level = 2,
+						Nom = "Usines",
+						Numéro = "1.2",
+					};
+
+						var O121 = new TreeTableObject
+						{
+							Parent = O12,
+							Level = 3,
+							Nom = "Centre d'usinage",
+							Numéro = "1.2.1",
+							ValeurComptable = 10400000.0m,
+							ValeurAssurance = 13000000.0m,
+							Responsable = "René",
+						};
+
+						var O122 = new TreeTableObject
+						{
+							Parent = O12,
+							Level = 3,
+							Nom = "Centre d'assemblage",
+							Numéro = "1.2.2",
+							ValeurComptable = 8000000.0m,
+							ValeurAssurance = 9500000.0m,
+							Responsable = "Ernest",
+						};
+
+					var O13 = new TreeTableObject
+					{
+						Parent = O1,
+						Level = 2,
+						Nom = "Entrepôts",
+						Numéro = "1.3",
+					};
+
+						var O131 = new TreeTableObject
+						{
+							Parent = O13,
+							Level = 3,
+							Nom = "Dépôt principal",
+							Numéro = "1.3.1",
+							ValeurComptable = 2100000.0m,
+							ValeurAssurance = 3500000.0m,
+							Responsable = "Anne-Sophie",
+						};
+
+						var O132 = new TreeTableObject
+						{
+							Parent = O13,
+							Level = 3,
+							Nom = "Dépôt secondaire",
+							Numéro = "1.3.2",
+							ValeurComptable = 5320000.0m,
+							ValeurAssurance = 5000000.0m,
+							Responsable = "Paul",
+						};
+
+						var O133 = new TreeTableObject
+						{
+							Parent = O13,
+							Level = 3,
+							Nom = "Centre de recyclage",
+							Numéro = "1.3.3",
+							ValeurComptable = 1200000.0m,
+							ValeurAssurance = 1500000.0m,
+							Responsable = "Victoria",
+						};
+
+				var O2 = new TreeTableObject
+				{
+					Parent = O,
+					Level = 1,
+					Nom = "Véhicules",
+					Numéro = "2",
+				};
+
+					var O21 = new TreeTableObject
+					{
+						Parent = O2,
+						Level = 2,
+						Nom = "Camions",
+						Numéro = "2.1",
+					};
+
+						var O211 = new TreeTableObject
+						{
+							Parent = O21,
+							Level = 3,
+							Nom = "Scania X20",
+							Numéro = "2.1.1",
+							ValeurComptable = 150000.0m,
+							ValeurAssurance = 160000.0m,
+							Responsable = "François",
+							Couleur = "Blanc",
+							NuméroSérie = "25004-800-65210-45R",
+						};
+
+						var O212 = new TreeTableObject
+						{
+							Parent = O21,
+							Level = 3,
+							Nom = "Scania X30 semi",
+							Numéro = "2.1.2",
+							ValeurComptable = 180000.0m,
+							ValeurAssurance = 200000.0m,
+							Responsable = "Serge",
+							Couleur = "Rouge",
+							NuméroSérie = "25004-800-20087-20X",
+						};
+
+						var O213 = new TreeTableObject
+						{
+							Parent = O21,
+							Level = 3,
+							Nom = "Volvo T-200",
+							Numéro = "2.1.3",
+							ValeurComptable = 90000.0m,
+							ValeurAssurance = 75000.0m,
+							Responsable = "Jean-Pierre",
+							Couleur = "Jaune",
+							NuméroSérie = "T40-56-200-65E4",
+						};
+
+						var O214 = new TreeTableObject
+						{
+							Parent = O21,
+							Level = 3,
+							Nom = "Volvo R-500",
+							Numéro = "2.1.4",
+							ValeurComptable = 110000.0m,
+							ValeurAssurance = 120000.0m,
+							Responsable = "Olivier",
+							Couleur = "Blanc",
+							NuméroSérie = "T50-00-490-9PQ8",
+						};
+
+					var O22 = new TreeTableObject
+					{
+						Parent = O2,
+						Level = 2,
+						Nom = "Camionnettes",
+						Numéro = "2.2",
+					};
+
+						var O221 = new TreeTableObject
+						{
+							Parent = O22,
+							Level = 3,
+							Nom = "Renault Doblo",
+							Numéro = "2.2.1",
+							ValeurComptable = 25000.0m,
+							ValeurAssurance = 28000.0m,
+							Responsable = "Francine",
+							Couleur = "Blanc",
+							NuméroSérie = "456-321-132-898908",
+						};
+
+						var O222 = new TreeTableObject
+						{
+							Parent = O22,
+							Level = 3,
+							Nom = "Ford Transit",
+							Numéro = "2.2.2",
+							ValeurComptable = 30000.0m,
+							ValeurAssurance = 32000.0m,
+							Responsable = "Jean-Bernard",
+							Couleur = "Blanc",
+							NuméroSérie = "4380003293-343213-4",
+						};
+
+					var O23 = new TreeTableObject
+					{
+						Parent = O2,
+						Level = 2,
+						Nom = "Voitures",
+						Numéro = "2.3",
+					};
+
+						var O231 = new TreeTableObject
+						{
+							Parent = O23,
+							Level = 3,
+							Nom = "Citroën C4 Picasso",
+							Numéro = "2.3.1",
+							ValeurComptable = 22000.0m,
+							ValeurAssurance = 25000.0m,
+							Responsable = "Simon",
+							Couleur = "Noir",
+							NuméroSérie = "D456-0003232-0005",
+						};
+
+						var O232 = new TreeTableObject
+						{
+							Parent = O23,
+							Level = 3,
+							Nom = "Opel Corsa",
+							Numéro = "2.3.2",
+							ValeurComptable = 9000.0m,
+							ValeurAssurance = 10000.0m,
+							Responsable = "Frédérique",
+							Couleur = "Noir",
+							NuméroSérie = "45-3292302-544545-8",
+						};
+
+						var O233 = new TreeTableObject
+						{
+							Parent = O23,
+							Level = 3,
+							Nom = "Fiat Panda",
+							Numéro = "2.3.3",
+							ValeurComptable = 8000.0m,
+							ValeurAssurance = 5000.0m,
+							Responsable = "Dominique",
+							Couleur = "Gris métalisé",
+							NuméroSérie = "780004563233232",
+						};
+
+						var O234 = new TreeTableObject
+						{
+							Parent = O23,
+							Level = 3,
+							Nom = "Fiat Uno",
+							Numéro = "2.3.4",
+							ValeurComptable = 11000.0m,
+							ValeurAssurance = 10000.0m,
+							Responsable = "Denise",
+							Couleur = "Bleu",
+							NuméroSérie = "456000433434002",
+						};
+
+						var O235 = new TreeTableObject
+						{
+							Parent = O23,
+							Level = 3,
+							Nom = "Fiat Uno",
+							Numéro = "2.3.5",
+							ValeurComptable = 12000.0m,
+							ValeurAssurance = 13000.0m,
+							Responsable = "Marie",
+							Couleur = "Antracite",
+							NuméroSérie = "789787332009822",
+						};
+
+						var O236 = new TreeTableObject
+						{
+							Parent = O23,
+							Level = 3,
+							Nom = "Toyota Yaris Verso",
+							Numéro = "2.3.6",
+							ValeurComptable = 16000.0m,
+							ValeurAssurance = 12000.0m,
+							Responsable = "Christiane",
+							Couleur = "Gris",
+							NuméroSérie = "F40T-500023-40232-30987-M",
+						};
+
+			TreeTableObject[] OO =
+			{
+				O,
+					O1,
+						O11,
+							O111, O112, O113, O114,
+						O12,
+							O121, O122,
+						O13,
+							O131, O132, O133,
+					O2,
+						O21,
+							O211, O212, O213, O214,
+						O22,
+							O221, O222,
+						O23,
+							O231, O232, O233, O234, O235, O236,
+			};
+
+			return OO;
+		}
+
+		private class TreeTableObject
+		{
+			public TreeTableObject Parent;
+			public int Level;
+			public string Nom;
+			public string Numéro;
+			public decimal ValeurComptable;
+			public decimal ValeurAssurance;
+			public string Responsable;
+			public string Couleur;
+			public string NuméroSérie;
 		}
 	
 		
