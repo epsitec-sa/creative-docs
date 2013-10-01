@@ -72,9 +72,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color TreeTableBackgroundFirstColor
+		public static Color GetTreeTableBackgroundFirstColor(bool isHover = false)
 		{
-			get
+			if (isHover)
+			{
+				return Color.FromHexa ("ebe8d6");  // gris-jaune
+			}
+			else
 			{
 				return Color.FromBrightness (0.97);
 			}

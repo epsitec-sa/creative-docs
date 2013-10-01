@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					var rect = this.GetCellsRect (y);
 
 					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+					graphics.RenderSolid (ColorManager.GetBackgroundColor (y == this.hilitedHoverRow));
 
 					rect.Deflate (this.DescriptionMargin, 0, 0, 0);
 

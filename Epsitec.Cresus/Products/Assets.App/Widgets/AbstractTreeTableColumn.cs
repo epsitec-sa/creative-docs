@@ -12,6 +12,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public abstract class AbstractTreeTableColumn : Widget
 	{
+		public AbstractTreeTableColumn()
+		{
+			this.detectedHoverRow = -1;
+			this.hilitedHoverRow = -1;
+		}
+
+
 		public int								ColumnIndex
 		{
 			get;
@@ -56,6 +63,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public int								HilitedHoverRow
+		{
+			get
+			{
+				return this.hilitedHoverRow;
+			}
+			set
+			{
+				if (this.hilitedHoverRow != value)
+				{
+					this.hilitedHoverRow = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 	
 		protected override void OnClicked(MessageEventArgs e)
 		{
@@ -64,11 +87,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void OnMouseMove(MessageEventArgs e)
 		{
+			this.SetDetectedHoverRow (this.Detect (e.Point));
 			base.OnMouseMove (e);
 		}
 
 		protected override void OnExited(MessageEventArgs e)
 		{
+			this.SetDetectedHoverRow (-1);
 			base.OnExited (e);
 		}
 
@@ -132,6 +157,42 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		private int Detect(Point pos)
+		{
+			if (this.HeaderRect.Contains (pos))
+			{
+				return AbstractTreeTableColumn.HeaderRank;
+			}
+
+			if (this.FooterRect.Contains (pos))
+			{
+				return AbstractTreeTableColumn.FooterRank;
+			}
+
+			int count = this.VisibleCellCount;
+
+			for (int rank = 0; rank < count; rank++)
+			{
+				var rect = this.GetCellsRect (rank);
+
+				if (rect.Contains (pos))
+				{
+					return rank;
+				}
+			}
+
+			return -1;
+		}
+
+		private void SetDetectedHoverRow(int row)
+		{
+			if (this.detectedHoverRow != row)
+			{
+				this.detectedHoverRow = row;
+				this.OnCellHovered (row);
+			}
+		}
+
 		private Rectangle HeaderRect
 		{
 			get
@@ -182,16 +243,35 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Events handler
-		private void OnCellClicked(int rank)
+		private void OnCellClicked(int row)
 		{
 			if (this.CellClicked != null)
 			{
-				this.CellClicked (this, rank);
+				this.CellClicked (this, row);
 			}
 		}
 
-		public delegate void CellClickedEventHandler(object sender, int rank);
+		public delegate void CellClickedEventHandler(object sender, int row);
 		public event CellClickedEventHandler CellClicked;
+
+		private void OnCellHovered(int row)
+		{
+			if (this.CellHovered != null)
+			{
+				this.CellHovered (this, row);
+			}
+		}
+
+		public delegate void CellHoveredEventHandler(object sender, int row);
+		public event CellHoveredEventHandler CellHovered;
 		#endregion
+
+
+		public const int HeaderRank = 1000000;
+		public const int FooterRank = 1000001;
+
+
+		protected int							detectedHoverRow;
+		protected int							hilitedHoverRow;
 	}
 }

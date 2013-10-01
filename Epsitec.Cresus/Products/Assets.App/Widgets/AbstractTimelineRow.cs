@@ -77,22 +77,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private int								HoverRank
-		{
-			get
-			{
-				return this.hoverRank;
-			}
-			set
-			{
-				if (this.hoverRank != value)
-				{
-					this.hoverRank = value;
-					this.Invalidate ();
-				}
-			}
-		}
-
 	
 		protected override void OnClicked(MessageEventArgs e)
 		{
@@ -102,13 +86,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void OnMouseMove(MessageEventArgs e)
 		{
-			this.HoverRank = this.Detect (e.Point);
+			this.SetHoverRank (this.Detect (e.Point));
 			base.OnMouseMove (e);
 		}
 
 		protected override void OnExited(MessageEventArgs e)
 		{
-			this.HoverRank = -1;
+			this.SetHoverRank (-1);
 			base.OnExited (e);
 		}
 
@@ -144,6 +128,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			return -1;
+		}
+
+		private void SetHoverRank(int rank)
+		{
+			if (this.hoverRank != rank)
+			{
+				this.hoverRank = rank;
+				this.Invalidate ();
+			}
 		}
 
 		protected virtual void InitializeAfterCellsChanged()

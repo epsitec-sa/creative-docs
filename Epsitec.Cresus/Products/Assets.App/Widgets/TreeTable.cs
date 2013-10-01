@@ -41,6 +41,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				Dock           = DockStyle.Fill,
 				PreferredWidth = this.firstWidth,
 			};
+
+			this.columnFirst.CellHovered += delegate (object sender, int row)
+			{
+				this.SetHilitedHoverRow (row);
+			};
 		}
 
 		public int								VScrollerTopMargin
@@ -78,6 +83,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				column.ColumnIndex = index++;
 				this.columnsContainer.Viewport.Children.Add (column);
+
+				column.CellHovered += delegate (object sender, int row)
+				{
+					this.SetHilitedHoverRow (row);
+				};
 			}
 
 			this.UpdateChildrensGeometry ();
@@ -170,6 +180,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			get
 			{
 				return (int) ((this.ActualHeight - this.headerHeight - this.footerHeight - AbstractScroller.DefaultBreadth) / this.rowHeight);
+			}
+		}
+
+
+		private void SetHilitedHoverRow(int row)
+		{
+			this.columnFirst.HilitedHoverRow = row;
+
+			foreach (var column in this.Columns)
+			{
+				column.HilitedHoverRow = row;
 			}
 		}
 
