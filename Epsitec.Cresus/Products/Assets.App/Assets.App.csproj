@@ -77,6 +77,8 @@
     <Compile Include="Widgets\ColorManager.cs" />
     <Compile Include="Widgets\ColorExtensions.cs" />
     <Compile Include="Widgets\AbstractTreeTableColumn.cs" />
+    <Compile Include="Widgets\TreeTableColumnDecimal.cs" />
+    <Compile Include="Widgets\TreeTableCellDecimal.cs" />
     <Compile Include="Widgets\NavigationTreeTableController.cs" />
     <Compile Include="Widgets\TreeTableColumnFirst.cs" />
     <Compile Include="Widgets\TreeTableColumnString.cs" />

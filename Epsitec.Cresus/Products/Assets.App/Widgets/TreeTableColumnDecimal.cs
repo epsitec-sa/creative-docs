@@ -10,11 +10,11 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public class TreeTableColumnString : AbstractTreeTableColumn
+	public class TreeTableColumnDecimal : AbstractTreeTableColumn
 	{
-		public void SetCellStrings(TreeTableCellString[] cellStrings)
+		public void SetCellDecimals(TreeTableCellDecimal[] cellDecimals)
 		{
-			this.cellStrings = cellStrings;
+			this.cellDecimals = cellDecimals;
 			this.Invalidate ();
 		}
 
@@ -23,23 +23,28 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			base.PaintBackgroundImplementation(graphics, clipRect);
 
-			if (this.cellStrings != null)
+			if (this.cellDecimals != null)
 			{
 				int y = 0;
 
-				foreach (var cellString in this.cellStrings)
+				foreach (var cellDecimal in this.cellDecimals)
 				{
 					var rect = this.GetCellsRect (y);
 
 					graphics.AddFilledRectangle (rect);
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
-					rect.Deflate (this.DescriptionMargin, 0, 0, 0);
+					if (cellDecimal.Value.HasValue)
+					{
+						rect.Deflate (0, this.DescriptionMargin, 0, 0);
 
-					var font = Font.DefaultFont;
+						var font = Font.DefaultFont;
+						var text = cellDecimal.Value.Value.ToString ("0,0.00");
+						//?var text = cellDecimal.Value.Value.ToString ("D2");
 
-					graphics.Color = ColorManager.TextColor;
-					graphics.PaintText (rect, cellString.Value, font, this.FontSize, ContentAlignment.MiddleLeft);
+						graphics.Color = ColorManager.TextColor;
+						graphics.PaintText (rect, text, font, this.FontSize, ContentAlignment.MiddleRight);
+					}
 
 					y++;
 				}
@@ -47,6 +52,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private TreeTableCellString[] cellStrings;
+		private TreeTableCellDecimal[] cellDecimals;
 	}
 }

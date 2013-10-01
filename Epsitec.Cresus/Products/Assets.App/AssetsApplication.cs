@@ -517,17 +517,17 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			tt.SetColumns (AssetsApplication.GetColumns ());
-			this.InitialiseTreeTable (tt, 0, -1);
+			AssetsApplication.InitialiseTreeTable (tt, 0, -1);
 
 			tt.SizeChanged += delegate
 			{
-				this.InitialiseTreeTable (tt, 0, -1);
+				AssetsApplication.InitialiseTreeTable (tt, 0, -1);
 			};
 		}
 
 		private void CreateTestTreeTableController(Widget parent)
 		{
-			var OO = this.GetTreeTableObjects ();
+			var OO = AssetsApplication.GetTreeTableObjects ();
 
 			this.treeTableRowsCount = OO.Length;
 			this.treeTableSelectedRow = -1;
@@ -569,7 +569,7 @@ namespace Epsitec.Cresus.Assets.App
 			int cellsCount = System.Math.Min (this.treeTableRowsCount, this.treeTableController.TreeTable.VisibleRowsCount);
 			int selection = this.treeTableSelectedRow - this.treeTableController.TopVisibleRow;
 
-			this.InitialiseTreeTable (this.treeTableController.TreeTable, first, selection);
+			AssetsApplication.InitialiseTreeTable (this.treeTableController.TreeTable, first, selection);
 		}
 
 		private NavigationTreeTableController treeTableController;
@@ -625,11 +625,35 @@ namespace Epsitec.Cresus.Assets.App
 				list.Add (c);
 			}
 
+			{
+				var c = new TreeTableColumnDecimal
+				{
+					PreferredWidth = 120,
+					HeaderDescription = "Valeur comptable",
+					FooterDescription = "Colonne 5, pied",
+				};
+
+				list.Add (c);
+			}
+
+			{
+				var c = new TreeTableColumnDecimal
+				{
+					PreferredWidth = 120,
+					HeaderDescription = "Valeur assurance",
+					FooterDescription = "Colonne 6, pied",
+				};
+
+				list.Add (c);
+			}
+
 			return list;
 		}
 
-		private void InitialiseTreeTable(TreeTable treeTable, int firstRow, int selection)
+		private static void InitialiseTreeTable(TreeTable treeTable, int firstRow, int selection)
 		{
+			var OO = AssetsApplication.GetTreeTableObjects ();
+
 			treeTable.ColumnFirst.HeaderDescription = "Objet";
 			treeTable.ColumnFirst.FooterDescription = "Liste, pied";
 
@@ -638,8 +662,8 @@ namespace Epsitec.Cresus.Assets.App
 			var c2 = new List<TreeTableCellString> ();
 			var c3 = new List<TreeTableCellString> ();
 			var c4 = new List<TreeTableCellString> ();
-
-			var OO = this.GetTreeTableObjects ();
+			var c5 = new List<TreeTableCellDecimal> ();
+			var c6 = new List<TreeTableCellDecimal> ();
 
 			var count = treeTable.VisibleRowsCount;
 			for (int i=0; i<count; i++)
@@ -658,12 +682,16 @@ namespace Epsitec.Cresus.Assets.App
 				var s2 = new TreeTableCellString (true, O.Responsable);
 				var s3 = new TreeTableCellString (true, O.Couleur);
 				var s4 = new TreeTableCellString (true, O.NuméroSérie);
+				var s5 = new TreeTableCellDecimal (true, O.ValeurComptable);
+				var s6 = new TreeTableCellDecimal (true, O.ValeurAssurance);
 
 				cf.Add (sf);
 				c1.Add (s1);
 				c2.Add (s2);
 				c3.Add (s3);
 				c4.Add (s4);
+				c5.Add (s5);
+				c6.Add (s6);
 			}
 
 			treeTable.ColumnFirst.SetCellFirsts (cf.ToArray ());
@@ -671,32 +699,36 @@ namespace Epsitec.Cresus.Assets.App
 			int cc = 0;
 			foreach (var c in treeTable.Columns)
 			{
-				if (c is TreeTableColumnString)
+				var stringColumn = c as TreeTableColumnString;
+				var decimalColumn = c as TreeTableColumnDecimal;
+
+				switch (cc)
 				{
-					var column = c as TreeTableColumnString;
-
-					switch (cc)
-					{
-						case 0:
-							column.SetCellStrings (c1.ToArray ());
-							break;
-						case 1:
-							column.SetCellStrings (c2.ToArray ());
-							break;
-						case 2:
-							column.SetCellStrings (c3.ToArray ());
-							break;
-						case 3:
-							column.SetCellStrings (c4.ToArray ());
-							break;
-					}
-
-					cc++;
+					case 0:
+						stringColumn.SetCellStrings (c1.ToArray ());
+						break;
+					case 1:
+						stringColumn.SetCellStrings (c2.ToArray ());
+						break;
+					case 2:
+						stringColumn.SetCellStrings (c3.ToArray ());
+						break;
+					case 3:
+						stringColumn.SetCellStrings (c4.ToArray ());
+						break;
+					case 4:
+						decimalColumn.SetCellDecimals (c5.ToArray ());
+						break;
+					case 5:
+						decimalColumn.SetCellDecimals (c6.ToArray ());
+						break;
 				}
+
+				cc++;
 			}
 		}
 
-		private TreeTableObject[] GetTreeTableObjects()
+		private static TreeTableObject[] GetTreeTableObjects()
 		{
 			var O = new TreeTableObject
 			{
@@ -1051,8 +1083,8 @@ namespace Epsitec.Cresus.Assets.App
 			public int Level;
 			public string Nom;
 			public string Numéro;
-			public decimal ValeurComptable;
-			public decimal ValeurAssurance;
+			public decimal? ValeurComptable;
+			public decimal? ValeurAssurance;
 			public string Responsable;
 			public string Couleur;
 			public string NuméroSérie;
