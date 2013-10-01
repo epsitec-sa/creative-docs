@@ -185,35 +185,9 @@ namespace Epsitec.Cresus.Assets.App
 				BackColor = Color.FromBrightness (0.8),
 			};
 
-			//?this.CreateTestTimelineBase (frame);
-			//?this.CreateTestTimelineController (frame);
+			this.CreateTestTimelineController (frame);
 			//?this.CreateTestTimelineProvider (frame);
-			this.CreateTestTreeTableController (frame);
-		}
-
-		private void CreateTestTimelineBase(Widget parent)
-		{
-			var timeline = new Timeline ()
-			{
-				Parent     = parent,
-				Dock       = DockStyle.Fill,
-				Margins    = new Margins (10, 10, 220, 10),
-				Pivot      = 0.0,
-				ShowLabels = true,
-			};
-
-			var start = new System.DateTime (2013, 11, 20);
-
-			timeline.SetRows (AssetsApplication.GetRows (true));
-			AssetsApplication.InitialiseTimeline (timeline, start, 100, -1);
-
-			timeline.CellClicked += delegate (object sender, int row, int rank)
-			{
-				if (row == 2)
-				{
-					AssetsApplication.InitialiseTimeline (timeline, start, 100, rank);
-				}
-			};
+			//?this.CreateTestTreeTableController (frame);
 		}
 
 
@@ -242,11 +216,11 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			this.timelineController.CreateUI (frame);
-			this.timelineController.Timeline.Pivot = 0.0;
-			this.timelineController.Timeline.SetRows (AssetsApplication.GetRows (false));
+			this.timelineController.Pivot = 0.0;
+			this.timelineController.SetRows (AssetsApplication.GetRows (false));
 			this.UpdateTimelineController ();
 
-			this.timelineController.Timeline.CellClicked += delegate (object sender, int row, int rank)
+			this.timelineController.CellClicked += delegate (object sender, int row, int rank)
 			{
 				if (row == 0)
 				{
@@ -259,10 +233,10 @@ namespace Epsitec.Cresus.Assets.App
 		private void UpdateTimelineController()
 		{
 			var date = AssetsApplication.AddDays (timelineStart, this.timelineController.LeftVisibleCell);
-			int cellsCount = System.Math.Min (this.timelineCellsCount, this.timelineController.Timeline.VisibleCellsCount);
+			int cellsCount = System.Math.Min (this.timelineCellsCount, this.timelineController.VisibleCellsCount);
 			int selection = this.timelineSelectedCell - this.timelineController.LeftVisibleCell;
 
-			AssetsApplication.InitialiseTimeline (this.timelineController.Timeline, date, cellsCount, selection);
+			AssetsApplication.InitialiseTimeline (this.timelineController, date, cellsCount, selection);
 		}
 
 		private NavigationTimelineController timelineController;
@@ -383,7 +357,7 @@ namespace Epsitec.Cresus.Assets.App
 			return list;
 		}
 
-		private static void InitialiseTimeline(Timeline timeline, System.DateTime start, int cellsCount, int selection)
+		private static void InitialiseTimeline(NavigationTimelineController timeline, System.DateTime start, int cellsCount, int selection)
 		{
 			var dates = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();

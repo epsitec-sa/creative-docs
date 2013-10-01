@@ -24,14 +24,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.scroller = new HScroller ()
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Bottom,
-//				Margins = new Margins (0, 0, 2, 0),
+				Parent = parent,
+				Dock   = DockStyle.Bottom,
 			};
 
 			this.timeline.SizeChanged += delegate
 			{
 				this.UpdateScroller ();
+			};
+
+			this.timeline.CellClicked += delegate (object sender, int row, int rank)
+			{
+				this.OnCellClicked (row, rank);
 			};
 
 			this.scroller.ValueChanged += delegate
@@ -75,6 +79,42 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		#region Timeline Facade
+		public double							Pivot
+		{
+			get
+			{
+				return this.timeline.Pivot;
+			}
+			set
+			{
+				this.timeline.Pivot = value;
+			}
+		}
+
+		public int								VisibleCellsCount
+		{
+			get
+			{
+				return this.timeline.VisibleCellsCount;
+			}
+		}
+
+		public IEnumerable<AbstractTimelineRow> Rows
+		{
+			get
+			{
+				return this.timeline.Rows;
+			}
+		}
+
+		public void SetRows(List<AbstractTimelineRow> rows)
+		{
+			this.timeline.SetRows (rows);
+		}
+		#endregion
+
+
 		private void UpdateScroller()
 		{
 			if (this.timeline == null || this.scroller == null)
@@ -109,6 +149,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public delegate void DateChangedEventHandler(object sender);
 		public event DateChangedEventHandler DateChanged;
+
+	
+		private void OnCellClicked(int row, int rank)
+		{
+			if (this.CellClicked != null)
+			{
+				this.CellClicked (this, row, rank);
+			}
+		}
+
+		public delegate void CellClickedEventHandler(object sender, int row, int rank);
+		public event CellClickedEventHandler CellClicked;
 		#endregion
 
 
