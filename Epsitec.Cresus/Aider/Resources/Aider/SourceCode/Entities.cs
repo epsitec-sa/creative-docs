@@ -1084,6 +1084,54 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>AllPhoneNumbers</c> field.
+		///	designer:fld/LVAF/LVAHH
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAHH]", IsVirtual=true)]
+		public string AllPhoneNumbers
+		{
+			get
+			{
+				string value = default (string);
+				this.GetAllPhoneNumbers (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.AllPhoneNumbers;
+				if (oldValue != value || !this.IsFieldDefined("[LVAHH]"))
+				{
+					this.OnAllPhoneNumbersChanging (oldValue, value);
+					this.SetAllPhoneNumbers (value);
+					this.OnAllPhoneNumbersChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>AllEmails</c> field.
+		///	designer:fld/LVAF/LVAIH
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAIH]", IsVirtual=true)]
+		public string AllEmails
+		{
+			get
+			{
+				string value = default (string);
+				this.GetAllEmails (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.AllEmails;
+				if (oldValue != value || !this.IsFieldDefined("[LVAIH]"))
+				{
+					this.OnAllEmailsChanging (oldValue, value);
+					this.SetAllEmails (value);
+					this.OnAllEmailsChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1123,6 +1171,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnMainContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnHouseholdContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnHouseholdContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnAllPhoneNumbersChanging(string oldValue, string newValue);
+		partial void OnAllPhoneNumbersChanged(string oldValue, string newValue);
+		partial void OnAllEmailsChanging(string oldValue, string newValue);
+		partial void OnAllEmailsChanged(string oldValue, string newValue);
 		
 		partial void GetCallNameDisplay(ref string value);
 		partial void SetCallNameDisplay(string value);
@@ -1137,6 +1189,10 @@ namespace Epsitec.Aider.Entities
 		partial void SetMainContact(global::Epsitec.Aider.Entities.AiderContactEntity value);
 		partial void GetHouseholdContact(ref global::Epsitec.Aider.Entities.AiderContactEntity value);
 		partial void SetHouseholdContact(global::Epsitec.Aider.Entities.AiderContactEntity value);
+		partial void GetAllPhoneNumbers(ref string value);
+		partial void SetAllPhoneNumbers(string value);
+		partial void GetAllEmails(ref string value);
+		partial void SetAllEmails(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

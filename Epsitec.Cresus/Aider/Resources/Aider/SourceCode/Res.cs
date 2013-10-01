@@ -1722,6 +1722,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddresses = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 470);
 				//	designer:cap/LVANG
 				public static readonly global::Epsitec.Common.Support.Druid Address = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 535);
+				//	designer:cap/LVAIH
+				public static readonly global::Epsitec.Common.Support.Druid AllEmails = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 562);
+				//	designer:cap/LVAHH
+				public static readonly global::Epsitec.Common.Support.Druid AllPhoneNumbers = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 561);
 				//	designer:cap/LVANE
 				public static readonly global::Epsitec.Common.Support.Druid BirthdayDay = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 471);
 				//	designer:cap/LVAOE

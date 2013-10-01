@@ -458,6 +458,32 @@ namespace Epsitec.Aider.Entities
 
 
 
+		partial void GetAllEmails(ref string value)
+		{
+			var addresses = this.Contacts.Select (x => x.Address).Concat (this.Households.Select (x => x.Address)).Where (x => x.IsNotNull ());
+			var emails = addresses.Select (x => x.Email).Where (x => string.IsNullOrEmpty (x) == false).Distinct ();
+
+			value = string.Join ("; ", emails);
+		}
+
+		partial void SetAllEmails(string value)
+		{
+			throw new NotImplementedException ();
+		}
+
+		partial void GetAllPhoneNumbers(ref string value)
+		{
+			var addresses = this.Contacts.Select (x => x.Address).Concat (this.Households.Select (x => x.Address)).Where (x => x.IsNotNull ());
+			var phones = addresses.Select (x => x.Phone1).Concat (addresses.Select (x => x.Phone2)).Concat (addresses.Select (x => x.Mobile)).Where (x => string.IsNullOrEmpty (x) == false).Distinct ();
+
+			value = string.Join ("; ", phones);
+		}
+
+		partial void SetAllPhoneNumbers(string value)
+		{
+			throw new NotImplementedException ();
+		}
+
 		partial void GetAddress(ref AiderAddressEntity value)
 		{
 			value = this.GetAddress ();
