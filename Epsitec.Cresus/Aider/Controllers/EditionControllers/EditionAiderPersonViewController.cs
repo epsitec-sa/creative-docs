@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
@@ -29,6 +30,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 
 			wall.AddBrick ()
 				.Icon (this.Entity.GetIconName ("Data"))
+				.EnableActionMenu<ActionAiderPersonViewController9Deceased> ()
 				.Input ()
 					.HorizontalGroup ()
 						.Title ("Prénoms et nom")
@@ -40,7 +42,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.HorizontalGroup ()
 						.Title ("Dates de naissance et de décès")
 						.Field (x => x.eCH_Person.PersonDateOfBirth)
-						.Field (x => x.eCH_Person.PersonDateOfDeath)
+						.Field (x => x.eCH_Person.PersonDateOfDeath).ReadOnly ()
 					.End ()
 					.Field (x => x.eCH_Person.PersonSex)
 					.Field (x => x.MrMrs)
@@ -70,7 +72,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.HorizontalGroup ()
 						.Title ("Dates de naissance et de décès")
 						.Field (x => x.eCH_Person.PersonDateOfBirth).ReadOnly ()
-						.Field (x => x.eCH_Person.PersonDateOfDeath)
+						.Field (x => x.eCH_Person.PersonDateOfDeath).ReadOnly ()
 					.End ()
 					.Field (x => x.eCH_Person.PersonSex).ReadOnly ()
 					.Field (x => x.MrMrs)

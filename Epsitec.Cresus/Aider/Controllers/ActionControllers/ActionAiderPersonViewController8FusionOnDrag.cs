@@ -73,12 +73,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
             if (!this.AdditionalEntity.Person.IsGovernmentDefined)
             {
-                form
-                .Title("Fusion de données")
-                .Text(this.GetText())
-                .Field<bool>()
-                    .Title("Fusionner")
-                .End()
+                form.Title("Fusion de données")
+					.Text(this.GetText())
+					.Field<bool>()
+						.Title("Fusionner")
+					.End()
                 .End();
             }
 		}

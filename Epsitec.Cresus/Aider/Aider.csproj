@@ -94,6 +94,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController7RemoveHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController1DeleteSubGroup.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController3ChangeHeadOfHousehold.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController9Deceased.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController1ProcessPersonMissing.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController0DiscardWarning.cs" />
