@@ -62,6 +62,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			userInfo.ProfilePictureUrl = picture;
 
 			this.BroadcastUsersList ();
+			this.Clients.Caller.setMyUserInfo (userInfo);
 		}
 
 		public List<ChatMessage> GetMessageHistory(string otherConnectionId)

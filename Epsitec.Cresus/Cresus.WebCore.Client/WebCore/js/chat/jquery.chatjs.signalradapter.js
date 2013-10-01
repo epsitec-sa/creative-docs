@@ -39,6 +39,10 @@ SignalRAdapter.prototype = {
             chat.client.usersListChanged(usersList);
         };
 
+        _this.hub.client.setMyUserInfo = function (myUser) {
+            chat.client.setMyUserInfo(myUser);
+        };
+
         // These are the methods that ARE CALLED BY THE CLIENT
         // Client functions should call these functions
         _this.server = new Object();

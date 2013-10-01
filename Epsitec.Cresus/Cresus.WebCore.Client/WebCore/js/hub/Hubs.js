@@ -34,7 +34,7 @@ function() {
         $.connection.hub.start(function() {
           toastrInstance.init(username, me);
           me.initHub(username);
-          $.connection.chatHub.server.updateUserInfo(username,"");
+          $.connection.chatHub.server.updateUserInfo(username,'meu@email.com');
         });
       });
     },

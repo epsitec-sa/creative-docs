@@ -498,6 +498,9 @@
             _this.saveWindows();
         };
 
+        _this.updateMyUserInfo = function (user) {
+            _this.opts.user = user;
+        };
 
         _this.processUserListAjaxResult = function (data) {
             /// <summary>Handles the list of users coming from the server</summary>
@@ -645,6 +648,10 @@
                 /// <summary>Called by the adapter when the users list changes</summary>
                 /// <param name="usersList" type="Object">The new user list</param>
                 _this.processUserListAjaxResult(usersList);
+            };
+
+            _this.client.setMyUserInfo = function (myUser) {
+                _this.updateMyUserInfo(myUser);
             };
 
             _this.onReady = function (usersList) {
