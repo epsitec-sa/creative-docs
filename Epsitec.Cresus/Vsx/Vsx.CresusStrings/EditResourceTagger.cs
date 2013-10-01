@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Strings
 		{
 			get
 			{
-				return this.provider.Engine;
+				return this.provider.EngineSource.Engine;
 			}
 		}
 

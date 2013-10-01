@@ -35,20 +35,6 @@ namespace Epsitec.VisualStudio
 		}
 
 		[Import]
-		public Epsitec.VisualStudio.DTE			DTE
-		{
-			get
-			{
-				return this.dte;
-			}
-			set
-			{
-				this.dte = value;
-				this.dte.WindowActivated += this.OnDTEWindowActivated;
-			}
-		}
-
-		[Import]
 		public CresusDesigner					CresusDesigner
 		{
 			get;
@@ -63,12 +49,9 @@ namespace Epsitec.VisualStudio
 			}
 		}
 
-		internal ITextBuffer					ActiveTextBuffer
+		internal void SetActiveDocument(EnvDTE.Document document, ITextBuffer textBuffer = null)
 		{
-			set
-			{
-				this.documentSourceManager.SetActiveDocument (this.dte.Application.ActiveDocument, value);
-			}
+			this.documentSourceManager.SetActiveDocument (document, textBuffer);
 		}
 
 		public async Task<ResourceSymbolInfo> GetResourceSymbolInfoAsync(SnapshotPoint point, CancellationToken cancellationToken)
@@ -101,25 +84,12 @@ namespace Epsitec.VisualStudio
 			this.CresusDesigner.Dispose ();
 			this.resourceProvider.Dispose ();
 			this.documentSourceManager.Dispose ();
-			this.dte.WindowActivated -= this.OnDTEWindowActivated;
 		}
 
 		#endregion
 
-		private void OnDTEWindowActivated(EnvDTE.Window GotFocus, EnvDTE.Window LostFocus)
-		{
-			//var dteActiveDocument = GotFocus.Document;
-			//if (dteActiveDocument != null)
-			//{
-			this.documentSourceManager.SetActiveDocument (this.dte.Application.ActiveDocument);
-			//}
-		}
-
 		private readonly ResourceSymbolMapperSource resourceProvider;
 		private readonly DocumentSourceManager documentSourceManager;
-
-		// Visual Studio DOM
-		private Epsitec.VisualStudio.DTE dte;
 
 		// Roslyn DOM
 		private IWorkspace workspace;

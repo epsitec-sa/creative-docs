@@ -13,7 +13,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Epsitec
 {
-
 	[TestClass]
 	public class FileWatcherTest
 	{
@@ -23,21 +22,18 @@ namespace Epsitec
 			Trace.WriteLine (string.Format ("[{0}] Started...", Thread.CurrentThread.ManagedThreadId));
 
 			var folder = Path.GetFullPath (TestFolder);
-			using (var watcher = new FileSystemWatcher (folder, TestFileName1))
+			using (new FileMonitor (folder, TestFileName1).Watch ().Subscribe (e => Trace.WriteLine (string.Format ("[{0}] {1}", Thread.CurrentThread.ManagedThreadId, e)), TraceError, TraceCompleted))
 			{
-				using (watcher.Watch ().Subscribe (e => Trace.WriteLine (string.Format ("[{0}] {1}", Thread.CurrentThread.ManagedThreadId, e)), TraceError, TraceCompleted))
+				for (int i = 0; i < 10; ++i)
 				{
-					for (int i = 0; i < 10; ++i)
+					using (var stream = File.CreateText (TestFilePath1))
 					{
-						using (var stream = File.CreateText (TestFilePath1))
-						{
-							stream.WriteLine (Guid.NewGuid ().ToString ());
-						}
+						stream.WriteLine (Guid.NewGuid ().ToString ());
 					}
-					File.Delete (TestFilePath1);
-
-					Thread.Sleep (1000);
 				}
+				File.Delete (TestFilePath1);
+
+				Thread.Sleep (1000);
 			}
 			Trace.WriteLine (string.Format ("[{0}] Finished", Thread.CurrentThread.ManagedThreadId));
 		}
@@ -47,28 +43,25 @@ namespace Epsitec
 			Trace.WriteLine (string.Format ("[{0}] Started...", Thread.CurrentThread.ManagedThreadId));
 
 			var folder = Path.GetFullPath (TestFolder);
-			using (var watcher1 = new FileSystemWatcher (folder, TestFileName1))
-			using (var watcher2 = new FileSystemWatcher (folder, TestFileName2))
-			{
-				var allEvents = Observable.Merge (watcher1.Watch (), watcher2.Watch ());
-				using (allEvents.Subscribe (e => Trace.WriteLine (string.Format ("[{0}] {1}", Thread.CurrentThread.ManagedThreadId, e)), TraceError, TraceCompleted))
-				{
-					for (int i = 0; i < 10; ++i)
-					{
-						using (var stream1 = File.CreateText (TestFilePath1))
-						{
-							stream1.WriteLine (Guid.NewGuid ().ToString ());
-						}
-						using (var stream2 = File.CreateText (TestFilePath2))
-						{
-							stream2.WriteLine (Guid.NewGuid ().ToString ());
-						}
-					}
-					File.Delete (TestFilePath1);
-					File.Delete (TestFilePath2);
+			var allEvents = Observable.Merge (new FileMonitor (folder, TestFileName1).Watch (), new FileMonitor (folder, TestFileName2).Watch ());
 
-					Thread.Sleep (1000);
+			using (allEvents.Subscribe (e => Trace.WriteLine (string.Format ("[{0}] {1}", Thread.CurrentThread.ManagedThreadId, e)), TraceError, TraceCompleted))
+			{
+				for (int i = 0; i < 10; ++i)
+				{
+					using (var stream1 = File.CreateText (TestFilePath1))
+					{
+						stream1.WriteLine (Guid.NewGuid ().ToString ());
+					}
+					using (var stream2 = File.CreateText (TestFilePath2))
+					{
+						stream2.WriteLine (Guid.NewGuid ().ToString ());
+					}
 				}
+				File.Delete (TestFilePath1);
+				File.Delete (TestFilePath2);
+
+				Thread.Sleep (1000);
 			}
 			Trace.WriteLine (string.Format ("[{0}] Finished", Thread.CurrentThread.ManagedThreadId));
 		}

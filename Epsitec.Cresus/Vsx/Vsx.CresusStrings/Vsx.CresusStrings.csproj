@@ -110,6 +110,9 @@
     </Compile>
     <Compile Include="Config.cs" />
     <Compile Include="IO\Extensions.cs" />
+    <Compile Include="IO\FileMonitor.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="IO\FileSystemNotification.cs" />
     <Compile Include="ResourceManagement\MultiCultureResourceItem.cs" />
     <Compile Include="Tools\CresusDesigner.cs" />
@@ -119,6 +122,7 @@
     <Compile Include="EditResourceSmartTagAction.cs" />
     <Compile Include="Tools\Import\Druid.cs" />
     <Compile Include="VisualStudio\DocumentSourceManager.cs" />
+    <Compile Include="VisualStudio\EngineSource.cs" />
     <Compile Include="VisualStudio\ISolutionProvider.cs" />
     <Compile Include="VisualStudio\ResourceSymbolInfo.cs" />
     <Compile Include="CresusStrings.xaml.cs">

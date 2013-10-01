@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -55,16 +56,18 @@ namespace Epsitec.VisualStudio
 
 		private static IObservable<FileSystemNotification> CreateResourceFileEvents(SolutionResource solution)
 		{
-			var files = new HashSet<string> ();
-			var folders = new HashSet<string> ();
-			foreach (var filePath in solution.TouchedFilePathes ())
+			using (new TimeTrace ())
 			{
-				files.Add (filePath);
-				folders.Add (Path.GetDirectoryName (filePath));
+				var files = new HashSet<string> ();
+				var folders = new HashSet<string> ();
+				foreach (var filePath in solution.TouchedFilePathes ().Select (path => path.ToLower ()))
+				{
+					files.Add (filePath);
+					folders.Add (Path.GetDirectoryName (filePath));
+				}
+				return Observable.Merge (folders.Select (folder => new FileMonitor (folder).Watch ()))
+					.Where (n => files.Contains (n.FullPath, StringComparer.OrdinalIgnoreCase));
 			}
-			return Observable.Merge (folders.Select (folder => new FileSystemWatcher (folder).Watch ()))
-				.Where (n => files.Contains (n.FullPath, StringComparer.OrdinalIgnoreCase))
-				.Throttle (TimeSpan.FromMilliseconds (50));
 		}
 
 
@@ -79,8 +82,11 @@ namespace Epsitec.VisualStudio
 
 		private void Restart()
 		{
-			this.Dispose ();
-			this.SymbolMapperAsync (CancellationToken.None).ConfigureAwait (false);
+			using (new TimeTrace ())
+			{
+				this.Dispose ();
+				this.SymbolMapperAsync (CancellationToken.None).ConfigureAwait (false);
+			}
 		}
 
 		private CancellationTokenSource EnsureCts()
@@ -111,6 +117,7 @@ namespace Epsitec.VisualStudio
 							lock (this.syncRoot)
 							{
 								this.subscription = ResourceSymbolMapperSource.CreateResourceFileEvents (solutionResource)
+									.Throttle (TimeSpan.FromMilliseconds (50))
 									.Subscribe (_ => this.Restart ());
 							}
 							var mapper = new ResourceSymbolMapper ();

@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Strings
 		}
 
 		[Import]
-		internal Epsitec.VisualStudio.Engine Engine
+		internal Epsitec.VisualStudio.EngineSource EngineSource
 		{
 			get;
 			set;
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Strings
 		{
 			using (new TimeTrace ())
 			{
-				this.Engine.ActiveTextBuffer = textBuffer;
+				this.EngineSource.ActiveTextBuffer = textBuffer;
 				return new QuickInfoSource (this, textBuffer);
 			}
 		}

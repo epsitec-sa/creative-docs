@@ -13,7 +13,7 @@ namespace Epsitec
 	{
 		public static IObservable<FileSystemNotification> Watch(this FileSystemWatcher watcher, WatcherChangeTypes changeTypes = WatcherChangeTypes.All)
 		{
-			return Observable.Create<FileSystemNotification> (
+			var notifications = Observable.Create<FileSystemNotification> (
 				observer =>
 				{
 					var mergedEvents = Observable.Merge (watcher.CreateObservableEvents (changeTypes));
@@ -25,6 +25,7 @@ namespace Epsitec
 						() => observer.OnCompleted ());
 				}
 			);
+			return Observable.Using (() => watcher, _ => notifications);
 		}
 
 		private static IEnumerable<IObservable<FileSystemNotification>> CreateObservableEvents(this FileSystemWatcher watcher, WatcherChangeTypes changeTypes)

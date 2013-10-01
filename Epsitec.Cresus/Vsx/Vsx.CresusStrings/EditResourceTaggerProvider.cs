@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Strings
 		}
 
 		[Import]
-		internal Epsitec.VisualStudio.Engine Engine
+		internal Epsitec.VisualStudio.EngineSource EngineSource
 		{
 			get;
 			set;
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Strings
 			// make sure we are tagging only the top buffer
 			if (textView != null && textBuffer == textView.TextBuffer)
 			{
-				this.Engine.ActiveTextBuffer = textBuffer;
+				this.EngineSource.ActiveTextBuffer = textBuffer;
 				return new EditResourceTagger (textBuffer, textView, this) as ITagger<T>;
 			}
 			return null;
