@@ -46,14 +46,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.UpdateScroller ();
 		}
 
-		public Timeline							Timeline
-		{
-			get
-			{
-				return this.timeline;
-			}
-		}
-
 		public int								CellsCount
 		{
 			get
