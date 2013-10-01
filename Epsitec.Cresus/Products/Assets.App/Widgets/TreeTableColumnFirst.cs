@@ -78,9 +78,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						PreferredSize = rect.Size,
 						Anchor        = AnchorStyles.BottomLeft,
 						Margins       = new Margins (rect.Left, 0, 0, rect.Bottom),
+						Name          = TreeTableColumnFirst.Serialize (y, cellFirst.Type),
 					};
 
 					this.Children.Add (button);
+
+					button.Clicked += delegate
+					{
+						int yy;
+						TreeTableFirstType tt;
+						TreeTableColumnFirst.Deserialize (button.Name, out yy, out tt);
+						this.OnTreeButtonClicked (yy, tt);
+					};
 				}
 
 				y++;
@@ -104,6 +113,39 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			return rect;
 		}
+
+
+		private static string Serialize(int row, TreeTableFirstType type)
+		{
+			string s1 = row.ToString ();
+			string s2 = ((int) type).ToString ();
+
+			return string.Concat (s1, " ", s2);
+		}
+
+		private static void Deserialize(string text, out int row, out TreeTableFirstType type)
+		{
+			var p = text.Split (' ');
+
+			row = int.Parse (p[0]);
+
+			int t = int.Parse (p[1]);
+			type = (TreeTableFirstType) t;
+		}
+
+
+		#region Events handler
+		private void OnTreeButtonClicked(int row, TreeTableFirstType type)
+		{
+			if (this.TreeButtonClicked != null)
+			{
+				this.TreeButtonClicked (this, row, type);
+			}
+		}
+
+		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableFirstType type);
+		public event TreeButtonClickedEventHandler TreeButtonClicked;
+		#endregion
 
 
 		private TreeTableCellFirst[] cellFirsts;

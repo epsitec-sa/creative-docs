@@ -513,6 +513,10 @@ namespace Epsitec.Cresus.Assets.App
 				this.treeTableSelectedRow = this.treeTableController.TopVisibleRow + row;
 				this.UpdateTreeTableController ();
 			};
+
+			this.treeTableController.TreeButtonClicked += delegate (object sender, int row, TreeTableFirstType type)
+			{
+			};
 		}
 
 		private void UpdateTreeTableController()
