@@ -205,6 +205,35 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static void PersonDied(Cresus.Core.Business.BusinessContext businessContext, AiderPersonEntity person, Date date)
+		{
+			var contacts       = person.Contacts.ToList ();
+			var households     = person.Households.ToList ();
+			var participations = person.Groups.ToList ();
+
+			person.Visibility = PersonVisibilityStatus.Deceased;
+			person.eCH_Person.PersonDateOfDeath = date;
+
+			var deadContact = AiderContactEntity.CreateDeceased (businessContext, person);
+
+			//	Update all group participations and replace the contact with the deceased one,
+			//	so that we can keep an history:
+
+			foreach (var participation in participations)
+			{
+				participation.Contact = deadContact;
+				participation.EndDate = date;
+			}
+
+			foreach (var contact in contacts)
+			{
+				AiderContactEntity.Delete (businessContext, contact);
+			}
+
+			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, households);
+		}
+
+
 		public FormattedText GetGroupTitle()
 		{
 			int nbGroups = this.Groups.Count;

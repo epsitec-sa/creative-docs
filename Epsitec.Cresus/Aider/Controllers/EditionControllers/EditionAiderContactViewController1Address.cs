@@ -23,6 +23,11 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			var currentUser = UserManager.Current.AuthenticatedUser;
 			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
 
+			if (this.Entity.ContactType == ContactType.Deceased)
+			{
+				return;
+			}
+
 			bricks = this.GetHeader (bricks);
 
 			bricks = bricks

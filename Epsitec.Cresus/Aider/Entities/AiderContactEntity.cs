@@ -56,6 +56,7 @@ namespace Epsitec.Aider.Entities
 				case Enumerations.ContactType.PersonHousehold:
 					return this.GetPersonRecipientText ();
 
+				case Enumerations.ContactType.Deceased:
 				default:
 					// Is that right or should we throw here?
 					return "";
@@ -96,6 +97,7 @@ namespace Epsitec.Aider.Entities
 				case Enumerations.ContactType.PersonHousehold:
 					return this.GetPersonParentRecipientText ();
 
+				case Enumerations.ContactType.Deceased:
 				default:
 					// Is that right or should we throw here?
 					return "";
@@ -149,6 +151,7 @@ namespace Epsitec.Aider.Entities
 		{
 			switch (this.ContactType)
 			{
+				case ContactType.Deceased:
 				case ContactType.None:
 					return null;
 
@@ -204,6 +207,11 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, HouseholdRole role)
 		{
+			if (person.IsDeceased)
+			{
+				throw new System.ArgumentException ("Cannot create contact for a dead person.");
+			}
+			
 			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonHousehold);
 
 			contact.Person        = person;
@@ -216,8 +224,29 @@ namespace Epsitec.Aider.Entities
 			return contact;
 		}
 
+		public static AiderContactEntity CreateDeceased(BusinessContext businessContext, AiderPersonEntity person)
+		{
+			if (person.IsAlive)
+			{
+				throw new System.ArgumentException ("Cannot create contact for a living person.");
+			}
+
+			var contact = AiderContactEntity.Create (businessContext, ContactType.Deceased);
+
+			contact.Person = person;
+
+			person.AddContactInternal (contact);
+
+			return contact;
+		}
+
 		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AddressType type)
 		{
+			if (person.IsDeceased)
+			{
+				throw new System.ArgumentException ("Cannot create contact for a dead person.");
+			}
+
 			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonAddress);
 
 			contact.Person      = person;
@@ -314,6 +343,9 @@ namespace Epsitec.Aider.Entities
 				case ContactType.PersonAddress:
 					return this.GetPersonAddressDisplayName ();
 
+				case ContactType.Deceased:
+					return this.GetPersonDeceasedDisplayName ();
+					
 				case ContactType.PersonHousehold:
 					return this.GetPersonHouseholdDisplayName ();
 
@@ -342,6 +374,11 @@ namespace Epsitec.Aider.Entities
 		private string GetPersonAddressDisplayName()
 		{
 			return this.Person.GetDisplayName () + " (°)";
+		}
+
+		private string GetPersonDeceasedDisplayName()
+		{
+			return this.Person.GetDisplayName ();
 		}
 
 		private string GetPersonHouseholdDisplayName()
@@ -382,6 +419,7 @@ namespace Epsitec.Aider.Entities
 				case ContactType.Legal:
 					return this.LegalPerson.ParishGroup;
 
+				case ContactType.Deceased:
 				case ContactType.PersonAddress:
 				case ContactType.PersonHousehold:
 					return this.Person.ParishGroup;

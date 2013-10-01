@@ -39,9 +39,9 @@ namespace Epsitec.Aider.Rules
 
 			if (entity.ContactType == ContactType.PersonAddress)
 			{
-				// We don't register the address in other cases, as it is owned by another entity
-				// like an household or a legal person, and it will therefore be registered through
-				// it.
+				//	We don't register the address in other cases, as it is owned by another entity
+				//	like an household or a legal person, and it will therefore be registered through
+				//	it.
 
 				businessContext.Register (entity.Address);
 			}

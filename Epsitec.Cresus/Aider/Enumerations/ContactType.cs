@@ -14,5 +14,7 @@ namespace Epsitec.Aider.Enumerations
 		PersonAddress		= 2,
 
 		Legal				= 3,
+
+		Deceased			= 4,				//	DeadPerson
 	}
 }

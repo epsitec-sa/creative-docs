@@ -48,13 +48,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected void DeleteEmptyHouseholds(IEnumerable<AiderHouseholdEntity> households)
 		{
-			foreach (var household in households)
-			{
-				if (household.Members.Count == 0)
-				{
-					AiderHouseholdEntity.Delete (this.BusinessContext, household);
-				}
-			}
+			AiderHouseholdEntity.DeleteEmptyHouseholds (this.BusinessContext, households);
 		}
 		
 		private static void CleanUpEchPerson(AiderPersonEntity person)

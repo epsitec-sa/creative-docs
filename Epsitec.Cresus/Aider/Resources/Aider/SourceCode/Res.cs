@@ -375,6 +375,14 @@ namespace Epsitec.Aider
 				
 				public static class ContactType
 				{
+					//	designer:cap/LVAGH
+					public static global::Epsitec.Common.Types.Caption Deceased
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 560));
+						}
+					}
 					//	designer:cap/LVA0E
 					public static global::Epsitec.Common.Types.Caption Legal
 					{

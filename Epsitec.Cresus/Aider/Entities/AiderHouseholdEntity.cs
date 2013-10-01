@@ -302,6 +302,16 @@ namespace Epsitec.Aider.Entities
 			businessContext.DeleteEntity (household);
 		}
 
+		public static void DeleteEmptyHouseholds(BusinessContext businessContext, IEnumerable<AiderHouseholdEntity> households)
+		{
+			foreach (var household in households)
+			{
+				if (household.Members.Count == 0)
+				{
+					AiderHouseholdEntity.Delete (businessContext, household);
+				}
+			}
+		}
 
 		internal void AddContactInternal(AiderContactEntity contact)
 		{

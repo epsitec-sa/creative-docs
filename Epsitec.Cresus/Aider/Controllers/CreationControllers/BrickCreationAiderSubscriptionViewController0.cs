@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Data.Common;
 
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
@@ -57,7 +60,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 			if (household.IsNotNull () && legalPersonContact.IsNotNull ())
 			{
-				var message = "Il faut spécifier qu'un seul destinataire.";
+				var message = "Il ne faut spécifier qu'un seul destinataire.";
 
 				throw new BusinessRuleException (message);
 			}
@@ -95,7 +98,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 			var edition = this.GetEdition (receiver.Address);
 
-			return AiderSubscriptionEntity.Create (businessContext, receiver, edition, 1);
+			return AiderSubscriptionEntity.Create (businessContext, receiver, edition, count: 1);
 		}
 
 		private AiderGroupEntity GetEdition(AiderAddressEntity address)
@@ -108,9 +111,12 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 			var regionCode = parishName != null
 				? parishRepository.GetDetails (parishName).RegionCode
-				: 4;
+				: BrickCreationAiderSubscriptionViewController0.DefaultRegionCode;
 
 			return ParishAssigner.FindRegionGroup (this.BusinessContext, regionCode);
 		}
+
+
+		private static readonly int				DefaultRegionCode = 4;
 	}
 }

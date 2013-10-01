@@ -49,18 +49,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var warning = this.Entity;
 			var person  = warning.Person;
 
-			var contacts   = person.Contacts.ToList ();
-			var households = person.Households.ToList ();
+			AiderPersonEntity.PersonDied (this.BusinessContext, person, date);
 
-			person.Visibility = PersonVisibilityStatus.Deceased;
-			person.eCH_Person.PersonDateOfDeath = date;
-			
-			foreach (var contact in contacts)
-			{
-				AiderContactEntity.Delete (this.BusinessContext, contact);
-			}
-
-			this.DeleteEmptyHouseholds (households);
 			this.ClearWarningAndRefreshCaches ();
 		}
 

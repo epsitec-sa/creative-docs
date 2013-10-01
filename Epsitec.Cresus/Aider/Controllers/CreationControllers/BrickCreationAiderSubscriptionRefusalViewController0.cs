@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Cresus.Bricks;
@@ -55,7 +58,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 			if (household.IsNotNull () && legalPersonContact.IsNotNull ())
 			{
-				var message = "Il faut spécifier qu'un seul destinataire.";
+				var message = "Il ne faut spécifier qu'un seul destinataire.";
 
 				throw new BusinessRuleException (message);
 			}

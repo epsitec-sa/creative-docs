@@ -289,7 +289,7 @@
   <data name="Val.Enum.ContactType.PersonHousehold" id="AUD">&lt;s:data id="_0" f:Name="PersonHousehold" f:Labels="{Collection {Text 'Personne (ménage)'}}" /&gt;</data>
   <data name="Val.Enum.ContactType.PersonAddress" id="AVD">&lt;s:data id="_0" f:Name="PersonAddress" f:Labels="{Collection {Text 'Personne (adresse supplémentaire)'}}" /&gt;</data>
   <data name="Val.Enum.ContactType.Legal" id="A0E">&lt;s:data id="_0" f:Name="Legal" f:Labels="{Collection {Text 'Personne morale'}}" /&gt;</data>
-  <data name="Typ.Enum.ContactType" id="ASD">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.ContactType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.ContactType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVATD]'}, {Text '1 [LVAUD]'}, {Text '2 [LVAVD]'}, {Text '3 [LVA0E]'}}" /&gt;</data>
+  <data name="Typ.Enum.ContactType" id="ASD">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.ContactType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.ContactType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVATD]'}, {Text '1 [LVAUD]'}, {Text '2 [LVAVD]'}, {Text '3 [LVA0E]'}, {Text '4 [LVAGH]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.ContactType, Aider/None" f:Labels="{Collection {Text 'Type de contact'}}" /&gt;</data>
   <data name="Val.Enum.HouseholdRole.None" id="A2E">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'Membre'}}" /&gt;</data>
   <data name="Val.Enum.HouseholdRole.Head" id="A3E">&lt;s:data id="_0" f:Name="Head" f:Labels="{Collection {Text 'Chef de famille'}}" /&gt;</data>
   <data name="Typ.Enum.HouseholdRole" id="A1E">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.HouseholdRole" f:_1.SystemType="E:Epsitec.Aider.Enumerations.HouseholdRole, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA2E]'}, {Text '1 [LVA3E]'}}" /&gt;</data>
@@ -465,4 +465,5 @@
   <data name="Cmd.Base.ShowAiderSubscriptionVerificationRequested" id="ADH">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderSubscriptionVerificationRequested" f:Icon="manifest:Epsitec.Aider.Images.Data.AiderSubscription.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'À vérifier'}}" /&gt;</data>
   <data name="Fld.AiderPerson.MainContact" id="AEH">&lt;s:data id="_0" f:Name="MainContact" f:Labels="{Collection {Text 'Contact principal'}}" /&gt;</data>
   <data name="Fld.AiderPerson.HouseholdContact" id="AFH">&lt;s:data id="_0" f:Name="HouseholdContact" /&gt;</data>
+  <data name="Val.Enum.ContactType.Deceased" id="AGH">&lt;s:data id="_0" f:Name="Deceased" f:Labels="{Collection {Text 'Personne décédée'}}" /&gt;</data>
 </bundle>

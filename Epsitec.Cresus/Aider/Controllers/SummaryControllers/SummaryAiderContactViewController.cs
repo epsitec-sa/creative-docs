@@ -22,6 +22,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderContactEntity> wall)
 		{
+			//	TODO: refactor this in a set of sub-controllers, just like SummaryAiderPersonWarningViewController
+
 			var contact = this.Entity;
 			var household = this.Entity.Household;
 
@@ -39,6 +41,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			switch (this.Entity.ContactType)
 			{
+				case Enumerations.ContactType.Deceased:
+					if (contact.Person.IsNotNull ())
+					{						
+						wall.AddBrick (x => x.Person)
+							.Icon (contact.Person.GetIconName ("Data"))
+							.Text (contactSummary)
+							.Attribute (BrickMode.DefaultToSummarySubView);
+					}
+					break;
+
 				case Enumerations.ContactType.PersonHousehold:
 					if (contact.Person.IsNotNull ())
 					{						
