@@ -25,7 +25,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			get
 			{
-				return this.Entity.eCH_Person.DataSource == Enumerations.DataSource.Government;
+				return true; // this.Entity.eCH_Person.DataSource == Enumerations.DataSource.Government;
 			}
 		}
 
@@ -34,9 +34,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return Resources.Text ("Fusionner avec un contact manuel");
 		}
 
-		private string GetText()
+		private FormattedText GetText()
 		{
-			return "Cette action fusionne les données avec la personne définie par le registre cantonal des habitants (RCH).";
+			return TextFormatter.FormatText ("Cette action fusionne les données des deux personnes.\n\n",
+				"Le contact", this.AdditionalEntity.GetDisplayName (), "que vous venez de glisser sur", this.Entity.GetDisplayName (), "sera supprimé.");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -55,6 +56,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				var otherPerson    = otherContact.Person;
 
 				AiderPersonEntity.MergePersons (businessContext, officialPerson, otherPerson);
+				AiderContactEntity.Delete (businessContext, otherContact);
 			}
 		}
 

@@ -206,6 +206,13 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		/// <summary>
+		/// Kills the person... which will mark it as deceased, removing any live contacts and
+		/// associated households; groups will be remapped to the deceased contact.
+		/// </summary>
+		/// <param name="businessContext">The business context.</param>
+		/// <param name="person">The dead person.</param>
+		/// <param name="date">The date of the death.</param>
 		public static void KillPerson(BusinessContext businessContext, AiderPersonEntity person, Date date)
 		{
 			var contacts       = person.Contacts.ToList ();
@@ -234,6 +241,15 @@ namespace Epsitec.Aider.Entities
 			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, households);
 		}
 
+		/// <summary>
+		/// Merges two persons. The official person will be the one which will be kept;
+		/// the other person will get deleted. Move as much information from the 'other'
+		/// to the official one. If the other person has a governmental eCH record, then
+		/// it will be used instead of the official person (swap).
+		/// </summary>
+		/// <param name="businessContext">The business context.</param>
+		/// <param name="officialPerson">The official person.</param>
+		/// <param name="otherPerson">The other person.</param>
 		public static void MergePersons(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
 		{
 			if (officialPerson == otherPerson)
@@ -286,6 +302,7 @@ namespace Epsitec.Aider.Entities
 				contact.Person = officialPerson;
 			}
 
+			AiderContactEntity.DeleteDuplicateContacts (businessContext, officialPerson.Contacts.ToList ());
 			AiderPersonEntity.Delete (businessContext, otherPerson);
 		}
 		

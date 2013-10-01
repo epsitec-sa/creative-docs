@@ -344,6 +344,75 @@ namespace Epsitec.Aider.Entities
 			
 			businessContext.DeleteEntity (contact);
 		}
+		
+		public static void DeleteDuplicateContacts(BusinessContext businessContext, IEnumerable<AiderContactEntity> contacts)
+		{
+			var processed = new List<AiderContactEntity> ();
+
+			foreach (var contact in contacts)
+			{
+				var type       = contact.ContactType;
+				var candidates = processed.Where (x => x.ContactType == type);
+
+				AiderContactEntity remove = null;
+
+				foreach (var candidate in candidates)
+				{
+					switch (type)
+					{
+						case ContactType.Deceased:
+							if (candidate.Person == contact.Person)
+							{
+								remove = candidate;
+								goto processDuplicate;
+							}
+							break;
+						
+						case ContactType.Legal:
+							if ((candidate.LegalPerson == contact.LegalPerson) &&
+								(candidate.LegalPersonContactFullName == contact.LegalPersonContactFullName) &&
+								(candidate.LegalPersonContactMrMrs == contact.LegalPersonContactMrMrs) &&
+								(candidate.LegalPersonContactPrincipal == contact.LegalPersonContactPrincipal) &&
+								(candidate.LegalPersonContactRole == contact.LegalPersonContactRole))
+							{
+								remove = candidate;
+								goto processDuplicate;
+							}
+							break;
+						
+						case ContactType.PersonAddress:
+							if ((candidate.Person == contact.Person) &&
+								(candidate.AddressType == contact.AddressType) &&
+								(candidate.Address.GetSummary () == contact.Address.GetSummary ()))
+							{
+								remove = candidate;
+								goto processDuplicate;
+							}
+							break;
+
+						case ContactType.PersonHousehold:
+							if ((candidate.Person == contact.Person) &&
+								(candidate.Household == contact.Household))
+							{
+								remove = candidate;
+								goto processDuplicate;
+							}
+							break;
+						
+						default:
+							break;
+					}
+				}
+
+				processed.Add (contact);
+
+			processDuplicate:
+				if (remove != null)
+				{
+					AiderContactEntity.Delete (businessContext, contact);
+				}
+			}
+		}
 
 
 		public string GetDisplayName()
