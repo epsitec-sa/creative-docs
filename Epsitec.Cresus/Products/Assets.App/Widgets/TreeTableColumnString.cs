@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public void SetCellStrings(TreeTableCellString[] cellStrings)
 		{
 			this.cellStrings = cellStrings;
+			this.Invalidate ();
 		}
 
 

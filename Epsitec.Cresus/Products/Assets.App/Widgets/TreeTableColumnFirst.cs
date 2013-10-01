@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public void SetCellFirsts(TreeTableCellFirst[] cellFirsts)
 		{
 			this.cellFirsts = cellFirsts;
+			this.Invalidate ();
 		}
 
 

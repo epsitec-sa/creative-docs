@@ -188,7 +188,8 @@ namespace Epsitec.Cresus.Assets.App
 			//?this.CreateTestTimelineBase (frame);
 			//?this.CreateTestTimelineController (frame);
 			//?this.CreateTestTimelineProvider (frame);
-			this.CreateTestTreeTable (frame);
+			//?this.CreateTestTreeTableBase (frame);
+			this.CreateTestTreeTableController (frame);
 		}
 
 		private void CreateTestTimelineBase(Widget parent)
@@ -216,15 +217,16 @@ namespace Epsitec.Cresus.Assets.App
 			};
 		}
 
+
 		private void CreateTestTimelineController(Widget parent)
 		{
-			this.start = new System.DateTime (2013, 1, 1);
-			this.cellsCount = 365;
-			this.selectedCell = -1;
+			this.timelineStart = new System.DateTime (2013, 1, 1);
+			this.timelineCellsCount = 365;
+			this.timelineSelectedCell = -1;
 
-			this.controller = new NavigationTimelineController
+			this.timelineController = new NavigationTimelineController
 			{
-				CellsCount = cellsCount,
+				CellsCount = timelineCellsCount,
 			};
 
 			var frame = new FrameBox
@@ -235,39 +237,40 @@ namespace Epsitec.Cresus.Assets.App
 				Margins         = new Margins (10),
 			};
 
-			this.controller.DateChanged += delegate
+			this.timelineController.DateChanged += delegate
 			{
-				this.UpdateController ();
+				this.UpdateTimelineController ();
 			};
 
-			this.controller.CreateUI (frame);
-			this.controller.Timeline.Pivot = 0.0;
-			this.controller.Timeline.SetRows (AssetsApplication.GetRows (false));
-			this.UpdateController ();
+			this.timelineController.CreateUI (frame);
+			this.timelineController.Timeline.Pivot = 0.0;
+			this.timelineController.Timeline.SetRows (AssetsApplication.GetRows (false));
+			this.UpdateTimelineController ();
 
-			this.controller.Timeline.CellClicked += delegate (object sender, int row, int rank)
+			this.timelineController.Timeline.CellClicked += delegate (object sender, int row, int rank)
 			{
 				if (row == 0)
 				{
-					this.selectedCell = this.controller.LeftVisibleCell + rank;
-					this.UpdateController ();
+					this.timelineSelectedCell = this.timelineController.LeftVisibleCell + rank;
+					this.UpdateTimelineController ();
 				}
 			};
 		}
 
-		private void UpdateController()
+		private void UpdateTimelineController()
 		{
-			var date = AssetsApplication.AddDays (start, this.controller.LeftVisibleCell);
-			int cellsCount = System.Math.Min (this.cellsCount, this.controller.Timeline.VisibleCellsCount);
-			int selection = this.selectedCell - this.controller.LeftVisibleCell;
+			var date = AssetsApplication.AddDays (timelineStart, this.timelineController.LeftVisibleCell);
+			int cellsCount = System.Math.Min (this.timelineCellsCount, this.timelineController.Timeline.VisibleCellsCount);
+			int selection = this.timelineSelectedCell - this.timelineController.LeftVisibleCell;
 
-			AssetsApplication.InitialiseTimeline (this.controller.Timeline, date, cellsCount, selection);
+			AssetsApplication.InitialiseTimeline (this.timelineController.Timeline, date, cellsCount, selection);
 		}
 
-		private NavigationTimelineController controller;
-		private System.DateTime start;
-		private int cellsCount;
-		private int selectedCell;
+		private NavigationTimelineController timelineController;
+		private System.DateTime timelineStart;
+		private int timelineCellsCount;
+		private int timelineSelectedCell;
+
 
 		private void CreateTestTimelineProvider(Widget parent)
 		{
@@ -504,7 +507,7 @@ namespace Epsitec.Cresus.Assets.App
 		}
 
 
-		private void CreateTestTreeTable(Widget parent)
+		private void CreateTestTreeTableBase(Widget parent)
 		{
 			var tt = new TreeTable ()
 			{
@@ -514,13 +517,65 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			tt.SetColumns (AssetsApplication.GetColumns ());
-			this.InitializeTreeTable (tt);
+			this.InitialiseTreeTable (tt, 0, -1);
 
 			tt.SizeChanged += delegate
 			{
-				this.InitializeTreeTable (tt);
+				this.InitialiseTreeTable (tt, 0, -1);
 			};
 		}
+
+		private void CreateTestTreeTableController(Widget parent)
+		{
+			var OO = this.GetTreeTableObjects ();
+
+			this.treeTableRowsCount = OO.Length;
+			this.treeTableSelectedRow = -1;
+
+			this.treeTableController = new NavigationTreeTableController
+			{
+				RowsCount = treeTableRowsCount,
+			};
+
+			var frame = new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Fill,
+				Margins         = new Margins (10),
+			};
+
+			this.treeTableController.RowChanged += delegate
+			{
+				this.UpdateTreeTableController ();
+			};
+
+			this.treeTableController.CreateUI (frame);
+			this.treeTableController.TreeTable.SetColumns (AssetsApplication.GetColumns ());
+			this.UpdateTreeTableController ();
+
+			//?this.treeTableController.TreeTable.CellClicked += delegate (object sender, int row, int rank)
+			//?{
+			//?	if (row == 0)
+			//?	{
+			//?		this.treeTableSelectedRow = this.treeTableController.LeftVisibleCell + rank;
+			//?		this.UpdateTreeTableController ();
+			//?	}
+			//?};
+		}
+
+		private void UpdateTreeTableController()
+		{
+			var first = this.treeTableController.TopVisibleRow;
+			int cellsCount = System.Math.Min (this.treeTableRowsCount, this.treeTableController.TreeTable.VisibleRowsCount);
+			int selection = this.treeTableSelectedRow - this.treeTableController.TopVisibleRow;
+
+			this.InitialiseTreeTable (this.treeTableController.TreeTable, first, selection);
+		}
+
+		private NavigationTreeTableController treeTableController;
+		private int treeTableRowsCount;
+		private int treeTableSelectedRow;
+
 
 		private static List<AbstractTreeTableColumn> GetColumns()
 		{
@@ -573,7 +628,7 @@ namespace Epsitec.Cresus.Assets.App
 			return list;
 		}
 
-		private void InitializeTreeTable(TreeTable treeTable)
+		private void InitialiseTreeTable(TreeTable treeTable, int firstRow, int selection)
 		{
 			treeTable.ColumnFirst.HeaderDescription = "Objet";
 			treeTable.ColumnFirst.FooterDescription = "Liste, pied";
@@ -586,10 +641,15 @@ namespace Epsitec.Cresus.Assets.App
 
 			var OO = this.GetTreeTableObjects ();
 
-			var count = System.Math.Min(treeTable.VisibleRowsCount, OO.Length);
+			var count = treeTable.VisibleRowsCount;
 			for (int i=0; i<count; i++)
 			{
-				var O = OO[i];
+				if (firstRow+i > OO.Length)
+				{
+					break;
+				}
+
+				var O = OO[firstRow+i];
 
 				var type = O.Level == 3 ? TreeTableFirstType.Final : TreeTableFirstType.Extended;
 
