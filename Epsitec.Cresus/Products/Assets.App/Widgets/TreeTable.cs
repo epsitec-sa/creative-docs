@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			graphics.AddFilledRectangle (new Rectangle (Point.Zero, this.ActualSize));
-			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+			graphics.RenderSolid (ColorManager.TreeTableBackgroundColor);
 		}
 
 

@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var rect = this.GetCellsRect (y);
 
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (ColorManager.BackgroundFirstColor);
+				graphics.RenderSolid (ColorManager.TreeTableBackgroundFirstColor);
 
 				rect.Deflate (this.DescriptionMargin * (cellFirst.Level+1), 0, 0, 0);
 
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.PaintGlyph (graphics, cellFirst.Type, rect);
 				}
 
-				rect.Deflate (rect.Height * 1.0, 0, 0, 0);
+				rect.Deflate (this.DescriptionMargin * 2, 0, 0, 0);
 
 				var font = Font.DefaultFont;
 
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				graphics.LineWidth = rect.Height * 0.1;
 				graphics.AddPath (path);
-				graphics.RenderSolid (ColorManager.ArrowColor);
+				graphics.RenderSolid (ColorManager.TreeTableArrowColor);
 				graphics.LineWidth = 1;
 			}
 		}

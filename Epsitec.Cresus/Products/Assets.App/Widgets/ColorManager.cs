@@ -64,7 +64,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color BackgroundFirstColor
+		public static Color TreeTableBackgroundColor
+		{
+			get
+			{
+				return Color.FromBrightness (0.90);
+			}
+		}
+
+		public static Color TreeTableBackgroundFirstColor
 		{
 			get
 			{
@@ -72,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color ArrowColor
+		public static Color TreeTableArrowColor
 		{
 			get
 			{

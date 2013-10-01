@@ -27,6 +27,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			foreach (var cellString in this.cellStrings)
 			{
 				var rect = this.GetCellsRect (y);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
 				rect.Deflate (this.DescriptionMargin, 0, 0, 0);
 
 				var font = Font.DefaultFont;

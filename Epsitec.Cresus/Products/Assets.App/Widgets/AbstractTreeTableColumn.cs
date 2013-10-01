@@ -80,9 +80,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			graphics.AddFilledRectangle (new Rectangle (Point.Zero, this.ActualSize));
-			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
-
 			this.PaintHeader (graphics);
 			this.PaintFooter (graphics);
 		}
@@ -100,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var rect = this.HeaderRect;
 
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (Color.FromBrightness (0.9));
+				graphics.RenderSolid (ColorManager.TreeTableBackgroundColor);
 
 				if (!string.IsNullOrEmpty (this.HeaderDescription))
 				{
@@ -121,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var rect = this.FooterRect;
 
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (Color.FromBrightness (0.9));
+				graphics.RenderSolid (ColorManager.TreeTableBackgroundColor);
 
 				if (!string.IsNullOrEmpty (this.FooterDescription))
 				{
