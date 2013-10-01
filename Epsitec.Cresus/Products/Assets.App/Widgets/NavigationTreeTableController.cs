@@ -39,14 +39,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.UpdateScroller ();
 		}
 
-		public TreeTable						TreeTable
-		{
-			get
-			{
-				return this.treeTable;
-			}
-		}
-
 		public int								RowsCount
 		{
 			get
@@ -70,6 +62,38 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return (int) this.scroller.Value;
 			}
 		}
+
+
+		#region TreeTable Facade
+		public int								VisibleRowsCount
+		{
+			get
+			{
+				return this.treeTable.VisibleRowsCount;
+			}
+		}
+
+		public TreeTableColumnFirst				ColumnFirst
+		{
+			get
+			{
+				return this.treeTable.ColumnFirst;
+			}
+		}
+
+		public IEnumerable<AbstractTreeTableColumn> Columns
+		{
+			get
+			{
+				return this.treeTable.Columns;
+			}
+		}
+
+		public void SetColumns(List<AbstractTreeTableColumn> columns)
+		{
+			this.treeTable.SetColumns (columns);
+		}
+		#endregion
 
 
 		private void UpdateScroller()

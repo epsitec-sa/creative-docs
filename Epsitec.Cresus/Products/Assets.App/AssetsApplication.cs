@@ -188,7 +188,6 @@ namespace Epsitec.Cresus.Assets.App
 			//?this.CreateTestTimelineBase (frame);
 			//?this.CreateTestTimelineController (frame);
 			//?this.CreateTestTimelineProvider (frame);
-			//?this.CreateTestTreeTableBase (frame);
 			this.CreateTestTreeTableController (frame);
 		}
 
@@ -507,24 +506,6 @@ namespace Epsitec.Cresus.Assets.App
 		}
 
 
-		private void CreateTestTreeTableBase(Widget parent)
-		{
-			var tt = new TreeTable ()
-			{
-				Parent     = parent,
-				Dock       = DockStyle.Fill,
-				Margins    = new Margins (10),
-			};
-
-			tt.SetColumns (AssetsApplication.GetColumns ());
-			AssetsApplication.InitialiseTreeTable (tt, 0, -1);
-
-			tt.SizeChanged += delegate
-			{
-				AssetsApplication.InitialiseTreeTable (tt, 0, -1);
-			};
-		}
-
 		private void CreateTestTreeTableController(Widget parent)
 		{
 			var OO = AssetsApplication.GetTreeTableObjects ();
@@ -550,7 +531,7 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			this.treeTableController.CreateUI (frame);
-			this.treeTableController.TreeTable.SetColumns (AssetsApplication.GetColumns ());
+			this.treeTableController.SetColumns (AssetsApplication.GetColumns ());
 			this.UpdateTreeTableController ();
 
 			//?this.treeTableController.TreeTable.CellClicked += delegate (object sender, int row, int rank)
@@ -566,10 +547,10 @@ namespace Epsitec.Cresus.Assets.App
 		private void UpdateTreeTableController()
 		{
 			var first = this.treeTableController.TopVisibleRow;
-			int cellsCount = System.Math.Min (this.treeTableRowsCount, this.treeTableController.TreeTable.VisibleRowsCount);
+			int cellsCount = System.Math.Min (this.treeTableRowsCount, this.treeTableController.VisibleRowsCount);
 			int selection = this.treeTableSelectedRow - this.treeTableController.TopVisibleRow;
 
-			AssetsApplication.InitialiseTreeTable (this.treeTableController.TreeTable, first, selection);
+			AssetsApplication.InitialiseTreeTable (this.treeTableController, first, selection);
 		}
 
 		private NavigationTreeTableController treeTableController;
@@ -650,7 +631,7 @@ namespace Epsitec.Cresus.Assets.App
 			return list;
 		}
 
-		private static void InitialiseTreeTable(TreeTable treeTable, int firstRow, int selection)
+		private static void InitialiseTreeTable(NavigationTreeTableController treeTable, int firstRow, int selection)
 		{
 			var OO = AssetsApplication.GetTreeTableObjects ();
 

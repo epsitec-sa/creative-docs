@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public TreeTableColumnFirst ColumnFirst
+		public TreeTableColumnFirst				ColumnFirst
 		{
 			get
 			{
