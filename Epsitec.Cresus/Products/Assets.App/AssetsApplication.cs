@@ -574,7 +574,7 @@ namespace Epsitec.Cresus.Assets.App
 
 			var OO = this.GetTreeTableObjects ();
 
-			var count = treeTable.VisibleRowsCount;
+			var count = System.Math.Min(treeTable.VisibleRowsCount, OO.Length);
 			for (int i=0; i<count; i++)
 			{
 				var O = OO[i];
