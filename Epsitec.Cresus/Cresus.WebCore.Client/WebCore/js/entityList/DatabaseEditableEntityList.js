@@ -176,7 +176,7 @@ function() {
 
     reloadAndScrollToEntity: function(columnManager,entityId,entityIndex,samePage) {
       this.resetStore(false);
-      this.setLoading();
+      this.setLoading(false,true);
       columnManager.removeAllColumns();
     
       
