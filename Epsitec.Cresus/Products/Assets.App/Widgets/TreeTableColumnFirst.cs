@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.cellFirsts = cellFirsts;
 
-			this.CreateTinyButtons ();
+			this.CreateGlyphButtons ();
 			this.Invalidate ();
 		}
 
@@ -33,14 +33,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			foreach (var cellFirst in this.cellFirsts)
 			{
+				//	Dessine le fond.
 				var rect = this.GetCellsRect (y);
 
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (AbstractTreeTableColumn.GetFirstCellColor (y == this.hilitedHoverRow, cellFirst.IsSelected));
 
-				int leftMargin = this.DescriptionMargin*cellFirst.Level + this.DescriptionMargin*5/2;
-				rect.Deflate (leftMargin, 0, 0, 0);
-
+				//	Dessine le texte.
+				rect = this.GetTextRectangle (y, cellFirst.Level);
 				var font = Font.DefaultFont;
 
 				graphics.Color = ColorManager.TextColor;
@@ -54,11 +54,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			base.OnSizeChanged (oldValue, newValue);
 
-			this.CreateTinyButtons ();
+			this.CreateGlyphButtons ();
 		}
 
-		private void CreateTinyButtons()
+		private void CreateGlyphButtons()
 		{
+			//	Crée les petits boutons pour la gestion de l'arborescence.
 			this.Children.Clear ();
 
 			int y = 0;
@@ -68,17 +69,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (cellFirst.Type == TreeTableFirstType.Compacted ||
 					cellFirst.Type == TreeTableFirstType.Extended)
 				{
-					var rect = this.GetCellsRect (y);
-					rect.Deflate (this.DescriptionMargin * cellFirst.Level, 0, 0, 0);
-					var r = new Rectangle (rect.Left, rect.Bottom, rect.Height, rect.Height);
+					var rect = this.GetGlyphRectangle (y, cellFirst.Level);
 
 					var button = new GlyphButton
 					{
 						GlyphShape    = cellFirst.Type == TreeTableFirstType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
 						ButtonStyle   = ButtonStyle.ToolItem,
-						PreferredSize = r.Size,
+						PreferredSize = rect.Size,
 						Anchor        = AnchorStyles.BottomLeft,
-						Margins       = new Margins (r.Left, 0, 0, r.Bottom),
+						Margins       = new Margins (rect.Left, 0, 0, rect.Bottom),
 					};
 
 					this.Children.Add (button);
@@ -86,6 +85,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				y++;
 			}
+		}
+
+		private Rectangle GetGlyphRectangle(int y, int level)
+		{
+			//	Retourne le rectangle pour le petit GlyphButton.
+			var rect = this.GetCellsRect (y);
+			rect.Deflate (this.DescriptionMargin*level, 0, 0, 0);
+
+			return new Rectangle (rect.Left, rect.Bottom, rect.Height, rect.Height);
+		}
+
+		private Rectangle GetTextRectangle(int y, int level)
+		{
+			//	Retourne le rectangle pour le texte, en laissant la place pour le GlyphButton à gauche.
+			var rect = this.GetCellsRect (y);
+			rect.Deflate (this.DescriptionMargin*level + this.DescriptionMargin*5/2, 0, 0, 0);
+
+			return rect;
 		}
 
 
