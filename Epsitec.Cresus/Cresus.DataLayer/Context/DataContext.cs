@@ -1923,6 +1923,18 @@ namespace Epsitec.Cresus.DataLayer.Context
 				: null;
 		}
 
+		public static bool IsUnchanged(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				return true;
+			}
+			
+			var context = entity.GetEntityContext ();
+
+			return entity.GetEntityDataGeneration () < context.DataGeneration;
+		}
+
 		/// <summary>
 		/// Copies an <see cref="AbstractEntity"/> present in a <see cref="DataContext"/> in another
 		/// <see cref="DataContext"/>. What happens is exactly the same as if the
