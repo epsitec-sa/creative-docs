@@ -644,7 +644,7 @@ namespace Epsitec.Cresus.Assets.App
 			var count = treeTable.VisibleRowsCount;
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i > OO.Length)
+				if (firstRow+i >= OO.Length)
 				{
 					break;
 				}
