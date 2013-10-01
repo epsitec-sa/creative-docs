@@ -12,6 +12,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public void CreateUI(Widget parent)
 		{
+			parent.BackColor = ColorManager.TreeTableBackgroundColor;
+
 			this.treeTable = new TreeTable ()
 			{
 				Parent = parent,
