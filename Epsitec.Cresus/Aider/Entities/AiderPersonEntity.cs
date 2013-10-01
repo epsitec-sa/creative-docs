@@ -250,11 +250,12 @@ namespace Epsitec.Aider.Entities
 		/// <param name="businessContext">The business context.</param>
 		/// <param name="officialPerson">The official person.</param>
 		/// <param name="otherPerson">The other person.</param>
-		public static void MergePersons(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
+		/// <returns><c>true</c> if the persons were merged, <c>false</c> otherwise</returns>
+		public static bool MergePersons(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
 		{
 			if (officialPerson == otherPerson)
 			{
-				return;
+				return false;
 			}
 
 			if ((officialPerson.eCH_Person.DataSource == Enumerations.DataSource.Government) &&
@@ -262,7 +263,7 @@ namespace Epsitec.Aider.Entities
 			{
 				Logic.BusinessRuleException (officialPerson, "Impossible de fusionner deux personnes provenant du RCH.");
 				
-				return;
+				return false;
 			}
 
 			if (otherPerson.eCH_Person.DataSource == Enumerations.DataSource.Government)
@@ -304,9 +305,12 @@ namespace Epsitec.Aider.Entities
 
 			AiderCommentEntity.CombineComments (officialPerson, otherPerson.Comment.Text.ToSimpleText ());
 			AiderCommentEntity.CombineSystemComments (officialPerson, otherPerson.Comment.SystemText);
+			AiderCommentEntity.CombineSystemComments (officialPerson, "Fusion par " + Epsitec.Cresus.Core.Business.UserManagement.UserManager.Current.AuthenticatedUser.DisplayName + " le " + System.DateTime.Now.ToShortDateString ());
 
 			AiderContactEntity.DeleteDuplicateContacts (businessContext, officialPerson.Contacts.ToList ());
 			AiderPersonEntity.Delete (businessContext, otherPerson);
+
+			return true;
 		}
 		
 		public static void Delete(BusinessContext businessContext, AiderPersonEntity person)

@@ -49,7 +49,7 @@ namespace Epsitec.Aider.Entities
 			//	allowed in this field. The type of the field should be corrected to allow texts of
 			//	unlimited size.
 
-			if (combinedText.Length >= 800)
+			if (combinedText.Length >= AiderCommentEntity.MaximumCommentLength)
 			{
 				return;
 			}
@@ -59,24 +59,29 @@ namespace Epsitec.Aider.Entities
 
 		public static void CombineSystemComments(IComment entity, string text)
 		{
+			if (string.IsNullOrWhiteSpace (text))
+			{
+				return;
+			}
+			
 			//	With the null reference virtualizer, we don't need to handle explicitely the case
 			//	when there is no comment defined yet.
 
 			var comment = entity.Comment;
-			var combinedText = string.Concat (comment.SystemText ?? "", "\n\n", text).Trim ();
+			var combinedText = string.Concat (text, "\n\n", comment.SystemText ?? "").Trim ();
 
 			//	HACK This is a temporary hack to avoid texts with 800 or more chars with are not
 			//	allowed in this field. The type of the field should be corrected to allow texts of
 			//	unlimited size.
 
-			if (combinedText.Length >= 800)
+			if (combinedText.Length >= AiderCommentEntity.MaximumCommentLength)
 			{
-				return;
+				combinedText = combinedText.Substring (0, AiderCommentEntity.MaximumCommentLength-1);
 			}
 
 			comment.SystemText = combinedText;
 		}
 
-
+		public const int MaximumCommentLength = 800;
 	}
 }
