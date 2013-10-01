@@ -8,8 +8,7 @@ namespace Epsitec.Cresus.Strings
 {
 	public static class Config
 	{
-		public const int MaxSmartTagDelay	= 50; // [ms]
-		public const int MaxQuickInfoDelay	= 50; // [ms]
+		public const int MaxAsyncDelay	= 50; // [ms]
 
 		public const string EditResourceSmartTagMenu		= "Edit string with Cresus Designer";
 		public const string EditResourceSmartTagMenuFormat	= "Edit '{0}' with Cresus Designer";

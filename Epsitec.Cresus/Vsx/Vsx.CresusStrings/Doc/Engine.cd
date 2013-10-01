@@ -8,7 +8,7 @@
       <Field Name="workspace" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>EAQAABAAACAQAAAAQBEAAgAAAAAAAIAAQAwAAAAABAA=</HashCode>
+      <HashCode>EAAAABAAACAQAAAAQBEAAgAAAQAAAAAAAAgAAAAAAAA=</HashCode>
       <FileName>VisualStudio\Engine.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -79,13 +79,13 @@
       <Method Name="Dispose" Hidden="true" />
       <Method Name="EnsureSymbolMapperTask" Hidden="true" />
       <Method Name="ResourceSymbolMapperSource" Hidden="true" />
-      <Method Name="Restart" Hidden="true" />
+      <Method Name="RestartSymbolMapper" Hidden="true" />
       <Property Name="Solution" Hidden="true" />
       <Field Name="solutionProvider" Hidden="true" />
       <Field Name="symbolMapperTask" Hidden="true" />
     </Members>
     <TypeIdentifier>
-      <HashCode>EAAAgBASACAAAAAQAAIAAAAAABEAAAAAMAAIAAAAAAA=</HashCode>
+      <HashCode>AAAAgBASACAAAABAEAIAAAAAIBEAAAAAMAIIAAAAAAA=</HashCode>
       <FileName>VisualStudio\ResourceSymbolMapperSource.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>

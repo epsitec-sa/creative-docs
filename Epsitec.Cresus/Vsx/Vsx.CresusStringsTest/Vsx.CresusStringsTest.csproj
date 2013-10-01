@@ -93,6 +93,7 @@
     <Compile Include="MultiCultureResourceItemCollectionViewTest.cs" />
     <Compile Include="Spikes.cs" />
     <Compile Include="FileWatcherTest.cs" />
+    <Compile Include="DteTest.cs" />
     <Compile Include="XLayoutTest.cs" />
     <Compile Include="WpfHelper.cs" />
   </ItemGroup>

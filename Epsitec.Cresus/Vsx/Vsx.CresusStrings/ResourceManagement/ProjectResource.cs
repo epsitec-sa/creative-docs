@@ -68,6 +68,11 @@ namespace Epsitec.Cresus.ResourceManagement
 			return this.SelectMany (m => m.TouchedFilePathes ());
 		}
 
+		public IEnumerable<string> TouchedFolderPathes()
+		{
+			yield return ProjectResource.GetFolderPath (this.project.FilePath);
+		}
+
 
 		#region Object Overrides
 		public override string ToString()
@@ -109,10 +114,10 @@ namespace Epsitec.Cresus.ResourceManagement
 		private static IEnumerable<ResourceModule> LoadModules(string projectFilePath, ProjectResource project, CancellationToken cancellationToken)
 		{
 			cancellationToken.ThrowIfCancellationRequested ();
-			var directory = Path.GetDirectoryName (projectFilePath) + @"\Resources\";
-			if (Directory.Exists (directory))
+			var folderPath = ProjectResource.GetFolderPath (projectFilePath);
+			if (Directory.Exists (folderPath))
 			{
-				var fileNames = Directory.EnumerateFiles (directory, "module.info", SearchOption.AllDirectories);
+				var fileNames = Directory.EnumerateFiles (folderPath, "module.info", SearchOption.AllDirectories);
 				return fileNames
 					.Select (fn => ResourceModule.Load (fn, project, cancellationToken))
 					.Where (m => m != null)
@@ -120,6 +125,11 @@ namespace Epsitec.Cresus.ResourceManagement
 					.ToList ();
 			}
 			return Enumerable.Empty<ResourceModule> ();
+		}
+
+		private static string GetFolderPath(string projectFilePath)
+		{
+			return Path.GetDirectoryName (projectFilePath) + @"\Resources\";
 		}
 		
 		#endregion

@@ -122,7 +122,9 @@
     <Compile Include="EditResourceSmartTagAction.cs" />
     <Compile Include="Tools\Import\Druid.cs" />
     <Compile Include="VisualStudio\DocumentSourceManager.cs" />
+    <Compile Include="VisualStudio\DteNotification.cs" />
     <Compile Include="VisualStudio\EngineSource.cs" />
+    <Compile Include="VisualStudio\Extensions.cs" />
     <Compile Include="VisualStudio\ISolutionProvider.cs" />
     <Compile Include="VisualStudio\ResourceSymbolInfo.cs" />
     <Compile Include="CresusStrings.xaml.cs">

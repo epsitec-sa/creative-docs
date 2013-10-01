@@ -78,13 +78,26 @@ namespace Epsitec.Cresus.Strings
 			return null;
 		}
 
-		private Epsitec.VisualStudio.Engine Engine
+		private Epsitec.VisualStudio.EngineSource EngineSource
 		{
 			get
 			{
-				return this.provider.EngineSource.Engine;
+				return this.provider.EngineSource;
 			}
 		}
+
+		private CresusDesigner CresusDesigner
+		{
+			get
+			{
+				return this.EngineSource.CresusDesigner;
+			}
+		}
+
+		//private async Task<Epsitec.VisualStudio.Engine> EngineAsync(CancellationToken cancellationToken)
+		//{
+		//	return await this.EngineSource.EngineAsync (cancellationToken);
+		//}
 
 
 		private void OnCaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
@@ -107,7 +120,7 @@ namespace Epsitec.Cresus.Strings
 		{
 			using (new TimeTrace ())
 			{
-				var cts = new CancellationTokenSource (Config.MaxSmartTagDelay);
+				var cts = new CancellationTokenSource (Config.MaxAsyncDelay);
 				try
 				{
 					var task = this.CreateSymbolInfoAsync (point, cts.Token);
@@ -149,14 +162,14 @@ namespace Epsitec.Cresus.Strings
 
 		private async Task<ResourceSymbolInfo> CreateSymbolInfoAsync(SnapshotPoint point, CancellationToken cancellationToken)
 		{
-			this.Engine.ActiveDocumentSource.TextBuffer = this.textBuffer;
-			return await this.Engine.GetResourceSymbolInfoAsync (point, cancellationToken);
+			await this.EngineSource.ActiveTextBufferAsync (this.textBuffer, cancellationToken).ConfigureAwait (false);
+			return await this.EngineSource.GetResourceSymbolInfoAsync (point, cancellationToken).ConfigureAwait(false);
 		}
 
 		private TagSpan<SmartTag> CreateTagSpan(ResourceSymbolInfo symbolInfo)
 		{
 			SnapshotSpan span = symbolInfo.SnapshotSpan;
-			var actions = EditResourceTagger.GetSmartTagActions (this.Engine.CresusDesigner, symbolInfo);
+			var actions = EditResourceTagger.GetSmartTagActions (this.CresusDesigner, symbolInfo);
 			var smartTag = new SmartTag (SmartTagType.Factoid, actions);
 			return new TagSpan<SmartTag> (span, smartTag);
 		}

@@ -86,7 +86,7 @@ namespace Epsitec.VisualStudio
 				throw new InvalidOperationException ("TextBuffer not initialized");
 			}
 			var syntaxRoot = await this.SyntaxRootAsync (cancellationToken).ConfigureAwait (false);
-			if (syntaxRoot.Span.Contains (point.Position))
+			if (syntaxRoot != null && syntaxRoot.Span.Contains (point.Position))
 			{
 				var token = syntaxRoot.FindToken (point);
 				var semanticModel = await this.SemanticModelAsync (cancellationToken).ConfigureAwait (false);
@@ -251,8 +251,12 @@ namespace Epsitec.VisualStudio
 				using (new TimeTrace ())
 				{
 					var documentId = this.documentIdTask.Result;
-					var document = this.Solution.GetDocument (documentId);
-					return document.GetSyntaxRoot (this.ctsSyntaxAndSemantic.Token);
+					if (documentId != null)
+					{
+						var document = this.Solution.GetDocument (documentId);
+						return document.GetSyntaxRoot (this.ctsSyntaxAndSemantic.Token);
+					}
+					return null;
 				}
 			}, this.ctsSyntaxAndSemantic.Token);
 		}
@@ -264,8 +268,12 @@ namespace Epsitec.VisualStudio
 				using (new TimeTrace ())
 				{
 					var documentId = this.documentIdTask.Result;
-					var document = this.Solution.GetDocument (documentId);
-					return document.GetSemanticModel (this.ctsSyntaxAndSemantic.Token);
+					if (documentId != null)
+					{
+						var document = this.Solution.GetDocument (documentId);
+						return document.GetSemanticModel (this.ctsSyntaxAndSemantic.Token);
+					}
+					return null;
 				}
 			}, this.ctsSyntaxAndSemantic.Token);
 		}

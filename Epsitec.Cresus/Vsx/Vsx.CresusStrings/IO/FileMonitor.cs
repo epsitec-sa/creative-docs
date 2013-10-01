@@ -15,14 +15,16 @@ namespace Epsitec.IO
 		{
 			Trace.WriteLine ("FileMonitor()");
 		}
-		public FileMonitor(string path)
+		public FileMonitor(string path, bool includeSubdirectories = false)
 			: base (path)
 		{
+			this.IncludeSubdirectories = includeSubdirectories;
 			Trace.WriteLine (string.Format ("FileMonitor({0})", path));
 		}
-		public FileMonitor(string path, string filter)
+		public FileMonitor(string path, string filter, bool includeSubdirectories = false)
 			: base (path, filter)
 		{
+			this.IncludeSubdirectories = includeSubdirectories;
 			Trace.WriteLine (string.Format ("FileMonitor({0}, {1})", path, filter));
 		}
 

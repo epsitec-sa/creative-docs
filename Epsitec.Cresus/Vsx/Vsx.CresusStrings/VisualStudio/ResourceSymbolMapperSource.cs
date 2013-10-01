@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -40,16 +41,7 @@ namespace Epsitec.VisualStudio
 
 		public void Dispose()
 		{
-			lock (this.syncRoot)
-			{
-				this.cts.Cancel ();
-				var subscription = Interlocked.Exchange (ref this.subscription, null);
-				if (subscription != null)
-				{
-					subscription.Dispose ();
-				}
-				Interlocked.Exchange (ref this.symbolMapperTask, null).DisposeResult ().ForgetSafely ();
-			}
+			this.DisposeSymbolMapper ();
 		}
 
 		#endregion
@@ -58,16 +50,23 @@ namespace Epsitec.VisualStudio
 		{
 			using (new TimeTrace ())
 			{
-				var files = new HashSet<string> ();
 				var folders = new HashSet<string> ();
-				foreach (var filePath in solution.TouchedFilePathes ().Select (path => path.ToLower ()))
+				foreach (var folderPath in solution.TouchedFolderPathes ().Select (path => path.ToLower (CultureInfo.InvariantCulture)))
 				{
-					files.Add (filePath);
-					folders.Add (Path.GetDirectoryName (filePath));
+					folders.Add (Path.GetDirectoryName (folderPath));
 				}
-				return Observable.Merge (folders.Select (folder => new FileMonitor (folder).Watch ()))
-					.Where (n => files.Contains (n.FullPath, StringComparer.OrdinalIgnoreCase));
+				var monitors = folders
+					.SelectMany (folder => ResourceSymbolMapperSource.FileMonitors(folder))
+					.Select(m => m.Watch());
+
+				return Observable.Merge (monitors);
 			}
+		}
+
+		private static IEnumerable<FileMonitor> FileMonitors(string folder)
+		{
+			yield return new FileMonitor (folder, "module.info", true);
+			yield return new FileMonitor (folder, "*.resource", true);
 		}
 
 
@@ -80,18 +79,32 @@ namespace Epsitec.VisualStudio
 		}
 
 
-		private void Restart()
+		private void DisposeSymbolMapper()
+		{
+			lock (this.syncMapper)
+			{
+				this.cts.Cancel ();
+				var subscription = Interlocked.Exchange (ref this.subscription, null);
+				if (subscription != null)
+				{
+					subscription.Dispose ();
+				}
+				Interlocked.Exchange (ref this.symbolMapperTask, null).DisposeResult ().ForgetSafely ();
+			}
+		}
+
+		private void RestartSymbolMapper()
 		{
 			using (new TimeTrace ())
 			{
-				this.Dispose ();
+				this.DisposeSymbolMapper ();
 				this.SymbolMapperAsync (CancellationToken.None).ConfigureAwait (false);
 			}
 		}
 
 		private CancellationTokenSource EnsureCts()
 		{
-			lock (this.syncRoot)
+			lock (this.syncMapper)
 			{
 				if (this.cts.IsCancellationRequested)
 				{
@@ -103,7 +116,7 @@ namespace Epsitec.VisualStudio
 
 		private Task<ResourceSymbolMapper> EnsureSymbolMapperTask()
 		{
-			lock (this.syncRoot)
+			lock (this.syncMapper)
 			{
 				if (this.symbolMapperTask == null || this.symbolMapperTask.Status == TaskStatus.Canceled || this.symbolMapperTask.Status == TaskStatus.Faulted)
 				{
@@ -114,11 +127,11 @@ namespace Epsitec.VisualStudio
 						using (new TimeTrace ())
 						{
 							var solutionResource = new SolutionResource (this.Solution, cancellationToken);
-							lock (this.syncRoot)
+							lock (this.syncMapper)
 							{
 								this.subscription = ResourceSymbolMapperSource.CreateResourceFileEvents (solutionResource)
 									.Throttle (TimeSpan.FromMilliseconds (50))
-									.Subscribe (_ => this.Restart ());
+									.Subscribe (_ => this.RestartSymbolMapper ());
 							}
 							var mapper = new ResourceSymbolMapper ();
 							mapper.VisitSolution (solutionResource);
@@ -131,7 +144,7 @@ namespace Epsitec.VisualStudio
 		}
 
 
-		private readonly object syncRoot = new object ();
+		private readonly object syncMapper = new object ();
 
 		private readonly ISolutionProvider solutionProvider;
 		private CancellationTokenSource cts;

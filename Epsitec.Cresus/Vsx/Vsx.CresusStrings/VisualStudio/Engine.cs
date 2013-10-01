@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,30 +16,41 @@ using Roslyn.Services;
 
 namespace Epsitec.VisualStudio
 {
-	[Export(typeof(Engine))]
 	public class Engine : ISolutionProvider, IDisposable
 	{
-		public Engine()
+		public static Engine Create()
 		{
 			using (new TimeTrace ())
 			{
-				this.workspace = Workspace.PrimaryWorkspace;
-				this.solution = Workspace.PrimaryWorkspace.CurrentSolution;
-				if (!string.IsNullOrEmpty (this.solution.FilePath))
+				var workspace = Workspace.PrimaryWorkspace;
+				var solution = workspace.CurrentSolution;
+				if (string.IsNullOrEmpty (solution.FilePath))
 				{
-					this.workspace = Workspace.LoadSolution (this.solution.FilePath, enableFileTracking: true);
-					this.solution = this.workspace.CurrentSolution;
+					Trace.TraceWarning ("SOLUTION PATH IS EMPTY");
+					return null;
 				}
-				this.documentSourceManager = new DocumentSourceManager (this);
-				this.resourceProvider = new ResourceSymbolMapperSource (this);
+				else
+				{
+					workspace = Workspace.LoadSolution (solution.FilePath);
+					// TEST ONLY
+					//foreach (var project in this.solution.Projects.Take(1))
+					//{
+					//	foreach (var document in project.Documents)
+					//	{
+					//		Trace.WriteLine (document.FilePath);
+					//	}
+					//}
+					return new Engine (workspace);
+				}
 			}
 		}
 
-		[Import]
-		public CresusDesigner					CresusDesigner
+		private Engine(IWorkspace workspace)
 		{
-			get;
-			set;
+			this.workspace = workspace;
+			this.solution = workspace.CurrentSolution;
+			this.documentSourceManager = new DocumentSourceManager (this);
+			this.resourceProvider = new ResourceSymbolMapperSource (this);
 		}
 
 		public DocumentSource					ActiveDocumentSource
@@ -81,7 +93,6 @@ namespace Epsitec.VisualStudio
 
 		public void Dispose()
 		{
-			this.CresusDesigner.Dispose ();
 			this.resourceProvider.Dispose ();
 			this.documentSourceManager.Dispose ();
 		}

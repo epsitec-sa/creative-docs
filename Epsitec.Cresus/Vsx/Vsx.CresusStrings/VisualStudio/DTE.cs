@@ -30,6 +30,54 @@ namespace Epsitec.VisualStudio
 			}
 		}
 
+		public event EnvDTE._dispSolutionEvents_RenamedEventHandler SolutionRenamed
+		{
+			add
+			{
+				this.solutionEvents.Renamed += value;
+			}
+			remove
+			{
+				this.solutionEvents.Renamed -= value;
+			}
+		}
+
+		public event EnvDTE._dispSolutionEvents_QueryCloseSolutionEventHandler QueryCloseSolution
+		{
+			add
+			{
+				this.solutionEvents.QueryCloseSolution += value;
+			}
+			remove
+			{
+				this.solutionEvents.QueryCloseSolution -= value;
+			}
+		}
+
+		public event EnvDTE._dispSolutionEvents_AfterClosingEventHandler AfterClosingSolution
+		{
+			add
+			{
+				this.solutionEvents.AfterClosing += value;
+			}
+			remove
+			{
+				this.solutionEvents.AfterClosing -= value;
+			}
+		}
+
+		public event EnvDTE._dispSolutionEvents_BeforeClosingEventHandler BeforeClosingSolution
+		{
+			add
+			{
+				this.solutionEvents.BeforeClosing += value;
+			}
+			remove
+			{
+				this.solutionEvents.BeforeClosing -= value;
+			}
+		}
+
 		public event EnvDTE._dispSolutionEvents_ProjectAddedEventHandler ProjectAdded
 		{
 			add
@@ -54,6 +102,42 @@ namespace Epsitec.VisualStudio
 			}
 		}
 
+		public event EnvDTE._dispSolutionEvents_ProjectRenamedEventHandler ProjectRenamed
+		{
+			add
+			{
+				this.solutionEvents.ProjectRenamed += value;
+			}
+			remove
+			{
+				this.solutionEvents.ProjectRenamed -= value;
+			}
+		}
+
+		public event EnvDTE._dispDocumentEvents_DocumentClosingEventHandler DocumentClosing
+		{
+			add
+			{
+				this.documentEvents.DocumentClosing += value;
+			}
+			remove
+			{
+				this.documentEvents.DocumentClosing -= value;
+			}
+		}
+
+		public event EnvDTE._dispDocumentEvents_DocumentOpeningEventHandler DocumentOpening
+		{
+			add
+			{
+				this.documentEvents.DocumentOpening += value;
+			}
+			remove
+			{
+				this.documentEvents.DocumentOpening -= value;
+			}
+		}
+
 		public event EnvDTE._dispDocumentEvents_DocumentOpenedEventHandler DocumentOpened
 		{
 			add
@@ -63,6 +147,18 @@ namespace Epsitec.VisualStudio
 			remove
 			{
 				this.documentEvents.DocumentOpened -= value;
+			}
+		}
+
+		public event EnvDTE._dispDocumentEvents_DocumentSavedEventHandler DocumentSaved
+		{
+			add
+			{
+				this.documentEvents.DocumentSaved += value;
+			}
+			remove
+			{
+				this.documentEvents.DocumentSaved -= value;
 			}
 		}
 

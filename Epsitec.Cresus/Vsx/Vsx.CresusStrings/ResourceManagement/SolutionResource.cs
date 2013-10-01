@@ -45,11 +45,16 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-
 		public IEnumerable<string> TouchedFilePathes()
 		{
 			return this.SelectMany (p => p.TouchedFilePathes ());
 		}
+
+		public IEnumerable<string> TouchedFolderPathes()
+		{
+			return this.SelectMany (p => p.TouchedFolderPathes ());
+		}
+
 
 		#region ResourceNode Overrides
 

@@ -58,10 +58,10 @@ namespace Epsitec.Cresus.Strings
 				if (subjectTriggerPoint.HasValue)
 				{
 					var point = subjectTriggerPoint.Value;
-					var cts = new CancellationTokenSource (QuickInfoSource.Timeout(Config.MaxQuickInfoDelay));
+					var cts = new CancellationTokenSource (QuickInfoSource.Timeout(Config.MaxAsyncDelay));
 					try
 					{
-						var symbolInfoTask = this.Engine.GetResourceSymbolInfoAsync (point, cts.Token);
+						var symbolInfoTask = this.EngineSource.GetResourceSymbolInfoAsync (point, cts.Token);
 						symbolInfoTask.Wait (cts.Token);
 						var symbolInfo = symbolInfoTask.Result;
 						if (symbolInfo != null)
@@ -143,11 +143,11 @@ namespace Epsitec.Cresus.Strings
 			qiContent.Add (message);
 		}
 
-		private Epsitec.VisualStudio.Engine Engine
+		private Epsitec.VisualStudio.EngineSource EngineSource
 		{
 			get
 			{
-				return this.provider.EngineSource.Engine;
+				return this.provider.EngineSource;
 			}
 		}
 
