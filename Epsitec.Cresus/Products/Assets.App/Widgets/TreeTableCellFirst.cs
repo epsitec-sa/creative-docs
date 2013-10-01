@@ -10,12 +10,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TreeTableCellFirst
 	{
-		public TreeTableCellFirst(int level, TreeTableFirstType type, string description, double relativeHeight = 1.0)
+		public TreeTableCellFirst(int level, TreeTableFirstType type, string description, double relativeHeight = 1.0, bool isSelected = false, bool isError = false)
 		{
 			this.Level          = level;
 			this.Type           = type;
 			this.Description    = description;
 			this.RelativeHeight = relativeHeight;
+			this.IsSelected     = isSelected;
+			this.IsError        = isError;
 		}
 
 
@@ -40,6 +42,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public readonly TreeTableFirstType		Type;
 		public readonly string					Description;
 		public readonly double					RelativeHeight;
+		public readonly bool					IsSelected;
+		public readonly bool					IsError;
 
 		
 		public override string ToString()
@@ -53,6 +57,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			buffer.Append (this.Description);
 			buffer.Append (" ");
 			buffer.Append (this.RelativeHeight.ToString ());
+
+			if (this.IsSelected)
+			{
+				buffer.Append (" selected");
+			}
+			if (this.IsError)
+			{
+				buffer.Append (" error");
+			}
 
 			return buffer.ToString ();
 		}

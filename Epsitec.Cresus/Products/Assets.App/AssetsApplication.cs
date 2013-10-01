@@ -508,14 +508,11 @@ namespace Epsitec.Cresus.Assets.App
 			this.treeTableController.SetColumns (AssetsApplication.GetColumns ());
 			this.UpdateTreeTableController ();
 
-			//?this.treeTableController.TreeTable.CellClicked += delegate (object sender, int row, int rank)
-			//?{
-			//?	if (row == 0)
-			//?	{
-			//?		this.treeTableSelectedRow = this.treeTableController.LeftVisibleCell + rank;
-			//?		this.UpdateTreeTableController ();
-			//?	}
-			//?};
+			this.treeTableController.RowClicked += delegate (object sender, int column, int row)
+			{
+				this.treeTableSelectedRow = this.treeTableController.TopVisibleRow + row;
+				this.UpdateTreeTableController ();
+			};
 		}
 
 		private void UpdateTreeTableController()
@@ -632,13 +629,13 @@ namespace Epsitec.Cresus.Assets.App
 
 				var type = O.Level == 3 ? TreeTableFirstType.Final : TreeTableFirstType.Extended;
 
-				var sf = new TreeTableCellFirst (O.Level, type, O.Nom);
-				var s1 = new TreeTableCellString (true, O.Numéro);
-				var s2 = new TreeTableCellString (true, O.Responsable);
-				var s3 = new TreeTableCellString (true, O.Couleur);
-				var s4 = new TreeTableCellString (true, O.NuméroSérie);
-				var s5 = new TreeTableCellDecimal (true, O.ValeurComptable);
-				var s6 = new TreeTableCellDecimal (true, O.ValeurAssurance);
+				var sf = new TreeTableCellFirst (O.Level, type, O.Nom, isSelected: (i == selection));
+				var s1 = new TreeTableCellString (true, O.Numéro, isSelected: (i == selection));
+				var s2 = new TreeTableCellString (true, O.Responsable, isSelected: (i == selection));
+				var s3 = new TreeTableCellString (true, O.Couleur, isSelected: (i == selection));
+				var s4 = new TreeTableCellString (true, O.NuméroSérie, isSelected: (i == selection));
+				var s5 = new TreeTableCellDecimal (true, O.ValeurComptable, isSelected: (i == selection));
+				var s6 = new TreeTableCellDecimal (true, O.ValeurAssurance, isSelected: (i == selection));
 
 				cf.Add (sf);
 				c1.Add (s1);

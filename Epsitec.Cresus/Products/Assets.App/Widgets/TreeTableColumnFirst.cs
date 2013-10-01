@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var rect = this.GetCellsRect (y);
 
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (ColorManager.GetTreeTableBackgroundFirstColor (y == this.hilitedHoverRow));
+				graphics.RenderSolid (AbstractTreeTableColumn .GetFirstCellColor (y == this.hilitedHoverRow, cellFirst.IsSelected));
 
 				rect.Deflate (this.DescriptionMargin * (cellFirst.Level+1), 0, 0, 0);
 

@@ -46,6 +46,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				this.SetHilitedHoverRow (row);
 			};
+
+			this.columnFirst.CellClicked += delegate (object sender, int row)
+			{
+				this.OnRowClicked (-1, row);
+			};
 		}
 
 		public int								VScrollerTopMargin
@@ -87,6 +92,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				column.CellHovered += delegate (object sender, int row)
 				{
 					this.SetHilitedHoverRow (row);
+				};
+
+				column.CellClicked += delegate (object sender, int row)
+				{
+					this.OnRowClicked (index, row);
 				};
 			}
 
@@ -219,15 +229,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Events handler
-		private void OnRowClicked(int row, int rank)
+		private void OnRowClicked(int column, int row)
 		{
 			if (this.RowClicked != null)
 			{
-				this.RowClicked (this, row, rank);
+				this.RowClicked (this, column, row);
 			}
 		}
 
-		public delegate void RowClickedEventHandler(object sender, int row, int rank);
+		public delegate void RowClickedEventHandler(object sender, int column, int row);
 		public event RowClickedEventHandler RowClicked;
 		#endregion
 

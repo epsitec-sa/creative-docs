@@ -82,6 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	
 		protected override void OnClicked(MessageEventArgs e)
 		{
+			this.OnCellClicked (this.detectedHoverRow);
 			base.OnClicked (e);
 		}
 
@@ -239,6 +240,31 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	pour que la dernière cellule touche toujours le bas.
 			double dim = (this.ActualHeight - this.HeaderHeight - this.FooterHeight) / this.VisibleCellCount;
 			return (int) this.ActualHeight - this.HeaderHeight - (int) (rank * dim);
+		}
+
+
+		protected static Color GetFirstCellColor(bool isHover, bool isSelected)
+		{
+			if (isSelected)
+			{
+				return ColorManager.SelectionColor;
+			}
+			else
+			{
+				return ColorManager.GetTreeTableBackgroundFirstColor (isHover);
+			}
+		}
+
+		protected static Color GetCellColor(bool isHover, bool isSelected)
+		{
+			if (isSelected)
+			{
+				return ColorManager.SelectionColor;
+			}
+			else
+			{
+				return ColorManager.GetBackgroundColor (isHover);
+			}
 		}
 
 
