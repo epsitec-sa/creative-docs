@@ -79,6 +79,7 @@
     <Compile Include="Widgets\AbstractTreeTableColumn.cs" />
     <Compile Include="Widgets\TimelineRowType.cs" />
     <Compile Include="Widgets\TimelineRowDescription.cs" />
+    <Compile Include="Widgets\Tree.cs" />
     <Compile Include="Widgets\TreeTableColumnType.cs" />
     <Compile Include="Widgets\TreeTableColumnDescription.cs" />
     <Compile Include="Widgets\TreeTableColumnDecimal.cs" />

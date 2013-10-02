@@ -64,7 +64,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else
 			{
-				return Color.FromBrightness (even ? 0.95 : 0.90);
+				return Color.FromBrightness (1.0);
+				//?return Color.FromBrightness (even ? 0.95 : 0.90);
 			}
 		}
 

@@ -185,6 +185,8 @@ namespace Epsitec.Cresus.Assets.App
 				BackColor = ColorManager.WindowBackgroundColor,
 			};
 
+			TreeTest.Test ();
+
 			this.CreateTestTimelineController (frame);
 			this.CreateTestTreeTableController (frame);
 			//?this.CreateTestTimelineProvider (frame);
@@ -691,7 +693,7 @@ namespace Epsitec.Cresus.Assets.App
 							Numéro = "2.1.1",
 							ValeurComptable = 150000.0m,
 							ValeurAssurance = 160000.0m,
-							Responsable = "François",
+							Responsable = "Jean-François-Paul-Eric-Georges-André",
 							Couleur = "Blanc",
 							NuméroSérie = "25004-800-65210-45R",
 						};
