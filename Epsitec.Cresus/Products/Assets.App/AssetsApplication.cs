@@ -489,7 +489,7 @@ namespace Epsitec.Cresus.Assets.App
 
 			this.treeTableController = new NavigationTreeTableController
 			{
-				RowsCount = treeTableRowsCount,
+				RowsCount    = treeTableRowsCount,
 			};
 
 			var frame = new FrameBox
@@ -505,6 +505,7 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			this.treeTableController.CreateUI (frame);
+			this.treeTableController.FooterHeight = 0;
 			this.treeTableController.SetColumns (AssetsApplication.GetColumns ());
 			this.UpdateTreeTableController ();
 
@@ -542,7 +543,7 @@ namespace Epsitec.Cresus.Assets.App
 				{
 					PreferredWidth = 80,
 					HeaderDescription = "Numéro",
-					FooterDescription = "Colonne 1, pied",
+					FooterDescription = "",
 				};
 
 				list.Add (c);
@@ -553,7 +554,7 @@ namespace Epsitec.Cresus.Assets.App
 				{
 					PreferredWidth = 120,
 					HeaderDescription = "Responsable",
-					FooterDescription = "Colonne 2, pied",
+					FooterDescription = "",
 				};
 
 				list.Add (c);
@@ -564,7 +565,7 @@ namespace Epsitec.Cresus.Assets.App
 				{
 					PreferredWidth = 150,
 					HeaderDescription = "Couleur",
-					FooterDescription = "Colonne 3, pied",
+					FooterDescription = "",
 				};
 
 				list.Add (c);
@@ -575,7 +576,7 @@ namespace Epsitec.Cresus.Assets.App
 				{
 					PreferredWidth = 200,
 					HeaderDescription = "Numéro de série",
-					FooterDescription = "Colonne 4, pied",
+					FooterDescription = "",
 				};
 
 				list.Add (c);
@@ -586,7 +587,7 @@ namespace Epsitec.Cresus.Assets.App
 				{
 					PreferredWidth = 120,
 					HeaderDescription = "Valeur comptable",
-					FooterDescription = "Colonne 5, pied",
+					FooterDescription = "",
 				};
 
 				list.Add (c);
@@ -597,7 +598,7 @@ namespace Epsitec.Cresus.Assets.App
 				{
 					PreferredWidth = 120,
 					HeaderDescription = "Valeur assurance",
-					FooterDescription = "Colonne 6, pied",
+					FooterDescription = "",
 				};
 
 				list.Add (c);
@@ -611,7 +612,7 @@ namespace Epsitec.Cresus.Assets.App
 			var OO = AssetsApplication.GetTreeTableObjects ();
 
 			treeTable.ColumnFirst.HeaderDescription = "Objet";
-			treeTable.ColumnFirst.FooterDescription = "Liste, pied";
+			treeTable.ColumnFirst.FooterDescription = "Totaux";
 
 			var cf = new List<TreeTableCellFirst> ();
 			var c1 = new List<TreeTableCellString> ();

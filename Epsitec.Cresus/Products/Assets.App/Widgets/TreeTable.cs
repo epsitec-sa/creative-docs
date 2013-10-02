@@ -22,9 +22,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public TreeTable()
 		{
 			this.firstWidth   = 200;
-			this.headerHeight = 30;
-			this.footerHeight = 30;
-			this.rowHeight    = 20;
+			this.headerHeight = 24;
+			this.footerHeight = 24;
+			this.rowHeight    = 18;
 
 			this.firstContainer = new FrameBox
 			{
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private int								HeaderHeight
+		public int								HeaderHeight
 		{
 			get
 			{
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private int								FooterHeight
+		public int								FooterHeight
 		{
 			get
 			{
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private int								RowHeight
+		public int								RowHeight
 		{
 			get
 			{

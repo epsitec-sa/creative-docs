@@ -98,23 +98,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			base.OnExited (e);
 		}
 
-		protected override void UpdateClientGeometry()
-		{
-			base.UpdateClientGeometry ();
-			this.InitializeAfterCellsChanged ();
-		}
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			this.PaintHeader (graphics);
 			this.PaintFooter (graphics);
 		}
 		
-
-		protected virtual void InitializeAfterCellsChanged()
-		{
-		}
-
 
 		private void PaintHeader(Graphics graphics)
 		{
@@ -222,7 +211,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.RowHeight * 0.6;
+				return this.RowHeight * 0.65;
 			}
 		}
 

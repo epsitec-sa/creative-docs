@@ -82,6 +82,42 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region TreeTable Facade
+		public int								HeaderHeight
+		{
+			get
+			{
+				return this.treeTable.HeaderHeight;
+			}
+			set
+			{
+				this.treeTable.HeaderHeight = value;
+			}
+		}
+
+		public int								FooterHeight
+		{
+			get
+			{
+				return this.treeTable.FooterHeight;
+			}
+			set
+			{
+				this.treeTable.FooterHeight = value;
+			}
+		}
+
+		public int								RowHeight
+		{
+			get
+			{
+				return this.treeTable.RowHeight;
+			}
+			set
+			{
+				this.treeTable.RowHeight = value;
+			}
+		}
+
 		public int								VisibleRowsCount
 		{
 			get
