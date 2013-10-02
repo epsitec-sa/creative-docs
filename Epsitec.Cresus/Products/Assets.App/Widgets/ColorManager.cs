@@ -12,6 +12,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public static class ColorManager
 	{
+		public static Color WindowBackgroundColor
+		{
+			get
+			{
+				return Color.FromBrightness (0.8);
+			}
+		}
+
 		public static Color GetBackgroundColor(bool isHover = false)
 		{
 			if (isHover)

@@ -40,11 +40,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected));
 
 				//	Dessine le texte.
-				rect = this.GetTextRectangle (y, cell.Level);
-				var font = Font.DefaultFont;
+				if (!string.IsNullOrEmpty (cell.Value))
+				{
+					rect = this.GetTextRectangle (y, cell.Level);
+					var font = Font.DefaultFont;
 
-				graphics.Color = ColorManager.TextColor;
-				graphics.PaintText (rect, cell.Value, font, this.FontSize, ContentAlignment.MiddleLeft);
+					graphics.Color = ColorManager.TextColor;
+					graphics.PaintText (rect, cell.Value, font, this.FontSize, ContentAlignment.MiddleLeft);
+				}
 
 				y++;
 			}

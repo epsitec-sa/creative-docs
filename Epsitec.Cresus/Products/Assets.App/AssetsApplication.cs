@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				Parent    = window.Root,
 				Dock      = DockStyle.Fill,
-				BackColor = Color.FromBrightness (0.8),
+				BackColor = ColorManager.WindowBackgroundColor,
 			};
 
 			this.CreateTestTimelineController (frame);
