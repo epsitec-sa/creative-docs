@@ -80,7 +80,7 @@ function() {
           columnhide: this.setupColumnParameter,
           columnshow: this.setupColumnParameterAndRefresh,
           reconfigure: this.reconfigureFiltersFeature,
-          headerclick: function(ct, column) { this.selectedColumnId = column.dataIndex; },
+          //headerclick: function(ct, column) { this.selectedColumnId = column.dataIndex; },
           scope: this
         },
         features: [{
@@ -663,7 +663,7 @@ function() {
 
     ///QUICK SEARCH
     onQuickSearchHandler: function(field, e) {
-      var config, columnName = this.selectedColumnId;
+      var config, columnName = this.columnDefinitions[0].name;
 
       config = {
         type: 'string',
@@ -689,7 +689,7 @@ function() {
             this.filters.getFilter(columnName).setActive(true);
           }
           else {
-            this.filters.getFilter(columnName).setActive(false);
+            this.filters.clearFilters();
           }
         }
       }
