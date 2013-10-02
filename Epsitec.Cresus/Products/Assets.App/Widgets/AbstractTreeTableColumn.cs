@@ -19,6 +19,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		public bool								DockToLeft
+		{
+			get;
+			set;
+		}
+
 		public int								ColumnIndex
 		{
 			get;
@@ -232,7 +238,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected static Color GetGlyphCellColor(bool isHover, bool isSelected)
+		protected Color GetCellColor(bool isHover, bool isSelected)
 		{
 			if (isSelected)
 			{
@@ -240,19 +246,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else
 			{
-				return ColorManager.GetTreeTableBackgroundGlyphColor (isHover);
-			}
-		}
-
-		protected static Color GetCellColor(bool isHover, bool isSelected)
-		{
-			if (isSelected)
-			{
-				return ColorManager.SelectionColor;
-			}
-			else
-			{
-				return ColorManager.GetBackgroundColor (isHover);
+				if (this.DockToLeft)
+				{
+					return ColorManager.GetTreeTableBackgroundDockToLeftColor (isHover);
+				}
+				else
+				{
+					return ColorManager.GetBackgroundColor (isHover);
+				}
 			}
 		}
 

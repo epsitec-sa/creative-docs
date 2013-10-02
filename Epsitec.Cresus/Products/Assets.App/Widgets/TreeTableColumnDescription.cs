@@ -62,6 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			System.Diagnostics.Debug.Assert (column != null);
 
+			column.DockToLeft        = description.DockToLeft;
 			column.PreferredWidth    = description.Width;
 			column.HeaderDescription = description.Header;
 			column.FooterDescription = description.Footer;
