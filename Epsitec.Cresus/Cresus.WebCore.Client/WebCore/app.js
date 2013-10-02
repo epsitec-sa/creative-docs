@@ -243,9 +243,12 @@ function() {
       if(Ext.isDefined(columnManager))
       {   
           var currentSelection = columnManager.leftList.entityList.getSelectionModel().getSelection();
-          var selectionIndex = currentSelection[0].index;
-
-          columnManager.leftList.entityList.reloadAndScrollToEntity(columnManager,currentSelection[0].internalId,selectionIndex,samePage);    
+          if(currentSelection.length>0)
+          {
+            var selectionIndex = currentSelection[0].index;
+            columnManager.leftList.entityList.reloadAndScrollToEntity(columnManager,currentSelection[0].internalId,selectionIndex,samePage);
+          }
+              
       }
       
     },
