@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected static Color GetFirstCellColor(bool isHover, bool isSelected)
+		protected static Color GetGlyphCellColor(bool isHover, bool isSelected)
 		{
 			if (isSelected)
 			{
@@ -240,7 +240,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else
 			{
-				return ColorManager.GetTreeTableBackgroundFirstColor (isHover);
+				return ColorManager.GetTreeTableBackgroundGlyphColor (isHover);
 			}
 		}
 

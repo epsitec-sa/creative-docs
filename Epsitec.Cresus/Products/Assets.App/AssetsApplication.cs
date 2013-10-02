@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.Assets.App
 				this.UpdateTreeTableController ();
 			};
 
-			this.treeTableController.TreeButtonClicked += delegate (object sender, int row, TreeTableFirstType type)
+			this.treeTableController.TreeButtonClicked += delegate (object sender, int row, TreeTableGlyphType type)
 			{
 			};
 		}
@@ -522,7 +522,6 @@ namespace Epsitec.Cresus.Assets.App
 		private void UpdateTreeTableController()
 		{
 			var first = this.treeTableController.TopVisibleRow;
-			int cellsCount = System.Math.Min (this.treeTableRowsCount, this.treeTableController.VisibleRowsCount);
 			int selection = this.treeTableSelectedRow - this.treeTableController.TopVisibleRow;
 
 			AssetsApplication.InitialiseTreeTable (this.treeTableController, first, selection);
@@ -533,87 +532,27 @@ namespace Epsitec.Cresus.Assets.App
 		private int treeTableSelectedRow;
 
 
-		private static List<AbstractTreeTableColumn> GetColumns()
+		private static TreeTableColumnDescription[] GetColumns()
 		{
-			var list = new List<AbstractTreeTableColumn> ();
+			var list = new List<TreeTableColumnDescription> ();
 
-			{
-				var c = new TreeTableColumnString
-				{
-					PreferredWidth = 80,
-					HeaderDescription = "Numéro",
-					FooterDescription = "",
-				};
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.First,   200, "Objet", dockToLeft: true));
+//			list.Add (new TreeTableColumnDescription (TreeTableColumnType.First,   200, "Objet"));
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   80, "Numéro"));
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  120, "Responsable"));
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  150, "Couleur"));
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  200, "Numéro de série"));
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 120, "Valeur comptable"));
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 120, "Valeur assurance"));
 
-				list.Add (c);
-			}
-
-			{
-				var c = new TreeTableColumnString
-				{
-					PreferredWidth = 120,
-					HeaderDescription = "Responsable",
-					FooterDescription = "",
-				};
-
-				list.Add (c);
-			}
-
-			{
-				var c = new TreeTableColumnString
-				{
-					PreferredWidth = 150,
-					HeaderDescription = "Couleur",
-					FooterDescription = "",
-				};
-
-				list.Add (c);
-			}
-
-			{
-				var c = new TreeTableColumnString
-				{
-					PreferredWidth = 200,
-					HeaderDescription = "Numéro de série",
-					FooterDescription = "",
-				};
-
-				list.Add (c);
-			}
-
-			{
-				var c = new TreeTableColumnDecimal
-				{
-					PreferredWidth = 120,
-					HeaderDescription = "Valeur comptable",
-					FooterDescription = "",
-				};
-
-				list.Add (c);
-			}
-
-			{
-				var c = new TreeTableColumnDecimal
-				{
-					PreferredWidth = 120,
-					HeaderDescription = "Valeur assurance",
-					FooterDescription = "",
-				};
-
-				list.Add (c);
-			}
-
-			return list;
+			return list.ToArray ();
 		}
 
 		private static void InitialiseTreeTable(NavigationTreeTableController treeTable, int firstRow, int selection)
 		{
 			var OO = AssetsApplication.GetTreeTableObjects ();
 
-			treeTable.ColumnFirst.HeaderDescription = "Objet";
-			treeTable.ColumnFirst.FooterDescription = "Totaux";
-
-			var cf = new List<TreeTableCellFirst> ();
+			var cf = new List<TreeTableCellGlyph> ();
 			var c1 = new List<TreeTableCellString> ();
 			var c2 = new List<TreeTableCellString> ();
 			var c3 = new List<TreeTableCellString> ();
@@ -631,13 +570,13 @@ namespace Epsitec.Cresus.Assets.App
 
 				var O = OO[firstRow+i];
 
-				var type = O.Level == 3 ? TreeTableFirstType.Final : TreeTableFirstType.Extended;
+				var type = O.Level == 3 ? TreeTableGlyphType.Final : TreeTableGlyphType.Extended;
 				if (i == 0)
 				{
-					type = TreeTableFirstType.Compacted;  // juste pour en voir un !
+					type = TreeTableGlyphType.Compacted;  // juste pour en voir un !
 				}
 
-				var sf = new TreeTableCellFirst (O.Level, type, O.Nom, isSelected: (i == selection));
+				var sf = new TreeTableCellGlyph (true, O.Level, type, O.Nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString (true, O.Numéro, isSelected: (i == selection));
 				var s2 = new TreeTableCellString (true, O.Responsable, isSelected: (i == selection));
 				var s3 = new TreeTableCellString (true, O.Couleur, isSelected: (i == selection));
@@ -654,38 +593,13 @@ namespace Epsitec.Cresus.Assets.App
 				c6.Add (s6);
 			}
 
-			treeTable.ColumnFirst.SetCellFirsts (cf.ToArray ());
-
-			int cc = 0;
-			foreach (var c in treeTable.Columns)
-			{
-				var stringColumn = c as TreeTableColumnString;
-				var decimalColumn = c as TreeTableColumnDecimal;
-
-				switch (cc)
-				{
-					case 0:
-						stringColumn.SetCellStrings (c1.ToArray ());
-						break;
-					case 1:
-						stringColumn.SetCellStrings (c2.ToArray ());
-						break;
-					case 2:
-						stringColumn.SetCellStrings (c3.ToArray ());
-						break;
-					case 3:
-						stringColumn.SetCellStrings (c4.ToArray ());
-						break;
-					case 4:
-						decimalColumn.SetCellDecimals (c5.ToArray ());
-						break;
-					case 5:
-						decimalColumn.SetCellDecimals (c6.ToArray ());
-						break;
-				}
-
-				cc++;
-			}
+			treeTable.SetColumnCells (0, cf.ToArray ());
+			treeTable.SetColumnCells (1, c1.ToArray ());
+			treeTable.SetColumnCells (2, c2.ToArray ());
+			treeTable.SetColumnCells (3, c3.ToArray ());
+			treeTable.SetColumnCells (4, c4.ToArray ());
+			treeTable.SetColumnCells (5, c5.ToArray ());
+			treeTable.SetColumnCells (6, c6.ToArray ());
 		}
 
 		private static TreeTableObject[] GetTreeTableObjects()

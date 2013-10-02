@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color GetTreeTableBackgroundFirstColor(bool isHover = false)
+		public static Color GetTreeTableBackgroundGlyphColor(bool isHover = false)
 		{
 			if (isHover)
 			{

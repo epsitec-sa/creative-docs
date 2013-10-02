@@ -15,9 +15,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnDecimal : AbstractTreeTableColumn
 	{
-		public void SetCellDecimals(TreeTableCellDecimal[] cellDecimals)
+		public void SetCells(TreeTableCellDecimal[] cells)
 		{
-			this.cellDecimals = cellDecimals;
+			this.cells = cells;
 			this.Invalidate ();
 		}
 
@@ -26,23 +26,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			base.PaintBackgroundImplementation(graphics, clipRect);
 
-			if (this.cellDecimals != null)
+			if (this.cells != null)
 			{
 				int y = 0;
 
-				foreach (var cellDecimal in this.cellDecimals)
+				foreach (var cell in this.cells)
 				{
 					var rect = this.GetCellsRect (y);
 
 					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (AbstractTreeTableColumn.GetCellColor(y == this.hilitedHoverRow, cellDecimal.IsSelected));
+					graphics.RenderSolid (AbstractTreeTableColumn.GetCellColor(y == this.hilitedHoverRow, cell.IsSelected));
 
-					if (cellDecimal.Value.HasValue)
+					if (cell.Value.HasValue)
 					{
 						rect.Deflate (0, this.DescriptionMargin, 0, 0);
 
 						var font = Font.DefaultFont;
-						var text = cellDecimal.Value.Value.ToString ("0,0.00");
+						var text = cell.Value.Value.ToString ("0,0.00");
 						//?var text = cellDecimal.Value.Value.ToString ("D2");
 
 						graphics.Color = ColorManager.TextColor;
@@ -55,6 +55,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private TreeTableCellDecimal[] cellDecimals;
+		private TreeTableCellDecimal[] cells;
 	}
 }

@@ -15,11 +15,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class NavigationTreeTableController
 	{
-		public void CreateUI(Widget parent, int firstWidth = 200, int rowHeight = 18, int headerHeight = 24, int footerHeight = 24)
+		public void CreateUI(Widget parent, int rowHeight = 18, int headerHeight = 24, int footerHeight = 24)
 		{
 			parent.BackColor = ColorManager.TreeTableBackgroundColor;
 
-			this.treeTable = new TreeTable (firstWidth, rowHeight, headerHeight, footerHeight)
+			this.treeTable = new TreeTable (rowHeight, headerHeight, footerHeight)
 			{
 				Parent = parent,
 				Dock   = DockStyle.Fill,
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.OnRowClicked (column, row);
 			};
 
-			this.treeTable.TreeButtonClicked += delegate (object sender, int row, TreeTableFirstType type)
+			this.treeTable.TreeButtonClicked += delegate (object sender, int row, TreeTableGlyphType type)
 			{
 				this.OnTreeButtonClicked (row, type);
 			};
@@ -55,6 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.UpdateScroller ();
 		}
+
 
 		public int								RowsCount
 		{
@@ -90,25 +91,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public TreeTableColumnFirst				ColumnFirst
+		public void SetColumns(TreeTableColumnDescription[] descriptions)
 		{
-			get
-			{
-				return this.treeTable.ColumnFirst;
-			}
+			this.treeTable.SetColumns (descriptions);
 		}
 
-		public IEnumerable<AbstractTreeTableColumn> Columns
+		public void SetColumnCells(int rank, TreeTableCellGlyph[] cells)
 		{
-			get
-			{
-				return this.treeTable.Columns;
-			}
+			this.treeTable.SetColumnCells (rank, cells);
 		}
 
-		public void SetColumns(List<AbstractTreeTableColumn> columns)
+		public void SetColumnCells(int rank, TreeTableCellString[] cells)
 		{
-			this.treeTable.SetColumns (columns);
+			this.treeTable.SetColumnCells (rank, cells);
+		}
+
+		public void SetColumnCells(int rank, TreeTableCellDecimal[] cells)
+		{
+			this.treeTable.SetColumnCells (rank, cells);
 		}
 		#endregion
 
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event RowClickedEventHandler RowClicked;
 
 
-		private void OnTreeButtonClicked(int row, TreeTableFirstType type)
+		private void OnTreeButtonClicked(int row, TreeTableGlyphType type)
 		{
 			if (this.TreeButtonClicked != null)
 			{
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableFirstType type);
+		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableGlyphType type);
 		public event TreeButtonClickedEventHandler TreeButtonClicked;
 		#endregion
 

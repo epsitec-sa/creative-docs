@@ -15,9 +15,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnString : AbstractTreeTableColumn
 	{
-		public void SetCellStrings(TreeTableCellString[] cellStrings)
+		public void SetCells(TreeTableCellString[] cells)
 		{
-			this.cellStrings = cellStrings;
+			this.cells = cells;
 			this.Invalidate ();
 		}
 
@@ -26,23 +26,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			base.PaintBackgroundImplementation(graphics, clipRect);
 
-			if (this.cellStrings != null)
+			if (this.cells != null)
 			{
 				int y = 0;
 
-				foreach (var cellString in this.cellStrings)
+				foreach (var cell in this.cells)
 				{
 					var rect = this.GetCellsRect (y);
 
 					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (AbstractTreeTableColumn.GetCellColor (y == this.hilitedHoverRow, cellString.IsSelected));
+					graphics.RenderSolid (AbstractTreeTableColumn.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected));
 
 					rect.Deflate (this.DescriptionMargin, 0, 0, 0);
 
 					var font = Font.DefaultFont;
 
 					graphics.Color = ColorManager.TextColor;
-					graphics.PaintText (rect, cellString.Value, font, this.FontSize, ContentAlignment.MiddleLeft);
+					graphics.PaintText (rect, cell.Value, font, this.FontSize, ContentAlignment.MiddleLeft);
 
 					y++;
 				}
@@ -50,6 +50,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private TreeTableCellString[] cellStrings;
+		private TreeTableCellString[] cells;
 	}
 }

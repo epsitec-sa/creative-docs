@@ -11,14 +11,14 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
-	/// Première colonne de TreeTable affichant des chaînes avec une indication
-	/// du niveau dans l'arborescence.
+	/// Colonne de TreeTable affichant des chaînes avec une indication du niveau
+	/// dans l'arborescence. Cette colonne est habituellement en mode DockToLeft.
 	/// </summary>
-	public class TreeTableColumnFirst : AbstractTreeTableColumn
+	public class TreeTableColumnGlyph : AbstractTreeTableColumn
 	{
-		public void SetCellFirsts(TreeTableCellFirst[] cellFirsts)
+		public void SetCells(TreeTableCellGlyph[] cells)
 		{
-			this.cellFirsts = cellFirsts;
+			this.cells = cells;
 
 			this.CreateGlyphButtons ();
 			this.Invalidate ();
@@ -31,20 +31,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			int y = 0;
 
-			foreach (var cellFirst in this.cellFirsts)
+			foreach (var cell in this.cells)
 			{
 				//	Dessine le fond.
 				var rect = this.GetCellsRect (y);
 
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (AbstractTreeTableColumn.GetFirstCellColor (y == this.hilitedHoverRow, cellFirst.IsSelected));
+				graphics.RenderSolid (AbstractTreeTableColumn.GetGlyphCellColor (y == this.hilitedHoverRow, cell.IsSelected));
 
 				//	Dessine le texte.
-				rect = this.GetTextRectangle (y, cellFirst.Level);
+				rect = this.GetTextRectangle (y, cell.Level);
 				var font = Font.DefaultFont;
 
 				graphics.Color = ColorManager.TextColor;
-				graphics.PaintText (rect, cellFirst.Description, font, this.FontSize, ContentAlignment.MiddleLeft);
+				graphics.PaintText (rect, cell.Value, font, this.FontSize, ContentAlignment.MiddleLeft);
 
 				y++;
 			}
@@ -64,21 +64,21 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			int y = 0;
 
-			foreach (var cellFirst in this.cellFirsts)
+			foreach (var cell in this.cells)
 			{
-				if (cellFirst.Type == TreeTableFirstType.Compacted ||
-					cellFirst.Type == TreeTableFirstType.Extended)
+				if (cell.Type == TreeTableGlyphType.Compacted ||
+					cell.Type == TreeTableGlyphType.Extended)
 				{
-					var rect = this.GetGlyphRectangle (y, cellFirst.Level);
+					var rect = this.GetGlyphRectangle (y, cell.Level);
 
 					var button = new GlyphButton
 					{
-						GlyphShape    = cellFirst.Type == TreeTableFirstType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
+						GlyphShape    = cell.Type == TreeTableGlyphType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
 						ButtonStyle   = ButtonStyle.ToolItem,
 						PreferredSize = rect.Size,
 						Anchor        = AnchorStyles.BottomLeft,
 						Margins       = new Margins (rect.Left, 0, 0, rect.Bottom),
-						Name          = TreeTableColumnFirst.Serialize (y, cellFirst.Type),
+						Name          = TreeTableColumnGlyph.Serialize (y, cell.Type),
 					};
 
 					this.Children.Add (button);
@@ -86,8 +86,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					button.Clicked += delegate
 					{
 						int yy;
-						TreeTableFirstType tt;
-						TreeTableColumnFirst.Deserialize (button.Name, out yy, out tt);
+						TreeTableGlyphType tt;
+						TreeTableColumnGlyph.Deserialize (button.Name, out yy, out tt);
 						this.OnTreeButtonClicked (yy, tt);
 					};
 				}
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private static string Serialize(int row, TreeTableFirstType type)
+		private static string Serialize(int row, TreeTableGlyphType type)
 		{
 			string s1 = row.ToString ();
 			string s2 = ((int) type).ToString ();
@@ -123,19 +123,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return string.Concat (s1, " ", s2);
 		}
 
-		private static void Deserialize(string text, out int row, out TreeTableFirstType type)
+		private static void Deserialize(string text, out int row, out TreeTableGlyphType type)
 		{
 			var p = text.Split (' ');
 
 			row = int.Parse (p[0]);
 
 			int t = int.Parse (p[1]);
-			type = (TreeTableFirstType) t;
+			type = (TreeTableGlyphType) t;
 		}
 
 
 		#region Events handler
-		private void OnTreeButtonClicked(int row, TreeTableFirstType type)
+		private void OnTreeButtonClicked(int row, TreeTableGlyphType type)
 		{
 			if (this.TreeButtonClicked != null)
 			{
@@ -143,11 +143,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableFirstType type);
+		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableGlyphType type);
 		public event TreeButtonClickedEventHandler TreeButtonClicked;
 		#endregion
 
 
-		private TreeTableCellFirst[] cellFirsts;
+		private TreeTableCellGlyph[] cells;
 	}
 }

@@ -19,52 +19,40 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTable : Widget
 	{
-		public TreeTable(int firstWidth, int rowHeight, int headerHeight, int footerHeight)
+		public TreeTable(int rowHeight, int headerHeight, int footerHeight)
 		{
-			this.firstWidth   = firstWidth;
 			this.rowHeight    = rowHeight;
 			this.headerHeight = headerHeight;
 			this.footerHeight = footerHeight;
 
-			this.firstContainer = new FrameBox
+			this.treeTableColumns = new List<AbstractTreeTableColumn> ();
+
+			//	Crée le conteneur de gauche, qui contiendra toutes les colonnes
+			//	en mode DockToLeft (habituellement la seule TreeTableColumnGlyph).
+			//	Ce conteneur n'est pas scrollable horizontalement; sa largeur
+			//	s'adapte en fonctions du total des colonnes contenues.
+			this.leftContainer = new FrameBox
 			{
+				Parent         = this,
 				Dock           = DockStyle.Left,
-				PreferredWidth = this.firstWidth,
+				PreferredWidth = 0,
 				Margins        = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
 			};
 
+			//	Crée le conteneur de droite, qui contiendra toutes les colonnes
+			//	qui n'ont pas le mode DockToLeft. Ce conteneur est scrollable
+			//	horizontalement.
 			this.columnsContainer = new Scrollable
 			{
+				Parent                 = this,
 				HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways,
 				VerticalScrollerMode   = ScrollableScrollerMode.HideAlways,
 				Dock                   = DockStyle.Fill,
 			};
 
-			this.Children.Add (this.firstContainer);
-			this.Children.Add (this.columnsContainer);
-
-			this.columnFirst = new TreeTableColumnFirst
-			{
-				Parent         = this.firstContainer,
-				Dock           = DockStyle.Fill,
-				PreferredWidth = this.firstWidth,
-			};
-
-			this.columnFirst.CellHovered += delegate (object sender, int row)
-			{
-				this.SetHilitedHoverRow (row);
-			};
-
-			this.columnFirst.CellClicked += delegate (object sender, int row)
-			{
-				this.OnRowClicked (-1, row);
-			};
-
-			this.columnFirst.TreeButtonClicked += delegate (object sender, int row, TreeTableFirstType type)
-			{
-				this.OnTreeButtonClicked (row, type);
-			};
+			this.columnsContainer.Viewport.IsAutoFitting = true;
 		}
+
 
 		public int								VScrollerTopMargin
 		{
@@ -82,25 +70,42 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public TreeTableColumnFirst				ColumnFirst
+		public int								VisibleRowsCount
 		{
 			get
 			{
-				return this.columnFirst;
+				return (int) ((this.ActualHeight - this.headerHeight - this.footerHeight - AbstractScroller.DefaultBreadth) / this.rowHeight);
 			}
 		}
 
-		public void SetColumns(List<AbstractTreeTableColumn> columns)
+
+		public void SetColumns(TreeTableColumnDescription[] descriptions)
 		{
-			this.columnsContainer.Viewport.IsAutoFitting = true;
+			this.columnDescriptions = descriptions;
+
+			this.treeTableColumns.Clear ();
+			this.leftContainer.Children.Clear ();
 			this.columnsContainer.Viewport.Children.Clear ();
 
 			int index = 0;
 
-			foreach (var column in columns)
+			foreach (var description in this.columnDescriptions)
 			{
+				var column = TreeTableColumnDescription.Create (description);
 				column.ColumnIndex = index++;
-				this.columnsContainer.Viewport.Children.Add (column);
+
+				this.treeTableColumns.Add (column);
+
+				if (description.DockToLeft)
+				{
+					column.Dock = DockStyle.Left;
+					this.leftContainer.Children.Add (column);
+				}
+				else
+				{
+					column.Dock = DockStyle.Left;
+					this.columnsContainer.Viewport.Children.Add (column);
+				}
 
 				column.CellHovered += delegate (object sender, int row)
 				{
@@ -111,44 +116,43 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					this.OnRowClicked (index, row);
 				};
+
+				if (column is TreeTableColumnGlyph)
+				{
+					var glyph = column as TreeTableColumnGlyph;
+
+					glyph.TreeButtonClicked += delegate (object sender, int row, TreeTableGlyphType type)
+					{
+						this.OnTreeButtonClicked (row, type);
+					};
+				}
 			}
 
 			this.UpdateChildrensGeometry ();
 		}
 
-		public IEnumerable<AbstractTreeTableColumn> Columns
+		public void SetColumnCells(int rank, TreeTableCellGlyph[] cells)
 		{
-			get
-			{
-				return this.columnsContainer.Viewport.Children.Cast<AbstractTreeTableColumn> ();
-			}
+			var column = this.GetColumn (rank) as TreeTableColumnGlyph;
+			System.Diagnostics.Debug.Assert (column != null);
+
+			column.SetCells (cells);
 		}
 
-
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		public void SetColumnCells(int rank, TreeTableCellString[] cells)
 		{
-			graphics.AddFilledRectangle (new Rectangle (Point.Zero, this.ActualSize));
-			graphics.RenderSolid (ColorManager.TreeTableBackgroundColor);
+			var column = this.GetColumn (rank) as TreeTableColumnString;
+			System.Diagnostics.Debug.Assert (column != null);
+
+			column.SetCells (cells);
 		}
 
-
-		public int								VisibleRowsCount
+		public void SetColumnCells(int rank, TreeTableCellDecimal[] cells)
 		{
-			get
-			{
-				return (int) ((this.ActualHeight - this.headerHeight - this.footerHeight - AbstractScroller.DefaultBreadth) / this.rowHeight);
-			}
-		}
+			var column = this.GetColumn (rank) as TreeTableColumnDecimal;
+			System.Diagnostics.Debug.Assert (column != null);
 
-
-		private void SetHilitedHoverRow(int row)
-		{
-			this.columnFirst.HilitedHoverRow = row;
-
-			foreach (var column in this.Columns)
-			{
-				column.HilitedHoverRow = row;
-			}
+			column.SetCells (cells);
 		}
 
 
@@ -158,20 +162,35 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.UpdateChildrensGeometry ();
 		}
 
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			graphics.AddFilledRectangle (new Rectangle (Point.Zero, this.ActualSize));
+			graphics.RenderSolid (ColorManager.TreeTableBackgroundColor);
+		}
+
+
+		private void SetHilitedHoverRow(int row)
+		{
+			foreach (var column in this.treeTableColumns)
+			{
+				column.HilitedHoverRow = row;
+			}
+		}
+
 		private void UpdateChildrensGeometry()
 		{
-			this.columnFirst.HeaderHeight = this.headerHeight;
-			this.columnFirst.FooterHeight = this.footerHeight;
-			this.columnFirst.RowHeight    = this.rowHeight;
-
-			foreach (var column in this.Columns)
+			foreach (var column in this.treeTableColumns)
 			{
-				column.Dock = DockStyle.Left;
-
 				column.HeaderHeight = this.headerHeight;
 				column.FooterHeight = this.footerHeight;
 				column.RowHeight    = this.rowHeight;
 			}
+		}
+
+		private AbstractTreeTableColumn GetColumn(int rank)
+		{
+			System.Diagnostics.Debug.Assert (rank >= 0 && rank < this.treeTableColumns.Count);
+			return this.treeTableColumns[rank];
 		}
 
 
@@ -188,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event RowClickedEventHandler RowClicked;
 
 
-		private void OnTreeButtonClicked(int row, TreeTableFirstType type)
+		private void OnTreeButtonClicked(int row, TreeTableGlyphType type)
 		{
 			if (this.TreeButtonClicked != null)
 			{
@@ -196,16 +215,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableFirstType type);
+		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableGlyphType type);
 		public event TreeButtonClickedEventHandler TreeButtonClicked;
 		#endregion
 
 
-		private readonly FrameBox				firstContainer;
+		private readonly List<AbstractTreeTableColumn> treeTableColumns;
+		private readonly FrameBox				leftContainer;
 		private readonly Scrollable				columnsContainer;
-		private readonly TreeTableColumnFirst	columnFirst;
 
-		private int								firstWidth;
+		private TreeTableColumnDescription[]	columnDescriptions;
 		private int								headerHeight;
 		private int								footerHeight;
 		private int								rowHeight;

@@ -3,10 +3,8 @@
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public enum TreeTableFirstType
+	public enum TreeTableGlyphType
 	{
-		Empty,
-
 		Compacted,	// > content
 		Extended,	// v content
 		Final,		// content
