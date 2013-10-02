@@ -6,10 +6,16 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Loader;
 
+
+using Epsitec.Common.Support.Extensions;
+
 using System;
 using System.Linq;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Common.Types;
+using Epsitec.Cresus.Database;
+using System.Data;
+using System.Collections.Generic;
 
 
 namespace Epsitec.Aider.Data.Job
@@ -65,6 +71,12 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
+
+		/// <summary>
+		/// This Fixer Method can't run correctly without ad'hoc databases view's :
+		/// See 
+		/// </summary>
+		/// <param name="coreData"></param>
 		public static void WarnHouseholdWithNoSubscription(CoreData coreData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
@@ -75,16 +87,57 @@ namespace Epsitec.Aider.Data.Job
 
 				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
 
-				var subscription =	businessContext.GetAllEntities<AiderSubscriptionEntity> ().Select(s => s.Household).ToList();
-				var refusal =		businessContext.GetAllEntities<AiderSubscriptionRefusalEntity> ().Select(s => s.Household).ToList();
-				var households =	businessContext.GetAllEntities<AiderHouseholdEntity> ();
 
-				var householdWithoutSubscription = households.Where (h => !subscription.Contains (h) && refusal.Contains (h)).ToList();
-				foreach (var household in householdWithoutSubscription)
+				var db = businessContext.DataContext.DbInfrastructure;
+				var dbAbstraction = DbFactory.CreateDatabaseAbstraction (db.Access);
+				var sqlEngine = dbAbstraction.SqlEngine;
+
+				var sqlCommand = "select H1.id " +
+									"from " +
+									"HOUSEHOLDS H1 " + 
+									"where " +
+									"H1.id not in ( " +
+									"select h2.id " +
+									"from SUBSCRIPTIONS S1 " +
+									"inner join HOUSEHOLDS H2 on s1.household_id = h2.id) " +
+									"and " +
+									"H1.id not in ( " +
+									"select h3.id " +
+									"from SUBSCRIPTIONREFUSALS S2 " +
+									"inner join HOUSEHOLDS H3 on s2.household_id = h3.id);";
+
+				var sqlBuilder = dbAbstraction.SqlBuilder;
+				var command = sqlBuilder.CreateCommand (dbAbstraction.BeginReadOnlyTransaction (), sqlCommand);
+				DataSet dataSet;
+				sqlEngine.Execute (command, DbCommandType.ReturningData, 1, out dataSet);
+
+				var householdIdsToCorrect = new List<DbId> ();
+				foreach (DataRow row in dataSet.Tables[0].Rows)
 				{
-					var person = household.Members.Where (m => household.IsHead (m)).FirstOrDefault ();
+					if (!row[0].ToString ().IsNullOrWhiteSpace ())
+					{
+						householdIdsToCorrect.Add (new DbId((long)row[0]));
+					}
+				}
 
-					AiderPersonWarningEntity.Create (businessContext, person, person.ParishGroupPathCache, WarningType.HouseholdWithoutSubscription, "Ménage sans abo.", "Ce ménage n'est pas référencé dans les abonnements ou refus", warningSource);
+
+				foreach (var householdId in householdIdsToCorrect)
+				{
+					var household = businessContext.DataContext.ResolveEntity<AiderHouseholdEntity> (new DbKey(householdId));
+					if (household.Members.Count > 0)
+					{
+						var person = household.Members.Where (m => household.IsHead (m)).FirstOrDefault ();
+						if (person.IsNull ())
+						{
+							person = household.Members.FirstOrDefault ();
+						}
+
+						AiderPersonWarningEntity.Create (businessContext, person, person.ParishGroupPathCache, WarningType.HouseholdWithoutSubscription, "Ménage sans abo.", "Ce ménage n'est pas référencé dans les abonnements ou refus", warningSource);
+					}
+					else
+					{
+						AiderHouseholdEntity.Delete (businessContext, household);
+					}
 				}
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}

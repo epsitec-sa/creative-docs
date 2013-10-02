@@ -191,7 +191,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-warngouseholdwithnosubscription"))
+				if (args.Contains ("-warnhouseholdwithnosubscription"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.WarnHouseholdWithNoSubscription (args));
 					return;
