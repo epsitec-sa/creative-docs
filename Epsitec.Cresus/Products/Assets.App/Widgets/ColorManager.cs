@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (isHover)
 			{
-				return Color.FromHexa ("ebe8d6");  // gris-jaune
+				return ColorManager.hoverColor;
 			}
 			else
 			{
@@ -24,11 +24,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color GetTreeTableDockToLeftBackgroundColor(bool isHover = false)
+		{
+			if (isHover)
+			{
+				return ColorManager.hoverColor;
+			}
+			else
+			{
+				return Color.FromBrightness (0.97);
+			}
+		}
+
 		public static Color GetHolidayColor(bool isHover = false)
 		{
 			if (isHover)
 			{
-				return Color.FromHexa ("ebe8d6");  // gris-jaune
+				return ColorManager.hoverColor;
 			}
 			else
 			{
@@ -40,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (isHover)
 			{
-				return Color.FromHexa ("ebe8d6");  // gris-jaune
+				return ColorManager.hoverColor;
 			}
 			else
 			{
@@ -69,18 +81,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			get
 			{
 				return Color.FromBrightness (0.90);
-			}
-		}
-
-		public static Color GetTreeTableBackgroundDockToLeftColor(bool isHover = false)
-		{
-			if (isHover)
-			{
-				return Color.FromHexa ("ebe8d6");  // gris-jaune
-			}
-			else
-			{
-				return Color.FromBrightness (0.97);
 			}
 		}
 
@@ -115,5 +115,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return Color.FromHexa ("fff088");  // jaune
 			}
 		}
+
+
+		private static readonly Color hoverColor = Color.FromHexa ("ebe8d6");  // gris-jaune
 	}
 }

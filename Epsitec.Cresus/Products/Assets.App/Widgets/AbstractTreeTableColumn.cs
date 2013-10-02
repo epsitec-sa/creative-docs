@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				if (this.DockToLeft)
 				{
-					return ColorManager.GetTreeTableBackgroundDockToLeftColor (isHover);
+					return ColorManager.GetTreeTableDockToLeftBackgroundColor (isHover);
 				}
 				else
 				{
