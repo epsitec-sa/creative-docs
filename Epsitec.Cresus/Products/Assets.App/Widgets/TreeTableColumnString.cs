@@ -42,10 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					if (!string.IsNullOrEmpty (cell.Value))
 					{
 						rect = this.GetContentDeflateRectangle (rect);
-						var font = Font.DefaultFont;
-
-						graphics.Color = ColorManager.TextColor;
-						graphics.PaintText (rect, cell.Value, font, this.FontSize, ContentAlignment.MiddleLeft);
+						this.PaintText (graphics, rect, cell.Value);
 					}
 
 					y++;

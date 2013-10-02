@@ -14,6 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public AbstractTreeTableColumn()
 		{
+			this.textLayout = new TextLayout ();
+
 			this.detectedHoverRow = -1;
 			this.hilitedHoverRow = -1;
 		}
@@ -123,10 +125,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (!string.IsNullOrEmpty (this.HeaderDescription))
 				{
 					rect = this.GetContentDeflateRectangle (rect);
-					var font = Font.DefaultFont;
-
-					graphics.Color = ColorManager.TextColor;
-					graphics.PaintText (rect, this.HeaderDescription, font, this.FontSize, this.RowContentAlignment);
+					this.PaintText (graphics, rect, this.HeaderDescription);
 				}
 			}
 		}
@@ -143,12 +142,26 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (!string.IsNullOrEmpty (this.FooterDescription))
 				{
 					rect = this.GetContentDeflateRectangle (rect);
-					var font = Font.DefaultFont;
-
-					graphics.Color = ColorManager.TextColor;
-					graphics.PaintText (rect, this.FooterDescription, font, this.FontSize, this.RowContentAlignment);
+					this.PaintText (graphics, rect, this.FooterDescription);
 				}
 			}
+		}
+
+		protected void PaintText(Graphics graphics, Rectangle rect, string text)
+		{
+			var font      = Font.DefaultFont;
+			var fontSize  = this.FontSize;
+			var color     = ColorManager.TextColor;
+			var alignment = this.RowContentAlignment;
+
+			this.textLayout.Text            = text;
+			this.textLayout.DefaultFont     = font;
+			this.textLayout.DefaultFontSize = fontSize;
+			this.textLayout.LayoutSize      = rect.Size;
+			this.textLayout.BreakMode       = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+			this.textLayout.Alignment       = alignment;
+
+			this.textLayout.Paint (rect.BottomLeft, graphics, rect, color, GlyphPaintStyle.Normal);
 		}
 
 		protected Rectangle GetContentDeflateRectangle(Rectangle rect)
@@ -309,6 +322,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public const int HeaderRank = 1000000;
 		public const int FooterRank = 1000001;
 
+
+		private readonly TextLayout				textLayout;
 
 		protected int							detectedHoverRow;
 		protected int							hilitedHoverRow;

@@ -800,7 +800,7 @@ namespace Epsitec.Cresus.Assets.App
 							ValeurAssurance = 10000.0m,
 							Responsable = "Frédérique",
 							Couleur = "Noir",
-							NuméroSérie = "45-3292302-544545-8",
+							NuméroSérie = "45-3292302-544545-8 ABCDEFGHIJKLMNOPQRSTUVWXYZ",
 						};
 
 						var O233 = new TreeTableObject

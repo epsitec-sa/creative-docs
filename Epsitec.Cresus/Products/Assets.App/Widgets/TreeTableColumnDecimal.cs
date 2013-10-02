@@ -42,12 +42,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					if (cell.Value.HasValue)
 					{
 						rect = this.GetContentDeflateRectangle (rect);
-						var font = Font.DefaultFont;
+
 						var text = cell.Value.Value.ToString ("0,0.00");
 						//?var text = cellDecimal.Value.Value.ToString ("D2");
 
-						graphics.Color = ColorManager.TextColor;
-						graphics.PaintText (rect, text, font, this.FontSize, ContentAlignment.MiddleRight);
+						this.PaintText (graphics, rect, text);
 					}
 
 					y++;
