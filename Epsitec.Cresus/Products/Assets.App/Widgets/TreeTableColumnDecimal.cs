@@ -39,8 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					if (cell.Value.HasValue)
 					{
-						rect.Deflate (0, this.DescriptionMargin, 0, 0);
-
+						rect = this.GetContentDeflateRectangle (rect);
 						var font = Font.DefaultFont;
 						var text = cell.Value.Value.ToString ("0,0.00");
 						//?var text = cellDecimal.Value.Value.ToString ("D2");
@@ -51,6 +50,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					y++;
 				}
+			}
+		}
+
+		protected override ContentAlignment RowContentAlignment
+		{
+			get
+			{
+				return ContentAlignment.MiddleRight;
 			}
 		}
 

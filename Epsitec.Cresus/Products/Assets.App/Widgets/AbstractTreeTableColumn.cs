@@ -122,12 +122,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				if (!string.IsNullOrEmpty (this.HeaderDescription))
 				{
-					rect.Deflate (this.DescriptionMargin, 0, 0, 0);
-
+					rect = this.GetContentDeflateRectangle (rect);
 					var font = Font.DefaultFont;
 
 					graphics.Color = ColorManager.TextColor;
-					graphics.PaintText (rect, this.HeaderDescription, font, this.FontSize, ContentAlignment.MiddleLeft);
+					graphics.PaintText (rect, this.HeaderDescription, font, this.FontSize, this.RowContentAlignment);
 				}
 			}
 		}
@@ -143,15 +142,39 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				if (!string.IsNullOrEmpty (this.FooterDescription))
 				{
-					rect.Deflate (this.DescriptionMargin, 0, 0, 0);
-
+					rect = this.GetContentDeflateRectangle (rect);
 					var font = Font.DefaultFont;
 
 					graphics.Color = ColorManager.TextColor;
-					graphics.PaintText (rect, this.FooterDescription, font, this.FontSize, ContentAlignment.MiddleLeft);
+					graphics.PaintText (rect, this.FooterDescription, font, this.FontSize, this.RowContentAlignment);
 				}
 			}
 		}
+
+		protected Rectangle GetContentDeflateRectangle(Rectangle rect)
+		{
+			if (this.RowContentAlignment == Common.Drawing.ContentAlignment.TopLeft ||
+				this.RowContentAlignment == Common.Drawing.ContentAlignment.MiddleLeft ||
+				this.RowContentAlignment == Common.Drawing.ContentAlignment.BottomLeft)
+			{
+				rect.Deflate (this.DescriptionMargin, 0, 0, 0);
+			}
+			else
+			{
+				rect.Deflate (0, this.DescriptionMargin, 0, 0);
+			}
+
+			return rect;
+		}
+
+		protected virtual ContentAlignment RowContentAlignment
+		{
+			get
+			{
+				return ContentAlignment.MiddleLeft;
+			}
+		}
+
 
 		private int Detect(Point pos)
 		{

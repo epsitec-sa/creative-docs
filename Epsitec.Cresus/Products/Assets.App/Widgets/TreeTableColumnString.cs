@@ -37,8 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.AddFilledRectangle (rect);
 					graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected));
 
-					rect.Deflate (this.DescriptionMargin, 0, 0, 0);
-
+					rect = this.GetContentDeflateRectangle (rect);
 					var font = Font.DefaultFont;
 
 					graphics.Color = ColorManager.TextColor;
