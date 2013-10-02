@@ -15,8 +15,6 @@ using System;
 
 using System.Collections.Generic;
 
-using System.Diagnostics;
-
 using System.Linq;
 
 
@@ -39,29 +37,35 @@ namespace Epsitec.Aider.Data.Common
 			if (parishGroup.IsNull ())
 			{
 				this.AssignToNoParishGroup (person);
+				return;
+			}
+
+			if (person.ParishGroup == parishGroup)
+			{
+				return;
+			}
+
+			var noParishGroupParticipation = ParishAssigner.GetNoParishGroupParticipation (person);
+
+			if (noParishGroupParticipation.IsNull ())
+			{
+				var participationData = new ParticipationData (person);
+				AiderGroupParticipantEntity.StartParticipation (businessContext, parishGroup, participationData, startDate);
+
+				System.Diagnostics.Debug.Assert (person.ParishGroup == parishGroup);
+				System.Diagnostics.Debug.Assert (person.ParishGroupPathCache == parishGroup.Path);
+					
+				this.UpdateSubscription (person);
 			}
 			else
 			{
-				var noParishGroupParticipation = ParishAssigner.GetNoParishGroupParticipation (person);
+				//	Here we recycle the participation to the no parish group, so we don't delete
+				//	an entity to create a similar one right after.
 
-				if (noParishGroupParticipation.IsNull ())
-				{
-					var participationData = new ParticipationData (person);
-					AiderGroupParticipantEntity.StartParticipation (businessContext, parishGroup, participationData, startDate);
-
-					person.ParishGroup          = parishGroup;
-					person.ParishGroupPathCache = parishGroup.Path;
+				noParishGroupParticipation.Group = parishGroup;
+				person.ParishGroup = parishGroup;
 					
-					this.UpdateSubscription (person);
-				}
-				else
-				{
-					// Here we recycle the participation to the no parish group, so we don't delete
-					// an entity to create a similar one right after.
-
-					noParishGroupParticipation.Group = parishGroup;
-					person.ParishGroup = parishGroup;
-				}
+				System.Diagnostics.Debug.Assert (person.ParishGroupPathCache == parishGroup.Path);
 			}
 		}
 
@@ -124,7 +128,7 @@ namespace Epsitec.Aider.Data.Common
 				var addressText = mainAddress.GetSummary ().ToSimpleText ().Replace ("\n", "; ");
 				var format = "WARNING: parish not found for {0} at address {1}";
 
-				Debug.WriteLine (string.Format (format, nameText, addressText));
+				System.Diagnostics.Debug.WriteLine (string.Format (format, nameText, addressText));
 			}
 
 			return group;
@@ -132,8 +136,14 @@ namespace Epsitec.Aider.Data.Common
 
 		private void AssignToNoParishGroup(AiderPersonEntity person)
 		{
-			var participationData = new ParticipationData (person);
 			var group = this.FindNoParishGroup ();
+
+			if (person.ParishGroup == group)
+			{
+				return;
+			}
+			
+			var participationData = new ParticipationData (person);
 
 			AiderGroupParticipantEntity.StartParticipation (businessContext, group, participationData);
 		}

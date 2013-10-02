@@ -175,22 +175,24 @@ namespace Epsitec.Aider.Rules
 			{
 				AiderPersonBusinessRules.AssignParish (context, person);
 			}
-			if (person.ParishGroup.IsParish () == false)
+			
+			if ((person.ParishGroup.IsParish () == false) &&
+				(person.ParishGroup.IsNoParish () == false))
 			{
 				Logic.BusinessRuleException (person, Resources.Text ("Vous devez sélectionner un groupe 'paroisse' pour la paroisse."));
+				return;
 			}
-			else
+			
+			if (AiderPersonBusinessRules.IsReassignNeeded (context, person))
 			{
-				if (AiderPersonBusinessRules.IsReassignNeeded (context, person))
-				{
-					AiderPersonBusinessRules.ReassignParish (context, person);
-				}
+				AiderPersonBusinessRules.ReassignParish (context, person);
 			}
 		}
 
 		private static bool IsReassignNeeded(BusinessContext context, AiderPersonEntity person)
 		{
-			if (ParishAssigner.IsInValidParish (ParishAddressRepository.Current, person))
+			if ((ParishAssigner.IsInValidParish (ParishAddressRepository.Current, person)) ||
+				(ParishAssigner.IsInNoParishGroup (person)))
 			{
 				return false;
 			}

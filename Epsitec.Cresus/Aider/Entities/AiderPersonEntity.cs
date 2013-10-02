@@ -404,11 +404,30 @@ namespace Epsitec.Aider.Entities
 
 		internal void AddParticipationInternal(AiderGroupParticipantEntity participation)
 		{
+			System.Diagnostics.Debug.Assert (participation.IsNotNull ());
+
+			//	If we assign the person to a group, check to see if the group is a parish
+			//	(or the special "no parish" group), in which case we have to update
+			//	the ParishGroup property instead:
+
+			if ((participation.Group.IsParish ()) ||
+				(participation.Group.IsNoParish ()))
+			{
+				this.ParishGroup = participation.Group;
+			}
+
 			this.GetParticipations ().Add (participation);
 		}
 
 		internal void RemoveParticipationInternal(AiderGroupParticipantEntity participation)
 		{
+			System.Diagnostics.Debug.Assert (participation.IsNotNull ());
+
+			if (participation.Group == this.ParishGroup)
+			{
+				this.ParishGroup = null;
+			}
+
 			this.GetParticipations ().Remove (participation);
 		}
 
