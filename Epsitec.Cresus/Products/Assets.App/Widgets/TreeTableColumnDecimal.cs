@@ -32,11 +32,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				foreach (var cell in this.cells)
 				{
+					//	Dessine le fond.
 					var rect = this.GetCellsRect (y);
 
 					graphics.AddFilledRectangle (rect);
 					graphics.RenderSolid (this.GetCellColor(y == this.hilitedHoverRow, cell.IsSelected));
 
+					//	Dessine le montant.
 					if (cell.Value.HasValue)
 					{
 						rect = this.GetContentDeflateRectangle (rect);

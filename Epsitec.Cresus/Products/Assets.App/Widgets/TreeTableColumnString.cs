@@ -32,16 +32,21 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				foreach (var cell in this.cells)
 				{
+					//	Dessine le fond.
 					var rect = this.GetCellsRect (y);
 
 					graphics.AddFilledRectangle (rect);
 					graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected));
 
-					rect = this.GetContentDeflateRectangle (rect);
-					var font = Font.DefaultFont;
+					//	Dessine le texte.
+					if (!string.IsNullOrEmpty (cell.Value))
+					{
+						rect = this.GetContentDeflateRectangle (rect);
+						var font = Font.DefaultFont;
 
-					graphics.Color = ColorManager.TextColor;
-					graphics.PaintText (rect, cell.Value, font, this.FontSize, ContentAlignment.MiddleLeft);
+						graphics.Color = ColorManager.TextColor;
+						graphics.PaintText (rect, cell.Value, font, this.FontSize, ContentAlignment.MiddleLeft);
+					}
 
 					y++;
 				}

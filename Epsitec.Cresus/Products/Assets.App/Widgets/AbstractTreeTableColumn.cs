@@ -153,9 +153,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected Rectangle GetContentDeflateRectangle(Rectangle rect)
 		{
-			if (this.RowContentAlignment == Common.Drawing.ContentAlignment.TopLeft ||
-				this.RowContentAlignment == Common.Drawing.ContentAlignment.MiddleLeft ||
-				this.RowContentAlignment == Common.Drawing.ContentAlignment.BottomLeft)
+			if (this.RowContentAlignment == ContentAlignment.TopLeft    ||
+				this.RowContentAlignment == ContentAlignment.MiddleLeft ||
+				this.RowContentAlignment == ContentAlignment.BottomLeft )
 			{
 				rect.Deflate (this.DescriptionMargin, 0, 0, 0);
 			}
