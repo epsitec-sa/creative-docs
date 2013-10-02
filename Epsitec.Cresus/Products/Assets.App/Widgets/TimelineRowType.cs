@@ -3,10 +3,13 @@
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public enum TreeTableColumnType
+	public enum TimelineRowType
 	{
+		Month,
+		WeekOfYear,
+		DaysOfWeek,
+		Days,
 		Glyph,
-		String,
-		Decimal,
+		Value,
 	};
 }

@@ -29,9 +29,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public TimelineValueDisplayMode ValueDisplayMode;
-		public Color? Color1;
-		public Color? Color2;
+		public TimelineValueDisplayMode			ValueDisplayMode;
+		public Color?							ValueColor1;
+		public Color?							ValueColor2;
 
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private Color GetColor(int rank)
 		{
-			var color = (rank == 0) ? this.Color1 : this.Color2;
+			var color = (rank == 0) ? this.ValueColor1 : this.ValueColor2;
 
 			if (color.HasValue)
 			{

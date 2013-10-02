@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Assets.App
 			int cellsCount = System.Math.Min (this.timelineCellsCount, this.timelineController.VisibleCellsCount);
 			int selection = this.timelineSelectedCell - this.timelineController.LeftVisibleCell;
 
-			AssetsApplication.InitialiseTimeline (this.timelineController, date, cellsCount, selection);
+			AssetsApplication.InitialiseTimeline (this.timelineController, date, cellsCount, selection, false);
 		}
 
 		private NavigationTimelineController timelineController;
@@ -276,88 +276,31 @@ namespace Epsitec.Cresus.Assets.App
 			controller.Refresh ();
 		}
 
-		private static List<AbstractTimelineRow> GetRows(bool all)
+		private static TimelineRowDescription[] GetRows(bool all)
 		{
-			var list = new List<AbstractTimelineRow> ();
+			var list = new List<TimelineRowDescription> ();
 
 			if (all)
 			{
-				var row = new TimelineRowValues ()
-				{
-					Description = "Valeur assurance",
-					RelativeHeight = 2.0,
-					ValueDisplayMode = TimelineValueDisplayMode.All,
-				};
-
-				list.Add (row);
+				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeur assurance", relativeHeight: 2.0));
+				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeur comptable", relativeHeight: 2.0, valueColor1: Color.FromName ("Green"), valueColor2: Color.FromName ("Red")));
+				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
+				list.Add (new TimelineRowDescription (TimelineRowType.DaysOfWeek, ""));
+				list.Add (new TimelineRowDescription (TimelineRowType.WeekOfYear, "Semaines"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
 			}
-
-			if (all)
+			else
 			{
-				var row = new TimelineRowValues ()
-				{
-					Description = "Valeur comptable",
-					RelativeHeight = 2.0,
-//					ValueDisplayMode = TimelineValueDisplayMode.Dots | TimelineValueDisplayMode.Lines,
-					ValueDisplayMode = TimelineValueDisplayMode.All,
-					Color1 = Color.FromName ("Green"),
-					Color2 = Color.FromName ("Red"), 
-				};
-
-				list.Add (row);
+				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
 			}
 
-			{
-				var row = new TimelineRowGlyphs ()
-				{
-					Description = "Evénements",
-				};
-
-				list.Add (row);
-			}
-
-			{
-				var row = new TimelineRowDays ()
-				{
-					Description = "Jours",
-				};
-
-				list.Add (row);
-			}
-
-			if (all)
-			{
-				var row = new TimelineRowDaysOfWeek ()
-				{
-					Description = "",
-				};
-
-				list.Add (row);
-			}
-
-			if (all)
-			{
-				var row = new TimelineRowWeeksOfYear ()
-				{
-					Description = "Semaines",
-				};
-
-				list.Add (row);
-			}
-			
-			{
-				var row = new TimelineRowMonths ()
-				{
-					Description = "Mois",
-				};
-
-				list.Add (row);
-			}
-
-			return list;
+			return list.ToArray ();
 		}
 
-		private static void InitialiseTimeline(NavigationTimelineController timeline, System.DateTime start, int cellsCount, int selection)
+		private static void InitialiseTimeline(NavigationTimelineController timeline, System.DateTime start, int cellsCount, int selection, bool all)
 		{
 			var dates = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();
@@ -444,38 +387,21 @@ namespace Epsitec.Cresus.Assets.App
 				values2.Add (x2);
 			}
 
-			foreach (var r in timeline.Rows)
+			if (all)
 			{
-				if (r is TimelineRowGlyphs)
-				{
-					var row = r as TimelineRowGlyphs;
-					row.SetCells (glyphs.ToArray ());
-				}
-				else if (r is TimelineRowValues)
-				{
-					var row = r as TimelineRowValues;
-					row.SetCells (row.RowIndex == 0 ? values1.ToArray () : values2.ToArray ());
-				}
-				else if (r is TimelineRowDays)
-				{
-					var row = r as TimelineRowDays;
-					row.SetCells (dates.ToArray ());
-				}
-				else if (r is TimelineRowDaysOfWeek)
-				{
-					var row = r as TimelineRowDaysOfWeek;
-					row.SetCells (dates.ToArray ());
-				}
-				else if (r is TimelineRowMonths)
-				{
-					var row = r as TimelineRowMonths;
-					row.SetCells (dates.ToArray ());
-				}
-				else if (r is TimelineRowWeeksOfYear)
-				{
-					var row = r as TimelineRowWeeksOfYear;
-					row.SetCells (dates.ToArray ());
-				}
+				timeline.SetRowValueCells (0, values1.ToArray ());
+				timeline.SetRowValueCells (1, values2.ToArray ());
+				timeline.SetRowGlyphCells (2, glyphs.ToArray ());
+				timeline.SetRowDayCells (3, dates.ToArray ());
+				timeline.SetRowDayOfWeekCells (4, dates.ToArray ());
+				timeline.SetRowWeekOfYearCells (5, dates.ToArray ());
+				timeline.SetRowMonthCells (6, dates.ToArray ());
+			}
+			else
+			{
+				timeline.SetRowGlyphCells (0, glyphs.ToArray ());
+				timeline.SetRowDayCells (1, dates.ToArray ());
+				timeline.SetRowMonthCells (2, dates.ToArray ());
 			}
 		}
 
@@ -536,8 +462,8 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			var list = new List<TreeTableColumnDescription> ();
 
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.First,   200, "Objet", dockToLeft: true));
-//			list.Add (new TreeTableColumnDescription (TreeTableColumnType.First,   200, "Objet"));
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,   200, "Objet", dockToLeft: true));
+//			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,   200, "Objet"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   80, "Numéro"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  120, "Responsable"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  150, "Couleur"));

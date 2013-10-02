@@ -43,9 +43,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				this.OnDateChanged ();
 			};
-
-			this.UpdateScroller ();
 		}
+
 
 		public int								CellsCount
 		{
@@ -93,17 +92,39 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public IEnumerable<AbstractTimelineRow> Rows
+		public void SetRows(TimelineRowDescription[] descriptions)
 		{
-			get
-			{
-				return this.timeline.Rows;
-			}
+			this.timeline.SetRows (descriptions);
 		}
 
-		public void SetRows(List<AbstractTimelineRow> rows)
+		public void SetRowMonthCells(int rank, TimelineCellDate[] cells)
 		{
-			this.timeline.SetRows (rows);
+			this.timeline.SetRowMonthCells (rank, cells);
+		}
+
+		public void SetRowWeekOfYearCells(int rank, TimelineCellDate[] cells)
+		{
+			this.timeline.SetRowWeekOfYearCells (rank, cells);
+		}
+
+		public void SetRowDayOfWeekCells(int rank, TimelineCellDate[] cells)
+		{
+			this.timeline.SetRowDayOfWeekCells (rank, cells);
+		}
+
+		public void SetRowDayCells(int rank, TimelineCellDate[] cells)
+		{
+			this.timeline.SetRowDayCells (rank, cells);
+		}
+
+		public void SetRowValueCells(int rank, TimelineCellValue[] cells)
+		{
+			this.timeline.SetRowValueCells (rank, cells);
+		}
+
+		public void SetRowGlyphCells(int rank, TimelineCellGlyph[] cells)
+		{
+			this.timeline.SetRowGlyphCells (rank, cells);
 		}
 		#endregion
 

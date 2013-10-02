@@ -81,15 +81,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public void SetColumns(TreeTableColumnDescription[] descriptions)
 		{
-			this.columnDescriptions = descriptions;
-
 			this.treeTableColumns.Clear ();
 			this.leftContainer.Children.Clear ();
 			this.columnsContainer.Viewport.Children.Clear ();
 
 			int index = 0;
 
-			foreach (var description in this.columnDescriptions)
+			foreach (var description in descriptions)
 			{
 				var column = TreeTableColumnDescription.Create (description);
 				column.ColumnIndex = index++;
@@ -224,7 +222,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private readonly FrameBox				leftContainer;
 		private readonly Scrollable				columnsContainer;
 
-		private TreeTableColumnDescription[]	columnDescriptions;
 		private int								headerHeight;
 		private int								footerHeight;
 		private int								rowHeight;

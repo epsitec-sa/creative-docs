@@ -17,12 +17,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class Timeline : Widget
 	{
-		public IEnumerable<AbstractTimelineRow>	Rows
+		public Timeline()
 		{
-			get
-			{
-				return this.Children.Cast<AbstractTimelineRow> ();
-			}
+			this.timelineRows = new List<AbstractTimelineRow> ();
 		}
 
 
@@ -98,21 +95,25 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.Children.Cast<AbstractTimelineRow> ().Sum (x => x.RelativeHeight);
+				return this.timelineRows.Sum (x => x.RelativeHeight);
 			}
 		}
 
 
-		public void SetRows(List<AbstractTimelineRow> rows)
+		public void SetRows(TimelineRowDescription[] descriptions)
 		{
-			//	Spécifie toutes les lignes-enfant contenues dans la timeline.
+			//	Spécifie toutes les lignes-enfant contenues dans la timeline, de bas en haut.
+			this.timelineRows.Clear ();
 			this.Children.Clear ();
 
 			int index = 0;
 
-			foreach (var row in rows)
+			foreach (var description in descriptions)
 			{
+				var row = TimelineRowDescription.Create (description);
 				row.RowIndex = index++;
+
+				this.timelineRows.Add (row);
 				this.Children.Add (row);
 
 				row.CellClicked += delegate (object sender, int rank)
@@ -122,6 +123,54 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			this.UpdateLabelsWidth ();
+		}
+
+		public void SetRowMonthCells(int rank, TimelineCellDate[] cells)
+		{
+			var row = this.GetRow (rank) as TimelineRowMonths;
+			System.Diagnostics.Debug.Assert (row != null);
+
+			row.SetCells (cells);
+		}
+
+		public void SetRowWeekOfYearCells(int rank, TimelineCellDate[] cells)
+		{
+			var row = this.GetRow (rank) as TimelineRowWeeksOfYear;
+			System.Diagnostics.Debug.Assert (row != null);
+
+			row.SetCells (cells);
+		}
+
+		public void SetRowDayOfWeekCells(int rank, TimelineCellDate[] cells)
+		{
+			var row = this.GetRow (rank) as TimelineRowDaysOfWeek;
+			System.Diagnostics.Debug.Assert (row != null);
+
+			row.SetCells (cells);
+		}
+
+		public void SetRowDayCells(int rank, TimelineCellDate[] cells)
+		{
+			var row = this.GetRow (rank) as TimelineRowDays;
+			System.Diagnostics.Debug.Assert (row != null);
+
+			row.SetCells (cells);
+		}
+
+		public void SetRowValueCells(int rank, TimelineCellValue[] cells)
+		{
+			var row = this.GetRow (rank) as TimelineRowValues;
+			System.Diagnostics.Debug.Assert (row != null);
+
+			row.SetCells (cells);
+		}
+
+		public void SetRowGlyphCells(int rank, TimelineCellGlyph[] cells)
+		{
+			var row = this.GetRow (rank) as TimelineRowGlyphs;
+			System.Diagnostics.Debug.Assert (row != null);
+
+			row.SetCells (cells);
 		}
 
 
@@ -139,11 +188,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			int w = this.CellWidth;
 			int bottom = 0;
 
-			foreach (var children in this.Children)
+			foreach (var row in this.timelineRows)
 			{
-				var row = children as AbstractTimelineRow;
-				System.Diagnostics.Debug.Assert (row != null);
-
 				var h = (int) (w * row.RelativeHeight);
 				var top = this.ActualHeight-bottom-h;
 
@@ -159,11 +205,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private void UpdateChildrensPivot()
 		{
 			//	Met à jour le pivot de toutes les lignes-enfant.
-			foreach (var children in this.Children)
+			foreach (var row in this.timelineRows)
 			{
-				var row = children as AbstractTimelineRow;
-				System.Diagnostics.Debug.Assert (row != null);
-
 				row.Pivot = this.pivot;
 			}
 		}
@@ -175,11 +218,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (this.showLabels)
 			{
-				foreach (var children in this.Children)
+				foreach (var row in this.timelineRows)
 				{
-					var row = children as AbstractTimelineRow;
-					System.Diagnostics.Debug.Assert (row != null);
-
 					if (!string.IsNullOrEmpty (row.Description))
 					{
 						this.labelsWidth = System.Math.Max (this.labelsWidth, this.GetTextWidth (row.Description));
@@ -191,11 +231,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.labelsWidth += this.LabelMargin * 2;
 				}
 
-				foreach (var children in this.Children)
+				foreach (var row in this.timelineRows)
 				{
-					var row = children as AbstractTimelineRow;
-					System.Diagnostics.Debug.Assert (row != null);
-
 					row.LabelWidth = this.labelsWidth;
 				}
 			}
@@ -230,6 +267,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		private AbstractTimelineRow GetRow(int rank)
+		{
+			System.Diagnostics.Debug.Assert (rank >= 0 && rank < this.timelineRows.Count);
+			return this.timelineRows[rank];
+		}
+
 
 		#region Events handler
 		private void OnCellClicked(int row, int rank)
@@ -244,6 +287,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event CellClickedEventHandler CellClicked;
 		#endregion
 
+
+		private readonly List<AbstractTimelineRow> timelineRows;
 
 		private double							pivot;
 		private bool							showLabels;
