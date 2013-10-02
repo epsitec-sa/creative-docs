@@ -504,8 +504,7 @@ namespace Epsitec.Cresus.Assets.App
 				this.UpdateTreeTableController ();
 			};
 
-			this.treeTableController.CreateUI (frame);
-			this.treeTableController.FooterHeight = 0;
+			this.treeTableController.CreateUI (frame, footerHeight: 0);
 			this.treeTableController.SetColumns (AssetsApplication.GetColumns ());
 			this.UpdateTreeTableController ();
 

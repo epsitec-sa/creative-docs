@@ -19,12 +19,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTable : Widget
 	{
-		public TreeTable()
+		public TreeTable(int firstWidth, int rowHeight, int headerHeight, int footerHeight)
 		{
-			this.firstWidth   = 200;
-			this.headerHeight = 24;
-			this.footerHeight = 24;
-			this.rowHeight    = 18;
+			this.firstWidth   = firstWidth;
+			this.rowHeight    = rowHeight;
+			this.headerHeight = headerHeight;
+			this.footerHeight = footerHeight;
 
 			this.firstContainer = new FrameBox
 			{
@@ -131,72 +131,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.RenderSolid (ColorManager.TreeTableBackgroundColor);
 		}
 
-
-		private int								FirstWidth
-		{
-			get
-			{
-				return this.firstWidth;
-			}
-			set
-			{
-				if (this.firstWidth != value)
-				{
-					this.firstWidth = value;
-
-					this.firstContainer.PreferredWidth = this.firstWidth;
-					this.columnFirst.PreferredWidth = this.firstWidth;
-				}
-			}
-		}
-
-		public int								HeaderHeight
-		{
-			get
-			{
-				return this.headerHeight;
-			}
-			set
-			{
-				if (this.headerHeight != value)
-				{
-					this.headerHeight = value;
-					this.Invalidate ();
-				}
-			}
-		}
-
-		public int								FooterHeight
-		{
-			get
-			{
-				return this.footerHeight;
-			}
-			set
-			{
-				if (this.footerHeight != value)
-				{
-					this.footerHeight = value;
-					this.Invalidate ();
-				}
-			}
-		}
-
-		public int								RowHeight
-		{
-			get
-			{
-				return this.rowHeight;
-			}
-			set
-			{
-				if (this.rowHeight != value)
-				{
-					this.rowHeight = value;
-					this.Invalidate ();
-				}
-			}
-		}
 
 		public int								VisibleRowsCount
 		{

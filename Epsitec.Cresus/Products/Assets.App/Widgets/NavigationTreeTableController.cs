@@ -15,11 +15,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class NavigationTreeTableController
 	{
-		public void CreateUI(Widget parent)
+		public void CreateUI(Widget parent, int firstWidth = 200, int rowHeight = 18, int headerHeight = 24, int footerHeight = 24)
 		{
 			parent.BackColor = ColorManager.TreeTableBackgroundColor;
 
-			this.treeTable = new TreeTable ()
+			this.treeTable = new TreeTable (firstWidth, rowHeight, headerHeight, footerHeight)
 			{
 				Parent = parent,
 				Dock   = DockStyle.Fill,
@@ -82,42 +82,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region TreeTable Facade
-		public int								HeaderHeight
-		{
-			get
-			{
-				return this.treeTable.HeaderHeight;
-			}
-			set
-			{
-				this.treeTable.HeaderHeight = value;
-			}
-		}
-
-		public int								FooterHeight
-		{
-			get
-			{
-				return this.treeTable.FooterHeight;
-			}
-			set
-			{
-				this.treeTable.FooterHeight = value;
-			}
-		}
-
-		public int								RowHeight
-		{
-			get
-			{
-				return this.treeTable.RowHeight;
-			}
-			set
-			{
-				this.treeTable.RowHeight = value;
-			}
-		}
-
 		public int								VisibleRowsCount
 		{
 			get
