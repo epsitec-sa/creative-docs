@@ -380,12 +380,18 @@ namespace Epsitec.Aider.Data.Job
 
 								foreach (var member in members.Where (x => aiderHousehold.IsHead (x)))
 								{
+									//BUG SPOTTED: 
+									//Verifier si le membre est encore dans le ménage d'origine et
+									//dans ce cas ne pas apposer de warning
 									this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
-									this.ReassignAndWarnParish (businessContext, member, changes);
+									this.ReassignAndWarnParish (businessContext, member, changes);							
 								}
 								
 								foreach (var member in members.Where (x => aiderHousehold.IsHead (x) == false))
 								{
+									//BUG SPOTTED: 
+									//Verifier si le membre est encore dans le ménage d'origine et
+									//dans ce cas ne pas apposer de warning
 									this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
 									this.ReassignAndWarnParish (businessContext, member, changes);
 								}
