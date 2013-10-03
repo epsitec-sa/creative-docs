@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.footerHeight = footerHeight;
 
 			this.lastColumnSeparatorRank = -1;
+			this.lastColumnOrderRank = -1;
 
 			this.treeTableColumns = new List<AbstractTreeTableColumn> ();
 
@@ -205,14 +206,31 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else
 			{
-				int rank = this.DetectColumnSeparator (e.Point);
+				var pos = this.foreground.MapParentToClient (e.Point);
 
-				if (this.lastColumnSeparatorRank != rank)
+				int sepRank = this.DetectColumnSeparator (pos);
+				int ordRank = this.DetectColumnOrder     (pos);
+
+				if (sepRank != this.lastColumnSeparatorRank ||
+					ordRank != this.lastColumnOrderRank)
 				{
-					this.lastColumnSeparatorRank = rank;
+					this.lastColumnSeparatorRank = sepRank;
+					this.lastColumnOrderRank     = ordRank;
 
-					var x = this.GetColumnSeparatorX (this.lastColumnSeparatorRank);
-					this.ColumnSeparatorUpdateForeground (x);
+					if (this.lastColumnSeparatorRank != -1)
+					{
+						var x = this.GetColumnSeparatorX (this.lastColumnSeparatorRank);
+						this.ColumnSeparatorUpdateForeground (x);
+					}
+					else if (this.lastColumnOrderRank != -1)
+					{
+						var rect = this.GetColumnOrderRect (this.lastColumnOrderRank);
+						this.ColumnOrderUpdateForeground (rect);
+					}
+					else
+					{
+						this.ColumnSeparatorUpdateForeground (null);
+					}
 				}
 			}
 
@@ -306,7 +324,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private int DetectColumnSeparator(Point pos)
 		{
-			if (pos.Y > AbstractScroller.DefaultBreadth)
+			if (pos.Y >= 0 && pos.Y < this.foreground.ActualHeight)
 			{
 				//	A l'envers, pour pouvoir déployer une colonne de largeur nulle.
 				for (int i=this.treeTableColumns.Count-1; i>=0; i--)
@@ -314,8 +332,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					double? x = this.GetColumnSeparatorX (i);
 
 					if (x.HasValue &&
-						pos.X >= x.Value - TreeTable.colomnSeparatorWidth &&
-						pos.X <= x.Value + TreeTable.colomnSeparatorWidth)
+						pos.X >= x.Value - 4 &&
+						pos.X <= x.Value + 4)
 					{
 						return i;
 					}
@@ -359,6 +377,74 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
+		#region Drag column order
+		private void ColumnOrderUpdateForeground(Rectangle rect)
+		{
+			this.foreground.ClearZones ();
+
+			if (rect.IsValid)
+			{
+				var color = Color.FromAlphaColor (0.4, ColorManager.MoveColumnColor);
+				this.foreground.AddZone (rect, color);
+			}
+
+			this.foreground.Invalidate ();
+		}
+
+		private int DetectColumnOrder(Point pos)
+		{
+			for (int i=0; i<this.treeTableColumns.Count; i++)
+			{
+				var rect = this.GetColumnOrderRect (i);
+
+				if (rect.Contains (pos))
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+		private Rectangle GetColumnOrderRect(int rank)
+		{
+			double x1 = 0;
+			double x2 = 0;
+
+			if (rank != -1)
+			{
+				var column = this.treeTableColumns[rank];
+				
+				if (column.DockToLeft)
+				{
+					x1 = column.ActualBounds.Left;
+					x2 = column.ActualBounds.Right;
+				}
+				else
+				{
+					double start  = this.columnsContainer.ActualBounds.Left;
+					double offset = this.columnsContainer.ViewportOffsetX;
+
+					x1 = start - offset + column.ActualBounds.Left;
+					x2 = start - offset + column.ActualBounds.Right;
+
+					x1 = System.Math.Max (x1, start);
+					x2 = System.Math.Max (x2, start);
+				}
+			}
+
+			if (x1 < x2)
+			{
+				return new Rectangle (x1, this.foreground.ActualHeight-this.headerHeight, x2-x1, this.headerHeight);
+			}
+			else
+			{
+				return Rectangle.Empty;
+			}
+		}
+		#endregion
+
+
 		#region Events handler
 		private void OnRowClicked(int column, int row)
 		{
@@ -385,8 +471,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		private static readonly double colomnSeparatorWidth = 6;
-
 		private readonly List<AbstractTreeTableColumn> treeTableColumns;
 		private readonly FrameBox				leftContainer;
 		private readonly Scrollable				columnsContainer;
@@ -395,10 +479,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private int								headerHeight;
 		private int								footerHeight;
 		private int								rowHeight;
+
 		private int								lastColumnSeparatorRank;
 		private bool							isDragColumnWidth;
 		private double							dragColumnWidthInitialMouse;
 		private double							dragColumnWidthInitialLeft;
 		private double							dragColumnWidthInitialWidth;
+
+		private int								lastColumnOrderRank;
+		private bool							isDragColumnOrder;
 	}
 }
