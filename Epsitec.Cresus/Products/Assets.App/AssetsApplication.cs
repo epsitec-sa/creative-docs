@@ -466,7 +466,7 @@ namespace Epsitec.Cresus.Assets.App
 //			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,   200, "Objet"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   50, "N°", dockToLeft: true));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  120, "Responsable"));
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  150, "Couleur"));
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   60, "Couleur"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  200, "Numéro de série"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 120, "Valeur comptable"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 120, "Valeur assurance"));

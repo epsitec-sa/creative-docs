@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.headerHeight = headerHeight;
 			this.footerHeight = footerHeight;
 
+			this.lastColumnSeparatorRank = -1;
+
 			this.treeTableColumns = new List<AbstractTreeTableColumn> ();
 
 			//	Crée le conteneur de gauche, qui contiendra toutes les colonnes
@@ -163,21 +165,45 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			if (message.IsMouseType)
+			{
+				if (message.MessageType == MessageType.MouseDown)
+				{
+					if (this.lastColumnSeparatorRank != -1)
+					{
+						this.BeginDragColumnWidth (this.lastColumnSeparatorRank, pos);
+					}
+				}
+				else if (message.MessageType == MessageType.MouseUp)
+				{
+					if (this.isDragColumnWidth)
+					{
+						this.EndDragColumnWidth (this.lastColumnSeparatorRank, pos);
+					}
+				}
+			}
+
+			base.ProcessMessage (message, pos);
+		}
+
 		protected override void OnMouseMove(MessageEventArgs e)
 		{
-			var sep = this.DetectColumnSeparator (e.Point);
-
-			if (this.lastColumnSeparator != sep)
+			if (this.isDragColumnWidth)
 			{
-				this.lastColumnSeparator = sep;
+				this.MoveDragColumnWidth (this.lastColumnSeparatorRank, e.Point);
+			}
+			else
+			{
+				int rank = this.DetectColumnSeparator (e.Point);
 
-				if (this.lastColumnSeparator.HasValue)
+				if (this.lastColumnSeparatorRank != rank)
 				{
-					this.foreground.HilitedZone = this.GetColumnSeparatorRect (this.lastColumnSeparator.Value);
-				}
-				else
-				{
-					this.foreground.HilitedZone = Rectangle.Empty;
+					this.lastColumnSeparatorRank = rank;
+
+					var x = this.GetColumnSeparatorX (this.lastColumnSeparatorRank);
+					this.ColumnSeparatorUpdateForeground (x);
 				}
 			}
 
@@ -222,62 +248,103 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		#region Drag column width
+		private void BeginDragColumnWidth(int rank, Point pos)
+		{
+			this.isDragColumnWidth = true;
+			this.dragColumnWidthInitialMouse = pos.X;
+			this.dragColumnWidthInitialLeft = this.GetColumnSeparatorX (rank).Value - this.treeTableColumns[rank].ActualWidth;
+			this.dragColumnWidthInitialWidth = this.treeTableColumns[rank].ActualWidth;
+
+		}
+
+		private void MoveDragColumnWidth(int rank, Point pos)
+		{
+			var delta = pos.X - this.dragColumnWidthInitialMouse;
+			var width = System.Math.Max (this.dragColumnWidthInitialWidth + delta, 0.0);
+			this.treeTableColumns[rank].PreferredWidth = width;
+
+			var x = this.dragColumnWidthInitialLeft + width;
+			this.ColumnSeparatorUpdateForeground (x);
+		}
+
+		private void EndDragColumnWidth(int rank, Point pos)
+		{
+			this.isDragColumnWidth = false;
+		}
+		#endregion
+
+
 		#region Column separator
+		private void ColumnSeparatorUpdateForeground(double? x)
+		{
+			if (x.HasValue)
+			{
+				this.foreground.HilitedZone = this.GetColumnSeparatorRect (x.Value);
+			}
+			else
+			{
+				this.foreground.HilitedZone = Rectangle.Empty;
+			}
+		}
+
 		private Rectangle GetColumnSeparatorRect(double x)
 		{
 			x = System.Math.Floor (x);
 			return new Rectangle (x-1, 0, 3, this.ActualHeight);
 		}
 
-		private double? DetectColumnSeparator(Point pos)
+		private int DetectColumnSeparator(Point pos)
 		{
 			if (pos.Y > AbstractScroller.DefaultBreadth)
 			{
-				for (int i=0; i<this.treeTableColumns.Count; i++)
+				//	A l'envers, pour pouvoir déployer une colonne de largeur nulle.
+				for (int i=this.treeTableColumns.Count-1; i>=0; i--)
 				{
 					double? x = this.GetColumnSeparatorX (i);
 
 					if (x.HasValue &&
-						pos.X >= x.Value - TreeTable.colomnSeparatorWidth*2.0 &&
-						pos.X <= x.Value + TreeTable.colomnSeparatorWidth*2.0)
+						pos.X >= x.Value - TreeTable.colomnSeparatorWidth &&
+						pos.X <= x.Value + TreeTable.colomnSeparatorWidth)
 					{
+						return i;
+					}
+				}
+			}
+
+			return -1;
+		}
+
+		private double? GetColumnSeparatorX(int rank)
+		{
+			if (rank != -1)
+			{
+				var column = this.treeTableColumns[rank];
+
+				if (column.DockToLeft)
+				{
+					return column.ActualBounds.Right;
+				}
+				else
+				{
+					double offset = this.columnsContainer.ViewportOffsetX;
+					double position = column.ActualBounds.Right;
+
+					if (position > offset)
+					{
+						var x = this.columnsContainer.ActualBounds.Left - offset + position;
+
+						if (rank == this.treeTableColumns.Count-1)  // dernière colonne ?
+						{
+							x -= 2;  // pour ne pas être sous l'ascenseur vertical
+						}
+
 						return x;
 					}
 				}
 			}
 
 			return null;
-		}
-
-		private double? GetColumnSeparatorX(int rank)
-		{
-			var column = this.treeTableColumns[rank];
-
-			if (column.DockToLeft)
-			{
-				return column.ActualBounds.Right;
-			}
-			else
-			{
-				double offset = this.columnsContainer.ViewportOffsetX;
-				double position = column.ActualBounds.Right;
-
-				if (position > offset)
-				{
-					var x = this.columnsContainer.ActualBounds.Left - offset + position;
-
-					if (rank == this.treeTableColumns.Count-1)  // dernière colonne ?
-					{
-						x -= 2;
-					}
-
-					return x;
-				}
-				else
-				{
-					return null;
-				}
-			}
 		}
 		#endregion
 
@@ -318,6 +385,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private int								headerHeight;
 		private int								footerHeight;
 		private int								rowHeight;
-		private double?							lastColumnSeparator;
+		private int								lastColumnSeparatorRank;
+		private bool							isDragColumnWidth;
+		private double							dragColumnWidthInitialMouse;
+		private double							dragColumnWidthInitialLeft;
+		private double							dragColumnWidthInitialWidth;
 	}
 }

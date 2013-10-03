@@ -9,6 +9,10 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Ce widget permet de dessiner une zone rectangulaire servant de feedback
+	/// visuel pour un hilite, par exemple lors du déplacement d'une colonne.
+	/// </summary>
 	public class Foreground : Widget
 	{
 		public Rectangle HilitedZone
