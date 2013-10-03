@@ -47,9 +47,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 
 				//	Dessine la grille.
-				if (this.showGrid)
+				if (this.hilitedHoverRow != -1)
 				{
-					this.PaintGrid (graphics, rect);
+					this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
 				}
 
 				y++;

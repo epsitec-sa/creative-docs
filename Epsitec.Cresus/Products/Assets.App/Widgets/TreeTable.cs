@@ -165,18 +165,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected override void OnEntered(MessageEventArgs e)
-		{
-			this.ShowGrid = true;
-			base.OnEntered (e);
-		}
-
-		protected override void OnExited(MessageEventArgs e)
-		{
-			this.ShowGrid = false;
-			base.OnExited (e);
-		}
-
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			if (message.IsMouseType)
@@ -234,26 +222,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.RenderSolid (ColorManager.TreeTableBackgroundColor);
 		}
 
-
-		private bool ShowGrid
-		{
-			get
-			{
-				return this.showGrid;
-			}
-			set
-			{
-				if (this.showGrid != value)
-				{
-					this.showGrid = value;
-
-					foreach (var column in this.treeTableColumns)
-					{
-						column.ShowGrid = this.showGrid;
-					}
-				}
-			}
-		}
 
 		private void SetHilitedHoverRow(int row)
 		{
@@ -417,7 +385,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private int								headerHeight;
 		private int								footerHeight;
 		private int								rowHeight;
-		private bool							showGrid;
 		private int								lastColumnSeparatorRank;
 		private bool							isDragColumnWidth;
 		private double							dragColumnWidthInitialMouse;

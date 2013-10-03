@@ -21,22 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public bool								ShowGrid
-		{
-			get
-			{
-				return this.showGrid;
-			}
-			set
-			{
-				if (this.showGrid != value)
-				{
-					this.showGrid = value;
-					this.Invalidate ();
-				}
-			}
-		}
-
 		public bool								DockToLeft
 		{
 			get;
@@ -164,11 +148,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected void PaintGrid(Graphics graphics, Rectangle rect)
+		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRow, int hilitedRow)
 		{
 			graphics.AddLine (rect.BottomLeft, rect.BottomRight);
 			graphics.AddLine (rect.BottomRight, rect.TopRight);
-			graphics.RenderSolid (ColorManager.TreeTableGrid);
+
+			int delta = System.Math.Abs (currentRow - hilitedRow);
+			double alpha = System.Math.Max (1.0 - delta * 0.1, 0.0);
+			var color = Color.FromAlphaColor (alpha, ColorManager.TreeTableGrid);
+
+			graphics.RenderSolid (color);
 		}
 
 		protected void PaintText(Graphics graphics, Rectangle rect, string text)
@@ -351,6 +340,5 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected int							detectedHoverRow;
 		protected int							hilitedHoverRow;
-		protected bool							showGrid;
 	}
 }
