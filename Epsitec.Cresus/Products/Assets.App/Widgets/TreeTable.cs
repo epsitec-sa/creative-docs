@@ -177,6 +177,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
+			pos = this.foreground.MapParentToClient (pos);
+
 			if (message.IsMouseType)
 			{
 				if (message.MessageType == MessageType.MouseDown)
@@ -185,12 +187,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					{
 						this.BeginDragColumnWidth (this.lastColumnSeparatorRank, pos);
 					}
+					else if (this.lastColumnOrderRank != -1)
+					{
+						this.BeginDragColumnOrder (this.lastColumnOrderRank, pos);
+					}
 				}
 				else if (message.MessageType == MessageType.MouseUp)
 				{
 					if (this.isDragColumnWidth)
 					{
 						this.EndDragColumnWidth (this.lastColumnSeparatorRank, pos);
+					}
+					if (this.isDragColumnOrder)
+					{
+						this.EndDragColumnOrder (this.lastColumnOrderRank, pos);
 					}
 				}
 			}
@@ -200,14 +210,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void OnMouseMove(MessageEventArgs e)
 		{
+			var pos = this.foreground.MapParentToClient (e.Point);
+
 			if (this.isDragColumnWidth)
 			{
-				this.MoveDragColumnWidth (this.lastColumnSeparatorRank, e.Point);
+				this.MoveDragColumnWidth (this.lastColumnSeparatorRank, pos);
+			}
+			else if (this.isDragColumnOrder)
+			{
+				this.MoveDragColumnOrder (this.lastColumnOrderRank, pos);
 			}
 			else
 			{
-				var pos = this.foreground.MapParentToClient (e.Point);
-
 				int sepRank = this.DetectColumnSeparator (pos);
 				int ordRank = this.DetectColumnOrder     (pos);
 
@@ -298,6 +312,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private void EndDragColumnWidth(int rank, Point pos)
 		{
 			this.isDragColumnWidth = false;
+			this.ColumnSeparatorUpdateForeground (null);
 		}
 		#endregion
 
@@ -377,7 +392,62 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		#region Drag column order
+		#region Drag column width
+		private void BeginDragColumnOrder(int rank, Point pos)
+		{
+			this.isDragColumnOrder = true;
+			this.dragColumnOrderInitialMouse = pos.X;
+			this.dragColumnOrderInitialRect = this.GetColumnOrderRect (rank);
+			this.dragColumnOrderDstRank = -1;
+		}
+
+		private void MoveDragColumnOrder(int rank, Point pos)
+		{
+			var delta = pos.X - this.dragColumnOrderInitialMouse;
+			var rect = Rectangle.Offset (this.dragColumnOrderInitialRect, delta, 0);
+			this.ColumnOrderUpdateForeground (this.dragColumnOrderInitialRect, rect);
+		}
+
+		private void EndDragColumnOrder(int rank, Point pos)
+		{
+			this.isDragColumnOrder = false;
+			this.ColumnSeparatorUpdateForeground (null);
+		}
+		#endregion
+
+
+		#region Column order
+		private void ColumnOrderUpdateForeground(Rectangle src, Rectangle dst)
+		{
+			this.foreground.ClearZones ();
+
+			if (src.IsValid)
+			{
+				this.foreground.AddZone (src, ColorManager.TreeTableBackgroundColor.Delta (-0.2));
+
+				src.Deflate (1);
+				this.foreground.AddZone (src, ColorManager.TreeTableBackgroundColor);
+			}
+
+			if (dst.IsValid)
+			{
+				var color = Color.FromAlphaColor (0.4, ColorManager.MoveColumnColor);
+				this.foreground.AddZone (dst, color);
+
+				var tr = new Rectangle (dst.Left, dst.Top-1, dst.Width, 1);
+				var br = new Rectangle (dst.Left, dst.Bottom, dst.Width, 1);
+				var lr = new Rectangle (dst.Left, dst.Bottom, 1, dst.Height);
+				var rr = new Rectangle (dst.Right-1, dst.Bottom, 1, dst.Height);
+				color = ColorManager.TextColor;
+				this.foreground.AddZone (tr, color);
+				this.foreground.AddZone (br, color);
+				this.foreground.AddZone (lr, color);
+				this.foreground.AddZone (rr, color);
+			}
+
+			this.foreground.Invalidate ();
+		}
+
 		private void ColumnOrderUpdateForeground(Rectangle rect)
 		{
 			this.foreground.ClearZones ();
@@ -488,5 +558,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private int								lastColumnOrderRank;
 		private bool							isDragColumnOrder;
+		private double							dragColumnOrderInitialMouse;
+		private Rectangle						dragColumnOrderInitialRect;
+		private int								dragColumnOrderDstRank;
 	}
 }
