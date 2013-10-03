@@ -41,12 +41,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					//	Dessine le montant.
 					if (cell.Value.HasValue)
 					{
-						rect = this.GetContentDeflateRectangle (rect);
+						var textRect = this.GetContentDeflateRectangle (rect);
 
 						var text = cell.Value.Value.ToString ("0,0.00");
 						//?var text = cellDecimal.Value.Value.ToString ("D2");
 
-						this.PaintText (graphics, rect, text);
+						this.PaintText (graphics, textRect, text);
+					}
+
+					//	Dessine la grille.
+					if (this.showGrid)
+					{
+						this.PaintGrid (graphics, rect);
 					}
 
 					y++;

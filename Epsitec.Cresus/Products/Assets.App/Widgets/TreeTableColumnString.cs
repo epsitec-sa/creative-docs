@@ -41,8 +41,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					//	Dessine le texte.
 					if (!string.IsNullOrEmpty (cell.Value))
 					{
-						rect = this.GetContentDeflateRectangle (rect);
-						this.PaintText (graphics, rect, cell.Value);
+						var textRect = this.GetContentDeflateRectangle (rect);
+						this.PaintText (graphics, textRect, cell.Value);
+					}
+
+					//	Dessine la grille.
+					if (this.showGrid)
+					{
+						this.PaintGrid (graphics, rect);
 					}
 
 					y++;

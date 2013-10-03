@@ -93,6 +93,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color TreeTableGrid
+		{
+			get
+			{
+				return Color.FromBrightness (0.8);
+			}
+		}
+
 		public static Color ValueDotColor
 		{
 			get
