@@ -92,11 +92,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.SetDetectedHoverRow (-1);
 		}
 
-	
-		protected override void OnClicked(MessageEventArgs e)
+
+		protected override void ProcessMessage(Message message, Point pos)
 		{
-			this.OnCellClicked (this.detectedHoverRow);
-			base.OnClicked (e);
+			if (message.IsMouseType)
+			{
+				if (message.MessageType == MessageType.MouseUp)
+				{
+					this.OnCellClicked (this.detectedHoverRow);
+				}
+			}
+
+			base.ProcessMessage (message, pos);
 		}
 
 		protected override void OnMouseMove(MessageEventArgs e)
