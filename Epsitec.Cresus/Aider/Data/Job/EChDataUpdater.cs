@@ -98,7 +98,7 @@ namespace Epsitec.Aider.Data.Job
 
 			this.RemoveOldEChReportedPersons ();
 			this.CreateNewEChReportedPersons ();
-			this.CreateNewAiderHouseholds ();
+			this.CreateNewAiderHouseholds ();	
 
 			this.LogToConsole (time, "done");
 		}
@@ -369,31 +369,41 @@ namespace Epsitec.Aider.Data.Job
 							changes.Add (TextFormatter.FormatText (oldAddress, "\n->\n", newAddress));
 
 							var refPerson      = this.GetAiderPersonEntity (businessContext,family.Adult1);
-							var aiderHousehold = this.GetAiderHousehold (businessContext, refPerson);
+							var potentialAiderHousehold = this.GetAiderHousehold (businessContext, refPerson);
 
-							if (aiderHousehold.IsNotNull ())
+							if (potentialAiderHousehold.IsNotNull ())
 							{
-								var members = aiderHousehold.Members;
-
-								//	First, reassign the parents, then the children. This simplifies the updating
-								//	of the children' household address in UpdateAiderHouseholdAndSubscription.
-
-								foreach (var member in members.Where (x => aiderHousehold.IsHead (x)))
+								var isSameHead = potentialAiderHousehold.IsHead(refPerson);
+								var isSameMemberCount = potentialAiderHousehold.Members.Count.Equals (family.MembersCount);
+								//Ensure that potential family is like ECh ReportedPerson before apply a full relocate
+								if (isSameHead&&isSameMemberCount)
 								{
-									//BUG SPOTTED: 
-									//Verifier si le membre est encore dans le ménage d'origine et
-									//dans ce cas ne pas apposer de warning
-									this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
-									this.ReassignAndWarnParish (businessContext, member, changes);							
+
+									var members = potentialAiderHousehold.Members;
+
+									//	First, reassign the parents, then the children. This simplifies the updating
+									//	of the children' household address in UpdateAiderHouseholdAndSubscription.
+
+									foreach (var member in members.Where (x => potentialAiderHousehold.IsHead (x)))
+									{
+
+										this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
+										this.ReassignAndWarnParish (businessContext, member, changes);
+
+									}
+
+									foreach (var member in members.Where (x => potentialAiderHousehold.IsHead (x) == false))
+									{
+										this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
+										this.ReassignAndWarnParish (businessContext, member, changes);
+									}
 								}
-								
-								foreach (var member in members.Where (x => aiderHousehold.IsHead (x) == false))
+								else //potential family is different
 								{
-									//BUG SPOTTED: 
-									//Verifier si le membre est encore dans le ménage d'origine et
-									//dans ce cas ne pas apposer de warning
-									this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
-									this.ReassignAndWarnParish (businessContext, member, changes);
+									var warningMessage = FormattedText.FromSimpleText ("Cette personne a maintenant son propre ménage.");
+									this.RelocateAndCreateNewAiderHousehold (businessContext, family);
+									this.CreateWarning (businessContext, refPerson, refPerson.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
+									this.ReassignAndWarnParish (businessContext, refPerson, changes);
 								}
 							}
 							else
@@ -593,7 +603,7 @@ namespace Epsitec.Aider.Data.Job
 					foreach (var eChReportedPerson in this.houseHoldsToRemove)
 					{
 						var eChReportedPersonEntity = this.GetEchReportedPersonEntity (businessContext, eChReportedPerson);
-
+						
 						var aiderPersonEntity     = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
 
 						if (aiderPersonEntity.IsNotNull ())
@@ -611,8 +621,11 @@ namespace Epsitec.Aider.Data.Job
 							
 						}
 
-						businessContext.DeleteEntity (eChReportedPersonEntity.Address);
-						businessContext.DeleteEntity (eChReportedPersonEntity);
+						if (eChReportedPersonEntity.IsNotNull ())
+						{
+							businessContext.DeleteEntity (eChReportedPersonEntity.Address);
+							businessContext.DeleteEntity (eChReportedPersonEntity);
+						}					
 					}
 				});
 		}
@@ -743,8 +756,8 @@ namespace Epsitec.Aider.Data.Job
 									var currentHouseholdAddress = aiderPersonA1.Contacts.Where (c => c.Household.IsNotNull ()).First ().Household.Address;
 									if (currentHouseholdAddress.IsNotNull ())
 									{
-										//if the address and town is different put a warning
-										if (!eChAddressEntity.StreetUserFriendly.Equals (currentHouseholdAddress.StreetUserFriendly) && !eChAddressEntity.SwissZipCodeId.Equals (currentHouseholdAddress.Town.SwissZipCodeId))
+										//if the address or town is different put a warning
+										if (!(eChAddressEntity.StreetUserFriendly == currentHouseholdAddress.StreetUserFriendly) || !(eChAddressEntity.SwissZipCodeId == currentHouseholdAddress.Town.SwissZipCodeId))
 										{
 											this.CreateWarning (businessContext, aiderPersonA1, aiderPersonA1.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
 										}
@@ -890,6 +903,101 @@ namespace Epsitec.Aider.Data.Job
 				});
 		}
 
+		private void RelocateAndCreateNewAiderHousehold(BusinessContext businessContext,eCH_ReportedPersonEntity eChReportedPerson)
+		{
+			var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+			aiderHousehold.HouseholdMrMrs = HouseholdMrMrs.Auto;
+
+			var aiderAddressEntity = aiderHousehold.Address;
+			var eChAddressEntity = eChReportedPerson.Address;
+
+
+			var houseNumber = StringUtils.ParseNullableInt (SwissPostStreet.StripHouseNumber (eChAddressEntity.HouseNumber));
+			var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement (eChAddressEntity.HouseNumber);
+
+			if (string.IsNullOrWhiteSpace (houseNumberComplement))
+			{
+				houseNumberComplement = null;
+			}
+
+			aiderAddressEntity.AddressLine1 = eChAddressEntity.AddressLine1;
+			aiderAddressEntity.Street = eChAddressEntity.Street;
+			aiderAddressEntity.HouseNumber = houseNumber;
+			aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
+			aiderAddressEntity.Town = this.GetAiderTownEntity (businessContext, eChReportedPerson.Address.SwissZipCode);
+
+
+			//Link household to ECh Entity
+			if (eChReportedPerson.Adult1.IsNotNull ())
+			{
+				var aiderPerson = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
+				var oldHousehold = this.GetAiderHousehold (businessContext, aiderPerson);
+				//Remove Old Contact
+				if (oldHousehold.IsNotNull ())
+				{
+					var contactToRemove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
+					businessContext.DeleteEntity (contactToRemove);
+				}
+
+				//Setup household if needed
+				if (!this.eChPersonIdWithHouseholdSetupDone.Contains (aiderPerson.eCH_Person.PersonId))
+				{
+					//we check that no equivalent (based on display name) member exist before doing the setup
+					var nonEchEquivalentMemberExist = aiderHousehold.Members.Where (m => m.GetDisplayName ().Equals (aiderPerson.GetDisplayName ()) && m.IsGovernmentDefined == false).Any ();
+					if (nonEchEquivalentMemberExist)
+					{
+						var nonEChmember = aiderHousehold.Members.Where (m => m.GetDisplayName ().Equals (aiderPerson.GetDisplayName ()) && m.IsGovernmentDefined == false).First ();
+
+						if (nonEChmember.IsNotNull ())
+						{
+							var contact = nonEChmember.Contacts.Where (c => c.Household == aiderHousehold).First ();
+							if (contact.IsNotNull ())
+							{
+								businessContext.DeleteEntity (contact);
+							}
+							businessContext.DeleteEntity (nonEChmember);
+						}
+					}
+
+					AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, true);
+				}
+
+			}
+
+			if (eChReportedPerson.Adult2.IsNotNull ())
+			{
+				var aiderPerson = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult2);
+				var oldHousehold = this.GetAiderHousehold (businessContext, aiderPerson);
+				//Remove Old Contact
+				if (oldHousehold.IsNotNull ())
+				{
+					var contactToRemove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
+					businessContext.DeleteEntity (contactToRemove);
+				}
+
+				AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, false);
+
+			}
+
+			foreach (var child in eChReportedPerson.Children)
+			{
+				var aiderPerson = this.GetAiderPersonEntity (businessContext, child);
+				var oldHousehold = this.GetAiderHousehold (businessContext, aiderPerson);
+				
+				//Remove or not for child?
+				//Remove Old Contact
+				//if (oldHousehold.IsNotNull ())
+				//{
+				//	var contactToRemove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
+				//	businessContext.DeleteEntity (contactToRemove);
+				//}
+
+				AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, false);
+
+			}
+			
+		}
+		
 
 		private void ReassignAndWarnParish(BusinessContext businessContext, AiderPersonEntity aiderPersonEntity, List<FormattedText> changes)
 		{
