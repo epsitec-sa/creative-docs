@@ -51,6 +51,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			};
 
 			this.columnsContainer.Viewport.IsAutoFitting = true;
+
+			//	Crée la surcouche.
+			this.foreground = new Foreground
+			{
+				Parent       = this,
+				Anchor       = AnchorStyles.All,
+				Margins      = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
+				HilitedColor = ColorManager.MoveColumnColor,
+			};
 		}
 
 
@@ -154,6 +163,27 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		protected override void OnMouseMove(MessageEventArgs e)
+		{
+			var sep = this.DetectColumnSeparator (e.Point);
+
+			if (this.lastColumnSeparator != sep)
+			{
+				this.lastColumnSeparator = sep;
+
+				if (this.lastColumnSeparator.HasValue)
+				{
+					this.foreground.HilitedZone = this.GetColumnSeparatorRect (this.lastColumnSeparator.Value);
+				}
+				else
+				{
+					this.foreground.HilitedZone = Rectangle.Empty;
+				}
+			}
+
+			base.OnMouseMove (e);
+		}
+
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry ();
@@ -192,6 +222,66 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		#region Column separator
+		private Rectangle GetColumnSeparatorRect(double x)
+		{
+			x = System.Math.Floor (x);
+			return new Rectangle (x-1, 0, 3, this.ActualHeight);
+		}
+
+		private double? DetectColumnSeparator(Point pos)
+		{
+			if (pos.Y > AbstractScroller.DefaultBreadth)
+			{
+				for (int i=0; i<this.treeTableColumns.Count; i++)
+				{
+					double? x = this.GetColumnSeparatorX (i);
+
+					if (x.HasValue &&
+						pos.X >= x.Value - TreeTable.colomnSeparatorWidth*2.0 &&
+						pos.X <= x.Value + TreeTable.colomnSeparatorWidth*2.0)
+					{
+						return x;
+					}
+				}
+			}
+
+			return null;
+		}
+
+		private double? GetColumnSeparatorX(int rank)
+		{
+			var column = this.treeTableColumns[rank];
+
+			if (column.DockToLeft)
+			{
+				return column.ActualBounds.Right;
+			}
+			else
+			{
+				double offset = this.columnsContainer.ViewportOffsetX;
+				double position = column.ActualBounds.Right;
+
+				if (position > offset)
+				{
+					var x = this.columnsContainer.ActualBounds.Left - offset + position;
+
+					if (rank == this.treeTableColumns.Count-1)  // dernière colonne ?
+					{
+						x -= 2;
+					}
+
+					return x;
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+		#endregion
+
+
 		#region Events handler
 		private void OnRowClicked(int column, int row)
 		{
@@ -218,12 +308,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
+		private static readonly double colomnSeparatorWidth = 6;
+
 		private readonly List<AbstractTreeTableColumn> treeTableColumns;
 		private readonly FrameBox				leftContainer;
 		private readonly Scrollable				columnsContainer;
+		private readonly Foreground				foreground;
 
 		private int								headerHeight;
 		private int								footerHeight;
 		private int								rowHeight;
+		private double?							lastColumnSeparator;
 	}
 }

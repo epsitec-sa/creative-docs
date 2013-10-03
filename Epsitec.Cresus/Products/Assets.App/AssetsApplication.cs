@@ -185,8 +185,6 @@ namespace Epsitec.Cresus.Assets.App
 				BackColor = ColorManager.WindowBackgroundColor,
 			};
 
-			TreeTest.Test ();
-
 			this.CreateTestTimelineController (frame);
 			this.CreateTestTreeTableController (frame);
 			//?this.CreateTestTimelineProvider (frame);

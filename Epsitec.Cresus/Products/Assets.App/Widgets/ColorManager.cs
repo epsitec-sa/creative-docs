@@ -125,6 +125,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color MoveColumnColor
+		{
+			get
+			{
+				return ColorManager.HoverColor;
+			}
+		}
+
 
 		private static readonly Color hoverColor = Color.FromHexa ("ebe8d6");  // gris-jaune
 	}
