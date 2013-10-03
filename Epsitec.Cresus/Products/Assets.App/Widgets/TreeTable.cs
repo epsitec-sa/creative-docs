@@ -57,10 +57,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Crée la surcouche.
 			this.foreground = new Foreground
 			{
-				Parent       = this,
-				Anchor       = AnchorStyles.All,
-				Margins      = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
-				HilitedColor = ColorManager.MoveColumnColor,
+				Parent  = this,
+				Anchor  = AnchorStyles.All,
+				Margins = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
 			};
 		}
 
@@ -288,14 +287,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#region Column separator
 		private void ColumnSeparatorUpdateForeground(double? x)
 		{
+			this.foreground.ClearZones ();
+
 			if (x.HasValue)
 			{
-				this.foreground.HilitedZone = this.GetColumnSeparatorRect (x.Value);
+				var rect = this.GetColumnSeparatorRect (x.Value);
+				this.foreground.AddZone (rect, ColorManager.MoveColumnColor);
 			}
-			else
-			{
-				this.foreground.HilitedZone = Rectangle.Empty;
-			}
+
+			this.foreground.Invalidate ();
 		}
 
 		private Rectangle GetColumnSeparatorRect(double x)

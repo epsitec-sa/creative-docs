@@ -15,50 +15,46 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class Foreground : Widget
 	{
-		public Rectangle HilitedZone
+		public Foreground()
 		{
-			get
-			{
-				return this.hilitedZone;
-			}
-			set
-			{
-				if (this.hilitedZone != value)
-				{
-					this.hilitedZone = value;
-					this.Invalidate ();
-				}
-			}
+			this.zones = new List<Zone> ();
 		}
 
-		public Color HilitedColor
+
+		public void ClearZones()
 		{
-			get
+			this.zones.Clear ();
+		}
+
+		public void AddZone(Rectangle rect, Color color)
+		{
+			var zone = new Zone
 			{
-				return this.hilitedColor;
-			}
-			set
-			{
-				if (this.hilitedColor != value)
-				{
-					this.hilitedColor = value;
-					this.Invalidate ();
-				}
-			}
+				Rectangle = rect,
+				Color     = color,
+			};
+
+			this.zones.Add (zone);
 		}
 
 
 		protected override void OnPaintBackground(PaintEventArgs e)
 		{
-			if (this.hilitedZone.IsValid && this.hilitedColor.IsValid)
+			foreach (var zone in zones)
 			{
-				e.Graphics.AddFilledRectangle (this.hilitedZone);
-				e.Graphics.RenderSolid (this.hilitedColor);
+				e.Graphics.AddFilledRectangle (zone.Rectangle);
+				e.Graphics.RenderSolid (zone.Color);
 			}
 		}
 
 
-		private Rectangle hilitedZone;
-		private Color hilitedColor;
+		private struct Zone
+		{
+			public Rectangle Rectangle;
+			public Color     Color;
+		}
+
+
+		private readonly List<Zone> zones;
 	}
 }
