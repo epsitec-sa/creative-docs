@@ -18,7 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public AbstractTimelineRow()
 		{
 			this.RelativeHeight = 1.0;
-			this.hoverRank = -1;
+			this.detectedHoverRank = -1;
+			this.hilitedHoverRank = -1;
 		}
 
 
@@ -77,22 +78,43 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public int								HilitedHoverRank
+		{
+			get
+			{
+				return this.hilitedHoverRank;
+			}
+			set
+			{
+				if (this.hilitedHoverRank != value)
+				{
+					this.hilitedHoverRank = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public void ClearDetectedHoverRank()
+		{
+			this.SetDetectedHoverRank (-1);
+		}
+
 	
 		protected override void OnClicked(MessageEventArgs e)
 		{
-			this.OnCellClicked (this.hoverRank);
+			this.OnCellClicked (this.detectedHoverRank);
 			base.OnClicked (e);
 		}
 
 		protected override void OnMouseMove(MessageEventArgs e)
 		{
-			this.SetHoverRank (this.Detect (e.Point));
+			this.SetDetectedHoverRank (this.Detect (e.Point));
 			base.OnMouseMove (e);
 		}
 
 		protected override void OnExited(MessageEventArgs e)
 		{
-			this.SetHoverRank (-1);
+			this.SetDetectedHoverRank (-1);
 			base.OnExited (e);
 		}
 
@@ -130,12 +152,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return -1;
 		}
 
-		private void SetHoverRank(int rank)
+		private void SetDetectedHoverRank(int rank)
 		{
-			if (this.hoverRank != rank)
+			if (this.detectedHoverRank != rank)
 			{
-				this.hoverRank = rank;
-				this.Invalidate ();
+				this.detectedHoverRank = rank;
+				this.OnCellHovered (rank);
 			}
 		}
 
@@ -143,6 +165,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 		}
 
+
+		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRank, int hilitedRank, double decrease = 0.1)
+		{
+			rect.Deflate (0.5);
+
+			graphics.AddLine (rect.BottomLeft, rect.BottomRight);
+			graphics.AddLine (rect.BottomRight, rect.TopRight);
+
+			int delta = System.Math.Abs (currentRank - hilitedRank);
+			double alpha = System.Math.Max (1.0 - delta * decrease, 0.0);
+			var color = Color.FromAlphaColor (alpha, ColorManager.TreeTableGrid);
+
+			graphics.RenderSolid (color);
+		}
 
 		protected void PaintLabel(Graphics graphics)
 		{
@@ -206,10 +242,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public delegate void CellClickedEventHandler(object sender, int rank);
 		public event CellClickedEventHandler CellClicked;
+
+		private void OnCellHovered(int rank)
+		{
+			if (this.CellHovered != null)
+			{
+				this.CellHovered (this, rank);
+			}
+		}
+
+		public delegate void CellHoveredEventHandler(object sender, int rank);
+		public event CellHoveredEventHandler CellHovered;
 		#endregion
 
 
 		protected double						pivot;
-		protected int							hoverRank;
+		protected int							detectedHoverRank;
+		protected int							hilitedHoverRank;
 	}
 }

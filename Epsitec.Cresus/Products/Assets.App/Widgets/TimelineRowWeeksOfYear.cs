@@ -47,10 +47,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (!TimelineRowWeeksOfYear.IsSame (lastCell, cell) && x != rank)
 				{
 					var rect = this.GetCellsRect (x, rank);
-					bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
+					bool isHover = (this.detectedHoverRank >= x && this.detectedHoverRank < rank);
 
 					this.PaintCellBackground (graphics, rect, lastCell, isHover, index);
 					this.PaintCellForeground (graphics, rect, lastCell, isHover, index);
+
+					//	Dessine la grille.
+					if (this.hilitedHoverRank != -1)
+					{
+						this.PaintGrid (graphics, rect, index, this.hilitedHoverRank);
+					}
 
 					index++;
 					x = rank;

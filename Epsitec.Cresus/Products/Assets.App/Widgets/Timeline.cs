@@ -116,6 +116,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.timelineRows.Add (row);
 				this.Children.Add (row);
 
+				row.CellHovered += delegate (object sender, int rank)
+				{
+					this.SetHilitedHoverRank (rank);
+				};
+
 				row.CellClicked += delegate (object sender, int rank)
 				{
 					this.OnCellClicked (row.RowIndex, rank);
@@ -174,10 +179,29 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		protected override void OnExited(MessageEventArgs e)
+		{
+			foreach (var row in this.timelineRows)
+			{
+				row.ClearDetectedHoverRank ();
+			}
+
+			base.OnExited (e);
+		}
+
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry ();
 			this.UpdateChildrensGeometry ();
+		}
+
+
+		private void SetHilitedHoverRank(int rank)
+		{
+			foreach (var row in this.timelineRows)
+			{
+				row.HilitedHoverRank = rank;
+			}
 		}
 
 		private void UpdateChildrensGeometry()
