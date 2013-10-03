@@ -27,12 +27,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			set;
 		}
 
-		public int								ColumnIndex
-		{
-			get;
-			set;
-		}
-
 		public string							HeaderDescription
 		{
 			get;

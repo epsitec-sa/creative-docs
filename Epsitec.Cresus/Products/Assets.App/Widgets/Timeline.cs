@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			foreach (var description in descriptions)
 			{
 				var row = TimelineRowDescription.Create (description);
-				row.RowIndex = index++;
+				row.Index = index++;
 
 				this.timelineRows.Add (row);
 				this.Children.Add (row);
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				row.CellClicked += delegate (object sender, int rank)
 				{
-					this.OnCellClicked (row.RowIndex, rank);
+					this.OnCellClicked (row.Index, rank);
 				};
 			}
 

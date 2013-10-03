@@ -23,12 +23,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public int								RowIndex
-		{
-			get;
-			set;
-		}
-
 		public double							RelativeHeight
 		{
 			get;
