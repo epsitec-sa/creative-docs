@@ -118,12 +118,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				column.CellHovered += delegate (object sender, int row)
 				{
-					this.SetHilitedHoverRow (row);
+					if (!this.isDragColumnOrder)
+					{
+						this.SetHilitedHoverRow (row);
+					}
 				};
 
 				column.CellClicked += delegate (object sender, int row)
 				{
-					this.OnRowClicked (column.Index, row);
+					if (!this.isDragColumnOrder)
+					{
+						this.OnRowClicked (column.Index, row);
+					}
 				};
 
 				if (column is TreeTableColumnTree)
@@ -454,7 +460,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (dst.IsValid)
 			{
-				//	L'en-tête destination est dessinée pour ressembler au maxiumu
+				//	L'en-tête destination est dessinée pour ressembler au maximum
 				//	à une en-tête normale.
 				var color = Color.FromAlphaColor (0.8, ColorManager.TreeTableBackgroundColor);
 				this.foreground.AddZone (dst, color);
@@ -477,7 +483,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var rect = this.GetColumnSeparatorRect (dstX.Value, (int) (dstWidth/2));
 				rect.Deflate (0, 0, this.headerHeight, 0);
-				this.foreground.AddZone (rect, Color.FromAlphaRgb (0.8, 0.9, 0.9, 0.9));
+				this.foreground.AddZone (rect, Color.FromAlphaRgb (0.9, 0.9, 0.9, 0.9));
 
 				var lr = new Rectangle (rect.Left,    rect.Bottom, 1, rect.Height);
 				var mr = new Rectangle (dstX.Value-1, rect.Bottom, 3, rect.Height);
