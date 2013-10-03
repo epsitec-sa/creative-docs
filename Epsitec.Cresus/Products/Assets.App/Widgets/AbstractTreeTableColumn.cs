@@ -155,6 +155,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRow, int hilitedRow)
 		{
+			//	Dessine une portion de grille dans une cellule, sous forme de 2 traits,
+			//	en bas et à droite. Plus la distance jusqu'à la cellule survollée est
+			//	grande et plus l'effet est estompé.
 			if (hilitedRow != -1)
 			{
 				rect.Deflate (0.5);
@@ -162,11 +165,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.AddLine (rect.BottomLeft, rect.BottomRight);
 				graphics.AddLine (rect.BottomRight, rect.TopRight);
 
-				int delta = System.Math.Abs (currentRow - hilitedRow);
-				double alpha = System.Math.Max (1.0 - delta * 0.1, 0.0);
-				var color = Color.FromAlphaColor (alpha, ColorManager.GridColor);
+				var delta = System.Math.Abs (currentRow - hilitedRow);
+				var alpha = System.Math.Max (1.0 - delta * 0.1, 0.0);
 
-				graphics.RenderSolid (color);
+				if (alpha > 0.0)
+				{
+					var color = Color.FromAlphaColor (alpha, ColorManager.GridColor);
+					graphics.RenderSolid (color);
+				}
 			}
 		}
 

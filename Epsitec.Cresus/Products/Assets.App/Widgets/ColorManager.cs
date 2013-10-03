@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return Color.FromBrightness (0.85);
+				return Color.FromHexa ("d2ca9b");  // gris-jaune
 			}
 		}
 
