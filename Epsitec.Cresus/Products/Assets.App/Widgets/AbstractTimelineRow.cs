@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRank, int hilitedRank, double decrease = 0.1)
 		{
 			//	Dessine une portion de grille dans une cellule, sous forme de 2 traits,
-			//	en bas et à droite. Plus la distance jusqu'à la cellule survollée est
+			//	en bas et à droite. Plus la distance jusqu'à la cellule survolée est
 			//	grande et plus l'effet est estompé.
 			if (hilitedRank != -1)
 			{

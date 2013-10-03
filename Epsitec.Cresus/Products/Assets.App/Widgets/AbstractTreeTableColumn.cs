@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRow, int hilitedRow)
 		{
 			//	Dessine une portion de grille dans une cellule, sous forme de 2 traits,
-			//	en bas et à droite. Plus la distance jusqu'à la cellule survollée est
+			//	en bas et à droite. Plus la distance jusqu'à la cellule survolée est
 			//	grande et plus l'effet est estompé.
 			if (hilitedRow != -1)
 			{
@@ -178,6 +178,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected void PaintText(Graphics graphics, Rectangle rect, string text)
 		{
+			//	Dessine un texte inclu dans un rectangle, avec un effet visible si
+			//	le texte déborde (par exemple "Abracadab...").
 			var font      = Font.DefaultFont;
 			var fontSize  = this.FontSize;
 			var color     = ColorManager.TextColor;
@@ -245,7 +247,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return -1;
 		}
 
-		private void SetDetectedHoverRow(int row)
+		protected void SetDetectedHoverRow(int row)
 		{
 			if (this.detectedHoverRow != row)
 			{

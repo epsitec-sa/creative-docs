@@ -86,6 +86,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					this.Children.Add (button);
 
+					button.MouseMove += delegate
+					{
+						int yy;
+						TreeTableGlyphType tt;
+						TreeTableColumnGlyph.Deserialize (button.Name, out yy, out tt);
+						this.SetDetectedHoverRow (yy);
+					};
+
 					button.Clicked += delegate
 					{
 						int yy;
