@@ -83,7 +83,7 @@ namespace Epsitec.Aider.Data.Job
 			{
 				var jobDateTime    = System.DateTime.Now;
 				var jobName        = "SubscriptionAndRefusalFixer.WarnHouseholdWithNoSubscription()";
-				var jobDescription = string.Format ("Avertissement des ménages sans Abo BN");
+				var jobDescription = string.Format ("Ménages sans abonnement à Bonne Nouvelle");
 
 				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
 
@@ -132,7 +132,7 @@ namespace Epsitec.Aider.Data.Job
 							person = household.Members.FirstOrDefault ();
 						}
 
-						AiderPersonWarningEntity.Create (businessContext, person, person.ParishGroupPathCache, WarningType.HouseholdWithoutSubscription, "Ménage sans abo.", "Ce ménage n'est pas référencé dans les abonnements ou refus", warningSource);
+						AiderPersonWarningEntity.Create (businessContext, person, person.ParishGroupPathCache, WarningType.HouseholdWithoutSubscription, "Ménage sans abonnement", "Ce ménage n'est référencé ni dans les abonnements, ni dans les refus", warningSource);
 					}
 					else
 					{

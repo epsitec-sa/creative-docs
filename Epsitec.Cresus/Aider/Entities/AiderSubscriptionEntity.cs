@@ -145,6 +145,33 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static AiderSubscriptionEntity Create(BusinessContext context, AiderHouseholdEntity household)
+		{
+			if (household.IsNull ())
+			{
+				return null;
+			}
+
+			var edition = AiderSubscriptionEntity.GetEdition (context, household.Address);
+			return AiderSubscriptionEntity.Create (context, household, edition, 1);
+		}
+		
+		public static AiderGroupEntity GetEdition(BusinessContext context, AiderAddressEntity address)
+		{
+			var parishRepository = Epsitec.Aider.Data.Common.ParishAddressRepository.Current;
+			var parishName = Epsitec.Aider.Data.Common.ParishAssigner.FindParishName (parishRepository, address);
+
+			// If we can't find the region code, we default to the region 4, which is the one of
+			// Lausanne.
+
+			var regionCode = parishName != null
+				? parishRepository.GetDetails (parishName).RegionCode
+				: 4;
+
+			return Epsitec.Aider.Data.Common.ParishAssigner.FindRegionGroup (context, regionCode);
+		}
+
+
 		public static AiderSubscriptionEntity Create
 		(
 			BusinessContext businessContext,

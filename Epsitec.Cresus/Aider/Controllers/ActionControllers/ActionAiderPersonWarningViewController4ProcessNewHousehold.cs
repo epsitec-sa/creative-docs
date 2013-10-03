@@ -101,13 +101,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 			if (subscribe)
 			{
-				var household = this.Entity.Person.Contacts.Where(c => c.Household.Address.IsNotNull()).First().Household;
-				if (household.IsNotNull ())
-				{
-					var edition = this.GetEdition (household.Address);
-					AiderSubscriptionEntity.Create (this.BusinessContext, household, edition, 1);
-				}
-				
+				var household = this.Entity.Person.Households.FirstOrDefault ();
+				AiderSubscriptionEntity.Create (this.BusinessContext, household);
 			}
 		}
 
@@ -145,21 +140,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			};
 
 			return businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).FirstOrDefault ();
-		}
-
-		private AiderGroupEntity GetEdition(AiderAddressEntity address)
-		{
-			var parishRepository = ParishAddressRepository.Current;
-			var parishName = ParishAssigner.FindParishName (parishRepository, address);
-
-			// If we can't find the region code, we default to the region 4, which is the one of
-			// Lausanne.
-
-			var regionCode = parishName != null
-				? parishRepository.GetDetails (parishName).RegionCode
-				: 4;
-
-			return ParishAssigner.FindRegionGroup (this.BusinessContext, regionCode);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)

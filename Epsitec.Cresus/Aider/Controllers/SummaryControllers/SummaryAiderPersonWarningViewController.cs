@@ -58,6 +58,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 				case WarningType.ParishDeparture:
 					return new SpecializedSummaryAiderPersonWarningViewController_ParishDeparture ();
+
+				case WarningType.HouseholdWithoutSubscription:
+					return new SpecializedSummaryAiderPersonWarningViewController_HouseholdWithoutSubscription ();
 			}
 			
 			return base.GetController ();
