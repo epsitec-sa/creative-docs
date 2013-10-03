@@ -294,8 +294,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.isDragColumnWidth = true;
 			this.dragColumnWidthInitialMouse = pos.X;
-			this.dragColumnWidthInitialLeft = this.GetColumnSeparatorX (rank).Value - this.treeTableColumns[rank].ActualWidth;
-			this.dragColumnWidthInitialWidth = this.treeTableColumns[rank].ActualWidth;
+			this.dragColumnWidthInitialLeft = this.GetColumnSeparatorX (rank).Value - this.treeTableColumns[rank-1].ActualWidth;
+			this.dragColumnWidthInitialWidth = this.treeTableColumns[rank-1].ActualWidth;
 
 		}
 
@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			var delta = pos.X - this.dragColumnWidthInitialMouse;
 			var width = System.Math.Max (this.dragColumnWidthInitialWidth + delta, 0.0);
-			this.treeTableColumns[rank].PreferredWidth = width;
+			this.treeTableColumns[rank-1].PreferredWidth = width;
 
 			var x = this.dragColumnWidthInitialLeft + width;
 			this.ColumnSeparatorUpdateForeground (x);
@@ -324,25 +324,25 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (x.HasValue)
 			{
-				var rect = this.GetColumnSeparatorRect (x.Value);
+				var rect = this.GetColumnSeparatorRect (x.Value, 1);
 				this.foreground.AddZone (rect, ColorManager.MoveColumnColor);
 			}
 
 			this.foreground.Invalidate ();
 		}
 
-		private Rectangle GetColumnSeparatorRect(double x)
+		private Rectangle GetColumnSeparatorRect(double x, int thickness)
 		{
 			x = System.Math.Floor (x);
-			return new Rectangle (x-1, 0, 3, this.ActualHeight);
+			return new Rectangle (x-thickness, 0, thickness*2+1, this.foreground.ActualHeight);
 		}
 
-		private int DetectColumnSeparator(Point pos)
+		private int DetectColumnSeparator(Point pos, bool leftExclude = true)
 		{
 			if (pos.Y >= 0 && pos.Y < this.foreground.ActualHeight)
 			{
 				//	A l'envers, pour pouvoir déployer une colonne de largeur nulle.
-				for (int i=this.treeTableColumns.Count-1; i>=0; i--)
+				for (int i=this.treeTableColumns.Count; i>=0; i--)
 				{
 					double? x = this.GetColumnSeparatorX (i);
 
@@ -350,7 +350,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						pos.X >= x.Value - 4 &&
 						pos.X <= x.Value + 4)
 					{
-						return i;
+						if (leftExclude && i == 0)
+						{
+							return -1;
+						}
+						else
+						{
+							return i;
+						}
 					}
 				}
 			}
@@ -362,27 +369,36 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (rank != -1)
 			{
-				var column = this.treeTableColumns[rank];
-
-				if (column.DockToLeft)
+				if (rank == 0)
 				{
-					return column.ActualBounds.Right;
+					var column = this.treeTableColumns[0];
+					return column.ActualBounds.Left;
 				}
 				else
 				{
-					double offset = this.columnsContainer.ViewportOffsetX;
-					double position = column.ActualBounds.Right;
+					rank--;
+					var column = this.treeTableColumns[rank];
 
-					if (position > offset)
+					if (column.DockToLeft)
 					{
-						var x = this.columnsContainer.ActualBounds.Left - offset + position;
+						return column.ActualBounds.Right;
+					}
+					else
+					{
+						double offset = this.columnsContainer.ViewportOffsetX;
+						double position = column.ActualBounds.Right;
 
-						if (rank == this.treeTableColumns.Count-1)  // dernière colonne ?
+						if (position > offset)
 						{
-							x -= 2;  // pour ne pas être sous l'ascenseur vertical
-						}
+							var x = this.columnsContainer.ActualBounds.Left - offset + position;
 
-						return x;
+							if (rank == this.treeTableColumns.Count-1)  // dernière colonne ?
+							{
+								x -= 2;  // pour ne pas être sous l'ascenseur vertical
+							}
+
+							return x;
+						}
 					}
 				}
 			}
@@ -405,7 +421,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			var delta = pos.X - this.dragColumnOrderInitialMouse;
 			var rect = Rectangle.Offset (this.dragColumnOrderInitialRect, delta, 0);
-			this.ColumnOrderUpdateForeground (this.dragColumnOrderInitialRect, rect);
+
+			this.dragColumnOrderDstRank = this.DetectColumnSeparator (pos, false);
+			var x = this.GetColumnSeparatorX (this.dragColumnOrderDstRank);
+
+			this.ColumnOrderUpdateForeground (this.dragColumnOrderInitialRect, rect, x);
 		}
 
 		private void EndDragColumnOrder(int rank, Point pos)
@@ -417,7 +437,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Column order
-		private void ColumnOrderUpdateForeground(Rectangle src, Rectangle dst)
+		private void ColumnOrderUpdateForeground(Rectangle src, Rectangle dst, double? dstX)
 		{
 			this.foreground.ClearZones ();
 
@@ -438,11 +458,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var br = new Rectangle (dst.Left, dst.Bottom, dst.Width, 1);
 				var lr = new Rectangle (dst.Left, dst.Bottom, 1, dst.Height);
 				var rr = new Rectangle (dst.Right-1, dst.Bottom, 1, dst.Height);
-				color = ColorManager.TextColor;
-				this.foreground.AddZone (tr, color);
-				this.foreground.AddZone (br, color);
-				this.foreground.AddZone (lr, color);
-				this.foreground.AddZone (rr, color);
+				this.foreground.AddZone (tr, ColorManager.TextColor);
+				this.foreground.AddZone (br, ColorManager.TextColor);
+				this.foreground.AddZone (lr, ColorManager.TextColor);
+				this.foreground.AddZone (rr, ColorManager.TextColor);
+			}
+
+			if (dstX.HasValue)
+			{
+				var rect = this.GetColumnSeparatorRect (dstX.Value, 3);
+				rect.Deflate (0, 0, this.headerHeight, 0);
+				this.foreground.AddZone (rect, ColorManager.MoveColumnColor);
 			}
 
 			this.foreground.Invalidate ();
