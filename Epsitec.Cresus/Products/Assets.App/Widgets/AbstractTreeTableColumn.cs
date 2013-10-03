@@ -174,12 +174,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				var delta = System.Math.Abs (currentRow - hilitedRow);
 				var alpha = System.Math.Max (1.0 - delta * 0.1, 0.0);
+				var color = Color.FromAlphaColor (alpha, ColorManager.GridColor);
 
-				if (alpha > 0.0)
-				{
-					var color = Color.FromAlphaColor (alpha, ColorManager.GridColor);
-					graphics.RenderSolid (color);
-				}
+				graphics.RenderSolid (color);
 			}
 		}
 
