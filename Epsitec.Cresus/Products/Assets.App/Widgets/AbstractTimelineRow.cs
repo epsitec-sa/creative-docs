@@ -168,16 +168,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRank, int hilitedRank, double decrease = 0.1)
 		{
-			rect.Deflate (0.5);
+			if (hilitedRank != -1)
+			{
+				rect.Deflate (0.5);
 
-			graphics.AddLine (rect.BottomLeft, rect.BottomRight);
-			graphics.AddLine (rect.BottomRight, rect.TopRight);
+				graphics.AddLine (rect.BottomLeft, rect.BottomRight);
+				graphics.AddLine (rect.BottomRight, rect.TopRight);
 
-			int delta = System.Math.Abs (currentRank - hilitedRank);
-			double alpha = System.Math.Max (1.0 - delta * decrease, 0.0);
-			var color = Color.FromAlphaColor (alpha, ColorManager.TreeTableGrid);
+				int delta = System.Math.Abs (currentRank - hilitedRank);
+				double alpha = System.Math.Max (1.0 - delta * decrease, 0.0);
+				var color = Color.FromAlphaColor (alpha, ColorManager.GridColor);
 
-			graphics.RenderSolid (color);
+				graphics.RenderSolid (color);
+			}
 		}
 
 		protected void PaintLabel(Graphics graphics)

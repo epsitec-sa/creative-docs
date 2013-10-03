@@ -155,14 +155,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRow, int hilitedRow)
 		{
-			graphics.AddLine (rect.BottomLeft, rect.BottomRight);
-			graphics.AddLine (rect.BottomRight, rect.TopRight);
+			if (hilitedRow != -1)
+			{
+				rect.Deflate (0.5);
 
-			int delta = System.Math.Abs (currentRow - hilitedRow);
-			double alpha = System.Math.Max (1.0 - delta * 0.1, 0.0);
-			var color = Color.FromAlphaColor (alpha, ColorManager.TreeTableGrid);
+				graphics.AddLine (rect.BottomLeft, rect.BottomRight);
+				graphics.AddLine (rect.BottomRight, rect.TopRight);
 
-			graphics.RenderSolid (color);
+				int delta = System.Math.Abs (currentRow - hilitedRow);
+				double alpha = System.Math.Max (1.0 - delta * 0.1, 0.0);
+				var color = Color.FromAlphaColor (alpha, ColorManager.GridColor);
+
+				graphics.RenderSolid (color);
+			}
 		}
 
 		protected void PaintText(Graphics graphics, Rectangle rect, string text)
