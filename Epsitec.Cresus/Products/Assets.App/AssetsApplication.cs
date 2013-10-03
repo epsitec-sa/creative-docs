@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App
 				Parent          = parent,
 				Dock            = DockStyle.Bottom,
 				PreferredHeight = 70,
-				Margins         = new Margins (10, 10, 0, 10),
+				Margins         = new Margins (0, 0, 2, 0),
 			};
 
 			this.timelineController.DateChanged += delegate
@@ -422,7 +422,7 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Fill,
-				Margins         = new Margins (10),
+				Margins         = new Margins (0),
 			};
 
 			this.treeTableController.RowChanged += delegate
