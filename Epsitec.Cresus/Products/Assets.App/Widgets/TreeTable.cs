@@ -165,6 +165,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		protected override void OnExited(MessageEventArgs e)
+		{
+			foreach (var column in this.treeTableColumns)
+			{
+				column.ClearDetectedHoverRow ();
+			}
+
+			base.OnExited (e);
+		}
+
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			if (message.IsMouseType)

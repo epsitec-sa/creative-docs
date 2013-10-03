@@ -87,6 +87,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public void ClearDetectedHoverRow()
+		{
+			this.SetDetectedHoverRow (-1);
+		}
+
 	
 		protected override void OnClicked(MessageEventArgs e)
 		{
