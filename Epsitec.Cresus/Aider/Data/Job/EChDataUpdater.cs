@@ -77,7 +77,7 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 
-		public void ProcessJob()
+		public void ProcessJob ()
 		{
 			//	Try to repair broken things, and warn as Ech for corrections if needed
 			this.PerformDataQuality ();
@@ -87,7 +87,7 @@ namespace Epsitec.Aider.Data.Job
 			var time = this.LogToConsole ("starting main job");
 
 			this.UpdateEChPersonEntities ();
-			this.UpdateHouseholdsAndPropagate ();
+			this.UpdateHouseholdsAndPropagate (false);
 
 			this.TagEChPersonsForDeletion ();
 			this.TagAiderPersonsForDeletion ();
@@ -101,6 +101,11 @@ namespace Epsitec.Aider.Data.Job
 			this.CreateNewAiderHouseholds ();	
 
 			this.LogToConsole (time, "done");
+		}
+
+		public void FixPreviousUpdate()
+		{
+			this.UpdateHouseholdsAndPropagate (true);
 		}
 
 
@@ -300,9 +305,9 @@ namespace Epsitec.Aider.Data.Job
 			return true;
 		}
 
-		private bool UpdateHouseholdsAndPropagate()
+		private bool UpdateHouseholdsAndPropagate(bool fixPreviousUpdate)
 		{
-			this.LogToConsole ("UpdateHouseholdsAndPropagate()");
+			this.LogToConsole ("UpdateHouseholdsAndPropagate(fixPreviousUpdate={0})",fixPreviousUpdate);
 
 			this.ExecuteWithBusinessContext (
 				businessContext =>
@@ -311,7 +316,27 @@ namespace Epsitec.Aider.Data.Job
 					{
 						try
 						{
+
 							var family  = this.GetEchReportedPersonEntity (businessContext, item.NewValue);
+
+							if (family.IsNull () && fixPreviousUpdate)//need to investigate, in case of fixupdate family is sometimes null
+							{
+								continue;
+							}
+
+							//Set old state
+							if (fixPreviousUpdate)
+							{						
+								family.Address.AddressLine1 = item.OldValue.Address.AddressLine1;
+								family.Address.HouseNumber = item.OldValue.Address.HouseNumber;
+								family.Address.Street = item.OldValue.Address.Street ?? "";
+								family.Address.SwissZipCode      = item.OldValue.Address.SwissZipCode;
+								family.Address.SwissZipCodeAddOn = item.OldValue.Address.SwissZipCodeAddOn;
+								family.Address.SwissZipCodeId    = item.OldValue.Address.SwissZipCodeId;
+								family.Address.Town = item.OldValue.Address.Town ?? "";
+								family.Address.Country = item.OldValue.Address.CountryCode ?? "";
+							}
+			
 							var changes = new List<FormattedText> ();
 							var changed = false;
 
@@ -322,7 +347,6 @@ namespace Epsitec.Aider.Data.Job
 							if (StringUtils.NotEqualOrEmpty (family.Address.AddressLine1, item.NewValue.Address.AddressLine1))
 							{
 								family.Address.AddressLine1 = item.NewValue.Address.AddressLine1 ?? "";
-								changed = true;
 							}
 
 							if (StringUtils.NotEqualOrEmpty (family.Address.HouseNumber, item.NewValue.Address.HouseNumber))
@@ -372,9 +396,51 @@ namespace Epsitec.Aider.Data.Job
 							var potentialAiderHousehold = this.GetAiderHousehold (businessContext, refPerson);
 
 							if (potentialAiderHousehold.IsNotNull ())
-							{
+							{								
+								//Clean household contact & warnings before retry
+								if (fixPreviousUpdate)
+								{
+									//setup old household with old addresse
+									var oldEChAddress = new eCH_AddressEntity ()
+									{
+										AddressLine1 = item.OldValue.Address.AddressLine1,
+										HouseNumber = item.OldValue.Address.HouseNumber,
+										Street = item.OldValue.Address.Street ?? "",
+										SwissZipCode      = item.OldValue.Address.SwissZipCode,
+										SwissZipCodeAddOn = item.OldValue.Address.SwissZipCodeAddOn,
+										SwissZipCodeId    = item.OldValue.Address.SwissZipCodeId,
+										Town = item.OldValue.Address.Town ?? "",
+										Country = item.OldValue.Address.CountryCode ?? ""
+									};
+
+									var oldEChReportedPerson = new eCH_ReportedPersonEntity ()
+									{
+										Address = oldEChAddress
+									};
+
+									this.UpdateAiderHouseholdAddress (businessContext, potentialAiderHousehold, oldEChReportedPerson);
+
+									foreach (var member in family.Members)
+									{
+										var aiderPerson = this.GetAiderPersonEntity (businessContext, member);
+
+										//Remove previous warnings
+										foreach (var warning in aiderPerson.Warnings)
+										{
+											if (warning.WarningType == WarningType.EChAddressChanged || 
+												warning.WarningType == WarningType.ParishArrival || 
+												warning.WarningType == WarningType.ParishDeparture)
+											{
+												aiderPerson.RemoveWarningInternal (warning);
+												businessContext.DeleteEntity (warning);
+											}
+										}
+									}
+									//AT THIS POINT WE HAVE RECOVERED OLD STATES -> NOW RETRY TO DO THINGS CORRECTLY
+								}
+
 								var isSameHead = potentialAiderHousehold.IsHead(refPerson);
-								var isSameMemberCount = potentialAiderHousehold.Members.Count.Equals (family.MembersCount);
+								var isSameMemberCount = potentialAiderHousehold.Members.Count (x => x.IsGovernmentDefined).Equals (family.MembersCount);
 								//Ensure that potential family is like ECh ReportedPerson before apply a full relocate
 								if (isSameHead&&isSameMemberCount)
 								{
@@ -398,7 +464,7 @@ namespace Epsitec.Aider.Data.Job
 										this.ReassignAndWarnParish (businessContext, member, changes);
 									}
 								}
-								else //potential family is different
+								else //potential family is different relocate head form ECh new Data
 								{
 									var warningMessage = FormattedText.FromSimpleText ("Cette personne a maintenant son propre ménage.");
 									this.RelocateAndCreateNewAiderHousehold (businessContext, family);

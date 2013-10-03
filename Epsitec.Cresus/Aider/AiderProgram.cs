@@ -91,8 +91,8 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.RunEchImportation (args));
 					return;
 				}
-
-				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv\last.xml -oldechfile:s:\eerv\initial.xml -output:s:\eerv\analyse.md
+																		
+				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv\last.xml -oldechfile:s:\eerv\initial.xml -output:s:\eerv\analyse.md -fixpreviousupdate:false
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.RunEchUpdate (args));
 					return;
@@ -247,11 +247,19 @@ namespace Epsitec.Aider
 				var oldEChDataFile   = AiderProgram.GetFile (args, "-oldechfile:", true);
 				var reportFile       = AiderProgram.GetFile (args, "-output:", true);
 				var parishRepository = ParishAddressRepository.Current;
-				
-				var updater = new EChDataUpdater (oldEChDataFile.FullName, newEChDataFile.FullName, reportFile.FullName, coreData, parishRepository);
-				
-				updater.ProcessJob ();
+				var fixPreviousUpdate   = AiderProgram.GetBool (args, "-fixpreviousupdate:", true) ?? false;
 
+				var updater = new EChDataUpdater (oldEChDataFile.FullName, newEChDataFile.FullName, reportFile.FullName, coreData, parishRepository);
+
+				if (fixPreviousUpdate)
+				{
+					updater.FixPreviousUpdate ();
+				}
+				else
+				{
+					updater.ProcessJob ();
+				}
+				
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});
