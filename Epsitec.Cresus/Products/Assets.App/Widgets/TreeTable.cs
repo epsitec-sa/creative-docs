@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.treeTableColumns = new List<AbstractTreeTableColumn> ();
 
 			//	Crée le conteneur de gauche, qui contiendra toutes les colonnes
-			//	en mode DockToLeft (habituellement la seule TreeTableColumnGlyph).
+			//	en mode DockToLeft (habituellement la seule TreeTableColumnTree).
 			//	Ce conteneur n'est pas scrollable horizontalement; sa largeur
 			//	s'adapte en fonctions du total des colonnes contenues.
 			this.leftContainer = new FrameBox
@@ -126,11 +126,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.OnRowClicked (index, row);
 				};
 
-				if (column is TreeTableColumnGlyph)
+				if (column is TreeTableColumnTree)
 				{
-					var glyph = column as TreeTableColumnGlyph;
+					var tree = column as TreeTableColumnTree;
 
-					glyph.TreeButtonClicked += delegate (object sender, int row, TreeTableGlyphType type)
+					tree.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
 					{
 						this.OnTreeButtonClicked (row, type);
 					};
@@ -140,9 +140,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.UpdateChildrensGeometry ();
 		}
 
-		public void SetColumnCells(int rank, TreeTableCellGlyph[] cells)
+		public void SetColumnCells(int rank, TreeTableCellTree[] cells)
 		{
-			var column = this.GetColumn (rank) as TreeTableColumnGlyph;
+			var column = this.GetColumn (rank) as TreeTableColumnTree;
 			System.Diagnostics.Debug.Assert (column != null);
 
 			column.SetCells (cells);
@@ -372,7 +372,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event RowClickedEventHandler RowClicked;
 
 
-		private void OnTreeButtonClicked(int row, TreeTableGlyphType type)
+		private void OnTreeButtonClicked(int row, TreeTableTreeType type)
 		{
 			if (this.TreeButtonClicked != null)
 			{
@@ -380,7 +380,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableGlyphType type);
+		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableTreeType type);
 		public event TreeButtonClickedEventHandler TreeButtonClicked;
 		#endregion
 

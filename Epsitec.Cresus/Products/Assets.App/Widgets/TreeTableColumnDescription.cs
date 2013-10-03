@@ -47,8 +47,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			switch (description.Type)
 			{
-				case TreeTableColumnType.Glyph:
-					column = new TreeTableColumnGlyph ();
+				case TreeTableColumnType.Tree:
+					column = new TreeTableColumnTree ();
 					break;
 
 				case TreeTableColumnType.String:

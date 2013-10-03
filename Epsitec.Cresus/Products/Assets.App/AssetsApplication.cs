@@ -440,7 +440,7 @@ namespace Epsitec.Cresus.Assets.App
 				this.UpdateTreeTableController ();
 			};
 
-			this.treeTableController.TreeButtonClicked += delegate (object sender, int row, TreeTableGlyphType type)
+			this.treeTableController.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
 			{
 			};
 		}
@@ -462,8 +462,8 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			var list = new List<TreeTableColumnDescription> ();
 
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,   200, "Objet", dockToLeft: true));
-//			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,   200, "Objet"));
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,    200, "Objet", dockToLeft: true));
+//			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,    200, "Objet"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   50, "N°", dockToLeft: true));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  120, "Responsable"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   60, "Couleur"));
@@ -478,7 +478,7 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			var OO = AssetsApplication.GetTreeTableObjects ();
 
-			var cf = new List<TreeTableCellGlyph> ();
+			var cf = new List<TreeTableCellTree> ();
 			var c1 = new List<TreeTableCellString> ();
 			var c2 = new List<TreeTableCellString> ();
 			var c3 = new List<TreeTableCellString> ();
@@ -496,13 +496,13 @@ namespace Epsitec.Cresus.Assets.App
 
 				var O = OO[firstRow+i];
 
-				var type = O.Level == 3 ? TreeTableGlyphType.Final : TreeTableGlyphType.Extended;
+				var type = O.Level == 3 ? TreeTableTreeType.Final : TreeTableTreeType.Extended;
 				if (i == 0)
 				{
-					type = TreeTableGlyphType.Compacted;  // juste pour en voir un !
+					type = TreeTableTreeType.Compacted;  // juste pour en voir un !
 				}
 
-				var sf = new TreeTableCellGlyph (true, O.Level, type, O.Nom, isSelected: (i == selection));
+				var sf = new TreeTableCellTree (true, O.Level, type, O.Nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString (true, O.Numéro, isSelected: (i == selection));
 				var s2 = new TreeTableCellString (true, O.Responsable, isSelected: (i == selection));
 				var s3 = new TreeTableCellString (true, O.Couleur, isSelected: (i == selection));

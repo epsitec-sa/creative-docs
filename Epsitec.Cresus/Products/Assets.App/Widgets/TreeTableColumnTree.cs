@@ -14,13 +14,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// Colonne de TreeTable affichant des chaînes avec une indication du niveau
 	/// dans l'arborescence. Cette colonne est habituellement en mode DockToLeft.
 	/// </summary>
-	public class TreeTableColumnGlyph : AbstractTreeTableColumn
+	public class TreeTableColumnTree : AbstractTreeTableColumn
 	{
-		public void SetCells(TreeTableCellGlyph[] cells)
+		public void SetCells(TreeTableCellTree[] cells)
 		{
 			this.cells = cells;
 
-			this.CreateGlyphButtons ();
+			this.CreateTreeButtons ();
 			this.Invalidate ();
 		}
 
@@ -57,10 +57,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			base.OnSizeChanged (oldValue, newValue);
 
-			this.CreateGlyphButtons ();
+			this.CreateTreeButtons ();
 		}
 
-		private void CreateGlyphButtons()
+		private void CreateTreeButtons()
 		{
 			//	Crée les petits boutons pour la gestion de l'arborescence.
 			this.Children.Clear ();
@@ -69,19 +69,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			foreach (var cell in this.cells)
 			{
-				if (cell.Type == TreeTableGlyphType.Compacted ||
-					cell.Type == TreeTableGlyphType.Extended)
+				if (cell.Type == TreeTableTreeType.Compacted ||
+					cell.Type == TreeTableTreeType.Extended)
 				{
 					var rect = this.GetGlyphRectangle (y, cell.Level);
 
 					var button = new GlyphButton
 					{
-						GlyphShape    = cell.Type == TreeTableGlyphType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
+						GlyphShape    = cell.Type == TreeTableTreeType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
 						ButtonStyle   = ButtonStyle.ToolItem,
 						PreferredSize = rect.Size,
 						Anchor        = AnchorStyles.BottomLeft,
 						Margins       = new Margins (rect.Left, 0, 0, rect.Bottom),
-						Name          = TreeTableColumnGlyph.Serialize (y, cell.Type),
+						Name          = TreeTableColumnTree.Serialize (y, cell.Type),
 					};
 
 					this.Children.Add (button);
@@ -89,16 +89,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					button.MouseMove += delegate
 					{
 						int yy;
-						TreeTableGlyphType tt;
-						TreeTableColumnGlyph.Deserialize (button.Name, out yy, out tt);
+						TreeTableTreeType tt;
+						TreeTableColumnTree.Deserialize (button.Name, out yy, out tt);
 						this.SetDetectedHoverRow (yy);
 					};
 
 					button.Clicked += delegate
 					{
 						int yy;
-						TreeTableGlyphType tt;
-						TreeTableColumnGlyph.Deserialize (button.Name, out yy, out tt);
+						TreeTableTreeType tt;
+						TreeTableColumnTree.Deserialize (button.Name, out yy, out tt);
 						this.OnTreeButtonClicked (yy, tt);
 					};
 				}
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private static string Serialize(int row, TreeTableGlyphType type)
+		private static string Serialize(int row, TreeTableTreeType type)
 		{
 			string s1 = row.ToString ();
 			string s2 = ((int) type).ToString ();
@@ -134,19 +134,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return string.Concat (s1, " ", s2);
 		}
 
-		private static void Deserialize(string text, out int row, out TreeTableGlyphType type)
+		private static void Deserialize(string text, out int row, out TreeTableTreeType type)
 		{
 			var p = text.Split (' ');
 
 			row = int.Parse (p[0]);
 
 			int t = int.Parse (p[1]);
-			type = (TreeTableGlyphType) t;
+			type = (TreeTableTreeType) t;
 		}
 
 
 		#region Events handler
-		private void OnTreeButtonClicked(int row, TreeTableGlyphType type)
+		private void OnTreeButtonClicked(int row, TreeTableTreeType type)
 		{
 			if (this.TreeButtonClicked != null)
 			{
@@ -154,11 +154,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableGlyphType type);
+		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableTreeType type);
 		public event TreeButtonClickedEventHandler TreeButtonClicked;
 		#endregion
 
 
-		private TreeTableCellGlyph[] cells;
+		private TreeTableCellTree[] cells;
 	}
 }

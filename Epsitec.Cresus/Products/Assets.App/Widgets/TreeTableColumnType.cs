@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public enum TreeTableColumnType
 	{
-		Glyph,
+		Tree,
 		String,
 		Decimal,
 	};

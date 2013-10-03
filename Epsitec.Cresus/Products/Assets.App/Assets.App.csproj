@@ -86,12 +86,12 @@
     <Compile Include="Widgets\TreeTableColumnDecimal.cs" />
     <Compile Include="Widgets\TreeTableCellDecimal.cs" />
     <Compile Include="Widgets\NavigationTreeTableController.cs" />
-    <Compile Include="Widgets\TreeTableColumnGlyph.cs" />
+    <Compile Include="Widgets\TreeTableColumnTree.cs" />
     <Compile Include="Widgets\TreeTableColumnString.cs" />
     <Compile Include="Widgets\TreeTableCellString.cs" />
     <Compile Include="Widgets\TreeTable.cs" />
-    <Compile Include="Widgets\TreeTableGlyphType.cs" />
-    <Compile Include="Widgets\TreeTableCellGlyph.cs" />
+    <Compile Include="Widgets\TreeTableTreeType.cs" />
+    <Compile Include="Widgets\TreeTableCellTree.cs" />
     <Compile Include="Widgets\NavigationTimelineController.cs" />
     <Compile Include="Widgets\Essai.cs" />
     <Compile Include="Widgets\TimelineCellValue.cs" />

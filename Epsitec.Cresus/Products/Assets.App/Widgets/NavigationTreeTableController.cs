@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.OnRowClicked (column, row);
 			};
 
-			this.treeTable.TreeButtonClicked += delegate (object sender, int row, TreeTableGlyphType type)
+			this.treeTable.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
 			{
 				this.OnTreeButtonClicked (row, type);
 			};
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.treeTable.SetColumns (descriptions);
 		}
 
-		public void SetColumnCells(int rank, TreeTableCellGlyph[] cells)
+		public void SetColumnCells(int rank, TreeTableCellTree[] cells)
 		{
 			this.treeTable.SetColumnCells (rank, cells);
 		}
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event RowClickedEventHandler RowClicked;
 
 
-		private void OnTreeButtonClicked(int row, TreeTableGlyphType type)
+		private void OnTreeButtonClicked(int row, TreeTableTreeType type)
 		{
 			if (this.TreeButtonClicked != null)
 			{
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableGlyphType type);
+		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableTreeType type);
 		public event TreeButtonClickedEventHandler TreeButtonClicked;
 		#endregion
 
