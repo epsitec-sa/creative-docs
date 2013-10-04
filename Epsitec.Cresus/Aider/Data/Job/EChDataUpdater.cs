@@ -105,7 +105,9 @@ namespace Epsitec.Aider.Data.Job
 
 		public void FixPreviousUpdate()
 		{
+			var time = this.LogToConsole ("fixing last update");
 			this.UpdateHouseholdsAndPropagate (true);
+			this.LogToConsole (time, "done");
 		}
 
 
@@ -319,8 +321,9 @@ namespace Epsitec.Aider.Data.Job
 
 							var family  = this.GetEchReportedPersonEntity (businessContext, item.NewValue);
 
-							if (family.IsNull () && fixPreviousUpdate)//need to investigate, in case of fixupdate family is sometimes null
+							if (family.IsNull () && fixPreviousUpdate)
 							{
+								this.LogToConsole ("Cannot fix correctly, family not found (FAMILYKEY:{0}), skipping! Are you using the good XML files ?",item.NewValue.FamilyKey);
 								continue;
 							}
 
@@ -397,7 +400,7 @@ namespace Epsitec.Aider.Data.Job
 
 							if (potentialAiderHousehold.IsNotNull ())
 							{								
-								//Clean household contact & warnings before retry
+								//Clean warnings before retry and restore household address
 								if (fixPreviousUpdate)
 								{
 									//setup old household with old addresse
@@ -990,7 +993,7 @@ namespace Epsitec.Aider.Data.Job
 			aiderAddressEntity.Street = eChAddressEntity.Street;
 			aiderAddressEntity.HouseNumber = houseNumber;
 			aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
-			aiderAddressEntity.Town = this.GetAiderTownEntity (businessContext, eChReportedPerson.Address.SwissZipCode);
+			aiderAddressEntity.Town = this.GetAiderTownEntity (businessContext, eChReportedPerson.Address.SwissZipCodeId);
 
 
 			//Link household to ECh Entity
