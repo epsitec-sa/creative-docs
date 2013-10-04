@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// Surcouche interactive pour TreeTable s'occupant du déplacement d'un séparateur de colonne.
 	/// Ceci permet de modifier les largeurs des colonnes.
 	/// </summary>
-	public class InteractiveLayerSeparator : AbstractInteractiveLayer
+	public class InteractiveLayerColumnSeparator : AbstractInteractiveLayer
 	{
-		public InteractiveLayerSeparator(TreeTable treeTable)
+		public InteractiveLayerColumnSeparator(TreeTable treeTable)
 			: base (treeTable)
 		{
 			this.lastColumnRank = -1;

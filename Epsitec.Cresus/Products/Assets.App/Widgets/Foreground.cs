@@ -10,7 +10,7 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
-	/// Ce widget permet de dessiner une zone rectangulaire servant de feedback
+	/// Ce widget permet de dessiner des chemins quelconques servant de feedback
 	/// visuel pour un hilite, par exemple lors du déplacement d'une colonne.
 	/// </summary>
 	public class Foreground : Widget
@@ -26,21 +26,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.zones.Clear ();
 		}
 
-		public void AddZone(Rectangle rect, Color color)
+		public void AddZone(Rectangle rect, Color color, bool isOutline = false, double width = 1, CapStyle cap = CapStyle.Round, JoinStyle join = JoinStyle.Round, double miterLimit = 10)
 		{
 			var path = new Path();
 			path.AppendRectangle (rect);
 
-			this.AddZone (path, color, false);
+			this.AddZone (path, color, isOutline, width, cap, join, miterLimit);
 		}
 
-		public void AddZone(Path path, Color color, bool isOutline)
+		public void AddZone(Path path, Color color, bool isOutline = false, double width = 1, CapStyle cap = CapStyle.Round, JoinStyle join = JoinStyle.Round, double miterLimit = 10)
 		{
 			var zone = new Zone
 			{
 				Path      = path,
 				Color     = color,
 				IsOutline = isOutline,
+				Width     = width,
+				Cap       = cap,
+				Join      = join,
 			};
 
 			this.zones.Add (zone);
@@ -53,11 +56,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				if (zone.IsOutline)
 				{
-					e.Graphics.AddPath (zone.Path);
+					e.Graphics.Rasterizer.AddOutline (zone.Path, zone.Width, zone.Cap, zone.Join, zone.MiterLimit);
 				}
 				else
 				{
-					e.Graphics.AddFilledPath (zone.Path);
+					e.Graphics.Rasterizer.AddSurface (zone.Path);
 				}
 
 				e.Graphics.RenderSolid (zone.Color);
@@ -67,9 +70,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private struct Zone
 		{
-			public Path  Path;
-			public Color Color;
-			public bool  IsOutline;
+			public Path      Path;
+			public Color     Color;
+			public bool      IsOutline;
+			public double    Width;
+			public CapStyle  Cap;
+			public JoinStyle Join;
+			public double    MiterLimit;
 		}
 
 

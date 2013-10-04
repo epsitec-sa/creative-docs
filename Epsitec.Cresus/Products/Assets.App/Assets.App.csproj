@@ -80,8 +80,8 @@
     <Compile Include="Widgets\ColorExtensions.cs" />
     <Compile Include="Widgets\AbstractTreeTableColumn.cs" />
     <Compile Include="Widgets\AbstractInteractiveLayer.cs" />
-    <Compile Include="Widgets\InteractiveLayerSeparator.cs" />
-    <Compile Include="Widgets\InteractiveLayerOrder.cs" />
+    <Compile Include="Widgets\InteractiveLayerColumnSeparator.cs" />
+    <Compile Include="Widgets\InteractiveLayerColumnOrder.cs" />
     <Compile Include="Widgets\Foreground.cs" />
     <Compile Include="Widgets\TimelineRowType.cs" />
     <Compile Include="Widgets\TimelineRowDescription.cs" />

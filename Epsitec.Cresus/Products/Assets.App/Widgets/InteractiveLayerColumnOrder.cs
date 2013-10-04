@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// Surcouche interactive pour TreeTable s'occupant du déplacement d'une colonne.
 	/// Ceci permet de modifier l'ordre des colonnes.
 	/// </summary>
-	public class InteractiveLayerOrder : AbstractInteractiveLayer
+	public class InteractiveLayerColumnOrder : AbstractInteractiveLayer
 	{
-		public InteractiveLayerOrder(TreeTable treeTable)
+		public InteractiveLayerColumnOrder(TreeTable treeTable)
 			: base (treeTable)
 		{
 			this.lastColumnRank = -1;
@@ -190,27 +190,37 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.foreground.AddZone (dst, color);
 
 				//	On dessine un rectangle plus foncé autour.
-				var tr = new Rectangle (dst.Left,    dst.Top-1,  dst.Width, 1         );
-				var br = new Rectangle (dst.Left,    dst.Bottom, dst.Width, 1         );
-				var lr = new Rectangle (dst.Left,    dst.Bottom, 1,         dst.Height);
-				var rr = new Rectangle (dst.Right-1, dst.Bottom, 1,         dst.Height);
-
+				dst.Deflate (0.5);
 				color = ColorManager.TreeTableBackgroundColor.Delta (-0.3);
-				
-				this.foreground.AddZone (tr, color);
-				this.foreground.AddZone (br, color);
-				this.foreground.AddZone (lr, color);
-				this.foreground.AddZone (rr, color);
+				this.foreground.AddZone (dst, color, isOutline: true);
 			}
 
 			if (dstX.HasValue)
 			{
 				var rect = this.GetSeparatorRect (dstX.Value, (int) (dstWidth/2));
-				var mr = new Rectangle (dstX.Value, rect.Bottom, 1, rect.Height);
-
 				rect.Deflate (0, 0, this.HeaderHeight, 0);
+
+				//	Ligne traitillée centrale.
+				var line = new DashedPath ();
+				line.AddDash (4, 4);
+				line.MoveTo (dstX.Value+0.5, rect.Top-20);
+				line.LineTo (dstX.Value+0.5, rect.Bottom);
+				var dash = line.GenerateDashedPath ();
+
+				//	Flèche vers le bas.
+				var path = new Path ();
+				path.MoveTo (dstX.Value, rect.Top-20);
+				path.LineTo (dstX.Value-20, rect.Top);
+				path.LineTo (dstX.Value-8, rect.Top);
+				path.LineTo (dstX.Value-8, rect.Top+this.HeaderHeight);
+				path.LineTo (dstX.Value+10, rect.Top+this.HeaderHeight);
+				path.LineTo (dstX.Value+10, rect.Top);
+				path.LineTo (dstX.Value+20, rect.Top);
+				path.Close ();
+
 				this.foreground.AddZone (rect, Color.FromAlphaRgb (0.9, 0.9, 0.9, 0.9));
-				this.foreground.AddZone (mr, ColorManager.HoverColor);
+				this.foreground.AddZone (dash, ColorManager.TextColor, isOutline: true);
+				this.foreground.AddZone (path, ColorManager.HoverColor);
 			}
 
 			this.foreground.Invalidate ();

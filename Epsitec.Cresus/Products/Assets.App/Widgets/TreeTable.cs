@@ -53,11 +53,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.columnsContainer.Viewport.IsAutoFitting = true;
 
 			//	Crée les surcouches interactives.
-			this.interactiveLayerSeparator = new InteractiveLayerSeparator (this);
-			this.interactiveLayerSeparator.CreateUI ();
+			this.interactiveLayerColumnSeparator = new InteractiveLayerColumnSeparator (this);
+			this.interactiveLayerColumnSeparator.CreateUI ();
 
-			this.interactiveLayerOrder = new InteractiveLayerOrder (this);
-			this.interactiveLayerOrder.CreateUI ();
+			this.interactiveLayerColumnOrder = new InteractiveLayerColumnOrder (this);
+			this.interactiveLayerColumnOrder.CreateUI ();
 		}
 
 
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				column.CellHovered += delegate (object sender, int row)
 				{
-					if (!this.interactiveLayerOrder.IsDragging)
+					if (!this.interactiveLayerColumnOrder.IsDragging)
 					{
 						this.SetHilitedHoverRow (row);
 					}
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				column.CellClicked += delegate (object sender, int row)
 				{
-					if (!this.interactiveLayerOrder.IsDragging)
+					if (!this.interactiveLayerColumnOrder.IsDragging)
 					{
 						this.OnRowClicked (column.Index, row);
 					}
@@ -222,29 +222,29 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				if (message.MessageType == MessageType.MouseDown)
 				{
-					this.interactiveLayerSeparator.BeginDrag (pos);
-					this.interactiveLayerOrder.BeginDrag (pos);
+					this.interactiveLayerColumnSeparator.BeginDrag (pos);
+					this.interactiveLayerColumnOrder.BeginDrag (pos);
 				}
 				else if (message.MessageType == MessageType.MouseMove)
 				{
-					if (this.interactiveLayerSeparator.IsDragging)
+					if (this.interactiveLayerColumnSeparator.IsDragging)
 					{
-						this.interactiveLayerSeparator.ProcessDrag (pos);
+						this.interactiveLayerColumnSeparator.ProcessDrag (pos);
 					}
-					else if (this.interactiveLayerOrder.IsDragging)
+					else if (this.interactiveLayerColumnOrder.IsDragging)
 					{
-						this.interactiveLayerOrder.ProcessDrag (pos);
+						this.interactiveLayerColumnOrder.ProcessDrag (pos);
 					}
 					else
 					{
-						this.interactiveLayerSeparator.ProcessDrag (pos);
-						this.interactiveLayerOrder.ProcessDrag (pos);
+						this.interactiveLayerColumnSeparator.ProcessDrag (pos);
+						this.interactiveLayerColumnOrder.ProcessDrag (pos);
 					}
 				}
 				else if (message.MessageType == MessageType.MouseUp)
 				{
-					this.interactiveLayerSeparator.EndDrag (pos);
-					this.interactiveLayerOrder.EndDrag (pos);
+					this.interactiveLayerColumnSeparator.EndDrag (pos);
+					this.interactiveLayerColumnOrder.EndDrag (pos);
 				}
 			}
 
@@ -324,8 +324,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private readonly List<AbstractTreeTableColumn> treeTableColumns;
 		private readonly FrameBox				leftContainer;
 		private readonly Scrollable				columnsContainer;
-		private readonly InteractiveLayerSeparator interactiveLayerSeparator;
-		private readonly InteractiveLayerOrder	interactiveLayerOrder;
+		private readonly InteractiveLayerColumnSeparator interactiveLayerColumnSeparator;
+		private readonly InteractiveLayerColumnOrder interactiveLayerColumnOrder;
 
 		private int								headerHeight;
 		private int								footerHeight;
