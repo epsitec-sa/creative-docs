@@ -207,8 +207,15 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.PostBarCodes", "..\Epsitec\dot.net\Epsitec.SwissPost\Epsitec.PostBarCodes\Epsitec.PostBarCodes.csproj", "{33651191-2712-4F69-92A8-1C3D216531B3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusAssets", "App.CresusAssets\App.CresusAssets.csproj", "{66EBFC8F-B339-4A9D-AB39-932EC36D0DF8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E70C6F16-A0BF-439B-845D-87B164510AA0} = {E70C6F16-A0BF-439B-845D-87B164510AA0}
+		{91DA0241-F084-40C5-B76E-0240884D1841} = {91DA0241-F084-40C5-B76E-0240884D1841}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.App", "Products\Assets.App\Assets.App.csproj", "{9DE5BB31-C4B5-4A81-A02D-CD2B9AAF89EA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C757AD58-605D-4480-BC2E-03E8076368B2} = {C757AD58-605D-4480-BC2E-03E8076368B2}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{A254E420-166A-488D-9687-0268BF6FFEE5}"
 EndProject
