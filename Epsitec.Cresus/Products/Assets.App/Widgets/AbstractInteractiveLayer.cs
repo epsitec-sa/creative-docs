@@ -98,7 +98,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	|     |     |     |     |
 			//	|  0  |  1  |  2  |  3  |  <-- rangs des colonnes
 			//	|     |     |     |     |
-			//  0     1     2     3     4  <-- rangs des frontières
+			//
+			//	0     1     2     3     4  <-- rangs des frontières
 
 			if (rank != -1)
 			{
@@ -153,7 +154,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected readonly TreeTable			treeTable;
+		private readonly TreeTable				treeTable;
 
 		protected Foreground					foreground;
 		protected bool							isDragging;

@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public InteractiveLayerColumnSeparator(TreeTable treeTable)
 			: base (treeTable)
 		{
-			this.lastColumnRank = -1;
+			this.detectedColumnRank = -1;
 		}
 
 
@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
-			if (this.lastColumnRank != -1)
+			if (this.detectedColumnRank != -1)
 			{
 				this.isDragging = true;
 
-				int rank = this.lastColumnRank;
+				int rank = this.detectedColumnRank;
 				this.dragInitialMouse = pos.X;
 				this.dragInitialLeft = this.GetSeparatorX (rank).Value - this.GetColumn (rank-1).ActualWidth;
 				this.dragInitialWidth = this.GetColumn (rank-1).ActualWidth;
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var delta = pos.X - this.dragInitialMouse;
 				var width = System.Math.Max (this.dragInitialWidth + delta, 0.0);
-				this.GetColumn (this.lastColumnRank-1).PreferredWidth = width;
+				this.GetColumn (this.detectedColumnRank-1).PreferredWidth = width;
 
 				var x = this.dragInitialLeft + width;
 				this.UpdateForeground (x);
@@ -54,13 +54,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				int rank = this.DetectSeparator (pos);
 
-				if (rank != this.lastColumnRank)
+				if (rank != this.detectedColumnRank)
 				{
-					this.lastColumnRank = rank;
+					this.detectedColumnRank = rank;
 
-					if (this.lastColumnRank != -1)
+					if (this.detectedColumnRank != -1)
 					{
-						var x = this.GetSeparatorX (this.lastColumnRank);
+						var x = this.GetSeparatorX (this.detectedColumnRank);
 						this.UpdateForeground (x);
 					}
 					else
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private int								lastColumnRank;
+		private int								detectedColumnRank;
 		private double							dragInitialMouse;
 		private double							dragInitialLeft;
 		private double							dragInitialWidth;
