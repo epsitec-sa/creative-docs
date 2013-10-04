@@ -83,6 +83,56 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+
+		protected Rectangle GetSeparatorRect(double x, int thickness)
+		{
+			x = System.Math.Floor (x);
+			return new Rectangle (x-thickness, 0, thickness*2+1, this.foreground.ActualHeight);
+		}
+
+		protected double? GetSeparatorX(int rank)
+		{
+			//	Retourne la position d'un frontière. S'il existe n colonnes, on peut
+			//	obtenir les positions 0..n (0 = tout à gauche, n = tout à droite).
+			if (rank != -1)
+			{
+				if (rank == 0)  // tout à gauche ?
+				{
+					var column = this.GetColumn (0);
+					return column.ActualBounds.Left;
+				}
+				else  // cherche une frontière droite ?
+				{
+					rank--;  // 0..n-1
+					var column = this.GetColumn (rank);
+
+					if (column.DockToLeft)
+					{
+						return column.ActualBounds.Right;
+					}
+					else
+					{
+						double offset = this.ColumnsContainer.ViewportOffsetX;
+						double position = column.ActualBounds.Right;
+
+						if (position > offset)
+						{
+							var x = this.ColumnsContainer.ActualBounds.Left - offset + position;
+
+							if (rank == this.ColumnCount-1)  // dernière colonne ?
+							{
+								x -= 2;  // pour ne pas être sous l'ascenseur vertical
+							}
+
+							return x;
+						}
+					}
+				}
+			}
+
+			return null;
+		}
+
 		protected int ColumnCount
 		{
 			get
