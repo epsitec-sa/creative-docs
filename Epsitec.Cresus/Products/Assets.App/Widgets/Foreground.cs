@@ -54,16 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void AddZone(Path path, Color color, bool isOutline, double width = 1, CapStyle cap = CapStyle.Round, JoinStyle join = JoinStyle.Round, double miterLimit = 10)
 		{
-			var zone = new Zone
-			{
-				Path      = path,
-				Color     = color,
-				IsOutline = isOutline,
-				Width     = width,
-				Cap       = cap,
-				Join      = join,
-			};
-
+			var zone = new Zone(path, color, isOutline, width, cap, join, miterLimit);
 			this.zones.Add (zone);
 		}
 
@@ -88,13 +79,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private struct Zone
 		{
-			public Path      Path;
-			public Color     Color;
-			public bool      IsOutline;
-			public double    Width;
-			public CapStyle  Cap;
-			public JoinStyle Join;
-			public double    MiterLimit;
+			public Zone(Path path, Color color, bool isOutline, double width, CapStyle cap, JoinStyle join, double miterLimit)
+			{
+				this.Path       = path;
+				this.Color      = color;
+				this.IsOutline  = isOutline;
+				this.Width      = width;
+				this.Cap        = cap;
+				this.Join       = join;
+				this.MiterLimit = miterLimit;
+			}
+
+			public readonly Path      Path;
+			public readonly Color     Color;
+			public readonly bool      IsOutline;
+			public readonly double    Width;
+			public readonly CapStyle  Cap;
+			public readonly JoinStyle Join;
+			public readonly double    MiterLimit;
 		}
 
 
