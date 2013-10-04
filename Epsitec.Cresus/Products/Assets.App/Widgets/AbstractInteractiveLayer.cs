@@ -52,6 +52,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		public virtual bool HasActiveHover
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public virtual void ClearActiveHover()
+		{
+		}
+
+
 		protected void ClearForeground()
 		{
 			this.foreground.ClearZones ();

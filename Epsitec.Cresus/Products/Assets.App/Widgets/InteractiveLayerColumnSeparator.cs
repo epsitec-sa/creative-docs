@@ -53,21 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			else
 			{
 				int rank = this.DetectSeparator (pos);
-
-				if (rank != this.detectedColumnRank)
-				{
-					this.detectedColumnRank = rank;
-
-					if (this.detectedColumnRank != -1)
-					{
-						var x = this.GetSeparatorX (this.detectedColumnRank);
-						this.UpdateForeground (x);
-					}
-					else
-					{
-						this.ClearForeground ();
-					}
-				}
+				this.SetActiveHover (rank);
 			}
 		}
 
@@ -79,6 +65,38 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				this.isDragging = false;
 				this.ClearForeground ();
+			}
+		}
+
+
+		public override bool HasActiveHover
+		{
+			get
+			{
+				return this.detectedColumnRank != -1;
+			}
+		}
+
+		public override void ClearActiveHover()
+		{
+			this.SetActiveHover (-1);
+		}
+
+		private void SetActiveHover(int rank)
+		{
+			if (rank != this.detectedColumnRank)
+			{
+				this.detectedColumnRank = rank;
+
+				if (this.detectedColumnRank != -1)
+				{
+					var x = this.GetSeparatorX (this.detectedColumnRank);
+					this.UpdateForeground (x);
+				}
+				else
+				{
+					this.ClearForeground ();
+				}
 			}
 		}
 

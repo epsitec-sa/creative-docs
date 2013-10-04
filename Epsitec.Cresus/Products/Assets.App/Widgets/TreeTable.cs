@@ -53,11 +53,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.columnsContainer.Viewport.IsAutoFitting = true;
 
 			//	Crée les surcouches interactives.
-			this.interactiveLayerColumnSeparator = new InteractiveLayerColumnSeparator (this);
-			this.interactiveLayerColumnSeparator.CreateUI ();
+			this.interactiveLayers = new List<AbstractInteractiveLayer> ();
 
-			this.interactiveLayerColumnOrder = new InteractiveLayerColumnOrder (this);
-			this.interactiveLayerColumnOrder.CreateUI ();
+			this.interactiveLayers.Add (new InteractiveLayerColumnResurrect (this));
+			this.interactiveLayers.Add (new InteractiveLayerColumnSeparator (this));
+			this.interactiveLayers.Add (new InteractiveLayerColumnOrder (this));
+
+			foreach (var layer in this.interactiveLayers)
+			{
+				layer.CreateUI ();
+			}
 		}
 
 
@@ -153,7 +158,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				column.CellHovered += delegate (object sender, int row)
 				{
-					if (!this.interactiveLayerColumnOrder.IsDragging)
+					if (!this.HasDraggingLayer)
 					{
 						this.SetHilitedHoverRow (row);
 					}
@@ -161,7 +166,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				column.CellClicked += delegate (object sender, int row)
 				{
-					if (!this.interactiveLayerColumnOrder.IsDragging)
+					if (!this.HasDraggingLayer)
 					{
 						this.OnRowClicked (column.Index, row);
 					}
@@ -222,39 +227,56 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				if (message.MessageType == MessageType.MouseDown)
 				{
-					this.interactiveLayerColumnSeparator.BeginDrag (pos);
-					this.interactiveLayerColumnOrder.BeginDrag (pos);
+					for (int i=0; i<this.interactiveLayers.Count; i++)
+					{
+						var layer = this.interactiveLayers[i];
+
+						layer.BeginDrag (pos);
+
+						if (layer.IsDragging)
+						{
+							break;
+						}
+					}
 				}
 				else if (message.MessageType == MessageType.MouseMove)
 				{
-					if (this.interactiveLayerColumnSeparator.IsDragging)
+					var draggingLayer = this.DraggingLayer;
+
+					if (draggingLayer == null)
 					{
-						this.interactiveLayerColumnSeparator.ProcessDrag (pos);
-					}
-					else if (this.interactiveLayerColumnOrder.IsDragging)
-					{
-						this.interactiveLayerColumnOrder.ProcessDrag (pos);
+						for (int i=0; i<this.interactiveLayers.Count; i++)
+						{
+							var layer = this.interactiveLayers[i];
+
+							layer.ProcessDrag (pos);
+
+							if (layer.HasActiveHover)
+							{
+								for (int j=i+1; j<this.interactiveLayers.Count; j++)
+								{
+									this.interactiveLayers[j].ClearActiveHover ();
+								}
+
+								break;
+							}
+						}
 					}
 					else
 					{
-						this.interactiveLayerColumnSeparator.ProcessDrag (pos);
-						this.interactiveLayerColumnOrder.ProcessDrag (pos);
+						draggingLayer.ProcessDrag (pos);
 					}
 				}
 				else if (message.MessageType == MessageType.MouseUp)
 				{
-					this.interactiveLayerColumnSeparator.EndDrag (pos);
-					this.interactiveLayerColumnOrder.EndDrag (pos);
+					foreach (var layer in this.interactiveLayers)
+					{
+						layer.EndDrag (pos);
+					}
 				}
 			}
 
 			base.ProcessMessage (message, pos);
-		}
-
-		protected override void OnMouseMove(MessageEventArgs e)
-		{
-
-			base.OnMouseMove (e);
 		}
 
 		protected override void UpdateClientGeometry()
@@ -295,6 +317,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private bool HasDraggingLayer
+		{
+			get
+			{
+				return this.DraggingLayer != null;
+			}
+		}
+
+		private AbstractInteractiveLayer DraggingLayer
+		{
+			get
+			{
+				return this.interactiveLayers.Where (x => x.IsDragging).FirstOrDefault ();
+			}
+		}
+
+
 		#region Events handler
 		private void OnRowClicked(int column, int row)
 		{
@@ -324,8 +363,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private readonly List<AbstractTreeTableColumn> treeTableColumns;
 		private readonly FrameBox				leftContainer;
 		private readonly Scrollable				columnsContainer;
-		private readonly InteractiveLayerColumnSeparator interactiveLayerColumnSeparator;
-		private readonly InteractiveLayerColumnOrder interactiveLayerColumnOrder;
+		private readonly List<AbstractInteractiveLayer> interactiveLayers;
 
 		private int								headerHeight;
 		private int								footerHeight;
