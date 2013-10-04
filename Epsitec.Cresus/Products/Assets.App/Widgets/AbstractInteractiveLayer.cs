@@ -92,8 +92,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected double? GetSeparatorX(int rank)
 		{
-			//	Retourne la position d'un frontière. S'il existe n colonnes, on peut
+			//	Retourne la position d'une frontière. S'il existe n colonnes, on peut
 			//	obtenir les positions 0..n (0 = tout à gauche, n = tout à droite).
+			//
+			//	|     |     |     |     |
+			//	|  0  |  1  |  2  |  3  |  <-- rangs des colonnes
+			//	|     |     |     |     |
+			//  0     1     2     3     4  <-- rangs des frontières
+
 			if (rank != -1)
 			{
 				if (rank == 0)  // tout à gauche ?

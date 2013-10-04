@@ -206,16 +206,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (dstX.HasValue)
 			{
 				var rect = this.GetSeparatorRect (dstX.Value, (int) (dstWidth/2));
+				var mr = new Rectangle (dstX.Value, rect.Bottom, 1, rect.Height);
+
 				rect.Deflate (0, 0, this.HeaderHeight, 0);
 				this.foreground.AddZone (rect, Color.FromAlphaRgb (0.9, 0.9, 0.9, 0.9));
-
-				var lr = new Rectangle (rect.Left,    rect.Bottom, 1, rect.Height);
-				var mr = new Rectangle (dstX.Value-1, rect.Bottom, 3, rect.Height);
-				var rr = new Rectangle (rect.Right-1, rect.Bottom, 1, rect.Height);
-
-				this.foreground.AddZone (lr, Color.FromAlphaRgb (0.2, 0.0, 0.0, 0.0));
 				this.foreground.AddZone (mr, ColorManager.HoverColor);
-				this.foreground.AddZone (rr, Color.FromAlphaRgb (0.2, 0.0, 0.0, 0.0));
 			}
 
 			this.foreground.Invalidate ();

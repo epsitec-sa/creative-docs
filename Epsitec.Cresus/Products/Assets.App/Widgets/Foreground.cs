@@ -28,10 +28,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public void AddZone(Rectangle rect, Color color)
 		{
+			var path = new Path();
+			path.AppendRectangle (rect);
+
+			this.AddZone (path, color, false);
+		}
+
+		public void AddZone(Path path, Color color, bool isOutline)
+		{
 			var zone = new Zone
 			{
-				Rectangle = rect,
+				Path      = path,
 				Color     = color,
+				IsOutline = isOutline,
 			};
 
 			this.zones.Add (zone);
@@ -42,7 +51,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			foreach (var zone in zones)
 			{
-				e.Graphics.AddFilledRectangle (zone.Rectangle);
+				if (zone.IsOutline)
+				{
+					e.Graphics.AddPath (zone.Path);
+				}
+				else
+				{
+					e.Graphics.AddFilledPath (zone.Path);
+				}
+
 				e.Graphics.RenderSolid (zone.Color);
 			}
 		}
@@ -50,8 +67,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private struct Zone
 		{
-			public Rectangle Rectangle;
-			public Color     Color;
+			public Path  Path;
+			public Color Color;
+			public bool  IsOutline;
 		}
 
 
