@@ -26,15 +26,33 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.zones.Clear ();
 		}
 
-		public void AddZone(Rectangle rect, Color color, bool isOutline = false, double width = 1, CapStyle cap = CapStyle.Round, JoinStyle join = JoinStyle.Round, double miterLimit = 10)
+		public void AddSurface(Rectangle rect, Color color)
 		{
-			var path = new Path();
+			var path = new Path ();
 			path.AppendRectangle (rect);
 
-			this.AddZone (path, color, isOutline, width, cap, join, miterLimit);
+			this.AddSurface (path, color);
 		}
 
-		public void AddZone(Path path, Color color, bool isOutline = false, double width = 1, CapStyle cap = CapStyle.Round, JoinStyle join = JoinStyle.Round, double miterLimit = 10)
+		public void AddOutline(Rectangle rect, Color color, double width = 1, CapStyle cap = CapStyle.Round, JoinStyle join = JoinStyle.Round, double miterLimit = 10)
+		{
+			var path = new Path ();
+			path.AppendRectangle (rect);
+
+			this.AddOutline (path, color, width, cap, join, miterLimit);
+		}
+
+		public void AddSurface(Path path, Color color)
+		{
+			this.AddZone (path, color, false);
+		}
+
+		public void AddOutline(Path path, Color color, double width = 1, CapStyle cap = CapStyle.Round, JoinStyle join = JoinStyle.Round, double miterLimit = 10)
+		{
+			this.AddZone (path, color, true, width, cap, join, miterLimit);
+		}
+
+		private void AddZone(Path path, Color color, bool isOutline, double width = 1, CapStyle cap = CapStyle.Round, JoinStyle join = JoinStyle.Round, double miterLimit = 10)
 		{
 			var zone = new Zone
 			{

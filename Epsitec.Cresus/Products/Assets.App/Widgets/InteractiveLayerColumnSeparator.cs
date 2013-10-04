@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (x.HasValue)
 			{
 				var rect = this.GetSeparatorRect (x.Value, 1);
-				this.foreground.AddZone (rect, ColorManager.MoveColumnColor);
+				this.foreground.AddSurface (rect, ColorManager.MoveColumnColor);
 			}
 
 			this.foreground.Invalidate ();

@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				//	La colonne source est fortement estompée, pour donner l'illusion
 				//	qu'elle a disparu.
 				src = new Rectangle (src.Left, 0, src.Width, this.foreground.ActualHeight);
-				this.foreground.AddZone (src, Color.FromAlphaRgb (0.8, 1.0, 1.0, 1.0));
+				this.foreground.AddSurface (src, Color.FromAlphaRgb (0.8, 1.0, 1.0, 1.0));
 			}
 
 			if (dst.IsValid)
@@ -187,12 +187,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				//	L'en-tête destination est dessinée pour ressembler au maximum
 				//	à une en-tête normale.
 				var color = Color.FromAlphaColor (0.8, ColorManager.TreeTableBackgroundColor);
-				this.foreground.AddZone (dst, color);
+				this.foreground.AddSurface (dst, color);
 
 				//	On dessine un rectangle plus foncé autour.
 				dst.Deflate (0.5);
 				color = ColorManager.TreeTableBackgroundColor.Delta (-0.3);
-				this.foreground.AddZone (dst, color, isOutline: true);
+				this.foreground.AddOutline (dst, color);
 			}
 
 			if (dstX.HasValue)
@@ -218,9 +218,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				path.LineTo (dstX.Value+20, rect.Top);
 				path.Close ();
 
-				this.foreground.AddZone (rect, Color.FromAlphaRgb (0.9, 0.9, 0.9, 0.9));
-				this.foreground.AddZone (dash, ColorManager.TextColor, isOutline: true);
-				this.foreground.AddZone (path, ColorManager.HoverColor);
+				this.foreground.AddSurface (rect, Color.FromAlphaRgb (0.9, 0.9, 0.9, 0.9));
+				this.foreground.AddOutline (dash, ColorManager.TextColor);
+				this.foreground.AddSurface (path, ColorManager.HoverColor);
 			}
 
 			this.foreground.Invalidate ();
@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (rect.IsValid)
 			{
 				var color = Color.FromAlphaColor (0.4, ColorManager.MoveColumnColor);
-				this.foreground.AddZone (rect, color);
+				this.foreground.AddSurface (rect, color);
 			}
 
 			this.foreground.Invalidate ();
