@@ -39,15 +39,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public virtual void BeginDrag(Point pos)
+		public virtual void MouseDown(Point pos)
 		{
 		}
 
-		public virtual void ProcessDrag(Point pos)
+		public virtual void MouseMove(Point pos)
 		{
 		}
 
-		public virtual void EndDrag(Point pos)
+		public virtual void MouseUp(Point pos)
 		{
 		}
 

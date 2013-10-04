@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public override void BeginDrag(Point pos)
+		public override void MouseDown(Point pos)
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public override void ProcessDrag(Point pos)
+		public override void MouseMove(Point pos)
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public override void EndDrag(Point pos)
+		public override void MouseUp(Point pos)
 		{
 			pos = this.foreground.MapParentToClient (pos);
 

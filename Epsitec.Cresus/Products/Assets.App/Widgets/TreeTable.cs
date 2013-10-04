@@ -52,12 +52,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.columnsContainer.Viewport.IsAutoFitting = true;
 
-			//	Crée les surcouches interactives.
+			//	Crée les surcouches interactives. La permier surcouche sera dessinée
+			//	sous les autres. La dernière surcouche est celle qui réagit prioritairement
+			//	aux autres.
 			this.interactiveLayers = new List<AbstractInteractiveLayer> ();
 
-			this.interactiveLayers.Add (new InteractiveLayerColumnResurrect (this));
-			this.interactiveLayers.Add (new InteractiveLayerColumnSeparator (this));
 			this.interactiveLayers.Add (new InteractiveLayerColumnOrder (this));
+			this.interactiveLayers.Add (new InteractiveLayerColumnSeparator (this));
+			this.interactiveLayers.Add (new InteractiveLayerColumnResurrect (this));
 
 			foreach (var layer in this.interactiveLayers)
 			{
@@ -227,57 +229,86 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				if (message.MessageType == MessageType.MouseDown)
 				{
-					for (int i=0; i<this.interactiveLayers.Count; i++)
-					{
-						var layer = this.interactiveLayers[i];
-
-						layer.BeginDrag (pos);
-
-						if (layer.IsDragging)
-						{
-							break;
-						}
-					}
+					this.ProcessMouseDown (pos);
 				}
 				else if (message.MessageType == MessageType.MouseMove)
 				{
-					var draggingLayer = this.DraggingLayer;
-
-					if (draggingLayer == null)
-					{
-						for (int i=0; i<this.interactiveLayers.Count; i++)
-						{
-							var layer = this.interactiveLayers[i];
-
-							layer.ProcessDrag (pos);
-
-							if (layer.HasActiveHover)
-							{
-								for (int j=i+1; j<this.interactiveLayers.Count; j++)
-								{
-									this.interactiveLayers[j].ClearActiveHover ();
-								}
-
-								break;
-							}
-						}
-					}
-					else
-					{
-						draggingLayer.ProcessDrag (pos);
-					}
+					this.ProcessMouseMove (pos);
 				}
 				else if (message.MessageType == MessageType.MouseUp)
 				{
-					foreach (var layer in this.interactiveLayers)
-					{
-						layer.EndDrag (pos);
-					}
+					this.ProcessMouseUp (pos);
+					this.ProcessMouseMove (pos);
 				}
 			}
 
 			base.ProcessMessage (message, pos);
 		}
+
+		private void ProcessMouseDown(Point pos)
+		{
+			AbstractInteractiveLayer draggingLayer = null;
+
+			for (int i=this.interactiveLayers.Count-1; i>=0; i--)
+			{
+				var layer = this.interactiveLayers[i];
+
+				layer.MouseDown (pos);
+
+				if (layer.IsDragging)
+				{
+					draggingLayer = layer;
+					break;
+				}
+			}
+
+			if (draggingLayer != null)
+			{
+				foreach (var layer in this.interactiveLayers.Where (x => x != draggingLayer))
+				{
+					layer.ClearActiveHover ();
+				}
+			}
+		}
+
+		private void ProcessMouseMove(Point pos)
+		{
+			var draggingLayer = this.DraggingLayer;
+
+			if (draggingLayer == null)
+			{
+				for (int i=this.interactiveLayers.Count-1; i>=0; i--)
+				{
+					var layer = this.interactiveLayers[i];
+
+					layer.MouseMove (pos);
+
+					if (layer.HasActiveHover)
+					{
+						for (int j=i-1; j>=0; j--)
+						{
+							this.interactiveLayers[j].ClearActiveHover ();
+						}
+
+						break;
+					}
+				}
+			}
+			else
+			{
+				draggingLayer.MouseMove (pos);
+			}
+		}
+
+		private void ProcessMouseUp(Point pos)
+		{
+			for (int i=this.interactiveLayers.Count-1; i>=0; i--)
+			{
+				var layer = this.interactiveLayers[i];
+				layer.MouseUp (pos);
+			}
+		}
+
 
 		protected override void UpdateClientGeometry()
 		{

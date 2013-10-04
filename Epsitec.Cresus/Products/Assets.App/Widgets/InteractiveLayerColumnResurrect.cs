@@ -21,13 +21,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public override void BeginDrag(Point pos)
+		public override void MouseDown(Point pos)
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
 		}
 
-		public override void ProcessDrag(Point pos)
+		public override void MouseMove(Point pos)
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
@@ -35,10 +35,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.SetShowButtons (this.DetectHeader (pos));
 		}
 
-		public override void EndDrag(Point pos)
+		public override void MouseUp(Point pos)
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
+			if (this.detectedColumnRank != -1)
+			{
+				this.ResurrectColumn(this.detectedColumnRank, 50);
+				this.ClearActiveHover ();
+			}
 		}
 
 
@@ -58,19 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void SetActiveHover(int rank)
 		{
-			if (rank != this.detectedColumnRank)
-			{
-				this.detectedColumnRank = rank;
-
-				if (this.detectedColumnRank != -1)
-				{
-					this.UpdateForeground ();
-				}
-				else
-				{
-					this.ClearForeground ();
-				}
-			}
+			this.detectedColumnRank = rank;
 		}
 
 		private void SetShowButtons(bool show)
@@ -131,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			var path = new Path ();
 
-			rect.Deflate (5.0);
+			rect.Deflate (4.0);
 
 			path.MoveTo (rect.Left, rect.Center.Y);
 			path.LineTo (rect.Right, rect.Center.Y);
@@ -142,19 +135,40 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return path;
 		}
 
+
+		private void ResurrectColumn(int rank, int width)
+		{
+			for (int i=0; i<this.ColumnCount; i++)
+			{
+				var column = this.GetColumn (i);
+
+				if (column.ActualWidth == 0)
+				{
+					if (rank-- == 0)
+					{
+						this.GetColumn (i).PreferredWidth = width;
+						break;
+					}
+				}
+			}
+		}
+
 		private IEnumerable<Rectangle> ButtonRectangles
 		{
 			get
 			{
 				foreach (var rank in this.NullColumns)
 				{
-					var x = (double) this.GetSeparatorX (rank);
+					var x = this.GetSeparatorX (rank);
 
-					yield return new Rectangle (
-						x,
-						this.foreground.ActualHeight-InteractiveLayerColumnResurrect.size,
-						InteractiveLayerColumnResurrect.size,
-						InteractiveLayerColumnResurrect.size);
+					if (x.HasValue)
+					{
+						yield return new Rectangle (
+							x.Value,
+							this.foreground.ActualHeight-InteractiveLayerColumnResurrect.size,
+							InteractiveLayerColumnResurrect.size,
+							InteractiveLayerColumnResurrect.size);
+					}
 				}
 			}
 		}
@@ -167,16 +181,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					var column = this.GetColumn (i);
 
-					if (column.ActualWidth == 0)
+					if (column.PreferredWidth == 0)
 					{
-						yield return i;
+						yield return i+1;
 					}
 				}
 			}
 		}
 
 
-		private static readonly int size = 20;
+		private static readonly int size = 16;
 
 		private int								detectedColumnRank;
 		private bool							showButtons;

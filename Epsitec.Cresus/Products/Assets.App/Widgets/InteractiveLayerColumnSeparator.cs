@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public override void BeginDrag(Point pos)
+		public override void MouseDown(Point pos)
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public override void ProcessDrag(Point pos)
+		public override void MouseMove(Point pos)
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public override void EndDrag(Point pos)
+		public override void MouseUp(Point pos)
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
@@ -105,9 +105,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (pos.Y >= 0 && pos.Y < this.foreground.ActualHeight)
 			{
-				//	A l'envers, pour pouvoir déployer une colonne de largeur nulle.
 				//	On saute la colonne 0 qui est tout à gauche.
-				for (int i=this.ColumnCount; i>0; i--)
+				for (int i=1; i<=this.ColumnCount; i++)
 				{
 					double? x = this.GetSeparatorX (i);
 
