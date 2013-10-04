@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 
 				this.token.ThrowIfCancellationRequested ();
 
-				await TaskEx.Delay (100, this.token);
+				await Task.Delay (100, this.token);
 
 				if (this.index == 100)
 				{
