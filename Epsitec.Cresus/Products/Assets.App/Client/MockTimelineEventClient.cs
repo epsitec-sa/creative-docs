@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Client
 
 				this.token.ThrowIfCancellationRequested ();
 
-				await TaskEx.Delay (20, this.token);
+				await Task.Delay (20, this.token);
 
 				this.RandomlyGenerateNextDate ();
 
