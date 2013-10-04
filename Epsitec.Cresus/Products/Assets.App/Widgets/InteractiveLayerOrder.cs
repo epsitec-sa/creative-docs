@@ -9,6 +9,10 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Surcouche interactive pour TreeTable s'occupant du déplacement d'une colonne.
+	/// Ceci permet de modifier l'ordre des colonnes.
+	/// </summary>
 	public class InteractiveLayerOrder : AbstractInteractiveLayer
 	{
 		public InteractiveLayerOrder(TreeTable treeTable)
@@ -17,14 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.lastColumnRank = -1;
 		}
 
-
-		public override bool IsDragging
-		{
-			get
-			{
-				return this.isDragging;
-			}
-		}
 
 		public override void BeginDrag(Point pos)
 		{
@@ -290,7 +286,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		private int								lastColumnRank;
-		private bool							isDragging;
 		private double							dragInitialMouse;
 		private Rectangle						dragInitialRect;
 		private int								dragDstRank;

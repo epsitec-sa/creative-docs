@@ -9,6 +9,10 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Surcouche interactive pour TreeTable s'occupant du déplacement d'un séparateur de colonne.
+	/// Ceci permet de modifier les largeurs des colonnes.
+	/// </summary>
 	public class InteractiveLayerSeparator : AbstractInteractiveLayer
 	{
 		public InteractiveLayerSeparator(TreeTable treeTable)
@@ -17,14 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.lastColumnRank = -1;
 		}
 
-
-		public override bool IsDragging
-		{
-			get
-			{
-				return this.isDragging;
-			}
-		}
 
 		public override void BeginDrag(Point pos)
 		{
@@ -174,7 +170,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		private int								lastColumnRank;
-		private bool							isDragging;
 		private double							dragInitialMouse;
 		private double							dragInitialLeft;
 		private double							dragInitialWidth;

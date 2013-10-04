@@ -9,6 +9,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Surcouche interactive pour TreeTable s'occupant du déplacement d'un élément quelconque.
+	/// </summary>
 	public abstract class AbstractInteractiveLayer
 	{
 		public AbstractInteractiveLayer(TreeTable treeTable)
@@ -28,11 +31,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public virtual bool IsDragging
+		public bool IsDragging
 		{
 			get
 			{
-				return false;
+				return this.isDragging;
 			}
 		}
 
@@ -95,6 +98,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		protected readonly TreeTable			treeTable;
+
 		protected Foreground					foreground;
+		protected bool							isDragging;
 	}
 }
