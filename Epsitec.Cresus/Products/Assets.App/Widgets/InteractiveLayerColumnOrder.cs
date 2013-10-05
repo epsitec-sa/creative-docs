@@ -134,6 +134,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						x1 = x2;
 					}
 				}
+
+				return this.ColumnCount;
 			}
 
 			return -1;

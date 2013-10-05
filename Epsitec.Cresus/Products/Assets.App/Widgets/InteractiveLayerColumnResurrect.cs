@@ -41,9 +41,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
-			if (this.detectedColumnRank != -1)
+			if (this.detectedColumnRank != -1)  // clic dans le bouton "+" ?
 			{
-				this.ResurrectColumn(this.detectedColumnRank, 75);
+				this.ResurrectColumn(this.detectedColumnRank, 75);  // avec une largeur arbitraire
 				this.ClearActiveHover ();
 			}
 
