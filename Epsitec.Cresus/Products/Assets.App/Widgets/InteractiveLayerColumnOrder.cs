@@ -72,7 +72,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.isDragging = false;
 				this.ClearForeground ();
 
-				this.ChangeColumnOrder (this.detectedColumnRank, this.dragDstRank);
+				if (this.dragDstRank != -1)
+				{
+					this.ChangeColumnOrder (this.detectedColumnRank, this.dragDstRank);
+				}
 			}
 		}
 
