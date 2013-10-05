@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.headerHeight = headerHeight;
 			this.footerHeight = footerHeight;
 
+			this.columnsMapper = new List<int> ();
 			this.treeTableColumns = new List<AbstractTreeTableColumn> ();
 
 			//	Crée le conteneur de gauche, qui contiendra toutes les colonnes
@@ -134,14 +135,50 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public void SetColumns(TreeTableColumnDescription[] descriptions)
 		{
+			this.columnDescriptions = descriptions;
+
+			this.columnsMapper.Clear ();
+
+			for (int i=0; i<descriptions.Length; i++)
+			{
+				this.columnsMapper.Add (i);
+			}
+
+			this.CreateColumns ();
+		}
+
+		public void ChangeColumnOrder(int columnSrc, int separatorDst)
+		{
+			if (separatorDst < columnSrc)
+			{
+				int x = this.columnsMapper[columnSrc];
+				this.columnsMapper.RemoveAt (columnSrc);
+				this.columnsMapper.Insert (separatorDst, x);
+			}
+			else
+			{
+				int x = this.columnsMapper[columnSrc];
+				this.columnsMapper.RemoveAt (columnSrc);
+				this.columnsMapper.Insert (separatorDst-1, x);
+			}
+
+			this.CreateColumns ();
+			this.OnContentChanged ();  // on demande de mettre à jour le contenu
+		}
+
+		private void CreateColumns()
+		{
 			this.treeTableColumns.Clear ();
 			this.leftContainer.Children.Clear ();
 			this.columnsContainer.Viewport.Children.Clear ();
 
 			int index = 0;
 
-			foreach (var description in descriptions)
+			for (int i=0; i<this.columnsMapper.Count; i++)
 			{
+				var ii = this.MapRelativeToAbsolute (i);
+				var description = this.columnDescriptions[ii];
+
 				var column = TreeTableColumnDescription.Create (description);
 				column.Index = index++;
 
@@ -300,7 +337,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else  // drag en cours ?
 			{
-				//	Fait bouger uniquement la surcouche en cours de drag.
+				//	Fait réagir uniquement la surcouche en cours de drag.
 				draggingLayer.MouseMove (pos);
 			}
 		}
@@ -346,9 +383,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private AbstractTreeTableColumn GetColumn(int rank)
+		private AbstractTreeTableColumn GetColumn(int absRank)
 		{
-			System.Diagnostics.Debug.Assert (rank >= 0 && rank < this.treeTableColumns.Count);
+			System.Diagnostics.Debug.Assert (absRank >= 0 && absRank < this.treeTableColumns.Count);
+			int rank = this.MapAbsoluteToRelative (absRank);
 			return this.treeTableColumns[rank];
 		}
 
@@ -370,6 +408,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private int MapAbsoluteToRelative(int absRank)
+		{
+			return this.columnsMapper.IndexOf (absRank);
+		}
+
+		private int MapRelativeToAbsolute(int relRank)
+		{
+			return this.columnsMapper[relRank];
+		}
+
+
 		#region Events handler
 		private void OnRowClicked(int column, int row)
 		{
@@ -381,6 +430,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public delegate void RowClickedEventHandler(object sender, int column, int row);
 		public event RowClickedEventHandler RowClicked;
+
+
+		private void OnContentChanged()
+		{
+			if (this.ContentChanged != null)
+			{
+				this.ContentChanged (this);
+			}
+		}
+
+		public delegate void ContentChangedEventHandler(object sender);
+		public event ContentChangedEventHandler ContentChanged;
 
 
 		private void OnTreeButtonClicked(int row, TreeTableTreeType type)
@@ -396,11 +457,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
+		private readonly List<int>				columnsMapper;
 		private readonly List<AbstractTreeTableColumn> treeTableColumns;
 		private readonly FrameBox				leftContainer;
 		private readonly Scrollable				columnsContainer;
 		private readonly List<AbstractInteractiveLayer> interactiveLayers;
 
+		private TreeTableColumnDescription[]	columnDescriptions;
 		private int								headerHeight;
 		private int								footerHeight;
 		private int								rowHeight;

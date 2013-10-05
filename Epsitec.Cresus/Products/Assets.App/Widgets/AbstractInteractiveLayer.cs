@@ -153,6 +153,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return null;
 		}
 
+
+		protected void ChangeColumnOrder(int columnSrc, int separatorDst)
+		{
+			this.treeTable.ChangeColumnOrder (columnSrc, separatorDst);
+		}
+
 		protected int ColumnCount
 		{
 			get

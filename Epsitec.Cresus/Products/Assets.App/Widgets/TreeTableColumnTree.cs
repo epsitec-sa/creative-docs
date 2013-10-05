@@ -29,27 +29,30 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			base.PaintBackgroundImplementation(graphics, clipRect);
 
-			int y = 0;
-
-			foreach (var cell in this.cells)
+			if (this.cells != null)
 			{
-				//	Dessine le fond.
-				var rect = this.GetCellsRect (y);
+				int y = 0;
 
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected));
-
-				//	Dessine le texte.
-				if (!string.IsNullOrEmpty (cell.Value))
+				foreach (var cell in this.cells)
 				{
-					var textRect = this.GetTextRectangle (y, cell.Level);
-					this.PaintText (graphics, textRect, cell.Value);
+					//	Dessine le fond.
+					var rect = this.GetCellsRect (y);
+
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected));
+
+					//	Dessine le texte.
+					if (!string.IsNullOrEmpty (cell.Value))
+					{
+						var textRect = this.GetTextRectangle (y, cell.Level);
+						this.PaintText (graphics, textRect, cell.Value);
+					}
+
+					//	Dessine la grille.
+					this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
+
+					y++;
 				}
-
-				//	Dessine la grille.
-				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-				y++;
 			}
 		}
 
@@ -65,48 +68,51 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Crée les petits boutons pour la gestion de l'arborescence.
 			this.Children.Clear ();
 
-			int y = 0;
-
-			foreach (var cell in this.cells)
+			if (this.cells != null)
 			{
-				if (cell.Type == TreeTableTreeType.Compacted ||
-					cell.Type == TreeTableTreeType.Extended)
+				int y = 0;
+
+				foreach (var cell in this.cells)
 				{
-					var rect = this.GetGlyphRectangle (y, cell.Level);
-
-					var button = new GlyphButton
+					if (cell.Type == TreeTableTreeType.Compacted ||
+					cell.Type == TreeTableTreeType.Extended)
 					{
-						GlyphShape    = cell.Type == TreeTableTreeType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
-						ButtonStyle   = ButtonStyle.ToolItem,
-						PreferredSize = rect.Size,
-						Anchor        = AnchorStyles.BottomLeft,
-						Margins       = new Margins (rect.Left, 0, 0, rect.Bottom),
-						Name          = TreeTableColumnTree.Serialize (y, cell.Type),
-					};
+						var rect = this.GetGlyphRectangle (y, cell.Level);
 
-					this.Children.Add (button);
+						var button = new GlyphButton
+						{
+							GlyphShape    = cell.Type == TreeTableTreeType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
+							ButtonStyle   = ButtonStyle.ToolItem,
+							PreferredSize = rect.Size,
+							Anchor        = AnchorStyles.BottomLeft,
+							Margins       = new Margins (rect.Left, 0, 0, rect.Bottom),
+							Name          = TreeTableColumnTree.Serialize (y, cell.Type),
+						};
 
-					button.MouseMove += delegate
-					{
-						//	Si la souris est bougée dans le bouton, il faut passer l'information
-						//	au widget sous-jacent (TreeTable), afin que la ligne survolée soit
-						//	mise en évidence.
-						int yy;
-						TreeTableTreeType tt;
-						TreeTableColumnTree.Deserialize (button.Name, out yy, out tt);
-						this.SetDetectedHoverRow (yy);
-					};
+						this.Children.Add (button);
 
-					button.Clicked += delegate
-					{
-						int yy;
-						TreeTableTreeType tt;
-						TreeTableColumnTree.Deserialize (button.Name, out yy, out tt);
-						this.OnTreeButtonClicked (yy, tt);
-					};
+						button.MouseMove += delegate
+						{
+							//	Si la souris est bougée dans le bouton, il faut passer l'information
+							//	au widget sous-jacent (TreeTable), afin que la ligne survolée soit
+							//	mise en évidence.
+							int yy;
+							TreeTableTreeType tt;
+							TreeTableColumnTree.Deserialize (button.Name, out yy, out tt);
+							this.SetDetectedHoverRow (yy);
+						};
+
+						button.Clicked += delegate
+						{
+							int yy;
+							TreeTableTreeType tt;
+							TreeTableColumnTree.Deserialize (button.Name, out yy, out tt);
+							this.OnTreeButtonClicked (yy, tt);
+						};
+					}
+
+					y++;
 				}
-
-				y++;
 			}
 		}
 

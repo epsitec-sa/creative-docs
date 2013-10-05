@@ -440,6 +440,11 @@ namespace Epsitec.Cresus.Assets.App
 				this.UpdateTreeTableController ();
 			};
 
+			this.treeTableController.ContentChanged += delegate (object sender)
+			{
+				this.UpdateTreeTableController ();
+			};
+
 			this.treeTableController.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
 			{
 			};

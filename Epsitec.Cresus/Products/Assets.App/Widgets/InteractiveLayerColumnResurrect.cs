@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private int DetectButton(Point pos)
 		{
-			//	On cherche à l'envers (de droite à gauche), pour ressuciter d'abord
+			//	On cherche à l'envers (de droite à gauche), pour ressusciter d'abord
 			//	la dernière colonne compactée.
 			var rects = this.ButtonRectangles.ToArray ();
 

@@ -71,6 +71,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				this.isDragging = false;
 				this.ClearForeground ();
+
+				this.ChangeColumnOrder (this.detectedColumnRank, this.dragDstRank);
 			}
 		}
 
@@ -235,7 +237,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				path.LineTo (dstX.Value+20, rect.Top);
 				path.Close ();
 
-				this.foreground.AddSurface (rect, Color.FromAlphaRgb (0.9, 0.9, 0.9, 0.9));
+				//?this.foreground.AddSurface (rect, Color.FromAlphaRgb (0.9, 0.9, 0.9, 0.9));
 				this.foreground.AddOutline (dash, ColorManager.TextColor);
 				this.foreground.AddSurface (path, ColorManager.HoverColor);
 			}

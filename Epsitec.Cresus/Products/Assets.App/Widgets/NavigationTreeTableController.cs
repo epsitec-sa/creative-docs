@@ -43,6 +43,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.OnRowClicked (column, row);
 			};
 
+			this.treeTable.ContentChanged += delegate (object sender)
+			{
+				this.OnContentChanged ();
+			};
+
 			this.treeTable.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
 			{
 				this.OnTreeButtonClicked (row, type);
@@ -164,6 +169,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public delegate void RowClickedEventHandler(object sender, int column, int row);
 		public event RowClickedEventHandler RowClicked;
+
+
+		private void OnContentChanged()
+		{
+			if (this.ContentChanged != null)
+			{
+				this.ContentChanged (this);
+			}
+		}
+
+		public delegate void ContentChangedEventHandler(object sender);
+		public event ContentChangedEventHandler ContentChanged;
 
 
 		private void OnTreeButtonClicked(int row, TreeTableTreeType type)
