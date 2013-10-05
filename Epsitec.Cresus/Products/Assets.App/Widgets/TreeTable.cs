@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			bool srcDockToLeft = (columnSrc < this.dockToLeftCount);
 			bool dstDockToLeft = (separatorDst.Rank < this.dockToLeftCount);
 
-			//	Si on est sur la frontière des conteneurs left-scrollable, on force
+			//	Si on est sur la frontière des conteneurs left|scrollable, on force
 			//	la destination dans la bonne direction.
 			if (separatorDst.Left)
 			{
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				dstDockToLeft = false;
 			}
 
-			if (separatorDst.Rank < columnSrc)  // déplacement vers la gauche ?
+			if (separatorDst.Rank <= columnSrc)  // déplacement vers la gauche ?
 			{
 				int x = this.columnsMapper[columnSrc];
 				this.columnsMapper.RemoveAt (columnSrc);

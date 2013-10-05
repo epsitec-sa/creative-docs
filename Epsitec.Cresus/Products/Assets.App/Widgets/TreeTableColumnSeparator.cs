@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TreeTableColumnSeparator
 	{
-		public TreeTableColumnSeparator(int rank = -1, int direction = 0)
+		public TreeTableColumnSeparator(int rank, int direction = 0)
 		{
 			this.Rank      = rank;
 			this.Direction = direction;
@@ -48,5 +48,28 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return this.Rank == -1;
 			}
 		}
+
+		public bool IsValidDrag(int columnRank, bool dockToLeft)
+		{
+			if (this.Rank != columnRank &&
+				this.Rank != columnRank+1)
+			{
+				return true;
+			}
+
+			if (this.Rank == columnRank && this.Direction == -1 && !dockToLeft)
+			{
+				return true;
+			}
+
+			if (this.Rank == columnRank+1 && this.Direction == 1 && dockToLeft)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		public static readonly TreeTableColumnSeparator Invalid = new TreeTableColumnSeparator (-1);
 	}
 }

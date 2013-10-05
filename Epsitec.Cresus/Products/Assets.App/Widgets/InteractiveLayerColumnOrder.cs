@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				this.dragInitialMouse = pos.X;
 				this.dragInitialRect = this.GetColumnRect (this.detectedColumnRank);
-				this.dragDstRank = new TreeTableColumnSeparator ();
+				this.dragDstRank = TreeTableColumnSeparator.Invalid;
 			}
 		}
 
@@ -47,25 +47,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				this.dragDstRank = this.DetectColumnDst (pos);
 
-				if (this.dragDstRank.Rank == this.detectedColumnRank ||  // aucun sens si drag juste avant
-					this.dragDstRank.Rank == this.detectedColumnRank+1)  // aucun sens si drag juste après
+				bool dockToLeft = this.detectedColumnRank < this.DockToLeftCount;
+				if (!this.dragDstRank.IsValidDrag (this.detectedColumnRank, dockToLeft))
 				{
-					this.dragDstRank = new TreeTableColumnSeparator ();
+					this.dragDstRank = TreeTableColumnSeparator.Invalid;
 				}
 
-				var x = this.GetSeparatorX (this.dragDstRank.Rank);
-
-				if (this.dragDstRank.Left)
-				{
-					x -= 5;
-				}
-
-				if (this.dragDstRank.Right)
-				{
-					x += 5;
-				}
-
-				this.UpdateForeground (this.dragInitialRect, rect, x, this.dragInitialRect.Width);
+				this.UpdateForeground (this.dragInitialRect, rect, this.dragDstRank, this.dragInitialRect.Width);
 			}
 			else
 			{
@@ -138,9 +126,25 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 						if (pos.X >= x1 && pos.X < xm)
 						{
-							if (i == this.DockToLeftCount)  // sur la frontière left-scrollable ?
+							if (i == 0 && this.DockToLeftCount == 0)
 							{
-								//	On est à droite de la frontière left-scrollable.
+								//	Cas particulier où le conteneur de gauche est vide et où on
+								//	cherche à y revenir.
+								if (pos.X < 10)
+								{
+									//	On va revenir dans le conteneur de gauche.
+									return new TreeTableColumnSeparator (0, -1);
+								}
+								else
+								{
+									//	On va tout à gauche du conteneur scrollable.
+									return new TreeTableColumnSeparator (0);
+								}
+							}
+
+							if (i == this.DockToLeftCount)  // sur la frontière left|scrollable ?
+							{
+								//	On est à droite de la frontière left|scrollable.
 								return new TreeTableColumnSeparator (i, 1);
 							}
 							else
@@ -151,9 +155,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 						if (pos.X >= xm && pos.X < x2)
 						{
-							if (i+1 == this.DockToLeftCount)  // sur la frontière left-scrollable ?
+							if (i+1 == this.DockToLeftCount)  // sur la frontière left|scrollable ?
 							{
-								//	On est à gauche de la frontière left-scrollable.
+								//	On est à gauche de la frontière left|scrollable.
 								return new TreeTableColumnSeparator (i+1, -1);
 							}
 							else
@@ -167,7 +171,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return new TreeTableColumnSeparator (this.ColumnCount);
 			}
 
-			return new TreeTableColumnSeparator ();
+			return TreeTableColumnSeparator.Invalid;
 		}
 
 		private int DetectColumnSrc(Point pos)
@@ -223,7 +227,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private void UpdateForeground(Rectangle src, Rectangle dst, double? dstX, double dstWidth)
+		private void UpdateForeground(Rectangle src, Rectangle headerDst, TreeTableColumnSeparator dst, double dstWidth)
 		{
 			this.foreground.ClearZones ();
 
@@ -235,48 +239,78 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.foreground.AddSurface (src, Color.FromAlphaRgb (0.8, 1.0, 1.0, 1.0));
 			}
 
-			if (dst.IsValid)
+			if (headerDst.IsValid)
 			{
 				//	L'en-tête destination est dessinée pour ressembler au maximum
 				//	à une en-tête normale.
 				var color = Color.FromAlphaColor (0.8, ColorManager.TreeTableBackgroundColor);
-				this.foreground.AddSurface (dst, color);
+				this.foreground.AddSurface (headerDst, color);
 
 				//	On dessine un rectangle plus foncé autour.
-				dst.Deflate (0.5);
+				headerDst.Deflate (0.5);
 				color = ColorManager.TreeTableBackgroundColor.Delta (-0.3);
-				this.foreground.AddOutline (dst, color);
+				this.foreground.AddOutline (headerDst, color);
 			}
 
-			if (dstX.HasValue)
+			if (dst.IsValid)
 			{
-				var rect = this.GetSeparatorRect (dstX.Value, (int) (dstWidth/2));
-				rect.Deflate (0, 0, this.HeaderHeight, 0);
+				var x = this.GetSeparatorX (dst.Rank);
 
-				//	Ligne traitillée centrale.
-				var line = new DashedPath ();
-				line.AddDash (4, 4);
-				line.MoveTo (dstX.Value+0.5, rect.Top-20);
-				line.LineTo (dstX.Value+0.5, rect.Bottom);
-				var dash = line.GenerateDashedPath ();
+				if (x.HasValue)
+				{
+					if (dst.Rank == 0 && this.DockToLeftCount == 0)
+					{
+						//	Cas particulier où le conteneur de gauche est vide et où on
+						//	cherche à y revenir.
+						x += 5;
+					}
 
-				//	Flèche vers le bas.
-				var path = new Path ();
-				path.MoveTo (dstX.Value, rect.Top-20);
-				path.LineTo (dstX.Value-20, rect.Top);
-				path.LineTo (dstX.Value- 8, rect.Top);
-				path.LineTo (dstX.Value- 8, rect.Top+this.HeaderHeight);
-				path.LineTo (dstX.Value+10, rect.Top+this.HeaderHeight);
-				path.LineTo (dstX.Value+10, rect.Top);
-				path.LineTo (dstX.Value+20, rect.Top);
-				path.Close ();
+					if (dst.Left)
+					{
+						x -= 5;
+					}
 
-				//?this.foreground.AddSurface (rect, Color.FromAlphaRgb (0.9, 0.9, 0.9, 0.9));
-				this.foreground.AddOutline (dash, ColorManager.TextColor);
-				this.foreground.AddSurface (path, ColorManager.HoverColor);
+					if (dst.Right)
+					{
+						x += 5;
+					}
+
+					//	Ligne traitillée centrale.
+					var line = new DashedPath ();
+					line.AddDash (2, 4);
+					line.MoveTo (x.Value+0.5, this.foreground.ActualHeight - this.HeaderHeight - 20);
+					line.LineTo (x.Value+0.5, 0);
+					var dash = line.GenerateDashedPath ();
+
+					this.foreground.AddOutline (dash, ColorManager.TextColor);
+
+					//	Flèche vers le bas.
+					var path = this.ArrowDown (x.Value);
+					this.foreground.AddSurface (path, ColorManager.HoverColor);
+				}
 			}
 
 			this.foreground.Invalidate ();
+		}
+
+		public Path ArrowDown(double x)
+		{
+			var path = new Path ();
+
+			var y1 = this.foreground.ActualHeight;
+			var y2 = this.foreground.ActualHeight - this.HeaderHeight;
+			var y3 = this.foreground.ActualHeight - this.HeaderHeight - 20;
+
+			path.MoveTo (x,    y3);
+			path.LineTo (x-20, y2);
+			path.LineTo (x- 8, y2);
+			path.LineTo (x- 8, y1);
+			path.LineTo (x+10, y1);
+			path.LineTo (x+10, y2);
+			path.LineTo (x+20, y2);
+			path.Close ();
+
+			return path;
 		}
 
 		private void UpdateForeground(Rectangle rect)
