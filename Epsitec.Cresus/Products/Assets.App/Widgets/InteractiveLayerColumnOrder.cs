@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				this.dragInitialMouse = pos.X;
 				this.dragInitialRect = this.GetColumnRect (this.detectedColumnRank);
-				this.dragDstRank = -1;
+				this.dragDstRank = new TreeTableColumnSeparator ();
 			}
 		}
 
@@ -47,13 +47,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				this.dragDstRank = this.DetectColumnDst (pos);
 
-				if (this.dragDstRank == this.detectedColumnRank ||  // aucun sens si drag juste avant
-					this.dragDstRank == this.detectedColumnRank+1)  // aucun sens si drag juste après
+				if (this.dragDstRank.Rank == this.detectedColumnRank ||  // aucun sens si drag juste avant
+					this.dragDstRank.Rank == this.detectedColumnRank+1)  // aucun sens si drag juste après
 				{
-					this.dragDstRank = -1;
+					this.dragDstRank = new TreeTableColumnSeparator ();
 				}
 
-				var x = this.GetSeparatorX (this.dragDstRank);
+				var x = this.GetSeparatorX (this.dragDstRank.Rank);
+
+				if (this.dragDstRank.Left)
+				{
+					x -= 5;
+				}
+
+				if (this.dragDstRank.Right)
+				{
+					x += 5;
+				}
+
 				this.UpdateForeground (this.dragInitialRect, rect, x, this.dragInitialRect.Width);
 			}
 			else
@@ -72,7 +83,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.isDragging = false;
 				this.ClearForeground ();
 
-				if (this.dragDstRank != -1)
+				if (this.dragDstRank.IsValid)
 				{
 					this.ChangeColumnOrder (this.detectedColumnRank, this.dragDstRank);
 				}
@@ -112,33 +123,49 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private int DetectColumnDst(Point pos)
+		private TreeTableColumnSeparator DetectColumnDst(Point pos)
 		{
 			if (pos.Y >= 0 && pos.Y < this.foreground.ActualHeight)
 			{
-				double x1 = 0;
-
 				for (int i=0; i<this.ColumnCount; i++)
 				{
-					double? x = this.GetSeparatorX (i+1);  // une frontière droite
+					double? x1 = this.GetSeparatorX (i+0);  // une frontière gauche
+					double? x2 = this.GetSeparatorX (i+1);  // une frontière droite
 
-					if (x.HasValue)
+					if (x1.HasValue && x2.HasValue)
 					{
-						var x2 = x.Value;
+						var xm = (x1+x2)/2;
 
-						if (pos.X < (x1+x2)/2)
+						if (pos.X >= x1 && pos.X < xm)
 						{
-							return i;
+							if (i == this.DockToLeftCount)
+							{
+								return new TreeTableColumnSeparator (i, 1);
+							}
+							else
+							{
+								return new TreeTableColumnSeparator (i);
+							}
 						}
 
-						x1 = x2;
+						if (pos.X >= xm && pos.X < x2)
+						{
+							if (i+1 == this.DockToLeftCount)
+							{
+								return new TreeTableColumnSeparator (i+1, -1);
+							}
+							else
+							{
+								return new TreeTableColumnSeparator (i+1);
+							}
+						}
 					}
 				}
 
-				return this.ColumnCount;
+				return new TreeTableColumnSeparator (this.ColumnCount);
 			}
 
-			return -1;
+			return new TreeTableColumnSeparator ();
 		}
 
 		private int DetectColumnSrc(Point pos)
@@ -267,6 +294,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private int								detectedColumnRank;
 		private double							dragInitialMouse;
 		private Rectangle						dragInitialRect;
-		private int								dragDstRank;
+		private TreeTableColumnSeparator		dragDstRank;
 	}
 }

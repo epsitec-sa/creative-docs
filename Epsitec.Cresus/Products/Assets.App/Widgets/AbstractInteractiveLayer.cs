@@ -154,9 +154,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected void ChangeColumnOrder(int columnSrc, int separatorDst)
+		protected void ChangeColumnOrder(int columnSrc, TreeTableColumnSeparator separatorDst)
 		{
 			this.treeTable.ChangeColumnOrder (columnSrc, separatorDst);
+		}
+
+		protected int DockToLeftCount
+		{
+			get
+			{
+				return this.treeTable.DockToLeftCount;
+			}
 		}
 
 		protected int ColumnCount

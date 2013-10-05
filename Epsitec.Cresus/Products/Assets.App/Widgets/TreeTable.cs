@@ -125,7 +125,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public List<AbstractTreeTableColumn> TreeTableColumns
+		public int								DockToLeftCount
+		{
+			get
+			{
+				return this.dockToLeftCount;
+			}
+		}
+
+		public List<AbstractTreeTableColumn>	TreeTableColumns
 		{
 			get
 			{
@@ -149,19 +157,29 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.CreateColumns ();
 		}
 
-		public void ChangeColumnOrder(int columnSrc, int separatorDst)
+		public void ChangeColumnOrder(int columnSrc, TreeTableColumnSeparator separatorDst)
 		{
 			//	Change l'ordre des colonnes en déplaçant une colonne vers la gauche
 			//	ou vers la droite. On modifie simplement le 'mapping', puis on
 			//	reconstruit le tableau.
-			bool srcDockToLeft = (columnSrc    < this.dockToLeftCount);
-			bool dstDockToLeft = (separatorDst < this.dockToLeftCount);
+			bool srcDockToLeft = (columnSrc < this.dockToLeftCount);
+			bool dstDockToLeft = (separatorDst.Rank < this.dockToLeftCount);
 
-			if (separatorDst < columnSrc)  // déplacement vers la gauche ?
+			if (separatorDst.Left)
+			{
+				dstDockToLeft = true;
+			}
+
+			if (separatorDst.Right)
+			{
+				dstDockToLeft = false;
+			}
+
+			if (separatorDst.Rank < columnSrc)  // déplacement vers la gauche ?
 			{
 				int x = this.columnsMapper[columnSrc];
 				this.columnsMapper.RemoveAt (columnSrc);
-				this.columnsMapper.Insert (separatorDst, x);
+				this.columnsMapper.Insert (separatorDst.Rank, x);
 
 				if (!srcDockToLeft && dstDockToLeft)
 				{
@@ -172,7 +190,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				int x = this.columnsMapper[columnSrc];
 				this.columnsMapper.RemoveAt (columnSrc);
-				this.columnsMapper.Insert (separatorDst-1, x);
+				this.columnsMapper.Insert (separatorDst.Rank-1, x);
 
 				if (srcDockToLeft && !dstDockToLeft)
 				{
