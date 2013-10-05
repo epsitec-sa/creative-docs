@@ -129,8 +129,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				for (int i=0; i<this.ColumnCount; i++)
 				{
-					double? x1 = this.GetSeparatorX (i+0);  // une frontière gauche
-					double? x2 = this.GetSeparatorX (i+1);  // une frontière droite
+					double? x1 = this.GetSeparatorX (i+0);  // frontière gauche
+					double? x2 = this.GetSeparatorX (i+1);  // frontière droite
 
 					if (x1.HasValue && x2.HasValue)
 					{
@@ -138,8 +138,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 						if (pos.X >= x1 && pos.X < xm)
 						{
-							if (i == this.DockToLeftCount)
+							if (i == this.DockToLeftCount)  // sur la frontière left-scrollable ?
 							{
+								//	On est à droite de la frontière left-scrollable.
 								return new TreeTableColumnSeparator (i, 1);
 							}
 							else
@@ -150,8 +151,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 						if (pos.X >= xm && pos.X < x2)
 						{
-							if (i+1 == this.DockToLeftCount)
+							if (i+1 == this.DockToLeftCount)  // sur la frontière left-scrollable ?
 							{
+								//	On est à gauche de la frontière left-scrollable.
 								return new TreeTableColumnSeparator (i+1, -1);
 							}
 							else

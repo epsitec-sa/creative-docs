@@ -165,6 +165,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			bool srcDockToLeft = (columnSrc < this.dockToLeftCount);
 			bool dstDockToLeft = (separatorDst.Rank < this.dockToLeftCount);
 
+			//	Si on est sur la frontière des conteneurs left-scrollable, on force
+			//	la destination dans la bonne direction.
 			if (separatorDst.Left)
 			{
 				dstDockToLeft = true;
