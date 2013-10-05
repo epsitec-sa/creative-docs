@@ -8,13 +8,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TreeTableColumnDescription
 	{
-		public TreeTableColumnDescription(TreeTableColumnType type = TreeTableColumnType.String, int width = 100, string header = null, string footer = null, bool dockToLeft = false)
+		public TreeTableColumnDescription(TreeTableColumnType type = TreeTableColumnType.String, int width = 100, string header = null, string footer = null)
 		{
 			this.Type       = type;
 			this.Width      = width;
 			this.Header     = header;
 			this.Footer     = footer;
-			this.DockToLeft = dockToLeft;
 		}
 
 
@@ -22,7 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public readonly int						Width;
 		public readonly string					Header;
 		public readonly string					Footer;
-		public readonly bool					DockToLeft;
 
 		
 		public override string ToString()
@@ -62,7 +60,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			System.Diagnostics.Debug.Assert (column != null);
 
-			column.DockToLeft        = description.DockToLeft;
 			column.PreferredWidth    = description.Width;
 			column.HeaderDescription = description.Header;
 			column.FooterDescription = description.Footer;

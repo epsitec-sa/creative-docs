@@ -96,9 +96,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public void SetColumns(TreeTableColumnDescription[] descriptions)
+		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
 		{
-			this.treeTable.SetColumns (descriptions);
+			this.treeTable.SetColumns (descriptions, dockToLeftCount);
 		}
 
 		public void SetColumnCells(int rank, TreeTableCellTree[] cells)

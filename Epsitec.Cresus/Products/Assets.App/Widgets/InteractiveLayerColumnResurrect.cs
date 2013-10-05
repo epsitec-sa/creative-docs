@@ -133,15 +133,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					}
 					else
 					{
-						var r = rect;
-						r.Deflate (0.5);
-
 						var line = new DashedPath ();
-						line.AddDash (1, 3);
-						line.AppendRectangle (r);
+						line.AddDash (6, 3);
+						line.MoveTo (rect.Center.X, rect.Bottom);
+						line.LineTo (rect.Center.X, rect.Top);
 						var dash = line.GenerateDashedPath ();
 
-						this.foreground.AddOutline (dash, ColorManager.TextColor, 1, CapStyle.Butt);
+						this.foreground.AddOutline (dash, ColorManager.TextColor, 2, CapStyle.Butt);
 					}
 				}
 			}

@@ -431,7 +431,7 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			this.treeTableController.CreateUI (frame, footerHeight: 0);
-			this.treeTableController.SetColumns (AssetsApplication.GetColumns ());
+			this.treeTableController.SetColumns (AssetsApplication.GetColumns (), 2);
 			this.UpdateTreeTableController ();
 
 			this.treeTableController.RowClicked += delegate (object sender, int column, int row)
@@ -467,9 +467,8 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			var list = new List<TreeTableColumnDescription> ();
 
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,    200, "Objet", dockToLeft: true));
-//			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,    200, "Objet"));
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   50, "N°", dockToLeft: true));
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,    200, "Objet"));
+			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   50, "N°"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  120, "Responsable"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   60, "Couleur"));
 			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  200, "Numéro de série"));

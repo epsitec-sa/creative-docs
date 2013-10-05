@@ -133,9 +133,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public void SetColumns(TreeTableColumnDescription[] descriptions)
+		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
 		{
 			this.columnDescriptions = descriptions;
+			this.dockToLeftCount = dockToLeftCount;
 
 			this.columnsMapper.Clear ();
 
@@ -184,13 +185,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				this.treeTableColumns.Add (column);
 
-				if (description.DockToLeft)
+				if (i < this.dockToLeftCount)
 				{
+					column.DockToLeft = true;
 					column.Dock = DockStyle.Left;
 					this.leftContainer.Children.Add (column);
 				}
 				else
 				{
+					column.DockToLeft = false;
 					column.Dock = DockStyle.Left;
 					this.columnsContainer.Viewport.Children.Add (column);
 				}
@@ -464,6 +467,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private readonly List<AbstractInteractiveLayer> interactiveLayers;
 
 		private TreeTableColumnDescription[]	columnDescriptions;
+		private int								dockToLeftCount;
 		private int								headerHeight;
 		private int								footerHeight;
 		private int								rowHeight;
