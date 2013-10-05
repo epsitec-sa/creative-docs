@@ -233,8 +233,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var path = new Path ();
 				path.MoveTo (dstX.Value, rect.Top-20);
 				path.LineTo (dstX.Value-20, rect.Top);
-				path.LineTo (dstX.Value-8, rect.Top);
-				path.LineTo (dstX.Value-8, rect.Top+this.HeaderHeight);
+				path.LineTo (dstX.Value- 8, rect.Top);
+				path.LineTo (dstX.Value- 8, rect.Top+this.HeaderHeight);
 				path.LineTo (dstX.Value+10, rect.Top+this.HeaderHeight);
 				path.LineTo (dstX.Value+10, rect.Top);
 				path.LineTo (dstX.Value+20, rect.Top);

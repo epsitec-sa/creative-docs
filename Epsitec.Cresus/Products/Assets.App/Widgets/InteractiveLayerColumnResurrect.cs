@@ -120,9 +120,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					if (hover)
 					{
+						//	Dessine un bouton carré jaune avec un "+".
 						this.foreground.AddSurface (rect, ColorManager.MoveColumnColor);
 						this.foreground.AddOutline (InteractiveLayerColumnResurrect.GetPlusPath (rect), ColorManager.TextColor, 2, CapStyle.Butt);
 
+						//	Dessine une ligne traitillée verticale jusqu'en bas.
 						var line = new DashedPath ();
 						line.AddDash (6, 3);
 						line.MoveTo (rect.Center.X, this.foreground.ActualHeight-this.HeaderHeight);
@@ -133,6 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					}
 					else
 					{
+						//	Dessine une ligne traitillée verticale dans l'en-tête.
 						var line = new DashedPath ();
 						line.AddDash (6, 3);
 						line.MoveTo (rect.Center.X, rect.Bottom);
@@ -153,11 +156,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			rect.Deflate (System.Math.Floor (rect.Height*0.3));
 
-			path.MoveTo (rect.Left, rect.Center.Y);
-			path.LineTo (rect.Right, rect.Center.Y);
+			path.MoveTo (rect.Left,  rect.Center.Y);
+			path.LineTo (rect.Right, rect.Center.Y);  // branche ---
 
 			path.MoveTo (rect.Center.X, rect.Bottom);
-			path.LineTo (rect.Center.X, rect.Top);
+			path.LineTo (rect.Center.X, rect.Top);  // branche |
 
 			return path;
 		}

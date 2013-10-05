@@ -135,6 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
 		{
+			//	Spécifie les colonnes à afficher, et réinitialise le mapping.
 			this.columnDescriptions = descriptions;
 			this.dockToLeftCount = dockToLeftCount;
 
@@ -150,17 +151,34 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public void ChangeColumnOrder(int columnSrc, int separatorDst)
 		{
-			if (separatorDst < columnSrc)
+			//	Change l'ordre des colonnes en déplaçant une colonne vers la gauche
+			//	ou vers la droite. On modifie simplement le 'mapping', puis on
+			//	reconstruit le tableau.
+			bool srcDockToLeft = (columnSrc    < this.dockToLeftCount);
+			bool dstDockToLeft = (separatorDst < this.dockToLeftCount);
+
+			if (separatorDst < columnSrc)  // déplacement vers la gauche ?
 			{
 				int x = this.columnsMapper[columnSrc];
 				this.columnsMapper.RemoveAt (columnSrc);
 				this.columnsMapper.Insert (separatorDst, x);
+
+				if (!srcDockToLeft && dstDockToLeft)
+				{
+					this.dockToLeftCount++;
+				}
 			}
-			else
+			else  // déplacement vers la droite ?
 			{
 				int x = this.columnsMapper[columnSrc];
 				this.columnsMapper.RemoveAt (columnSrc);
 				this.columnsMapper.Insert (separatorDst-1, x);
+
+				if (srcDockToLeft && !dstDockToLeft)
+				{
+					System.Diagnostics.Debug.Assert (this.dockToLeftCount > 0);
+					this.dockToLeftCount--;
+				}
 			}
 
 			this.CreateColumns ();
@@ -169,6 +187,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void CreateColumns()
 		{
+			//	Crée les widgets des différentes colonnes, selon le mapping.
 			this.treeTableColumns.Clear ();
 			this.leftContainer.Children.Clear ();
 			this.columnsContainer.Viewport.Children.Clear ();
@@ -185,19 +204,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				this.treeTableColumns.Add (column);
 
-				if (i < this.dockToLeftCount)
+				if (i < this.dockToLeftCount)  // dans le conteneur fixe de gauche ?
 				{
 					column.DockToLeft = true;
 					column.Dock = DockStyle.Left;
 					this.leftContainer.Children.Add (column);
 				}
-				else
+				else  // dans le conteneur scrollable de droite ?
 				{
 					column.DockToLeft = false;
 					column.Dock = DockStyle.Left;
 					this.columnsContainer.Viewport.Children.Add (column);
 				}
 
+				//	Connecte les événements de la colonne.
 				column.CellHovered += delegate (object sender, int row)
 				{
 					if (!this.HasDraggingLayer)
