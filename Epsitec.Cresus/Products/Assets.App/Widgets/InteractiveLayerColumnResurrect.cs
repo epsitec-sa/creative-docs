@@ -22,8 +22,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public override void MouseDown(Point pos)
 		{
-			pos = this.foreground.MapParentToClient (pos);
-
+			if (this.detectedColumnRank != -1)
+			{
+				this.isDragging = true;
+			}
 		}
 
 		public override void MouseMove(Point pos)
@@ -44,6 +46,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.ResurrectColumn(this.detectedColumnRank, 75);
 				this.ClearActiveHover ();
 			}
+
+			this.isDragging = false;
 		}
 
 

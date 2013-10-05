@@ -58,8 +58,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public override void MouseUp(Point pos)
 		{
-			pos = this.foreground.MapParentToClient (pos);
-
 			if (this.isDragging)
 			{
 				this.isDragging = false;
