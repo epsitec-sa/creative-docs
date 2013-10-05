@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -31,8 +30,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
-			this.SetActiveHover (this.DetectButton (pos));
-			this.SetShowButtons (this.DetectHeader (pos));
+			var show = this.DetectHeader (pos);
+			var rank = this.DetectButton (pos);
+			this.SetActiveHover (show, rank);
 		}
 
 		public override void MouseUp(Point pos)
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (this.detectedColumnRank != -1)
 			{
-				this.ResurrectColumn(this.detectedColumnRank, 50);
+				this.ResurrectColumn(this.detectedColumnRank, 75);
 				this.ClearActiveHover ();
 			}
 		}
@@ -57,24 +57,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public override void ClearActiveHover()
 		{
-			this.SetActiveHover (-1);
-			this.SetShowButtons (false);
+			this.SetActiveHover (false, -1);
 		}
 
-		private void SetActiveHover(int rank)
+		private void SetActiveHover(bool show, int rank)
 		{
-			this.detectedColumnRank = rank;
-		}
-
-		private void SetShowButtons(bool show)
-		{
-			if (this.showButtons != show)
+			if (this.showButtons != show || this.detectedColumnRank != rank)
 			{
 				this.showButtons = show;
+				this.detectedColumnRank = rank;
 
 				if (this.showButtons)
 				{
-					this.UpdateForeground ();
+					this.UpdateForeground (this.detectedColumnRank);
 				}
 				else
 				{
@@ -91,13 +86,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private int DetectButton(Point pos)
 		{
-			var rects = this.ButtonRectangles.ToArray();
+			//	On cherche à l'envers (de droite à gauche), pour ressuciter d'abord
+			//	la dernière colonne compactée.
+			var rects = this.ButtonRectangles.ToArray ();
 
-			for (int i=0; i<rects.Length; i++)
+			for (int i=rects.Length-1; i>=0; i--)
 			{
 				var rect = rects[i];
 
-				if (rect.Contains (pos))
+				if (rect.IsValid && rect.Contains (pos))
 				{
 					return i;
 				}
@@ -107,14 +104,42 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 	
-		private void UpdateForeground()
+		private void UpdateForeground(int hoverRank)
 		{
 			this.foreground.ClearZones ();
 
 			foreach (var rect in this.ButtonRectangles)
 			{
-				this.foreground.AddSurface (rect, ColorManager.MoveColumnColor);
-				this.foreground.AddOutline (InteractiveLayerColumnResurrect.GetPlusPath (rect), ColorManager.TextColor, 2, CapStyle.Butt);
+				bool hover = (hoverRank-- == 0);
+
+				if (rect.IsValid)
+				{
+					if (hover)
+					{
+						this.foreground.AddSurface (rect, ColorManager.MoveColumnColor);
+						this.foreground.AddOutline (InteractiveLayerColumnResurrect.GetPlusPath (rect), ColorManager.TextColor, 2, CapStyle.Butt);
+
+						var line = new DashedPath ();
+						line.AddDash (4, 4);
+						line.MoveTo (rect.Center.X+0.5, this.foreground.ActualHeight-this.HeaderHeight);
+						line.LineTo (rect.Center.X+0.5, 0);
+						var dash = line.GenerateDashedPath ();
+
+						this.foreground.AddOutline (dash, ColorManager.TextColor);
+					}
+					else
+					{
+						var r = rect;
+						r.Deflate (0.5);
+
+						var line = new DashedPath ();
+						line.AddDash (1, 3);
+						line.AppendRectangle (r);
+						var dash = line.GenerateDashedPath ();
+
+						this.foreground.AddOutline (dash, ColorManager.TextColor, 1, CapStyle.Butt);
+					}
+				}
 			}
 
 			this.foreground.Invalidate ();
@@ -124,7 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			var path = new Path ();
 
-			rect.Deflate (4.0);
+			rect.Deflate (System.Math.Floor (rect.Height*0.3));
 
 			path.MoveTo (rect.Left, rect.Center.Y);
 			path.LineTo (rect.Right, rect.Center.Y);
@@ -138,61 +163,41 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void ResurrectColumn(int rank, int width)
 		{
-			for (int i=0; i<this.ColumnCount; i++)
-			{
-				var column = this.GetColumn (i);
+			this.GetColumn (rank).PreferredWidth = width;
 
-				if (column.ActualWidth == 0)
-				{
-					if (rank-- == 0)
-					{
-						this.GetColumn (i).PreferredWidth = width;
-						break;
-					}
-				}
-			}
+			//	Comme GetSeparatorX est basé sur la géométrie actuellle (ActualBounds) et 
+			//	non préférée (PreferredWidth), il est nécessaire de forcer le mise à jour
+			//	du layout.
+			this.foreground.Window.ForceLayout ();
 		}
 
 		private IEnumerable<Rectangle> ButtonRectangles
 		{
-			get
-			{
-				foreach (var rank in this.NullColumns)
-				{
-					var x = this.GetSeparatorX (rank);
-
-					if (x.HasValue)
-					{
-						yield return new Rectangle (
-							x.Value,
-							this.foreground.ActualHeight-InteractiveLayerColumnResurrect.size,
-							InteractiveLayerColumnResurrect.size,
-							InteractiveLayerColumnResurrect.size);
-					}
-				}
-			}
-		}
-
-		private IEnumerable<int> NullColumns
-		{
+			//	Retourne un rectangle par colonne. Les colonnes non nulles retournent
+			//	un rectangle vide.
 			get
 			{
 				for (int i=0; i<this.ColumnCount; i++)
 				{
 					var column = this.GetColumn (i);
+					var x = this.GetSeparatorX (i);
 
-					if (column.PreferredWidth == 0)
+					if (column.PreferredWidth == 0 && x.HasValue)
 					{
-						yield return i+1;
+						var h = this.HeaderHeight;
+						var y = this.foreground.ActualHeight-h;
+						yield return new Rectangle (x.Value-h/2, y, h, h);
+					}
+					else
+					{
+						yield return Rectangle.Empty;
 					}
 				}
 			}
 		}
 
 
-		private static readonly int size = 16;
-
-		private int								detectedColumnRank;
 		private bool							showButtons;
+		private int								detectedColumnRank;
 	}
 }

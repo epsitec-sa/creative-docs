@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return new Rectangle (x-thickness, 0, thickness*2+1, this.foreground.ActualHeight);
 		}
 
-		protected double? GetSeparatorX(int rank)
+		protected double? GetSeparatorX(int sepRank)
 		{
 			//	Retourne la position d'une frontière. S'il existe n colonnes, on peut
 			//	obtenir les positions 0..n (0 = tout à gauche, n = tout à droite).
@@ -114,17 +114,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//
 			//	0     1     2     3     4  <-- rangs des frontières
 
-			if (rank != -1)
+			if (sepRank != -1)
 			{
-				if (rank == 0)  // tout à gauche ?
+				if (sepRank == 0)  // tout à gauche ?
 				{
 					var column = this.GetColumn (0);
 					return column.ActualBounds.Left;
 				}
 				else  // cherche une frontière droite ?
 				{
-					rank--;  // 0..n-1
-					var column = this.GetColumn (rank);
+					sepRank--;  // 0..n-1
+					var column = this.GetColumn (sepRank);
 
 					if (column.DockToLeft)
 					{
@@ -135,11 +135,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						double offset = this.ColumnsContainer.ViewportOffsetX;
 						double position = column.ActualBounds.Right;
 
-						if (position > offset)
+						if (position >= offset)
 						{
 							var x = this.ColumnsContainer.ActualBounds.Left - offset + position;
 
-							if (rank == this.ColumnCount-1)  // dernière colonne ?
+							if (sepRank == this.ColumnCount-1)  // dernière colonne ?
 							{
 								x -= 2;  // pour ne pas être sous l'ascenseur vertical
 							}

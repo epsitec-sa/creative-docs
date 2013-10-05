@@ -249,6 +249,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			AbstractInteractiveLayer draggingLayer = null;
 
+			//	Essaie de démarrer le drag d'une surcouche.
 			for (int i=this.interactiveLayers.Count-1; i>=0; i--)
 			{
 				var layer = this.interactiveLayers[i];
@@ -262,6 +263,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
+			//	Si une surcouche a démarré un drag, on clear toutes les autres.
 			if (draggingLayer != null)
 			{
 				foreach (var layer in this.interactiveLayers.Where (x => x != draggingLayer))
@@ -275,8 +277,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			var draggingLayer = this.DraggingLayer;
 
-			if (draggingLayer == null)
+			if (draggingLayer == null)  // pas de drag en cours ?
 			{
+				//	Fait bouger le hover d'une surcouche.
 				for (int i=this.interactiveLayers.Count-1; i>=0; i--)
 				{
 					var layer = this.interactiveLayers[i];
@@ -285,6 +288,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					if (layer.HasActiveHover)
 					{
+						//	Dès qu'une surcouche a réagi, on clear celles qui sont en dessous.
 						for (int j=i-1; j>=0; j--)
 						{
 							this.interactiveLayers[j].ClearActiveHover ();
@@ -294,8 +298,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					}
 				}
 			}
-			else
+			else  // drag en cours ?
 			{
+				//	Fait bouger uniquement la surcouche en cours de drag.
 				draggingLayer.MouseMove (pos);
 			}
 		}

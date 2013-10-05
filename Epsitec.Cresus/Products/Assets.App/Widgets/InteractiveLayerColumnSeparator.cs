@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -18,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public InteractiveLayerColumnSeparator(TreeTable treeTable)
 			: base (treeTable)
 		{
-			this.detectedColumnRank = -1;
+			this.detectedSeparatorRank = -1;
 		}
 
 
@@ -26,11 +25,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			pos = this.foreground.MapParentToClient (pos);
 
-			if (this.detectedColumnRank != -1)
+			if (this.detectedSeparatorRank != -1)
 			{
 				this.isDragging = true;
 
-				int rank = this.detectedColumnRank;
+				int rank = this.detectedSeparatorRank;
 				this.dragInitialMouse = pos.X;
 				this.dragInitialLeft = this.GetSeparatorX (rank).Value - this.GetColumn (rank-1).ActualWidth;
 				this.dragInitialWidth = this.GetColumn (rank-1).ActualWidth;
@@ -45,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var delta = pos.X - this.dragInitialMouse;
 				var width = System.Math.Max (this.dragInitialWidth + delta, 0.0);
-				this.GetColumn (this.detectedColumnRank-1).PreferredWidth = width;
+				this.GetColumn (this.detectedSeparatorRank-1).PreferredWidth = width;
 
 				var x = this.dragInitialLeft + width;
 				this.UpdateForeground (x);
@@ -73,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.detectedColumnRank != -1;
+				return this.detectedSeparatorRank != -1;
 			}
 		}
 
@@ -84,13 +83,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void SetActiveHover(int rank)
 		{
-			if (rank != this.detectedColumnRank)
+			if (rank != this.detectedSeparatorRank)
 			{
-				this.detectedColumnRank = rank;
+				this.detectedSeparatorRank = rank;
 
-				if (this.detectedColumnRank != -1)
+				if (this.detectedSeparatorRank != -1)
 				{
-					var x = this.GetSeparatorX (this.detectedColumnRank);
+					var x = this.GetSeparatorX (this.detectedSeparatorRank);
 					this.UpdateForeground (x);
 				}
 				else
@@ -137,7 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private int								detectedColumnRank;
+		private int								detectedSeparatorRank;
 		private double							dragInitialMouse;
 		private double							dragInitialLeft;
 		private double							dragInitialWidth;
