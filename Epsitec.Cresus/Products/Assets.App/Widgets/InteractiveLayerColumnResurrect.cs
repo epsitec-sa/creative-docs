@@ -124,12 +124,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						this.foreground.AddOutline (InteractiveLayerColumnResurrect.GetPlusPath (rect), ColorManager.TextColor, 2, CapStyle.Butt);
 
 						var line = new DashedPath ();
-						line.AddDash (4, 4);
-						line.MoveTo (rect.Center.X+0.5, this.foreground.ActualHeight-this.HeaderHeight);
-						line.LineTo (rect.Center.X+0.5, 0);
+						line.AddDash (6, 3);
+						line.MoveTo (rect.Center.X, this.foreground.ActualHeight-this.HeaderHeight);
+						line.LineTo (rect.Center.X, 0);
 						var dash = line.GenerateDashedPath ();
 
-						this.foreground.AddOutline (dash, ColorManager.TextColor);
+						this.foreground.AddOutline (dash, ColorManager.TextColor, 2, CapStyle.Butt);
 					}
 					else
 					{
