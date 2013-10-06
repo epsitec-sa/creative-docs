@@ -57,6 +57,10 @@ namespace Epsitec.Aider.Data.ECh
 		public readonly PersonMaritalStatus MaritalStatus;
 
 
+		public override string ToString()
+		{
+			return string.Format ("{0} {1}, {2} {3} {4}", this.Id, this.OfficialName, this.FirstNames, this.DateOfBirth, this.MaritalStatus);
+		}
 	}
 
 

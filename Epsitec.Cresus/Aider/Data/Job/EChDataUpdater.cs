@@ -65,6 +65,8 @@ namespace Epsitec.Aider.Data.Job
 
 					this.PrepareHashSetForAnalytics ();
 
+					this.DumpCollections (System.IO.Path.Combine (System.IO.Path.GetDirectoryName (reportFile), System.IO.Path.GetFileNameWithoutExtension (reportFile)));
+					
 					this.LogToConsole (time2, "analysis done");
 				}
 
@@ -74,6 +76,37 @@ namespace Epsitec.Aider.Data.Job
 			{
 				throw new System.Exception ("Failed to load ECh files");
 			}
+		}
+
+		private void DumpCollections(string reportFile)
+		{
+			this.Dump (reportFile + ".pcreate.txt", this.personsToCreate);
+			this.Dump (reportFile + ".premove.txt", this.personsToRemove);
+			this.Dump (reportFile + ".pupdate.txt", this.personsToUpdate);
+			this.Dump (reportFile + ".hcreate.txt", this.houseHoldsToCreate);
+			this.Dump (reportFile + ".hremove.txt", this.houseHoldsToRemove);
+			this.Dump (reportFile + ".hupdate.txt", this.houseHoldsToUpdate);
+			this.Dump (reportFile + ".hnew.txt", this.newHouseHoldsToCreate);
+			this.Dump (reportFile + ".hmissing.txt", this.missingHouseHoldsToRemove);
+		}
+		private void Dump(string path, List<Change<EChReportedPerson>> list)
+		{
+			System.IO.File.WriteAllLines (path, list.Select (x => x.OldValue.ToString () + " *** " + x.NewValue.ToString ()));
+		}
+
+		private void Dump(string path, List<Change<EChPerson>> list)
+		{
+			System.IO.File.WriteAllLines (path, list.Select (x => x.OldValue.ToString () + " *** " + x.NewValue.ToString ()));
+		}
+
+		private void Dump(string path, List<EChReportedPerson> list)
+		{
+			System.IO.File.WriteAllLines (path, list.Select (x => x.ToString ()));
+		}
+
+		private void Dump(string path, List<EChPerson> list)
+		{
+			System.IO.File.WriteAllLines (path, list.Select (x => x.ToString ()));
 		}
 
 
@@ -97,12 +130,19 @@ namespace Epsitec.Aider.Data.Job
 			this.CreateNewAiderPersons ();
 
 			this.RemoveOldEChReportedPersons ();
-			this.CreateNewEChReportedPersons ();
+			this.CreateNewEChReportedPersons ();			//	houseHoldsToCreate
 			this.CreateNewAiderHouseholds ();	
 
 			this.LogToConsole (time, "done");
 		}
 
+		public void FixBrokenHouseholdAddresses()
+		{
+			var time = this.LogToConsole ("fixing broken household addresses");
+			this.FixNewEChReportedPersons ();
+			this.LogToConsole (time, "done");
+		}
+		
 		public void FixPreviousUpdate()
 		{
 			var time = this.LogToConsole ("fixing last update");
@@ -723,6 +763,50 @@ namespace Epsitec.Aider.Data.Job
 						}					
 					}
 				});
+		}
+
+		private void FixNewEChReportedPersons()
+		{
+			this.LogToConsole ("CreateNewEChReportedPersons()");
+			this.ExecuteWithBusinessContext (
+				businessContext =>
+				{
+					var households = new List<AiderHouseholdEntity> ();
+
+					foreach (var eChReportedPerson in this.houseHoldsToCreate)
+					{
+						var adult1    = this.GetEchPersonEntity (businessContext, eChReportedPerson.Adult1);
+						var person    = this.GetAiderPersonEntity (businessContext, adult1);
+
+						if (person.IsNull ())
+						{
+							this.LogToConsole ("COHERENCE ERROR - Person not found: {0}", eChReportedPerson.Adult1.ToString ());
+							continue;
+						}
+
+						if (person.HouseholdContact.IsNull ())
+						{
+							this.LogToConsole ("COHERENCE ERROR - Person has no household: {0}", eChReportedPerson.Adult1.ToString ());
+							continue;
+						}
+						
+						var household        = person.HouseholdContact.Household;
+						var householdAddress = household.Address;
+						var rchAddress       = eChReportedPerson.Address;
+
+						var postal1 = householdAddress.GetPostalAddress ().ToSimpleText ().Replace ("\n", ", ");
+						var postal2 = rchAddress.GetSwissPostalAddress ().ToSimpleText ().Replace ("\n", ", ");
+
+						if (postal1.EndsWith (postal2) == false)
+						{
+//							this.LogToConsole ("{0}: {1} > {2}", eChReportedPerson.FamilyKey, postal1, postal2);
+							households.Add (household);
+						}
+					}
+
+					this.LogToConsole ("Identified {0} households which need fixing...", households.Distinct ().Count ());
+				}
+			);
 		}
 
 		private void CreateNewEChReportedPersons()

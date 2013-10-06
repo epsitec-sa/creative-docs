@@ -77,6 +77,10 @@ namespace Epsitec.Aider.Data.ECh
 		public readonly string FamilyKey;
 
 
+		public override string ToString()
+		{
+			return string.Format ("{0} {1} > {2}", this.FamilyKey, this.Address.ToString (), string.Join (" | ", this.GetMembers ().Select (x => x.ToString ())));
+		}
 	}
 
 
