@@ -38,11 +38,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
+			var person  = this.Entity;
+			var date    = person.eCH_Person.PersonDateOfDeath ?? Date.Today;
+			
 			form.Title ("Marque la personne comme décédée")
 				.Text ("Attention: cette opération est irréversible.")
 				.Field<Date> ()
 					.Title ("Date du décès")
-					.InitialValue (Date.Today)
+					.InitialValue (date)
 				.End ();
 		}
 	}

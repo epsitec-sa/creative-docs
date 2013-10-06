@@ -51,17 +51,23 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			AiderPersonEntity.KillPerson (this.BusinessContext, person, date);
 
-			this.ClearWarningAndRefreshCaches ();
+		//	No need to clear the warning -- killing the person removes all warnings...
+		//	this.ClearWarningAndRefreshCaches ();
 		}
 
 
 		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
 		{
+			var warning = this.Entity;
+			var person  = warning.Person;
+			var date    = person.eCH_Person.PersonDateOfDeath ?? Date.Today;
+
 			form
 				.Title ("Marquer la personne comme décédée")
+				.Text ("Attention: cette opération est irréversible.")
 				.Field<Date> ()
-					.Title ("Date de décès")
-					.InitialValue (Date.Today)
+					.Title ("Date du décès")
+					.InitialValue (date)
 				.End ()
 			.End ();           
 		}
