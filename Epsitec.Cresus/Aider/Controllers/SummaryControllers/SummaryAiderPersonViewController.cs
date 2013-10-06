@@ -40,8 +40,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick ()
 				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator))
 				.Icon (this.Entity.GetIconName ("Data"))
-				.Title (x => TextFormatter.FormatText ("Détails techniques"))
-				.Text (x => x.eCH_Person.GetSummary ());
+				.Title (x => TextFormatter.FormatText ("Détails techniques du RCH"))
+				.Text (x => SummaryAiderPersonViewController.GetTechnicalSummary (x));
 
 			wall.AddBrick (x => x.ParishGroup)
 				.Icon ("Data.AiderGroup.Parish")
@@ -99,6 +99,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);
+		}
+		
+		private static FormattedText GetTechnicalSummary(AiderPersonEntity person)
+		{
+			return TextFormatter.FormatText (person.eCH_Person.GetSummary (), "~\n \n~",
+				person.eCH_Person.ReportedPerson1.Address.GetSummary (), "~\n \n~",
+				person.eCH_Person.ReportedPerson2.Address.GetSummary ());
 		}
 	}
 }

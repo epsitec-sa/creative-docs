@@ -22,7 +22,7 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			var lines = this.GetConcanatedAddressLines ("\n");
+			var lines = this.GetJoinedAddressLines ("\n");
 
 			return TextFormatter.FormatText (lines);
 		}
@@ -30,13 +30,13 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			var lines = this.GetConcanatedAddressLines (" ");
+			var lines = this.GetJoinedAddressLines (" ");
 
 			return TextFormatter.FormatText (lines);
 		}
 
 
-		private string GetConcanatedAddressLines(string separator)
+		private string GetJoinedAddressLines(string separator)
 		{
 			return this.GetAddressLines ()
 				.Where (l => !l.IsNullOrWhiteSpace ())
@@ -47,9 +47,22 @@ namespace Epsitec.Aider.Entities
 		private IEnumerable<string> GetAddressLines()
 		{
 			yield return this.AddressLine1;
-			yield return StringUtils.Join (" ", this.StreetUserFriendly, this.HouseNumber);
-			yield return StringUtils.Join (" ", this.SwissZipCode, this.Town);
-			yield return IsoCountryNames.Instance[this.Country];
+
+			if (string.IsNullOrEmpty (this.StreetUserFriendly) == false)
+			{
+				yield return StringUtils.Join (" ", this.StreetUserFriendly, this.HouseNumber);
+			}
+
+			if (string.IsNullOrEmpty (this.Town) == false)
+			{
+				yield return StringUtils.Join (" ", this.SwissZipCode, this.Town);
+			}
+
+			if ((this.Country != "CH") &&
+				(string.IsNullOrEmpty (this.Country) == false))
+			{
+				yield return IsoCountryNames.Instance[this.Country];
+			}
 		}
 		
 		partial void GetStreetUserFriendly(ref string value)

@@ -15,6 +15,7 @@ using Epsitec.Aider.Override;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using System.Linq;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -46,15 +47,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (p => p.GetCompactSummary (this.Entity))
 				.End ();
 
+			var household = this.Entity;
+			var person    = household.Members.FirstOrDefault ();
+
 			if (this.HasUserPowerLevel (UserPowerLevel.Administrator))
 			{
 				var head = this.Entity.Contacts.FirstOrDefault (c => (c.HouseholdRole == HouseholdRole.Head) && (c.Person.IsGovernmentDefined));
 
 				if (head != null)
 				{
-					var list = head.Person.eCH_Person.ReportedPersons;
+					var list = head.Person.eCH_Person.ReportedPersons.SelectMany (x => x.Members).Distinct ();
 
-					foreach (var item in list.SelectMany (x => x.Members))
+					foreach (var item in list)
 					{
 						wall.AddBrick ()
 							.Attribute (BrickMode.DefaultToSummarySubView)

@@ -15,7 +15,7 @@ namespace Epsitec.Aider.Entities
 	{
 		public static FormattedText GetSummary(IAiderWarning warning)
 		{
-			return TextFormatter.FormatText (warning.Title, "~\n~", warning.Description);
+			return TextFormatter.FormatText (warning.Title, "~\n \n~", warning.Description);
 		}
 
 		public static FormattedText GetCompactSummary(IAiderWarning warning)
