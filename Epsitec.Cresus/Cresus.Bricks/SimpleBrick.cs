@@ -21,19 +21,21 @@ namespace Epsitec.Cresus.Bricks
 
 		public SimpleBrick<T> IfCondition(System.Func<bool> predicate)
 		{
-			if (predicate () == false)
-			{
-				this.BrickWall.Remove (this);
-			}
-
-			return this;
+			return this.IfTrue (predicate ());
 		}
 
 		public SimpleBrick<T> IfTrue(bool value)
 		{
 			if (value == false)
 			{
-				this.BrickWall.Remove (this);
+				if (this.HasProperty ())
+				{
+					this.RemoveLastProperty ();
+				}
+				else
+				{
+					this.BrickWall.Remove (this);
+				}
 			}
 
 			return this;
@@ -41,12 +43,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public SimpleBrick<T> IfFalse(bool value)
 		{
-			if (value == true)
-			{
-				this.BrickWall.Remove (this);
-			}
-
-			return this;
+			return this.IfTrue (value == false);
 		}
 
 		public SimpleBrick<T> Name(string value)

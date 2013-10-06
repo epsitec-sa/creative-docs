@@ -311,6 +311,8 @@ namespace Epsitec.Aider.Data.Job
 		{
 			this.LogToConsole ("UpdateHouseholdsAndPropagate(fixPreviousUpdate={0})",fixPreviousUpdate);
 
+			bool exit = false;
+
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -318,8 +320,12 @@ namespace Epsitec.Aider.Data.Job
 					{
 						try
 						{
-
 							var family  = this.GetEchReportedPersonEntity (businessContext, item.NewValue);
+
+							if (exit)
+							{
+								break;
+							}
 
 							if (family.IsNull () && fixPreviousUpdate)
 							{
@@ -327,17 +333,18 @@ namespace Epsitec.Aider.Data.Job
 								continue;
 							}
 
-							//Set old state
 							if (fixPreviousUpdate)
-							{						
-								family.Address.AddressLine1 = item.OldValue.Address.AddressLine1;
-								family.Address.HouseNumber = item.OldValue.Address.HouseNumber;
-								family.Address.Street = item.OldValue.Address.Street ?? "";
+							{
+								//	Restore old state for the eCH family address:
+								
+								family.Address.AddressLine1      = item.OldValue.Address.AddressLine1;
+								family.Address.HouseNumber       = item.OldValue.Address.HouseNumber;
+								family.Address.Street            = item.OldValue.Address.Street ?? "";
 								family.Address.SwissZipCode      = item.OldValue.Address.SwissZipCode;
 								family.Address.SwissZipCodeAddOn = item.OldValue.Address.SwissZipCodeAddOn;
 								family.Address.SwissZipCodeId    = item.OldValue.Address.SwissZipCodeId;
-								family.Address.Town = item.OldValue.Address.Town ?? "";
-								family.Address.Country = item.OldValue.Address.CountryCode ?? "";
+								family.Address.Town              = item.OldValue.Address.Town ?? "";
+								family.Address.Country           = item.OldValue.Address.CountryCode ?? "";
 							}
 			
 							var changes = new List<FormattedText> ();
@@ -395,25 +402,27 @@ namespace Epsitec.Aider.Data.Job
 
 							changes.Add (TextFormatter.FormatText (oldAddress, "\n->\n", newAddress));
 
-							var refPerson      = this.GetAiderPersonEntity (businessContext,family.Adult1);
+							var refPerson               = this.GetAiderPersonEntity (businessContext,family.Adult1);
 							var potentialAiderHousehold = this.GetAiderHousehold (businessContext, refPerson);
 
 							if (potentialAiderHousehold.IsNotNull ())
-							{								
-								//Clean warnings before retry and restore household address
+							{
 								if (fixPreviousUpdate)
 								{
-									//setup old household with old addresse
+									//	Clear past warnings, then retry and restore the household address...
+									
+									//	Setup old ECh household with the previous ECh address
+									
 									var oldEChAddress = new eCH_AddressEntity ()
 									{
-										AddressLine1 = item.OldValue.Address.AddressLine1,
-										HouseNumber = item.OldValue.Address.HouseNumber,
-										Street = item.OldValue.Address.Street ?? "",
+										AddressLine1      = item.OldValue.Address.AddressLine1,
+										HouseNumber       = item.OldValue.Address.HouseNumber,
+										Street            = item.OldValue.Address.Street ?? "",
 										SwissZipCode      = item.OldValue.Address.SwissZipCode,
 										SwissZipCodeAddOn = item.OldValue.Address.SwissZipCodeAddOn,
 										SwissZipCodeId    = item.OldValue.Address.SwissZipCodeId,
-										Town = item.OldValue.Address.Town ?? "",
-										Country = item.OldValue.Address.CountryCode ?? ""
+										Town              = item.OldValue.Address.Town ?? "",
+										Country           = item.OldValue.Address.CountryCode ?? ""
 									};
 
 									var oldEChReportedPerson = new eCH_ReportedPersonEntity ()
@@ -423,22 +432,39 @@ namespace Epsitec.Aider.Data.Job
 
 									this.UpdateAiderHouseholdAddress (businessContext, potentialAiderHousehold, oldEChReportedPerson);
 
-									foreach (var member in family.Members)
-									{
-										var aiderPerson = this.GetAiderPersonEntity (businessContext, member);
+									var persons = family.Members
+										.Select (x => this.GetAiderPersonEntity (businessContext, x))
+										.Concat (potentialAiderHousehold.Members)
+										.Distinct ();
 
-										//Remove previous warnings
-										foreach (var warning in aiderPerson.Warnings)
+									foreach (var aiderPerson in persons)
+									{
+										var warnings = aiderPerson.Warnings.ToArray ();
+
+										foreach (var warning in warnings)
 										{
 											if (warning.WarningType == WarningType.EChAddressChanged || 
 												warning.WarningType == WarningType.ParishArrival || 
 												warning.WarningType == WarningType.ParishDeparture)
 											{
-												aiderPerson.RemoveWarningInternal (warning);
-												businessContext.DeleteEntity (warning);
+												AiderPersonWarningEntity.Delete (businessContext, warning);
 											}
 										}
+
+										//	Never mind history of parish participation -- we probably have none and we want
+										//	to make sure that we clean up the current mess...
+
+										var parishes = aiderPerson.Groups.Where (x => x.Group.IsParish ()).ToList ();
+
+										foreach (var parishParticipation in parishes)
+										{
+											aiderPerson.RemoveParticipationInternal (parishParticipation);
+											businessContext.DeleteEntity (parishParticipation);
+										}
 									}
+									
+									ParishAssigner.AssignToParish (parishAddressRepository, businessContext, persons);
+									
 									//AT THIS POINT WE HAVE RECOVERED OLD STATES -> NOW RETRY TO DO THINGS CORRECTLY
 								}
 

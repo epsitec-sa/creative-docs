@@ -40,8 +40,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			person.Contacts.ForEach (x => x.RefreshCache ());
 			person.Households.ForEach (x => x.RefreshCache ());
 
-			person.RemoveWarningInternal (warning);
-			context.DeleteEntity (warning);
+			AiderPersonWarningEntity.Delete (context, warning);
 
 			ActionAiderPersonWarningViewController.CleanUpEchPerson (person);
 		}

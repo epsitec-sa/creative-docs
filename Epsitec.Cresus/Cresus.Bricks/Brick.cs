@@ -86,6 +86,20 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+		internal void RemoveLastProperty()
+		{
+			var index = this.properties.Count - 1;
+
+			if (index >= 0)
+			{
+				this.properties.RemoveAt (index);
+			}
+		}
+
+		internal bool HasProperty()
+		{
+			return this.properties.Count > 0;
+		}
 
 		internal void DebugDump(string prefix = "")
 		{

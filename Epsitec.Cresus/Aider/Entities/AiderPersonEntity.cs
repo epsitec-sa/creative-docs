@@ -218,6 +218,7 @@ namespace Epsitec.Aider.Entities
 			var contacts       = person.Contacts.ToList ();
 			var households     = person.Households.ToList ();
 			var participations = person.Groups.ToList ();
+			var warnings       = person.Warnings.ToList ();
 
 			person.Visibility = PersonVisibilityStatus.Deceased;
 			person.eCH_Person.PersonDateOfDeath = date;
@@ -231,6 +232,11 @@ namespace Epsitec.Aider.Entities
 			{
 				participation.Contact = deadContact;
 				participation.EndDate = date;
+			}
+
+			foreach (var warning in warnings)
+			{
+				AiderPersonWarningEntity.Delete (businessContext, warning);
 			}
 
 			foreach (var contact in contacts)

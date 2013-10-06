@@ -76,5 +76,13 @@ namespace Epsitec.Aider.Entities
 
 			return warning;
 		}
+
+		public static void Delete(BusinessContext businessContext, AiderPersonWarningEntity warning)
+		{
+			var person = warning.Person;
+			
+			person.RemoveWarningInternal (warning);
+			businessContext.DeleteEntity (warning);
+		}
 	}
 }

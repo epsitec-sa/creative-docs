@@ -90,8 +90,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 				}
 
-				this.Entity.Person.RemoveWarningInternal(this.Entity);
-				this.BusinessContext.DeleteEntity(this.Entity);
+				this.ClearWarningAndRefreshCaches ();
 			}
 
 			var household = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household;
@@ -117,8 +116,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 						break;
 				}
 
-				this.Entity.Person.RemoveWarningInternal(this.Entity);
-				this.BusinessContext.DeleteEntity(this.Entity);
+				this.ClearWarningAndRefreshCaches ();
 			}
 		}
 

@@ -86,6 +86,7 @@ namespace Epsitec.Aider.Data.Common
 				foreach (var subscription in subscriptions)
 				{
 					subscription.RegionalEdition = regionGroup;
+					subscription.RefreshCache ();
 				}
 			}
 		}

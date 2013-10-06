@@ -27,13 +27,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderPersonWarningEntity> wall)
 		{
+			var warning = this.Entity;
+			var person  = warning.Person;
+
+			bool alive = person.IsAlive;
+
 			wall.AddBrick ()
 				.Title (x => x.WarningType)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderPersonWarningViewController1Details))
 				.EnableActionButton<ActionAiderPersonWarningViewController61ProcessDepartureDeceased> ()
-				.EnableActionButton<ActionAiderPersonWarningViewController62ProcessDeparture> ()
-				.EnableActionButton<ActionAiderPersonWarningViewController63ProcessDeparture> ();
+				.EnableActionButton<ActionAiderPersonWarningViewController62ProcessDeparture> ().IfTrue (alive)
+				.EnableActionButton<ActionAiderPersonWarningViewController63ProcessDeparture> ().IfTrue (alive);
 		}
 	}
 }

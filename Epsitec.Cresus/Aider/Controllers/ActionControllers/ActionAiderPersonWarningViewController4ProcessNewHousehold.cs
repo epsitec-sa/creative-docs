@@ -42,8 +42,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(bool createNewHousehold,bool subscribe)
 		{
-			this.Entity.Person.RemoveWarningInternal(this.Entity);
-			this.BusinessContext.DeleteEntity(this.Entity);
+			this.ClearWarningAndRefreshCaches ();
 
 			if (createNewHousehold)
 			{

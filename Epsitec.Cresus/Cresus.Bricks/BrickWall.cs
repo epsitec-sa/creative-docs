@@ -27,6 +27,18 @@ namespace Epsitec.Cresus.Bricks
 			this.bricks.Add (brick);
 		}
 
+		internal Brick GetLastBrick()
+		{
+			int index = this.bricks.Count - 1;
+
+			if (index < 0)
+			{
+				return null;
+			}
+
+			return this.bricks[index];
+		}
+
 		internal void Remove(Brick brick)
 		{
 			this.bricks.Remove (brick);
