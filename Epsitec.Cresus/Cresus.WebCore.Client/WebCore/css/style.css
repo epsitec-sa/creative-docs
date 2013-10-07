@@ -92,6 +92,23 @@ div.tile-selected #tile-text:hover {
   background-position: 100%, 50%;
 }
 
+
+.tile-gmaps-header-button {
+  display: inline-block;
+  background-image: url('../images/Static/icon-google-maps.png');
+  height: 14px;
+  width: 14px;
+  margin: 0;
+}
+
+.tile-local-header-button {
+  display: inline-block;
+  background-image: url('../images/Static/icon-tel-local.png');
+  height: 14px;
+  width: 14px;
+  margin: 0;
+}
+
 .grouped-summary-tile {
   margin: 0px;
   background-color: #EBF4FF;

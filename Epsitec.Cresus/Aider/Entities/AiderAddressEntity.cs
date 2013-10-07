@@ -52,9 +52,9 @@ namespace Epsitec.Aider.Entities
 
 			var what  = UriBuilder.ConvertToAlphaNumericQueryArgument (name);
 			var where = UriBuilder.ConvertToAlphaNumericQueryArgument (address);
-			
-			var link1 = string.Format (@"&nbsp;&nbsp;<a href=""http://tel.local.ch/fr/q?what={0}&amp;where={1}&amp;typeref=res"" target=""_blank""><img src=""/images/Static/icon-tel-local.png""/></a>", what, where);
-			var link2 = string.Format (@"&nbsp;&nbsp;<a href=""http://maps.google.ch/maps?f=q&q={0}"" target=""_blank""><img src=""/images/Static/icon-google-maps.png""/></a>", where);
+
+			var link1 = string.Format (@"&nbsp;&nbsp;<a href=""http://tel.local.ch/fr/q?what={0}&amp;where={1}&amp;typeref=res"" class=""tile-local-header-button"" target=""_blank""></a>", what, where);
+			var link2 = string.Format (@"&nbsp;&nbsp;<a href=""http://maps.google.ch/maps?f=q&q={0}"" class=""tile-gmaps-header-button"" target=""_blank""></a>", where);
 			
 			return link1 + link2;
 		}

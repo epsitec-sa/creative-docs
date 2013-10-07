@@ -202,6 +202,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.WarnHouseholdWithNoSubscription (args));
 					return;
 				}
+
+				if (args.Contains ("-fixechpersons"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixEChPersons (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -448,6 +454,14 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData
 			(
 				coreData => WarningParishGroupPathFixer.StartJob(coreData)
+			);
+		}
+
+		private static void FixEChPersons(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => EChPersonFixer.TryFixAll (coreData)
 			);
 		}
 

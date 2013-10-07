@@ -19,73 +19,97 @@ using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Data.Job
 {
-	internal static class PersonWithoutContactFixer
+	internal static class EChPersonFixer
 	{
 		public static void TryFixAll(CoreData coreData)
 		{
 			
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				PersonWithoutContactFixer.LogToConsole ("Perform DataQuality on Person without Contact");
+				EChPersonFixer.LogToConsole ("Perform DataQuality on EChPerson with same EChReportedPerson on slot 1 and 2");
 				var jobDateTime    = System.DateTime.Now;
-				var jobName        = "PersonWithoutContactFixer";
-				var jobDescription = string.Format ("Qualité de données sur les personnes sans contacts");
+				var jobName        = "EChPersonFixer";
+				var jobDescription = string.Format ("Qualité de données sur les personnes ECh");
 
 				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
-				var warningTitleMessage = TextFormatter.FormatText ("DataQuality Personne sans contact", jobDateTime.ToShortDateString ());
+				var warningTitleMessage = TextFormatter.FormatText ("DataQuality Personne ECH", jobDateTime.ToShortDateString ());
 
 				var db = businessContext.DataContext.DbInfrastructure;
 				var dbAbstraction = DbFactory.CreateDatabaseAbstraction (db.Access);
 				var sqlEngine = dbAbstraction.SqlEngine;
 
-				var sqlCommand = "SELECT mud_lva.u_lva1 " +
-								 "FROM mud_lvaf " +
-								 "INNER JOIN mud_lva on mud_lvaf.u_lvau1 = mud_lva.cr_id " +
-								 "LEFT OUTER JOIN mud_lvard ON mud_lvaf.cr_id = mud_lvard.u_lva5e " +
-								 "WHERE mud_lvard.cr_id IS NULL " +
-								 "ORDER BY mud_lva.u_lva2";
+				var sqlCommand = "select CR_ID " +
+								 "from MUD_LVA p " +
+								 "where " +
+								 "p.U_LVAH2 IS NOT NULL " + 
+								 "AND p.U_LVAG2 = p.U_LVAH2";
 
 
 				var sqlBuilder = dbAbstraction.SqlBuilder;
 				var command = sqlBuilder.CreateCommand (dbAbstraction.BeginReadOnlyTransaction (), sqlCommand);
 				DataSet dataSet;
 				sqlEngine.Execute (command, DbCommandType.ReturningData, 1, out dataSet);
-				PersonWithoutContactFixer.LogToConsole ("DataQuality SQL Results:");
-				var personIdsToCorrect = new List<string> ();
+
+				var personIdsToCorrect = new List<DbId> ();
 				foreach (DataRow row in dataSet.Tables[0].Rows)
 				{
 					if (!row[0].ToString ().IsNullOrWhiteSpace ())
 					{
-						personIdsToCorrect.Add (row[0].ToString ());
-						PersonWithoutContactFixer.LogToConsole (row[0] + " added");
+						personIdsToCorrect.Add (new DbId ((long) row[0]));
 					}
 				}
 
-				PersonWithoutContactFixer.LogToConsole (personIdsToCorrect.Count + " persons without contacts detected");
+				EChPersonFixer.LogToConsole (personIdsToCorrect.Count + " persons with same ReportedPerson 1 and 2");
 
 				foreach (var eChPersonId in personIdsToCorrect)
 				{
-					//retreive AiderPerson
-					var person = PersonWithoutContactFixer.GetAiderPersonEntity (businessContext, eChPersonId);
+					//retreive eChPerson
+					var person = businessContext.DataContext.ResolveEntity<eCH_PersonEntity> (new DbKey (eChPersonId));
 
 					if (person.IsNull ())
 					{
-						PersonWithoutContactFixer.LogToConsole ("No eCH person found for ID {0}", eChPersonId);
+						EChPersonFixer.LogToConsole ("No eCH person found for ID {0}", eChPersonId);
 						continue;
 					}
 
-					//Retreive person aider household
-					var household = PersonWithoutContactFixer.GetAiderHousehold (businessContext, person.eCH_Person.ReportedPerson1.Adult1);
+					//fix secondary ReportedPerson
+					person.ReportedPerson2 = null;
+
+					var aiderPerson = EChPersonFixer.GetAiderPersonEntity (businessContext, person.PersonId);
+
+					aiderPerson.eCH_Person.ReportedPerson2 = null;
+
+					if (aiderPerson.IsNull ())
+					{
+						EChPersonFixer.LogToConsole ("No Aider person found for ID {0}", eChPersonId);
+						continue;
+					}
+
+					//Retreive main aider household
+					var household = EChPersonFixer.GetAiderHousehold (businessContext, person.ReportedPerson1.Adult1);
+					
 					if (household.IsNotNull ())
 					{
-						AiderContactEntity.Create (businessContext, person, household, isHead: household.IsHead (person));
-						PersonWithoutContactFixer.LogToConsole ("Corrected: {0}", person.GetDisplayName ());
-					}
-					else //warn
-					{
-						var warningMessage = FormattedText.FromSimpleText ("Ménage a recréer (problème de qualité de données)");
-						PersonWithoutContactFixer.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.EChHouseholdAdded, warningTitleMessage, warningMessage, warningSource);
-						PersonWithoutContactFixer.LogToConsole ("Warning added for: {0}", person.GetDisplayName ());
+						//verify that a contact exist
+						if (!household.Contacts.Any (c => c.Person.eCH_Person.PersonId == person.PersonId))
+						{
+							//We need to create a contact
+							EChPersonFixer.LogToConsole ("No contact found for ID {0} in household {1} -> Adding contact", eChPersonId, household.GetCompactSummary ());
+							AiderContactEntity.Create (businessContext, aiderPerson, household, isHead: household.IsHead (aiderPerson));
+						}
+						else
+						{
+							//too many contact exist?
+							if (household.Contacts.Count (c => c.Person.eCH_Person.PersonId == person.PersonId) > 1)
+							{
+								EChPersonFixer.LogToConsole ("Too many contacts found for ID {0} in household {1} -> Removing contacts, leave only one", eChPersonId, household.GetCompactSummary ());
+								var duplicateContacts = household.Contacts.Where (c => c.Person.eCH_Person.PersonId == person.PersonId).Skip (1);
+								foreach (var duplicate in duplicateContacts)
+								{
+									businessContext.DeleteEntity (duplicate);
+								}						
+							}
+						}
 					}
 				}
 
