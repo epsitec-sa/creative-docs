@@ -3,13 +3,14 @@
 
 using Epsitec.Common.Support.Entities;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Entities
 {
@@ -59,6 +60,20 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText ("ID eCH:", this.PersonId, "\n", this.DeclarationStatus);
 		}
 
+		public override EntityStatus GetEntityStatus()
+		{
+			using (var a = new EntityStatusAccumulator ())
+			{
+				a.Accumulate (this.ReportedPerson1.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.ReportedPerson2.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.PersonOfficialName.GetEntityStatus ());
+				a.Accumulate (this.PersonFirstNames.GetEntityStatus ());
+
+				return a.EntityStatus;
+			}
+		}
+		
+		
 		public string GetDisplayName()
 		{
 			var lastname = this.PersonOfficialName;

@@ -74,10 +74,9 @@ namespace Epsitec.Aider.Data.Job
 
 					//fix secondary ReportedPerson
 					person.ReportedPerson2 = null;
+					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 
 					var aiderPerson = EChPersonFixer.GetAiderPersonEntity (businessContext, person.PersonId);
-
-					aiderPerson.eCH_Person.ReportedPerson2 = null;
 
 					if (aiderPerson.IsNull ())
 					{
@@ -87,7 +86,7 @@ namespace Epsitec.Aider.Data.Job
 
 					//Retreive main aider household
 					var household = EChPersonFixer.GetAiderHousehold (businessContext, person.ReportedPerson1.Adult1);
-					
+
 					if (household.IsNotNull ())
 					{
 						//verify that a contact exist
@@ -107,9 +106,15 @@ namespace Epsitec.Aider.Data.Job
 								foreach (var duplicate in duplicateContacts)
 								{
 									businessContext.DeleteEntity (duplicate);
-								}						
+								}
 							}
 						}
+					}
+					else
+					{
+						var warningMessage = FormattedText.FromSimpleText ("Ménage a recréer (problème de qualité de données)");
+						EChPersonFixer.CreateWarning (businessContext, aiderPerson, aiderPerson.ParishGroupPathCache, WarningType.EChHouseholdAdded, warningTitleMessage, warningMessage, warningSource);
+						EChPersonFixer.LogToConsole ("Warning added for: {0}", aiderPerson.GetDisplayName ());
 					}
 				}
 
