@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Epsitec.Common.Types.Converters;
 
 namespace Epsitec.Common.IO
 {
@@ -376,6 +377,41 @@ namespace Epsitec.Common.IO
 			}
 
 			return officialName + officialSuffix + partialUri;
+		}
+
+
+		public static string ConvertToAlphaNumericQueryArgument(string arg)
+		{
+			if (string.IsNullOrWhiteSpace (arg))
+			{
+				return "";
+			}
+
+			var buffer = new System.Text.StringBuilder ();
+
+			bool escaped = true;
+
+			foreach (var c in TextConverter.StripAccents (arg))
+			{
+				if (((c >= 'a') && (c <= 'z')) ||
+					((c >= 'A') && (c <= 'Z')) ||
+					((c >= '0') && (c <= '9')) ||
+					((c == '-') || (c == ',') || (c == '.')))
+				{
+					buffer.Append (c);
+					escaped = false;
+				}
+				else
+				{
+					if (escaped == false)
+					{
+						buffer.Append ('+');
+						escaped = true;
+					}
+				}
+			}
+
+			return buffer.ToString ().TrimEnd ('+');
 		}
 
 

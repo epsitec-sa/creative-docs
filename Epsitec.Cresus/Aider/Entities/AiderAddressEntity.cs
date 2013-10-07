@@ -43,6 +43,23 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		
+		public string GetHtmlForLocationWebServices(string name = null)
+		{
+			var street  = string.Concat (this.StreetUserFriendly, " ", this.HouseNumberAndComplement);
+			var town    = string.Concat (this.Town.ZipCode, " ", this.Town.Name);
+			var address = string.Concat (street, ", ", town);
+
+			var what  = UriBuilder.ConvertToAlphaNumericQueryArgument (name);
+			var where = UriBuilder.ConvertToAlphaNumericQueryArgument (address);
+			
+			var link1 = string.Format (@"&nbsp;&nbsp;<a href=""http://tel.local.ch/fr/q?what={0}&amp;where={1}&amp;typeref=res"" target=""_blank""><img src=""/images/Static/icon-tel-local.png""/></a>", what, where);
+			var link2 = string.Format (@"&nbsp;&nbsp;<a href=""http://maps.google.ch/maps?f=q&q={0}"" target=""_blank""><img src=""/images/Static/icon-google-maps.png""/></a>", where);
+			
+			return link1 + link2;
+		}
+
+
 
 		public FormattedText GetPostalAddress()
 		{

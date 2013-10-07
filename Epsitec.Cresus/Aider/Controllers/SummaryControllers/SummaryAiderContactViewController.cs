@@ -78,8 +78,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					{
 						if (contact.Address.IsNotNull ())
 						{
+							var html = contact.Address.GetHtmlForLocationWebServices (contact.DisplayName);
+
 							wall.AddBrick ()
-								.Title (Resources.Text ("Adresse de domicile"))
+								.Title (new FormattedText (Resources.Text ("Adresse de domicile") + html))
 								.Text (contact.Address.GetSummary ())
 								.Icon ("Data.AiderAddress")
 								.WithSpecialController (typeof (EditionAiderContactViewController1Address));

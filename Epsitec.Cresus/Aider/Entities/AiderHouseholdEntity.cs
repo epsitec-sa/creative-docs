@@ -37,7 +37,6 @@ namespace Epsitec.Aider.Entities
 			return this.GetAddressLabelText ();
 		}
 
-
 		public void RefreshCache()
 		{
 			this.DisplayName          = this.GetDisplayName ();
@@ -56,12 +55,7 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetAddressLabelText()
 		{
-			return TextFormatter.FormatText
-			(
-				this.GetAddressRecipientText (),
-				"\n",
-				this.Address.GetPostalAddress ()
-			);
+			return TextFormatter.FormatText (this.GetAddressRecipientText (), "\n", this.Address.GetPostalAddress ());
 		}
 
 
