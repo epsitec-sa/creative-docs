@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					}
 				}
 
-				return new TreeTableColumnSeparator (this.ColumnCount);
+				return TreeTableColumnSeparator.Invalid;
 			}
 
 			return TreeTableColumnSeparator.Invalid;
@@ -258,6 +258,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				if (x.HasValue)
 				{
+#if false
 					if (dst.Rank == 0 && this.DockToLeftCount == 0)
 					{
 						//	Cas particulier où le conteneur de gauche est vide et où on
@@ -274,6 +275,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					{
 						x += 5;
 					}
+#endif
 
 					//	Ligne traitillée centrale.
 					var line = new DashedPath ();

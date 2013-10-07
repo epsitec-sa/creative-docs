@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 							if (sepRank == this.ColumnCount-1)  // dernière colonne ?
 							{
-								x -= 2;  // pour ne pas être sous l'ascenseur vertical
+								x--;  // pour ne pas être sous l'ascenseur vertical
 							}
 
 							return x;
