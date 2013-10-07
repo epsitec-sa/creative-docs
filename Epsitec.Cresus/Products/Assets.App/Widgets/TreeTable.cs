@@ -317,6 +317,35 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		public string Serialize()
+		{
+			var builder = new System.Text.StringBuilder ();
+
+			builder.Append ("<map=");
+			foreach (int map in this.columnsMapper)
+			{
+				builder.Append ("<rank=");
+				builder.Append (map.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				builder.Append (">");
+			}
+			builder.Append (">");
+
+			builder.Append ("<widths=");
+			foreach (var width in this.columnWidths)
+			{
+				builder.Append (width.Serialize ());
+			}
+			builder.Append (">");
+
+			return builder.ToString ();
+		}
+
+		public void Deserialize(string data)
+		{
+			// TODO: 
+		}
+
+
 		protected override void OnExited(MessageEventArgs e)
 		{
 			foreach (var column in this.treeTableColumns)
@@ -529,6 +558,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					return this.hide ? 0 : this.width;
 				}
+			}
+
+			public string Serialize()
+			{
+				var builder = new System.Text.StringBuilder ();
+
+				builder.Append ("<width=");
+				builder.Append (this.width.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				builder.Append (";");
+				builder.Append (this.hide ? "hide" : "show");
+				builder.Append (">");
+
+				return builder.ToString ();
+			}
+
+			public void Deserialize(string data)
+			{
+				// TODO:
 			}
 
 			private int  width;

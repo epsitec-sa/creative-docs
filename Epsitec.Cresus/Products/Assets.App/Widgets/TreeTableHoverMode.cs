@@ -5,8 +5,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public enum TreeTableHoverMode
 	{
-		None,
-		VerticalGradient,
-		OnlyVerticalSeparators,
+		None,						// aucun feedback
+		VerticalGradient,			// dégradé à partir de la position de la souris
+		OnlyVerticalSeparators,		// ne montre que les séparateurs verticaux des colonnes
 	};
 }

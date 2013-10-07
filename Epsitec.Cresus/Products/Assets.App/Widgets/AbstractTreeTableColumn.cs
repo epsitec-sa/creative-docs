@@ -172,28 +172,29 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRow, int hilitedRow)
 		{
-			//	Dessine une portion de grille dans une cellule, sous forme de 2 traits,
-			//	en bas et à droite. Plus la distance jusqu'à la cellule survolée est
-			//	grande et plus l'effet est estompé.
-			if (this.hoverMode == TreeTableHoverMode.VerticalGradient)
+			//	Dessine une portion de grille dans une cellule, selon le mode choisi.
+
+			if (this.hoverMode == TreeTableHoverMode.VerticalGradient && hilitedRow != -1)
 			{
-				if (hilitedRow != -1)
-				{
-					rect.Deflate (0.5);
+				//	Dessine une portion de grille dans une cellule, sous forme de 2 traits,
+				//	en bas et à droite. Plus la distance jusqu'à la cellule survolée est
+				//	grande et plus l'effet est estompé.
+				rect.Deflate (0.5);
 
-					graphics.AddLine (rect.BottomLeft, rect.BottomRight);
-					graphics.AddLine (rect.BottomRight, rect.TopRight);
+				graphics.AddLine (rect.BottomLeft, rect.BottomRight);
+				graphics.AddLine (rect.BottomRight, rect.TopRight);
 
-					var delta = System.Math.Abs (currentRow - hilitedRow);
-					var alpha = System.Math.Max (1.0 - delta * 0.1, 0.0);
-					var color = Color.FromAlphaColor (alpha, ColorManager.GridColor);
+				var delta = System.Math.Abs (currentRow - hilitedRow);
+				var alpha = System.Math.Max (1.0 - delta * 0.1, 0.0);
+				var color = Color.FromAlphaColor (alpha, ColorManager.GridColor);
 
-					graphics.RenderSolid (color);
-				}
+				graphics.RenderSolid (color);
 			}
 
 			if (this.hoverMode == TreeTableHoverMode.OnlyVerticalSeparators)
 			{
+				//	Dessine une portion de séparteur vertical dans une cellule, sous la
+				//	forme d'un trait à droite.
 				rect.Deflate (0.5);
 
 				graphics.AddLine (rect.BottomRight, rect.TopRight);
