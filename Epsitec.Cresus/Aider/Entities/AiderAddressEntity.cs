@@ -321,7 +321,10 @@ namespace Epsitec.Aider.Entities
 				return null;
 			}
 
-			value = value.Trim ();
+			//	"c1" will become "C" (suffix numbers are not allowed)
+			//	"Bis" will become "bis" (multiple characters = "bis"/"ter"/...)
+			
+			value = new string (value.Where (c => char.IsLetter (c)).ToArray ());
 
 			if (value.Length == 1)
 			{
