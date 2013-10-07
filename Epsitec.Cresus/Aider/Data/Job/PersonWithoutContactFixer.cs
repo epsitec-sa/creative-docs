@@ -19,21 +19,20 @@ using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Data.Job
 {
-	internal static class ContactsFixer
+	internal static class PersonWithoutContactFixer
 	{
 		public static void TryFixAll(CoreData coreData)
 		{
 			
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
+				PersonWithoutContactFixer.LogToConsole ("Perform DataQuality on Person without Contact");
 				var jobDateTime    = System.DateTime.Now;
-				var jobName        = "ContactsFixer.TryFixAll()";
-				var jobDescription = string.Format ("Qualité de données sur les contacts");
+				var jobName        = "PersonWithoutContactFixer";
+				var jobDescription = string.Format ("Qualité de données sur les personnes sans contacts");
 
 				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
-				var warningTitleMessage = TextFormatter.FormatText ("Qualité de donnée sur les contacts ", jobDateTime.ToShortDateString ());
-
-
+				var warningTitleMessage = TextFormatter.FormatText ("DataQuality Personne sans contact", jobDateTime.ToShortDateString ());
 
 				var db = businessContext.DataContext.DbInfrastructure;
 				var dbAbstraction = DbFactory.CreateDatabaseAbstraction (db.Access);
@@ -51,36 +50,42 @@ namespace Epsitec.Aider.Data.Job
 				var command = sqlBuilder.CreateCommand (dbAbstraction.BeginReadOnlyTransaction (), sqlCommand);
 				DataSet dataSet;
 				sqlEngine.Execute (command, DbCommandType.ReturningData, 1, out dataSet);
-
+				PersonWithoutContactFixer.LogToConsole ("DataQuality SQL Results:");
 				var personIdsToCorrect = new List<string> ();
 				foreach (DataRow row in dataSet.Tables[0].Rows)
 				{
 					if (!row[0].ToString ().IsNullOrWhiteSpace ())
 					{
 						personIdsToCorrect.Add (row[0].ToString ());
+						PersonWithoutContactFixer.LogToConsole (row[0] + " added");
 					}
 				}
+
+				PersonWithoutContactFixer.LogToConsole (personIdsToCorrect.Count + " persons without contacts detected");
 
 				foreach (var eChPersonId in personIdsToCorrect)
 				{
 					//retreive AiderPerson
-					var person = ContactsFixer.GetAiderPersonEntity (businessContext, eChPersonId);
+					var person = PersonWithoutContactFixer.GetAiderPersonEntity (businessContext, eChPersonId);
 
 					if (person.IsNull ())
 					{
+						PersonWithoutContactFixer.LogToConsole ("No eCH person found for ID {0}", eChPersonId);
 						continue;
 					}
 
 					//Retreive person aider household
-					var household = ContactsFixer.GetAiderHousehold (businessContext, person.eCH_Person.ReportedPerson1.Adult1);
+					var household = PersonWithoutContactFixer.GetAiderHousehold (businessContext, person.eCH_Person.ReportedPerson1.Adult1);
 					if (household.IsNotNull ())
 					{
 						AiderContactEntity.Create (businessContext, person, household, isHead: household.IsHead (person));
+						PersonWithoutContactFixer.LogToConsole ("Corrected: {0}", person.GetDisplayName ());
 					}
 					else //warn
 					{
 						var warningMessage = FormattedText.FromSimpleText ("Ménage a recréer (problème de qualité de données)");
-						ContactsFixer.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.EChHouseholdAdded, warningTitleMessage, warningMessage, warningSource);
+						PersonWithoutContactFixer.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.EChHouseholdAdded, warningTitleMessage, warningMessage, warningSource);
+						PersonWithoutContactFixer.LogToConsole ("Warning added for: {0}", person.GetDisplayName ());
 					}
 				}
 			}
@@ -118,6 +123,25 @@ namespace Epsitec.Aider.Data.Job
 			};
 
 			return businessContext.DataContext.GetByRequest<AiderHouseholdEntity> (request).FirstOrDefault ();
+		}
+
+		private static System.Diagnostics.Stopwatch LogToConsole(string format, params object[] args)
+		{
+			var message = string.Format (format, args);
+
+			if (message.StartsWith ("Error"))
+			{
+				System.Console.ForegroundColor = System.ConsoleColor.Red;
+			}
+
+			System.Console.WriteLine ("ContactFixer: {0}", message);
+			System.Console.ResetColor ();
+
+			var time = new System.Diagnostics.Stopwatch ();
+
+			time.Start ();
+
+			return time;
 		}
 
 		private static void CreateWarning(BusinessContext context, AiderPersonEntity person, string parishGroupPath,

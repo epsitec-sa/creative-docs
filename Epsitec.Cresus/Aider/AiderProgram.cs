@@ -167,6 +167,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-warnpersonwithoutcontact"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.WarnPersonWithoutContact (args));
+					return;
+				}
+
 				if (args.Contains ("-fixchardonnesubscriptions"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixChardonneSubscriptions (args));
@@ -433,6 +439,14 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData
 			(
 				coreData => WarningParishGroupPathFixer.StartJob(coreData)
+			);
+		}
+
+		private static void WarnPersonWithoutContact(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => PersonWithoutContactFixer.TryFixAll (coreData)
 			);
 		}
 
