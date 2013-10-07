@@ -285,16 +285,40 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.foreground.AddOutline (dash, ColorManager.TextColor);
 
 					//	Flèche vers le bas.
-					var path = this.ArrowDown (x.Value);
+					var path = this.GlyphArrowDown (x.Value);
 					this.foreground.AddSurface (path, ColorManager.HoverColor);
+
+					//	Dessine le TreeTable miniature s'il y a ambiguïté.
+					if (dst.Left)
+					{
+						this.PaintGlyphTreeTable (x.Value, true);
+					}
+					else if (dst.Right || (dst.Rank == 0 && this.DockToLeftCount == 0))
+					{
+						this.PaintGlyphTreeTable (x.Value, false);
+					}
 				}
 			}
 
 			this.foreground.Invalidate ();
 		}
 
-		public Path ArrowDown(double x)
+		private void UpdateForeground(Rectangle rect)
 		{
+			this.foreground.ClearZones ();
+
+			if (rect.IsValid)
+			{
+				var color = Color.FromAlphaColor (0.4, ColorManager.MoveColumnColor);
+				this.foreground.AddSurface (rect, color);
+			}
+
+			this.foreground.Invalidate ();
+		}
+
+		private Path GlyphArrowDown(double x)
+		{
+			//	Grosse flèche vers le bas dont le trait correspond à la hauteur de l'en-tête.
 			var path = new Path ();
 
 			var y1 = this.foreground.ActualHeight;
@@ -313,17 +337,77 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return path;
 		}
 
-		private void UpdateForeground(Rectangle rect)
+		private void PaintGlyphTreeTable(double x, bool dockToLeft)
 		{
-			this.foreground.ClearZones ();
+			//	Dessine une miniature du TreeTable, mettant en évidence l'utilisation
+			//	du conteneur gauche ou du conteneur scrollable.
+			x = System.Math.Max (x, 20);
+			x = System.Math.Min (x, this.foreground.ActualWidth-20);
 
-			if (rect.IsValid)
+			//	Efface le fond.
+			var y = this.foreground.ActualHeight - this.HeaderHeight - 20 - 10;
+			var rect = new Rectangle (x-20-1, y-32-1, 40+2, 32+2);
+			this.foreground.AddSurface (rect, Color.FromBrightness (0.97));
+
+			//	Dessine le glyph.
+			rect = new Rectangle (x-20, y-40, 40, 40);
+			var path = InteractiveLayerColumnOrder.GlyphTreeTable (rect, dockToLeft);
+			this.foreground.AddSurface (path, Color.FromBrightness (0.40));
+		}
+
+		private static Path GlyphTreeTable(Rectangle rect, bool dockToLeft)
+		{
+			var path = new Path ();
+
+			//	Cadre de la fenêtre.
+			path.MoveTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect,   0.0, 100.0));
+			path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect,   0.0,  20.0));
+			path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 100.0,  20.0));
+			path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 100.0, 100.0));
+			path.Close ();
+
+			if (dockToLeft)
 			{
-				var color = Color.FromAlphaColor (0.4, ColorManager.MoveColumnColor);
-				this.foreground.AddSurface (rect, color);
+				//	Cadre du conteneur gauche.
+				path.MoveTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect,  10.0,  90.0));
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect,  40.0,  90.0));
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect,  40.0,  40.0));
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect,  10.0,  40.0));
+				path.Close ();
+			}
+			else
+			{
+				//	Cadre du conteneur scrollable.
+				path.MoveTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect,  40.0,  90.0));
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect,  90.0,  90.0));
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect,  90.0,  40.0));
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect,  40.0,  40.0));
+				path.Close ();
+
+				//	Ascenseur miniature.
+				path.MoveTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 37.5, 30.0));  // <
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 47.5, 35.0));
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 47.5, 25.0));
+				path.Close ();
+
+				path.MoveTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 50.0, 32.5));
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 80.0, 32.5));
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 80.0, 27.5));
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 50.0, 27.5));
+				path.Close ();
+
+				path.MoveTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 92.5, 30.0));  // >
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 82.5, 25.0));
+				path.LineTo (InteractiveLayerColumnOrder.GetGlyphPoint (rect, 82.5, 35.0));
+				path.Close ();
 			}
 
-			this.foreground.Invalidate ();
+			return path;
+		}
+
+		private static Point GetGlyphPoint(Rectangle rect, double x, double y)
+		{
+			return new Point (rect.Left + x*rect.Width/100, rect.Bottom + y*rect.Height/100);
 		}
 
 
