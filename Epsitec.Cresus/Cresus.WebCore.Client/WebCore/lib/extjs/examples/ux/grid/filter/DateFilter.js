@@ -124,11 +124,7 @@ Ext.define('Ext.ux.grid.filter.DateFilter', {
                         plain: true,
                         items: [
                             Ext.apply(pickerCfg, {
-                                itemId: item,
-                                listeners: {
-                                    select: me.onPickerSelect,
-                                    scope: me
-                                }
+                                itemId: item
                             })
                         ]
                     }),
@@ -195,6 +191,12 @@ Ext.define('Ext.ux.grid.filter.DateFilter', {
                 fields.after.setChecked(false, true);
             }
         }
+
+        // keep track of the picker value separately because the menu gets destroyed
+        // when columns order changes.  We return this value from getValue() instead
+        // of picker.getValue()
+        this.values[picker.itemId] = date;
+
         this.fireEvent('update', this);
 
         picker.up('menu').hide();
@@ -323,13 +325,5 @@ Ext.define('Ext.ux.grid.filter.DateFilter', {
             }
         }
         return true;
-    },
-
-    onPickerSelect: function(picker, date) {
-        // keep track of the picker value separately because the menu gets destroyed
-        // when columns order changes.  We return this value from getValue() instead
-        // of picker.getValue()
-        this.values[picker.itemId] = date;
-        this.fireEvent('update', this);
     }
 });

@@ -13,7 +13,7 @@ terms contained in a written agreement between you and Sencha.
 If you are unsure which license is appropriate for your use, please contact the sales department
 at http://www.sencha.com/contact.
 
-Build date: 2013-05-16 14:36:50 (f9be68accb407158ba2b1be2c226a6ce1f649314)
+Build date: 2013-09-18 17:18:59 (940c324ac822b840618a3a8b2b4b873f83a1a9b1)
 */
 /**
  * France (France) translation
@@ -160,7 +160,6 @@ Ext.define("Ext.locale.fr.form.field.Text", {
 
 Ext.define("Ext.locale.fr.form.field.Number", {
     override: "Ext.form.field.Number",
-    decimalSeparator: ",",
     decimalPrecision: 2,
     minText: "La valeur minimum de ce champ doit être de {0}",
     maxText: "La valeur maximum de ce champ doit être de {0}",
@@ -289,7 +288,7 @@ Ext.define("Ext.locale.fr.grid.header.Container", {
 });
 
 Ext.define("Ext.locale.fr.grid.GroupingFeature", {
-    override: "Ext.grid.GroupingFeature",
+    override: "Ext.grid.feature.Grouping",
     emptyGroupText: '(Aucun)',
     groupByText: 'Grouper par ce champ',
     showGroupsText: 'Afficher par groupes'

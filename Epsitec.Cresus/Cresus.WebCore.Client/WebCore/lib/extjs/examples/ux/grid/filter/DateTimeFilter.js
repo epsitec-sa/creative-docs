@@ -43,7 +43,7 @@
  *
  * Example Usage:
  *
- *     var filters = Ext.create('Ext.ux.grid.GridFilters', {
+ *     var filters = Ext.create('Ext.ux.grid.FiltersFeature', {
  *         ...
  *         filters: [{
  *             // required configs
@@ -148,7 +148,6 @@ Ext.define('Ext.ux.grid.filter.DateTimeFilter', {
     positionDatepickerFirst: true,
 
     reTime: /\s(am|pm)/i,
-    reItemId: /\w*-(\w*)$/,
 
     /**
      * Replaces the selected value of the timepicker with the default 00:00:00.
@@ -246,14 +245,12 @@ Ext.define('Ext.ux.grid.filter.DateTimeFilter', {
                 pickerCtnCfg.dockedItems = {
                     xtype: 'toolbar',
                     dock: dockCfg.dock,
-                    items: [
-                        {
-                            xtype: 'button',
-                            text: dockCfg.buttonText,
-                            flex: 1,
-                            listeners: defaultListeners.click
-                        }
-                    ]   
+                    items: [{
+                        xtype: 'button',
+                        text: dockCfg.buttonText,
+                        flex: 1,
+                        listeners: defaultListeners.click
+                    }]   
                 };
             }
         }
@@ -265,7 +262,7 @@ Ext.define('Ext.ux.grid.filter.DateTimeFilter', {
                 pickerCtnCfg.items[datepickerPosition].itemId = item;
 
                 cfg = {
-                    itemId: 'range-' + item,
+                    itemId: item,
                     text: me[item + 'Text'],
                     menu: Ext.create('Ext.menu.Menu', {
                         items: pickerCtnCfg
@@ -311,11 +308,18 @@ Ext.define('Ext.ux.grid.filter.DateTimeFilter', {
         // NOTE: we need to redefine the picker.
         var me = this,
             menu = me.menu,
-            checkItemId = menu.getFocusEl().itemId.replace(me.reItemId, '$1'),
             fields = me.fields,
             field;
 
-        picker = menu.queryById(checkItemId);
+        if (me.dock) {
+            // If there is a dock config then the button will trigger the menu select.
+            // In these cases, the picker function arg isn't actually a picker but the
+            // button that was clicked, so redefine the picker.
+            //
+            // The focusEl is going to be the check item.
+            picker = menu.getFocusEl().down('datepicker');
+        }
+
         field = me.fields[picker.itemId];
         field.setChecked(true);
 
@@ -351,14 +355,16 @@ Ext.define('Ext.ux.grid.filter.DateTimeFilter', {
         var me = this,
             key,
             fields = me.fields,
-            args = [];
+            args = [],
+            date = Ext.apply(me.dateDefaults, me.date || {}),
+            time = Ext.apply(me.timeDefaults, me.time || {});
 
         for (key in fields) {
             if (fields[key].checked) {
                 args.push({
                     type: 'datetime',
                     comparison: me.compareMap[key],
-                    value: Ext.Date.format(me.getFieldValue(key), (me.date.format || me.dateDefaults.format) + ' ' + (me.time.format || me.timeDefaults.format))
+                    value: Ext.Date.format(me.getFieldValue(key), date.format + ' ' + time.format)
                 });
             }
         }
