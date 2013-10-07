@@ -74,6 +74,9 @@ namespace Epsitec.Aider.Data.Job
 
 					//fix secondary ReportedPerson
 					person.ReportedPerson2 = null;
+
+
+					//	SAMUEL: pourquoi ???
 					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 
 					var aiderPerson = EChPersonFixer.GetAiderPersonEntity (businessContext, person.PersonId);
@@ -105,6 +108,14 @@ namespace Epsitec.Aider.Data.Job
 								var duplicateContacts = household.Contacts.Where (c => c.Person.eCH_Person.PersonId == person.PersonId).Skip (1);
 								foreach (var duplicate in duplicateContacts)
 								{
+									//	SAMUEL: attention, mieux vaut faire une copie du résultat de la requête 'duplicateContacts' avec un ToList
+									//			pour éviter des surprises si la collection household.Contacts devait tout à coup changer sous nos
+									//			pieds pendant qu'on itère!!!
+
+									//	SAMUEL: mieux: utiliser AiderContactEntity.Delete (...)
+									
+									//	SAMUEL: il y aussi AiderContactEntity.DeleteDuplicateContacts qui fera l'affaire
+									
 									businessContext.DeleteEntity (duplicate);
 								}
 							}
