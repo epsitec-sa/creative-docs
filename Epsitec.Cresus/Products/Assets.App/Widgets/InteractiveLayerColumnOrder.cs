@@ -346,15 +346,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			x = System.Math.Max (x, 20);
 			x = System.Math.Min (x, this.foreground.ActualWidth-20);
 
-			//	Efface le fond.
 			var y = this.foreground.ActualHeight - this.HeaderHeight - 20 - 10;
-			var rect = new Rectangle (x-20-1, y-32-1, 40+2, 32+2);
-			this.foreground.AddSurface (rect, Color.FromBrightness (0.97));
+			var rect = new Rectangle (x-20, y-32, 40, 32);
+
+			//	Efface le fond.
+			var r = rect;
+			r.Inflate (1);
+			this.foreground.AddSurface (r, Color.FromBrightness (1.0));
+
+			//	Dessine le fond.
+			this.foreground.AddSurface (rect, dockToLeft
+				? ColorManager.GetTreeTableDockToLeftBackgroundColor ()
+				: ColorManager.GetBackgroundColor ());
 
 			//	Dessine le glyph.
 			rect = new Rectangle (x-20, y-40, 40, 40);
 			var path = InteractiveLayerColumnOrder.GlyphTreeTable (rect, dockToLeft);
-			this.foreground.AddSurface (path, Color.FromBrightness (0.40));
+			this.foreground.AddSurface (path, Color.FromBrightness (0.4));
 		}
 
 		private static Path GlyphTreeTable(Rectangle rect, bool dockToLeft)

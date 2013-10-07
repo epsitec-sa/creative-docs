@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			//	Comme GetSeparatorX est basé sur la géométrie actuellle (ActualBounds) et 
 			//	non préférée (PreferredWidth), il est nécessaire de forcer le mise à jour
-			//	du layout après avoir modifié une largeur.
+			//	du layout après avoir modifié une largeur de colonne.
 			this.foreground.Window.ForceLayout ();
 		}
 
