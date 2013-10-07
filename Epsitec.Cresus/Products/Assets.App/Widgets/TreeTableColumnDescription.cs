@@ -10,10 +10,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public TreeTableColumnDescription(TreeTableColumnType type = TreeTableColumnType.String, int width = 100, string header = null, string footer = null)
 		{
-			this.Type       = type;
-			this.Width      = width;
-			this.Header     = header;
-			this.Footer     = footer;
+			this.Type   = type;
+			this.Width  = width;
+			this.Header = header;
+			this.Footer = footer;
 		}
 
 
@@ -60,7 +60,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			System.Diagnostics.Debug.Assert (column != null);
 
-			column.PreferredWidth    = description.Width;
 			column.HeaderDescription = description.Header;
 			column.FooterDescription = description.Footer;
 

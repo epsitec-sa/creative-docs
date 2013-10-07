@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (this.detectedColumnRank != -1)  // clic dans le bouton "+" ?
 			{
-				this.ResurrectColumn(this.detectedColumnRank, 75);  // avec une largeur arbitraire
+				this.ResurrectColumn(this.detectedColumnRank);
 				this.ClearActiveHover ();
 			}
 
@@ -166,14 +166,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private void ResurrectColumn(int rank, int width)
+		private void ResurrectColumn(int rank)
 		{
-			this.GetColumn (rank).PreferredWidth = width;
-
-			//	Comme GetSeparatorX est basé sur la géométrie actuellle (ActualBounds) et 
-			//	non préférée (PreferredWidth), il est nécessaire de forcer le mise à jour
-			//	du layout.
-			this.foreground.Window.ForceLayout ();
+			this.SetColumnWidth (rank, null);  // remet la largeur originale
+			this.ForceLayout ();
 		}
 
 		private IEnumerable<Rectangle> ButtonRectangles

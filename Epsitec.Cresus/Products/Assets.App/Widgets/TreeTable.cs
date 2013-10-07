@@ -143,9 +143,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
 		{
-			//	Spécifie les colonnes à afficher, et réinitialise le mapping.
+			//	Spécifie les colonnes à afficher, et réinitialise le mapping ainsi
+			//	que les largeurs courantes.
 			this.columnDescriptions = descriptions;
 			this.dockToLeftCount = dockToLeftCount;
+
+			this.columnWidths = new ColumnWidth[this.columnDescriptions.Length];
+			for (int i=0; i<this.columnDescriptions.Length; i++)
+			{
+				this.columnWidths[i].SetWidth (this.columnDescriptions[i].Width);
+			}
 
 			this.columnsMapper.Clear ();
 
@@ -155,6 +162,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			this.CreateColumns ();
+		}
+
+		public void SetColumnWidth(int rank, int? width)
+		{
+			//	Modifie la largeur d'une colonne. Si la largeur n'est pas précisée (null),
+			//	on restirue la largeur précédente.
+			rank = this.MapRelativeToAbsolute (rank);
+
+			if (!width.HasValue)
+			{
+				width = this.columnWidths[rank].OriginalWidth;
+			}
+
+			this.columnWidths[rank].SetWidth (width.Value);
+
+			this.GetColumn (rank).PreferredWidth = this.columnWidths[rank].FinalWidth;
 		}
 
 		public void ChangeColumnOrder(int columnSrc, TreeTableColumnSeparator separatorDst)
@@ -220,6 +243,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var description = this.columnDescriptions[ii];
 
 				var column = TreeTableColumnDescription.Create (description);
+				column.PreferredWidth = this.columnWidths[ii].FinalWidth;
 				column.Index = index++;
 
 				this.treeTableColumns.Add (column);
@@ -462,6 +486,42 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private struct ColumnWidth
+		{
+			public void SetWidth(int width)
+			{
+				if (width == 0)
+				{
+					this.hide = true;
+				}
+				else
+				{
+					this.width = width;
+					this.hide  = false;
+				}
+			}
+
+			public int OriginalWidth
+			{
+				get
+				{
+					return this.width;
+				}
+			}
+
+			public int FinalWidth
+			{
+				get
+				{
+					return this.hide ? 0 : this.width;
+				}
+			}
+
+			private int  width;
+			private bool hide;
+		}
+
+
 		#region Events handler
 		private void OnRowClicked(int column, int row)
 		{
@@ -507,6 +567,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private readonly List<AbstractInteractiveLayer> interactiveLayers;
 
 		private TreeTableColumnDescription[]	columnDescriptions;
+		private ColumnWidth[]					columnWidths;
 		private int								dockToLeftCount;
 		private int								headerHeight;
 		private int								footerHeight;

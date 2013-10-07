@@ -157,6 +157,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		protected void ChangeColumnOrder(int columnSrc, TreeTableColumnSeparator separatorDst)
 		{
 			this.treeTable.ChangeColumnOrder (columnSrc, separatorDst);
+			this.ForceLayout ();
+		}
+
+		protected void ForceLayout()
+		{
+			//	Comme GetSeparatorX est basé sur la géométrie actuellle (ActualBounds) et 
+			//	non préférée (PreferredWidth), il est nécessaire de forcer le mise à jour
+			//	du layout après avoir modifié une largeur.
+			this.foreground.Window.ForceLayout ();
 		}
 
 		protected int DockToLeftCount
@@ -165,6 +174,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				return this.treeTable.DockToLeftCount;
 			}
+		}
+
+		protected void MoveColumnWidth(int rank, int width)
+		{
+			this.GetColumn (rank).PreferredWidth = width;
+		}
+
+		protected void SetColumnWidth(int rank, int? width)
+		{
+			this.treeTable.SetColumnWidth (rank, width);
 		}
 
 		protected int ColumnCount
