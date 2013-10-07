@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public void SetColumnWidth(int rank, int? width)
 		{
 			//	Modifie la largeur d'une colonne. Si la largeur n'est pas précisée (null),
-			//	on restirue la largeur précédente.
+			//	on restitue la largeur originale.
 			rank = this.MapRelativeToAbsolute (rank);
 
 			if (!width.HasValue)

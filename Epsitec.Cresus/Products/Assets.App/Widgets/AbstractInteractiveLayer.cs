@@ -178,11 +178,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected void MoveColumnWidth(int rank, int width)
 		{
+			//	Déplacement interactif de la largeur d'une colonne. On se contente donc
+			//	de modifier le widget, sans rien mémoriser.
 			this.GetColumn (rank).PreferredWidth = width;
 		}
 
 		protected void SetColumnWidth(int rank, int? width)
 		{
+			//	Modifie et mémorise la largeur d'une colonne. Si la largeur n'est pas
+			//	précisée (null), on restitue la largeur originale.
 			this.treeTable.SetColumnWidth (rank, width);
 		}
 

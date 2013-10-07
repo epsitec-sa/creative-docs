@@ -42,9 +42,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (this.isDragging)
 			{
-				var delta = pos.X - this.dragInitialMouse;
-				var width = System.Math.Max (this.dragInitialWidth + delta, 0.0);
-				this.MoveColumnWidth (this.detectedSeparatorRank-1, (int) width);
+				var width = this.GetWidth (pos);
+				this.MoveColumnWidth (this.detectedSeparatorRank-1, width);
 
 				var x = this.dragInitialLeft + width;
 				this.UpdateForeground (x);
@@ -62,12 +61,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				this.isDragging = false;
 
-				var delta = pos.X - this.dragInitialMouse;
-				var width = System.Math.Max (this.dragInitialWidth + delta, 0.0);
-				this.SetColumnWidth (this.detectedSeparatorRank-1, (int) width);
+				var width = this.GetWidth (pos);
+				this.SetColumnWidth (this.detectedSeparatorRank-1, width);
 				
 				this.ClearForeground ();
 			}
+		}
+
+		private int GetWidth(Point pos)
+		{
+			var delta = pos.X - this.dragInitialMouse;
+			return (int) System.Math.Max (this.dragInitialWidth + delta, 0.0);
 		}
 
 
