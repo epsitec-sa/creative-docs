@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.headerHeight = headerHeight;
 			this.footerHeight = footerHeight;
 
+			this.hoverMode = TreeTableHoverMode.VerticalGradient;
+
 			this.columnsMapper = new List<int> ();
 			this.treeTableColumns = new List<AbstractTreeTableColumn> ();
 
@@ -264,10 +266,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				//	Connecte les événements de la colonne.
 				column.CellHovered += delegate (object sender, int row)
 				{
-					if (!this.HasDraggingLayer)
-					{
-						this.SetHilitedHoverRow (row);
-					}
+					this.SetHilitedHoverRow (row);
 				};
 
 				column.CellClicked += delegate (object sender, int row)
@@ -289,6 +288,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
+			this.UpdateHoverMode ();
 			this.UpdateChildrensGeometry ();
 		}
 
@@ -432,6 +432,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		public void SetHoverMode(TreeTableHoverMode mode)
+		{
+			this.hoverMode = mode;
+			this.UpdateHoverMode ();
+		}
+
+		private void UpdateHoverMode()
+		{
+			foreach (var column in this.treeTableColumns)
+			{
+				column.HoverMode = this.hoverMode;
+			}
+		}
+
 		private void SetHilitedHoverRow(int row)
 		{
 			foreach (var column in this.treeTableColumns)
@@ -572,5 +586,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private int								headerHeight;
 		private int								footerHeight;
 		private int								rowHeight;
+		private TreeTableHoverMode				hoverMode;
 	}
 }

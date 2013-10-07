@@ -33,6 +33,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.dragInitialMouse = pos.X;
 				this.dragInitialLeft = this.GetSeparatorX (rank).Value - this.GetColumn (rank-1).ActualWidth;
 				this.dragInitialWidth = this.GetColumn (rank-1).ActualWidth;
+
+				this.SetHoverMode (TreeTableHoverMode.OnlyVerticalSeparators);
 			}
 		}
 
@@ -65,6 +67,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.SetColumnWidth (this.detectedSeparatorRank-1, width);
 				
 				this.ClearForeground ();
+				this.SetHoverMode (TreeTableHoverMode.VerticalGradient);
 			}
 		}
 

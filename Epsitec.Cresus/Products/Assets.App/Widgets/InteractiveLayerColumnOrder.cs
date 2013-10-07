@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.dragInitialMouse = pos.X;
 				this.dragInitialRect = this.GetColumnRect (this.detectedColumnRank);
 				this.dragDstRank = TreeTableColumnSeparator.Invalid;
+
+				this.SetHoverMode (TreeTableHoverMode.None);
 			}
 		}
 
@@ -75,6 +77,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					this.ChangeColumnOrder (this.detectedColumnRank, this.dragDstRank);
 				}
+
+				this.SetHoverMode (TreeTableHoverMode.VerticalGradient);
 			}
 		}
 

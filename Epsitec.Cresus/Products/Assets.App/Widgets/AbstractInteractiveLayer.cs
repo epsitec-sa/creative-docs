@@ -168,6 +168,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.foreground.Window.ForceLayout ();
 		}
 
+		protected void SetHoverMode(TreeTableHoverMode mode)
+		{
+			this.treeTable.SetHoverMode (mode);
+		}
+
 		protected int DockToLeftCount
 		{
 			get
