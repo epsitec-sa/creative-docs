@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Enumerations;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -17,12 +20,8 @@ using System.Linq;
 
 namespace Epsitec.Aider.Entities
 {
-
-
 	public partial class AiderSubscriptionEntity
 	{
-
-
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText
@@ -364,9 +363,5 @@ namespace Epsitec.Aider.Entities
 				throw new BusinessRuleException (message);
 			}
 		}
-
-
 	}
-
-
 }

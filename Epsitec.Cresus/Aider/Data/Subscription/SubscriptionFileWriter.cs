@@ -15,7 +15,6 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Data.Platform.MatchSort;
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -32,10 +31,10 @@ namespace Epsitec.Aider.Data.Subscription
 			this.outputFile                       = outputFile;
 			this.errorFile                        = errorFile;
 			this.skipLinesWithDistrictNumberError = skipLinesWithDistrictNumberError;
-			this.startTime                        = DateTime.UtcNow;
+			this.startTime                        = System.DateTime.UtcNow;
 
-			this.errors               = new List<Tuple<string, string>> ();
-			this.districtNumberErrors = new List<Tuple<string, string>> ();
+			this.errors               = new List<System.Tuple<string, string>> ();
+			this.districtNumberErrors = new List<System.Tuple<string, string>> ();
 			this.editionStats         = new int[16];
 			this.countries            = new HashSet<string> ();
 		}
@@ -97,7 +96,7 @@ namespace Epsitec.Aider.Data.Subscription
 		private IEnumerable<SubscriptionFileLine> GetLines()
 		{
 			var lines          = new List<SubscriptionFileLine> ();
-			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
+			var encodingHelper = new EncodingHelper (SubscriptionFileLine.DefaultEncoding);
 
 			using (var etl = new MatchSortEtl (MatchSortEtl.MatchSortCsvPath))
 			{
@@ -115,7 +114,8 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			foreach (var subscription in subscriptions)
 			{
-				if (subscription.SusbscriptionFlag == SubscriptionFlag.VerificationRequired)
+				if ((subscription.SusbscriptionFlag == SubscriptionFlag.VerificationRequired) ||
+					(subscription.Count < 1))
 				{
 					continue;
 				}
@@ -126,18 +126,28 @@ namespace Epsitec.Aider.Data.Subscription
 				{
 					line = this.GetLine (subscription, etl, encodingHelper);
 				}
-				catch (Exception e)
+				catch (System.Exception e)
 				{
 					line = null;
 
-					this.errors.Add (Tuple.Create (subscription.Id, e.Message));
+					this.errors.Add (System.Tuple.Create (subscription.Id, e.Message));
 				}
 
-				if (this.skipLinesWithDistrictNumberError)
+				if ((line != null) &&
+					(line.DistrictNumber == null))
 				{
-					if (line != null && !line.DistrictNumber.HasValue)
+					if ((this.skipLinesWithDistrictNumberError) ||
+						(string.IsNullOrEmpty (line.Street)) ||
+						(string.IsNullOrEmpty (line.Town)) ||
+						(string.IsNullOrEmpty (line.Firstname)) ||
+						(string.IsNullOrEmpty (line.Lastname)))
 					{
+						this.errors.Add (System.Tuple.Create (subscription.Id, "Address not found in MAT[CH]sort"));
 						line = null;
+					}
+					else
+					{
+						//	Keep line without district number...
 					}
 				}
 
@@ -186,7 +196,7 @@ namespace Epsitec.Aider.Data.Subscription
 					return this.GetLegalPersonLine (subscription, etl, encodingHelper);
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -223,9 +233,10 @@ namespace Epsitec.Aider.Data.Subscription
 			var canton  = town.SwissCantonCode;
 
 			var subscriptionNumber = subscription.Id;
-			var copiesCount        = subscription.Count;
-			var editionId          = subscription.GetEditionId ();
-			var districtNumber     = this.GetDistrictNumber (subscriptionNumber, address, etl);
+			
+			var copiesCount    = subscription.Count;
+			var editionId      = subscription.GetEditionId ();
+			var districtNumber = this.GetDistrictNumber (subscriptionNumber, address, etl);
 
 			string title;
 			string lastname;
@@ -239,18 +250,15 @@ namespace Epsitec.Aider.Data.Subscription
 
 			SubscriptionFileWriter.GetAddressData (address, encodingHelper, out addressComplement, out street, out houseNumber);
 
-			var zipCode = SubscriptionFileWriter.Format (SubscriptionFileWriter.GetZipCode (town), SubscriptionFileLine.ZipCodeLength, encodingHelper);
-			var townName = SubscriptionFileWriter.Format (town.Name, SubscriptionFileLine.TownLength, encodingHelper);
+			var zipCode     = SubscriptionFileWriter.Format (SubscriptionFileWriter.GetZipCode (town), SubscriptionFileLine.ZipCodeLength, encodingHelper);
+			var townName    = SubscriptionFileWriter.Format (town.Name, SubscriptionFileLine.TownLength, encodingHelper);
 			var countryName = SubscriptionFileWriter.Format (country.Name, SubscriptionFileLine.CountryLength, encodingHelper);
 
 			var isSwitzerland = country.IsSwitzerland ();
 
-			return new SubscriptionFileLine
-			(
-				subscriptionNumber, copiesCount, editionId, title, lastname, firstname,
-				addressComplement, street, houseNumber, districtNumber, zipCode, townName,
-				countryName, DistributionMode.Surface, isSwitzerland, canton
-			);
+			return new SubscriptionFileLine (subscriptionNumber, copiesCount, editionId, title, lastname, firstname,
+											 addressComplement, street, houseNumber, districtNumber, zipCode, townName,
+											 countryName, DistributionMode.Surface, isSwitzerland, canton);
 		}
 
 
@@ -424,7 +432,8 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static void GetFirstAndLastname(Func<string> firstnameGetter, Func<string> shortFirstnameGetter, Func<string> lastnameGetter, Func<string> shortLastnameGetter, EncodingHelper encodingHelper,
+		private static void GetFirstAndLastname(System.Func<string> firstnameGetter, System.Func<string> shortFirstnameGetter, System.Func<string> lastnameGetter, System.Func<string> shortLastnameGetter,
+												EncodingHelper encodingHelper,
 												int maxFirstnameLength, int maxLastnameLength, int maxFullnameLength, bool forceShortFirstname, bool forceShortLastname,
 												out string firstname, out string lastname)
 		{
@@ -573,7 +582,7 @@ namespace Epsitec.Aider.Data.Subscription
 				var message = "Invalid house number: " + houseNumber;
 
 				Debug.WriteLine (message);
-				throw new NotSupportedException (message);
+				throw new System.NotSupportedException (message);
 			}
 		}
 
@@ -878,7 +887,7 @@ namespace Epsitec.Aider.Data.Subscription
 				encodingHelper
 			);
 
-			var maxFirstnameLength = Math.Min
+			var maxFirstnameLength = System.Math.Min
 			(
 				SubscriptionFileLine.FirstnameLength,
 				SubscriptionFileLine.NameLengthMax - lastname.Length - 1
@@ -950,7 +959,7 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 
 			// The specs requires 999 for adresses with a post box.
-			if (!String.IsNullOrEmpty (address.PostBox))
+			if (!string.IsNullOrEmpty (address.PostBox))
 			{
 				return SubscriptionFileLine.SwissDistrictNumberPostbox;
 			}
@@ -1009,7 +1018,7 @@ namespace Epsitec.Aider.Data.Subscription
 			Debug.WriteLine (message);
 			System.Console.WriteLine (message);
 
-			this.districtNumberErrors.Add (Tuple.Create (subscriptionId, message));
+			this.districtNumberErrors.Add (System.Tuple.Create (subscriptionId, message));
 
 			return null;
 		}
@@ -1019,8 +1028,8 @@ namespace Epsitec.Aider.Data.Subscription
 		private readonly FileInfo				outputFile;
 		private readonly FileInfo				errorFile;
 		private readonly bool					skipLinesWithDistrictNumberError;
-		private readonly List<Tuple<string, string>> errors;
-		private readonly List<Tuple<string, string>> districtNumberErrors;
+		private readonly List<System.Tuple<string, string>> errors;
+		private readonly List<System.Tuple<string, string>> districtNumberErrors;
 
 		private readonly int[]					editionStats;
 		private readonly System.DateTime		startTime;

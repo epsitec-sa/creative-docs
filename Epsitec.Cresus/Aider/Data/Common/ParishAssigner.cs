@@ -5,6 +5,7 @@ using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
@@ -37,11 +38,15 @@ namespace Epsitec.Aider.Data.Common
 			if (parishGroup.IsNull ())
 			{
 				this.AssignToNoParishGroup (person);
+				this.UpdateSubscriptionAndRefreshCache (person);
+				
 				return;
 			}
 
 			if (person.ParishGroup == parishGroup)
 			{
+				this.UpdateSubscriptionAndRefreshCache (person);
+				
 				return;
 			}
 
@@ -55,7 +60,7 @@ namespace Epsitec.Aider.Data.Common
 				System.Diagnostics.Debug.Assert (person.ParishGroup == parishGroup);
 				System.Diagnostics.Debug.Assert (person.ParishGroupPathCache == parishGroup.Path);
 					
-				this.UpdateSubscription (person);
+				this.UpdateSubscriptionAndRefreshCache (person);
 			}
 			else
 			{
@@ -66,11 +71,16 @@ namespace Epsitec.Aider.Data.Common
 				person.ParishGroup = parishGroup;
 					
 				System.Diagnostics.Debug.Assert (person.ParishGroupPathCache == parishGroup.Path);
+
+				this.UpdateSubscriptionAndRefreshCache (person);
 			}
 		}
 
-		private void UpdateSubscription(AiderPersonEntity person)
+		private void UpdateSubscriptionAndRefreshCache(AiderPersonEntity person)
 		{
+			var subscriptions = AiderSubscriptionEntity.FindSubscriptions (this.businessContext, person);
+			var refusals      = AiderSubscriptionRefusalEntity.FindRefusals (this.businessContext, person);
+
 			if ((person.ParishGroup.IsNull ()) ||
 				(person.ParishGroup.Parent.IsNull ()))
 			{
@@ -81,14 +91,14 @@ namespace Epsitec.Aider.Data.Common
 				var parishGroup = person.ParishGroup;
 				var regionGroup = parishGroup.Parent;
 
-				var subscriptions = AiderSubscriptionEntity.FindSubscriptions (this.businessContext, person);
-
 				foreach (var subscription in subscriptions)
 				{
 					subscription.RegionalEdition = regionGroup;
-					subscription.RefreshCache ();
 				}
 			}
+
+			subscriptions.ForEach (x => x.RefreshCache ());
+			refusals.ForEach (x => x.RefreshCache ());
 		}
 
 		private void AssignToParish(AiderLegalPersonEntity legalPerson)

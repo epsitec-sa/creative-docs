@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Types;
 
@@ -8,13 +11,9 @@ using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Rules
 {
-
-
 	[BusinessRule]
 	public sealed class AiderSubscriptionBusinessRules : GenericBusinessRule<AiderSubscriptionEntity>
 	{
-
-
 		public override void ApplySetupRule(AiderSubscriptionEntity entity)
 		{
 			this.AssignId (entity);
@@ -28,7 +27,6 @@ namespace Epsitec.Aider.Rules
 
 			entity.Id = InvariantConverter.ToString (id);
 		}
-
 
 		private RefIdGenerator GetRefIdGenerator()
 		{
@@ -48,7 +46,6 @@ namespace Epsitec.Aider.Rules
 			this.CheckRegionalEdition (entity);
 		}
 
-
 		public override void ApplyUpdateRule(AiderSubscriptionEntity entity)
 		{
 			entity.RefreshCache ();
@@ -60,37 +57,32 @@ namespace Epsitec.Aider.Rules
 			if (entity.Count < 1)
 			{
 				var message = "Le nombre d'exemplaires minimal est de 1.";
-
+				Logic.BusinessRuleException (entity, message);
+			}
+			else if (entity.Count > 99)
+			{
+				var message = "Le nombre d'exemplaires maximal est de 99.";
 				Logic.BusinessRuleException (entity, message);
 			}
 		}
-
 
 		private void CheckRegionalEdition(AiderSubscriptionEntity entity)
 		{
 			if (entity.RegionalEdition.IsNull ())
 			{
 				var message = "Le cahier est obligatoire.";
-
 				Logic.BusinessRuleException (entity, message);
 			}
 
 			if (!entity.RegionalEdition.IsRegion ())
 			{
 				var message = "Le cahier doit être une région.";
-
 				Logic.BusinessRuleException (entity, message);
 			}
 		}
 
 
-		private static readonly string generatorSuffix = "BN_ID";
-
-
-		private static readonly long generatorStartId = 1000000;
-
-
+		private static readonly string			generatorSuffix = "BN_ID";
+		private static readonly long			generatorStartId = 1000000;
 	}
-
-
 }

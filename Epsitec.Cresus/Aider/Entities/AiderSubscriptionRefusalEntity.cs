@@ -1,10 +1,13 @@
-﻿using Epsitec.Aider.Enumerations;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.EntityEngine;
-
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Loader;
 
@@ -17,12 +20,8 @@ using System.Linq;
 
 namespace Epsitec.Aider.Entities
 {
-
-
 	public partial class AiderSubscriptionRefusalEntity
 	{
-
-
 		public void RefreshCache()
 		{
 			this.DisplayName = this.GetDisplayName ();
@@ -239,6 +238,20 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static IEnumerable<AiderSubscriptionRefusalEntity> FindRefusals(BusinessContext businessContext, AiderPersonEntity person)
+		{
+			foreach (var household in person.Households)
+			{
+				var refusal = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, household);
+
+				if (refusal.IsNotNull ())
+				{
+					yield return refusal;
+				}
+			}
+		}
+
+
 		public static IList<AiderSubscriptionRefusalEntity> FindRefusals
 		(
 			BusinessContext businessContext,
@@ -299,9 +312,5 @@ namespace Epsitec.Aider.Entities
 				throw new BusinessRuleException (message);
 			}
 		}
-
-
 	}
-
-
 }

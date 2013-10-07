@@ -367,8 +367,9 @@ namespace Epsitec.Aider
 			{
 				var outputFile = AiderProgram.GetFile (args, "-output:", true);
 				var errorFile = AiderProgram.GetFile (args, "-error:");
+				var excludeDistrictError = AiderProgram.GetBool (args, "-exclude-district-error:", false, false);
 
-				var writer = new SubscriptionFileWriter (coreData, outputFile, errorFile, true);
+				var writer = new SubscriptionFileWriter (coreData, outputFile, errorFile, excludeDistrictError);
 
 				writer.Write ();
 			});
