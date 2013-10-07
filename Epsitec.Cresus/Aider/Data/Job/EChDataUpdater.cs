@@ -133,7 +133,7 @@ namespace Epsitec.Aider.Data.Job
 			this.LogToConsole (time, "done");
 		}
 
-		public void FixBrokenHouseholdAddresses()
+		public void FixHouseholdUpdate()
 		{
 			var time = this.LogToConsole ("fixing broken household addresses");
 			this.FixNewEChReportedPersons ();
@@ -241,9 +241,170 @@ namespace Epsitec.Aider.Data.Job
 			return true;
 		}
 
+		private void RestoreHouseholdAddressAndClearWarnings(BusinessContext businessContext, Change<EChReportedPerson> item, eCH_ReportedPersonEntity family, AiderHouseholdEntity potentialAiderHousehold)
+		{
+			//	Clear past warnings, then retry and restore the household address...
+
+			//	Setup old ECh household with the previous ECh address
+
+			var oldEChAddress = new eCH_AddressEntity ()
+			{
+				AddressLine1      = item.OldValue.Address.AddressLine1,
+				HouseNumber       = item.OldValue.Address.HouseNumber,
+				Street            = item.OldValue.Address.Street ?? "",
+				SwissZipCode      = item.OldValue.Address.SwissZipCode,
+				SwissZipCodeAddOn = item.OldValue.Address.SwissZipCodeAddOn,
+				SwissZipCodeId    = item.OldValue.Address.SwissZipCodeId,
+				Town              = item.OldValue.Address.Town ?? "",
+				Country           = item.OldValue.Address.CountryCode ?? ""
+			};
+
+			var oldEChReportedPerson = new eCH_ReportedPersonEntity ()
+			{
+				Address = oldEChAddress
+			};
+
+			this.UpdateAiderHouseholdAddress (businessContext, potentialAiderHousehold, oldEChReportedPerson);
+
+			var persons = family.Members
+				.Select (x => this.GetAiderPersonEntity (businessContext, x))
+				.Concat (potentialAiderHousehold.Members)
+				.Distinct ();
+
+			foreach (var aiderPerson in persons)
+			{
+				var warnings = aiderPerson.Warnings.ToArray ();
+
+				foreach (var warning in warnings)
+				{
+					if (warning.WarningType == WarningType.EChAddressChanged ||
+													warning.WarningType == WarningType.ParishArrival ||
+													warning.WarningType == WarningType.ParishDeparture)
+					{
+						AiderPersonWarningEntity.Delete (businessContext, warning);
+					}
+				}
+
+				//	Never mind history of parish participation -- we probably have none and we want
+				//	to make sure that we clean up the current mess...
+
+				var parishes = aiderPerson.Groups.Where (x => x.Group.IsParish ()).ToList ();
+
+				foreach (var parishParticipation in parishes)
+				{
+					aiderPerson.RemoveParticipationInternal (parishParticipation);
+					businessContext.DeleteEntity (parishParticipation);
+				}
+			}
+
+			ParishAssigner.AssignToParish (parishAddressRepository, businessContext, persons);
+		}
+
+
+		private void ReassignHousehold(BusinessContext businessContext, List<FormattedText> changes, eCH_ReportedPersonEntity family, AiderPersonEntity person, AiderHouseholdEntity household)
+		{
+			var isSameHead = household.IsHead (person);
+			var isSameMemberCount = household.Members.Count (x => x.IsGovernmentDefined).Equals (family.MembersCount);
+			
+			//	Ensure that potential family is like ECh ReportedPerson before apply a full relocate
+			
+			if (isSameHead&&isSameMemberCount)
+			{
+
+				var members = household.Members;
+
+				//	First, reassign the parents, then the children. This simplifies the updating
+				//	of the children' household address in UpdateAiderHouseholdAndSubscription.
+
+				foreach (var member in members.Where (x => household.IsHead (x)))
+				{
+
+					this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
+					this.ReassignAndWarnParish (businessContext, member, changes);
+
+				}
+
+				foreach (var member in members.Where (x => household.IsHead (x) == false))
+				{
+					this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
+					this.ReassignAndWarnParish (businessContext, member, changes);
+				}
+			}
+			else //potential family is different relocate head form ECh new Data
+			{
+				var warningMessage = FormattedText.FromSimpleText ("Cette personne a maintenant son propre ménage.");
+				this.RelocateAndCreateNewAiderHousehold (businessContext, family);
+				this.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
+				this.ReassignAndWarnParish (businessContext, person, changes);
+			}
+		}
+
+		private bool UpdateAddress(eCH_AddressEntity familyAddress, EChAddress newRchAddress, List<FormattedText> changes)
+		{
+			var oldAddress = familyAddress.GetSummary ();
+
+			if (this.UpdateAddress (familyAddress, newRchAddress))
+			{
+				var newAddress = familyAddress.GetSummary ();
+
+				changes.Add (TextFormatter.FormatText ("Changement dans l'adresse:"));
+				changes.Add (TextFormatter.FormatText (oldAddress, "\n->\n", newAddress));
+				
+				return true;
+			}
+
+			return false;
+		}
+		
+		private bool UpdateAddress(eCH_AddressEntity familyAddress, EChAddress newRchAddress)
+		{
+			bool changed = false;
+
+			if (StringUtils.NotEqualOrEmpty (familyAddress.AddressLine1, newRchAddress.AddressLine1))
+			{
+				familyAddress.AddressLine1 = newRchAddress.AddressLine1 ?? "";
+			}
+
+			if (StringUtils.NotEqualOrEmpty (familyAddress.HouseNumber, newRchAddress.HouseNumber))
+			{
+				familyAddress.HouseNumber = newRchAddress.HouseNumber ?? "";
+				changed = true;
+			}
+
+			if (StringUtils.NotEqualOrEmpty (familyAddress.Street, newRchAddress.Street))
+			{
+				familyAddress.Street = newRchAddress.Street ?? "";
+				changed = true;
+			}
+
+			if ((familyAddress.SwissZipCode != newRchAddress.SwissZipCode) ||
+									(familyAddress.SwissZipCodeAddOn != newRchAddress.SwissZipCodeAddOn) ||
+									(familyAddress.SwissZipCodeId != newRchAddress.SwissZipCodeId))
+			{
+				familyAddress.SwissZipCode      = newRchAddress.SwissZipCode;
+				familyAddress.SwissZipCodeAddOn = newRchAddress.SwissZipCodeAddOn;
+				familyAddress.SwissZipCodeId    = newRchAddress.SwissZipCodeId;
+				changed = true;
+			}
+
+			if (StringUtils.NotEqualOrEmpty (familyAddress.Town, newRchAddress.Town))
+			{
+				familyAddress.Town = newRchAddress.Town ?? "";
+				changed = true;
+			}
+
+			if (StringUtils.NotEqualOrEmpty (familyAddress.Country, newRchAddress.CountryCode))
+			{
+				familyAddress.Country = newRchAddress.CountryCode ?? "";
+				changed = true;
+			}
+
+			return changed;
+		}
+
 		private bool UpdateHouseholdsAndPropagate(bool fixPreviousUpdate)
 		{
-			this.LogToConsole ("UpdateHouseholdsAndPropagate(fixPreviousUpdate={0})",fixPreviousUpdate);
+			this.LogToConsole ("UpdateHouseholdsAndPropagate(fixPreviousUpdate={0})", fixPreviousUpdate);
 
 			bool exit = false;
 
@@ -263,182 +424,52 @@ namespace Epsitec.Aider.Data.Job
 
 							if (family.IsNull () && fixPreviousUpdate)
 							{
-								this.LogToConsole ("Cannot fix correctly, family not found (FAMILYKEY:{0}), skipping! Are you using the good XML files ?",item.NewValue.FamilyKey);
+								this.LogToConsole ("Cannot fix correctly, family not found (FAMILYKEY:{0}), skipping! Are you using the good XML files ?", item.NewValue.FamilyKey);
 								continue;
 							}
+
+							eCH_AddressEntity familyAddress = family.Address;
+
+							EChAddress newRchAddress = item.NewValue.Address;
+							EChAddress oldRchAddress = item.OldValue.Address;
 
 							if (fixPreviousUpdate)
 							{
 								//	Restore old state for the eCH family address:
-								
-								family.Address.AddressLine1      = item.OldValue.Address.AddressLine1;
-								family.Address.HouseNumber       = item.OldValue.Address.HouseNumber;
-								family.Address.Street            = item.OldValue.Address.Street ?? "";
-								family.Address.SwissZipCode      = item.OldValue.Address.SwissZipCode;
-								family.Address.SwissZipCodeAddOn = item.OldValue.Address.SwissZipCodeAddOn;
-								family.Address.SwissZipCodeId    = item.OldValue.Address.SwissZipCodeId;
-								family.Address.Town              = item.OldValue.Address.Town ?? "";
-								family.Address.Country           = item.OldValue.Address.CountryCode ?? "";
+
+								familyAddress.AddressLine1      = oldRchAddress.AddressLine1;
+								familyAddress.HouseNumber       = oldRchAddress.HouseNumber;
+								familyAddress.Street            = oldRchAddress.Street ?? "";
+								familyAddress.SwissZipCode      = oldRchAddress.SwissZipCode;
+								familyAddress.SwissZipCodeAddOn = oldRchAddress.SwissZipCodeAddOn;
+								familyAddress.SwissZipCodeId    = oldRchAddress.SwissZipCodeId;
+								familyAddress.Town              = oldRchAddress.Town ?? "";
+								familyAddress.Country           = oldRchAddress.CountryCode ?? "";
 							}
-			
+
 							var changes = new List<FormattedText> ();
-							var changed = false;
 
-							changes.Add (TextFormatter.FormatText ("Changement dans l'adresse:"));
-
-							var oldAddress = family.Address.GetSummary ();
-
-							if (StringUtils.NotEqualOrEmpty (family.Address.AddressLine1, item.NewValue.Address.AddressLine1))
-							{
-								family.Address.AddressLine1 = item.NewValue.Address.AddressLine1 ?? "";
-							}
-
-							if (StringUtils.NotEqualOrEmpty (family.Address.HouseNumber, item.NewValue.Address.HouseNumber))
-							{
-								family.Address.HouseNumber = item.NewValue.Address.HouseNumber ?? "";
-								changed = true;
-							}
-							
-							if (StringUtils.NotEqualOrEmpty (family.Address.Street, item.NewValue.Address.Street))
-							{
-								family.Address.Street = item.NewValue.Address.Street ?? "";
-								changed = true;
-							}
-
-							if ((family.Address.SwissZipCode != item.NewValue.Address.SwissZipCode) ||
-								(family.Address.SwissZipCodeAddOn != item.NewValue.Address.SwissZipCodeAddOn) ||
-								(family.Address.SwissZipCodeId != item.NewValue.Address.SwissZipCodeId))
-							{
-								family.Address.SwissZipCode      = item.NewValue.Address.SwissZipCode;
-								family.Address.SwissZipCodeAddOn = item.NewValue.Address.SwissZipCodeAddOn;
-								family.Address.SwissZipCodeId    = item.NewValue.Address.SwissZipCodeId;
-								changed = true;
-							}
-
-							if (StringUtils.NotEqualOrEmpty (family.Address.Town, item.NewValue.Address.Town))
-							{
-								family.Address.Town = item.NewValue.Address.Town ?? "";
-								changed = true;
-							}
-
-							if (StringUtils.NotEqualOrEmpty (family.Address.Country, item.NewValue.Address.CountryCode))
-							{
-								family.Address.Country = item.NewValue.Address.CountryCode ?? "";
-								changed = true;
-							}
-
-							if (changed == false)
+							if (this.UpdateAddress (familyAddress, newRchAddress, changes) == false)
 							{
 								continue;
 							}
 
-							var newAddress = family.Address.GetSummary ();
-
-							changes.Add (TextFormatter.FormatText (oldAddress, "\n->\n", newAddress));
-
-							var refPerson               = this.GetAiderPersonEntity (businessContext,family.Adult1);
+							var refPerson               = this.GetAiderPersonEntity (businessContext, family.Adult1);
 							var potentialAiderHousehold = this.GetAiderHousehold (businessContext, refPerson);
 
 							if (potentialAiderHousehold.IsNotNull ())
 							{
 								if (fixPreviousUpdate)
 								{
-									//	Clear past warnings, then retry and restore the household address...
-									
-									//	Setup old ECh household with the previous ECh address
-									
-									var oldEChAddress = new eCH_AddressEntity ()
-									{
-										AddressLine1      = item.OldValue.Address.AddressLine1,
-										HouseNumber       = item.OldValue.Address.HouseNumber,
-										Street            = item.OldValue.Address.Street ?? "",
-										SwissZipCode      = item.OldValue.Address.SwissZipCode,
-										SwissZipCodeAddOn = item.OldValue.Address.SwissZipCodeAddOn,
-										SwissZipCodeId    = item.OldValue.Address.SwissZipCodeId,
-										Town              = item.OldValue.Address.Town ?? "",
-										Country           = item.OldValue.Address.CountryCode ?? ""
-									};
-
-									var oldEChReportedPerson = new eCH_ReportedPersonEntity ()
-									{
-										Address = oldEChAddress
-									};
-
-									this.UpdateAiderHouseholdAddress (businessContext, potentialAiderHousehold, oldEChReportedPerson);
-
-									var persons = family.Members
-										.Select (x => this.GetAiderPersonEntity (businessContext, x))
-										.Concat (potentialAiderHousehold.Members)
-										.Distinct ();
-
-									foreach (var aiderPerson in persons)
-									{
-										var warnings = aiderPerson.Warnings.ToArray ();
-
-										foreach (var warning in warnings)
-										{
-											if (warning.WarningType == WarningType.EChAddressChanged || 
-												warning.WarningType == WarningType.ParishArrival || 
-												warning.WarningType == WarningType.ParishDeparture)
-											{
-												AiderPersonWarningEntity.Delete (businessContext, warning);
-											}
-										}
-
-										//	Never mind history of parish participation -- we probably have none and we want
-										//	to make sure that we clean up the current mess...
-
-										var parishes = aiderPerson.Groups.Where (x => x.Group.IsParish ()).ToList ();
-
-										foreach (var parishParticipation in parishes)
-										{
-											aiderPerson.RemoveParticipationInternal (parishParticipation);
-											businessContext.DeleteEntity (parishParticipation);
-										}
-									}
-									
-									ParishAssigner.AssignToParish (parishAddressRepository, businessContext, persons);
-									
-									//AT THIS POINT WE HAVE RECOVERED OLD STATES -> NOW RETRY TO DO THINGS CORRECTLY
+									this.RestoreHouseholdAddressAndClearWarnings (businessContext, item, family, potentialAiderHousehold);
 								}
 
-								var isSameHead = potentialAiderHousehold.IsHead(refPerson);
-								var isSameMemberCount = potentialAiderHousehold.Members.Count (x => x.IsGovernmentDefined).Equals (family.MembersCount);
-								//Ensure that potential family is like ECh ReportedPerson before apply a full relocate
-								if (isSameHead&&isSameMemberCount)
-								{
-
-									var members = potentialAiderHousehold.Members;
-
-									//	First, reassign the parents, then the children. This simplifies the updating
-									//	of the children' household address in UpdateAiderHouseholdAndSubscription.
-
-									foreach (var member in members.Where (x => potentialAiderHousehold.IsHead (x)))
-									{
-
-										this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
-										this.ReassignAndWarnParish (businessContext, member, changes);
-
-									}
-
-									foreach (var member in members.Where (x => potentialAiderHousehold.IsHead (x) == false))
-									{
-										this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
-										this.ReassignAndWarnParish (businessContext, member, changes);
-									}
-								}
-								else //potential family is different relocate head form ECh new Data
-								{
-									var warningMessage = FormattedText.FromSimpleText ("Cette personne a maintenant son propre ménage.");
-									this.RelocateAndCreateNewAiderHousehold (businessContext, family);
-									this.CreateWarning (businessContext, refPerson, refPerson.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
-									this.ReassignAndWarnParish (businessContext, refPerson, changes);
-								}
+								this.ReassignHousehold (businessContext, changes, family, refPerson, potentialAiderHousehold);
 							}
 							else
 							{
 								//	Found a person without any contact/household...
-								
+
 								this.LogToConsole ("N'a pas encore été corrigé; pas de ménage pour {0}", refPerson.GetDisplayName ());
 							}
 						}
@@ -448,7 +479,7 @@ namespace Epsitec.Aider.Data.Job
 						}
 					}
 				});
-			
+
 			return true;
 		}
 
@@ -659,13 +690,29 @@ namespace Epsitec.Aider.Data.Job
 				});
 		}
 
+		private static void RevertEChAddress(eCH_ReportedPersonEntity family, AiderHouseholdEntity household)
+		{
+			var echAddress = family.Address;
+			var oldAddress = household.Address;
+			var oldTown = oldAddress.Town;
+
+			echAddress.AddressLine1       = oldAddress.AddressLine1;
+			echAddress.StreetUserFriendly = oldAddress.StreetUserFriendly;
+			echAddress.HouseNumber        = oldAddress.HouseNumberAndComplement;
+			echAddress.SwissZipCode       = oldTown.SwissZipCode.GetValueOrDefault (0);
+			echAddress.SwissZipCodeAddOn  = oldTown.SwissZipCodeAddOn.GetValueOrDefault (0);
+			echAddress.SwissZipCodeId     = oldTown.SwissZipCodeId.GetValueOrDefault (0);
+			echAddress.Country            = oldTown.Country.IsoCode;
+			echAddress.Town               = oldTown.Name;
+		}
+
 		private void FixNewEChReportedPersons()
 		{
 			this.LogToConsole ("CreateNewEChReportedPersons()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
-					var households = new List<AiderHouseholdEntity> ();
+					var households = new List<System.Tuple<EChReportedPerson, AiderHouseholdEntity, AiderPersonEntity>> ();
 
 					foreach (var eChReportedPerson in this.houseHoldsToCreate)
 					{
@@ -683,22 +730,67 @@ namespace Epsitec.Aider.Data.Job
 							this.LogToConsole ("COHERENCE ERROR - Person has no household: {0}", eChReportedPerson.Adult1.ToString ());
 							continue;
 						}
-						
+
+#if false
+						var p1 = adult1.ReportedPerson1;
+						var p2 = adult1.ReportedPerson2;
+
+						if (p1 == p2)
+						{
+							adult1.ReportedPerson2 = null;
+						}
+#endif
+
 						var household        = person.HouseholdContact.Household;
 						var householdAddress = household.Address;
 						var rchAddress       = eChReportedPerson.Address;
 
-						var postal1 = householdAddress.GetPostalAddress ().ToSimpleText ().Replace ("\n", ", ");
-						var postal2 = rchAddress.GetSwissPostalAddress ().ToSimpleText ().Replace ("\n", ", ");
+						var householdPostalAddress = householdAddress.GetPostalAddress ();
+						var rchPostalAddress       = rchAddress.GetSwissPostalAddress ();
+						
+						var postal1 = householdPostalAddress.ToSimpleText ().Replace ("\n", ", ");
+						var postal2 = rchPostalAddress.ToSimpleText ().Replace ("\n", ", ");
 
 						if (postal1.EndsWith (postal2) == false)
 						{
-//							this.LogToConsole ("{0}: {1} > {2}", eChReportedPerson.FamilyKey, postal1, postal2);
-							households.Add (household);
+							households.Add (System.Tuple.Create (eChReportedPerson, household, person));
 						}
 					}
 
-					this.LogToConsole ("Identified {0} households which need fixing...", households.Distinct ().Count ());
+					this.LogToConsole ("Identified {0} households which need fixing...", households.Select (x => x.Item2).Distinct ().Count ());
+
+					var processedHouseholds = new HashSet<AiderHouseholdEntity> ();
+
+					foreach (var tuple in households)
+					{
+						if (processedHouseholds.Add (tuple.Item2))
+						{
+							var changes   = new List<FormattedText> ();
+							var family    = this.GetEchReportedPersonEntity (businessContext, tuple.Item1);
+							var address   = tuple.Item1.Address;
+							var household = tuple.Item2;
+							var person    = tuple.Item3;
+
+							//	No idea why some eCH reported persons cannot be resolved, since there is
+							//	one at hand through the person -> eCH_Person...
+
+							if (family == null)
+							{
+								family = person.eCH_Person.ReportedPerson1;
+							}
+
+							EChDataUpdater.RevertEChAddress (family, household);
+
+							if (this.UpdateAddress (family.Address, address, changes))
+							{
+								this.ReassignHousehold (businessContext, changes, family, person, household);
+							}
+							else
+							{
+								this.LogToConsole ("COHERENCE ERROR - Address update did not detect any change");
+							}
+						}
+					}
 				}
 			);
 		}

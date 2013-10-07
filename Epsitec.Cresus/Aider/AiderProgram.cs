@@ -92,7 +92,7 @@ namespace Epsitec.Aider
 					return;
 				}
 																		
-				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv\last.xml -oldechfile:s:\eerv\initial.xml -output:s:\eerv\analyse.md -fixpreviousupdate:false
+				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv\last.xml -oldechfile:s:\eerv\initial.xml -output:s:\eerv\analyse.md -fixpreviousupdate:false -fixhouseholdupdate:false
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.RunEchUpdate (args));
 					return;
@@ -249,19 +249,28 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				var newEChDataFile   = AiderProgram.GetFile (args, "-newechfile:", true);
-				var oldEChDataFile   = AiderProgram.GetFile (args, "-oldechfile:", true);
-				var reportFile       = AiderProgram.GetFile (args, "-output:", true);
+				var newEChDataFile     = AiderProgram.GetFile (args, "-newechfile:", true);
+				var oldEChDataFile     = AiderProgram.GetFile (args, "-oldechfile:", true);
+				var reportFile         = AiderProgram.GetFile (args, "-output:", true);
+				var fixPreviousUpdate  = AiderProgram.GetBool (args, "-fixpreviousupdate:", false, false);
+				var fixHouseholdUpdate = AiderProgram.GetBool (args, "-fixhouseholdupdate:", false, false);
+				
 				var parishRepository = ParishAddressRepository.Current;
-				var fixPreviousUpdate   = AiderProgram.GetBool (args, "-fixpreviousupdate:", true) ?? false;
 
 				var updater = new EChDataUpdater (oldEChDataFile.FullName, newEChDataFile.FullName, reportFile.FullName, coreData, parishRepository);
+
+				if (fixHouseholdUpdate)
+				{
+					updater.FixHouseholdUpdate ();
+				}
 
 				if (fixPreviousUpdate)
 				{
 					updater.FixPreviousUpdate ();
 				}
-				else
+				
+				if ((fixHouseholdUpdate == false) &&
+					(fixPreviousUpdate == false))
 				{
 					updater.ProcessJob ();
 				}
