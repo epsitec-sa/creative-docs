@@ -74,11 +74,13 @@ function() {
       list = this.caller;
       window = this;
 
+
+
       list.dockedItems.items[2].items.items[0].setValue(
           this.form.items.items[0].lastValue
       );
 
-      var index = 1
+      var index = 1;
       list.isSearching = true;
       // Show needed columns and appli filters
       Ext.Array.each(this.form.items.items, function(item) { 
@@ -133,7 +135,13 @@ function() {
     valueExist: function(item) {
       if(Ext.isDefined(item.lastValue))
       {
-        return true;
+        if(item.lastValue != "") {
+          return true;
+        }
+        else {
+          return false;
+        }
+        
       }
       else
       {
@@ -184,11 +192,12 @@ function() {
           case 'date':
           case 'datetime':
             var values = {}; 
-            var valuesExist = false;
+            values.after = null;
+            values.before = null;
+            values.on = null;
             Ext.Array.each(item.items.items, function(subitem) {
               if(Ext.isDefined(subitem.lastValue))
               {
-                valuesExist = true;
                 switch(subitem.name)
                 {
                   case 'after':
@@ -204,18 +213,17 @@ function() {
               }
             });
 
-            if(valuesExist)
-            {
-              return values; 
-            }
+            return values; 
+            
           break;
           case 'numeric':
             var values = {}; 
-            var valuesExist = false;
+            values.eq = null;
+            values.lt = null;
+            values.gt = null;
             Ext.Array.each(item.items.items, function(subitem) {
               if(Ext.isDefined(subitem.lastValue))
               {
-                valuesExist = true;
                 switch(subitem.name)
                 {
                   case 'eq':
@@ -231,10 +239,9 @@ function() {
               }
             });
 
-            if(valuesExist)
-            {
-              return values; 
-            }
+          
+            return values; 
+            
           break;
           default:
               return null;
@@ -266,6 +273,20 @@ function() {
       list.dockedItems.items[2].items.items[0].setValue(
           this.form.items.items[0].lastValue
       );
+
+      var index = 1;
+      // Show/Unshow needed columns
+      Ext.Array.each(this.form.items.items, function(item) { 
+        if (window.valueExist(item) && !list.columns[index].isVisible()) {
+          list.columns[index].show();
+        }
+        else {
+          if (window.fields[index-1].isHidden) {
+            list.columns[index].hide();
+          }
+        }   
+        index++;     
+      }); 
     },
 
     setQuickSearchValue: function(val) {
@@ -284,8 +305,12 @@ function() {
         var field = {
           name: c.name,
           type: c.type.type,
-          isHidden: c.isHidden
+          isHidden: c.hidden
         };
+        if(!c.filter.filterable)
+        {
+          field.disabled = true;
+        }
 
         switch (c.type.type) {
           case 'int':
