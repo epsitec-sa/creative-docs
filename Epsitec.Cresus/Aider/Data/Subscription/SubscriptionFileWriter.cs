@@ -571,11 +571,13 @@ namespace Epsitec.Aider.Data.Subscription
 		private static void GetAddressDataRegular(AiderAddressEntity address, EncodingHelper encodingHelper,
 												  out string addressComplement, out string streetAddress, out string houseNumber)
 		{
-			var houseNumberAndComplement = address.HouseNumberAndComplement.Replace (" ", "");
-			
-			addressComplement = SubscriptionFileWriter.Format (address.AddressLine1, SubscriptionFileLine.AddressComplementLength, encodingHelper);
-			streetAddress     = SubscriptionFileWriter.Format (address.StreetUserFriendly, SubscriptionFileLine.StreetLength, encodingHelper);
-			houseNumber       = SubscriptionFileWriter.Format (houseNumberAndComplement, SubscriptionFileLine.HouseNumberLength, encodingHelper);
+			addressComplement = address.AddressLine1;
+			streetAddress     = address.StreetUserFriendly;
+			houseNumber       = address.GetCleanHouseNumberAndComplement ().Replace (" ", "");
+
+			addressComplement = SubscriptionFileWriter.Format (addressComplement, SubscriptionFileLine.AddressComplementLength, encodingHelper);
+			streetAddress     = SubscriptionFileWriter.Format (streetAddress, SubscriptionFileLine.StreetLength, encodingHelper);
+			houseNumber       = SubscriptionFileWriter.Format (houseNumber, SubscriptionFileLine.HouseNumberLength, encodingHelper);
 
 			if (!SubscriptionFileLine.SwissHouseNumberRegex.IsMatch (houseNumber))
 			{

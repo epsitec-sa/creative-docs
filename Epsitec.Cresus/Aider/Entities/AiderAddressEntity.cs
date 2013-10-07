@@ -172,6 +172,16 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public string GetCleanHouseNumberAndComplement()
+		{
+			var tuple = this.HouseNumberAndComplement.SplitAfter (x => char.IsDigit (x));
+
+			var houseNumber = tuple.Item1;
+			var complement  = AiderAddressEntity.ParseHouseNumberComplement (tuple.Item2) ?? "";
+
+			return AiderAddressEntity.GetCleanHouseNumberAndComplement (houseNumber, complement);
+		}
+
 
 		public static AiderAddressEntity Create(BusinessContext context, AiderAddressEntity templateAddress = null)
 		{
@@ -227,19 +237,16 @@ namespace Epsitec.Aider.Entities
 			var houseNumber = this.HouseNumber.HasValue ? InvariantConverter.ToString (this.HouseNumber.Value) : "";
 			var complement  = this.HouseNumberComplement ?? "";
 
+			value = AiderAddressEntity.GetCleanHouseNumberAndComplement (houseNumber, complement);
+		}
+
+		private static string GetCleanHouseNumberAndComplement(string houseNumber, string complement)
+		{
 			switch (complement.Length)
 			{
-				case 0:
-					value = houseNumber;
-					break;
-
-				case 1:
-					value = houseNumber+complement;
-					break;
-
-				default:
-					value = string.Concat (houseNumber, " ", complement);
-					break;
+				case 0:  return houseNumber;
+				case 1:  return houseNumber+complement;
+				default: return string.Concat (houseNumber, " ", complement);
 			}
 		}
 

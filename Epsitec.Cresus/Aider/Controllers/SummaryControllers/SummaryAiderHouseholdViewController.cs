@@ -23,14 +23,17 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
 		{
+			var address = this.Entity.Address;
+			var html = address.GetHtmlForLocationWebServices ();
+
 			wall.AddBrick()
 				.EnableActionMenu<ActionAiderHouseholdViewController0NewHouseholdMember> ()
 				.EnableActionMenu<ActionAiderHouseholdViewController1AddHouseholdMember> ()
 				.EnableActionOnDrop<ActionAiderHouseholdViewController4AddHouseholdMemberOnDrag> ();
 
 			wall.AddBrick ()
-				.Title (Resources.Text ("Adresse"))
-				.Text (this.Entity.Address.GetSummary ())
+				.Title (new FormattedText (Resources.Text ("Adresse") + html))
+				.Text (address.GetSummary ())
 				.Icon ("Data.AiderAddress")
 				.WithSpecialController (typeof (EditionAiderHouseholdViewController1Address));
 
