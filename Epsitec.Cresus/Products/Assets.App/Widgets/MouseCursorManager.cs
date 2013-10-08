@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public MouseCursorManager(Widget parent)
 		{
+			System.Diagnostics.Debug.Assert (parent != null);
 			this.parent = parent;
 		}
 
@@ -26,9 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public void SetMouseCursor(MouseCursorType cursor)
 		{
-			this.mouseCursorType = cursor;
-
-			switch (this.mouseCursorType)
+			switch (cursor)
 			{
 				case MouseCursorType.HorizontalMove:
 					this.MouseCursorImage (ref this.mouseCursorHorizontalMove, MouseCursorManager.Icon ("Cursor.HorizontalMove"));
@@ -72,7 +71,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private readonly Widget parent;
 
-		private MouseCursorType mouseCursorType;
 		private Image mouseCursorHorizontalMove;
 		private Image mouseCursorVerticalMove;
 	}
