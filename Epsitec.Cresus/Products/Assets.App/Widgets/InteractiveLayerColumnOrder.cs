@@ -111,6 +111,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					this.ClearForeground ();
 				}
+
+				this.mouseCursorType = (this.detectedColumnRank == -1) ? MouseCursorType.Default : MouseCursorType.HorizontalMove;
 			}
 		}
 

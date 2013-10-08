@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.columnsMapper = new List<int> ();
 			this.treeTableColumns = new List<AbstractTreeTableColumn> ();
 
+			this.mouseCursorManager = new MouseCursorManager (this);
+
 			//	Crée le conteneur de gauche, qui contiendra toutes les colonnes
 			//	en mode DockToLeft (habituellement la seule TreeTableColumnTree).
 			//	Ce conteneur n'est pas scrollable horizontalement; sa largeur
@@ -335,6 +337,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				column.ClearDetectedHoverRow ();
 			}
 
+			this.mouseCursorManager.Clear ();
+
 			base.OnExited (e);
 		}
 
@@ -418,6 +422,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				//	Fait réagir uniquement la surcouche en cours de drag.
 				draggingLayer.MouseMove (pos);
 			}
+
+			this.UpdateMouseCursor ();
 		}
 
 		private void ProcessMouseUp(Point pos)
@@ -427,6 +433,26 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var layer = this.interactiveLayers[i];
 				layer.MouseUp (pos);
 			}
+		}
+
+
+		private void UpdateMouseCursor()
+		{
+			var cursor = MouseCursorType.Default;
+
+			for (int i=this.interactiveLayers.Count-1; i>=0; i--)
+			{
+				var layer = this.interactiveLayers[i];
+				var c = layer.MouseCursorType;
+
+				if (c != MouseCursorType.Default)
+				{
+					cursor = c;
+					break;
+				}
+			}
+
+			this.mouseCursorManager.SetMouseCursor (cursor);
 		}
 
 
@@ -600,6 +626,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private readonly FrameBox				leftContainer;
 		private readonly Scrollable				columnsContainer;
 		private readonly List<AbstractInteractiveLayer> interactiveLayers;
+		private readonly MouseCursorManager		mouseCursorManager;
 
 		private TreeTableColumnDescription[]	columnDescriptions;
 		private ColumnWidth[]					columnWidths;

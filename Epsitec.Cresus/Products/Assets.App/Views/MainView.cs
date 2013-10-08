@@ -4,7 +4,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -12,6 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public void CreateUI(Widget parent)
 		{
+			this.parent = parent;
+
 			this.toolbar = new MainToolbar ();
 			this.toolbar.CreateUI (parent);
 
@@ -58,6 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private Widget parent;
 		private MainToolbar toolbar;
 		private FrameBox viewBox;
 		private StaticText viewTitle;

@@ -78,6 +78,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\AbstractView.cs" />
     <Compile Include="Views\CategoriesView.cs" />
+    <Compile Include="Widgets\MouseCursorManager.cs" />
     <Compile Include="Views\SettingsView.cs" />
     <Compile Include="Views\ReportsView.cs" />
     <Compile Include="Views\EventsView.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Widgets\ColorExtensions.cs" />
     <Compile Include="Widgets\AbstractTreeTableColumn.cs" />
     <Compile Include="Widgets\AbstractInteractiveLayer.cs" />
+    <Compile Include="Widgets\MouseCursorType.cs" />
     <Compile Include="Widgets\TreeTableHoverMode.cs" />
     <Compile Include="Widgets\InteractiveLayerColumnResurrect.cs" />
     <Compile Include="Widgets\InteractiveLayerColumnSeparator.cs" />
@@ -147,6 +149,8 @@
     <EmbeddedResource Include="Images\View.Settings.icon" />
     <EmbeddedResource Include="Images\Edit.Cancel.icon" />
     <EmbeddedResource Include="Images\Edit.Accept.icon" />
+    <EmbeddedResource Include="Images\Cursor.HorizontalMove.icon" />
+    <EmbeddedResource Include="Images\Cursor.VerticalMove.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

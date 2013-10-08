@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.viewType = ViewType.Objects;
 
-			this.CreateToolbar (parent, 32);
+			this.CreateToolbar (parent, 40);  // les icônes actuelles font 32
 		}
 
 		public ViewType ViewType

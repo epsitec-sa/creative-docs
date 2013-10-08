@@ -52,6 +52,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		public MouseCursorType MouseCursorType
+		{
+			get
+			{
+				return this.mouseCursorType;
+			}
+		}
+
+
 		public virtual bool HasActiveHover
 		{
 			get
@@ -213,5 +222,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected Foreground					foreground;
 		protected bool							isDragging;
+		protected MouseCursorType				mouseCursorType;
 	}
 }
