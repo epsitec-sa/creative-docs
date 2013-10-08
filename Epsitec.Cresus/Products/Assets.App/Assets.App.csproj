@@ -77,6 +77,11 @@
     <Compile Include="AssetsUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\AbstractView.cs" />
+    <Compile Include="Views\CategoriesView.cs" />
+    <Compile Include="Views\SettingsView.cs" />
+    <Compile Include="Views\ReportsView.cs" />
+    <Compile Include="Views\EventsView.cs" />
+    <Compile Include="Views\GroupsView.cs" />
     <Compile Include="Views\MainToolbar.cs" />
     <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\ObjectsView.cs" />

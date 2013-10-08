@@ -20,6 +20,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public override string Title
+		{
+			get
+			{
+				return "Objets d'immobilisation";
+			}
+		}
+
+
 		private void CreateTimeline(Widget parent)
 		{
 			this.timelineStart = new System.DateTime (2013, 1, 1);

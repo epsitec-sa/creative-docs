@@ -38,11 +38,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateToolbar(Widget parent, int size)
 		{
-			var toolbar = new FrameBox
+			var toolbar = new HToolBar
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
 				PreferredHeight = size,
+				Padding         = new Margins (0),
 			};
 
 			this.buttonObjects    = this.CreateViewButton (toolbar, ViewType.Objects,    "View.Objects");
@@ -58,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateViewButtons ();
 		}
 
-		private IconButton CreateViewButton(FrameBox toolbar, ViewType view, string icon)
+		private IconButton CreateViewButton(HToolBar toolbar, ViewType view, string icon)
 		{
 			var size = toolbar.PreferredHeight;
 
@@ -97,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
-		private IconButton CreateEditButton(FrameBox toolbar, string icon)
+		private IconButton CreateEditButton(HToolBar toolbar, string icon)
 		{
 			var size = toolbar.PreferredHeight;
 

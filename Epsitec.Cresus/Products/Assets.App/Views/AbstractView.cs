@@ -15,12 +15,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public virtual string Title
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+
 		public static AbstractView CreateView(ViewType viewType)
 		{
 			switch (viewType)
 			{
 				case ViewType.Objects:
 					return new ObjectsView ();
+
+				case ViewType.Categories:
+					return new CategoriesView ();
+
+				case ViewType.Groups:
+					return new GroupsView ();
+
+				case ViewType.Events:
+					return new EventsView ();
+
+				case ViewType.Reports:
+					return new ReportsView ();
+
+				case ViewType.Settings:
+					return new SettingsView ();
 
 				default:
 					return null;
