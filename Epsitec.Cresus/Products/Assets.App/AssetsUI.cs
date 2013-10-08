@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App
 	{
 		public void CreateUI(Widget parent)
 		{
-			this.CreateToolbar (parent, 40);
+			this.CreateToolbar (parent, 32);
 			this.CreateTreeTable (parent);
 			this.CreateTimeline (parent);
 		}
@@ -31,19 +31,67 @@ namespace Epsitec.Cresus.Assets.App
 				Margins         = new Margins (0, 0, 0, 4),
 			};
 
-			new GlyphButton
+			new IconButton
 			{
 				Parent        = toolbar,
 				Dock          = DockStyle.Left,
-				GlyphShape    = GlyphShape.Accept,
+				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Objets"),
 				PreferredSize = new Size (size, size),
 			};
 
-			new GlyphButton
+			new IconButton
 			{
 				Parent        = toolbar,
 				Dock          = DockStyle.Left,
-				GlyphShape    = GlyphShape.Close,
+				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Catégories"),
+				PreferredSize = new Size (size, size),
+			};
+
+			new IconButton
+			{
+				Parent        = toolbar,
+				Dock          = DockStyle.Left,
+				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Groupes"),
+				PreferredSize = new Size (size, size),
+			};
+
+			new IconButton
+			{
+				Parent        = toolbar,
+				Dock          = DockStyle.Left,
+				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Evénements"),
+				PreferredSize = new Size (size, size),
+			};
+
+			new IconButton
+			{
+				Parent        = toolbar,
+				Dock          = DockStyle.Left,
+				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Rapports"),
+				PreferredSize = new Size (size, size),
+			};
+
+			new IconButton
+			{
+				Parent        = toolbar,
+				Dock          = DockStyle.Left,
+				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Réglages"),
+				PreferredSize = new Size (size, size),
+			};
+
+			new IconButton
+			{
+				Parent        = toolbar,
+				Dock          = DockStyle.Right,
+				IconUri       = AssetsUI.GetResourceIconUri ("Edit.Cancel"),
+				PreferredSize = new Size (size, size),
+			};
+
+			new IconButton
+			{
+				Parent        = toolbar,
+				Dock          = DockStyle.Right,
+				IconUri       = AssetsUI.GetResourceIconUri ("Edit.Accept"),
 				PreferredSize = new Size (size, size),
 			};
 		}
@@ -716,6 +764,23 @@ namespace Epsitec.Cresus.Assets.App
 		private static System.DateTime AddDays(System.DateTime date, int numberOfDays)
 		{
 			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays).ToDateTime ();
+		}
+
+
+		private static string GetResourceIconUri(string icon)
+		{
+			if (string.IsNullOrEmpty (icon))
+			{
+				return null;
+			}
+			else if (icon.Contains (':'))
+			{
+				return FormattedText.Escape (icon);
+			}
+			else
+			{
+				return string.Format ("manifest:Epsitec.Cresus.Assets.App.Images.{0}.icon", FormattedText.Escape (icon));
+			}
 		}
 
 

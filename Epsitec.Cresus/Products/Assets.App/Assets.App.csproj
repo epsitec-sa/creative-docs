@@ -129,6 +129,14 @@
     <Content Include="Resources\Assets.App\Strings.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Images\Présentation.Groupes.icon" />
+    <EmbeddedResource Include="Images\Présentation.Objets.icon" />
+    <EmbeddedResource Include="Images\Présentation.Catégories.icon" />
+    <EmbeddedResource Include="Images\Présentation.Evénements.icon" />
+    <EmbeddedResource Include="Images\Présentation.Rapports.icon" />
+    <EmbeddedResource Include="Images\Présentation.Réglages.icon" />
+    <EmbeddedResource Include="Images\Edit.Cancel.icon" />
+    <EmbeddedResource Include="Images\Edit.Accept.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
