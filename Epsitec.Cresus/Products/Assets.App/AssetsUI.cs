@@ -15,6 +15,8 @@ namespace Epsitec.Cresus.Assets.App
 	{
 		public void CreateUI(Widget parent)
 		{
+			this.view = AssetsView.Objets;
+
 			this.CreateToolbar (parent, 32);
 			this.CreateTreeTable (parent);
 			this.CreateTimeline (parent);
@@ -31,69 +33,75 @@ namespace Epsitec.Cresus.Assets.App
 				Margins         = new Margins (0, 0, 0, 4),
 			};
 
-			new IconButton
+			this.buttonObjets     = this.CreateViewButton (toolbar, AssetsView.Objets,     "Présentation.Objets");
+			this.buttonCatégories = this.CreateViewButton (toolbar, AssetsView.Catégories, "Présentation.Catégories");
+			this.buttonGroupes    = this.CreateViewButton (toolbar, AssetsView.Groupes,    "Présentation.Groupes");
+			this.buttonEvénements = this.CreateViewButton (toolbar, AssetsView.Evénements, "Présentation.Evénements");
+			this.buttonRapports   = this.CreateViewButton (toolbar, AssetsView.Rapports,   "Présentation.Rapports");
+			this.buttonRéglages   = this.CreateViewButton (toolbar, AssetsView.Réglages,   "Présentation.Réglages");
+
+			this.buttonCancel     = this.CreateEditButton (toolbar, "Edit.Cancel");
+			this.buttonAccept     = this.CreateEditButton (toolbar, "Edit.Accept");
+
+			this.UpdateViewButtons ();
+		}
+
+		private IconButton CreateViewButton(FrameBox toolbar, AssetsView view, string icon)
+		{
+			var size = toolbar.PreferredHeight;
+
+			var button = new IconButton
 			{
 				Parent        = toolbar,
+				ButtonStyle   = ButtonStyle.ActivableIcon,
+				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Objets"),
+				IconUri       = AssetsUI.GetResourceIconUri (icon),
 				PreferredSize = new Size (size, size),
 			};
 
-			new IconButton
+			button.Clicked += delegate
 			{
-				Parent        = toolbar,
-				Dock          = DockStyle.Left,
-				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Catégories"),
-				PreferredSize = new Size (size, size),
+				this.view = view;
+				this.UpdateViewButtons ();
 			};
 
-			new IconButton
-			{
-				Parent        = toolbar,
-				Dock          = DockStyle.Left,
-				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Groupes"),
-				PreferredSize = new Size (size, size),
-			};
+			return button;
+		}
 
-			new IconButton
-			{
-				Parent        = toolbar,
-				Dock          = DockStyle.Left,
-				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Evénements"),
-				PreferredSize = new Size (size, size),
-			};
+		private void UpdateViewButtons()
+		{
+			this.SetActiveState (this.buttonObjets,     this.view == AssetsView.Objets);
+			this.SetActiveState (this.buttonCatégories, this.view == AssetsView.Catégories);
+			this.SetActiveState (this.buttonGroupes,    this.view == AssetsView.Groupes);
+			this.SetActiveState (this.buttonEvénements, this.view == AssetsView.Evénements);
+			this.SetActiveState (this.buttonRapports,   this.view == AssetsView.Rapports);
+			this.SetActiveState (this.buttonRéglages,   this.view == AssetsView.Réglages);
+		}
 
-			new IconButton
-			{
-				Parent        = toolbar,
-				Dock          = DockStyle.Left,
-				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Rapports"),
-				PreferredSize = new Size (size, size),
-			};
+		private void SetActiveState(IconButton button, bool state)
+		{
+			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
+		}
 
-			new IconButton
-			{
-				Parent        = toolbar,
-				Dock          = DockStyle.Left,
-				IconUri       = AssetsUI.GetResourceIconUri ("Présentation.Réglages"),
-				PreferredSize = new Size (size, size),
-			};
+		private IconButton CreateEditButton(FrameBox toolbar, string icon)
+		{
+			var size = toolbar.PreferredHeight;
 
-			new IconButton
+			var button = new IconButton
 			{
 				Parent        = toolbar,
+				AutoFocus     = false,
 				Dock          = DockStyle.Right,
-				IconUri       = AssetsUI.GetResourceIconUri ("Edit.Cancel"),
+				IconUri       = AssetsUI.GetResourceIconUri (icon),
 				PreferredSize = new Size (size, size),
 			};
 
-			new IconButton
+			button.Clicked += delegate
 			{
-				Parent        = toolbar,
-				Dock          = DockStyle.Right,
-				IconUri       = AssetsUI.GetResourceIconUri ("Edit.Accept"),
-				PreferredSize = new Size (size, size),
 			};
+
+			return button;
 		}
 
 
@@ -783,6 +791,28 @@ namespace Epsitec.Cresus.Assets.App
 			}
 		}
 
+
+		private enum AssetsView
+		{
+			Objets,
+			Catégories,
+			Groupes,
+			Evénements,
+			Rapports,
+			Réglages,
+		}
+
+
+		private IconButton buttonObjets;
+		private IconButton buttonCatégories;
+		private IconButton buttonGroupes;
+		private IconButton buttonEvénements;
+		private IconButton buttonRapports;
+		private IconButton buttonRéglages;
+		private IconButton buttonAccept;
+		private IconButton buttonCancel;
+
+		private AssetsView view;
 
 		private NavigationTreeTableController treeTableController;
 		private int treeTableRowsCount;
