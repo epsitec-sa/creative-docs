@@ -75,10 +75,6 @@ namespace Epsitec.Aider.Data.Job
 					//fix secondary ReportedPerson
 					person.ReportedPerson2 = null;
 
-
-					//	SAMUEL: pourquoi ???
-					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
-
 					var aiderPerson = EChPersonFixer.GetAiderPersonEntity (businessContext, person.PersonId);
 
 					if (aiderPerson.IsNull ())
@@ -105,27 +101,16 @@ namespace Epsitec.Aider.Data.Job
 							if (household.Contacts.Count (c => c.Person.eCH_Person.PersonId == person.PersonId) > 1)
 							{
 								EChPersonFixer.LogToConsole ("Too many contacts found for ID {0} in household {1} -> Removing contacts, leave only one", eChPersonId, household.GetCompactSummary ());
-								var duplicateContacts = household.Contacts.Where (c => c.Person.eCH_Person.PersonId == person.PersonId).Skip (1);
-								foreach (var duplicate in duplicateContacts)
-								{
-									//	SAMUEL: attention, mieux vaut faire une copie du résultat de la requête 'duplicateContacts' avec un ToList
-									//			pour éviter des surprises si la collection household.Contacts devait tout à coup changer sous nos
-									//			pieds pendant qu'on itère!!!
-
-									//	SAMUEL: mieux: utiliser AiderContactEntity.Delete (...)
-									
-									//	SAMUEL: il y aussi AiderContactEntity.DeleteDuplicateContacts qui fera l'affaire
-									
-									businessContext.DeleteEntity (duplicate);
-								}
+								
+								var duplicateContacts = household.Contacts.Where (c => c.Person.eCH_Person.PersonId == person.PersonId).ToList ();
+								AiderContactEntity.DeleteDuplicateContacts (businessContext, duplicateContacts);
 							}
 						}
 					}
 					else
 					{
-						var warningMessage = FormattedText.FromSimpleText ("Ménage a recréer (problème de qualité de données)");
-						EChPersonFixer.CreateWarning (businessContext, aiderPerson, aiderPerson.ParishGroupPathCache, WarningType.EChHouseholdAdded, warningTitleMessage, warningMessage, warningSource);
-						EChPersonFixer.LogToConsole ("Warning added for: {0}", aiderPerson.GetDisplayName ());
+						var warningMessage = FormattedText.FromSimpleText ("No household found -> Use PersonWithoutContactFixer job to fix");
+
 					}
 				}
 

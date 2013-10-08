@@ -89,6 +89,7 @@ namespace Epsitec.Aider.Data.Job
 			this.Dump (reportFile + ".hnew.txt", this.newHouseHoldsToCreate);
 			this.Dump (reportFile + ".hmissing.txt", this.missingHouseHoldsToRemove);
 		}
+
 		private void Dump(string path, List<Change<EChReportedPerson>> list)
 		{
 			System.IO.File.WriteAllLines (path, list.Select (x => x.OldValue.ToString () + " *** " + x.NewValue.ToString ()));
@@ -574,7 +575,7 @@ namespace Epsitec.Aider.Data.Job
 					{
 						var existingPersonEntity = this.GetEchPersonEntity (businessContext, eChPerson);
 
-						if (existingPersonEntity == null)
+						if (existingPersonEntity.IsNull ())
 						{
 							var newPersonEntity = businessContext.CreateAndRegisterEntity<eCH_PersonEntity> ();
 							newPersonEntity.PersonId = eChPerson.Id;
