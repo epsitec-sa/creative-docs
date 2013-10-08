@@ -13,7 +13,43 @@ namespace Epsitec.Cresus.Assets.App
 {
 	public class AssetsUI
 	{
-		public void CreateTestTimelineController(Widget parent)
+		public void CreateUI(Widget parent)
+		{
+			this.CreateToolbar (parent, 40);
+			this.CreateTreeTable (parent);
+			this.CreateTimeline (parent);
+		}
+
+
+		private void CreateToolbar(Widget parent, int size)
+		{
+			var toolbar = new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Top,
+				PreferredHeight = size,
+				Margins         = new Margins (0, 0, 0, 4),
+			};
+
+			new GlyphButton
+			{
+				Parent        = toolbar,
+				Dock          = DockStyle.Left,
+				GlyphShape    = GlyphShape.Accept,
+				PreferredSize = new Size (size, size),
+			};
+
+			new GlyphButton
+			{
+				Parent        = toolbar,
+				Dock          = DockStyle.Left,
+				GlyphShape    = GlyphShape.Close,
+				PreferredSize = new Size (size, size),
+			};
+		}
+
+
+		private void CreateTimeline(Widget parent)
 		{
 			this.timelineStart = new System.DateTime (2013, 1, 1);
 			this.timelineCellsCount = 365;
@@ -192,7 +228,7 @@ namespace Epsitec.Cresus.Assets.App
 		}
 
 
-		public void CreateTestTreeTableController(Widget parent)
+		private void CreateTreeTable(Widget parent)
 		{
 			var OO = AssetsUI.GetTreeTableObjects ();
 

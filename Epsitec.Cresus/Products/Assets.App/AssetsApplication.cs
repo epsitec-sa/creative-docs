@@ -186,8 +186,7 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			var ui = new AssetsUI ();
-			ui.CreateTestTimelineController (frame);
-			ui.CreateTestTreeTableController (frame);
+			ui.CreateUI (frame);
 
 			//?this.CreateTestTimelineProvider (frame);
 		}
