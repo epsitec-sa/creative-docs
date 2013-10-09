@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock           = DockStyle.Right,
 				PreferredWidth = 500,
 				Margins        = new Margins (5, 0, 0, 0),
+				BackColor      = ColorManager.GetBackgroundColor (),
 			};
 
 			this.timelineBox = new FrameBox
@@ -65,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			};
 
-			this.UpdateBoxes ();
+			this.Update ();
 		}
 
 
@@ -81,13 +82,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnCommandEdit()
 		{
 			this.editing = true;
-			this.UpdateBoxes ();
+			this.Update ();
 		}
 
 		private void OnCommandAccept()
 		{
 			this.editing = false;
-			this.UpdateBoxes ();
+			this.Update ();
 		}
 
 		private void OnCommandCancel()
@@ -102,10 +103,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateTreeTableController ();
 			}
 
-			this.UpdateBoxes ();
+			this.Update ();
 		}
 
-		private void UpdateBoxes()
+		private void Update()
 		{
 			this.editBox.Visibility = this.editing;
 
@@ -340,9 +341,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.treeTableController.RowClicked += delegate (object sender, int column, int row)
 			{
-				this.treeTableSelectedRow = this.treeTableController.TopVisibleRow + row;
-				this.UpdateTreeTableController ();
-				this.UpdateBoxes ();
+				int sel = this.treeTableController.TopVisibleRow + row;
+
+				if (this.treeTableSelectedRow == sel)
+				{
+					this.OnCommandEdit ();
+				}
+				else
+				{
+					this.treeTableSelectedRow = sel;
+					this.UpdateTreeTableController ();
+					this.Update ();
+				}
 			};
 
 			this.treeTableController.ContentChanged += delegate (object sender)
