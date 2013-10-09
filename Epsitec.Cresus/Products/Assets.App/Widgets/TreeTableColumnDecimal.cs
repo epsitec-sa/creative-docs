@@ -56,8 +56,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						}
 						else
 						{
-							text = cell.Value.Value.ToString ("0,0.00");
-							//?text = cell.Value.Value.ToString ("D2");
+							//?text = cell.Value.Value.ToString ("0,0.00");
+							text = cell.Value.Value.ToString ("C");
 						}
 
 						this.PaintText (graphics, textRect, text);
