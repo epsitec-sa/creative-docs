@@ -153,6 +153,7 @@
     <EmbeddedResource Include="Images\Cursor.VerticalMoveSeparator.icon" />
     <EmbeddedResource Include="Images\Cursor.HorizontalMoveRectangle.icon" />
     <EmbeddedResource Include="Images\Cursor.VerticalMoveRectangle.icon" />
+    <EmbeddedResource Include="Images\Edit.Edit.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -7,51 +7,48 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public class MouseCursorManager
+	public static class MouseCursorManager
 	{
-		public MouseCursorManager(Widget parent)
+		public static void SetWindow(Window window)
 		{
-			System.Diagnostics.Debug.Assert (parent != null);
-			this.parent = parent;
+			MouseCursorManager.window = window;
 		}
 
-
-		public void Clear()
+		public static void Clear()
 		{
-			this.SetMouseCursor (MouseCursorType.Default);
+			MouseCursorManager.SetMouseCursor (MouseCursorType.Default);
 		}
 
-		public void SetMouseCursor(MouseCursorType cursor)
+		public static void SetMouseCursor(MouseCursorType cursor)
 		{
 			switch (cursor)
 			{
 				case MouseCursorType.HorizontalMoveSeparator:
-					this.MouseCursorImage (ref this.imageCursorHorizontalMoveSeparator, MouseCursorManager.Icon ("Cursor.HorizontalMoveSeparator"));
+					MouseCursorManager.MouseCursorImage (ref MouseCursorManager.imageCursorHorizontalMoveSeparator, MouseCursorManager.Icon ("Cursor.HorizontalMoveSeparator"));
 					break;
 
 				case MouseCursorType.VerticalMoveSeparator:
-					this.MouseCursorImage (ref this.imageCursorVerticalMoveSeparator, MouseCursorManager.Icon ("Cursor.VerticalMoveSeparator"));
+					MouseCursorManager.MouseCursorImage (ref MouseCursorManager.imageCursorVerticalMoveSeparator, MouseCursorManager.Icon ("Cursor.VerticalMoveSeparator"));
 					break;
 
 				case MouseCursorType.HorizontalMoveRectangle:
-					this.MouseCursorImage (ref this.imageCursorHorizontalMoveRectangle, MouseCursorManager.Icon ("Cursor.HorizontalMoveRectangle"));
+					MouseCursorManager.MouseCursorImage (ref MouseCursorManager.imageCursorHorizontalMoveRectangle, MouseCursorManager.Icon ("Cursor.HorizontalMoveRectangle"));
 					break;
 
 				case MouseCursorType.VerticalMoveRectangle:
-					this.MouseCursorImage (ref this.imageCursorVerticalMoveRectangle, MouseCursorManager.Icon ("Cursor.VerticalMoveRectangle"));
+					MouseCursorManager.MouseCursorImage (ref MouseCursorManager.imageCursorVerticalMoveRectangle, MouseCursorManager.Icon ("Cursor.VerticalMoveRectangle"));
 					break;
 
 				default:
-					this.parent.Window.MouseCursor = MouseCursor.AsArrow;
+					MouseCursorManager.window.MouseCursor = MouseCursor.AsArrow;
 					break;
 			}
 		}
 
-		private void MouseCursorImage(ref Image image, string name)
+		private static void MouseCursorImage(ref Image image, string name)
 		{
 			//	Choix du sprite de la souris.
 			if (image == null)
@@ -59,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				image = ImageProvider.Instance.GetImage (name, Resources.DefaultManager);
 			}
 
-			this.parent.Window.MouseCursor = MouseCursor.FromImage (image);
+			MouseCursorManager.window.MouseCursor = MouseCursor.FromImage (image);
 		}
 
 		private static string Icon(string icon)
@@ -77,11 +74,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private readonly Widget parent;
+		private static Window window;
 
-		private Image imageCursorHorizontalMoveSeparator;
-		private Image imageCursorVerticalMoveSeparator;
-		private Image imageCursorHorizontalMoveRectangle;
-		private Image imageCursorVerticalMoveRectangle;
+		private static Image imageCursorHorizontalMoveSeparator;
+		private static Image imageCursorVerticalMoveSeparator;
+		private static Image imageCursorHorizontalMoveRectangle;
+		private static Image imageCursorVerticalMoveRectangle;
 	}
 }

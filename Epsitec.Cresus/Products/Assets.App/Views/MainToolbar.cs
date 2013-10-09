@@ -55,6 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.buttonCancel     = this.CreateEditButton (toolbar, "Edit.Cancel");
 			this.buttonAccept     = this.CreateEditButton (toolbar, "Edit.Accept");
+			this.buttonEdit       = this.CreateEditButton (toolbar, "Edit.Edit");
 
 			this.UpdateViewButtons ();
 		}
@@ -157,6 +158,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonReports;
 		private IconButton buttonSettings;
 
+		private IconButton buttonEdit;
 		private IconButton buttonAccept;
 		private IconButton buttonCancel;
 

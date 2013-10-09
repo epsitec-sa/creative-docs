@@ -30,8 +30,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.columnsMapper = new List<int> ();
 			this.treeTableColumns = new List<AbstractTreeTableColumn> ();
 
-			this.mouseCursorManager = new MouseCursorManager (this);
-
 			//	Crée le conteneur de gauche, qui contiendra toutes les colonnes
 			//	en mode DockToLeft (habituellement la seule TreeTableColumnTree).
 			//	Ce conteneur n'est pas scrollable horizontalement; sa largeur
@@ -337,7 +335,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				column.ClearDetectedHoverRow ();
 			}
 
-			this.mouseCursorManager.Clear ();
+			MouseCursorManager.Clear ();
 
 			base.OnExited (e);
 		}
@@ -452,7 +450,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
-			this.mouseCursorManager.SetMouseCursor (cursor);
+			MouseCursorManager.SetMouseCursor (cursor);
 		}
 
 
@@ -626,7 +624,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private readonly FrameBox				leftContainer;
 		private readonly Scrollable				columnsContainer;
 		private readonly List<AbstractInteractiveLayer> interactiveLayers;
-		private readonly MouseCursorManager		mouseCursorManager;
 
 		private TreeTableColumnDescription[]	columnDescriptions;
 		private ColumnWidth[]					columnWidths;
