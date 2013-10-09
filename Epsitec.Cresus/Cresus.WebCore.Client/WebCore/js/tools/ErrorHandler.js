@@ -72,12 +72,21 @@ function() {
       },
 
       showError: function(title, message) {
-        Ext.MessageBox.show({
+       /* Ext.MessageBox.show({
           icon: Ext.MessageBox.ERROR,
           title: title,
           msg: message,
           buttons: Ext.MessageBox.OK
-        });
+        });*/
+
+        toastr.options = {
+          debug: false,
+          positionClass: 'toast-top-right',
+          fadeOut: 1000,
+          timeOut: 5000,
+          extendedTimeOut: 1000
+        };
+        toastr.error(message, title);
       }
     }
   });

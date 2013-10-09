@@ -70,8 +70,8 @@ function() {
         ),
         plugins: {
           ptype: 'bufferedrenderer',
-          trailingBufferZone: 100,  // Keep 20 rows rendered in the table behind scroll
-          leadingBufferZone: 100   // Keep 50 rows rendered in the table ahead of scroll
+          trailingBufferZone: 20,  // Keep 20 rows rendered in the table behind scroll
+          leadingBufferZone: 50   // Keep 50 rows rendered in the table ahead of scroll
         },
         selModel: this.createSelModel(options),
         onSelectionChangeCallback: options.onSelectionChange,
