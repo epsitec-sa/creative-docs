@@ -3,8 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -13,14 +14,134 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public virtual void CreateUI(Widget parent, MainToolbar toolbar)
 		{
 			this.toolbar = toolbar;
+
+			var topBox = new FrameBox
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 2),
+			};
+
+			this.listBox = new FrameBox
+			{
+				Parent = topBox,
+				Dock   = DockStyle.Fill,
+			};
+
+			this.editBox = new FrameBox
+			{
+				Parent         = topBox,
+				Dock           = DockStyle.Right,
+				PreferredWidth = 500,
+				Margins        = new Margins (5, 0, 0, 0),
+				BackColor      = ColorManager.GetBackgroundColor (),
+			};
+
+			this.listTopTitle = new TopTitle
+			{
+				Parent = this.listBox,
+			};
+
+			this.listTopTitle.SetTitle (this.Title);
+
+			this.editTopTitle = new TopTitle
+			{
+				Parent = this.editBox,
+			};
+
+			this.editTopTitle.SetTitle ("Edition");
+
+			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.Edit:
+						this.OnCommandEdit ();
+						break;
+
+					case ToolbarCommand.Accept:
+						this.OnCommandAccept ();
+						break;
+
+					case ToolbarCommand.Cancel:
+						this.OnCommandCancel ();
+						break;
+				}
+			};
 		}
 
 
-		public virtual string Title
+		protected virtual string Title
 		{
 			get
 			{
 				return null;
+			}
+		}
+
+
+		protected void OnCommandEdit()
+		{
+			this.isEditing = true;
+			this.Update ();
+		}
+
+		protected void OnCommandAccept()
+		{
+			this.isEditing = false;
+			this.Update ();
+		}
+
+		protected void OnCommandCancel()
+		{
+			if (this.isEditing)
+			{
+				this.isEditing = false;
+			}
+			else
+			{
+				this.SelectedRow = -1;
+			}
+
+			this.Update ();
+		}
+
+
+		protected void Update()
+		{
+			this.editBox.Visibility = this.isEditing;
+
+			if (this.SelectedRow == -1)
+			{
+				this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+				this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+				this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			}
+			else
+			{
+				if (this.isEditing)
+				{
+					this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+					this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Enable);
+					this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+				}
+				else
+				{
+					this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Enable);
+					this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
+					this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+				}
+			}
+		}
+
+		protected virtual int SelectedRow
+		{
+			get
+			{
+				return -1;
+			}
+			set
+			{
 			}
 		}
 
@@ -53,6 +174,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected MainToolbar toolbar;
+		protected MainToolbar					toolbar;
+
+		protected FrameBox						listBox;
+		protected FrameBox						editBox;
+
+		protected TopTitle						listTopTitle;
+		protected TopTitle						editTopTitle;
+
+		protected bool							isEditing;
 	}
 }

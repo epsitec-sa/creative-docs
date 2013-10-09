@@ -17,74 +17,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent, toolbar);
 
-			var topBox = new FrameBox
-			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (0, 0, 0, 2),
-			};
-
-			this.treeTableBox = new FrameBox
-			{
-				Parent = topBox,
-				Dock   = DockStyle.Fill,
-			};
-
-			this.editBox = new FrameBox
-			{
-				Parent         = topBox,
-				Dock           = DockStyle.Right,
-				PreferredWidth = 500,
-				Margins        = new Margins (5, 0, 0, 0),
-				BackColor      = ColorManager.GetBackgroundColor (),
-			};
-
-			this.treeTableTopTitle = new TopTitle
-			{
-				Parent = this.treeTableBox,
-			};
-
-			this.treeTableTopTitle.SetTitle (this.Title);
-
-			this.editTopTitle = new TopTitle
-			{
-				Parent = this.editBox,
-			};
-
-			this.editTopTitle.SetTitle ("Edition");
-
 			this.timelineBox = new FrameBox
 			{
 				Parent = parent,
 				Dock   = DockStyle.Bottom,
 			};
 
-			this.CreateTreeTable (this.treeTableBox);
+			this.CreateTreeTable (this.listBox);
 			this.CreateTimeline (this.timelineBox);
-
-			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			{
-				switch (command)
-				{
-					case ToolbarCommand.Edit:
-						this.OnCommandEdit ();
-						break;
-
-					case ToolbarCommand.Accept:
-						this.OnCommandAccept ();
-						break;
-
-					case ToolbarCommand.Cancel:
-						this.OnCommandCancel ();
-						break;
-				}
-			};
 
 			this.Update ();
 		}
 
 
-		public override string Title
+		protected override string Title
 		{
 			get
 			{
@@ -93,59 +39,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void OnCommandEdit()
+		protected override int SelectedRow
 		{
-			this.editing = true;
-			this.Update ();
-		}
-
-		private void OnCommandAccept()
-		{
-			this.editing = false;
-			this.Update ();
-		}
-
-		private void OnCommandCancel()
-		{
-			if (this.editing)
+			get
 			{
-				this.editing = false;
+				return this.treeTableSelectedRow;
 			}
-			else
+			set
 			{
-				this.treeTableSelectedRow = -1;
-				this.UpdateTreeTableController ();
-			}
-
-			this.Update ();
-		}
-
-		private void Update()
-		{
-			this.editBox.Visibility = this.editing;
-
-			if (this.treeTableSelectedRow == -1)
-			{
-				this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
-				this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-				this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
-			}
-			else
-			{
-				if (this.editing)
+				if (this.treeTableSelectedRow != value)
 				{
-					this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
-					this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Enable);
-					this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+					this.treeTableSelectedRow = value;
+					this.UpdateTreeTableController ();
 				}
-				else
-				{
-					this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Enable);
-					this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
-					this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
-				}
-
-				//this.editTopTitle.SetTitle ("...");  // TODO
 			}
 		}
 
@@ -828,14 +734,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private FrameBox						treeTableBox;
-		private FrameBox						editBox;
 		private FrameBox						timelineBox;
-
-		private TopTitle						treeTableTopTitle;
-		private TopTitle						editTopTitle;
-
-		private bool							editing;
 
 		private NavigationTreeTableController	treeTableController;
 		private int								treeTableRowsCount;

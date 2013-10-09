@@ -16,10 +16,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void CreateUI(Widget parent, MainToolbar toolbar)
 		{
 			base.CreateUI (parent, toolbar);
+
+			this.Update ();
 		}
 
 
-		public override string Title
+		protected override string Title
 		{
 			get
 			{
