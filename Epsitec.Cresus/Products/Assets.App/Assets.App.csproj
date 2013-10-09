@@ -149,8 +149,10 @@
     <EmbeddedResource Include="Images\View.Settings.icon" />
     <EmbeddedResource Include="Images\Edit.Cancel.icon" />
     <EmbeddedResource Include="Images\Edit.Accept.icon" />
-    <EmbeddedResource Include="Images\Cursor.HorizontalMove.icon" />
-    <EmbeddedResource Include="Images\Cursor.VerticalMove.icon" />
+    <EmbeddedResource Include="Images\Cursor.HorizontalMoveSeparator.icon" />
+    <EmbeddedResource Include="Images\Cursor.VerticalMoveSeparator.icon" />
+    <EmbeddedResource Include="Images\Cursor.HorizontalMoveRectangle.icon" />
+    <EmbeddedResource Include="Images\Cursor.VerticalMoveRectangle.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

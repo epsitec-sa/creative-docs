@@ -6,7 +6,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	public enum MouseCursorType
 	{
 		Default,
-		HorizontalMove,
-		VerticalMove,
+
+		HorizontalMoveSeparator,
+		VerticalMoveSeparator,
+		
+		HorizontalMoveRectangle,
+		VerticalMoveRectangle,
 	};
 }

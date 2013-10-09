@@ -29,12 +29,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			switch (cursor)
 			{
-				case MouseCursorType.HorizontalMove:
-					this.MouseCursorImage (ref this.mouseCursorHorizontalMove, MouseCursorManager.Icon ("Cursor.HorizontalMove"));
+				case MouseCursorType.HorizontalMoveSeparator:
+					this.MouseCursorImage (ref this.imageCursorHorizontalMoveSeparator, MouseCursorManager.Icon ("Cursor.HorizontalMoveSeparator"));
 					break;
 
-				case MouseCursorType.VerticalMove:
-					this.MouseCursorImage (ref this.mouseCursorVerticalMove, MouseCursorManager.Icon ("Cursor.VerticalMove"));
+				case MouseCursorType.VerticalMoveSeparator:
+					this.MouseCursorImage (ref this.imageCursorVerticalMoveSeparator, MouseCursorManager.Icon ("Cursor.VerticalMoveSeparator"));
+					break;
+
+				case MouseCursorType.HorizontalMoveRectangle:
+					this.MouseCursorImage (ref this.imageCursorHorizontalMoveRectangle, MouseCursorManager.Icon ("Cursor.HorizontalMoveRectangle"));
+					break;
+
+				case MouseCursorType.VerticalMoveRectangle:
+					this.MouseCursorImage (ref this.imageCursorVerticalMoveRectangle, MouseCursorManager.Icon ("Cursor.VerticalMoveRectangle"));
 					break;
 
 				default:
@@ -71,7 +79,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private readonly Widget parent;
 
-		private Image mouseCursorHorizontalMove;
-		private Image mouseCursorVerticalMove;
+		private Image imageCursorHorizontalMoveSeparator;
+		private Image imageCursorVerticalMoveSeparator;
+		private Image imageCursorHorizontalMoveRectangle;
+		private Image imageCursorVerticalMoveRectangle;
 	}
 }
