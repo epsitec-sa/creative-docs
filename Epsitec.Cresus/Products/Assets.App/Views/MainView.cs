@@ -20,14 +20,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar = new MainToolbar ();
 			this.toolbar.CreateUI (parent);
 
-			this.viewTitle = new StaticText
-			{
-				Parent           = parent,
-				PreferredHeight  = 30,
-				Dock             = DockStyle.Top,
-				ContentAlignment = ContentAlignment.MiddleCenter,
-			};
-
 			this.viewBox = new FrameBox
 			{
 				Parent = parent,
@@ -53,16 +45,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.view = AbstractView.CreateView (this.toolbar.ViewType);
 
-			if (this.view == null)
-			{
-				this.viewTitle.Text = null;
-			}
-			else
+			if (this.view != null)
 			{
 				this.view.CreateUI (this.viewBox, this.toolbar);
-
-				this.viewTitle.Text = this.view.Title;
-				this.viewTitle.TextLayout.DefaultFontSize = 20.0;
 			}
 		}
 
@@ -70,7 +55,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private Widget parent;
 		private MainToolbar toolbar;
 		private FrameBox viewBox;
-		private StaticText viewTitle;
 		private AbstractView view;
 	}
 }

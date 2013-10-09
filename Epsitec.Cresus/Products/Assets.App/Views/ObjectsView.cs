@@ -19,9 +19,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var topBox = new FrameBox
 			{
-				Parent          = parent,
-				Dock            = DockStyle.Fill,
-				Margins         = new Margins (0, 0, 0, 2),
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 2),
 			};
 
 			this.treeTableBox = new FrameBox
@@ -38,6 +38,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins        = new Margins (5, 0, 0, 0),
 				BackColor      = ColorManager.GetBackgroundColor (),
 			};
+
+			this.treeTableTopTitle = new TopTitle
+			{
+				Parent = this.treeTableBox,
+			};
+
+			this.treeTableTopTitle.SetTitle (this.Title);
+
+			this.editTopTitle = new TopTitle
+			{
+				Parent = this.editBox,
+			};
+
+			this.editTopTitle.SetTitle ("Edition");
 
 			this.timelineBox = new FrameBox
 			{
@@ -812,26 +826,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private static string GetResourceIconUri(string icon)
-		{
-			if (string.IsNullOrEmpty (icon))
-			{
-				return null;
-			}
-			else if (icon.Contains (':'))
-			{
-				return FormattedText.Escape (icon);
-			}
-			else
-			{
-				return string.Format ("manifest:Epsitec.Cresus.Assets.App.Images.{0}.icon", FormattedText.Escape (icon));
-			}
-		}
-
-
 		private FrameBox treeTableBox;
 		private FrameBox editBox;
 		private FrameBox timelineBox;
+
+		private TopTitle treeTableTopTitle;
+		private TopTitle editTopTitle;
 
 		private bool editing;
 
