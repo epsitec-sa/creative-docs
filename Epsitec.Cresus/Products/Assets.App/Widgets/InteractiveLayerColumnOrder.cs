@@ -112,7 +112,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.ClearForeground ();
 				}
 
-				this.mouseCursorType = (this.detectedColumnRank == -1) ? MouseCursorType.Default : MouseCursorType.HorizontalMoveRectangle;
+				this.mouseCursorType = (this.detectedColumnRank == -1)
+					? MouseCursorType.Default
+					: MouseCursorType.HorizontalMoveRectangle;
 			}
 		}
 
@@ -317,7 +319,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (rect.IsValid)
 			{
-				var color = Color.FromAlphaColor (0.4, ColorManager.MoveColumnColor);
+				var color = Color.FromAlphaColor (0.2, ColorManager.MoveColumnColor);
 				this.foreground.AddSurface (rect, color);
 			}
 
