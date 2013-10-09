@@ -7,6 +7,10 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Ce contrôleur simplifie l'usage d'un NavigationTreeTableController, en supposant
+	/// une liste complète connue à l'avance.
+	/// </summary>
 	public class SimpleTreeTableController
 	{
 		public SimpleTreeTableController()
@@ -82,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var firstRow = this.treeTable.TopVisibleRow;
 			int selection = this.selectedRow - this.treeTable.TopVisibleRow;
 
-
+			//	Construit la liste des conteneurs.
 			var list = new List<object> ();
 
 			foreach (var description in this.columnDescriptions)
@@ -97,7 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
-
+			//	Rempli les conteneurs en fonction de this.Content.
 			var count = this.treeTable.VisibleRowsCount;
 			for (int i=0; i<count; i++)
 			{
@@ -130,10 +134,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						l.Add (s);
 					}
 				}
-
 			}
 
-
+			//	Passe les données des conteneurs au TreeTable.
 			for (int c=0; c<this.columnDescriptions.Length; c++)
 			{
 				var description = this.columnDescriptions[c];
@@ -166,37 +169,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		private readonly NavigationTreeTableController treeTable;
-		private readonly List<List<AbstractSimpleTreeTableCell>> content;
+		private readonly NavigationTreeTableController				treeTable;
+		private readonly List<List<AbstractSimpleTreeTableCell>>	content;
 
 		private TreeTableColumnDescription[]	columnDescriptions;
 		private int								selectedRow;
-	}
-
-
-	// TODO: Move to file ?
-
-	public abstract class AbstractSimpleTreeTableCell
-	{
-	}
-
-	public class SimpleTreeTableCellString : AbstractSimpleTreeTableCell
-	{
-		public SimpleTreeTableCellString(string value)
-		{
-			this.Value = value;
-		}
-
-		public readonly string Value;
-	}
-
-	public class SimpleTreeTableCellDecimal : AbstractSimpleTreeTableCell
-	{
-		public SimpleTreeTableCellDecimal(decimal value)
-		{
-			this.Value = value;
-		}
-
-		public readonly decimal Value;
 	}
 }

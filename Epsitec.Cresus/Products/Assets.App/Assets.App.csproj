@@ -80,6 +80,9 @@
     <Compile Include="Views\CategoriesView.cs" />
     <Compile Include="Views\ToolbarCommand.cs" />
     <Compile Include="Views\ToolbarCommandState.cs" />
+    <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
+    <Compile Include="Widgets\SimpleTreeTableCellDecimal.cs" />
+    <Compile Include="Widgets\SimpleTreeTableCellString.cs" />
     <Compile Include="Widgets\SimpleTreeTableController.cs" />
     <Compile Include="Widgets\TopTitle.cs" />
     <Compile Include="Widgets\MouseCursorManager.cs" />
