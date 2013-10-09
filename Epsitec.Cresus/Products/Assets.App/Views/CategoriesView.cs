@@ -13,8 +13,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class CategoriesView : AbstractView
 	{
-		public override void CreateUI(Widget parent)
+		public override void CreateUI(Widget parent, MainToolbar toolbar)
 		{
+			base.CreateUI (parent, toolbar);
 		}
 
 

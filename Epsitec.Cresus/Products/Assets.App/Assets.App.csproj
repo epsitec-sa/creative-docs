@@ -78,6 +78,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\AbstractView.cs" />
     <Compile Include="Views\CategoriesView.cs" />
+    <Compile Include="Views\ToolbarCommand.cs" />
+    <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\MouseCursorManager.cs" />
     <Compile Include="Views\SettingsView.cs" />
     <Compile Include="Views\ReportsView.cs" />

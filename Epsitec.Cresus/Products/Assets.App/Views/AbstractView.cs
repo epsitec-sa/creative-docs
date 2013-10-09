@@ -10,8 +10,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractView
 	{
-		public virtual void CreateUI(Widget parent)
+		public virtual void CreateUI(Widget parent, MainToolbar toolbar)
 		{
+			this.toolbar = toolbar;
 		}
 
 
@@ -50,5 +51,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return null;
 			}
 		}
+
+
+		protected MainToolbar toolbar;
 	}
 }

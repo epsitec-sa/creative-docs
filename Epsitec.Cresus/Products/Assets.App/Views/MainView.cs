@@ -45,6 +45,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateView()
 		{
+			this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+			this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+			this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+
 			this.viewBox.Children.Clear ();
 
 			this.view = AbstractView.CreateView (this.toolbar.ViewType);
@@ -55,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				this.view.CreateUI (this.viewBox);
+				this.view.CreateUI (this.viewBox, this.toolbar);
 
 				this.viewTitle.Text = this.view.Title;
 				this.viewTitle.TextLayout.DefaultFontSize = 20.0;

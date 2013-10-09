@@ -12,11 +12,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MainToolbar
 	{
+		public MainToolbar()
+		{
+			this.commandStates = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
+		}
+
 		public void CreateUI(Widget parent)
 		{
 			this.viewType = ViewType.Objects;
 
 			this.CreateToolbar (parent, 40);  // les icônes actuelles font 32
+			this.UpdateCommandButtons ();
 		}
 
 		public ViewType ViewType
@@ -33,6 +39,50 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.UpdateViewButtons ();
 				}
 			}
+		}
+
+
+		public void SetCommandState(ToolbarCommand command, ToolbarCommandState state)
+		{
+			this.commandStates[command] = state;
+			this.UpdateCommandButtons ();
+		}
+
+		public ToolbarCommandState GetCommandState(ToolbarCommand command)
+		{
+			if (this.commandStates.ContainsKey (command))
+			{
+				return this.commandStates[command];
+			}
+			else
+			{
+				return ToolbarCommandState.Hide;
+			}
+		}
+
+
+		private void UpdateCommandButtons()
+		{
+			this.buttonEdit.Visibility   = this.GetCommandVisibility (ToolbarCommand.Edit);
+			this.buttonEdit.Enable       = this.GetCommandEnable     (ToolbarCommand.Edit);
+
+			this.buttonAccept.Visibility = this.GetCommandVisibility (ToolbarCommand.Accept);
+			this.buttonAccept.Enable     = this.GetCommandEnable     (ToolbarCommand.Accept);
+			
+			this.buttonCancel.Visibility = this.GetCommandVisibility (ToolbarCommand.Cancel);
+			this.buttonCancel.Enable     = this.GetCommandEnable     (ToolbarCommand.Cancel);
+		}
+
+		private bool GetCommandVisibility(ToolbarCommand command)
+		{
+			var state = this.GetCommandState (command);
+			return state != ToolbarCommandState.Hide;
+		}
+
+		private bool GetCommandEnable(ToolbarCommand command)
+		{
+			var state = this.GetCommandState (command);
+			return state == ToolbarCommandState.Enable;
 		}
 
 
@@ -56,6 +106,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonCancel     = this.CreateEditButton (toolbar, "Edit.Cancel");
 			this.buttonAccept     = this.CreateEditButton (toolbar, "Edit.Accept");
 			this.buttonEdit       = this.CreateEditButton (toolbar, "Edit.Edit");
+
+			this.buttonEdit.Clicked += delegate
+			{
+				this.OnCommandClicked (ToolbarCommand.Edit);
+			};
+
+			this.buttonAccept.Clicked += delegate
+			{
+				this.OnCommandClicked (ToolbarCommand.Accept);
+			};
+
+			this.buttonCancel.Clicked += delegate
+			{
+				this.OnCommandClicked (ToolbarCommand.Cancel);
+			};
 
 			this.UpdateViewButtons ();
 		}
@@ -148,8 +213,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public delegate void ViewChangedEventHandler(object sender, ViewType viewType);
 		public event ViewChangedEventHandler ViewChanged;
+
+
+		private void OnCommandClicked(ToolbarCommand command)
+		{
+			if (this.CommandClicked != null)
+			{
+				this.CommandClicked (this, command);
+			}
+		}
+
+		public delegate void CommandClickedEventHandler(object sender, ToolbarCommand command);
+		public event CommandClickedEventHandler CommandClicked;
 		#endregion
 
+
+		private readonly Dictionary<ToolbarCommand, ToolbarCommandState> commandStates;
 
 		private IconButton buttonObjects;
 		private IconButton buttonCategories;

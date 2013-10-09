@@ -13,10 +13,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectsView : AbstractView
 	{
-		public override void CreateUI(Widget parent)
+		public override void CreateUI(Widget parent, MainToolbar toolbar)
 		{
+			base.CreateUI (parent, toolbar);
+
 			this.CreateTreeTable (parent);
 			this.CreateTimeline (parent);
+
+			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.Edit:
+						this.OnCommandEdit ();
+						break;
+
+					case ToolbarCommand.Accept:
+						this.OnCommandAccept ();
+						break;
+
+					case ToolbarCommand.Cancel:
+						this.OnCommandCancel ();
+						break;
+				}
+			};
 		}
 
 
@@ -26,6 +46,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return "Objets d'immobilisation";
 			}
+		}
+
+
+		private void OnCommandEdit()
+		{
+		}
+
+		private void OnCommandAccept()
+		{
+		}
+
+		private void OnCommandCancel()
+		{
+			this.treeTableSelectedRow = -1;
+			this.UpdateTreeTableController ();
+
+			this.toolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Hide);
+			this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+			this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
 		}
 
 
@@ -240,6 +279,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.treeTableSelectedRow = this.treeTableController.TopVisibleRow + row;
 				this.UpdateTreeTableController ();
+
+				this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Enable);
+				this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
+				this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
 			};
 
 			this.treeTableController.ContentChanged += delegate (object sender)
