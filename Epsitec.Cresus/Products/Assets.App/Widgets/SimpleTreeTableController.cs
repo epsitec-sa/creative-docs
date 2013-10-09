@@ -88,7 +88,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					{
 						System.Diagnostics.Debug.Assert (line[c] is SimpleTreeTableCellString);
 					}
-					else if (description.Type == TreeTableColumnType.Decimal)
+					else if (description.Type == TreeTableColumnType.Decimal ||
+							 description.Type == TreeTableColumnType.Rate)
 					{
 						System.Diagnostics.Debug.Assert (line[c] is SimpleTreeTableCellDecimal);
 					}
@@ -120,7 +121,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					list.Add (new List<TreeTableCellString> ());
 				}
-				else if (description.Type == TreeTableColumnType.Decimal)
+				else if (description.Type == TreeTableColumnType.Decimal ||
+						 description.Type == TreeTableColumnType.Rate)
 				{
 					list.Add (new List<TreeTableCellDecimal> ());
 				}
@@ -150,7 +152,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						var l = list[c] as List<TreeTableCellString>;
 						l.Add (s);
 					}
-					else if (description.Type == TreeTableColumnType.Decimal)
+					else if (description.Type == TreeTableColumnType.Decimal ||
+							 description.Type == TreeTableColumnType.Rate)
 					{
 						var x = (content as SimpleTreeTableCellDecimal).Value;
 						var s = new TreeTableCellDecimal (true, x, isSelected: (i == selection));
@@ -171,7 +174,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					var l = list[c] as List<TreeTableCellString>;
 					this.treeTable.SetColumnCells (c, l.ToArray ());
 				}
-				else if (description.Type == TreeTableColumnType.Decimal)
+				else if (description.Type == TreeTableColumnType.Decimal ||
+						 description.Type == TreeTableColumnType.Rate)
 				{
 					var l = list[c] as List<TreeTableCellDecimal>;
 					this.treeTable.SetColumnCells (c, l.ToArray ());

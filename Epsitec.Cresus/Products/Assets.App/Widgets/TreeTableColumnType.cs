@@ -8,5 +8,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		Tree,
 		String,
 		Decimal,
+		Rate,
 	};
 }

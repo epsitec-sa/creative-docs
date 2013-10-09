@@ -54,7 +54,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 
 				case TreeTableColumnType.Decimal:
-					column = new TreeTableColumnDecimal ();
+					column = new TreeTableColumnDecimal (isRate: false);
+					break;
+
+				case TreeTableColumnType.Rate:
+					column = new TreeTableColumnDecimal (isRate: true);
 					break;
 			}
 

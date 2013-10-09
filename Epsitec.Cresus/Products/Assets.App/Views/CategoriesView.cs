@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var list = new List<TreeTableColumnDescription> ();
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  200, "Nom"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal,  80, "Taux"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate,     80, "Taux"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   80, "Type"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 100, "Résidu"));
 

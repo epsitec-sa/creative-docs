@@ -15,6 +15,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnDecimal : AbstractTreeTableColumn
 	{
+		public TreeTableColumnDecimal(bool isRate = false)
+		{
+			this.isRate = isRate;
+		}
+
 		public void SetCells(TreeTableCellDecimal[] cells)
 		{
 			this.cells = cells;
@@ -43,8 +48,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					{
 						var textRect = this.GetContentDeflateRectangle (rect);
 
-						var text = cell.Value.Value.ToString ("0,0.00");
-						//?var text = cellDecimal.Value.Value.ToString ("D2");
+						string text;
+
+						if (this.isRate)
+						{
+							text = cell.Value.Value.ToString ("0.0") + "%";
+						}
+						else
+						{
+							text = cell.Value.Value.ToString ("0,0.00");
+							//?text = cell.Value.Value.ToString ("D2");
+						}
 
 						this.PaintText (graphics, textRect, text);
 					}
@@ -66,6 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private readonly bool isRate;
 		private TreeTableCellDecimal[] cells;
 	}
 }
