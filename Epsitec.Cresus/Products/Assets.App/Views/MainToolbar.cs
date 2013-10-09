@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommandButtons ();
 		}
 
+
 		public ViewType ViewType
 		{
 			get

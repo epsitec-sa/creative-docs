@@ -144,6 +144,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
 					this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
 				}
+
+				//this.editTopTitle.SetTitle ("...");  // TODO
 			}
 		}
 
@@ -344,14 +346,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock   = DockStyle.Fill,
 			};
 
+			this.treeTableController.CreateUI (frame, footerHeight: 0);
+			this.treeTableController.SetColumns (ObjectsView.GetColumns (), 1);
+			this.UpdateTreeTableController ();
+
 			this.treeTableController.RowChanged += delegate
 			{
 				this.UpdateTreeTableController ();
 			};
-
-			this.treeTableController.CreateUI (frame, footerHeight: 0);
-			this.treeTableController.SetColumns (ObjectsView.GetColumns (), 1);
-			this.UpdateTreeTableController ();
 
 			this.treeTableController.RowClicked += delegate (object sender, int column, int row)
 			{
@@ -826,22 +828,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private FrameBox treeTableBox;
-		private FrameBox editBox;
-		private FrameBox timelineBox;
+		private FrameBox						treeTableBox;
+		private FrameBox						editBox;
+		private FrameBox						timelineBox;
 
-		private TopTitle treeTableTopTitle;
-		private TopTitle editTopTitle;
+		private TopTitle						treeTableTopTitle;
+		private TopTitle						editTopTitle;
 
-		private bool editing;
+		private bool							editing;
 
-		private NavigationTreeTableController treeTableController;
-		private int treeTableRowsCount;
-		private int treeTableSelectedRow;
+		private NavigationTreeTableController	treeTableController;
+		private int								treeTableRowsCount;
+		private int								treeTableSelectedRow;
 
-		private NavigationTimelineController timelineController;
-		private System.DateTime timelineStart;
-		private int timelineCellsCount;
-		private int timelineSelectedCell;
+		private NavigationTimelineController	timelineController;
+		private System.DateTime					timelineStart;
+		private int								timelineCellsCount;
+		private int								timelineSelectedCell;
 	}
 }

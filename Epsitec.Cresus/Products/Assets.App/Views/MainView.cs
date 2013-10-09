@@ -52,9 +52,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private Widget parent;
-		private MainToolbar toolbar;
-		private FrameBox viewBox;
-		private AbstractView view;
+		private Widget							parent;
+		private MainToolbar						toolbar;
+		private FrameBox						viewBox;
+		private AbstractView					view;
 	}
 }
