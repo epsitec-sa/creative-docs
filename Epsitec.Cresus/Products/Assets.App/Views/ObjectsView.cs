@@ -17,8 +17,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent, toolbar);
 
-			this.CreateTreeTable (parent);
-			this.CreateTimeline (parent);
+			var topBox = new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Fill,
+				Margins         = new Margins (0, 0, 0, 2),
+			};
+
+			this.treeTableBox = new FrameBox
+			{
+				Parent = topBox,
+				Dock   = DockStyle.Fill,
+			};
+
+			this.editBox = new FrameBox
+			{
+				Parent         = topBox,
+				Dock           = DockStyle.Right,
+				PreferredWidth = 500,
+				Margins        = new Margins (5, 0, 0, 0),
+			};
+
+			this.timelineBox = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Bottom,
+			};
+
+			this.CreateTreeTable (this.treeTableBox);
+			this.CreateTimeline (this.timelineBox);
 
 			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
 			{
@@ -37,6 +64,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						break;
 				}
 			};
+
+			this.UpdateBoxes ();
 		}
 
 
@@ -51,20 +80,56 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnCommandEdit()
 		{
+			this.editing = true;
+			this.UpdateBoxes ();
 		}
 
 		private void OnCommandAccept()
 		{
+			this.editing = false;
+			this.UpdateBoxes ();
 		}
 
 		private void OnCommandCancel()
 		{
-			this.treeTableSelectedRow = -1;
-			this.UpdateTreeTableController ();
+			if (this.editing)
+			{
+				this.editing = false;
+			}
+			else
+			{
+				this.treeTableSelectedRow = -1;
+				this.UpdateTreeTableController ();
+			}
 
-			this.toolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Hide);
-			this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-			this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			this.UpdateBoxes ();
+		}
+
+		private void UpdateBoxes()
+		{
+			this.editBox.Visibility = this.editing;
+
+			if (this.treeTableSelectedRow == -1)
+			{
+				this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+				this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+				this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			}
+			else
+			{
+				if (this.editing)
+				{
+					this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+					this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Enable);
+					this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+				}
+				else
+				{
+					this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Enable);
+					this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
+					this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+				}
+			}
 		}
 
 
@@ -84,7 +149,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent          = parent,
 				Dock            = DockStyle.Bottom,
 				PreferredHeight = 70,
-				Margins         = new Margins (0, 0, 2, 0),
 			};
 
 			this.timelineController.DateChanged += delegate
@@ -256,14 +320,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.treeTableController = new NavigationTreeTableController
 			{
-				RowsCount    = treeTableRowsCount,
+				RowsCount = treeTableRowsCount,
 			};
 
 			var frame = new FrameBox
 			{
-				Parent          = parent,
-				Dock            = DockStyle.Fill,
-				Margins         = new Margins (0),
+				Parent = parent,
+				Dock   = DockStyle.Fill,
 			};
 
 			this.treeTableController.RowChanged += delegate
@@ -272,17 +335,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.treeTableController.CreateUI (frame, footerHeight: 0);
-			this.treeTableController.SetColumns (ObjectsView.GetColumns (), 2);
+			this.treeTableController.SetColumns (ObjectsView.GetColumns (), 1);
 			this.UpdateTreeTableController ();
 
 			this.treeTableController.RowClicked += delegate (object sender, int column, int row)
 			{
 				this.treeTableSelectedRow = this.treeTableController.TopVisibleRow + row;
 				this.UpdateTreeTableController ();
-
-				this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Enable);
-				this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
-				this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+				this.UpdateBoxes ();
 			};
 
 			this.treeTableController.ContentChanged += delegate (object sender)
@@ -758,6 +818,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		private FrameBox treeTableBox;
+		private FrameBox editBox;
+		private FrameBox timelineBox;
+
+		private bool editing;
 
 		private NavigationTreeTableController treeTableController;
 		private int treeTableRowsCount;
