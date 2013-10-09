@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				this.selectedRow = this.treeTable.TopVisibleRow + row;
 				this.UpdateTreeTableController ();
+				this.OnRowClicked (column, row);
 			};
 
 			this.treeTable.ContentChanged += delegate (object sender)
@@ -149,6 +150,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 		}
+
+
+		#region Events handler
+		private void OnRowClicked(int column, int row)
+		{
+			if (this.RowClicked != null)
+			{
+				this.RowClicked (this, column, row);
+			}
+		}
+
+		public delegate void RowClickedEventHandler(object sender, int column, int row);
+		public event RowClickedEventHandler RowClicked;
+		#endregion
 
 
 		private readonly NavigationTreeTableController treeTable;

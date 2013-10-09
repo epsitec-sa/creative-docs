@@ -17,18 +17,82 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent, toolbar);
 
-			var title = new TopTitle
+			var topBox = new FrameBox
 			{
-				Parent = parent,
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 2),
 			};
 
-			title.SetTitle (this.Title);
+			this.treeTableBox = new FrameBox
+			{
+				Parent = topBox,
+				Dock   = DockStyle.Fill,
+			};
+
+			this.editBox = new FrameBox
+			{
+				Parent         = topBox,
+				Dock           = DockStyle.Right,
+				PreferredWidth = 500,
+				Margins        = new Margins (5, 0, 0, 0),
+				BackColor      = ColorManager.GetBackgroundColor (),
+			};
+
+			this.treeTableTopTitle = new TopTitle
+			{
+				Parent = this.treeTableBox,
+			};
+
+			this.treeTableTopTitle.SetTitle (this.Title);
+
+			this.editTopTitle = new TopTitle
+			{
+				Parent = this.editBox,
+			};
+
+			this.editTopTitle.SetTitle ("Edition");
+
+			this.lastSelectedRow = -2;
 
 			this.treeTable = new SimpleTreeTableController ();
-			this.treeTable.CreateUI (parent, footerHeight: 0);
+			this.treeTable.CreateUI (this.treeTableBox, footerHeight: 0);
 			this.treeTable.SetColumns (this.Descriptions, 0);
 			this.treeTable.Content.AddRange (this.Content);
 			this.treeTable.UpdateContent ();
+
+			this.treeTable.RowClicked += delegate
+			{
+				if (this.lastSelectedRow == this.treeTable.SelectedRow)
+				{
+					this.OnCommandEdit ();
+				}
+				else
+				{
+					this.lastSelectedRow = this.treeTable.SelectedRow;
+					this.Update ();
+				}
+			};
+
+			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.Edit:
+						this.OnCommandEdit ();
+						break;
+
+					case ToolbarCommand.Accept:
+						this.OnCommandAccept ();
+						break;
+
+					case ToolbarCommand.Cancel:
+						this.OnCommandCancel ();
+						break;
+				}
+			};
+
+			this.Update ();
 		}
 
 
@@ -37,6 +101,62 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return "Catégories d'immobilisation";
+			}
+		}
+
+
+		private void OnCommandEdit()
+		{
+			this.editing = true;
+			this.Update ();
+		}
+
+		private void OnCommandAccept()
+		{
+			this.editing = false;
+			this.Update ();
+		}
+
+		private void OnCommandCancel()
+		{
+			if (this.editing)
+			{
+				this.editing = false;
+			}
+			else
+			{
+				this.treeTable.SelectedRow = -1;
+			}
+
+			this.Update ();
+		}
+
+		private void Update()
+		{
+			this.editBox.Visibility = this.editing;
+
+			if (this.treeTable.SelectedRow == -1)
+			{
+				this.toolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Hide);
+				this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+				this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			}
+			else
+			{
+				if (this.editing)
+				{
+					this.toolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Hide);
+					this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Enable);
+					this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+				}
+				else
+				{
+					this.toolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Enable);
+					this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
+					this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+				}
+
+				//this.editTopTitle.SetTitle ("...");  // TODO
 			}
 		}
 
@@ -103,6 +223,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private SimpleTreeTableController treeTable;
+		private FrameBox						treeTableBox;
+		private FrameBox						editBox;
+
+		private TopTitle						treeTableTopTitle;
+		private TopTitle						editTopTitle;
+
+		private bool							editing;
+
+		private SimpleTreeTableController		treeTable;
+		private int								lastSelectedRow;
 	}
 }
