@@ -113,6 +113,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				{
 					var line = new List<AbstractSimpleTreeTableCell> ();
+					line.Add (new SimpleTreeTableCellString ("Stock"));
+					line.Add (new SimpleTreeTableCellDecimal (null));
+					line.Add (new SimpleTreeTableCellString (null));
+					line.Add (new SimpleTreeTableCellDecimal (100.0m));
+					list.Add (line);
+				}
+
+				{
+					var line = new List<AbstractSimpleTreeTableCell> ();
 					line.Add (new SimpleTreeTableCellString ("Mobilier"));
 					line.Add (new SimpleTreeTableCellDecimal (8.0m));
 					line.Add (new SimpleTreeTableCellString ("Linéaire"));

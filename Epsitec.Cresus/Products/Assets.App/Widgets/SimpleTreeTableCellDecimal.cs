@@ -8,11 +8,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public class SimpleTreeTableCellDecimal : AbstractSimpleTreeTableCell
 	{
-		public SimpleTreeTableCellDecimal(decimal value)
+		public SimpleTreeTableCellDecimal(decimal? value)
 		{
 			this.Value = value;
 		}
 
-		public readonly decimal Value;
+		public readonly decimal? Value;
 	}
 }
