@@ -16,7 +16,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public SimpleTreeTableController()
 		{
 			this.treeTable = new NavigationTreeTableController ();
-			this.content = new List<List<AbstractSimpleTreeTableCell>> ();
 
 			this.selectedRow = -1;
 		}
@@ -67,15 +66,41 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.treeTable.SetColumns (descriptions, dockToLeftCount);
 		}
 
-		public List<List<AbstractSimpleTreeTableCell>> Content
+		public void SetContent(List<List<AbstractSimpleTreeTableCell>> content)
 		{
-			get
+			this.content = content;
+			this.CheckContent ();
+			this.UpdateContent ();
+		}
+
+
+		private void CheckContent()
+		{
+			foreach (var line in this.content)
 			{
-				return this.content;
+				for (int c=0; c<this.columnDescriptions.Length; c++)
+				{
+					var description = this.columnDescriptions[c];
+
+					System.Diagnostics.Debug.Assert (line.Count == this.columnDescriptions.Length);
+
+					if (description.Type == TreeTableColumnType.String)
+					{
+						System.Diagnostics.Debug.Assert (line[c] is SimpleTreeTableCellString);
+					}
+					else if (description.Type == TreeTableColumnType.Decimal)
+					{
+						System.Diagnostics.Debug.Assert (line[c] is SimpleTreeTableCellDecimal);
+					}
+					else
+					{
+						System.Diagnostics.Debug.Fail ("Unsupported type exception");
+					}
+				}
 			}
 		}
 
-		public void UpdateContent()
+		private void UpdateContent()
 		{
 			this.treeTable.RowsCount = this.content.Count;
 			this.UpdateTreeTableController ();
@@ -169,10 +194,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		private readonly NavigationTreeTableController				treeTable;
-		private readonly List<List<AbstractSimpleTreeTableCell>>	content;
+		private readonly NavigationTreeTableController		treeTable;
 
-		private TreeTableColumnDescription[]	columnDescriptions;
-		private int								selectedRow;
+		private TreeTableColumnDescription[]				columnDescriptions;
+		private List<List<AbstractSimpleTreeTableCell>>		content;
+		private int											selectedRow;
 	}
 }

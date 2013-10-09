@@ -22,8 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTable = new SimpleTreeTableController ();
 			this.treeTable.CreateUI (this.listBox, footerHeight: 0);
 			this.treeTable.SetColumns (this.Descriptions, 0);
-			this.treeTable.Content.AddRange (this.Content);
-			this.treeTable.UpdateContent ();
+			this.treeTable.SetContent (this.Content);
 
 			this.treeTable.RowClicked += delegate
 			{
