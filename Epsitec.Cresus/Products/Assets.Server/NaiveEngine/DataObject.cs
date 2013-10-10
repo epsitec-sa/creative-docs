@@ -50,51 +50,6 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
-		#region Easy access
-		public string GetStringProperty(Timestamp timestamp, int id)
-		{
-			var p = this.GetSyntheticProperty (timestamp, id) as DataStringProperty;
-
-			if (p == null)
-			{
-				return null;
-			}
-			else
-			{
-				return p.Value;
-			}
-		}
-
-		public int? GetIntProperty(Timestamp timestamp, int id)
-		{
-			var p = this.GetSyntheticProperty (timestamp, id) as DataIntProperty;
-
-			if (p == null)
-			{
-				return null;
-			}
-			else
-			{
-				return p.Value;
-			}
-		}
-
-		public decimal? GetDecimalProperty(Timestamp timestamp, int id)
-		{
-			var p = this.GetSyntheticProperty (timestamp, id) as DataDecimalProperty;
-
-			if (p == null)
-			{
-				return null;
-			}
-			else
-			{
-				return p.Value;
-			}
-		}
-		#endregion
-
-
 		//	Retourne la propriété définie à la date exacte.
 		public AbstractDataProperty GetSingleProperty(Timestamp timestamp, int id)
 		{

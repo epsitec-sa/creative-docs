@@ -7,6 +7,11 @@ using System.Text;
 
 namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
+	/// <summary>
+	/// Cette couche est sensée pouvoir accéder à travers le réseau au mandat.
+	/// On ne retourne jamais un DataObject complet (avec tous ses événements),
+	/// cela serait un trop gros volume de données, mais juste le Guid.
+	/// </summary>
 	public class DataAccessor
 	{
 		public DataAccessor(DataMandat mandat)
@@ -23,29 +28,100 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public DataObject GetObject(int index)
+		public Guid GetObjectGuid(int index)
 		{
 			if (index >= 0 && index < this.mandat.Objects.Count)
 			{
-				return this.mandat.Objects[index];
+				return this.mandat.Objects[index].Guid;
 			}
 			else
 			{
-				return null;
+				return Guid.Empty;
 			}
 		}
 
-		public DataObject GetObject(Guid guid)
+		public List<AbstractDataProperty> GetObjectProperties(Guid guid, Timestamp timestamp)
 		{
-			return this.mandat.Objects.Where (x => x.Guid == guid).FirstOrDefault ();
+			var properties = new List<AbstractDataProperty> ();
+
+			var obj = this.mandat.GetObject (guid);
+
+			if (obj != null)
+			{
+				foreach (var field in DataAccessor.ObjectFields)
+				{
+					var p = obj.GetSyntheticProperty (timestamp, (int) field);
+					if (p != null)
+					{
+						properties.Add (p);
+					}
+				}
+			}
+
+			return properties;
+		}
+
+		private static IEnumerable<ObjectField> ObjectFields
+		{
+			get
+			{
+				yield return ObjectField.Level;
+				yield return ObjectField.Numéro;
+				yield return ObjectField.Nom;
+				yield return ObjectField.Description;
+				yield return ObjectField.Valeur1;
+				yield return ObjectField.Valeur2;
+				yield return ObjectField.Valeur3;
+				yield return ObjectField.Responsable;
+				yield return ObjectField.Couleur;
+				yield return ObjectField.NuméroSérie;
+			}
 		}
 
 
-
-		public DataObject GetCategory(Guid guid)
+		#region Easy access
+		public static string GetStringProperty(List<AbstractDataProperty> properties, int id)
 		{
-			return this.mandat.Categories.Where (x => x.Guid == guid).FirstOrDefault ();
+			var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataStringProperty;
+
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
 		}
+
+		public static int? GetIntProperty(List<AbstractDataProperty> properties, int id)
+		{
+			var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataIntProperty;
+
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
+		public static decimal? GetDecimalProperty(List<AbstractDataProperty> properties, int id)
+		{
+			var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataDecimalProperty;
+
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+		#endregion
 
 
 		private readonly DataMandat mandat;

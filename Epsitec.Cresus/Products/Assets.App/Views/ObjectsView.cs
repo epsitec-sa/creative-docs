@@ -166,18 +166,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 				}
 
-				var o = this.accessor.GetObject (firstRow+i);
+				var guid = this.accessor.GetObjectGuid (firstRow+i);
+				var properties = this.accessor.GetObjectProperties (guid, timestamp);
 
-				int level = o.GetIntProperty (timestamp, (int) ObjectField.Level).GetValueOrDefault ();
+				int level = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level).GetValueOrDefault ();
 				var type = level == 3 ? TreeTableTreeType.Final : TreeTableTreeType.Extended;
 
-				var nom         = o.GetStringProperty (timestamp, (int) ObjectField.Nom);
-				var numéro      = o.GetStringProperty (timestamp, (int) ObjectField.Numéro);
-				var responsable = o.GetStringProperty (timestamp, (int) ObjectField.Responsable);
-				var couleur     = o.GetStringProperty (timestamp, (int) ObjectField.Couleur);
-				var série       = o.GetStringProperty (timestamp, (int) ObjectField.NuméroSérie);
-				var valeur1     = o.GetDecimalProperty (timestamp, (int) ObjectField.Valeur1);
-				var valeur2     = o.GetDecimalProperty (timestamp, (int) ObjectField.Valeur2);
+				var nom         = DataAccessor.GetStringProperty (properties, (int) ObjectField.Nom);
+				var numéro      = DataAccessor.GetStringProperty (properties, (int) ObjectField.Numéro);
+				var responsable = DataAccessor.GetStringProperty (properties, (int) ObjectField.Responsable);
+				var couleur     = DataAccessor.GetStringProperty (properties, (int) ObjectField.Couleur);
+				var série       = DataAccessor.GetStringProperty (properties, (int) ObjectField.NuméroSérie);
+				var valeur1     = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.Valeur1);
+				var valeur2     = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.Valeur2);
 
 				var sf = new TreeTableCellTree (true, level, type, nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString (true, numéro, isSelected: (i == selection));
