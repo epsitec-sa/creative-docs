@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void InitialiseTimeline(NavigationTimelineController timeline, System.DateTime start, int cellsCount, int selection, bool all)
 		{
-			this.timelineData.Compute (this.SelectedGuid, true, new Timestamp(start, 0), cellsCount);
+			this.timelineData.Compute (this.SelectedGuid, false, new Timestamp(start, 0), cellsCount);
 
 			var dates  = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();

@@ -111,9 +111,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private static string GetCellText(TimelineCellDate cell)
 		{
 			//	Retourne le jour sous la forme "1" ou "31".
+			//	Voir http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
 			if (cell.IsValid)
 			{
-				return cell.Date.ToString ("dd", System.Globalization.DateTimeFormatInfo.CurrentInfo);
+				//?return cell.Date.ToString ("dd", System.Globalization.DateTimeFormatInfo.CurrentInfo);
+				return cell.Date.Day.ToString (System.Globalization.DateTimeFormatInfo.CurrentInfo);
 			}
 			else
 			{

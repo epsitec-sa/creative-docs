@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Dessine le contenu, plus ou moins détaillé selon la place disponible.
 			var font = Font.DefaultFont;
 
-			for (int detailLevel = 3; detailLevel >= 0; detailLevel--)
+			for (int detailLevel = 4; detailLevel >= 0; detailLevel--)
 			{
 				var text = TimelineRowMonths.GetMonthText (cell, detailLevel);
 				if (string.IsNullOrEmpty (text))
@@ -119,26 +119,30 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private static string GetMonthText(TimelineCellDate cell, int detailLevel)
 		{
 			//	Retourne le mois sous une forme plus ou moins détaillée.
-			//	detailLevel = 3 retourne "Septembre 2013"
-			//	detailLevel = 2 retourne "Sept. 2013"
-			//	detailLevel = 1 retourne "Septembre"
-			//	detailLevel = 0 retourne "Sept."
+			//	detailLevel = 4 retourne "Septembre 2013"
+			//	detailLevel = 3 retourne "Sept. 2013"
+			//	detailLevel = 2 retourne "Septembre"
+			//	detailLevel = 1 retourne "Sept."
+			//	detailLevel = 0 retourne "9"
 			//	Voir http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
 			if (cell.IsValid)
 			{
 				switch (detailLevel)
 				{
-					case 3:
+					case 4:
 						return cell.Date.ToString ("MMMM yyyy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 
-					case 2:
+					case 3:
 						return cell.Date.ToString ("MMM yyyy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 
-					case 1:
+					case 2:
 						return cell.Date.ToString ("MMMM", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 
-					case 0:
+					case 1:
 						return cell.Date.ToString ("MMM", System.Globalization.DateTimeFormatInfo.CurrentInfo);
+
+					case 0:
+						return cell.Date.Month.ToString (System.Globalization.DateTimeFormatInfo.CurrentInfo);
 				}
 			}
 
