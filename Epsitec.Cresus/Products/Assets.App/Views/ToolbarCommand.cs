@@ -11,5 +11,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Edit,
 		Accept,
 		Cancel,
+
+		New,
+		Delete,
 	}
 }

@@ -113,6 +113,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.SelectedRow == -1)
 			{
+				this.toolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
+				this.toolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Hide);
 				this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
 				this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
 				this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
@@ -121,12 +123,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.isEditing)
 				{
+					this.toolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Hide);
+					this.toolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Hide);
 					this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
 					this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Enable);
 					this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
 				}
 				else
 				{
+					this.toolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
+					this.toolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Enable);
 					this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Enable);
 					this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
 					this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);

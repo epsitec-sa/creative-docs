@@ -64,14 +64,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateCommandButtons()
 		{
-			this.buttonEdit.Visibility   = this.GetCommandVisibility (ToolbarCommand.Edit);
-			this.buttonEdit.Enable       = this.GetCommandEnable     (ToolbarCommand.Edit);
+			this.UpdateCommandButton (this.buttonNew,    ToolbarCommand.New);
+			this.UpdateCommandButton (this.buttonDelete, ToolbarCommand.Delete);
+			this.UpdateCommandButton (this.buttonEdit,   ToolbarCommand.Edit);
+			this.UpdateCommandButton (this.buttonAccept, ToolbarCommand.Accept);
+			this.UpdateCommandButton (this.buttonCancel, ToolbarCommand.Cancel);
+		}
 
-			this.buttonAccept.Visibility = this.GetCommandVisibility (ToolbarCommand.Accept);
-			this.buttonAccept.Enable     = this.GetCommandEnable     (ToolbarCommand.Accept);
-			
-			this.buttonCancel.Visibility = this.GetCommandVisibility (ToolbarCommand.Cancel);
-			this.buttonCancel.Enable     = this.GetCommandEnable     (ToolbarCommand.Cancel);
+		private void UpdateCommandButton(IconButton button, ToolbarCommand command)
+		{
+			button.Visibility = this.GetCommandVisibility (command);
+			button.Enable     = this.GetCommandEnable     (command);
 		}
 
 		private bool GetCommandVisibility(ToolbarCommand command)
@@ -104,9 +107,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonReports    = this.CreateViewButton (toolbar, ViewType.Reports,    "View.Reports");
 			this.buttonSettings   = this.CreateViewButton (toolbar, ViewType.Settings,   "View.Settings");
 
-			this.buttonCancel     = this.CreateEditButton (toolbar, "Edit.Cancel");
-			this.buttonAccept     = this.CreateEditButton (toolbar, "Edit.Accept");
-			this.buttonEdit       = this.CreateEditButton (toolbar, "Edit.Edit");
+			this.buttonNew        = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.New");
+			this.buttonDelete     = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.Delete");
+
+			this.buttonCancel     = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Cancel");
+			this.buttonAccept     = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Accept");
+			this.buttonEdit       = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Edit");
+
+			this.buttonNew.Margins = new Margins (20, 0, 0, 0);
 
 			this.buttonEdit.Clicked += delegate
 			{
@@ -165,7 +173,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
-		private IconButton CreateEditButton(HToolBar toolbar, string icon)
+		private IconButton CreateCommandButton(HToolBar toolbar, DockStyle dock, string icon)
 		{
 			var size = toolbar.PreferredHeight;
 
@@ -173,7 +181,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent        = toolbar,
 				AutoFocus     = false,
-				Dock          = DockStyle.Right,
+				Dock          = dock,
 				IconUri       = MainToolbar.GetResourceIconUri (icon),
 				PreferredSize = new Size (size, size),
 			};
@@ -237,6 +245,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonEvents;
 		private IconButton buttonReports;
 		private IconButton buttonSettings;
+
+		private IconButton buttonNew;
+		private IconButton buttonDelete;
 
 		private IconButton buttonEdit;
 		private IconButton buttonAccept;
