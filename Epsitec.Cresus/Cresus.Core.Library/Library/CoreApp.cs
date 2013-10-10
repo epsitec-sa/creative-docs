@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Core.Library
 			this.components        = new CoreComponentHostImplementation<CoreAppComponent> ();
 			this.manualComponents  = new CoreComponentHostImplementation<ICoreManualComponent> ();
 			this.policy            = this.CreateDefaultPolicy ();
+
+			this.PreConfigureBasedOnPolicy ();
 			
 			Factories.CoreAppComponentFactory.RegisterComponents (host: this);
 		}
@@ -257,6 +259,11 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				RequiresCoreCommandHandlers = true,
 			};
+		}
+
+		private void PreConfigureBasedOnPolicy()
+		{
+			CoreContext.EnableEmbeddedDatabaseClient (this.policy.UseEmbeddedServer);
 		}
 
 		[System.ThreadStatic]

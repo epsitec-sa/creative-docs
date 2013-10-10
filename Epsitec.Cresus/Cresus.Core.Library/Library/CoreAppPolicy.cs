@@ -17,5 +17,11 @@ namespace Epsitec.Cresus.Core.Library
 			get;
 			set;
 		}
+
+		public bool UseEmbeddedServer
+		{
+			get;
+			set;
+		}
 	}
 }

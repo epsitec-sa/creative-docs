@@ -19,6 +19,11 @@ namespace Epsitec.Cresus.Assets.App
 {
 	public class AssetsApplication : CoreInteractiveApp
 	{
+		public AssetsApplication()
+		{
+
+		}
+
 		public override string					ShortWindowTitle
 		{
 			get
@@ -59,8 +64,9 @@ namespace Epsitec.Cresus.Assets.App
 		protected override CoreAppPolicy CreateDefaultPolicy()
 		{
 			var policy = base.CreateDefaultPolicy ();
-
+			
 			policy.RequiresCoreCommandHandlers = false;
+			policy.UseEmbeddedServer = true;
 
 			return policy;
 		}
