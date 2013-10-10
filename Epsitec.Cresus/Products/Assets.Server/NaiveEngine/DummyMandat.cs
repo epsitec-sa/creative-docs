@@ -11,13 +11,13 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 	{
 		public static DataMandat GetDummyMandat()
 		{
-			var mandat = new DataMandat ();
+			var mandat = new DataMandat (new System.DateTime (2013, 1, 1));
 			int objectId = 0;
 			var start = new Timestamp (new System.DateTime (2013, 1, 1), 0);
-			var date1 = new Timestamp (new System.DateTime (2013, 1, 6), 0);
+			var date1 = new Timestamp (new System.DateTime (2013, 1, 7), 0);
 			var date2 = new Timestamp (new System.DateTime (2013, 1, 15), 0);
 			var date3 = new Timestamp (new System.DateTime (2013, 2, 1), 0);
-			var date4 = new Timestamp (new System.DateTime (2013, 2, 2), 0);
+			var date4 = new Timestamp (new System.DateTime (2013, 2, 4), 0);
 			var date5 = new Timestamp (new System.DateTime (2013, 3, 31), 0);
 
 			{

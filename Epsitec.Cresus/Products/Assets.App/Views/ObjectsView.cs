@@ -66,6 +66,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.treeTableSelectedRow = value;
 					this.UpdateTreeTableController ();
+					this.UpdateTimelineController ();
+					this.Update ();
 				}
 			}
 		}
@@ -107,9 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					this.treeTableSelectedRow = sel;
-					this.UpdateTreeTableController ();
-					this.Update ();
+					this.SelectedRow = sel;
 				}
 			};
 
@@ -205,13 +205,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 			treeTable.SetColumnCells (5, c5.ToArray ());
 			treeTable.SetColumnCells (6, c6.ToArray ());
 		}
+
+		private Guid? SelectedGuid
+		{
+			get
+			{
+				if (this.treeTableSelectedRow == -1)
+				{
+					return null;
+				}
+				else
+				{
+					return this.accessor.GetObjectGuid (this.treeTableSelectedRow);
+				}
+			}
+		}
 		#endregion
 
 
 		#region Timeline
 		private void CreateTimeline(Widget parent)
 		{
-			this.timelineStart = new System.DateTime (2013, 1, 1);
+			this.timelineStart = this.accessor.StartDate;
 			this.timelineCellsCount = 365;
 			this.timelineSelectedCell = -1;
 
@@ -249,11 +264,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateTimelineController()
 		{
-			var date = ObjectsView.AddDays (timelineStart, this.timelineController.LeftVisibleCell);
+			var date = ObjectsView.AddDays (this.timelineStart, this.timelineController.LeftVisibleCell);
 			int cellsCount = System.Math.Min (this.timelineCellsCount, this.timelineController.VisibleCellsCount);
 			int selection = this.timelineSelectedCell - this.timelineController.LeftVisibleCell;
 
-			ObjectsView.InitialiseTimeline (this.timelineController, date, cellsCount, selection, false);
+			this.InitialiseTimeline (this.timelineController, date, cellsCount, selection, false);
 		}
 
 
@@ -274,15 +289,52 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Days,  "Jours"));
 				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
 			}
 
 			return list.ToArray ();
 		}
 
-		private static void InitialiseTimeline(NavigationTimelineController timeline, System.DateTime start, int cellsCount, int selection, bool all)
+		private void InitialiseTimeline(NavigationTimelineController timeline, System.DateTime start, int cellsCount, int selection, bool all)
 		{
+			var dates = new List<TimelineCellDate> ();
+			var glyphs = new List<TimelineCellGlyph> ();
+
+			var guid = this.SelectedGuid;
+			int eventIndex = 0;
+			int eventCount = guid.HasValue ? this.accessor.GetObjectEventsCount (guid.Value) : 0;
+			Timestamp? nextTimestamp = null;
+
+			for (int i = 0; i < cellsCount; i++)
+			{
+				var date = ObjectsView.AddDays (start, i);
+				var glyph = TimelineGlyph.Empty;
+
+				if ((!nextTimestamp.HasValue || nextTimestamp.Value.Date < date) &&
+					eventIndex < eventCount)
+				{
+					nextTimestamp = this.accessor.GetObjectEventTimestamp (guid.Value, eventIndex++);
+				}
+
+				if (nextTimestamp.HasValue && nextTimestamp.Value.Date == date)
+				{
+					glyph = TimelineGlyph.FilledCircle;
+				}
+
+				var d = new TimelineCellDate (date, isSelected: (i == selection));
+				var g = new TimelineCellGlyph (glyph, isSelected: (i == selection));
+
+				dates.Add (d);
+				glyphs.Add (g);
+			}
+
+			timeline.SetRowGlyphCells (0, glyphs.ToArray ());
+			timeline.SetRowDayCells   (1, dates.ToArray ());
+			timeline.SetRowMonthCells (2, dates.ToArray ());
+
+
+#if false
 			var dates = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();
 			var values1 = new List<TimelineCellValue> ();
@@ -384,6 +436,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				timeline.SetRowDayCells (1, dates.ToArray ());
 				timeline.SetRowMonthCells (2, dates.ToArray ());
 			}
+#endif
 		}
 		#endregion
 

@@ -30,18 +30,19 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public void AddEvent(DataEvent e)
 		{
-			int index = 0;
-
-			for (int i=0; i<this.events.Count; i++)
+			int i = 0;
+			while (i < this.events.Count)
 			{
-				if (this.events[i].Timestamp < e.Timestamp)
+				if (this.events[i].Timestamp > e.Timestamp)
 				{
-					index = i;
+					i--;
 					break;
 				}
+
+				i++;
 			}
 
-			this.events.Insert (index, e);
+			this.events.Insert (i, e);
 		}
 
 		public DataEvent GetEvent(Timestamp timestamp)

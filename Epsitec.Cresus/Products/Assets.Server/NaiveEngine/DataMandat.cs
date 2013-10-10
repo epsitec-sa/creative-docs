@@ -9,8 +9,9 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
 	public class DataMandat
 	{
-		public DataMandat()
+		public DataMandat(System.DateTime startDate)
 		{
+			this.StartDate = startDate;
 			this.Guid = Guid.NewGuid ();
 
 			this.objects    = new List<DataObject> ();
@@ -18,6 +19,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			this.groups     = new List<DataObject> ();
 		}
 
+		public readonly System.DateTime			StartDate;
 		public readonly Guid					Guid;
 
 

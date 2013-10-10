@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 	{
 		public static void Test1()
 		{
-			var mandat = new DataMandat ();
+			var mandat = new DataMandat (new System.DateTime (2013, 1, 1));
 			int objectId = 0;
 
 			{

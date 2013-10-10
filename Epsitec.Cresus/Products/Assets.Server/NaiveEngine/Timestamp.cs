@@ -15,6 +15,22 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			this.position = position;
 		}
 
+		public System.DateTime Date
+		{
+			get
+			{
+				return this.date;
+			}
+		}
+
+		public int Position
+		{
+			get
+			{
+				return this.position;
+			}
+		}
+
 		public static Timestamp Now
 		{
 			get

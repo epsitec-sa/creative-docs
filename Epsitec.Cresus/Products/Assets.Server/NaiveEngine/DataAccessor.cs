@@ -20,6 +20,15 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
+		public System.DateTime StartDate
+		{
+			get
+			{
+				return this.mandat.StartDate;
+			}
+		}
+
+
 		public int ObjectsCount
 		{
 			get
@@ -28,11 +37,11 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public Guid GetObjectGuid(int index)
+		public Guid GetObjectGuid(int objectIndex)
 		{
-			if (index >= 0 && index < this.mandat.Objects.Count)
+			if (objectIndex >= 0 && objectIndex < this.mandat.Objects.Count)
 			{
-				return this.mandat.Objects[index].Guid;
+				return this.mandat.Objects[objectIndex].Guid;
 			}
 			else
 			{
@@ -40,11 +49,36 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public List<AbstractDataProperty> GetObjectProperties(Guid guid, Timestamp timestamp)
+		public int GetObjectEventsCount(Guid objectGuid)
 		{
-			var properties = new List<AbstractDataProperty> ();
+			var obj = this.mandat.GetObject (objectGuid);
 
-			var obj = this.mandat.GetObject (guid);
+			if (obj != null)
+			{
+				return obj.Events.Count;
+			}
+
+			return 0;
+		}
+
+		public Timestamp? GetObjectEventTimestamp(Guid objectGuid, int eventIndex)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				if (eventIndex >= 0 && eventIndex < obj.Events.Count)
+				{
+					return obj.Events[eventIndex].Timestamp;
+				}
+			}
+
+			return null;
+		}
+
+		public IEnumerable<AbstractDataProperty> GetObjectProperties(Guid objectGuid, Timestamp timestamp)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
 
 			if (obj != null)
 			{
@@ -53,12 +87,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					var p = obj.GetSyntheticProperty (timestamp, (int) field);
 					if (p != null)
 					{
-						properties.Add (p);
+						yield return p;
 					}
 				}
 			}
-
-			return properties;
 		}
 
 		private static IEnumerable<ObjectField> ObjectFields
@@ -80,7 +112,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 
 		#region Easy access
-		public static string GetStringProperty(List<AbstractDataProperty> properties, int id)
+		public static string GetStringProperty(IEnumerable<AbstractDataProperty> properties, int id)
 		{
 			var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataStringProperty;
 
@@ -94,7 +126,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public static int? GetIntProperty(List<AbstractDataProperty> properties, int id)
+		public static int? GetIntProperty(IEnumerable<AbstractDataProperty> properties, int id)
 		{
 			var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataIntProperty;
 
@@ -108,7 +140,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public static decimal? GetDecimalProperty(List<AbstractDataProperty> properties, int id)
+		public static decimal? GetDecimalProperty(IEnumerable<AbstractDataProperty> properties, int id)
 		{
 			var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataDecimalProperty;
 
