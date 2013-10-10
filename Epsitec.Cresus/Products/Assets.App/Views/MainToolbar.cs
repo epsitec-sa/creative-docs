@@ -107,29 +107,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonReports    = this.CreateViewButton (toolbar, ViewType.Reports,    "View.Reports",    "Rapports et statistiques");
 			this.buttonSettings   = this.CreateViewButton (toolbar, ViewType.Settings,   "View.Settings",   "Réglages");
 
-			this.buttonNew        = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.New",    "Nouveau");
-			this.buttonDelete     = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.Delete", "Supprimer");
-			this.buttonEdit       = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.Edit",   "Modifier");
+			this.buttonNew        = this.CreateCommandButton (toolbar, DockStyle.Left,  ToolbarCommand.New ,    "Object.New",    "Nouveau");
+			this.buttonDelete     = this.CreateCommandButton (toolbar, DockStyle.Left,  ToolbarCommand.Delete , "Object.Delete", "Supprimer");
+			this.buttonEdit       = this.CreateCommandButton (toolbar, DockStyle.Left,  ToolbarCommand.Edit ,   "Object.Edit",   "Modifier");
 
-			this.buttonCancel     = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Cancel",  "Annuler les modifications");
-			this.buttonAccept     = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Accept",  "Accepter les modifications");
+			this.buttonCancel     = this.CreateCommandButton (toolbar, DockStyle.Right, ToolbarCommand.Cancel , "Edit.Cancel",   "Annuler les modifications");
+			this.buttonAccept     = this.CreateCommandButton (toolbar, DockStyle.Right, ToolbarCommand.Accept , "Edit.Accept",   "Accepter les modifications");
 
 			this.buttonNew.Margins = new Margins (20, 0, 0, 0);
-
-			this.buttonEdit.Clicked += delegate
-			{
-				this.OnCommandClicked (ToolbarCommand.Edit);
-			};
-
-			this.buttonAccept.Clicked += delegate
-			{
-				this.OnCommandClicked (ToolbarCommand.Accept);
-			};
-
-			this.buttonCancel.Clicked += delegate
-			{
-				this.OnCommandClicked (ToolbarCommand.Cancel);
-			};
 
 			this.UpdateViewButtons ();
 		}
@@ -175,7 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
-		private IconButton CreateCommandButton(HToolBar toolbar, DockStyle dock, string icon, string tooltip)
+		private IconButton CreateCommandButton(HToolBar toolbar, DockStyle dock, ToolbarCommand command, string icon, string tooltip)
 		{
 			var size = toolbar.PreferredHeight;
 
@@ -192,6 +177,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			button.Clicked += delegate
 			{
+				this.OnCommandClicked (command);
 			};
 
 			return button;
