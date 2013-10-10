@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var visibleCells = (decimal) this.timeline.VisibleCellsCount;
 
 			this.scroller.Resolution = 1.0m;
-			this.scroller.VisibleRangeRatio = System.Math.Min (visibleCells/totalCells, 1.0m);
+			this.scroller.VisibleRangeRatio = (totalCells == 0) ? 1.0m : System.Math.Min (visibleCells/totalCells, 1.0m);
 
 			this.scroller.MinValue = 0.0m;
 			this.scroller.MaxValue = System.Math.Max ((decimal) this.cellsCount - visibleCells, 0.0m);

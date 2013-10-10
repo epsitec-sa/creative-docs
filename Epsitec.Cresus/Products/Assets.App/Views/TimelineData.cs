@@ -12,6 +12,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TimelineData
 	{
+		/// <summary>
+		/// Cette classe détermine le contenu d'une timeline de façon totalement indépendante
+		/// de la UI (notamment de la classe NavigationTimelineController).
+		/// </summary>
 		public TimelineData(DataAccessor accessor)
 		{
 			this.accessor = accessor;
@@ -19,15 +23,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void Compute(Guid? objectGuid, bool compact, Timestamp start, int visibleCellCount)
+		public void Compute(Guid? objectGuid, bool compact, System.DateTime start, System.DateTime end)
 		{
 			this.cells.Clear ();
 
 			if (!compact)
 			{
-				for (int i = 0; i < visibleCellCount; i++)
+				//	Crée des cellules pour tous les jours compris entre 'start' et 'end'.
+				for (int i = 0; i < 365*100; i++)
 				{
 					var date = TimelineData.AddDays (start.Date, i);
+
+					if (date > end.Date)
+					{
+						break;
+					}
 
 					var cell = new TimelineCell
 					{
@@ -46,9 +56,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				for (int i=0; i<eventCount; i++)
 				{
 					var t = this.accessor.GetObjectEventTimestamp (objectGuid.Value, i);
-					if (t.HasValue && t.Value >= start)
+
+					if (t.HasValue && t.Value.Date >= start)
 					{
+						if (t.Value.Date > end)
+						{
+							break;
+						}
+
 						var index = this.cells.FindIndex (x => x.Timestamp == t.Value);
+
 						if (index == -1)
 						{
 							index = this.GetIndex (t.Value);
@@ -76,6 +93,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return this.cells.Where (x => x.Timestamp < timestamp).Count ();
 		}
 
+
+		public int CellsCount
+		{
+			get
+			{
+				return this.cells.Count;
+			}
+		}
 
 		public TimelineCell GetCell(int index)
 		{

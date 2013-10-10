@@ -67,8 +67,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.treeTableSelectedRow != value)
 				{
 					this.treeTableSelectedRow = value;
+
 					this.UpdateTreeTableController ();
+
+					this.UpdateTimelineData ();
 					this.UpdateTimelineController ();
+
 					this.Update ();
 				}
 			}
@@ -93,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.treeTableController.CreateUI (frame, footerHeight: 0);
-			this.treeTableController.SetColumns (ObjectsView.GetColumns (), 1);
+			this.treeTableController.SetColumns (ObjectsView.GetTreeTableColumns (), 1);
 			this.UpdateTreeTableController ();
 
 			this.treeTableController.RowChanged += delegate
@@ -141,7 +145,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private static TreeTableColumnDescription[] GetColumns()
+		private static TreeTableColumnDescription[] GetTreeTableColumns()
 		{
 			var list = new List<TreeTableColumnDescription> ();
 
@@ -234,14 +238,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Timeline
 		private void CreateTimeline(Widget parent)
 		{
-			this.timelineStart = this.accessor.StartDate;
-			this.timelineCellsCount = 365;
 			this.timelineSelectedCell = -1;
 
-			this.timelineController = new NavigationTimelineController
-			{
-				CellsCount = timelineCellsCount,
-			};
+			this.timelineController = new NavigationTimelineController();
 
 			var frame = new FrameBox
 			{
@@ -257,7 +256,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelineController.CreateUI (frame);
 			this.timelineController.Pivot = 0.0;
-			this.timelineController.SetRows (ObjectsView.GetRows (false));
+			this.timelineController.SetRows (ObjectsView.GetTimelineRows (false));
+
+			this.UpdateTimelineData ();
 			this.UpdateTimelineController ();
 
 			this.timelineController.CellClicked += delegate (object sender, int row, int rank)
@@ -271,17 +272,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private void UpdateTimelineController()
-		{
-			var date = ObjectsView.AddDays (this.timelineStart, this.timelineController.LeftVisibleCell);
-			int cellsCount = System.Math.Min (this.timelineCellsCount, this.timelineController.VisibleCellsCount);
-			int selection = this.timelineSelectedCell - this.timelineController.LeftVisibleCell;
-
-			this.InitialiseTimeline (this.timelineController, date, cellsCount, selection, false);
-		}
-
-
-		private static TimelineRowDescription[] GetRows(bool all)
+		private static TimelineRowDescription[] GetTimelineRows(bool all)
 		{
 			var list = new List<TimelineRowDescription> ();
 
@@ -298,23 +289,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Days,  "Jours"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
 				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
 			}
 
 			return list.ToArray ();
 		}
 
-		private void InitialiseTimeline(NavigationTimelineController timeline, System.DateTime start, int cellsCount, int selection, bool all)
+		private void UpdateTimelineData()
 		{
-			this.timelineData.Compute (this.SelectedGuid, this.timelineCompact, new Timestamp (start, 0), cellsCount);
+			var start = new System.DateTime (this.accessor.StartDate.Year, 1, 1);
+			var end   = new System.DateTime (this.accessor.StartDate.Year, 12, 31);
 
+			this.timelineData.Compute (this.SelectedGuid, this.timelineCompact, start, end);
+
+			this.timelineController.CellsCount = this.timelineData.CellsCount;
+		}
+
+		private void UpdateTimelineController()
+		{
+			int selection = this.timelineSelectedCell - this.timelineController.LeftVisibleCell;
+			this.InitialiseTimeline (this.timelineController, selection);
+		}
+
+
+		private void InitialiseTimeline(NavigationTimelineController timeline, int selection)
+		{
 			var dates  = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();
 
-			for (int i = 0; i < cellsCount; i++)
+			int count = timeline.VisibleCellsCount;
+			int firstCell = timeline.LeftVisibleCell;
+
+			for (int i = 0; i < count; i++)
 			{
-				var cell = this.timelineData.GetCell (i);
+				var cell = this.timelineData.GetCell (firstCell+i);
 
 				if (cell == null)
 				{
@@ -345,18 +354,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					int sel = this.timelineSelectedCell - this.timelineController.LeftVisibleCell;
-					return this.timelineData.GetCell (sel).Timestamp;
+					return this.timelineData.GetCell (this.timelineSelectedCell).Timestamp;
 				}
 			}
 		}
 		#endregion
-
-
-		private static System.DateTime AddDays(System.DateTime date, int numberOfDays)
-		{
-			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays).ToDateTime ();
-		}
 
 
 		private readonly TimelineData			timelineData;
@@ -368,8 +370,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private int								treeTableSelectedRow;
 
 		private NavigationTimelineController	timelineController;
-		private System.DateTime					timelineStart;
-		private int								timelineCellsCount;
 		private int								timelineSelectedCell;
 		private bool							timelineCompact;
 	}
