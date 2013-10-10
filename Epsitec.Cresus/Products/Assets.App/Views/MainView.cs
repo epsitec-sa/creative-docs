@@ -3,19 +3,23 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MainView
 	{
+		public MainView(DataMandat mandat)
+		{
+			this.mandat = mandat;
+		}
+
 		public void CreateUI(Widget parent)
 		{
 			this.parent = parent;
 
-			Essai.Test1 ();
 			MouseCursorManager.SetWindow (parent.Window);
 
 			this.toolbar = new MainToolbar ();
@@ -46,7 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.viewBox.Children.Clear ();
 
-			this.view = AbstractView.CreateView (this.toolbar.ViewType);
+			this.view = AbstractView.CreateView (this.toolbar.ViewType, this.mandat);
 
 			if (this.view != null)
 			{
@@ -54,6 +58,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		private readonly DataMandat				mandat;
 
 		private Widget							parent;
 		private MainToolbar						toolbar;

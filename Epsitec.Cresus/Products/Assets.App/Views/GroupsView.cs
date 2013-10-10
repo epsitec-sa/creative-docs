@@ -8,11 +8,17 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class GroupsView : AbstractView
 	{
+		public GroupsView(DataMandat mandat)
+			: base (mandat)
+		{
+		}
+
 		public override void CreateUI(Widget parent, MainToolbar toolbar)
 		{
 			base.CreateUI (parent, toolbar);

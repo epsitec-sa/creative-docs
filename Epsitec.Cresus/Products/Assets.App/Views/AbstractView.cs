@@ -6,11 +6,17 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractView
 	{
+		public AbstractView(DataMandat mandat)
+		{
+			this.mandat = mandat;
+		}
+
 		public virtual void CreateUI(Widget parent, MainToolbar toolbar)
 		{
 			this.toolbar = toolbar;
@@ -168,33 +174,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractView CreateView(ViewType viewType)
+		public static AbstractView CreateView(ViewType viewType, DataMandat mandat)
 		{
 			switch (viewType)
 			{
 				case ViewType.Objects:
-					return new ObjectsView ();
+					return new ObjectsView (mandat);
 
 				case ViewType.Categories:
-					return new CategoriesView ();
+					return new CategoriesView (mandat);
 
 				case ViewType.Groups:
-					return new GroupsView ();
+					return new GroupsView (mandat);
 
 				case ViewType.Events:
-					return new EventsView ();
+					return new EventsView (mandat);
 
 				case ViewType.Reports:
-					return new ReportsView ();
+					return new ReportsView (mandat);
 
 				case ViewType.Settings:
-					return new SettingsView ();
+					return new SettingsView (mandat);
 
 				default:
 					return null;
 			}
 		}
 
+
+		protected readonly DataMandat			mandat;
 
 		protected MainToolbar					toolbar;
 

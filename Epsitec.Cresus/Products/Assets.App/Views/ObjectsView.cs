@@ -8,11 +8,17 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectsView : AbstractView
 	{
+		public ObjectsView(DataMandat mandat)
+			: base (mandat)
+		{
+		}
+
 		public override void CreateUI(Widget parent, MainToolbar toolbar)
 		{
 			base.CreateUI (parent, toolbar);
@@ -68,9 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region TreeTable
 		private void CreateTreeTable(Widget parent)
 		{
-			var OO = ObjectsView.GetTreeTableObjects ();
-
-			this.treeTableRowsCount = OO.Length;
+			this.treeTableRowsCount = this.mandat.Objects.Count;
 			this.treeTableSelectedRow = -1;
 
 			this.treeTableController = new NavigationTreeTableController
@@ -123,8 +127,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var first = this.treeTableController.TopVisibleRow;
 			int selection = this.treeTableSelectedRow - this.treeTableController.TopVisibleRow;
+			var timestamp = new Timestamp (new System.DateTime (2013, 1, 1), 0);
 
-			ObjectsView.InitialiseTreeTable (this.treeTableController, first, selection);
+			this.InitialiseTreeTable (this.treeTableController, first, selection, timestamp);
 		}
 
 
@@ -143,10 +148,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return list.ToArray ();
 		}
 
-		private static void InitialiseTreeTable(NavigationTreeTableController treeTable, int firstRow, int selection)
+		private void InitialiseTreeTable(NavigationTreeTableController treeTable, int firstRow, int selection, Timestamp timestamp)
 		{
-			var OO = ObjectsView.GetTreeTableObjects ();
-
 			var cf = new List<TreeTableCellTree> ();
 			var c1 = new List<TreeTableCellString> ();
 			var c2 = new List<TreeTableCellString> ();
@@ -158,26 +161,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var count = treeTable.VisibleRowsCount;
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= OO.Length)
+				if (firstRow+i >= this.mandat.Objects.Count)
 				{
 					break;
 				}
 
-				var O = OO[firstRow+i];
+				var o = this.mandat.Objects[firstRow+i];
 
-				var type = O.Level == 3 ? TreeTableTreeType.Final : TreeTableTreeType.Extended;
-				if (i == 0)
-				{
-					type = TreeTableTreeType.Compacted;  // juste pour en voir un !
-				}
+				int level = o.GetIntProperty (timestamp, (int) ObjectField.Level).GetValueOrDefault ();
+				var type = level == 3 ? TreeTableTreeType.Final : TreeTableTreeType.Extended;
 
-				var sf = new TreeTableCellTree (true, O.Level, type, O.Nom, isSelected: (i == selection));
-				var s1 = new TreeTableCellString (true, O.Numéro, isSelected: (i == selection));
-				var s2 = new TreeTableCellString (true, O.Responsable, isSelected: (i == selection));
-				var s3 = new TreeTableCellString (true, O.Couleur, isSelected: (i == selection));
-				var s4 = new TreeTableCellString (true, O.NuméroSérie, isSelected: (i == selection));
-				var s5 = new TreeTableCellDecimal (true, O.ValeurComptable, isSelected: (i == selection));
-				var s6 = new TreeTableCellDecimal (true, O.ValeurAssurance, isSelected: (i == selection));
+				var nom         = o.GetStringProperty (timestamp, (int) ObjectField.Nom);
+				var numéro      = o.GetStringProperty (timestamp, (int) ObjectField.Numéro);
+				var responsable = o.GetStringProperty (timestamp, (int) ObjectField.Responsable);
+				var couleur     = o.GetStringProperty (timestamp, (int) ObjectField.Couleur);
+				var série       = o.GetStringProperty (timestamp, (int) ObjectField.NuméroSérie);
+				var valeur1     = o.GetDecimalProperty (timestamp, (int) ObjectField.Valeur1);
+				var valeur2     = o.GetDecimalProperty (timestamp, (int) ObjectField.Valeur2);
+
+				var sf = new TreeTableCellTree (true, level, type, nom, isSelected: (i == selection));
+				var s1 = new TreeTableCellString (true, numéro, isSelected: (i == selection));
+				var s2 = new TreeTableCellString (true, responsable, isSelected: (i == selection));
+				var s3 = new TreeTableCellString (true, couleur, isSelected: (i == selection));
+				var s4 = new TreeTableCellString (true, série, isSelected: (i == selection));
+				var s5 = new TreeTableCellDecimal (true, valeur1, isSelected: (i == selection));
+				var s6 = new TreeTableCellDecimal (true, valeur2, isSelected: (i == selection));
 
 				cf.Add (sf);
 				c1.Add (s1);
@@ -195,368 +203,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			treeTable.SetColumnCells (4, c4.ToArray ());
 			treeTable.SetColumnCells (5, c5.ToArray ());
 			treeTable.SetColumnCells (6, c6.ToArray ());
-		}
-
-		private static TreeTableObject[] GetTreeTableObjects()
-		{
-			var O = new TreeTableObject
-			{
-				Nom = "Immobilisations",
-				Level = 0,
-			};
-
-				var O1 = new TreeTableObject
-				{
-					Parent = O,
-					Level = 1,
-					Nom = "Bâtiments",
-					Numéro = "1",
-				};
-
-					var O11 = new TreeTableObject
-					{
-						Parent = O1,
-						Level = 2,
-						Nom = "Immeubles",
-						Numéro = "1.1",
-					};
-
-						var O111 = new TreeTableObject
-						{
-							Parent = O11,
-							Level = 3,
-							Nom = "Centre administratif",
-							Numéro = "1.1.1",
-							ValeurComptable = 2450000.0m,
-							ValeurAssurance = 3000000.0m,
-							Responsable = "Paul",
-						};
-
-						var O112 = new TreeTableObject
-						{
-							Parent = O11,
-							Level = 3,
-							Nom = "Centre logistique",
-							Numéro = "1.1.2",
-							ValeurComptable = 4550000.0m,
-							ValeurAssurance = 6000000.0m,
-							Responsable = "Paul",
-						};
-
-						var O113 = new TreeTableObject
-						{
-							Parent = O11,
-							Level = 3,
-							Nom = "Centre d'expédition",
-							Numéro = "1.1.3",
-							ValeurComptable = 2100000.0m,
-							ValeurAssurance = 3000000.0m,
-							Responsable = "Sandra",
-						};
-
-						var O114 = new TreeTableObject
-						{
-							Parent = O11,
-							Level = 3,
-							Nom = "Showroom",
-							Numéro = "1.1.4",
-							ValeurComptable = 8750000.0m,
-							ValeurAssurance = 5500000.0m,
-							Responsable = "Eric",
-						};
-
-					var O12 = new TreeTableObject
-					{
-						Parent = O1,
-						Level = 2,
-						Nom = "Usines",
-						Numéro = "1.2",
-					};
-
-						var O121 = new TreeTableObject
-						{
-							Parent = O12,
-							Level = 3,
-							Nom = "Centre d'usinage",
-							Numéro = "1.2.1",
-							ValeurComptable = 10400000.0m,
-							ValeurAssurance = 13000000.0m,
-							Responsable = "René",
-						};
-
-						var O122 = new TreeTableObject
-						{
-							Parent = O12,
-							Level = 3,
-							Nom = "Centre d'assemblage",
-							Numéro = "1.2.2",
-							ValeurComptable = 8000000.0m,
-							ValeurAssurance = 9500000.0m,
-							Responsable = "Ernest",
-						};
-
-					var O13 = new TreeTableObject
-					{
-						Parent = O1,
-						Level = 2,
-						Nom = "Entrepôts",
-						Numéro = "1.3",
-					};
-
-						var O131 = new TreeTableObject
-						{
-							Parent = O13,
-							Level = 3,
-							Nom = "Dépôt principal",
-							Numéro = "1.3.1",
-							ValeurComptable = 2100000.0m,
-							ValeurAssurance = 3500000.0m,
-							Responsable = "Anne-Sophie",
-						};
-
-						var O132 = new TreeTableObject
-						{
-							Parent = O13,
-							Level = 3,
-							Nom = "Dépôt secondaire",
-							Numéro = "1.3.2",
-							ValeurComptable = 5320000.0m,
-							ValeurAssurance = 5000000.0m,
-							Responsable = "Paul",
-						};
-
-						var O133 = new TreeTableObject
-						{
-							Parent = O13,
-							Level = 3,
-							Nom = "Centre de recyclage",
-							Numéro = "1.3.3",
-							ValeurComptable = 1200000.0m,
-							ValeurAssurance = 1500000.0m,
-							Responsable = "Victoria",
-						};
-
-				var O2 = new TreeTableObject
-				{
-					Parent = O,
-					Level = 1,
-					Nom = "Véhicules",
-					Numéro = "2",
-				};
-
-					var O21 = new TreeTableObject
-					{
-						Parent = O2,
-						Level = 2,
-						Nom = "Camions",
-						Numéro = "2.1",
-					};
-
-						var O211 = new TreeTableObject
-						{
-							Parent = O21,
-							Level = 3,
-							Nom = "Scania X20",
-							Numéro = "2.1.1",
-							ValeurComptable = 150000.0m,
-							ValeurAssurance = 160000.0m,
-							Responsable = "Jean-François-Paul-Eric-Georges-André",
-							Couleur = "Blanc",
-							NuméroSérie = "25004-800-65210-45R",
-						};
-
-						var O212 = new TreeTableObject
-						{
-							Parent = O21,
-							Level = 3,
-							Nom = "Scania X30 semi",
-							Numéro = "2.1.2",
-							ValeurComptable = 180000.0m,
-							ValeurAssurance = 200000.0m,
-							Responsable = "Serge",
-							Couleur = "Rouge",
-							NuméroSérie = "25004-800-20087-20X",
-						};
-
-						var O213 = new TreeTableObject
-						{
-							Parent = O21,
-							Level = 3,
-							Nom = "Volvo T-200",
-							Numéro = "2.1.3",
-							ValeurComptable = 90000.0m,
-							ValeurAssurance = 75000.0m,
-							Responsable = "Jean-Pierre",
-							Couleur = "Jaune",
-							NuméroSérie = "T40-56-200-65E4",
-						};
-
-						var O214 = new TreeTableObject
-						{
-							Parent = O21,
-							Level = 3,
-							Nom = "Volvo R-500",
-							Numéro = "2.1.4",
-							ValeurComptable = 110000.0m,
-							ValeurAssurance = 120000.0m,
-							Responsable = "Olivier",
-							Couleur = "Blanc",
-							NuméroSérie = "T50-00-490-9PQ8",
-						};
-
-					var O22 = new TreeTableObject
-					{
-						Parent = O2,
-						Level = 2,
-						Nom = "Camionnettes",
-						Numéro = "2.2",
-					};
-
-						var O221 = new TreeTableObject
-						{
-							Parent = O22,
-							Level = 3,
-							Nom = "Renault Doblo",
-							Numéro = "2.2.1",
-							ValeurComptable = 25000.0m,
-							ValeurAssurance = 28000.0m,
-							Responsable = "Francine",
-							Couleur = "Blanc",
-							NuméroSérie = "456-321-132-898908",
-						};
-
-						var O222 = new TreeTableObject
-						{
-							Parent = O22,
-							Level = 3,
-							Nom = "Ford Transit",
-							Numéro = "2.2.2",
-							ValeurComptable = 30000.0m,
-							ValeurAssurance = 32000.0m,
-							Responsable = "Jean-Bernard",
-							Couleur = "Blanc",
-							NuméroSérie = "4380003293-343213-4",
-						};
-
-					var O23 = new TreeTableObject
-					{
-						Parent = O2,
-						Level = 2,
-						Nom = "Voitures",
-						Numéro = "2.3",
-					};
-
-						var O231 = new TreeTableObject
-						{
-							Parent = O23,
-							Level = 3,
-							Nom = "Citroën C4 Picasso",
-							Numéro = "2.3.1",
-							ValeurComptable = 22000.0m,
-							ValeurAssurance = 25000.0m,
-							Responsable = "Simon",
-							Couleur = "Noir",
-							NuméroSérie = "D456-0003232-0005",
-						};
-
-						var O232 = new TreeTableObject
-						{
-							Parent = O23,
-							Level = 3,
-							Nom = "Opel Corsa",
-							Numéro = "2.3.2",
-							ValeurComptable = 9000.0m,
-							ValeurAssurance = 10000.0m,
-							Responsable = "Frédérique",
-							Couleur = "Noir",
-							NuméroSérie = "45-3292302-544545-8 ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-						};
-
-						var O233 = new TreeTableObject
-						{
-							Parent = O23,
-							Level = 3,
-							Nom = "Fiat Panda",
-							Numéro = "2.3.3",
-							ValeurComptable = 8000.0m,
-							ValeurAssurance = 5000.0m,
-							Responsable = "Dominique",
-							Couleur = "Gris métalisé",
-							NuméroSérie = "780004563233232",
-						};
-
-						var O234 = new TreeTableObject
-						{
-							Parent = O23,
-							Level = 3,
-							Nom = "Fiat Uno",
-							Numéro = "2.3.4",
-							ValeurComptable = 11000.0m,
-							ValeurAssurance = 10000.0m,
-							Responsable = "Denise",
-							Couleur = "Bleu",
-							NuméroSérie = "456000433434002",
-						};
-
-						var O235 = new TreeTableObject
-						{
-							Parent = O23,
-							Level = 3,
-							Nom = "Fiat Uno",
-							Numéro = "2.3.5",
-							ValeurComptable = 12000.0m,
-							ValeurAssurance = 13000.0m,
-							Responsable = "Marie",
-							Couleur = "Antracite",
-							NuméroSérie = "789787332009822",
-						};
-
-						var O236 = new TreeTableObject
-						{
-							Parent = O23,
-							Level = 3,
-							Nom = "Toyota Yaris Verso",
-							Numéro = "2.3.6",
-							ValeurComptable = 16000.0m,
-							ValeurAssurance = 12000.0m,
-							Responsable = "Christiane",
-							Couleur = "Gris",
-							NuméroSérie = "F40T-500023-40232-30987-M",
-						};
-
-			TreeTableObject[] OO =
-			{
-				O,
-					O1,
-						O11,
-							O111, O112, O113, O114,
-						O12,
-							O121, O122,
-						O13,
-							O131, O132, O133,
-					O2,
-						O21,
-							O211, O212, O213, O214,
-						O22,
-							O221, O222,
-						O23,
-							O231, O232, O233, O234, O235, O236,
-			};
-
-			return OO;
-		}
-
-		private class TreeTableObject
-		{
-			public TreeTableObject Parent;
-			public int Level;
-			public string Nom;
-			public string Numéro;
-			public decimal? ValeurComptable;
-			public decimal? ValeurAssurance;
-			public string Responsable;
-			public string Couleur;
-			public string NuméroSérie;
 		}
 		#endregion
 

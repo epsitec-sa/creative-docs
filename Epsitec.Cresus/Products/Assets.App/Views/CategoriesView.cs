@@ -6,11 +6,17 @@ using System.Linq;
 
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class CategoriesView : AbstractView
 	{
+		public CategoriesView(DataMandat mandat)
+			: base (mandat)
+		{
+		}
+
 		public override void CreateUI(Widget parent, MainToolbar toolbar)
 		{
 			base.CreateUI (parent, toolbar);

@@ -13,6 +13,7 @@ using System.Linq;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App
 {
@@ -185,7 +186,9 @@ namespace Epsitec.Cresus.Assets.App
 				BackColor = ColorManager.WindowBackgroundColor,
 			};
 
-			var ui = new AssetsUI ();
+			var mandat = DummyMandat.GetDummyMandat ();
+
+			var ui = new AssetsUI (mandat);
 			ui.CreateUI (frame);
 
 			//?this.CreateTestTimelineProvider (frame);

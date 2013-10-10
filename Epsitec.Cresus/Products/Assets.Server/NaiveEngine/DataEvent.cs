@@ -1,0 +1,41 @@
+//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Epsitec.Cresus.Assets.Server.NaiveEngine
+{
+	public class DataEvent
+	{
+		public DataEvent(int id, Timestamp timestamp)
+		{
+			this.Guid      = Guid.NewGuid ();
+			this.Id        = id;
+			this.Timestamp = timestamp;
+
+			this.properties = new List<AbstractDataProperty> ();
+		}
+
+		public readonly Guid					Guid;
+		public readonly int						Id;
+		public readonly Timestamp				Timestamp;
+
+		public List<AbstractDataProperty>		Properties
+		{
+			get
+			{
+				return this.properties;
+			}
+		}
+
+		public AbstractDataProperty GetProperty(int id)
+		{
+			return this.properties.Where (x => x.Id == id).FirstOrDefault ();
+		}
+
+
+		private readonly List<AbstractDataProperty> properties;
+	}
+}
