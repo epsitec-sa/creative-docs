@@ -46,6 +46,25 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(bool confirmAddress, bool hideHousehold, bool suppressSubscription)
 		{
+			if (suppressSubscription)
+			{
+				var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, this.Entity.Person.MainContact.Household);
+				if (subscription.IsNotNull ())
+				{
+					AiderSubscriptionEntity.Delete (this.BusinessContext, subscription);
+				}
+			}
+
+			if (hideHousehold)
+			{
+				//BusinessContext.DeleteEntity (this.Entity.Person.MainContact);
+			}
+
+			if (confirmAddress || hideHousehold || suppressSubscription)
+			{
+				BusinessContext.DeleteEntity (this.Entity);
+			}
+
 #if false
 			var warning    = this.Entity;
 			var person     = warning.Person;
