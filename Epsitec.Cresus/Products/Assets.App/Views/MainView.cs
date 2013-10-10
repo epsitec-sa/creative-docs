@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.parent = parent;
 
+			Essai.Test1 ();
 			MouseCursorManager.SetWindow (parent.Window);
 
 			this.toolbar = new MainToolbar ();
