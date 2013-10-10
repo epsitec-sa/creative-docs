@@ -70,8 +70,8 @@ function() {
         ),
         plugins: {
           ptype: 'bufferedrenderer',
-          trailingBufferZone: 20,  // Keep 20 rows rendered in the table behind scroll
-          leadingBufferZone: 50   // Keep 50 rows rendered in the table ahead of scroll
+          trailingBufferZone: 20,  // Keep X rows rendered in the table behind scroll
+          leadingBufferZone: 50   // Keep X rows rendered in the table ahead of scroll
         },
         selModel: this.createSelModel(options),
         onSelectionChangeCallback: options.onSelectionChange,
@@ -383,7 +383,7 @@ function() {
         fields: this.createFields(columnDefinitions),
         sorters: this.createSorters(sorterDefinitions),
         autoLoad: autoLoad,
-        pageSize: 500,
+        pageSize: 100,
         buffered: true,
         remoteSort: true,
         remoteFilter: true,
@@ -672,7 +672,7 @@ function() {
         active: true
       };
       if (e.getKey() === e.ENTER) {
-
+        this.filters.clearFilters();
         if (this.fullSearchWindow) {
           this.fullSearchWindow.setQuickSearchValue(field.value);
         }
