@@ -76,17 +76,13 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			// Implémentation totalement naïve qui cherche depuis la date donnée
 			// en remontant dans le passé.
-			foreach (var e in this.events)
-			{
-				if (timestamp >= e.Timestamp)
-				{
-					p = e.GetProperty (id);
+			var e = this.events
+				.Where (x => x.Timestamp <= timestamp && x.GetProperty (id) != null)
+				.LastOrDefault ();
 
-					if (p != null)
-					{
-						return p;
-					}
-				}
+			if (e != null)
+			{
+				return e.GetProperty (id);
 			}
 
 			return null;

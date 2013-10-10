@@ -72,19 +72,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private int GetIndex(Timestamp timestamp)
 		{
-			int i = 0;
-			while (i < this.cells.Count)
-			{
-				if (this.cells[i].Timestamp > timestamp)
-				{
-					i--;
-					break;
-				}
 
-				i++;
-			}
-
-			return i;
+			return this.cells.Where (x => x.Timestamp < timestamp).Count ();
 		}
 
 

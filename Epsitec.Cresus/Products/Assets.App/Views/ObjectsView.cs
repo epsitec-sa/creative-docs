@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			: base (accessor)
 		{
 			this.timelineData = new TimelineData (this.accessor);
+			this.timelineCompact = false;
 		}
 
 		public override void CreateUI(Widget parent, MainToolbar toolbar)
@@ -128,9 +129,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var first = this.treeTableController.TopVisibleRow;
 			int selection = this.treeTableSelectedRow - this.treeTableController.TopVisibleRow;
-			var timestamp = new Timestamp (new System.DateTime (2013, 1, 1), 0);
 
-			this.InitialiseTreeTable (this.treeTableController, first, selection, timestamp);
+			var timestamp = this.SelectedTimestamp;
+
+			if (!timestamp.HasValue)
+			{
+				timestamp = new Timestamp (this.accessor.StartDate, 0);
+			}
+
+			this.InitialiseTreeTable (this.treeTableController, first, selection, timestamp.Value);
 		}
 
 
@@ -259,6 +266,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.timelineSelectedCell = this.timelineController.LeftVisibleCell + rank;
 					this.UpdateTimelineController ();
+					this.UpdateTreeTableController ();
 				}
 			};
 		}
@@ -299,7 +307,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void InitialiseTimeline(NavigationTimelineController timeline, System.DateTime start, int cellsCount, int selection, bool all)
 		{
-			this.timelineData.Compute (this.SelectedGuid, true, new Timestamp(start, 0), cellsCount);
+			this.timelineData.Compute (this.SelectedGuid, this.timelineCompact, new Timestamp (start, 0), cellsCount);
 
 			var dates  = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();
@@ -331,13 +339,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.timelineSelectedCell == -1)
+				if (this.timelineSelectedCell == -1 || this.timelineController == null)
 				{
 					return null;
 				}
 				else
 				{
-					return null;
+					int sel = this.timelineSelectedCell - this.timelineController.LeftVisibleCell;
+					return this.timelineData.GetCell (sel).Timestamp;
 				}
 			}
 		}
@@ -362,5 +371,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private System.DateTime					timelineStart;
 		private int								timelineCellsCount;
 		private int								timelineSelectedCell;
+		private bool							timelineCompact;
 	}
 }
