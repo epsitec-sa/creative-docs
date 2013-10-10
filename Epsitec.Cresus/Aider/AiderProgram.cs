@@ -93,7 +93,7 @@ namespace Epsitec.Aider
 				}
 																		
 				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv\last.xml -oldechfile:s:\eerv\initial.xml -output:s:\eerv\analyse.md -fixpreviousupdate:false -fixhouseholdupdate:false
-				{
+				{														//  use -v for verbose logging
 					ConsoleCreator.RunWithConsole (() => AiderProgram.RunEchUpdate (args));
 					return;
 				}
@@ -261,9 +261,15 @@ namespace Epsitec.Aider
 				var fixPreviousUpdate  = AiderProgram.GetBool (args, "-fixpreviousupdate:", false, false);
 				var fixHouseholdUpdate = AiderProgram.GetBool (args, "-fixhouseholdupdate:", false, false);
 				
+				var verboseLogging	   = false;
+				if (args.Contains ("-v"))
+				{
+					verboseLogging = true;
+				}
+
 				var parishRepository = ParishAddressRepository.Current;
 
-				var updater = new EChDataUpdater (oldEChDataFile.FullName, newEChDataFile.FullName, reportFile.FullName, coreData, parishRepository);
+				var updater = new EChDataUpdater (oldEChDataFile.FullName, newEChDataFile.FullName, reportFile.FullName, coreData, parishRepository,verboseLogging);
 
 				if (fixHouseholdUpdate)
 				{

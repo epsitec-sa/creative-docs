@@ -28,7 +28,7 @@ namespace Epsitec.Aider.Data.Job
 {
 	internal class EChDataUpdater
 	{
-		public EChDataUpdater(string oldEchFile, string newEchFile, string reportFile, CoreData coreData, ParishAddressRepository parishAddressRepository)
+		public EChDataUpdater(string oldEchFile, string newEchFile, string reportFile, CoreData coreData, ParishAddressRepository parishAddressRepository,bool verboseLogging)
 		{
 			this.coreData = coreData;
 			this.parishAddressRepository = parishAddressRepository;
@@ -43,6 +43,9 @@ namespace Epsitec.Aider.Data.Job
 
 			this.aiderPersonsTaggedForDeletion = new Dictionary<EntityKey, AiderPersonEntity> ();
 			this.aiderPersonEntitiesWithDeletedHousehold = new Dictionary<EntityKey, AiderHouseholdEntity> ();
+
+
+			this.verboseLogging = verboseLogging;
 
 			if (System.IO.File.Exists (oldEchFile) && System.IO.File.Exists (newEchFile))
 			{
@@ -121,7 +124,6 @@ namespace Epsitec.Aider.Data.Job
 			this.UpdateHouseholdsAndPropagate (false);
 
 			this.TagEChPersonsForDeletion ();
-			this.TagAiderPersonsForDeletion ();
 			this.TagAiderPersonsForMissingHousehold ();
 
 			this.CreateNewEChPersons ();
@@ -454,7 +456,7 @@ namespace Epsitec.Aider.Data.Job
 							if (fixPreviousUpdate)
 							{
 								//	Restore old state for the eCH family address:
-
+								this.LogToConsole ("Info: Restore old state for the ECh family address");
 								familyAddress.AddressLine1      = oldRchAddress.AddressLine1;
 								familyAddress.HouseNumber       = oldRchAddress.HouseNumber;
 								familyAddress.Street            = oldRchAddress.Street ?? "";
@@ -469,9 +471,11 @@ namespace Epsitec.Aider.Data.Job
 
 							if (this.UpdateAddress (familyAddress, newRchAddress, changes) == false)
 							{
+								this.LogToConsole ("Info: No address change detected, skipping");
 								continue;
 							}
 
+							this.LogToConsole ("Info: Address change detected, gathering Aider informations about adult1 and is potential household");
 							var refPerson               = this.GetAiderPersonEntity (businessContext, family.Adult1);
 							var potentialAiderHousehold = this.GetAiderHousehold (businessContext, refPerson);
 
@@ -479,9 +483,9 @@ namespace Epsitec.Aider.Data.Job
 							{
 								if (fixPreviousUpdate)
 								{
+									this.LogToConsole ("Info: Restore household address and clear warnings");
 									this.RestoreHouseholdAddressAndClearWarnings (businessContext, item, family, potentialAiderHousehold);
 								}
-
 								this.ReassignHousehold (businessContext, changes, family, refPerson, potentialAiderHousehold);
 							}
 							else
@@ -513,32 +517,31 @@ namespace Epsitec.Aider.Data.Job
 
 						if (existingPersonEntity != null)
 						{
+							this.LogToConsole ("Info: {0} tagged with RemovalReason.Departed",existingPersonEntity.GetCompactSummary ());
 							existingPersonEntity.RemovalReason = RemovalReason.Departed;
+
+							this.LogToConsole ("Info: Gathering AiderPerson");
+							var existingAiderPerson = this.GetAiderPersonEntity (businessContext, existingPersonEntity);
+
+							if (existingAiderPerson.IsNotNull ())
+							{
+								this.LogToConsole ("Info: warning added: EChPersonMissing");
+								this.CreateWarning (businessContext, existingAiderPerson, existingAiderPerson.ParishGroupPathCache,
+									/**/			WarningType.EChPersonMissing, this.warningTitleMessage,
+									/**/			TextFormatter.FormatText (existingAiderPerson.GetDisplayName (), "n'est plus dans le RCH."));
+
+								var personKey = businessContext.DataContext.GetNormalizedEntityKey (existingAiderPerson).Value;
+
+								this.aiderPersonsTaggedForDeletion.Add (personKey, existingAiderPerson);
+							}
+							else
+							{
+								this.LogToConsole ("Info: AiderPerson not found");
+							}
 						}
-					}
-				});
-		}
-
-		private void TagAiderPersonsForDeletion()
-		{
-			this.LogToConsole ("TagAiderPersonsForDeletion()");
-			this.ExecuteWithBusinessContext (
-				businessContext =>
-				{
-					foreach (var eChPerson in this.personsToRemove)
-					{
-						var existingPerson      = this.GetEchPersonEntity (businessContext, eChPerson);
-						var existingAiderPerson = this.GetAiderPersonEntity (businessContext, existingPerson);
-
-						if (existingAiderPerson.IsNotNull ())
+						else
 						{
-							this.CreateWarning (businessContext, existingAiderPerson, existingAiderPerson.ParishGroupPathCache,
-								/**/			WarningType.EChPersonMissing, this.warningTitleMessage,
-								/**/			TextFormatter.FormatText (existingAiderPerson.GetDisplayName (), "n'est plus dans le RCH."));
-
-							var personKey = businessContext.DataContext.GetNormalizedEntityKey (existingAiderPerson).Value;
-
-							this.aiderPersonsTaggedForDeletion.Add (personKey, existingAiderPerson);
+							this.LogToConsole ("Info: EChPerson entity not found");
 						}
 					}
 				});
@@ -1621,13 +1624,22 @@ namespace Epsitec.Aider.Data.Job
 		private System.Diagnostics.Stopwatch LogToConsole(string format, params object[] args)
 		{
 			var message = string.Format (format, args);
-
+			var verbose = false;
 			if (message.StartsWith ("Error"))
 			{
 				System.Console.ForegroundColor = System.ConsoleColor.Red;
 			}
 
-			System.Console.WriteLine ("EChDataUpdater: {0}", message);
+			if (message.StartsWith ("Info"))
+			{
+				verbose = true;
+			}
+
+			if ((verbose == true && this.verboseLogging == true) || verbose == false)
+			{
+				System.Console.WriteLine ("EChDataUpdater: {0}", message);
+			}
+
 			System.Console.ResetColor ();
 
 			var time = new System.Diagnostics.Stopwatch ();
@@ -1701,5 +1713,7 @@ namespace Epsitec.Aider.Data.Job
 		
 		private AiderWarningSourceEntity		warningSource;
 		private FormattedText					warningTitleMessage;
+
+		private bool							verboseLogging;
 	}
 }
