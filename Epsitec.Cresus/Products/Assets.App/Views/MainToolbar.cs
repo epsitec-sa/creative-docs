@@ -100,19 +100,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Padding         = new Margins (0),
 			};
 
-			this.buttonObjects    = this.CreateViewButton (toolbar, ViewType.Objects,    "View.Objects");
-			this.buttonCategories = this.CreateViewButton (toolbar, ViewType.Categories, "View.Categories");
-			this.buttonGroups     = this.CreateViewButton (toolbar, ViewType.Groups,     "View.Groups");
-			this.buttonEvents     = this.CreateViewButton (toolbar, ViewType.Events,     "View.Events");
-			this.buttonReports    = this.CreateViewButton (toolbar, ViewType.Reports,    "View.Reports");
-			this.buttonSettings   = this.CreateViewButton (toolbar, ViewType.Settings,   "View.Settings");
+			this.buttonObjects    = this.CreateViewButton (toolbar, ViewType.Objects,    "View.Objects",    "Objets d'immobilisation");
+			this.buttonCategories = this.CreateViewButton (toolbar, ViewType.Categories, "View.Categories", "Catégories d'immobilisations");
+			this.buttonGroups     = this.CreateViewButton (toolbar, ViewType.Groups,     "View.Groups",     "Sections");
+			this.buttonEvents     = this.CreateViewButton (toolbar, ViewType.Events,     "View.Events",     "Evénements");
+			this.buttonReports    = this.CreateViewButton (toolbar, ViewType.Reports,    "View.Reports",    "Rapports et statistiques");
+			this.buttonSettings   = this.CreateViewButton (toolbar, ViewType.Settings,   "View.Settings",   "Réglages");
 
-			this.buttonNew        = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.New");
-			this.buttonDelete     = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.Delete");
-			this.buttonEdit       = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.Edit");
+			this.buttonNew        = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.New",    "Nouveau");
+			this.buttonDelete     = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.Delete", "Supprimer");
+			this.buttonEdit       = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.Edit",   "Modifier");
 
-			this.buttonCancel     = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Cancel");
-			this.buttonAccept     = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Accept");
+			this.buttonCancel     = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Cancel",  "Annuler les modifications");
+			this.buttonAccept     = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Accept",  "Accepter les modifications");
 
 			this.buttonNew.Margins = new Margins (20, 0, 0, 0);
 
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateViewButtons ();
 		}
 
-		private IconButton CreateViewButton(HToolBar toolbar, ViewType view, string icon)
+		private IconButton CreateViewButton(HToolBar toolbar, ViewType view, string icon, string tooltip)
 		{
 			var size = toolbar.PreferredHeight;
 
@@ -147,6 +147,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				IconUri       = MainToolbar.GetResourceIconUri (icon),
 				PreferredSize = new Size (size, size),
 			};
+
+			ToolTip.Default.SetToolTip (button, tooltip);
 
 			button.Clicked += delegate
 			{
@@ -173,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
 		}
 
-		private IconButton CreateCommandButton(HToolBar toolbar, DockStyle dock, string icon)
+		private IconButton CreateCommandButton(HToolBar toolbar, DockStyle dock, string icon, string tooltip)
 		{
 			var size = toolbar.PreferredHeight;
 
@@ -185,6 +187,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				IconUri       = MainToolbar.GetResourceIconUri (icon),
 				PreferredSize = new Size (size, size),
 			};
+
+			ToolTip.Default.SetToolTip (button, tooltip);
 
 			button.Clicked += delegate
 			{
