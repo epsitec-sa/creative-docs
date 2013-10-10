@@ -42,6 +42,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			this.engine = bootStrapper.GetEngine ();
 
 			Logger.LogToConsole ("Nancy server started");
+
+			Logger.LogToConsole ("Set JsonSettings.MaxJsonLength to: 500'000");
+			Nancy.Json.JsonSettings.MaxJsonLength = 500000;
 		}
 
 		#region IDisposable Members
@@ -186,5 +189,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		private readonly HttpServer				httpServer;
 		private readonly INancyEngine			engine;
 		private readonly System.Uri				baseUri;
+		
 	}
 }
