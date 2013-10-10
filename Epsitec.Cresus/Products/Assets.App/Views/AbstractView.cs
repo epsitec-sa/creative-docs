@@ -22,13 +22,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins = new Margins (0, 0, 0, 2),
 			};
 
-			this.listBox = new FrameBox
+			this.listFrameBox = new FrameBox
 			{
 				Parent = topBox,
 				Dock   = DockStyle.Fill,
 			};
 
-			this.editBox = new FrameBox
+			this.editFrameBox = new FrameBox
 			{
 				Parent         = topBox,
 				Dock           = DockStyle.Right,
@@ -39,14 +39,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.listTopTitle = new TopTitle
 			{
-				Parent = this.listBox,
+				Parent = this.listFrameBox,
 			};
 
 			this.listTopTitle.SetTitle (this.Title);
 
 			this.editTopTitle = new TopTitle
 			{
-				Parent = this.editBox,
+				Parent = this.editFrameBox,
 			};
 
 			this.editTopTitle.SetTitle ("Edition");
@@ -55,6 +55,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				switch (command)
 				{
+					case ToolbarCommand.New:
+						this.OnCommandNew ();
+						break;
+
+					case ToolbarCommand.Delete:
+						this.OnCommandDelete ();
+						break;
+
 					case ToolbarCommand.Edit:
 						this.OnCommandEdit ();
 						break;
@@ -79,6 +87,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		protected virtual void OnCommandNew()
+		{
+		}
+
+		protected virtual void OnCommandDelete()
+		{
+		}
 
 		protected void OnCommandEdit()
 		{
@@ -109,7 +125,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void Update()
 		{
-			this.editBox.Visibility = this.isEditing;
+			this.editFrameBox.Visibility = this.isEditing;
 
 			if (this.SelectedRow == -1)
 			{
@@ -182,8 +198,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected MainToolbar					toolbar;
 
-		protected FrameBox						listBox;
-		protected FrameBox						editBox;
+		protected FrameBox						listFrameBox;
+		protected FrameBox						editFrameBox;
 
 		protected TopTitle						listTopTitle;
 		protected TopTitle						editTopTitle;

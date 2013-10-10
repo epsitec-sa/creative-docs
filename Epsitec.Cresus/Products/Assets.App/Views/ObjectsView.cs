@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock   = DockStyle.Bottom,
 			};
 
-			this.CreateTreeTable (this.listBox);
+			this.CreateTreeTable (this.listFrameBox);
 			this.CreateTimeline (this.timelineBox);
 
 			this.Update ();
@@ -36,6 +36,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return "Objets d'immobilisation";
 			}
+		}
+
+
+		protected override void OnCommandNew()
+		{
+		}
+
+		protected override void OnCommandDelete()
+		{
 		}
 
 
@@ -56,184 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void CreateTimeline(Widget parent)
-		{
-			this.timelineStart = new System.DateTime (2013, 1, 1);
-			this.timelineCellsCount = 365;
-			this.timelineSelectedCell = -1;
-
-			this.timelineController = new NavigationTimelineController
-			{
-				CellsCount = timelineCellsCount,
-			};
-
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Bottom,
-				PreferredHeight = 70,
-			};
-
-			this.timelineController.DateChanged += delegate
-			{
-				this.UpdateTimelineController ();
-			};
-
-			this.timelineController.CreateUI (frame);
-			this.timelineController.Pivot = 0.0;
-			this.timelineController.SetRows (ObjectsView.GetRows (false));
-			this.UpdateTimelineController ();
-
-			this.timelineController.CellClicked += delegate (object sender, int row, int rank)
-			{
-				if (row == 0)
-				{
-					this.timelineSelectedCell = this.timelineController.LeftVisibleCell + rank;
-					this.UpdateTimelineController ();
-				}
-			};
-		}
-
-		private void UpdateTimelineController()
-		{
-			var date = ObjectsView.AddDays (timelineStart, this.timelineController.LeftVisibleCell);
-			int cellsCount = System.Math.Min (this.timelineCellsCount, this.timelineController.VisibleCellsCount);
-			int selection = this.timelineSelectedCell - this.timelineController.LeftVisibleCell;
-
-			ObjectsView.InitialiseTimeline (this.timelineController, date, cellsCount, selection, false);
-		}
-
-
-		private static TimelineRowDescription[] GetRows(bool all)
-		{
-			var list = new List<TimelineRowDescription> ();
-
-			if (all)
-			{
-				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeur assurance", relativeHeight: 2.0));
-				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeur comptable", relativeHeight: 2.0, valueColor1: Color.FromName ("Green"), valueColor2: Color.FromName ("Red")));
-				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
-				list.Add (new TimelineRowDescription (TimelineRowType.DaysOfWeek, ""));
-				list.Add (new TimelineRowDescription (TimelineRowType.WeekOfYear, "Semaines"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
-			}
-			else
-			{
-				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
-			}
-
-			return list.ToArray ();
-		}
-
-		private static void InitialiseTimeline(NavigationTimelineController timeline, System.DateTime start, int cellsCount, int selection, bool all)
-		{
-			var dates = new List<TimelineCellDate> ();
-			var glyphs = new List<TimelineCellGlyph> ();
-			var values1 = new List<TimelineCellValue> ();
-			var values2 = new List<TimelineCellValue> ();
-
-			decimal? value1 = 10000.0m;
-			decimal? value2 = 15000.0m;
-			decimal? value3 = 25000.0m;
-
-			for (int i = 0; i < cellsCount; i++)
-			{
-				var date = ObjectsView.AddDays (start, i);
-
-				int ii = (int) (start.Ticks / Time.TicksPerDay) + i;
-				var glyph = TimelineGlyph.Empty;
-
-				if (ii%12 == 0)
-				{
-					glyph = TimelineGlyph.FilledCircle;
-				}
-				else if (ii%12 == 1)
-				{
-					glyph = TimelineGlyph.OutlinedCircle;
-				}
-				else if (ii%12 == 6)
-				{
-					glyph = TimelineGlyph.FilledSquare;
-				}
-				else if (ii%12 == 7)
-				{
-					glyph = TimelineGlyph.OutlinedSquare;
-				}
-
-				if (glyph != TimelineGlyph.Empty)
-				{
-					if (glyph == TimelineGlyph.OutlinedSquare)
-					{
-						value1 += 2000.0m;
-					}
-					else
-					{
-						value1 -= value1 * 0.10m;
-					}
-
-					value2 -= value2 * 0.25m;
-					value3 -= value3 * 0.50m;
-				}
-
-				var v1 = value1;
-				var v2 = value2;
-				var v3 = value3;
-
-				if (glyph == TimelineGlyph.Empty)
-				{
-					v1 = null;
-					v2 = null;
-					v3 = null;
-				}
-
-				if (v1.HasValue && v1.Value < 2000.0m)
-				{
-					v1 = null;
-				}
-
-				if (v2.HasValue && v2.Value < 2000.0m)
-				{
-					v2 = null;
-				}
-
-				if (v3.HasValue && v3.Value < 2000.0m)
-				{
-					v3 = null;
-				}
-
-				var d = new TimelineCellDate (date, isSelected: (i == selection));
-				var g = new TimelineCellGlyph (glyph, isSelected: (i == selection));
-				var x1 = new TimelineCellValue (v1, isSelected: (i == selection));
-				var x2 = new TimelineCellValue (v2, v3, isSelected: (i == selection));
-
-				dates.Add (d);
-				glyphs.Add (g);
-				values1.Add (x1);
-				values2.Add (x2);
-			}
-
-			if (all)
-			{
-				timeline.SetRowValueCells (0, values1.ToArray ());
-				timeline.SetRowValueCells (1, values2.ToArray ());
-				timeline.SetRowGlyphCells (2, glyphs.ToArray ());
-				timeline.SetRowDayCells (3, dates.ToArray ());
-				timeline.SetRowDayOfWeekCells (4, dates.ToArray ());
-				timeline.SetRowWeekOfYearCells (5, dates.ToArray ());
-				timeline.SetRowMonthCells (6, dates.ToArray ());
-			}
-			else
-			{
-				timeline.SetRowGlyphCells (0, glyphs.ToArray ());
-				timeline.SetRowDayCells (1, dates.ToArray ());
-				timeline.SetRowMonthCells (2, dates.ToArray ());
-			}
-		}
-
-
+		#region TreeTable
 		private void CreateTreeTable(Widget parent)
 		{
 			var OO = ObjectsView.GetTreeTableObjects ();
@@ -726,8 +558,189 @@ namespace Epsitec.Cresus.Assets.App.Views
 			public string Couleur;
 			public string NuméroSérie;
 		}
-	
-		
+		#endregion
+
+
+		#region Timeline
+		private void CreateTimeline(Widget parent)
+		{
+			this.timelineStart = new System.DateTime (2013, 1, 1);
+			this.timelineCellsCount = 365;
+			this.timelineSelectedCell = -1;
+
+			this.timelineController = new NavigationTimelineController
+			{
+				CellsCount = timelineCellsCount,
+			};
+
+			var frame = new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Bottom,
+				PreferredHeight = 70,
+			};
+
+			this.timelineController.DateChanged += delegate
+			{
+				this.UpdateTimelineController ();
+			};
+
+			this.timelineController.CreateUI (frame);
+			this.timelineController.Pivot = 0.0;
+			this.timelineController.SetRows (ObjectsView.GetRows (false));
+			this.UpdateTimelineController ();
+
+			this.timelineController.CellClicked += delegate (object sender, int row, int rank)
+			{
+				if (row == 0)
+				{
+					this.timelineSelectedCell = this.timelineController.LeftVisibleCell + rank;
+					this.UpdateTimelineController ();
+				}
+			};
+		}
+
+		private void UpdateTimelineController()
+		{
+			var date = ObjectsView.AddDays (timelineStart, this.timelineController.LeftVisibleCell);
+			int cellsCount = System.Math.Min (this.timelineCellsCount, this.timelineController.VisibleCellsCount);
+			int selection = this.timelineSelectedCell - this.timelineController.LeftVisibleCell;
+
+			ObjectsView.InitialiseTimeline (this.timelineController, date, cellsCount, selection, false);
+		}
+
+
+		private static TimelineRowDescription[] GetRows(bool all)
+		{
+			var list = new List<TimelineRowDescription> ();
+
+			if (all)
+			{
+				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeur assurance", relativeHeight: 2.0));
+				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeur comptable", relativeHeight: 2.0, valueColor1: Color.FromName ("Green"), valueColor2: Color.FromName ("Red")));
+				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
+				list.Add (new TimelineRowDescription (TimelineRowType.DaysOfWeek, ""));
+				list.Add (new TimelineRowDescription (TimelineRowType.WeekOfYear, "Semaines"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
+			}
+			else
+			{
+				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
+			}
+
+			return list.ToArray ();
+		}
+
+		private static void InitialiseTimeline(NavigationTimelineController timeline, System.DateTime start, int cellsCount, int selection, bool all)
+		{
+			var dates = new List<TimelineCellDate> ();
+			var glyphs = new List<TimelineCellGlyph> ();
+			var values1 = new List<TimelineCellValue> ();
+			var values2 = new List<TimelineCellValue> ();
+
+			decimal? value1 = 10000.0m;
+			decimal? value2 = 15000.0m;
+			decimal? value3 = 25000.0m;
+
+			for (int i = 0; i < cellsCount; i++)
+			{
+				var date = ObjectsView.AddDays (start, i);
+
+				int ii = (int) (start.Ticks / Time.TicksPerDay) + i;
+				var glyph = TimelineGlyph.Empty;
+
+				if (ii%12 == 0)
+				{
+					glyph = TimelineGlyph.FilledCircle;
+				}
+				else if (ii%12 == 1)
+				{
+					glyph = TimelineGlyph.OutlinedCircle;
+				}
+				else if (ii%12 == 6)
+				{
+					glyph = TimelineGlyph.FilledSquare;
+				}
+				else if (ii%12 == 7)
+				{
+					glyph = TimelineGlyph.OutlinedSquare;
+				}
+
+				if (glyph != TimelineGlyph.Empty)
+				{
+					if (glyph == TimelineGlyph.OutlinedSquare)
+					{
+						value1 += 2000.0m;
+					}
+					else
+					{
+						value1 -= value1 * 0.10m;
+					}
+
+					value2 -= value2 * 0.25m;
+					value3 -= value3 * 0.50m;
+				}
+
+				var v1 = value1;
+				var v2 = value2;
+				var v3 = value3;
+
+				if (glyph == TimelineGlyph.Empty)
+				{
+					v1 = null;
+					v2 = null;
+					v3 = null;
+				}
+
+				if (v1.HasValue && v1.Value < 2000.0m)
+				{
+					v1 = null;
+				}
+
+				if (v2.HasValue && v2.Value < 2000.0m)
+				{
+					v2 = null;
+				}
+
+				if (v3.HasValue && v3.Value < 2000.0m)
+				{
+					v3 = null;
+				}
+
+				var d = new TimelineCellDate (date, isSelected: (i == selection));
+				var g = new TimelineCellGlyph (glyph, isSelected: (i == selection));
+				var x1 = new TimelineCellValue (v1, isSelected: (i == selection));
+				var x2 = new TimelineCellValue (v2, v3, isSelected: (i == selection));
+
+				dates.Add (d);
+				glyphs.Add (g);
+				values1.Add (x1);
+				values2.Add (x2);
+			}
+
+			if (all)
+			{
+				timeline.SetRowValueCells (0, values1.ToArray ());
+				timeline.SetRowValueCells (1, values2.ToArray ());
+				timeline.SetRowGlyphCells (2, glyphs.ToArray ());
+				timeline.SetRowDayCells (3, dates.ToArray ());
+				timeline.SetRowDayOfWeekCells (4, dates.ToArray ());
+				timeline.SetRowWeekOfYearCells (5, dates.ToArray ());
+				timeline.SetRowMonthCells (6, dates.ToArray ());
+			}
+			else
+			{
+				timeline.SetRowGlyphCells (0, glyphs.ToArray ());
+				timeline.SetRowDayCells (1, dates.ToArray ());
+				timeline.SetRowMonthCells (2, dates.ToArray ());
+			}
+		}
+		#endregion
+
+
 		private static System.DateTime AddDays(System.DateTime date, int numberOfDays)
 		{
 			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays).ToDateTime ();

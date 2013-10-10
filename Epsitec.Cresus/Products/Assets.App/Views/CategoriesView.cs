@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.lastSelectedRow = -2;
 
 			this.treeTable = new SimpleTreeTableController ();
-			this.treeTable.CreateUI (this.listBox, footerHeight: 0);
+			this.treeTable.CreateUI (this.listFrameBox, footerHeight: 0);
 			this.treeTable.SetColumns (this.Descriptions, 0);
 			this.treeTable.SetContent (this.Content);
 
@@ -45,6 +45,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return "Catégories d'immobilisation";
 			}
+		}
+
+
+		protected override void OnCommandNew()
+		{
+		}
+
+		protected override void OnCommandDelete()
+		{
 		}
 
 
