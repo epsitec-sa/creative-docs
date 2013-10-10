@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.treeTable = new SimpleTreeTableController ();
 			this.treeTable.CreateUI (this.listFrameBox, footerHeight: 0);
-			this.treeTable.SetColumns (this.Descriptions, 0);
+			this.treeTable.SetColumns (this.Columns, 0);
 			this.treeTable.SetContent (this.Content);
 
 			this.treeTable.RowClicked += delegate
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private TreeTableColumnDescription[] Descriptions
+		private TreeTableColumnDescription[] Columns
 		{
 			get
 			{
@@ -94,58 +94,58 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var list = new List<List<AbstractSimpleTreeTableCell>> ();
 
 				{
-					var line = new List<AbstractSimpleTreeTableCell> ();
-					line.Add (new SimpleTreeTableCellString ("100"));
-					line.Add (new SimpleTreeTableCellString ("Immobilier"));
-					line.Add (new SimpleTreeTableCellDecimal (10.0m));
-					line.Add (new SimpleTreeTableCellString ("Linéaire"));
-					line.Add (new SimpleTreeTableCellDecimal (1000.0m));
-					line.Add (new SimpleTreeTableCellString ("Annuel"));
-					list.Add (line);
+					var row = new List<AbstractSimpleTreeTableCell> ();
+					row.Add (new SimpleTreeTableCellString ("100"));
+					row.Add (new SimpleTreeTableCellString ("Immobilier"));
+					row.Add (new SimpleTreeTableCellDecimal (10.0m));
+					row.Add (new SimpleTreeTableCellString ("Linéaire"));
+					row.Add (new SimpleTreeTableCellDecimal (1000.0m));
+					row.Add (new SimpleTreeTableCellString ("Annuel"));
+					list.Add (row);
 				}
 
 				{
-					var line = new List<AbstractSimpleTreeTableCell> ();
-					line.Add (new SimpleTreeTableCellString ("200"));
-					line.Add (new SimpleTreeTableCellString ("Véhicules"));
-					line.Add (new SimpleTreeTableCellDecimal (20.0m));
-					line.Add (new SimpleTreeTableCellString ("Progressif"));
-					line.Add (new SimpleTreeTableCellDecimal (1.0m));
-					line.Add (new SimpleTreeTableCellString ("Semestriel"));
-					list.Add (line);
+					var row = new List<AbstractSimpleTreeTableCell> ();
+					row.Add (new SimpleTreeTableCellString ("200"));
+					row.Add (new SimpleTreeTableCellString ("Véhicules"));
+					row.Add (new SimpleTreeTableCellDecimal (20.0m));
+					row.Add (new SimpleTreeTableCellString ("Progressif"));
+					row.Add (new SimpleTreeTableCellDecimal (1.0m));
+					row.Add (new SimpleTreeTableCellString ("Semestriel"));
+					list.Add (row);
 				}
 
 				{
-					var line = new List<AbstractSimpleTreeTableCell> ();
-					line.Add (new SimpleTreeTableCellString ("205"));
-					line.Add (new SimpleTreeTableCellString ("Machines"));
-					line.Add (new SimpleTreeTableCellDecimal (7.5m));
-					line.Add (new SimpleTreeTableCellString ("Progressif"));
-					line.Add (new SimpleTreeTableCellDecimal (1.0m));
-					line.Add (new SimpleTreeTableCellString ("Annuel"));
-					list.Add (line);
+					var row = new List<AbstractSimpleTreeTableCell> ();
+					row.Add (new SimpleTreeTableCellString ("205"));
+					row.Add (new SimpleTreeTableCellString ("Machines"));
+					row.Add (new SimpleTreeTableCellDecimal (7.5m));
+					row.Add (new SimpleTreeTableCellString ("Progressif"));
+					row.Add (new SimpleTreeTableCellDecimal (1.0m));
+					row.Add (new SimpleTreeTableCellString ("Annuel"));
+					list.Add (row);
 				}
 
 				{
-					var line = new List<AbstractSimpleTreeTableCell> ();
-					line.Add (new SimpleTreeTableCellString ("300"));
-					line.Add (new SimpleTreeTableCellString ("Stock"));
-					line.Add (new SimpleTreeTableCellDecimal (null));
-					line.Add (new SimpleTreeTableCellString (null));
-					line.Add (new SimpleTreeTableCellDecimal (100.0m));
-					line.Add (new SimpleTreeTableCellString ("Mensuel"));
-					list.Add (line);
+					var row = new List<AbstractSimpleTreeTableCell> ();
+					row.Add (new SimpleTreeTableCellString ("300"));
+					row.Add (new SimpleTreeTableCellString ("Stock"));
+					row.Add (new SimpleTreeTableCellDecimal (null));
+					row.Add (new SimpleTreeTableCellString (null));
+					row.Add (new SimpleTreeTableCellDecimal (100.0m));
+					row.Add (new SimpleTreeTableCellString ("Mensuel"));
+					list.Add (row);
 				}
 
 				{
-					var line = new List<AbstractSimpleTreeTableCell> ();
-					line.Add (new SimpleTreeTableCellString ("301"));
-					line.Add (new SimpleTreeTableCellString ("Mobilier"));
-					line.Add (new SimpleTreeTableCellDecimal (8.0m));
-					line.Add (new SimpleTreeTableCellString ("Linéaire"));
-					line.Add (new SimpleTreeTableCellDecimal (1.0m));
-					line.Add (new SimpleTreeTableCellString ("Annuel"));
-					list.Add (line);
+					var row = new List<AbstractSimpleTreeTableCell> ();
+					row.Add (new SimpleTreeTableCellString ("301"));
+					row.Add (new SimpleTreeTableCellString ("Mobilier"));
+					row.Add (new SimpleTreeTableCellDecimal (8.0m));
+					row.Add (new SimpleTreeTableCellString ("Linéaire"));
+					row.Add (new SimpleTreeTableCellDecimal (1.0m));
+					row.Add (new SimpleTreeTableCellString ("Annuel"));
+					list.Add (row);
 				}
 
 				return list;

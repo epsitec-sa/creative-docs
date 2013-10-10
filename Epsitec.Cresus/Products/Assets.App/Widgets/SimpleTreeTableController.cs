@@ -77,22 +77,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void CheckContent()
 		{
-			foreach (var line in this.content)
+			foreach (var row in this.content)
 			{
 				for (int c=0; c<this.columnDescriptions.Length; c++)
 				{
 					var description = this.columnDescriptions[c];
 
-					System.Diagnostics.Debug.Assert (line.Count == this.columnDescriptions.Length);
+					System.Diagnostics.Debug.Assert (row.Count == this.columnDescriptions.Length);
 
 					if (description.Type == TreeTableColumnType.String)
 					{
-						System.Diagnostics.Debug.Assert (line[c] is SimpleTreeTableCellString);
+						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellString);
 					}
 					else if (description.Type == TreeTableColumnType.Decimal ||
 							 description.Type == TreeTableColumnType.Rate)
 					{
-						System.Diagnostics.Debug.Assert (line[c] is SimpleTreeTableCellDecimal);
+						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellDecimal);
 					}
 					else
 					{
@@ -138,12 +138,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 				}
 
-				var line = this.content[firstRow+i];
+				var row = this.content[firstRow+i];
 
 				for (int c=0; c<this.columnDescriptions.Length; c++)
 				{
 					var description = this.columnDescriptions[c];
-					var content = line[c];
+					var content = row[c];
 
 					if (description.Type == TreeTableColumnType.String)
 					{
