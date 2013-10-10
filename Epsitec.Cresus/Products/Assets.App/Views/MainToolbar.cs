@@ -109,10 +109,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.buttonNew        = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.New");
 			this.buttonDelete     = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.Delete");
+			this.buttonEdit       = this.CreateCommandButton (toolbar, DockStyle.Left, "Object.Edit");
 
 			this.buttonCancel     = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Cancel");
 			this.buttonAccept     = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Accept");
-			this.buttonEdit       = this.CreateCommandButton (toolbar, DockStyle.Right, "Edit.Edit");
 
 			this.buttonNew.Margins = new Margins (20, 0, 0, 0);
 
