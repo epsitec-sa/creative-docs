@@ -54,5 +54,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			return buffer.ToString ();
 		}
+
+
+		public static bool IsSameGlyphs(TimelineCellGlyph c1, TimelineCellGlyph c2)
+		{
+			//	Deux glyhps successifs sont toujours considérés comme différents.
+			//	Il faut juste considérer comme identiques les glyphs hors bornes.
+			int g1 = (c1.IsValid) ? 0 : -1;
+			int g2 = (c2.IsValid) ? 1 : -1;
+
+			return g1 == g2;
+		}
 	}
 }

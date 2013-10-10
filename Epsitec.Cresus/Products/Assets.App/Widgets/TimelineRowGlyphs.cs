@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private static bool IsSame(TimelineCellGlyph c1, TimelineCellGlyph c2)
 		{
-			return false;
+			return TimelineCellGlyph.IsSameGlyphs (c1, c2);
 		}
 
 		private static Color GetCellColor(TimelineCellGlyph cell, bool isHover, int index)
