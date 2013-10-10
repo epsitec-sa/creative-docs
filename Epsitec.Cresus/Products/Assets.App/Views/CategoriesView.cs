@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class CategoriesView : AbstractView
 	{
-		public CategoriesView(DataMandat mandat)
-			: base (mandat)
+		public CategoriesView(DataAccessor accessor)
+			: base (accessor)
 		{
 		}
 

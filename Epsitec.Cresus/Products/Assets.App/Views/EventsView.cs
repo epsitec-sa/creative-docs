@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EventsView : AbstractView
 	{
-		public EventsView(DataMandat mandat)
-			: base (mandat)
+		public EventsView(DataAccessor accessor)
+			: base (accessor)
 		{
 		}
 

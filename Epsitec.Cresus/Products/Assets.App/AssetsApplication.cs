@@ -187,8 +187,9 @@ namespace Epsitec.Cresus.Assets.App
 			};
 
 			var mandat = DummyMandat.GetDummyMandat ();
+			var accessor = new DataAccessor (mandat);
 
-			var ui = new AssetsUI (mandat);
+			var ui = new AssetsUI (accessor);
 			ui.CreateUI (frame);
 
 			//?this.CreateTestTimelineProvider (frame);

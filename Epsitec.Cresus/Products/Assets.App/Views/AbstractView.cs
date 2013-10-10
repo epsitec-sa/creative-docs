@@ -12,9 +12,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractView
 	{
-		public AbstractView(DataMandat mandat)
+		public AbstractView(DataAccessor accessor)
 		{
-			this.mandat = mandat;
+			this.accessor = accessor;
 		}
 
 		public virtual void CreateUI(Widget parent, MainToolbar toolbar)
@@ -174,27 +174,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractView CreateView(ViewType viewType, DataMandat mandat)
+		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor)
 		{
 			switch (viewType)
 			{
 				case ViewType.Objects:
-					return new ObjectsView (mandat);
+					return new ObjectsView (accessor);
 
 				case ViewType.Categories:
-					return new CategoriesView (mandat);
+					return new CategoriesView (accessor);
 
 				case ViewType.Groups:
-					return new GroupsView (mandat);
+					return new GroupsView (accessor);
 
 				case ViewType.Events:
-					return new EventsView (mandat);
+					return new EventsView (accessor);
 
 				case ViewType.Reports:
-					return new ReportsView (mandat);
+					return new ReportsView (accessor);
 
 				case ViewType.Settings:
-					return new SettingsView (mandat);
+					return new SettingsView (accessor);
 
 				default:
 					return null;
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected readonly DataMandat			mandat;
+		protected readonly DataAccessor			accessor;
 
 		protected MainToolbar					toolbar;
 

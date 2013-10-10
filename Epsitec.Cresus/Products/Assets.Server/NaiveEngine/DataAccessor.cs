@@ -15,10 +15,32 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
+		public int ObjectsCount
+		{
+			get
+			{
+				return this.mandat.Objects.Count;
+			}
+		}
+
+		public DataObject GetObject(int index)
+		{
+			if (index >= 0 && index < this.mandat.Objects.Count)
+			{
+				return this.mandat.Objects[index];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		public DataObject GetObject(Guid guid)
 		{
 			return this.mandat.Objects.Where (x => x.Guid == guid).FirstOrDefault ();
 		}
+
+
 
 		public DataObject GetCategory(Guid guid)
 		{

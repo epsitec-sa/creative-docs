@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class SettingsView : AbstractView
 	{
-		public SettingsView(DataMandat mandat)
-			: base (mandat)
+		public SettingsView(DataAccessor accessor)
+			: base (accessor)
 		{
 		}
 

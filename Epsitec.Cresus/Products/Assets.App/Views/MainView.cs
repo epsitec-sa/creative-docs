@@ -11,9 +11,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MainView
 	{
-		public MainView(DataMandat mandat)
+		public MainView(DataAccessor accessor)
 		{
-			this.mandat = mandat;
+			this.accessor = accessor;
 		}
 
 		public void CreateUI(Widget parent)
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.viewBox.Children.Clear ();
 
-			this.view = AbstractView.CreateView (this.toolbar.ViewType, this.mandat);
+			this.view = AbstractView.CreateView (this.toolbar.ViewType, this.accessor);
 
 			if (this.view != null)
 			{
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly DataMandat				mandat;
+		private readonly DataAccessor			accessor;
 
 		private Widget							parent;
 		private MainToolbar						toolbar;

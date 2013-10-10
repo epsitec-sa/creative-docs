@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectsView : AbstractView
 	{
-		public ObjectsView(DataMandat mandat)
-			: base (mandat)
+		public ObjectsView(DataAccessor accessor)
+			: base (accessor)
 		{
 		}
 
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region TreeTable
 		private void CreateTreeTable(Widget parent)
 		{
-			this.treeTableRowsCount = this.mandat.Objects.Count;
+			this.treeTableRowsCount = this.accessor.ObjectsCount;
 			this.treeTableSelectedRow = -1;
 
 			this.treeTableController = new NavigationTreeTableController
@@ -161,12 +161,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var count = treeTable.VisibleRowsCount;
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= this.mandat.Objects.Count)
+				if (firstRow+i >= this.accessor.ObjectsCount)
 				{
 					break;
 				}
 
-				var o = this.mandat.Objects[firstRow+i];
+				var o = this.accessor.GetObject (firstRow+i);
 
 				int level = o.GetIntProperty (timestamp, (int) ObjectField.Level).GetValueOrDefault ();
 				var type = level == 3 ? TreeTableTreeType.Final : TreeTableTreeType.Extended;

@@ -12,18 +12,18 @@ namespace Epsitec.Cresus.Assets.App
 {
 	public class AssetsUI
 	{
-		public AssetsUI(DataMandat mandat)
+		public AssetsUI(DataAccessor accessor)
 		{
-			this.mandat = mandat;
+			this.accessor = accessor;
 		}
 
 		public void CreateUI(Widget parent)
 		{
-			var mainView = new MainView (this.mandat);
+			var mainView = new MainView (this.accessor);
 			mainView.CreateUI (parent);
 		}
 
 
-		private readonly DataMandat mandat;
+		private readonly DataAccessor accessor;
 	}
 }

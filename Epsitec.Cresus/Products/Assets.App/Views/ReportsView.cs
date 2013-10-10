@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ReportsView : AbstractView
 	{
-		public ReportsView(DataMandat mandat)
-			: base (mandat)
+		public ReportsView(DataAccessor accessor)
+			: base (accessor)
 		{
 		}
 

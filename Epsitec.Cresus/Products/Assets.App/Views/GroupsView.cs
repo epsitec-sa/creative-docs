@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class GroupsView : AbstractView
 	{
-		public GroupsView(DataMandat mandat)
-			: base (mandat)
+		public GroupsView(DataAccessor accessor)
+			: base (accessor)
 		{
 		}
 
