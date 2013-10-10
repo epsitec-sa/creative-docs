@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectsView(DataAccessor accessor)
 			: base (accessor)
 		{
+			this.timelineData = new TimelineData (this.accessor);
 		}
 
 		public override void CreateUI(Widget parent, MainToolbar toolbar)
@@ -298,145 +299,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void InitialiseTimeline(NavigationTimelineController timeline, System.DateTime start, int cellsCount, int selection, bool all)
 		{
-			var dates = new List<TimelineCellDate> ();
-			var glyphs = new List<TimelineCellGlyph> ();
+			this.timelineData.Compute (this.SelectedGuid, true, new Timestamp(start, 0), cellsCount);
 
-			var guid = this.SelectedGuid;
-			int eventIndex = 0;
-			int eventCount = guid.HasValue ? this.accessor.GetObjectEventsCount (guid.Value) : 0;
-			Timestamp? nextTimestamp = null;
+			var dates  = new List<TimelineCellDate> ();
+			var glyphs = new List<TimelineCellGlyph> ();
 
 			for (int i = 0; i < cellsCount; i++)
 			{
-				var date = ObjectsView.AddDays (start, i);
-				var glyph = TimelineGlyph.Empty;
+				var cell = this.timelineData.GetCell (i);
 
-				if ((!nextTimestamp.HasValue || nextTimestamp.Value.Date < date) &&
-					eventIndex < eventCount)
+				if (cell == null)
 				{
-					nextTimestamp = this.accessor.GetObjectEventTimestamp (guid.Value, eventIndex++);
+					break;
 				}
-
-				if (nextTimestamp.HasValue && nextTimestamp.Value.Date == date)
+				else
 				{
-					glyph = TimelineGlyph.FilledCircle;
+					var d = new TimelineCellDate (cell.Timestamp.Date, isSelected: (i == selection));
+					var g = new TimelineCellGlyph (cell.TimelineGlyph, isSelected: (i == selection));
+
+					dates.Add (d);
+					glyphs.Add (g);
 				}
-
-				var d = new TimelineCellDate (date, isSelected: (i == selection));
-				var g = new TimelineCellGlyph (glyph, isSelected: (i == selection));
-
-				dates.Add (d);
-				glyphs.Add (g);
 			}
 
 			timeline.SetRowGlyphCells (0, glyphs.ToArray ());
 			timeline.SetRowDayCells   (1, dates.ToArray ());
 			timeline.SetRowMonthCells (2, dates.ToArray ());
+		}
 
-
-#if false
-			var dates = new List<TimelineCellDate> ();
-			var glyphs = new List<TimelineCellGlyph> ();
-			var values1 = new List<TimelineCellValue> ();
-			var values2 = new List<TimelineCellValue> ();
-
-			decimal? value1 = 10000.0m;
-			decimal? value2 = 15000.0m;
-			decimal? value3 = 25000.0m;
-
-			for (int i = 0; i < cellsCount; i++)
+		public Timestamp? SelectedTimestamp
+		{
+			get
 			{
-				var date = ObjectsView.AddDays (start, i);
-
-				int ii = (int) (start.Ticks / Time.TicksPerDay) + i;
-				var glyph = TimelineGlyph.Empty;
-
-				if (ii%12 == 0)
+				if (this.timelineSelectedCell == -1)
 				{
-					glyph = TimelineGlyph.FilledCircle;
+					return null;
 				}
-				else if (ii%12 == 1)
+				else
 				{
-					glyph = TimelineGlyph.OutlinedCircle;
+					return null;
 				}
-				else if (ii%12 == 6)
-				{
-					glyph = TimelineGlyph.FilledSquare;
-				}
-				else if (ii%12 == 7)
-				{
-					glyph = TimelineGlyph.OutlinedSquare;
-				}
-
-				if (glyph != TimelineGlyph.Empty)
-				{
-					if (glyph == TimelineGlyph.OutlinedSquare)
-					{
-						value1 += 2000.0m;
-					}
-					else
-					{
-						value1 -= value1 * 0.10m;
-					}
-
-					value2 -= value2 * 0.25m;
-					value3 -= value3 * 0.50m;
-				}
-
-				var v1 = value1;
-				var v2 = value2;
-				var v3 = value3;
-
-				if (glyph == TimelineGlyph.Empty)
-				{
-					v1 = null;
-					v2 = null;
-					v3 = null;
-				}
-
-				if (v1.HasValue && v1.Value < 2000.0m)
-				{
-					v1 = null;
-				}
-
-				if (v2.HasValue && v2.Value < 2000.0m)
-				{
-					v2 = null;
-				}
-
-				if (v3.HasValue && v3.Value < 2000.0m)
-				{
-					v3 = null;
-				}
-
-				var d = new TimelineCellDate (date, isSelected: (i == selection));
-				var g = new TimelineCellGlyph (glyph, isSelected: (i == selection));
-				var x1 = new TimelineCellValue (v1, isSelected: (i == selection));
-				var x2 = new TimelineCellValue (v2, v3, isSelected: (i == selection));
-
-				dates.Add (d);
-				glyphs.Add (g);
-				values1.Add (x1);
-				values2.Add (x2);
 			}
-
-			if (all)
-			{
-				timeline.SetRowValueCells (0, values1.ToArray ());
-				timeline.SetRowValueCells (1, values2.ToArray ());
-				timeline.SetRowGlyphCells (2, glyphs.ToArray ());
-				timeline.SetRowDayCells (3, dates.ToArray ());
-				timeline.SetRowDayOfWeekCells (4, dates.ToArray ());
-				timeline.SetRowWeekOfYearCells (5, dates.ToArray ());
-				timeline.SetRowMonthCells (6, dates.ToArray ());
-			}
-			else
-			{
-				timeline.SetRowGlyphCells (0, glyphs.ToArray ());
-				timeline.SetRowDayCells (1, dates.ToArray ());
-				timeline.SetRowMonthCells (2, dates.ToArray ());
-			}
-#endif
 		}
 		#endregion
 
@@ -446,6 +349,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays).ToDateTime ();
 		}
 
+
+		private readonly TimelineData			timelineData;
 
 		private FrameBox						timelineBox;
 

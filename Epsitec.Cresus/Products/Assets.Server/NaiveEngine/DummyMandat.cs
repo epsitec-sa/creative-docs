@@ -15,10 +15,11 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			int objectId = 0;
 			var start = new Timestamp (new System.DateTime (2013, 1, 1), 0);
 			var date1 = new Timestamp (new System.DateTime (2013, 1, 7), 0);
-			var date2 = new Timestamp (new System.DateTime (2013, 1, 15), 0);
-			var date3 = new Timestamp (new System.DateTime (2013, 2, 1), 0);
-			var date4 = new Timestamp (new System.DateTime (2013, 2, 4), 0);
-			var date5 = new Timestamp (new System.DateTime (2013, 3, 31), 0);
+			var date2 = new Timestamp (new System.DateTime (2013, 1, 7), 1);
+			var date3 = new Timestamp (new System.DateTime (2013, 1, 15), 0);
+			var date4 = new Timestamp (new System.DateTime (2013, 2, 1), 0);
+			var date5 = new Timestamp (new System.DateTime (2013, 2, 4), 0);
+			var date6 = new Timestamp (new System.DateTime (2013, 3, 31), 0);
 
 			{
 				var o = new DataObject (objectId++);
@@ -435,17 +436,23 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				{
 					var e = new DataEvent (1, date1);
 					o.AddEvent (e);
-					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     12500.0m));
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     12000.0m));
 				}
 
 				{
 					var e = new DataEvent (1, date2);
 					o.AddEvent (e);
-					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Responsable, "Georges"));
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     12500.0m));
 				}
 
 				{
 					var e = new DataEvent (1, date3);
+					o.AddEvent (e);
+					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Responsable, "Georges"));
+				}
+
+				{
+					var e = new DataEvent (1, date4);
 					o.AddEvent (e);
 					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur1,     14500.0m));
 					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     11000.0m));
@@ -453,7 +460,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 
 				{
-					var e = new DataEvent (1, date4);
+					var e = new DataEvent (1, date5);
 					o.AddEvent (e);
 					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur1,     12000.0m));
 				}
@@ -483,14 +490,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 
 				{
-					var e = new DataEvent (1, date3);
+					var e = new DataEvent (1, date4);
 					o.AddEvent (e);
 					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur1,     4600.0m));
 					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     2400.0m));
 				}
 
 				{
-					var e = new DataEvent (1, date5);
+					var e = new DataEvent (1, date6);
 					o.AddEvent (e);
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Responsable, "Daniel"));
 				}
