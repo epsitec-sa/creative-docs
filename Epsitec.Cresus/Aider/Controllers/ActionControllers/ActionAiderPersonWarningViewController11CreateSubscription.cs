@@ -22,6 +22,17 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (11)]
 	public sealed class ActionAiderPersonWarningViewController11CreateSubscription : ActionAiderPersonWarningViewControllerPassive
 	{
+		public override bool IsEnabled
+		{
+			get
+			{
+				var person = this.Entity.Person;
+				var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, person.MainContact.Household);
+				var refusal = AiderSubscriptionRefusalEntity.FindRefusal (this.BusinessContext, person.MainContact.Household);
+				return subscription.IsNull () && refusal.IsNull ();
+			}
+		}
+
 		public override FormattedText GetTitle()
 		{
 			return TextFormatter.FormatText ("Crée l'abonnement");

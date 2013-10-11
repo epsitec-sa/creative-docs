@@ -525,9 +525,9 @@ namespace Epsitec.Aider.Data.Job
 
 							if (existingAiderPerson.IsNotNull ())
 							{
-								this.LogToConsole ("Info: warning added: EChPersonMissing");
+								this.LogToConsole ("Info: warning added: EChProcessDeparture");
 								this.CreateWarning (businessContext, existingAiderPerson, existingAiderPerson.ParishGroupPathCache,
-									/**/			WarningType.EChPersonMissing, this.warningTitleMessage,
+									/**/			WarningType.EChProcessDeparture, this.warningTitleMessage,
 									/**/			TextFormatter.FormatText (existingAiderPerson.GetDisplayName (), "n'est plus dans le RCH."));
 
 								var personKey = businessContext.DataContext.GetNormalizedEntityKey (existingAiderPerson).Value;
@@ -569,25 +569,12 @@ namespace Epsitec.Aider.Data.Job
 
 							var personKey = businessContext.DataContext.GetNormalizedEntityKey (existingAiderPerson).Value;
 
-							if (this.aiderPersonsTaggedForDeletion.ContainsKey (personKey))
-							{
-								foreach (var warn in existingAiderPerson.Warnings)
-								{
-									if ((warn.WarningType == WarningType.EChPersonMissing) &&
-										(warn.StartDate == Date.Today))
-									{
-										this.LogToConsole ("Info: Changed warning to EChProcessDeparture");
-										warn.WarningType = WarningType.EChProcessDeparture;
-										break;
-									}
-								}
-							}
-							else
+							if (!this.aiderPersonsTaggedForDeletion.ContainsKey (personKey))
 							{
 								this.LogToConsole ("Info: warning added: EChHouseholdMissing");
 								this.CreateWarning (businessContext, existingAiderPerson, existingAiderPerson.ParishGroupPathCache,
 									/**/			WarningType.EChHouseholdMissing, this.warningTitleMessage,
-									/**/			TextFormatter.FormatText (existingAiderPerson.GetDisplayName (), " n'a plus de famille dans le RCH."));
+									/**/			TextFormatter.FormatText (existingAiderPerson.GetDisplayName (), " n'a plus de famille dans le RCH."));//
 							}
 						}
 					}
@@ -919,8 +906,8 @@ namespace Epsitec.Aider.Data.Job
 
 						if (this.eChPersonIdWithNewPerson.Contains (aiderPersonA1.eCH_Person.PersonId))
 						{
-							this.LogToConsole ("Info: warning added: EChPersonNew");
-							this.CreateWarning (businessContext, aiderPersonA1, aiderPersonA1.ParishGroupPathCache, WarningType.EChPersonNew, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonA1.GetDisplayName () + ": nouveau dans le RCH."));
+							this.LogToConsole ("Info: warning added: EChProcessArrival");
+							this.CreateWarning (businessContext, aiderPersonA1, aiderPersonA1.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonA1.GetDisplayName () + ": nouveau dans le RCH."));
 						}
 
 						AiderHouseholdEntity oldHousehold;
@@ -968,8 +955,8 @@ namespace Epsitec.Aider.Data.Job
 
 							if (this.eChPersonIdWithNewPerson.Contains (aiderPersonA2.eCH_Person.PersonId))
 							{
-								this.LogToConsole ("Info: warning added: EChPersonNew");
-								this.CreateWarning (businessContext, aiderPersonA2, aiderPersonA2.ParishGroupPathCache, WarningType.EChPersonNew, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonA2.GetDisplayName () + ": nouveau dans le RCH."));
+								this.LogToConsole ("Info: warning added: EChProcessArrival");
+								this.CreateWarning (businessContext, aiderPersonA2, aiderPersonA2.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonA2.GetDisplayName () + ": nouveau dans le RCH."));
 							}
 						}
 
@@ -1008,8 +995,8 @@ namespace Epsitec.Aider.Data.Job
 								}
 								if (this.eChPersonIdWithNewPerson.Contains (aiderPersonC.eCH_Person.PersonId))
 								{
-									this.LogToConsole ("Info: warning added: EChPersonNew");
-									this.CreateWarning (businessContext, aiderPersonC, aiderPersonC.ParishGroupPathCache, WarningType.EChPersonNew, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonC.GetDisplayName () + ": nouveau dans le RCH."));
+									this.LogToConsole ("Info: warning added: EChProcessArrival");
+									this.CreateWarning (businessContext, aiderPersonC, aiderPersonC.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonC.GetDisplayName () + ": nouveau dans le RCH."));
 								}
 							}
 						}

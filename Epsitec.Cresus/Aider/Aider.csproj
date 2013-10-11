@@ -98,7 +98,6 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController10DismissNoSubscription.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController11CreateSubscription.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController1ProcessPersonMissing.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController0DiscardWarning.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController21ProcessParishArrival.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController2ProcessParishArrival.cs" />
@@ -145,8 +144,6 @@
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_EChHouseholdAdded.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_EChHouseholdChanged.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_EChPersonDataChanged.cs" />
-    <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_EChPersonMissing.cs" />
-    <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_EChPersonNew.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_EChProcessArrival.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_EChProcessDeparture.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_HouseholdWithoutSubscription.cs" />

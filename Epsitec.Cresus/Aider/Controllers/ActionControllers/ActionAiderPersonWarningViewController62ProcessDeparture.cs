@@ -44,26 +44,35 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create<bool, bool, bool> (this.Execute);
 		}
 
-		private void Execute(bool confirmAddress, bool hideHousehold, bool suppressSubscription)
+		private void Execute(bool confirmAddress, bool hidePerson, bool suppressSubscription)
 		{
+			var warning    = this.Entity;
+			var person     = warning.Person;
+
+			if (!confirmAddress && !hidePerson)
+			{
+				var message = "Il faut au moins choisir une options";
+
+				throw new BusinessRuleException (message);
+			}
+
+
 			if (suppressSubscription)
 			{
-				var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, this.Entity.Person.MainContact.Household);
+				var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, person.MainContact.Household);
 				if (subscription.IsNotNull ())
 				{
 					AiderSubscriptionEntity.Delete (this.BusinessContext, subscription);
 				}
 			}
 
-			if (hideHousehold)
+			if (hidePerson)
 			{
-				//BusinessContext.DeleteEntity (this.Entity.Person.MainContact);
+				person.Visibility = PersonVisibilityStatus.Hidden;
 			}
 
-			if (confirmAddress || hideHousehold || suppressSubscription)
-			{
-				BusinessContext.DeleteEntity (this.Entity);
-			}
+			this.ClearWarningAndRefreshCaches ();
+			
 
 #if false
 			var warning    = this.Entity;
@@ -173,34 +182,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			this.ClearWarningAndRefreshCaches ();
 #endif
-		}
-
-		private AiderTownEntity GetAiderTownEntity(eCH_AddressEntity address)
-		{
-			var townExample = new AiderTownEntity ()
-			{
-				SwissZipCodeId = address.SwissZipCodeId
-			};
-
-			return this.BusinessContext.DataContext.GetByExample<AiderTownEntity> (townExample).FirstOrDefault ();
-		}
-
-		private eCH_ReportedPersonEntity GetNewHousehold()
-		{
-			var echHouseholdExample = new eCH_ReportedPersonEntity ()
-			{
-				Adult1 = this.Entity.Person.eCH_Person
-			};
-			return this.BusinessContext.DataContext.GetByExample<eCH_ReportedPersonEntity> (echHouseholdExample).FirstOrDefault ();
-		}
-
-		private eCH_ReportedPersonEntity GetEChHousehold(eCH_PersonEntity person)
-		{
-			var echHouseholdExample = new eCH_ReportedPersonEntity ()
-			{
-				Adult1 = person
-			};
-			return this.BusinessContext.DataContext.GetByExample<eCH_ReportedPersonEntity> (echHouseholdExample).FirstOrDefault ();
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)

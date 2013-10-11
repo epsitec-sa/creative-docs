@@ -32,12 +32,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				case WarningType.EChPersonDataChanged:
 					return new SpecializedSummaryAiderPersonWarningViewController_EChPersonDataChanged ();
 
-				case WarningType.EChPersonMissing:
-					return new SpecializedSummaryAiderPersonWarningViewController_EChPersonMissing ();
-
-				case WarningType.EChPersonNew:
-					return new SpecializedSummaryAiderPersonWarningViewController_EChPersonNew ();
-
 				case WarningType.EChProcessDeparture:
 					return new SpecializedSummaryAiderPersonWarningViewController_EChProcessDeparture ();
 

@@ -24,27 +24,22 @@ using Epsitec.Aider.Data.Common;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (4)]
-	public sealed class ActionAiderPersonWarningViewController4ProcessNewHousehold : ActionAiderPersonWarningViewControllerInteractive
+	public sealed class ActionAiderPersonWarningViewController4ProcessNewHousehold : ActionAiderPersonWarningViewControllerPassive
 	{
 		public override bool IsEnabled
 		{
 			get
 			{
-				//	TODO: refactor and validate this implementation
-				return false;
+				return true;
 			}
 		}
-		
-		public override ActionExecutor GetExecutor()
-		{
-			return ActionExecutor.Create<bool,bool>(this.Execute);
-		}
 
-		private void Execute(bool createNewHousehold,bool subscribe)
+		protected override void Execute()
 		{
 			this.ClearWarningAndRefreshCaches ();
-
-			if (createNewHousehold)
+		}
+#if false
+		if (createNewHousehold)
 			{
 				if (this.Entity.Person.MainContact.IsNotNull ())
 				{
@@ -103,100 +98,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				var household = this.Entity.Person.Households.FirstOrDefault ();
 				AiderSubscriptionEntity.Create (this.BusinessContext, household);
 			}
-		}
-
-		private AiderTownEntity GetAiderTownEntity(eCH_AddressEntity address)
-		{
-			var townExample = new AiderTownEntity()
-			{
-				SwissZipCodeId = address.SwissZipCodeId
-			};
-
-			return this.BusinessContext.DataContext.GetByExample<AiderTownEntity>(townExample).FirstOrDefault();
-		}
-
-		private eCH_ReportedPersonEntity GetNewHousehold()
-		{
-			var echHouseholdExample = new eCH_ReportedPersonEntity()
-			{
-				Adult1 = this.Entity.Person.eCH_Person
-			};
-			return this.BusinessContext.DataContext.GetByExample<eCH_ReportedPersonEntity>(echHouseholdExample).FirstOrDefault();
-		}
-
-		private AiderPersonEntity GetAiderPersonEntity(BusinessContext businessContext, eCH_PersonEntity person)
-		{
-			if (person == null)
-			{
-				return null;
-			}
-
-			var personExample = new AiderPersonEntity ();
-
-			personExample.eCH_Person = new eCH_PersonEntity ()
-			{
-				PersonId = person.PersonId
-			};
-
-			return businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).FirstOrDefault ();
-		}
-
-		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
-		{
-			var analyse = TextFormatter.FormatText ("Résultat de l'analyse:\n");
-			if (this.Entity.Person.MainContact.IsNotNull ())
-			{
-				var householdAddress = this.Entity.Person.MainContact.Household.Address;
-				var newHousehold = this.GetNewHousehold ();
-				
-				if (newHousehold.Address.StreetUserFriendly.Equals (householdAddress.StreetUserFriendly))
-				{
-					analyse = analyse.AppendLine (TextFormatter.FormatText ("Ménage identique que le précédent!\n", newHousehold.Address.GetCompactSummary ()));
-					form
-					.Title (this.GetTitle ())
-					.Text (analyse)
-					.Field<bool> ()
-						.Title ("Créer le nouveau ménage")
-						.InitialValue (false)
-					.End ()
-					.Field<bool> ()
-						.Title ("Souscrire à un abonnement BN")
-						.InitialValue (false)
-					.End ();
-				}
-				else
-				{
-					analyse = analyse.AppendLine (TextFormatter.FormatText ("Nouveau ménage:\n", newHousehold.Address.GetCompactSummary ()));
-					form
-						.Title (this.GetTitle ())
-						.Text (analyse)
-						.Field<bool> ()
-							.Title ("Créer le nouveau ménage")
-							.InitialValue (true)
-						.End ()
-						.Field<bool> ()
-							.Title ("Souscrire à un abonnement BN")
-							.InitialValue (true)
-						.End ()
-					.End ();
-				}
-			}
-			else
-			{
-				analyse = analyse.AppendLine (TextFormatter.FormatText ("Traitement de qualité de données"));
-				form
-					.Title (this.GetTitle ())
-					.Text (analyse)
-					.Field<bool> ()
-						.Title ("Créer le nouveau ménage")
-						.InitialValue (true)
-					.End ()
-					.Field<bool> ()
-						.Title ("Souscrire à un abonnement BN")
-						.InitialValue (true)
-					.End ()
-				.End ();
-			}
-		}
+#endif
 	}
 }

@@ -29,28 +29,27 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			get
 			{
-				//	TODO: refactor and validate this implementation
-				return false;
+				return true;
 			}
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<bool,bool>(this.Execute);
+			return ActionExecutor.Create<bool>(this.Execute);
 		}
 
-		private void Execute(bool correctHousehold,bool confirmed)
-		{        
+		private void Execute(bool confirmed)
+		{
+			var warning    = this.Entity;
+			var person     = warning.Person;
+			var households = new HashSet<AiderHouseholdEntity> (person.Households);
+			var members    = households.SelectMany (x => x.Members).Distinct ().ToList ();
+
 			if (confirmed)
 			{
-				var householdMembers = this.Entity.Person.Contacts.Where(c => c.Household.Address.IsNotNull()).First().Household.Members;
-				foreach (var member in householdMembers)
+				foreach (var member in members)
 				{
-					var warnCount = member.Warnings.Where (w => w.WarningType.Equals (WarningType.EChPersonMissing) ||
-																w.WarningType.Equals (WarningType.EChHouseholdAdded) ||		
-																w.WarningType.Equals(WarningType.EChProcessArrival) ||
-																w.WarningType.Equals (WarningType.EChProcessDeparture)).ToList ().Count;
-					if (warnCount > 0)
+					if (this.CountBlockingWarningsForMember(member) > 0)
 					{
 						var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + member.GetCompactSummary();
 
@@ -58,105 +57,19 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					}
 				}
 
-
-				var newHousehold = this.GetNewHousehold();
-				if (newHousehold.Adult2.IsNotNull())
-				{
-					var adult2WarnCount = this.GetAiderPerson(newHousehold.Adult2).Warnings.Where(w => w.WarningType.Equals(WarningType.EChPersonMissing) ||
-																w.WarningType.Equals(WarningType.EChHouseholdAdded) ||
-																w.WarningType.Equals(WarningType.EChProcessArrival) ||
-																w.WarningType.Equals(WarningType.EChProcessDeparture)).ToList().Count;
-
-					if (adult2WarnCount > 0)
-					{
-						var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + newHousehold.Adult2.GetCompactSummary();
-						throw new BusinessRuleException(message);
-					}
-				}
-				
-				foreach (var child in newHousehold.Children)
-				{
-
-
-					var childWarnCount = this.GetAiderPerson(child).Warnings.Where(w => w.WarningType.Equals(WarningType.EChPersonMissing) ||
-																w.WarningType.Equals(WarningType.EChProcessArrival) ||
-																w.WarningType.Equals(WarningType.EChProcessDeparture)).ToList().Count;
-					if (childWarnCount > 0)
-					{
-						var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + child.GetCompactSummary();
-
-						throw new BusinessRuleException(message);
-					}
-
-				}
-
-				this.ClearWarningAndRefreshCaches ();
-			}
-
-			var household = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household;
-			if (correctHousehold && household.IsNotNull ())
-			{
-				var result = this.analyseChanges();
-					
-				switch (result)
-				{
-					case -1:
-						foreach (var contactToAdd in this.contactToAdd)
-						{
-							var aiderPerson = this.GetAiderPerson(contactToAdd);
-							AiderContactEntity.Create(this.BusinessContext, aiderPerson, household, false);
-						}
-						break;
-					case 1:
-						foreach (var personToRemove in this.contactToRemove)
-						{
-							var contact = personToRemove.Contacts.Where(c => c.Household == household).First();
-							this.BusinessContext.DeleteEntity(contact);
-						}
-						break;
-				}
-
 				this.ClearWarningAndRefreshCaches ();
 			}
 		}
 
-		private AiderTownEntity GetAiderTownEntity(eCH_AddressEntity address)
+		private int CountBlockingWarningsForMember(AiderPersonEntity member)
 		{
-			var townExample = new AiderTownEntity()
-			{
-				SwissZipCodeId = address.SwissZipCodeId
-			};
-
-			return this.BusinessContext.DataContext.GetByExample<AiderTownEntity>(townExample).FirstOrDefault();
+			return member.Warnings.Count(w =>	w.WarningType == WarningType.EChHouseholdAdded ||		
+												w.WarningType == WarningType.EChProcessArrival ||
+												w.WarningType == WarningType.EChProcessDeparture);
 		}
 
-		private eCH_ReportedPersonEntity GetNewHousehold()
-		{
-			var echHouseholdExample = new eCH_ReportedPersonEntity()
-			{
-				Adult1 = this.Entity.Person.eCH_Person
-			};
-			return this.BusinessContext.DataContext.GetByExample<eCH_ReportedPersonEntity>(echHouseholdExample).FirstOrDefault();
-		}
-
-		private eCH_ReportedPersonEntity GetEChHousehold(eCH_PersonEntity person)
-		{
-			var echHouseholdExample = new eCH_ReportedPersonEntity ()
-			{
-				Adult1 = person
-			};
-			return this.BusinessContext.DataContext.GetByExample<eCH_ReportedPersonEntity> (echHouseholdExample).FirstOrDefault ();
-		}
-
-		private AiderPersonEntity GetAiderPerson(eCH_PersonEntity person)
-		{
-			var personExample = new AiderPersonEntity()
-			{
-				eCH_Person = person
-			};
-			return this.BusinessContext.DataContext.GetByExample<AiderPersonEntity>(personExample).FirstOrDefault();
-		}
-
+		
+#if false
 		private int analyseChanges()
 		{
 			var aiderHouseholdMembers = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household.Members.Where(p => p.IsGovernmentDefined).ToList ();
@@ -237,28 +150,22 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("OK"));
 			return 0;
 		}
-
-
+#endif
 		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
 		{
-			this.analyseChanges ();
-
 			form
 			.Title (this.GetTitle ())
-			.Text (analyse)
-			.Field<bool>()
-				.Title("Adapter à la composition ECh")
-				.InitialValue(false)
-			.End ()
 			.Field<bool> ()
 				.Title ("Contrôler et supprimer l'avertissement")
 				.InitialValue (true)
-			.End ();
-			
+			.End ();		
 		}
 
+#if false
 		private FormattedText   analyse = new FormattedText ();
 		private List<eCH_PersonEntity> contactToAdd     = new List<eCH_PersonEntity> ();
 		private List<AiderPersonEntity> contactToRemove = new List<AiderPersonEntity> ();
+#endif
+
 	}
 }
