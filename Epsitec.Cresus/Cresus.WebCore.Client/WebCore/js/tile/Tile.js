@@ -90,7 +90,6 @@ function() {
           
           button.requiresAdditionalEntity = a.requiresAdditionalEntity;
           button.handler = function() { 
-            this.setLoading(true);
             this.handleAction(a.viewId); 
           };
           button.scope = tile;
@@ -195,7 +194,6 @@ function() {
     },
 
     handleActionCallback: function() {
-      this.setLoading(false);
       this.column.refreshAll();
     },
 
