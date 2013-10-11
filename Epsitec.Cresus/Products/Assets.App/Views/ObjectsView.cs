@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void OnTimelineFirst()
 		{
-			this.timelineSelectedCell = 0;
+			this.timelineSelectedCell = this.FirstTimelineEventIndex;
 
 			this.UpdateTimelineController ();
 			this.UpdateTreeTableController ();
@@ -513,6 +513,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 			timeline.SetRowMonthCells (2, dates.ToArray ());
 		}
 
+		public int FirstTimelineEventIndex
+		{
+			get
+			{
+				int count = this.timelineData.CellsCount;
+				for (int i = 0; i < count; i++)
+				{
+					var cell = this.timelineData.GetCell (i);
+
+					if (cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+					{
+						return i;
+					}
+				}
+
+				return 0;
+			}
+		}
+
 		public Timestamp? SelectedTimestamp
 		{
 			get
@@ -549,15 +568,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (empty)
 				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.First,  ToolbarCommandState.Enable);
 					this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
 					this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
 				}
 				else
 				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.First,  ToolbarCommandState.Enable);
 					this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
 					this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Enable);
+				}
+
+				if (this.timelineSelectedCell == this.FirstTimelineEventIndex)
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Disable);
+				}
+				else
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Enable);
 				}
 
 				if (this.timelineSelectedCell == -1)
