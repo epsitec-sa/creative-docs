@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Library
 			this.manualComponents  = new CoreComponentHostImplementation<ICoreManualComponent> ();
 			this.policy            = this.CreateDefaultPolicy ();
 
-			this.PreConfigureBasedOnPolicy ();
+			//-[DR]-this.PreConfigureBasedOnPolicy ();
 			
 			Factories.CoreAppComponentFactory.RegisterComponents (host: this);
 		}
