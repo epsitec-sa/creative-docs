@@ -68,11 +68,11 @@ function() {
             options.getUrl, true, options.columnDefinitions,
             options.sorterDefinitions
         ),
-        plugins: {
+        /*plugins: {
           ptype: 'bufferedrenderer',
           trailingBufferZone: 20,  // Keep X rows rendered in the table behind scroll
           leadingBufferZone: 50   // Keep X rows rendered in the table ahead of scroll
-        },
+        },*/
         selModel: this.createSelModel(options),
         onSelectionChangeCallback: options.onSelectionChange,
         listeners: {
@@ -672,7 +672,9 @@ function() {
         active: true
       };
       if (e.getKey() === e.ENTER) {
+
         this.filters.clearFilters();
+
         if (this.fullSearchWindow) {
           this.fullSearchWindow.setQuickSearchValue(field.value);
         }
