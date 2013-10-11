@@ -473,8 +473,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					var d = new TimelineCellDate (cell.Timestamp.Date, isSelected: (i == selection));
-					var g = new TimelineCellGlyph (cell.TimelineGlyph, isSelected: (i == selection));
+					var d = new TimelineCellDate (cell.Value.Timestamp.Date, isSelected: (i == selection));
+					var g = new TimelineCellGlyph (cell.Value.TimelineGlyph, isSelected: (i == selection));
 
 					dates.Add (d);
 					glyphs.Add (g);
@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					return this.timelineData.GetCell (this.timelineSelectedCell).Timestamp;
+					return this.timelineData.GetCell (this.timelineSelectedCell).Value.Timestamp;
 				}
 			}
 		}
@@ -515,7 +515,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.timelineSelectedCell != -1)
 				{
 					var cell = this.timelineData.GetCell (this.timelineSelectedCell);
-					empty = cell.TimelineGlyph == TimelineGlyph.Empty;
+					empty = cell.Value.TimelineGlyph == TimelineGlyph.Empty;
 				}
 
 				if (empty)

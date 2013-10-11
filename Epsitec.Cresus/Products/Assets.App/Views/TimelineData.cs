@@ -127,7 +127,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 						}
 						else
 						{
-							this.cells[index].TimelineGlyph = TimelineGlyph.FilledCircle;
+							var cell = new TimelineCell
+							{
+								Timestamp     = this.cells[index].Timestamp,
+								TimelineGlyph = TimelineGlyph.FilledCircle,
+							};
+
+							this.cells[index] = cell;
 						}
 					}
 				}
@@ -149,7 +155,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public TimelineCell GetCell(int index)
+		public TimelineCell? GetCell(int index)
 		{
 			if (index >= 0 && index < this.cells.Count)
 			{
@@ -162,7 +168,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public class TimelineCell
+		public struct TimelineCell
 		{
 			public Timestamp		Timestamp;
 			public TimelineGlyph	TimelineGlyph;
