@@ -294,22 +294,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private void UpdateTreeTableController()
-		{
-			var first = this.treeTableController.TopVisibleRow;
-			int selection = this.treeTableSelectedRow - this.treeTableController.TopVisibleRow;
-
-			var timestamp = this.SelectedTimestamp;
-
-			if (!timestamp.HasValue)
-			{
-				timestamp = new Timestamp (this.accessor.StartDate, 0);
-			}
-
-			this.InitialiseTreeTable (this.treeTableController, first, selection, timestamp.Value);
-		}
-
-
 		private static TreeTableColumnDescription[] GetTreeTableColumns()
 		{
 			var list = new List<TreeTableColumnDescription> ();
@@ -325,8 +309,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return list.ToArray ();
 		}
 
-		private void InitialiseTreeTable(NavigationTreeTableController treeTable, int firstRow, int selection, Timestamp timestamp)
+		private void UpdateTreeTableController()
 		{
+			var firstRow = this.treeTableController.TopVisibleRow;
+			int selection = this.treeTableSelectedRow - this.treeTableController.TopVisibleRow;
+
+			var timestamp = this.SelectedTimestamp;
+
+			if (!timestamp.HasValue)
+			{
+				timestamp = new Timestamp (this.accessor.StartDate, 0);
+			}
+
 			var cf = new List<TreeTableCellTree> ();
 			var c1 = new List<TreeTableCellString> ();
 			var c2 = new List<TreeTableCellString> ();
@@ -335,7 +329,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var c5 = new List<TreeTableCellDecimal> ();
 			var c6 = new List<TreeTableCellDecimal> ();
 
-			var count = treeTable.VisibleRowsCount;
+			var count = this.treeTableController.VisibleRowsCount;
 			for (int i=0; i<count; i++)
 			{
 				if (firstRow+i >= this.accessor.ObjectsCount)
@@ -344,10 +338,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				var guid = this.accessor.GetObjectGuid (firstRow+i);
-				var properties = this.accessor.GetObjectProperties (guid, timestamp);
+				var properties = this.accessor.GetObjectProperties (guid, timestamp.Value);
 
-				int level = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level).GetValueOrDefault ();
-				var type = level == 3 ? TreeTableTreeType.Final : TreeTableTreeType.Extended;
+				int level = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level).GetValueOrDefault (-1);
+
+				var type = TreeTableTreeType.Extended;
+
+				if (level == -1)
+				{
+					type = TreeTableTreeType.None;
+				}
+				else if (level == 3)
+				{
+					type = TreeTableTreeType.Final;
+				}
 
 				var nom         = DataAccessor.GetStringProperty (properties, (int) ObjectField.Nom);
 				var numéro      = DataAccessor.GetStringProperty (properties, (int) ObjectField.Numéro);
@@ -374,13 +378,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				c6.Add (s6);
 			}
 
-			treeTable.SetColumnCells (0, cf.ToArray ());
-			treeTable.SetColumnCells (1, c1.ToArray ());
-			treeTable.SetColumnCells (2, c2.ToArray ());
-			treeTable.SetColumnCells (3, c3.ToArray ());
-			treeTable.SetColumnCells (4, c4.ToArray ());
-			treeTable.SetColumnCells (5, c5.ToArray ());
-			treeTable.SetColumnCells (6, c6.ToArray ());
+			this.treeTableController.SetColumnCells (0, cf.ToArray ());
+			this.treeTableController.SetColumnCells (1, c1.ToArray ());
+			this.treeTableController.SetColumnCells (2, c2.ToArray ());
+			this.treeTableController.SetColumnCells (3, c3.ToArray ());
+			this.treeTableController.SetColumnCells (4, c4.ToArray ());
+			this.treeTableController.SetColumnCells (5, c5.ToArray ());
+			this.treeTableController.SetColumnCells (6, c6.ToArray ());
 		}
 
 		private Guid? SelectedGuid
@@ -503,18 +507,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateTimelineController()
 		{
-			int selection = this.timelineSelectedCell - this.timelineController.LeftVisibleCell;
-			this.InitialiseTimeline (this.timelineController, selection);
-		}
+			int visibleCount = this.timelineController.VisibleCellsCount;
+			int cellsCount   = this.timelineData.CellsCount;
+			int count        = System.Math.Min (visibleCount, cellsCount);
+			int firstCell    = this.timelineController.LeftVisibleCell;
+			int selection    = this.timelineSelectedCell;
 
+			if (selection != -1)
+			{
+				//	La sélection ne peut pas dépasser le nombre maximal de cellules.
+				selection = System.Math.Min (selection, cellsCount-1);
 
-		private void InitialiseTimeline(NavigationTimelineController timeline, int selection)
-		{
+				//	Si la sélection est avant la zone visible, on recule firstCell.
+				firstCell = System.Math.Min (firstCell, selection);
+
+				//	Si la sélection est après la zone visible, on avance firstCell.
+				firstCell = System.Math.Max (firstCell, selection-count+1);
+
+				if (this.timelineController.LeftVisibleCell != firstCell)
+				{
+					this.timelineController.LeftVisibleCell = firstCell;
+				}
+
+				selection -= this.timelineController.LeftVisibleCell;
+			}
+
 			var dates  = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();
-
-			int count = timeline.VisibleCellsCount;
-			int firstCell = timeline.LeftVisibleCell;
 
 			for (int i = 0; i < count; i++)
 			{
@@ -534,9 +553,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			timeline.SetRowGlyphCells (0, glyphs.ToArray ());
-			timeline.SetRowDayCells   (1, dates.ToArray ());
-			timeline.SetRowMonthCells (2, dates.ToArray ());
+			this.timelineController.SetRowGlyphCells (0, glyphs.ToArray ());
+			this.timelineController.SetRowDayCells   (1, dates.ToArray ());
+			this.timelineController.SetRowMonthCells (2, dates.ToArray ());
 		}
 
 		public int FirstTimelineEventIndex
@@ -602,14 +621,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.timelineSelectedCell == -1 || this.timelineController == null)
+				if (this.timelineSelectedCell != -1 && this.timelineController != null)
 				{
-					return null;
+					var cell = this.timelineData.GetCell (this.timelineSelectedCell);
+
+					if (cell.HasValue)
+					{
+						return cell.Value.Timestamp;
+					}
 				}
-				else
-				{
-					return this.timelineData.GetCell (this.timelineSelectedCell).Value.Timestamp;
-				}
+
+				return null;
 			}
 		}
 
@@ -626,15 +648,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				bool empty = true;
+				bool noEventSelected = true;
 
 				if (this.timelineSelectedCell != -1)
 				{
 					var cell = this.timelineData.GetCell (this.timelineSelectedCell);
-					empty = cell.Value.TimelineGlyph == TimelineGlyph.Empty;
+					noEventSelected = (cell.HasValue && cell.Value.TimelineGlyph == TimelineGlyph.Empty);
 				}
 
-				if (empty)
+				if (noEventSelected)
 				{
 					this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
 					this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);

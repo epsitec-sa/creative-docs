@@ -68,6 +68,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				return (int) this.scroller.Value;
 			}
+			set
+			{
+				this.scroller.Value = value;
+			}
 		}
 
 

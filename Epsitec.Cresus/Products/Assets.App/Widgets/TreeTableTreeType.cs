@@ -5,6 +5,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public enum TreeTableTreeType
 	{
+		None,
 		Compacted,	// > content
 		Extended,	// v content
 		Final,		// content
