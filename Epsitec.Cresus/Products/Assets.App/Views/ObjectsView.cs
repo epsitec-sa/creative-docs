@@ -387,7 +387,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Bottom,
-				PreferredHeight = 70,
+				PreferredHeight = AbstractScroller.DefaultBreadth + 18*3,
 			};
 
 			this.timelineController.DateChanged += delegate
@@ -409,6 +409,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.timelineSelectedCell = this.timelineController.LeftVisibleCell + rank;
 					this.UpdateTimelineController ();
 					this.UpdateTreeTableController ();
+					this.UpdateTimelineToolbar ();
 				}
 			};
 		}
@@ -509,7 +510,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				if (this.timelineSelectedCell == -1)
+				bool empty = true;
+
+				if (this.timelineSelectedCell != -1)
+				{
+					var cell = this.timelineData.GetCell (this.timelineSelectedCell);
+					empty = cell.TimelineGlyph == TimelineGlyph.Empty;
+				}
+
+				if (empty)
 				{
 					this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
 					this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);

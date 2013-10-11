@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					};
 
 					int i = this.cells.Where (x => x.Timestamp.Date < now).Count ();
-					this.cells.Insert (i, cell);  // la liste doit être triéée chronologiquement
+					this.cells.Insert (i, cell);  // la liste doit être triée chronologiquement
 				}
 			}
 
