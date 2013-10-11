@@ -73,6 +73,9 @@ if %cleanup%==1 (
 
 @echo on
 
+@rem First, restore NuGet packages, since we deleted them by cleaning up
+..\.nuget\nuget.exe restore ..\Epsitec.Cresus.sln
+
 @rem Build the solution.
 msbuild /verbosity:minimal /property:Configuration=Release;Platform="x86" /target:Build ..\Epsitec.Cresus.sln
 if %ERRORLEVEL% neq 0 exit /B 1
