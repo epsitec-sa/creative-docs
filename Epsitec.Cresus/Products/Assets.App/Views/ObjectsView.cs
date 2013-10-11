@@ -80,6 +80,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnTimelineFirst ();
 						break;
 
+					case ToolbarCommand.Now:
+						this.OnTimelineNow ();
+						break;
+
+					case ToolbarCommand.Last:
+						this.OnTimelineLast ();
+						break;
+
 					case ToolbarCommand.New:
 						this.OnTimelineNew ();
 						break;
@@ -150,6 +158,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected void OnTimelineFirst()
 		{
 			this.timelineSelectedCell = this.FirstTimelineEventIndex;
+
+			this.UpdateTimelineController ();
+			this.UpdateTreeTableController ();
+			this.UpdateTimelineToolbar ();
+		}
+
+		protected void OnTimelineNow()
+		{
+			this.timelineSelectedCell = this.NowTimelineEventIndex.GetValueOrDefault (0);
+
+			this.UpdateTimelineController ();
+			this.UpdateTreeTableController ();
+			this.UpdateTimelineToolbar ();
+		}
+
+		protected void OnTimelineLast()
+		{
+			this.timelineSelectedCell = this.LastTimelineEventIndex;
 
 			this.UpdateTimelineController ();
 			this.UpdateTreeTableController ();
@@ -532,6 +558,46 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public int LastTimelineEventIndex
+		{
+			get
+			{
+				int count = this.timelineData.CellsCount;
+				for (int i = count-1; i >= 0; i--)
+				{
+					var cell = this.timelineData.GetCell (i);
+
+					if (cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+					{
+						return i;
+					}
+				}
+
+				return count-1;
+			}
+		}
+
+		public int? NowTimelineEventIndex
+		{
+			get
+			{
+				var now = Timestamp.Now;
+
+				int count = this.timelineData.CellsCount;
+				for (int i = 0; i < count; i++)
+				{
+					var cell = this.timelineData.GetCell (i);
+
+					if (cell.Value.Timestamp == now)
+					{
+						return i;
+					}
+				}
+
+				return null;
+			}
+		}
+
 		public Timestamp? SelectedTimestamp
 		{
 			get
@@ -552,6 +618,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.isEditing)
 			{
 				this.timelineToolbar.SetCommandState (ToolbarCommand.First,    ToolbarCommandState.Disable);
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Now,      ToolbarCommandState.Disable);
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Last,     ToolbarCommandState.Disable);
 				this.timelineToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Disable);
 				this.timelineToolbar.SetCommandState (ToolbarCommand.Delete,   ToolbarCommandState.Disable);
 				this.timelineToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
@@ -584,6 +652,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else
 				{
 					this.timelineToolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Enable);
+				}
+
+				if (this.timelineSelectedCell == this.NowTimelineEventIndex.GetValueOrDefault (-999))
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Disable);
+				}
+				else
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Enable);
+				}
+
+				if (this.timelineSelectedCell == this.LastTimelineEventIndex)
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.Last, ToolbarCommandState.Disable);
+				}
+				else
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.Last, ToolbarCommandState.Enable);
 				}
 
 				if (this.timelineSelectedCell == -1)

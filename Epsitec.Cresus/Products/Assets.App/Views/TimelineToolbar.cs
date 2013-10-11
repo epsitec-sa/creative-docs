@@ -38,6 +38,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void UpdateCommandButtons()
 		{
 			this.UpdateCommandButton (this.buttonFirst,    ToolbarCommand.First);
+			this.UpdateCommandButton (this.buttonNow  ,    ToolbarCommand.Now);
+			this.UpdateCommandButton (this.buttonLast,     ToolbarCommand.Last);
 			this.UpdateCommandButton (this.buttonNew,      ToolbarCommand.New);
 			this.UpdateCommandButton (this.buttonDelete,   ToolbarCommand.Delete);
 			this.UpdateCommandButton (this.buttonDeselect, ToolbarCommand.Deselect);
@@ -58,11 +60,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonExpended  = this.CreateModeButton (toolbar, TimelineMode.Extended,  "Timeline.Extended",  "Affichage étendu");
 
 			this.buttonFirst    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.First ,   "Timeline.First",    "Retour sur le premier événement");
+			this.buttonNow      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Now ,     "Timeline.Now",      "Va à la date du jour");
+			this.buttonLast     = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur le dernier événement");
 			this.buttonNew      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New ,     "Timeline.New",      "Nouvel événement");
 			this.buttonDelete   = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete ,  "Timeline.Delete",   "Supprimer l'événement");
 			this.buttonDeselect = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne l'événement");
 
 			this.buttonFirst.Margins = new Margins (20, 0, 0, 0);
+			this.buttonNew.Margins = new Margins (20, 0, 0, 0);
 
 			this.UpdateModeButtons ();
 		}
@@ -119,6 +124,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonExpended;
 
 		private IconButton buttonFirst;
+		private IconButton buttonNow;
+		private IconButton buttonLast;
 		private IconButton buttonNew;
 		private IconButton buttonDelete;
 		private IconButton buttonDeselect;

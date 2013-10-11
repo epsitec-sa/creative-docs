@@ -35,7 +35,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		{
 			get
 			{
-				return new Timestamp (System.DateTime.Now, 0);
+				var now = System.DateTime.Now;
+
+				//	Il faut absolument forcer l'heure à 00:00:00 !
+				return new Timestamp (new System.DateTime (now.Year, now.Month, now.Day), 0);
 			}
 		}
 

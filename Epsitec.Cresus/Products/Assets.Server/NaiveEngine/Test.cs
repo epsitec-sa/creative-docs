@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				var o = new DataObject (objectId++);
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 1, 1), 0));
+				var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 1, 1), 0), EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty    (1, 0));
 				e.Properties.Add (new DataStringProperty (2, "Immobilisations"));
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				var o = new DataObject (objectId++);
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 1, 1), 0));
+				var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 1, 1), 0), EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty    (1, 1));
 				e.Properties.Add (new DataStringProperty (2, "1"));
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				var o = new DataObject (objectId++);
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 1, 1), 0));
+				var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 1, 1), 0), EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty    (1, 2));
 				e.Properties.Add (new DataStringProperty (2, "1.1"));
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				mandat.Objects.Add (o);
 
 				{
-					var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 1, 1), 0));
+					var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 1, 1), 0), EventType.Entrée);
 					o.AddEvent (e);
 					e.Properties.Add (new DataIntProperty     (1, 3));
 					e.Properties.Add (new DataStringProperty  (2, "1.1.1"));
@@ -61,14 +61,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 
 				{
-					var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 3, 1), 0));
+					var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 3, 1), 0), EventType.Entrée);
 					o.AddEvent (e);
 					e.Properties.Add (new DataDecimalProperty (5, 4000000.0m));
 					e.Properties.Add (new DataStringProperty  (6, "René"));
 				}
 
 				{
-					var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 2, 1), 0));
+					var e = new DataEvent (1, new Timestamp (new System.DateTime (2013, 2, 1), 0), EventType.Entrée);
 					o.AddEvent (e);
 					e.Properties.Add (new DataDecimalProperty (5, 3000000.0m));
 				}

@@ -77,6 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Dessine le contenu.
 			//	Dessine le contenu.
 			Rectangle r;
+			Path path;
 
 			switch (cell.Glyph)
 			{
@@ -110,6 +111,46 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.AddRectangle (r);
 					graphics.RenderSolid (ColorManager.TextColor);
 					break;
+
+				case TimelineGlyph.FilledDown:
+					r = TimelineRowGlyphs.GetGlyphSquare (rect, 0.3);
+					path = TimelineRowGlyphs.GetDownPath (r);
+
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.TextColor);
+					break;
+
+				case TimelineGlyph.OutlinedDown:
+					r = TimelineRowGlyphs.GetGlyphSquare (rect, 0.3);
+					r.Deflate (0.5);
+					path = TimelineRowGlyphs.GetDownPath (r);
+
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+					graphics.AddPath (path);
+					graphics.RenderSolid (ColorManager.TextColor);
+					break;
+
+				case TimelineGlyph.FilledUp:
+					r = TimelineRowGlyphs.GetGlyphSquare (rect, 0.3);
+					path = TimelineRowGlyphs.GetUpPath (r);
+
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.TextColor);
+					break;
+
+				case TimelineGlyph.OutlinedUp:
+					r = TimelineRowGlyphs.GetGlyphSquare (rect, 0.3);
+					r.Deflate (0.5);
+					path = TimelineRowGlyphs.GetUpPath (r);
+
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+					graphics.AddPath (path);
+					graphics.RenderSolid (ColorManager.TextColor);
+					break;
 			}
 		}
 
@@ -121,6 +162,31 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			return new Rectangle (x, y, d*2, d*2);
 		}
+
+		private static Path GetDownPath(Rectangle rect)
+		{
+			var path = new Path ();
+
+			path.MoveTo (rect.TopLeft);
+			path.LineTo (rect.TopRight);
+			path.LineTo (rect.Center.X, rect.Bottom);
+			path.Close ();
+
+			return path;
+		}
+
+		private static Path GetUpPath(Rectangle rect)
+		{
+			var path = new Path ();
+
+			path.MoveTo (rect.BottomLeft);
+			path.LineTo (rect.BottomRight);
+			path.LineTo (rect.Center.X, rect.Top);
+			path.Close ();
+
+			return path;
+		}
+
 
 		private static bool IsSame(TimelineCellGlyph c1, TimelineCellGlyph c2)
 		{

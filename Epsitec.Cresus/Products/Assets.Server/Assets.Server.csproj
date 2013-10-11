@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="NaiveEngine\AbstractDataProperty.cs" />
     <Compile Include="NaiveEngine\CategoryField.cs" />
+    <Compile Include="NaiveEngine\EventType.cs" />
     <Compile Include="NaiveEngine\DummyMandat.cs" />
     <Compile Include="NaiveEngine\Guid.cs" />
     <Compile Include="NaiveEngine\ObjectField.cs" />

@@ -180,6 +180,8 @@
     <EmbeddedResource Include="Images\Timeline.Compacted.icon" />
     <EmbeddedResource Include="Images\Timeline.First.icon" />
     <EmbeddedResource Include="Images\Timeline.Deselect.icon" />
+    <EmbeddedResource Include="Images\Timeline.Last.icon" />
+    <EmbeddedResource Include="Images\Timeline.Now.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -76,6 +76,21 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			return null;
 		}
 
+		public EventType? GetObjectEventType(Guid objectGuid, int eventIndex)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				if (eventIndex >= 0 && eventIndex < obj.Events.Count)
+				{
+					return obj.Events[eventIndex].Type;
+				}
+			}
+
+			return null;
+		}
+
 		public IEnumerable<AbstractDataProperty> GetObjectProperties(Guid objectGuid, Timestamp timestamp)
 		{
 			var obj = this.mandat.GetObject (objectGuid);

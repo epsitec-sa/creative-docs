@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var cell = new TimelineCell
 					{
-						Timestamp     = new Timestamp (now, 0),
+						Timestamp     = Timestamp.Now,
 						TimelineGlyph = TimelineGlyph.Empty,
 					};
 
@@ -112,6 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						}
 
 						var index = this.cells.FindIndex (x => x.Timestamp == t.Value);
+						var glyph = this.GetGlyph (objectGuid.Value, i);
 
 						if (index == -1)
 						{
@@ -120,7 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							var cell = new TimelineCell
 							{
 								Timestamp     = t.Value,
-								TimelineGlyph = TimelineGlyph.FilledCircle,
+								TimelineGlyph = glyph,
 							};
 
 							this.cells.Insert (index, cell);
@@ -130,13 +131,49 @@ namespace Epsitec.Cresus.Assets.App.Views
 							var cell = new TimelineCell
 							{
 								Timestamp     = this.cells[index].Timestamp,
-								TimelineGlyph = TimelineGlyph.FilledCircle,
+								TimelineGlyph = glyph,
 							};
 
 							this.cells[index] = cell;
 						}
 					}
 				}
+			}
+		}
+
+		private TimelineGlyph GetGlyph(Guid objectGuid, int eventIndex)
+		{
+			var type = this.accessor.GetObjectEventType (objectGuid, eventIndex);
+
+			if (type.HasValue)
+			{
+				return TimelineData.TypeToGlyph ((EventType) type.Value);
+			}
+
+			return TimelineGlyph.FilledCircle;
+		}
+
+		private static TimelineGlyph TypeToGlyph(EventType type)
+		{
+			switch (type)
+			{
+				case EventType.Entrée:
+					return TimelineGlyph.FilledSquare;
+
+				case EventType.Sortie:
+					return TimelineGlyph.OutlinedSquare;
+
+				case EventType.Modification:
+					return TimelineGlyph.FilledCircle;
+
+				case EventType.Augmentation:
+					return TimelineGlyph.FilledUp;
+
+				case EventType.Diminution:
+					return TimelineGlyph.FilledDown;
+
+				default:
+					return TimelineGlyph.FilledCircle;
 			}
 		}
 
