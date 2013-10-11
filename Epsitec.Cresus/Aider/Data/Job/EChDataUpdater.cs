@@ -349,8 +349,8 @@ namespace Epsitec.Aider.Data.Job
 
 		private List<FormattedText> GetAddressChanges(AiderAddressEntity familyAddress, EChAddress newRchAddress)
 		{
-			var oldAddress = familyAddress.GetSummary ();
-			var newAddress = familyAddress.GetSummary ();
+			var oldAddress = familyAddress.GetPostalAddress ();
+			var newAddress = newRchAddress.GetSwissPostalAddress ();
 			var changes = new List<FormattedText> ();
 
 			changes.Add (TextFormatter.FormatText ("Changement dans l'adresse:"));
