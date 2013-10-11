@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		New,
 		Delete,
 		Deselect,
+		First,
 		Edit,
 		Accept,
 		Cancel,

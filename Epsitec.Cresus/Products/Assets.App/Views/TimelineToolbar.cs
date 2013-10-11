@@ -37,8 +37,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateCommandButtons()
 		{
-			this.UpdateCommandButton (this.buttonNew,    ToolbarCommand.New);
-			this.UpdateCommandButton (this.buttonDelete, ToolbarCommand.Delete);
+			this.UpdateCommandButton (this.buttonFirst,    ToolbarCommand.First);
+			this.UpdateCommandButton (this.buttonNew,      ToolbarCommand.New);
+			this.UpdateCommandButton (this.buttonDelete,   ToolbarCommand.Delete);
+			this.UpdateCommandButton (this.buttonDeselect, ToolbarCommand.Deselect);
 		}
 
 
@@ -55,10 +57,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonCompacted = this.CreateModeButton (toolbar, TimelineMode.Compacted, "Timeline.Compacted", "Affichage compact");
 			this.buttonExpended  = this.CreateModeButton (toolbar, TimelineMode.Extended,  "Timeline.Extended",  "Affichage étendu");
 
-			this.buttonNew    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New ,    "Timeline.New",    "Nouvel événement");
-			this.buttonDelete = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete , "Timeline.Delete", "Supprimer l'événement");
+			this.buttonFirst    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.First ,   "Timeline.First",    "Retour sur le premier événement");
+			this.buttonNew      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New ,     "Timeline.New",      "Nouvel événement");
+			this.buttonDelete   = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete ,  "Timeline.Delete",   "Supprimer l'événement");
+			this.buttonDeselect = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne l'événement");
 
-			this.buttonNew.Margins = new Margins (20, 0, 0, 0);
+			this.buttonFirst.Margins = new Margins (20, 0, 0, 0);
 
 			this.UpdateModeButtons ();
 		}
@@ -114,8 +118,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonCompacted;
 		private IconButton buttonExpended;
 
+		private IconButton buttonFirst;
 		private IconButton buttonNew;
 		private IconButton buttonDelete;
+		private IconButton buttonDeselect;
 
 		private TimelineMode timelineMode;
 	}

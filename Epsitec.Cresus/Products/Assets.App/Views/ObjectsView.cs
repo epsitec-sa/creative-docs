@@ -76,12 +76,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				switch (command)
 				{
+					case ToolbarCommand.First:
+						this.OnTimelineFirst ();
+						break;
+
 					case ToolbarCommand.New:
 						this.OnTimelineNew ();
 						break;
 
 					case ToolbarCommand.Delete:
 						this.OnTimelineDelete ();
+						break;
+
+					case ToolbarCommand.Deselect:
+						this.OnTimelineDeselect ();
 						break;
 				}
 			};
@@ -139,12 +147,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Update ();
 		}
 
+		protected void OnTimelineFirst()
+		{
+			this.timelineSelectedCell = 0;
+
+			this.UpdateTimelineController ();
+			this.UpdateTreeTableController ();
+			this.UpdateTimelineToolbar ();
+		}
+
 		protected void OnTimelineNew()
 		{
 		}
 
 		protected void OnTimelineDelete()
 		{
+		}
+
+		protected void OnTimelineDeselect()
+		{
+			this.timelineSelectedCell = -1;
+
+			this.UpdateTimelineController ();
+			this.UpdateTreeTableController ();
+			this.UpdateTimelineToolbar ();
 		}
 
 		protected void OnEditAccept()
@@ -407,6 +433,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (row == 0)
 				{
 					this.timelineSelectedCell = this.timelineController.LeftVisibleCell + rank;
+
 					this.UpdateTimelineController ();
 					this.UpdateTreeTableController ();
 					this.UpdateTimelineToolbar ();
@@ -505,8 +532,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.isEditing)
 			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Disable);
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
+				this.timelineToolbar.SetCommandState (ToolbarCommand.First,    ToolbarCommandState.Disable);
+				this.timelineToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Disable);
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Delete,   ToolbarCommandState.Disable);
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
 			}
 			else
 			{
@@ -520,13 +549,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (empty)
 				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.First,  ToolbarCommandState.Enable);
 					this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
 					this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
 				}
 				else
 				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.First,  ToolbarCommandState.Enable);
 					this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
 					this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Enable);
+				}
+
+				if (this.timelineSelectedCell == -1)
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
+				}
+				else
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Enable);
 				}
 			}
 		}
