@@ -73,6 +73,7 @@ function() {
 
     onResetClick: function() {
       this.hideError();
+      this.setLoading();
       this.getForm().reset();
     },
 
