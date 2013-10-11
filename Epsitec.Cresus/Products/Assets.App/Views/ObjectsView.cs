@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
@@ -25,7 +23,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent, toolbar);
 
-			this.timelineFrameBox = new FrameBox
+			this.timelineFrameBox2 = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Bottom,
+			};
+
+			this.timelineFrameBox1 = new FrameBox
 			{
 				Parent = parent,
 				Dock   = DockStyle.Bottom,
@@ -35,14 +39,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableToolbar.CreateUI (this.listFrameBox);
 
 			this.timelineToolbar = new TimelineToolbar ();
-			this.timelineToolbar.CreateUI (this.timelineFrameBox);
+			this.timelineToolbar.CreateUI (this.timelineFrameBox1);
 			this.timelineToolbar.TimelineMode = this.timelineMode;
 
 			this.editToolbar = new EditToolbar ();
 			this.editToolbar.CreateUI (this.editFrameBox);
 
 			this.CreateTreeTable (this.listFrameBox);
-			this.CreateTimeline (this.timelineFrameBox);
+			this.CreateTimeline (this.timelineFrameBox2);
 
 			this.Update ();
 
@@ -120,6 +124,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.timelineMode = this.timelineToolbar.TimelineMode;
 
+				this.UpdateTimelineData ();
+				this.UpdateTimelineController ();
+			};
+
+			this.timelineToolbar.GraphChanged += delegate
+			{
+				this.timelineFrameBox2.Children.Clear ();
+				this.CreateTimeline (this.timelineFrameBox2);
 				this.UpdateTimelineData ();
 				this.UpdateTimelineController ();
 			};
@@ -338,7 +350,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				var guid = this.accessor.GetObjectGuid (firstRow+i);
-				var properties = this.accessor.GetObjectProperties (guid, timestamp.Value);
+				var properties = this.accessor.GetObjectSyntheticProperties (guid, timestamp.Value);
 
 				int level = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level).GetValueOrDefault (-1);
 
@@ -439,11 +451,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelineController = new NavigationTimelineController();
 
+			double height = AbstractScroller.DefaultBreadth + 18*3;
+
+			if (this.timelineToolbar.Graph)
+			{
+				height += 18*2;
+			}
+
 			var frame = new FrameBox
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Bottom,
-				PreferredHeight = AbstractScroller.DefaultBreadth + 18*3,
+				PreferredHeight = height,
 			};
 
 			this.timelineController.DateChanged += delegate
@@ -453,14 +472,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelineController.CreateUI (frame);
 			this.timelineController.Pivot = 0.0;
-			this.timelineController.SetRows (ObjectsView.GetTimelineRows (false));
+			this.timelineController.SetRows (this.GetTimelineRows ());
 
 			this.UpdateTimelineData ();
 			this.UpdateTimelineController ();
 
 			this.timelineController.CellClicked += delegate (object sender, int row, int rank)
 			{
-				if (row == 0)
+				if (row == (this.timelineToolbar.Graph ? 1 : 0))
 				{
 					this.timelineSelectedCell = this.timelineController.LeftVisibleCell + rank;
 
@@ -471,24 +490,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private static TimelineRowDescription[] GetTimelineRows(bool all)
+		private TimelineRowDescription[] GetTimelineRows()
 		{
 			var list = new List<TimelineRowDescription> ();
 
-			if (all)
+			if (this.timelineToolbar.Graph)
 			{
-				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeur assurance", relativeHeight: 2.0));
-				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeur comptable", relativeHeight: 2.0, valueColor1: Color.FromName ("Green"), valueColor2: Color.FromName ("Red")));
+				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeurs", relativeHeight: 2.0));
 				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
-				list.Add (new TimelineRowDescription (TimelineRowType.DaysOfWeek, ""));
-				list.Add (new TimelineRowDescription (TimelineRowType.WeekOfYear, "Semaines"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Days,  "Jours"));
 				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
 			}
 			else
 			{
 				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Days,  "Jours"));
 				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
 			}
 
@@ -534,6 +550,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var dates  = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();
+			var values = new List<TimelineCellValue> ();
 
 			for (int i = 0; i < count; i++)
 			{
@@ -547,15 +564,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var d = new TimelineCellDate (cell.Value.Timestamp.Date, isSelected: (i == selection));
 					var g = new TimelineCellGlyph (cell.Value.TimelineGlyph, isSelected: (i == selection));
+					var v = new TimelineCellValue (cell.Value.Value1, cell.Value.Value2, isSelected: (i == selection));
 
 					dates.Add (d);
 					glyphs.Add (g);
+					values.Add (v);
 				}
 			}
 
-			this.timelineController.SetRowGlyphCells (0, glyphs.ToArray ());
-			this.timelineController.SetRowDayCells   (1, dates.ToArray ());
-			this.timelineController.SetRowMonthCells (2, dates.ToArray ());
+			int line = 0;
+
+			if (this.timelineToolbar.Graph)
+			{
+				this.timelineController.SetRowValueCells (line++, values.ToArray ());
+			}
+
+			this.timelineController.SetRowGlyphCells (line++, glyphs.ToArray ());
+			this.timelineController.SetRowDayCells   (line++, dates.ToArray ());
+			this.timelineController.SetRowMonthCells (line++, dates.ToArray ());
 		}
 
 		public int FirstTimelineEventIndex
@@ -637,11 +663,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateTimelineToolbar()
 		{
+			if (this.timelineSelectedCell == this.FirstTimelineEventIndex)
+			{
+				this.timelineToolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Disable);
+			}
+			else
+			{
+				this.timelineToolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Enable);
+			}
+
+			if (this.timelineSelectedCell == this.NowTimelineEventIndex.GetValueOrDefault (-999))
+			{
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Disable);
+			}
+			else
+			{
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Enable);
+			}
+
+			if (this.timelineSelectedCell == this.LastTimelineEventIndex)
+			{
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Last, ToolbarCommandState.Disable);
+			}
+			else
+			{
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Last, ToolbarCommandState.Enable);
+			}
+
 			if (this.isEditing)
 			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.First,    ToolbarCommandState.Disable);
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Now,      ToolbarCommandState.Disable);
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Last,     ToolbarCommandState.Disable);
 				this.timelineToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Disable);
 				this.timelineToolbar.SetCommandState (ToolbarCommand.Delete,   ToolbarCommandState.Disable);
 				this.timelineToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
@@ -667,33 +717,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Enable);
 				}
 
-				if (this.timelineSelectedCell == this.FirstTimelineEventIndex)
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Disable);
-				}
-				else
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Enable);
-				}
-
-				if (this.timelineSelectedCell == this.NowTimelineEventIndex.GetValueOrDefault (-999))
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Disable);
-				}
-				else
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Enable);
-				}
-
-				if (this.timelineSelectedCell == this.LastTimelineEventIndex)
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.Last, ToolbarCommandState.Disable);
-				}
-				else
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.Last, ToolbarCommandState.Enable);
-				}
-
 				if (this.timelineSelectedCell == -1)
 				{
 					this.timelineToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
@@ -713,7 +736,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TimelineToolbar					timelineToolbar;
 		private EditToolbar						editToolbar;
 
-		private FrameBox						timelineFrameBox;
+		private FrameBox						timelineFrameBox1;
+		private FrameBox						timelineFrameBox2;
 
 		private NavigationTreeTableController	treeTableController;
 		private int								treeTableRowsCount;

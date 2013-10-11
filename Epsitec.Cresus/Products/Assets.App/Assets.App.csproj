@@ -182,6 +182,7 @@
     <EmbeddedResource Include="Images\Timeline.Deselect.icon" />
     <EmbeddedResource Include="Images\Timeline.Last.icon" />
     <EmbeddedResource Include="Images\Timeline.Now.icon" />
+    <EmbeddedResource Include="Images\Timeline.Graph.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

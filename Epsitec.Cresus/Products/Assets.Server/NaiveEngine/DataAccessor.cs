@@ -91,7 +91,24 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			return null;
 		}
 
-		public IEnumerable<AbstractDataProperty> GetObjectProperties(Guid objectGuid, Timestamp timestamp)
+		public IEnumerable<AbstractDataProperty> GetObjectSingleProperties(Guid objectGuid, Timestamp timestamp)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				foreach (var field in DataAccessor.ObjectFields)
+				{
+					var p = obj.GetSingleProperty (timestamp, (int) field);
+					if (p != null)
+					{
+						yield return p;
+					}
+				}
+			}
+		}
+
+		public IEnumerable<AbstractDataProperty> GetObjectSyntheticProperties(Guid objectGuid, Timestamp timestamp)
 		{
 			var obj = this.mandat.GetObject (objectGuid);
 

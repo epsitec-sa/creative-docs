@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var date4 = new Timestamp (new System.DateTime (2013, 2, 1), 0);
 			var date5 = new Timestamp (new System.DateTime (2013, 2, 4), 0);
 			var date6 = new Timestamp (new System.DateTime (2013, 3, 31), 0);
+			var date7 = new Timestamp (new System.DateTime (2013, 8, 21), 0);
+			var date8 = new Timestamp (new System.DateTime (2013, 9, 18), 0);
 
 			{
 				var o = new DataObject (objectId++);
@@ -488,7 +490,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "2.3.7"));
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Nom,         "Toyota Corolla"));
 					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur1,     5000.0m));
-					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     2500.0m));
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     3500.0m));
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Responsable, "Georges"));
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Couleur,     "Noire"));
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.NuméroSérie, "F30T-340407-52118-40720-R"));
@@ -511,6 +513,18 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					var e = new DataEvent (1, date6, EventType.Modification);
 					o.AddEvent (e);
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Responsable, "Daniel"));
+				}
+
+				{
+					var e = new DataEvent (1, date7, EventType.Augmentation);
+					o.AddEvent (e);
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     3000.0m));
+				}
+
+				{
+					var e = new DataEvent (1, date8, EventType.Diminution);
+					o.AddEvent (e);
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur1,     2100.0m));
 				}
 			}
 

@@ -114,16 +114,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var index = this.cells.FindIndex (x => x.Timestamp == t.Value);
 						var glyph = this.GetGlyph (objectGuid.Value, i);
 
+						var properties = this.accessor.GetObjectSingleProperties (objectGuid.Value, t.Value);
+
+						var value1 = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.Valeur1);
+						var value2 = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.Valeur2);
+
 						if (index == -1)
 						{
-							index = this.GetIndex (t.Value);
-
 							var cell = new TimelineCell
 							{
 								Timestamp     = t.Value,
 								TimelineGlyph = glyph,
+								Value1        = value1,
+								Value2        = value2,
 							};
 
+							index = this.GetIndex (t.Value);
 							this.cells.Insert (index, cell);
 						}
 						else
@@ -132,6 +138,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 							{
 								Timestamp     = this.cells[index].Timestamp,
 								TimelineGlyph = glyph,
+								Value1        = value1,
+								Value2        = value2,
 							};
 
 							this.cells[index] = cell;
@@ -209,6 +217,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			public Timestamp		Timestamp;
 			public TimelineGlyph	TimelineGlyph;
+			public decimal?			Value1;
+			public decimal?			Value2;
 		}
 
 

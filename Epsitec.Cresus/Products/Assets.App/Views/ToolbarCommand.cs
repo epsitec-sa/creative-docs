@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Last,
 		Now,
 		Edit,
+		Graph,
 		Accept,
 		Cancel,
 	}
