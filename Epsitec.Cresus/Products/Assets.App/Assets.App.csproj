@@ -79,6 +79,10 @@
     <Compile Include="Views\AbstractView.cs" />
     <Compile Include="Views\CategoriesView.cs" />
     <Compile Include="Views\AbstractCommandToolbar.cs" />
+    <Compile Include="Views\TimelineMode.cs" />
+    <Compile Include="Views\TimelineToolbar.cs" />
+    <Compile Include="Views\EditToolbar.cs" />
+    <Compile Include="Views\TreeTableToolbar.cs" />
     <Compile Include="Views\TimelineData.cs" />
     <Compile Include="Views\ToolbarCommand.cs" />
     <Compile Include="Views\ToolbarCommandState.cs" />
@@ -165,12 +169,15 @@
     <EmbeddedResource Include="Images\Object.Edit.icon" />
     <EmbeddedResource Include="Images\Object.Delete.icon" />
     <EmbeddedResource Include="Images\Object.New.icon" />
-    <None Include="Images\Timeline.Delete.icon" />
-    <None Include="Images\Timeline.Edit.icon" />
-    <None Include="Images\Timeline.New.icon" />
-    <None Include="Images\TreeTable.Delete.icon" />
-    <None Include="Images\TreeTable.Edit.icon" />
-    <None Include="Images\TreeTable.New.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Deselect.icon" />
+    <EmbeddedResource Include="Images\Timeline.Delete.icon" />
+    <EmbeddedResource Include="Images\Timeline.Edit.icon" />
+    <EmbeddedResource Include="Images\Timeline.New.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Delete.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Edit.icon" />
+    <EmbeddedResource Include="Images\TreeTable.New.icon" />
+    <EmbeddedResource Include="Images\Timeline.Extended.icon" />
+    <EmbeddedResource Include="Images\Timeline.Compacted.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

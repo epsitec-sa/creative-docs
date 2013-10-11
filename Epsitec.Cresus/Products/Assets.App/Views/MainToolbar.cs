@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -40,11 +39,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateCommandButtons()
 		{
-			this.UpdateCommandButton (this.buttonNew,    ToolbarCommand.New);
-			this.UpdateCommandButton (this.buttonDelete, ToolbarCommand.Delete);
-			this.UpdateCommandButton (this.buttonEdit,   ToolbarCommand.Edit);
-			this.UpdateCommandButton (this.buttonAccept, ToolbarCommand.Accept);
-			this.UpdateCommandButton (this.buttonCancel, ToolbarCommand.Cancel);
 		}
 
 
@@ -64,15 +58,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonEvents     = this.CreateViewButton (toolbar, ViewType.Events,     "View.Events",     "Evénements");
 			this.buttonReports    = this.CreateViewButton (toolbar, ViewType.Reports,    "View.Reports",    "Rapports et statistiques");
 			this.buttonSettings   = this.CreateViewButton (toolbar, ViewType.Settings,   "View.Settings",   "Réglages");
-
-			this.buttonNew        = this.CreateCommandButton (toolbar, DockStyle.Left,  ToolbarCommand.New ,    "Object.New",    "Nouveau");
-			this.buttonDelete     = this.CreateCommandButton (toolbar, DockStyle.Left,  ToolbarCommand.Delete , "Object.Delete", "Supprimer");
-			this.buttonEdit       = this.CreateCommandButton (toolbar, DockStyle.Left,  ToolbarCommand.Edit ,   "Object.Edit",   "Modifier");
-
-			this.buttonCancel     = this.CreateCommandButton (toolbar, DockStyle.Right, ToolbarCommand.Cancel , "Edit.Cancel",   "Annuler les modifications");
-			this.buttonAccept     = this.CreateCommandButton (toolbar, DockStyle.Right, ToolbarCommand.Accept , "Edit.Accept",   "Accepter les modifications");
-
-			this.buttonNew.Margins = new Margins (20, 0, 0, 0);
 
 			this.UpdateViewButtons ();
 		}
@@ -134,13 +119,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonEvents;
 		private IconButton buttonReports;
 		private IconButton buttonSettings;
-
-		private IconButton buttonNew;
-		private IconButton buttonDelete;
-
-		private IconButton buttonEdit;
-		private IconButton buttonAccept;
-		private IconButton buttonCancel;
 
 		private ViewType viewType;
 	}

@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					bool isHover = (this.detectedHoverRank >= x && this.detectedHoverRank < rank);
 
 					this.PaintCellBackground (graphics, rect, lastCell, isHover, index);
-					this.PaintCellForeground (graphics, rect, lastCell, isHover, index);
+					this.PaintCellForeground (graphics, rect, lastCell, x == rank-1);
 
 					this.PaintGrid (graphics, rect, index, this.hilitedHoverRank, 0.0);
 
@@ -75,28 +75,53 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
+		private void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool square)
 		{
 			//	Dessine le contenu.
 			//	Dessine le contenu, plus ou moins détaillé selon la place disponible.
-			var font = Font.DefaultFont;
+			var text = this.GetCellText (rect, cell, square);
 
-			for (int detailLevel = 4; detailLevel >= 0; detailLevel--)
+			if (!string.IsNullOrEmpty (text))
 			{
-				var text = TimelineRowMonths.GetMonthText (cell, detailLevel);
-				if (string.IsNullOrEmpty (text))
-				{
-					break;
-				}
+				var font = Font.DefaultFont;
 
-				var width = new TextGeometry (0, 0, 1000, 100, text, font, this.FontSize, ContentAlignment.MiddleLeft).Width;
-				if (width <= rect.Width)
+				graphics.Color = ColorManager.TextColor;
+				graphics.PaintText (rect, text, font, this.FontSize, ContentAlignment.MiddleCenter);
+			}
+		}
+
+		private string GetCellText(Rectangle rect, TimelineCellDate cell, bool square)
+		{
+			//	Retourne le texte, plus ou moins détaillé selon la place disponible.
+			if (square)
+			{
+				//	Si la cellule est carrée (donc la plus petite taille possible),
+				//	on évite d'essayer de caser des textes abrégés. Ceci est nécessaire
+				//	pour uniformiser les textes et éviter des mélanges de chiffres et
+				//	de lettres tels que "1 fév. 3 4...".
+				return TimelineRowMonths.GetMonthText (cell, 0);
+			}
+			else
+			{
+				var font = Font.DefaultFont;
+
+				for (int detailLevel = 4; detailLevel >= 0; detailLevel--)
 				{
-					graphics.Color = ColorManager.TextColor;
-					graphics.PaintText (rect, text, font, this.FontSize, ContentAlignment.MiddleCenter);
-					break;
+					var text = TimelineRowMonths.GetMonthText (cell, detailLevel);
+					if (string.IsNullOrEmpty (text))
+					{
+						break;
+					}
+
+					var width = new TextGeometry (0, 0, 1000, 100, text, font, this.FontSize, ContentAlignment.MiddleLeft).Width;
+					if (width <= rect.Width)
+					{
+						return text;
+					}
 				}
 			}
+
+			return null;
 		}
 
 		private static bool IsSame(TimelineCellDate c1, TimelineCellDate c2)

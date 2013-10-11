@@ -78,7 +78,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			int m1 = (c1.IsValid) ? c1.Date.Month : -1;
 			int m2 = (c2.IsValid) ? c2.Date.Month : -1;
 
-			return m1 == m2;
+			int y1 = (c1.IsValid) ? c1.Date.Year : -1;
+			int y2 = (c2.IsValid) ? c2.Date.Year : -1;
+
+			return m1 == m2 && y1 == y2;
 		}
 
 		public static bool IsSameDays(TimelineCellDate c1, TimelineCellDate c2)
@@ -86,7 +89,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			int d1 = (c1.IsValid) ? c1.Date.Day : -1;
 			int d2 = (c2.IsValid) ? c2.Date.Day : -1;
 
-			return d1 == d2;
+			int m1 = (c1.IsValid) ? c1.Date.Month : -1;
+			int m2 = (c2.IsValid) ? c2.Date.Month : -1;
+
+			int y1 = (c1.IsValid) ? c1.Date.Year : -1;
+			int y2 = (c2.IsValid) ? c2.Date.Year : -1;
+
+			return d1 == d2 && m1 == m2 && y1 == y2;
 		}
 
 

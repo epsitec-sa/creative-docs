@@ -23,11 +23,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void Compute(Guid? objectGuid, bool compact, System.DateTime start, System.DateTime end)
+		public void Compute(Guid? objectGuid, TimelineMode mode, System.DateTime start, System.DateTime end)
 		{
 			this.cells.Clear ();
 
-			if (!compact)
+			if (mode == TimelineMode.Extended)
 			{
 				//	Crée des cellules pour tous les jours compris entre 'start' et 'end'.
 				for (int i = 0; i < 365*100; i++)
@@ -46,6 +46,53 @@ namespace Epsitec.Cresus.Assets.App.Views
 					};
 
 					this.cells.Add (cell);
+				}
+			}
+
+			if (mode == TimelineMode.Compacted)
+			{
+				//	Crée des cellules pour tous premiers du mois compris entre 'start' et 'end'.
+				int year  = start.Year;
+				int month = start.Month;
+
+				for (int i = 0; i < 12*100; i++)
+				{
+					var date = new System.DateTime (year, month, 1);
+
+					if (date > end.Date)
+					{
+						break;
+					}
+
+					var cell = new TimelineCell
+					{
+						Timestamp     = new Timestamp (date, 0),
+						TimelineGlyph = TimelineGlyph.Empty,
+					};
+
+					this.cells.Add (cell);
+
+					month++;
+					if (month > 12)
+					{
+						month = 1;
+						year++;
+					}
+				}
+
+				//	Si nécessaire, crée une cellule pour aujourd'hui.
+				var now = System.DateTime.Now;
+
+				if (!this.cells.Where (x => x.Timestamp.Date == now).Any ())
+				{
+					var cell = new TimelineCell
+					{
+						Timestamp     = new Timestamp (now, 0),
+						TimelineGlyph = TimelineGlyph.Empty,
+					};
+
+					int i = this.cells.Where (x => x.Timestamp.Date < now).Count ();
+					this.cells.Insert (i, cell);  // la liste doit être triéée chronologiquement
 				}
 			}
 

@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.lastSelectedRow == this.treeTable.SelectedRow)
 				{
-					this.OnCommandEdit ();
+					//?this.OnCommandEdit ();
 				}
 				else
 				{
@@ -51,15 +51,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return "Catégories d'immobilisation";
 			}
-		}
-
-
-		protected override void OnCommandNew()
-		{
-		}
-
-		protected override void OnCommandDelete()
-		{
 		}
 
 

@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				var o = new DataObject (objectId++);
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start);
+				var e = new DataEvent (1, date1);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "1.1.2"));

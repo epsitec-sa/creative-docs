@@ -18,23 +18,95 @@ namespace Epsitec.Cresus.Assets.App.Views
 			: base (accessor)
 		{
 			this.timelineData = new TimelineData (this.accessor);
-			this.timelineCompact = false;
+			this.timelineMode = TimelineMode.Extended;
 		}
 
 		public override void CreateUI(Widget parent, MainToolbar toolbar)
 		{
 			base.CreateUI (parent, toolbar);
 
-			this.timelineBox = new FrameBox
+			this.timelineFrameBox = new FrameBox
 			{
 				Parent = parent,
 				Dock   = DockStyle.Bottom,
 			};
 
+			this.treeTableToolbar = new TreeTableToolbar ();
+			this.treeTableToolbar.CreateUI (this.listFrameBox);
+
+			this.timelineToolbar = new TimelineToolbar ();
+			this.timelineToolbar.CreateUI (this.timelineFrameBox);
+			this.timelineToolbar.TimelineMode = this.timelineMode;
+
+			this.editToolbar = new EditToolbar ();
+			this.editToolbar.CreateUI (this.editFrameBox);
+
 			this.CreateTreeTable (this.listFrameBox);
-			this.CreateTimeline (this.timelineBox);
+			this.CreateTimeline (this.timelineFrameBox);
 
 			this.Update ();
+
+			// provisoire:
+			this.editToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
+			this.editToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+
+			this.treeTableToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.New:
+						this.OnTreeTableNew ();
+						break;
+
+					case ToolbarCommand.Delete:
+						this.OnTreeTableDelete ();
+						break;
+
+					case ToolbarCommand.Edit:
+						this.OnTreeTableEdit ();
+						break;
+
+					case ToolbarCommand.Deselect:
+						this.OnTreeTableDeselect ();
+						break;
+				}
+			};
+
+			this.timelineToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.New:
+						this.OnTimelineNew ();
+						break;
+
+					case ToolbarCommand.Delete:
+						this.OnTimelineDelete ();
+						break;
+				}
+			};
+
+			this.editToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.Accept:
+						this.OnEditAccept ();
+						break;
+
+					case ToolbarCommand.Cancel:
+						this.OnEditCancel ();
+						break;
+				}
+			};
+
+			this.timelineToolbar.ModeChanged += delegate
+			{
+				this.timelineMode = this.timelineToolbar.TimelineMode;
+
+				this.UpdateTimelineData ();
+				this.UpdateTimelineController ();
+			};
 		}
 
 
@@ -47,14 +119,55 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void OnCommandNew()
+		protected void OnTreeTableNew()
 		{
 		}
 
-		protected override void OnCommandDelete()
+		protected void OnTreeTableDelete()
 		{
 		}
 
+		protected void OnTreeTableEdit()
+		{
+			this.isEditing = true;
+			this.Update ();
+		}
+
+		protected void OnTreeTableDeselect()
+		{
+			this.SelectedRow = -1;
+			this.Update ();
+		}
+
+		protected void OnTimelineNew()
+		{
+		}
+
+		protected void OnTimelineDelete()
+		{
+		}
+
+		protected void OnEditAccept()
+		{
+			this.isEditing = false;
+			this.Update ();
+		}
+
+		protected void OnEditCancel()
+		{
+			this.isEditing = false;
+			this.Update ();
+		}
+
+
+
+		protected override void Update()
+		{
+			base.Update ();
+
+			this.UpdateTreeTableToolbar ();
+			this.UpdateTimelineToolbar ();
+		}
 
 		protected override int SelectedRow
 		{
@@ -111,7 +224,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (this.treeTableSelectedRow == sel)
 				{
-					this.OnCommandEdit ();
+					this.OnTreeTableEdit ();
 				}
 				else
 				{
@@ -232,6 +345,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 		}
+
+		private void UpdateTreeTableToolbar()
+		{
+			if (this.isEditing)
+			{
+				this.treeTableToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Disable);
+				this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete,   ToolbarCommandState.Disable);
+				this.treeTableToolbar.SetCommandState (ToolbarCommand.Edit,     ToolbarCommandState.Disable);
+				this.treeTableToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
+			}
+			else
+			{
+				if (this.treeTableSelectedRow == -1)
+				{
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Enable);
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete,   ToolbarCommandState.Disable);
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.Edit,     ToolbarCommandState.Disable);
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
+				}
+				else
+				{
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Enable);
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete,   ToolbarCommandState.Enable);
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.Edit,     ToolbarCommandState.Enable);
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Enable);
+				}
+			}
+		}
 		#endregion
 
 
@@ -301,7 +442,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var start = new System.DateTime (this.accessor.StartDate.Year, 1, 1);
 			var end   = new System.DateTime (this.accessor.StartDate.Year, 12, 31);
 
-			this.timelineData.Compute (this.SelectedGuid, this.timelineCompact, start, end);
+			this.timelineData.Compute (this.SelectedGuid, this.timelineMode, start, end);
 
 			this.timelineController.CellsCount = this.timelineData.CellsCount;
 		}
@@ -358,12 +499,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 		}
+
+		private void UpdateTimelineToolbar()
+		{
+			if (this.isEditing)
+			{
+				this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Disable);
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
+			}
+			else
+			{
+				if (this.timelineSelectedCell == -1)
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
+					this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
+				}
+				else
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
+					this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Enable);
+				}
+			}
+		}
 		#endregion
 
 
 		private readonly TimelineData			timelineData;
 
-		private FrameBox						timelineBox;
+		private TreeTableToolbar				treeTableToolbar;
+		private TimelineToolbar					timelineToolbar;
+		private EditToolbar						editToolbar;
+
+		private FrameBox						timelineFrameBox;
 
 		private NavigationTreeTableController	treeTableController;
 		private int								treeTableRowsCount;
@@ -371,6 +538,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private NavigationTimelineController	timelineController;
 		private int								timelineSelectedCell;
-		private bool							timelineCompact;
+		private TimelineMode					timelineMode;
 	}
 }

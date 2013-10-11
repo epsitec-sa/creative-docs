@@ -6,13 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public enum ToolbarCommand
+	public enum TimelineMode
 	{
-		New,
-		Delete,
-		Deselect,
-		Edit,
-		Accept,
-		Cancel,
+		Compacted,
+		Extended,
 	}
 }
