@@ -66,7 +66,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			System.Diagnostics.Trace.WriteLine ("Unhandled warning: " + this.Entity.WarningType.GetQualifiedName ());
 
 			wall.AddBrick ()
-				.Attribute (BrickMode.DefaultToSummarySubView);
+				.Attribute (BrickMode.DefaultToNoSubView);
 		}
 	}
 }

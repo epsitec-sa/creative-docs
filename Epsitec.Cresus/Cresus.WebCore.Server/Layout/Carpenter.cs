@@ -93,6 +93,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				case ViewControllerMode.Set:
 					return this.BuildSetColumn (viewMode, viewId);
 
+				case ViewControllerMode.None:
+					return null;
+
 				default:
 					throw new System.NotImplementedException ();
 			}
@@ -483,6 +486,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			else if (brickModes.Contains (BrickMode.DefaultToSetSubView))
 			{
 				viewMode = ViewControllerMode.Set;
+			}
+			else if (brickModes.Contains (BrickMode.DefaultToNoSubView))
+			{
+				viewMode = ViewControllerMode.None;
 			}
 			else
 			{

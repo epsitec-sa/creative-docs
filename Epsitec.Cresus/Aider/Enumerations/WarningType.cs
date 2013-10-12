@@ -15,10 +15,11 @@ namespace Epsitec.Aider.Enumerations
 
 		Generic = 1,
 
-		MissingHousehold        = 1000,
-		ParishMismatch  = 1001,
-		ParishArrival   = 1002,
-		ParishDeparture = 1003,
+		MissingHousehold	 = 1000,
+		ParishMismatch		 = 1001,
+		ParishArrival		 = 1002,
+		ParishDeparture		 = 1003,
+		
 		HouseholdWithoutSubscription = 1004,
 		
 		EChPersonNew         = 2000,
@@ -28,11 +29,10 @@ namespace Epsitec.Aider.Enumerations
 		EChHouseholdChanged  = 2004,
 		EChHouseholdAdded    = 2005,
 		
-		EChAddressChanged = 3000,
-		
-		EChProcessDeparture = 3001,
-		EChProcessArrival   = 3002,
+		EChAddressChanged    = 3000,
+		EChProcessDeparture  = 3001,
+		EChProcessArrival    = 3002,
 
-		EChPersonDuplicated = 4000
+		EChPersonDuplicated  = 4000
 	}
 }

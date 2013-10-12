@@ -34,9 +34,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		public abstract string GetColumnType();
 
+		public static Dictionary<string, object> GetEmptyDictionary()
+		{
+			return new Dictionary<string, object> ();
+		}
+
 		public Dictionary<string, object> ToDictionary(Caches caches)
 		{
-			var column = new Dictionary<string, object> ();
+			var column = EntityColumn.GetEmptyDictionary ();
 
 			this.FillDictionary (column, caches);
 
