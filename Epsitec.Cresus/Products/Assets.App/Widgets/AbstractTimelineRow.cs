@@ -46,7 +46,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (this.pivot != value)
 				{
 					this.pivot = value;
-					this.InitializeAfterCellsChanged ();
 					this.Invalidate ();
 				}
 			}
@@ -115,7 +114,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry ();
-			this.InitializeAfterCellsChanged ();
 		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -153,10 +151,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.detectedHoverRank = rank;
 				this.OnCellHovered (rank);
 			}
-		}
-
-		protected virtual void InitializeAfterCellsChanged()
-		{
 		}
 
 

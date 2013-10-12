@@ -200,6 +200,65 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public void GetMinMax(out decimal min, out decimal max)
+		{
+			min = decimal.MaxValue;
+			max = decimal.MinValue;
+
+			foreach (var cell in this.cells)
+			{
+				if (cell.Value1.HasValue)
+				{
+					min = System.Math.Min (min, cell.Value1.Value);
+					max = System.Math.Max (max, cell.Value1.Value);
+				}
+
+				if (cell.Value2.HasValue)
+				{
+					min = System.Math.Min (min, cell.Value2.Value);
+					max = System.Math.Max (max, cell.Value2.Value);
+				}
+			}
+		}
+
+		public TimelineCell? GetSyntheticCell(int index)
+		{
+			var syntheticCell = new TimelineCell ();
+			bool first = true;
+
+			while (index >= 0)
+			{
+				var cell = this.GetCell (index--);
+
+				if (cell.HasValue)
+				{
+					if (first)
+					{
+						syntheticCell.Timestamp     = cell.Value.Timestamp;
+						syntheticCell.TimelineGlyph = cell.Value.TimelineGlyph;
+						first = false;
+					}
+
+					if (!syntheticCell.Value1.HasValue && cell.Value.Value1.HasValue)
+					{
+						syntheticCell.Value1 = cell.Value.Value1;
+					}
+
+					if (!syntheticCell.Value2.HasValue && cell.Value.Value2.HasValue)
+					{
+						syntheticCell.Value2 = cell.Value.Value2;
+					}
+
+					if (syntheticCell.Value1.HasValue && syntheticCell.Value2.HasValue)
+					{
+						break;
+					}
+				}
+			}
+
+			return syntheticCell;
+		}
+
 		public TimelineCell? GetCell(int index)
 		{
 			if (index >= 0 && index < this.cells.Count)

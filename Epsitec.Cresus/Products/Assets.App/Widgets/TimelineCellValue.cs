@@ -10,8 +10,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineCellValue
 	{
-		public TimelineCellValue(decimal? value1 = null, decimal? value2 = null, bool isSelected = false, bool isError = false)
+		public TimelineCellValue(int rank, decimal? value1 = null, decimal? value2 = null, bool isSelected = false, bool isError = false)
 		{
+			this.Rank       = rank;
 			this.Value1     = value1;
 			this.Value2     = value2;
 			this.IsSelected = isSelected;
@@ -40,6 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return (rank == 0) ? this.Value1 : this.Value2;
 		}
 
+		public readonly int						Rank;
 		public readonly decimal?				Value1;
 		public readonly decimal?				Value2;
 		public readonly bool					IsSelected;

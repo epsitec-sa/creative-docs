@@ -121,9 +121,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.timeline.SetRowDayCells (rank, cells);
 		}
 
-		public void SetRowValueCells(int rank, TimelineCellValue[] cells)
+		public void SetRowValueCells(int rank, TimelineCellValue[] cells, decimal min, decimal max)
 		{
-			this.timeline.SetRowValueCells (rank, cells);
+			this.timeline.SetRowValueCells (rank, cells, min, max);
 		}
 
 		public void SetRowGlyphCells(int rank, TimelineCellGlyph[] cells)

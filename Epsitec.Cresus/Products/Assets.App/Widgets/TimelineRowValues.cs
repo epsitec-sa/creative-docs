@@ -24,8 +24,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public void SetCells(TimelineCellValue[] cells)
 		{
 			this.cells = cells;
-			this.InitializeAfterCellsChanged ();
 			this.Invalidate ();
+		}
+
+		public void SetMinMax(decimal min, decimal max)
+		{
+			//	Le zéro est toujours inclu, pour avoir des courbes comparables.
+			this.min = System.Math.Min (min, 0.0m);
+			this.max = System.Math.Max (max, 0.0m);
 		}
 
 
@@ -54,7 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				for (int i=0; i<2; i++)
 				{
-					for (int rank = 0; rank <= this.VisibleCellCount; rank++)
+					for (int rank = -1; rank <= this.VisibleCellCount; rank++)
 					{
 						var cell = this.GetCell (rank);
 
@@ -235,32 +241,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		protected override void InitializeAfterCellsChanged()
-		{
-			this.min = decimal.MaxValue;
-			this.max = decimal.MinValue;
-
-			for (int rank = 0; rank <= this.VisibleCellCount; rank++)
-			{
-				var cell = this.GetCell (rank);
-
-				if (cell.Value1.HasValue)
-				{
-					this.min = System.Math.Min (this.min, cell.Value1.Value);
-					this.max = System.Math.Max (this.max, cell.Value1.Value);
-				}
-
-				if (cell.Value2.HasValue)
-				{
-					this.min = System.Math.Min (this.min, cell.Value2.Value);
-					this.max = System.Math.Max (this.max, cell.Value2.Value);
-				}
-			}
-		}
-
 
 		private TimelineCellValue GetCell(int rank)
 		{
+			return this.cells.Where (x => x.Rank == rank).FirstOrDefault ();
+
+#if false
 			if (rank < this.VisibleCellCount)
 			{
 				int index = this.GetListIndex (rank);
@@ -272,6 +258,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			return new TimelineCellValue ();  // retourne une cellule invalide
+#endif
 		}
 
 		private int GetListIndex(int rank)

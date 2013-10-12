@@ -65,8 +65,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       3));
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "1.1.1"));
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Nom,         "Centre administratif"));
-					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur1,     2450000.0m));
-					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     3000000.0m));
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur1,     3000000.0m));
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     2500000.0m));
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Responsable, "Paul"));
 				}
 
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					{
 						var e = new DataEvent (1, new Timestamp (start.Date.AddDays (i*3), 0), EventType.Diminution);
 						o.AddEvent (e);
-						e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur1, 2450000.0m-i*100));
+						e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur1, 3000000.0m-i*10000));
 					}
 				}
 			}

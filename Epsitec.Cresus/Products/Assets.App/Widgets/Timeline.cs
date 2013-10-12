@@ -162,12 +162,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			row.SetCells (cells);
 		}
 
-		public void SetRowValueCells(int rank, TimelineCellValue[] cells)
+		public void SetRowValueCells(int rank, TimelineCellValue[] cells, decimal min, decimal max)
 		{
 			var row = this.GetRow (rank) as TimelineRowValues;
 			System.Diagnostics.Debug.Assert (row != null);
 
 			row.SetCells (cells);
+			row.SetMinMax (min, max);
 		}
 
 		public void SetRowGlyphCells(int rank, TimelineCellGlyph[] cells)
