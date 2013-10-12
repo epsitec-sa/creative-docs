@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateToolbar (parent, 24+6);  // les icônes actuelles font 24
+			this.CreateToolbar (parent, AbstractCommandToolbar.SecondaryToolbarHeight);
 			this.UpdateCommandButtons ();
 		}
 

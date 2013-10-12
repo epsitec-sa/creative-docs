@@ -128,6 +128,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
+		public static readonly int PrimaryToolbarHeight   = 32 + 10;
+		public static readonly int SecondaryToolbarHeight = 24 + 2;
+
+
 		private readonly Dictionary<ToolbarCommand, ToolbarCommandState> commandStates;
 	}
 }
