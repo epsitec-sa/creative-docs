@@ -124,6 +124,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.timelineMode = this.timelineToolbar.TimelineMode;
 
+				this.timelineFrameBox2.Children.Clear ();
+				this.CreateTimeline (this.timelineFrameBox2);
+
 				this.UpdateTimelineData ();
 				this.UpdateTimelineController ();
 			};
@@ -132,6 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.timelineFrameBox2.Children.Clear ();
 				this.CreateTimeline (this.timelineFrameBox2);
+
 				this.UpdateTimelineData ();
 				this.UpdateTimelineController ();
 			};
@@ -449,7 +453,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.timelineSelectedCell = -1;
 
-			this.timelineController = new NavigationTimelineController();
+			this.timelineController = new NavigationTimelineController ();
 
 			double height = AbstractScroller.DefaultBreadth + 18*3;
 
@@ -471,6 +475,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.timelineController.CreateUI (frame);
+			this.timelineController.RelativeWidth = (this.timelineMode == TimelineMode.Extended) ? 1.0 : 2.0;
 			this.timelineController.Pivot = 0.0;
 			this.timelineController.SetRows (this.GetTimelineRows ());
 
@@ -497,15 +502,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.timelineToolbar.Graph)
 			{
 				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeurs", relativeHeight: 2.0));
-				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Days,  "Jours"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
+			}
+
+			list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
+
+			if (this.timelineMode == TimelineMode.Extended)
+			{
+				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Months, "Mois"));
 			}
 			else
 			{
-				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Days,  "Jours"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Month, "Mois"));
+				list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, "Jours"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Years, "Année"));
 			}
 
 			return list.ToArray ();
@@ -514,7 +523,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateTimelineData()
 		{
 			var start = new System.DateTime (this.accessor.StartDate.Year, 1, 1);
-			var end   = new System.DateTime (this.accessor.StartDate.Year, 12, 31);
+			var end   = new System.DateTime (this.accessor.StartDate.Year+1, 12, 31);
 
 			this.timelineData.Compute (this.SelectedGuid, this.timelineMode, start, end);
 
@@ -555,7 +564,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (firstCell > 0)
 			{
 				//	S'il existe une cellule précédente, cachée à gauche, il est nécessaire
-				//	de la donner, pour que le dessin du graphique soit correct.
+				//	de la donner, pour que le dessin de l'origine du graphique soit correct.
 				var cell = this.timelineData.GetSyntheticCell (firstCell-1);
 				var v = new TimelineCellValue (-1, cell.Value.Values);
 				values.Add (v);
@@ -591,8 +600,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.timelineController.SetRowGlyphCells (line++, glyphs.ToArray ());
-			this.timelineController.SetRowDayCells   (line++, dates.ToArray ());
-			this.timelineController.SetRowMonthCells (line++, dates.ToArray ());
+
+			if (this.timelineMode == TimelineMode.Extended)
+			{
+				this.timelineController.SetRowDayCells (line++, dates.ToArray ());
+				this.timelineController.SetRowMonthCells (line++, dates.ToArray ());
+			}
+			else
+			{
+				this.timelineController.SetRowDayMonthCells (line++, dates.ToArray ());
+				this.timelineController.SetRowYearCells (line++, dates.ToArray ());
+			}
 		}
 
 		public int FirstTimelineEventIndex

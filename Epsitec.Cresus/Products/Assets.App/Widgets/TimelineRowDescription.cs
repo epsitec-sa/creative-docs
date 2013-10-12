@@ -17,12 +17,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			Color? valueColor2 = null
 		)
 		{
-			this.Type           = type;
-			this.Description    = description;
-			this.RelativeHeight = relativeHeight;
-			this.ValueDisplayMode    = valueDisplayMode;
-			this.ValueColor1         = valueColor1;
-			this.ValueColor2         = valueColor2;
+			this.Type             = type;
+			this.Description      = description;
+			this.RelativeHeight   = relativeHeight;
+			this.ValueDisplayMode = valueDisplayMode;
+			this.ValueColor1      = valueColor1;
+			this.ValueColor2      = valueColor2;
 		}
 
 
@@ -52,7 +52,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			switch (description.Type)
 			{
-				case TimelineRowType.Month:
+				case TimelineRowType.Years:
+					row = new TimelineRowYears ();
+					break;
+
+				case TimelineRowType.Months:
 					row = new TimelineRowMonths ();
 					break;
 
@@ -66,6 +70,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				case TimelineRowType.Days:
 					row = new TimelineRowDays ();
+					break;
+
+				case TimelineRowType.DaysMonths:
+					row = new TimelineRowDaysMonths ();
 					break;
 
 				case TimelineRowType.Glyph:

@@ -87,6 +87,8 @@
     <Compile Include="Views\ToolbarCommand.cs" />
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
+    <Compile Include="Widgets\TimelineRowYears.cs" />
+    <Compile Include="Widgets\TimelineRowDaysMonths.cs" />
     <Compile Include="Widgets\SimpleTreeTableCellDecimal.cs" />
     <Compile Include="Widgets\SimpleTreeTableCellString.cs" />
     <Compile Include="Widgets\SimpleTreeTableController.cs" />

@@ -65,6 +65,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		public static bool IsSameYears(TimelineCellDate c1, TimelineCellDate c2)
+		{
+			int y1 = (c1.IsValid) ? c1.Date.Year : -1;
+			int y2 = (c2.IsValid) ? c2.Date.Year : -1;
+
+			return y1 == y2;
+		}
+
 		public static bool IsSameWeeksOfYear(TimelineCellDate c1, TimelineCellDate c2)
 		{
 			int w1 = (c1.IsValid) ? TimelineCellDate.GetWeekOfYear (c1.Date) : -1;

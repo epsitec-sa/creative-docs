@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public Timeline()
 		{
 			this.timelineRows = new List<AbstractTimelineRow> ();
+			this.RelativeWidth = 1.0;
 		}
 
 
@@ -44,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return (int) ((this.ActualBounds.Width - this.labelsWidth) / this.CellWidth);
+				return (int) ((this.ActualBounds.Width - this.labelsWidth) / (this.CellHeight * this.RelativeWidth));
 			}
 		}
 
@@ -83,21 +84,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private int								CellWidth
+		private int								CellHeight
 		{
 			get
 			{
-				return (int) (this.ActualHeight / this.RelativeHeights);
+				return (int) (this.ActualHeight / this.RelativeHeight);
 			}
 		}
 
-		private double							RelativeHeights
+		private double							RelativeHeight
 		{
 			get
 			{
 				return this.timelineRows.Sum (x => x.RelativeHeight);
 			}
 		}
+
+		public double							RelativeWidth;
 
 
 		public void SetRows(TimelineRowDescription[] descriptions)
@@ -130,6 +133,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.UpdateLabelsWidth ();
 		}
 
+		public void SetRowYearCells(int rank, TimelineCellDate[] cells)
+		{
+			var row = this.GetRow (rank) as TimelineRowYears;
+			System.Diagnostics.Debug.Assert (row != null);
+
+			row.SetCells (cells);
+		}
+
 		public void SetRowMonthCells(int rank, TimelineCellDate[] cells)
 		{
 			var row = this.GetRow (rank) as TimelineRowMonths;
@@ -157,6 +168,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public void SetRowDayCells(int rank, TimelineCellDate[] cells)
 		{
 			var row = this.GetRow (rank) as TimelineRowDays;
+			System.Diagnostics.Debug.Assert (row != null);
+
+			row.SetCells (cells);
+		}
+
+		public void SetRowDayMonthCells(int rank, TimelineCellDate[] cells)
+		{
+			var row = this.GetRow (rank) as TimelineRowDaysMonths;
 			System.Diagnostics.Debug.Assert (row != null);
 
 			row.SetCells (cells);
@@ -210,16 +229,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Met à jour la géométrie de toutes les lignes-enfant.
 			this.UpdateLabelsWidth ();
 
-			int w = this.CellWidth;
+			int ch = this.CellHeight;
 			int bottom = 0;
 
 			foreach (var row in this.timelineRows)
 			{
-				var h = (int) (w * row.RelativeHeight);
+				var h = (int) (ch * row.RelativeHeight);
 				var top = this.ActualHeight-bottom-h;
 
 				row.Anchor = AnchorStyles.All;
-				row.CellWidth = w;
+				row.CellWidth = (int) (ch * this.RelativeWidth);
+				row.RelativeWidth = this.RelativeWidth;
 				row.Margins = new Margins (0, 0, top, bottom);
 				row.PreferredHeight = h;
 
@@ -280,7 +300,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return (int) (this.CellWidth * 0.5);
+				return (int) (this.CellHeight * 0.5);
 			}
 		}
 
@@ -288,7 +308,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.CellWidth * 0.6;
+				return this.CellHeight * 0.6;
 			}
 		}
 

@@ -96,9 +96,26 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public double							RelativeWidth
+		{
+			get
+			{
+				return this.timeline.RelativeWidth;
+			}
+			set
+			{
+				this.timeline.RelativeWidth = value;
+			}
+		}
+
 		public void SetRows(TimelineRowDescription[] descriptions)
 		{
 			this.timeline.SetRows (descriptions);
+		}
+
+		public void SetRowYearCells(int rank, TimelineCellDate[] cells)
+		{
+			this.timeline.SetRowYearCells (rank, cells);
 		}
 
 		public void SetRowMonthCells(int rank, TimelineCellDate[] cells)
@@ -119,6 +136,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public void SetRowDayCells(int rank, TimelineCellDate[] cells)
 		{
 			this.timeline.SetRowDayCells (rank, cells);
+		}
+
+		public void SetRowDayMonthCells(int rank, TimelineCellDate[] cells)
+		{
+			this.timeline.SetRowDayMonthCells (rank, cells);
 		}
 
 		public void SetRowValueCells(int rank, TimelineCellValue[] cells, decimal min, decimal max)

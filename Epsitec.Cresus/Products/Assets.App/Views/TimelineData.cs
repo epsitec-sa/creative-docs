@@ -51,7 +51,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (mode == TimelineMode.Compacted)
 			{
-				//	Crée des cellules pour tous premiers du mois compris entre 'start' et 'end'.
+#if false
+				//	Crée des cellules pour tous les premiers du mois compris entre 'start' et 'end'.
 				int year  = start.Year;
 				int month = start.Month;
 
@@ -79,6 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						year++;
 					}
 				}
+#endif
 
 				//	Si nécessaire, crée une cellule pour aujourd'hui.
 				var now = System.DateTime.Now;

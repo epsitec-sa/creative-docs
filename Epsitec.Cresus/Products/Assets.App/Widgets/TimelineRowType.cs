@@ -5,10 +5,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public enum TimelineRowType
 	{
-		Month,
+		Years,
+		Months,
 		WeekOfYear,
 		DaysOfWeek,
 		Days,
+		DaysMonths,
 		Glyph,
 		Value,
 	};

@@ -57,6 +57,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			set;
 		}
 
+		public double							RelativeWidth
+		{
+			get;
+			set;
+		}
+
 		public int								LabelWidth
 		{
 			get;
@@ -204,7 +210,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.CellWidth * 0.6;
+				return this.CellWidth / this.RelativeWidth * 0.6;
 			}
 		}
 
