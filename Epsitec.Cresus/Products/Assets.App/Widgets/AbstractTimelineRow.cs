@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return (int) (this.ActualWidth / this.CellWidth);
+				return (int) ((this.ActualWidth - this.LabelWidth) / this.CellWidth);
 			}
 		}
 

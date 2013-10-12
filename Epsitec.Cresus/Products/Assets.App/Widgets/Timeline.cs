@@ -88,11 +88,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return (int) (this.ActualHeight / this.RelativeHeight);
+				return (int) (this.ActualHeight / this.RelativeHeights);
 			}
 		}
 
-		private double							RelativeHeight
+		private double							RelativeHeights
 		{
 			get
 			{
