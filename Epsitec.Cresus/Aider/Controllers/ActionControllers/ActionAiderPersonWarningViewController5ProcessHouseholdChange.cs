@@ -29,7 +29,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			get
 			{
-				return true;
+				return false;	//	TODO: review the class -- does it still make sense?
 			}
 		}
 
