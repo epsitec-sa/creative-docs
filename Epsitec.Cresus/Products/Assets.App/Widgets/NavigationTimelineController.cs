@@ -76,6 +76,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Timeline Facade
+		public bool							ShowLabels
+		{
+			get
+			{
+				return this.timeline.ShowLabels;
+			}
+			set
+			{
+				this.timeline.ShowLabels = value;
+			}
+		}
+
 		public double							Pivot
 		{
 			get

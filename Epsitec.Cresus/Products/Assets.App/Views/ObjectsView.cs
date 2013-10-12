@@ -130,15 +130,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateTimelineData ();
 				this.UpdateTimelineController ();
 			};
-
-			this.timelineToolbar.GraphChanged += delegate
-			{
-				this.timelineFrameBox2.Children.Clear ();
-				this.CreateTimeline (this.timelineFrameBox2);
-
-				this.UpdateTimelineData ();
-				this.UpdateTimelineController ();
-			};
 		}
 
 
@@ -457,9 +448,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			double height = AbstractScroller.DefaultBreadth + 18*3;
 
-			if (this.timelineToolbar.Graph)
+			if (this.HasGraph)
 			{
 				height += 18*2;
+			}
+
+			if (this.IsWeeksOfYear)
+			{
+				height += 18*1;
+			}
+
+			if (this.IsDaysOfWeek)
+			{
+				height += 18*1;
 			}
 
 			var frame = new FrameBox
@@ -475,7 +476,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.timelineController.CreateUI (frame);
-			this.timelineController.RelativeWidth = (this.timelineMode == TimelineMode.Extended) ? 1.0 : 2.0;
+			this.timelineController.RelativeWidth = this.IsExtended ? 1.0 : 2.0;
+			this.timelineController.ShowLabels = this.IsShowLabels;
 			this.timelineController.Pivot = 0.0;
 			this.timelineController.SetRows (this.GetTimelineRows ());
 
@@ -484,7 +486,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelineController.CellClicked += delegate (object sender, int row, int rank)
 			{
-				if (row == (this.timelineToolbar.Graph ? 1 : 0))
+				if (row == (this.HasGraph ? 1 : 0))
 				{
 					this.timelineSelectedCell = this.timelineController.LeftVisibleCell + rank;
 
@@ -499,21 +501,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var list = new List<TimelineRowDescription> ();
 
-			if (this.timelineToolbar.Graph)
+			if (this.HasGraph)
 			{
 				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeurs", relativeHeight: 2.0));
 			}
 
 			list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
 
-			if (this.timelineMode == TimelineMode.Extended)
+			if (this.IsExtended)
 			{
-				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jours"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jour"));
+			}
+			else
+			{
+				list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, "Jour"));
+			}
+
+			if (this.IsDaysOfWeek)
+			{
+				list.Add (new TimelineRowDescription (TimelineRowType.DaysOfWeek, ""));
+			}
+
+			if (this.IsWeeksOfYear)
+			{
+				list.Add (new TimelineRowDescription (TimelineRowType.WeekOfYear, "Semaine"));
+			}
+
+			if (this.IsExtended)
+			{
 				list.Add (new TimelineRowDescription (TimelineRowType.Months, "Mois"));
 			}
 			else
 			{
-				list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, "Jours"));
 				list.Add (new TimelineRowDescription (TimelineRowType.Years, "Année"));
 			}
 
@@ -592,7 +611,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			int line = 0;
 
-			if (this.timelineToolbar.Graph)
+			if (this.HasGraph)
 			{
 				decimal min, max;
 				this.timelineData.GetMinMax (out min, out max);
@@ -601,14 +620,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelineController.SetRowGlyphCells (line++, glyphs.ToArray ());
 
-			if (this.timelineMode == TimelineMode.Extended)
+			if (this.IsExtended)
 			{
 				this.timelineController.SetRowDayCells (line++, dates.ToArray ());
-				this.timelineController.SetRowMonthCells (line++, dates.ToArray ());
 			}
 			else
 			{
 				this.timelineController.SetRowDayMonthCells (line++, dates.ToArray ());
+			}
+
+			if (this.IsDaysOfWeek)
+			{
+				this.timelineController.SetRowDayOfWeekCells (line++, dates.ToArray ());
+			}
+
+			if (this.IsWeeksOfYear)
+			{
+				this.timelineController.SetRowWeekOfYearCells (line++, dates.ToArray ());
+			}
+
+			if (this.IsExtended)
+			{
+				this.timelineController.SetRowMonthCells (line++, dates.ToArray ());
+			}
+			else
+			{
 				this.timelineController.SetRowYearCells (line++, dates.ToArray ());
 			}
 		}
@@ -754,6 +790,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.timelineToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Enable);
 				}
+			}
+		}
+
+
+		private bool IsShowLabels
+		{
+			get
+			{
+				return (this.timelineMode & TimelineMode.Labels) != 0;
+			}
+		}
+
+		private bool IsWeeksOfYear
+		{
+			get
+			{
+				return (this.timelineMode & TimelineMode.WeeksOfYear) != 0;
+			}
+		}
+
+		private bool IsDaysOfWeek
+		{
+			get
+			{
+				return (this.timelineMode & TimelineMode.DaysOfWeek) != 0;
+			}
+		}
+
+		private bool IsExtended
+		{
+			get
+			{
+				return (this.timelineMode & TimelineMode.Extended) != 0;
+			}
+		}
+
+		private bool HasGraph
+		{
+			get
+			{
+				return (this.timelineMode & TimelineMode.Graph) != 0;
 			}
 		}
 		#endregion

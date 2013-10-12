@@ -34,22 +34,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public bool Graph
-		{
-			get
-			{
-				return this.graph;
-			}
-			set
-			{
-				if (this.graph != value)
-				{
-					this.graph = value;
-					this.UpdateGraphButtons ();
-				}
-			}
-		}
-
 
 		protected override void UpdateCommandButtons()
 		{
@@ -72,24 +56,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Padding         = new Margins (0),
 			};
 
-			this.buttonCompacted = this.CreateModeButton (toolbar, TimelineMode.Compacted, "Timeline.Compacted", "Affichage compact");
-			this.buttonExpended  = this.CreateModeButton (toolbar, TimelineMode.Extended,  "Timeline.Extended",  "Affichage étendu");
+			this.buttonLabels      = this.CreateModeButton (toolbar, TimelineMode.Labels,      "Timeline.Labels",      "Affiche les noms des lignes");
+								   															   
+			this.buttonCompacted   = this.CreateModeButton (toolbar, TimelineMode.Compacted,   "Timeline.Compacted",   "Affichage compact");
+			this.buttonExpended    = this.CreateModeButton (toolbar, TimelineMode.Extended,    "Timeline.Extended",    "Affichage étendu");
 
-			this.buttonGraph     = this.CreateGraphButton (toolbar, "Timeline.Graph",  "Graphique des valeurs");
+			this.buttonWeeksOfYear = this.CreateModeButton (toolbar, TimelineMode.WeeksOfYear, "Timeline.WeeksOfYear", "Affiche les numéros des semaines");
+			this.buttonDaysOfWeek  = this.CreateModeButton (toolbar, TimelineMode.DaysOfWeek,  "Timeline.DaysOfWeek",  "Affiche les jours de la semaine");
+			this.buttonGraph       = this.CreateModeButton (toolbar, TimelineMode.Graph,       "Timeline.Graph",       "Affiche les graphique des valeurs");
 
-			this.buttonFirst     = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.First,    "Timeline.First",    "Retour sur le premier événement");
-			this.buttonNow       = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Now,      "Timeline.Now",      "Va à la date du jour");
-			this.buttonLast      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur le dernier événement");
-			this.buttonNew       = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New,      "Timeline.New",      "Nouvel événement");
-			this.buttonDelete    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete ,  "Timeline.Delete",   "Supprimer l'événement");
-			this.buttonDeselect  = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne l'événement");
+			this.buttonFirst       = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.First,    "Timeline.First",    "Retour sur le premier événement");
+			this.buttonNow         = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Now,      "Timeline.Now",      "Va à la date du jour");
+			this.buttonLast        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur le dernier événement");
+			this.buttonNew         = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New,      "Timeline.New",      "Nouvel événement");
+			this.buttonDelete      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete ,  "Timeline.Delete",   "Supprimer l'événement");
+			this.buttonDeselect    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne l'événement");
 
-			this.buttonGraph.Margins = new Margins (20, 0, 0, 0);
-			this.buttonFirst.Margins = new Margins (20, 0, 0, 0);
-			this.buttonNew.Margins   = new Margins (20, 0, 0, 0);
+			this.buttonCompacted.Margins   = new Margins (20, 0, 0, 0);
+			this.buttonWeeksOfYear.Margins = new Margins (20, 0, 0, 0);
+			this.buttonFirst.Margins       = new Margins (20, 0, 0, 0);
+			this.buttonNew.Margins         = new Margins (20, 0, 0, 0);
 
 			this.UpdateModeButtons ();
-			this.UpdateGraphButtons ();
 		}
 
 		private IconButton CreateModeButton(HToolBar toolbar, TimelineMode mode, string icon, string tooltip)
@@ -110,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			button.Clicked += delegate
 			{
-				this.timelineMode = mode;
+				this.ChangeMode (mode);
 				this.UpdateModeButtons ();
 				this.OnModeChanged (this.timelineMode);
 			};
@@ -118,42 +106,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return button;
 		}
 
-		private IconButton CreateGraphButton(HToolBar toolbar, string icon, string tooltip)
+
+		private void ChangeMode(TimelineMode mode)
 		{
-			var size = toolbar.PreferredHeight;
-
-			var button = new IconButton
+			if (mode == Views.TimelineMode.Compacted)
 			{
-				Parent        = toolbar,
-				ButtonStyle   = ButtonStyle.ActivableIcon,
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				IconUri       = MainToolbar.GetResourceIconUri (icon),
-				PreferredSize = new Size (size, size),
-			};
-
-			ToolTip.Default.SetToolTip (button, tooltip);
-
-			button.Clicked += delegate
+				this.timelineMode |=  Views.TimelineMode.Compacted;
+				this.timelineMode &= ~Views.TimelineMode.Extended;
+			}
+			else if (mode == Views.TimelineMode.Extended)
 			{
-				this.graph = !this.graph;
-				this.UpdateGraphButtons ();
-				this.OnGraphChanged (this.graph);
-			};
-
-			return button;
+				this.timelineMode |=  Views.TimelineMode.Extended;
+				this.timelineMode &= ~Views.TimelineMode.Compacted;
+			}
+			else
+			{
+				this.timelineMode ^= mode;
+			}
 		}
-
 
 		private void UpdateModeButtons()
 		{
-			this.SetActiveState (this.buttonCompacted, this.timelineMode == TimelineMode.Compacted);
-			this.SetActiveState (this.buttonExpended,  this.timelineMode == TimelineMode.Extended);
-		}
-
-		private void UpdateGraphButtons()
-		{
-			this.SetActiveState (this.buttonGraph, this.graph);
+			this.SetActiveState (this.buttonLabels,      (this.timelineMode & TimelineMode.Labels     ) != 0);
+			this.SetActiveState (this.buttonCompacted,   (this.timelineMode & TimelineMode.Compacted  ) != 0);
+			this.SetActiveState (this.buttonExpended,    (this.timelineMode & TimelineMode.Extended   ) != 0);
+			this.SetActiveState (this.buttonWeeksOfYear, (this.timelineMode & TimelineMode.WeeksOfYear) != 0);
+			this.SetActiveState (this.buttonDaysOfWeek,  (this.timelineMode & TimelineMode.DaysOfWeek ) != 0);
+			this.SetActiveState (this.buttonGraph,       (this.timelineMode & TimelineMode.Graph      ) != 0);
 		}
 
 
@@ -168,23 +147,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public delegate void ModeChangedEventHandler(object sender, TimelineMode timelineMode);
 		public event ModeChangedEventHandler ModeChanged;
-
-
-		private void OnGraphChanged(bool graph)
-		{
-			if (this.GraphChanged != null)
-			{
-				this.GraphChanged (this, graph);
-			}
-		}
-
-		public delegate void GraphChangedEventHandler(object sender, bool graph);
-		public event GraphChangedEventHandler GraphChanged;
 		#endregion
 
 
+		private IconButton buttonLabels;
 		private IconButton buttonCompacted;
 		private IconButton buttonExpended;
+		private IconButton buttonWeeksOfYear;
+		private IconButton buttonDaysOfWeek;
 		private IconButton buttonGraph;
 
 		private IconButton buttonFirst;
@@ -195,6 +165,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonDeselect;
 
 		private TimelineMode timelineMode;
-		private bool graph;
 	}
 }

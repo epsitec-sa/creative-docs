@@ -185,6 +185,9 @@
     <EmbeddedResource Include="Images\Timeline.Last.icon" />
     <EmbeddedResource Include="Images\Timeline.Now.icon" />
     <EmbeddedResource Include="Images\Timeline.Graph.icon" />
+    <EmbeddedResource Include="Images\Timeline.DaysOfWeek.icon" />
+    <EmbeddedResource Include="Images\Timeline.WeeksOfYear.icon" />
+    <EmbeddedResource Include="Images\Timeline.Labels.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
