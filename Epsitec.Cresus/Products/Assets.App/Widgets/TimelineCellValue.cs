@@ -10,11 +10,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineCellValue
 	{
-		public TimelineCellValue(int rank, decimal? value1 = null, decimal? value2 = null, bool isSelected = false, bool isError = false)
+		public TimelineCellValue(int rank, decimal?[] values, bool isSelected = false, bool isError = false)
 		{
 			this.Rank       = rank;
-			this.Value1     = value1;
-			this.Value2     = value2;
+			this.Values     = values;
 			this.IsSelected = isSelected;
 			this.IsError    = isError;
 		}
@@ -24,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return !this.Value1.HasValue && !this.Value2.HasValue;
+				return !this.IsValid;
 			}
 		}
 
@@ -32,29 +31,32 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.Value1.HasValue || this.Value2.HasValue;
+				return this.Values != null;
 			}
 		}
 
 		public decimal? GetValue(int rank)
 		{
-			return (rank == 0) ? this.Value1 : this.Value2;
+			return this.Values[rank];
 		}
 
 		public readonly int						Rank;
-		public readonly decimal?				Value1;
-		public readonly decimal?				Value2;
+		public readonly decimal?[]				Values;
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
+
+		public static readonly int MaxValues = 2;
 
 		
 		public override string ToString()
 		{
 			var buffer = new System.Text.StringBuilder ();
 
-			buffer.Append (this.Value1.ToString ());
-			buffer.Append (" ");
-			buffer.Append (this.Value2.ToString ());
+			foreach (var value in this.Values)
+			{
+				buffer.Append (value.ToString ());
+				buffer.Append (" ");
+			}
 
 			if (this.IsSelected)
 			{

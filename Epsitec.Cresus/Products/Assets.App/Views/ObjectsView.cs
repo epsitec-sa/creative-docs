@@ -557,7 +557,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				//	S'il existe une cellule précédente, cachée à gauche, il est nécessaire
 				//	de la donner, pour que le dessin du graphique soit correct.
 				var cell = this.timelineData.GetSyntheticCell (firstCell-1);
-				var v = new TimelineCellValue (-1, cell.Value.Value1, cell.Value.Value2);
+				var v = new TimelineCellValue (-1, cell.Value.Values);
 				values.Add (v);
 			}
 
@@ -573,7 +573,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var d = new TimelineCellDate (cell.Value.Timestamp.Date, isSelected: (i == selection));
 					var g = new TimelineCellGlyph (cell.Value.TimelineGlyph, isSelected: (i == selection));
-					var v = new TimelineCellValue (i, cell.Value.Value1, cell.Value.Value2, isSelected: (i == selection));
+					var v = new TimelineCellValue (i, cell.Value.Values, isSelected: (i == selection));
 
 					dates.Add (d);
 					glyphs.Add (g);

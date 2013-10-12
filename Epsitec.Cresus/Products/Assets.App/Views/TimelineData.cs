@@ -125,8 +125,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							{
 								Timestamp     = t.Value,
 								TimelineGlyph = glyph,
-								Value1        = value1,
-								Value2        = value2,
+								Values        = new decimal?[] {value1, value2},
 							};
 
 							index = this.GetIndex (t.Value);
@@ -138,8 +137,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							{
 								Timestamp     = this.cells[index].Timestamp,
 								TimelineGlyph = glyph,
-								Value1        = value1,
-								Value2        = value2,
+								Values        = new decimal?[] { value1, value2 },
 							};
 
 							this.cells[index] = cell;
@@ -207,23 +205,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			foreach (var cell in this.cells)
 			{
-				if (cell.Value1.HasValue)
+				if (cell.Values != null)
 				{
-					min = System.Math.Min (min, cell.Value1.Value);
-					max = System.Math.Max (max, cell.Value1.Value);
-				}
-
-				if (cell.Value2.HasValue)
-				{
-					min = System.Math.Min (min, cell.Value2.Value);
-					max = System.Math.Max (max, cell.Value2.Value);
+					foreach (var value in cell.Values)
+					{
+						if (value.HasValue)
+						{
+							min = System.Math.Min (min, value.Value);
+							max = System.Math.Max (max, value.Value);
+						}
+					}
 				}
 			}
 		}
 
 		public TimelineCell? GetSyntheticCell(int index)
 		{
-			var syntheticCell = new TimelineCell ();
+			var syntheticCell = new TimelineCell ()
+			{
+				Values = new decimal?[TimelineCellValue.MaxValues],
+			};
+
 			bool first = true;
 
 			while (index >= 0)
@@ -239,19 +241,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 						first = false;
 					}
 
-					if (!syntheticCell.Value1.HasValue && cell.Value.Value1.HasValue)
+					if (cell.Value.Values != null)
 					{
-						syntheticCell.Value1 = cell.Value.Value1;
-					}
+						int count = System.Math.Min (syntheticCell.Values.Length, cell.Value.Values.Length);
+						for (int i=0; i<count; i++)
+						{
+							if (!syntheticCell.Values[i].HasValue && cell.Value.Values[i].HasValue)
+							{
+								syntheticCell.Values[i] = cell.Value.Values[i];
+							}
+						}
 
-					if (!syntheticCell.Value2.HasValue && cell.Value.Value2.HasValue)
-					{
-						syntheticCell.Value2 = cell.Value.Value2;
-					}
-
-					if (syntheticCell.Value1.HasValue && syntheticCell.Value2.HasValue)
-					{
-						break;
+						if (syntheticCell.Values.Where (x => x.HasValue).Count () == syntheticCell.Values.Length)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -276,8 +280,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			public Timestamp		Timestamp;
 			public TimelineGlyph	TimelineGlyph;
-			public decimal?			Value1;
-			public decimal?			Value2;
+			public decimal?[]		Values;
 		}
 
 
