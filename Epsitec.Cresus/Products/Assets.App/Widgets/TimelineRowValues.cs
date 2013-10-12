@@ -48,18 +48,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void Paint(Graphics graphics)
 		{
-			var dots = new List<ColoredDot> ();
+			var dots = new List<IndexedDot> ();
 
 			if (this.HasMinMax)
 			{
 				for (int i=0; i<2; i++)
 				{
-					var path = new Path ();
-					int? lastX = null;
-					int? lastY = null;
-					var surfaceColor = this.GetSurfaceColor (i);
-					var dotColor = this.GetDotColor (i);
-
 					for (int rank = 0; rank <= this.VisibleCellCount; rank++)
 					{
 						var cell = this.GetCell (rank);
@@ -73,60 +67,82 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 								var rect = this.GetCellsRect (rank, rank+1);
 								int x = (int) rect.Center.X - 1;
 
-								if (lastX.HasValue && lastY.HasValue)
-								{
-									if (path.IsEmpty)
-									{
-										path.MoveTo (lastX.Value+0.5, -0.5);
-										path.LineTo (lastX.Value+0.5, lastY.Value+0.5);
-									}
-
-									path.LineTo (x+0.5, lastY.Value+0.5);
-									path.LineTo (x+0.5, y.Value+0.5);
-								}
-
-								dots.Add (new ColoredDot(new Point (x, y.Value), dotColor));
-
-								lastX = x;
-								lastY = y;
+								dots.Add (new IndexedDot(new Point (x, y.Value), i));
 							}
-						}
-					}
-
-					if (lastX.HasValue)
-					{
-						path.LineTo (this.ActualWidth+0.5, lastY.Value+0.5);
-						path.LineTo (this.ActualWidth+0.5, -0.5);
-						path.Close ();
-
-						if ((this.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0)
-						{
-							graphics.AddFilledPath (path);
-							graphics.RenderSolid (surfaceColor);
-						}
-
-						if ((this.ValueDisplayMode & TimelineValueDisplayMode.Lines) != 0)
-						{
-							graphics.AddPath (path);
-							graphics.RenderSolid (dotColor);
 						}
 					}
 				}
 			}
 
-			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Dots) != 0)
+			this.PaintSurfaces (graphics, dots);
+			this.PaintDots     (graphics, dots);
+		}
+
+		private void PaintSurfaces(Graphics graphics, List<IndexedDot> dots)
+		{
+			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0 ||
+				(this.ValueDisplayMode & TimelineValueDisplayMode.Lines   ) != 0)
 			{
-				foreach (var dot in dots)
+				for (int i=0; i<2; i++)
 				{
-					this.PaintDot (graphics, dot);
+					var points = dots.Where (x => x.Index == i).Select (x => x.Point).ToArray ();
+					this.PaintSurfaces (graphics, points, i);
 				}
 			}
 		}
 
-		private void PaintDot(Graphics graphics, ColoredDot dot)
+		private void PaintSurfaces(Graphics graphics, Point[] points, int index)
 		{
-			int x = (int) dot.Point.X;
-			int y = (int) dot.Point.Y;
+			if (!points.Any ())
+			{
+				return;
+			}
+
+			var path = new Path ();
+
+			path.MoveTo (points[0].X+0.5, -0.5);
+			path.LineTo (points[0].X+0.5, points[0].Y+0.5);
+
+			for (int i=1; i<points.Length; i++)
+			{
+				path.LineTo (points[i].X+0.5, points[i-1].Y+0.5);
+				path.LineTo (points[i].X+0.5, points[i].Y+0.5);
+			}
+
+			var lastPoint = points.Last ();
+			path.LineTo (this.ActualWidth+0.5, lastPoint.Y+0.5);
+			path.LineTo (this.ActualWidth+0.5, -0.5);
+			path.Close ();
+
+			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0)
+			{
+				graphics.AddFilledPath (path);
+				graphics.RenderSolid (this.GetSurfaceColor (index));
+			}
+
+			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Lines) != 0)
+			{
+				graphics.AddPath (path);
+				graphics.RenderSolid (this.GetDotColor (index));
+			}
+		}
+
+		private void PaintDots(Graphics graphics, List<IndexedDot> dots)
+		{
+			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Dots) != 0)
+			{
+				foreach (var dot in dots)
+				{
+					var color = this.GetDotColor (dot.Index);
+					this.PaintDot (graphics, dot.Point, color);
+				}
+			}
+		}
+
+		private void PaintDot(Graphics graphics, Point pos, Color color)
+		{
+			int x = (int) pos.X;
+			int y = (int) pos.Y;
 			int s = this.DotSize;
 
 			if (false)  // points carrée ?
@@ -135,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 				graphics.AddRectangle (x-s/2+0.5, y-s/2+0.5, s, s);
-				graphics.RenderSolid (dot.Color);
+				graphics.RenderSolid (color);
 			}
 			else  // points ronds ?
 			{
@@ -143,20 +159,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 				graphics.AddCircle (x+0.5, y+0.5, s-1.0);
-				graphics.RenderSolid (dot.Color);
+				graphics.RenderSolid (color);
 			}
 		}
 
-		private struct ColoredDot
+		private struct IndexedDot
 		{
-			public ColoredDot(Point point, Color color)
+			public IndexedDot(Point point, int index)
 			{
 				this.Point = point;
-				this.Color = color;
+				this.Index = index;
 			}
 
 			public readonly Point Point;
-			public readonly Color Color;
+			public readonly int   Index;
 		}
 
 		private Color GetSurfaceColor(int rank)
@@ -204,7 +220,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.min <= this.max;
+				return this.min < this.max;
 			}
 		}
 
