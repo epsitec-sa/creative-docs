@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				//	Crée des cellules pour tous les jours compris entre 'start' et 'end'.
 				for (int i = 0; i < 365*100; i++)
 				{
-					var date = TimelineData.AddDays (start.Date, i);
+					var date = start.Date.AddDays (i);
 
 					if (date > end.Date)
 					{
@@ -219,13 +219,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			public TimelineGlyph	TimelineGlyph;
 			public decimal?			Value1;
 			public decimal?			Value2;
-		}
-
-
-
-		private static System.DateTime AddDays(System.DateTime date, int numberOfDays)
-		{
-			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays).ToDateTime ();
 		}
 
 

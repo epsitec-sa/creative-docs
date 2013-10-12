@@ -74,8 +74,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
-			this.PaintSurfaces (graphics, dots);
-			this.PaintDots     (graphics, dots);
+			if (dots.Any ())
+			{
+				this.PaintSurfaces (graphics, dots);
+				this.PaintDots     (graphics, dots);
+			}
 		}
 
 		private void PaintSurfaces(Graphics graphics, List<IndexedDot> dots)
