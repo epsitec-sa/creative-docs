@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid)
 			{
-				return ColorManager.GetCheckerboardColor (index%2 == 0, isHover);
+				return ColorManager.GetBackgroundColor (isHover);
 			}
 			else
 			{

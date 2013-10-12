@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Responsable, "Paul"));
 				}
 
-				for (int i=1; i<100; i++)
+				for (int i=1; i<200; i++)
 				{
 					{
 						var e = new DataEvent (1, new Timestamp (start.Date.AddDays (i*3), 0), EventType.Diminution);

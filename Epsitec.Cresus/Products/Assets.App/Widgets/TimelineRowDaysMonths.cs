@@ -12,7 +12,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// <summary>
 	/// Ligne de Timeline affichant les numéros des jours et mois.
 	/// Par exemple "28.03", "29.03", "30.03", "31.03".
-	/// Les samedis et dimanches ont une couleur de fond légèrement différente.
 	/// </summary>
 	public class TimelineRowDaysMonths : AbstractTimelineRow
 	{
@@ -92,15 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid)
 			{
-				if (cell.Date.DayOfWeek == System.DayOfWeek.Saturday ||
-					cell.Date.DayOfWeek == System.DayOfWeek.Sunday)
-				{
-					return ColorManager.GetHolidayColor (isHover);
-				}
-				else
-				{
-					return ColorManager.GetBackgroundColor (isHover);
-				}
+				return ColorManager.GetCheckerboardColor (index%2 == 0, isHover);
 			}
 			else
 			{

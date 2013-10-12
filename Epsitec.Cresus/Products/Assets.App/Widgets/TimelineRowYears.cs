@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.PaintCellBackground (graphics, rect, lastCell, isHover, index);
 					this.PaintCellForeground (graphics, rect, lastCell, isHover, index);
 
-					this.PaintGrid (graphics, rect, index, this.hilitedHoverRank);
+					this.PaintGrid (graphics, rect, index, this.hilitedHoverRank, 0.0);
 
 					index++;
 					x = rank;
@@ -91,15 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid)
 			{
-				if (cell.Date.DayOfWeek == System.DayOfWeek.Saturday ||
-					cell.Date.DayOfWeek == System.DayOfWeek.Sunday)
-				{
-					return ColorManager.GetHolidayColor (isHover);
-				}
-				else
-				{
-					return ColorManager.GetBackgroundColor (isHover);
-				}
+				return ColorManager.GetBackgroundColor (isHover);
 			}
 			else
 			{
