@@ -182,19 +182,32 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected void PaintLabel(Graphics graphics)
 		{
+			if (this.LabelWidth > 0 && this.hilitedHoverRank != -1)
+			{
+				this.PaintGrid (graphics, this.BoxLabelRect, 0, 0);
+			}
+
 			if (this.LabelWidth > 0 && !string.IsNullOrEmpty (this.Description))
 			{
 				var font = Font.DefaultFont;
 				graphics.Color = ColorManager.TextColor;
-				graphics.PaintText (this.LabelRect, this.Description, font, this.FontSize, ContentAlignment.MiddleLeft);
+				graphics.PaintText (this.TextLabelRect, this.Description, font, this.FontSize, ContentAlignment.MiddleLeft);
 			}
 		}
 
-		private Rectangle LabelRect
+		private Rectangle BoxLabelRect
 		{
 			get
 			{
-				return new Rectangle (this.LabelMargin, 0, this.LabelWidth, this.ActualHeight);
+				return new Rectangle (0, 0, this.LabelWidth, this.ActualHeight);
+			}
+		}
+
+		private Rectangle TextLabelRect
+		{
+			get
+			{
+				return new Rectangle (this.LabelMargin, 0, this.LabelWidth - this.LabelMargin, this.ActualHeight);
 			}
 		}
 
