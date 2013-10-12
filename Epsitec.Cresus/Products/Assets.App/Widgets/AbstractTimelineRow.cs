@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return (int) (this.CellWidth * 0.5);
+				return (int) (this.ActualHeight * 0.5);
 			}
 		}
 

@@ -499,6 +499,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private TimelineRowDescription[] GetTimelineRows()
 		{
+			//	Retourne les descriptions des lignes, de bas en haut.
 			var list = new List<TimelineRowDescription> ();
 
 			if (this.HasGraph)
@@ -508,6 +509,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
 
+			if (this.IsDaysOfWeek)
+			{
+				list.Add (new TimelineRowDescription (TimelineRowType.DaysOfWeek, ""));
+			}
+
 			if (this.IsExtended)
 			{
 				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jour"));
@@ -515,11 +521,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, "Jour"));
-			}
-
-			if (this.IsDaysOfWeek)
-			{
-				list.Add (new TimelineRowDescription (TimelineRowType.DaysOfWeek, ""));
 			}
 
 			if (this.IsWeeksOfYear)
@@ -620,6 +621,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelineController.SetRowGlyphCells (line++, glyphs.ToArray ());
 
+			if (this.IsDaysOfWeek)
+			{
+				this.timelineController.SetRowDayOfWeekCells (line++, dates.ToArray ());
+			}
+
 			if (this.IsExtended)
 			{
 				this.timelineController.SetRowDayCells (line++, dates.ToArray ());
@@ -627,11 +633,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				this.timelineController.SetRowDayMonthCells (line++, dates.ToArray ());
-			}
-
-			if (this.IsDaysOfWeek)
-			{
-				this.timelineController.SetRowDayOfWeekCells (line++, dates.ToArray ());
 			}
 
 			if (this.IsWeeksOfYear)
