@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public int SelectedRow
+		public int								SelectedRow
 		{
 			get
 			{
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public Timestamp Timestamp
+		public Timestamp						Timestamp
 		{
 			get
 			{

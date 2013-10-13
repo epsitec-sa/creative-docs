@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectsTimelineController(DataAccessor accessor)
 		{
 			this.accessor = accessor;
+
 			this.timelineData = new TimelineData (this.accessor);
 			this.timelineMode = TimelineMode.Extended;
 		}
@@ -25,7 +26,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public int SelectedCell
+		public TimelineMode						TimelineMode
+		{
+			get
+			{
+				return this.timelineMode;
+			}
+			set
+			{
+				if (this.timelineMode != value)
+				{
+					this.timelineMode = value;
+
+					this.UpdateRows ();
+					this.UpdateTimelineData ();
+					this.UpdateTimelineController ();
+				}
+			}
+		}
+
+		public int								SelectedCell
 		{
 			get
 			{
@@ -38,11 +58,39 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.selectedCell = value;
 
 					this.UpdateTimelineController ();
+					this.OnCellClicked (this.selectedCell);
 				}
 			}
 		}
 
-		public Guid ObjectGuid
+		public Timestamp?						SelectedTimestamp
+		{
+			get
+			{
+				if (this.selectedCell != -1 && this.controller != null)
+				{
+					var cell = this.timelineData.GetCell (this.selectedCell);
+
+					if (cell.HasValue)
+					{
+						return cell.Value.Timestamp;
+					}
+				}
+
+				return null;
+			}
+		}
+
+		public bool								HasSelectedEvent
+		{
+			get
+			{
+				var cell = this.timelineData.GetCell (this.selectedCell);
+				return (cell.HasValue && cell.Value.TimelineGlyph == TimelineGlyph.Empty);
+			}
+		}
+
+		public Guid								ObjectGuid
 		{
 			get
 			{
@@ -61,34 +109,76 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public int?								FirstEventIndex
+		{
+			get
+			{
+				int count = this.timelineData.CellsCount;
+				for (int i = 0; i < count; i++)
+				{
+					var cell = this.timelineData.GetCell (i);
+
+					if (cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+					{
+						return i;
+					}
+				}
+
+				return null;
+			}
+		}
+
+		public int?								LastEventIndex
+		{
+			get
+			{
+				int count = this.timelineData.CellsCount;
+				for (int i = count-1; i >= 0; i--)
+				{
+					var cell = this.timelineData.GetCell (i);
+
+					if (cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+					{
+						return i;
+					}
+				}
+
+				return null;
+			}
+		}
+
+		public int?								NowEventIndex
+		{
+			get
+			{
+				var now = Timestamp.Now;
+
+				int count = this.timelineData.CellsCount;
+				for (int i = 0; i < count; i++)
+				{
+					var cell = this.timelineData.GetCell (i);
+
+					if (cell.Value.Timestamp == now)
+					{
+						return i;
+					}
+				}
+
+				return null;
+			}
+		}
+
+
 		private void CreateTimeline(Widget parent)
 		{
 			this.selectedCell = -1;
 
 			this.controller = new NavigationTimelineController ();
 
-			double height = AbstractScroller.DefaultBreadth + 18*3;
-
-			if (this.HasGraph)
+			this.frameBox = new FrameBox
 			{
-				height += 18*2;
-			}
-
-			if (this.IsWeeksOfYear)
-			{
-				height += 18*1;
-			}
-
-			if (this.IsDaysOfWeek)
-			{
-				height += 18*1;
-			}
-
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Bottom,
-				PreferredHeight = height,
+				Parent = parent,
+				Dock   = DockStyle.Bottom,
 			};
 
 			this.controller.DateChanged += delegate
@@ -96,19 +186,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateTimelineController ();
 			};
 
-			this.controller.CreateUI (frame);
+			this.controller.CreateUI (this.frameBox);
 			this.controller.RelativeWidth = this.IsExtended ? 1.0 : 2.0;
 			this.controller.ShowLabels = this.IsShowLabels;
 			this.controller.Pivot = 0.0;
-			this.controller.SetRows (this.GetTimelineRows ());
 
+			this.UpdateRows ();
 			this.UpdateTimelineData ();
 			this.UpdateTimelineController ();
 
 			//	Connexion des événements.
 			this.controller.CellClicked += delegate (object sender, int row, int rank)
 			{
-				if (row == (this.HasGraph ? 1 : 0))
+				if (row == this.GlyphRow)
 				{
 					int sel = this.controller.LeftVisibleCell + rank;
 
@@ -119,11 +209,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 					else
 					{
 						this.SelectedCell = sel;
-						this.OnCellClicked (sel);
 					}
 				}
 			};
 		}
+
+
+		private void UpdateRows()
+		{
+			this.frameBox.PreferredHeight = this.Height;
+
+			this.controller.SetRows (this.GetTimelineRows ());
+		}
+
+		private int Height
+		{
+			get
+			{
+				int height = (int) AbstractScroller.DefaultBreadth + 18*3;
+
+				if (this.HasGraph)
+				{
+					height += 18*2;
+				}
+
+				if (this.IsWeeksOfYear)
+				{
+					height += 18*1;
+				}
+
+				if (this.IsDaysOfWeek)
+				{
+					height += 18*1;
+				}
+
+				return height;
+			}
+		}
+
 
 		private TimelineRowDescription[] GetTimelineRows()
 		{
@@ -168,6 +291,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return list.ToArray ();
 		}
 
+
 		private void UpdateTimelineData()
 		{
 			var start = new System.DateTime (this.accessor.StartDate.Year, 1, 1);
@@ -177,6 +301,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller.CellsCount = this.timelineData.CellsCount;
 		}
+
 
 		private void UpdateTimelineController()
 		{
@@ -278,83 +403,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public int FirstTimelineEventIndex
-		{
-			get
-			{
-				int count = this.timelineData.CellsCount;
-				for (int i = 0; i < count; i++)
-				{
-					var cell = this.timelineData.GetCell (i);
-
-					if (cell.Value.TimelineGlyph != TimelineGlyph.Empty)
-					{
-						return i;
-					}
-				}
-
-				return 0;
-			}
-		}
-
-		public int LastTimelineEventIndex
-		{
-			get
-			{
-				int count = this.timelineData.CellsCount;
-				for (int i = count-1; i >= 0; i--)
-				{
-					var cell = this.timelineData.GetCell (i);
-
-					if (cell.Value.TimelineGlyph != TimelineGlyph.Empty)
-					{
-						return i;
-					}
-				}
-
-				return count-1;
-			}
-		}
-
-		public int? NowTimelineEventIndex
-		{
-			get
-			{
-				var now = Timestamp.Now;
-
-				int count = this.timelineData.CellsCount;
-				for (int i = 0; i < count; i++)
-				{
-					var cell = this.timelineData.GetCell (i);
-
-					if (cell.Value.Timestamp == now)
-					{
-						return i;
-					}
-				}
-
-				return null;
-			}
-		}
-
-		public Timestamp? SelectedTimestamp
-		{
-			get
-			{
-				if (this.selectedCell != -1 && this.controller != null)
-				{
-					var cell = this.timelineData.GetCell (this.selectedCell);
-
-					if (cell.HasValue)
-					{
-						return cell.Value.Timestamp;
-					}
-				}
-
-				return null;
-			}
-		}
-
 
 		private bool IsShowLabels
 		{
@@ -385,6 +433,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return (this.timelineMode & TimelineMode.Extended) != 0;
+			}
+		}
+
+		private int GlyphRow
+		{
+			get
+			{
+				return this.HasGraph ? 1 : 0;
 			}
 		}
 
@@ -426,6 +482,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor			accessor;
 		private readonly TimelineData			timelineData;
 
+		private FrameBox						frameBox;
 		private NavigationTimelineController	controller;
 		private int								selectedCell;
 		private TimelineMode					timelineMode;
