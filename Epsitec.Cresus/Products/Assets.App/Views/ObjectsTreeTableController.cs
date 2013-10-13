@@ -60,12 +60,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateTreeTable(Widget parent)
 		{
-			this.rowsCount = this.accessor.ObjectsCount;
+			int rowsCount = this.accessor.ObjectsCount;
 			this.selectedRow = -1;
 
 			this.controller = new NavigationTreeTableController
 			{
-				RowsCount = this.rowsCount,
+				RowsCount = rowsCount,
 			};
 
 			var frame = new FrameBox
@@ -76,8 +76,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller.CreateUI (frame, footerHeight: 0);
 			this.controller.SetColumns (this.GetTreeTableColumns (), 1);
+
 			this.UpdateTreeTableController ();
 
+			//	Connexion des événements.
 			this.controller.RowChanged += delegate
 			{
 				this.UpdateTreeTableController ();
@@ -224,7 +226,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor			accessor;
 
 		private NavigationTreeTableController	controller;
-		private int								rowsCount;
 		private int								selectedRow;
 		private Timestamp						timestamp;
 	}
