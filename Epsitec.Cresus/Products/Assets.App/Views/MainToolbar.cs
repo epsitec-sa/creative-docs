@@ -39,6 +39,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateCommandButtons()
 		{
+			this.UpdateCommandButton (this.buttonEdit,          ToolbarCommand.Edit);
+			this.UpdateCommandButton (this.buttonAmortissement, ToolbarCommand.Amortissement);
+			this.UpdateCommandButton (this.buttonSimulation,    ToolbarCommand.Simulation);
 		}
 
 
@@ -58,6 +61,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonEvents     = this.CreateViewButton (toolbar, ViewType.Events,     "View.Events",     "Evénements");
 			this.buttonReports    = this.CreateViewButton (toolbar, ViewType.Reports,    "View.Reports",    "Rapports et statistiques");
 			this.buttonSettings   = this.CreateViewButton (toolbar, ViewType.Settings,   "View.Settings",   "Réglages");
+
+			this.buttonEdit          = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Edit,          "Main.Edit",          "Edition");
+			this.buttonAmortissement = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Amortissement, "Main.Amortissement", "Amortissement");
+			this.buttonSimulation    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Simulation,    "Main.Simulation",    "Simulation");
+
+			this.buttonEdit.Margins = new Margins (40, 0, 0, 0);
 
 			this.UpdateViewButtons ();
 		}
@@ -96,6 +105,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetActiveState (this.buttonEvents,     this.viewType == ViewType.Events);
 			this.SetActiveState (this.buttonReports,    this.viewType == ViewType.Reports);
 			this.SetActiveState (this.buttonSettings,   this.viewType == ViewType.Settings);
+
+			this.SetCommandState (ToolbarCommand.Amortissement, ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.Simulation, ToolbarCommandState.Enable);
 		}
 
 
@@ -119,6 +131,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonEvents;
 		private IconButton buttonReports;
 		private IconButton buttonSettings;
+
+		private IconButton buttonEdit;
+		private IconButton buttonAmortissement;
+		private IconButton buttonSimulation;
 
 		private ViewType viewType;
 	}

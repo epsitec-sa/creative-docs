@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public AbstractTimelineRow()
 		{
 			this.RelativeHeight = 1.0;
+			this.RelativeWidth = 1.0;
 			this.detectedHoverRank = -1;
 			this.hilitedHoverRank = -1;
 		}

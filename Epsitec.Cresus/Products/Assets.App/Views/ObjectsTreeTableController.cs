@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectsTreeTableController(DataAccessor accessor)
 		{
 			this.accessor = accessor;
+			this.timestamp = new Timestamp (System.DateTime.MaxValue, 0);
 		}
 
 		public void CreateUI(Widget parent)
@@ -36,6 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.selectedRow = value;
 
 					this.UpdateTreeTableController ();
+					this.OnRowClicked (this.selectedRow);
 				}
 			}
 		}
@@ -75,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.controller.CreateUI (frame, footerHeight: 0);
-			this.controller.SetColumns (this.GetTreeTableColumns (), 1);
+			this.controller.SetColumns (this.TreeTableColumns, 1);
 
 			this.UpdateTreeTableController ();
 
@@ -110,19 +112,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private TreeTableColumnDescription[] GetTreeTableColumns()
+		private TreeTableColumnDescription[] TreeTableColumns
 		{
-			var list = new List<TreeTableColumnDescription> ();
+			get
+			{
+				var list = new List<TreeTableColumnDescription> ();
 
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,    200, "Objet"));
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   50, "N°"));
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  120, "Responsable"));
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   60, "Couleur"));
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  200, "Numéro de série"));
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 120, "Valeur comptable"));
-			list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 120, "Valeur assurance"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,    200, "Objet"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   50, "N°"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  120, "Responsable"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   60, "Couleur"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  200, "Numéro de série"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 120, "Valeur comptable"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 120, "Valeur assurance"));
 
-			return list.ToArray ();
+				return list.ToArray ();
+			}
 		}
 
 		private void UpdateTreeTableController()

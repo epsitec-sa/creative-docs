@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		WeeksOfYear,
 		DaysOfWeek,
 		Graph,
+		Amortissement,
+		Simulation,
 		Accept,
 		Cancel,
 	}

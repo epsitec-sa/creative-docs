@@ -73,17 +73,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.editFrameBox.Visibility = this.isEditing;
 		}
 
-		protected virtual int SelectedRow
-		{
-			get
-			{
-				return -1;
-			}
-			set
-			{
-			}
-		}
-
 
 		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor)
 		{

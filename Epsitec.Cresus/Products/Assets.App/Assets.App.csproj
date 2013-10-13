@@ -190,6 +190,9 @@
     <EmbeddedResource Include="Images\Timeline.DaysOfWeek.icon" />
     <EmbeddedResource Include="Images\Timeline.WeeksOfYear.icon" />
     <EmbeddedResource Include="Images\Timeline.Labels.icon" />
+    <EmbeddedResource Include="Images\Main.Amortissement.icon" />
+    <EmbeddedResource Include="Images\Main.Edit.icon" />
+    <EmbeddedResource Include="Images\Main.Simulation.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

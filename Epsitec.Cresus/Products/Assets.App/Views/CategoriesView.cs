@@ -54,19 +54,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override int SelectedRow
-		{
-			get
-			{
-				return this.treeTable.SelectedRow;
-			}
-			set
-			{
-				this.treeTable.SelectedRow = value;
-			}
-		}
-
-
 		private TreeTableColumnDescription[] Columns
 		{
 			get

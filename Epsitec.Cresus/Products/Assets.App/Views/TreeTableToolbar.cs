@@ -22,7 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.UpdateCommandButton (this.buttonNew,      ToolbarCommand.New);
 			this.UpdateCommandButton (this.buttonDelete,   ToolbarCommand.Delete);
-			this.UpdateCommandButton (this.buttonEdit,     ToolbarCommand.Edit);
 			this.UpdateCommandButton (this.buttonDeselect, ToolbarCommand.Deselect);
 		}
 
@@ -39,14 +38,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.buttonNew      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New ,     "TreeTable.New",      "Nouvel objet");
 			this.buttonDelete   = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete ,  "TreeTable.Delete",   "Supprimer l'objet");
-			this.buttonEdit     = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Edit,     "TreeTable.Edit",     "Modifier l'objet");
 			this.buttonDeselect = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Deselect, "TreeTable.Deselect", "Désélectionne l'objet");
 		}
 
 
 		private IconButton buttonNew;
 		private IconButton buttonDelete;
-		private IconButton buttonEdit;
 		private IconButton buttonDeselect;
 	}
 }

@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				};
 			}
 
-			this.UpdateLabelsWidth ();
+			this.UpdateChildrensGeometry ();
 		}
 
 		public void SetRowYearCells(int rank, TimelineCellDate[] cells)
@@ -237,10 +237,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var h = (int) (ch * row.RelativeHeight);
 				var top = this.ActualHeight-bottom-h;
 
-				row.Anchor = AnchorStyles.All;
-				row.CellWidth = (int) (ch * this.RelativeWidth);
-				row.RelativeWidth = this.RelativeWidth;
-				row.Margins = new Margins (0, 0, top, bottom);
+				row.Anchor          = AnchorStyles.All;
+				row.CellWidth       = (int) (ch * this.RelativeWidth);
+				row.RelativeWidth   = this.RelativeWidth;
+				row.Margins         = new Margins (0, 0, top, bottom);
 				row.PreferredHeight = h;
 
 				bottom += h;

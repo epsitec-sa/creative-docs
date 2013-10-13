@@ -187,8 +187,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.controller.CreateUI (this.frameBox);
-			this.controller.RelativeWidth = this.IsExtended ? 1.0 : 2.0;
-			this.controller.ShowLabels = this.IsShowLabels;
 			this.controller.Pivot = 0.0;
 
 			this.UpdateRows ();
@@ -217,78 +215,87 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateRows()
 		{
-			this.frameBox.PreferredHeight = this.Height;
+			this.frameBox.PreferredHeight = this.RequiredHeight;
 
-			this.controller.SetRows (this.GetTimelineRows ());
+			this.controller.RelativeWidth = this.IsExtended ? 1.0 : 2.0;
+			this.controller.ShowLabels = this.IsShowLabels;
+			this.controller.SetRows (this.TimelineRows);
+
+			this.frameBox.Window.ForceLayout ();
 		}
 
-		private int Height
+		private int RequiredHeight
 		{
 			get
 			{
-				int height = (int) AbstractScroller.DefaultBreadth + 18*3;
+				const int lineHeight = 18;
+
+				int h = (int) AbstractScroller.DefaultBreadth + lineHeight*3;
 
 				if (this.HasGraph)
 				{
-					height += 18*2;
+					h += lineHeight*2;
 				}
 
 				if (this.IsWeeksOfYear)
 				{
-					height += 18*1;
+					h += lineHeight*1;
 				}
 
 				if (this.IsDaysOfWeek)
 				{
-					height += 18*1;
+					h += lineHeight*1;
 				}
 
-				return height;
+				return h;
 			}
 		}
 
 
-		private TimelineRowDescription[] GetTimelineRows()
+		private TimelineRowDescription[] TimelineRows
 		{
 			//	Retourne les descriptions des lignes, de bas en haut.
-			var list = new List<TimelineRowDescription> ();
-
-			if (this.HasGraph)
+			get
 			{
-				list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeurs", relativeHeight: 2.0));
-			}
+				var list = new List<TimelineRowDescription> ();
 
-			list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
+				if (this.HasGraph)
+				{
+					list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeurs", relativeHeight: 2.0));
+				}
 
-			if (this.IsDaysOfWeek)
-			{
-				list.Add (new TimelineRowDescription (TimelineRowType.DaysOfWeek, ""));
-			}
+				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
 
-			if (this.IsExtended)
-			{
-				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jour"));
-			}
-			else
-			{
-				list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, "Jour"));
-			}
+				if (this.IsDaysOfWeek)
+				{
+					list.Add (new TimelineRowDescription (TimelineRowType.DaysOfWeek, ""));
+				}
 
-			if (this.IsWeeksOfYear)
-			{
-				list.Add (new TimelineRowDescription (TimelineRowType.WeekOfYear, "Semaine"));
-			}
+				if (this.IsExtended)
+				{
+					list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jour"));
+				}
+				else
+				{
+					list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, "Jour"));
+				}
 
-			if (this.IsExtended)
-			{
-				list.Add (new TimelineRowDescription (TimelineRowType.Months, "Mois"));
-			}
-			else
-			{
-				list.Add (new TimelineRowDescription (TimelineRowType.Years, "Année"));
-			}
+				if (this.IsWeeksOfYear)
+				{
+					list.Add (new TimelineRowDescription (TimelineRowType.WeekOfYear, "Semaine"));
+				}
 
-			return list.ToArray ();
+				if (this.IsExtended)
+				{
+					list.Add (new TimelineRowDescription (TimelineRowType.Months, "Mois"));
+				}
+				else
+				{
+					list.Add (new TimelineRowDescription (TimelineRowType.Years, "Année"));
+				}
+
+				return list.ToArray ();
+			}
 		}
 
 
