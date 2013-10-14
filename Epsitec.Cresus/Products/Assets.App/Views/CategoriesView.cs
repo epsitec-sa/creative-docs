@@ -45,15 +45,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override string Title
-		{
-			get
-			{
-				return "Catégories d'immobilisation";
-			}
-		}
-
-
 		private TreeTableColumnDescription[] Columns
 		{
 			get

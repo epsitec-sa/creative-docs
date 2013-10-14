@@ -83,6 +83,8 @@
     <Compile Include="Views\AbstractView.cs" />
     <Compile Include="Views\CategoriesView.cs" />
     <Compile Include="Views\AbstractCommandToolbar.cs" />
+    <Compile Include="Views\AbstractEditor.cs" />
+    <Compile Include="Views\ObjectEditor.cs" />
     <Compile Include="Views\ObjectsTimelineController.cs" />
     <Compile Include="Views\ObjectsTreeTableController.cs" />
     <Compile Include="Views\TimelineMode.cs" />

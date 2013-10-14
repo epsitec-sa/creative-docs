@@ -42,27 +42,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins        = new Margins (5, 0, 0, 0),
 				BackColor      = ColorManager.GetBackgroundColor (),
 			};
-
-			this.listTopTitle = new TopTitle
-			{
-				Parent = this.listFrameBox,
-			};
-
-			this.listTopTitle.SetTitle (this.Title);
-
-			this.editTopTitle = new TopTitle
-			{
-				Parent = this.editFrameBox,
-			};
-		}
-
-
-		protected virtual string Title
-		{
-			get
-			{
-				return null;
-			}
 		}
 
 
@@ -106,9 +85,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected FrameBox						listFrameBox;
 		protected FrameBox						editFrameBox;
-
-		protected TopTitle						listTopTitle;
-		protected TopTitle						editTopTitle;
 
 		protected bool							isEditing;
 	}

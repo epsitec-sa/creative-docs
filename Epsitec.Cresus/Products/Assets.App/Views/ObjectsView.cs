@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.treeTableController = new ObjectsTreeTableController (this.accessor);
 			this.timelineController = new ObjectsTimelineController (this.accessor);
+			this.objectEditor = new ObjectEditor (this.accessor);
 		}
 
 		public override void CreateUI(Widget parent, MainToolbar toolbar)
@@ -36,6 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.treeTableController.CreateUI (this.listFrameBox);
 			this.timelineController.CreateUI (this.timelineFrameBox2);
+			this.objectEditor.CreateUI (this.editFrameBox);
 
 			this.treeTableToolbar = new TreeTableToolbar ();
 			this.treeTableToolbar.CreateUI (this.listFrameBox);
@@ -158,15 +160,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.timelineController.TimelineMode = this.timelineToolbar.TimelineMode;
 			};
-		}
-
-
-		protected override string Title
-		{
-			get
-			{
-				return "Objets d'immobilisation";
-			}
 		}
 
 
@@ -344,7 +337,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.Update ();
 			this.UpdateToolbars ();
-			this.UpdateEditTitle ();
+			this.UpdateEditor ();
 		}
 
 		private void UpdateAfterTreeTableChanged()
@@ -361,7 +354,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateToolbars ();
-			this.UpdateEditTitle ();
+			this.UpdateEditor ();
 		}
 
 		private void UpdateAfterTimelineChanged()
@@ -376,40 +369,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.Timestamp = timestamp.Value;
 
 			this.UpdateToolbars ();
-			this.UpdateEditTitle ();
+			this.UpdateEditor ();
 		}
 
-		private void UpdateEditTitle()
+		private void UpdateEditor()
 		{
-			this.editTopTitle.SetTitle (this.ObjectEditionTitle);
-		}
+			var guid = this.accessor.GetObjectGuid (this.treeTableController.SelectedRow);
+			var timestamp = this.timelineController.SelectedTimestamp;
 
-		private string ObjectEditionTitle
-		{
-			//	Retourne le nom de l'objet sélectionné ainsi que la date de l'événement
-			//	définissant ses propriétés.
-			get
-			{
-				var list = new List<string> ();
-
-				var guid = this.accessor.GetObjectGuid (this.treeTableController.SelectedRow);
-				var timestamp = this.timelineController.SelectedTimestamp;
-
-				if (!guid.IsEmpty)
-				{
-					var ts = timestamp.GetValueOrDefault (new Timestamp (System.DateTime.MaxValue, 0));
-					var properties = this.accessor.GetObjectSyntheticProperties (guid, ts);
-					var nom = DataAccessor.GetStringProperty (properties, (int) ObjectField.Nom);
-					list.Add (nom);
-				}
-
-				if (timestamp.HasValue)
-				{
-					list.Add (timestamp.Value.Date.ToString ("dd.MM.yyyy"));
-				}
-
-				return string.Join (" — ", list);
-			}
+			this.objectEditor.SetObject (guid, timestamp);
 		}
 
 		private void UpdateToolbars()
@@ -522,6 +490,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly ObjectsTreeTableController		treeTableController;
 		private readonly ObjectsTimelineController		timelineController;
+		private readonly ObjectEditor					objectEditor;
 
 		private TreeTableToolbar				treeTableToolbar;
 		private TimelineToolbar					timelineToolbar;

@@ -3,27 +3,25 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class SettingsView : AbstractView
+	public abstract class AbstractEditor
 	{
-		public SettingsView(DataAccessor accessor)
-			: base (accessor)
+		public AbstractEditor(DataAccessor accessor)
+		{
+			this.accessor = accessor;
+		}
+
+		public virtual void CreateUI(Widget parent)
 		{
 		}
 
-		public override void CreateUI(Widget parent, MainToolbar toolbar)
-		{
-			base.CreateUI (parent, toolbar);
 
-			this.Update ();
-		}
+		protected readonly DataAccessor			accessor;
 	}
 }

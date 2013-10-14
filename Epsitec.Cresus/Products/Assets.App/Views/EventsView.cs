@@ -25,14 +25,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.Update ();
 		}
-
-
-		protected override string Title
-		{
-			get
-			{
-				return "Evénements";
-			}
-		}
 	}
 }

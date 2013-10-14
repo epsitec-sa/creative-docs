@@ -125,6 +125,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
+
 		private static IEnumerable<ObjectField> ObjectFields
 		{
 			get

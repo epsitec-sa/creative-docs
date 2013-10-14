@@ -20,6 +20,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
+			this.topTitle = new TopTitle
+			{
+				Parent = parent,
+			};
+
+			this.topTitle.SetTitle ("Objets d'immobilisation");
+
 			this.CreateTreeTable (parent);
 		}
 
@@ -230,6 +237,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly DataAccessor			accessor;
 
+		private TopTitle						topTitle;
 		private NavigationTreeTableController	controller;
 		private int								selectedRow;
 		private Timestamp						timestamp;
