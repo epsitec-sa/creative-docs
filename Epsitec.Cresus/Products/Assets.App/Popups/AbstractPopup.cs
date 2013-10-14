@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return label;
 		}
 
-		protected Button CreateButton(int x, int y, int dx, int dy, string name, string text)
+		protected Button CreateButton(int x, int y, int dx, int dy, string name, string text, string tooltip = null)
 		{
 			x += (int) this.dialogRect.Left;
 			y += (int) this.dialogRect.Bottom;
@@ -104,6 +104,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				PreferredSize = new Size (dx, dy),
 				Margins       = new Margins (x, 0, 0, y),
 			};
+
+			if (!string.IsNullOrEmpty (tooltip))
+			{
+				ToolTip.Default.SetToolTip (button, tooltip);
+			}
 
 			button.Clicked += delegate
 			{

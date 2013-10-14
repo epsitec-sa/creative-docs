@@ -9,12 +9,13 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
 	public enum EventType
 	{
-		Entrée,
-		AmortissementExtra,
-		Modification,
-		Réorganisation,
-		Augmentation,		// Revalorisation
-		Diminution,			// Réévaluation
-		Sortie,
+		Entrée,					// entrée dans l'inventaire, acquisition
+		AmortissementAuto,		// amortissement ordinaire
+		AmortissementExtra,		// amortissement extraordinaire
+		Modification,			// modification de diverses informations
+		Réorganisation,			// spécificité MCH2
+		Augmentation,			// revalorisation
+		Diminution,				// réévaluation
+		Sortie,					// sortie de l'inventaire, vente, vol, destruction, etc.
 	}
 }

@@ -29,19 +29,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.CreateTitle (NewEventPopup.titleHeight, this.Title);
 
-			this.CreateButton (x, y, dx, dy, "Entrée", "Entrée");
+			this.CreateButton (x, y, dx, dy, "Entrée", "Entrée", "Entrée dans l'inventaire, acquisition");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Modification", "Modification");
+			this.CreateButton (x, y, dx, dy, "Modification", "Modification", "Modification de diverses informations");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Réorganisation", "Réorganisation");
+			this.CreateButton (x, y, dx, dy, "Réorganisation", "Réorganisation", "Modification pour MCH2");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Augmentation", "Revalorisation");
+			this.CreateButton (x, y, dx, dy, "Augmentation", "Revalorisation", "Augmentation de la valeur");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Diminution", "Réévaluation");
+			this.CreateButton (x, y, dx, dy, "Diminution", "Réévaluation", "Baisse de la valeur");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "AmortissementExtra", "Amortissement extraordinaire");
+			this.CreateButton (x, y, dx, dy, "AmortissementExtra", "Amortissement extraordinaire", "Amortissement manuel");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Sortie", "Sortie");
+			this.CreateButton (x, y, dx, dy, "Sortie", "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.");
 		}
 
 		private Size GetDialogSize(int buttonCount)
