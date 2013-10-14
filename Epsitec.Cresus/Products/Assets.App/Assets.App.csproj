@@ -76,6 +76,7 @@
     <Compile Include="Converters\TimelineCellConverter.cs" />
     <Compile Include="AssetsUI.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
+    <Compile Include="Popups\BalloonPath.cs" />
     <Compile Include="Popups\DeletePopup.cs" />
     <Compile Include="Popups\NewEventPopup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

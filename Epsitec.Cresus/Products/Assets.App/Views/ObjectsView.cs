@@ -381,10 +381,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateEditTitle()
 		{
-			this.editTopTitle.SetTitle (this.SelectedTitle);
+			this.editTopTitle.SetTitle (this.ObjectEditionTitle);
 		}
 
-		private string SelectedTitle
+		private string ObjectEditionTitle
 		{
 			//	Retourne le nom de l'objet sélectionné ainsi que la date de l'événement
 			//	définissant ses propriétés.
