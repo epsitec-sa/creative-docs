@@ -12,8 +12,9 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		Entrée,
 		AmortissementExtra,
 		Modification,
-		Augmentation,
-		Diminution,
+		Réorganisation,
+		Augmentation,		// Revalorisation
+		Diminution,			// Réévaluation
 		Sortie,
 	}
 }

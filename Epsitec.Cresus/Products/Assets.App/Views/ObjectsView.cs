@@ -488,7 +488,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				if (this.timelineController.SelectedTimestamp.HasValue)
+				var guid = this.accessor.GetObjectGuid (this.treeTableController.SelectedRow);
+
+				if (!guid.IsEmpty && this.timelineController.SelectedTimestamp.HasValue)
 				{
 					this.timelineToolbar.SetCommandState (ToolbarCommand.New, ToolbarCommandState.Enable);
 				}

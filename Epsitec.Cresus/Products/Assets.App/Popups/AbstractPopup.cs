@@ -221,7 +221,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private static readonly double queueLength     = 20;
-		private static readonly double queueThickness  = 10;
 		private static readonly double dialogThickness = 5;
 
 		private Rectangle dialogRect;

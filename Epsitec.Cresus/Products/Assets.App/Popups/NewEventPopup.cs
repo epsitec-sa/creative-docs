@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return this.GetDialogSize (6);
+				return this.GetDialogSize (7);
 			}
 		}
 
@@ -33,9 +33,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			y -= dy+NewEventPopup.buttonGap;
 			this.CreateButton (x, y, dx, dy, "Modification", "Modification");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Augmentation", "Augmentation");
+			this.CreateButton (x, y, dx, dy, "Réorganisation", "Réorganisation");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Diminution", "Diminution");
+			this.CreateButton (x, y, dx, dy, "Augmentation", "Revalorisation");
+			y -= dy+NewEventPopup.buttonGap;
+			this.CreateButton (x, y, dx, dy, "Diminution", "Réévaluation");
 			y -= dy+NewEventPopup.buttonGap;
 			this.CreateButton (x, y, dx, dy, "AmortissementExtra", "Amortissement extraordinaire");
 			y -= dy+NewEventPopup.buttonGap;

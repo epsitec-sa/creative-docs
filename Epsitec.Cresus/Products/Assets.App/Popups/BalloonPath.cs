@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static Point GetAttachHimself(AttachMode mode)
 		{
-			//	Retourne le point d'attache sur le commentaire.
+			//	Retourne le point d'attache sur le rectangle cible.
 			Point pos = Point.Zero;
 
 			if (mode != AttachMode.None)
@@ -298,7 +298,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static Point GetAttachOther(AttachMode mode)
 		{
-			//	Retourne le point d'attache sur l'objet lié (boîte ou commentaire).
+			//	Retourne le point d'attache sur le rectangle cible.
 			var pos = Point.Zero;
 
 			if (mode != AttachMode.None)
