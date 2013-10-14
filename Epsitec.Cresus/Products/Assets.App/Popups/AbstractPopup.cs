@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var rect = this.ExternalRect;
 				rect.Inflate (step*80.0);
 
-				var path = AbstractPopup.GetPathRoundRectangle (rect, step*80.0);
+				var path = AbstractPopup.GetPathRoundRectangle (rect, step*120.0);
 				var alpha = System.Math.Pow (1.0-step, 2.0) * 0.02;
 
 				graphics.AddFilledPath (path);

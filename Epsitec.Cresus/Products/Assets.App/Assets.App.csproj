@@ -199,6 +199,8 @@
     <EmbeddedResource Include="Images\Main.Amortissement.icon" />
     <EmbeddedResource Include="Images\Main.Edit.icon" />
     <EmbeddedResource Include="Images\Main.Simulation.icon" />
+    <EmbeddedResource Include="Images\Timeline.Prev.icon" />
+    <EmbeddedResource Include="Images\Timeline.Next.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

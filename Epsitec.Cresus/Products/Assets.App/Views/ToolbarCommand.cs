@@ -12,6 +12,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Delete,
 		Deselect,
 		First,
+		Prev,
+		Next,
 		Last,
 		Now,
 		Edit,

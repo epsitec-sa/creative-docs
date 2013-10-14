@@ -118,9 +118,58 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var cell = this.timelineData.GetCell (i);
 
-					if (cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+					if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
 					{
 						return i;
+					}
+				}
+
+				return null;
+			}
+		}
+
+		public int?								PrevEventIndex
+		{
+			get
+			{
+				if (this.selectedCell != -1)
+				{
+					int i = this.selectedCell - 1;
+					while (i >= 0)
+					{
+						var cell = this.timelineData.GetCell (i);
+
+						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+						{
+							return i;
+						}
+
+						i--;
+					}
+				}
+
+				return null;
+			}
+		}
+
+		public int?								NextEventIndex
+		{
+			get
+			{
+				if (this.selectedCell != -1)
+				{
+					int count = this.timelineData.CellsCount;
+					int i = this.selectedCell + 1;
+					while (i < count)
+					{
+						var cell = this.timelineData.GetCell (i);
+
+						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+						{
+							return i;
+						}
+
+						i++;
 					}
 				}
 
@@ -137,7 +186,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var cell = this.timelineData.GetCell (i);
 
-					if (cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+					if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
 					{
 						return i;
 					}
@@ -158,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var cell = this.timelineData.GetCell (i);
 
-					if (cell.Value.Timestamp == now)
+					if (cell.HasValue && cell.Value.Timestamp == now)
 					{
 						return i;
 					}

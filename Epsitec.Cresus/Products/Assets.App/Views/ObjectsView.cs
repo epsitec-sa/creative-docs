@@ -120,12 +120,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnTimelineFirst ();
 						break;
 
-					case ToolbarCommand.Now:
-						this.OnTimelineNow ();
-						break;
-
 					case ToolbarCommand.Last:
 						this.OnTimelineLast ();
+						break;
+
+					case ToolbarCommand.Prev:
+						this.OnTimelinePrev ();
+						break;
+
+					case ToolbarCommand.Next:
+						this.OnTimelineNext ();
+						break;
+
+					case ToolbarCommand.Now:
+						this.OnTimelineNow ();
 						break;
 
 					case ToolbarCommand.New:
@@ -247,9 +255,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnTimelineNow()
+		protected void OnTimelinePrev()
 		{
-			var index = this.timelineController.NowEventIndex;
+			var index = this.timelineController.PrevEventIndex;
+
+			if (index.HasValue)
+			{
+				this.timelineController.SelectedCell = index.Value;
+			}
+		}
+
+		protected void OnTimelineNext()
+		{
+			var index = this.timelineController.NextEventIndex;
 
 			if (index.HasValue)
 			{
@@ -260,6 +278,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected void OnTimelineLast()
 		{
 			var index = this.timelineController.LastEventIndex;
+
+			if (index.HasValue)
+			{
+				this.timelineController.SelectedCell = index.Value;
+			}
+		}
+
+		protected void OnTimelineNow()
+		{
+			var index = this.timelineController.NowEventIndex;
 
 			if (index.HasValue)
 			{
@@ -420,8 +448,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateTimelineToolbar()
 		{
 			int sel = this.timelineController.SelectedCell;
+			int? index;
 
-			if (sel == this.timelineController.FirstEventIndex.GetValueOrDefault (-999))
+			index = this.timelineController.FirstEventIndex;
+			if (!index.HasValue || sel == index.Value)
 			{
 				this.timelineToolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Disable);
 			}
@@ -430,22 +460,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.timelineToolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Enable);
 			}
 
-			if (sel == this.timelineController.NowEventIndex.GetValueOrDefault (-999))
+			index = this.timelineController.PrevEventIndex;
+			if (!index.HasValue || sel == index.Value)
 			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Disable);
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Prev, ToolbarCommandState.Disable);
 			}
 			else
 			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Enable);
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Prev, ToolbarCommandState.Enable);
 			}
 
-			if (sel == this.timelineController.LastEventIndex.GetValueOrDefault (-999))
+			index = this.timelineController.NextEventIndex;
+			if (!index.HasValue || sel == index.Value)
+			{
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Next, ToolbarCommandState.Disable);
+			}
+			else
+			{
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Next, ToolbarCommandState.Enable);
+			}
+
+			index = this.timelineController.LastEventIndex;
+			if (!index.HasValue || sel == index.Value)
 			{
 				this.timelineToolbar.SetCommandState (ToolbarCommand.Last, ToolbarCommandState.Disable);
 			}
 			else
 			{
 				this.timelineToolbar.SetCommandState (ToolbarCommand.Last, ToolbarCommandState.Enable);
+			}
+
+			index = this.timelineController.NowEventIndex;
+			if (!index.HasValue || sel == index.Value)
+			{
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Disable);
+			}
+			else
+			{
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Enable);
 			}
 
 			if (this.isEditing)

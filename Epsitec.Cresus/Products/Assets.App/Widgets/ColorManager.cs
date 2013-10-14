@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return Color.FromHexa ("ffd200");  // jaune
+				return ColorManager.selectionColor;
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return ColorManager.hoverColor;
+				return ColorManager.selectionColor;
 			}
 		}
 
@@ -136,11 +136,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return ColorManager.HoverColor;
+				return ColorManager.selectionColor;
 			}
 		}
 
 
-		private static readonly Color hoverColor = Color.FromHexa ("ebe8d6");  // gris-jaune
+		private static readonly Color selectionColor = Color.FromHexa ("ffd200");  // jaune
+		private static readonly Color hoverColor     = Color.FromHexa ("ebe8d6");  // gris-jaune
 	}
 }

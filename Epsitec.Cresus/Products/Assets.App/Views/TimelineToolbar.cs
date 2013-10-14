@@ -38,8 +38,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void UpdateCommandButtons()
 		{
 			this.UpdateCommandButton (this.buttonFirst,    ToolbarCommand.First);
-			this.UpdateCommandButton (this.buttonNow,      ToolbarCommand.Now);
+			this.UpdateCommandButton (this.buttonPrev,     ToolbarCommand.Prev);
+			this.UpdateCommandButton (this.buttonNext,     ToolbarCommand.Next);
 			this.UpdateCommandButton (this.buttonLast,     ToolbarCommand.Last);
+			this.UpdateCommandButton (this.buttonNow,      ToolbarCommand.Now);
 			this.UpdateCommandButton (this.buttonNew,      ToolbarCommand.New);
 			this.UpdateCommandButton (this.buttonDelete,   ToolbarCommand.Delete);
 			this.UpdateCommandButton (this.buttonDeselect, ToolbarCommand.Deselect);
@@ -66,8 +68,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonGraph       = this.CreateModeButton (toolbar, TimelineMode.Graph,       "Timeline.Graph",       "Affiche les graphique des valeurs");
 
 			this.buttonFirst       = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.First,    "Timeline.First",    "Retour sur le premier événement");
-			this.buttonNow         = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Now,      "Timeline.Now",      "Va à la date du jour");
+			this.buttonPrev        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur l'événement précédent");
+			this.buttonNext        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Next,     "Timeline.Next",     "Avance sur l'événement suivant");
 			this.buttonLast        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur le dernier événement");
+			this.buttonNow         = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Now,      "Timeline.Now",      "Va à la date du jour");
 			this.buttonNew         = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New,      "Timeline.New",      "Nouvel événement");
 			this.buttonDelete      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete ,  "Timeline.Delete",   "Supprimer l'événement");
 			this.buttonDeselect    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne l'événement");
@@ -158,8 +162,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonGraph;
 
 		private IconButton buttonFirst;
-		private IconButton buttonNow;
+		private IconButton buttonPrev;
+		private IconButton buttonNext;
 		private IconButton buttonLast;
+		private IconButton buttonNow;
 		private IconButton buttonNew;
 		private IconButton buttonDelete;
 		private IconButton buttonDeselect;
