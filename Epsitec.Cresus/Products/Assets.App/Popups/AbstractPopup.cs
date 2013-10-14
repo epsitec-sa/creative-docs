@@ -10,10 +10,17 @@ using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Un popup permet de réaliser des dialogues modaux, sans qu'il soit dit.
+	/// Dès que la souris quitte la surface, le popup est fermé.
+	/// A la création, un popup s'attache à la fenêtre parent nommée "PopupParentFrame",
+	/// qui doit remplir toute la fenêtre. Le popup lui-même occupe toute la surfce.
+	/// </summary>
 	public abstract class AbstractPopup : Widget
 	{
 		public void Create(Widget target)
 		{
+			//	Crée le popup, dont la queue pointera vers le widget target.
 			var parent = AbstractPopup.GetParent (target);
 
 			this.Parent = parent;
@@ -28,10 +35,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.targetRect = new Rectangle (x, y, target.ActualWidth, target.ActualHeight);
 
-			this.Initialize ();
+			this.InitializeDialogRect ();
+			this.CreateUI ();
 		}
 
-		private void Initialize()
+		private void InitializeDialogRect()
 		{
 			var x = this.targetRect.Center.X - this.DialogSize.Width/2;
 
@@ -48,9 +56,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var y = this.targetRect.Top + AbstractPopup.queueLength;
 				this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 			}
-
-			this.CreateUI ();
 		}
+
 
 		protected virtual Size DialogSize
 		{
@@ -110,11 +117,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			//?base.ProcessMessage (message, pos);
-
 			if (message.MessageType == MessageType.MouseMove)
 			{
 				if (!this.CloseRect.Contains (pos))
+				{
+					this.ClosePopup ();
+				}
+			}
+			else if (message.MessageType == MessageType.KeyPress)  // TODO: ne fonctionne pas !
+			{
+				if (message.KeyCode == KeyCode.Escape)
 				{
 					this.ClosePopup ();
 				}
@@ -136,6 +148,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.PaintFrame (graphics);
 		}
 
+
+		#region Painting
 		private void PaintFrame(Graphics graphics)
 		{
 			graphics.AddFilledRectangle (this.ActualBounds);
@@ -547,26 +561,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return AttachMode.None;
 		}
 
-		private Rectangle ExternalRect
-		{
-			get
-			{
-				var rect = this.dialogRect;
-				rect.Inflate (AbstractPopup.dialogThickness);
-				return rect;
-			}
-		}
-
-		private Rectangle CloseRect
-		{
-			get
-			{
-				var rect = this.ExternalRect;
-				rect.MergeWith (this.targetRect);
-				return rect;
-			}
-		}
-
 
 		private enum AttachMode
 		{
@@ -579,6 +573,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			BottomRight,
 			TopLeft,
 			TopRight,
+		}
+		#endregion
+
+
+		private Rectangle CloseRect
+		{
+			//	Retourne le rectangle hors duquel le popup est fermé automatiquement.
+			get
+			{
+				var rect = this.ExternalRect;
+				rect.MergeWith (this.targetRect);
+				return rect;
+			}
+		}
+
+		private Rectangle ExternalRect
+		{
+			//	Retourne le rectangle extérieur, auquel on ajoute une queue.
+			get
+			{
+				var rect = this.dialogRect;
+				rect.Inflate (AbstractPopup.dialogThickness);
+				return rect;
+			}
 		}
 
 
