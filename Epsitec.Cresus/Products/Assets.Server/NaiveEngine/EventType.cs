@@ -10,9 +10,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 	public enum EventType
 	{
 		Entrée,
-		Sortie,
+		AmortissementExtra,
 		Modification,
 		Augmentation,
 		Diminution,
+		Sortie,
 	}
 }

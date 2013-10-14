@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return this.GetDialogSize (5);
+				return this.GetDialogSize (6);
 			}
 		}
 
@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			y -= dy+NewEventPopup.buttonGap;
 			this.CreateButton (x, y, dx, dy, "Diminution", "Diminution");
 			y -= dy+NewEventPopup.buttonGap;
+			this.CreateButton (x, y, dx, dy, "AmortissementExtra", "Amortissement extraordinaire");
+			y -= dy+NewEventPopup.buttonGap;
 			this.CreateButton (x, y, dx, dy, "Sortie", "Sortie");
 		}
 
@@ -52,14 +54,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return "Crée un événement le<br/>" + this.Date.ToString ("dd.MM.yyyy");
+				return "Crée un événement le " + this.Date.ToString ("dd.MM.yyyy");
 			}
 		}
 
 
 		private static readonly int margins      = 20;
-		private static readonly int titleHeight  = 50;
-		private static readonly int buttonWidth  = 120;
+		private static readonly int titleHeight  = 30;
+		private static readonly int buttonWidth  = 180;
 		private static readonly int buttonHeight = 30;
 		private static readonly int buttonGap    = 5;
 	}
