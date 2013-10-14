@@ -653,34 +653,33 @@ namespace Epsitec.Aider.Data.Job
 							
 							ParishAssigner.AssignToParish (parishAddressRepository, businessContext, aiderPersonEntity, this.startDate);
 
-							//if this person come from new household
-							if (this.eChPersonIdWithNewHousehold.Contains (eChPerson.Id))
-							{
-								this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + ", nouvelle famille dans le RCH."));
-							}
-							else
-							{
-								this.eChPersonIdWithNewPerson.Add(aiderPersonEntity.eCH_Person.PersonId);
-							}
+							this.CreateArrivalWarningForNewHousehold (businessContext, aiderPersonEntity);
 						}
 						else
 						{
 							this.LogToConsole ("Updated: AiderPerson ECHPERSONID:{0}", eChPerson.Id);
+
+							//Update EChDATA
 							existingAiderPersonEntity.eCH_Person = eChPersonEntity;
 
-							//if this person come from new household
-							if (this.eChPersonIdWithNewHousehold.Contains (eChPerson.Id))
-							{
-								this.CreateWarning (businessContext, existingAiderPersonEntity, existingAiderPersonEntity.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + ", nouvelle famille dans le RCH."));
-							}
-							else
-							{
-								this.eChPersonIdWithNewPerson.Add (existingAiderPersonEntity.eCH_Person.PersonId);
-							}
+							this.CreateArrivalWarningForNewHousehold (businessContext, existingAiderPersonEntity);				
 						}
 
 					}
 				});
+		}
+
+		private void CreateArrivalWarningForNewHousehold(BusinessContext businessContext, AiderPersonEntity aiderPersonEntity)
+		{
+			//if this person come from new household
+			if (this.eChPersonIdWithNewHousehold.Contains (aiderPersonEntity.eCH_Person.PersonId))
+			{
+				this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + ", nouvelle famille dans le RCH."));
+			}
+			else
+			{
+				this.eChPersonIdWithNewPerson.Add (aiderPersonEntity.eCH_Person.PersonId);
+			}
 		}
 
 		private void RemoveOldEChReportedPersons()
@@ -847,158 +846,39 @@ namespace Epsitec.Aider.Data.Job
 						var eChReportedPersonEntity   = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity> ();
 						eChReportedPersonEntity.Address = eChAddressEntity;
 
-
-
-						
-						var eChPersonA1 = this.GetEchPersonEntity (businessContext, eChReportedPerson.Adult1);
-						this.LogToConsole ("Info: Processing adult 1 {0}", eChPersonA1.PersonId);
-						eChPersonA1.ReportedPerson1 = eChReportedPersonEntity;
-						eChReportedPersonEntity.Adult1 = eChPersonA1;
-
-						//create aiderPerson if needed (weird case)
-						var aiderPersonA1 = this.GetAiderPersonEntity (businessContext, eChPersonA1);
-						if (aiderPersonA1.IsNull ())
+						//create ref aiderPerson if needed (weird case)
+						var refAiderPerson = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
+						if (refAiderPerson.IsNull ())
 						{
 							var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-							aiderPersonEntity.eCH_Person = eChPersonA1;
-							this.LogToConsole ("Warning: Need to create the AiderPersonEntity: ECHPERSONID:{0}",eChPersonA1.PersonId);
+							aiderPersonEntity.eCH_Person = eChReportedPersonEntity.Adult1;
+							this.LogToConsole ("Warning: Need to create the AiderPersonEntity: ECHPERSONID:{0}", eChReportedPersonEntity.Adult1.PersonId);
 
-							aiderPersonA1 = aiderPersonEntity;
+							refAiderPerson = aiderPersonEntity;
 						}
 
-						//autoassign person to AiderHousehold if needed
-						if (aiderPersonA1.Households.IsEmpty ())
-						{
-							this.LogToConsole ("Info: Household setup needed for :{0}",aiderPersonA1.GetFullName());
-							var aiderHousehold = this.GetAiderHousehold (businessContext, eChPersonA1);
-							if (aiderHousehold.IsNotNull ())
-							{
-								EChDataImporter.SetupHousehold (businessContext, aiderPersonA1, aiderHousehold, eChReportedPersonEntity, isHead1: true);
-								this.eChPersonIdWithHouseholdSetupDone.Add (aiderPersonA1.eCH_Person.PersonId);
-								ParishAssigner.AssignToParish (parishAddressRepository, businessContext, aiderPersonA1, this.startDate);
-								this.LogToConsole ("Info: Setup done and parish assigned -> further process will skip household creation");
-							}
-							else
-							{
-								this.LogToConsole ("Info: No AiderHousehold found -> further process needed");
-							}
-						}
-						else // We need to check for relocate
-						{
-							this.LogToConsole ("Info: {0} is already assiged to an household",aiderPersonA1.GetFullName());
-							var aiderHousehold		= aiderPersonA1.HouseholdContact.Household;
-							var householdAddress	= aiderHousehold.Address;
-							var rchAddress			= eChReportedPerson.Address;
-
-							if (!this.AddressComparator (householdAddress, rchAddress))
-							{
-								this.LogToConsole ("Info: new address detected, starting reassign");
-								var changes = this.GetAddressChanges (householdAddress, rchAddress);
-								this.ReassignHousehold (businessContext, changes, eChReportedPersonEntity, aiderPersonA1, aiderHousehold);
-								
-							}
-							else
-							{
-								this.LogToConsole ("Info: same address detected, nothing to do");
-							}
-							
-						}
-
-						if (this.eChPersonIdWithNewPerson.Contains (aiderPersonA1.eCH_Person.PersonId))
-						{
-							this.LogToConsole ("Info: warning added: EChProcessArrival");
-							this.CreateWarning (businessContext, aiderPersonA1, aiderPersonA1.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonA1.GetDisplayName () + ": nouveau dans le RCH."));
-						}
-
-						AiderHouseholdEntity oldHousehold;
-
-						var key = businessContext.DataContext.GetNormalizedEntityKey (aiderPersonA1).Value;
-
-						if (this.aiderPersonEntitiesWithDeletedHousehold.TryGetValue (key, out oldHousehold))
-						{
-							var warningMessage = FormattedText.FromSimpleText ("Un changement de composition a eu lieu dans le ménage.");
-							this.LogToConsole ("Info: warning added: EChHouseholdChanged");
-							this.CreateWarning (businessContext, aiderPersonA1, aiderPersonA1.ParishGroupPathCache, WarningType.EChHouseholdChanged, this.warningTitleMessage, warningMessage);
-						}
+						//retreiving ref aiderHousehold
+						var refAiderHousehold = this.GetAiderHousehold (businessContext, refAiderPerson);
+						
+						eChReportedPersonEntity.Adult1 = refAiderPerson.eCH_Person;
+						
+						this.ProcessHouseholdChangesForMember (businessContext, refAiderPerson.eCH_Person, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
 
 						if (eChReportedPerson.Adult2 != null)
 						{
-							var eChPersonA2 = this.GetEchPersonEntity (businessContext, eChReportedPerson.Adult2);
-							this.LogToConsole ("Info: Processing adult 2 {0}", eChPersonA2.PersonId);
-							eChPersonA2.ReportedPerson1 = eChReportedPersonEntity;
-							eChReportedPersonEntity.Adult2 = eChPersonA2;
-
-							//autoassign person to AiderHousehold if needed
-							var aiderPersonA2 = this.GetAiderPersonEntity (businessContext, eChPersonA2);
-							if (aiderPersonA2.IsNull ())
-							{
-								var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-								aiderPersonEntity.eCH_Person = eChPersonA2;
-								this.LogToConsole ("Warning: Need to create the AiderPersonEntity: ECHPERSONID:{0}", eChPersonA2.PersonId);
-							}
-							if (aiderPersonA2.Households.IsEmpty ())
-							{
-								this.LogToConsole ("Info: Household setup needed for :{0}", aiderPersonA2.GetFullName ());
-								var aiderHousehold = this.GetAiderHousehold (businessContext, eChPersonA1);
-								if (aiderHousehold.IsNotNull ())
-								{
-									EChDataImporter.SetupHousehold (businessContext, aiderPersonA2, aiderHousehold, eChReportedPersonEntity, isHead2: true);
-									this.eChPersonIdWithHouseholdSetupDone.Add (aiderPersonA2.eCH_Person.PersonId);
-									ParishAssigner.AssignToParish (parishAddressRepository, businessContext, aiderPersonA2, this.startDate);
-									this.LogToConsole ("Info: Setup done and parish assigned -> further process will skip household creation");
-								}
-								else
-								{
-									this.LogToConsole ("Info: No AiderHousehold found -> further process needed");
-								}
-							}
-
-							if (this.eChPersonIdWithNewPerson.Contains (aiderPersonA2.eCH_Person.PersonId))
-							{
-								this.LogToConsole ("Info: warning added: EChProcessArrival");
-								this.CreateWarning (businessContext, aiderPersonA2, aiderPersonA2.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonA2.GetDisplayName () + ": nouveau dans le RCH."));
-							}
+							var eChPersonEntity = this.GetEchPersonEntity (businessContext, eChReportedPerson.Adult2);
+							eChReportedPersonEntity.Adult2 = eChPersonEntity;
+							eChReportedPersonEntity.RemoveDuplicates ();
+							this.ProcessHouseholdChangesForMember (businessContext, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
 						}
 
 						foreach (var eChChild in eChReportedPerson.Children)
 						{
-							
-							var eChPersonC = this.GetEchPersonEntity (businessContext, eChChild);
-							this.LogToConsole ("Info: Child {0}", eChPersonC.PersonId);
-							eChPersonC.ReportedPerson1 = eChReportedPersonEntity;
-							eChReportedPersonEntity.Children.Add (eChPersonC);
+							var eChPersonEntity  = this.GetEchPersonEntity (businessContext, eChChild);
+							eChReportedPersonEntity.Children.Add (eChPersonEntity);
 							eChReportedPersonEntity.RemoveDuplicates ();
 
-							//	Autoassign person to AiderHousehold if needed
-							var aiderPersonC = this.GetAiderPersonEntity (businessContext, eChPersonC);
-							if (aiderPersonC.IsNull ())
-							{
-								var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-								aiderPersonEntity.eCH_Person = eChPersonC;
-								this.LogToConsole ("Warning: Need to create the AiderPersonEntity: ECHPERSONID:{0}", eChPersonC.PersonId);
-							}
-							if (aiderPersonC.Households.IsEmpty ())
-							{
-								this.LogToConsole ("Info: Household setup needed for :{0}", aiderPersonC.GetFullName ());
-								var aiderHousehold = this.GetAiderHousehold (businessContext, eChPersonA1);
-								if (aiderPersonC.IsNull ())
-								{
-									var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-									aiderPersonEntity.eCH_Person = eChPersonC;
-								}
-								if (aiderHousehold.IsNotNull ())
-								{
-									EChDataImporter.SetupHousehold (businessContext, aiderPersonC, aiderHousehold, eChReportedPersonEntity);
-									this.eChPersonIdWithHouseholdSetupDone.Add (aiderPersonC.eCH_Person.PersonId);
-									ParishAssigner.AssignToParish (parishAddressRepository, businessContext, aiderPersonC, this.startDate);
-									this.LogToConsole ("Info: Setup done and parish assigned -> further process will skip household creation");
-								}
-								if (this.eChPersonIdWithNewPerson.Contains (aiderPersonC.eCH_Person.PersonId))
-								{
-									this.LogToConsole ("Info: warning added: EChProcessArrival");
-									this.CreateWarning (businessContext, aiderPersonC, aiderPersonC.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonC.GetDisplayName () + ": nouveau dans le RCH."));
-								}
-							}
+							this.ProcessHouseholdChangesForMember (businessContext, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
 						}
 					}
 				});
@@ -1054,30 +934,7 @@ namespace Epsitec.Aider.Data.Job
 								//Link household to ECh Entity
 								if (existingEChReportedPerson.Adult1.IsNotNull ())
 								{
-									this.LogToConsole ("Info: Processing Adult 1 setup");
-									var aiderPerson = this.GetAiderPersonEntity (businessContext, existingEChReportedPerson.Adult1);
-									this.LogToConsole ("Info: Try to remove warning added previously");
-									//remove EChHouseholdAdded warning added previously (if exist)
-									foreach (var warning in aiderPerson.Warnings)
-									{
-										if (warning.WarningType.Equals (WarningType.EChHouseholdAdded) && warning.Title.Equals (this.warningTitleMessage))
-										{
-											businessContext.DeleteEntity (warning);
-											this.LogToConsole ("Info: Warning removed");
-										}
-									}
-
-									//Setup household if needed
-									if (!this.eChPersonIdWithHouseholdSetupDone.Contains (aiderPerson.eCH_Person.PersonId))
-									{
-										this.LogToConsole ("Info: No previous setup detected, processing household setup");
-										EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, existingEChReportedPerson, isHead1: true);				
-									}
-									else
-									{
-										this.LogToConsole ("Info: Aiderhousehold already setuped");									
-									}
-
+									this.SetupAndAiderHouseholdForMember (businessContext, existingEChReportedPerson.Adult1, existingEChReportedPerson, aiderHousehold, true, false);
 								}
 								else
 								{
@@ -1086,56 +943,12 @@ namespace Epsitec.Aider.Data.Job
 
 								if (existingEChReportedPerson.Adult2.IsNotNull ())
 								{
-									this.LogToConsole ("Info: Processing Adult 2 setup");
-									var aiderPerson = this.GetAiderPersonEntity (businessContext, existingEChReportedPerson.Adult2);
-
-									this.LogToConsole ("Info: Try to remove warning added previously");
-									//remove EChHouseholdAdded warning added previously (if exist)
-									foreach (var warning in aiderPerson.Warnings)
-									{
-										if (warning.WarningType.Equals (WarningType.EChHouseholdAdded) && warning.Title.Equals (this.warningTitleMessage))
-										{
-											businessContext.DeleteEntity (warning);
-											this.LogToConsole ("Info: Warning removed");
-										}
-									}
-
-									if (!this.eChPersonIdWithHouseholdSetupDone.Contains (aiderPerson.eCH_Person.PersonId))
-									{
-										this.LogToConsole ("Info: No previous setup detected, processing household setup");
-										EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, existingEChReportedPerson, isHead2: true);
-									}
-									else
-									{
-										this.LogToConsole ("Info: Aiderhousehold already setuped");
-									}
-
+									this.SetupAndAiderHouseholdForMember (businessContext, existingEChReportedPerson.Adult2, existingEChReportedPerson, aiderHousehold, false, true);
 								}
 								
 								foreach (var child in existingEChReportedPerson.Children)
 								{
-									this.LogToConsole ("Info: Processing Child setup");
-									var aiderPerson = this.GetAiderPersonEntity (businessContext, child);
-
-									this.LogToConsole ("Info: Try to remove warning added previously");
-									//remove EChHouseholdAdded warning added previously (if exist)
-									foreach (var warning in aiderPerson.Warnings)
-									{
-										if (warning.WarningType.Equals (WarningType.EChHouseholdAdded) && warning.Title.Equals (this.warningTitleMessage))
-										{
-											businessContext.DeleteEntity (warning);
-											this.LogToConsole ("Info: Warning removed");
-										}
-									}
-									if (!this.eChPersonIdWithHouseholdSetupDone.Contains (aiderPerson.eCH_Person.PersonId))
-									{
-										this.LogToConsole ("Info: No previous setup detected, processing household setup");
-										EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, existingEChReportedPerson);
-									}
-									else
-									{
-										this.LogToConsole ("Info: Aiderhousehold already setuped");
-									}
+									this.SetupAndAiderHouseholdForMember (businessContext, child, existingEChReportedPerson, aiderHousehold, false, false);
 								}
 							}
 						}
@@ -1145,6 +958,85 @@ namespace Epsitec.Aider.Data.Job
 						}
 					}
 				});
+		}
+
+		private void SetupAndAiderHouseholdForMember(BusinessContext businessContext, eCH_PersonEntity eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, AiderHouseholdEntity aiderHousehold, bool isHead1, bool isHead2)
+		{
+			this.LogToConsole ("Info: Processing PERSONID:{0} setup", eChPerson.PersonId);
+			var aiderPerson = this.GetAiderPersonEntity (businessContext, eChPerson);
+			this.LogToConsole ("Info: Try to remove warning added previously");
+			//remove EChHouseholdAdded warning added previously (if exist)
+			foreach (var warning in aiderPerson.Warnings)
+			{
+				if (warning.WarningType.Equals (WarningType.EChHouseholdAdded) && warning.Title.Equals (this.warningTitleMessage))
+				{
+					businessContext.DeleteEntity (warning);
+					this.LogToConsole ("Info: Warning removed");
+				}
+			}
+
+			//Setup household if needed
+			if (!this.eChPersonIdWithHouseholdSetupDone.Contains (aiderPerson.eCH_Person.PersonId))
+			{
+				this.LogToConsole ("Info: No previous setup detected, processing household setup");
+				EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1, isHead2);
+			}
+			else
+			{
+				this.LogToConsole ("Info: Aiderhousehold already setuped");
+			}
+		}
+
+		private void ProcessHouseholdChangesForMember(BusinessContext businessContext, eCH_PersonEntity eChPersonEntity,EChAddress rchAddress, eCH_ReportedPersonEntity eChReportedPersonEntity,AiderHouseholdEntity refAiderHousehold)
+		{
+			this.LogToConsole ("Info: Processing {0}", eChPersonEntity.PersonId);
+
+			//Assign household EChHousehold
+			eChPersonEntity.ReportedPerson1 = eChReportedPersonEntity;
+			
+			var aiderPerson = this.GetAiderPersonEntity (businessContext, eChPersonEntity);
+			//autoassign person to AiderHousehold if needed
+			if (aiderPerson.Households.IsEmpty ())
+			{
+				this.LogToConsole ("Info: Household setup needed for :{0}", aiderPerson.GetFullName ());
+				
+				if (refAiderHousehold.IsNotNull ())
+				{
+					EChDataImporter.SetupHousehold (businessContext, aiderPerson, refAiderHousehold, eChReportedPersonEntity, isHead1: true);
+					this.eChPersonIdWithHouseholdSetupDone.Add (aiderPerson.eCH_Person.PersonId);
+					ParishAssigner.AssignToParish (parishAddressRepository, businessContext, aiderPerson, this.startDate);
+					this.LogToConsole ("Info: Setup done and parish assigned -> further process will skip household creation");
+				}
+				else
+				{
+					this.LogToConsole ("Info: No AiderHousehold found -> further process needed");
+				}
+			}
+			else // We need to check for relocate
+			{
+				this.LogToConsole ("Info: {0} is already assiged to an household", aiderPerson.GetFullName ());
+				var aiderHousehold		= aiderPerson.HouseholdContact.Household;
+				var householdAddress	= aiderHousehold.Address;
+
+				if (!this.AddressComparator (householdAddress, rchAddress))
+				{
+					this.LogToConsole ("Info: new address detected, starting reassign");
+					var changes = this.GetAddressChanges (householdAddress, rchAddress);
+					this.ReassignHousehold (businessContext, changes, eChReportedPersonEntity, aiderPerson, aiderHousehold);
+
+				}
+				else
+				{
+					this.LogToConsole ("Info: same address detected, nothing to do");
+				}
+
+			}
+
+			if (this.eChPersonIdWithNewPerson.Contains (aiderPerson.eCH_Person.PersonId))
+			{
+				this.LogToConsole ("Info: warning added: EChProcessArrival");
+				this.CreateWarning (businessContext, aiderPerson, aiderPerson.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPerson.GetDisplayName () + ": nouveau dans le RCH."));
+			}
 		}
 
 		private void RelocateAndCreateNewAiderHousehold(BusinessContext businessContext,eCH_ReportedPersonEntity eChReportedPerson)

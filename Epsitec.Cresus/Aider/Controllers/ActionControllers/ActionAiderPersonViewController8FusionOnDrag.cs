@@ -60,8 +60,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				var otherContact   = this.AdditionalEntity;
 				var otherPerson    = otherContact.Person;
 
-				AiderPersonEntity.MergePersons (businessContext, officialPerson, otherPerson);
-				AiderContactEntity.Delete (businessContext, otherContact);
+				if (AiderPersonEntity.MergePersons (businessContext, officialPerson, otherPerson))
+				{
+					AiderContactEntity.Delete (businessContext, otherContact);
+				}
 			}
 		}
 
