@@ -54,8 +54,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent = this.editFrameBox,
 			};
-
-			this.editTopTitle.SetTitle ("Edition");
 		}
 
 

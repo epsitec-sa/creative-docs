@@ -61,8 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.treeTableController.StartEdition += delegate
 			{
-				this.isEditing = true;
-				this.Update ();
+				this.OnMainEdit ();
 			};
 
 			this.timelineController.CellClicked += delegate
@@ -72,8 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelineController.StartEdition += delegate
 			{
-				this.isEditing = true;
-				this.Update ();
+				this.OnMainEdit ();
 			};
 
 			this.mainToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
@@ -346,6 +344,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.Update ();
 			this.UpdateToolbars ();
+			this.UpdateEditTitle ();
 		}
 
 		private void UpdateAfterTreeTableChanged()
@@ -362,6 +361,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateToolbars ();
+			this.UpdateEditTitle ();
 		}
 
 		private void UpdateAfterTimelineChanged()
@@ -376,6 +376,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.Timestamp = timestamp.Value;
 
 			this.UpdateToolbars ();
+			this.UpdateEditTitle ();
+		}
+
+		private void UpdateEditTitle()
+		{
+			this.editTopTitle.SetTitle (this.SelectedTitle);
+		}
+
+		private string SelectedTitle
+		{
+			//	Retourne le nom de l'objet sélectionné ainsi que la date de l'événement
+			//	définissant ses propriétés.
+			get
+			{
+				var list = new List<string> ();
+
+				var guid = this.accessor.GetObjectGuid (this.treeTableController.SelectedRow);
+				var timestamp = this.timelineController.SelectedTimestamp;
+
+				if (!guid.IsEmpty)
+				{
+					var ts = timestamp.GetValueOrDefault (new Timestamp (System.DateTime.MaxValue, 0));
+					var properties = this.accessor.GetObjectSyntheticProperties (guid, ts);
+					var nom = DataAccessor.GetStringProperty (properties, (int) ObjectField.Nom);
+					list.Add (nom);
+				}
+
+				if (timestamp.HasValue)
+				{
+					list.Add (timestamp.Value.Date.ToString ("dd.MM.yyyy"));
+				}
+
+				return string.Join (" — ", list);
+			}
 		}
 
 		private void UpdateToolbars()
