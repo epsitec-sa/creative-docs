@@ -139,11 +139,14 @@ function() {
         Epsitec.ErrorHandler.handleFormError(action);
         Epsitec.Cresus.Core.app.reloadCurrentDatabase(true);
         
-        businessError = json.content.businesserror;
-        if (Ext.isDefined(businessError))
+        if(Ext.isDefined(json))
         {
-          this.showError(businessError);
-        }
+          businessError = json.content.businesserror;     
+          if (Ext.isDefined(businessError))
+          {
+            this.showError(businessError);
+          }
+        }     
       }
     },
 

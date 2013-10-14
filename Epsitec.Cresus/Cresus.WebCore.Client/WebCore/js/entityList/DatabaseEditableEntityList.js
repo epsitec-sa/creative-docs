@@ -173,6 +173,14 @@ function() {
       this.resetStore(true);
     },
 
+    reload: function(columnManager) {
+      this.resetStore(false);
+      this.setLoading(false,true);
+      columnManager.removeAllColumns();
+
+      this.store.load();
+      
+    },
 
     reloadAndScrollToEntity: function(columnManager,entityId,entityIndex,samePage) {
       this.resetStore(false);

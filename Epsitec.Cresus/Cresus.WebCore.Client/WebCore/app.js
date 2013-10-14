@@ -248,6 +248,10 @@ function() {
             var selectionIndex = currentSelection[0].index;
             columnManager.leftList.entityList.reloadAndScrollToEntity(columnManager,currentSelection[0].internalId,selectionIndex,samePage);
           }
+          else
+          {
+            columnManager.leftList.entityList.reload(columnManager);
+          }
               
       }
       
