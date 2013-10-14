@@ -33,6 +33,7 @@ function() {
       this.callParent(arguments);
       this.add(
           this.createMenuGroup(),
+          this.createElasticSearchBar(),
           '->',
           this.createScopeSelector(),
           this.createToolsGroup()
@@ -43,6 +44,47 @@ function() {
     },
 
     /* Methods */
+    createElasticSearchBar: function () {
+      if(epsitecConfig.featureElasticSearch) {
+        return Ext.create('Ext.container.ButtonGroup', {
+          title: 'Recherche',
+          headerPosition: 'bottom',
+          layout: 'fit',
+          width: '30%',
+          items: [{
+              xtype: 'textfield',
+              name: 'searchquery',
+              layout: 'fit',
+              listeners: {
+                specialkey: this.handleElasticSearch,
+                scope: this
+              }
+            }]
+        });
+      }
+      else
+        return null;
+    },
+
+    handleElasticSearch: function(field, e) {
+      if (e.getKey() === e.ENTER) {
+        var index = 'contacts';
+        var type = 'person';
+
+        var resultsCallBack = function(results) {
+          console.log(results);
+            if (results.hits) {
+            }
+        };
+
+        /* execute the request */
+        var r = ejs.Request({indices: index, types: type})
+
+        console.log(r.toString());
+         r.query(ejs.QueryStringQuery(field.value || '*'))
+          .doSearch(resultsCallBack);
+      }
+    },
 
     createMenuGroup: function() {
       var group = Ext.create('Ext.container.ButtonGroup', {

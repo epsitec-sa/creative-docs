@@ -37,6 +37,7 @@ function() {
     tabManager: null,
     entityBag: null,
     faqWindow: null,
+    elastic: null,
 
     /* Application entry point */
 
@@ -51,6 +52,40 @@ function() {
     },
 
     /* Methods */
+    setupElasticSearch: function() {
+      var index = 'contacts';
+      var type = 'person';
+
+      /* setup client */
+      ejs.client = ejs.jQueryClient('https://localhost:9443');
+      var docs = [
+        ejs.Document(index, type, '1').source({
+          user: 'mrweber', 
+          message: 'Elastic.js - a Javascript implementation of the ElasticSearch Query DSL and Core API'}), 
+        ejs.Document(index, type, '2').source({
+          user: 'egaumer',
+          message: 'FullScale Labs just released Elastic.js go check it out!'
+        }),
+        ejs.Document(index, type, '3').source({
+          user: 'dataintensive',
+          message: 'We are pleased to announce Elastic.js an implementation of the #elasticsearch query dsl'
+        }),
+        ejs.Document(index, type, '4').source({
+          user: 'kimchy',
+          message: 'The FullScale Labs team are awesome!  Go check out Elastic.js'
+        }),
+        ejs.Document(index, type, '5').source({
+          user: 'egaumer',
+          message: 'Use elastic.js to write a complex query and translate it to json with our query translator'
+        })
+      ];
+
+      this.elastic = ejs.client;
+
+      Ext.Array.each(docs, function (doc) {
+          doc.refresh(true).doIndex();
+        });
+    },
 
     setupWindowTitle: function() {
       window.document.title = Epsitec.Texts.getWindowTitle();
@@ -234,6 +269,11 @@ function() {
       if(epsitecConfig.featureFaq) {
         this.faqWindow = Ext.create('Epsitec.FaqWindow');
       }
+
+      if(epsitecConfig.featureElasticSearch) {
+        this.setupElasticSearch();
+      }
+      
 
     },
 

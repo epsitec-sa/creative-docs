@@ -6,6 +6,7 @@
 
 ConfigureExperimentalFeature ("ContextualMenu");
 ConfigureExperimentalFeature ("Notifications");
+#ConfigureExperimentalFeature ("ElasticSearch");
 ConfigureExperimentalFeature ("QuickSearch");
 # ConfigureExperimentalFeature ("Search");
 ConfigureExperimentalFeature ("Warnings");
