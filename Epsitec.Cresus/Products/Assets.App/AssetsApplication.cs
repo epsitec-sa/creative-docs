@@ -190,6 +190,7 @@ namespace Epsitec.Cresus.Assets.App
 				Parent    = window.Root,
 				Dock      = DockStyle.Fill,
 				BackColor = ColorManager.WindowBackgroundColor,
+				Name      = "PopupParentFrame",
 			};
 
 			var mandat = DummyMandat.GetDummyMandat ();

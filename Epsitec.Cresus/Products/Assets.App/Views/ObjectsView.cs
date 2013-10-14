@@ -3,9 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -83,6 +82,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					case ToolbarCommand.Edit:
 						this.OnMainEdit ();
+						break;
+
+					case ToolbarCommand.Amortissement:
+						this.OnMainAmortissement ();
+						break;
+
+					case ToolbarCommand.Simulation:
+						this.OnMainSimulation ();
 						break;
 				}
 			};
@@ -171,12 +178,67 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Update ();
 		}
 
+		protected void OnMainAmortissement()
+		{
+			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Amortissement);
+
+			if (target != null)
+			{
+				var popup = new DeletePopup
+				{
+					Question = "Voulez-vous générer les amortissements ?",
+				};
+
+				popup.Create (target);
+			}
+		}
+
+		protected void OnMainSimulation()
+		{
+			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Simulation);
+
+			if (target != null)
+			{
+				var popup = new DeletePopup
+				{
+					Question = "Voulez-vous débuter une simulation ?",
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+					}
+				};
+			}
+		}
+
 		protected void OnTreeTableNew()
 		{
 		}
 
 		protected void OnTreeTableDelete()
 		{
+			var target = this.treeTableToolbar.GetCommandWidget (ToolbarCommand.Delete);
+
+			if (target != null)
+			{
+				var popup = new DeletePopup
+				{
+					Question = "Voulez-vous supprimer l'objet sélectionné ?",
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+					}
+				};
+			}
 		}
 
 		protected void OnTreeTableDeselect()
@@ -216,10 +278,45 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void OnTimelineNew()
 		{
+			var target = this.timelineToolbar.GetCommandWidget (ToolbarCommand.New);
+			var timestamp = this.timelineController.SelectedTimestamp;
+
+			if (target != null && timestamp.HasValue)
+			{
+				var popup = new NewEventPopup
+				{
+					Date = timestamp.Value.Date,
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					this.CreateEvent (timestamp.Value.Date, name);
+				};
+			}
 		}
 
 		protected void OnTimelineDelete()
 		{
+			var target = this.timelineToolbar.GetCommandWidget (ToolbarCommand.Delete);
+
+			if (target != null)
+			{
+				var popup = new DeletePopup
+				{
+					Question = "Voulez-vous supprimer l'événement sélectionné ?",
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+					}
+				};
+			}
 		}
 
 		protected void OnTimelineDeselect()
@@ -237,6 +334,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.isEditing = false;
 			this.Update ();
+		}
+
+
+		private void CreateEvent(System.DateTime date, string buttonName)
+		{
 		}
 
 
@@ -352,7 +454,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.New, ToolbarCommandState.Enable);
+				if (this.timelineController.SelectedTimestamp.HasValue)
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.New, ToolbarCommandState.Enable);
+				}
+				else
+				{
+					this.timelineToolbar.SetCommandState (ToolbarCommand.New, ToolbarCommandState.Disable);
+				}
 
 				if (this.timelineController.HasSelectedEvent)
 				{

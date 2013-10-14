@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				var cell = this.timelineData.GetCell (this.selectedCell);
-				return (cell.HasValue && cell.Value.TimelineGlyph == TimelineGlyph.Empty);
+				return (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty);
 			}
 		}
 

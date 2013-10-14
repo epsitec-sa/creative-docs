@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public AbstractCommandToolbar()
 		{
 			this.commandStates = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
+			this.commandWidgets = new Dictionary<ToolbarCommand, Widget> ();
 		}
 
 		public virtual void CreateUI(Widget parent)
@@ -37,6 +38,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				return ToolbarCommandState.Hide;
+			}
+		}
+
+
+		public Widget GetCommandWidget(ToolbarCommand command)
+		{
+			if (this.commandStates.ContainsKey (command))
+			{
+				return this.commandWidgets[command];
+			}
+			else
+			{
+				return null;
 			}
 		}
 
@@ -93,6 +107,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnCommandClicked (command);
 			};
 
+			this.commandWidgets.Add (command, button);
+
 			return button;
 		}
 
@@ -133,5 +149,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly Dictionary<ToolbarCommand, ToolbarCommandState> commandStates;
+		private readonly Dictionary<ToolbarCommand, Widget> commandWidgets;
 	}
 }
