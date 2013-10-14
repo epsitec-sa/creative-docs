@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Cette classe, fortement inspirée de Common.Designer.EntitiesEditor.ObjectComment,
 	/// calcule le chemin d'une 'bulle de bd', c'est-à-dire un rectangle avec une queue
-	/// partant de l'un des 4 côtés.
+	/// partant de l'un des 4 côtés ou de l'un des 4 coins.
 	/// </summary>
 	public static class BalloonPath
 	{
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			double d = Point.Distance (himself, other);
 
-			Rectangle bounds = BalloonPath.mainRect;
+			var bounds = BalloonPath.mainRect;
 
 			if (mode == AttachMode.None || himself.IsZero || other.IsZero || d <= 0)
 			{
@@ -46,8 +46,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else if (mode == AttachMode.Left)
 			{
-				Point h1 = himself;
-				Point h2 = himself;
+				var h1 = himself;
+				var h2 = himself;
 
 				h1.Y -= BalloonPath.queueThickness;
 				h2.Y += BalloonPath.queueThickness;
@@ -75,8 +75,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else if (mode == AttachMode.Right)
 			{
-				Point h1 = himself;
-				Point h2 = himself;
+				var h1 = himself;
+				var h2 = himself;
 
 				h1.Y -= BalloonPath.queueThickness;
 				h2.Y += BalloonPath.queueThickness;
@@ -104,8 +104,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else if (mode == AttachMode.Bottom)
 			{
-				Point h1 = himself;
-				Point h2 = himself;
+				var h1 = himself;
+				var h2 = himself;
 
 				h1.X -= BalloonPath.queueThickness;
 				h2.X += BalloonPath.queueThickness;
@@ -133,8 +133,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else if (mode == AttachMode.Top)
 			{
-				Point h1 = himself;
-				Point h2 = himself;
+				var h1 = himself;
+				var h2 = himself;
 
 				h1.X -= BalloonPath.queueThickness;
 				h2.X += BalloonPath.queueThickness;
@@ -162,8 +162,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else if (mode == AttachMode.BottomLeft)
 			{
-				Point h1 = himself;
-				Point h2 = himself;
+				var h1 = himself;
+				var h2 = himself;
 
 				h1.Y += BalloonPath.queueThickness*System.Math.Sqrt (2);
 				h2.X += BalloonPath.queueThickness*System.Math.Sqrt (2);
@@ -178,8 +178,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else if (mode == AttachMode.BottomRight)
 			{
-				Point h1 = himself;
-				Point h2 = himself;
+				var h1 = himself;
+				var h2 = himself;
 
 				h1.Y += BalloonPath.queueThickness*System.Math.Sqrt (2);
 				h2.X -= BalloonPath.queueThickness*System.Math.Sqrt (2);
@@ -194,8 +194,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else if (mode == AttachMode.TopLeft)
 			{
-				Point h1 = himself;
-				Point h2 = himself;
+				var h1 = himself;
+				var h2 = himself;
 
 				h1.Y -= BalloonPath.queueThickness*System.Math.Sqrt (2);
 				h2.X += BalloonPath.queueThickness*System.Math.Sqrt (2);
@@ -210,8 +210,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else if (mode == AttachMode.TopRight)
 			{
-				Point h1 = himself;
-				Point h2 = himself;
+				var h1 = himself;
+				var h2 = himself;
 
 				h1.Y -= BalloonPath.queueThickness*System.Math.Sqrt (2);
 				h2.X -= BalloonPath.queueThickness*System.Math.Sqrt (2);
@@ -231,11 +231,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static Point GetAttachHimself(AttachMode mode)
 		{
 			//	Retourne le point d'attache sur le rectangle cible.
-			Point pos = Point.Zero;
+			var pos = Point.Zero;
 
 			if (mode != AttachMode.None)
 			{
-				Rectangle bounds = BalloonPath.mainRect;
+				var bounds = BalloonPath.mainRect;
 				bounds.Inflate (0.5);
 
 				if (mode == AttachMode.BottomLeft)
@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (mode != AttachMode.None)
 			{
-				Rectangle bounds = BalloonPath.mainRect;
+				var bounds = BalloonPath.mainRect;
 				bounds.Inflate (0.5);
 
 				if (mode == AttachMode.BottomLeft)
