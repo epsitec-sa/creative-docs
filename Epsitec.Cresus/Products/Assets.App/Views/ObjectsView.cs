@@ -448,58 +448,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateTimelineToolbar()
 		{
 			int sel = this.timelineController.SelectedCell;
-			int? index;
 
-			index = this.timelineController.FirstEventIndex;
-			if (!index.HasValue || sel == index.Value)
-			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Disable);
-			}
-			else
-			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Enable);
-			}
-
-			index = this.timelineController.PrevEventIndex;
-			if (!index.HasValue || sel == index.Value)
-			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Prev, ToolbarCommandState.Disable);
-			}
-			else
-			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Prev, ToolbarCommandState.Enable);
-			}
-
-			index = this.timelineController.NextEventIndex;
-			if (!index.HasValue || sel == index.Value)
-			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Next, ToolbarCommandState.Disable);
-			}
-			else
-			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Next, ToolbarCommandState.Enable);
-			}
-
-			index = this.timelineController.LastEventIndex;
-			if (!index.HasValue || sel == index.Value)
-			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Last, ToolbarCommandState.Disable);
-			}
-			else
-			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Last, ToolbarCommandState.Enable);
-			}
-
-			index = this.timelineController.NowEventIndex;
-			if (!index.HasValue || sel == index.Value)
-			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Disable);
-			}
-			else
-			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Now, ToolbarCommandState.Enable);
-			}
-
+			this.UpdateTimelineCommand (ToolbarCommand.First, sel, this.timelineController.FirstEventIndex);
+			this.UpdateTimelineCommand (ToolbarCommand.Prev,  sel, this.timelineController.PrevEventIndex);
+			this.UpdateTimelineCommand (ToolbarCommand.Next,  sel, this.timelineController.NextEventIndex);
+			this.UpdateTimelineCommand (ToolbarCommand.Last,  sel, this.timelineController.LastEventIndex);
+			this.UpdateTimelineCommand (ToolbarCommand.Now,   sel, this.timelineController.NowEventIndex);
+			
 			if (this.isEditing)
 			{
 				this.timelineToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Disable);
@@ -510,32 +465,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var guid = this.accessor.GetObjectGuid (this.treeTableController.SelectedRow);
 
-				if (!guid.IsEmpty && this.timelineController.SelectedTimestamp.HasValue)
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.New, ToolbarCommandState.Enable);
-				}
-				else
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.New, ToolbarCommandState.Disable);
-				}
+				this.UpdateTimelineCommand (ToolbarCommand.New,      !guid.IsEmpty && this.timelineController.SelectedTimestamp.HasValue);
+				this.UpdateTimelineCommand (ToolbarCommand.Delete,   this.timelineController.HasSelectedEvent);
+				this.UpdateTimelineCommand (ToolbarCommand.Deselect, sel != -1);
+			}
+		}
 
-				if (this.timelineController.HasSelectedEvent)
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Enable);
-				}
-				else
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
-				}
+		private void UpdateTimelineCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		{
+			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
+			this.UpdateTimelineCommand (command, enable);
+		}
 
-				if (sel == -1)
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
-				}
-				else
-				{
-					this.timelineToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Enable);
-				}
+		private void UpdateTimelineCommand(ToolbarCommand command, bool enable)
+		{
+			if (enable)
+			{
+				this.timelineToolbar.SetCommandState (command, ToolbarCommandState.Enable);
+			}
+			else
+			{
+				this.timelineToolbar.SetCommandState (command, ToolbarCommandState.Disable);
 			}
 		}
 
