@@ -113,8 +113,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.hasEvent && this.properties != null)
 				{
 					var s1 = StaticDescriptions.GetEventDescription (this.eventType);
-					var s2 = this.SinglePropertiesCount.ToString ();
-					return string.Format ("Cet événement de type \"{0}\" définit {1} champs.", s1, s2);
+					var s2 = this.SinglePropertiesCount;
+
+					if (s2 <= 1)
+					{
+						return string.Format ("Cet événement de type \"{0}\" définit {1} champ.", s1, s2.ToString ());
+					}
+					else
+					{
+						return string.Format ("Cet événement de type \"{0}\" définit {1} champs.", s1, s2.ToString ());
+					}
 				}
 				else if (!this.timestamp.HasValue)
 				{
@@ -133,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.timestamp.HasValue)
 				{
-					string d = this.timestamp.Value.Date.ToString ("dd.MM.yyyy");
+					string d = Helpers.Converters.DateToString (this.timestamp.Value.Date);
 					return string.Format ("Le tableau ci-dessous montre l'état de l'objet en date du {0} :", d);
 				}
 				else
@@ -161,7 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var d = DataAccessor.GetDecimalProperty (this.properties, field.Value);
 				if (d.HasValue)
 				{
-					st.Text = d.Value.ToString () + " ";
+					st.Text = Helpers.Converters.MontantToString (d) + " ";
 					st.ContentAlignment = ContentAlignment.MiddleRight;
 					return;
 				}
@@ -169,7 +177,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var i = DataAccessor.GetIntProperty (this.properties, field.Value);
 				if (i.HasValue)
 				{
-					st.Text = i.Value.ToString () + " ";
+					st.Text = Helpers.Converters.IntToString (i) + " ";
 					st.ContentAlignment = ContentAlignment.MiddleRight;
 					return;
 				}

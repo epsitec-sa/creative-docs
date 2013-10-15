@@ -76,28 +76,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private static string ConvDecimalToString(decimal? value)
 		{
-			if (value.HasValue)
-			{
-				return value.Value.ToString ();
-			}
-			else
-			{
-				return null;
-			}
+			return Helpers.Converters.MontantToString (value);
 		}
 
 		private static decimal? ConvStringToDecimal(string text)
 		{
-			if (!string.IsNullOrEmpty (text))
-			{
-				decimal value;
-				if (decimal.TryParse (text, out value))
-				{
-					return value;
-				}
-			}
-
-			return null;
+			return Helpers.Converters.ParseMontant (text);
 		}
 
 

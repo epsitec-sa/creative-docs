@@ -100,28 +100,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private static string ConvDateToString(System.DateTime? value)
 		{
-			if (value.HasValue)
-			{
-				return value.Value.ToString ("dd.MM.yyyy");
-			}
-			else
-			{
-				return null;
-			}
+			return Helpers.Converters.DateToString (value);
 		}
 
 		private static System.DateTime? ConvStringToDate(string text)
 		{
-			if (!string.IsNullOrEmpty (text))
-			{
-				System.DateTime value;
-				if (System.DateTime.TryParse (text, out value))
-				{
-					return value;
-				}
-			}
-
-			return null;
+			return Helpers.Converters.ParseDate (text);
 		}
 
 

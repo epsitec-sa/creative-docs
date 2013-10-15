@@ -289,7 +289,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (this.timestamp.HasValue)
 				{
-					list.Add (this.timestamp.Value.Date.ToString ("dd.MM.yyyy"));
+					var d = Helpers.Converters.DateToString (this.timestamp.Value.Date);
+					list.Add (d);
 				}
 
 				var ed = StaticDescriptions.GetEventDescription (this.eventType);

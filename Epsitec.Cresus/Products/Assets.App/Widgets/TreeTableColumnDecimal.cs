@@ -52,12 +52,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 						if (this.isRate)
 						{
-							text = cell.Value.Value.ToString ("0.0") + "%";
+							text = Helpers.Converters.PercentToString (cell.Value);
 						}
 						else
 						{
-							//?text = cell.Value.Value.ToString ("0,0.00");
-							text = cell.Value.Value.ToString ("C");
+							text = Helpers.Converters.MontantToString (cell.Value);
 						}
 
 						this.PaintText (graphics, textRect, text);
