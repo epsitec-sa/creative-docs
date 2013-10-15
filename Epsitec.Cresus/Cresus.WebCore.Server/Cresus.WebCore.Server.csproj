@@ -77,6 +77,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\Nancy\Nancy.dll</HintPath>
     </Reference>
+    <Reference Include="Nest">
+      <HintPath>..\External\Nest\Nest.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\External\Json\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -130,6 +133,7 @@
     <Compile Include="Core\PropertyAccessor\FieldTypeSelector.cs" />
     <Compile Include="Core\PropertyAccessor\FieldType.cs" />
     <Compile Include="Core\IO\FieldIO.cs" />
+    <Compile Include="ElasticSearch\Document.cs" />
     <Compile Include="Layout\AbstractActionTile.cs" />
     <Compile Include="Layout\AbstractEntityTile.cs" />
     <Compile Include="Layout\ActionItem.cs" />
@@ -166,6 +170,7 @@
     <Compile Include="Chat\ChatUserStatusType.cs" />
     <Compile Include="Gravatar\GravatarHelper.cs" />
     <Compile Include="Gravatar\GravatarImageSize.cs" />
+    <Compile Include="Owin\Hubs\ElasticSearchHub.cs" />
     <Compile Include="Owin\Hubs\NotificationHub.cs" />
     <Compile Include="Owin\Hubs\NotificationClient.cs" />
     <Compile Include="Owin\OwinServer.cs" />

@@ -1,47 +1,44 @@
-Ext.require([
-],
-function() {
-  Ext.define('Epsitec.cresus.webcore.hub.Hubs', {
-    alternateClassName: ['Epsitec.Hubs'],
+$.getScript('signalr/hubs', function() {
+  Ext.require([
+  ],
+  function() {
+    Ext.define('Epsitec.cresus.webcore.hub.Hubs', {
+      alternateClassName: ['Epsitec.Hubs'],
 
-    hub: null,
+      hub: null,
+      username: null,
+      registeredHubs: null,
+      ready: null,
+      constructor: function(username) {
+        this.registeredHubs = [];
+        this.username = username;
+        this.ready = false;
+      },
 
-    constructor: function(ToastrFunc, username) {
-      var me = this;
-      $.getScript('signalr/hubs', function() {
+      registerHub: function(HubFunc) {
+        var me = this;
+          var hubInstance = new HubFunc();
+          me.registeredHubs.push(hubInstance);
+      },
 
-        $.connection.hub.logging = false;
-        if(epsitecConfig.featureChat)
-        {
-          $.chat({
-            user: {
-               Id: 'tempid',
-               Name: username,
-               ProfilePictureUrl: ''
-            },
-            // text displayed when the other user is typing
-            typingText: ' écrit...',
-            // the title for the user's list window
-            titleText: 'Messagerie instantanée',
-            // text displayed when there's no other users in the room
-            emptyRoomText: "Aucun autre utilisateur connecté",
-            // the adapter you are using
-            adapter: new SignalRAdapter()
-          });
-        }
-        // Start the connection
-        var toastrInstance = new ToastrFunc();
-        $.connection.hub.start(function() {
-          toastrInstance.init(username, me);
-          me.initHub(username);
-          $.connection.chatHub.server.updateUserInfo(username,'meu@email.com');
+      initHubs: function(con) {
+        var me = this;
+        Ext.Array.each(this.registeredHubs, function(rhub){
+          rhub.init(con,me.username, me);
         });
-      });
-    },
+      },
 
-    initHub: function() {
-      this.hub = $.connection.notificationHub;
-      this.hub.server.setupUserConnection();      
-    }
+      start: function() {
+        var me = this;
+        
+          $.connection.hub.logging = false;
+          // Start the connection
+          $.connection.hub.start().done(function () {
+            me.initHubs($.connection);
+          });
+        
+      }
+
+    });
   });
 });

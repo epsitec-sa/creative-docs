@@ -68,21 +68,7 @@ function() {
 
     handleElasticSearch: function(field, e) {
       if (e.getKey() === e.ENTER) {
-        var index = 'contacts';
-        var type = 'person';
-
-        var resultsCallBack = function(results) {
-          console.log(results);
-            if (results.hits) {
-            }
-        };
-
-        /* execute the request */
-        var r = ejs.Request({indices: index, types: type})
-
-        console.log(r.toString());
-         r.query(ejs.QueryStringQuery(field.value || '*'))
-          .doSearch(resultsCallBack);
+          
       }
     },
 
