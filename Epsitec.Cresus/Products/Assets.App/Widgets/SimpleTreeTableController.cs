@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				this.selectedRow = this.treeTable.TopVisibleRow + row;
 				this.UpdateTreeTableController ();
-				this.OnRowClicked (column, row);
+				this.OnRowClicked (column, this.selectedRow);
 			};
 
 			this.treeTable.ContentChanged += delegate (object sender)
@@ -44,6 +44,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			};
 		}
 
+
+		public bool AllowsMovement
+		{
+			get
+			{
+				return this.treeTable.AllowsMovement;
+			}
+			set
+			{
+				this.treeTable.AllowsMovement = value;
+			}
+		}
 
 		public int SelectedRow
 		{
@@ -61,7 +73,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
+		public void ShowSelection()
+		{
+			// TODO...
+		}
+
+		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount = 0)
 		{
 			this.columnDescriptions = descriptions;
 			this.treeTable.SetColumns (descriptions, dockToLeftCount);

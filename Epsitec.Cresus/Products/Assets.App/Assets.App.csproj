@@ -78,6 +78,7 @@
     <Compile Include="Helpers\Converters.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
+    <Compile Include="Popups\HistoryPopup.cs" />
     <Compile Include="Popups\DeletePopup.cs" />
     <Compile Include="Popups\NewEventPopup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Views\AbstractCommandToolbar.cs" />
     <Compile Include="Views\AbstractEditor.cs" />
     <Compile Include="Views\AbstractFieldController.cs" />
+    <Compile Include="Views\HistoryController.cs" />
     <Compile Include="Views\DateFieldController.cs" />
     <Compile Include="Views\StaticDescriptions.cs" />
     <Compile Include="Views\SummaryController.cs" />

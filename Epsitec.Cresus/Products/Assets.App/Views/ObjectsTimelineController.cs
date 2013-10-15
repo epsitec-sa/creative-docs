@@ -128,6 +128,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return null;
 		}
 
+		public int? GetEventIndex(Timestamp? timestamp)
+		{
+			if (timestamp.HasValue)
+			{
+				int count = this.timelineData.CellsCount;
+				for (int i = 0; i < count; i++)
+				{
+					var cell = this.timelineData.GetCell (i);
+
+					if (cell.HasValue && cell.Value.Timestamp == timestamp)
+					{
+						return i;
+					}
+				}
+			}
+
+			return null;
+		}
+
 
 		public int?								FirstEventIndex
 		{

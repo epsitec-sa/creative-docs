@@ -92,6 +92,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region TreeTable Facade
+		public bool								AllowsMovement
+		{
+			get
+			{
+				return this.treeTable.AllowsMovement;
+			}
+			set
+			{
+				this.treeTable.AllowsMovement = value;
+			}
+		}
+
 		public int								VisibleRowsCount
 		{
 			get
@@ -132,19 +144,28 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var totalRows   = (decimal) this.rowsCount;
 			var visibleRows = (decimal) this.treeTable.VisibleRowsCount;
 
-			if (visibleRows < 0)
+			if (visibleRows < 0 || totalRows == 0)
 			{
-				return;
+				this.scroller.Resolution = 1.0m;
+				this.scroller.VisibleRangeRatio = 1.0m;
+
+				this.scroller.MinValue = 0.0m;
+				this.scroller.MaxValue = 1.0m;
+
+				this.scroller.SmallChange = 1.0m;
+				this.scroller.LargeChange = 1.0m;
 			}
+			else
+			{
+				this.scroller.Resolution = 1.0m;
+				this.scroller.VisibleRangeRatio = System.Math.Min (visibleRows/totalRows, 1.0m);
 
-			this.scroller.Resolution = 1.0m;
-			this.scroller.VisibleRangeRatio = System.Math.Min (visibleRows/totalRows, 1.0m);
+				this.scroller.MinValue = 0.0m;
+				this.scroller.MaxValue = System.Math.Max ((decimal) this.rowsCount - visibleRows, 0.0m);
 
-			this.scroller.MinValue = 0.0m;
-			this.scroller.MaxValue = System.Math.Max ((decimal) this.rowsCount - visibleRows, 0.0m);
-
-			this.scroller.SmallChange = 1.0m;
-			this.scroller.LargeChange = visibleRows;
+				this.scroller.SmallChange = 1.0m;
+				this.scroller.LargeChange = visibleRows;
+			}
 
 			this.OnRowChanged ();  // met à jour le tableau
 		}

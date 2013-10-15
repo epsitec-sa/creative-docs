@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var x = this.targetRect.Center.X - this.DialogSize.Width/2;
 
 			x = System.Math.Max (x, AbstractPopup.dialogThickness);
-			x = System.Math.Min (x, this.Parent.ActualWidth - this.DialogSize.Height - AbstractPopup.dialogThickness);
+			x = System.Math.Min (x, this.Parent.ActualWidth - this.DialogSize.Width - AbstractPopup.dialogThickness);
 
 			if (this.targetRect.Center.Y > this.Parent.ActualHeight/2)
 			{
@@ -107,6 +107,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return frame;
 		}
 
+		protected FrameBox CreateFullFrame()
+		{
+			int x = (int) this.dialogRect.Left;
+			int y = (int) this.dialogRect.Bottom;
+
+			var frame = new FrameBox
+			{
+				Parent           = this,
+				Anchor           = AnchorStyles.BottomLeft,
+				PreferredSize    = this.dialogRect.Size,
+				Margins          = new Margins (x, 0, 0, y),
+			};
+
+			return frame;
+		}
+
 		protected Button CreateButton(int x, int y, int dx, int dy, string name, string text, string tooltip = null)
 		{
 			x += (int) this.dialogRect.Left;
@@ -139,6 +155,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
+			base.ProcessMessage (message, pos);
+
 			if (message.MessageType == MessageType.MouseMove)
 			{
 				if (!this.TotalRect.Contains (pos))
@@ -154,11 +172,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 			}
 
-			message.Captured = true;
-			message.Consumer = this;
+			//?message.Captured = true;
+			//?message.Consumer = this;
 		}
 
-		private void ClosePopup()
+		protected void ClosePopup()
 		{
 			var parent = AbstractPopup.GetParent (this);
 			parent.Children.Remove (this);

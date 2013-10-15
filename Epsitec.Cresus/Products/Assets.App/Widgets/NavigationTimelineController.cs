@@ -177,14 +177,28 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var totalCells   = (decimal) this.cellsCount;
 			var visibleCells = (decimal) this.timeline.VisibleCellsCount;
 
-			this.scroller.Resolution = 1.0m;
-			this.scroller.VisibleRangeRatio = (totalCells == 0) ? 1.0m : System.Math.Min (visibleCells/totalCells, 1.0m);
+			if (visibleCells < 0 || totalCells == 0)
+			{
+				this.scroller.Resolution = 1.0m;
+				this.scroller.VisibleRangeRatio = 1.0m;
 
-			this.scroller.MinValue = 0.0m;
-			this.scroller.MaxValue = System.Math.Max ((decimal) this.cellsCount - visibleCells, 0.0m);
+				this.scroller.MinValue = 0.0m;
+				this.scroller.MaxValue = 1.0m;
 
-			this.scroller.SmallChange = 1.0m;
-			this.scroller.LargeChange = visibleCells;
+				this.scroller.SmallChange = 1.0m;
+				this.scroller.LargeChange = 1.0m;
+			}
+			else
+			{
+				this.scroller.Resolution = 1.0m;
+				this.scroller.VisibleRangeRatio = (totalCells == 0) ? 1.0m : System.Math.Min (visibleCells/totalCells, 1.0m);
+
+				this.scroller.MinValue = 0.0m;
+				this.scroller.MaxValue = System.Math.Max ((decimal) this.cellsCount - visibleCells, 0.0m);
+
+				this.scroller.SmallChange = 1.0m;
+				this.scroller.LargeChange = visibleCells;
+			}
 
 			this.OnDateChanged ();  // met à jour la timeline
 		}

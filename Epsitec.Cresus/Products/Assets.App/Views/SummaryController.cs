@@ -158,32 +158,51 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (field.HasValue && this.properties != null)
 			{
-				string s = DataAccessor.GetStringProperty (this.properties, field.Value);
-				if (!string.IsNullOrEmpty (s))
-				{
-					st.Text = " " + s;
-					st.ContentAlignment = ContentAlignment.MiddleLeft;
-					return;
-				}
+				var type = this.accessor.GetFieldType ((ObjectField) field.Value);
 
-				var d = DataAccessor.GetDecimalProperty (this.properties, field.Value);
-				if (d.HasValue)
+				switch (type)
 				{
-					st.Text = Helpers.Converters.MontantToString (d) + " ";
-					st.ContentAlignment = ContentAlignment.MiddleRight;
-					return;
-				}
+					case FieldType.Amount:
+						var d = DataAccessor.GetDecimalProperty (this.properties, field.Value);
+						if (d.HasValue)
+						{
+							st.Text = Helpers.Converters.AmountToString (d) + " ";
+							st.ContentAlignment = ContentAlignment.MiddleRight;
+						}
+						break;
 
-				var i = DataAccessor.GetIntProperty (this.properties, field.Value);
-				if (i.HasValue)
-				{
-					st.Text = Helpers.Converters.IntToString (i) + " ";
-					st.ContentAlignment = ContentAlignment.MiddleRight;
-					return;
+					case FieldType.Rate:
+						var p = DataAccessor.GetDecimalProperty (this.properties, field.Value);
+						if (p.HasValue)
+						{
+							st.Text = Helpers.Converters.RateToString (p) + " ";
+							st.ContentAlignment = ContentAlignment.MiddleRight;
+						}
+						break;
+
+					case FieldType.Int:
+						var i = DataAccessor.GetIntProperty (this.properties, field.Value);
+						if (i.HasValue)
+						{
+							st.Text = Helpers.Converters.IntToString (i) + " ";
+							st.ContentAlignment = ContentAlignment.MiddleRight;
+						}
+						break;
+
+					default:
+						string s = DataAccessor.GetStringProperty (this.properties, field.Value);
+						if (!string.IsNullOrEmpty (s))
+						{
+							st.Text = " " + s;
+							st.ContentAlignment = ContentAlignment.MiddleLeft;
+						}
+						break;
 				}
 			}
-
-			st.Text = null;
+			else
+			{
+				st.Text = null;
+			}
 		}
 
 		private Color GetBackgroundColor(int? field)

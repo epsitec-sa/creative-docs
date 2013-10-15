@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static readonly int margins      = 20;
 		private static readonly int titleHeight  = 30;
-		private static readonly int buttonWidth  = 200;
+		private static readonly int buttonWidth  = 250;
 		private static readonly int buttonHeight = 30;
 		private static readonly int buttonGap    = 5;
 

@@ -79,11 +79,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.IsRate)
 			{
-				return Helpers.Converters.PercentToString (value);
+				return Helpers.Converters.RateToString (value);
 			}
 			else
 			{
-				return Helpers.Converters.MontantToString (value);
+				return Helpers.Converters.AmountToString (value);
 			}
 		}
 
@@ -91,11 +91,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.IsRate)
 			{
-				return Helpers.Converters.ParsePercent (text);
+				return Helpers.Converters.ParseRate (text);
 			}
 			else
 			{
-				return Helpers.Converters.ParseMontant (text);
+				return Helpers.Converters.ParseAmount (text);
 			}
 		}
 

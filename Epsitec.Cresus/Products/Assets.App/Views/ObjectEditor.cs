@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
@@ -236,6 +237,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			controller.ValueChanged += delegate
 			{
 			};
+
+			controller.ShowHistory += delegate (object sender, Widget target)
+			{
+				this.ShowHistoryPopup (target, field);
+			};
 		}
 
 		private void CreateDecimalController(Widget parent, ObjectField field, bool isRate = false)
@@ -253,6 +259,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueChanged += delegate
 			{
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target)
+			{
+				this.ShowHistoryPopup (target, field);
+			};
+		}
+
+		private void ShowHistoryPopup(Widget target, ObjectField field)
+		{
+			var popup = new HistoryPopup (this.accessor, this.objectGuid, this.timestamp, (int) field);
+
+			popup.Create (target);
+
+			popup.Navigate += delegate (object sender, Timestamp timestamp)
+			{
+				this.OnNavigate (timestamp);
 			};
 		}
 
@@ -342,6 +365,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return list;
 			}
 		}
+
+
+		#region Events handler
+		private void OnNavigate(Timestamp timestamp)
+		{
+			if (this.Navigate != null)
+			{
+				this.Navigate (this, timestamp);
+			}
+		}
+
+		public delegate void NavigateEventHandler(object sender, Timestamp timestamp);
+		public event NavigateEventHandler Navigate;
+		#endregion
 
 
 		private readonly SummaryController			summaryController;

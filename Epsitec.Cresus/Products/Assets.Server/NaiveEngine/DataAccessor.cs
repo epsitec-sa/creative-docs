@@ -154,6 +154,29 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
+		public FieldType GetFieldType(ObjectField objectField)
+		{
+			switch (objectField)
+			{
+				case ObjectField.Level:
+				case ObjectField.FréquenceAmortissement:
+					return FieldType.Int;
+
+				case ObjectField.Valeur1:
+				case ObjectField.Valeur2:
+				case ObjectField.Valeur3:
+				case ObjectField.ValeurRésiduelle:
+					return FieldType.Amount;
+
+				case ObjectField.TauxAmortissement:
+					return FieldType.Rate;
+
+				default:
+					return FieldType.String;
+			}
+		}
+
+
 		private static IEnumerable<ObjectField> ObjectFields
 		{
 			get

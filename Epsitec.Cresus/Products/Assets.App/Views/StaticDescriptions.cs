@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "Type";
 
 				case ObjectField.FréquenceAmortissement:
-					return "Fréquence d'amortissement";
+					return "Fréquence";
 
 				case ObjectField.ValeurRésiduelle:
 					return "Valeur résiduelle";

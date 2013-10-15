@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.headerHeight = headerHeight;
 			this.footerHeight = footerHeight;
 
+			this.AllowsMovement = true;
+
 			this.hoverMode = TreeTableHoverMode.VerticalGradient;
 
 			this.columnsMapper = new List<int> ();
@@ -70,6 +72,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+
+		public bool								AllowsMovement;
 
 		public int								VScrollerTopMargin
 		{
@@ -367,69 +371,78 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			AbstractInteractiveLayer draggingLayer = null;
 
 			//	Essaie de démarrer le drag d'une surcouche.
-			for (int i=this.interactiveLayers.Count-1; i>=0; i--)
+			if (this.AllowsMovement)
 			{
-				var layer = this.interactiveLayers[i];
-
-				layer.MouseDown (pos);
-
-				if (layer.IsDragging)
+				for (int i=this.interactiveLayers.Count-1; i>=0; i--)
 				{
-					draggingLayer = layer;
-					break;
+					var layer = this.interactiveLayers[i];
+
+					layer.MouseDown (pos);
+
+					if (layer.IsDragging)
+					{
+						draggingLayer = layer;
+						break;
+					}
 				}
-			}
 
-			//	Si une surcouche a démarré un drag, on clear toutes les autres.
-			if (draggingLayer != null)
-			{
-				foreach (var layer in this.interactiveLayers.Where (x => x != draggingLayer))
+				//	Si une surcouche a démarré un drag, on clear toutes les autres.
+				if (draggingLayer != null)
 				{
-					layer.ClearActiveHover ();
+					foreach (var layer in this.interactiveLayers.Where (x => x != draggingLayer))
+					{
+						layer.ClearActiveHover ();
+					}
 				}
 			}
 		}
 
 		private void ProcessMouseMove(Point pos)
 		{
-			var draggingLayer = this.DraggingLayer;
-
-			if (draggingLayer == null)  // pas de drag en cours ?
+			if (this.AllowsMovement)
 			{
-				//	Fait bouger le hover d'une surcouche.
-				for (int i=this.interactiveLayers.Count-1; i>=0; i--)
+				var draggingLayer = this.DraggingLayer;
+
+				if (draggingLayer == null)  // pas de drag en cours ?
 				{
-					var layer = this.interactiveLayers[i];
-
-					layer.MouseMove (pos);
-
-					if (layer.HasActiveHover)
+					//	Fait bouger le hover d'une surcouche.
+					for (int i=this.interactiveLayers.Count-1; i>=0; i--)
 					{
-						//	Dès qu'une surcouche a réagi, on clear celles qui sont en dessous.
-						for (int j=i-1; j>=0; j--)
-						{
-							this.interactiveLayers[j].ClearActiveHover ();
-						}
+						var layer = this.interactiveLayers[i];
 
-						break;
+						layer.MouseMove (pos);
+
+						if (layer.HasActiveHover)
+						{
+							//	Dès qu'une surcouche a réagi, on clear celles qui sont en dessous.
+							for (int j=i-1; j>=0; j--)
+							{
+								this.interactiveLayers[j].ClearActiveHover ();
+							}
+
+							break;
+						}
 					}
 				}
-			}
-			else  // drag en cours ?
-			{
-				//	Fait réagir uniquement la surcouche en cours de drag.
-				draggingLayer.MouseMove (pos);
-			}
+				else  // drag en cours ?
+				{
+					//	Fait réagir uniquement la surcouche en cours de drag.
+					draggingLayer.MouseMove (pos);
+				}
 
-			this.UpdateMouseCursor ();
+				this.UpdateMouseCursor ();
+			}
 		}
 
 		private void ProcessMouseUp(Point pos)
 		{
-			for (int i=this.interactiveLayers.Count-1; i>=0; i--)
+			if (this.AllowsMovement)
 			{
-				var layer = this.interactiveLayers[i];
-				layer.MouseUp (pos);
+				for (int i=this.interactiveLayers.Count-1; i>=0; i--)
+				{
+					var layer = this.interactiveLayers[i];
+					layer.MouseUp (pos);
+				}
 			}
 		}
 
