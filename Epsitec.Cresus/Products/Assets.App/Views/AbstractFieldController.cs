@@ -5,13 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Server.NaiveEngine;
+using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractFieldController
 	{
 		public int TabIndex;
-		public int EditWidth = 300;
+		public int EditWidth = 280;
+		public PropertyState PropertyState;
 
 		public string Label
 		{
@@ -32,14 +35,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = 22,
-				Margins         = new Margins (0, 0, 0, 2),
+				PreferredHeight = AbstractFieldController.lineHeight,
+				Margins         = new Margins (0, 0, 0, 0),
+				Padding         = new Margins (5),
+				BackColor       = this.BackgroundColor,
 			};
 
 			this.CreateLabel ();
+
+			if (this.PropertyState == PropertyState.Single)
+			{
+				this.CreateClearButton ();
+			}
 		}
 
-		protected void CreateLabel()
+		private void CreateLabel()
 		{
 			new StaticText
 			{
@@ -50,6 +60,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredWidth   = AbstractFieldController.labelWidth,
 				Margins          = new Margins (0, 10, 3, 0),
 			};
+		}
+
+		private void CreateClearButton()
+		{
+			var button = new GlyphButton
+			{
+				Parent        = this.frameBox,
+				GlyphShape    = GlyphShape.Close,
+				ButtonStyle   = ButtonStyle.ToolItem,
+				Dock          = DockStyle.Right,
+				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
+			};
+
+			button.Clicked += delegate
+			{
+			};
+		}
+
+
+		protected Color BackgroundColor
+		{
+			get
+			{
+				switch (this.PropertyState)
+				{
+					case PropertyState.Single:
+						return ColorManager.EditSinglePropertyColor;
+
+					case PropertyState.Inherited:
+						return ColorManager.EditInheritedPropertyColor;
+
+					default:
+						return Color.Empty;
+				}
+			}
 		}
 
 
@@ -68,6 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 
+		protected static readonly int lineHeight = 22;
 		protected static readonly int labelWidth = 100;
 
 		protected FrameBox						frameBox;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -45,6 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins        = new Margins (0, 10, 0, 0),
 				TabIndex       = this.TabIndex,
 				Text           = DecimalFieldController.ConvDecimalToString (this.value),
+				IsReadOnly     = this.PropertyState == PropertyState.Readonly,
 			};
 
 			new StaticText

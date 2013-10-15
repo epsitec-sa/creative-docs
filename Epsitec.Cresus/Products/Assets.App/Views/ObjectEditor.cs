@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			parent.BackColor = Color.FromBrightness (0.5);
+			parent.BackColor = ColorManager.EditBackgroundColor;
 
 			this.tabBook = new TabBook
 			{
@@ -118,11 +118,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.objectGuid.IsEmpty)
 			{
+				this.hasEvent = false;
 				this.properties = null;
 			}
 			else
 			{
 				var ts = this.timestamp.GetValueOrDefault (new Timestamp (System.DateTime.MaxValue, 0));
+				this.hasEvent = this.accessor.HasObjectEvent (this.objectGuid, ts);
 				this.properties = this.accessor.GetObjectSyntheticProperties (this.objectGuid, ts);
 			}
 
@@ -187,15 +189,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.containerCompta.Viewport.Children.Clear ();
 		}
 
-		private void CreateStringController(Widget parent, ObjectField field, string label, int editWidth = 300, int lineCount = 1)
+		private void CreateStringController(Widget parent, ObjectField field, string label, int editWidth = 280, int lineCount = 1)
 		{
 			var controller = new StringFieldController
 			{
-				Label     = label,
-				Value     = DataAccessor.GetStringProperty (this.properties, (int) field),
-				EditWidth = editWidth,
-				LineCount = lineCount,
-				TabIndex  = this.tabIndex++,
+				Label         = label,
+				Value         = DataAccessor.GetStringProperty (this.properties, (int) field),
+				PropertyState = this.GetPropertyState (field),
+				EditWidth     = editWidth,
+				LineCount     = lineCount,
+				TabIndex      = this.tabIndex++,
 			};
 
 			controller.CreateUI (parent);
@@ -209,10 +212,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new DecimalFieldController
 			{
-				Label    = label,
-				Value    = DataAccessor.GetDecimalProperty (this.properties, (int) field),
-				IsRate   = isRate,
-				TabIndex = this.tabIndex++,
+				Label         = label,
+				Value         = DataAccessor.GetDecimalProperty (this.properties, (int) field),
+				PropertyState = this.GetPropertyState (field),
+				IsRate        = isRate,
+				TabIndex      = this.tabIndex++,
 			};
 
 			controller.CreateUI (parent);
@@ -220,6 +224,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			controller.ValueChanged += delegate
 			{
 			};
+		}
+
+		private PropertyState GetPropertyState(ObjectField field)
+		{
+			if (this.hasEvent)
+			{
+				return DataAccessor.GetPropertyState (this.properties, (int) field);
+			}
+			else
+			{
+				return PropertyState.Readonly;
+			}
 		}
 
 
@@ -262,6 +278,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TopTitle							topTitle;
 		private Guid								objectGuid;
 		private Timestamp?							timestamp;
+		private bool								hasEvent;
 		private IEnumerable<AbstractDataProperty>	properties;
 		private int									tabIndex;
 	}

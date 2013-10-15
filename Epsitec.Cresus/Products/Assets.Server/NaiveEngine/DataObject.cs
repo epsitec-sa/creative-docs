@@ -58,7 +58,12 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (e != null)
 			{
-				return e.GetProperty (id);
+				var p = e.GetProperty (id);
+				if (p != null)
+				{
+					p.State = PropertyState.Single;
+					return p;
+				}
 			}
 
 			return null;
@@ -71,6 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (p != null)
 			{
+				p.State = PropertyState.Single;
 				return p;
 			}
 
@@ -82,7 +88,12 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (e != null)
 			{
-				return e.GetProperty (id);
+				p = e.GetProperty (id);
+				if (p != null)
+				{
+					p.State = PropertyState.Synthetic;
+					return p;
+				}
 			}
 
 			return null;

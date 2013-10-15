@@ -140,6 +140,30 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color EditBackgroundColor
+		{
+			get
+			{
+				return Color.FromBrightness (0.5);
+			}
+		}
+
+		public static Color EditSinglePropertyColor
+		{
+			get
+			{
+				return Color.FromHexa ("bcdfff");  // bleu
+			}
+		}
+
+		public static Color EditInheritedPropertyColor
+		{
+			get
+			{
+				return Color.FromHexa ("c0fcc1");  // vert
+			}
+		}
+
 
 		private static readonly Color selectionColor = Color.FromHexa ("ffd200");  // jaune
 		private static readonly Color hoverColor     = Color.FromHexa ("ebe8d6");  // gris-jaune

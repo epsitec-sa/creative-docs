@@ -15,5 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 		public readonly int Id;
+
+		public PropertyState State;
 	}
 }

@@ -91,6 +91,18 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			return null;
 		}
 
+		public bool HasObjectEvent(Guid objectGuid, Timestamp timestamp)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				return obj.GetEvent (timestamp) != null;
+			}
+
+			return false;
+		}
+
 		public IEnumerable<AbstractDataProperty> GetObjectSingleProperties(Guid objectGuid, Timestamp timestamp)
 		{
 			var obj = this.mandat.GetObject (objectGuid);
@@ -145,6 +157,20 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 
 		#region Easy access
+		public static PropertyState GetPropertyState(IEnumerable<AbstractDataProperty> properties, int id)
+		{
+			var p = properties.Where (x => x.Id == id).FirstOrDefault ();
+
+			if (p == null)
+			{
+				return PropertyState.Undefined;
+			}
+			else
+			{
+				return p.State;
+			}
+		}
+
 		public static string GetStringProperty(IEnumerable<AbstractDataProperty> properties, int id)
 		{
 			var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataStringProperty;
