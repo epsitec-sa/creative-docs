@@ -98,14 +98,33 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				var o = new DataObject (objectId++);
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
-				o.AddEvent (e);
-				e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       3));
-				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "1.1.3"));
-				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Nom,         "Centre d'expédition"));
-				e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur1,     2100000.0m));
-				e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     3000000.0m));
-				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Responsable, "Sandra"));
+				{
+					var e = new DataEvent (1, start, EventType.Entrée);
+					o.AddEvent (e);
+					e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       3));
+					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "1.1.3"));
+					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Nom,         "Centre d'expédition"));
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur1,     2100000.0m));
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.Valeur2,     3000000.0m));
+					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Responsable, "Sandra"));
+				}
+
+				{
+					var e = new DataEvent (1, date2, EventType.Modification);
+					o.AddEvent (e);
+					e.Properties.Add (new DataStringProperty  ((int) ObjectField.NomCatégorie,           "Immobilier"));
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.TauxAmortissement,      0.075m));
+					e.Properties.Add (new DataStringProperty  ((int) ObjectField.TypeAmortissement,      "Dégressif"));
+					e.Properties.Add (new DataIntProperty     ((int) ObjectField.FréquenceAmortissement, 12));
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.ValeurRésiduelle,       1.0m));
+				}
+
+				{
+					var e = new DataEvent (1, date3, EventType.Modification);
+					o.AddEvent (e);
+					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.TauxAmortissement,      0.085m));
+					e.Properties.Add (new DataStringProperty  ((int) ObjectField.TypeAmortissement,      "Linéaire"));
+				}
 			}
 
 			{

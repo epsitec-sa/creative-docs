@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (this.textField != null)
 					{
-						this.textField.Text = DecimalFieldController.ConvDecimalToString (this.value);
+						this.textField.Text = this.ConvDecimalToString (this.value);
 					}
 				}
 			}
@@ -46,23 +46,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Margins         = new Margins (0, 10, 0, 0),
 				TabIndex        = this.TabIndex,
-				Text            = DecimalFieldController.ConvDecimalToString (this.value),
+				Text            = this.ConvDecimalToString (this.value),
 				IsReadOnly      = this.PropertyState == PropertyState.Readonly,
 			};
 
 			new StaticText
 			{
-				Parent          = this.frameBox,
-				Dock            = DockStyle.Left,
-				PreferredWidth  = 50,
-				PreferredHeight = AbstractFieldController.lineHeight - 1,
-				Margins         = new Margins (0, 10, 1, 0),
-				Text            = this.IsRate ? "%" : "CHF",
+				Parent           = this.frameBox,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = 50,
+				PreferredHeight  = AbstractFieldController.lineHeight - 1,
+				Margins          = new Margins (0, 10, 1, 0),
+				Text             = this.IsRate ? "" : "CHF",
+				ContentAlignment = ContentAlignment.TopLeft,
 			};
 
 			this.textField.TextChanged += delegate
 			{
-				this.value = DecimalFieldController.ConvStringToDecimal (this.textField.Text);
+				this.value = this.ConvStringToDecimal (this.textField.Text);
 				this.OnValueChanged ();
 			};
 		}
@@ -74,14 +75,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private static string ConvDecimalToString(decimal? value)
+		private string ConvDecimalToString(decimal? value)
 		{
-			return Helpers.Converters.MontantToString (value);
+			if (this.IsRate)
+			{
+				return Helpers.Converters.PercentToString (value);
+			}
+			else
+			{
+				return Helpers.Converters.MontantToString (value);
+			}
 		}
 
-		private static decimal? ConvStringToDecimal(string text)
+		private decimal? ConvStringToDecimal(string text)
 		{
-			return Helpers.Converters.ParseMontant (text);
+			if (this.IsRate)
+			{
+				return Helpers.Converters.ParsePercent (text);
+			}
+			else
+			{
+				return Helpers.Converters.ParseMontant (text);
+			}
 		}
 
 
