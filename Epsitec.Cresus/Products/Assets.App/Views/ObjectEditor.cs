@@ -19,16 +19,72 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			this.editorContainer = new Scrollable
+			parent.BackColor = Color.FromBrightness (0.5);
+
+			this.tabBook = new TabBook
 			{
-				Parent                 = parent,
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Arrows  = TabBookArrows.Stretch,
+				Margins = new Margins (10),
+			};
+
+			this.tabPageInfos = new TabPage
+			{
+				TabTitle = "Général",
+				Padding  = new Margins (10),
+			};
+
+			this.tabPageValues = new TabPage
+			{
+				TabTitle = "Valeurs",
+				Padding  = new Margins (10),
+			};
+
+			this.tabPageCompta = new TabPage
+			{
+				TabTitle = "Comptabilisation",
+				Padding  = new Margins (10),
+			};
+
+			this.tabBook.Items.Add (this.tabPageInfos);
+			this.tabBook.Items.Add (this.tabPageValues);
+			this.tabBook.Items.Add (this.tabPageCompta);
+
+			this.tabBook.ActivePage = this.tabPageInfos;
+
+			//	Infos.
+			this.containerInfos = new Scrollable
+			{
+				Parent                 = this.tabPageInfos,
 				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 				VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways,
 				Dock                   = DockStyle.Fill,
 			};
 
-			this.editorContainer.Viewport.IsAutoFitting = true;
-			this.editorContainer.Viewport.Padding = new Margins (20);
+			this.containerInfos.Viewport.IsAutoFitting = true;
+
+			//	Values.
+			this.containerValues = new Scrollable
+			{
+				Parent                 = this.tabPageValues,
+				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+				VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways,
+				Dock                   = DockStyle.Fill,
+			};
+
+			this.containerValues.Viewport.IsAutoFitting = true;
+
+			//	Compta.
+			this.containerCompta = new Scrollable
+			{
+				Parent                 = this.tabPageCompta,
+				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+				VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways,
+				Dock                   = DockStyle.Fill,
+			};
+
+			this.containerCompta.Viewport.IsAutoFitting = true;
 
 			this.topTitle = new TopTitle
 			{
@@ -58,13 +114,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateEditorUI()
 		{
-			this.editorContainer.Viewport.Children.Clear ();
+			this.containerInfos.Viewport.Children.Clear ();
 
 			// brouillon :
 			{
 				var t = new TextField
 				{
-					Parent = this.editorContainer.Viewport,
+					Parent = this.containerInfos.Viewport,
 					Dock = DockStyle.Top,
 					PreferredWidth = 300,
 				};
@@ -75,11 +131,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			for (int i=0; i<100; i++)
+			for (int i=0; i<1; i++)
 			{
 				var t = new TextField
 				{
-					Parent = this.editorContainer.Viewport,
+					Parent = this.containerInfos.Viewport,
 					Dock = DockStyle.Top,
 					PreferredWidth = 300,
 				};
@@ -123,7 +179,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private Scrollable							editorContainer;
+		private TabBook								tabBook;
+		private TabPage								tabPageInfos;
+		private TabPage								tabPageValues;
+		private TabPage								tabPageCompta;
+		private Scrollable							containerInfos;
+		private Scrollable							containerValues;
+		private Scrollable							containerCompta;
 		private TopTitle							topTitle;
 		private Guid								objectGuid;
 		private Timestamp?							timestamp;
