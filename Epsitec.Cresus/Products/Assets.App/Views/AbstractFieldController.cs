@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public abstract class AbstractFieldController
 	{
 		public int								TabIndex;
+		public int								LabelWidth = 100;
 		public int								EditWidth = 280;
 		public PropertyState					PropertyState;
 
@@ -37,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock            = DockStyle.Top,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Margins         = new Margins (0, 0, 0, 0),
-				Padding         = new Margins (5),
+				Padding         = new Margins (2),
 				BackColor       = this.BackgroundColor,
 			};
 
@@ -49,18 +50,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public virtual void SetFocus()
+		{
+		}
+
 		private void CreateLabel()
 		{
-			new StaticText
+			if (this.LabelWidth != 0)
 			{
-				Parent           = this.frameBox,
-				Text             = this.label,
-				ContentAlignment = ContentAlignment.TopRight,
-				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				Dock             = DockStyle.Left,
-				PreferredWidth   = AbstractFieldController.labelWidth,
-				Margins          = new Margins (0, 10, 3, 0),
-			};
+				new StaticText
+				{
+					Parent           = this.frameBox,
+					Text             = this.label,
+					ContentAlignment = ContentAlignment.TopRight,
+					TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+					Dock             = DockStyle.Left,
+					PreferredWidth   = this.LabelWidth,
+					PreferredHeight  = AbstractFieldController.lineHeight - 1,
+					Margins          = new Margins (0, 10, 1, 0),
+				};
+			}
 		}
 
 		private void CreateClearButton()
@@ -115,9 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-
-		protected static readonly int lineHeight = 22;
-		protected static readonly int labelWidth = 100;
+		protected static readonly int lineHeight = 17;
 
 		protected FrameBox						frameBox;
 		private string							label;

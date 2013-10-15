@@ -90,6 +90,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return label;
 		}
 
+		protected FrameBox CreateTitleFrame(int dy)
+		{
+			int x = (int) this.dialogRect.Left;
+			int y = (int) (this.dialogRect.Bottom + this.dialogRect.Height - dy);
+
+			var frame = new FrameBox
+			{
+				Parent           = this,
+				Anchor           = AnchorStyles.BottomLeft,
+				PreferredSize    = new Size (this.dialogRect.Width, dy),
+				Margins          = new Margins (x, 0, 0, y),
+				BackColor        = ColorManager.SelectionColor,
+			};
+
+			return frame;
+		}
+
 		protected Button CreateButton(int x, int y, int dx, int dy, string name, string text, string tooltip = null)
 		{
 			x += (int) this.dialogRect.Left;

@@ -40,22 +40,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.textField = new TextField
 			{
-				Parent         = this.frameBox,
-				Dock           = DockStyle.Left,
-				PreferredWidth = this.IsRate ? 50 : 100,
-				Margins        = new Margins (0, 10, 0, 0),
-				TabIndex       = this.TabIndex,
-				Text           = DecimalFieldController.ConvDecimalToString (this.value),
-				IsReadOnly     = this.PropertyState == PropertyState.Readonly,
+				Parent          = this.frameBox,
+				Dock            = DockStyle.Left,
+				PreferredWidth  = this.IsRate ? 50 : 100,
+				PreferredHeight = AbstractFieldController.lineHeight,
+				Margins         = new Margins (0, 10, 0, 0),
+				TabIndex        = this.TabIndex,
+				Text            = DecimalFieldController.ConvDecimalToString (this.value),
+				IsReadOnly      = this.PropertyState == PropertyState.Readonly,
 			};
 
 			new StaticText
 			{
-				Parent         = this.frameBox,
-				Dock           = DockStyle.Left,
-				PreferredWidth = 50,
-				Margins        = new Margins (0, 10, 3, 0),
-				Text           = this.IsRate ? "%" : "CHF",
+				Parent          = this.frameBox,
+				Dock            = DockStyle.Left,
+				PreferredWidth  = 50,
+				PreferredHeight = AbstractFieldController.lineHeight - 1,
+				Margins         = new Margins (0, 10, 1, 0),
+				Text            = this.IsRate ? "%" : "CHF",
 			};
 
 			this.textField.TextChanged += delegate
@@ -63,6 +65,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.value = DecimalFieldController.ConvStringToDecimal (this.textField.Text);
 				this.OnValueChanged ();
 			};
+		}
+
+		public override void SetFocus()
+		{
+			this.textField.SelectAll ();
+			this.textField.Focus ();
 		}
 
 

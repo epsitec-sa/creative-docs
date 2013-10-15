@@ -3,8 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Views;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
@@ -27,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			int x = NewEventPopup.margins;
 			int y = (int) this.DialogSize.Height - NewEventPopup.margins - NewEventPopup.titleHeight - dy;
 
-			this.CreateTitle (NewEventPopup.titleHeight, this.Title);
+			this.CreateDateUI ();
 
 			this.CreateButton (x, y, dx, dy, "Entrée", "Entrée", "Entrée dans l'inventaire, acquisition");
 			y -= dy+NewEventPopup.buttonGap;
@@ -44,6 +45,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateButton (x, y, dx, dy, "Sortie", "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.");
 		}
 
+		private void CreateDateUI()
+		{
+			var frame = this.CreateTitleFrame (NewEventPopup.titleHeight);
+
+			this.dateController = new DateFieldController
+			{
+				Label      = "Crée un événement le",
+				LabelWidth = 110,
+				Value      = this.Date,
+			};
+
+			this.dateController.CreateUI (frame);
+			this.dateController.SetFocus ();
+
+			this.dateController.ValueChanged += delegate
+			{
+				this.OnDateChanged (this.dateController.Value);
+			};
+		}
+
 		private Size GetDialogSize(int buttonCount)
 		{
 			int dx = NewEventPopup.margins*2 + NewEventPopup.buttonWidth;
@@ -52,19 +73,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return new Size (dx, dy);
 		}
 
-		private string Title
+
+		#region Events handler
+		private void OnDateChanged(System.DateTime? dateTime)
 		{
-			get
+			if (this.DateChanged != null)
 			{
-				return "Crée un événement le " + this.Date.ToString ("dd.MM.yyyy");
+				this.DateChanged (this, dateTime);
 			}
 		}
+
+		public delegate void DateChangedEventHandler(object sender, System.DateTime? dateTime);
+		public event DateChangedEventHandler DateChanged;
+		#endregion
 
 
 		private static readonly int margins      = 20;
 		private static readonly int titleHeight  = 30;
-		private static readonly int buttonWidth  = 180;
+		private static readonly int buttonWidth  = 200;
 		private static readonly int buttonHeight = 30;
 		private static readonly int buttonGap    = 5;
+
+		private DateFieldController dateController;
 	}
 }

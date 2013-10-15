@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					Parent          = this.frameBox,
 					Dock            = DockStyle.Left,
 					PreferredWidth  = this.EditWidth,
+					PreferredHeight = AbstractFieldController.lineHeight,
 					Margins         = new Margins (0, 10, 0, 0),
 					TabIndex        = this.TabIndex,
 					Text            = this.value,
@@ -72,6 +73,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnValueChanged ();
 			};
 		}
+
+		public override void SetFocus()
+		{
+			this.textField.SelectAll ();
+			this.textField.Focus ();
+		}
+
 
 		private static int GetMultiHeight(int lineCount)
 		{

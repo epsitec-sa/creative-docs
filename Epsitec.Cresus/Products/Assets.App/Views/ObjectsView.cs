@@ -309,6 +309,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				popup.Create (target);
 
+				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
+				{
+					var index = this.timelineController.GetEventIndex (dateTime);
+
+					if (index.HasValue)
+					{
+						this.timelineController.SelectedCell = index.Value;
+					}
+				};
+
 				popup.ButtonClicked += delegate (object sender, string name)
 				{
 					this.CreateEvent (timestamp.Value.Date, name);
