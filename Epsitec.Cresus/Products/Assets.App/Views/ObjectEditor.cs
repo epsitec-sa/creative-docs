@@ -114,41 +114,71 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateEditorUI()
 		{
+			this.CreateEditorInfosUI ();
+			this.CreateEditorValuesUI ();
+			this.CreateEditorComptaUI ();
+		}
+
+		private void CreateEditorInfosUI()
+		{
 			this.containerInfos.Viewport.Children.Clear ();
 
-			// brouillon :
+			if (this.properties != null)
 			{
-				var t = new TextField
-				{
-					Parent = this.containerInfos.Viewport,
-					Dock = DockStyle.Top,
-					PreferredWidth = 300,
-				};
-
-				if (this.properties != null)
-				{
-					t.Text = DataAccessor.GetStringProperty (this.properties, (int) ObjectField.Nom);
-				}
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Numéro,      "Numéro");
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Nom,         "Nom");
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Description, "Description");
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Responsable, "Responsable");
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Couleur,     "Couleur");
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.NuméroSérie, "Numéro de série");
 			}
+		}
 
-			for (int i=0; i<1; i++)
+		private void CreateEditorValuesUI()
+		{
+			this.containerValues.Viewport.Children.Clear ();
+
+			if (this.properties != null)
 			{
-				var t = new TextField
-				{
-					Parent = this.containerInfos.Viewport,
-					Dock = DockStyle.Top,
-					PreferredWidth = 300,
-				};
-
-				if (this.properties != null)
-				{
-					var m = DataAccessor.GetDecimalProperty (this.properties, (int) ObjectField.Valeur1);
-					if (m.HasValue)
-					{
-						t.Text = m.Value.ToString ("C");
-					}
-				}
+				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur1, "Valeur comptable");
+				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur2, "Valeur d'assurance");
+				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur3, "Valeur imposable");
 			}
+		}
+
+		private void CreateEditorComptaUI()
+		{
+			this.containerCompta.Viewport.Children.Clear ();
+		}
+
+		private void CreateStringController(Widget parent, ObjectField field, string label)
+		{
+			var controller = new StringFieldController
+			{
+				Label = label,
+				Value = DataAccessor.GetStringProperty (this.properties, (int) field),
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueChanged += delegate
+			{
+			};
+		}
+
+		private void CreateDecimalController(Widget parent, ObjectField field, string label)
+		{
+			var controller = new DecimalFieldController
+			{
+				Label = label,
+				Value = DataAccessor.GetDecimalProperty (this.properties, (int) field),
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueChanged += delegate
+			{
+			};
 		}
 
 
