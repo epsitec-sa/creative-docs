@@ -114,6 +114,12 @@ function() {
         this.show();
       }
       this.setSizeAndPosition();
+
+      //FOR TESTING
+      if(epsitecConfig.featureElasticSearch)
+      {
+        Epsitec.Cresus.Core.app.hubs.getHubByName("elastic").createDocument(entity);
+      }
     },
 
     removeEntityFromBag: function(entity) {

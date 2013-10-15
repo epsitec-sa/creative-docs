@@ -222,18 +222,18 @@ function() {
 
       if(epsitecConfig.featureChat)
       {
-        this.hubs.registerHub(SignalRChat);
+        this.hubs.registerHub("chat",SignalRChat);
       } 
 
       if(epsitecConfig.featureElasticSearch)
       {
-        this.hubs.registerHub(ElasticSearch);
+        this.hubs.registerHub("elastic",ElasticSearch);
       }
 
       if (epsitecConfig.featureNotifications) {
-        this.hubs.registerHub(NotificationsToastr);
+        this.hubs.registerHub("toastr",NotificationsToastr);
       }
-      
+
       this.hubs.start();
 
       this.viewport = Ext.create('Ext.container.Viewport', {

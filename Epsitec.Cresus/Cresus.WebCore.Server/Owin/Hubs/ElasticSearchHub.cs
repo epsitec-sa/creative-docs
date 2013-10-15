@@ -12,19 +12,33 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 	public class ElasticSearchHub : Hub
 	{
 
-		private void Query(string q)
+		public void Query(string query)
 		{
-			var result = ElasticClient.Search<Document> (body =>
-				// return first 5 results, default is 10
-				body.Size (5).Query (query =>
-					query.QueryString (qs => qs.Query (q))));
+			var result = ElasticClient.Search<Document>(s => s
+							.Index("aider")
+							.AllTypes()
+							.QueryString(query));
 
 			Clients.Caller.processResult (result);
 		}
 
 
-		private void AddDocument()
+		public void IndexDocument(string id,string name,string text,string type)
 		{
+			var client = ElasticClient;
+			var document = new Document ()
+			{
+				DocumentId = id,
+				Name = name,
+				Text = text
+			};
+
+			if (!client.IndexExists ("aider").Exists)
+			{
+				client.CreateIndex ("aider", new IndexSettings ());
+			}
+
+			client.Index (document, "aider", type, document.DocumentId);
 
 		}
 
@@ -47,7 +61,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 					var uriString = "http://localhost:9200";
 					var searchBoxUri = new System.Uri (uriString);
 					var settings = new ConnectionSettings (searchBoxUri);
-					settings.SetDefaultIndex ("sample");
+					settings.SetDefaultIndex ("contacts");
 					return new ElasticClient (settings);
 				}
 				catch (System.Exception)

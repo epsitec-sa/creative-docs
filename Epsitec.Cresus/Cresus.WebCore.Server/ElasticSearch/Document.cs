@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.WebCore.Server.ElasticSearch
 	{
 		//DocumentId will be used as id, no need to index it as a property
 		[JsonIgnore]
-		public int DocumentId
+		public string DocumentId
 		{
 			get;
 			set;

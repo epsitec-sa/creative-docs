@@ -68,7 +68,7 @@ function() {
 
     handleElasticSearch: function(field, e) {
       if (e.getKey() === e.ENTER) {
-          
+          Epsitec.Cresus.Core.app.hubs.getHubByName("elastic").query(field.value);
       }
     },
 

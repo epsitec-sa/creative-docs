@@ -10,22 +10,27 @@ $.getScript('signalr/hubs', function() {
       registeredHubs: null,
       ready: null,
       constructor: function(username) {
-        this.registeredHubs = [];
+        this.registeredHubs = {};
         this.username = username;
         this.ready = false;
       },
 
-      registerHub: function(HubFunc) {
+      registerHub: function(name,HubFunc) {
         var me = this;
           var hubInstance = new HubFunc();
-          me.registeredHubs.push(hubInstance);
+          me.registeredHubs[name] = hubInstance;
+      },
+
+      getHubByName: function(name)
+      {
+        return this.registeredHubs[name];
       },
 
       initHubs: function(con) {
-        var me = this;
-        Ext.Array.each(this.registeredHubs, function(rhub){
-          rhub.init(con,me.username, me);
-        });
+        for (var key in this.registeredHubs)
+        {
+          this.registeredHubs[key].init(con,this.username, this);
+        }
       },
 
       start: function() {
