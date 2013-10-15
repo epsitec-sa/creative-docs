@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public abstract class AbstractFieldController
 	{
 		public int TabIndex;
+		public int EditWidth = 300;
 
 		public string Label
 		{

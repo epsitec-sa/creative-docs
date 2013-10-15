@@ -10,6 +10,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class StringFieldController : AbstractFieldController
 	{
+		public int LineCount = 1;
+
 		public string Value
 		{
 			get
@@ -34,15 +36,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
-			this.textField = new TextField
+			if (this.LineCount == 1)
 			{
-				Parent         = this.frameBox,
-				Dock           = DockStyle.Left,
-				PreferredWidth = 300,
-				Margins        = new Margins (0, 10, 0, 0),
-				TabIndex       = this.TabIndex,
-				Text           = this.value,
-			};
+				this.textField = new TextField
+				{
+					Parent         = this.frameBox,
+					Dock           = DockStyle.Left,
+					PreferredWidth = this.EditWidth,
+					Margins        = new Margins (0, 10, 0, 0),
+					TabIndex       = this.TabIndex,
+					Text           = this.value,
+				};
+			}
+			else
+			{
+				this.textField = new TextFieldMulti
+				{
+					Parent          = this.frameBox,
+					Dock            = DockStyle.Left,
+					PreferredWidth  = this.EditWidth,
+					PreferredHeight = StringFieldController.GetMultiHeight (this.LineCount),
+					Margins         = new Margins (0, 10, 0, 0),
+					TabIndex        = this.TabIndex,
+					Text            = this.value,
+				};
+			}
 
 			this.textField.TextChanged += delegate
 			{
@@ -51,8 +69,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
+		private static int GetMultiHeight(int lineCount)
+		{
+			return 7 + lineCount*15;
+		}
 
-		private TextField						textField;
+
+		private AbstractTextField				textField;
 		private string							value;
 	}
 }

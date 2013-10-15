@@ -145,11 +145,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.properties != null)
 			{
-				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Numéro,      "Numéro");
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Numéro,      "Numéro", editWidth: 100);
 				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Nom,         "Nom");
-				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Description, "Description");
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Description, "Description", lineCount: 5);
 				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Responsable, "Responsable");
-				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Couleur,     "Couleur");
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Couleur,     "Couleur", editWidth: 100);
 				this.CreateStringController (this.containerInfos.Viewport, ObjectField.NuméroSérie, "Numéro de série");
 			}
 		}
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.NomCatégorie,           "Nom de la catégorie");
 				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.TauxAmortissement,      "Taux", isRate: true);
-				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.TypeAmortissement,      "Type");
+				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.TypeAmortissement,      "Type", editWidth: 100);
 				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.FréquenceAmortissement, "Fréquence");
 				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.ValeurRésiduelle,       "Valeur résiduelle");
 			}
@@ -187,13 +187,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.containerCompta.Viewport.Children.Clear ();
 		}
 
-		private void CreateStringController(Widget parent, ObjectField field, string label)
+		private void CreateStringController(Widget parent, ObjectField field, string label, int editWidth = 300, int lineCount = 1)
 		{
 			var controller = new StringFieldController
 			{
-				Label    = label,
-				Value    = DataAccessor.GetStringProperty (this.properties, (int) field),
-				TabIndex = this.tabIndex++,
+				Label     = label,
+				Value     = DataAccessor.GetStringProperty (this.properties, (int) field),
+				EditWidth = editWidth,
+				LineCount = lineCount,
+				TabIndex  = this.tabIndex++,
 			};
 
 			controller.CreateUI (parent);
