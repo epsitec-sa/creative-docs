@@ -494,11 +494,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly ObjectsTimelineController		timelineController;
 		private readonly ObjectEditor					objectEditor;
 
-		private TreeTableToolbar				treeTableToolbar;
-		private TimelineToolbar					timelineToolbar;
-		private EditToolbar						editToolbar;
+		private TreeTableToolbar						treeTableToolbar;
+		private TimelineToolbar							timelineToolbar;
+		private EditToolbar								editToolbar;
 
-		private FrameBox						timelineFrameBox1;
-		private FrameBox						timelineFrameBox2;
+		private FrameBox								timelineFrameBox1;
+		private FrameBox								timelineFrameBox2;
 	}
 }

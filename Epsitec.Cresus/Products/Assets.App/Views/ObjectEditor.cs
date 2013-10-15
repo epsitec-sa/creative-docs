@@ -19,12 +19,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			this.editorFrameBox = new FrameBox
+			this.editorContainer = new Scrollable
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				Padding = new Margins (20),
+				Parent                 = parent,
+				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+				VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways,
+				Dock                   = DockStyle.Fill,
 			};
+
+			this.editorContainer.Viewport.IsAutoFitting = true;
+			this.editorContainer.Viewport.Padding = new Margins (20);
 
 			this.topTitle = new TopTitle
 			{
@@ -54,13 +58,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateEditorUI()
 		{
-			this.editorFrameBox.Children.Clear ();
+			this.editorContainer.Viewport.Children.Clear ();
 
 			// brouillon :
 			{
 				var t = new TextField
 				{
-					Parent = this.editorFrameBox,
+					Parent = this.editorContainer.Viewport,
 					Dock = DockStyle.Top,
 					PreferredWidth = 300,
 				};
@@ -71,10 +75,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
+			for (int i=0; i<100; i++)
 			{
 				var t = new TextField
 				{
-					Parent = this.editorFrameBox,
+					Parent = this.editorContainer.Viewport,
 					Dock = DockStyle.Top,
 					PreferredWidth = 300,
 				};
@@ -118,10 +123,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private FrameBox						editorFrameBox;
-		private TopTitle						topTitle;
-		private Guid							objectGuid;
-		private Timestamp?						timestamp;
+		private Scrollable							editorContainer;
+		private TopTitle							topTitle;
+		private Guid								objectGuid;
+		private Timestamp?							timestamp;
 		private IEnumerable<AbstractDataProperty>	properties;
 	}
 }

@@ -619,18 +619,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		private readonly List<int>				columnsMapper;
-		private readonly List<AbstractTreeTableColumn> treeTableColumns;
-		private readonly FrameBox				leftContainer;
-		private readonly Scrollable				columnsContainer;
-		private readonly List<AbstractInteractiveLayer> interactiveLayers;
+		private readonly List<int>						columnsMapper;
+		private readonly List<AbstractTreeTableColumn>	treeTableColumns;
+		private readonly FrameBox						leftContainer;
+		private readonly Scrollable						columnsContainer;
+		private readonly List<AbstractInteractiveLayer>	interactiveLayers;
 
-		private TreeTableColumnDescription[]	columnDescriptions;
-		private ColumnWidth[]					columnWidths;
-		private int								dockToLeftCount;
-		private int								headerHeight;
-		private int								footerHeight;
-		private int								rowHeight;
-		private TreeTableHoverMode				hoverMode;
+		private TreeTableColumnDescription[]			columnDescriptions;
+		private ColumnWidth[]							columnWidths;
+		private int										dockToLeftCount;
+		private int										headerHeight;
+		private int										footerHeight;
+		private int										rowHeight;
+		private TreeTableHoverMode						hoverMode;
 	}
 }
