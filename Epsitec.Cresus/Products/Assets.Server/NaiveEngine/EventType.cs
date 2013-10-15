@@ -9,6 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
 	public enum EventType
 	{
+		Unknown,
 		Entrée,					// entrée dans l'inventaire, acquisition
 		AmortissementAuto,		// amortissement ordinaire
 		AmortissementExtra,		// amortissement extraordinaire

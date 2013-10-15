@@ -56,6 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent           = this.frameBox,
 				Text             = this.label,
 				ContentAlignment = ContentAlignment.TopRight,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Dock             = DockStyle.Left,
 				PreferredWidth   = AbstractFieldController.labelWidth,
 				Margins          = new Margins (0, 10, 3, 0),
@@ -72,6 +73,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock          = DockStyle.Right,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
+
+			ToolTip.Default.SetToolTip (button, "Supprime cette assignation de l'événement");
 
 			button.Clicked += delegate
 			{

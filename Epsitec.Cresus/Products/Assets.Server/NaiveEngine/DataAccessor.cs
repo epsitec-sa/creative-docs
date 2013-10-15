@@ -91,6 +91,22 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			return null;
 		}
 
+		public EventType? GetObjectEventType(Guid objectGuid, Timestamp timestamp)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				var e = obj.Events.Where (x => x.Timestamp == timestamp).FirstOrDefault ();
+				if (e != null)
+				{
+					return e.Type;
+				}
+			}
+
+			return null;
+		}
+
 		public bool HasObjectEvent(Guid objectGuid, Timestamp timestamp)
 		{
 			var obj = this.mandat.GetObject (objectGuid);

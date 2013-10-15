@@ -138,12 +138,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.objectGuid.IsEmpty)
 			{
 				this.hasEvent = false;
+				this.eventType = EventType.Unknown;
 				this.properties = null;
 			}
 			else
 			{
 				var ts = this.timestamp.GetValueOrDefault (new Timestamp (System.DateTime.MaxValue, 0));
 				this.hasEvent = this.accessor.HasObjectEvent (this.objectGuid, ts);
+				this.eventType = this.accessor.GetObjectEventType (this.objectGuid, ts).GetValueOrDefault (EventType.Unknown);
 				this.properties = this.accessor.GetObjectSyntheticProperties (this.objectGuid, ts);
 			}
 
@@ -175,12 +177,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.properties != null)
 			{
-				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Numéro,      "Numéro", editWidth: 100);
-				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Nom,         "Nom");
-				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Description, "Description", lineCount: 5);
-				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Responsable, "Responsable");
-				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Couleur,     "Couleur", editWidth: 100);
-				this.CreateStringController (this.containerInfos.Viewport, ObjectField.NuméroSérie, "Numéro de série");
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Numéro, editWidth: 100);
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Nom);
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Description, lineCount: 5);
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Responsable);
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Couleur, editWidth: 100);
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.NuméroSérie);
 			}
 		}
 
@@ -191,9 +193,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.properties != null)
 			{
-				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur1, "Valeur comptable");
-				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur2, "Valeur d'assurance");
-				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur3, "Valeur imposable");
+				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur1);
+				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur2);
+				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur3);
 			}
 		}
 
@@ -204,11 +206,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.properties != null)
 			{
-				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.NomCatégorie,           "Nom de la catégorie");
-				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.TauxAmortissement,      "Taux", isRate: true);
-				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.TypeAmortissement,      "Type", editWidth: 100);
-				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.FréquenceAmortissement, "Fréquence");
-				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.ValeurRésiduelle,       "Valeur résiduelle");
+				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.NomCatégorie);
+				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.TauxAmortissement, isRate: true);
+				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.TypeAmortissement, editWidth: 100);
+				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.FréquenceAmortissement);
+				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.ValeurRésiduelle);
 			}
 		}
 
@@ -217,11 +219,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.containerCompta.Viewport.Children.Clear ();
 		}
 
-		private void CreateStringController(Widget parent, ObjectField field, string label, int editWidth = 280, int lineCount = 1)
+		private void CreateStringController(Widget parent, ObjectField field, int editWidth = 280, int lineCount = 1)
 		{
 			var controller = new StringFieldController
 			{
-				Label         = label,
+				Label         = StaticDescriptions.GetObjectFieldDescription (field),
 				Value         = DataAccessor.GetStringProperty (this.properties, (int) field),
 				PropertyState = this.GetPropertyState (field),
 				EditWidth     = editWidth,
@@ -236,11 +238,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private void CreateDecimalController(Widget parent, ObjectField field, string label, bool isRate = false)
+		private void CreateDecimalController(Widget parent, ObjectField field, bool isRate = false)
 		{
 			var controller = new DecimalFieldController
 			{
-				Label         = label,
+				Label         = StaticDescriptions.GetObjectFieldDescription (field),
 				Value         = DataAccessor.GetDecimalProperty (this.properties, (int) field),
 				PropertyState = this.GetPropertyState (field),
 				IsRate        = isRate,
@@ -275,6 +277,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var list = new List<string> ();
 
+#if false
 				if (this.properties != null)
 				{
 					var nom = DataAccessor.GetStringProperty (this.properties, (int) ObjectField.Nom);
@@ -283,10 +286,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 						list.Add (nom);
 					}
 				}
+#endif
 
 				if (this.timestamp.HasValue)
 				{
 					list.Add (this.timestamp.Value.Date.ToString ("dd.MM.yyyy"));
+				}
+
+				var ed = StaticDescriptions.GetEventDescription (this.eventType);
+				if (!string.IsNullOrEmpty (ed))
+				{
+					list.Add (ed);
 				}
 
 				return string.Join (" — ", list);
@@ -354,6 +364,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private Guid								objectGuid;
 		private Timestamp?							timestamp;
 		private bool								hasEvent;
+		private EventType							eventType;
 		private IEnumerable<AbstractDataProperty>	properties;
 		private int									tabIndex;
 	}

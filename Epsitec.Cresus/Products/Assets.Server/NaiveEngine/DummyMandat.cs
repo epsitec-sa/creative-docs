@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 				var e = new DataEvent (1, start, EventType.Entrée);
 				o.AddEvent (e);
-				e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       3));
+				e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       2));
 				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "2.3"));
 				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Nom,         "Voitures"));
 			}

@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				for (int row = 0; row < rowsCount; row++)
 				{
-					new StaticText
+					var st = new StaticText
 					{
 						Parent        = columnFrame,
 						Dock          = DockStyle.Top,
@@ -49,6 +49,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 						Margins       = new Margins (1),
 						TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 					};
+
+					var field = this.GetField (column, row);
+					var desc = StaticDescriptions.GetObjectFieldDescription ((ObjectField) field.GetValueOrDefault (-1));
+					if (!string.IsNullOrEmpty (desc))
+					{
+						ToolTip.Default.SetToolTip (st, desc);
+					}
 				}
 			}
 		}
