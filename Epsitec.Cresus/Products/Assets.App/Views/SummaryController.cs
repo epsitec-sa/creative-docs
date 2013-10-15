@@ -23,9 +23,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.informations = new StaticText
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 20),
+				Parent          = parent,
+				Dock            = DockStyle.Top,
+				PreferredHeight = 30,
+				Margins         = new Margins (0, 0, 0, 20),
 			};
 
 			this.frameBox = new FrameBox
@@ -74,12 +75,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (objectGuid.IsEmpty)
 			{
 				this.hasEvent = false;
+				this.eventType = EventType.Unknown;
 				this.properties = null;
 			}
 			else
 			{
 				var ts = timestamp.GetValueOrDefault (new Timestamp (System.DateTime.MaxValue, 0));
 				this.hasEvent = this.accessor.HasObjectEvent (objectGuid, ts);
+				this.eventType = this.accessor.GetObjectEventType (objectGuid, ts).GetValueOrDefault (EventType.Unknown);
 				this.properties = this.accessor.GetObjectSyntheticProperties (objectGuid, ts);
 			}
 
@@ -100,24 +103,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateInformations()
 		{
-			this.informations.Text = this.Informations;
+			this.informations.Text = string.Concat (this.Informations1, "<br/>", this.Informations2);
 		}
 
-		private string Informations
+		private string Informations1
 		{
 			get
 			{
 				if (this.hasEvent && this.properties != null)
 				{
-					return string.Format ("Cet événement définit {0} champs.", this.SinglePropertiesCount);
+					var s1 = StaticDescriptions.GetEventDescription (this.eventType);
+					var s2 = this.SinglePropertiesCount.ToString ();
+					return string.Format ("Cet événement de type \"{0}\" définit {1} champs.", s1, s2);
 				}
 				else if (!this.timestamp.HasValue)
 				{
-					return "Etat final de l'objet.";
+					return "Il n'y a pas de date sélectionnée.";
 				}
 				else
 				{
 					return "Il n'y a pas d'événement à cette date.";
+				}
+			}
+		}
+
+		private string Informations2
+		{
+			get
+			{
+				if (this.timestamp.HasValue)
+				{
+					string d = this.timestamp.Value.Date.ToString ("dd.MM.yyyy");
+					return string.Format ("Le tableau ci-dessous montre l'état de l'objet en date du {0} :", d);
+				}
+				else
+				{
+					return "Le tableau ci-dessous montre l'état final de l'objet :";
 				}
 			}
 		}
@@ -249,6 +270,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox							frameBox;
 		private Timestamp?							timestamp;
 		private bool								hasEvent;
+		private EventType							eventType;
 		private IEnumerable<AbstractDataProperty>	properties;
 	}
 }
