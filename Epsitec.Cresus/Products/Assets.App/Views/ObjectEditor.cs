@@ -141,6 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateEditorInfosUI()
 		{
 			this.containerInfos.Viewport.Children.Clear ();
+			this.tabIndex = 1;
 
 			if (this.properties != null)
 			{
@@ -156,6 +157,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateEditorValuesUI()
 		{
 			this.containerValues.Viewport.Children.Clear ();
+			this.tabIndex = 1;
 
 			if (this.properties != null)
 			{
@@ -168,6 +170,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateEditorAmortissementUI()
 		{
 			this.containerAmortissement.Viewport.Children.Clear ();
+			this.tabIndex = 1;
 
 			if (this.properties != null)
 			{
@@ -188,8 +191,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new StringFieldController
 			{
-				Label = label,
-				Value = DataAccessor.GetStringProperty (this.properties, (int) field),
+				Label    = label,
+				Value    = DataAccessor.GetStringProperty (this.properties, (int) field),
+				TabIndex = this.tabIndex++,
 			};
 
 			controller.CreateUI (parent);
@@ -203,9 +207,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new DecimalFieldController
 			{
-				Label  = label,
-				Value  = DataAccessor.GetDecimalProperty (this.properties, (int) field),
-				IsRate = isRate,
+				Label    = label,
+				Value    = DataAccessor.GetDecimalProperty (this.properties, (int) field),
+				IsRate   = isRate,
+				TabIndex = this.tabIndex++,
 			};
 
 			controller.CreateUI (parent);
@@ -256,5 +261,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private Guid								objectGuid;
 		private Timestamp?							timestamp;
 		private IEnumerable<AbstractDataProperty>	properties;
+		private int									tabIndex;
 	}
 }

@@ -10,6 +10,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractFieldController
 	{
+		public int TabIndex;
+
 		public string Label
 		{
 			get

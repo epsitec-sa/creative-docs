@@ -43,6 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock           = DockStyle.Left,
 				PreferredWidth = this.IsRate ? 50 : 100,
 				Margins        = new Margins (0, 10, 0, 0),
+				TabIndex       = this.TabIndex,
 				Text           = DecimalFieldController.ConvDecimalToString (this.value),
 			};
 

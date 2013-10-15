@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock           = DockStyle.Left,
 				PreferredWidth = 300,
 				Margins        = new Margins (0, 10, 0, 0),
+				TabIndex       = this.TabIndex,
 				Text           = this.value,
 			};
 
