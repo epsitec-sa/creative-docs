@@ -21,11 +21,34 @@ namespace Epsitec.Common.Support
 
 	public sealed class XmlValidator
 	{
-		
-
-		private XmlValidator(IEnumerable<string> xsdContents)
+		public static XmlValidator Create(FileInfo xsdFile)
 		{
-			this.xmlSchemaSet = XmlValidator.BuildXmlSchemaSet (xsdContents);
+			var xsdFiles = new List<FileInfo> () { xsdFile };
+
+			return XmlValidator.Create (xsdFiles);
+		}
+
+		public static XmlValidator Create(IEnumerable<FileInfo> xsdFiles)
+		{
+			var xsdContents = from xsdFile in xsdFiles
+							  select File.ReadAllText (xsdFile.FullName);
+
+			return new XmlValidator (xsdContents);
+		}
+
+		public static XmlValidator Create(Assembly assembly, string xsdResourceName)
+		{
+			var xsdResourceNames = new List<string> () { xsdResourceName };
+
+			return XmlValidator.Create (assembly, xsdResourceNames);
+		}
+
+		public static XmlValidator Create(Assembly assembly, IEnumerable<string> xsdResourceNames)
+		{
+			var xsdContents = from xsdResourceName in xsdResourceNames
+							  select assembly.GetResourceText (xsdResourceName);
+
+			return new XmlValidator (xsdContents);
 		}
 
 
@@ -53,7 +76,6 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-
 		public void Validate(XDocument document)
 		{
 			var rootNamespace = document.Root.Name.Namespace.NamespaceName;
@@ -61,18 +83,6 @@ namespace Epsitec.Common.Support
 			this.CheckRootNamespace (rootNamespace);
 
 			document.Validate (this.xmlSchemaSet, null);
-		}
-
-
-
-		private void CheckRootNamespace(string rootNamespace)
-		{
-			if (!this.xmlSchemaSet.Contains (rootNamespace))
-			{
-				var message = "Invalid namespace for root element";
-
-				throw new XmlSchemaValidationException (message);
-			}
 		}
 
 
@@ -97,37 +107,19 @@ namespace Epsitec.Common.Support
 		}
 
 
-		public static XmlValidator Create(FileInfo xsdFile)
+		private XmlValidator(IEnumerable<string> xsdContents)
 		{
-			var xsdFiles = new List<FileInfo> () { xsdFile };
-
-			return XmlValidator.Create (xsdFiles);
+			this.xmlSchemaSet = XmlValidator.BuildXmlSchemaSet (xsdContents);
 		}
 
-
-		public static XmlValidator Create(IEnumerable<FileInfo> xsdFiles)
+		private void CheckRootNamespace(string rootNamespace)
 		{
-			var xsdContents = from xsdFile in xsdFiles
-							  select File.ReadAllText (xsdFile.FullName);
+			if (!this.xmlSchemaSet.Contains (rootNamespace))
+			{
+				var message = "Invalid namespace for root element";
 
-			return new XmlValidator (xsdContents);
-		}
-
-
-		public static XmlValidator Create(Assembly assembly, string xsdResourceName)
-		{
-			var xsdResourceNames = new List<string> () { xsdResourceName };
-
-			return XmlValidator.Create (assembly, xsdResourceNames);
-		}
-
-
-		public static XmlValidator Create(Assembly assembly, IEnumerable<string> xsdResourceNames)
-		{
-			var xsdContents = from xsdResourceName in xsdResourceNames
-							  select assembly.GetResourceText (xsdResourceName);
-
-			return new XmlValidator (xsdContents);
+				throw new XmlSchemaValidationException (message);
+			}
 		}
 
 
