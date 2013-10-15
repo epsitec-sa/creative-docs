@@ -12,11 +12,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractFieldController
 	{
-		public int TabIndex;
-		public int EditWidth = 280;
-		public PropertyState PropertyState;
+		public int								TabIndex;
+		public int								EditWidth = 280;
+		public PropertyState					PropertyState;
 
-		public string Label
+		public string							Label
 		{
 			get
 			{

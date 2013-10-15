@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectEditor(DataAccessor accessor)
 			: base (accessor)
 		{
+			this.summaryController = new SummaryController (this.accessor, ObjectEditor.SummaryFields);
 		}
 
 		public override void CreateUI(Widget parent)
@@ -27,6 +28,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock    = DockStyle.Fill,
 				Arrows  = TabBookArrows.Stretch,
 				Margins = new Margins (10),
+			};
+
+			this.tabPageSummary = new TabPage
+			{
+				TabTitle = "Résumé",
+				Padding  = new Margins (10),
 			};
 
 			this.tabPageInfos = new TabPage
@@ -53,12 +60,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Padding  = new Margins (10),
 			};
 
+			this.tabBook.Items.Add (this.tabPageSummary);
 			this.tabBook.Items.Add (this.tabPageInfos);
 			this.tabBook.Items.Add (this.tabPageValues);
 			this.tabBook.Items.Add (this.tabPageAmortissement);
 			this.tabBook.Items.Add (this.tabPageCompta);
 
-			this.tabBook.ActivePage = this.tabPageInfos;
+			this.tabBook.ActivePage = this.tabPageSummary;
+
+			//	Summary.
+			this.containerSummary = new Scrollable
+			{
+				Parent                 = this.tabPageSummary,
+				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+				VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways,
+				Dock                   = DockStyle.Fill,
+			};
+
+			this.containerSummary.Viewport.IsAutoFitting = true;
 
 			//	Infos.
 			this.containerInfos = new Scrollable
@@ -134,10 +153,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateEditorUI()
 		{
+			this.CreateEditorSummaryUI ();
 			this.CreateEditorInfosUI ();
 			this.CreateEditorValuesUI ();
 			this.CreateEditorAmortissementUI ();
 			this.CreateEditorComptaUI ();
+		}
+
+		private void CreateEditorSummaryUI()
+		{
+			this.containerSummary.Viewport.Children.Clear ();
+
+			this.summaryController.CreateUI (this.containerSummary.Viewport);
+			this.summaryController.UpdateFields (this.objectGuid, this.timestamp);
 		}
 
 		private void CreateEditorInfosUI()
@@ -265,16 +293,63 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private static List<List<int>> SummaryFields
+		{
+			get
+			{
+				var list = new List<List<int>>();
+
+				var c1 = new List<int> ()
+				{
+					(int) ObjectField.Level,
+					(int) ObjectField.Numéro,
+					(int) ObjectField.Nom,
+					(int) ObjectField.Description,
+					(int) ObjectField.Responsable,
+					(int) ObjectField.Couleur,
+					(int) ObjectField.NuméroSérie,
+				};
+				list.Add (c1);
+
+				var c2 = new List<int> ()
+				{
+					(int) ObjectField.Valeur1,
+					(int) ObjectField.Valeur2,
+					(int) ObjectField.Valeur3,
+				};
+				list.Add (c2);
+
+				var c3 = new List<int> ()
+				{
+					(int) ObjectField.NomCatégorie,
+					(int) ObjectField.TauxAmortissement,
+					(int) ObjectField.TypeAmortissement,
+					(int) ObjectField.FréquenceAmortissement,
+					(int) ObjectField.ValeurRésiduelle,
+				};
+				list.Add (c3);
+
+				return list;
+			}
+		}
+
+
+		private readonly SummaryController			summaryController;
 
 		private TabBook								tabBook;
+
+		private TabPage								tabPageSummary;
 		private TabPage								tabPageInfos;
 		private TabPage								tabPageValues;
 		private TabPage								tabPageAmortissement;
 		private TabPage								tabPageCompta;
+
+		private Scrollable							containerSummary;
 		private Scrollable							containerInfos;
 		private Scrollable							containerValues;
 		private Scrollable							containerAmortissement;
 		private Scrollable							containerCompta;
+
 		private TopTitle							topTitle;
 		private Guid								objectGuid;
 		private Timestamp?							timestamp;

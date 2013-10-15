@@ -11,7 +11,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class DecimalFieldController : AbstractFieldController
 	{
-		public decimal? Value
+		public bool								IsRate;
+
+		public decimal?							Value
 		{
 			get
 			{
@@ -30,8 +32,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 		}
-
-		public bool IsRate;
 
 
 		public override void CreateUI(Widget parent)

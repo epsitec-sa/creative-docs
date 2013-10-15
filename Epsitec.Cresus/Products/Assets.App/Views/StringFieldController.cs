@@ -11,9 +11,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class StringFieldController : AbstractFieldController
 	{
-		public int LineCount = 1;
+		public int								LineCount = 1;
 
-		public string Value
+		public string							Value
 		{
 			get
 			{
@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 		}
+
 
 		public override void CreateUI(Widget parent)
 		{
