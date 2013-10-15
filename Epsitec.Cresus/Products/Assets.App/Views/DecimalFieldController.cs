@@ -30,6 +30,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public bool IsRate;
+
+
 		public override void CreateUI(Widget parent)
 		{
 			base.CreateUI (parent);
@@ -38,9 +41,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent         = this.frameBox,
 				Dock           = DockStyle.Left,
-				PreferredWidth = 100,
+				PreferredWidth = this.IsRate ? 50 : 100,
 				Margins        = new Margins (0, 10, 0, 0),
 				Text           = DecimalFieldController.ConvDecimalToString (this.value),
+			};
+
+			new StaticText
+			{
+				Parent         = this.frameBox,
+				Dock           = DockStyle.Left,
+				PreferredWidth = 50,
+				Margins        = new Margins (0, 10, 3, 0),
+				Text           = this.IsRate ? "%" : "CHF",
 			};
 
 			this.textField.TextChanged += delegate

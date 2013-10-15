@@ -41,6 +41,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Padding  = new Margins (10),
 			};
 
+			this.tabPageAmortissement = new TabPage
+			{
+				TabTitle = "Amortissement",
+				Padding  = new Margins (10),
+			};
+
 			this.tabPageCompta = new TabPage
 			{
 				TabTitle = "Comptabilisation",
@@ -49,6 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.tabBook.Items.Add (this.tabPageInfos);
 			this.tabBook.Items.Add (this.tabPageValues);
+			this.tabBook.Items.Add (this.tabPageAmortissement);
 			this.tabBook.Items.Add (this.tabPageCompta);
 
 			this.tabBook.ActivePage = this.tabPageInfos;
@@ -74,6 +81,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.containerValues.Viewport.IsAutoFitting = true;
+
+			//	Amortissement.
+			this.containerAmortissement = new Scrollable
+			{
+				Parent                 = this.tabPageAmortissement,
+				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+				VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways,
+				Dock                   = DockStyle.Fill,
+			};
+
+			this.containerAmortissement.Viewport.IsAutoFitting = true;
 
 			//	Compta.
 			this.containerCompta = new Scrollable
@@ -116,6 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateEditorInfosUI ();
 			this.CreateEditorValuesUI ();
+			this.CreateEditorAmortissementUI ();
 			this.CreateEditorComptaUI ();
 		}
 
@@ -146,6 +165,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private void CreateEditorAmortissementUI()
+		{
+			this.containerAmortissement.Viewport.Children.Clear ();
+
+			if (this.properties != null)
+			{
+				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.NomCatégorie,           "Nom de la catégorie");
+				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.TauxAmortissement,      "Taux", isRate: true);
+				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.TypeAmortissement,      "Type");
+				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.FréquenceAmortissement, "Fréquence");
+				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.ValeurRésiduelle,       "Valeur résiduelle");
+			}
+		}
+
 		private void CreateEditorComptaUI()
 		{
 			this.containerCompta.Viewport.Children.Clear ();
@@ -166,12 +199,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private void CreateDecimalController(Widget parent, ObjectField field, string label)
+		private void CreateDecimalController(Widget parent, ObjectField field, string label, bool isRate = false)
 		{
 			var controller = new DecimalFieldController
 			{
-				Label = label,
-				Value = DataAccessor.GetDecimalProperty (this.properties, (int) field),
+				Label  = label,
+				Value  = DataAccessor.GetDecimalProperty (this.properties, (int) field),
+				IsRate = isRate,
 			};
 
 			controller.CreateUI (parent);
@@ -212,9 +246,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TabBook								tabBook;
 		private TabPage								tabPageInfos;
 		private TabPage								tabPageValues;
+		private TabPage								tabPageAmortissement;
 		private TabPage								tabPageCompta;
 		private Scrollable							containerInfos;
 		private Scrollable							containerValues;
+		private Scrollable							containerAmortissement;
 		private Scrollable							containerCompta;
 		private TopTitle							topTitle;
 		private Guid								objectGuid;

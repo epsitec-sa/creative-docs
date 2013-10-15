@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = 16,
+				PreferredHeight = 22,
 				Margins         = new Margins (0, 0, 0, 2),
 			};
 

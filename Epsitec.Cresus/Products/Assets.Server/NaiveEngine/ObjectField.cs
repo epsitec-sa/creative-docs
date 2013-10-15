@@ -19,5 +19,11 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		Responsable,
 		Couleur,
 		NuméroSérie,
+
+		NomCatégorie,
+		TauxAmortissement,
+		TypeAmortissement,
+		FréquenceAmortissement,
+		ValeurRésiduelle,
 	}
 }
