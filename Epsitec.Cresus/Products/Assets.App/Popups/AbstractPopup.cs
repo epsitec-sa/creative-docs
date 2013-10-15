@@ -154,12 +154,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private void PaintFrame(Graphics graphics, bool smooth = true)
+		private void PaintFrame(Graphics graphics, bool smoothShadow = true)
 		{
-			if (smooth)
+			if (smoothShadow)
 			{
 				//	Dessine une jolie ombre douce.
-				this.PaintShadow (graphics);
+				this.PaintSmoothShadow (graphics);
 			}
 			else
 			{
@@ -183,15 +183,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 		}
 
-		private void PaintShadow(Graphics graphics)
+		private void PaintSmoothShadow(Graphics graphics)
 		{
 			for (double step=0.0; step<=1.0; step+=0.02)  // 0..1
 			{
 				var rect = this.ExternalRect;
-				rect.Inflate (step*80.0);
+				rect.Offset (0, -20);
+				rect.Inflate (-20 + step*80.0);
 
-				var path = AbstractPopup.GetPathRoundRectangle (rect, step*120.0);
-				var alpha = System.Math.Pow (1.0-step, 2.0) * 0.02;
+				var path = AbstractPopup.GetPathRoundRectangle (rect, 10.0 + step*80.0);
+				var alpha = System.Math.Pow (1.0-step, 2.0) * 0.03;
 
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (Color.FromAlphaRgb (alpha, 0.0, 0.0, 0.0));
