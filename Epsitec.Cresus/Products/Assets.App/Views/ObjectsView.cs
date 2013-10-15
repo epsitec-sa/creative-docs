@@ -418,7 +418,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.isEditing)
 			{
-				this.mainToolbar.SetCommandState (ToolbarCommand.Edit,     ToolbarCommandState.Disable);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Edit,     ToolbarCommandState.Activate);
 
 				this.treeTableToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Disable);
 				this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete,   ToolbarCommandState.Disable);

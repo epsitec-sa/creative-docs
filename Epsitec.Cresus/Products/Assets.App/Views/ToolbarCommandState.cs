@@ -9,6 +9,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public enum ToolbarCommandState
 	{
 		Enable,
+		Activate,
 		Disable,
 		Hide,
 	}

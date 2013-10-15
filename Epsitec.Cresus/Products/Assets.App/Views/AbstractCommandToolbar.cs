@@ -61,8 +61,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateCommandButton(IconButton button, ToolbarCommand command)
 		{
-			button.Visibility = this.GetCommandVisibility (command);
-			button.Enable     = this.GetCommandEnable     (command);
+			button.Visibility  = this.GetCommandVisibility    (command);
+			button.Enable      = this.GetCommandEnable        (command);
+			button.ActiveState = this.GetCommandActivateState (command);
 		}
 
 		private bool GetCommandVisibility(ToolbarCommand command)
@@ -74,7 +75,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private bool GetCommandEnable(ToolbarCommand command)
 		{
 			var state = this.GetCommandState (command);
-			return state == ToolbarCommandState.Enable;
+			return state == ToolbarCommandState.Enable ||
+				   state == ToolbarCommandState.Activate;
+		}
+
+		private ActiveState GetCommandActivateState(ToolbarCommand command)
+		{
+			var state = this.GetCommandState (command);
+			return (state == ToolbarCommandState.Activate) ? ActiveState.Yes : ActiveState.No;
 		}
 
 
