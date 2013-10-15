@@ -168,6 +168,12 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				yield return ObjectField.Responsable;
 				yield return ObjectField.Couleur;
 				yield return ObjectField.NuméroSérie;
+
+				yield return ObjectField.NomCatégorie;
+				yield return ObjectField.TauxAmortissement;
+				yield return ObjectField.TypeAmortissement;
+				yield return ObjectField.FréquenceAmortissement;
+				yield return ObjectField.ValeurRésiduelle;
 			}
 		}
 

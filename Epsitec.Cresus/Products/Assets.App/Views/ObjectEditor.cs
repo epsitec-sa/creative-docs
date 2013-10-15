@@ -271,8 +271,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string ObjectTitle
 		{
-			//	Retourne le nom de l'objet sélectionné ainsi que la date de l'événement
-			//	définissant ses propriétés.
+			//	Retourne le type de l'événement ainsi que la date.
 			get
 			{
 				var list = new List<string> ();

@@ -21,6 +21,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
+			this.informations = new StaticText
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 20),
+			};
+
 			this.frameBox = new FrameBox
 			{
 				Parent = parent,
@@ -62,6 +69,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateFields(Guid objectGuid, Timestamp? timestamp)
 		{
+			this.timestamp = timestamp;
+
 			if (objectGuid.IsEmpty)
 			{
 				this.hasEvent = false;
@@ -74,6 +83,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.properties = this.accessor.GetObjectSyntheticProperties (objectGuid, ts);
 			}
 
+			this.UpdateInformations ();
+
 			for (int column = 0; column < this.frameBox.Children.Count; column++)
 			{
 				var columnFrame = this.frameBox.Children[column] as FrameBox;
@@ -85,6 +96,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 		}
+
+
+		private void UpdateInformations()
+		{
+			this.informations.Text = this.Informations;
+		}
+
+		private string Informations
+		{
+			get
+			{
+				if (this.hasEvent && this.properties != null)
+				{
+					return string.Format ("Cet événement définit {0} champs.", this.SinglePropertiesCount);
+				}
+				else if (!this.timestamp.HasValue)
+				{
+					return "Etat final de l'objet.";
+				}
+				else
+				{
+					return "Il n'y a pas d'événement à cette date.";
+				}
+			}
+		}
+
 
 		private void UpdateStaticText(StaticText st, int? field)
 		{
@@ -151,6 +188,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private int SinglePropertiesCount
+		{
+			get
+			{
+				if (this.properties == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.properties.Where (x => x.State == PropertyState.Single).Count ();
+				}
+			}
+		}
+
 		private int? GetField(int column, int row)
 		{
 			if (column < this.fields.Count)
@@ -193,7 +245,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor				accessor;
 		private readonly List<List<int>>			fields;
 
+		private StaticText							informations;
 		private FrameBox							frameBox;
+		private Timestamp?							timestamp;
 		private bool								hasEvent;
 		private IEnumerable<AbstractDataProperty>	properties;
 	}

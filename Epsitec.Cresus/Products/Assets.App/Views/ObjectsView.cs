@@ -457,18 +457,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			
 			if (this.isEditing)
 			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Disable);
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Delete,   ToolbarCommandState.Disable);
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
+				this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Disable);
+				this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
 			}
 			else
 			{
 				var guid = this.accessor.GetObjectGuid (this.treeTableController.SelectedRow);
 
-				this.UpdateTimelineCommand (ToolbarCommand.New,      !guid.IsEmpty && this.timelineController.SelectedTimestamp.HasValue);
-				this.UpdateTimelineCommand (ToolbarCommand.Delete,   this.timelineController.HasSelectedEvent);
-				this.UpdateTimelineCommand (ToolbarCommand.Deselect, sel != -1);
+				this.UpdateTimelineCommand (ToolbarCommand.New,    !guid.IsEmpty && this.timelineController.SelectedTimestamp.HasValue);
+				this.UpdateTimelineCommand (ToolbarCommand.Delete, this.timelineController.HasSelectedEvent);
 			}
+
+			this.UpdateTimelineCommand (ToolbarCommand.Deselect, sel != -1);
 		}
 
 		private void UpdateTimelineCommand(ToolbarCommand command, int selectedCell, int? newSelection)
