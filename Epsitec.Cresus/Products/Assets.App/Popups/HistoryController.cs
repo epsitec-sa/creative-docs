@@ -8,7 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class HistoryController
 	{
