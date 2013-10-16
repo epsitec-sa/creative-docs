@@ -231,9 +231,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (message.MessageType == MessageType.MouseMove)
 			{
+#if false
+				//	Si la souris bouge hors du popup, on le ferme.
 				if (!this.TotalRect.Contains (pos))
 				{
-					//?this.ClosePopup ();
+					this.ClosePopup ();
+				}
+#endif
+			}
+			else if (message.MessageType == MessageType.MouseUp)
+			{
+				//	Un clic de la souris hors du popup le ferme.
+				if (!this.TotalRect.Contains (pos))
+				{
+					this.ClosePopup ();
 				}
 			}
 			else if (message.MessageType == MessageType.KeyPress)  // TODO: ne fonctionne pas toujours !
