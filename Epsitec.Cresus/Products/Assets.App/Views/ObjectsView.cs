@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			: base (accessor)
 		{
 			this.treeTableController = new ObjectsTreeTableController (this.accessor);
-			this.timelineController = new ObjectsTimelineController (this.accessor);
-			this.objectEditor = new ObjectEditor (this.accessor);
+			this.timelineController  = new ObjectsTimelineController (this.accessor);
+			this.objectEditor        = new ObjectEditor (this.accessor);
 
 			this.objectEditor.Navigate += delegate (object sender, Timestamp timestamp)
 			{

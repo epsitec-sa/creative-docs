@@ -14,10 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	{
 		public HistoryPopup(DataAccessor accessor, Guid objectGuid, Timestamp? timestamp, int field)
 		{
-			this.accessor   = accessor;
-			this.objectGuid = objectGuid;
-			this.timestamp  = timestamp;
-			this.field      = field;
+			this.controller = new HistoryController (accessor, objectGuid, timestamp, field);
 		}
 
 
@@ -37,10 +34,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var frame = this.CreateFullFrame ();
 
-			var c = new HistoryController (this.accessor, this.objectGuid, this.timestamp, this.field);
-			c.CreateUI (frame);
+			this.controller.CreateUI (frame);
 
-			c.Navigate += delegate (object sender, Timestamp timestamp)
+			this.controller.Navigate += delegate (object sender, Timestamp timestamp)
 			{
 				this.ClosePopup ();
 				this.OnNavigate (timestamp);
@@ -62,9 +58,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private readonly DataAccessor			accessor;
-		private readonly Guid					objectGuid;
-		private readonly Timestamp?				timestamp;
-		private readonly int					field;
+		private readonly HistoryController		controller;
 	}
 }
