@@ -286,16 +286,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (row == this.GlyphRow)
 				{
-					int sel = this.controller.LeftVisibleCell + rank;
+					this.SelectedCell = this.controller.LeftVisibleCell + rank;
+				}
+			};
 
-					if (this.selectedCell == sel)
-					{
-						this.OnStartEdition (sel);
-					}
-					else
-					{
-						this.SelectedCell = sel;
-					}
+			this.controller.CellDoubleClicked += delegate (object sender, int row, int rank)
+			{
+				if (row == this.GlyphRow)
+				{
+					int sel = this.controller.LeftVisibleCell + rank;
+					this.OnStartEdition (sel);
 				}
 			};
 		}

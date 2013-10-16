@@ -96,17 +96,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller.RowClicked += delegate (object sender, int column, int row)
 			{
-				int sel = this.controller.TopVisibleRow + row;
+				this.SelectedRow = this.controller.TopVisibleRow + row;
+				this.OnRowClicked (this.SelectedRow);
+			};
 
-				if (this.selectedRow == sel)
-				{
-					this.OnStartEdition (sel);
-				}
-				else
-				{
-					this.SelectedRow = sel;
-					this.OnRowClicked (sel);
-				}
+			this.controller.RowDoubleClicked += delegate (object sender, int column, int row)
+			{
+				this.SelectedRow = this.controller.TopVisibleRow + row;
+				this.OnStartEdition (this.SelectedRow);
 			};
 
 			this.controller.ContentChanged += delegate (object sender)

@@ -124,6 +124,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			base.ProcessMessage (message, pos);
 		}
 
+		protected override void OnDoubleClicked(MessageEventArgs e)
+		{
+			this.OnCellDoubleClicked (this.detectedHoverRow);
+			base.OnDoubleClicked (e);
+		}
+
 		protected override void OnMouseMove(MessageEventArgs e)
 		{
 			this.SetDetectedHoverRow (this.Detect (e.Point));
@@ -370,6 +376,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public delegate void CellClickedEventHandler(object sender, int row);
 		public event CellClickedEventHandler CellClicked;
+
+
+		private void OnCellDoubleClicked(int row)
+		{
+			if (this.CellDoubleClicked != null)
+			{
+				this.CellDoubleClicked (this, row);
+			}
+		}
+
+		public delegate void CellDoubleClickedEventHandler(object sender, int row);
+		public event CellDoubleClickedEventHandler CellDoubleClicked;
+
 
 		private void OnCellHovered(int row)
 		{

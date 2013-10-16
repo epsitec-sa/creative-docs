@@ -281,6 +281,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					}
 				};
 
+				column.CellDoubleClicked += delegate (object sender, int row)
+				{
+					if (!this.HasDraggingLayer)
+					{
+						this.OnRowDoubleClicked (column.Index, row);
+					}
+				};
+
 				if (column is TreeTableColumnTree)
 				{
 					var tree = column as TreeTableColumnTree;
@@ -605,6 +613,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public delegate void RowClickedEventHandler(object sender, int column, int row);
 		public event RowClickedEventHandler RowClicked;
+
+
+		private void OnRowDoubleClicked(int column, int row)
+		{
+			if (this.RowDoubleClicked != null)
+			{
+				this.RowDoubleClicked (this, column, row);
+			}
+		}
+
+		public delegate void RowDoubleClickedEventHandler(object sender, int column, int row);
+		public event RowDoubleClickedEventHandler RowDoubleClicked;
 
 
 		private void OnContentChanged()

@@ -128,6 +128,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					this.OnCellClicked (row.Index, rank);
 				};
+
+				row.CellDoubleClicked += delegate (object sender, int rank)
+				{
+					this.OnCellDoubleClicked (row.Index, rank);
+				};
 			}
 
 			this.UpdateChildrensGeometry ();
@@ -330,6 +335,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public delegate void CellClickedEventHandler(object sender, int row, int rank);
 		public event CellClickedEventHandler CellClicked;
+
+
+		private void OnCellDoubleClicked(int row, int rank)
+		{
+			if (this.CellDoubleClicked != null)
+			{
+				this.CellDoubleClicked (this, row, rank);
+			}
+		}
+
+		public delegate void CellDoubleClickedEventHandler(object sender, int row, int rank);
+		public event CellDoubleClickedEventHandler CellDoubleClicked;
 		#endregion
 
 
