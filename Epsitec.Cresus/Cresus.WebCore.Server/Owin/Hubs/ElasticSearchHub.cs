@@ -14,32 +14,16 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		public void Query(string query)
 		{
-			var result = ElasticClient.Search<Document>(s => s
-							.Index("aider")
-							.AllTypes()
-							.QueryString(query));
+			var result = ElasticClient.Search<Document> (s => s
+				.Index ("aider")
+				.Type ("contacts")
+				.Query (q => q
+					.FuzzyLikeThis (f => f
+						.LikeText (query)
+			)));
+
 
 			Clients.Caller.processResult (result);
-		}
-
-
-		public void IndexDocument(string id,string name,string text,string type)
-		{
-			var client = ElasticClient;
-			var document = new Document ()
-			{
-				DocumentId = id,
-				Name = name,
-				Text = text
-			};
-
-			if (!client.IndexExists ("aider").Exists)
-			{
-				client.CreateIndex ("aider", new IndexSettings ());
-			}
-
-			client.Index (document, "aider", type, document.DocumentId);
-
 		}
 
 		public override Task OnDisconnected()
@@ -59,8 +43,8 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 				try
 				{
 					var uriString = "http://localhost:9200";
-					var searchBoxUri = new System.Uri (uriString);
-					var settings = new ConnectionSettings (searchBoxUri);
+					var uri = new System.Uri (uriString);
+					var settings = new ConnectionSettings (uri);
 					settings.SetDefaultIndex ("contacts");
 					return new ElasticClient (settings);
 				}

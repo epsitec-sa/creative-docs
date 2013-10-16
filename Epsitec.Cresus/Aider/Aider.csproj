@@ -64,6 +64,12 @@
       <HintPath>..\External\Open XML SDK\V2.0\lib\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Nest">
+      <HintPath>..\External\Nest\Nest.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\External\Json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -170,6 +176,7 @@
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\ContactNameFixer.cs" />
     <Compile Include="Data\Job\EChPersonFixer.cs" />
+    <Compile Include="Data\Job\ElasticSearchLoader.cs" />
     <Compile Include="Data\Job\PersonWithoutContactFixer.cs" />
     <Compile Include="Data\Job\PersonDeathFixer.cs" />
     <Compile Include="Data\Job\DisplayValuesFixer.cs" />

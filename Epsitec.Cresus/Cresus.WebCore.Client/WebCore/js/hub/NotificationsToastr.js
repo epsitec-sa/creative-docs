@@ -13,6 +13,7 @@ function NotificationsToastr() {
 
   //Entry points for calling hub
   this.hub.client.Toast = function(title, message) {
+      toastr.options = null;
       toastr.options = {
         'debug': false,
         'positionClass': 'toast-bottom-full-width',
@@ -38,6 +39,8 @@ function NotificationsToastr() {
       fieldMessage: errorMsg,
       fieldName: field
     };
+
+    toastr.options = null;
 
     toastr.options = {
       debug: false,

@@ -208,6 +208,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixEChPersons (args));
 					return;
 				}
+
+				if (args.Contains ("-loadelasticsearch"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.LoadElasticSearch (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -233,6 +239,17 @@ namespace Epsitec.Aider
 			{
 				download.DeleteDownloadedFilesButLast ();
 			}
+		}
+
+		private static void LoadElasticSearch(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				var job = new ElasticSearchLoader (coreData);
+
+				job.ProcessJob ();
+
+			});
 		}
 
 		private static void RunEchImportation(string[] args)

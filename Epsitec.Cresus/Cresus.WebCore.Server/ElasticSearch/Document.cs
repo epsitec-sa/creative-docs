@@ -29,5 +29,18 @@ namespace Epsitec.Cresus.WebCore.Server.ElasticSearch
 			get;
 			set;
 		}
+
+
+		public string DatasetId
+		{
+			get;
+			set;
+		}
+
+		public string EntityId
+		{
+			get;
+			set;
+		}	
 	}
 }

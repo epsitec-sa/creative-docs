@@ -78,7 +78,7 @@ function() {
           msg: message,
           buttons: Ext.MessageBox.OK
         });*/
-
+        toastr.options = null;
         toastr.options = {
           debug: false,
           positionClass: 'toast-top-right',
