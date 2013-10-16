@@ -51,6 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				y = System.Math.Max (y, AbstractPopup.dialogThickness + margin);
 				y = System.Math.Min (y, this.Parent.ActualHeight - this.DialogSize.Height - AbstractPopup.dialogThickness - margin);
+				y = System.Math.Floor (y);
 
 				if (this.targetRect.Center.X > this.Parent.ActualWidth/2)  // popup à gauche ?
 				{
@@ -69,6 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				x = System.Math.Max (x, AbstractPopup.dialogThickness + margin);
 				x = System.Math.Min (x, this.Parent.ActualWidth - this.DialogSize.Width - AbstractPopup.dialogThickness - margin);
+				x = System.Math.Floor (x);
 
 				if (this.targetRect.Center.Y > this.Parent.ActualHeight/2)  // popup en dessous ?
 				{
