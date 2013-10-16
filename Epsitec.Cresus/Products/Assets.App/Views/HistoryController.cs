@@ -35,21 +35,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
-			this.treeTableController = new SimpleTreeTableController ();
-			this.treeTableController.CreateUI (parent, rowHeight: HistoryController.RowHeight, headerHeight: HistoryController.HeaderHeight, footerHeight: 0);
-			this.treeTableController.AllowsMovement = false;
-			this.treeTableController.SetColumns (this.Columns);
-			this.treeTableController.SetContent (this.content);
-			this.treeTableController.SelectedRow = this.selectedRow;
-			this.treeTableController.ShowSelection ();
-
-			this.treeTableController.RowClicked += delegate (object sender, int column, int row)
+			if (this.RowsCount == 0)
 			{
-				if (row >= 0 && row < this.timestamps.Count)
+				new StaticText
 				{
-					this.OnNavigate (this.timestamps[row]);
-				}
-			};
+					Parent           = parent,
+					Text             = "Ce champ n'est jamais défini.",
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+					Dock             = DockStyle.Fill,
+				};
+			}
+			else
+			{
+				this.treeTableController = new SimpleTreeTableController ();
+				this.treeTableController.CreateUI (parent, rowHeight: HistoryController.RowHeight, headerHeight: HistoryController.HeaderHeight, footerHeight: 0);
+				this.treeTableController.AllowsMovement = false;
+				this.treeTableController.SetColumns (this.Columns);
+				this.treeTableController.SetContent (this.content);
+				this.treeTableController.SelectedRow = this.selectedRow;
+				this.treeTableController.ShowSelection ();
+
+				this.treeTableController.RowClicked += delegate (object sender, int column, int row)
+				{
+					if (row >= 0 && row < this.timestamps.Count)
+					{
+						this.OnNavigate (this.timestamps[row]);
+					}
+				};
+			}
 		}
 
 		private TreeTableColumnDescription[] Columns
