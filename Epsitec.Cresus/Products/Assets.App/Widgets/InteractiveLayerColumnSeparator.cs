@@ -71,6 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+
 		private int GetWidth(Point pos)
 		{
 			var delta = pos.X - this.dragInitialMouse;

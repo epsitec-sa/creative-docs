@@ -267,26 +267,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.columnsContainer.Viewport.Children.Add (column);
 				}
 
-				//	Connecte les événements de la colonne.
-				column.CellHovered += delegate (object sender, int row)
+				column.ChildrenMouseMove += delegate (object sender, int row)
 				{
 					this.SetHilitedHoverRow (row);
-				};
-
-				column.CellClicked += delegate (object sender, int row)
-				{
-					if (!this.HasDraggingLayer)
-					{
-						this.OnRowClicked (column.Index, row);
-					}
-				};
-
-				column.CellDoubleClicked += delegate (object sender, int row)
-				{
-					if (!this.HasDraggingLayer)
-					{
-						this.OnRowDoubleClicked (column.Index, row);
-					}
 				};
 
 				if (column is TreeTableColumnTree)
@@ -342,12 +325,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void OnExited(MessageEventArgs e)
 		{
-			foreach (var column in this.treeTableColumns)
-			{
-				column.ClearDetectedHoverRow ();
-			}
-
-			MouseCursorManager.Clear ();
+			this.ProcessMouseLeave (e.Point);
 
 			base.OnExited (e);
 		}
@@ -359,6 +337,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (message.MessageType == MessageType.MouseDown)
 				{
 					this.ProcessMouseDown (pos);
+					this.ProcessMouseClick (pos);
 				}
 				else if (message.MessageType == MessageType.MouseMove)
 				{
@@ -369,9 +348,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.ProcessMouseUp (pos);
 					this.ProcessMouseMove (pos);
 				}
+				else if (message.MessageType == MessageType.MouseLeave)
+				{
+					this.ProcessMouseLeave (pos);
+				}
+			}
+		
+			base.ProcessMessage (message, pos);
+		}
+
+		protected override void OnDoubleClicked(MessageEventArgs e)
+		{
+			int row = this.DetectRow (e.Point);
+			if (row != -1)
+			{
+				this.OnRowDoubleClicked (row);
 			}
 
-			base.ProcessMessage (message, pos);
+			base.OnDoubleClicked (e);
 		}
 
 		private void ProcessMouseDown(Point pos)
@@ -440,6 +434,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				this.UpdateMouseCursor ();
 			}
+
+			this.SetHilitedHoverRow (this.DetectRow (pos));
 		}
 
 		private void ProcessMouseUp(Point pos)
@@ -452,6 +448,52 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					layer.MouseUp (pos);
 				}
 			}
+		}
+
+		private void ProcessMouseClick(Point pos)
+		{
+			int row = this.DetectRow (pos);
+			if (row != -1)
+			{
+				this.OnRowClicked (row);
+			}
+		}
+
+		private void ProcessMouseLeave(Point pos)
+		{
+			if (this.AllowsMovement)
+			{
+				for (int i=this.interactiveLayers.Count-1; i>=0; i--)
+				{
+					var layer = this.interactiveLayers[i];
+					layer.MouseLeave (pos);
+				}
+			}
+
+			this.SetHilitedHoverRow (-1);
+
+			MouseCursorManager.Clear ();
+		}
+
+
+		private int DetectRow(Point pos)
+		{
+			int max = this.VisibleRowsCount;
+			double h = this.ActualHeight - this.headerHeight - this.footerHeight - AbstractScroller.DefaultBreadth;
+			double dy = h / max;
+
+			double y = this.ActualHeight - this.headerHeight - pos.Y;
+			if (y >= 0)
+			{
+				int row = (int) (y / dy);
+
+				if (row >= 0 && row < max)
+				{
+					return row;
+				}
+			}
+
+			return -1;
 		}
 
 
@@ -603,27 +645,27 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Events handler
-		private void OnRowClicked(int column, int row)
+		private void OnRowClicked(int row)
 		{
 			if (this.RowClicked != null)
 			{
-				this.RowClicked (this, column, row);
+				this.RowClicked (this, row);
 			}
 		}
 
-		public delegate void RowClickedEventHandler(object sender, int column, int row);
+		public delegate void RowClickedEventHandler(object sender, int row);
 		public event RowClickedEventHandler RowClicked;
 
 
-		private void OnRowDoubleClicked(int column, int row)
+		private void OnRowDoubleClicked(int row)
 		{
 			if (this.RowDoubleClicked != null)
 			{
-				this.RowDoubleClicked (this, column, row);
+				this.RowDoubleClicked (this, row);
 			}
 		}
 
-		public delegate void RowDoubleClickedEventHandler(object sender, int column, int row);
+		public delegate void RowDoubleClickedEventHandler(object sender, int row);
 		public event RowDoubleClickedEventHandler RowDoubleClicked;
 
 

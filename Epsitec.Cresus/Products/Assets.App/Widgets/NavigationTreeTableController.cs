@@ -38,14 +38,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.UpdateScroller ();
 			};
 
-			this.treeTable.RowClicked += delegate (object sender, int column, int row)
+			this.treeTable.RowClicked += delegate (object sender, int row)
 			{
-				this.OnRowClicked (column, row);
+				this.OnRowClicked (row);
 			};
 
-			this.treeTable.RowDoubleClicked += delegate (object sender, int column, int row)
+			this.treeTable.RowDoubleClicked += delegate (object sender, int row)
 			{
-				this.OnRowDoubleClicked (column, row);
+				this.OnRowDoubleClicked (row);
 			};
 
 			this.treeTable.ContentChanged += delegate (object sender)
@@ -189,27 +189,27 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event RowChangedEventHandler RowChanged;
 
 
-		private void OnRowClicked(int column, int row)
+		private void OnRowClicked(int row)
 		{
 			if (this.RowClicked != null)
 			{
-				this.RowClicked (this, column, row);
+				this.RowClicked (this, row);
 			}
 		}
 
-		public delegate void RowClickedEventHandler(object sender, int column, int row);
+		public delegate void RowClickedEventHandler(object sender, int row);
 		public event RowClickedEventHandler RowClicked;
 
 
-		private void OnRowDoubleClicked(int column, int row)
+		private void OnRowDoubleClicked(int row)
 		{
 			if (this.RowDoubleClicked != null)
 			{
-				this.RowDoubleClicked (this, column, row);
+				this.RowDoubleClicked (this, row);
 			}
 		}
 
-		public delegate void RowDoubleClickedEventHandler(object sender, int column, int row);
+		public delegate void RowDoubleClickedEventHandler(object sender, int row);
 		public event RowDoubleClickedEventHandler RowDoubleClicked;
 
 

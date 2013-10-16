@@ -51,6 +51,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 		}
 
+		public void MouseLeave(Point pos)
+		{
+			this.ClearActiveHover ();
+		}
+
 
 		public MouseCursorType MouseCursorType
 		{

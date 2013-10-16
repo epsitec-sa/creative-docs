@@ -31,11 +31,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.UpdateTreeTableController ();
 			};
 
-			this.treeTable.RowClicked += delegate (object sender, int column, int row)
+			this.treeTable.RowClicked += delegate (object sender, int row)
 			{
 				this.selectedRow = this.treeTable.TopVisibleRow + row;
 				this.UpdateTreeTableController ();
-				this.OnRowClicked (column, this.selectedRow);
+				this.OnRowClicked (this.selectedRow);
 			};
 
 			this.treeTable.ContentChanged += delegate (object sender)
@@ -203,15 +203,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Events handler
-		private void OnRowClicked(int column, int row)
+		private void OnRowClicked(int row)
 		{
 			if (this.RowClicked != null)
 			{
-				this.RowClicked (this, column, row);
+				this.RowClicked (this, row);
 			}
 		}
 
-		public delegate void RowClickedEventHandler(object sender, int column, int row);
+		public delegate void RowClickedEventHandler(object sender, int row);
 		public event RowClickedEventHandler RowClicked;
 		#endregion
 

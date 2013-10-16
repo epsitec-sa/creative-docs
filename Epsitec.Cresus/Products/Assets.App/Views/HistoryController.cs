@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.treeTableController.SelectedRow = this.selectedRow;
 				this.treeTableController.ShowSelection ();
 
-				this.treeTableController.RowClicked += delegate (object sender, int column, int row)
+				this.treeTableController.RowClicked += delegate (object sender, int row)
 				{
 					if (row >= 0 && row < this.timestamps.Count)
 					{

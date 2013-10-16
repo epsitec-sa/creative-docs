@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void OnMainEdit()
 		{
-			this.isEditing = true;
+			this.isEditing = !this.isEditing;
 			this.Update ();
 		}
 

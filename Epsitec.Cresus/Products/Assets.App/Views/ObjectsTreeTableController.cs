@@ -94,13 +94,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateTreeTableController ();
 			};
 
-			this.controller.RowClicked += delegate (object sender, int column, int row)
+			this.controller.RowClicked += delegate (object sender, int row)
 			{
 				this.SelectedRow = this.controller.TopVisibleRow + row;
 				this.OnRowClicked (this.SelectedRow);
 			};
 
-			this.controller.RowDoubleClicked += delegate (object sender, int column, int row)
+			this.controller.RowDoubleClicked += delegate (object sender, int row)
 			{
 				this.SelectedRow = this.controller.TopVisibleRow + row;
 				this.OnStartEdition (this.SelectedRow);

@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 						this.Children.Add (button);
 
-						button.MouseMove += delegate
+						button.MouseMove += delegate (object sender, MessageEventArgs e)
 						{
 							//	Si la souris est bougée dans le bouton, il faut passer l'information
 							//	au widget sous-jacent (TreeTable), afin que la ligne survolée soit
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 							int yy;
 							TreeTableTreeType tt;
 							TreeTableColumnTree.Deserialize (button.Name, out yy, out tt);
-							this.SetDetectedHoverRow (yy);
+							this.OnChildrenMouseMove (yy);
 						};
 
 						button.Clicked += delegate

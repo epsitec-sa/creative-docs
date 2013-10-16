@@ -16,7 +16,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.textLayout = new TextLayout ();
 
-			this.detectedHoverRow = -1;
 			this.hilitedHoverRow = -1;
 		}
 
@@ -97,50 +96,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public void ClearDetectedHoverRow()
-		{
-			this.SetDetectedHoverRow (-1);
-		}
-
-
-		protected override void ProcessMessage(Message message, Point pos)
-		{
-			if (message.IsMouseType)
-			{
-				if (message.MessageType == MessageType.MouseDown)
-				{
-					message.Captured = true;
-					message.Consumer = this;
-				}
-				else if (message.MessageType == MessageType.MouseUp)
-				{
-					this.OnCellClicked (this.detectedHoverRow);
-
-					message.Captured = true;
-					message.Consumer = this;
-				}
-			}
-		
-			base.ProcessMessage (message, pos);
-		}
-
-		protected override void OnDoubleClicked(MessageEventArgs e)
-		{
-			this.OnCellDoubleClicked (this.detectedHoverRow);
-			base.OnDoubleClicked (e);
-		}
-
-		protected override void OnMouseMove(MessageEventArgs e)
-		{
-			this.SetDetectedHoverRow (this.Detect (e.Point));
-			base.OnMouseMove (e);
-		}
-
-		protected override void OnExited(MessageEventArgs e)
-		{
-			this.SetDetectedHoverRow (-1);
-			base.OnExited (e);
-		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -260,42 +215,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private int Detect(Point pos)
-		{
-			if (this.HeaderRect.Contains (pos))
-			{
-				return AbstractTreeTableColumn.HeaderRank;
-			}
-
-			if (this.FooterRect.Contains (pos))
-			{
-				return AbstractTreeTableColumn.FooterRank;
-			}
-
-			int count = this.VisibleCellCount;
-
-			for (int rank = 0; rank < count; rank++)
-			{
-				var rect = this.GetCellsRect (rank);
-
-				if (rect.Contains (pos))
-				{
-					return rank;
-				}
-			}
-
-			return -1;
-		}
-
-		protected void SetDetectedHoverRow(int row)
-		{
-			if (this.detectedHoverRow != row)
-			{
-				this.detectedHoverRow = row;
-				this.OnCellHovered (row);
-			}
-		}
-
 		private Rectangle HeaderRect
 		{
 			get
@@ -366,40 +285,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Events handler
-		private void OnCellClicked(int row)
+		protected void OnChildrenMouseMove(int row)
 		{
-			if (this.CellClicked != null)
+			if (this.ChildrenMouseMove != null)
 			{
-				this.CellClicked (this, row);
+				this.ChildrenMouseMove (this, row);
 			}
 		}
 
-		public delegate void CellClickedEventHandler(object sender, int row);
-		public event CellClickedEventHandler CellClicked;
-
-
-		private void OnCellDoubleClicked(int row)
-		{
-			if (this.CellDoubleClicked != null)
-			{
-				this.CellDoubleClicked (this, row);
-			}
-		}
-
-		public delegate void CellDoubleClickedEventHandler(object sender, int row);
-		public event CellDoubleClickedEventHandler CellDoubleClicked;
-
-
-		private void OnCellHovered(int row)
-		{
-			if (this.CellHovered != null)
-			{
-				this.CellHovered (this, row);
-			}
-		}
-
-		public delegate void CellHoveredEventHandler(object sender, int row);
-		public event CellHoveredEventHandler CellHovered;
+		public delegate void ChildrenMouseMoveEventHandler(object sender, int row);
+		public event ChildrenMouseMoveEventHandler ChildrenMouseMove;
 		#endregion
 
 
@@ -409,7 +304,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private readonly TextLayout				textLayout;
 
-		protected int							detectedHoverRow;
 		protected TreeTableHoverMode			hoverMode;
 		protected int							hilitedHoverRow;
 	}
