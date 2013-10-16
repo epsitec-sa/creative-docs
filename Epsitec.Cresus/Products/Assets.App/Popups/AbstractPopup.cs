@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public abstract class AbstractPopup : Widget
 	{
-		public void Create(Widget target)
+		public void Create(Widget target, bool leftOrRight = false)
 		{
 			//	Crée le popup, dont la queue pointera vers le widget target.
 			var parent = AbstractPopup.GetParent (target);
@@ -35,26 +35,47 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.targetRect = new Rectangle (x, y, target.ActualWidth, target.ActualHeight);
 
-			this.InitializeDialogRect ();
+			this.InitializeDialogRect (leftOrRight);
 			this.CreateUI ();
 		}
 
-		private void InitializeDialogRect()
+		private void InitializeDialogRect(bool leftOrRight)
 		{
-			var x = this.targetRect.Center.X - this.DialogSize.Width/2;
-
-			x = System.Math.Max (x, AbstractPopup.dialogThickness);
-			x = System.Math.Min (x, this.Parent.ActualWidth - this.DialogSize.Width - AbstractPopup.dialogThickness);
-
-			if (this.targetRect.Center.Y > this.Parent.ActualHeight/2)
+			if (leftOrRight)
 			{
-				var y = this.targetRect.Bottom - AbstractPopup.queueLength - this.DialogSize.Height;
-				this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
+				var y = this.targetRect.Center.Y - this.DialogSize.Height/2;
+
+				y = System.Math.Max (y, AbstractPopup.dialogThickness);
+				y = System.Math.Min (y, this.Parent.ActualHeight - this.DialogSize.Height - AbstractPopup.dialogThickness);
+
+				if (this.targetRect.Center.X > this.Parent.ActualWidth/2)  // popup à gauche ?
+				{
+					var x = this.targetRect.Left - AbstractPopup.queueLength - this.DialogSize.Width;
+					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
+				}
+				else  // popup à droite ?
+				{
+					var x = this.targetRect.Right + AbstractPopup.queueLength;
+					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
+				}
 			}
 			else
 			{
-				var y = this.targetRect.Top + AbstractPopup.queueLength;
-				this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
+				var x = this.targetRect.Center.X - this.DialogSize.Width/2;
+
+				x = System.Math.Max (x, AbstractPopup.dialogThickness);
+				x = System.Math.Min (x, this.Parent.ActualWidth - this.DialogSize.Width - AbstractPopup.dialogThickness);
+
+				if (this.targetRect.Center.Y > this.Parent.ActualHeight/2)  // popup en dessous ?
+				{
+					var y = this.targetRect.Bottom - AbstractPopup.queueLength - this.DialogSize.Height;
+					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
+				}
+				else  // popup en dessus ?
+				{
+					var y = this.targetRect.Top + AbstractPopup.queueLength;
+					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
+				}
 			}
 		}
 

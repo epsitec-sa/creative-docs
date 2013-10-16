@@ -271,7 +271,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var popup = new HistoryPopup (this.accessor, this.objectGuid, this.timestamp, (int) field);
 
-			popup.Create (target);
+			popup.Create (target, leftOrRight: true);
 
 			popup.Navigate += delegate (object sender, Timestamp timestamp)
 			{
