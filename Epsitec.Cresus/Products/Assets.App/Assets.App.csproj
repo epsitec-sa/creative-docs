@@ -210,6 +210,8 @@
     <EmbeddedResource Include="Images\Main.Simulation.icon" />
     <EmbeddedResource Include="Images\Timeline.Prev.icon" />
     <EmbeddedResource Include="Images\Timeline.Next.icon" />
+    <EmbeddedResource Include="Images\Field.History.icon" />
+    <EmbeddedResource Include="Images\Field.Clear.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,6 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.App.Popups;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -77,11 +76,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateHistoryButton()
 		{
-			var button = new GlyphButton
+			var button = new IconButton
 			{
 				Parent        = this.frameBox,
-				GlyphShape    = GlyphShape.Dots,
-				ButtonStyle   = ButtonStyle.ToolItem,
+				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Field.History"),
+				AutoFocus     = false,
 				Dock          = DockStyle.Right,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
@@ -98,11 +97,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.PropertyState == PropertyState.Single)
 			{
-				var button = new GlyphButton
+				var button = new IconButton
 				{
 					Parent        = this.frameBox,
-					GlyphShape    = GlyphShape.Close,
-					ButtonStyle   = ButtonStyle.ToolItem,
+					IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Field.Clear"),
+					AutoFocus     = false,
 					Dock          = DockStyle.Right,
 					PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 				};

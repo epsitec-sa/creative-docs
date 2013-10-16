@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected static string GetResourceIconUri(string icon)
+		public static string GetResourceIconUri(string icon)
 		{
 			if (string.IsNullOrEmpty (icon))
 			{
