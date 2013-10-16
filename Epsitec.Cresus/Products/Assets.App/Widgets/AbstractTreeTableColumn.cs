@@ -107,12 +107,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (message.IsMouseType)
 			{
-				if (message.MessageType == MessageType.MouseUp)
+				if (message.MessageType == MessageType.MouseDown)
+				{
+					message.Captured = true;
+					message.Consumer = this;
+				}
+				else if (message.MessageType == MessageType.MouseUp)
 				{
 					this.OnCellClicked (this.detectedHoverRow);
+
+					message.Captured = true;
+					message.Consumer = this;
 				}
 			}
-
+		
 			base.ProcessMessage (message, pos);
 		}
 

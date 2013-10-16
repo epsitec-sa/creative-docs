@@ -222,8 +222,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			base.ProcessMessage (message, pos);
-
 			if (message.MessageType == MessageType.MouseMove)
 			{
 				if (!this.TotalRect.Contains (pos))
@@ -231,7 +229,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					//?this.ClosePopup ();
 				}
 			}
-			else if (message.MessageType == MessageType.KeyPress)  // TODO: ne fonctionne pas !
+			else if (message.MessageType == MessageType.KeyPress)  // TODO: ne fonctionne pas toujours !
 			{
 				if (message.KeyCode == KeyCode.Escape)
 				{
@@ -241,6 +239,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			message.Captured = true;
 			message.Consumer = this;
+
+			base.ProcessMessage (message, pos);
 		}
 
 		protected void ClosePopup()
