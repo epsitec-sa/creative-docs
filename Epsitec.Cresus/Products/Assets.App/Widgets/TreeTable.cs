@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			this.CreateColumns ();
-			this.OnContentChanged ();  // on demande de mettre à jour le contenu
+			this.OnContentChanged (true);  // on demande de mettre à jour le contenu
 		}
 
 		private void CreateColumns()
@@ -669,15 +669,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event RowDoubleClickedEventHandler RowDoubleClicked;
 
 
-		private void OnContentChanged()
+		private void OnContentChanged(bool crop)
 		{
 			if (this.ContentChanged != null)
 			{
-				this.ContentChanged (this);
+				this.ContentChanged (this, crop);
 			}
 		}
 
-		public delegate void ContentChangedEventHandler(object sender);
+		public delegate void ContentChangedEventHandler(object sender, bool crop);
 		public event ContentChangedEventHandler ContentChanged;
 
 

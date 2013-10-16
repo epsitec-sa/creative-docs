@@ -89,14 +89,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateTreeTableController ();
 
 			//	Connexion des événements.
-			this.controller.RowChanged += delegate
+			this.controller.ContentChanged += delegate (object sender, bool crop)
 			{
-				this.UpdateTreeTableController (crop: false);
-			};
-
-			this.controller.ContentChanged += delegate (object sender)
-			{
-				this.UpdateTreeTableController ();
+				this.UpdateTreeTableController (crop);
 			};
 
 			this.controller.RowClicked += delegate (object sender, int row)

@@ -48,9 +48,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.OnRowDoubleClicked (row);
 			};
 
-			this.treeTable.ContentChanged += delegate (object sender)
+			this.treeTable.ContentChanged += delegate (object sender, bool crop)
 			{
-				this.OnContentChanged ();
+				this.OnContentChanged (crop);
 			};
 
 			this.treeTable.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.scroller.ValueChanged += delegate
 			{
-				this.OnRowChanged ();
+				this.OnContentChanged (false);
 			};
 
 			this.UpdateScroller ();
@@ -182,23 +182,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.scroller.LargeChange = visibleRows;
 			}
 
-			this.OnContentChanged ();  // on demande de mettre à jour le contenu
+			this.OnContentChanged (true);  // on demande de mettre à jour le contenu
 		}
 
 
 		#region Events handler
-		private void OnRowChanged()
-		{
-			if (this.RowChanged != null)
-			{
-				this.RowChanged (this);
-			}
-		}
-
-		public delegate void RowChangedEventHandler(object sender);
-		public event RowChangedEventHandler RowChanged;
-
-
 		private void OnRowClicked(int row)
 		{
 			if (this.RowClicked != null)
@@ -223,15 +211,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event RowDoubleClickedEventHandler RowDoubleClicked;
 
 
-		private void OnContentChanged()
+		private void OnContentChanged(bool crop)
 		{
 			if (this.ContentChanged != null)
 			{
-				this.ContentChanged (this);
+				this.ContentChanged (this, crop);
 			}
 		}
 
-		public delegate void ContentChangedEventHandler(object sender);
+		public delegate void ContentChangedEventHandler(object sender, bool crop);
 		public event ContentChangedEventHandler ContentChanged;
 
 

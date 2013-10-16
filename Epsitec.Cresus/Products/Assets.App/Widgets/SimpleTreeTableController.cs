@@ -26,11 +26,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.treeTable.CreateUI (parent, rowHeight, headerHeight, footerHeight);
 
-			this.treeTable.RowChanged += delegate
-			{
-				this.UpdateTreeTableController (crop: false);
-			};
-
 			this.treeTable.RowClicked += delegate (object sender, int row)
 			{
 				this.selectedRow = this.treeTable.TopVisibleRow + row;
@@ -38,9 +33,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.OnRowClicked (this.selectedRow);
 			};
 
-			this.treeTable.ContentChanged += delegate (object sender)
+			this.treeTable.ContentChanged += delegate (object sender, bool crop)
 			{
-				this.UpdateTreeTableController ();
+				this.UpdateTreeTableController (crop);
 			};
 		}
 

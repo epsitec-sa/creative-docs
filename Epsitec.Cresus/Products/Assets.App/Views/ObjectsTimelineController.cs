@@ -277,14 +277,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateTimelineController ();
 
 			//	Connexion des événements.
-			this.controller.DateChanged += delegate
+			this.controller.ContentChanged += delegate (object sender, bool crop)
 			{
-				this.UpdateTimelineController (crop: false);
-			};
-
-			this.controller.ContentChanged += delegate
-			{
-				this.UpdateTimelineController ();
+				this.UpdateTimelineController (crop);
 			};
 
 			this.controller.CellClicked += delegate (object sender, int row, int rank)

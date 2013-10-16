@@ -43,9 +43,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void InitializeDialogRect(bool leftOrRight)
 		{
+			//	Calcule la position du popup.
+			//	leftOrRight = false  ->  en haut ou en bas
+			//	leftOrRight = true   ->  à gauche ou à droite
 			const int margin = 10;
 
-			if (leftOrRight)
+			if (leftOrRight)  // à gauche ou à droite ?
 			{
 				var y = this.targetRect.Center.Y - this.DialogSize.Height/2;
 
@@ -64,7 +67,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 			}
-			else
+			else  // en haut ou en bas ?
 			{
 				var x = this.targetRect.Center.X - this.DialogSize.Width/2;
 
@@ -356,6 +359,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected Widget GetParent()
 		{
+			//	Retourne un widget parent quelconque, dont la seule caractéristique
+			//	importante est qu'il doit occuper toute la fenêtre.
 			Widget parent = this.target;
 
 			while (true)

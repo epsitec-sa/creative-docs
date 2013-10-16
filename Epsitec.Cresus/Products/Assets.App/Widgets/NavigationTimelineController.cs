@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.scroller.ValueChanged += delegate
 			{
-				this.OnDateChanged ();
+				this.OnContentChanged (false);
 			};
 		}
 
@@ -215,23 +215,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.scroller.LargeChange = visibleCells;
 			}
 
-			this.OnContentChanged ();  // on demande de mettre à jour le contenu
+			this.OnContentChanged (true);  // on demande de mettre à jour le contenu
 		}
 
 
 		#region Events handler
-		private void OnDateChanged()
-		{
-			if (this.DateChanged != null)
-			{
-				this.DateChanged (this);
-			}
-		}
-
-		public delegate void DateChangedEventHandler(object sender);
-		public event DateChangedEventHandler DateChanged;
-
-	
 		private void OnCellClicked(int row, int rank)
 		{
 			if (this.CellClicked != null)
@@ -256,15 +244,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event CellDoubleClickedEventHandler CellDoubleClicked;
 
 
-		private void OnContentChanged()
+		private void OnContentChanged(bool crop)
 		{
 			if (this.ContentChanged != null)
 			{
-				this.ContentChanged (this);
+				this.ContentChanged (this, crop);
 			}
 		}
 
-		public delegate void ContentChangedEventHandler(object sender);
+		public delegate void ContentChangedEventHandler(object sender, bool crop);
 		public event ContentChangedEventHandler ContentChanged;
 		#endregion
 
