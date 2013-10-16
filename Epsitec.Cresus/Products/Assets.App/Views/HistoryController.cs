@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
@@ -35,13 +36,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
+			new StaticText
+			{
+				Parent           = parent,
+				Text             = "Historique des modifications",
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				Dock             = DockStyle.Top,
+				PreferredHeight  = HistoryController.TitleHeight - 4,
+				BackColor        = ColorManager.SelectionColor,
+			};
+
+			new StaticText
+			{
+				Parent           = parent,
+				Dock             = DockStyle.Top,
+				PreferredHeight  = 4,
+				BackColor        = ColorManager.SelectionColor,
+			};
+
 			if (this.RowsCount == 0)
 			{
 				new StaticText
 				{
 					Parent           = parent,
 					Text             = "Ce champ n'est jamais défini.",
-					ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+					ContentAlignment = ContentAlignment.MiddleCenter,
 					Dock             = DockStyle.Fill,
 				};
 			}
@@ -157,7 +176,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		public static readonly int HeaderHeight     = 24;
+		public static readonly int TitleHeight      = 24;
+		public static readonly int HeaderHeight     = 22;
 		public static readonly int RowHeight        = 18;
 		public static readonly int DateColumnWidth  = 80;
 		public static readonly int ValueColumnWidth = 150;

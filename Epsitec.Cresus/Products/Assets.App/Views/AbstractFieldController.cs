@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public int								LabelWidth = 100;
 		public int								EditWidth = 260;
 		public PropertyState					PropertyState;
+		public bool								HideAdditionalButtons;
 
 		public string							Label
 		{
@@ -44,8 +45,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.CreateLabel ();
-			this.CreateClearButton ();
-			this.CreateHistoryButton ();
+
+			if (!this.HideAdditionalButtons)
+			{
+				this.CreateClearButton ();
+				this.CreateHistoryButton ();
+			}
 		}
 
 		public virtual void SetFocus()
@@ -81,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
 
-			ToolTip.Default.SetToolTip (button, "Montre les variations dans le temps");
+			ToolTip.Default.SetToolTip (button, "Montre l'historique des modifications");
 
 			button.Clicked += delegate
 			{

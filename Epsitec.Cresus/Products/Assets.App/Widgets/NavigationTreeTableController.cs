@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class NavigationTreeTableController
 	{
-		public void CreateUI(Widget parent, int rowHeight = 18, int headerHeight = 24, int footerHeight = 24)
+		public void CreateUI(Widget parent, int rowHeight = 18, int headerHeight = 22, int footerHeight = 22)
 		{
 			parent.BackColor = ColorManager.TreeTableBackgroundColor;
 

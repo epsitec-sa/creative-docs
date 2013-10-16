@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void CreateUI(Widget parent)
+		public override void CreateUI(Widget parent)
 		{
 			base.CreateUI (parent);
 
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var minus = new GlyphButton
 			{
 				Parent        = this.frameBox,
-				GlyphShape    = GlyphShape.Minus,
+				GlyphShape    = GlyphShape.TriangleLeft,
 				ButtonStyle   = ButtonStyle.ToolItem,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var plus = new GlyphButton
 			{
 				Parent        = this.frameBox,
-				GlyphShape    = GlyphShape.Plus,
+				GlyphShape    = GlyphShape.TriangleRight,
 				ButtonStyle   = ButtonStyle.ToolItem,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),

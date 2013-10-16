@@ -131,7 +131,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Text             = text,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 				Anchor           = AnchorStyles.BottomLeft,
-				PreferredSize    = new Size (this.dialogRect.Width, dy),
+				PreferredSize    = new Size (this.dialogRect.Width, dy-4),
+				Margins          = new Margins (x, 0, 0, y+4),
+				BackColor        = ColorManager.SelectionColor,
+			};
+
+			new FrameBox
+			{
+				Parent           = this,
+				Anchor           = AnchorStyles.BottomLeft,
+				PreferredSize    = new Size (this.dialogRect.Width, 4),
 				Margins          = new Margins (x, 0, 0, y),
 				BackColor        = ColorManager.SelectionColor,
 			};
@@ -148,7 +157,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent           = this,
 				Anchor           = AnchorStyles.BottomLeft,
-				PreferredSize    = new Size (this.dialogRect.Width, dy),
+				PreferredSize    = new Size (this.dialogRect.Width, dy-4),
+				Margins          = new Margins (x, 0, 0, y+4),
+				BackColor        = ColorManager.SelectionColor,
+			};
+
+			new FrameBox
+			{
+				Parent           = this,
+				Anchor           = AnchorStyles.BottomLeft,
+				PreferredSize    = new Size (this.dialogRect.Width, 4),
 				Margins          = new Margins (x, 0, 0, y),
 				BackColor        = ColorManager.SelectionColor,
 			};
@@ -221,8 +239,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 			}
 
-			//?message.Captured = true;
-			//?message.Consumer = this;
+			message.Captured = true;
+			message.Consumer = this;
 		}
 
 		protected void ClosePopup()

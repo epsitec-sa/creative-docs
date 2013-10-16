@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			int y = (int) DeletePopup.margins;
 			int dx = (DeletePopup.dialogWidth - DeletePopup.margins*2 - DeletePopup.buttonGap) /2;
-			int dy = 30;
+			int dy = 24;
 
 			this.CreateButton (DeletePopup.margins,                          y, dx, dy, "yes", "Oui");
 			this.CreateButton (DeletePopup.margins+dx+DeletePopup.buttonGap, y, dx, dy, "no",  "Non");
