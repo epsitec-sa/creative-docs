@@ -21,7 +21,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public void Create(Widget target, bool leftOrRight = false)
 		{
 			//	Crée le popup, dont la queue pointera vers le widget target.
-			var parent = AbstractPopup.GetParent (target);
+			this.target = target;
+
+			var parent = this.GetParent ();
 
 			this.Parent = parent;
 			this.Anchor = AnchorStyles.All;
@@ -199,7 +201,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected void ClosePopup()
 		{
-			var parent = AbstractPopup.GetParent (this);
+			var parent = this.GetParent ();
 			parent.Children.Remove (this);
 		}
 
@@ -304,9 +306,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private static Widget GetParent(Widget widget)
+		protected Widget GetParent()
 		{
-			Widget parent = widget;
+			Widget parent = this.target;
 
 			while (true)
 			{
@@ -337,7 +339,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly double queueLength     = 20;
 		private static readonly double dialogThickness = 5;
 
-		private Rectangle dialogRect;
-		private Rectangle targetRect;
+		private Widget							target;
+		private Rectangle						dialogRect;
+		private Rectangle						targetRect;
 	}
 }

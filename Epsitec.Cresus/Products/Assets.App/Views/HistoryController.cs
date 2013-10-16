@@ -13,23 +13,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public HistoryController(DataAccessor accessor, Guid objectGuid, Timestamp? timestamp, int field)
 		{
-			this.accessor   = accessor;
-			this.objectGuid = objectGuid;
-			this.timestamp  = timestamp;
-			this.field      = field;
+			this.accessor = accessor;
 
+			this.fieldType = this.accessor.GetFieldType ((ObjectField) field);
+
+			this.content    = new List<List<AbstractSimpleTreeTableCell>> ();
 			this.timestamps = new List<Timestamp> ();
-			this.fieldType = this.accessor.GetFieldType ((ObjectField) this.field);
+
+			this.InitializeContent (objectGuid, timestamp, field);
+		}
+
+
+		public int RowsCount
+		{
+			get
+			{
+				return this.content.Count ();
+			}
 		}
 
 
 		public void CreateUI(Widget parent)
 		{
 			this.treeTableController = new SimpleTreeTableController ();
-			this.treeTableController.CreateUI (parent, footerHeight: 0);
+			this.treeTableController.CreateUI (parent, rowHeight: HistoryController.RowHeight, headerHeight: HistoryController.HeaderHeight, footerHeight: 0);
 			this.treeTableController.AllowsMovement = false;
 			this.treeTableController.SetColumns (this.Columns);
-			this.treeTableController.SetContent (this.Content);
+			this.treeTableController.SetContent (this.content);
 			this.treeTableController.SelectedRow = this.selectedRow;
 			this.treeTableController.ShowSelection ();
 
@@ -68,59 +78,54 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private List<List<AbstractSimpleTreeTableCell>> Content
+		private void InitializeContent(Guid objectGuid, Timestamp? timestamp, int field)
 		{
-			get
+			this.selectedRow = -1;
+			this.content.Clear ();
+			this.timestamps.Clear ();
+
+			int count = this.accessor.GetObjectEventsCount (objectGuid);
+			for (int i=0; i<count; i++)
 			{
-				this.selectedRow = -1;
-				this.timestamps.Clear ();
-				var list = new List<List<AbstractSimpleTreeTableCell>> ();
-
-				int count = this.accessor.GetObjectEventsCount (this.objectGuid);
-				for (int i=0; i<count; i++)
+				var eventTimestamp = this.accessor.GetObjectEventTimestamp (objectGuid, i);
+				if (eventTimestamp.HasValue)
 				{
-					var timestamp = this.accessor.GetObjectEventTimestamp (this.objectGuid, i);
-					if (timestamp.HasValue)
+					var properties = this.accessor.GetObjectSingleProperties (objectGuid, eventTimestamp.Value);
+
+					var state = DataAccessor.GetPropertyState (properties, field);
+					if (state != PropertyState.Undefined)
 					{
-						var properties = this.accessor.GetObjectSingleProperties (this.objectGuid, timestamp.Value);
+						var row = new List<AbstractSimpleTreeTableCell> ();
 
-						var state = DataAccessor.GetPropertyState (properties, this.field);
-						if (state != PropertyState.Undefined)
+						//	Ajoute la date.
+						string date = Helpers.Converters.DateToString (eventTimestamp.Value.Date);
+						row.Add (new SimpleTreeTableCellString (date));
+
+						//	Ajoute la valeur.
+						if (this.fieldType == FieldType.Amount ||
+							this.fieldType == FieldType.Int    ||
+							this.fieldType == FieldType.Rate)
 						{
-							var row = new List<AbstractSimpleTreeTableCell> ();
-
-							//	Ajoute la date.
-							string date = Helpers.Converters.DateToString (timestamp.Value.Date);
-							row.Add (new SimpleTreeTableCellString (date));
-
-							//	Ajoute la valeur.
-							if (this.fieldType == FieldType.Amount ||
-								this.fieldType == FieldType.Int    ||
-								this.fieldType == FieldType.Rate)
-							{
-								var value = DataAccessor.GetDecimalProperty (properties, this.field);
-								row.Add (new SimpleTreeTableCellDecimal (value));
-							}
-							else
-							{
-								string s = DataAccessor.GetStringProperty (properties, this.field);
-								row.Add (new SimpleTreeTableCellString (s));
-							}
-
-							list.Add (row);
-
-							if (this.timestamp != null &&
-								this.timestamp.Value.Date == timestamp.Value.Date)
-							{
-								this.selectedRow = list.Count-1;
-							}
-
-							this.timestamps.Add (timestamp.Value);
+							var value = DataAccessor.GetDecimalProperty (properties, field);
+							row.Add (new SimpleTreeTableCellDecimal (value));
 						}
+						else
+						{
+							string s = DataAccessor.GetStringProperty (properties, field);
+							row.Add (new SimpleTreeTableCellString (s));
+						}
+
+						this.content.Add (row);
+
+						if (timestamp != null &&
+							timestamp.Value.Date == eventTimestamp.Value.Date)
+						{
+							this.selectedRow = this.content.Count-1;
+						}
+
+						this.timestamps.Add (eventTimestamp.Value);
 					}
 				}
-
-				return list;
 			}
 		}
 
@@ -139,17 +144,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
+		public static readonly int HeaderHeight     = 24;
+		public static readonly int RowHeight        = 18;
 		public static readonly int DateColumnWidth  = 80;
 		public static readonly int ValueColumnWidth = 150;
 
-		private readonly DataAccessor			accessor;
-		private readonly Guid					objectGuid;
-		private readonly Timestamp?				timestamp;
-		private readonly int					field;
-		private readonly FieldType				fieldType;
-		private readonly List<Timestamp>		timestamps;
+		private readonly DataAccessor								accessor;
+		private readonly FieldType									fieldType;
+		private readonly List<List<AbstractSimpleTreeTableCell>>	content;
+		private readonly List<Timestamp>							timestamps;
 
-		private SimpleTreeTableController		treeTableController;
-		private int								selectedRow;
+		private SimpleTreeTableController							treeTableController;
+		private int													selectedRow;
 	}
 }

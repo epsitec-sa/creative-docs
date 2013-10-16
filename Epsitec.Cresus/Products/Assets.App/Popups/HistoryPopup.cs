@@ -22,11 +22,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
+				var parent = this.GetParent ();
+
+				double h = parent.ActualHeight - HistoryController.HeaderHeight - AbstractScroller.DefaultBreadth;
+				int max = (int) (h*0.75) / HistoryController.RowHeight;
+				int rows = System.Math.Min (this.controller.RowsCount, max);
+
 				int dx = HistoryController.DateColumnWidth
 					   + HistoryController.ValueColumnWidth
 					   + (int) AbstractScroller.DefaultBreadth;
 
-				return new Size (dx, 200);
+				int dy = HistoryController.HeaderHeight
+					   + rows * HistoryController.RowHeight
+					   + (int) AbstractScroller.DefaultBreadth;
+
+				dy = System.Math.Max (dy, 50);
+
+				return new Size (dx, dy);
 			}
 		}
 
