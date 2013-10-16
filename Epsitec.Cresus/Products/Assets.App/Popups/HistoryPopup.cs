@@ -53,6 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var frame = this.CreateFullFrame ();
 
 			this.controller.CreateUI (frame);
+			this.CreateCloseButton ();
 
 			this.controller.Navigate += delegate (object sender, Timestamp timestamp)
 			{

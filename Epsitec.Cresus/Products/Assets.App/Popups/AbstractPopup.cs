@@ -94,6 +94,32 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 		}
 
+		protected void CreateCloseButton()
+		{
+			//	Crée le bouton de fermeture en haut à droite.
+			const int size = 20;
+
+			int x = (int) this.dialogRect.Right - size;
+			int y = (int) this.dialogRect.Top - size;
+
+			var button = new GlyphButton
+			{
+				Parent        = this,
+				GlyphShape    = GlyphShape.Close,
+				ButtonStyle   = ButtonStyle.ToolItem,
+				Anchor        = AnchorStyles.BottomLeft,
+				PreferredSize = new Size (size, size),
+				Margins       = new Margins (x, 0, 0, y),
+			};
+
+			ToolTip.Default.SetToolTip (button, "Ferme la fenêtre");
+
+			button.Clicked += delegate
+			{
+				this.ClosePopup ();
+			};
+		}
+
 		protected StaticText CreateTitle(int dy, string text)
 		{
 			int x = (int) this.dialogRect.Left;
@@ -184,7 +210,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (!this.TotalRect.Contains (pos))
 				{
-					this.ClosePopup ();
+					//?this.ClosePopup ();
 				}
 			}
 			else if (message.MessageType == MessageType.KeyPress)  // TODO: ne fonctionne pas !

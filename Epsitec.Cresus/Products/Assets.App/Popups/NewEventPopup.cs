@@ -43,6 +43,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateButton (x, y, dx, dy, "AmortissementExtra", "Amortissement extraordinaire", "Amortissement manuel");
 			y -= dy+NewEventPopup.buttonGap;
 			this.CreateButton (x, y, dx, dy, "Sortie", "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.");
+
+			this.CreateCloseButton ();
 		}
 
 		private void CreateDateUI()
