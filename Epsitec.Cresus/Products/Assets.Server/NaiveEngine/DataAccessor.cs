@@ -204,58 +204,62 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		#region Easy access
 		public static PropertyState GetPropertyState(IEnumerable<AbstractDataProperty> properties, int id)
 		{
-			var p = properties.Where (x => x.Id == id).FirstOrDefault ();
+			if (properties != null)
+			{
+				var p = properties.Where (x => x.Id == id).FirstOrDefault ();
 
-			if (p == null)
-			{
-				return PropertyState.Undefined;
+				if (p != null)
+				{
+					return p.State;
+				}
 			}
-			else
-			{
-				return p.State;
-			}
+
+			return PropertyState.Undefined;
 		}
 
 		public static string GetStringProperty(IEnumerable<AbstractDataProperty> properties, int id)
 		{
-			var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataStringProperty;
+			if (properties != null)
+			{
+				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataStringProperty;
 
-			if (p == null)
-			{
-				return null;
+				if (p != null)
+				{
+					return p.Value;
+				}
 			}
-			else
-			{
-				return p.Value;
-			}
+
+			return null;
 		}
 
 		public static int? GetIntProperty(IEnumerable<AbstractDataProperty> properties, int id)
 		{
-			var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataIntProperty;
+			if (properties != null)
+			{
+				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataIntProperty;
 
-			if (p == null)
-			{
-				return null;
+				if (p != null)
+				{
+					return p.Value;
+				}
 			}
-			else
-			{
-				return p.Value;
-			}
+
+			return null;
 		}
 
 		public static decimal? GetDecimalProperty(IEnumerable<AbstractDataProperty> properties, int id)
 		{
-			var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataDecimalProperty;
+			if (properties != null)
+			{
+				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataDecimalProperty;
 
-			if (p == null)
-			{
-				return null;
+				if (p != null)
+				{
+					return p.Value;
+				}
 			}
-			else
-			{
-				return p.Value;
-			}
+
+			return null;
 		}
 		#endregion
 

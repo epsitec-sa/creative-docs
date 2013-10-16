@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			int count = System.Math.Min (this.treeTable.VisibleRowsCount, this.rowsCount);
 
 			sel = System.Math.Min (sel + count/2, this.rowsCount-1);
-			sel = System.Math.Max (sel - count, 0);
+			sel = System.Math.Max (sel - count+1, 0);
 
 			return sel;
 		}

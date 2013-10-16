@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			int count = System.Math.Min (this.timeline.VisibleCellsCount, this.cellsCount);
 
 			sel = System.Math.Min (sel + count/2, this.cellsCount-1);
-			sel = System.Math.Max (sel - count, 0);
+			sel = System.Math.Max (sel - count+1, 0);
 
 			return sel;
 		}

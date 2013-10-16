@@ -36,23 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public void CreateUI(Widget parent)
 		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = "Historique des modifications",
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = HistoryController.TitleHeight - 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			new StaticText
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
+			this.CreateTitle (parent);
 
 			if (this.RowsCount == 0)
 			{
@@ -84,6 +68,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private void CreateTitle(Widget parent)
+		{
+			new StaticText
+			{
+				Parent           = parent,
+				Text             = "Historique des modifications",
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				Dock             = DockStyle.Top,
+				PreferredHeight  = HistoryController.TitleHeight - 4,
+				BackColor        = ColorManager.SelectionColor,
+			};
+
+			new StaticText
+			{
+				Parent           = parent,
+				Dock             = DockStyle.Top,
+				PreferredHeight  = 4,
+				BackColor        = ColorManager.SelectionColor,
+			};
+		}
+
+
 		private TreeTableColumnDescription[] Columns
 		{
 			get
@@ -110,11 +116,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+
 		private void InitializeContent(Guid objectGuid, Timestamp? timestamp, int field)
 		{
 			this.selectedRow = -1;
 			this.content.Clear ();
 			this.timestamps.Clear ();
+
+			bool put = false;
 
 			int count = this.accessor.GetObjectEventsCount (objectGuid);
 			for (int i=0; i<count; i++)
@@ -127,37 +136,62 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					var state = DataAccessor.GetPropertyState (properties, field);
 					if (state != PropertyState.Undefined)
 					{
-						var row = new List<AbstractSimpleTreeTableCell> ();
-
-						//	Ajoute la date.
-						string date = Helpers.Converters.DateToString (eventTimestamp.Value.Date);
-						row.Add (new SimpleTreeTableCellString (date));
-
-						//	Ajoute la valeur.
-						if (this.fieldType == FieldType.Amount ||
-							this.fieldType == FieldType.Int    ||
-							this.fieldType == FieldType.Rate)
+						if (!put && timestamp != null && timestamp.Value < eventTimestamp.Value)
 						{
-							var value = DataAccessor.GetDecimalProperty (properties, field);
-							row.Add (new SimpleTreeTableCellDecimal (value));
-						}
-						else
-						{
-							string s = DataAccessor.GetStringProperty (properties, field);
-							row.Add (new SimpleTreeTableCellString (s));
+							var c = this.GetCell (null, field);
+							this.AddRow (timestamp, timestamp.Value, c);
+							put = true;
 						}
 
-						this.content.Add (row);
-
-						if (timestamp != null &&
-							timestamp.Value.Date == eventTimestamp.Value.Date)
+						if (!put && timestamp != null && timestamp.Value == eventTimestamp.Value)
 						{
-							this.selectedRow = this.content.Count-1;
+							put = true;
 						}
 
-						this.timestamps.Add (eventTimestamp.Value);
+						var cell = this.GetCell (properties, field);
+						this.AddRow (timestamp, eventTimestamp.Value, cell);
 					}
 				}
+			}
+
+			if (!put && timestamp != null)
+			{
+				var c = this.GetCell (null, field);
+				this.AddRow (timestamp, timestamp.Value, c);
+			}
+		}
+
+		private AbstractSimpleTreeTableCell GetCell(IEnumerable<AbstractDataProperty> properties, int field)
+		{
+			if (this.fieldType == FieldType.Amount ||
+				this.fieldType == FieldType.Int    ||
+				this.fieldType == FieldType.Rate)
+			{
+				var value = DataAccessor.GetDecimalProperty (properties, field);
+				return new SimpleTreeTableCellDecimal (value);
+			}
+			else
+			{
+				string s = DataAccessor.GetStringProperty (properties, field);
+				return new SimpleTreeTableCellString (s);
+			}
+		}
+
+		private void AddRow(Timestamp? selTimestamp, Timestamp addTimestamp, AbstractSimpleTreeTableCell addCell)
+		{
+			var row = new List<AbstractSimpleTreeTableCell> ();
+
+			string d = Helpers.Converters.DateToString (addTimestamp.Date);
+			row.Add (new SimpleTreeTableCellString (d));
+			row.Add (addCell);
+
+			this.content.Add (row);
+			this.timestamps.Add (addTimestamp);
+
+			if (selTimestamp != null &&
+				selTimestamp.Value == addTimestamp)
+			{
+				this.selectedRow = this.content.Count-1;
 			}
 		}
 
