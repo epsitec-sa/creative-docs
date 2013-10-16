@@ -30,8 +30,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						 - HistoryController.HeaderHeight
 						 - AbstractScroller.DefaultBreadth;
 
+				//	Utilise au maximum les 3/4 de la hauteur.
 				int max = (int) (h*0.75) / HistoryController.RowHeight;
+
 				int rows = System.Math.Min (this.controller.RowsCount, max);
+					rows = System.Math.Max (rows, 2);
 
 				int dx = HistoryController.DateColumnWidth
 					   + HistoryController.ValueColumnWidth
@@ -40,8 +43,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				int dy = HistoryController.HeaderHeight
 					   + rows * HistoryController.RowHeight
 					   + (int) AbstractScroller.DefaultBreadth;
-
-				dy = System.Math.Max (dy, 50);
 
 				return new Size (dx, dy);
 			}
