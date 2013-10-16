@@ -95,6 +95,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public int GetTopVisibleRow(int sel)
+		{
+			int count = System.Math.Min (this.treeTable.VisibleRowsCount, this.rowsCount);
+
+			sel = System.Math.Min (sel + count/2, this.rowsCount-1);
+			sel = System.Math.Max (sel - count, 0);
+
+			return sel;
+		}
+
 
 		#region TreeTable Facade
 		public bool								AllowsMovement
@@ -166,13 +176,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.scroller.VisibleRangeRatio = System.Math.Min (visibleRows/totalRows, 1.0m);
 
 				this.scroller.MinValue = 0.0m;
-				this.scroller.MaxValue = System.Math.Max ((decimal) this.rowsCount - visibleRows, 0.0m);
+				this.scroller.MaxValue = System.Math.Max (totalRows - visibleRows, 0.0m);
 
 				this.scroller.SmallChange = 1.0m;
 				this.scroller.LargeChange = visibleRows;
 			}
 
-			this.OnRowChanged ();  // met à jour le tableau
+			this.OnContentChanged ();  // on demande de mettre à jour le contenu
 		}
 
 

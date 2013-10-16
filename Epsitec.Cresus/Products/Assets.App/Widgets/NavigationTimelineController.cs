@@ -79,9 +79,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public int GetLeftVisibleCell(int sel)
+		{
+			int count = System.Math.Min (this.timeline.VisibleCellsCount, this.cellsCount);
+
+			sel = System.Math.Min (sel + count/2, this.cellsCount-1);
+			sel = System.Math.Max (sel - count, 0);
+
+			return sel;
+		}
+
 
 		#region Timeline Facade
-		public bool							ShowLabels
+		public bool								ShowLabels
 		{
 			get
 			{
@@ -196,16 +206,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			else
 			{
 				this.scroller.Resolution = 1.0m;
-				this.scroller.VisibleRangeRatio = (totalCells == 0) ? 1.0m : System.Math.Min (visibleCells/totalCells, 1.0m);
+				this.scroller.VisibleRangeRatio = System.Math.Min (visibleCells/totalCells, 1.0m);
 
 				this.scroller.MinValue = 0.0m;
-				this.scroller.MaxValue = System.Math.Max ((decimal) this.cellsCount - visibleCells, 0.0m);
+				this.scroller.MaxValue = System.Math.Max (totalCells - visibleCells, 0.0m);
 
 				this.scroller.SmallChange = 1.0m;
 				this.scroller.LargeChange = visibleCells;
 			}
 
-			this.OnDateChanged ();  // met à jour la timeline
+			this.OnContentChanged ();  // on demande de mettre à jour le contenu
 		}
 
 
@@ -244,6 +254,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public delegate void CellDoubleClickedEventHandler(object sender, int row, int rank);
 		public event CellDoubleClickedEventHandler CellDoubleClicked;
+
+
+		private void OnContentChanged()
+		{
+			if (this.ContentChanged != null)
+			{
+				this.ContentChanged (this);
+			}
+		}
+
+		public delegate void ContentChangedEventHandler(object sender);
+		public event ContentChangedEventHandler ContentChanged;
 		#endregion
 
 

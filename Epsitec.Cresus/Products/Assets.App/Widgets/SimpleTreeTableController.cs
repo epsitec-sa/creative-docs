@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.treeTable.RowChanged += delegate
 			{
-				this.UpdateTreeTableController ();
+				this.UpdateTreeTableController (crop: false);
 			};
 
 			this.treeTable.RowClicked += delegate (object sender, int row)
@@ -125,10 +125,32 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.UpdateTreeTableController ();
 		}
 
-		private void UpdateTreeTableController()
+		private void UpdateTreeTableController(bool crop = true)
 		{
-			var firstRow = this.treeTable.TopVisibleRow;
-			int selection = this.selectedRow - this.treeTable.TopVisibleRow;
+			int visibleCount = this.treeTable.VisibleRowsCount;
+			int rowsCount    = this.content.Count;
+			int count        = System.Math.Min (visibleCount, rowsCount);
+			int firstRow     = this.treeTable.TopVisibleRow;
+			int selection    = this.selectedRow;
+
+			if (selection != -1)
+			{
+				//	La sélection ne peut pas dépasser le nombre maximal de lignes.
+				selection = System.Math.Min (selection, rowsCount-1);
+
+				//	Si la sélection est hors de la zone visible, on choisit un autre cadrage.
+				if (crop && (selection < firstRow || selection >= firstRow+count))
+				{
+					firstRow = this.treeTable.GetTopVisibleRow (selection);
+				}
+
+				if (this.treeTable.TopVisibleRow != firstRow)
+				{
+					this.treeTable.TopVisibleRow = firstRow;
+				}
+
+				selection -= this.treeTable.TopVisibleRow;
+			}
 
 			//	Construit la liste des conteneurs.
 			var list = new List<object> ();
@@ -147,7 +169,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			//	Rempli les conteneurs en fonction de this.Content.
-			var count = this.treeTable.VisibleRowsCount;
 			for (int i=0; i<count; i++)
 			{
 				if (firstRow+i >= this.content.Count)

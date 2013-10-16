@@ -91,6 +91,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Connexion des événements.
 			this.controller.RowChanged += delegate
 			{
+				this.UpdateTreeTableController (crop: false);
+			};
+
+			this.controller.ContentChanged += delegate (object sender)
+			{
 				this.UpdateTreeTableController ();
 			};
 
@@ -104,11 +109,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.SelectedRow = this.controller.TopVisibleRow + row;
 				this.OnStartEdition (this.SelectedRow);
-			};
-
-			this.controller.ContentChanged += delegate (object sender)
-			{
-				this.UpdateTreeTableController ();
 			};
 
 			this.controller.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
@@ -134,10 +134,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void UpdateTreeTableController()
+		private void UpdateTreeTableController(bool crop = true)
 		{
-			var firstRow = this.controller.TopVisibleRow;
-			int selection = this.selectedRow - this.controller.TopVisibleRow;
+			int visibleCount = this.controller.VisibleRowsCount;
+			int rowsCount    = this.accessor.ObjectsCount;
+			int count        = System.Math.Min (visibleCount, rowsCount);
+			int firstRow     = this.controller.TopVisibleRow;
+			int selection    = this.selectedRow;
+
+			if (selection != -1)
+			{
+				//	La sélection ne peut pas dépasser le nombre maximal de lignes.
+				selection = System.Math.Min (selection, rowsCount-1);
+
+				//	Si la sélection est hors de la zone visible, on choisit un autre cadrage.
+				if (crop && (selection < firstRow || selection >= firstRow+count))
+				{
+					firstRow = this.controller.GetTopVisibleRow (selection);
+				}
+
+				if (this.controller.TopVisibleRow != firstRow)
+				{
+					this.controller.TopVisibleRow = firstRow;
+				}
+
+				selection -= this.controller.TopVisibleRow;
+			}
 
 			var cf = new List<TreeTableCellTree> ();
 			var c1 = new List<TreeTableCellString> ();
@@ -147,7 +169,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var c5 = new List<TreeTableCellDecimal> ();
 			var c6 = new List<TreeTableCellDecimal> ();
 
-			var count = this.controller.VisibleRowsCount;
 			for (int i=0; i<count; i++)
 			{
 				if (firstRow+i >= this.accessor.ObjectsCount)

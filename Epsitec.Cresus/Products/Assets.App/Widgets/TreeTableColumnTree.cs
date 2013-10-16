@@ -96,18 +96,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 							//	Si la souris est bougée dans le bouton, il faut passer l'information
 							//	au widget sous-jacent (TreeTable), afin que la ligne survolée soit
 							//	mise en évidence.
-							int yy;
-							TreeTableTreeType tt;
-							TreeTableColumnTree.Deserialize (button.Name, out yy, out tt);
-							this.OnChildrenMouseMove (yy);
+							int row;
+							TreeTableTreeType type;
+							TreeTableColumnTree.Deserialize (button.Name, out row, out type);
+							this.OnChildrenMouseMove (row);
 						};
 
 						button.Clicked += delegate
 						{
-							int yy;
-							TreeTableTreeType tt;
-							TreeTableColumnTree.Deserialize (button.Name, out yy, out tt);
-							this.OnTreeButtonClicked (yy, tt);
+							int row;
+							TreeTableTreeType type;
+							TreeTableColumnTree.Deserialize (button.Name, out row, out type);
+							this.OnTreeButtonClicked (row, type);
 						};
 					}
 

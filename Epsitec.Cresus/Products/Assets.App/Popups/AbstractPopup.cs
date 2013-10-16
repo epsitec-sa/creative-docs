@@ -43,12 +43,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void InitializeDialogRect(bool leftOrRight)
 		{
+			const int margin = 10;
+
 			if (leftOrRight)
 			{
 				var y = this.targetRect.Center.Y - this.DialogSize.Height/2;
 
-				y = System.Math.Max (y, AbstractPopup.dialogThickness);
-				y = System.Math.Min (y, this.Parent.ActualHeight - this.DialogSize.Height - AbstractPopup.dialogThickness);
+				y = System.Math.Max (y, AbstractPopup.dialogThickness + margin);
+				y = System.Math.Min (y, this.Parent.ActualHeight - this.DialogSize.Height - AbstractPopup.dialogThickness - margin);
 
 				if (this.targetRect.Center.X > this.Parent.ActualWidth/2)  // popup à gauche ?
 				{
@@ -65,8 +67,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var x = this.targetRect.Center.X - this.DialogSize.Width/2;
 
-				x = System.Math.Max (x, AbstractPopup.dialogThickness);
-				x = System.Math.Min (x, this.Parent.ActualWidth - this.DialogSize.Width - AbstractPopup.dialogThickness);
+				x = System.Math.Max (x, AbstractPopup.dialogThickness + margin);
+				x = System.Math.Min (x, this.Parent.ActualWidth - this.DialogSize.Width - AbstractPopup.dialogThickness - margin);
 
 				if (this.targetRect.Center.Y > this.Parent.ActualHeight/2)  // popup en dessous ?
 				{
@@ -294,7 +296,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				rect.Inflate (-20 + step*80.0);
 
 				var path = AbstractPopup.GetPathRoundRectangle (rect, 10.0 + step*80.0);
-				var alpha = System.Math.Pow (1.0-step, 2.0) * 0.03;
+				var alpha = System.Math.Pow (1.0-step, 2.0) * 0.04;
 
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (Color.FromAlphaRgb (alpha, 0.0, 0.0, 0.0));

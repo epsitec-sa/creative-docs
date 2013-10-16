@@ -269,11 +269,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock   = DockStyle.Bottom,
 			};
 
-			this.controller.DateChanged += delegate
-			{
-				this.UpdateTimelineController ();
-			};
-
 			this.controller.CreateUI (this.frameBox);
 			this.controller.Pivot = 0.0;
 
@@ -282,6 +277,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateTimelineController ();
 
 			//	Connexion des événements.
+			this.controller.DateChanged += delegate
+			{
+				this.UpdateTimelineController (crop: false);
+			};
+
+			this.controller.ContentChanged += delegate
+			{
+				this.UpdateTimelineController ();
+			};
+
 			this.controller.CellClicked += delegate (object sender, int row, int rank)
 			{
 				if (row == this.GlyphRow)
@@ -398,7 +403,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateTimelineController()
+		private void UpdateTimelineController(bool crop = true)
 		{
 			int visibleCount = this.controller.VisibleCellsCount;
 			int cellsCount   = this.timelineData.CellsCount;
@@ -411,11 +416,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				//	La sélection ne peut pas dépasser le nombre maximal de cellules.
 				selection = System.Math.Min (selection, cellsCount-1);
 
-				//	Si la sélection est avant la zone visible, on recule firstCell.
-				firstCell = System.Math.Min (firstCell, selection);
-
-				//	Si la sélection est après la zone visible, on avance firstCell.
-				firstCell = System.Math.Max (firstCell, selection-count+1);
+				//	Si la sélection est hors de la zone visible, on choisit un autre cadrage.
+				if (crop && (selection < firstCell || selection >= firstCell+count))
+				{
+					firstCell = this.controller.GetLeftVisibleCell (selection);
+				}
 
 				if (this.controller.LeftVisibleCell != firstCell)
 				{
