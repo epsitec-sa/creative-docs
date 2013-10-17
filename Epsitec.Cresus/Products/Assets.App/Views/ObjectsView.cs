@@ -378,6 +378,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateEvent(System.DateTime date, string buttonName)
 		{
+			var guid = this.accessor.GetObjectGuid (this.treeTableController.SelectedRow);
+
+			if (!guid.IsEmpty)
+			{
+				var type = ObjectsView.ParseEventType (buttonName);
+				this.accessor.CreateEvent (guid, date, type);
+
+				// TODO: Mettre à jour la timeline !
+
+				this.Update ();
+			}
+		}
+
+		private static EventType ParseEventType(string text)
+		{
+			var type = EventType.Unknown;
+			System.Enum.TryParse<EventType> (text, out type);
+			return type;
 		}
 
 

@@ -153,6 +153,19 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
+		public void CreateEvent(Guid objectGuid, System.DateTime date, EventType type)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				var ts = new Timestamp (date, 0);  // TODO: trouver position !
+				var e = new DataEvent (0, ts, type);
+
+				obj.Events.Add (e);  // TODO: insérer à la bonne place !
+			}
+		}
+
 
 		public FieldType GetFieldType(ObjectField objectField)
 		{

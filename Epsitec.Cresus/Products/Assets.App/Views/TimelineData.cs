@@ -177,11 +177,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case EventType.Modification:
 					return TimelineGlyph.FilledCircle;
 
+				case EventType.Réorganisation:
+					return TimelineGlyph.OutlinedCircle;
+
 				case EventType.Augmentation:
 					return TimelineGlyph.FilledUp;
 
 				case EventType.Diminution:
 					return TimelineGlyph.FilledDown;
+
+				case EventType.AmortissementAuto:
+					return TimelineGlyph.FilledDiamond;
+
+				case EventType.AmortissementExtra:
+					return TimelineGlyph.OutlinedDiamond;
 
 				default:
 					return TimelineGlyph.FilledCircle;

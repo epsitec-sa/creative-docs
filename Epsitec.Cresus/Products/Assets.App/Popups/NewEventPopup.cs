@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
@@ -30,19 +31,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.CreateDateUI ();
 
-			this.CreateButton (x, y, dx, dy, "Entrée", "Entrée", "Entrée dans l'inventaire, acquisition");
+			this.CreateButton (x, y, dx, dy, EventType.Entrée, "Entrée", "Entrée dans l'inventaire, acquisition");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Modification", "Modification", "Modification de diverses informations");
+			this.CreateButton (x, y, dx, dy, EventType.Modification, "Modification", "Modification de diverses informations");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Réorganisation", "Réorganisation", "Modification pour MCH2");
+			this.CreateButton (x, y, dx, dy, EventType.Réorganisation, "Réorganisation", "Modification pour MCH2");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Augmentation", "Revalorisation", "Augmentation de la valeur");
+			this.CreateButton (x, y, dx, dy, EventType.Augmentation, "Revalorisation", "Augmentation de la valeur");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Diminution", "Réévaluation", "Baisse de la valeur");
+			this.CreateButton (x, y, dx, dy, EventType.Diminution, "Réévaluation", "Baisse de la valeur");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "AmortissementExtra", "Amortissement extraordinaire", "Amortissement manuel");
+			this.CreateButton (x, y, dx, dy, EventType.AmortissementExtra, "Amortissement extraordinaire", "Amortissement manuel");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, "Sortie", "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.");
+			this.CreateButton (x, y, dx, dy, EventType.Sortie, "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.");
 
 			this.CreateCloseButton ();
 		}
@@ -66,6 +67,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				this.OnDateChanged (this.dateController.Value);
 			};
+		}
+
+		private Button CreateButton(int x, int y, int dx, int dy, EventType type, string text, string tooltip = null)
+		{
+			string name = type.ToString();
+			return this.CreateButton (x, y, dx, dy, name, text, tooltip);
 		}
 
 		private Size GetDialogSize(int buttonCount)

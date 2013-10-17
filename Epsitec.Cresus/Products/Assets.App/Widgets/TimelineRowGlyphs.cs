@@ -112,6 +112,26 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.RenderSolid (ColorManager.TextColor);
 					break;
 
+				case TimelineGlyph.FilledDiamond:
+					r = TimelineRowGlyphs.GetGlyphSquare (rect, 0.35);
+					path = TimelineRowGlyphs.GetDiamondPath (r);
+
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.TextColor);
+					break;
+
+				case TimelineGlyph.OutlinedDiamond:
+					r = TimelineRowGlyphs.GetGlyphSquare (rect, 0.35);
+					r.Deflate (0.5);
+					path = TimelineRowGlyphs.GetDiamondPath (r);
+
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+					graphics.AddPath (path);
+					graphics.RenderSolid (ColorManager.TextColor);
+					break;
+
 				case TimelineGlyph.FilledDown:
 					r = TimelineRowGlyphs.GetGlyphSquare (rect, 0.3);
 					path = TimelineRowGlyphs.GetDownPath (r);
@@ -182,6 +202,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			path.MoveTo (rect.BottomLeft);
 			path.LineTo (rect.BottomRight);
 			path.LineTo (rect.Center.X, rect.Top);
+			path.Close ();
+
+			return path;
+		}
+
+		private static Path GetDiamondPath(Rectangle rect)
+		{
+			var path = new Path ();
+
+			path.MoveTo (rect.Center.X, rect.Top);
+			path.LineTo (rect.Right, rect.Center.Y);
+			path.LineTo (rect.Center.X, rect.Bottom);
+			path.LineTo (rect.Left, rect.Center.Y);
 			path.Close ();
 
 			return path;

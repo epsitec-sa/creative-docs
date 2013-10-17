@@ -15,6 +15,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		FilledSquare,
 		OutlinedSquare,
 
+		FilledDiamond,
+		OutlinedDiamond,
+
 		FilledDown,
 		OutlinedDown,
 
