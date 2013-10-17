@@ -66,6 +66,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				treeTable.AllowsMovement = false;
 				treeTable.SetColumns (this.accessor.Columns);
 				treeTable.SetContent (this.accessor.Content);
+
+				//	Il faut forcer le calcul du layout pour pouvoir calculer la
+				//	première ligne visible dans le TreeTable.
+				parent.Window.ForceLayout ();
+
 				treeTable.SelectedRow = this.accessor.SelectedRow;
 				treeTable.ShowSelection ();
 
