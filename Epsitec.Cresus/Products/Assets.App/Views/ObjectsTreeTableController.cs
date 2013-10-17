@@ -86,6 +86,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.CreateUI (frame, footerHeight: 0);
 			this.controller.SetColumns (this.TreeTableColumns, 1);
 
+			//	Pour que le calcul du nombre de lignes visibles soit correct.
+			parent.Window.ForceLayout ();
+
 			this.UpdateTreeTableController ();
 
 			//	Connexion des événements.

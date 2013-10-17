@@ -62,8 +62,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				this.OnContentChanged (false);
 			};
-
-			this.UpdateScroller ();
 		}
 
 

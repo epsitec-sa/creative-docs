@@ -272,6 +272,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.CreateUI (this.frameBox);
 			this.controller.Pivot = 0.0;
 
+			//	Pour que le calcul du nombre de cellules visibles soit correct.
+			parent.Window.ForceLayout ();
+
 			this.UpdateRows ();
 			this.UpdateTimelineData ();
 			this.UpdateTimelineController ();
