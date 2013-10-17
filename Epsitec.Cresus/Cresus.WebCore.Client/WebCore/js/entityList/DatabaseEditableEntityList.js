@@ -183,12 +183,15 @@ function() {
     },
 
     reloadAndScrollToEntity: function(columnManager,entityId,entityIndex,samePage) {
+      var result, scroll;
+
+
       this.resetStore(false);
       this.setLoading(false,true);
       columnManager.removeAllColumns();
     
       
-      var result = this.store.data.findBy(function(record) {
+      result = this.store.data.findBy(function(record) {
           return record.getId() === entityId;
       });
 
@@ -205,7 +208,7 @@ function() {
         return;
       }
 
-      var scroll = entityIndex;
+      scroll = entityIndex;
 
       this.store.reload({
         callback: function() {

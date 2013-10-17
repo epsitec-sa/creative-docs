@@ -256,12 +256,14 @@ function() {
     reloadCurrentDatabase: function(samePage) {
       var key = this.tabManager.currentTab;
       var columnManager = this.tabManager.entityTabs[key];
+      var currentSelection, selectionIndex;
+      
       if(Ext.isDefined(columnManager))
       {   
-          var currentSelection = columnManager.leftList.entityList.getSelectionModel().getSelection();
+          currentSelection = columnManager.leftList.entityList.getSelectionModel().getSelection();
           if(currentSelection.length>0)
           {
-            var selectionIndex = currentSelection[0].index;
+            selectionIndex = currentSelection[0].index;
             columnManager.leftList.entityList.reloadAndScrollToEntity(columnManager,currentSelection[0].internalId,selectionIndex,samePage);
           }
           else

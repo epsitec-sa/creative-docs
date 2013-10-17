@@ -84,6 +84,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				AiderContactEntity.Delete (this.BusinessContext, contact);
 			}
+
+			household.RefreshCache ();
 		}
 	}
 }

@@ -68,7 +68,6 @@ function() {
 
     /* Methods */
     executeFullSearch: function() {
-
       var list, window, index;
 
       list = this.caller;
@@ -80,7 +79,7 @@ function() {
           this.form.items.items[0].lastValue
       );
 
-      var index = 1;
+      index = 1;
       list.isSearching = true;
       // Show needed columns and appli filters
       Ext.Array.each(this.form.items.items, function(item) { 
@@ -119,20 +118,21 @@ function() {
     },
 
     addFilterToList: function(item,list) {
-      var value = this.getFormItemValue(item);
+      var filter,value = this.getFormItemValue(item);
       list.filters.addFilter({
         type: item.filterType,
         dataIndex: item.name,
         value: value,
         active: true
       });
-      var filter = list.filters.getFilter(item.name);
+      filter = list.filters.getFilter(item.name);
       filter.fireEventArgs(
         'update', filter
       );                  
     }, 
 
     valueExist: function(item) {
+      var exist;
       if(Ext.isDefined(item.lastValue))
       {
         if(item.lastValue != "") {
@@ -147,7 +147,7 @@ function() {
       {
         if(this.isSubItemField(item))
         {
-          var exist = false;
+          exist = false;
           Ext.Array.each(item.items.items, function(subitem) {
             if(Ext.isDefined(subitem.lastValue))
             {
@@ -181,6 +181,7 @@ function() {
     },
 
     getFormItemValue: function(item) {
+      var values;
       if(Ext.isDefined(item.lastValue))
       {
         return item.lastValue;
@@ -191,7 +192,7 @@ function() {
         {
           case 'date':
           case 'datetime':
-            var values = {}; 
+            values = {}; 
             values.after = null;
             values.before = null;
             values.on = null;
@@ -217,7 +218,7 @@ function() {
             
           break;
           case 'numeric':
-            var values = {}; 
+            values = {}; 
             values.eq = null;
             values.lt = null;
             values.gt = null;
@@ -253,7 +254,11 @@ function() {
     resetFullSearch: function() {
       var list = this.caller;
       var window = this;
-      Ext.Array.each(this.form.items.items, function(item) {        
+      var index;
+
+      Ext.Array.each(this.form.items.items, function(item) {
+        var filter,value;
+
         if(window.isSubItemField(item)) {
           Ext.Array.each(item.items.items, function(subitem) {
             subitem.reset();
@@ -264,17 +269,18 @@ function() {
         }
 
         if (list.filters.filters.containsKey(item.name)) {
-          var filter = list.filters.getFilter(item.name);
-          var value = window.getFormItemValue(item);
+          filter = list.filters.getFilter(item.name);
+          value = window.getFormItemValue(item);
           filter.setValue(value);
           filter.setActive(false);
         }
       });
+
       list.dockedItems.items[2].items.items[0].setValue(
           this.form.items.items[0].lastValue
       );
 
-      var index = 1;
+      index = 1;
       // Show/Unshow needed columns
       Ext.Array.each(this.form.items.items, function(item) { 
         if (window.valueExist(item) && !list.columns[index].isVisible()) {

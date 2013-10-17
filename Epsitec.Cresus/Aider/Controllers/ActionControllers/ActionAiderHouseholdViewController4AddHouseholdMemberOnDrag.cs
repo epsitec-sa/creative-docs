@@ -41,6 +41,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			ActionAiderHouseholdViewController1AddHouseholdMember.ValidatePersonAge (household, person, isPersonHead);
 
 			AiderContactEntity.Create (this.BusinessContext, person, household, isPersonHead);
+
+			household.RefreshCache ();
 		}
 
 		internal static void ValidatePerson(AiderHouseholdEntity household, AiderPersonEntity person)
