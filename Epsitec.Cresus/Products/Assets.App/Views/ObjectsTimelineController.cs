@@ -257,6 +257,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public void Update()
+		{
+			this.UpdateRows ();
+			this.UpdateTimelineData ();
+			this.UpdateTimelineController ();
+		}
+
+
 		private void CreateTimeline(Widget parent)
 		{
 			this.selectedCell = -1;

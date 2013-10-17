@@ -383,11 +383,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (!guid.IsEmpty)
 			{
 				var type = ObjectsView.ParseEventType (buttonName);
-				this.accessor.CreateEvent (guid, date, type);
+				var timestamp = this.accessor.CreateEvent (guid, date, type);
 
-				// TODO: Mettre à jour la timeline !
+				if (timestamp.HasValue)
+				{
+					this.timelineController.Update ();
 
-				this.Update ();
+					int? index = this.timelineController.GetEventIndex (timestamp);
+					if (index.HasValue)
+					{
+						this.timelineController.SelectedCell = index.Value;
+					}
+				}
 			}
 		}
 
