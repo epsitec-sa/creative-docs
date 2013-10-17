@@ -312,6 +312,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null && timestamp.HasValue)
 			{
+				System.DateTime? createDate = timestamp.Value.Date;
+
 				var popup = new NewEventPopup
 				{
 					Date = timestamp.Value.Date,
@@ -327,11 +329,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						this.timelineController.SelectedCell = index.Value;
 					}
+					else
+					{
+						this.timelineController.SelectedCell = -1;
+					}
+
+					if (dateTime.HasValue)
+					{
+						createDate = dateTime.Value;
+					}
 				};
 
 				popup.ButtonClicked += delegate (object sender, string name)
 				{
-					this.CreateEvent (timestamp.Value.Date, name);
+					if (createDate.HasValue)
+					{
+						this.CreateEvent (createDate.Value, name);
+					}
 				};
 			}
 		}
