@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void Compute(Guid? objectGuid, TimelineMode mode, System.DateTime start, System.DateTime end)
+		public void Compute(Guid? objectGuid, TimelineMode mode, System.DateTime start, System.DateTime end, System.DateTime? forcedDate)
 		{
 			this.cells.Clear ();
 
@@ -49,9 +49,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			if ((mode & TimelineMode.Compacted) != 0)
+			//if ((mode & TimelineMode.Compacted) != 0)
+			if (false)
 			{
-#if false
 				//	Crée des cellules pour tous les premiers du mois compris entre 'start' et 'end'.
 				int year  = start.Year;
 				int month = start.Month;
@@ -80,24 +80,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 						year++;
 					}
 				}
-#endif
-
-				//	Si nécessaire, crée une cellule pour aujourd'hui.
-				var now = System.DateTime.Now;
-
-				if (!this.cells.Where (x => x.Timestamp.Date == now).Any ())
-				{
-					var cell = new TimelineCell
-					{
-						Timestamp     = Timestamp.Now,
-						TimelineGlyph = TimelineGlyph.Empty,
-					};
-
-					int i = this.cells.Where (x => x.Timestamp.Date < now).Count ();
-					this.cells.Insert (i, cell);  // la liste doit être triée chronologiquement
-				}
 			}
 
+			//	Si nécessaire, ajoute les cellules forcées.
+			this.AddForcedDate (Timestamp.Now.Date);
+			this.AddForcedDate (forcedDate);
+
+			//	Ajoute les cellules correspondant aux événements de l'objet.
+			//	S'il existe déjà une cellule à la date concernée, on modifie la
+			//	cellule pour représenter l'événement de l'objet.
 			if (objectGuid.HasValue)
 			{
 				int eventCount = this.accessor.GetObjectEventsCount (objectGuid.Value);
@@ -151,6 +142,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 		}
+
+		private void AddForcedDate(System.DateTime? date)
+		{
+			//	Ajoute une date dans la liste des cellules, si elle n'y est pas déjà.
+			if (date.HasValue &&
+				!this.cells.Where (x => x.Timestamp.Date == date.Value).Any ())
+			{
+				var cell = new TimelineCell
+				{
+					Timestamp     = new Timestamp(date.Value, 0),
+					TimelineGlyph = TimelineGlyph.Empty,
+				};
+
+				int i = this.cells.Where (x => x.Timestamp.Date < date.Value).Count ();
+				this.cells.Insert (i, cell);  // la liste doit être triée chronologiquement
+			}
+		}
+
 
 		private TimelineGlyph GetGlyph(Guid objectGuid, int eventIndex)
 		{

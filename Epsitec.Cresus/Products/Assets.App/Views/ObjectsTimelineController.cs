@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
@@ -38,9 +37,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.timelineMode = value;
 
-					this.UpdateRows ();
-					this.UpdateTimelineData ();
-					this.UpdateTimelineController ();
+					using (new SaveCurrentDate (this))
+					{
+						this.UpdateRows ();
+						this.UpdateTimelineData ();
+						this.UpdateTimelineController ();
+					}
 				}
 			}
 		}
@@ -102,8 +104,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.objectGuid = value;
 
-					this.UpdateTimelineData ();
-					this.UpdateTimelineController ();
+					using (new SaveCurrentDate (this))
+					{
+						this.UpdateTimelineData ();
+						this.UpdateTimelineController ();
+					}
 				}
 			}
 		}
@@ -259,9 +264,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void Update()
 		{
-			this.UpdateRows ();
-			this.UpdateTimelineData ();
-			this.UpdateTimelineController ();
+			using (new SaveCurrentDate (this))
+			{
+				this.UpdateRows ();
+				this.UpdateTimelineData ();
+				this.UpdateTimelineController ();
+			}
 		}
 
 
@@ -403,7 +411,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var start = new System.DateTime (this.accessor.StartDate.Year, 1, 1);
 			var end   = new System.DateTime (this.accessor.StartDate.Year+1, 12, 31);
 
-			this.timelineData.Compute (this.objectGuid, this.timelineMode, start, end);
+			this.timelineData.Compute (this.objectGuid, this.timelineMode, start, end, this.CurrentDate);
 
 			this.controller.CellsCount = this.timelineData.CellsCount;
 		}
@@ -506,6 +514,52 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				this.controller.SetRowYearCells (line++, dates.ToArray ());
+			}
+		}
+
+
+		private class SaveCurrentDate : System.IDisposable
+		{
+			public SaveCurrentDate(ObjectsTimelineController controller)
+			{
+				this.controller = controller;
+				this.currentDate = this.controller.CurrentDate;
+			}
+
+			public void Dispose()
+			{
+				this.controller.CurrentDate = this.currentDate;
+			}
+
+			private readonly ObjectsTimelineController	controller;
+			private readonly System.DateTime?			currentDate;
+		}
+
+		private System.DateTime? CurrentDate
+		{
+			get
+			{
+				var currentTimestamp = this.SelectedTimestamp;
+
+				if (currentTimestamp.HasValue)
+				{
+					return currentTimestamp.Value.Date;
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if (value.HasValue)
+				{
+					var index = this.GetEventIndex (value.Value);
+					if (index.HasValue)
+					{
+						this.SelectedCell = index.Value;
+					}
+				}
 			}
 		}
 

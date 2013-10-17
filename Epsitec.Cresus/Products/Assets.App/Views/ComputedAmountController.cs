@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
@@ -11,6 +12,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ComputedAmountController
 	{
+		public ComputedAmountController()
+		{
+			this.ignoreChanges = new SafeCounter ();
+		}
+
+
 		public ComputedAmount?					ComputedAmount
 		{
 			get
@@ -133,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.argumentTextField.TextChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					this.ArgumentChanged ();
 					this.UpdateUI ();
@@ -143,7 +150,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.finalTextField.TextChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					this.FinalChanged ();
 					this.UpdateUI ();
@@ -312,55 +319,54 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			this.ignoreChange = true;
-
-			bool computedButtonEnable = !this.isReadOnly;
-
-			if (this.computedAmount.HasValue)
+			using (this.ignoreChanges.Enter ())
 			{
-				var ca = this.computedAmount.Value;
+				bool computedButtonEnable = !this.isReadOnly;
 
-				this.initialTextField .Visibility = ca.Computed;
-				this.addSubButton     .Visibility = ca.Computed;
-				this.argumentTextField.Visibility = ca.Computed;
-				this.rateButton       .Visibility = ca.Computed;
-				this.equalText        .Visibility = ca.Computed;
-
-				this.computedButton.GlyphShape = ca.Computed ? GlyphShape.TriangleLeft : GlyphShape.TriangleRight;
-				this.addSubButton.GlyphShape = ca.Substract ? GlyphShape.Minus : GlyphShape.Plus;
-				this.rateButton.Text = ca.Rate ? "%" : "CHF";
-
-				this.initialTextField.Text = Helpers.Converters.AmountToString (ca.InitialAmount);
-
-				this.EditedArgumentAmount = ca.ArgumentAmount;
-				this.EditedFinalAmount    = ca.FinalAmount;
-
-				if (!ca.Computed && !ca.FinalAmount.HasValue)
+				if (this.computedAmount.HasValue)
 				{
+					var ca = this.computedAmount.Value;
+
+					this.initialTextField .Visibility = ca.Computed;
+					this.addSubButton     .Visibility = ca.Computed;
+					this.argumentTextField.Visibility = ca.Computed;
+					this.rateButton       .Visibility = ca.Computed;
+					this.equalText        .Visibility = ca.Computed;
+
+					this.computedButton.GlyphShape = ca.Computed ? GlyphShape.TriangleLeft : GlyphShape.TriangleRight;
+					this.addSubButton.GlyphShape = ca.Substract ? GlyphShape.Minus : GlyphShape.Plus;
+					this.rateButton.Text = ca.Rate ? "%" : "CHF";
+
+					this.initialTextField.Text = Helpers.Converters.AmountToString (ca.InitialAmount);
+
+					this.EditedArgumentAmount = ca.ArgumentAmount;
+					this.EditedFinalAmount    = ca.FinalAmount;
+
+					if (!ca.Computed && !ca.FinalAmount.HasValue)
+					{
+						computedButtonEnable = false;
+					}
+				}
+				else
+				{
+					this.initialTextField .Visibility = false;
+					this.addSubButton     .Visibility = false;
+					this.argumentTextField.Visibility = false;
+					this.rateButton       .Visibility = false;
+					this.equalText        .Visibility = false;
+
+					this.EditedFinalAmount = null;
 					computedButtonEnable = false;
 				}
+
+
+				this.argumentTextField.IsReadOnly =  this.isReadOnly;
+				this.finalTextField   .IsReadOnly =  this.isReadOnly;
+				this.addSubButton     .Enable     = !this.isReadOnly;
+				this.rateButton       .Enable     = !this.isReadOnly;
+				this.equalText        .Enable     = !this.isReadOnly;
+				this.computedButton   .Enable     = computedButtonEnable;
 			}
-			else
-			{
-				this.initialTextField .Visibility = false;
-				this.addSubButton     .Visibility = false;
-				this.argumentTextField.Visibility = false;
-				this.rateButton       .Visibility = false;
-				this.equalText        .Visibility = false;
-
-				this.EditedFinalAmount = null;
-				computedButtonEnable = false;
-			}
-
-
-			this.argumentTextField.IsReadOnly =  this.isReadOnly;
-			this.finalTextField   .IsReadOnly =  this.isReadOnly;
-			this.addSubButton     .Enable     = !this.isReadOnly;
-			this.rateButton       .Enable     = !this.isReadOnly;
-			this.equalText        .Enable     = !this.isReadOnly;
-			this.computedButton   .Enable     = computedButtonEnable;
-
-			this.ignoreChange = false;
 		}
 
 
@@ -430,10 +436,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected static readonly int lineHeight = 17;
 		protected static readonly int editWidth  = 90;
 
-	
+
+		private readonly SafeCounter			ignoreChanges;
+
 		private ComputedAmount?					computedAmount;
 		private bool							isReadOnly;
-		private bool							ignoreChange;
 
 		private TextField						initialTextField;
 		private GlyphButton						addSubButton;
