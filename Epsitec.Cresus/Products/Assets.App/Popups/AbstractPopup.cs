@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var y = r2.Bottom - r1.Bottom;
 
 			this.targetRect = new Rectangle (x, y, target.ActualWidth, target.ActualHeight);
+			this.targetRect.Inflate (1);
 
 			this.InitializeDialogRect (leftOrRight);
 			this.CreateUI ();
@@ -291,6 +292,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Met en évidence le bouton target à l'origine du popup.
 			var rect = this.targetRect;
 			rect.Deflate (0.5);
+			graphics.AddRectangle (rect);
+			rect.Deflate (1.0);
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (ColorManager.SelectionColor);
 
