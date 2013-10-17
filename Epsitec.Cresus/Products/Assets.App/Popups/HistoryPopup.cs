@@ -4,8 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -23,30 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				//	On calcule une hauteur adaptée au contenu, mais qui ne dépasse
-				//	évidement pas la hauteur de la fenêtre principale.
-				var parent = this.GetParent ();
-
-				double h = parent.ActualHeight
-						 - HistoryController.HeaderHeight
-						 - AbstractScroller.DefaultBreadth;
-
-				//	Utilise au maximum les 3/4 de la hauteur.
-				int max = (int) (h*0.75) / HistoryController.RowHeight;
-
-				int rows = System.Math.Min (this.accessor.RowsCount, max);
-					rows = System.Math.Max (rows, 3);
-
-				int dx = HistoryController.DateColumnWidth
-					   + HistoryController.ValueColumnWidth
-					   + (int) AbstractScroller.DefaultBreadth;
-
-				int dy = HistoryController.TitleHeight
-					   + HistoryController.HeaderHeight
-					   + rows * HistoryController.RowHeight
-					   + (int) AbstractScroller.DefaultBreadth;
-
-				return new Size (dx, dy);
+				return this.controller.GetSize (this.GetParent ());
 			}
 		}
 

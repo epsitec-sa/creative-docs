@@ -47,6 +47,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		public int								ColumnsWidth
+		{
+			get
+			{
+				return HistoryAccessor.DateColumnWidth + HistoryAccessor.ValueColumnWidth;
+			}
+		}
+
 
 		public Timestamp? GetTimestamp(int row)
 		{
@@ -67,20 +75,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, HistoryController.DateColumnWidth, "Date"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, HistoryAccessor.DateColumnWidth, "Date"));
 
 				if (this.fieldType == FieldType.Amount ||
 					this.fieldType == FieldType.Int)
 				{
-					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, HistoryController.ValueColumnWidth, "Valeur"));
+					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, HistoryAccessor.ValueColumnWidth, "Valeur"));
 				}
 				else if (this.fieldType == FieldType.Rate)
 				{
-					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, HistoryController.ValueColumnWidth, "Valeur"));
+					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, HistoryAccessor.ValueColumnWidth, "Valeur"));
 				}
 				else
 				{
-					list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, HistoryController.ValueColumnWidth, "Valeur"));
+					list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, HistoryAccessor.ValueColumnWidth, "Valeur"));
 				}
 
 				return list.ToArray ();
@@ -166,6 +174,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+
+		private static readonly int DateColumnWidth  = 80;
+		private static readonly int ValueColumnWidth = 150;
 
 		private readonly DataAccessor								accessor;
 		private readonly FieldType									fieldType;
