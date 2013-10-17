@@ -78,6 +78,7 @@
     <Compile Include="Helpers\Converters.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
+    <Compile Include="Popups\HistoryAccessor.cs" />
     <Compile Include="Popups\HistoryPopup.cs" />
     <Compile Include="Popups\DeletePopup.cs" />
     <Compile Include="Popups\NewEventPopup.cs" />

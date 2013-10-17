@@ -14,7 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	{
 		public HistoryPopup(DataAccessor accessor, Guid objectGuid, Timestamp? timestamp, int field)
 		{
-			this.controller = new HistoryController (accessor, objectGuid, timestamp, field);
+			this.accessor = new HistoryAccessor (accessor, objectGuid, timestamp, field);
+			this.controller = new HistoryController (this.accessor);
 		}
 
 
@@ -33,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				//	Utilise au maximum les 3/4 de la hauteur.
 				int max = (int) (h*0.75) / HistoryController.RowHeight;
 
-				int rows = System.Math.Min (this.controller.RowsCount, max);
+				int rows = System.Math.Min (this.accessor.RowsCount, max);
 					rows = System.Math.Max (rows, 3);
 
 				int dx = HistoryController.DateColumnWidth
@@ -78,6 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
+		private readonly HistoryAccessor		accessor;
 		private readonly HistoryController		controller;
 	}
 }
