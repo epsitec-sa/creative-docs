@@ -311,6 +311,14 @@ namespace Epsitec.Aider
 			{
 				public static class AddressType
 				{
+					//	designer:cap/LVO403
+					public static global::Epsitec.Common.Types.Caption Confidential
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 4));
+						}
+					}
 					//	designer:cap/LVAU5
 					public static global::Epsitec.Common.Types.Caption Default
 					{
@@ -1746,6 +1754,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid CallNameDisplay = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 124);
 				//	designer:cap/LVAI5
 				public static readonly global::Epsitec.Common.Support.Druid Confession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 178);
+				//	designer:cap/LVO503
+				public static readonly global::Epsitec.Common.Support.Druid ConfidentialAddresses = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 5);
 				//	designer:cap/LVAIE
 				public static readonly global::Epsitec.Common.Support.Druid Contacts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 466);
 				//	designer:cap/LVAI4

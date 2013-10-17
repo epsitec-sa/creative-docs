@@ -558,6 +558,16 @@ namespace Epsitec.Aider.Entities
 		{
 			value = this.GetContacts ()
 				.Where (x => x.ContactType == ContactType.PersonAddress)
+				.Where (x => x.AddressType != AddressType.Confidential)
+				.OrderBy (x => x.DisplayAddress)
+				.AsReadOnlyCollection ();
+		}
+
+		partial void GetConfidentialAddresses(ref IList<AiderContactEntity> value)
+		{
+			value = this.GetContacts ()
+				.Where (x => x.ContactType == ContactType.PersonAddress)
+				.Where (x => x.AddressType == AddressType.Confidential)
 				.OrderBy (x => x.DisplayAddress)
 				.AsReadOnlyCollection ();
 		}

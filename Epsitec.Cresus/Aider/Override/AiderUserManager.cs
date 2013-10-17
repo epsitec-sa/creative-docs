@@ -49,7 +49,6 @@ namespace Epsitec.Aider.Override
 			}
 		}
 
-
 		public override void NotifySusccessfulLogin(SoftwareUserEntity user)
 		{
 			this.UpdateUser (user.Code, u => u.LastLoginDate = System.DateTime.UtcNow);

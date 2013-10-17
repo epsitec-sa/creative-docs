@@ -29,6 +29,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
+			var user = AiderUserManager.Current.AuthenticatedUser;
+
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
 				.EnableActionMenu<ActionAiderPersonViewController5AddHousehold> ()
@@ -95,6 +97,20 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.AddressType).ApplyBold (), "\n", x.Address.GetSummary ()))
 					.End ()
 					.WithSpecialController (typeof (EditionAiderContactViewController1Address));
+
+				if (user.CanViewConfidentialAddress ())
+				{
+					wall.AddBrick (x => x.ConfidentialAddresses)
+					.Title ("Adresses confidentielles")
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Attribute (BrickMode.AutoGroup)
+					.EnableActionMenu<ActionAiderPersonViewController6RemoveAlternateAddress> ()
+					.Template ()
+						.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.AddressType).ApplyBold (), "\n", x.Address.GetSummary ()))
+					.End ()
+					.WithSpecialController (typeof (EditionAiderContactViewController1Address));
+				}
 			}
 
 			wall.AddBrick (x => x.Comment)

@@ -15,6 +15,7 @@ using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -23,7 +24,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderContactEntity> wall)
 		{
 			//	TODO: refactor this in a set of sub-controllers, just like SummaryAiderPersonWarningViewController
-
+			var user = AiderUserManager.Current.AuthenticatedUser;
 			var contact = this.Entity;
 			var household = this.Entity.Household;
 
@@ -114,11 +115,26 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					}
 					if (contact.Address.IsNotNull ())
 					{
-						wall.AddBrick ()
+						if (contact.AddressType == AddressType.Confidential)
+						{
+							if (user.CanViewConfidentialAddress ())
+							{
+								wall.AddBrick ()
+								.Title (TextFormatter.FormatText (contact.AddressType))
+								.Text (contact.Address.GetSummary ())
+								.Icon ("Data.AiderAddress")
+								.WithSpecialController (typeof (EditionAiderContactViewController1Address));
+							}
+						}
+						else
+						{
+							wall.AddBrick ()
 							.Title (TextFormatter.FormatText (contact.AddressType))
 							.Text (contact.Address.GetSummary ())
 							.Icon ("Data.AiderAddress")
 							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
+						}
+						
 					}
 					break;
 
@@ -153,11 +169,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 		public static FormattedText GetPersonContactSummary(AiderContactEntity contact)
 		{
+			var user = AiderUserManager.Current.AuthenticatedUser;
 			var text = contact.Person.GetCompactSummary ();
-
 			var contactInfoPrivate   = text;
-			var contactInfoProf      = FormattedText.Empty;
-			var contactInfoSecondary = FormattedText.Empty;
+			var contactInfoConfidential = FormattedText.Empty;
+			var contactInfoProf			= FormattedText.Empty;
+			var contactInfoSecondary	= FormattedText.Empty;
 
 			foreach (var detail in contact.Person.Contacts.Where (x => x.Address.IsNotNull ()))
 			{
@@ -174,10 +191,20 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				switch (detail.AddressType)
 				{
 					case Enumerations.AddressType.Default:
-					case Enumerations.AddressType.Other:
+					
+					case Enumerations.AddressType.Other:					
 						contactInfoPrivate = TextFormatter.FormatText (contactInfoPrivate, "\n", phone, "\n", email);
 						break;
-
+					case Enumerations.AddressType.Confidential:
+						if (user.CanViewConfidentialAddress ())
+						{
+							if (contactInfoConfidential.IsNullOrEmpty ())
+							{
+								contactInfoConfidential = new FormattedText ("<hr/><b>Confidentiel:</b>");
+							}
+							contactInfoConfidential = TextFormatter.FormatText (contactInfoConfidential, "\n", phone, "\n", email);
+						}
+						break;
 					case Enumerations.AddressType.Professional:
 						if (contactInfoProf.IsNullOrEmpty ())
 						{
@@ -196,7 +223,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				}
 			}
 
-			return TextFormatter.FormatText (contactInfoPrivate, "\n", contactInfoProf, "\n", contactInfoSecondary);
+			return TextFormatter.FormatText (contactInfoPrivate, "\n", contactInfoProf, "\n", contactInfoSecondary, "\n", contactInfoConfidential);
 		}
 	}
 }

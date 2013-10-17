@@ -1037,6 +1037,20 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>ConfidentialAddresses</c> field.
+		///	designer:fld/LVAF/LVO503
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO503]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> ConfidentialAddresses
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity>);
+				this.GetConfidentialAddresses (ref value);
+				return value;
+			}
+		}
+		///	<summary>
 		///	The <c>MainContact</c> field.
 		///	designer:fld/LVAF/LVAEH
 		///	</summary>
@@ -1185,6 +1199,7 @@ namespace Epsitec.Aider.Entities
 		partial void GetAddress(ref global::Epsitec.Aider.Entities.AiderAddressEntity value);
 		partial void SetAddress(global::Epsitec.Aider.Entities.AiderAddressEntity value);
 		partial void GetAdditionalAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
+		partial void GetConfidentialAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
 		partial void GetMainContact(ref global::Epsitec.Aider.Entities.AiderContactEntity value);
 		partial void SetMainContact(global::Epsitec.Aider.Entities.AiderContactEntity value);
 		partial void GetHouseholdContact(ref global::Epsitec.Aider.Entities.AiderContactEntity value);

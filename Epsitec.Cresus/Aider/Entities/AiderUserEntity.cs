@@ -69,7 +69,10 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		
+		public bool CanViewConfidentialAddress()
+		{
+			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);
+		}
 
 		public void SetPassword(string password, string confirmation)
 		{
