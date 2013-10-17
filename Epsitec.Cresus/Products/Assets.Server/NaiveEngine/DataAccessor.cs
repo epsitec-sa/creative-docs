@@ -159,7 +159,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (obj != null)
 			{
-				var ts = new Timestamp (date, 0);  // TODO: trouver position +1 !
+				var position = obj.GetNewPosition (date);
+				var ts = new Timestamp (date, position);
 				var e = new DataEvent (0, ts, type);
 
 				obj.AddEvent (e);

@@ -28,6 +28,20 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
+		public int GetNewPosition(System.DateTime date)
+		{
+			var e = this.events.Where (x => x.Timestamp.Date == date).LastOrDefault ();
+
+			if (e == null)
+			{
+				return 0;
+			}
+			else
+			{
+				return e.Timestamp.Position+1;
+			}
+		}
+
 		public void AddEvent(DataEvent e)
 		{
 			int i = this.events.Where (x => x.Timestamp < e.Timestamp).Count ();
