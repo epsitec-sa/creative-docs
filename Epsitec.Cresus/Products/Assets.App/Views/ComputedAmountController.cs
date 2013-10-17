@@ -27,6 +27,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public bool IsReadOnly
+		{
+			get
+			{
+				return this.isReadOnly;
+			}
+			set
+			{
+				if (this.isReadOnly != value)
+				{
+					this.isReadOnly = value;
+					this.UpdateUI ();
+				}
+			}
+		}
+
 
 		public void CreateUI(Widget parent)
 		{
@@ -79,20 +95,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (ComputedAmountController.editWidth, ComputedAmountController.lineHeight),
 				TabIndex      = 2,
-				Margins       = new Margins (0, 10, 0, 0),
 			};
 
-			this.calcButton = new IconButton
+			this.computedButton = new GlyphButton
 			{
 				Parent        = parent,
-				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Field.Calc"),
+				ButtonStyle   = ButtonStyle.ToolItem,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (ComputedAmountController.lineHeight, ComputedAmountController.lineHeight),
 			};
 
 			//	Connexion des événements.
-			this.calcButton.Clicked += delegate
+			this.computedButton.Clicked += delegate
 			{
 				this.SwapComputed ();
 				this.UpdateUI ();
@@ -299,35 +314,51 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.ignoreChange = true;
 
+			bool computedButtonEnable = !this.isReadOnly;
+
 			if (this.computedAmount.HasValue)
 			{
 				var ca = this.computedAmount.Value;
 
-				this.initialTextField.Visibility = ca.Computed;
-				this.addSubButton.Visibility = ca.Computed;
+				this.initialTextField .Visibility = ca.Computed;
+				this.addSubButton     .Visibility = ca.Computed;
 				this.argumentTextField.Visibility = ca.Computed;
-				this.rateButton.Visibility = ca.Computed;
-				this.equalText.Visibility = ca.Computed;
+				this.rateButton       .Visibility = ca.Computed;
+				this.equalText        .Visibility = ca.Computed;
 
-				this.calcButton.ActiveState = ca.Computed ? ActiveState.Yes : ActiveState.No;
+				this.computedButton.GlyphShape = ca.Computed ? GlyphShape.TriangleLeft : GlyphShape.TriangleRight;
 				this.addSubButton.GlyphShape = ca.Substract ? GlyphShape.Minus : GlyphShape.Plus;
 				this.rateButton.Text = ca.Rate ? "%" : "CHF";
 
-				this.initialTextField.Text  = Helpers.Converters.AmountToString (ca.InitialAmount);
+				this.initialTextField.Text = Helpers.Converters.AmountToString (ca.InitialAmount);
 
 				this.EditedArgumentAmount = ca.ArgumentAmount;
 				this.EditedFinalAmount    = ca.FinalAmount;
+
+				if (!ca.Computed && !ca.FinalAmount.HasValue)
+				{
+					computedButtonEnable = false;
+				}
 			}
 			else
 			{
-				this.initialTextField.Visibility = false;
-				this.addSubButton.Visibility = false;
+				this.initialTextField .Visibility = false;
+				this.addSubButton     .Visibility = false;
 				this.argumentTextField.Visibility = false;
-				this.rateButton.Visibility = false;
-				this.equalText.Visibility = false;
+				this.rateButton       .Visibility = false;
+				this.equalText        .Visibility = false;
 
 				this.EditedFinalAmount = null;
+				computedButtonEnable = false;
 			}
+
+
+			this.argumentTextField.IsReadOnly =  this.isReadOnly;
+			this.finalTextField   .IsReadOnly =  this.isReadOnly;
+			this.addSubButton     .Enable     = !this.isReadOnly;
+			this.rateButton       .Enable     = !this.isReadOnly;
+			this.equalText        .Enable     = !this.isReadOnly;
+			this.computedButton   .Enable     = computedButtonEnable;
 
 			this.ignoreChange = false;
 		}
@@ -401,14 +432,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 	
 		private ComputedAmount?					computedAmount;
+		private bool							isReadOnly;
 		private bool							ignoreChange;
 
-		private IconButton						calcButton;
 		private TextField						initialTextField;
 		private GlyphButton						addSubButton;
 		private TextField						argumentTextField;
 		private Button							rateButton;
 		private StaticText						equalText;
 		private TextField						finalTextField;
+		private GlyphButton						computedButton;
 	}
 }

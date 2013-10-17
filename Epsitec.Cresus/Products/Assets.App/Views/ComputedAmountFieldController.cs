@@ -38,7 +38,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller = new ComputedAmountController ();
 			this.controller.CreateUI (this.frameBox);
-			this.controller.ComputedAmount = this.value;
+			this.controller.IsReadOnly = this.PropertyState == PropertyState.Readonly;
+			this.controller.ComputedAmount = this.value == null ? new ComputedAmount () : this.value;
 
 			this.controller.ValueChanged += delegate
 			{
