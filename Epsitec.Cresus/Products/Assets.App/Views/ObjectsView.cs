@@ -468,25 +468,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateTimelineToolbar()
 		{
 			int sel = this.timelineController.SelectedCell;
+			var guid = this.accessor.GetObjectGuid (this.treeTableController.SelectedRow);
 
 			this.UpdateTimelineCommand (ToolbarCommand.First, sel, this.timelineController.FirstEventIndex);
 			this.UpdateTimelineCommand (ToolbarCommand.Prev,  sel, this.timelineController.PrevEventIndex);
 			this.UpdateTimelineCommand (ToolbarCommand.Next,  sel, this.timelineController.NextEventIndex);
 			this.UpdateTimelineCommand (ToolbarCommand.Last,  sel, this.timelineController.LastEventIndex);
 			this.UpdateTimelineCommand (ToolbarCommand.Now,   sel, this.timelineController.NowEventIndex);
-			
-			if (this.isEditing)
-			{
-				this.timelineToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Disable);
-				this.timelineToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
-			}
-			else
-			{
-				var guid = this.accessor.GetObjectGuid (this.treeTableController.SelectedRow);
 
-				this.UpdateTimelineCommand (ToolbarCommand.New,    !guid.IsEmpty && this.timelineController.SelectedTimestamp.HasValue);
-				this.UpdateTimelineCommand (ToolbarCommand.Delete, this.timelineController.HasSelectedEvent);
-			}
+			this.UpdateTimelineCommand (ToolbarCommand.New,    !guid.IsEmpty && this.timelineController.SelectedTimestamp.HasValue);
+			this.UpdateTimelineCommand (ToolbarCommand.Delete, this.timelineController.HasSelectedEvent);
 
 			this.UpdateTimelineCommand (ToolbarCommand.Deselect, sel != -1);
 		}
