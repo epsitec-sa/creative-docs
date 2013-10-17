@@ -75,7 +75,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					{
 						var e = new DataEvent (1, new Timestamp (start.Date.AddDays (i*3), 0), EventType.Diminution);
 						o.AddEvent (e);
-						e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (3000000.0m-i*10000)));
+
+						decimal a1 = 3000000.0m-(i-1)*10000;
+						decimal a2 = 3000000.0m-i*10000;
+						e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (a1, a2)));
 					}
 				}
 			}
@@ -474,7 +477,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				{
 					var e = new DataEvent (1, date2, EventType.Augmentation);
 					o.AddEvent (e);
-					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (12000.0m, 500.0m, 12500.0m, false, false)));
+					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (12000.0m, 12500.0m)));
 				}
 
 				{
@@ -486,8 +489,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				{
 					var e = new DataEvent (1, date4, EventType.Modification);
 					o.AddEvent (e);
-					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (16000.0m, 1500.0m, 14500.0m, true, false)));
-					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (12500.0m, 1500.0m, 11000.0m, true, false)));
+					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (16000.0m, 14500.0m, true)));
+					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (12500.0m, 11000.0m)));
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Damien"));
 				}
 
@@ -518,14 +521,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				{
 					var e = new DataEvent (1, date1, EventType.Augmentation);
 					o.AddEvent (e);
-					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (5000.0m, 200.0m, 5200.0m, false, false)));
+					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (5000.0m, 5200.0m)));
 				}
 
 				{
 					var e = new DataEvent (1, date4, EventType.Diminution);
 					o.AddEvent (e);
-					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (5200.0m, 600.0m, 4600.0m, true, false)));
-					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (3500.0m, 1100.0m, 2400.0m, true, false)));
+					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (5200.0m, 4600.0m)));
+					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (3500.0m, 2400.0m)));
 				}
 
 				{
@@ -537,13 +540,13 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				{
 					var e = new DataEvent (1, date7, EventType.Augmentation);
 					o.AddEvent (e);
-					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (2400.0m, 600.0m, 3000.0m, false, false)));
+					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (2400.0m, 3000.0m, true)));
 				}
 
 				{
 					var e = new DataEvent (1, date8, EventType.Diminution);
 					o.AddEvent (e);
-					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (4600.0m, 2500.0m, 2100.0m, true, false)));
+					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (4600.0m, 2100.0m, true)));
 				}
 			}
 

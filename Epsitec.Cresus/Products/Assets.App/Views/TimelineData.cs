@@ -118,8 +118,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 						var properties = this.accessor.GetObjectSingleProperties (objectGuid.Value, t.Value);
 
-						var value1 = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.Valeur1);
-						var value2 = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.Valeur2);
+						var value1 = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur1);
+						var value2 = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur2);
+
+						decimal? v1 = value1 != null && value1.HasValue ? value1.Value.FinalAmount : null;
+						decimal? v2 = value2 != null && value2.HasValue ? value2.Value.FinalAmount : null;
 
 						if (index == -1)
 						{
@@ -127,7 +130,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							{
 								Timestamp     = t.Value,
 								TimelineGlyph = glyph,
-								Values        = new decimal?[] {value1, value2},
+								Values        = new decimal?[] { v1, v2 },
 							};
 
 							index = this.GetIndex (t.Value);
@@ -139,7 +142,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							{
 								Timestamp     = this.cells[index].Timestamp,
 								TimelineGlyph = glyph,
-								Values        = new decimal?[] { value1, value2 },
+								Values        = new decimal?[] { v1, v2 },
 							};
 
 							this.cells[index] = cell;
@@ -286,7 +289,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly DataAccessor accessor;
-		private readonly List<TimelineCell> cells;
+		private readonly DataAccessor			accessor;
+		private readonly List<TimelineCell>		cells;
 	}
 }

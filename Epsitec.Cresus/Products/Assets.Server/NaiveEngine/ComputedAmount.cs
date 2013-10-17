@@ -19,6 +19,16 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			this.Rate           = false;
 		}
 
+		public ComputedAmount(decimal initialAmount, decimal finalAmount, bool rate = false)
+		{
+			this.InitialAmount  = initialAmount;
+			this.FinalAmount    = finalAmount;
+			this.Substract      = initialAmount > finalAmount;
+			this.Computed       = true;
+			this.Rate           = rate;
+			this.ArgumentAmount = ComputedAmount.ComputeArgument (this.InitialAmount, finalAmount, this.Substract, this.Rate);
+		}
+
 		public ComputedAmount(decimal? initialAmount, decimal? argumentAmount, decimal? finalAmount, bool substract, bool rate)
 		{
 			//	Initialise un montant calculé.
@@ -33,14 +43,19 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public decimal? ComputeFinal(decimal? argument)
 		{
-			if (this.InitialAmount.HasValue)
+			return ComputedAmount.ComputeFinal (this.InitialAmount, argument, this.Substract, this.Rate);
+		}
+
+		public static decimal? ComputeFinal(decimal? initial, decimal? argument, bool substract, bool rate)
+		{
+			if (initial.HasValue)
 			{
-				var i = this.InitialAmount.GetValueOrDefault (0.0m);
+				var i = initial.GetValueOrDefault (0.0m);
 				var a = argument.GetValueOrDefault (0.0m);
 
-				if (this.Rate)
+				if (rate)
 				{
-					if (this.Substract)
+					if (substract)
 					{
 						return i-i*a;
 					}
@@ -51,7 +66,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 				else
 				{
-					if (this.Substract)
+					if (substract)
 					{
 						return i-a;
 					}
@@ -69,12 +84,17 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public decimal? ComputeArgument(decimal? final)
 		{
-			if (this.InitialAmount.HasValue)
+			return ComputedAmount.ComputeArgument (this.InitialAmount, final, this.Substract, this.Rate);
+		}
+
+		public static decimal? ComputeArgument(decimal? initial, decimal? final, bool substract, bool rate)
+		{
+			if (initial.HasValue)
 			{
-				var i = this.InitialAmount.GetValueOrDefault (0.0m);
+				var i = initial.GetValueOrDefault (0.0m);
 				var f = final.GetValueOrDefault (0.0m);
 
-				if (this.Rate)
+				if (rate)
 				{
 					if (i == 0.0m)
 					{
@@ -82,7 +102,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					}
 					else
 					{
-						if (this.Substract)
+						if (substract)
 						{
 							return (i-f)/i;
 						}
@@ -94,7 +114,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 				else
 				{
-					if (this.Substract)
+					if (substract)
 					{
 						return i-f;
 					}
