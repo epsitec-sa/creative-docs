@@ -208,6 +208,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Parent        = this,
 				Name          = name,
 				Text          = text,
+				ButtonStyle   = ButtonStyle.Icon,
 				Anchor        = AnchorStyles.BottomLeft,
 				PreferredSize = new Size (dx, dy),
 				Margins       = new Margins (x, 0, 0, y),

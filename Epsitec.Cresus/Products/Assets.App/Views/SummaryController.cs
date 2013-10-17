@@ -189,6 +189,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 						}
 						break;
 
+					case FieldType.ComputedAmount:
+						var ca = DataAccessor.GetComputedAmountProperty (this.properties, field.Value);
+						if (ca.HasValue)
+						{
+							st.Text = Helpers.Converters.AmountToString (ca.Value.FinalAmount) + " ";
+							st.ContentAlignment = ContentAlignment.MiddleRight;
+						}
+						break;
+
 					default:
 						string s = DataAccessor.GetStringProperty (this.properties, field.Value);
 						if (!string.IsNullOrEmpty (s))

@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 	{
 		String,
 		Amount,
+		ComputedAmount,
 		Rate,
 		Int,
 		Date,

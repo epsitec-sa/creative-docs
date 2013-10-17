@@ -165,6 +165,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				case ObjectField.Valeur1:
 				case ObjectField.Valeur2:
 				case ObjectField.Valeur3:
+					return FieldType.ComputedAmount;
+
 				case ObjectField.ValeurRésiduelle:
 					return FieldType.Amount;
 
@@ -237,6 +239,21 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			if (properties != null)
 			{
 				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataIntProperty;
+
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
+
+			return null;
+		}
+
+		public static ComputedAmount? GetComputedAmountProperty(IEnumerable<AbstractDataProperty> properties, int id)
+		{
+			if (properties != null)
+			{
+				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataComputedAmountProperty;
 
 				if (p != null)
 				{

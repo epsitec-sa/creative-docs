@@ -106,6 +106,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					{
 						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellDecimal);
 					}
+					else if (description.Type == TreeTableColumnType.ComputedAmount)
+					{
+						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellComputedAmount);
+					}
 					else
 					{
 						System.Diagnostics.Debug.Fail ("Unsupported type exception");
@@ -161,6 +165,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					list.Add (new List<TreeTableCellDecimal> ());
 				}
+				else if (description.Type == TreeTableColumnType.ComputedAmount)
+				{
+					list.Add (new List<TreeTableCellComputedAmount> ());
+				}
 			}
 
 			//	Rempli les conteneurs en fonction de this.Content.
@@ -195,6 +203,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						var l = list[c] as List<TreeTableCellDecimal>;
 						l.Add (s);
 					}
+					else if (description.Type == TreeTableColumnType.ComputedAmount)
+					{
+						var x = (content as SimpleTreeTableCellComputedAmount).Value;
+						var s = new TreeTableCellComputedAmount (true, x, isSelected: (i == selection));
+
+						var l = list[c] as List<TreeTableCellComputedAmount>;
+						l.Add (s);
+					}
 				}
 			}
 
@@ -212,6 +228,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						 description.Type == TreeTableColumnType.Rate)
 				{
 					var l = list[c] as List<TreeTableCellDecimal>;
+					this.treeTable.SetColumnCells (c, l.ToArray ());
+				}
+				else if (description.Type == TreeTableColumnType.ComputedAmount)
+				{
+					var l = list[c] as List<TreeTableCellComputedAmount>;
 					this.treeTable.SetColumnCells (c, l.ToArray ());
 				}
 			}

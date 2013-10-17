@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent          = this.frameBox,
 				Dock            = DockStyle.Left,
-				PreferredWidth  = this.IsRate ? 50 : 100,
+				PreferredWidth  = this.IsRate ? 50 : 90,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Margins         = new Margins (0, 10, 0, 0),
 				TabIndex        = this.TabIndex,

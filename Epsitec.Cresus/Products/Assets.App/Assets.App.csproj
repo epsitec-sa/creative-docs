@@ -89,6 +89,8 @@
     <Compile Include="Views\AbstractEditor.cs" />
     <Compile Include="Views\AbstractFieldController.cs" />
     <Compile Include="Popups\HistoryController.cs" />
+    <Compile Include="Views\ComputedAmountController.cs" />
+    <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\DateFieldController.cs" />
     <Compile Include="Views\StaticDescriptions.cs" />
     <Compile Include="Views\SummaryController.cs" />
@@ -105,6 +107,9 @@
     <Compile Include="Views\ToolbarCommand.cs" />
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
+    <Compile Include="Widgets\SimpleTreeTableCellComputedAmount.cs" />
+    <Compile Include="Widgets\TreeTableCellComputedAmount.cs" />
+    <Compile Include="Widgets\TreeTableColumnComputedAmount.cs" />
     <Compile Include="Widgets\TimelineRowYears.cs" />
     <Compile Include="Widgets\TimelineRowDaysMonths.cs" />
     <Compile Include="Widgets\SimpleTreeTableCellDecimal.cs" />
@@ -213,6 +218,7 @@
     <EmbeddedResource Include="Images\Timeline.Next.icon" />
     <EmbeddedResource Include="Images\Field.History.icon" />
     <EmbeddedResource Include="Images\Field.Clear.icon" />
+    <EmbeddedResource Include="Images\Field.Calc.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

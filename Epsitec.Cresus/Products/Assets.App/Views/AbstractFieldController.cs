@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public int								TabIndex;
 		public int								LabelWidth = 100;
-		public int								EditWidth = 260;
+		public int								EditWidth = 380;
 		public PropertyState					PropertyState;
 		public bool								HideAdditionalButtons;
 

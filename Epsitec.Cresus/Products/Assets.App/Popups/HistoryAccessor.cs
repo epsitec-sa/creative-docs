@@ -86,6 +86,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, HistoryAccessor.ValueColumnWidth, "Valeur"));
 				}
+				else if (this.fieldType == FieldType.ComputedAmount)
+				{
+					list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, HistoryAccessor.ValueColumnWidth, "Valeur"));
+				}
 				else
 				{
 					list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, HistoryAccessor.ValueColumnWidth, "Valeur"));
@@ -148,6 +152,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var value = DataAccessor.GetDecimalProperty (properties, field);
 				return new SimpleTreeTableCellDecimal (value);
+			}
+			if (this.fieldType == FieldType.ComputedAmount)
+			{
+				var value = DataAccessor.GetComputedAmountProperty (properties, field);
+				return new SimpleTreeTableCellComputedAmount (value);
 			}
 			else
 			{

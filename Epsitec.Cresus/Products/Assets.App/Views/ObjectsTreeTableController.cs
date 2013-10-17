@@ -120,13 +120,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,    200, "Objet"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   50, "N°"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  120, "Responsable"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   60, "Couleur"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  200, "Numéro de série"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 120, "Valeur comptable"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 120, "Valeur assurance"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,           180, "Objet"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          50, "N°"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         120, "Responsable"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          60, "Couleur"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         200, "Numéro de série"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur comptable"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur assurance"));
 
 				return list.ToArray ();
 			}
@@ -164,8 +164,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var c2 = new List<TreeTableCellString> ();
 			var c3 = new List<TreeTableCellString> ();
 			var c4 = new List<TreeTableCellString> ();
-			var c5 = new List<TreeTableCellDecimal> ();
-			var c6 = new List<TreeTableCellDecimal> ();
+			var c5 = new List<TreeTableCellComputedAmount> ();
+			var c6 = new List<TreeTableCellComputedAmount> ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -195,16 +195,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var responsable = DataAccessor.GetStringProperty (properties, (int) ObjectField.Responsable);
 				var couleur     = DataAccessor.GetStringProperty (properties, (int) ObjectField.Couleur);
 				var série       = DataAccessor.GetStringProperty (properties, (int) ObjectField.NuméroSérie);
-				var valeur1     = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.Valeur1);
-				var valeur2     = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.Valeur2);
+				var valeur1     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur1);
+				var valeur2     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur2);
 
 				var sf = new TreeTableCellTree (true, level, type, nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString (true, numéro, isSelected: (i == selection));
 				var s2 = new TreeTableCellString (true, responsable, isSelected: (i == selection));
 				var s3 = new TreeTableCellString (true, couleur, isSelected: (i == selection));
 				var s4 = new TreeTableCellString (true, série, isSelected: (i == selection));
-				var s5 = new TreeTableCellDecimal (true, valeur1, isSelected: (i == selection));
-				var s6 = new TreeTableCellDecimal (true, valeur2, isSelected: (i == selection));
+				var s5 = new TreeTableCellComputedAmount (true, valeur1, isSelected: (i == selection));
+				var s6 = new TreeTableCellComputedAmount (true, valeur2, isSelected: (i == selection));
 
 				cf.Add (sf);
 				c1.Add (s1);

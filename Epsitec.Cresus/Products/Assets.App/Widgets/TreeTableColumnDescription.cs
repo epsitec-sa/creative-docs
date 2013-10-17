@@ -60,6 +60,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				case TreeTableColumnType.Rate:
 					column = new TreeTableColumnDecimal (isRate: true);
 					break;
+
+				case TreeTableColumnType.ComputedAmount:
+					column = new TreeTableColumnComputedAmount ();
+					break;
 			}
 
 			System.Diagnostics.Debug.Assert (column != null);

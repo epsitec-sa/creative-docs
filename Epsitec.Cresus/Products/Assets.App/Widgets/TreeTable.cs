@@ -311,6 +311,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			column.SetCells (cells);
 		}
 
+		public void SetColumnCells(int rank, TreeTableCellComputedAmount[] cells)
+		{
+			var column = this.GetColumn (rank) as TreeTableColumnComputedAmount;
+			System.Diagnostics.Debug.Assert (column != null);
+
+			column.SetCells (cells);
+		}
+
 
 		public string Serialize()
 		{

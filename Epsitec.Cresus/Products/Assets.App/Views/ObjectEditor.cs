@@ -178,11 +178,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.properties != null)
 			{
-				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Numéro, editWidth: 100);
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Numéro, editWidth: 90);
 				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Nom);
 				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Description, lineCount: 5);
 				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Responsable);
-				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Couleur, editWidth: 100);
+				this.CreateStringController (this.containerInfos.Viewport, ObjectField.Couleur, editWidth: 90);
 				this.CreateStringController (this.containerInfos.Viewport, ObjectField.NuméroSérie);
 			}
 		}
@@ -194,9 +194,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.properties != null)
 			{
-				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur1);
-				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur2);
-				this.CreateDecimalController (this.containerValues.Viewport, ObjectField.Valeur3);
+				this.CreateComputedAmountController (this.containerValues.Viewport, ObjectField.Valeur1);
+				this.CreateComputedAmountController (this.containerValues.Viewport, ObjectField.Valeur2);
+				this.CreateComputedAmountController (this.containerValues.Viewport, ObjectField.Valeur3);
 			}
 		}
 
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.NomCatégorie);
 				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.TauxAmortissement, isRate: true);
-				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.TypeAmortissement, editWidth: 100);
+				this.CreateStringController  (this.containerAmortissement.Viewport, ObjectField.TypeAmortissement, editWidth: 90);
 				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.FréquenceAmortissement);
 				this.CreateDecimalController (this.containerAmortissement.Viewport, ObjectField.ValeurRésiduelle);
 			}
@@ -220,7 +220,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.containerCompta.Viewport.Children.Clear ();
 		}
 
-		private void CreateStringController(Widget parent, ObjectField field, int editWidth = 280, int lineCount = 1)
+
+		private void CreateStringController(Widget parent, ObjectField field, int editWidth = 380, int lineCount = 1)
 		{
 			var controller = new StringFieldController
 			{
@@ -266,6 +267,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, field);
 			};
 		}
+
+		private void CreateComputedAmountController(Widget parent, ObjectField field)
+		{
+			var controller = new ComputedAmountFieldController
+			{
+				Label         = StaticDescriptions.GetObjectFieldDescription (field),
+				Value         = DataAccessor.GetComputedAmountProperty (this.properties, (int) field),
+				PropertyState = this.GetPropertyState (field),
+				TabIndex      = this.tabIndex++,
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueChanged += delegate
+			{
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target)
+			{
+				this.ShowHistoryPopup (target, field);
+			};
+		}
+
 
 		private void ShowHistoryPopup(Widget target, ObjectField field)
 		{
