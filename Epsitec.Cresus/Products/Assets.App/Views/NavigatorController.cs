@@ -57,6 +57,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateItems(int rank)
 		{
+			int width = this.GetButtonWidth (this.items[rank]);
+
 			var button = new ColoredButton
 			{
 				Parent           = this.frameBox,
@@ -65,7 +67,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				AutoFocus        = false,
 				Dock             = DockStyle.Left,
-				PreferredSize    = new Size (NavigatorController.itemWidth, NavigatorController.height),
+				PreferredSize    = new Size (width, NavigatorController.height),
 				ActiveState      = rank == this.Selection ? ActiveState.Yes : ActiveState.No,
 				NormalColor      = Color.Empty,
 				SelectedColor    = ColorManager.EditBackgroundColor,
@@ -76,6 +78,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.OnItemClicked (rank);
 			};
+		}
+
+		private int GetButtonWidth(string text)
+		{
+			var width = new TextGeometry (0, 0, 1000, 100, text, Font.DefaultFont, Font.DefaultFontSize, ContentAlignment.MiddleLeft).Width;
+			return (int) width + 20;
 		}
 
 		private void CreateArrow()
@@ -106,8 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private static readonly int height    = 26;
-		private static readonly int itemWidth = 100;
+		private static readonly int height = 26;
 
 		private readonly List<string> items;
 		private FrameBox frameBox;

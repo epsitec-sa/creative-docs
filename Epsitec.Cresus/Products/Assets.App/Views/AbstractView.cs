@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent  = parent,
 				Dock    = DockStyle.Fill,
-				Margins = new Margins (0, 0, 0, 5),
+				Margins = new Margins (0, 0, 0, 10),
 			};
 
 			this.listFrameBox = new FrameBox
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent         = topBox,
 				Dock           = DockStyle.Right,
 				PreferredWidth = 600,
-				Margins        = new Margins (5, 0, 0, 0),
+				Margins        = new Margins (10, 0, 0, 0),
 				BackColor      = ColorManager.GetBackgroundColor (),
 			};
 		}
