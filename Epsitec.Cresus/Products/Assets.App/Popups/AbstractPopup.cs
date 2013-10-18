@@ -330,13 +330,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void PaintSmoothShadow(Graphics graphics)
 		{
+			double factor = this.ExternalRect.Height / 200;  // l'ombre est plus discrète si le popup est petit
+
+			factor = System.Math.Min (factor, 1.0);
+			factor = System.Math.Max (factor, 0.5);
+
 			for (double step=0.0; step<=1.0; step+=0.02)  // 0..1
 			{
 				var rect = this.ExternalRect;
-				rect.Offset (0, -20);
-				rect.Inflate (-20 + step*80.0);
+				rect.Offset (0, -20*factor);
+				rect.Inflate (-20*factor + step*80.0*factor);
 
-				var path = AbstractPopup.GetPathRoundRectangle (rect, 10.0 + step*80.0);
+				var path = AbstractPopup.GetPathRoundRectangle (rect, (10.0 + step*80.0)*factor);
 				var alpha = System.Math.Pow (1.0-step, 2.0) * 0.04;
 
 				graphics.AddFilledPath (path);
