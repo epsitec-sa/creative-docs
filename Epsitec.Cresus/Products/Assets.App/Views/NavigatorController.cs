@@ -11,6 +11,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class NavigatorController
 	{
+		//	Le rang inclu l'onglet/bouton ainsi que la flèche/triangle
+		//	sur la droite.
+		//	
+		//	    0         1         2
+		//	<-------> <-------> <-------> 
+		//	
+		//	+-----+   +-----+   +-----+
+		//	|     | > |     | > |     | >
+		//	+-----+   +-----+   +-----+
+
 		public NavigatorController()
 		{
 			this.items = new List<string> ();

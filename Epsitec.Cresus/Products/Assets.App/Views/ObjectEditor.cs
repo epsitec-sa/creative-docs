@@ -16,8 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectEditor(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.pageTypes = new List<ObjectPageType> ();
-			this.childrenPageTypes = new List<IEnumerable<ObjectPageType>> ();
+			this.navigatorLevels = new List<NavigatorLevel> ();
 		}
 
 		public override void CreateUI(Widget parent)
@@ -62,11 +61,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	On a cliqué sur un triangle ">" dans le navigateur. Il faut proposer
 			//	une "menu" des enfants possibles.
-			int count = this.childrenPageTypes[rank].Count ();
+			int count = this.navigatorLevels[rank].Childrens.Count ();
 
 			if (count == 1)
 			{
-				var type = this.childrenPageTypes[rank].First ();
+				//	S'il n'y a qu'un enfant possible, pas besoin de poser la question;
+				//	on y va directement.
+				var type = this.navigatorLevels[rank].Childrens.First ();
 				this.NavigatorGoTo (rank+1, type);
 			}
 			else if (count > 1)
@@ -75,10 +76,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				//	dans le menu.
 				int sel = -1;
 
-				if (rank < this.pageTypes.Count-1)
+				if (rank < this.navigatorLevels.Count-1)
 				{
-					var np = this.pageTypes[rank+1];
-					sel = this.childrenPageTypes[rank].ToList ().IndexOf (np);
+					var np = this.navigatorLevels[rank+1].Type;
+					sel = this.navigatorLevels[rank].Childrens.ToList ().IndexOf (np);
 				}
 
 				//	Crée un popup en guise de menu.
@@ -87,7 +88,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					Selected = sel,
 				};
 
-				foreach (var type in this.childrenPageTypes[rank])
+				foreach (var type in this.navigatorLevels[rank].Childrens)
 				{
 					popup.Items.Add (StaticDescriptions.GetObjectPageDescription (type));
 				}
@@ -96,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				popup.ItemClicked += delegate (object sender, int i)
 				{
-					var type = this.childrenPageTypes[rank].ElementAt (i);
+					var type = this.navigatorLevels[rank].Childrens.ElementAt (i);
 					this.NavigatorGoTo (rank+1, type);
 				};
 			}
@@ -105,17 +106,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void NavigatorGoBack(int rank)
 		{
 			//	Revient en arrière à un niveau quelconque.
-			var type = this.pageTypes[rank];
+			var type = this.navigatorLevels[rank].Type;
 			this.NavigatorGoTo (rank, type);
 		}
 
 		private void NavigatorGoTo(int rank, ObjectPageType type)
 		{
 			//	Effectue un autre branchement à un niveau quelconque.
-			int count = this.pageTypes.Count - rank;
-			this.pageTypes.RemoveRange (rank, count);
-			this.childrenPageTypes.RemoveRange (rank, count);
+			int count = this.navigatorLevels.Count - rank;
 
+			this.navigatorLevels.RemoveRange (rank, count);
 			this.navigatorController.Items.RemoveRange (rank, count);
 
 			this.AddPage (type);
@@ -137,13 +137,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.AddPage (openType);
 			};
 
-			this.pageTypes.Add (type);
-			this.childrenPageTypes.Add (this.currentPage.ChildrenPageTypes);
+			this.navigatorLevels.Add (new NavigatorLevel (type, this.currentPage.ChildrenPageTypes));
 
 			this.navigatorController.Items.Add (StaticDescriptions.GetObjectPageDescription (type));
 			this.navigatorController.Selection = this.navigatorController.Items.Count-1;
 			this.navigatorController.HasLastArrow = this.currentPage.ChildrenPageTypes.Any ();
 			this.navigatorController.UpdateUI ();
+		}
+
+		private struct NavigatorLevel
+		{
+			public NavigatorLevel(ObjectPageType type, IEnumerable<ObjectPageType> childrens)
+			{
+				this.Type      = type;
+				this.Childrens = childrens;
+			}
+
+			public readonly ObjectPageType					Type;
+			public readonly IEnumerable<ObjectPageType>		Childrens;
 		}
 
 
@@ -222,8 +233,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private readonly List<ObjectPageType>		pageTypes;
-		private readonly List<IEnumerable<ObjectPageType>>	childrenPageTypes;
+		private readonly List<NavigatorLevel>		navigatorLevels;
+		//?private readonly List<ObjectPageType>		pageTypes;
+		//?private readonly List<IEnumerable<ObjectPageType>>	childrenPageTypes;
 
 		private NavigatorController					navigatorController;
 		private FrameBox							editFrameBox;
