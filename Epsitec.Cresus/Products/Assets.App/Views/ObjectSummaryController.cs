@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -15,7 +14,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectSummaryController(DataAccessor accessor, List<List<int>> fields)
 		{
 			this.accessor = accessor;
-			this.fields = fields;
+			this.fields   = fields;
+
+			this.controller = new SummaryController ();
+
+			this.controller.TileClicked += delegate (object sender, int row, int column)
+			{
+				this.OnTileClicked (row, column);
+			};
 		}
 
 
@@ -29,53 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins         = new Margins (0, 0, 0, 20),
 			};
 
-			this.frameBox = new FrameBox
-			{
-				Parent = parent,
-				Dock   = DockStyle.Fill,
-			};
-
-			int columnsCount = this.ColumnsCount;
-			int rowsCount    = this.RowsCount;
-
-			for (int column = 0; column < columnsCount; column++ )
-			{
-				var columnFrame = new FrameBox
-				{
-					Parent         = this.frameBox,
-					Dock           = DockStyle.Left,
-					PreferredWidth = 120,
-				};
-
-				for (int row = 0; row < rowsCount; row++)
-				{
-					var button = new ColoredButton
-					{
-						Parent        = columnFrame,
-						Name          = ObjectSummaryController.PutRowColumn (row, column),
-						Dock          = DockStyle.Top,
-						PreferredSize = new Size (100, 20),
-						Margins       = new Margins (1),
-						TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-					};
-
-					var field = this.GetField (column, row);
-					var desc = StaticDescriptions.GetObjectFieldDescription ((ObjectField) field.GetValueOrDefault (-1));
-					if (!string.IsNullOrEmpty (desc))
-					{
-						ToolTip.Default.SetToolTip (button, desc);
-					}
-
-					this.UpdateButton (button, this.GetField (column, row));
-
-					button.Clicked += delegate
-					{
-						int r, c;
-						ObjectSummaryController.GetRowColumn (button.Name, out r, out c);
-						this.OnTileClicked (r, c);
-					};
-				}
-			}
+			this.controller.CreateUI (parent);
 		}
 
 		public void UpdateFields(Guid objectGuid, Timestamp? timestamp)
@@ -98,16 +58,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateInformations ();
 
-			for (int column = 0; column < this.frameBox.Children.Count; column++)
-			{
-				var columnFrame = this.frameBox.Children[column] as FrameBox;
+			var cells = new List<List<SummaryControllerTile?>> ();
 
-				for (int row = 0; row < columnFrame.Children.Count; row++)
+			int columnsCount = this.ColumnsCount;
+			int rowsCount    = this.RowsCount;
+
+			for (int column = 0; column < columnsCount; column++)
+			{
+				var columns = new List<SummaryControllerTile?> ();
+
+				for (int row = 0; row < rowsCount; row++)
 				{
-					var button = columnFrame.Children[row] as ColoredButton;
-					this.UpdateButton (button, this.GetField (column, row));
+					var field = this.GetField (column, row);
+					var cell = this.GetCell (field);
+					columns.Add (cell);
 				}
+
+				cells.Add (columns);
 			}
+
+			this.controller.SetTiles (cells);
 		}
 
 
@@ -162,120 +132,79 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateButton(ColoredButton button, int? field)
+		private SummaryControllerTile? GetCell(int? field)
 		{
-			var a = this.GetActiveState (field);
-
-			if (a == ActiveState.Maybe)
+			if (!field.HasValue || this.properties == null)
 			{
-				button.NormalColor   = ColorManager.EditBackgroundColor;
-				button.SelectedColor = ColorManager.EditBackgroundColor;
-				button.HoverColor    = ColorManager.EditBackgroundColor;
-
-				button.ActiveState = ActiveState.No;
-			}
-			else
-			{
-				button.NormalColor   = ColorManager.WindowBackgroundColor;
-				button.SelectedColor = ColorManager.EditSinglePropertyColor;
-				button.HoverColor    = ColorManager.SelectionColor;
-
-				button.ActiveState = a;
+				return null;
 			}
 
-			if (field.HasValue && this.properties != null)
+			string text = null;
+			var alignment = ContentAlignment.MiddleCenter;
+
+			switch (this.accessor.GetFieldType ((ObjectField) field.Value))
 			{
-				var type = this.accessor.GetFieldType ((ObjectField) field.Value);
+				case FieldType.Amount:
+					var d = DataAccessor.GetDecimalProperty (this.properties, field.Value);
+					if (d.HasValue)
+					{
+						text = Helpers.Converters.AmountToString (d);
+						alignment = ContentAlignment.MiddleRight;
+					}
+					break;
 
-				switch (type)
-				{
-					case FieldType.Amount:
-						var d = DataAccessor.GetDecimalProperty (this.properties, field.Value);
-						if (d.HasValue)
-						{
-							button.Text = Helpers.Converters.AmountToString (d) + " ";
-							button.ContentAlignment = ContentAlignment.MiddleRight;
-						}
-						break;
+				case FieldType.Rate:
+					var p = DataAccessor.GetDecimalProperty (this.properties, field.Value);
+					if (p.HasValue)
+					{
+						text = Helpers.Converters.RateToString (p);
+						alignment = ContentAlignment.MiddleRight;
+					}
+					break;
 
-					case FieldType.Rate:
-						var p = DataAccessor.GetDecimalProperty (this.properties, field.Value);
-						if (p.HasValue)
-						{
-							button.Text = Helpers.Converters.RateToString (p) + " ";
-							button.ContentAlignment = ContentAlignment.MiddleRight;
-						}
-						break;
+				case FieldType.Int:
+					var i = DataAccessor.GetIntProperty (this.properties, field.Value);
+					if (i.HasValue)
+					{
+						text = Helpers.Converters.IntToString (i);
+						alignment = ContentAlignment.MiddleRight;
+					}
+					break;
 
-					case FieldType.Int:
-						var i = DataAccessor.GetIntProperty (this.properties, field.Value);
-						if (i.HasValue)
-						{
-							button.Text = Helpers.Converters.IntToString (i) + " ";
-							button.ContentAlignment = ContentAlignment.MiddleRight;
-						}
-						break;
+				case FieldType.ComputedAmount:
+					var ca = DataAccessor.GetComputedAmountProperty (this.properties, field.Value);
+					if (ca.HasValue)
+					{
+						text = Helpers.Converters.AmountToString (ca.Value.FinalAmount);
+						alignment = ContentAlignment.MiddleRight;
+					}
+					break;
 
-					case FieldType.ComputedAmount:
-						var ca = DataAccessor.GetComputedAmountProperty (this.properties, field.Value);
-						if (ca.HasValue)
-						{
-							button.Text = Helpers.Converters.AmountToString (ca.Value.FinalAmount) + " ";
-							button.ContentAlignment = ContentAlignment.MiddleRight;
-						}
-						break;
-
-					default:
-						string s = DataAccessor.GetStringProperty (this.properties, field.Value);
-						if (!string.IsNullOrEmpty (s))
-						{
-							button.Text = " " + s;
-							button.ContentAlignment = ContentAlignment.MiddleLeft;
-						}
-						break;
-				}
+				default:
+					string s = DataAccessor.GetStringProperty (this.properties, field.Value);
+					if (!string.IsNullOrEmpty (s))
+					{
+						text = s;
+						alignment = ContentAlignment.MiddleLeft;
+					}
+					break;
 			}
-			else
-			{
-				button.Text = null;
-			}
+
+			string tooltip = StaticDescriptions.GetObjectFieldDescription ((ObjectField) field.GetValueOrDefault (-1));
+			bool hilited = this.IsHilited (field);
+
+			return new SummaryControllerTile (text, tooltip, alignment, hilited);
 		}
 
-		private ActiveState GetActiveState(int? field)
+		private bool IsHilited(int? field)
 		{
 			if (field.HasValue)
 			{
-				switch (this.GetPropertyState (field.Value))
-				{
-					case PropertyState.Single:
-						return ActiveState.Yes;
-
-					default:
-						return ActiveState.No;
-				}
+				return this.GetPropertyState (field.Value) == PropertyState.Single;
 			}
 			else
 			{
-				return ActiveState.Maybe;
-			}
-		}
-
-		private Color GetBackgroundColor(int? field)
-		{
-			if (field.HasValue)
-			{
-				switch (this.GetPropertyState (field.Value))
-				{
-					case PropertyState.Single:
-						return ColorManager.EditSinglePropertyColor;
-
-					default:
-						return ColorManager.WindowBackgroundColor;
-				}
-			}
-			else
-			{
-				return Color.Empty;
+				return false;
 			}
 		}
 
@@ -345,24 +274,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private static string PutRowColumn(int row, int column)
-		{
-			return string.Concat
-			(
-				row.ToString (System.Globalization.CultureInfo.InstalledUICulture),
-				"/",
-				column.ToString (System.Globalization.CultureInfo.InstalledUICulture)
-			);
-		}
-
-		private static void GetRowColumn(string text, out int row, out int column)
-		{
-			var p = text.Split ('/');
-			row    = int.Parse (p[0], System.Globalization.CultureInfo.InstalledUICulture);
-			column = int.Parse (p[1], System.Globalization.CultureInfo.InstalledUICulture);
-		}
-
-
 		#region Events handler
 		private void OnTileClicked(int row, int column)
 		{
@@ -379,9 +290,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly DataAccessor				accessor;
 		private readonly List<List<int>>			fields;
+		private readonly SummaryController			controller;
 
 		private StaticText							informations;
-		private FrameBox							frameBox;
 		private Timestamp?							timestamp;
 		private bool								hasEvent;
 		private EventType							eventType;

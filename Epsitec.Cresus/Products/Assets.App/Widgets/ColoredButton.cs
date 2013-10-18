@@ -11,6 +11,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public class ColoredButton : AbstractButton
 	{
+		public ColoredButton()
+		{
+			this.textLayout = new TextLayout ();
+		}
+
+
 		public Color							NormalColor
 		{
 			get
@@ -82,11 +88,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			var rect = new Rectangle (0, 0, this.ActualWidth, this.ActualHeight);
 
+			//	Dessine le fond coloré.
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (this.BackColor);
 
-			graphics.AddText (rect.Left, rect.Bottom, rect.Width, rect.Height, this.Text, Font.DefaultFont, Font.DefaultFontSize, this.ContentAlignment);
-			graphics.RenderSolid (Color.FromBrightness (0));
+			//	Dessine le texte.
+			this.textLayout.Text            = this.Text;
+			this.textLayout.DefaultFont     = Font.DefaultFont;
+			this.textLayout.DefaultFontSize = Font.DefaultFontSize;
+			this.textLayout.LayoutSize      = rect.Size;
+			this.textLayout.BreakMode       = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+			this.textLayout.Alignment       = this.ContentAlignment;
+
+			this.textLayout.Paint (rect.BottomLeft, graphics, rect, Color.FromBrightness (0), GlyphPaintStyle.Normal);
 		}
 
 
@@ -109,6 +123,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+
+		private readonly TextLayout				textLayout;
 
 		private Color							normalColor;
 		private Color							selectedColor;
