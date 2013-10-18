@@ -58,10 +58,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.Update ();
 
-			// provisoire:
-			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
-
 			//	Connexion des événements.
 			this.treeTableController.RowClicked += delegate
 			{
@@ -460,8 +456,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbars()
 		{
+			this.UpdateMainToolbar ();
 			this.UpdateTreeTableToolbar ();
 			this.UpdateTimelineToolbar ();
+		}
+
+		private void UpdateMainToolbar()
+		{
+			if (this.isEditing)
+			{
+				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Enable);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+			}
+			else
+			{
+				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			}
 		}
 
 		private void UpdateTreeTableToolbar()

@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 				};
 
-				ToolTip.Default.SetToolTip (button, "Supprime cette assignation de l'événement");
+				ToolTip.Default.SetToolTip (button, "Supprime cette modification de l'événement");
 
 				button.Clicked += delegate
 				{

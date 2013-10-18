@@ -42,12 +42,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateView()
 		{
-			this.toolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Hide);
-			this.toolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Hide);
-			this.toolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
-			this.toolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-			this.toolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
-
 			this.viewBox.Children.Clear ();
 
 			this.view = AbstractView.CreateView (this.toolbar.ViewType, this.accessor);
