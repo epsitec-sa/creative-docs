@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				for (int row = 0; row < rowsCount; row++)
 				{
-					var st = new StaticText
+					var button = new ColoredButton
 					{
 						Parent        = columnFrame,
 						Name          = SummaryController.PutRowColumn (row, column),
@@ -63,13 +63,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var desc = StaticDescriptions.GetObjectFieldDescription ((ObjectField) field.GetValueOrDefault (-1));
 					if (!string.IsNullOrEmpty (desc))
 					{
-						ToolTip.Default.SetToolTip (st, desc);
+						ToolTip.Default.SetToolTip (button, desc);
 					}
 
-					st.Clicked += delegate
+					this.UpdateButton (button, this.GetField (column, row));
+
+					button.Clicked += delegate
 					{
 						int r, c;
-						SummaryController.GetRowColumn (st.Name, out r, out c);
+						SummaryController.GetRowColumn (button.Name, out r, out c);
 						this.OnTileClicked (r, c);
 					};
 				}
@@ -102,8 +104,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				for (int row = 0; row < columnFrame.Children.Count; row++)
 				{
-					var st = columnFrame.Children[row] as StaticText;
-					this.UpdateStaticText (st, this.GetField (column, row));
+					var button = columnFrame.Children[row] as ColoredButton;
+					this.UpdateButton (button, this.GetField (column, row));
 				}
 			}
 		}
@@ -160,9 +162,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateStaticText(StaticText st, int? field)
+		private void UpdateButton(ColoredButton button, int? field)
 		{
-			st.BackColor = this.GetBackgroundColor (field);
+			var a = this.GetActiveState (field);
+
+			if (a == ActiveState.Maybe)
+			{
+				button.NormalColor   = ColorManager.EditBackgroundColor;
+				button.SelectedColor = ColorManager.EditBackgroundColor;
+				button.HoverColor    = ColorManager.EditBackgroundColor;
+
+				button.ActiveState = ActiveState.No;
+			}
+			else
+			{
+				button.NormalColor   = ColorManager.WindowBackgroundColor;
+				button.SelectedColor = ColorManager.EditSinglePropertyColor;
+				button.HoverColor    = ColorManager.SelectionColor;
+
+				button.ActiveState = a;
+			}
 
 			if (field.HasValue && this.properties != null)
 			{
@@ -174,8 +193,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var d = DataAccessor.GetDecimalProperty (this.properties, field.Value);
 						if (d.HasValue)
 						{
-							st.Text = Helpers.Converters.AmountToString (d) + " ";
-							st.ContentAlignment = ContentAlignment.MiddleRight;
+							button.Text = Helpers.Converters.AmountToString (d) + " ";
+							button.ContentAlignment = ContentAlignment.MiddleRight;
 						}
 						break;
 
@@ -183,8 +202,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var p = DataAccessor.GetDecimalProperty (this.properties, field.Value);
 						if (p.HasValue)
 						{
-							st.Text = Helpers.Converters.RateToString (p) + " ";
-							st.ContentAlignment = ContentAlignment.MiddleRight;
+							button.Text = Helpers.Converters.RateToString (p) + " ";
+							button.ContentAlignment = ContentAlignment.MiddleRight;
 						}
 						break;
 
@@ -192,8 +211,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var i = DataAccessor.GetIntProperty (this.properties, field.Value);
 						if (i.HasValue)
 						{
-							st.Text = Helpers.Converters.IntToString (i) + " ";
-							st.ContentAlignment = ContentAlignment.MiddleRight;
+							button.Text = Helpers.Converters.IntToString (i) + " ";
+							button.ContentAlignment = ContentAlignment.MiddleRight;
 						}
 						break;
 
@@ -201,8 +220,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var ca = DataAccessor.GetComputedAmountProperty (this.properties, field.Value);
 						if (ca.HasValue)
 						{
-							st.Text = Helpers.Converters.AmountToString (ca.Value.FinalAmount) + " ";
-							st.ContentAlignment = ContentAlignment.MiddleRight;
+							button.Text = Helpers.Converters.AmountToString (ca.Value.FinalAmount) + " ";
+							button.ContentAlignment = ContentAlignment.MiddleRight;
 						}
 						break;
 
@@ -210,15 +229,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 						string s = DataAccessor.GetStringProperty (this.properties, field.Value);
 						if (!string.IsNullOrEmpty (s))
 						{
-							st.Text = " " + s;
-							st.ContentAlignment = ContentAlignment.MiddleLeft;
+							button.Text = " " + s;
+							button.ContentAlignment = ContentAlignment.MiddleLeft;
 						}
 						break;
 				}
 			}
 			else
 			{
-				st.Text = null;
+				button.Text = null;
+			}
+		}
+
+		private ActiveState GetActiveState(int? field)
+		{
+			if (field.HasValue)
+			{
+				switch (this.GetPropertyState (field.Value))
+				{
+					case PropertyState.Single:
+						return ActiveState.Yes;
+
+					default:
+						return ActiveState.No;
+				}
+			}
+			else
+			{
+				return ActiveState.Maybe;
 			}
 		}
 

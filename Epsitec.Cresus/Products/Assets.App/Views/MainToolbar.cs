@@ -6,6 +6,7 @@ using System.Linq;
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -47,12 +48,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateToolbar(Widget parent, int size)
 		{
-			var toolbar = new HToolBar
+			var toolbar = new FrameBox
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
 				PreferredHeight = size,
-				Padding         = new Margins (0),
+				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
 			this.buttonObjects    = this.CreateViewButton (toolbar, ViewType.Objects,    "View.Objects",    "Objets d'immobilisation");
@@ -71,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateViewButtons ();
 		}
 
-		private IconButton CreateViewButton(HToolBar toolbar, ViewType view, string icon, string tooltip)
+		private IconButton CreateViewButton(FrameBox toolbar, ViewType view, string icon, string tooltip)
 		{
 			var size = toolbar.PreferredHeight;
 

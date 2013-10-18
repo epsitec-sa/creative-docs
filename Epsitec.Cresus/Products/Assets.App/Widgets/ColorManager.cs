@@ -16,7 +16,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return Color.FromBrightness (0.85);
+				return Color.FromBrightness (0.8);
+			}
+		}
+
+		public static Color ToolbarBackgroundColor
+		{
+			get
+			{
+				return Color.FromBrightness (0.8);
 			}
 		}
 
@@ -40,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else
 			{
-				return Color.FromBrightness (0.97);
+				return Color.FromBrightness (0.95);
 			}
 		}
 
@@ -88,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return Color.FromBrightness (0.90);
+				return Color.FromBrightness (0.95);
 			}
 		}
 
@@ -144,7 +152,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return Color.FromBrightness (0.9);
+				return Color.FromBrightness (0.95);
 			}
 		}
 

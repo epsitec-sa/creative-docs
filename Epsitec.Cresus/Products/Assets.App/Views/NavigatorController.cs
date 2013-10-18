@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent          = parent,
 				Dock            = DockStyle.Top,
 				PreferredHeight = NavigatorController.height,
-				BackColor       = ColorManager.EditBackgroundColor,
+				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 		}
 
@@ -57,17 +57,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateItems(int rank)
 		{
-			var button = new Button
+			var button = new ColoredButton
 			{
 				Parent           = this.frameBox,
 				Text             = this.items[rank],
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				ButtonStyle      = ButtonStyle.ActivableIcon,
 				AutoFocus        = false,
 				Dock             = DockStyle.Left,
 				PreferredSize    = new Size (NavigatorController.itemWidth, NavigatorController.height),
 				ActiveState      = rank == this.Selection ? ActiveState.Yes : ActiveState.No,
+				NormalColor      = Color.Empty,
+				SelectedColor    = ColorManager.EditBackgroundColor,
+				HoverColor       = ColorManager.SelectionColor,
 			};
 
 			button.Clicked += delegate

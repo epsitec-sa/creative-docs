@@ -92,6 +92,7 @@
     <Compile Include="Views\ComputedAmountController.cs" />
     <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\AbstractObjectEditorPage.cs" />
+    <Compile Include="Widgets\ColoredButton.cs" />
     <Compile Include="Views\ObjectEditorPageValues.cs" />
     <Compile Include="Views\ObjectEditorPageAmortissements.cs" />
     <Compile Include="Views\ObjectEditorPageInfos.cs" />

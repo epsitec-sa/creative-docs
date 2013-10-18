@@ -6,6 +6,7 @@ using System.Linq;
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -27,12 +28,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateToolbar(Widget parent, int size)
 		{
-			var toolbar = new HToolBar
+			var toolbar = new FrameBox
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
 				PreferredHeight = size,
-				Padding         = new Margins (0),
+				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
 			this.buttonAccept = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
