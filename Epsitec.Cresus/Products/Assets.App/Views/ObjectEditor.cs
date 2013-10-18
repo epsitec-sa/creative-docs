@@ -62,39 +62,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	On a cliqué sur un triangle ">" dans le navigateur. Il faut proposer
 			//	une "menu" des enfants possibles.
-			if (!this.childrenPageTypes[rank].Any ())
+			int count = this.childrenPageTypes[rank].Count ();
+
+			if (count == 1)
 			{
-				return;
-			}
-
-			//	Cherche s'il existe un enfant déjà ouvert, pour le mettre en évidence
-			//	dans le menu.
-			int sel = -1;
-
-			if (rank < this.pageTypes.Count-1)
-			{
-				var np = this.pageTypes[rank+1];
-				sel = this.childrenPageTypes[rank].ToList ().IndexOf (np);
-			}
-
-			//	Crée un popup en guise de menu.
-			var popup = new SimplePopup
-			{
-				Selected = sel,
-			};
-
-			foreach (var type in this.childrenPageTypes[rank])
-			{
-				popup.Items.Add (StaticDescriptions.GetObjectPageDescription (type));
-			}
-
-			popup.Create (target);
-
-			popup.ItemClicked += delegate (object sender, int i)
-			{
-				var type = this.childrenPageTypes[rank].ElementAt (i);
+				var type = this.childrenPageTypes[rank].First ();
 				this.NavigatorGoTo (rank+1, type);
-			};
+			}
+			else if (count > 1)
+			{
+				//	Cherche s'il existe un enfant déjà ouvert, pour le mettre en évidence
+				//	dans le menu.
+				int sel = -1;
+
+				if (rank < this.pageTypes.Count-1)
+				{
+					var np = this.pageTypes[rank+1];
+					sel = this.childrenPageTypes[rank].ToList ().IndexOf (np);
+				}
+
+				//	Crée un popup en guise de menu.
+				var popup = new SimplePopup
+				{
+					Selected = sel,
+				};
+
+				foreach (var type in this.childrenPageTypes[rank])
+				{
+					popup.Items.Add (StaticDescriptions.GetObjectPageDescription (type));
+				}
+
+				popup.Create (target);
+
+				popup.ItemClicked += delegate (object sender, int i)
+				{
+					var type = this.childrenPageTypes[rank].ElementAt (i);
+					this.NavigatorGoTo (rank+1, type);
+				};
+			}
 		}
 
 		private void NavigatorGoBack(int rank)

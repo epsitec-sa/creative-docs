@@ -92,12 +92,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static int GetButtonWidth(string text)
 		{
 			var width = new TextGeometry (0, 0, 1000, 100, text, Font.DefaultFont, Font.DefaultFontSize, ContentAlignment.MiddleLeft).Width;
-			return (int) width + 10;
+			return (int) width + 1;
 		}
 
 		private string GetText(int rank)
 		{
-			return "  " + this.items[rank];
+			return string.Concat ("  ", this.items[rank], "  ");
 		}
 
 
