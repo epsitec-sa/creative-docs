@@ -91,6 +91,13 @@
     <Compile Include="Popups\HistoryController.cs" />
     <Compile Include="Views\ComputedAmountController.cs" />
     <Compile Include="Views\ComputedAmountFieldController.cs" />
+    <Compile Include="Views\AbstractObjectEditorPage.cs" />
+    <Compile Include="Views\ObjectEditorPageValues.cs" />
+    <Compile Include="Views\ObjectEditorPageAmortissements.cs" />
+    <Compile Include="Views\ObjectEditorPageInfos.cs" />
+    <Compile Include="Views\ObjectPageType.cs" />
+    <Compile Include="Views\ObjectEditorPageSummary.cs" />
+    <Compile Include="Views\NavigatorController.cs" />
     <Compile Include="Views\DateFieldController.cs" />
     <Compile Include="Views\StaticDescriptions.cs" />
     <Compile Include="Views\SummaryController.cs" />

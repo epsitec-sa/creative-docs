@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var st = new StaticText
 					{
 						Parent        = columnFrame,
+						Name          = SummaryController.PutRowColumn (row, column),
 						Dock          = DockStyle.Top,
 						PreferredSize = new Size (100, 20),
 						Margins       = new Margins (1),
@@ -64,6 +65,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						ToolTip.Default.SetToolTip (st, desc);
 					}
+
+					st.Clicked += delegate
+					{
+						int r, c;
+						SummaryController.GetRowColumn (st.Name, out r, out c);
+						this.OnTileClicked (r, c);
+					};
 				}
 			}
 		}
@@ -297,6 +305,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return count;
 			}
 		}
+
+
+		private static string PutRowColumn(int row, int column)
+		{
+			return string.Concat
+			(
+				row.ToString (System.Globalization.CultureInfo.InstalledUICulture),
+				"/",
+				column.ToString (System.Globalization.CultureInfo.InstalledUICulture)
+			);
+		}
+
+		private static void GetRowColumn(string text, out int row, out int column)
+		{
+			var p = text.Split ('/');
+			row    = int.Parse (p[0], System.Globalization.CultureInfo.InstalledUICulture);
+			column = int.Parse (p[1], System.Globalization.CultureInfo.InstalledUICulture);
+		}
+
+
+		#region Events handler
+		private void OnTileClicked(int row, int column)
+		{
+			if (this.TileClicked != null)
+			{
+				this.TileClicked (this, row, column);
+			}
+		}
+
+		public delegate void TileClickedEventHandler(object sender, int row, int column);
+		public event TileClickedEventHandler TileClicked;
+		#endregion
 
 
 		private readonly DataAccessor				accessor;
