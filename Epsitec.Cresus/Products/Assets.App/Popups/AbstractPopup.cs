@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			else if (message.MessageType == MessageType.MouseUp)
 			{
 				//	Un clic de la souris hors du popup le ferme.
-				if (!this.TotalRect.Contains (pos))
+				if (!this.ExternalRect.Contains (pos))
 				{
 					this.ClosePopup ();
 				}
