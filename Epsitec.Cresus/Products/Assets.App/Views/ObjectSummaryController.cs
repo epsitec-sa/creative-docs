@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						return string.Format ("Cet événement de type \"{0}\" définit {1} champs.", s1, s2.ToString ());
 					}
 				}
-				else if (!this.timestamp.HasValue)
+				else if (!ObjectSummaryController.IsDefined (this.timestamp))
 				{
 					return "Il n'y a pas de date sélectionnée.";
 				}
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.timestamp.HasValue)
+				if (ObjectSummaryController.IsDefined (this.timestamp))
 				{
 					string d = Helpers.Converters.DateToString (this.timestamp.Value.Date);
 					return string.Format ("Le tableau ci-dessous montre l'état de l'objet en date du {0} :", d);
@@ -129,6 +129,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "Le tableau ci-dessous montre l'état final de l'objet :";
 				}
 			}
+		}
+
+		private static bool IsDefined(Timestamp? timestamp)
+		{
+			return timestamp != null && timestamp.Value.Date != System.DateTime.MaxValue;
 		}
 
 

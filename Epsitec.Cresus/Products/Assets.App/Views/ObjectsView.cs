@@ -240,6 +240,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected void OnTreeTableDeselect()
 		{
 			this.treeTableController.SelectedRow = -1;
+
+			if (this.isEditing)
+			{
+				this.isEditing = false;
+				this.Update ();
+			}
 		}
 
 		protected void OnTimelineFirst()
@@ -479,11 +485,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.isEditing)
 			{
-				this.mainToolbar.SetCommandState (ToolbarCommand.Edit,     ToolbarCommandState.Activate);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
 
-				this.treeTableToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Disable);
-				this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete,   ToolbarCommandState.Disable);
-				this.treeTableToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
+				this.treeTableToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Disable);
+				this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
 			}
 			else
 			{
@@ -491,18 +496,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Disable);
 
-					this.treeTableToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Enable);
-					this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete,   ToolbarCommandState.Disable);
-					this.treeTableToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
 				}
 				else
 				{
 					this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Enable);
 
-					this.treeTableToolbar.SetCommandState (ToolbarCommand.New,      ToolbarCommandState.Enable);
-					this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete,   ToolbarCommandState.Enable);
-					this.treeTableToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Enable);
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
+					this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Enable);
 				}
+			}
+
+			if (this.treeTableController.SelectedRow == -1)
+			{
+				this.treeTableToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
+			}
+			else
+			{
+				this.treeTableToolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Enable);
 			}
 		}
 
