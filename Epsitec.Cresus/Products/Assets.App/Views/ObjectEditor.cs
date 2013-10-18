@@ -180,34 +180,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.currentPage.SetObject (this.editFrameBox, this.objectGuid, this.timestamp);
 
-			this.topTitle.SetTitle (this.ObjectTitle);
+			this.topTitle.SetTitle (this.EventDescription);
 		}
 
 
-		private string ObjectTitle
+		private string EventDescription
 		{
-			//	Retourne le type de l'événement ainsi que la date.
+			//	Retourne un texte décrivant l'événement, composé de la date
+			//	et du type de l'événement.
+			//	Par exemple "31.03.2014 — Amortissement"
 			get
 			{
 				var list = new List<string> ();
 
-#if false
-				if (this.properties != null)
-				{
-					var nom = DataAccessor.GetStringProperty (this.properties, (int) ObjectField.Nom);
-					if (!string.IsNullOrEmpty (nom))
-					{
-						list.Add (nom);
-					}
-				}
-#endif
-
+				//	Met la date de l'événement, si elle est connue.
 				if (this.timestamp.Date != System.DateTime.MaxValue)
 				{
 					var d = Helpers.Converters.DateToString (this.timestamp.Date);
 					list.Add (d);
 				}
 
+				//	Met le type de l'événement, s'il est connu.
 				var ed = StaticDescriptions.GetEventDescription (this.eventType);
 				if (!string.IsNullOrEmpty (ed))
 				{
@@ -234,8 +227,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly List<NavigatorLevel>		navigatorLevels;
-		//?private readonly List<ObjectPageType>		pageTypes;
-		//?private readonly List<IEnumerable<ObjectPageType>>	childrenPageTypes;
 
 		private NavigatorController					navigatorController;
 		private FrameBox							editFrameBox;
