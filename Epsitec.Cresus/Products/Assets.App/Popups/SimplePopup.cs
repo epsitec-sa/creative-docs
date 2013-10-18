@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Popup tout simple contenant juste une liste de textes. Il peut s'utiliser
+	/// comme un menu-combo. La largeur s'adapte en fonction des textes contenus.
+	/// </summary>
 	public class SimplePopup : AbstractPopup
 	{
 		public SimplePopup()
@@ -82,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				(
 					item => Helpers.Text.GetTextWidth (SimplePopup.GetTextWithGaps (item))
 				)
-				+ 5;
+				+ 3;  // visuellement, il est bon d'avoir un chouia d'espace en plus à droite
 			}
 		}
 
@@ -111,10 +114,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int margins    = 1;
-		private static readonly int itemHeight = 20;
-		private static readonly string textGap = "    ";
+		private static readonly int				margins		= 1;
+		private static readonly int				itemHeight	= 20;
+		private static readonly string			textGap		= "    ";
 
-		private readonly List<string> items;
+		private readonly List<string>			items;
 	}
 }
