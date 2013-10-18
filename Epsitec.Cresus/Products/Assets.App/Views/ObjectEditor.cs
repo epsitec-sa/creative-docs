@@ -51,7 +51,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-
 		private void NavigatorGoBack(int rank)
 		{
 			var type = this.pageTypes[rank];
