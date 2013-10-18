@@ -10,9 +10,9 @@ using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class SummaryController
+	public class ObjectSummaryController
 	{
-		public SummaryController(DataAccessor accessor, List<List<int>> fields)
+		public ObjectSummaryController(DataAccessor accessor, List<List<int>> fields)
 		{
 			this.accessor = accessor;
 			this.fields = fields;
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var button = new ColoredButton
 					{
 						Parent        = columnFrame,
-						Name          = SummaryController.PutRowColumn (row, column),
+						Name          = ObjectSummaryController.PutRowColumn (row, column),
 						Dock          = DockStyle.Top,
 						PreferredSize = new Size (100, 20),
 						Margins       = new Margins (1),
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					button.Clicked += delegate
 					{
 						int r, c;
-						SummaryController.GetRowColumn (button.Name, out r, out c);
+						ObjectSummaryController.GetRowColumn (button.Name, out r, out c);
 						this.OnTileClicked (r, c);
 					};
 				}

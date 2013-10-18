@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectEditorPageSummary(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.summaryController = new SummaryController (this.accessor, ObjectEditorPageSummary.SummaryFields);
+			this.summaryController = new ObjectSummaryController (this.accessor, ObjectEditorPageSummary.SummaryFields);
 
 			this.summaryController.TileClicked += delegate (object sender, int row, int column)
 			{
@@ -101,6 +101,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 	
-		private readonly SummaryController			summaryController;
+		private readonly ObjectSummaryController			summaryController;
 	}
 }

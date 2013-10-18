@@ -105,7 +105,7 @@
     <Compile Include="Views\NavigatorController.cs" />
     <Compile Include="Views\DateFieldController.cs" />
     <Compile Include="Views\StaticDescriptions.cs" />
-    <Compile Include="Views\SummaryController.cs" />
+    <Compile Include="Views\ObjectSummaryController.cs" />
     <Compile Include="Views\DecimalFieldController.cs" />
     <Compile Include="Views\StringFieldController.cs" />
     <Compile Include="Views\ObjectEditor.cs" />
