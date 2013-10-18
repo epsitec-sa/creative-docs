@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private static readonly int height    = 24;
+		private static readonly int height    = 26;
 		private static readonly int itemWidth = 100;
 
 		private readonly List<string> items;

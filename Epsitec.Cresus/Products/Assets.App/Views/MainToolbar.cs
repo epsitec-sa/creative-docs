@@ -43,6 +43,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommandButton (this.buttonEdit,          ToolbarCommand.Edit);
 			this.UpdateCommandButton (this.buttonAmortissement, ToolbarCommand.Amortissement);
 			this.UpdateCommandButton (this.buttonSimulation,    ToolbarCommand.Simulation);
+
+			this.UpdateCommandButton (this.buttonAccept,        ToolbarCommand.Accept);
+			this.UpdateCommandButton (this.buttonCancel,        ToolbarCommand.Cancel);
 		}
 
 
@@ -66,6 +69,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonEdit          = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Edit,          "Main.Edit",          "Edition");
 			this.buttonAmortissement = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Amortissement, "Main.Amortissement", "Amortissement");
 			this.buttonSimulation    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Simulation,    "Main.Simulation",    "Simulation");
+
+			this.buttonCancel = this.CreateCommandButton (toolbar, DockStyle.Right, ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
+			this.buttonAccept = this.CreateCommandButton (toolbar, DockStyle.Right, ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
 
 			this.buttonEdit.Margins = new Margins (40, 0, 0, 0);
 
@@ -136,6 +142,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonEdit;
 		private IconButton buttonAmortissement;
 		private IconButton buttonSimulation;
+
+		private IconButton buttonAccept;
+		private IconButton buttonCancel;
 
 		private ViewType viewType;
 	}

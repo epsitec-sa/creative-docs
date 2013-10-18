@@ -56,14 +56,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelineToolbar.CreateUI (this.timelineFrameBox1);
 			this.timelineToolbar.TimelineMode = this.timelineController.TimelineMode;
 
-			this.editToolbar = new EditToolbar ();
-			this.editToolbar.CreateUI (this.editFrameBox);
-
 			this.Update ();
 
 			// provisoire:
-			this.editToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
-			this.editToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Disable);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
 
 			//	Connexion des événements.
 			this.treeTableController.RowClicked += delegate
@@ -100,6 +97,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case ToolbarCommand.Simulation:
 						this.OnMainSimulation ();
+						break;
+
+					case ToolbarCommand.Accept:
+						this.OnEditAccept ();
+						break;
+
+					case ToolbarCommand.Cancel:
+						this.OnEditCancel ();
 						break;
 				}
 			};
@@ -156,20 +161,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case ToolbarCommand.Deselect:
 						this.OnTimelineDeselect ();
-						break;
-				}
-			};
-
-			this.editToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			{
-				switch (command)
-				{
-					case ToolbarCommand.Accept:
-						this.OnEditAccept ();
-						break;
-
-					case ToolbarCommand.Cancel:
-						this.OnEditCancel ();
 						break;
 				}
 			};
@@ -546,7 +537,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private TreeTableToolbar						treeTableToolbar;
 		private TimelineToolbar							timelineToolbar;
-		private EditToolbar								editToolbar;
 
 		private FrameBox								timelineFrameBox1;
 		private FrameBox								timelineFrameBox2;
