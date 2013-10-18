@@ -16,15 +16,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override string PageTitle
-		{
-			get
-			{
-				return "Général";
-			}
-		}
-
-
 		protected override void CreateUI(Widget parent)
 		{
 			if (this.properties != null)

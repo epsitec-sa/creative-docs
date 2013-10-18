@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
@@ -16,6 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			: base (accessor)
 		{
 			this.pageTypes = new List<ObjectPageType> ();
+			this.childrenPageTypes = new List<IEnumerable<ObjectPageType>> ();
 		}
 
 		public override void CreateUI(Widget parent)
@@ -48,15 +50,66 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.NavigatorGoBack (rank);
 			};
+
+			this.navigatorController.ArrowClicked += delegate (object sender, Widget button, int rank)
+			{
+				this.NavigatorArrowClicked (button, rank);
+			};
 		}
 
 
+		private void NavigatorArrowClicked(Widget target, int rank)
+		{
+			//	On a cliqué sur un triangle ">" dans le navigateur. Il faut proposer
+			//	une "menu" des enfants possibles.
+			if (!this.childrenPageTypes[rank].Any ())
+			{
+				return;
+			}
+
+			//	Cherche s'il existe un enfant déjà ouvert, pour le mettre en évidence
+			//	dans le menu.
+			int sel = -1;
+
+			if (rank < this.pageTypes.Count-1)
+			{
+				var np = this.pageTypes[rank+1];
+				sel = this.childrenPageTypes[rank].ToList ().IndexOf (np);
+			}
+
+			//	Crée un popup en guise de menu.
+			var popup = new SimplePopup
+			{
+				Selected = sel,
+			};
+
+			foreach (var type in this.childrenPageTypes[rank])
+			{
+				popup.Items.Add (StaticDescriptions.GetObjectPageDescription (type));
+			}
+
+			popup.Create (target);
+
+			popup.ItemClicked += delegate (object sender, int i)
+			{
+				var type = this.childrenPageTypes[rank].ElementAt (i);
+				this.NavigatorGoTo (rank+1, type);
+			};
+		}
+
 		private void NavigatorGoBack(int rank)
 		{
+			//	Revient en arrière à un niveau quelconque.
 			var type = this.pageTypes[rank];
+			this.NavigatorGoTo (rank, type);
+		}
 
+		private void NavigatorGoTo(int rank, ObjectPageType type)
+		{
+			//	Effectue un autre branchement à un niveau quelconque.
 			int count = this.pageTypes.Count - rank;
 			this.pageTypes.RemoveRange (rank, count);
+			this.childrenPageTypes.RemoveRange (rank, count);
 
 			this.navigatorController.Items.RemoveRange (rank, count);
 
@@ -65,6 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void AddPage(ObjectPageType type)
 		{
+			//	Ajoute une nouvelle page à la fin de la liste actuelle.
 			this.currentPage = AbstractObjectEditorPage.CreatePage (this.accessor, type);
 			this.currentPage.SetObject (this.editFrameBox, this.objectGuid, this.timestamp);
 
@@ -79,16 +133,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.pageTypes.Add (type);
+			this.childrenPageTypes.Add (this.currentPage.ChildrenPageTypes);
 
-			this.navigatorController.Items.Add (this.currentPage.PageTitle);
+			this.navigatorController.Items.Add (StaticDescriptions.GetObjectPageDescription (type));
 			this.navigatorController.Selection = this.navigatorController.Items.Count-1;
+			this.navigatorController.HasLastArrow = this.currentPage.ChildrenPageTypes.Any ();
 			this.navigatorController.UpdateUI ();
 		}
 
 
-
 		public void SetObject(Guid objectGuid, Timestamp? timestamp)
 		{
+			//	Spécifie l'objet sélectionné dans le TreeTable de gauche.
 			if (timestamp == null || !timestamp.HasValue)
 			{
 				timestamp = new Timestamp (System.DateTime.MaxValue, 0);
@@ -162,6 +218,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly List<ObjectPageType>		pageTypes;
+		private readonly List<IEnumerable<ObjectPageType>>	childrenPageTypes;
 
 		private NavigatorController					navigatorController;
 		private FrameBox							editFrameBox;

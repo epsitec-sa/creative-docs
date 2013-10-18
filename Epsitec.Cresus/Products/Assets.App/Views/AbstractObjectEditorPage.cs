@@ -17,11 +17,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public virtual string PageTitle
+		public virtual IEnumerable<ObjectPageType> ChildrenPageTypes
 		{
 			get
 			{
-				return null;
+				return new List<ObjectPageType> ();
 			}
 		}
 
@@ -164,6 +164,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case ObjectPageType.Amortissements:
 					return new ObjectEditorPageAmortissements (accessor);
+
+				case ObjectPageType.Compta:
+					return new ObjectEditorPageCompta (accessor);
 
 				default:
 					System.Diagnostics.Debug.Fail ("Unsupported page type");

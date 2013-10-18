@@ -78,6 +78,7 @@
     <Compile Include="Helpers\Converters.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
+    <Compile Include="Popups\SimplePopup.cs" />
     <Compile Include="Popups\HistoryAccessor.cs" />
     <Compile Include="Popups\HistoryPopup.cs" />
     <Compile Include="Popups\DeletePopup.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Views\ComputedAmountController.cs" />
     <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\AbstractObjectEditorPage.cs" />
+    <Compile Include="Views\ObjectEditorPageCompta.cs" />
     <Compile Include="Widgets\ColoredButton.cs" />
     <Compile Include="Views\ObjectEditorPageValues.cs" />
     <Compile Include="Views\ObjectEditorPageAmortissements.cs" />

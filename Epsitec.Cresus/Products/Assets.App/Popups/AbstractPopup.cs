@@ -228,6 +228,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return button;
 		}
 
+		protected ColoredButton CreateItem(int x, int y, int dx, int dy, string text)
+		{
+			x += (int) this.dialogRect.Left;
+			y += (int) this.dialogRect.Bottom;
+
+			var button = new ColoredButton
+			{
+				Parent           = this,
+				Text             = text,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				Anchor           = AnchorStyles.BottomLeft,
+				PreferredSize    = new Size (dx, dy),
+				Margins          = new Margins (x, 0, 0, y),
+				NormalColor      = Color.Empty,
+				SelectedColor    = ColorManager.SelectionColor,
+				HoverColor       = ColorManager.SelectionColor,
+			};
+
+			return button;
+		}
+
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{

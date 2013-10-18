@@ -12,9 +12,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class NewEventPopup : AbstractPopup
 	{
-		public System.DateTime Date;
+		public System.DateTime					Date;
 
-		protected override Size DialogSize
+		protected override Size					DialogSize
 		{
 			get
 			{

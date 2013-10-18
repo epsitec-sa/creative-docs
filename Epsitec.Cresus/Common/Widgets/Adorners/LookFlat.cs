@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorCaption           = Drawing.Color.FromRgb(255.0/255.0, 210.0/255.0,   0.0/255.0);
 			this.colorCaptionText       = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
 			this.colorThreeState        = Drawing.Color.FromRgb(218.0/255.0, 207.0/255.0, 162.0/255.0);
-			this.colorInfo              = Drawing.Color.FromRgb(250.0/255.0, 250.0/255.0, 250.0/255.0);
+			this.colorInfo              = Drawing.Color.FromRgb(250.0/255.0, 231.0/255.0,  95.0/255.0);
 			this.colorError             = Drawing.Color.FromHexa ("ffb1b1");  // rouge pâle
 			this.colorUndefinedLanguage = Drawing.Color.FromHexa ("b1e3ff");  // bleu pâle
 		}

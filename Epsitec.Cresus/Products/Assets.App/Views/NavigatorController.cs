@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public bool								HasLastArrow;
 		public int								Selection;
 
 
@@ -47,9 +48,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.CreateItems (i);
 
-				if (i < this.items.Count-1)
+				if (i < this.items.Count-1 || this.HasLastArrow)
 				{
-					this.CreateArrow ();
+					this.CreateArrow (i);
 				}
 			}
 		}
@@ -57,7 +58,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateItems(int rank)
 		{
-			int width = this.GetButtonWidth (this.items[rank]);
+			int width = NavigatorController.GetButtonWidth (this.items[rank]);
 
 			var button = new ColoredButton
 			{
@@ -80,15 +81,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private int GetButtonWidth(string text)
+		private static int GetButtonWidth(string text)
 		{
 			var width = new TextGeometry (0, 0, 1000, 100, text, Font.DefaultFont, Font.DefaultFontSize, ContentAlignment.MiddleLeft).Width;
 			return (int) width + 20;
 		}
 
-		private void CreateArrow()
+		private void CreateArrow(int rank)
 		{
-			new GlyphButton
+			var button = new GlyphButton
 			{
 				Parent           = this.frameBox,
 				GlyphShape       = GlyphShape.TriangleRight,
@@ -96,6 +97,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AutoFocus        = false,
 				Dock             = DockStyle.Left,
 				PreferredSize    = new Size (NavigatorController.height, NavigatorController.height),
+			};
+
+			button.Clicked += delegate
+			{
+				this.OnArrowClicked (button, rank);
 			};
 		}
 
@@ -111,12 +117,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public delegate void ItemClickedEventHandler(object sender, int rank);
 		public event ItemClickedEventHandler ItemClicked;
+
+
+		private void OnArrowClicked(Widget button, int rank)
+		{
+			if (this.ArrowClicked != null)
+			{
+				this.ArrowClicked (this, button, rank);
+			}
+		}
+
+		public delegate void ArrowClickedEventHandler(object sender, Widget button, int rank);
+		public event ArrowClickedEventHandler ArrowClicked;
 		#endregion
 
 
 		private static readonly int height = 26;
 
-		private readonly List<string> items;
-		private FrameBox frameBox;
+		private readonly List<string>			items;
+		private FrameBox						frameBox;
 	}
 }

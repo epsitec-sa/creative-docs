@@ -95,5 +95,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return null;
 			}
 		}
+
+		public static string GetObjectPageDescription(ObjectPageType type)
+		{
+			switch (type)
+			{
+				case ObjectPageType.Summary:
+					return "Résumé";
+
+				case ObjectPageType.Infos:
+					return "Général";
+
+				case ObjectPageType.Values:
+					return "Valeurs";
+
+				case ObjectPageType.Amortissements:
+					return "Amortissements";
+
+				case ObjectPageType.Compta:
+					return "Comptabilisation";
+
+				default:
+					return null;
+			}
+		}
 	}
 }

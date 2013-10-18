@@ -9,7 +9,7 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public class ColoredButton : StaticText
+	public class ColoredButton : AbstractButton
 	{
 		public Color							NormalColor
 		{
@@ -76,6 +76,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.BackColor = this.GetColor (false);
 			base.OnExited (e);
+		}
+
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			var rect = new Rectangle (0, 0, this.ActualWidth, this.ActualHeight);
+
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (this.BackColor);
+
+			graphics.AddText (rect.Left, rect.Bottom, rect.Width, rect.Height, this.Text, Font.DefaultFont, Font.DefaultFontSize, this.ContentAlignment);
+			graphics.RenderSolid (Color.FromBrightness (0));
 		}
 
 

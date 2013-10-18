@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class DeletePopup : AbstractPopup
 	{
-		public string Question;
+		public string							Question;
 
-		protected override Size DialogSize
+		protected override Size					DialogSize
 		{
 			get
 			{
