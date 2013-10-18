@@ -44,7 +44,14 @@ namespace Epsitec.Aider.Data.Job
 			businessContext =>
 			{
 				this.LogToConsole ("Fetching contacts to index...");
-				var contactsToIndex = businessContext.GetAllEntities<AiderContactEntity> ();
+				
+				var contactExample = new AiderContactEntity()
+				{
+					AddressType = Enumerations.AddressType.Default
+				};
+
+				var contactsToIndex = businessContext.DataContext.GetByExample<AiderContactEntity> (contactExample);	
+
 				this.LogToConsole ("Done.");
 				var total = contactsToIndex.Count ();
 				var client = ElasticClient;
@@ -56,18 +63,22 @@ namespace Epsitec.Aider.Data.Job
 				var count = 0;
 				foreach (var contact in contactsToIndex)
 				{
+
 					var id = businessContext.DataContext.GetNormalizedEntityKey (contact).Value.ToString ();
 					var druid = (Druid) Res.CommandIds.Base.ShowAiderContact;
+					var name = contact.GetDisplayName ();
+					var text = contact.Address.GetDisplayAddress ().ToSimpleText ();
 					var document = new Document ()
 					{
 						DocumentId  = id,
 						DatasetId = druid.ToCompactString (),
 						EntityId  = id.Replace ('/', '-'),
-						Name = contact.GetSummary ().ToSimpleText (),
-						Text = contact.Address.GetPostalAddress ().ToSimpleText ()
+						Name = name,
+						Text = text
 					};
-					this.LogToConsole ("Indexing {0}\n{1}/{2} indexed",document.Name,count++,total);
+					this.LogToConsole ("Indexing {0}\n{1}/{2} indexed", document.Name, count++, total);
 					client.Index (document, "aider", "contacts", document.DocumentId);
+					
 				}
 
 			});

@@ -10,7 +10,41 @@ function ElasticSearch() {
 
   //Entry points for calling hub
   this.hub.client.processResult = function(result) {
-    Ext.Array.each(result.Documents, function (doc)
+    $('#elasticsearch').sidr({
+      name: 'sidr',
+      side: 'left',
+      body: '#columnmanager',
+      source: function(name) {
+        var htmlMenu = "<h1>Résultat de la recherche</h1><ul>";
+        var id = 0;
+
+
+        Ext.Array.each(result.Documents, function (doc)
+        {       
+
+         // Generate or pull any HTML you want for the back.
+        
+          htmlMenu += "<li id='"+id+"'><a href='#' onclick='" +
+                      "var target = document.getElementById(\""+id+"\");" +
+                      "var spinner = new Spinner().spin(target);" + 
+                      "var path = { " +
+                      "databaseName: \"" + doc.DatasetId + "\"," + 
+                      "entityId: \"" + doc.EntityId + "\"};" + 
+                      "Epsitec.Cresus.Core.app.showEntity(path,Epsitec.Callback.create(function(){spinner.stop()},this));'>" + 
+                      doc.Name + 
+                      "<p>"+ doc.Text +"</p></a></li>";
+          id++;
+        });
+
+        htmlMenu += "<li><a href='#' onclick='$.sidr(\"close\",\"sidr\");'>fermer</a></li></ul>";
+
+        return htmlMenu;
+      }
+    });
+
+    $.sidr('open','sidr');
+
+    /*Ext.Array.each(result.Documents, function (doc)
     {
 
       var path = {
@@ -32,7 +66,7 @@ function ElasticSearch() {
       };
 
       toastr.info(doc.Text, doc.Name);
-    });
+    });*/
       
   };
 

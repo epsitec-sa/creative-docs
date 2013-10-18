@@ -53,6 +53,7 @@ function() {
           width: '30%',
           items: [{
               xtype: 'textfield',
+              id: 'elasticsearch',
               name: 'searchquery',
               layout: 'fit',
               listeners: {
