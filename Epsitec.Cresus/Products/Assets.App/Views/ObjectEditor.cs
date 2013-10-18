@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				//	Crée un popup en guise de menu.
 				var popup = new SimplePopup
 				{
-					Selected = sel,
+					SelectedItem = sel,
 				};
 
 				foreach (var type in this.navigatorLevels[rank].Childrens)

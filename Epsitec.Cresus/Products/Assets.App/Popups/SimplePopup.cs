@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public SimplePopup()
 		{
 			this.items = new List<string> ();
-			this.Selected = -1;
+			this.SelectedItem = -1;
 		}
 
 
@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public int								Selected;
+		public int								SelectedItem;
 
 
 		protected override Size DialogSize
@@ -59,9 +59,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			int dx = width;
 			int dy = SimplePopup.itemHeight;
 
-			var button = this.CreateItem (x, y, dx, dy, this.GetText (rank));
+			var button = this.CreateItem (x, y, dx, dy, this.GetTextWithGaps (rank));
 
-			if (rank == this.Selected)
+			if (rank == this.SelectedItem)
 			{
 				button.ActiveState = ActiveState.Yes;
 			}
@@ -75,29 +75,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private int RequiredWidth
 		{
+			//	Calcule la largeur nécessaire en fonction de l'ensemble des textes.
 			get
 			{
-				int width = 0;
-
-				for (int i=0; i<this.items.Count; i++)
-				{
-					int bw = SimplePopup.GetButtonWidth (this.GetText (i));
-					width = System.Math.Max (bw, width);
-				}
-
-				return width;
+				return this.items.Max
+				(
+					item => Helpers.Text.GetTextWidth (SimplePopup.GetTextWithGaps (item))
+				)
+				+ 5;
 			}
 		}
 
-		private static int GetButtonWidth(string text)
+		private string GetTextWithGaps(int rank)
 		{
-			var width = new TextGeometry (0, 0, 1000, 100, text, Font.DefaultFont, Font.DefaultFontSize, ContentAlignment.MiddleLeft).Width;
-			return (int) width + 5;
+			return SimplePopup.GetTextWithGaps (this.items[rank]);
 		}
 
-		private string GetText(int rank)
+		private static string GetTextWithGaps(string text)
 		{
-			return string.Concat ("    ", this.items[rank], "    ");
+			return string.Concat (SimplePopup.textGap, text, SimplePopup.textGap);
 		}
 
 
@@ -117,6 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static readonly int margins    = 1;
 		private static readonly int itemHeight = 20;
+		private static readonly string textGap = "    ";
 
 		private readonly List<string> items;
 	}

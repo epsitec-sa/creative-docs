@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateItems(int rank)
 		{
-			int width = NavigatorController.GetButtonWidth (this.items[rank]);
+			int width = Helpers.Text.GetTextWidth (this.items[rank]) + 20;
 
 			var button = new ColoredButton
 			{
@@ -89,12 +89,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.OnItemClicked (rank);
 			};
-		}
-
-		private static int GetButtonWidth(string text)
-		{
-			var width = new TextGeometry (0, 0, 1000, 100, text, Font.DefaultFont, Font.DefaultFontSize, ContentAlignment.MiddleLeft).Width;
-			return (int) width + 20;
 		}
 
 		private void CreateArrow(int rank)

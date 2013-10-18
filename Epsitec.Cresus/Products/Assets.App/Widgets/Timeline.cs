@@ -268,13 +268,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (this.showLabels)
 			{
-				foreach (var row in this.timelineRows)
-				{
-					if (!string.IsNullOrEmpty (row.Description))
-					{
-						this.labelsWidth = System.Math.Max (this.labelsWidth, this.GetTextWidth (row.Description));
-					}
-				}
+				this.labelsWidth = this.timelineRows.Max
+				(
+					row => Helpers.Text.GetTextWidth (row.Description, Font.DefaultFont, this.FontSize)
+				);
 
 				if (this.labelsWidth > 0)
 				{
@@ -285,19 +282,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					row.LabelWidth = this.labelsWidth;
 				}
-			}
-		}
-
-		private int GetTextWidth(string text)
-		{
-			if (string.IsNullOrEmpty (text))
-			{
-				return 0;
-			}
-			else
-			{
-				var font = Font.DefaultFont;
-				return (int) new TextGeometry (0, 0, 1000, 100, text, font, this.FontSize, ContentAlignment.MiddleLeft).Width + 1;
 			}
 		}
 
