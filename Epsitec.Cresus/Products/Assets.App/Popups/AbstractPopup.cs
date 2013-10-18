@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			if (smoothShadow)
 			{
 				//	Dessine une jolie ombre douce.
-				this.PaintSmoothShadow (graphics);
+				SmoothShadow.Paint (graphics, this.ExternalRect);
 			}
 			else
 			{
@@ -326,52 +326,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Dessine le fond blanc du popup.
 			graphics.AddFilledRectangle (this.dialogRect);
 			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
-		}
-
-		private void PaintSmoothShadow(Graphics graphics)
-		{
-			double factor = this.ExternalRect.Height / 200;  // l'ombre est plus discrète si le popup est petit
-
-			factor = System.Math.Min (factor, 1.0);
-			factor = System.Math.Max (factor, 0.5);
-
-			for (double step=0.0; step<=1.0; step+=0.02)  // 0..1
-			{
-				var rect = this.ExternalRect;
-				rect.Offset (0, -20*factor);
-				rect.Inflate (-20*factor + step*80.0*factor);
-
-				var path = AbstractPopup.GetPathRoundRectangle (rect, (10.0 + step*80.0)*factor);
-				var alpha = System.Math.Pow (1.0-step, 2.0) * 0.04;
-
-				graphics.AddFilledPath (path);
-				graphics.RenderSolid (Color.FromAlphaRgb (alpha, 0.0, 0.0, 0.0));
-			}
-		}
-
-		private static Path GetPathRoundRectangle(Rectangle rect, double radius)
-		{
-			//	Crée le chemin d'un rectangle à coins arrondis.
-			double ox = rect.Left;
-			double oy = rect.Bottom;
-			double dx = rect.Width;
-			double dy = rect.Height;
-
-			radius = System.Math.Max (radius, 0.1);
-
-			var path = new Path ();
-			path.MoveTo (ox+radius+0.5, oy+0.5);
-			path.LineTo (ox+dx-radius-0.5, oy+0.5);
-			path.CurveTo (ox+dx-0.5, oy+0.5, ox+dx-0.5, oy+radius+0.5);
-			path.LineTo (ox+dx-0.5, oy+dy-radius-0.5);
-			path.CurveTo (ox+dx-0.5, oy+dy-0.5, ox+dx-radius-0.5, oy+dy-0.5);
-			path.LineTo (ox+radius+0.5, oy+dy-0.5);
-			path.CurveTo (ox+0.5, oy+dy-0.5, ox+0.5, oy+dy-radius-0.5);
-			path.LineTo (ox+0.5, oy+radius+0.5);
-			path.CurveTo (ox+0.5, oy+0.5, ox+radius+0.5, oy+0.5);
-			path.Close ();
-
-			return path;
 		}
 
 
