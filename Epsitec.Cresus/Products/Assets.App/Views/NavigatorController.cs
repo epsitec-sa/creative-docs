@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ActiveState      = rank == this.Selection ? ActiveState.Yes : ActiveState.No,
 				NormalColor      = Color.Empty,
 				SelectedColor    = ColorManager.EditBackgroundColor,
-				HoverColor       = ColorManager.SelectionColor,
+				HoverColor       = ColorManager.HoverColor,
 			};
 
 			button.Clicked += delegate
