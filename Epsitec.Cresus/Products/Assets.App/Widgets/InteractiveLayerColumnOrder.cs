@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					//	Flèche vers le bas.
 					var path = this.GlyphArrowDown (x.Value);
-					this.foreground.AddSurface (path, ColorManager.HoverColor);
+					this.foreground.AddSurface (path, ColorManager.SelectionColor);
 
 					//	Dessine le TreeTable miniature s'il y a ambiguïté.
 					if (dst.Left)
@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (rect.IsValid)
 			{
-				var color = Color.FromAlphaColor (0.2, ColorManager.MoveColumnColor);
+				var color = Color.FromAlphaColor (0.6, ColorManager.HoverColor);
 				this.foreground.AddSurface (rect, color);
 			}
 

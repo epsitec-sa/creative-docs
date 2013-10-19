@@ -95,11 +95,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (cell.Date.DayOfWeek == System.DayOfWeek.Saturday ||
 					cell.Date.DayOfWeek == System.DayOfWeek.Sunday)
 				{
-					return ColorManager.GetHolidayColor (isHover);
+					return ColorManager.GetHolidayColor (false);
 				}
 				else
 				{
-					return ColorManager.GetBackgroundColor (isHover);
+					return ColorManager.GetBackgroundColor (false);
 				}
 			}
 			else

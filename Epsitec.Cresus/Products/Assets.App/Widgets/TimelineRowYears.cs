@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid)
 			{
-				return ColorManager.GetBackgroundColor (isHover);
+				return ColorManager.GetBackgroundColor (false);
 			}
 			else
 			{

@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				button.NormalColor   = ColorManager.WindowBackgroundColor;
 				button.SelectedColor = ColorManager.EditSinglePropertyColor;
-				button.HoverColor    = ColorManager.SelectionColor;
+				button.HoverColor    = ColorManager.HoverColor;
 
 				button.ActiveState = a;
 			}

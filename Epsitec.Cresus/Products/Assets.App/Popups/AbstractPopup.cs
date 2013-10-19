@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Margins          = new Margins (x, 0, 0, y),
 				NormalColor      = Color.Empty,
 				SelectedColor    = ColorManager.SelectionColor,
-				HoverColor       = ColorManager.SelectionColor,
+				HoverColor       = ColorManager.HoverColor,
 			};
 
 			return button;

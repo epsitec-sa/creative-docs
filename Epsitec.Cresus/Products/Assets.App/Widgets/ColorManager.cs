@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return ColorManager.selectionColor;
+				return ColorManager.hoverColor;
 			}
 		}
 
