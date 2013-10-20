@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
@@ -21,7 +22,54 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
+			this.toolbar = new TimelineToolbar ();
+			this.toolbar.CreateUI (parent);
+
 			this.CreateTimeline (parent);
+
+			//	Connexion des événements.
+			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.First:
+						this.OnFirst ();
+						break;
+
+					case ToolbarCommand.Last:
+						this.OnLast ();
+						break;
+
+					case ToolbarCommand.Prev:
+						this.OnPrev ();
+						break;
+
+					case ToolbarCommand.Next:
+						this.OnNext ();
+						break;
+
+					case ToolbarCommand.Now:
+						this.OnNow ();
+						break;
+
+					case ToolbarCommand.New:
+						this.OnNew ();
+						break;
+
+					case ToolbarCommand.Delete:
+						this.OnDelete ();
+						break;
+
+					case ToolbarCommand.Deselect:
+						this.OnDeselect ();
+						break;
+				}
+			};
+
+			this.toolbar.ModeChanged += delegate
+			{
+				this.TimelineMode = this.toolbar.TimelineMode;
+			};
 		}
 
 
@@ -40,8 +88,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					using (new SaveCurrentDate (this))
 					{
 						this.UpdateRows ();
-						this.UpdateTimelineData ();
-						this.UpdateTimelineController ();
+						this.UpdateData ();
+						this.UpdateController ();
+						this.UpdateToolbar ();
 					}
 				}
 			}
@@ -59,8 +108,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.selectedCell = value;
 
-					this.UpdateTimelineController ();
-					this.OnCellClicked (this.selectedCell);
+					this.UpdateController ();
+					this.UpdateToolbar ();
+
+					this.OnSelectedCellChanged (this.selectedCell);
 				}
 			}
 		}
@@ -119,8 +170,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					using (new SaveCurrentDate (this))
 					{
-						this.UpdateTimelineData ();
-						this.UpdateTimelineController ();
+						this.UpdateData ();
+						this.UpdateController ();
+						this.UpdateToolbar ();
 					}
 				}
 			}
@@ -166,125 +218,165 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public int?								FirstEventIndex
+		private void OnFirst()
 		{
-			get
-			{
-				int count = this.timelineData.CellsCount;
-				for (int i = 0; i < count; i++)
-				{
-					var cell = this.timelineData.GetCell (i);
+			var index = this.FirstEventIndex;
 
-					if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+			if (index.HasValue)
+			{
+				this.SelectedCell = index.Value;
+			}
+		}
+
+		private void OnPrev()
+		{
+			var index = this.PrevEventIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedCell = index.Value;
+			}
+		}
+
+		private void OnNext()
+		{
+			var index = this.NextEventIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedCell = index.Value;
+			}
+		}
+
+		private void OnLast()
+		{
+			var index = this.LastEventIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedCell = index.Value;
+			}
+		}
+
+		private void OnNow()
+		{
+			var index = this.NowEventIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedCell = index.Value;
+			}
+		}
+
+		private void OnNew()
+		{
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
+			var timestamp = this.SelectedTimestamp;
+
+			if (target != null && timestamp.HasValue)
+			{
+				System.DateTime? createDate = timestamp.Value.Date;
+
+				var popup = new NewEventPopup
+				{
+					Date = timestamp.Value.Date,
+				};
+
+				popup.Create (target);
+
+				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
+				{
+					var index = this.GetEventIndex (dateTime);
+
+					if (index.HasValue)
 					{
-						return i;
+						this.SelectedCell = index.Value;
+					}
+					else
+					{
+						this.SelectedCell = -1;
+					}
+
+					if (dateTime.HasValue)
+					{
+						createDate = dateTime.Value;
+					}
+				};
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (createDate.HasValue)
+					{
+						this.CreateEvent (createDate.Value, name);
+					}
+				};
+			}
+		}
+
+		private void OnDelete()
+		{
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Delete);
+
+			if (target != null)
+			{
+				var popup = new DeletePopup
+				{
+					Question = "Voulez-vous supprimer l'événement sélectionné ?",
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+					}
+				};
+			}
+		}
+
+		private void OnDeselect()
+		{
+			this.SelectedCell = -1;
+		}
+
+
+		private void CreateEvent(System.DateTime date, string buttonName)
+		{
+			var guid = this.objectGuid;
+
+			if (!guid.IsEmpty)
+			{
+				var type = ObjectsTimelineController.ParseEventType (buttonName);
+				var timestamp = this.accessor.CreateEvent (guid, date, type);
+
+				if (timestamp.HasValue)
+				{
+					using (new SaveCurrentDate (this))
+					{
+						this.UpdateRows ();
+						this.UpdateData ();
+						this.UpdateController ();
+						this.UpdateToolbar ();
+					}
+
+					int? index = this.GetEventIndex (timestamp);
+					if (index.HasValue)
+					{
+						this.SelectedCell = index.Value;
 					}
 				}
-
-				return null;
 			}
 		}
 
-		public int?								PrevEventIndex
+		private static EventType ParseEventType(string text)
 		{
-			get
-			{
-				if (this.selectedCell != -1)
-				{
-					int i = this.selectedCell - 1;
-					while (i >= 0)
-					{
-						var cell = this.timelineData.GetCell (i);
-
-						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
-						{
-							return i;
-						}
-
-						i--;
-					}
-				}
-
-				return null;
-			}
+			var type = EventType.Unknown;
+			System.Enum.TryParse<EventType> (text, out type);
+			return type;
 		}
 
-		public int?								NextEventIndex
-		{
-			get
-			{
-				if (this.selectedCell != -1)
-				{
-					int count = this.timelineData.CellsCount;
-					int i = this.selectedCell + 1;
-					while (i < count)
-					{
-						var cell = this.timelineData.GetCell (i);
-
-						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
-						{
-							return i;
-						}
-
-						i++;
-					}
-				}
-
-				return null;
-			}
-		}
-
-		public int?								LastEventIndex
-		{
-			get
-			{
-				int count = this.timelineData.CellsCount;
-				for (int i = count-1; i >= 0; i--)
-				{
-					var cell = this.timelineData.GetCell (i);
-
-					if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
-					{
-						return i;
-					}
-				}
-
-				return null;
-			}
-		}
-
-		public int?								NowEventIndex
-		{
-			get
-			{
-				var now = Timestamp.Now;
-
-				int count = this.timelineData.CellsCount;
-				for (int i = 0; i < count; i++)
-				{
-					var cell = this.timelineData.GetCell (i);
-
-					if (cell.HasValue && cell.Value.Timestamp == now)
-					{
-						return i;
-					}
-				}
-
-				return null;
-			}
-		}
-
-
-		public void Update()
-		{
-			using (new SaveCurrentDate (this))
-			{
-				this.UpdateRows ();
-				this.UpdateTimelineData ();
-				this.UpdateTimelineController ();
-			}
-		}
-
+	
 
 		private void CreateTimeline(Widget parent)
 		{
@@ -305,13 +397,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			parent.Window.ForceLayout ();
 
 			this.UpdateRows ();
-			this.UpdateTimelineData ();
-			this.UpdateTimelineController ();
+			this.UpdateData ();
+			this.UpdateController ();
+			this.UpdateToolbar ();
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
 			{
-				this.UpdateTimelineController (crop);
+				this.UpdateController (crop);
 			};
 
 			this.controller.CellClicked += delegate (object sender, int row, int rank)
@@ -419,7 +512,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateTimelineData()
+		private void UpdateData()
 		{
 			var start = new System.DateTime (this.accessor.StartDate.Year, 1, 1);
 			var end   = new System.DateTime (this.accessor.StartDate.Year+1, 12, 31);
@@ -430,7 +523,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateTimelineController(bool crop = true)
+		private void UpdateController(bool crop = true)
 		{
 			int visibleCount = this.controller.VisibleCellsCount;
 			int cellsCount   = this.timelineData.CellsCount;
@@ -531,6 +624,150 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void UpdateToolbar()
+		{
+			int sel = this.SelectedCell;
+
+			this.UpdateCommand (ToolbarCommand.First, sel, this.FirstEventIndex);
+			this.UpdateCommand (ToolbarCommand.Prev,  sel, this.PrevEventIndex);
+			this.UpdateCommand (ToolbarCommand.Next,  sel, this.NextEventIndex);
+			this.UpdateCommand (ToolbarCommand.Last,  sel, this.LastEventIndex);
+			this.UpdateCommand (ToolbarCommand.Now,   sel, this.NowEventIndex);
+
+			this.UpdateCommand (ToolbarCommand.New, !this.objectGuid.IsEmpty && this.SelectedTimestamp.HasValue);
+			this.UpdateCommand (ToolbarCommand.Delete, this.HasSelectedEvent);
+
+			this.UpdateCommand (ToolbarCommand.Deselect, sel != -1);
+		}
+
+		private void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		{
+			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
+			this.UpdateCommand (command, enable);
+		}
+
+		private void UpdateCommand(ToolbarCommand command, bool enable)
+		{
+			if (enable)
+			{
+				this.toolbar.SetCommandState (command, ToolbarCommandState.Enable);
+			}
+			else
+			{
+				this.toolbar.SetCommandState (command, ToolbarCommandState.Disable);
+			}
+		}
+
+
+		private int? FirstEventIndex
+		{
+			get
+			{
+				int count = this.timelineData.CellsCount;
+				for (int i = 0; i < count; i++)
+				{
+					var cell = this.timelineData.GetCell (i);
+
+					if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+					{
+						return i;
+					}
+				}
+
+				return null;
+			}
+		}
+
+		private int? PrevEventIndex
+		{
+			get
+			{
+				if (this.selectedCell != -1)
+				{
+					int i = this.selectedCell - 1;
+					while (i >= 0)
+					{
+						var cell = this.timelineData.GetCell (i);
+
+						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+						{
+							return i;
+						}
+
+						i--;
+					}
+				}
+
+				return null;
+			}
+		}
+
+		private int? NextEventIndex
+		{
+			get
+			{
+				if (this.selectedCell != -1)
+				{
+					int count = this.timelineData.CellsCount;
+					int i = this.selectedCell + 1;
+					while (i < count)
+					{
+						var cell = this.timelineData.GetCell (i);
+
+						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+						{
+							return i;
+						}
+
+						i++;
+					}
+				}
+
+				return null;
+			}
+		}
+
+		private int? LastEventIndex
+		{
+			get
+			{
+				int count = this.timelineData.CellsCount;
+				for (int i = count-1; i >= 0; i--)
+				{
+					var cell = this.timelineData.GetCell (i);
+
+					if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+					{
+						return i;
+					}
+				}
+
+				return null;
+			}
+		}
+
+		private int? NowEventIndex
+		{
+			get
+			{
+				var now = Timestamp.Now;
+
+				int count = this.timelineData.CellsCount;
+				for (int i = 0; i < count; i++)
+				{
+					var cell = this.timelineData.GetCell (i);
+
+					if (cell.HasValue && cell.Value.Timestamp == now)
+					{
+						return i;
+					}
+				}
+
+				return null;
+			}
+		}
+
+
 		private class SaveCurrentDate : System.IDisposable
 		{
 			public SaveCurrentDate(ObjectsTimelineController controller)
@@ -627,16 +864,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
-		private void OnCellClicked(int cell)
+		private void OnSelectedCellChanged(int cell)
 		{
-			if (this.CellClicked != null)
+			if (this.SelectedCellChanged != null)
 			{
-				this.CellClicked (this, cell);
+				this.SelectedCellChanged (this, cell);
 			}
 		}
 
-		public delegate void CellClickedEventHandler(object sender, int cell);
-		public event CellClickedEventHandler CellClicked;
+		public delegate void SelectedCellChangedEventHandler(object sender, int cell);
+		public event SelectedCellChangedEventHandler SelectedCellChanged;
 
 
 		private void OnStartEdition(int row)
@@ -656,6 +893,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly TimelineData			timelineData;
 
 		private FrameBox						frameBox;
+		private TimelineToolbar					toolbar;
 		private NavigationTimelineController	controller;
 		private int								selectedCell;
 		private TimelineMode					timelineMode;

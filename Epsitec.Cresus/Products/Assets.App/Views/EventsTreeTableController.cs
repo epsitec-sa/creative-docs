@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
@@ -26,7 +26,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.topTitle.SetTitle ("Evénements");
 
+			this.toolbar = new TreeTableToolbar ();
+			this.toolbar.CreateUI (parent);
+
 			this.CreateTreeTable (parent);
+
+			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.First:
+						this.OnFirst ();
+						break;
+
+					case ToolbarCommand.Last:
+						this.OnLast ();
+						break;
+
+					case ToolbarCommand.Prev:
+						this.OnPrev ();
+						break;
+
+					case ToolbarCommand.Next:
+						this.OnNext ();
+						break;
+
+					case ToolbarCommand.New:
+						this.OnNew ();
+						break;
+
+					case ToolbarCommand.Delete:
+						this.OnDelete ();
+						break;
+
+					case ToolbarCommand.Deselect:
+						this.OnDeselect ();
+						break;
+				}
+			};
 		}
 
 
@@ -44,6 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.selectedTimestamp = null;
 
 					this.UpdateTreeTableController ();
+					this.UpdateToolbar ();
 				}
 			}
 		}
@@ -62,9 +100,95 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.selectedRow = this.TimestampToRow (this.selectedTimestamp);
 
 					this.UpdateTreeTableController ();
+					this.UpdateToolbar ();
+
 					this.OnRowClicked (this.selectedTimestamp);
 				}
 			}
+		}
+
+		public int								SelectedRow
+		{
+			get
+			{
+				return this.TimestampToRow (this.selectedTimestamp);
+			}
+			set
+			{
+				this.SelectedTimestamp = this.RowToTimestamp (value);
+			}
+		}
+
+
+		private void OnFirst()
+		{
+			var index = this.FirstRowIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedRow = index.Value;
+			}
+		}
+
+		private void OnPrev()
+		{
+			var index = this.PrevRowIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedRow = index.Value;
+			}
+		}
+
+		private void OnNext()
+		{
+			var index = this.NextRowIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedRow = index.Value;
+			}
+		}
+
+		private void OnLast()
+		{
+			var index = this.LastRowIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedRow = index.Value;
+			}
+		}
+
+		private void OnNew()
+		{
+		}
+
+		private void OnDelete()
+		{
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Delete);
+
+			if (target != null)
+			{
+				var popup = new DeletePopup
+				{
+					Question = "Voulez-vous supprimer l'événement sélectionné ?",
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+					}
+				};
+			}
+		}
+
+		private void OnDeselect()
+		{
+			this.SelectedTimestamp = null;
 		}
 
 
@@ -88,6 +212,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			parent.Window.ForceLayout ();
 
 			this.UpdateTreeTableController ();
+			this.UpdateToolbar ();
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -97,18 +222,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller.RowClicked += delegate (object sender, int row)
 			{
-				this.selectedRow = this.controller.TopVisibleRow + row;
-				this.selectedTimestamp= this.RowToTimestamp (this.selectedRow);
-				this.UpdateTreeTableController ();
-				this.OnRowClicked (this.selectedTimestamp);
+				this.SelectedTimestamp = this.RowToTimestamp (this.controller.TopVisibleRow + row);
 			};
 
 			this.controller.RowDoubleClicked += delegate (object sender, int row)
 			{
-				this.selectedRow = this.controller.TopVisibleRow + row;
-				this.selectedTimestamp= this.RowToTimestamp (this.selectedRow);
-				this.UpdateTreeTableController ();
-				this.OnRowDoubleClicked (this.selectedTimestamp);
+				this.SelectedTimestamp = this.RowToTimestamp (this.controller.TopVisibleRow + row);
+				this.OnRowDoubleClicked (this.SelectedTimestamp);
 			};
 
 			this.controller.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
@@ -229,6 +349,94 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.SetColumnCells (c++, c9.ToArray ());
 		}
 
+		private void UpdateToolbar()
+		{
+			int row = this.selectedRow;
+
+			this.toolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Hide);
+			this.toolbar.SetCommandState (ToolbarCommand.Last,  ToolbarCommandState.Hide);
+
+//			this.UpdateCommand (ToolbarCommand.First, row, this.FirstRowIndex);
+			this.UpdateCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);
+			this.UpdateCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
+//			this.UpdateCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
+
+			this.UpdateCommand (ToolbarCommand.New,      true);
+			this.UpdateCommand (ToolbarCommand.Delete,   row != -1);
+			this.UpdateCommand (ToolbarCommand.Deselect, row != -1);
+		}
+
+		private void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		{
+			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
+			this.UpdateCommand (command, enable);
+		}
+
+		private void UpdateCommand(ToolbarCommand command, bool enable)
+		{
+			if (enable)
+			{
+				this.toolbar.SetCommandState (command, ToolbarCommandState.Enable);
+			}
+			else
+			{
+				this.toolbar.SetCommandState (command, ToolbarCommandState.Disable);
+			}
+		}
+
+
+		private int? FirstRowIndex
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
+		private int? PrevRowIndex
+		{
+			get
+			{
+				if (this.selectedRow == -1)
+				{
+					return null;
+				}
+				else
+				{
+					int i = this.selectedRow - 1;
+					i = System.Math.Max (i, 0);
+					i = System.Math.Min (i, this.controller.RowsCount - 1);
+					return i;
+				}
+			}
+		}
+
+		private int? NextRowIndex
+		{
+			get
+			{
+				if (this.selectedRow == -1)
+				{
+					return null;
+				}
+				else
+				{
+					int i = this.selectedRow + 1;
+					i = System.Math.Max (i, 0);
+					i = System.Math.Min (i, this.controller.RowsCount - 1);
+					return i;
+				}
+			}
+		}
+
+		private int? LastRowIndex
+		{
+			get
+			{
+				return this.controller.RowsCount - 1;
+			}
+		}
+
 
 		private int TimestampToRow(Timestamp? timestamp)
 		{
@@ -294,8 +502,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private Guid							objectGuid;
 		private TopTitle						topTitle;
+		private TreeTableToolbar				toolbar;
 		private NavigationTreeTableController	controller;
-		private int								selectedRow;
 		private Timestamp?						selectedTimestamp;
+		private int								selectedRow;
 	}
 }

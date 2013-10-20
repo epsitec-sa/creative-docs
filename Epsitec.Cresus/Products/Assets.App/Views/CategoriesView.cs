@@ -12,14 +12,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class CategoriesView : AbstractView
 	{
-		public CategoriesView(DataAccessor accessor)
-			: base (accessor)
+		public CategoriesView(DataAccessor accessor, MainToolbar toolbar)
+			: base (accessor, toolbar)
 		{
 		}
 
-		public override void CreateUI(Widget parent, MainToolbar toolbar)
+		public override void CreateUI(Widget parent)
 		{
-			base.CreateUI (parent, toolbar);
+			base.CreateUI (parent);
 
 			var topBox = new FrameBox
 			{

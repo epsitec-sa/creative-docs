@@ -14,14 +14,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ReportsView : AbstractView
 	{
-		public ReportsView(DataAccessor accessor)
-			: base (accessor)
+		public ReportsView(DataAccessor accessor, MainToolbar toolbar)
+			: base (accessor, toolbar)
 		{
 		}
 
-		public override void CreateUI(Widget parent, MainToolbar toolbar)
+		public override void CreateUI(Widget parent)
 		{
-			base.CreateUI (parent, toolbar);
+			base.CreateUI (parent);
 
 			this.Update ();
 		}

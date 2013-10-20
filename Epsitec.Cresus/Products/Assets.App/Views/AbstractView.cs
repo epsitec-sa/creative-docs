@@ -4,20 +4,79 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractView
 	{
-		public AbstractView(DataAccessor accessor)
+		public AbstractView(DataAccessor accessor, MainToolbar toolbar)
 		{
 			this.accessor = accessor;
+			this.mainToolbar = toolbar;
 		}
 
-		public virtual void CreateUI(Widget parent, MainToolbar toolbar)
+
+		public virtual void Dispose()
 		{
-			this.mainToolbar = toolbar;
+		}
+
+
+		public virtual void CreateUI(Widget parent)
+		{
+		}
+
+		public virtual void OnCommand(ToolbarCommand command)
+		{
+			switch (command)
+			{
+				case ToolbarCommand.Amortissement:
+					this.OnMainAmortissement ();
+					break;
+
+				case ToolbarCommand.Simulation:
+					this.OnMainSimulation ();
+					break;
+			}
+		}
+
+
+		private void OnMainAmortissement()
+		{
+			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Amortissement);
+
+			if (target != null)
+			{
+				var popup = new DeletePopup
+				{
+					Question = "Voulez-vous générer les amortissements ?",
+				};
+
+				popup.Create (target);
+			}
+		}
+
+		private void OnMainSimulation()
+		{
+			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Simulation);
+
+			if (target != null)
+			{
+				var popup = new DeletePopup
+				{
+					Question = "Voulez-vous débuter une simulation ?",
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+					}
+				};
+			}
 		}
 
 
@@ -26,27 +85,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor)
+		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor, MainToolbar toolbar)
 		{
 			switch (viewType)
 			{
 				case ViewType.Objects:
-					return new ObjectsView (accessor);
+					return new ObjectsView (accessor, toolbar);
 
 				case ViewType.Categories:
-					return new CategoriesView (accessor);
+					return new CategoriesView (accessor, toolbar);
 
 				case ViewType.Groups:
-					return new GroupsView (accessor);
+					return new GroupsView (accessor, toolbar);
 
 				case ViewType.Events:
-					//?return new ObjectsTreeTableView (accessor);
+				//?return new ObjectsTreeTableView (accessor, toolbar);
 
 				case ViewType.Reports:
-					return new ReportsView (accessor);
+					return new ReportsView (accessor, toolbar);
 
 				case ViewType.Settings:
-					return new SettingsView (accessor);
+					return new SettingsView (accessor, toolbar);
 
 				default:
 					return null;
@@ -55,7 +114,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected readonly DataAccessor			accessor;
-
-		protected MainToolbar					mainToolbar;
+		protected readonly MainToolbar			mainToolbar;
 	}
 }

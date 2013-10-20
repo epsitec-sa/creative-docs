@@ -136,11 +136,11 @@
     <Compile Include="Widgets\MouseCursorManager.cs" />
     <Compile Include="Views\SettingsView.cs" />
     <Compile Include="Views\ReportsView.cs" />
-    <Compile Include="Views\ObjectsTreeTableView.cs" />
+    <Compile Include="Views\ObjectsWithoutTimelineView.cs" />
     <Compile Include="Views\GroupsView.cs" />
     <Compile Include="Views\MainToolbar.cs" />
     <Compile Include="Views\MainView.cs" />
-    <Compile Include="Views\ObjectsTimelineView.cs" />
+    <Compile Include="Views\ObjectsWithTimelineView.cs" />
     <Compile Include="Views\ViewType.cs" />
     <Compile Include="Widgets\AbstractTimelineRow.cs" />
     <Compile Include="Widgets\ColorManager.cs" />
@@ -240,6 +240,8 @@
     <EmbeddedResource Include="Images\TreeTable.Last.icon" />
     <EmbeddedResource Include="Images\TreeTable.Next.icon" />
     <EmbeddedResource Include="Images\TreeTable.Prev.icon" />
+    <EmbeddedResource Include="Images\View.WithoutTimeline.icon" />
+    <EmbeddedResource Include="Images\View.WithTimeline.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

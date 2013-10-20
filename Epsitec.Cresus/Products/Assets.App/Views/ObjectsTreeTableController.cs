@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
@@ -27,7 +27,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.topTitle.SetTitle ("Objets d'immobilisation");
 
+			this.toolbar = new TreeTableToolbar ();
+			this.toolbar.CreateUI (parent);
+
 			this.CreateTreeTable (parent);
+
+			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.First:
+						this.OnFirst ();
+						break;
+
+					case ToolbarCommand.Last:
+						this.OnLast ();
+						break;
+
+					case ToolbarCommand.Prev:
+						this.OnPrev ();
+						break;
+
+					case ToolbarCommand.Next:
+						this.OnNext ();
+						break;
+
+					case ToolbarCommand.New:
+						this.OnNew ();
+						break;
+
+					case ToolbarCommand.Delete:
+						this.OnDelete ();
+						break;
+
+					case ToolbarCommand.Deselect:
+						this.OnDeselect ();
+						break;
+				}
+			};
 		}
 
 
@@ -43,8 +80,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.selectedRow = value;
 
-					this.UpdateTreeTableController ();
-					this.OnRowClicked (this.selectedRow);
+					this.UpdateController ();
+					this.UpdateToolbar ();
+
+					this.OnSelectedRowChanged (this.selectedRow);
 				}
 			}
 		}
@@ -63,12 +102,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var guid = this.accessor.GetObjectGuid (i);
 					if (guid == value)
 					{
-						this.selectedRow = i;
+						this.SelectedRow = i;
 						return;
 					}
 				}
 
-				this.selectedRow = -1;
+				this.SelectedRow = -1;
 			}
 		}
 
@@ -84,9 +123,82 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.timestamp = value;
 
-					this.UpdateTreeTableController ();
+					this.UpdateController ();
+					this.UpdateToolbar ();
 				}
 			}
+		}
+
+
+		private void OnFirst()
+		{
+			var index = this.FirstRowIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedRow = index.Value;
+			}
+		}
+
+		private void OnPrev()
+		{
+			var index = this.PrevRowIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedRow = index.Value;
+			}
+		}
+
+		private void OnNext()
+		{
+			var index = this.NextRowIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedRow = index.Value;
+			}
+		}
+
+		private void OnLast()
+		{
+			var index = this.LastRowIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedRow = index.Value;
+			}
+		}
+
+		private void OnNew()
+		{
+		}
+
+		private void OnDelete()
+		{
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Delete);
+
+			if (target != null)
+			{
+				var popup = new DeletePopup
+				{
+					Question = "Voulez-vous supprimer l'objet sélectionné ?",
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+					}
+				};
+			}
+		}
+
+		private void OnDeselect()
+		{
+			this.SelectedRow = -1;
 		}
 
 
@@ -112,18 +224,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Pour que le calcul du nombre de lignes visibles soit correct.
 			parent.Window.ForceLayout ();
 
-			this.UpdateTreeTableController ();
+			this.UpdateController ();
+			this.UpdateToolbar ();
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
 			{
-				this.UpdateTreeTableController (crop);
+				this.UpdateController (crop);
 			};
 
 			this.controller.RowClicked += delegate (object sender, int row)
 			{
 				this.SelectedRow = this.controller.TopVisibleRow + row;
-				this.OnRowClicked (this.SelectedRow);
 			};
 
 			this.controller.RowDoubleClicked += delegate (object sender, int row)
@@ -155,7 +267,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void UpdateTreeTableController(bool crop = true)
+		private void UpdateController(bool crop = true)
 		{
 			int visibleCount = this.controller.VisibleRowsCount;
 			int rowsCount    = this.accessor.ObjectsCount;
@@ -247,18 +359,106 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.SetColumnCells (6, c6.ToArray ());
 		}
 
-
-		#region Events handler
-		private void OnRowClicked(int row)
+		private void UpdateToolbar()
 		{
-			if (this.RowClicked != null)
+			int row = this.SelectedRow;
+
+			this.toolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Hide);
+			this.toolbar.SetCommandState (ToolbarCommand.Last,  ToolbarCommandState.Hide);
+
+//			this.UpdateCommand (ToolbarCommand.First, row, this.FirstRowIndex);
+			this.UpdateCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);
+			this.UpdateCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
+//			this.UpdateCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
+
+			this.UpdateCommand (ToolbarCommand.New,      true);
+			this.UpdateCommand (ToolbarCommand.Delete,   row != -1);
+			this.UpdateCommand (ToolbarCommand.Deselect, row != -1);
+		}
+
+		private void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		{
+			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
+			this.UpdateCommand (command, enable);
+		}
+
+		private void UpdateCommand(ToolbarCommand command, bool enable)
+		{
+			if (enable)
 			{
-				this.RowClicked (this, row);
+				this.toolbar.SetCommandState (command, ToolbarCommandState.Enable);
+			}
+			else
+			{
+				this.toolbar.SetCommandState (command, ToolbarCommandState.Disable);
 			}
 		}
 
-		public delegate void RowClickedEventHandler(object sender, int row);
-		public event RowClickedEventHandler RowClicked;
+
+		private int? FirstRowIndex
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
+		private int? PrevRowIndex
+		{
+			get
+			{
+				if (this.selectedRow == -1)
+				{
+					return null;
+				}
+				else
+				{
+					int i = this.selectedRow - 1;
+					i = System.Math.Max (i, 0);
+					i = System.Math.Min (i, this.controller.RowsCount - 1);
+					return i;
+				}
+			}
+		}
+
+		private int? NextRowIndex
+		{
+			get
+			{
+				if (this.selectedRow == -1)
+				{
+					return null;
+				}
+				else
+				{
+					int i = this.selectedRow + 1;
+					i = System.Math.Max (i, 0);
+					i = System.Math.Min (i, this.controller.RowsCount - 1);
+					return i;
+				}
+			}
+		}
+
+		private int? LastRowIndex
+		{
+			get
+			{
+				return this.controller.RowsCount - 1;
+			}
+		}
+
+
+		#region Events handler
+		private void OnSelectedRowChanged(int row)
+		{
+			if (this.SelectedRowChanged != null)
+			{
+				this.SelectedRowChanged (this, row);
+			}
+		}
+
+		public delegate void SelectedRowChangedEventHandler(object sender, int row);
+		public event SelectedRowChangedEventHandler SelectedRowChanged;
 
 
 		private void OnRowDoubleClicked(int row)
@@ -277,6 +477,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor			accessor;
 
 		private TopTitle						topTitle;
+		private TreeTableToolbar				toolbar;
 		private NavigationTreeTableController	controller;
 		private int								selectedRow;
 		private Timestamp						timestamp;

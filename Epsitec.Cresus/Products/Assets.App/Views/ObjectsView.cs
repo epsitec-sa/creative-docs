@@ -10,15 +10,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectsView : AbstractView
 	{
-		public ObjectsView(DataAccessor accessor)
-			: base (accessor)
+		public ObjectsView(DataAccessor accessor, MainToolbar toolbar)
+			: base (accessor, toolbar)
 		{
 			this.isTimelineView = true;
 		}
 
-		public override void CreateUI(Widget parent, MainToolbar toolbar)
+
+		public override void Dispose()
 		{
-			base.CreateUI (parent, toolbar);
+		}
+
+
+		public override void CreateUI(Widget parent)
+		{
+			base.CreateUI (parent);
 
 			this.frameBox = new FrameBox
 			{
@@ -27,6 +33,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.CreateView ();
+		}
+
+		public override void OnCommand(ToolbarCommand command)
+		{
+			base.OnCommand (command);
+
+			if (this.currentView != null)
+			{
+				this.currentView.OnCommand (command);
+			}
 		}
 
 		protected override void Update()
@@ -44,17 +60,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				guid = this.currentView.ObjectGuid;
 				timestamp = this.currentView.Timestamp;
+
+				this.currentView.Dispose ();
+				this.currentView = null;
 			}
 
 			this.frameBox.Children.Clear ();
 
 			if (this.isTimelineView)
 			{
-				this.currentView = new ObjectsTimelineView (this.accessor, this.mainToolbar);
+				this.currentView = new ObjectsWithTimelineView (this.accessor, this.mainToolbar);
 			}
 			else
 			{
-				this.currentView = new ObjectsTreeTableView (this.accessor, this.mainToolbar);
+				this.currentView = new ObjectsWithoutTimelineView (this.accessor, this.mainToolbar);
 			}
 
 			this.currentView.CreateUI (this.frameBox);

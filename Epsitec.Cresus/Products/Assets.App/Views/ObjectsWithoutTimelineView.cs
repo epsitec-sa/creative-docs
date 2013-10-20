@@ -5,15 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectsTreeTableView : AbstractObjectsView
+	public class ObjectsWithoutTimelineView : AbstractObjectsView
 	{
-		public ObjectsTreeTableView(DataAccessor accessor, MainToolbar toolbar)
+		public ObjectsWithoutTimelineView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
 			this.objectsController = new ObjectsTreeTableController (this.accessor);
@@ -24,6 +23,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.eventsController.SelectedTimestamp = timestamp;
 			};
+		}
+
+
+		public override void Dispose()
+		{
 		}
 
 
@@ -48,6 +52,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			set
 			{
 				this.eventsController.SelectedTimestamp = value;
+
+				this.openedColumnsCount = value.HasValue ? 2 : 1;
+				this.Update ();
 			}
 		}
 
@@ -78,12 +85,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.eventsController.CreateUI (this.eventsFrameBox);
 			this.objectEditor.CreateUI (this.editFrameBox);
 
-			this.objectsToolbar = new TreeTableToolbar ();
-			this.objectsToolbar.CreateUI (this.objectsFrameBox);
-
-			this.eventsToolbar = new TreeTableToolbar ();
-			this.eventsToolbar.CreateUI (this.eventsFrameBox);
-
 			this.closeButton = new GlyphButton
 			{
 				Parent        = parent,
@@ -93,18 +94,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredSize = new Size (TopTitle.Height, TopTitle.Height),
 			};
 
-			this.swapViewButton = new GlyphButton
+			this.swapViewButton = new IconButton
 			{
 				Parent        = parent,
-				GlyphShape    = GlyphShape.TriangleUp,
-				ButtonStyle   = ButtonStyle.ToolItem,
+				AutoFocus     = false,
+				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("View.WithTimeline"),
 				Anchor        = AnchorStyles.BottomRight,
 				PreferredSize = new Size (AbstractCommandToolbar.SecondaryToolbarHeight, AbstractCommandToolbar.SecondaryToolbarHeight),
 			};
 			ToolTip.Default.SetToolTip (this.swapViewButton, "Montre l'axe du temps");
 
 			this.openedColumnsCount = 1;
-
 			this.Update ();
 
 			//	Connexion des événements.
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnViewChanged ();
 			};
 
-			this.objectsController.RowClicked += delegate
+			this.objectsController.SelectedRowChanged += delegate
 			{
 				this.UpdateAfterObjectsChanged ();
 			};
@@ -137,34 +137,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.CloseColumn ();
 			};
+		}
 
-			this.mainToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+		public override void OnCommand(ToolbarCommand command)
+		{
+			base.OnCommand (command);
+
+			switch (command)
 			{
-				switch (command)
-				{
-					case ToolbarCommand.Edit:
-						this.OnMainEdit ();
-						break;
+				case ToolbarCommand.Edit:
+					this.OnMainEdit ();
+					break;
 
-					case ToolbarCommand.Accept:
-						this.OnEditAccept ();
-						break;
+				case ToolbarCommand.Accept:
+					this.OnEditAccept ();
+					break;
 
-					case ToolbarCommand.Cancel:
-						this.OnEditCancel ();
-						break;
-				}
-			};
-
-			this.eventsToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			{
-				switch (command)
-				{
-					case ToolbarCommand.New:
-						this.OnEventNew ();
-						break;
-				}
-			};
+				case ToolbarCommand.Cancel:
+					this.OnEditCancel ();
+					break;
+			}
 		}
 
 
@@ -172,59 +164,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.openedColumnsCount == 2)
 			{
-				this.openedColumnsCount = 3;
+				this.openedColumnsCount = 3;  // active l'édition
 			}
 			else
 			{
-				this.openedColumnsCount = 2;
+				this.openedColumnsCount = 2;  // plus d'édition
 			}
 
 			this.Update ();
-		}
-
-		private void OnEventNew()
-		{
-			var target = this.eventsToolbar.GetCommandWidget (ToolbarCommand.New);
-			var timestamp = this.eventsController.SelectedTimestamp;
-
-			if (target != null && timestamp.HasValue)
-			{
-				System.DateTime? createDate = timestamp.Value.Date;
-
-				var popup = new NewEventPopup
-				{
-					Date = timestamp.Value.Date,
-				};
-
-				popup.Create (target);
-
-				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
-				{
-					//?var index = this.eventsController.GetEventIndex (dateTime);
-					//?
-					//?if (index.HasValue)
-					//?{
-					//?	this.eventsController.SelectedCell = index.Value;
-					//?}
-					//?else
-					//?{
-					//?	this.eventsController.SelectedCell = -1;
-					//?}
-					//?
-					//?if (dateTime.HasValue)
-					//?{
-					//?	createDate = dateTime.Value;
-					//?}
-				};
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (createDate.HasValue)
-					{
-						//?this.CreateEvent (createDate.Value, name);
-					}
-				};
-			}
 		}
 
 		private void OnEditAccept()
@@ -326,6 +273,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (row == -1)
 			{
 				this.eventsController.ObjectGuid = Guid.Empty;
+
+				if (this.openedColumnsCount > 1)
+				{
+					this.openedColumnsCount = 1;
+					this.Update ();
+				}
 			}
 			else
 			{
@@ -341,14 +294,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.selectedTimestamp = this.eventsController.SelectedTimestamp;
 			this.objectEditor.SetObject (this.eventsController.ObjectGuid, this.eventsController.SelectedTimestamp);
 
+			if (!this.selectedTimestamp.HasValue)
+			{
+				if (this.openedColumnsCount == 3)  // édition en cours ?
+				{
+					this.openedColumnsCount = 2;
+					this.Update ();
+				}
+			}
+
 			this.UpdateToolbars ();
 		}
 
 		private void UpdateToolbars()
 		{
 			this.UpdateMainToolbar ();
-			this.UpdateObjectsToolbar ();
-			this.UpdateEventsToolbar ();
 		}
 
 		private void UpdateMainToolbar()
@@ -381,50 +341,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
 		}
 
-		private void UpdateObjectsToolbar()
-		{
-			this.UpdateTreeTableToolbar (this.objectsToolbar, this.objectsController.SelectedRow != -1);
-		}
-
-		private void UpdateEventsToolbar()
-		{
-			this.UpdateTreeTableToolbar (this.eventsToolbar, this.eventsController.SelectedTimestamp.HasValue);
-		}
-
-		private void UpdateTreeTableToolbar(AbstractCommandToolbar toolbar, bool selected)
-		{
-			toolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Hide);
-			toolbar.SetCommandState (ToolbarCommand.Prev,  ToolbarCommandState.Disable);
-			toolbar.SetCommandState (ToolbarCommand.Next,  ToolbarCommandState.Disable);
-			toolbar.SetCommandState (ToolbarCommand.Last,  ToolbarCommandState.Hide);
-
-			if (!selected)
-			{
-				toolbar.SetCommandState (ToolbarCommand.New, ToolbarCommandState.Enable);
-				toolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
-				toolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Disable);
-			}
-			else
-			{
-				toolbar.SetCommandState (ToolbarCommand.New, ToolbarCommandState.Enable);
-				toolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Enable);
-				toolbar.SetCommandState (ToolbarCommand.Deselect, ToolbarCommandState.Enable);
-			}
-		}
-
 
 		private readonly ObjectsTreeTableController		objectsController;
 		private readonly EventsTreeTableController		eventsController;
 		private readonly ObjectEditor					objectEditor;
 
-		private TreeTableToolbar						objectsToolbar;
-		private TreeTableToolbar						eventsToolbar;
-
 		private FrameBox								objectsFrameBox;
 		private FrameBox								eventsFrameBox;
 		private FrameBox								editFrameBox;
 		private GlyphButton								closeButton;
-		private GlyphButton								swapViewButton;
+		private IconButton								swapViewButton;
 
 		private int										openedColumnsCount;
 		private Timestamp?								selectedTimestamp;

@@ -17,6 +17,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public virtual void Dispose()
+		{
+		}
+
+
 		public virtual Guid ObjectGuid
 		{
 			get
@@ -41,6 +46,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 	
 		public virtual void CreateUI(Widget parent)
+		{
+		}
+
+		public virtual void OnCommand(ToolbarCommand command)
 		{
 		}
 

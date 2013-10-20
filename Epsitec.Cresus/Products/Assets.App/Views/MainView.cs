@@ -36,6 +36,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateView ();
 			};
 
+			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				if (this.view != null)
+				{
+					this.view.OnCommand (command);
+				}
+			};
+
 			this.UpdateView ();
 		}
 
@@ -44,11 +52,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.viewBox.Children.Clear ();
 
-			this.view = AbstractView.CreateView (this.toolbar.ViewType, this.accessor);
+			if (this.view != null)
+			{
+				this.view.Dispose ();
+				this.view = null;
+			}
+
+			this.view = AbstractView.CreateView (this.toolbar.ViewType, this.accessor, this.toolbar);
 
 			if (this.view != null)
 			{
-				this.view.CreateUI (this.viewBox, this.toolbar);
+				this.view.CreateUI (this.viewBox);
 			}
 		}
 

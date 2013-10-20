@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public static void Paint(Graphics graphics, Rectangle rect)
 		{
 			//	Dessine une jolie ombre douce.
-			//	L'ombre est plus discrète si le popup est petit.
+			//	L'ombre est plus discrète si le rectangle est petit.
 
 			double factor = rect.Height / 200;  // plus discrète si petit
 
