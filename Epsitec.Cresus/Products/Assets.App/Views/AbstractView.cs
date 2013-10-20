@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return new GroupsView (accessor);
 
 				case ViewType.Events:
-					return new EventsView (accessor);
+					//?return new ObjectsTreeTableView (accessor);
 
 				case ViewType.Reports:
 					return new ReportsView (accessor);

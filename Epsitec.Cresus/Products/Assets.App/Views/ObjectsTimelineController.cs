@@ -81,6 +81,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				return null;
 			}
+			set
+			{
+				var sel = this.GetEventIndex (value);
+
+				if (sel.HasValue)
+				{
+					this.SelectedCell = sel.Value;
+				}
+				else
+				{
+					this.SelectedCell = -1;
+				}
+			}
 		}
 
 		public bool								HasSelectedEvent

@@ -49,6 +49,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public Guid								SelectedGuid
+		{
+			get
+			{
+				return this.accessor.GetObjectGuid (this.selectedRow);
+			}
+			set
+			{
+				int count = this.accessor.ObjectsCount;
+				for (int i=0; i<count; i++)
+				{
+					var guid = this.accessor.GetObjectGuid (i);
+					if (guid == value)
+					{
+						this.selectedRow = i;
+						return;
+					}
+				}
+
+				this.selectedRow = -1;
+			}
+		}
+
 		public Timestamp						Timestamp
 		{
 			get

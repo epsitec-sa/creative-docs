@@ -21,6 +21,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateCommandButtons()
 		{
+			this.UpdateCommandButton (this.buttonFirst,    ToolbarCommand.First);
+			this.UpdateCommandButton (this.buttonPrev,     ToolbarCommand.Prev);
+			this.UpdateCommandButton (this.buttonNext,     ToolbarCommand.Next);
+			this.UpdateCommandButton (this.buttonLast,     ToolbarCommand.Last);
 			this.UpdateCommandButton (this.buttonNew,      ToolbarCommand.New);
 			this.UpdateCommandButton (this.buttonDelete,   ToolbarCommand.Delete);
 			this.UpdateCommandButton (this.buttonDeselect, ToolbarCommand.Deselect);
@@ -37,12 +41,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonNew      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New ,     "TreeTable.New",      "Nouvel objet");
-			this.buttonDelete   = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete ,  "TreeTable.Delete",   "Supprimer l'objet");
-			this.buttonDeselect = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Deselect, "TreeTable.Deselect", "Désélectionne l'objet");
+			this.buttonFirst    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.First,    "TreeTable.First",    "Retour sur la première ligne");
+			this.buttonPrev     = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Prev,     "TreeTable.Prev",     "Recule sur la ligne précédente");
+			this.buttonNext     = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Next,     "TreeTable.Next",     "Avance sur la ligne suivante");
+			this.buttonLast     = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Last,     "TreeTable.Last",     "Avance sur la dernière ligne");
+			this.buttonNew      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New ,     "TreeTable.New",      "Nouvel ligne");
+			this.buttonDelete   = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete ,  "TreeTable.Delete",   "Supprimer la ligne");
+			this.buttonDeselect = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Deselect, "TreeTable.Deselect", "Désélectionne la ligne");
+
+			this.buttonNew.Margins = new Margins (20, 0, 0, 0);
 		}
 
 
+		private IconButton buttonFirst;
+		private IconButton buttonPrev;
+		private IconButton buttonNext;
+		private IconButton buttonLast;
 		private IconButton buttonNew;
 		private IconButton buttonDelete;
 		private IconButton buttonDeselect;

@@ -5,25 +5,55 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class EventsView : AbstractView
+	public class ObjectsTreeTableView : AbstractObjectsView
 	{
-		public EventsView(DataAccessor accessor)
-			: base (accessor)
+		public ObjectsTreeTableView(DataAccessor accessor, MainToolbar toolbar)
+			: base (accessor, toolbar)
 		{
 			this.objectsController = new ObjectsTreeTableController (this.accessor);
 			this.eventsController  = new EventsTreeTableController (this.accessor);
 			this.objectEditor      = new ObjectEditor (this.accessor);
+
+			this.objectEditor.Navigate += delegate (object sender, Timestamp timestamp)
+			{
+				this.eventsController.SelectedTimestamp = timestamp;
+			};
 		}
 
-		public override void CreateUI(Widget parent, MainToolbar toolbar)
-		{
-			base.CreateUI (parent, toolbar);
 
+		public override Guid ObjectGuid
+		{
+			get
+			{
+				return this.objectsController.SelectedGuid;
+			}
+			set
+			{
+				this.objectsController.SelectedGuid = value;
+			}
+		}
+
+		public override Timestamp? Timestamp
+		{
+			get
+			{
+				return this.eventsController.SelectedTimestamp;
+			}
+			set
+			{
+				this.eventsController.SelectedTimestamp = value;
+			}
+		}
+
+
+		public override void CreateUI(Widget parent)
+		{
 			this.objectsFrameBox = new FrameBox
 			{
 				Parent         = parent,
@@ -63,11 +93,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredSize = new Size (TopTitle.Height, TopTitle.Height),
 			};
 
+			this.swapViewButton = new GlyphButton
+			{
+				Parent        = parent,
+				GlyphShape    = GlyphShape.TriangleUp,
+				ButtonStyle   = ButtonStyle.ToolItem,
+				Anchor        = AnchorStyles.BottomRight,
+				PreferredSize = new Size (AbstractCommandToolbar.SecondaryToolbarHeight, AbstractCommandToolbar.SecondaryToolbarHeight),
+			};
+			ToolTip.Default.SetToolTip (this.swapViewButton, "Montre l'axe du temps");
+
 			this.openedColumnsCount = 1;
 
 			this.Update ();
 
 			//	Connexion des événements.
+			this.swapViewButton.Clicked += delegate
+			{
+				this.OnViewChanged ();
+			};
+
 			this.objectsController.RowClicked += delegate
 			{
 				this.UpdateAfterObjectsChanged ();
@@ -110,6 +155,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 						break;
 				}
 			};
+
+			this.eventsToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.New:
+						this.OnEventNew ();
+						break;
+				}
+			};
 		}
 
 
@@ -125,6 +180,51 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.Update ();
+		}
+
+		private void OnEventNew()
+		{
+			var target = this.eventsToolbar.GetCommandWidget (ToolbarCommand.New);
+			var timestamp = this.eventsController.SelectedTimestamp;
+
+			if (target != null && timestamp.HasValue)
+			{
+				System.DateTime? createDate = timestamp.Value.Date;
+
+				var popup = new NewEventPopup
+				{
+					Date = timestamp.Value.Date,
+				};
+
+				popup.Create (target);
+
+				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
+				{
+					//?var index = this.eventsController.GetEventIndex (dateTime);
+					//?
+					//?if (index.HasValue)
+					//?{
+					//?	this.eventsController.SelectedCell = index.Value;
+					//?}
+					//?else
+					//?{
+					//?	this.eventsController.SelectedCell = -1;
+					//?}
+					//?
+					//?if (dateTime.HasValue)
+					//?{
+					//?	createDate = dateTime.Value;
+					//?}
+				};
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (createDate.HasValue)
+					{
+						//?this.CreateEvent (createDate.Value, name);
+					}
+				};
+			}
 		}
 
 		private void OnEditAccept()
@@ -155,7 +255,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void Update()
+		public override void Update()
 		{
 			this.UpdateOpenedColumns ();
 			this.UpdateToolbars ();
@@ -170,7 +270,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.editFrameBox.Visibility = false;
 
 				this.objectsFrameBox.Dock = DockStyle.Fill;
-				this.objectsFrameBox.Margins = new Margins (0);
+				this.objectsFrameBox.Margins = new Margins (0, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
 			}
 			else if (this.openedColumnsCount == 2)
 			{
@@ -180,10 +280,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.objectsFrameBox.Dock = DockStyle.Left;
 				this.objectsFrameBox.PreferredWidth = 190;
-				this.objectsFrameBox.Margins = new Margins (0);
+				this.objectsFrameBox.Margins = new Margins (0, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
 
 				this.eventsFrameBox.Dock = DockStyle.Fill;
-				this.eventsFrameBox.Margins = new Margins (10, 0, 0, 0);
+				this.eventsFrameBox.Margins = new Margins (10, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
 			}
 			else if (this.openedColumnsCount == 3)
 			{
@@ -192,11 +292,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.editFrameBox.Visibility = true;
 
 				this.eventsFrameBox.Dock = DockStyle.Fill;
-				this.eventsFrameBox.Margins = new Margins (0);
+				this.eventsFrameBox.Margins = new Margins (0, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
 
 				this.editFrameBox.Dock = DockStyle.Right;
 				this.editFrameBox.PreferredWidth = 600;
-				this.editFrameBox.Margins = new Margins (10, 0, 0, 0);
+				this.editFrameBox.Margins = new Margins (10, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
 			}
 			else
 			{
@@ -206,14 +306,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.objectsFrameBox.Dock = DockStyle.Left;
 				this.objectsFrameBox.PreferredWidth = 190;
-				this.objectsFrameBox.Margins = new Margins (0);
+				this.objectsFrameBox.Margins = new Margins (0, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
 
 				this.eventsFrameBox.Dock = DockStyle.Fill;
-				this.eventsFrameBox.Margins = new Margins (10, 0, 0, 0);
+				this.eventsFrameBox.Margins = new Margins (10, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
 
 				this.editFrameBox.Dock = DockStyle.Right;
 				this.editFrameBox.PreferredWidth = 600;
-				this.editFrameBox.Margins = new Margins (10, 0, 0, 0);
+				this.editFrameBox.Margins = new Margins (10, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
 			}
 
 			this.closeButton.Visibility = this.openedColumnsCount > 1;
@@ -293,6 +393,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateTreeTableToolbar(AbstractCommandToolbar toolbar, bool selected)
 		{
+			toolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Hide);
+			toolbar.SetCommandState (ToolbarCommand.Prev,  ToolbarCommandState.Disable);
+			toolbar.SetCommandState (ToolbarCommand.Next,  ToolbarCommandState.Disable);
+			toolbar.SetCommandState (ToolbarCommand.Last,  ToolbarCommandState.Hide);
+
 			if (!selected)
 			{
 				toolbar.SetCommandState (ToolbarCommand.New, ToolbarCommandState.Enable);
@@ -319,6 +424,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox								eventsFrameBox;
 		private FrameBox								editFrameBox;
 		private GlyphButton								closeButton;
+		private GlyphButton								swapViewButton;
 
 		private int										openedColumnsCount;
 		private Timestamp?								selectedTimestamp;

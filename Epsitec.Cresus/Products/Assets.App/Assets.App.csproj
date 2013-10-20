@@ -95,6 +95,8 @@
     <Compile Include="Views\ComputedAmountController.cs" />
     <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\AbstractObjectEditorPage.cs" />
+    <Compile Include="Views\AbstractObjectsView.cs" />
+    <Compile Include="Views\ObjectsView.cs" />
     <Compile Include="Views\EventsTreeTableController.cs" />
     <Compile Include="Views\SummaryController.cs" />
     <Compile Include="Views\ObjectEditorPageCompta.cs" />
@@ -134,11 +136,11 @@
     <Compile Include="Widgets\MouseCursorManager.cs" />
     <Compile Include="Views\SettingsView.cs" />
     <Compile Include="Views\ReportsView.cs" />
-    <Compile Include="Views\EventsView.cs" />
+    <Compile Include="Views\ObjectsTreeTableView.cs" />
     <Compile Include="Views\GroupsView.cs" />
     <Compile Include="Views\MainToolbar.cs" />
     <Compile Include="Views\MainView.cs" />
-    <Compile Include="Views\ObjectsView.cs" />
+    <Compile Include="Views\ObjectsTimelineView.cs" />
     <Compile Include="Views\ViewType.cs" />
     <Compile Include="Widgets\AbstractTimelineRow.cs" />
     <Compile Include="Widgets\ColorManager.cs" />
@@ -234,6 +236,10 @@
     <EmbeddedResource Include="Images\Field.History.icon" />
     <EmbeddedResource Include="Images\Field.Clear.icon" />
     <EmbeddedResource Include="Images\Field.Calc.icon" />
+    <EmbeddedResource Include="Images\TreeTable.First.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Last.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Next.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Prev.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
