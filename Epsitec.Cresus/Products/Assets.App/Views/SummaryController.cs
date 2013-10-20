@@ -10,7 +10,7 @@ using Epsitec.Cresus.Assets.App.Widgets;
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	/// <summary>
-	/// Affiche un tableau résumé contenant des textes (définis dans Tile).
+	/// Affiche un tableau résumé contenant des textes (définis dans SummaryControllerTile).
 	/// </summary>
 	public class SummaryController
 	{

@@ -3,9 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -20,34 +18,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public virtual void CreateUI(Widget parent, MainToolbar toolbar)
 		{
 			this.mainToolbar = toolbar;
-
-			var topBox = new FrameBox
-			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (0, 0, 0, 10),
-			};
-
-			this.listFrameBox = new FrameBox
-			{
-				Parent = topBox,
-				Dock   = DockStyle.Fill,
-			};
-
-			this.editFrameBox = new FrameBox
-			{
-				Parent         = topBox,
-				Dock           = DockStyle.Right,
-				PreferredWidth = 600,
-				Margins        = new Margins (10, 0, 0, 0),
-				BackColor      = ColorManager.GetBackgroundColor (),
-			};
 		}
 
 
 		protected virtual void Update()
 		{
-			this.editFrameBox.Visibility = this.isEditing;
 		}
 
 
@@ -82,10 +57,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected readonly DataAccessor			accessor;
 
 		protected MainToolbar					mainToolbar;
-
-		protected FrameBox						listFrameBox;
-		protected FrameBox						editFrameBox;
-
-		protected bool							isEditing;
 	}
 }

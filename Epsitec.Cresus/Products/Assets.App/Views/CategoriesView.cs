@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
@@ -20,6 +20,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void CreateUI(Widget parent, MainToolbar toolbar)
 		{
 			base.CreateUI (parent, toolbar);
+
+			var topBox = new FrameBox
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
+			this.listFrameBox = new FrameBox
+			{
+				Parent = topBox,
+				Dock   = DockStyle.Fill,
+			};
+
+			this.editFrameBox = new FrameBox
+			{
+				Parent         = topBox,
+				Dock           = DockStyle.Right,
+				PreferredWidth = 600,
+				Margins        = new Margins (10, 0, 0, 0),
+				BackColor      = ColorManager.GetBackgroundColor (),
+				Visibility     = false,
+			};
 
 			this.lastSelectedRow = -2;
 
@@ -129,6 +152,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private SimpleTreeTableController		treeTable;
+		private FrameBox						listFrameBox;
+		private FrameBox						editFrameBox;
 		private int								lastSelectedRow;
 	}
 }

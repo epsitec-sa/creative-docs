@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public TopTitle()
 		{
 			this.Dock             = DockStyle.Top;
-			this.PreferredHeight  = 30;
+			this.PreferredHeight  = TopTitle.Height;
 			this.ContentAlignment = ContentAlignment.MiddleCenter;
 			this.BackColor        = ColorManager.WindowBackgroundColor;
 		}
@@ -37,5 +37,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.Text = null;
 		}
+
+
+		public static readonly int Height = 30;
 	}
 }

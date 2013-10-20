@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var date5  = new Timestamp (new System.DateTime (2013, 2, 4), 0);
 			var date6  = new Timestamp (new System.DateTime (2013, 3, 31), 0);
 			var date7  = new Timestamp (new System.DateTime (2013, 8, 21), 0);
-			var date8  = new Timestamp (new System.DateTime (2013, 9, 18), 0);
+			var date8  = new Timestamp (new System.DateTime (2013, 9, 19), 0);
 
 			{
 				var o = new DataObject (objectId++);

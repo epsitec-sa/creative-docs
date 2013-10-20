@@ -3,8 +3,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -32,6 +34,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void CreateUI(Widget parent, MainToolbar toolbar)
 		{
 			base.CreateUI (parent, toolbar);
+
+			var topBox = new FrameBox
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 10),
+			};
+
+			this.listFrameBox = new FrameBox
+			{
+				Parent = topBox,
+				Dock   = DockStyle.Fill,
+			};
+
+			this.editFrameBox = new FrameBox
+			{
+				Parent         = topBox,
+				Dock           = DockStyle.Right,
+				PreferredWidth = 600,
+				Margins        = new Margins (10, 0, 0, 0),
+				BackColor      = ColorManager.GetBackgroundColor (),
+			};
 
 			this.timelineFrameBox2 = new FrameBox
 			{
@@ -64,7 +88,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateAfterTreeTableChanged ();
 			};
 
-			this.treeTableController.StartEdition += delegate
+			this.treeTableController.RowDoubleClicked += delegate
 			{
 				this.OnMainEdit ();
 			};
@@ -168,13 +192,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected void OnMainEdit()
+		private void OnMainEdit()
 		{
 			this.isEditing = !this.isEditing;
 			this.Update ();
 		}
 
-		protected void OnMainAmortissement()
+		private void OnMainAmortissement()
 		{
 			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Amortissement);
 
@@ -189,7 +213,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnMainSimulation()
+		private void OnMainSimulation()
 		{
 			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Simulation);
 
@@ -211,11 +235,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnTreeTableNew()
+		private void OnTreeTableNew()
 		{
 		}
 
-		protected void OnTreeTableDelete()
+		private void OnTreeTableDelete()
 		{
 			var target = this.treeTableToolbar.GetCommandWidget (ToolbarCommand.Delete);
 
@@ -237,7 +261,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnTreeTableDeselect()
+		private void OnTreeTableDeselect()
 		{
 			this.treeTableController.SelectedRow = -1;
 
@@ -248,7 +272,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnTimelineFirst()
+		private void OnTimelineFirst()
 		{
 			var index = this.timelineController.FirstEventIndex;
 
@@ -258,7 +282,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnTimelinePrev()
+		private void OnTimelinePrev()
 		{
 			var index = this.timelineController.PrevEventIndex;
 
@@ -268,7 +292,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnTimelineNext()
+		private void OnTimelineNext()
 		{
 			var index = this.timelineController.NextEventIndex;
 
@@ -278,7 +302,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnTimelineLast()
+		private void OnTimelineLast()
 		{
 			var index = this.timelineController.LastEventIndex;
 
@@ -288,7 +312,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnTimelineNow()
+		private void OnTimelineNow()
 		{
 			var index = this.timelineController.NowEventIndex;
 
@@ -298,7 +322,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnTimelineNew()
+		private void OnTimelineNew()
 		{
 			var target = this.timelineToolbar.GetCommandWidget (ToolbarCommand.New);
 			var timestamp = this.timelineController.SelectedTimestamp;
@@ -343,7 +367,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnTimelineDelete()
+		private void OnTimelineDelete()
 		{
 			var target = this.timelineToolbar.GetCommandWidget (ToolbarCommand.Delete);
 
@@ -365,18 +389,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnTimelineDeselect()
+		private void OnTimelineDeselect()
 		{
 			this.timelineController.SelectedCell = -1;
 		}
 
-		protected void OnEditAccept()
+		private void OnEditAccept()
 		{
 			this.isEditing = false;
 			this.Update ();
 		}
 
-		protected void OnEditCancel()
+		private void OnEditCancel()
 		{
 			this.isEditing = false;
 			this.Update ();
@@ -415,7 +439,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void Update()
 		{
-			base.Update ();
+			this.editFrameBox.Visibility = this.isEditing;
+
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
 		}
@@ -471,11 +496,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.isEditing)
 			{
+				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
+
 				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Enable);
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
 			}
 			else
 			{
+				if (this.treeTableController.SelectedRow == -1)
+				{
+					this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Disable);
+				}
+				else
+				{
+					this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Enable);
+				}
+
 				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
 			}
@@ -485,8 +521,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.isEditing)
 			{
-				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
-
 				this.treeTableToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Disable);
 				this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
 			}
@@ -494,15 +528,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.treeTableController.SelectedRow == -1)
 				{
-					this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Disable);
-
 					this.treeTableToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
 					this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Disable);
 				}
 				else
 				{
-					this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Enable);
-
 					this.treeTableToolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Enable);
 					this.treeTableToolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Enable);
 				}
@@ -561,7 +591,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TreeTableToolbar						treeTableToolbar;
 		private TimelineToolbar							timelineToolbar;
 
+		private FrameBox								listFrameBox;
+		private FrameBox								editFrameBox;
 		private FrameBox								timelineFrameBox1;
 		private FrameBox								timelineFrameBox2;
+
+		private bool									isEditing;
 	}
 }

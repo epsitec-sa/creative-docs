@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.RowDoubleClicked += delegate (object sender, int row)
 			{
 				this.SelectedRow = this.controller.TopVisibleRow + row;
-				this.OnStartEdition (this.SelectedRow);
+				this.OnRowDoubleClicked (this.SelectedRow);
 			};
 
 			this.controller.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
@@ -238,16 +238,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event RowClickedEventHandler RowClicked;
 
 
-		private void OnStartEdition(int row)
+		private void OnRowDoubleClicked(int row)
 		{
-			if (this.StartEdition != null)
+			if (this.RowDoubleClicked != null)
 			{
-				this.StartEdition (this, row);
+				this.RowDoubleClicked (this, row);
 			}
 		}
 
-		public delegate void StartEditionEventHandler(object sender, int row);
-		public event StartEditionEventHandler StartEdition;
+		public delegate void RowDoubleClickedEventHandler(object sender, int row);
+		public event RowDoubleClickedEventHandler RowDoubleClicked;
 		#endregion
 
 
