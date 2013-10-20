@@ -162,6 +162,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnNew()
 		{
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
+			var timestamp = this.SelectedTimestamp;
+
+			if (target != null && timestamp.HasValue)
+			{
+				System.DateTime? createDate = timestamp.Value.Date;
+
+				var popup = new NewEventPopup
+				{
+					Date = timestamp.Value.Date,
+				};
+
+				popup.Create (target);
+
+				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
+				{
+					if (dateTime.HasValue)
+					{
+						createDate = dateTime.Value;
+
+						int sel = this.TimestampToRow (new Timestamp (dateTime.Value, 0));
+						if (sel != -1)
+						{
+							this.SelectedRow = sel;
+						}
+					}
+				};
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (createDate.HasValue)
+					{
+						this.CreateEvent (createDate.Value, name);
+					}
+				};
+			}
 		}
 
 		private void OnDelete()
@@ -189,6 +225,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnDeselect()
 		{
 			this.SelectedTimestamp = null;
+		}
+
+
+		private void CreateEvent(System.DateTime date, string buttonName)
+		{
+			var guid = this.objectGuid;
+
+			if (!guid.IsEmpty)
+			{
+				var type = EventsTreeTableController.ParseEventType (buttonName);
+				var timestamp = this.accessor.CreateEvent (guid, date, type);
+
+				if (timestamp.HasValue)
+				{
+					this.UpdateTreeTableController ();
+					this.UpdateToolbar ();
+
+					this.SelectedRow = this.TimestampToRow (timestamp.Value);
+				}
+			}
+		}
+
+		private static EventType ParseEventType(string text)
+		{
+			var type = EventType.Unknown;
+			System.Enum.TryParse<EventType> (text, out type);
+			return type;
 		}
 
 

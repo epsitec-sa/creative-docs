@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectsView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
-			this.isTimelineView = true;
+			this.isWithTimelineView = true;
 		}
 
 
@@ -53,6 +53,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateView()
 		{
+			//	Crée la bonne vue (With/Without Timeline) tout en transférant un maximum
+			//	de l'aspect de l'ancienne dans la nouvelle vue.
 			Guid guid = Guid.Empty;
 			Timestamp? timestamp = null;
 
@@ -67,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.frameBox.Children.Clear ();
 
-			if (this.isTimelineView)
+			if (this.isWithTimelineView)
 			{
 				this.currentView = new ObjectsWithTimelineView (this.accessor, this.mainToolbar);
 			}
@@ -82,13 +84,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.currentView.ViewChanged += delegate
 			{
-				this.isTimelineView = !this.isTimelineView;
+				this.isWithTimelineView = !this.isWithTimelineView;
 				this.CreateView ();
 			};
 		}
 
 
-		private bool							isTimelineView;
+		private bool							isWithTimelineView;
 		private AbstractObjectsView				currentView;
 		private FrameBox						frameBox;
 	}
