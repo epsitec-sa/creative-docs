@@ -27,4 +27,4 @@ Aline Berthe André
 
 -echupdate -newechfile:S:\eerv\eerv-2013-09-05.xml -oldechfile:S:\Epsitec.Cresus\App.Aider\Samples\eerv.xml -output:S:\eerv\ech-diff.md -fixpreviousupdate:false -fixhouseholdupdate:true
 -echupdate -newechfile:S:\eerv\eerv-2013-10-03.xml -oldechfile:S:\eerv\eerv-2013-09-05.xml -output:S:\eerv\ech-diff.md -fixpreviousupdate:false
-
+-echupdate -newechfile:S:\eerv\eerv-2013-10-17.xml -oldechfile:S:\eerv\eerv-2013-10-03.xml -output:S:\eerv\ech-diff.md
