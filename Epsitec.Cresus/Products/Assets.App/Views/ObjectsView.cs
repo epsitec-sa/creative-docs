@@ -231,6 +231,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnStartStopEdit()
 		{
+			if (!this.isEditing && this.selectedGuid.IsEmpty)
+			{
+				return;
+			}
+
 			this.isEditing = !this.isEditing;
 			this.Update ();
 		}
