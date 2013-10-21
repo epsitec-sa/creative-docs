@@ -136,15 +136,20 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public IEnumerable<AbstractDataProperty> GetObjectSyntheticProperties(Guid objectGuid, Timestamp timestamp)
+		public IEnumerable<AbstractDataProperty> GetObjectSyntheticProperties(Guid objectGuid, Timestamp? timestamp)
 		{
 			var obj = this.mandat.GetObject (objectGuid);
 
 			if (obj != null)
 			{
+				if (!timestamp.HasValue)
+				{
+					timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+				}
+
 				foreach (var field in DataAccessor.ObjectFields)
 				{
-					var p = obj.GetSyntheticProperty (timestamp, (int) field);
+					var p = obj.GetSyntheticProperty (timestamp.Value, (int) field);
 					if (p != null)
 					{
 						yield return p;

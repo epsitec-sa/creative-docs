@@ -15,7 +15,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			: base (accessor)
 		{
 			this.title = "Objets d'immobilisation";
-			this.timestamp = new Timestamp (System.DateTime.MaxValue, 0);
 		}
 
 
@@ -42,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public Timestamp						Timestamp
+		public Timestamp?						Timestamp
 		{
 			get
 			{
@@ -182,6 +181,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private Timestamp						timestamp;
+		private Timestamp?						timestamp;
 	}
 }

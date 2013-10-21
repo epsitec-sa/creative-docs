@@ -420,7 +420,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (row == this.GlyphRow)
 				{
 					int sel = this.controller.LeftVisibleCell + rank;
-					this.OnStartEdition (sel);
+					this.OnCellDoubleClicked (sel);
 				}
 			};
 		}
@@ -876,16 +876,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event SelectedCellChangedEventHandler SelectedCellChanged;
 
 
-		private void OnStartEdition(int row)
+		private void OnCellDoubleClicked(int row)
 		{
-			if (this.StartEdition != null)
+			if (this.CellDoubleClicked != null)
 			{
-				this.StartEdition (this, row);
+				this.CellDoubleClicked (this, row);
 			}
 		}
 
-		public delegate void StartEditionEventHandler(object sender, int row);
-		public event StartEditionEventHandler StartEdition;
+		public delegate void CellDoubleClickedEventHandler(object sender, int row);
+		public event CellDoubleClickedEventHandler CellDoubleClicked;
 		#endregion
 
 

@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateAfterTimelineChanged ();
 			};
 
-			this.timelineController.StartEdition += delegate
+			this.timelineController.CellDoubleClicked += delegate
 			{
 				this.OnMainEdit ();
 			};

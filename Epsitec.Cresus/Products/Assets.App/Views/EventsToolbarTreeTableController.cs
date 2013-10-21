@@ -29,7 +29,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.objectGuid != value)
 				{
 					this.objectGuid = value;
-					this.selectedRow = -1;
 
 					this.UpdateController ();
 					this.UpdateToolbar ();
