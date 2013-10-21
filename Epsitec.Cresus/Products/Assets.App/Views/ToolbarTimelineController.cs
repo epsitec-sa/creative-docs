@@ -10,9 +10,9 @@ using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectsTimelineController
+	public class ToolbarTimelineController
 	{
-		public ObjectsTimelineController(DataAccessor accessor)
+		public ToolbarTimelineController(DataAccessor accessor)
 		{
 			this.accessor = accessor;
 
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (!guid.IsEmpty)
 			{
-				var type = ObjectsTimelineController.ParseEventType (buttonName);
+				var type = ToolbarTimelineController.ParseEventType (buttonName);
 				var timestamp = this.accessor.CreateEvent (guid, date, type);
 
 				if (timestamp.HasValue)
@@ -770,7 +770,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private class SaveCurrentDate : System.IDisposable
 		{
-			public SaveCurrentDate(ObjectsTimelineController controller)
+			public SaveCurrentDate(ToolbarTimelineController controller)
 			{
 				this.controller = controller;
 				this.currentDate = this.controller.CurrentDate;
@@ -781,7 +781,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.controller.CurrentDate = this.currentDate;
 			}
 
-			private readonly ObjectsTimelineController	controller;
+			private readonly ToolbarTimelineController	controller;
 			private readonly System.DateTime?			currentDate;
 		}
 

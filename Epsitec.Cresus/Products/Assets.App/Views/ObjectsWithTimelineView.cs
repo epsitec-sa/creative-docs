@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectsWithTimelineView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
-			this.treeTableController = new ObjectsTreeTableController (this.accessor);
-			this.timelineController  = new ObjectsTimelineController (this.accessor);
+			this.treeTableController = new ObjectsToolbarTreeTableController (this.accessor);
+			this.timelineController  = new ObjectsToolbarTimelineController (this.accessor);
 			this.objectEditor        = new ObjectEditor (this.accessor);
 
 			this.objectEditor.Navigate += delegate (object sender, Timestamp timestamp)
@@ -260,16 +260,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly ObjectsTreeTableController		treeTableController;
-		private readonly ObjectsTimelineController		timelineController;
-		private readonly ObjectEditor					objectEditor;
+		private readonly ObjectsToolbarTreeTableController	treeTableController;
+		private readonly ObjectsToolbarTimelineController	timelineController;
+		private readonly ObjectEditor						objectEditor;
 
-		private FrameBox								listFrameBox;
-		private FrameBox								editFrameBox;
-		private FrameBox								timelineFrameBox;
+		private FrameBox									listFrameBox;
+		private FrameBox									editFrameBox;
+		private FrameBox									timelineFrameBox;
 
-		private IconButton								swapViewButton;
+		private IconButton									swapViewButton;
 
-		private bool									isEditing;
+		private bool										isEditing;
 	}
 }

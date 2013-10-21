@@ -4,18 +4,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectsTreeTableController
+	public abstract class AbstractToolbarTreeTableController
 	{
-		public ObjectsTreeTableController(DataAccessor accessor)
+		public AbstractToolbarTreeTableController(DataAccessor accessor)
 		{
 			this.accessor = accessor;
-			this.timestamp = new Timestamp (System.DateTime.MaxValue, 0);
 		}
 
 		public void CreateUI(Widget parent)
@@ -25,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent = parent,
 			};
 
-			this.topTitle.SetTitle ("Objets d'immobilisation");
+			this.topTitle.SetTitle (this.title);
 
 			this.toolbar = new TreeTableToolbar ();
 			this.toolbar.CreateUI (parent);
@@ -88,47 +86,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public Guid								SelectedGuid
-		{
-			get
-			{
-				return this.accessor.GetObjectGuid (this.selectedRow);
-			}
-			set
-			{
-				int count = this.accessor.ObjectsCount;
-				for (int i=0; i<count; i++)
-				{
-					var guid = this.accessor.GetObjectGuid (i);
-					if (guid == value)
-					{
-						this.SelectedRow = i;
-						return;
-					}
-				}
-
-				this.SelectedRow = -1;
-			}
-		}
-
-		public Timestamp						Timestamp
-		{
-			get
-			{
-				return this.timestamp;
-			}
-			set
-			{
-				if (this.timestamp != value)
-				{
-					this.timestamp = value;
-
-					this.UpdateController ();
-					this.UpdateToolbar ();
-				}
-			}
-		}
-
 
 		private void OnFirst()
 		{
@@ -170,30 +127,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnNew()
+		protected virtual void OnNew()
 		{
 		}
 
-		private void OnDelete()
+		protected virtual void OnDelete()
 		{
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Delete);
-
-			if (target != null)
-			{
-				var popup = new DeletePopup
-				{
-					Question = "Voulez-vous supprimer l'objet sélectionné ?",
-				};
-
-				popup.Create (target);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "yes")
-					{
-					}
-				};
-			}
 		}
 
 		private void OnDeselect()
@@ -204,13 +143,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateTreeTable(Widget parent)
 		{
-			int rowsCount = this.accessor.ObjectsCount;
 			this.selectedRow = -1;
 
-			this.controller = new NavigationTreeTableController
-			{
-				RowsCount = rowsCount,
-			};
+			this.controller = new NavigationTreeTableController();
 
 			var frame = new FrameBox
 			{
@@ -249,28 +184,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private TreeTableColumnDescription[] TreeTableColumns
+		protected virtual TreeTableColumnDescription[] TreeTableColumns
 		{
 			get
 			{
-				var list = new List<TreeTableColumnDescription> ();
-
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,           180, "Objet"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          50, "N°"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         120, "Responsable"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          60, "Couleur"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         200, "Numéro de série"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur comptable"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur assurance"));
-
-				return list.ToArray ();
+				return null;
 			}
 		}
 
-		private void UpdateController(bool crop = true)
+		protected void UpdateController(bool crop = true)
 		{
+			this.controller.RowsCount = this.RowsCount;
+
 			int visibleCount = this.controller.VisibleRowsCount;
-			int rowsCount    = this.accessor.ObjectsCount;
+			int rowsCount    = this.controller.RowsCount;
 			int count        = System.Math.Min (visibleCount, rowsCount);
 			int firstRow     = this.controller.TopVisibleRow;
 			int selection    = this.selectedRow;
@@ -294,72 +221,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 				selection -= this.controller.TopVisibleRow;
 			}
 
-			var cf = new List<TreeTableCellTree> ();
-			var c1 = new List<TreeTableCellString> ();
-			var c2 = new List<TreeTableCellString> ();
-			var c3 = new List<TreeTableCellString> ();
-			var c4 = new List<TreeTableCellString> ();
-			var c5 = new List<TreeTableCellComputedAmount> ();
-			var c6 = new List<TreeTableCellComputedAmount> ();
-
-			for (int i=0; i<count; i++)
-			{
-				if (firstRow+i >= this.accessor.ObjectsCount)
-				{
-					break;
-				}
-
-				var guid = this.accessor.GetObjectGuid (firstRow+i);
-				var properties = this.accessor.GetObjectSyntheticProperties (guid, this.timestamp);
-
-				int level = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level).GetValueOrDefault (-1);
-
-				var type = TreeTableTreeType.Extended;
-
-				if (level == -1)
-				{
-					type = TreeTableTreeType.None;
-				}
-				else if (level == 3)
-				{
-					type = TreeTableTreeType.Final;
-				}
-
-				var nom         = DataAccessor.GetStringProperty (properties, (int) ObjectField.Nom);
-				var numéro      = DataAccessor.GetStringProperty (properties, (int) ObjectField.Numéro);
-				var responsable = DataAccessor.GetStringProperty (properties, (int) ObjectField.Responsable);
-				var couleur     = DataAccessor.GetStringProperty (properties, (int) ObjectField.Couleur);
-				var série       = DataAccessor.GetStringProperty (properties, (int) ObjectField.NuméroSérie);
-				var valeur1     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur1);
-				var valeur2     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur2);
-
-				var sf = new TreeTableCellTree (true, level, type, nom, isSelected: (i == selection));
-				var s1 = new TreeTableCellString (true, numéro, isSelected: (i == selection));
-				var s2 = new TreeTableCellString (true, responsable, isSelected: (i == selection));
-				var s3 = new TreeTableCellString (true, couleur, isSelected: (i == selection));
-				var s4 = new TreeTableCellString (true, série, isSelected: (i == selection));
-				var s5 = new TreeTableCellComputedAmount (true, valeur1, isSelected: (i == selection));
-				var s6 = new TreeTableCellComputedAmount (true, valeur2, isSelected: (i == selection));
-
-				cf.Add (sf);
-				c1.Add (s1);
-				c2.Add (s2);
-				c3.Add (s3);
-				c4.Add (s4);
-				c5.Add (s5);
-				c6.Add (s6);
-			}
-
-			this.controller.SetColumnCells (0, cf.ToArray ());
-			this.controller.SetColumnCells (1, c1.ToArray ());
-			this.controller.SetColumnCells (2, c2.ToArray ());
-			this.controller.SetColumnCells (3, c3.ToArray ());
-			this.controller.SetColumnCells (4, c4.ToArray ());
-			this.controller.SetColumnCells (5, c5.ToArray ());
-			this.controller.SetColumnCells (6, c6.ToArray ());
+			this.UpdateContent (firstRow, count, selection, crop);
 		}
 
-		private void UpdateToolbar()
+		protected virtual int RowsCount
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
+		protected virtual void UpdateContent(int firstRow, int count, int selection, bool crop = true)
+		{
+		}
+
+		protected void UpdateToolbar()
 		{
 			int row = this.SelectedRow;
 
@@ -474,12 +351,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private readonly DataAccessor			accessor;
+		protected readonly DataAccessor			accessor;
 
-		private TopTitle						topTitle;
-		private TreeTableToolbar				toolbar;
-		private NavigationTreeTableController	controller;
-		private int								selectedRow;
-		private Timestamp						timestamp;
+		protected string						title;
+		protected TopTitle						topTitle;
+		protected TreeTableToolbar				toolbar;
+		protected NavigationTreeTableController	controller;
+		protected int							selectedRow;
 	}
 }

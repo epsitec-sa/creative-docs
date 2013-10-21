@@ -96,8 +96,11 @@
     <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\AbstractObjectEditorPage.cs" />
     <Compile Include="Views\AbstractObjectsView.cs" />
+    <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
+    <Compile Include="Views\EventsToolbarTreeTableController.cs" />
+    <Compile Include="Views\ObjectsToolbarTreeTableController.cs" />
+    <Compile Include="Views\ToolbarTimelineController.cs" />
     <Compile Include="Views\ObjectsView.cs" />
-    <Compile Include="Views\EventsTreeTableController.cs" />
     <Compile Include="Views\SummaryController.cs" />
     <Compile Include="Views\ObjectEditorPageCompta.cs" />
     <Compile Include="Views\SummaryControllerTile.cs" />
@@ -114,8 +117,7 @@
     <Compile Include="Views\DecimalFieldController.cs" />
     <Compile Include="Views\StringFieldController.cs" />
     <Compile Include="Views\ObjectEditor.cs" />
-    <Compile Include="Views\ObjectsTimelineController.cs" />
-    <Compile Include="Views\ObjectsTreeTableController.cs" />
+    <Compile Include="Views\ObjectsToolbarTimelineController.cs" />
     <Compile Include="Views\TimelineMode.cs" />
     <Compile Include="Views\TimelineToolbar.cs" />
     <Compile Include="Views\EditToolbar.cs" />

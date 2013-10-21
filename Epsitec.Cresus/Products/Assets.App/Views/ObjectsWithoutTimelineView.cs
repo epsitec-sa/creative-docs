@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectsWithoutTimelineView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
-			this.objectsController = new ObjectsTreeTableController (this.accessor);
-			this.eventsController  = new EventsTreeTableController (this.accessor);
+			this.objectsController = new ObjectsToolbarTreeTableController (this.accessor);
+			this.eventsController  = new EventsToolbarTreeTableController (this.accessor);
 			this.objectEditor      = new ObjectEditor (this.accessor);
 
 			this.objectEditor.Navigate += delegate (object sender, Timestamp timestamp)
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnObjectDoubleClicked ();
 			};
 
-			this.eventsController.RowClicked += delegate
+			this.eventsController.SelectedRowChanged += delegate
 			{
 				this.UpdateAfterEventsChanged ();
 			};
@@ -342,17 +342,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly ObjectsTreeTableController		objectsController;
-		private readonly EventsTreeTableController		eventsController;
-		private readonly ObjectEditor					objectEditor;
+		private readonly ObjectsToolbarTreeTableController	objectsController;
+		private readonly EventsToolbarTreeTableController	eventsController;
+		private readonly ObjectEditor						objectEditor;
 
-		private FrameBox								objectsFrameBox;
-		private FrameBox								eventsFrameBox;
-		private FrameBox								editFrameBox;
-		private GlyphButton								closeButton;
-		private IconButton								swapViewButton;
+		private FrameBox									objectsFrameBox;
+		private FrameBox									eventsFrameBox;
+		private FrameBox									editFrameBox;
+		private GlyphButton									closeButton;
+		private IconButton									swapViewButton;
 
-		private int										openedColumnsCount;
-		private Timestamp?								selectedTimestamp;
+		private int											openedColumnsCount;
+		private Timestamp?									selectedTimestamp;
 	}
 }
