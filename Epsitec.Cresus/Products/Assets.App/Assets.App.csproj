@@ -95,7 +95,6 @@
     <Compile Include="Views\ComputedAmountController.cs" />
     <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\AbstractObjectEditorPage.cs" />
-    <Compile Include="Views\AbstractObjectsView.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\EventsToolbarTreeTableController.cs" />
     <Compile Include="Views\ObjectsToolbarTreeTableController.cs" />
@@ -138,11 +137,9 @@
     <Compile Include="Widgets\MouseCursorManager.cs" />
     <Compile Include="Views\SettingsView.cs" />
     <Compile Include="Views\ReportsView.cs" />
-    <Compile Include="Views\ObjectsWithoutTimelineView.cs" />
     <Compile Include="Views\GroupsView.cs" />
     <Compile Include="Views\MainToolbar.cs" />
     <Compile Include="Views\MainView.cs" />
-    <Compile Include="Views\ObjectsWithTimelineView.cs" />
     <Compile Include="Views\ViewType.cs" />
     <Compile Include="Widgets\AbstractTimelineRow.cs" />
     <Compile Include="Widgets\ColorManager.cs" />
