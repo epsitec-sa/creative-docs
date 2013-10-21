@@ -98,7 +98,6 @@
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\EventsToolbarTreeTableController.cs" />
     <Compile Include="Views\ObjectsToolbarTreeTableController.cs" />
-    <Compile Include="Views\ToolbarTimelineController.cs" />
     <Compile Include="Views\ObjectsView.cs" />
     <Compile Include="Views\SummaryController.cs" />
     <Compile Include="Views\ObjectEditorPageCompta.cs" />

@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.CreateUI (parent);
 
 			this.CreateTimeline (parent);
+			this.toolbar.TimelineMode = this.timelineMode;
 
 			//	Connexion des événements.
 			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
@@ -782,7 +783,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			private readonly ObjectsToolbarTimelineController	controller;
-			private readonly System.DateTime?			currentDate;
+			private readonly System.DateTime?					currentDate;
 		}
 
 		private System.DateTime? CurrentDate
