@@ -252,23 +252,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if (message.MessageType == MessageType.MouseMove)
+			if (message.MessageType == MessageType.MouseDown)
 			{
-#if false
-				//	Si la souris bouge hors du popup, on le ferme.
-				if (!this.TotalRect.Contains (pos))
-				{
-					this.ClosePopup ();
-				}
-#endif
+				this.MouseDown (pos);
+			}
+			else if (message.MessageType == MessageType.MouseMove)
+			{
+				this.MouseMove (pos);
 			}
 			else if (message.MessageType == MessageType.MouseUp)
 			{
-				//	Un clic de la souris hors du popup le ferme.
-				if (!this.ExternalRect.Contains (pos))
-				{
-					this.ClosePopup ();
-				}
+				this.MouseUp (pos);
 			}
 			else if (message.MessageType == MessageType.KeyPress)  // TODO: ne fonctionne pas toujours !
 			{
@@ -283,6 +277,45 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			base.ProcessMessage (message, pos);
 		}
+
+
+		private void MouseDown(Point pos)
+		{
+			this.isDragging = true;
+			this.lastPos = pos;
+		}
+
+		private void MouseMove(Point pos)
+		{
+			if (this.isDragging)
+			{
+				var delta = pos - this.lastPos;
+				this.lastPos = pos;
+
+				//	Déplace tous les widgets enfants.
+				foreach (var widget in this.Children)
+				{
+					widget.Margins = new Margins (widget.Margins.Left+delta.X, 0, 0, widget.Margins.Bottom+delta.Y);
+				}
+
+				//	Déplace le rectngle du popup.
+				this.dialogRect.Offset (delta);
+
+				this.Invalidate ();
+			}
+		}
+
+		private void MouseUp(Point pos)
+		{
+			this.isDragging = false;
+
+			//	Un clic de la souris hors du popup le ferme.
+			if (!this.ExternalRect.Contains (pos))
+			{
+				this.ClosePopup ();
+			}
+		}
+
 
 		protected void ClosePopup()
 		{
@@ -328,17 +361,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 		}
 
-
-		private Rectangle TotalRect
-		{
-			//	Retourne le rectangle hors duquel le popup est fermé automatiquement.
-			get
-			{
-				var rect = this.ExternalRect;
-				rect.MergeWith (this.targetRect);
-				return rect;
-			}
-		}
 
 		private Rectangle ExternalRect
 		{
@@ -390,5 +412,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private Widget							target;
 		private Rectangle						dialogRect;
 		private Rectangle						targetRect;
+
+		private bool							isDragging;
+		private Point							lastPos;
 	}
 }
