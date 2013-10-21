@@ -85,13 +85,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (tile.Value.Readonly)
 				{
-					button.NormalColor   = ColorManager.ReadonlyColor;
+					//	Rectangle gris sans hover. Il ne devrait jamais être
+					//	bleu à cause des règles des pages autorisées selon le
+					//	type de l'événement.
+					button.NormalColor   = ColorManager.ReadonlyFieldColor;
 					button.SelectedColor = ColorManager.EditSinglePropertyColor;
-					button.HoverColor    = ColorManager.ReadonlyColor;
+					button.HoverColor    = ColorManager.ReadonlyFieldColor;
 				}
 				else
 				{
-					button.NormalColor   = Color.FromBrightness (1.0);
+					//	Rectangle blanc ou bleu avec hover.
+					button.NormalColor   = ColorManager.NormalFieldColor;
 					button.SelectedColor = ColorManager.EditSinglePropertyColor;
 					button.HoverColor    = ColorManager.HoverColor;
 				}
@@ -107,9 +111,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				button.NormalColor   = ColorManager.EditBackgroundColor;
-				button.SelectedColor = ColorManager.EditBackgroundColor;
-				button.HoverColor    = ColorManager.EditBackgroundColor;
+				//	Rectangle invisible (comme le fond).
+				button.NormalColor   = Color.Empty;
+				button.SelectedColor = Color.Empty;
+				button.HoverColor    = Color.Empty;
 
 				button.ActiveState = ActiveState.No;
 			}

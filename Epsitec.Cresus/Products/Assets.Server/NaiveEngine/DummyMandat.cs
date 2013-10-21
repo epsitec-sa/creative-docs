@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var date2  = new Timestamp (new System.DateTime (2013, 1, 14), 0);
 			var date3  = new Timestamp (new System.DateTime (2013, 1, 15), 0);
 			var date4  = new Timestamp (new System.DateTime (2013, 2, 1), 0);
+			var date4b = new Timestamp (new System.DateTime (2013, 2, 1), 1);
 			var date5  = new Timestamp (new System.DateTime (2013, 2, 4), 0);
 			var date6  = new Timestamp (new System.DateTime (2013, 3, 31), 0);
 			var date7  = new Timestamp (new System.DateTime (2013, 8, 21), 0);
@@ -470,7 +471,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 
 				{
-					var e = new DataEvent (1, date1, EventType.Modification);
+					var e = new DataEvent (1, date1, EventType.Entrée);
 					o.AddEvent (e);
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (12000.0m)));
 				}
@@ -488,11 +489,16 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 
 				{
-					var e = new DataEvent (1, date4, EventType.Modification);
+					var e = new DataEvent (1, date4, EventType.Diminution);
 					o.AddEvent (e);
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (16000.0m, 14500.0m, true)));
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (12500.0m, 11000.0m)));
-					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Damien"));
+				}
+
+				{
+					var e = new DataEvent (1, date4b, EventType.Modification);
+					o.AddEvent (e);
+					e.Properties.Add (new DataStringProperty ((int) ObjectField.Responsable, "Damien"));
 				}
 
 				{
@@ -526,7 +532,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 
 				{
-					var e = new DataEvent (1, date2, EventType.Augmentation);
+					var e = new DataEvent (1, date2, EventType.Modification);
 					o.AddEvent (e);
 					e.Properties.Add (new DataStringProperty ((int) ObjectField.NuméroSérie, "F30T-340407-52118-40721-S"));
 				}

@@ -184,6 +184,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.eventType = this.accessor.GetObjectEventType (this.objectGuid, this.timestamp).GetValueOrDefault (EventType.Unknown);
 			}
 
+			//	Si le type d'événement à changé, il faut réinitialiser le navigateur,
+			//	car il permet peut-être d'atteindre des pages interdites.
 			if (this.lastEventType != this.eventType)
 			{
 				this.AdaptPages ();
@@ -197,43 +199,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void AdaptPages()
 		{
-			//?if (this.ContainsUnAvailablePage)
-			{
-				this.navigatorLevels.Clear ();
-				this.navigatorController.Items.Clear ();
+			//	Remet à zéro la barre de navigation et affiche la page universelle
+			//	du résumé.
+			this.navigatorLevels.Clear ();
+			this.navigatorController.Items.Clear ();
 
-				this.AddPage (EditionObjectPageType.Summary);
-			}
-		}
-
-		private bool ContainsUnAvailablePage
-		{
-			get
-			{
-				var availables = ObjectEditor.GetAvailablePages (this.hasEvent, this.eventType).ToArray ();
-
-				foreach (var level in this.navigatorLevels)
-				{
-					if (!availables.Contains (level.PageType))
-					{
-						return true;
-					}
-
-					foreach (var page in level.ChildrenPages)
-					{
-						if (!availables.Contains (page))
-						{
-							return true;
-						}
-					}
-				}
-
-				return false;
-			}
+			this.AddPage (EditionObjectPageType.Summary);
 		}
 
 		private IEnumerable<EditionObjectPageType> CurrentChildrenPageTypes
 		{
+			//	Retourne la liste des pages autorisées en fonction du type de
+			//	l'événement courant.
 			get
 			{
 				var types = ObjectEditor.GetAvailablePages (this.hasEvent, this.eventType).ToArray ();
@@ -243,6 +220,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public static IEnumerable<EditionObjectPageType> GetAvailablePages(bool hasEvent, EventType type)
 		{
+			//	Retourne les pages autorisées pour un type d'événement donné.
 			yield return EditionObjectPageType.Summary;
 
 			if (hasEvent)

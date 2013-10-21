@@ -216,6 +216,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private bool IsReadonly(int? field)
 		{
+			//	Un champ est non modifiable s'il appartient à une page interdite
+			//	pour le type de l'événement en cours.
 			if (this.hasEvent && field.HasValue)
 			{
 				var type = ObjectEditorPageSummary.GetPageType ((ObjectField) field.Value);

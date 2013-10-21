@@ -40,7 +40,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color ReadonlyColor
+		public static Color NormalFieldColor
+		{
+			get
+			{
+				return Color.FromBrightness (1.0);
+			}
+		}
+
+		public static Color ReadonlyFieldColor
 		{
 			get
 			{
