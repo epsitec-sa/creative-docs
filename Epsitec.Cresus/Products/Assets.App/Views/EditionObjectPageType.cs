@@ -6,10 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public enum ObjectPageType
+	public enum EditionObjectPageType
 	{
 		Summary,
-		Infos,
+		General,
 		Values,
 		Amortissements,
 		Compta,

@@ -81,23 +81,37 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateButton(ColoredButton button, SummaryControllerTile? tile)
 		{
-			var a = this.GetActiveState (tile);
+			if (tile.HasValue)
+			{
+				if (tile.Value.Readonly)
+				{
+					button.NormalColor   = ColorManager.ReadonlyColor;
+					button.SelectedColor = ColorManager.EditSinglePropertyColor;
+					button.HoverColor    = ColorManager.ReadonlyColor;
+				}
+				else
+				{
+					button.NormalColor   = Color.FromBrightness (1.0);
+					button.SelectedColor = ColorManager.EditSinglePropertyColor;
+					button.HoverColor    = ColorManager.HoverColor;
+				}
 
-			if (a == ActiveState.Maybe)
+				if (tile.Value.Hilited)
+				{
+					button.ActiveState = ActiveState.Yes;
+				}
+				else
+				{
+					button.ActiveState = ActiveState.No;
+				}
+			}
+			else
 			{
 				button.NormalColor   = ColorManager.EditBackgroundColor;
 				button.SelectedColor = ColorManager.EditBackgroundColor;
 				button.HoverColor    = ColorManager.EditBackgroundColor;
 
 				button.ActiveState = ActiveState.No;
-			}
-			else
-			{
-				button.NormalColor   = ColorManager.WindowBackgroundColor;
-				button.SelectedColor = ColorManager.EditSinglePropertyColor;
-				button.HoverColor    = ColorManager.HoverColor;
-
-				button.ActiveState = a;
 			}
 
 			if (tile.HasValue)
@@ -135,25 +149,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				ToolTip.Default.ClearToolTip (button);
-			}
-		}
-
-		private ActiveState GetActiveState(SummaryControllerTile? tile)
-		{
-			if (tile.HasValue)
-			{
-				if (tile.Value.Hilited)
-				{
-					return ActiveState.Yes;
-				}
-				else
-				{
-					return ActiveState.No;
-				}
-			}
-			else
-			{
-				return ActiveState.Maybe;
 			}
 		}
 

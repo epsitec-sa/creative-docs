@@ -197,8 +197,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			string tooltip = StaticDescriptions.GetObjectFieldDescription ((ObjectField) field.GetValueOrDefault (-1));
 			bool hilited = this.IsHilited (field);
+			bool readOnly = this.IsReadonly (field);
 
-			return new SummaryControllerTile (text, tooltip, alignment, hilited);
+			return new SummaryControllerTile (text, tooltip, alignment, hilited, readOnly);
 		}
 
 		private bool IsHilited(int? field)
@@ -210,6 +211,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				return false;
+			}
+		}
+
+		private bool IsReadonly(int? field)
+		{
+			if (this.hasEvent && field.HasValue)
+			{
+				var type = ObjectEditorPageSummary.GetPageType ((ObjectField) field.Value);
+				var availables = ObjectEditor.GetAvailablePages (this.hasEvent, this.eventType).ToArray ();
+				return !availables.Contains (type);
+			}
+			else
+			{
+				return true;
 			}
 		}
 

@@ -16,12 +16,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override IEnumerable<ObjectPageType> ChildrenPageTypes
+		public override IEnumerable<EditionObjectPageType> ChildrenPageTypes
 		{
 			get
 			{
-				yield return ObjectPageType.Amortissements;
-				yield return ObjectPageType.Compta;
+				yield return EditionObjectPageType.Amortissements;
+				yield return EditionObjectPageType.Compta;
 			}
 		}
 
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				button.Clicked += delegate
 				{
-					this.OnPageOpen (ObjectPageType.Amortissements);
+					this.OnPageOpen (EditionObjectPageType.Amortissements);
 				};
 #endif
 			}

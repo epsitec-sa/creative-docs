@@ -16,11 +16,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override IEnumerable<ObjectPageType> ChildrenPageTypes
+		public override IEnumerable<EditionObjectPageType> ChildrenPageTypes
 		{
 			get
 			{
-				yield return ObjectPageType.Compta;
+				yield return EditionObjectPageType.Compta;
 			}
 		}
 

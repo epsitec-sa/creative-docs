@@ -22,14 +22,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override IEnumerable<ObjectPageType> ChildrenPageTypes
+		public override IEnumerable<EditionObjectPageType> ChildrenPageTypes
 		{
 			get
 			{
-				yield return ObjectPageType.Infos;
-				yield return ObjectPageType.Values;
-				yield return ObjectPageType.Amortissements;
-				yield return ObjectPageType.Compta;
+				yield return EditionObjectPageType.General;
+				yield return EditionObjectPageType.Values;
+				yield return EditionObjectPageType.Amortissements;
+				yield return EditionObjectPageType.Compta;
 			}
 		}
 
@@ -43,25 +43,58 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void TileClicked(int row, int column)
 		{
-			switch (column)
+			int? field = ObjectEditorPageSummary.GetField (column, row);
+
+			if (field.HasValue)
 			{
-				case 0:
-					this.OnPageOpen (ObjectPageType.Infos);
-					break;
-
-				case 1:
-					this.OnPageOpen (ObjectPageType.Values);
-					break;
-
-				case 2:
-					this.OnPageOpen (ObjectPageType.Amortissements);
-					break;
+				var type = ObjectEditorPageSummary.GetPageType ((ObjectField) field.Value);
+				this.OnPageOpen (type);
 			}
 		}
 
 
+		public static EditionObjectPageType GetPageType(ObjectField field)
+		{
+			//	Retourne la page permettant d'éditer un champ donné.
+			switch (field)
+			{
+				case ObjectField.Valeur1:
+				case ObjectField.Valeur2:
+				case ObjectField.Valeur3:
+					return EditionObjectPageType.Values;
+
+				case ObjectField.NomCatégorie:
+				case ObjectField.TauxAmortissement:
+				case ObjectField.TypeAmortissement:
+				case ObjectField.FréquenceAmortissement:
+				case ObjectField.ValeurRésiduelle:
+					return EditionObjectPageType.Amortissements;
+
+				default:
+					return EditionObjectPageType.General;
+			}
+		}
+
+		private static int? GetField(int column, int row)
+		{
+			var fields = ObjectEditorPageSummary.SummaryFields;
+
+			if (column < fields.Count)
+			{
+				var rows = fields[column];
+
+				if (row < rows.Count)
+				{
+					return rows[row];
+				}
+			}
+
+			return null;
+		}
+
 		private static List<List<int>> SummaryFields
 		{
+			//	Retourne la liste des champs qui peupleront la tableau.
 			get
 			{
 				var list = new List<List<int>> ();

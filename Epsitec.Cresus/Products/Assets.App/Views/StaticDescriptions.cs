@@ -96,23 +96,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public static string GetObjectPageDescription(ObjectPageType type)
+		public static string GetObjectPageDescription(EditionObjectPageType type)
 		{
 			switch (type)
 			{
-				case ObjectPageType.Summary:
+				case EditionObjectPageType.Summary:
 					return "Résumé";
 
-				case ObjectPageType.Infos:
+				case EditionObjectPageType.General:
 					return "Général";
 
-				case ObjectPageType.Values:
+				case EditionObjectPageType.Values:
 					return "Valeurs";
 
-				case ObjectPageType.Amortissements:
+				case EditionObjectPageType.Amortissements:
 					return "Amortissements";
 
-				case ObjectPageType.Compta:
+				case EditionObjectPageType.Compta:
 					return "Comptabilisation";
 
 				default:

@@ -9,17 +9,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public struct SummaryControllerTile
 	{
-		public SummaryControllerTile(string text, string tooltip = null, ContentAlignment alignment = ContentAlignment.MiddleLeft, bool hilited = false)
+		public SummaryControllerTile(string text, string tooltip = null, ContentAlignment alignment = ContentAlignment.MiddleLeft, bool hilited = false, bool readOnly = false)
 		{
 			this.Text      = text;
 			this.Tootip    = tooltip;
 			this.Alignment = alignment;
 			this.Hilited   = hilited;
+			this.Readonly  = readOnly;
 		}
 
 		public readonly string				Text;
 		public readonly string				Tootip;
 		public readonly ContentAlignment	Alignment;
 		public readonly bool				Hilited;
+		public readonly bool				Readonly;
 	}
 }

@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.navigatorLevels = new List<NavigatorLevel> ();
 		}
 
+
 		public override void CreateUI(Widget parent)
 		{
 			this.topTitle = new TopTitle
@@ -43,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor = ColorManager.EditBackgroundColor,
 			};
 
-			this.AddPage (ObjectPageType.Summary);
+			this.AddPage (EditionObjectPageType.Summary);
 
 			this.navigatorController.ItemClicked += delegate (object sender, int rank)
 			{
@@ -60,26 +61,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void NavigatorArrowClicked(Widget target, int rank)
 		{
 			//	On a cliqué sur un triangle ">" dans le navigateur. Il faut proposer
-			//	une "menu" des enfants possibles.
-			int count = this.navigatorLevels[rank].Childrens.Count ();
+			//	une "menu" des pages enfants possibles.
+			int count = this.navigatorLevels[rank].ChildrenPages.Count ();
 
 			if (count == 1)
 			{
-				//	S'il n'y a qu'un enfant possible, pas besoin de poser la question;
+				//	S'il n'y a qu'une page enfant possible, pas besoin de poser la question;
 				//	on y va directement.
-				var type = this.navigatorLevels[rank].Childrens.First ();
+				var type = this.navigatorLevels[rank].ChildrenPages.First ();
 				this.NavigatorGoTo (rank+1, type);
 			}
 			else if (count > 1)
 			{
-				//	Cherche s'il existe un enfant déjà ouvert, pour le mettre en évidence
-				//	dans le menu.
+				//	Cherche s'il existe une page enfant déjà ouverte, pour la mettre
+				//	en évidence dans le menu.
 				int sel = -1;
 
 				if (rank < this.navigatorLevels.Count-1)
 				{
-					var np = this.navigatorLevels[rank+1].Type;
-					sel = this.navigatorLevels[rank].Childrens.ToList ().IndexOf (np);
+					var np = this.navigatorLevels[rank+1].PageType;
+					sel = this.navigatorLevels[rank].ChildrenPages.ToList ().IndexOf (np);
 				}
 
 				//	Crée un popup en guise de menu.
@@ -88,7 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					SelectedItem = sel,
 				};
 
-				foreach (var type in this.navigatorLevels[rank].Childrens)
+				foreach (var type in this.navigatorLevels[rank].ChildrenPages)
 				{
 					popup.Items.Add (StaticDescriptions.GetObjectPageDescription (type));
 				}
@@ -97,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				popup.ItemClicked += delegate (object sender, int i)
 				{
-					var type = this.navigatorLevels[rank].Childrens.ElementAt (i);
+					var type = this.navigatorLevels[rank].ChildrenPages.ElementAt (i);
 					this.NavigatorGoTo (rank+1, type);
 				};
 			}
@@ -106,11 +107,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void NavigatorGoBack(int rank)
 		{
 			//	Revient en arrière à un niveau quelconque.
-			var type = this.navigatorLevels[rank].Type;
+			var type = this.navigatorLevels[rank].PageType;
 			this.NavigatorGoTo (rank, type);
 		}
 
-		private void NavigatorGoTo(int rank, ObjectPageType type)
+		private void NavigatorGoTo(int rank, EditionObjectPageType type)
 		{
 			//	Effectue un autre branchement à un niveau quelconque.
 			int count = this.navigatorLevels.Count - rank;
@@ -121,7 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.AddPage (type);
 		}
 
-		private void AddPage(ObjectPageType type)
+		private void AddPage(EditionObjectPageType type)
 		{
 			//	Ajoute une nouvelle page à la fin de la liste actuelle.
 			this.currentPage = AbstractObjectEditorPage.CreatePage (this.accessor, type);
@@ -132,29 +133,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnNavigate (timestamp);
 			};
 
-			this.currentPage.PageOpen += delegate (object sender, ObjectPageType openType)
+			this.currentPage.PageOpen += delegate (object sender, EditionObjectPageType openType)
 			{
 				this.AddPage (openType);
 			};
 
-			this.navigatorLevels.Add (new NavigatorLevel (type, this.currentPage.ChildrenPageTypes));
+			var ccpt = this.CurrentChildrenPageTypes.ToArray ();
+
+			this.navigatorLevels.Add (new NavigatorLevel (type, ccpt));
 
 			this.navigatorController.Items.Add (StaticDescriptions.GetObjectPageDescription (type));
 			this.navigatorController.Selection = this.navigatorController.Items.Count-1;
-			this.navigatorController.HasLastArrow = this.currentPage.ChildrenPageTypes.Any ();
+			this.navigatorController.HasLastArrow = ccpt.Any ();
 			this.navigatorController.UpdateUI ();
 		}
 
 		private struct NavigatorLevel
 		{
-			public NavigatorLevel(ObjectPageType type, IEnumerable<ObjectPageType> childrens)
+			public NavigatorLevel(EditionObjectPageType pageType, IEnumerable<EditionObjectPageType> childrenPages)
 			{
-				this.Type      = type;
-				this.Childrens = childrens;
+				this.PageType      = pageType;
+				this.ChildrenPages = childrenPages;
 			}
 
-			public readonly ObjectPageType					Type;
-			public readonly IEnumerable<ObjectPageType>		Childrens;
+			public readonly EditionObjectPageType				PageType;
+			public readonly IEnumerable<EditionObjectPageType>	ChildrenPages;
 		}
 
 
@@ -171,16 +174,103 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.objectGuid.IsEmpty)
 			{
+				this.hasEvent = false;
 				this.eventType = EventType.Unknown;
 			}
 			else
 			{
+				var ts = timestamp.GetValueOrDefault (new Timestamp (System.DateTime.MaxValue, 0));
+				this.hasEvent = this.accessor.HasObjectEvent (this.objectGuid, ts);
 				this.eventType = this.accessor.GetObjectEventType (this.objectGuid, this.timestamp).GetValueOrDefault (EventType.Unknown);
+			}
+
+			if (this.lastEventType != this.eventType)
+			{
+				this.AdaptPages ();
+				this.lastEventType = this.eventType;
 			}
 
 			this.currentPage.SetObject (this.editFrameBox, this.objectGuid, this.timestamp);
 
 			this.topTitle.SetTitle (this.EventDescription);
+		}
+
+		private void AdaptPages()
+		{
+			//?if (this.ContainsUnAvailablePage)
+			{
+				this.navigatorLevels.Clear ();
+				this.navigatorController.Items.Clear ();
+
+				this.AddPage (EditionObjectPageType.Summary);
+			}
+		}
+
+		private bool ContainsUnAvailablePage
+		{
+			get
+			{
+				var availables = ObjectEditor.GetAvailablePages (this.hasEvent, this.eventType).ToArray ();
+
+				foreach (var level in this.navigatorLevels)
+				{
+					if (!availables.Contains (level.PageType))
+					{
+						return true;
+					}
+
+					foreach (var page in level.ChildrenPages)
+					{
+						if (!availables.Contains (page))
+						{
+							return true;
+						}
+					}
+				}
+
+				return false;
+			}
+		}
+
+		private IEnumerable<EditionObjectPageType> CurrentChildrenPageTypes
+		{
+			get
+			{
+				var types = ObjectEditor.GetAvailablePages (this.hasEvent, this.eventType).ToArray ();
+				return this.currentPage.ChildrenPageTypes.Where (x => types.Contains (x));
+			}
+		}
+
+		public static IEnumerable<EditionObjectPageType> GetAvailablePages(bool hasEvent, EventType type)
+		{
+			yield return EditionObjectPageType.Summary;
+
+			if (hasEvent)
+			{
+				switch (type)
+				{
+					case EventType.AmortissementAuto:
+					case EventType.AmortissementExtra:
+					case EventType.Augmentation:
+					case EventType.Diminution:
+						yield return EditionObjectPageType.Values;
+						break;
+
+					case EventType.Modification:
+					case EventType.Réorganisation:
+						yield return EditionObjectPageType.General;
+						yield return EditionObjectPageType.Amortissements;
+						yield return EditionObjectPageType.Compta;
+						break;
+
+					default:
+						yield return EditionObjectPageType.General;
+						yield return EditionObjectPageType.Values;
+						yield return EditionObjectPageType.Amortissements;
+						yield return EditionObjectPageType.Compta;
+						break;
+				}
+			}
 		}
 
 
@@ -235,6 +325,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private Guid								objectGuid;
 		private Timestamp							timestamp;
+		private bool								hasEvent;
 		private EventType							eventType;
+		private EventType							lastEventType;
 	}
 }

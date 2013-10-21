@@ -17,11 +17,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public virtual IEnumerable<ObjectPageType> ChildrenPageTypes
+		public virtual IEnumerable<EditionObjectPageType> ChildrenPageTypes
 		{
 			get
 			{
-				return new List<ObjectPageType> ();
+				return new List<EditionObjectPageType> ();
 			}
 		}
 
@@ -149,23 +149,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractObjectEditorPage CreatePage(DataAccessor accessor, ObjectPageType page)
+		public static AbstractObjectEditorPage CreatePage(DataAccessor accessor, EditionObjectPageType page)
 		{
 			switch (page)
 			{
-				case ObjectPageType.Summary:
+				case EditionObjectPageType.Summary:
 					return new ObjectEditorPageSummary (accessor);
 
-				case ObjectPageType.Infos:
-					return new ObjectEditorPageInfos (accessor);
+				case EditionObjectPageType.General:
+					return new ObjectEditorPageGeneral (accessor);
 
-				case ObjectPageType.Values:
+				case EditionObjectPageType.Values:
 					return new ObjectEditorPageValues (accessor);
 
-				case ObjectPageType.Amortissements:
+				case EditionObjectPageType.Amortissements:
 					return new ObjectEditorPageAmortissements (accessor);
 
-				case ObjectPageType.Compta:
+				case EditionObjectPageType.Compta:
 					return new ObjectEditorPageCompta (accessor);
 
 				default:
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event NavigateEventHandler Navigate;
 
 
-		protected void OnPageOpen(ObjectPageType type)
+		protected void OnPageOpen(EditionObjectPageType type)
 		{
 			if (this.PageOpen != null)
 			{
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public delegate void PageOpenEventHandler(object sender, ObjectPageType type);
+		public delegate void PageOpenEventHandler(object sender, EditionObjectPageType type);
 		public event PageOpenEventHandler PageOpen;
 		#endregion
 
