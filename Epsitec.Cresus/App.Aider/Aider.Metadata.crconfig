@@ -868,6 +868,30 @@ AiderPersonWarning = [LVALB]
       </col>
     </t>
 
+    <t eid="@AiderGroupParticipant" n="fonctional">
+     <!--
+        Person Parish Group data
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVALG].[LVAA4]" title="Paroisse" canSort="True" canFilter="True">
+        <sort o="Asc" />
+        <disp m="Visible" />
+      </col>
+      <!--
+        Group Def data
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA84].[LVADA].[LVA3A]" title="Fonction" canSort="True" canFilter="True">
+        <sort o="Asc" />
+        <disp m="Visible" />
+      </col>
+      <!--
+        Contact data
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVACE]" title="Contact" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+    </t>
+
     <t eid="@AiderSubscription" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVG332]" title="Numéro" canSort="True" canFilter="True">
         <sort o="None" />
@@ -1079,6 +1103,15 @@ AiderPersonWarning = [LVALB]
       <R><r>@user</r></R>
     </d>
 
+    <d cid="[LVO603]" teid="@AiderGroupParticipant" tn="fonctional" df="true" d="true" ec="false" ed="false" dg="@submenuDefs">
+      <R><r>@user</r></R>
+       <!-- Filter -->
+      <f id="@AiderGroupParticipant">
+        <!-- Column id=Classification (Valeur) (Comparaison) c=(1=equals) v="(e)num GroupClassification/valeur 10" -->
+        <C><c id="[LVA84].[LVADA].[LVA1C]"><v><comp c="1" v="e[LVATB]/10" /></v></c></C>
+      </f>
+    </d>
+
     <d cid="[LVG422]" teid="@AiderGroupParticipant" tn="default" df="false" d="false" ec="true" ed="true" dg="">
       <R><r>@user</r></R>
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderGroupParticipant:[LVAIG]" /></M>
@@ -1105,7 +1138,7 @@ AiderPersonWarning = [LVALB]
       </L>
       <!-- Filter -->
       <f id="@AiderContact">
-        <!-- Column id=ContactType (Valeur) (Comparaison) c=Equals(1) v="(e)num ContactType/n°3" -->
+        <!-- Column id=ContactType (Valeur) (Comparaison) c=(1=equals) v="(e)num ContactType/valeur 3" -->
         <C><c id="[LVA4E]"><v><comp c="1" v="e[LVASD]/3" /></v></c></C>
       </f>
     </d>

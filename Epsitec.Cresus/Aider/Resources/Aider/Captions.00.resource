@@ -471,4 +471,5 @@
   <data name="Val.Enum.WarningType.HouseholdWithoutSubscription" id="O203">&lt;s:data id="_0" f:Name="HouseholdWithoutSubscription" f:Labels="{Collection {Text 'Ménage sans abo. BN '}}" /&gt;</data>
   <data name="Val.Enum.AddressType.Confidential" id="O403">&lt;s:data id="_0" f:Name="Confidential" f:Labels="{Collection {Text 'Confidentielle'}}" /&gt;</data>
   <data name="Fld.AiderPerson.ConfidentialAddresses" id="O503">&lt;s:data id="_0" f:Name="ConfidentialAddresses" /&gt;</data>
+  <data name="Cmd.Base.ShowAiderGroupMemberByFunction" id="O603">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderGroupMemberByFunction" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Participations par fonctions métiers'}}" /&gt;</data>
 </bundle>

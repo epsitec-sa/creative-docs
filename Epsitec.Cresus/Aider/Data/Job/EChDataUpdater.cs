@@ -444,8 +444,7 @@ namespace Epsitec.Aider.Data.Job
 
 							if (family.IsNull () && fixPreviousUpdate)
 							{
-								this.LogToConsole ("Cannot fix correctly, family not found (FAMILYKEY:{0}), skipping! Are you using the good XML files ?", item.NewValue.FamilyKey);
-								continue;
+								family = this.CreateEChReportedPerson (businessContext, item.OldValue, false);
 							}
 
 							eCH_AddressEntity familyAddress = family.Address;
@@ -692,7 +691,7 @@ namespace Epsitec.Aider.Data.Job
 					{
 						var eChReportedPersonEntity = this.GetEchReportedPersonEntity (businessContext, eChReportedPerson);
 						
-						var aiderPersonEntity     = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
+						/*var aiderPersonEntity     = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
 
 						if (aiderPersonEntity.IsNotNull ())
 						{						
@@ -717,7 +716,7 @@ namespace Epsitec.Aider.Data.Job
 						else
 						{
 
-						}
+						}*/
 
 						if (eChReportedPersonEntity.IsNotNull ())
 						{
@@ -840,48 +839,65 @@ namespace Epsitec.Aider.Data.Job
 				{
 					foreach (var eChReportedPerson in this.houseHoldsToCreate)
 					{
-						//	Create eCH ReportedPerson entity, with the new eCH address, and assign the
-						//	two adults (if any) and the children found in the eCH data:
-						var eChAddressEntity          = EChDataImporter.ImportEchAddressEntity (businessContext, eChReportedPerson.Address);
-						var eChReportedPersonEntity   = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity> ();
-						eChReportedPersonEntity.Address = eChAddressEntity;
-
-						//create ref aiderPerson if needed (weird case)
-						var refAiderPerson = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
-						if (refAiderPerson.IsNull ())
-						{
-							var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-							aiderPersonEntity.eCH_Person = eChReportedPersonEntity.Adult1;
-							this.LogToConsole ("Warning: Need to create the AiderPersonEntity: ECHPERSONID:{0}", eChReportedPersonEntity.Adult1.PersonId);
-
-							refAiderPerson = aiderPersonEntity;
-						}
-
-						//retreiving ref aiderHousehold
-						var refAiderHousehold = this.GetAiderHousehold (businessContext, refAiderPerson);
-						
-						eChReportedPersonEntity.Adult1 = refAiderPerson.eCH_Person;
-						
-						this.ProcessHouseholdChangesForMember (businessContext, refAiderPerson.eCH_Person, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
-
-						if (eChReportedPerson.Adult2 != null)
-						{
-							var eChPersonEntity = this.GetEchPersonEntity (businessContext, eChReportedPerson.Adult2);
-							eChReportedPersonEntity.Adult2 = eChPersonEntity;
-							eChReportedPersonEntity.RemoveDuplicates ();
-							this.ProcessHouseholdChangesForMember (businessContext, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
-						}
-
-						foreach (var eChChild in eChReportedPerson.Children)
-						{
-							var eChPersonEntity  = this.GetEchPersonEntity (businessContext, eChChild);
-							eChReportedPersonEntity.Children.Add (eChPersonEntity);
-							eChReportedPersonEntity.RemoveDuplicates ();
-
-							this.ProcessHouseholdChangesForMember (businessContext, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
-						}
+						this.CreateEChReportedPerson (businessContext, eChReportedPerson,true);
 					}
 				});
+		}
+
+		private eCH_ReportedPersonEntity CreateEChReportedPerson(BusinessContext businessContext, EChReportedPerson eChReportedPerson,bool processAiderHouseholdChanges)
+		{
+			//	Create eCH ReportedPerson entity, with the new eCH address, and assign the
+			//	two adults (if any) and the children found in the eCH data:
+			var eChAddressEntity          = EChDataImporter.ImportEchAddressEntity (businessContext, eChReportedPerson.Address);
+			var eChReportedPersonEntity   = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity> ();
+			eChReportedPersonEntity.Address = eChAddressEntity;
+
+			//create ref aiderPerson if needed (weird case)
+			var refAiderPerson = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
+			if (refAiderPerson.IsNull ())
+			{
+				var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+				aiderPersonEntity.eCH_Person = eChReportedPersonEntity.Adult1;
+				this.LogToConsole ("Warning: Need to create the AiderPersonEntity: ECHPERSONID:{0}", eChReportedPersonEntity.Adult1.PersonId);
+
+				refAiderPerson = aiderPersonEntity;
+			}
+
+			//retreiving ref aiderHousehold
+			var refAiderHousehold = this.GetAiderHousehold (businessContext, refAiderPerson);
+
+			eChReportedPersonEntity.Adult1 = refAiderPerson.eCH_Person;
+
+			if (processAiderHouseholdChanges)
+			{
+				this.ProcessAiderHouseholdChangesForMember (businessContext, refAiderPerson.eCH_Person, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
+			}
+
+			if (eChReportedPerson.Adult2 != null)
+			{
+				var eChPersonEntity = this.GetEchPersonEntity (businessContext, eChReportedPerson.Adult2);
+				eChReportedPersonEntity.Adult2 = eChPersonEntity;
+				eChReportedPersonEntity.RemoveDuplicates ();
+
+				if (processAiderHouseholdChanges)
+				{
+					this.ProcessAiderHouseholdChangesForMember (businessContext, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
+				}
+			}
+
+			foreach (var eChChild in eChReportedPerson.Children)
+			{
+				var eChPersonEntity  = this.GetEchPersonEntity (businessContext, eChChild);
+				eChReportedPersonEntity.Children.Add (eChPersonEntity);
+				eChReportedPersonEntity.RemoveDuplicates ();
+
+				if (processAiderHouseholdChanges)
+				{
+					this.ProcessAiderHouseholdChangesForMember (businessContext, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
+				}
+			}
+
+			return eChReportedPersonEntity;
 		}
 
 		private void CreateNewAiderHouseholds()
@@ -987,7 +1003,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void ProcessHouseholdChangesForMember(BusinessContext businessContext, eCH_PersonEntity eChPersonEntity,EChAddress rchAddress, eCH_ReportedPersonEntity eChReportedPersonEntity,AiderHouseholdEntity refAiderHousehold)
+		private void ProcessAiderHouseholdChangesForMember(BusinessContext businessContext, eCH_PersonEntity eChPersonEntity,EChAddress rchAddress, eCH_ReportedPersonEntity eChReportedPersonEntity,AiderHouseholdEntity refAiderHousehold)
 		{
 			this.LogToConsole ("Info: Processing {0}", eChPersonEntity.PersonId);
 
