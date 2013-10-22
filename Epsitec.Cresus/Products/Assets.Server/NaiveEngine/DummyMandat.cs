@@ -70,6 +70,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (3000000.0m)));
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (2500000.0m)));
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Paul"));
+					DummyMandat.AddAmortissement1 (e);
 				}
 
 				for (int i=1; i<200; i++)
@@ -97,6 +98,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (4550000.0m)));
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (6000000.0m)));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Paul"));
+				DummyMandat.AddAmortissement1 (e);
 			}
 
 			{
@@ -112,6 +114,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (2100000.0m)));
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (3000000.0m)));
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Sandra"));
+					DummyMandat.AddAmortissement1 (e);
 				}
 
 				{
@@ -155,6 +158,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (10400000.0m)));
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (13000000.0m)));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Ernest"));
+				DummyMandat.AddAmortissement1 (e);
 			}
 
 			{
@@ -169,6 +173,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (8000000.0m)));
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (9500000.0m)));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "René"));
+				DummyMandat.AddAmortissement1 (e);
 			}
 
 			{
@@ -180,6 +185,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       2));
 				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "1.3"));
 				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Nom,         "Entrepôts"));
+				DummyMandat.AddAmortissement1 (e);
 			}
 
 			{
@@ -194,6 +200,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (2100000.0m)));
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (3500000.0m)));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Anne-Sophie"));
+				DummyMandat.AddAmortissement1 (e);
 			}
 
 			{
@@ -208,6 +215,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (5320000.0m)));
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (5000000.0m)));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Paul"));
+				DummyMandat.AddAmortissement1 (e);
 			}
 
 			{
@@ -222,6 +230,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (1200000.0m)));
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (1500000.0m)));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Vistoria"));
+				DummyMandat.AddAmortissement1 (e);
 			}
 
 			{
@@ -260,6 +269,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Jean-François"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Blanc"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.NuméroSérie, "25004-800-65210-45R"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -276,6 +286,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Serge"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Rouge"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.NuméroSérie, "25004-800-20087-20X"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -291,6 +302,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (75000.0m)));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Jean-Pierre"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Blanc"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -307,6 +319,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Olivier"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Jaune/Noir"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.NuméroSérie, "T40-56-200-65E4"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -322,6 +335,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Igor"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Bleu/Noir"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.NuméroSérie, "T40-72-300-PW3B"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -349,6 +363,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Francine"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Blanc"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.NuméroSérie, "456-321-132-898908"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -364,6 +379,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (32000.0m)));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Jean-Bernard"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Blanc"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -391,6 +407,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Simon"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Noir"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.NuméroSérie, "D456-0003232-0005"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -407,6 +424,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Frédérique"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Bleu"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.NuméroSérie, "45-3292302-544545-8"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -421,6 +439,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (8000.0m)));
 				e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (5000.0m)));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Dominique"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -436,6 +455,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Denise"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Rouge"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.NuméroSérie, "456000433434002"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -452,6 +472,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Marie"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Gris métalisé"));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.NuméroSérie, "780004563233232"));
+				DummyMandat.AddAmortissement2 (e);
 			}
 
 			{
@@ -468,6 +489,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Christiane"));
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Gris"));
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.NuméroSérie, "F40T-500023-40232-30987-M"));
+					DummyMandat.AddAmortissement2 (e);
 				}
 
 				{
@@ -523,6 +545,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Responsable, "Georges"));
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Couleur,     "Noire"));
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.NuméroSérie, "F30T-340407-52118-40720-R"));
+					DummyMandat.AddAmortissement2 (e);
 				}
 
 				{
@@ -564,6 +587,24 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			return mandat;
+		}
+
+		private static void AddAmortissement1(DataEvent e)
+		{
+			e.Properties.Add (new DataStringProperty  ((int) ObjectField.NomCatégorie,           "Immobilier"));
+			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.TauxAmortissement,      0.035m));
+			e.Properties.Add (new DataStringProperty  ((int) ObjectField.TypeAmortissement,      "Dégressif"));
+			e.Properties.Add (new DataIntProperty     ((int) ObjectField.FréquenceAmortissement, 12));
+			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.ValeurRésiduelle,       1.0m));
+		}
+
+		private static void AddAmortissement2(DataEvent e)
+		{
+			e.Properties.Add (new DataStringProperty  ((int) ObjectField.NomCatégorie,           "Véhicule"));
+			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.TauxAmortissement,      0.08m));
+			e.Properties.Add (new DataStringProperty  ((int) ObjectField.TypeAmortissement,      "Linéaire"));
+			e.Properties.Add (new DataIntProperty     ((int) ObjectField.FréquenceAmortissement, 3));
+			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.ValeurRésiduelle,       1.0m));
 		}
 	}
 
