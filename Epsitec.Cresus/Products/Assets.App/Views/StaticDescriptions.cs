@@ -46,6 +46,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.NomCatégorie:
 					return "Nom de la catégorie";
 
+				case ObjectField.DateAmortissement1:
+					return "Date 1er amort.";
+
+				case ObjectField.DateAmortissement2:
+					return "Date 2ème amort.";
+
 				case ObjectField.TauxAmortissement:
 					return "Taux";
 
@@ -71,10 +77,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "Entrée";
 
 				case EventType.AmortissementAuto:
-					return "Amortissement ordinaire";
+					return "Amort. ordinaire";
 
 				case EventType.AmortissementExtra:
-					return "Amortissement extraordinaire";
+					return "Amort. extraord.";
 
 				case EventType.Modification:
 					return "Modification";

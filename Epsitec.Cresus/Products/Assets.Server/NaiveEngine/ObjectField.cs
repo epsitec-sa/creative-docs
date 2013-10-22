@@ -21,6 +21,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		NuméroSérie,
 
 		NomCatégorie,
+		DateAmortissement1,
+		DateAmortissement2,
 		TauxAmortissement,
 		TypeAmortissement,
 		FréquenceAmortissement,

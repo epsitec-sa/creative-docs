@@ -107,6 +107,41 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			return null;
 		}
 
+		public void RemoveAmortissementsAuto(Guid objectGuid)
+		{
+			//	Supprime tous les événements d'amortissement automatique d'un objet.
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				while (true)
+				{
+					var e = obj.Events.Where (x => x.Type == EventType.AmortissementAuto).FirstOrDefault ();
+
+					if (e == null)
+					{
+						break;
+					}
+
+					this.RemoveEventeventGuid (objectGuid, e.Guid);
+				}
+			}
+		}
+
+		public void RemoveEventeventGuid(Guid objectGuid, Guid eventGuid)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				int i = obj.Events.FindIndex (x => x.Guid == eventGuid);
+				if (i != -1)
+				{
+					obj.Events.RemoveAt (i);
+				}
+			}
+		}
+
 		public bool HasObjectEvent(Guid objectGuid, Timestamp timestamp)
 		{
 			var obj = this.mandat.GetObject (objectGuid);
@@ -158,7 +193,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public Timestamp? CreateEvent(Guid objectGuid, System.DateTime date, EventType type)
+		public Timestamp? CreateObjectEvent(Guid objectGuid, System.DateTime date, EventType type)
 		{
 			var obj = this.mandat.GetObject (objectGuid);
 
@@ -173,6 +208,21 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			return null;
+		}
+
+		public void AddObjectEventProperty(Guid objectGuid, Timestamp timestamp, AbstractDataProperty property)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				var e = obj.Events.Where (x => x.Timestamp == timestamp).FirstOrDefault ();
+
+				if (e != null)
+				{
+					e.Properties.Add (property);
+				}
+			}
 		}
 
 
@@ -217,6 +267,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				yield return ObjectField.NuméroSérie;
 
 				yield return ObjectField.NomCatégorie;
+				yield return ObjectField.DateAmortissement1;
+				yield return ObjectField.DateAmortissement2;
 				yield return ObjectField.TauxAmortissement;
 				yield return ObjectField.TypeAmortissement;
 				yield return ObjectField.FréquenceAmortissement;

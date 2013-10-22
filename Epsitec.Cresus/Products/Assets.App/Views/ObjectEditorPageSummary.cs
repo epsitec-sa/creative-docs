@@ -64,6 +64,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return EditionObjectPageType.Values;
 
 				case ObjectField.NomCatégorie:
+				case ObjectField.DateAmortissement1:
+				case ObjectField.DateAmortissement2:
 				case ObjectField.TauxAmortissement:
 				case ObjectField.TypeAmortissement:
 				case ObjectField.FréquenceAmortissement:
@@ -122,6 +124,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var c3 = new List<int> ()
 				{
 					(int) ObjectField.NomCatégorie,
+					(int) ObjectField.DateAmortissement1,
+					(int) ObjectField.DateAmortissement2,
 					(int) ObjectField.TauxAmortissement,
 					(int) ObjectField.TypeAmortissement,
 					(int) ObjectField.FréquenceAmortissement,

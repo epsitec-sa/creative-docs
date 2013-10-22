@@ -96,6 +96,7 @@
     <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\AbstractObjectEditorPage.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
+    <Compile Include="Views\BusinessLogic.cs" />
     <Compile Include="Views\EventsToolbarTreeTableController.cs" />
     <Compile Include="Views\ObjectsToolbarTreeTableController.cs" />
     <Compile Include="Views\ObjectsView.cs" />

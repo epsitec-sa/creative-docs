@@ -15,6 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.accessor = accessor;
 			this.mainToolbar = toolbar;
+
+			this.businessLogic = new BusinessLogic (this.accessor);
 		}
 
 
@@ -54,6 +56,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 				};
 
 				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+						this.businessLogic.GénèreAmortissementsAuto ();
+						this.Update ();
+					}
+				};
 			}
 		}
 
@@ -115,5 +126,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected readonly DataAccessor			accessor;
 		protected readonly MainToolbar			mainToolbar;
+		protected readonly BusinessLogic		businessLogic;
 	}
 }

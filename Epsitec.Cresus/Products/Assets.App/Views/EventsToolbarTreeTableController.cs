@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (!guid.IsEmpty)
 			{
 				var type = EventsToolbarTreeTableController.ParseEventType (buttonName);
-				var timestamp = this.accessor.CreateEvent (guid, date, type);
+				var timestamp = this.accessor.CreateObjectEvent (guid, date, type);
 
 				if (timestamp.HasValue)
 				{

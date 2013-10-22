@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.properties != null)
 			{
 				this.CreateStringController  (parent, ObjectField.NomCatégorie);
+				this.CreateStringController  (parent, ObjectField.DateAmortissement1);
+				this.CreateStringController  (parent, ObjectField.DateAmortissement2);
 				this.CreateDecimalController (parent, ObjectField.TauxAmortissement, isRate: true);
 				this.CreateStringController  (parent, ObjectField.TypeAmortissement, editWidth: 90);
 				this.CreateDecimalController (parent, ObjectField.FréquenceAmortissement);
