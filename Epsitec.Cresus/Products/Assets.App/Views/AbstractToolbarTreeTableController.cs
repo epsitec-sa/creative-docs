@@ -240,13 +240,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			int row = this.SelectedRow;
 
-			this.toolbar.SetCommandState (ToolbarCommand.First, ToolbarCommandState.Hide);
-			this.toolbar.SetCommandState (ToolbarCommand.Last,  ToolbarCommandState.Hide);
-
-//			this.UpdateCommand (ToolbarCommand.First, row, this.FirstRowIndex);
+			this.UpdateCommand (ToolbarCommand.First, row, this.FirstRowIndex);
 			this.UpdateCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);
 			this.UpdateCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
-//			this.UpdateCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
+			this.UpdateCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
 
 			this.UpdateCommand (ToolbarCommand.New,      true);
 			this.UpdateCommand (ToolbarCommand.Delete,   row != -1);

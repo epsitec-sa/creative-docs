@@ -33,6 +33,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateToolbar(Widget parent, int size)
 		{
+			//	La toolbar s'adapte en fonction de la largeur disponible. Certains
+			//	boutons non indispensables disparaissent s'il manque de la place.
 			var toolbar = new FrameBox
 			{
 				Parent          = parent,
@@ -41,15 +43,70 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonFirst    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.First,    "TreeTable.First",    "Retour sur la première ligne");
-			this.buttonPrev     = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Prev,     "TreeTable.Prev",     "Recule sur la ligne précédente");
-			this.buttonNext     = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Next,     "TreeTable.Next",     "Avance sur la ligne suivante");
-			this.buttonLast     = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Last,     "TreeTable.Last",     "Avance sur la dernière ligne");
-			this.buttonNew      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New ,     "TreeTable.New",      "Nouvel ligne");
-			this.buttonDelete   = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete ,  "TreeTable.Delete",   "Supprimer la ligne");
-			this.buttonDeselect = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Deselect, "TreeTable.Deselect", "Désélectionne la ligne");
+			this.buttonFirst    = this.CreateCommandButton (toolbar, 0, ToolbarCommand.First,    "TreeTable.First",    "Retour sur la première ligne");
+			this.buttonPrev     = this.CreateCommandButton (toolbar, 0, ToolbarCommand.Prev,     "TreeTable.Prev",     "Recule sur la ligne précédente");
+			this.buttonNext     = this.CreateCommandButton (toolbar, 0, ToolbarCommand.Next,     "TreeTable.Next",     "Avance sur la ligne suivante");
+			this.buttonLast     = this.CreateCommandButton (toolbar, 0, ToolbarCommand.Last,     "TreeTable.Last",     "Avance sur la dernière ligne");
+			this.buttonNew      = this.CreateCommandButton (toolbar, 0, ToolbarCommand.New ,     "TreeTable.New",      "Nouvel ligne");
+			this.buttonDelete   = this.CreateCommandButton (toolbar, 0, ToolbarCommand.Delete ,  "TreeTable.Delete",   "Supprimer la ligne");
+			this.buttonDeselect = this.CreateCommandButton (toolbar, 0, ToolbarCommand.Deselect, "TreeTable.Deselect", "Désélectionne la ligne");
 
-			this.buttonNew.Margins = new Margins (20, 0, 0, 0);
+			toolbar.SizeChanged += delegate
+			{
+				this.Adjust (toolbar);
+			};
+		}
+
+		private void Adjust(FrameBox toolbar)
+		{
+			//	S'il manque de place en largeur, on supprime les boutons First/Last en
+			//	premier lieu. S'il manque encore de la place, c'est les boutons Prev/Next
+			//	qui sont supprimés.
+			double size = toolbar.ActualHeight;
+			double x = 0;
+
+			foreach (var bs in this.GetButtons (toolbar.ActualWidth, size))
+			{
+				bs.Button.Visibility = bs.Visibility;
+
+				if (bs.Visibility)
+				{
+					x += bs.Offset;
+					bs.Button.SetManualBounds (new Rectangle (x, 0, size, size));
+					x += size;
+				}
+			}
+		}
+
+		private IEnumerable<ButtonState> GetButtons(double width, double size)
+		{
+			bool firstLast = width > size*7 + 20;
+			bool prevNext  = width > size*5 + 20;
+
+			yield return new ButtonState (this.buttonFirst, firstLast);
+			yield return new ButtonState (this.buttonPrev,  prevNext);
+			yield return new ButtonState (this.buttonNext,  prevNext);
+			yield return new ButtonState (this.buttonLast,  firstLast);
+
+			//	L'offset à gauche du bouton New n'a de raison d'être que si les
+			//	boutons First/Prev/Next/Last sont présents.
+			yield return new ButtonState (this.buttonNew, offset: firstLast || prevNext ? 20 : 0);
+			yield return new ButtonState (this.buttonDelete);
+			yield return new ButtonState (this.buttonDeselect);
+		}
+
+		private struct ButtonState
+		{
+			public ButtonState(IconButton button, bool visibility = true, double offset = 0)
+			{
+				this.Button     = button;
+				this.Visibility = visibility;
+				this.Offset     = offset;
+			}
+
+			public readonly IconButton	Button;
+			public readonly bool		Visibility;
+			public readonly double		Offset;
 		}
 
 

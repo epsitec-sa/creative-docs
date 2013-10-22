@@ -61,7 +61,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateCommandButton(IconButton button, ToolbarCommand command)
 		{
-			button.Visibility  = this.GetCommandVisibility    (command);
+			//	Un bouton placé avec SetManualBounds gère différemment la visibilité.
+			if (button.Dock != DockStyle.None)
+			{
+				button.Visibility = this.GetCommandVisibility (command);
+			}
+
 			button.Enable      = this.GetCommandEnable        (command);
 			button.ActiveState = this.GetCommandActivateState (command);
 		}
@@ -107,6 +112,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 				IconUri       = AbstractCommandToolbar.GetResourceIconUri (icon),
 				PreferredSize = new Size (size, size),
 			};
+
+			ToolTip.Default.SetToolTip (button, tooltip);
+
+			button.Clicked += delegate
+			{
+				this.OnCommandClicked (command);
+			};
+
+			this.commandWidgets.Add (command, button);
+
+			return button;
+		}
+
+		protected IconButton CreateCommandButton(FrameBox toolbar, int x, ToolbarCommand command, string icon, string tooltip)
+		{
+			var size = toolbar.PreferredHeight;
+
+			var button = new IconButton
+			{
+				Parent        = toolbar,
+				AutoFocus     = false,
+				IconUri       = AbstractCommandToolbar.GetResourceIconUri (icon),
+			};
+
+			button.SetManualBounds (new Rectangle (x, 0, size, size));
 
 			ToolTip.Default.SetToolTip (button, tooltip);
 
