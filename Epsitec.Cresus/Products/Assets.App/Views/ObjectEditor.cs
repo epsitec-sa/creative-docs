@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Retourne un texte décrivant l'événement, composé de la date
 			//	et du type de l'événement.
-			//	Par exemple "31.03.2014 — Amortissement"
+			//	Par exemple "Evénement du 31.03.2014 — Amortissement"
 			get
 			{
 				var list = new List<string> ();
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.timestamp.Date != System.DateTime.MaxValue)
 				{
 					var d = Helpers.Converters.DateToString (this.timestamp.Date);
-					list.Add (d);
+					list.Add ("Evénement du " + d);
 				}
 
 				//	Met le type de l'événement, s'il est connu.

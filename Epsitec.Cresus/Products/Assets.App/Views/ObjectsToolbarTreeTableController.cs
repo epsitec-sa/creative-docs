@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null)
 			{
-				var popup = new DeletePopup
+				var popup = new YesNoPopup
 				{
 					Question = "Voulez-vous supprimer l'objet sélectionné ?",
 				};

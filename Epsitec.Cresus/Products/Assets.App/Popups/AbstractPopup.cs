@@ -230,6 +230,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return button;
 		}
 
+		protected RadioButton CreateRadio(int x, int y, int dx, int dy, string name, string text, string tooltip = null, bool activate = false)
+		{
+			x += (int) this.dialogRect.Left;
+			y += (int) this.dialogRect.Bottom;
+
+			var button = new RadioButton
+			{
+				Parent        = this,
+				Name          = name,
+				Text          = text,
+				AutoFocus     = false,
+				Anchor        = AnchorStyles.BottomLeft,
+				PreferredSize = new Size (dx, dy),
+				Margins       = new Margins (x, 0, 0, y),
+				ActiveState   = activate ? ActiveState.Yes : ActiveState.No,
+			};
+
+			if (!string.IsNullOrEmpty (tooltip))
+			{
+				ToolTip.Default.SetToolTip (button, tooltip);
+			}
+
+			return button;
+		}
+
 		protected ColoredButton CreateItem(int x, int y, int dx, int dy, string text)
 		{
 			x += (int) this.dialogRect.Left;
@@ -283,8 +308,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void MouseDown(Point pos)
 		{
-			this.isDragging = true;
-			this.lastPos = pos;
+			if (this.ExternalRect.Contains (pos))
+			{
+				this.isDragging = true;
+				this.lastPos = pos;
+			}
 		}
 
 		private void MouseMove(Point pos)

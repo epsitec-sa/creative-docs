@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
@@ -41,6 +42,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void Dispose()
 		{
+			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,          ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Amortissement, ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Accept,        ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel,        ToolbarCommandState.Hide);
 		}
 
 
@@ -183,6 +188,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.OnStartStopEdit ();
 					break;
 
+				case ToolbarCommand.Amortissement:
+					this.OnMainAmortissement ();
+					break;
+
 				case ToolbarCommand.Accept:
 					this.OnEditAccept ();
 					break;
@@ -238,6 +247,51 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.isEditing = !this.isEditing;
 			this.Update ();
+		}
+
+		private void OnMainAmortissement()
+		{
+			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Amortissement);
+
+			if (target != null)
+			{
+				var popup = new YesNoPopup
+				{
+					Question = "Voulez-vous générer les amortissements ?",
+				};
+
+				if (this.listController.SelectedRow == -1)
+				{
+					popup.Radios.Add (new YesNoPopup.Radio ("all", "Pour tous les objets", activate: true));
+				}
+				else
+				{
+					popup.Radios.Add (new YesNoPopup.Radio ("one", "Pour l'objet sélectionné", activate: true));
+					popup.Radios.Add (new YesNoPopup.Radio ("all", "Pour tous les objets"));
+				}
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+						if (popup.RadioSelected == "one")
+						{
+							var guid = this.accessor.GetObjectGuid (this.listController.SelectedRow);
+							this.businessLogic.GeneratesAmortissementsAuto (guid);
+						}
+						else
+						{
+							this.businessLogic.GeneratesAmortissementsAuto ();
+						}
+
+						this.Update ();
+						this.timelineController.Update ();
+						this.eventsController.Update ();
+					}
+				};
+			}
 		}
 
 		private void OnCloseColumn()

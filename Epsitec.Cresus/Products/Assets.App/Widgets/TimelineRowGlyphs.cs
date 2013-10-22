@@ -75,7 +75,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private static void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellGlyph cell, bool isHover, int index)
 		{
 			//	Dessine le contenu.
-			//	Dessine le contenu.
 			Rectangle r;
 			Path path;
 
@@ -238,6 +237,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					return ColorManager.HoverColor;
 				}
+				//-else if (cell.Glyph != TimelineGlyph.Empty)
+				//-{
+				//-	return ColorManager.EditSinglePropertyColor;
+				//-}
 				else
 				{
 					return ColorManager.GetBackgroundColor (isHover);

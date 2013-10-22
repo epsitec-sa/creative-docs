@@ -18,6 +18,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public void Update()
+		{
+			this.UpdateController ();
+			this.UpdateToolbar ();
+		}
+
+
 		public Guid								ObjectGuid
 		{
 			get
@@ -127,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null)
 			{
-				var popup = new DeletePopup
+				var popup = new YesNoPopup
 				{
 					Question = "Voulez-vous supprimer l'événement sélectionné ?",
 				};

@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "Amort. ordinaire";
 
 				case EventType.AmortissementExtra:
-					return "Amort. extraord.";
+					return "Amort. extraordinaire";
 
 				case EventType.Modification:
 					return "Modification";

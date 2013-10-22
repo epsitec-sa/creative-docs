@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonCancel = this.CreateCommandButton (toolbar, DockStyle.Right, ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
 			this.buttonAccept = this.CreateCommandButton (toolbar, DockStyle.Right, ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
 
-			this.buttonEdit.Margins = new Margins (40, 0, 0, 0);
+			this.buttonSettings.Margins = new Margins (0, 40, 0, 0);
 
 			this.UpdateViewButtons ();
 		}

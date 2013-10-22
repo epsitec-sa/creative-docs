@@ -83,7 +83,7 @@
     <Compile Include="Popups\SimplePopup.cs" />
     <Compile Include="Popups\HistoryAccessor.cs" />
     <Compile Include="Popups\HistoryPopup.cs" />
-    <Compile Include="Popups\DeletePopup.cs" />
+    <Compile Include="Popups\YesNoPopup.cs" />
     <Compile Include="Popups\NewEventPopup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Views\AbstractView.cs" />

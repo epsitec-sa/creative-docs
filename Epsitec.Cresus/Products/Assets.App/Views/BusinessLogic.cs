@@ -15,18 +15,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void GénèreAmortissementsAuto()
+		public void GeneratesAmortissementsAuto()
 		{
 			int count = this.accessor.ObjectsCount;
 			for (int i=0; i<count; i++)
 			{
 				var guid = this.accessor.GetObjectGuid (i);
-				this.GénèreAmortissementsAuto (guid);
+				this.GeneratesAmortissementsAuto (guid);
 			}
 		}
 
-		private void GénèreAmortissementsAuto(Guid objectGuid)
+		public void GeneratesAmortissementsAuto(Guid objectGuid)
 		{
+			//	TODO: ...
 			this.accessor.RemoveAmortissementsAuto (objectGuid);
 
 			this.CreateEvent (objectGuid, new System.DateTime (2013, 3, 1));
@@ -36,6 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateEvent(Guid objectGuid, System.DateTime date)
 		{
+			//	TODO: ...
 			var timestamp = this.accessor.CreateObjectEvent (objectGuid, date, EventType.AmortissementAuto);
 
 			if (timestamp.HasValue)

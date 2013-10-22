@@ -33,10 +33,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (command)
 			{
-				case ToolbarCommand.Amortissement:
-					this.OnMainAmortissement ();
-					break;
-
 				case ToolbarCommand.Simulation:
 					this.OnMainSimulation ();
 					break;
@@ -44,37 +40,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void OnMainAmortissement()
-		{
-			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Amortissement);
-
-			if (target != null)
-			{
-				var popup = new DeletePopup
-				{
-					Question = "Voulez-vous générer les amortissements ?",
-				};
-
-				popup.Create (target);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "yes")
-					{
-						this.businessLogic.GénèreAmortissementsAuto ();
-						this.Update ();
-					}
-				};
-			}
-		}
-
 		private void OnMainSimulation()
 		{
 			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Simulation);
 
 			if (target != null)
 			{
-				var popup = new DeletePopup
+				var popup = new YesNoPopup
 				{
 					Question = "Voulez-vous débuter une simulation ?",
 				};
