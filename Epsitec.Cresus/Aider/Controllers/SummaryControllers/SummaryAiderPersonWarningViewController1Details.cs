@@ -31,13 +31,22 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var contact   = person.MainContact;
 			var household = person.Households.FirstOrDefault ();
 
-			var contactSummary = SummaryAiderContactViewController.GetPersonContactSummary (contact);
+			if (contact.IsNotNull ())
+			{
+				var contactSummary = SummaryAiderContactViewController.GetPersonContactSummary (contact);
 
-			wall.AddBrick (x => x.Person)
-				.Icon (person.GetIconName ("Data"))
-				.Text (contactSummary)
-				.Attribute (BrickMode.DefaultToSummarySubView);
-
+				wall.AddBrick (x => x.Person)
+					.Icon (person.GetIconName ("Data"))
+					.Text (contactSummary)
+					.Attribute (BrickMode.DefaultToSummarySubView);
+			}
+			else
+			{
+				wall.AddBrick (x => x.Person)
+					.Icon (person.GetIconName ("Data"))
+					.Text ("Contact inexistant")
+					.Attribute (BrickMode.DefaultToSummarySubView);
+			}
 			if (household.IsNotNull ())
 			{
 				if (contact.Address.IsNotNull () && contact.Address.GetEntityStatus () == EntityStatus.Valid)

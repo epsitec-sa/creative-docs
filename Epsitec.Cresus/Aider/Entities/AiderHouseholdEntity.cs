@@ -304,6 +304,23 @@ namespace Epsitec.Aider.Entities
 				{
 					AiderHouseholdEntity.Delete (businessContext, household);
 				}
+				else
+				{
+					var adults = household.Members.Where (m => m.Age >= 18);
+					var childrens = household.Members.Where (m => m.Age < 18);
+
+					//Check for child-only household case
+					if (adults.Count () == 0 && childrens.Count () > 0)
+					{
+						//Warn childs
+						foreach (var child in childrens)
+						{
+							AiderPersonWarningEntity.Create (businessContext, child, child.ParishGroupPathCache, WarningType.MissingHousehold, new FormattedText ("Cet enfant n'est plus assigné à un ménage"));
+						}
+
+						AiderHouseholdEntity.Delete (businessContext, household);
+					}
+				}
 			}
 		}
 

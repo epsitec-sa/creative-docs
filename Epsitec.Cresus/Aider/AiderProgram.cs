@@ -209,6 +209,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-fixoldechwarnings"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixOldEChWarnings (args));
+					return;
+				}
+
 				if (args.Contains ("-loadelasticsearch"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.LoadElasticSearch (args));
@@ -504,6 +510,14 @@ namespace Epsitec.Aider
 			);
 		}
 
+		private static void FixOldEChWarnings(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => EChWarningsFixer.TryFixAll (coreData)
+			);
+		}
+		
 		private static void FixZombies(string[] args)
 		{
 			AiderProgram.RunWithCoreData

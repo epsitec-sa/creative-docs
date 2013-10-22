@@ -336,7 +336,7 @@ namespace Epsitec.Aider.Data.Job
 					this.ReassignAndWarnParish (businessContext, member, changes);
 				}
 			}
-			else //potential family is different relocate head form ECh new Data
+			else //potential family is different relocate head from ECh new Data
 			{
 				this.LogToConsole ("Info: Reassign only {0}", person.GetFullName ());
 				var warningMessage = FormattedText.FromSimpleText ("Cette personne a maintenant son propre ménage.");
@@ -442,7 +442,7 @@ namespace Epsitec.Aider.Data.Job
 								break;
 							}
 
-							if (family.IsNull () && fixPreviousUpdate)
+							if (family.IsNull ())
 							{
 								family = this.CreateEChReportedPerson (businessContext, item.OldValue, false);
 							}
@@ -910,68 +910,68 @@ namespace Epsitec.Aider.Data.Job
 					{
 						this.LogToConsole ("Info: Processing FAMILYKEY:{0}",eChReportedPerson.FamilyKey);
 						var existingEChReportedPerson = this.GetEchReportedPersonEntity(businessContext,eChReportedPerson);
-						if (existingEChReportedPerson.IsNotNull ())
+
+						if(existingEChReportedPerson.IsNull ())
 						{
-							this.LogToConsole ("Info: EChReportedPerson found");
-							var existingAiderHousehold = this.GetAiderHousehold (businessContext, existingEChReportedPerson.Adult1);
-							if (existingAiderHousehold.IsNotNull ())
-							{
+							existingEChReportedPerson = this.CreateEChReportedPerson (businessContext, eChReportedPerson, false);
+						}
+				
+						this.LogToConsole ("Info: EChReportedPerson found");
+						var existingAiderHousehold = this.GetAiderHousehold (businessContext, existingEChReportedPerson.Adult1);
+						if (existingAiderHousehold.IsNotNull ())
+						{
 
-								this.LogToConsole ("Info: Aider household already exist, skipping");
-								AiderContactEntity.DeleteDuplicateContacts (businessContext, existingAiderHousehold.Contacts);		
-								continue;
+							this.LogToConsole ("Info: Aider household already exist, skipping");
+							AiderContactEntity.DeleteDuplicateContacts (businessContext, existingAiderHousehold.Contacts);		
+							continue;
 
-							}
-							else
-							{
-								this.LogToConsole ("Info: Aider household creation");
-								var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-								aiderHousehold.HouseholdMrMrs = HouseholdMrMrs.Auto;
-
-								var aiderAddressEntity = aiderHousehold.Address;
-								var eChAddressEntity = this.GetEchAddressEntity (businessContext, eChReportedPerson.Address);
-
-
-								var houseNumber = StringUtils.ParseNullableInt (SwissPostStreet.StripHouseNumber (eChAddressEntity.HouseNumber));
-								var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement (eChAddressEntity.HouseNumber);
-
-								if (string.IsNullOrWhiteSpace (houseNumberComplement))
-								{
-									houseNumberComplement = null;
-								}
-
-								aiderAddressEntity.AddressLine1 = eChAddressEntity.AddressLine1;
-								aiderAddressEntity.Street = eChAddressEntity.Street;
-								aiderAddressEntity.HouseNumber = houseNumber;
-								aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
-								aiderAddressEntity.Town = this.GetAiderTownEntity (businessContext, eChReportedPerson.Address);
-
-
-								//Link household to ECh Entity
-								if (existingEChReportedPerson.Adult1.IsNotNull ())
-								{
-									this.SetupAndAiderHouseholdForMember (businessContext, existingEChReportedPerson.Adult1, existingEChReportedPerson, aiderHousehold, true, false);
-								}
-								else
-								{
-									this.LogToConsole ("Warning: Adult 1 is null");
-								}
-
-								if (existingEChReportedPerson.Adult2.IsNotNull ())
-								{
-									this.SetupAndAiderHouseholdForMember (businessContext, existingEChReportedPerson.Adult2, existingEChReportedPerson, aiderHousehold, false, true);
-								}
-								
-								foreach (var child in existingEChReportedPerson.Children)
-								{
-									this.SetupAndAiderHouseholdForMember (businessContext, child, existingEChReportedPerson, aiderHousehold, false, false);
-								}
-							}
 						}
 						else
 						{
-							this.LogToConsole ("Error: EChReportedPerson not found: FAMILYKEY:{0}",eChReportedPerson.FamilyKey);
+							this.LogToConsole ("Info: Aider household creation");
+							var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+							aiderHousehold.HouseholdMrMrs = HouseholdMrMrs.Auto;
+
+							var aiderAddressEntity = aiderHousehold.Address;
+							var eChAddressEntity = this.GetEchAddressEntity (businessContext, eChReportedPerson.Address);
+
+
+							var houseNumber = StringUtils.ParseNullableInt (SwissPostStreet.StripHouseNumber (eChAddressEntity.HouseNumber));
+							var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement (eChAddressEntity.HouseNumber);
+
+							if (string.IsNullOrWhiteSpace (houseNumberComplement))
+							{
+								houseNumberComplement = null;
+							}
+
+							aiderAddressEntity.AddressLine1 = eChAddressEntity.AddressLine1;
+							aiderAddressEntity.Street = eChAddressEntity.Street;
+							aiderAddressEntity.HouseNumber = houseNumber;
+							aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
+							aiderAddressEntity.Town = this.GetAiderTownEntity (businessContext, eChReportedPerson.Address);
+
+
+							//Link household to ECh Entity
+							if (existingEChReportedPerson.Adult1.IsNotNull ())
+							{
+								this.SetupAndAiderHouseholdForMember (businessContext, existingEChReportedPerson.Adult1, existingEChReportedPerson, aiderHousehold, true, false);
+							}
+							else
+							{
+								this.LogToConsole ("Warning: Adult 1 is null");
+							}
+
+							if (existingEChReportedPerson.Adult2.IsNotNull ())
+							{
+								this.SetupAndAiderHouseholdForMember (businessContext, existingEChReportedPerson.Adult2, existingEChReportedPerson, aiderHousehold, false, true);
+							}
+								
+							foreach (var child in existingEChReportedPerson.Children)
+							{
+								this.SetupAndAiderHouseholdForMember (businessContext, child, existingEChReportedPerson, aiderHousehold, false, false);
+							}
 						}
+						
 					}
 				});
 		}

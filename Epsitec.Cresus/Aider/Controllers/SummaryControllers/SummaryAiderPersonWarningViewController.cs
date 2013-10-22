@@ -55,6 +55,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 				case WarningType.HouseholdWithoutSubscription:
 					return new SpecializedSummaryAiderPersonWarningViewController_HouseholdWithoutSubscription ();
+
+				case WarningType.EChHouseholdMissing:
+				case WarningType.MissingHousehold:
+					return new SpecializedSummaryAiderPersonWarningViewController_MissingHousehold ();
 			}
 			
 			return base.GetController ();

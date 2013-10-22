@@ -27,6 +27,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			get
 			{
 				var person = this.Entity.Person;
+				if (person.MainContact.IsNull ())
+				{
+					return true;
+				}
+
 				var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, person.MainContact.Household);
 				var refusal = AiderSubscriptionRefusalEntity.FindRefusal (this.BusinessContext, person.MainContact.Household);
 				return subscription.IsNull () && refusal.IsNull ();
