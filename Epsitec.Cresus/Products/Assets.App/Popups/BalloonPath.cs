@@ -34,13 +34,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var mode    = BalloonPath.GetAttachMode ();
 			var himself = BalloonPath.GetAttachHimself (mode);
-			var other   = BalloonPath.GetAttachOther (mode);
+			var target  = BalloonPath.GetAttachTarget (mode);
 
-			double d = Point.Distance (himself, other);
+			double d = Point.Distance (himself, target);
 
 			var bounds = BalloonPath.mainRect;
 
-			if (mode == AttachMode.None || himself.IsZero || other.IsZero || d <= 0)
+			if (mode == AttachMode.None || himself.IsZero || target.IsZero || d <= 0)
 			{
 				path.AppendRectangle (bounds);
 			}
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					h2.Y = bounds.Top;
 				}
 
-				path.MoveTo (other);
+				path.MoveTo (target);
 				path.LineTo (h1);
 				path.LineTo (bounds.BottomLeft);
 				path.LineTo (bounds.BottomRight);
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					h2.Y = bounds.Top;
 				}
 
-				path.MoveTo (other);
+				path.MoveTo (target);
 				path.LineTo (h1);
 				path.LineTo (bounds.BottomRight);
 				path.LineTo (bounds.BottomLeft);
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					h2.X = bounds.Right;
 				}
 
-				path.MoveTo (other);
+				path.MoveTo (target);
 				path.LineTo (h1);
 				path.LineTo (bounds.BottomLeft);
 				path.LineTo (bounds.TopLeft);
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					h2.X = bounds.Right;
 				}
 
-				path.MoveTo (other);
+				path.MoveTo (target);
 				path.LineTo (h1);
 				path.LineTo (bounds.TopLeft);
 				path.LineTo (bounds.BottomLeft);
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				h1.Y += queueThickness*System.Math.Sqrt (2);
 				h2.X += queueThickness*System.Math.Sqrt (2);
 
-				path.MoveTo (other);
+				path.MoveTo (target);
 				path.LineTo (h1);
 				path.LineTo (bounds.TopLeft);
 				path.LineTo (bounds.TopRight);
@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				h1.Y += queueThickness*System.Math.Sqrt (2);
 				h2.X -= queueThickness*System.Math.Sqrt (2);
 
-				path.MoveTo (other);
+				path.MoveTo (target);
 				path.LineTo (h1);
 				path.LineTo (bounds.TopRight);
 				path.LineTo (bounds.TopLeft);
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				h1.Y -= queueThickness*System.Math.Sqrt (2);
 				h2.X += queueThickness*System.Math.Sqrt (2);
 
-				path.MoveTo (other);
+				path.MoveTo (target);
 				path.LineTo (h1);
 				path.LineTo (bounds.BottomLeft);
 				path.LineTo (bounds.BottomRight);
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				h1.Y -= queueThickness*System.Math.Sqrt (2);
 				h2.X -= queueThickness*System.Math.Sqrt (2);
 
-				path.MoveTo (other);
+				path.MoveTo (target);
 				path.LineTo (h1);
 				path.LineTo (bounds.BottomRight);
 				path.LineTo (bounds.BottomLeft);
@@ -235,11 +235,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var mode    = BalloonPath.GetAttachMode ();
 			var himself = BalloonPath.GetAttachHimself (mode);
-			var other   = BalloonPath.GetAttachOther (mode);
+			var target  = BalloonPath.GetAttachTarget (mode);
 
-			double d = Point.Distance (himself, other);
+			double d = Point.Distance (himself, target);
 
-			if (mode == AttachMode.None || himself.IsZero || other.IsZero || d <= 0)
+			if (mode == AttachMode.None || himself.IsZero || target.IsZero || d <= 0)
 			{
 				return 0.0;
 			}
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static Point GetAttachHimself(AttachMode mode)
 		{
-			//	Retourne le point d'attache sur le rectangle cible.
+			//	Retourne le point d'attache sur le rectangle d'origine.
 			var pos = Point.Zero;
 
 			if (mode != AttachMode.None)
@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return pos;
 		}
 
-		private static Point GetAttachOther(AttachMode mode)
+		private static Point GetAttachTarget(AttachMode mode)
 		{
 			//	Retourne le point d'attache sur le rectangle cible.
 			var pos = Point.Zero;

@@ -294,17 +294,50 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var delta = pos - this.lastPos;
 				this.lastPos = pos;
 
-				//	Déplace tous les widgets enfants.
-				foreach (var widget in this.Children)
-				{
-					widget.Margins = new Margins (widget.Margins.Left+delta.X, 0, 0, widget.Margins.Bottom+delta.Y);
-				}
+				//	Déplace le rectangle du popup.
+				var p = this.dialogRect.BottomLeft;
 
-				//	Déplace le rectngle du popup.
 				this.dialogRect.Offset (delta);
+				this.dialogRect = this.ForceInside (this.dialogRect);
+
+				delta = this.dialogRect.BottomLeft - p;  // recalcule le delta réel
+
+				//	Déplace tous les widgets enfants.
+				if (!delta.IsZero)
+				{
+					foreach (var widget in this.Children)
+					{
+						widget.Margins = new Margins (widget.Margins.Left+delta.X, 0, 0, widget.Margins.Bottom+delta.Y);
+					}
+				}
 
 				this.Invalidate ();
 			}
+		}
+
+		private Rectangle ForceInside(Rectangle rect)
+		{
+			if (rect.Left < 0)
+			{
+				rect.Offset (-rect.Left, 0);
+			}
+
+			if (rect.Right > this.ActualWidth)
+			{
+				rect.Offset (this.ActualWidth-rect.Right, 0);
+			}
+
+			if (rect.Bottom < 0)
+			{
+				rect.Offset (0, -rect.Bottom);
+			}
+
+			if (rect.Top > this.ActualHeight)
+			{
+				rect.Offset (0, this.ActualHeight-rect.Top);
+			}
+
+			return rect;
 		}
 
 		private void MouseUp(Point pos)
