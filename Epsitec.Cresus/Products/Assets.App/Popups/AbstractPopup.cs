@@ -87,6 +87,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 			}
+
+			this.initialDistance = this.Distance;
 		}
 
 
@@ -353,14 +355,63 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			graphics.RenderSolid (ColorManager.SelectionColor);
 
 			//	Dessine le cadre jaune du popup, avec la queue.
-			graphics.AddFilledPath (BalloonPath.GetPath (this.ExternalRect, this.targetRect));
-			graphics.RenderSolid (ColorManager.SelectionColor);
+			var alpha = this.Alpha;
+
+			if (alpha == 1.0)
+			{
+				graphics.AddFilledPath (BalloonPath.GetPath (this.ExternalRect, this.targetRect, this.QueueThickness));
+				graphics.RenderSolid (ColorManager.SelectionColor);
+			}
+			else if (alpha > 0.0)
+			{
+				graphics.AddFilledPath (BalloonPath.GetPath (this.ExternalRect, this.targetRect, this.QueueThickness));
+				graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.SelectionColor));
+
+				graphics.AddFilledRectangle (this.ExternalRect);
+				graphics.RenderSolid (ColorManager.SelectionColor);
+			}
+			else
+			{
+				graphics.AddFilledRectangle (this.ExternalRect);
+				graphics.RenderSolid (ColorManager.SelectionColor);
+			}
 
 			//	Dessine le fond blanc du popup.
 			graphics.AddFilledRectangle (this.dialogRect);
 			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 		}
 
+
+		private double QueueThickness
+		{
+			get
+			{
+				var delta = this.Distance - this.initialDistance + AbstractPopup.queueLength;
+				return System.Math.Min (delta / 2.0, 10.0);
+			}
+		}
+
+		private double Alpha
+		{
+			get
+			{
+				var delta = this.Distance - this.initialDistance;
+				var factor = (delta-30.0) / 50.0;
+
+				factor = System.Math.Max (factor, 0.0);
+				factor = System.Math.Min (factor, 1.0);
+
+				return 1.0 - factor;
+			}
+		}
+
+		private double Distance
+		{
+			get
+			{
+				return BalloonPath.GetDistance (this.ExternalRect, this.targetRect);
+			}
+		}
 
 		private Rectangle ExternalRect
 		{
@@ -413,6 +464,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private Rectangle						dialogRect;
 		private Rectangle						targetRect;
 
+		private double							initialDistance;
 		private bool							isDragging;
 		private Point							lastPos;
 	}
