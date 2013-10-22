@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				for (int i=1; i<200; i++)
 				{
 					{
-						var e = new DataEvent (1, new Timestamp (start.Date.AddDays (i*3), 0), EventType.Diminution);
+						var e = new DataEvent (1, new Timestamp (start.Date.AddDays (i*3), 0), EventType.AmortissementAuto);
 						o.AddEvent (e);
 
 						decimal a1 = 3000000.0m-(i-1)*10000;
@@ -561,7 +561,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 
 				{
-					var e = new DataEvent (1, date4, EventType.Diminution);
+					var e = new DataEvent (1, date4, EventType.AmortissementExtra);
 					o.AddEvent (e);
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (5200.0m, 4600.0m)));
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (3500.0m, 2400.0m)));

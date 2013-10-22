@@ -72,7 +72,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						int r, c;
 						SummaryController.GetRowColumn (button.Name, out r, out c);
-						this.OnTileClicked (r, c);
+						var sct = this.GetTile (c, r);
+						if (sct.HasValue && !sct.Value.Readonly)
+						{
+							this.OnTileClicked (r, c);
+						}
 					};
 				}
 			}
@@ -85,12 +89,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (tile.Value.Readonly)
 				{
-					//	Rectangle gris sans hover. Il ne devrait jamais être
-					//	bleu à cause des règles des pages autorisées selon le
-					//	type de l'événement.
+					//	Rectangle gris ou bleu sans hover.
 					button.NormalColor   = ColorManager.ReadonlyFieldColor;
 					button.SelectedColor = ColorManager.EditSinglePropertyColor;
-					button.HoverColor    = ColorManager.ReadonlyFieldColor;
+					button.HoverColor    = Color.Empty;
 				}
 				else
 				{

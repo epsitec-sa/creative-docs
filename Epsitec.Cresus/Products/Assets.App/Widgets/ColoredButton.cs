@@ -106,19 +106,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private Color GetColor(bool hover)
 		{
-			if (hover)
+			if (hover && this.hoverColor.IsValid)
 			{
-				return this.HoverColor;
+				return this.hoverColor;
 			}
 			else
 			{
 				if (this.ActiveState == ActiveState.Yes)
 				{
-					return this.SelectedColor;
+					return this.selectedColor;
 				}
 				else
 				{
-					return this.NormalColor;
+					return this.normalColor;
 				}
 			}
 		}

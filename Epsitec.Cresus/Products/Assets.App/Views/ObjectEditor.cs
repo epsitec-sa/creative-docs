@@ -228,6 +228,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				switch (type)
 				{
 					case EventType.AmortissementAuto:
+						break;
+
 					case EventType.AmortissementExtra:
 					case EventType.Augmentation:
 					case EventType.Diminution:
@@ -241,7 +243,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						yield return EditionObjectPageType.Compta;
 						break;
 
-					default:
+					default:  // accès à toutes les pages
 						yield return EditionObjectPageType.General;
 						yield return EditionObjectPageType.Values;
 						yield return EditionObjectPageType.Amortissements;

@@ -298,7 +298,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var p = this.dialogRect.BottomLeft;
 
 				this.dialogRect.Offset (delta);
-				this.dialogRect = this.ForceInside (this.dialogRect);
+
+				var master = this.ActualBounds;
+				master.Deflate (AbstractPopup.dialogThickness);
+				this.dialogRect = AbstractPopup.ForceInside (this.dialogRect, master);
 
 				delta = this.dialogRect.BottomLeft - p;  // recalcule le delta réel
 
@@ -315,39 +318,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private Rectangle ForceInside(Rectangle rect)
-		{
-			if (rect.Left < 0)
-			{
-				rect.Offset (-rect.Left, 0);
-			}
-
-			if (rect.Right > this.ActualWidth)
-			{
-				rect.Offset (this.ActualWidth-rect.Right, 0);
-			}
-
-			if (rect.Bottom < 0)
-			{
-				rect.Offset (0, -rect.Bottom);
-			}
-
-			if (rect.Top > this.ActualHeight)
-			{
-				rect.Offset (0, this.ActualHeight-rect.Top);
-			}
-
-			return rect;
-		}
-
 		private void MouseUp(Point pos)
 		{
-			this.isDragging = false;
-
-			//	Un clic de la souris hors du popup le ferme.
-			if (!this.ExternalRect.Contains (pos))
+			if (this.isDragging)
 			{
-				this.ClosePopup ();
+				this.isDragging = false;
+			}
+			else
+			{
+				//	Un clic de la souris hors du popup le ferme.
+				if (!this.ExternalRect.Contains (pos))
+				{
+					this.ClosePopup ();
+				}
 			}
 		}
 
@@ -473,6 +456,32 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				parent = parent.Parent;
 			}
+		}
+
+
+		private static Rectangle ForceInside(Rectangle rect, Rectangle master)
+		{
+			if (rect.Left < master.Left)
+			{
+				rect.Offset (master.Left-rect.Left, 0);
+			}
+
+			if (rect.Right > master.Right)
+			{
+				rect.Offset (master.Right-rect.Right, 0);
+			}
+
+			if (rect.Bottom < master.Bottom)
+			{
+				rect.Offset (0, master.Bottom-rect.Bottom);
+			}
+
+			if (rect.Top > master.Top)
+			{
+				rect.Offset (0, master.Top-rect.Top);
+			}
+
+			return rect;
 		}
 
 
