@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.cells.Clear ();
 
-			if ((mode & TimelineMode.Extended) != 0)
+			if ((mode & TimelineMode.Expanded) != 0)
 			{
 				//	Crée des cellules pour tous les jours compris entre 'start' et 'end'.
 				for (int i = 0; i < 365*100; i++)

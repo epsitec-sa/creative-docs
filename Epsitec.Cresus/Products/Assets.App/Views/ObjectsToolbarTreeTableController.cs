@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			: base (accessor)
 		{
 			this.title = "Objets d'immobilisation";
+			this.hasTreeOperations = true;
 		}
 
 

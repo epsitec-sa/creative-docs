@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		None,
 		Compacted,	// > content
-		Extended,	// v content
+		Expanded,	// v content
 		Final,		// content
 	};
 }

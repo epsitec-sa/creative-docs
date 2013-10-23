@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor = accessor;
 
 			this.timelineData = new TimelineData (this.accessor);
-			this.timelineMode = TimelineMode.Extended;
+			this.timelineMode = TimelineMode.Expanded;
 		}
 
 		public void CreateUI(Widget parent)
@@ -438,7 +438,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.frameBox.PreferredHeight = this.RequiredHeight;
 
-			this.controller.RelativeWidth = this.IsExtended ? 1.0 : 2.0;
+			this.controller.RelativeWidth = this.IsExpanded ? 1.0 : 2.0;
 			this.controller.ShowLabels = this.IsShowLabels;
 			this.controller.SetRows (this.TimelineRows);
 
@@ -492,7 +492,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					list.Add (new TimelineRowDescription (TimelineRowType.DaysOfWeek, ""));
 				}
 
-				if (this.IsExtended)
+				if (this.IsExpanded)
 				{
 					list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jour"));
 				}
@@ -506,7 +506,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					list.Add (new TimelineRowDescription (TimelineRowType.WeekOfYear, "Semaine"));
 				}
 
-				if (this.IsExtended)
+				if (this.IsExpanded)
 				{
 					list.Add (new TimelineRowDescription (TimelineRowType.Months, "Mois"));
 				}
@@ -607,7 +607,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.controller.SetRowDayOfWeekCells (line++, dates.ToArray ());
 			}
 
-			if (this.IsExtended)
+			if (this.IsExpanded)
 			{
 				this.controller.SetRowDayCells (line++, dates.ToArray ());
 			}
@@ -621,7 +621,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.controller.SetRowWeekOfYearCells (line++, dates.ToArray ());
 			}
 
-			if (this.IsExtended)
+			if (this.IsExpanded)
 			{
 				this.controller.SetRowMonthCells (line++, dates.ToArray ());
 			}
@@ -846,11 +846,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private bool IsExtended
+		private bool IsExpanded
 		{
 			get
 			{
-				return (this.timelineMode & TimelineMode.Extended) != 0;
+				return (this.timelineMode & TimelineMode.Expanded) != 0;
 			}
 		}
 

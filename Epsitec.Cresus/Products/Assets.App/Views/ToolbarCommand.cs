@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Next,
 		Last,
 		Now,
+		CompactAll,
+		ExpandAll,
 		Edit,
 		WeeksOfYear,
 		DaysOfWeek,

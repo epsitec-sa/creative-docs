@@ -217,7 +217,7 @@
     <EmbeddedResource Include="Images\TreeTable.Delete.icon" />
     <EmbeddedResource Include="Images\TreeTable.Edit.icon" />
     <EmbeddedResource Include="Images\TreeTable.New.icon" />
-    <EmbeddedResource Include="Images\Timeline.Extended.icon" />
+    <EmbeddedResource Include="Images\Timeline.Expanded.icon" />
     <EmbeddedResource Include="Images\Timeline.Compacted.icon" />
     <EmbeddedResource Include="Images\Timeline.First.icon" />
     <EmbeddedResource Include="Images\Timeline.Deselect.icon" />

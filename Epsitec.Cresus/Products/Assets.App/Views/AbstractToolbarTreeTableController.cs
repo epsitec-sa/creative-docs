@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.toolbar = new TreeTableToolbar ();
 			this.toolbar.CreateUI (parent);
+			this.toolbar.HasTreeOperations = this.hasTreeOperations;
 
 			this.CreateTreeTable (parent);
 
@@ -51,6 +52,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case ToolbarCommand.Next:
 						this.OnNext ();
+						break;
+
+					case ToolbarCommand.CompactAll:
+						this.OnCompactAll ();
+						break;
+
+					case ToolbarCommand.ExpandAll:
+						this.OnExpandAll ();
 						break;
 
 					case ToolbarCommand.New:
@@ -185,8 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
 			{
-				this.SelectedRow = this.controller.TopVisibleRow + row;
-				this.OnCompactExpand (this.SelectedRow);
+				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
 			};
 		}
 
@@ -235,26 +243,127 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void OnCompactExpand(int row)
+		private void OnCompactOrExpand(int row)
 		{
+			//	Etend ou compacte une ligne (inverse son mode actuel).
+			var guid = this.SelectedGuid;
+
 			int i = this.nodeIndexes[row];
 			var node = this.nodes[i];
 
 			if (node.Type == TreeTableTreeType.Compacted)
 			{
-				this.nodes[i] = new Node (node.Guid, node.Level, TreeTableTreeType.Extended);
+				this.nodes[i] = new Node (node.Guid, node.Level, TreeTableTreeType.Expanded);
 			}
-			else if (node.Type == TreeTableTreeType.Extended)
+			else if (node.Type == TreeTableTreeType.Expanded)
 			{
 				this.nodes[i] = new Node (node.Guid, node.Level, TreeTableTreeType.Compacted);
 			}
 
 			this.UpdateNodeIndexes ();
 			this.UpdateController ();
+			this.UpdateToolbar ();
+
+			this.SelectedGuid = guid;
+		}
+
+		private void OnCompactAll()
+		{
+			//	Compacte toutes les lignes.
+			var guid = this.SelectedGuid;
+
+			for (int i=0; i<this.nodes.Count; i++)
+			{
+				var node = this.nodes[i];
+
+				if (node.Type == TreeTableTreeType.Expanded)
+				{
+					this.nodes[i] = new Node (node.Guid, node.Level, TreeTableTreeType.Compacted);
+				}
+			}
+
+			this.UpdateNodeIndexes ();
+			this.UpdateController ();
+			this.UpdateToolbar ();
+
+			this.SelectedGuid = guid;
+		}
+
+		private void OnExpandAll()
+		{
+			//	Etend toutes les lignes.
+			var guid = this.SelectedGuid;
+
+			for (int i=0; i<this.nodes.Count; i++)
+			{
+				var node = this.nodes[i];
+
+				if (node.Type == TreeTableTreeType.Compacted)
+				{
+					this.nodes[i] = new Node (node.Guid, node.Level, TreeTableTreeType.Expanded);
+				}
+			}
+
+			this.UpdateNodeIndexes ();
+			this.UpdateController ();
+			this.UpdateToolbar ();
+
+			this.SelectedGuid = guid;
+		}
+
+		private Guid SelectedGuid
+		{
+			//	Retourne le Guid de l'objet actuellement sélectionné.
+			get
+			{
+				if (this.selectedRow != -1 && this.selectedRow < this.nodeIndexes.Count)
+				{
+					return this.nodes[this.nodeIndexes[this.selectedRow]].Guid;
+				}
+				else
+				{
+					return Guid.Empty;
+				}
+			}
+			//	Sélectionne l'objet ayant un Guid donné. Si la ligne correspondante
+			//	est cachée, on est assez malin pour sélectionner la prochaine ligne
+			//	visible, vers le haut.
+			set
+			{
+				int sel = -1;
+
+				if (!value.IsEmpty)
+				{
+					var i = this.nodes.FindIndex (x => x.Guid == value);
+					if (i != -1)
+					{
+						sel = this.nodeIndexes.Where (x => x <= i).Count () - 1;
+					}
+				}
+
+				this.SelectedRow = sel;
+			}
+		}
+
+		private bool IsAllCompacted
+		{
+			get
+			{
+				return !this.nodes.Where (x => x.Type == TreeTableTreeType.Expanded).Any ();
+			}
+		}
+
+		private bool IsAllExpanded
+		{
+			get
+			{
+				return !this.nodes.Where (x => x.Type == TreeTableTreeType.Compacted).Any ();
+			}
 		}
 
 		protected void UpdateData()
 		{
+			//	Met à jour toutes les données en mode étendu.
 			this.nodes.Clear ();
 
 			int count = this.DataCount;
@@ -264,6 +373,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				int currentLevel;
 				this.GetData(i, out currentGuid, out currentLevel);
 
+				//	Par défaut, on considére que la ligne ne peut être ni étendue
+				//	ni compactée.
 				var type = TreeTableTreeType.Final;
 
 				if (i < count-2)
@@ -272,9 +383,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					int nextLevel;
 					this.GetData (i+1, out nextGuid, out nextLevel);
 
+					//	Si le noeud suivant a un niveau plus élevé, il s'agit d'une
+					//	ligne pouvant être étendue ou compactée.
 					if (nextLevel > currentLevel)
 					{
-						type = TreeTableTreeType.Extended;
+						type = TreeTableTreeType.Expanded;
 					}
 				}
 
@@ -287,6 +400,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected virtual int DataCount
 		{
+			//	Retourne le nombre total de données disponibles.
 			get
 			{
 				return 0;
@@ -295,12 +409,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected virtual void GetData(int row, out Guid guid, out int level)
 		{
+			//	Retourne une donnée.
 			guid = Guid.Empty;
 			level = 0;
 		}
 
 		private void UpdateNodeIndexes()
 		{
+			//	Met à jour l'accès aux noeuds (nodeIndexes) en sautant les
+			//	noeuds cachés.
 			this.nodeIndexes.Clear ();
 
 			bool skip = false;
@@ -334,6 +451,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected int NodesCount
 		{
+			//	Retourne le nombre de noeuds visibles.
 			get
 			{
 				return this.nodeIndexes.Count;
@@ -342,11 +460,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected Node GetNode(int i)
 		{
+			//	Retourne un noeud visible.
 			return this.nodes[this.nodeIndexes[i]];
 		}
 
 		protected struct Node
 		{
+			//	Noeud correspondant à une ligne.
+			//	Si Type == TreeTableTreeType.Final, il s'agit d'une ligne ne pouvant
+			//	être ni compactée ni étendue (feuille de l'arbre).
+			//	Si Type == TreeTableTreeType.Compacted ou TreeTableTreeType.Expanded,
+			//	il s'agit d'une ligne avec un petit bouton triangulaire.
 			public Node(Guid guid, int level, TreeTableTreeType type)
 			{
 				this.Guid  = guid;
@@ -368,6 +492,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);
 			this.UpdateCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
 			this.UpdateCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
+
+			this.UpdateCommand (ToolbarCommand.CompactAll, !this.IsAllCompacted);
+			this.UpdateCommand (ToolbarCommand.ExpandAll,  !this.IsAllExpanded);
 
 			this.UpdateCommand (ToolbarCommand.New,      true);
 			this.UpdateCommand (ToolbarCommand.Delete,   row != -1);
@@ -476,6 +603,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly List<Node>				nodes;
 		private readonly List<int>				nodeIndexes;
 
+		protected bool							hasTreeOperations;
 		protected string						title;
 		protected TopTitle						topTitle;
 		protected TreeTableToolbar				toolbar;

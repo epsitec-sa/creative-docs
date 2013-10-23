@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public enum TimelineMode
 	{
 		Compacted	= 0x00000001,
-		Extended	= 0x00000002,
+		Expanded	= 0x00000002,
 
 		DaysOfWeek	= 0x00000100,
 		WeeksOfYear	= 0x00000200,

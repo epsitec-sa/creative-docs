@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				foreach (var cell in this.cells)
 				{
 					if (cell.Type == TreeTableTreeType.Compacted ||
-						cell.Type == TreeTableTreeType.Extended)
+						cell.Type == TreeTableTreeType.Expanded)
 					{
 						var rect = this.GetGlyphRectangle (y, cell.Level);
 

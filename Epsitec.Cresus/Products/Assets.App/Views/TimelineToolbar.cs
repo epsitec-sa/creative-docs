@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonLabels      = this.CreateModeButton (toolbar, TimelineMode.Labels,      "Timeline.Labels",      "Affiche les noms des lignes");
 								   															   
 			this.buttonCompacted   = this.CreateModeButton (toolbar, TimelineMode.Compacted,   "Timeline.Compacted",   "Affichage compact");
-			this.buttonExpended    = this.CreateModeButton (toolbar, TimelineMode.Extended,    "Timeline.Extended",    "Affichage étendu");
+			this.buttonExpended    = this.CreateModeButton (toolbar, TimelineMode.Expanded,    "Timeline.Expanded",    "Affichage étendu");
 
 			this.buttonWeeksOfYear = this.CreateModeButton (toolbar, TimelineMode.WeeksOfYear, "Timeline.WeeksOfYear", "Affiche les numéros des semaines");
 			this.buttonDaysOfWeek  = this.CreateModeButton (toolbar, TimelineMode.DaysOfWeek,  "Timeline.DaysOfWeek",  "Affiche les jours de la semaine");
@@ -117,11 +117,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (mode == Views.TimelineMode.Compacted)
 			{
 				this.timelineMode |=  Views.TimelineMode.Compacted;
-				this.timelineMode &= ~Views.TimelineMode.Extended;
+				this.timelineMode &= ~Views.TimelineMode.Expanded;
 			}
-			else if (mode == Views.TimelineMode.Extended)
+			else if (mode == Views.TimelineMode.Expanded)
 			{
-				this.timelineMode |=  Views.TimelineMode.Extended;
+				this.timelineMode |=  Views.TimelineMode.Expanded;
 				this.timelineMode &= ~Views.TimelineMode.Compacted;
 			}
 			else
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.SetActiveState (this.buttonLabels,      (this.timelineMode & TimelineMode.Labels     ) != 0);
 			this.SetActiveState (this.buttonCompacted,   (this.timelineMode & TimelineMode.Compacted  ) != 0);
-			this.SetActiveState (this.buttonExpended,    (this.timelineMode & TimelineMode.Extended   ) != 0);
+			this.SetActiveState (this.buttonExpended,    (this.timelineMode & TimelineMode.Expanded   ) != 0);
 			this.SetActiveState (this.buttonWeeksOfYear, (this.timelineMode & TimelineMode.WeeksOfYear) != 0);
 			this.SetActiveState (this.buttonDaysOfWeek,  (this.timelineMode & TimelineMode.DaysOfWeek ) != 0);
 			this.SetActiveState (this.buttonGraph,       (this.timelineMode & TimelineMode.Graph      ) != 0);
