@@ -4,14 +4,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Server.NaiveEngine
+namespace Epsitec.Cresus.Assets.App.Views
 {
-	public enum FieldType
+	public enum DecimalFormat
 	{
-		String,
-		Decimal,
-		ComputedAmount,
-		Int,
-		Date,
+		Unknown,
+		Real,
+		Amount,
+		Rate,
 	}
 }

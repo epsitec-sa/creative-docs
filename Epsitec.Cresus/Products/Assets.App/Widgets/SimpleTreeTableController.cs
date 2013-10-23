@@ -102,6 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellString);
 					}
 					else if (description.Type == TreeTableColumnType.Decimal ||
+							 description.Type == TreeTableColumnType.Amount  ||
 							 description.Type == TreeTableColumnType.Rate)
 					{
 						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellDecimal);
@@ -109,6 +110,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					else if (description.Type == TreeTableColumnType.ComputedAmount)
 					{
 						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellComputedAmount);
+					}
+					else if (description.Type == TreeTableColumnType.Int)
+					{
+						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellInt);
+					}
+					else if (description.Type == TreeTableColumnType.Date)
+					{
+						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellDate);
 					}
 					else
 					{
@@ -161,6 +170,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					list.Add (new List<TreeTableCellString> ());
 				}
 				else if (description.Type == TreeTableColumnType.Decimal ||
+						 description.Type == TreeTableColumnType.Amount  ||
 						 description.Type == TreeTableColumnType.Rate)
 				{
 					list.Add (new List<TreeTableCellDecimal> ());
@@ -168,6 +178,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				else if (description.Type == TreeTableColumnType.ComputedAmount)
 				{
 					list.Add (new List<TreeTableCellComputedAmount> ());
+				}
+				else if (description.Type == TreeTableColumnType.Int)
+				{
+					list.Add (new List<TreeTableCellInt> ());
+				}
+				else if (description.Type == TreeTableColumnType.Date)
+				{
+					list.Add (new List<TreeTableCellDate> ());
 				}
 			}
 
@@ -195,12 +213,29 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						l.Add (s);
 					}
 					else if (description.Type == TreeTableColumnType.Decimal ||
+							 description.Type == TreeTableColumnType.Amount  ||
 							 description.Type == TreeTableColumnType.Rate)
 					{
 						var x = (content as SimpleTreeTableCellDecimal).Value;
 						var s = new TreeTableCellDecimal (true, x, isSelected: (i == selection));
 
 						var l = list[c] as List<TreeTableCellDecimal>;
+						l.Add (s);
+					}
+					else if (description.Type == TreeTableColumnType.Date)
+					{
+						var x = (content as SimpleTreeTableCellDate).Value;
+						var s = new TreeTableCellDate (true, x, isSelected: (i == selection));
+
+						var l = list[c] as List<TreeTableCellDate>;
+						l.Add (s);
+					}
+					else if (description.Type == TreeTableColumnType.Int)
+					{
+						var x = (content as SimpleTreeTableCellInt).Value;
+						var s = new TreeTableCellInt (true, x, isSelected: (i == selection));
+
+						var l = list[c] as List<TreeTableCellInt>;
 						l.Add (s);
 					}
 					else if (description.Type == TreeTableColumnType.ComputedAmount)
@@ -225,9 +260,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.treeTable.SetColumnCells (c, l.ToArray ());
 				}
 				else if (description.Type == TreeTableColumnType.Decimal ||
+						 description.Type == TreeTableColumnType.Amount  ||
 						 description.Type == TreeTableColumnType.Rate)
 				{
 					var l = list[c] as List<TreeTableCellDecimal>;
+					this.treeTable.SetColumnCells (c, l.ToArray ());
+				}
+				else if (description.Type == TreeTableColumnType.Date)
+				{
+					var l = list[c] as List<TreeTableCellDate>;
+					this.treeTable.SetColumnCells (c, l.ToArray ());
+				}
+				else if (description.Type == TreeTableColumnType.Int)
+				{
+					var l = list[c] as List<TreeTableCellInt>;
 					this.treeTable.SetColumnCells (c, l.ToArray ());
 				}
 				else if (description.Type == TreeTableColumnType.ComputedAmount)

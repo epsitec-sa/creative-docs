@@ -13,14 +13,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// <summary>
 	/// Colonne de TreeTable affichant des montants alignés à droite.
 	/// </summary>
-	public class TreeTableColumnDecimal : AbstractTreeTableColumn
+	public class TreeTableColumnInt : AbstractTreeTableColumn
 	{
-		public TreeTableColumnDecimal(DecimalFormat format)
-		{
-			this.format = format;
-		}
-
-		public void SetCells(TreeTableCellDecimal[] cells)
+		public void SetCells(TreeTableCellInt[] cells)
 		{
 			this.cells = cells;
 			this.Invalidate ();
@@ -47,21 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					if (cell.Value.HasValue)
 					{
 						var textRect = this.GetContentDeflateRectangle (rect);
-
-						string text;
-
-						if (this.format == DecimalFormat.Rate)
-						{
-							text = Helpers.Converters.RateToString (cell.Value);
-						}
-						else if (this.format == DecimalFormat.Amount)
-						{
-							text = Helpers.Converters.AmountToString (cell.Value);
-						}
-						else
-						{
-							text = Helpers.Converters.DecimalToString (cell.Value);
-						}
+						string text = Helpers.Converters.IntToString (cell.Value);
 
 						this.PaintText (graphics, textRect, text);
 					}
@@ -83,7 +64,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private readonly DecimalFormat format;
-		private TreeTableCellDecimal[] cells;
+		private TreeTableCellInt[] cells;
 	}
 }

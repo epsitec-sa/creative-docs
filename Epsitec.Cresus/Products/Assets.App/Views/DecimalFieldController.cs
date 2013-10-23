@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class DecimalFieldController : AbstractFieldController
 	{
-		public bool								IsRate;
+		public DecimalFormat					DecimalFormat;
 
 		public decimal?							Value
 		{
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent          = this.frameBox,
 				Dock            = DockStyle.Left,
-				PreferredWidth  = this.IsRate ? 50 : 90,
+				PreferredWidth  = this.Width,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Margins         = new Margins (0, 10, 0, 0),
 				TabIndex        = this.TabIndex,
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredWidth   = 50,
 				PreferredHeight  = AbstractFieldController.lineHeight - 1,
 				Margins          = new Margins (0, 10, 1, 0),
-				Text             = this.IsRate ? "" : "CHF",
+				Text             = this.Unit,
 				ContentAlignment = ContentAlignment.TopLeft,
 			};
 
@@ -75,27 +75,67 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+
+		private int Width
+		{
+			get
+			{
+				switch (this.DecimalFormat)
+				{
+					case DecimalFormat.Rate:
+						return 50;
+
+					default:
+						return 90;
+				}
+			}
+		}
+
+		private string Unit
+		{
+			get
+			{
+				switch (this.DecimalFormat)
+				{
+					case DecimalFormat.Amount:
+						return "CHF";
+
+					default:
+						return "";
+				}
+			}
+		}
+
+
 		private string ConvDecimalToString(decimal? value)
 		{
-			if (this.IsRate)
+			if (this.DecimalFormat == Views.DecimalFormat.Rate)
 			{
 				return Helpers.Converters.RateToString (value);
 			}
-			else
+			else if (this.DecimalFormat == Views.DecimalFormat.Amount)
 			{
 				return Helpers.Converters.AmountToString (value);
+			}
+			else
+			{
+				return Helpers.Converters.DecimalToString (value);
 			}
 		}
 
 		private decimal? ConvStringToDecimal(string text)
 		{
-			if (this.IsRate)
+			if (this.DecimalFormat == Views.DecimalFormat.Rate)
 			{
 				return Helpers.Converters.ParseRate (text);
 			}
-			else
+			else if (this.DecimalFormat == Views.DecimalFormat.Amount)
 			{
 				return Helpers.Converters.ParseAmount (text);
+			}
+			else
+			{
+				return Helpers.Converters.ParseDecimal (text);
 			}
 		}
 

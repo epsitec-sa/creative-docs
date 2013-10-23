@@ -97,6 +97,9 @@
     <Compile Include="Views\AbstractObjectEditorPage.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\BusinessLogic.cs" />
+    <Compile Include="Views\IntFieldController.cs" />
+    <Compile Include="Views\Format.cs" />
+    <Compile Include="Views\DecimalFormat.cs" />
     <Compile Include="Views\EventsToolbarTreeTableController.cs" />
     <Compile Include="Views\ObjectsToolbarTreeTableController.cs" />
     <Compile Include="Views\ObjectsView.cs" />
@@ -125,6 +128,12 @@
     <Compile Include="Views\ToolbarCommand.cs" />
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
+    <Compile Include="Widgets\TreeTableColumnInt.cs" />
+    <Compile Include="Widgets\TreeTableCellInt.cs" />
+    <Compile Include="Widgets\SimpleTreeTableCellInt.cs" />
+    <Compile Include="Widgets\TreeTableCellDate.cs" />
+    <Compile Include="Widgets\TreeTableColumnDate.cs" />
+    <Compile Include="Widgets\SimpleTreeTableCellDate.cs" />
     <Compile Include="Widgets\SimpleTreeTableCellComputedAmount.cs" />
     <Compile Include="Widgets\TreeTableCellComputedAmount.cs" />
     <Compile Include="Widgets\TreeTableColumnComputedAmount.cs" />

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
@@ -14,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.accessor = accessor;
 
+			this.objectField = (ObjectField) field;
 			this.fieldType = this.accessor.GetFieldType ((ObjectField) field);
 
 			this.content    = new List<List<AbstractSimpleTreeTableCell>> ();
@@ -77,14 +79,29 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, HistoryAccessor.DateColumnWidth, "Date"));
 
-				if (this.fieldType == FieldType.Amount ||
-					this.fieldType == FieldType.Int)
+				if (this.fieldType == FieldType.Decimal)
 				{
-					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, HistoryAccessor.ValueColumnWidth, "Valeur"));
+					var format = Format.GetFieldFormat (this.objectField);
+					if (format == DecimalFormat.Rate)
+					{
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, HistoryAccessor.ValueColumnWidth, "Valeur"));
+					}
+					else if (format == DecimalFormat.Amount)
+					{
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, HistoryAccessor.ValueColumnWidth, "Valeur"));
+					}
+					else
+					{
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, HistoryAccessor.ValueColumnWidth, "Valeur"));
+					}
 				}
-				else if (this.fieldType == FieldType.Rate)
+				else if (this.fieldType == FieldType.Date)
 				{
-					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, HistoryAccessor.ValueColumnWidth, "Valeur"));
+					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date, HistoryAccessor.ValueColumnWidth, "Valeur"));
+				}
+				else if (this.fieldType == FieldType.Int)
+				{
+					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Int, HistoryAccessor.ValueColumnWidth, "Valeur"));
 				}
 				else if (this.fieldType == FieldType.ComputedAmount)
 				{
@@ -146,17 +163,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private AbstractSimpleTreeTableCell GetCell(IEnumerable<AbstractDataProperty> properties, int field)
 		{
-			if (this.fieldType == FieldType.Amount ||
-				this.fieldType == FieldType.Int    ||
-				this.fieldType == FieldType.Rate)
+			if (this.fieldType == FieldType.Decimal)
 			{
 				var value = DataAccessor.GetDecimalProperty (properties, field);
-				return new SimpleTreeTableCellDecimal (value);
+				return new SimpleTreeTableCellDecimal (value, Format.GetFieldFormat ((ObjectField) field));
 			}
-			if (this.fieldType == FieldType.ComputedAmount)
+			else if (this.fieldType == FieldType.Int)
+			{
+				var value = DataAccessor.GetIntProperty (properties, field);
+				return new SimpleTreeTableCellInt (value);
+			}
+			else if (this.fieldType == FieldType.ComputedAmount)
 			{
 				var value = DataAccessor.GetComputedAmountProperty (properties, field);
 				return new SimpleTreeTableCellComputedAmount (value);
+			}
+			else if (this.fieldType == FieldType.Date)
+			{
+				var value = DataAccessor.GetDateProperty (properties, field);
+				return new SimpleTreeTableCellDate (value);
 			}
 			else
 			{
@@ -188,6 +213,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int ValueColumnWidth = 150;
 
 		private readonly DataAccessor								accessor;
+		private readonly ObjectField								objectField;
 		private readonly FieldType									fieldType;
 		private readonly List<List<AbstractSimpleTreeTableCell>>	content;
 		private readonly List<Timestamp>							timestamps;

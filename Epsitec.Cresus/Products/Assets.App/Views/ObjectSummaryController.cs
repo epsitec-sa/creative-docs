@@ -149,21 +149,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			switch (this.accessor.GetFieldType ((ObjectField) field.Value))
 			{
-				case FieldType.Amount:
+				case FieldType.Decimal:
 					var d = DataAccessor.GetDecimalProperty (this.properties, field.Value);
 					if (d.HasValue)
 					{
-						text = Helpers.Converters.AmountToString (d);
-						alignment = ContentAlignment.MiddleRight;
-					}
-					break;
-
-				case FieldType.Rate:
-					var p = DataAccessor.GetDecimalProperty (this.properties, field.Value);
-					if (p.HasValue)
-					{
-						text = Helpers.Converters.RateToString (p);
-						alignment = ContentAlignment.MiddleRight;
+						var format = Format.GetFieldFormat ((ObjectField) field.Value);
+						if (format == DecimalFormat.Rate)
+						{
+							text = Helpers.Converters.RateToString (d);
+							alignment = ContentAlignment.MiddleRight;
+						}
+						else if (format == DecimalFormat.Amount)
+						{
+							text = Helpers.Converters.AmountToString (d);
+							alignment = ContentAlignment.MiddleRight;
+						}
+						else
+						{
+							text = Helpers.Converters.DecimalToString (d);
+							alignment = ContentAlignment.MiddleRight;
+						}
 					}
 					break;
 
@@ -182,6 +187,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						text = Helpers.Converters.AmountToString (ca.Value.FinalAmount);
 						alignment = ContentAlignment.MiddleRight;
+					}
+					break;
+
+				case FieldType.Date:
+					var da = DataAccessor.GetDateProperty (this.properties, field.Value);
+					if (da.HasValue)
+					{
+						text = Helpers.Converters.DateToString (da.Value);
+						alignment = ContentAlignment.MiddleLeft;
 					}
 					break;
 

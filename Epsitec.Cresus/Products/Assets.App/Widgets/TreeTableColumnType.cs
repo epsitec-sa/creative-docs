@@ -9,6 +9,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		String,
 		Decimal,
 		Rate,
+		Amount,
 		ComputedAmount,
+		Int,
+		Date,
 	};
 }

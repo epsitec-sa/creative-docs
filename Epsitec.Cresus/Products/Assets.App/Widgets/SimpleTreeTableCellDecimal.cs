@@ -3,16 +3,19 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.Views;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public class SimpleTreeTableCellDecimal : AbstractSimpleTreeTableCell
 	{
-		public SimpleTreeTableCellDecimal(decimal? value)
+		public SimpleTreeTableCellDecimal(decimal? value, DecimalFormat format = DecimalFormat.Real)
 		{
-			this.Value = value;
+			this.Value  = value;
+			this.Format = format;
 		}
 
-		public readonly decimal? Value;
+		public readonly decimal?				Value;
+		public readonly DecimalFormat			Format;
 	}
 }

@@ -271,11 +271,13 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				case ObjectField.Valeur3:
 					return FieldType.ComputedAmount;
 
-				case ObjectField.ValeurRésiduelle:
-					return FieldType.Amount;
-
 				case ObjectField.TauxAmortissement:
-					return FieldType.Rate;
+				case ObjectField.ValeurRésiduelle:
+					return FieldType.Decimal;
+
+				case ObjectField.DateAmortissement1:
+				case ObjectField.DateAmortissement2:
+					return FieldType.Date;
 
 				default:
 					return FieldType.String;
@@ -375,6 +377,21 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			if (properties != null)
 			{
 				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataDecimalProperty;
+
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
+
+			return null;
+		}
+
+		public static System.DateTime? GetDateProperty(IEnumerable<AbstractDataProperty> properties, int id)
+		{
+			if (properties != null)
+			{
+				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataDateProperty;
 
 				if (p != null)
 				{

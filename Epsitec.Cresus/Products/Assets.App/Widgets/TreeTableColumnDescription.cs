@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.Views;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -54,15 +55,27 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 
 				case TreeTableColumnType.Decimal:
-					column = new TreeTableColumnDecimal (isRate: false);
+					column = new TreeTableColumnDecimal (DecimalFormat.Real);
 					break;
 
 				case TreeTableColumnType.Rate:
-					column = new TreeTableColumnDecimal (isRate: true);
+					column = new TreeTableColumnDecimal (DecimalFormat.Rate);
+					break;
+
+				case TreeTableColumnType.Amount:
+					column = new TreeTableColumnDecimal (DecimalFormat.Amount);
 					break;
 
 				case TreeTableColumnType.ComputedAmount:
 					column = new TreeTableColumnComputedAmount ();
+					break;
+
+				case TreeTableColumnType.Int:
+					column = new TreeTableColumnInt ();
+					break;
+
+				case TreeTableColumnType.Date:
+					column = new TreeTableColumnDate ();
 					break;
 			}
 

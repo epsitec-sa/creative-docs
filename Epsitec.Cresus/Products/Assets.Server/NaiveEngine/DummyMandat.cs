@@ -591,7 +591,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		private static void AddAmortissement1(DataEvent e)
 		{
 			e.Properties.Add (new DataStringProperty  ((int) ObjectField.NomCatégorie,           "Immobilier"));
-			e.Properties.Add (new DataStringProperty  ((int) ObjectField.DateAmortissement1,     "01.01.2014"));
+			e.Properties.Add (new DataDateProperty    ((int) ObjectField.DateAmortissement1,     new System.DateTime (2014, 1, 1)));
 			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.TauxAmortissement,      0.035m));
 			e.Properties.Add (new DataStringProperty  ((int) ObjectField.TypeAmortissement,      "Dégressif"));
 			e.Properties.Add (new DataIntProperty     ((int) ObjectField.FréquenceAmortissement, 12));
@@ -601,8 +601,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		private static void AddAmortissement2(DataEvent e)
 		{
 			e.Properties.Add (new DataStringProperty  ((int) ObjectField.NomCatégorie,           "Véhicule"));
-			e.Properties.Add (new DataStringProperty  ((int) ObjectField.DateAmortissement1,     "01.11.2013"));
-			e.Properties.Add (new DataStringProperty  ((int) ObjectField.DateAmortissement2,     "01.01.2013"));
+			e.Properties.Add (new DataDateProperty    ((int) ObjectField.DateAmortissement1,     new System.DateTime (2013, 11, 1)));
+			e.Properties.Add (new DataDateProperty    ((int) ObjectField.DateAmortissement2,     new System.DateTime (2013, 1, 1)));
 			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.TauxAmortissement,      0.08m));
 			e.Properties.Add (new DataStringProperty  ((int) ObjectField.TypeAmortissement,      "Linéaire"));
 			e.Properties.Add (new DataIntProperty     ((int) ObjectField.FréquenceAmortissement, 3));

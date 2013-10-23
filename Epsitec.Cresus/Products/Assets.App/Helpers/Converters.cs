@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			return null;
 		}
 
-		public static string DecimalToString(decimal? value, int? fracCount)
+		public static string DecimalToString(decimal? value, int? fracCount = null)
 		{
 			//	Conversion d'un nombre réel en chaîne.
 			if (value.HasValue)

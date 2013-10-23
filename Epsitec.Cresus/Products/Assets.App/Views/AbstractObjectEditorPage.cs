@@ -78,14 +78,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		protected void CreateDecimalController(Widget parent, ObjectField field, bool isRate = false)
+		protected void CreateDecimalController(Widget parent, ObjectField field, DecimalFormat format)
 		{
 			var controller = new DecimalFieldController
 			{
 				Label         = StaticDescriptions.GetObjectFieldDescription (field),
 				Value         = DataAccessor.GetDecimalProperty (this.properties, (int) field),
 				PropertyState = this.GetPropertyState (field),
-				IsRate        = isRate,
+				DecimalFormat = format,
 				TabIndex      = this.tabIndex++,
 			};
 
@@ -107,6 +107,50 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Label         = StaticDescriptions.GetObjectFieldDescription (field),
 				Value         = DataAccessor.GetComputedAmountProperty (this.properties, (int) field),
+				PropertyState = this.GetPropertyState (field),
+				TabIndex      = this.tabIndex++,
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueChanged += delegate
+			{
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target)
+			{
+				this.ShowHistoryPopup (target, field);
+			};
+		}
+
+		protected void CreateIntController(Widget parent, ObjectField field)
+		{
+			var controller = new IntFieldController
+			{
+				Label         = StaticDescriptions.GetObjectFieldDescription (field),
+				Value         = DataAccessor.GetIntProperty (this.properties, (int) field),
+				PropertyState = this.GetPropertyState (field),
+				TabIndex      = this.tabIndex++,
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueChanged += delegate
+			{
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target)
+			{
+				this.ShowHistoryPopup (target, field);
+			};
+		}
+
+		protected void CreateDateController(Widget parent, ObjectField field)
+		{
+			var controller = new DateFieldController
+			{
+				Label         = StaticDescriptions.GetObjectFieldDescription (field),
+				Value         = DataAccessor.GetDateProperty (this.properties, (int) field),
 				PropertyState = this.GetPropertyState (field),
 				TabIndex      = this.tabIndex++,
 			};
