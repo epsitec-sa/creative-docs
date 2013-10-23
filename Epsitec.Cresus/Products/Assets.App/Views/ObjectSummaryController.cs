@@ -153,21 +153,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var d = DataAccessor.GetDecimalProperty (this.properties, field.Value);
 					if (d.HasValue)
 					{
-						var format = Format.GetFieldFormat ((ObjectField) field.Value);
-						if (format == DecimalFormat.Rate)
+						switch (Format.GetFieldFormat ((ObjectField) field.Value))
 						{
-							text = Helpers.Converters.RateToString (d);
-							alignment = ContentAlignment.MiddleRight;
-						}
-						else if (format == DecimalFormat.Amount)
-						{
-							text = Helpers.Converters.AmountToString (d);
-							alignment = ContentAlignment.MiddleRight;
-						}
-						else
-						{
-							text = Helpers.Converters.DecimalToString (d);
-							alignment = ContentAlignment.MiddleRight;
+							case DecimalFormat.Rate:
+								text = Helpers.Converters.RateToString (d);
+								alignment = ContentAlignment.MiddleRight;
+								break;
+
+							case DecimalFormat.Amount:
+								text = Helpers.Converters.AmountToString (d);
+								alignment = ContentAlignment.MiddleRight;
+								break;
+
+							case DecimalFormat.Real:
+								text = Helpers.Converters.DecimalToString (d);
+								alignment = ContentAlignment.MiddleRight;
+								break;
 						}
 					}
 					break;

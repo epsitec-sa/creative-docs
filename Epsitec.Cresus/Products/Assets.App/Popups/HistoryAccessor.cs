@@ -79,37 +79,40 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, HistoryAccessor.DateColumnWidth, "Date"));
 
-				if (this.fieldType == FieldType.Decimal)
+				switch (this.fieldType)
 				{
-					var format = Format.GetFieldFormat (this.objectField);
-					if (format == DecimalFormat.Rate)
-					{
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, HistoryAccessor.ValueColumnWidth, "Valeur"));
-					}
-					else if (format == DecimalFormat.Amount)
-					{
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, HistoryAccessor.ValueColumnWidth, "Valeur"));
-					}
-					else
-					{
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, HistoryAccessor.ValueColumnWidth, "Valeur"));
-					}
-				}
-				else if (this.fieldType == FieldType.Date)
-				{
-					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date, HistoryAccessor.ValueColumnWidth, "Valeur"));
-				}
-				else if (this.fieldType == FieldType.Int)
-				{
-					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Int, HistoryAccessor.ValueColumnWidth, "Valeur"));
-				}
-				else if (this.fieldType == FieldType.ComputedAmount)
-				{
-					list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, HistoryAccessor.ValueColumnWidth, "Valeur"));
-				}
-				else
-				{
-					list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, HistoryAccessor.ValueColumnWidth, "Valeur"));
+					case FieldType.Decimal:
+						switch (Format.GetFieldFormat (this.objectField))
+						{
+							case DecimalFormat.Rate:
+								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, HistoryAccessor.ValueColumnWidth, "Valeur"));
+								break;
+
+							case DecimalFormat.Amount:
+								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, HistoryAccessor.ValueColumnWidth, "Valeur"));
+								break;
+
+							default:
+								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, HistoryAccessor.ValueColumnWidth, "Valeur"));
+								break;
+						}
+						break;
+
+					case FieldType.Date:
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date, HistoryAccessor.ValueColumnWidth, "Valeur"));
+						break;
+
+					case FieldType.Int:
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Int, HistoryAccessor.ValueColumnWidth, "Valeur"));
+						break;
+
+					case FieldType.ComputedAmount:
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, HistoryAccessor.ValueColumnWidth, "Valeur"));
+						break;
+
+					default:
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, HistoryAccessor.ValueColumnWidth, "Valeur"));
+						break;
 				}
 
 				return list.ToArray ();
@@ -163,30 +166,37 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private AbstractSimpleTreeTableCell GetCell(IEnumerable<AbstractDataProperty> properties, int field)
 		{
-			if (this.fieldType == FieldType.Decimal)
+			switch (this.fieldType)
 			{
-				var value = DataAccessor.GetDecimalProperty (properties, field);
-				return new SimpleTreeTableCellDecimal (value, Format.GetFieldFormat ((ObjectField) field));
-			}
-			else if (this.fieldType == FieldType.Int)
-			{
-				var value = DataAccessor.GetIntProperty (properties, field);
-				return new SimpleTreeTableCellInt (value);
-			}
-			else if (this.fieldType == FieldType.ComputedAmount)
-			{
-				var value = DataAccessor.GetComputedAmountProperty (properties, field);
-				return new SimpleTreeTableCellComputedAmount (value);
-			}
-			else if (this.fieldType == FieldType.Date)
-			{
-				var value = DataAccessor.GetDateProperty (properties, field);
-				return new SimpleTreeTableCellDate (value);
-			}
-			else
-			{
-				string s = DataAccessor.GetStringProperty (properties, field);
-				return new SimpleTreeTableCellString (s);
+				case FieldType.Decimal:
+					{
+						var value = DataAccessor.GetDecimalProperty (properties, field);
+						return new SimpleTreeTableCellDecimal (value, Format.GetFieldFormat ((ObjectField) field));
+					}
+
+				case FieldType.Int:
+					{
+						var value = DataAccessor.GetIntProperty (properties, field);
+						return new SimpleTreeTableCellInt (value);
+					}
+
+				case FieldType.ComputedAmount:
+					{
+						var value = DataAccessor.GetComputedAmountProperty (properties, field);
+						return new SimpleTreeTableCellComputedAmount (value);
+					}
+
+				case FieldType.Date:
+					{
+						var value = DataAccessor.GetDateProperty (properties, field);
+						return new SimpleTreeTableCellDate (value);
+					}
+
+				default:
+					{
+						string s = DataAccessor.GetStringProperty (properties, field);
+						return new SimpleTreeTableCellString (s);
+					}
 			}
 		}
 

@@ -97,31 +97,33 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					System.Diagnostics.Debug.Assert (row.Count == this.columnDescriptions.Length);
 
-					if (description.Type == TreeTableColumnType.String)
+					switch (description.Type)
 					{
-						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellString);
-					}
-					else if (description.Type == TreeTableColumnType.Decimal ||
-							 description.Type == TreeTableColumnType.Amount  ||
-							 description.Type == TreeTableColumnType.Rate)
-					{
-						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellDecimal);
-					}
-					else if (description.Type == TreeTableColumnType.ComputedAmount)
-					{
-						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellComputedAmount);
-					}
-					else if (description.Type == TreeTableColumnType.Int)
-					{
-						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellInt);
-					}
-					else if (description.Type == TreeTableColumnType.Date)
-					{
-						System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellDate);
-					}
-					else
-					{
-						System.Diagnostics.Debug.Fail ("Unsupported type exception");
+						case TreeTableColumnType.String:
+							System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellString);
+							break;
+
+						case TreeTableColumnType.Decimal:
+						case TreeTableColumnType.Amount:
+						case TreeTableColumnType.Rate:
+							System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellDecimal);
+							break;
+
+						case TreeTableColumnType.ComputedAmount:
+							System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellComputedAmount);
+							break;
+
+						case TreeTableColumnType.Int:
+							System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellInt);
+							break;
+
+						case TreeTableColumnType.Date:
+							System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellDate);
+							break;
+
+						default:
+							System.Diagnostics.Debug.Fail ("Unsupported type exception");
+							break;
 					}
 				}
 			}
@@ -165,27 +167,29 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			foreach (var description in this.columnDescriptions)
 			{
-				if (description.Type == TreeTableColumnType.String)
+				switch (description.Type)
 				{
-					list.Add (new List<TreeTableCellString> ());
-				}
-				else if (description.Type == TreeTableColumnType.Decimal ||
-						 description.Type == TreeTableColumnType.Amount  ||
-						 description.Type == TreeTableColumnType.Rate)
-				{
-					list.Add (new List<TreeTableCellDecimal> ());
-				}
-				else if (description.Type == TreeTableColumnType.ComputedAmount)
-				{
-					list.Add (new List<TreeTableCellComputedAmount> ());
-				}
-				else if (description.Type == TreeTableColumnType.Int)
-				{
-					list.Add (new List<TreeTableCellInt> ());
-				}
-				else if (description.Type == TreeTableColumnType.Date)
-				{
-					list.Add (new List<TreeTableCellDate> ());
+					case TreeTableColumnType.String:
+						list.Add (new List<TreeTableCellString> ());
+						break;
+
+					case TreeTableColumnType.Decimal:
+					case TreeTableColumnType.Amount:
+					case TreeTableColumnType.Rate:
+						list.Add (new List<TreeTableCellDecimal> ());
+						break;
+
+					case TreeTableColumnType.ComputedAmount:
+						list.Add (new List<TreeTableCellComputedAmount> ());
+						break;
+
+					case TreeTableColumnType.Int:
+						list.Add (new List<TreeTableCellInt> ());
+						break;
+
+					case TreeTableColumnType.Date:
+						list.Add (new List<TreeTableCellDate> ());
+						break;
 				}
 			}
 
@@ -204,47 +208,59 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					var description = this.columnDescriptions[c];
 					var content = row[c];
 
-					if (description.Type == TreeTableColumnType.String)
+					switch (description.Type)
 					{
-						var x = (content as SimpleTreeTableCellString).Value;
-						var s = new TreeTableCellString (true, x, isSelected: (i == selection));
+						case TreeTableColumnType.String:
+							{
+								var x = (content as SimpleTreeTableCellString).Value;
+								var s = new TreeTableCellString (true, x, isSelected: (i == selection));
 
-						var l = list[c] as List<TreeTableCellString>;
-						l.Add (s);
-					}
-					else if (description.Type == TreeTableColumnType.Decimal ||
-							 description.Type == TreeTableColumnType.Amount  ||
-							 description.Type == TreeTableColumnType.Rate)
-					{
-						var x = (content as SimpleTreeTableCellDecimal).Value;
-						var s = new TreeTableCellDecimal (true, x, isSelected: (i == selection));
+								var l = list[c] as List<TreeTableCellString>;
+								l.Add (s);
+							}
+							break;
 
-						var l = list[c] as List<TreeTableCellDecimal>;
-						l.Add (s);
-					}
-					else if (description.Type == TreeTableColumnType.Date)
-					{
-						var x = (content as SimpleTreeTableCellDate).Value;
-						var s = new TreeTableCellDate (true, x, isSelected: (i == selection));
+						case TreeTableColumnType.Decimal:
+						case TreeTableColumnType.Amount:
+						case TreeTableColumnType.Rate:
+							{
+								var x = (content as SimpleTreeTableCellDecimal).Value;
+								var s = new TreeTableCellDecimal (true, x, isSelected: (i == selection));
 
-						var l = list[c] as List<TreeTableCellDate>;
-						l.Add (s);
-					}
-					else if (description.Type == TreeTableColumnType.Int)
-					{
-						var x = (content as SimpleTreeTableCellInt).Value;
-						var s = new TreeTableCellInt (true, x, isSelected: (i == selection));
+								var l = list[c] as List<TreeTableCellDecimal>;
+								l.Add (s);
+							}
+							break;
 
-						var l = list[c] as List<TreeTableCellInt>;
-						l.Add (s);
-					}
-					else if (description.Type == TreeTableColumnType.ComputedAmount)
-					{
-						var x = (content as SimpleTreeTableCellComputedAmount).Value;
-						var s = new TreeTableCellComputedAmount (true, x, isSelected: (i == selection));
+						case TreeTableColumnType.ComputedAmount:
+							{
+								var x = (content as SimpleTreeTableCellComputedAmount).Value;
+								var s = new TreeTableCellComputedAmount (true, x, isSelected: (i == selection));
 
-						var l = list[c] as List<TreeTableCellComputedAmount>;
-						l.Add (s);
+								var l = list[c] as List<TreeTableCellComputedAmount>;
+								l.Add (s);
+							}
+							break;
+
+						case TreeTableColumnType.Int:
+							{
+								var x = (content as SimpleTreeTableCellInt).Value;
+								var s = new TreeTableCellInt (true, x, isSelected: (i == selection));
+
+								var l = list[c] as List<TreeTableCellInt>;
+								l.Add (s);
+							}
+							break;
+
+						case TreeTableColumnType.Date:
+							{
+								var x = (content as SimpleTreeTableCellDate).Value;
+								var s = new TreeTableCellDate (true, x, isSelected: (i == selection));
+
+								var l = list[c] as List<TreeTableCellDate>;
+								l.Add (s);
+							}
+							break;
 					}
 				}
 			}
@@ -254,32 +270,44 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var description = this.columnDescriptions[c];
 
-				if (description.Type == TreeTableColumnType.String)
+				switch (description.Type)
 				{
-					var l = list[c] as List<TreeTableCellString>;
-					this.treeTable.SetColumnCells (c, l.ToArray ());
-				}
-				else if (description.Type == TreeTableColumnType.Decimal ||
-						 description.Type == TreeTableColumnType.Amount  ||
-						 description.Type == TreeTableColumnType.Rate)
-				{
-					var l = list[c] as List<TreeTableCellDecimal>;
-					this.treeTable.SetColumnCells (c, l.ToArray ());
-				}
-				else if (description.Type == TreeTableColumnType.Date)
-				{
-					var l = list[c] as List<TreeTableCellDate>;
-					this.treeTable.SetColumnCells (c, l.ToArray ());
-				}
-				else if (description.Type == TreeTableColumnType.Int)
-				{
-					var l = list[c] as List<TreeTableCellInt>;
-					this.treeTable.SetColumnCells (c, l.ToArray ());
-				}
-				else if (description.Type == TreeTableColumnType.ComputedAmount)
-				{
-					var l = list[c] as List<TreeTableCellComputedAmount>;
-					this.treeTable.SetColumnCells (c, l.ToArray ());
+					case TreeTableColumnType.String:
+						{
+							var l = list[c] as List<TreeTableCellString>;
+							this.treeTable.SetColumnCells (c, l.ToArray ());
+						}
+						break;
+
+					case TreeTableColumnType.Decimal:
+					case TreeTableColumnType.Amount:
+					case TreeTableColumnType.Rate:
+						{
+							var l = list[c] as List<TreeTableCellDecimal>;
+							this.treeTable.SetColumnCells (c, l.ToArray ());
+						}
+						break;
+
+					case TreeTableColumnType.ComputedAmount:
+						{
+							var l = list[c] as List<TreeTableCellComputedAmount>;
+							this.treeTable.SetColumnCells (c, l.ToArray ());
+						}
+						break;
+
+					case TreeTableColumnType.Int:
+						{
+							var l = list[c] as List<TreeTableCellInt>;
+							this.treeTable.SetColumnCells (c, l.ToArray ());
+						}
+						break;
+
+					case TreeTableColumnType.Date:
+						{
+							var l = list[c] as List<TreeTableCellDate>;
+							this.treeTable.SetColumnCells (c, l.ToArray ());
+						}
+						break;
 				}
 			}
 		}

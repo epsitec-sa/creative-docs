@@ -109,33 +109,37 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string ConvDecimalToString(decimal? value)
 		{
-			if (this.DecimalFormat == Views.DecimalFormat.Rate)
+			switch (this.DecimalFormat)
 			{
-				return Helpers.Converters.RateToString (value);
-			}
-			else if (this.DecimalFormat == Views.DecimalFormat.Amount)
-			{
-				return Helpers.Converters.AmountToString (value);
-			}
-			else
-			{
-				return Helpers.Converters.DecimalToString (value);
+				case DecimalFormat.Rate:
+					return Helpers.Converters.RateToString (value);
+
+				case DecimalFormat.Amount:
+					return Helpers.Converters.AmountToString (value);
+
+				case DecimalFormat.Real:
+					return Helpers.Converters.DecimalToString (value);
+
+				default:
+					return null;
 			}
 		}
 
 		private decimal? ConvStringToDecimal(string text)
 		{
-			if (this.DecimalFormat == Views.DecimalFormat.Rate)
+			switch (this.DecimalFormat)
 			{
-				return Helpers.Converters.ParseRate (text);
-			}
-			else if (this.DecimalFormat == Views.DecimalFormat.Amount)
-			{
-				return Helpers.Converters.ParseAmount (text);
-			}
-			else
-			{
-				return Helpers.Converters.ParseDecimal (text);
+				case DecimalFormat.Rate:
+					return Helpers.Converters.ParseRate (text);
+
+				case DecimalFormat.Amount:
+					return Helpers.Converters.ParseAmount (text);
+
+				case DecimalFormat.Real:
+					return Helpers.Converters.ParseDecimal (text);
+
+				default:
+					return null;
 			}
 		}
 

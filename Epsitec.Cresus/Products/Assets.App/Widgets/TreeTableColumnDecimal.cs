@@ -48,19 +48,21 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					{
 						var textRect = this.GetContentDeflateRectangle (rect);
 
-						string text;
+						string text = null;
 
-						if (this.format == DecimalFormat.Rate)
+						switch (this.format)
 						{
-							text = Helpers.Converters.RateToString (cell.Value);
-						}
-						else if (this.format == DecimalFormat.Amount)
-						{
-							text = Helpers.Converters.AmountToString (cell.Value);
-						}
-						else
-						{
-							text = Helpers.Converters.DecimalToString (cell.Value);
+							case DecimalFormat.Rate:
+								text = Helpers.Converters.RateToString (cell.Value);
+								break;
+
+							case DecimalFormat.Amount:
+								text = Helpers.Converters.AmountToString (cell.Value);
+								break;
+
+							case DecimalFormat.Real:
+								text = Helpers.Converters.DecimalToString (cell.Value);
+								break;
 						}
 
 						this.PaintText (graphics, textRect, text);
