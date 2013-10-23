@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return Color.FromBrightness (0.7);
+				return Color.FromBrightness (0.8);
 			}
 		}
 

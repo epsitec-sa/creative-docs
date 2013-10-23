@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void Update()
 		{
+			this.UpdateData ();
 			this.UpdateController ();
 			this.UpdateToolbar ();
 		}
@@ -113,6 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (timestamp.HasValue)
 				{
+					this.UpdateData ();
 					this.UpdateController ();
 					this.UpdateToolbar ();
 
