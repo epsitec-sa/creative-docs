@@ -98,6 +98,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		protected int							VisibleSelectedRow
+		{
+			get
+			{
+				if (this.selectedRow != -1)
+				{
+					return this.nodeIndexes.IndexOf (this.selectedRow);
+				}
+				else
+				{
+					return -1;
+				}
+			}
+			set
+			{
+				if (value >= 0 && value < this.nodeIndexes.Count)
+				{
+					this.SelectedRow = this.nodeIndexes[value];
+				}
+				else
+				{
+					this.SelectedRow = -1;
+				}
+			}
+		}
+
 
 		private void OnFirst()
 		{
@@ -105,7 +131,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (index.HasValue)
 			{
-				this.SelectedRow = index.Value;
+				this.VisibleSelectedRow = index.Value;
 			}
 		}
 
@@ -115,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (index.HasValue)
 			{
-				this.SelectedRow = index.Value;
+				this.VisibleSelectedRow = index.Value;
 			}
 		}
 
@@ -125,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (index.HasValue)
 			{
-				this.SelectedRow = index.Value;
+				this.VisibleSelectedRow = index.Value;
 			}
 		}
 
@@ -135,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (index.HasValue)
 			{
-				this.SelectedRow = index.Value;
+				this.VisibleSelectedRow = index.Value;
 			}
 		}
 
@@ -149,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnDeselect()
 		{
-			this.SelectedRow = -1;
+			this.VisibleSelectedRow = -1;
 		}
 
 
@@ -183,13 +209,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller.RowClicked += delegate (object sender, int row)
 			{
-				this.SelectedRow = this.controller.TopVisibleRow + row;
+				this.VisibleSelectedRow = this.controller.TopVisibleRow + row;
 			};
 
 			this.controller.RowDoubleClicked += delegate (object sender, int row)
 			{
-				this.SelectedRow = this.controller.TopVisibleRow + row;
-				this.OnRowDoubleClicked (this.SelectedRow);
+				this.VisibleSelectedRow = this.controller.TopVisibleRow + row;
+				this.OnRowDoubleClicked (this.VisibleSelectedRow);
 			};
 
 			this.controller.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
@@ -214,7 +240,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			int rowsCount    = this.controller.RowsCount;
 			int count        = System.Math.Min (visibleCount, rowsCount);
 			int firstRow     = this.controller.TopVisibleRow;
-			int selection    = this.selectedRow;
+			int selection    = this.VisibleSelectedRow;
 
 			if (selection != -1)
 			{
@@ -316,9 +342,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne le Guid de l'objet actuellement sélectionné.
 			get
 			{
-				if (this.selectedRow != -1 && this.selectedRow < this.nodeIndexes.Count)
+				int sel = this.VisibleSelectedRow;
+
+				if (sel != -1 && sel < this.nodeIndexes.Count)
 				{
-					return this.nodes[this.nodeIndexes[this.selectedRow]].Guid;
+					return this.nodes[this.nodeIndexes[sel]].Guid;
 				}
 				else
 				{
@@ -341,7 +369,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				}
 
-				this.SelectedRow = sel;
+				this.VisibleSelectedRow = sel;
 			}
 		}
 
@@ -486,7 +514,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateToolbar()
 		{
-			int row = this.SelectedRow;
+			int row = this.VisibleSelectedRow;
 
 			this.UpdateCommand (ToolbarCommand.First, row, this.FirstRowIndex);
 			this.UpdateCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);
@@ -532,15 +560,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.selectedRow == -1)
+				if (this.VisibleSelectedRow == -1)
 				{
 					return null;
 				}
 				else
 				{
-					int i = this.selectedRow - 1;
+					int i = this.VisibleSelectedRow - 1;
 					i = System.Math.Max (i, 0);
-					i = System.Math.Min (i, this.controller.RowsCount - 1);
+					i = System.Math.Min (i, this.NodesCount - 1);
 					return i;
 				}
 			}
@@ -550,15 +578,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.selectedRow == -1)
+				if (this.VisibleSelectedRow == -1)
 				{
 					return null;
 				}
 				else
 				{
-					int i = this.selectedRow + 1;
+					int i = this.VisibleSelectedRow + 1;
 					i = System.Math.Max (i, 0);
-					i = System.Math.Min (i, this.controller.RowsCount - 1);
+					i = System.Math.Min (i, this.NodesCount - 1);
 					return i;
 				}
 			}
@@ -568,7 +596,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.controller.RowsCount - 1;
+				return this.NodesCount - 1;
 			}
 		}
 
@@ -608,6 +636,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected TopTitle						topTitle;
 		protected TreeTableToolbar				toolbar;
 		protected NavigationTreeTableController	controller;
-		protected int							selectedRow;
+		private int								selectedRow;
 	}
 }

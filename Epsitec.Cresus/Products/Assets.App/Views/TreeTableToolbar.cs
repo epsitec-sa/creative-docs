@@ -80,10 +80,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void Adjust()
 		{
-#if true
-			//	S'il manque de place en largeur, on supprime les boutons First/Last en
-			//	premier lieu. S'il manque encore de la place, c'est les boutons Prev/Next
-			//	qui sont supprimés.
+			//	S'il manque de la place en largeur, on supprime des boutons avec
+			//	cette priorité:
+			//	- CompactAll/ExpandAll
+			//	- First/Last
+			//	- Prev/Next
 			if (this.toolbar == null)
 			{
 				return;
@@ -103,59 +104,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 					x += size;
 				}
 			}
-#else
-			double size = toolbar.ActualHeight;
-			double x = 0;
-			Size iconSize;
-
-			if (toolbar.ActualWidth < size*7 + 20)
-			{
-				iconSize = new Size (11, 11);
-
-				this.buttonFirst.SetManualBounds (new Rectangle (x, size/2, size/2, size/2));
-				this.buttonLast.SetManualBounds (new Rectangle (x, 0, size/2, size/2));
-				x += size/2;
-
-				this.buttonPrev.SetManualBounds (new Rectangle (x, size/2, size/2, size/2));
-				this.buttonNext.SetManualBounds (new Rectangle (x, 0, size/2, size/2));
-
-				x += size/2 + 20;
-				this.buttonNew.SetManualBounds (new Rectangle (x, 0, size, size));
-				x += size;
-				this.buttonDelete.SetManualBounds (new Rectangle (x, 0, size, size));
-				x += size;
-				this.buttonDeselect.SetManualBounds (new Rectangle (x, 0, size, size));
-			}
-			else
-			{
-				iconSize = new Size (24, 24);
-
-				this.buttonFirst.SetManualBounds (new Rectangle (x, 0, size, size));
-				x += size;
-				this.buttonPrev.SetManualBounds (new Rectangle (x, 0, size, size));
-				x += size;
-				this.buttonNext.SetManualBounds (new Rectangle (x, 0, size, size));
-				x += size;
-				this.buttonLast.SetManualBounds (new Rectangle (x, 0, size, size));
-				x += size + 20;
-				this.buttonNew.SetManualBounds (new Rectangle (x, 0, size, size));
-				x += size;
-				this.buttonDelete.SetManualBounds (new Rectangle (x, 0, size, size));
-				x += size;
-				this.buttonDeselect.SetManualBounds (new Rectangle (x, 0, size, size));
-			}
-
-			this.buttonFirst.PreferredIconSize = iconSize;
-			this.buttonPrev.PreferredIconSize = iconSize;
-			this.buttonNext.PreferredIconSize = iconSize;
-			this.buttonLast.PreferredIconSize = iconSize;
-#endif
 		}
 
 		private IEnumerable<ButtonState> GetButtons(double width, double size)
 		{
-			bool firstLast     = width > size*7 + 20;
 			bool prevNext      = width > size*5 + 20;
+			bool firstLast     = width > size*7 + 20;
 			bool compactExpand = width > size*9 + 20 + 20 && this.hasTreeOperations;
 
 			yield return new ButtonState (this.buttonFirst, firstLast);

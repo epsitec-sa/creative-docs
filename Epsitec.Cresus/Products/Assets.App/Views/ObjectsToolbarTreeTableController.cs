@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.accessor.GetObjectGuid (this.selectedRow);
+				return this.accessor.GetObjectGuid (this.SelectedRow);
 			}
 			set
 			{

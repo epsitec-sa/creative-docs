@@ -48,11 +48,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.RowToTimestamp (this.selectedRow);
+				return this.RowToTimestamp (this.SelectedRow);
 			}
 			set
 			{
-				this.SelectedRow = this.TimestampToRow (value);
+				this.VisibleSelectedRow = this.TimestampToRow (value);
 			}
 		}
 
