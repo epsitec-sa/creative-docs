@@ -1,24 +1,16 @@
-﻿using Epsitec.Common.Support.Extensions;
-
-using System;
-
+﻿using System;
 using System.Collections.Generic;
-
 using System.IO;
-
 using System.Linq;
-
 using System.Reflection;
-
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using Epsitec.Common.Support.Extensions;
 
 
 namespace Epsitec.Common.Support
 {
-
-
 	public sealed class XmlValidator
 	{
 		public static XmlValidator Create(FileInfo xsdFile)
@@ -85,6 +77,11 @@ namespace Epsitec.Common.Support
 			document.Validate (this.xmlSchemaSet, null);
 		}
 
+		public void Validate(XElement element)
+		{
+			this.Validate (new XDocument (element));
+		}
+
 
 		private static XmlSchemaSet BuildXmlSchemaSet(IEnumerable<string> xsdContents)
 		{
@@ -124,9 +121,5 @@ namespace Epsitec.Common.Support
 
 
 		private readonly XmlSchemaSet xmlSchemaSet;
-
-
 	}
-
-
 }
