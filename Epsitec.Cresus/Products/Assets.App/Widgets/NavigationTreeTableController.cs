@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public void CreateUI(Widget parent, int rowHeight = 18, int headerHeight = 22, int footerHeight = 22)
 		{
-			parent.BackColor = ColorManager.TreeTableBackgroundColor;
+			parent.BackColor = ColorManager.TreeTableOutColor;
 
 			this.treeTable = new TreeTable (rowHeight, headerHeight, footerHeight)
 			{
