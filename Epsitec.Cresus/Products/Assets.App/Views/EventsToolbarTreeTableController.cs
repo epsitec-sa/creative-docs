@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.objectGuid = value;
 
+					this.UpdateData ();
 					this.UpdateController ();
 					this.UpdateToolbar ();
 				}
@@ -171,14 +172,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected override int RowsCount
-		{
-			get
-			{
-				return this.accessor.GetObjectEventsCount (this.objectGuid);
-			}
-		}
-
 		protected override void UpdateContent(int firstRow, int count, int selection, bool crop = true)
 		{
 			var c1 = new List<TreeTableCellString> ();
@@ -193,12 +186,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= this.RowsCount)
+				if (firstRow+i >= this.NodesCount)
 				{
 					break;
 				}
 
-				var timestamp  = this.accessor.GetObjectEventTimestamp (this.objectGuid, firstRow+i);
+				var node = this.GetNode (firstRow+i);
+				var guid = node.Guid;
+
+				var timestamp  = this.accessor.GetObjectEventTimestamp (this.objectGuid, guid);
 				var eventType  = this.accessor.GetObjectEventType (this.objectGuid, timestamp.Value);
 				var properties = this.accessor.GetObjectSingleProperties (this.objectGuid, timestamp.Value);
 
@@ -243,6 +239,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.SetColumnCells (c++, c7.ToArray ());
 			this.controller.SetColumnCells (c++, c8.ToArray ());
 			this.controller.SetColumnCells (c++, c9.ToArray ());
+		}
+
+
+		protected override int DataCount
+		{
+			get
+			{
+				return this.accessor.GetObjectEventsCount (this.objectGuid);
+			}
+		}
+
+		protected override void GetData(int row, out Guid guid, out int level)
+		{
+			guid = this.accessor.GetObjectEventGuid (this.objectGuid, row);
+			level = 0;
 		}
 
 

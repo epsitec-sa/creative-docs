@@ -105,14 +105,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected override int RowsCount
-		{
-			get
-			{
-				return this.accessor.ObjectsCount;
-			}
-		}
-
 		protected override void UpdateContent(int firstRow, int count, int selection, bool crop = true)
 		{
 			var cf = new List<TreeTableCellTree> ();
@@ -125,26 +117,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= this.RowsCount)
+				if (firstRow+i >= this.NodesCount)
 				{
 					break;
 				}
 
-				var guid = this.accessor.GetObjectGuid (firstRow+i);
+				var node = this.GetNode (firstRow+i);
+				var guid  = node.Guid;
+				var level = node.Level;
+				var type  = node.Type;
+
 				var properties = this.accessor.GetObjectSyntheticProperties (guid, this.timestamp);
-
-				int level = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level).GetValueOrDefault (-1);
-
-				var type = TreeTableTreeType.Extended;
-
-				if (level == -1)
-				{
-					type = TreeTableTreeType.None;
-				}
-				else if (level == 3)
-				{
-					type = TreeTableTreeType.Final;
-				}
 
 				var nom         = DataAccessor.GetStringProperty (properties, (int) ObjectField.Nom);
 				var numéro      = DataAccessor.GetStringProperty (properties, (int) ObjectField.Numéro);
@@ -178,6 +161,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.SetColumnCells (4, c4.ToArray ());
 			this.controller.SetColumnCells (5, c5.ToArray ());
 			this.controller.SetColumnCells (6, c6.ToArray ());
+		}
+
+
+		protected override int DataCount
+		{
+			get
+			{
+				return this.accessor.ObjectsCount;
+			}
+		}
+
+		protected override void GetData(int row, out Guid guid, out int level)
+		{
+			guid = this.accessor.GetObjectGuid (row);
+			var properties = this.accessor.GetObjectSyntheticProperties (guid, this.timestamp);
+			level = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level).GetValueOrDefault (-1);
 		}
 
 

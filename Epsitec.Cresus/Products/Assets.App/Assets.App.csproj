@@ -241,6 +241,8 @@
     <EmbeddedResource Include="Images\TreeTable.Prev.icon" />
     <EmbeddedResource Include="Images\View.WithoutTimeline.icon" />
     <EmbeddedResource Include="Images\View.WithTimeline.icon" />
+    <EmbeddedResource Include="Images\TreeTable.ExpandAll.icon" />
+    <EmbeddedResource Include="Images\TreeTable.CompactAll.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

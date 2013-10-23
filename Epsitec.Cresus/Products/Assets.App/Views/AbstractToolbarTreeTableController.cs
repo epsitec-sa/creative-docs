@@ -14,6 +14,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public AbstractToolbarTreeTableController(DataAccessor accessor)
 		{
 			this.accessor = accessor;
+
+			this.nodes = new List<Node> ();
+			this.nodeIndexes = new List<int> ();
 		}
 
 		public void CreateUI(Widget parent)
@@ -159,6 +162,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Pour que le calcul du nombre de lignes visibles soit correct.
 			parent.Window.ForceLayout ();
 
+			this.UpdateData ();
 			this.UpdateController ();
 			this.UpdateToolbar ();
 
@@ -181,6 +185,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
 			{
+				this.SelectedRow = this.controller.TopVisibleRow + row;
+				this.OnCompactExpand (this.SelectedRow);
 			};
 		}
 
@@ -194,7 +200,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateController(bool crop = true)
 		{
-			this.controller.RowsCount = this.RowsCount;
+			this.controller.RowsCount = this.nodeIndexes.Count;
 
 			int visibleCount = this.controller.VisibleRowsCount;
 			int rowsCount    = this.controller.RowsCount;
@@ -224,7 +230,62 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateContent (firstRow, count, selection, crop);
 		}
 
-		protected virtual int RowsCount
+		protected virtual void UpdateContent(int firstRow, int count, int selection, bool crop = true)
+		{
+		}
+
+
+		private void OnCompactExpand(int row)
+		{
+			int i = this.nodeIndexes[row];
+			var node = this.nodes[i];
+
+			if (node.Type == TreeTableTreeType.Compacted)
+			{
+				this.nodes[i] = new Node (node.Guid, node.Level, TreeTableTreeType.Extended);
+			}
+			else if (node.Type == TreeTableTreeType.Extended)
+			{
+				this.nodes[i] = new Node (node.Guid, node.Level, TreeTableTreeType.Compacted);
+			}
+
+			this.UpdateNodeIndexes ();
+			this.UpdateController ();
+		}
+
+		protected void UpdateData()
+		{
+			this.nodes.Clear ();
+
+			int count = this.DataCount;
+			for (int i=0; i<count; i++)
+			{
+				Guid currentGuid;
+				int currentLevel;
+				this.GetData(i, out currentGuid, out currentLevel);
+
+				var type = TreeTableTreeType.Final;
+
+				if (i < count-2)
+				{
+					Guid nextGuid;
+					int nextLevel;
+					this.GetData (i+1, out nextGuid, out nextLevel);
+
+					if (nextLevel > currentLevel)
+					{
+						type = TreeTableTreeType.Extended;
+					}
+				}
+
+				var node = new Node (currentGuid, currentLevel, type);
+				this.nodes.Add (node);
+			}
+
+			this.UpdateNodeIndexes ();
+		}
+
+		protected virtual int DataCount
 		{
 			get
 			{
@@ -232,9 +293,72 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected virtual void UpdateContent(int firstRow, int count, int selection, bool crop = true)
+		protected virtual void GetData(int row, out Guid guid, out int level)
 		{
+			guid = Guid.Empty;
+			level = 0;
 		}
+
+		private void UpdateNodeIndexes()
+		{
+			this.nodeIndexes.Clear ();
+
+			bool skip = false;
+			int skipLevel = 0;
+
+			for (int i=0; i<this.nodes.Count; i++)
+			{
+				var node = this.nodes[i];
+
+				if (skip)
+				{
+					if (node.Level <= skipLevel)
+					{
+						skip = false;
+					}
+					else
+					{
+						continue;
+					}
+				}
+
+				if (node.Type == TreeTableTreeType.Compacted)
+				{
+					skip = true;
+					skipLevel = node.Level;
+				}
+
+				this.nodeIndexes.Add (i);
+			}
+		}
+
+		protected int NodesCount
+		{
+			get
+			{
+				return this.nodeIndexes.Count;
+			}
+		}
+
+		protected Node GetNode(int i)
+		{
+			return this.nodes[this.nodeIndexes[i]];
+		}
+
+		protected struct Node
+		{
+			public Node(Guid guid, int level, TreeTableTreeType type)
+			{
+				this.Guid  = guid;
+				this.Level = level;
+				this.Type  = type;
+			}
+
+			public readonly Guid				Guid;
+			public readonly int					Level;
+			public readonly TreeTableTreeType	Type;
+		}
+
 
 		protected void UpdateToolbar()
 		{
@@ -349,6 +473,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected readonly DataAccessor			accessor;
+		private readonly List<Node>				nodes;
+		private readonly List<int>				nodeIndexes;
 
 		protected string						title;
 		protected TopTitle						topTitle;

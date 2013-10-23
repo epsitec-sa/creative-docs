@@ -61,6 +61,38 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			return 0;
 		}
 
+		public Guid GetObjectEventGuid(Guid objectGuid, int eventIndex)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				if (eventIndex >= 0 && eventIndex < obj.Events.Count)
+				{
+					return obj.Events[eventIndex].Guid;
+				}
+			}
+
+			return Guid.Empty;
+		}
+
+		public Timestamp? GetObjectEventTimestamp(Guid objectGuid, Guid eventGuid)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				var e = obj.Events.Where (x => x.Guid == eventGuid).FirstOrDefault ();
+
+				if (e != null)
+				{
+					return e.Timestamp;
+				}
+			}
+
+			return null;
+		}
+
 		public Timestamp? GetObjectEventTimestamp(Guid objectGuid, int eventIndex)
 		{
 			var obj = this.mandat.GetObject (objectGuid);
