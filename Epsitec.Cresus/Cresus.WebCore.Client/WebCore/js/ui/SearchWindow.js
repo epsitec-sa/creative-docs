@@ -23,7 +23,7 @@ function() {
       this.fields = this.createSearchFormFields(columnDefinitions);
       this.form = Ext.widget({
         xtype: 'form',
-        layout: {type: 'absolute'},
+        layout: 'form',
         url: '',
         bodyPadding: '5 5 0',
         width: 400,

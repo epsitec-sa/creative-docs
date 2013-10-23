@@ -512,10 +512,12 @@ namespace Epsitec.Aider
 
 		private static void FixOldEChWarnings(string[] args)
 		{
-			AiderProgram.RunWithCoreData
-			(
-				coreData => EChWarningsFixer.TryFixAll (coreData)
-			);
+			AiderProgram.RunWithCoreData ( coreData => {
+						EChWarningsFixer.TryFixAll (coreData);
+						System.Console.WriteLine ("Press RETURN to quit");
+						System.Console.ReadLine ();
+					});
+			
 		}
 		
 		private static void FixZombies(string[] args)

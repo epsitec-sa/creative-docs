@@ -36,10 +36,57 @@ namespace Epsitec.Aider.Data.Job
 
 				EChWarningsFixer.DeleteWarning (businessContext, WarningType.EChHouseholdChanged);
 
+				EChWarningsFixer.RemoveWarningInTimeMismatch (businessContext);
+
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
 		}
 
+		private static void RemoveWarningInTimeMismatch(BusinessContext businessContext)
+		{
+			var example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.EChProcessArrival
+			};
+
+			var allArrivalsByPersonId = businessContext.DataContext.GetByExample<AiderPersonWarningEntity> (example).ToLookup (k => k.Person.eCH_Person);
+
+			example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.EChProcessDeparture
+			};
+
+			var allDepartureByPersonId = businessContext.DataContext.GetByExample<AiderPersonWarningEntity> (example).ToLookup (k => k.Person.eCH_Person);
+
+			var personsWithMismatch = allDepartureByPersonId.Where (a => allArrivalsByPersonId.Contains (a.Key));
+
+			foreach (var person in personsWithMismatch)
+			{
+				var personExample = new AiderPersonEntity ()
+				{
+					eCH_Person = person.Key
+				};
+
+				var personEntity = businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).FirstOrDefault ();
+				EChWarningsFixer.LogToConsole ("/// {0}:", personEntity.GetFullName ());
+
+				var warnings = personEntity.Warnings.OrderBy (w => w.StartDate);
+
+				
+
+				foreach (var warn in warnings)
+				{
+					EChWarningsFixer.LogToConsole ("{0} {1} detected",warn.Title, warn.WarningType);
+				}
+
+				var warningToDelete = warnings.Where(w => w.WarningType == WarningType.EChProcessDeparture || w.WarningType == WarningType.EChProcessArrival).First ();
+				EChWarningsFixer.LogToConsole ("REMOVED {0} {1}", warningToDelete.Title, warningToDelete.WarningType);
+				businessContext.DeleteEntity (warningToDelete);
+
+				EChWarningsFixer.LogToConsole ("/////////////////");
+
+			}			
+		}
 
 		private static void DeleteWarning(BusinessContext businessContext, WarningType deleteValue)
 		{
@@ -92,7 +139,7 @@ namespace Epsitec.Aider.Data.Job
 				System.Console.ForegroundColor = System.ConsoleColor.Red;
 			}
 
-			System.Console.WriteLine ("ContactFixer: {0}", message);
+			System.Console.WriteLine ("WarningFixer: {0}", message);
 			System.Console.ResetColor ();
 
 			var time = new System.Diagnostics.Stopwatch ();
