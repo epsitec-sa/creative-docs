@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.properties != null)
 			{
+				this.CreateIntController    (parent, ObjectField.Level);
 				this.CreateStringController (parent, ObjectField.Numéro, editWidth: 90);
 				this.CreateStringController (parent, ObjectField.Nom);
 				this.CreateStringController (parent, ObjectField.Description, lineCount: 5);
