@@ -66,8 +66,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonPrev       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,       "TreeTable.Prev",       "Recule sur la ligne précédente");
 			this.buttonNext       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Next,       "TreeTable.Next",       "Avance sur la ligne suivante");
 			this.buttonLast       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Last,       "TreeTable.Last",       "Avance sur la dernière ligne");
+
+			this.separator1       = this.CreateSeparator     (this.toolbar, 0);
+			
 			this.buttonCompactAll = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacte tout");
 			this.buttonExpandAll  = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etend tout");
+			
+			this.separator2       = this.CreateSeparator     (this.toolbar, 0);
+			
 			this.buttonNew        = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.New,        "TreeTable.New",        "Nouvel ligne");
 			this.buttonDelete     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
 			this.buttonDeselect   = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Deselect,   "TreeTable.Deselect",   "Désélectionne la ligne");
@@ -95,52 +101,58 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			foreach (var bs in this.GetButtons (this.toolbar.ActualWidth, size))
 			{
-				bs.Button.Visibility = bs.Visibility;
+				bs.Widget.Visibility = bs.Visibility;
 
 				if (bs.Visibility)
 				{
-					x += bs.Offset;
-					bs.Button.SetManualBounds (new Rectangle (x, 0, size, size));
-					x += size;
+					if (bs.Widget is IconButton)
+					{
+						bs.Widget.SetManualBounds (new Rectangle (x, 0, size, size));
+						x += size;
+					}
+					else if (bs.Widget is FrameBox)
+					{
+						x += AbstractCommandToolbar.SeparatorWidth/2;
+						bs.Widget.SetManualBounds (new Rectangle (x, 0, 1, size));
+						x += AbstractCommandToolbar.SeparatorWidth/2;
+					}
 				}
 			}
 		}
 
 		private IEnumerable<ButtonState> GetButtons(double width, double size)
 		{
-			bool prevNext      = width > size*5 + 20;
-			bool firstLast     = width > size*7 + 20;
-			bool compactExpand = width > size*9 + 20 + 20 && this.hasTreeOperations;
+			bool prevNext      = width > size*5 + AbstractCommandToolbar.SeparatorWidth;
+			bool firstLast     = width > size*7 + AbstractCommandToolbar.SeparatorWidth;
+			bool compactExpand = width > size*9 + AbstractCommandToolbar.SeparatorWidth*2 && this.hasTreeOperations;
 
 			yield return new ButtonState (this.buttonFirst, firstLast);
 			yield return new ButtonState (this.buttonPrev,  prevNext);
 			yield return new ButtonState (this.buttonNext,  prevNext);
 			yield return new ButtonState (this.buttonLast,  firstLast);
 
-			//	L'offset à gauche du bouton New n'a de raison d'être que si les
-			//	boutons First/Prev/Next/Last sont présents.
-			yield return new ButtonState (this.buttonCompactAll, compactExpand, offset: firstLast || prevNext ? 20 : 0);
+			yield return new ButtonState (this.separator1, firstLast || prevNext);
+
+			yield return new ButtonState (this.buttonCompactAll, compactExpand);
 			yield return new ButtonState (this.buttonExpandAll,  compactExpand);
 
-			//	L'offset à gauche du bouton New n'a de raison d'être que si les
-			//	boutons First/Prev/Next/Last/CompactAll/ExpandAll sont présents.
-			yield return new ButtonState (this.buttonNew, offset: firstLast || prevNext || compactExpand ? 20 : 0);
+			yield return new ButtonState (this.separator2, compactExpand);
+
+			yield return new ButtonState (this.buttonNew);
 			yield return new ButtonState (this.buttonDelete);
 			yield return new ButtonState (this.buttonDeselect);
 		}
 
 		private struct ButtonState
 		{
-			public ButtonState(IconButton button, bool visibility = true, double offset = 0)
+			public ButtonState(Widget widget, bool visibility = true)
 			{
-				this.Button     = button;
+				this.Widget     = widget;
 				this.Visibility = visibility;
-				this.Offset     = offset;
 			}
 
-			public readonly IconButton	Button;
+			public readonly Widget		Widget;
 			public readonly bool		Visibility;
-			public readonly double		Offset;
 		}
 
 
@@ -151,8 +163,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonNext;
 		private IconButton						buttonLast;
 
+		private FrameBox						separator1;
+		
 		private IconButton						buttonCompactAll;
 		private IconButton						buttonExpandAll;
+
+		private FrameBox						separator2;
 
 		private IconButton						buttonNew;
 		private IconButton						buttonDelete;

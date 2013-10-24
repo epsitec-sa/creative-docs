@@ -7,6 +7,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -162,6 +163,37 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return button;
 		}
 
+		protected FrameBox CreateSeparator(FrameBox toolbar, DockStyle dock)
+		{
+			var size = toolbar.PreferredHeight;
+
+			var sep = new FrameBox
+			{
+				Parent        = toolbar,
+				Dock          = dock,
+				PreferredSize = new Size (1, size),
+				Margins       = new Margins (AbstractCommandToolbar.SeparatorWidth/2, AbstractCommandToolbar.SeparatorWidth/2, 0, 0),
+				BackColor     = ColorManager.SeparatorColor,
+			};
+
+			return sep;
+		}
+
+		protected FrameBox CreateSeparator(FrameBox toolbar, int x)
+		{
+			var size = toolbar.PreferredHeight;
+
+			var sep = new FrameBox
+			{
+				Parent    = toolbar,
+				BackColor = ColorManager.SeparatorColor,
+			};
+
+			sep.SetManualBounds (new Rectangle (x, 0, 1, size));
+
+			return sep;
+		}
+
 
 		public static string GetResourceIconUri(string icon)
 		{
@@ -196,6 +228,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public static readonly int PrimaryToolbarHeight   = 32 + 10;
 		public static readonly int SecondaryToolbarHeight = 24 + 2;
+		public static readonly int SeparatorWidth         = 11;
 
 
 		private readonly Dictionary<ToolbarCommand, ToolbarCommandState> commandStates;

@@ -73,14 +73,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonNext        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Next,     "Timeline.Next",     "Avance sur l'événement suivant");
 			this.buttonLast        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur le dernier événement");
 			this.buttonNow         = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Now,      "Timeline.Now",      "Va à la date du jour");
+
+			this.CreateSeparator (toolbar, DockStyle.Left);
+			
 			this.buttonNew         = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New,      "Timeline.New",      "Nouvel événement");
 			this.buttonDelete      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete ,  "Timeline.Delete",   "Supprimer l'événement");
 			this.buttonDeselect    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne l'événement");
 
 			this.buttonCompacted.Margins   = new Margins (5, 0, 0, 0);
 			this.buttonWeeksOfYear.Margins = new Margins (5, 0, 0, 0);
-			this.buttonFirst.Margins       = new Margins (20, 0, 0, 0);
-			this.buttonNew.Margins         = new Margins (20, 0, 0, 0);
+			this.buttonFirst.Margins       = new Margins (10, 0, 0, 0);
 
 			this.UpdateModeButtons ();
 		}
