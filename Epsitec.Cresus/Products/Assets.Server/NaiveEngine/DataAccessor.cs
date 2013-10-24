@@ -227,12 +227,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public DataObject CreateObject(int row, Guid modelGuid)
+		public Timestamp CreateObject(int row, Guid modelGuid)
 		{
+			var timestamp = new Timestamp (this.mandat.StartDate, 0);
+
 			var o = new DataObject (0);
 			mandat.Objects.Insert (row, o);
 
-			var e = new DataEvent (1, new Timestamp (this.mandat.StartDate, 0), EventType.Entrée);
+			var e = new DataEvent (1, timestamp, EventType.Entrée);
 			o.AddEvent (e);
 
 			var properties = this.GetObjectSyntheticProperties (modelGuid, null);
@@ -251,7 +253,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				e.Properties.Add (new DataStringProperty ((int) ObjectField.Numéro, n));
 			}
 
-			return o;
+			return timestamp;
 		}
 
 		public Timestamp? CreateObjectEvent(Guid objectGuid, System.DateTime date, EventType type)

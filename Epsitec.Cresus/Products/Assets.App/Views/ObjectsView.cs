@@ -41,9 +41,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateToolbars ();
 			};
 
-			this.listController.StartEditing += delegate (object sender, EventType eventType)
+			this.listController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
 			{
-				this.OnStartEdit (eventType);
+				this.OnStartEdit (eventType, timestamp);
 			};
 
 			this.timelineController.StartEditing += delegate (object sender, EventType eventType)
@@ -269,11 +269,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Update ();
 		}
 
-		private void OnStartEdit(EventType eventType)
+		private void OnStartEdit(EventType eventType, Timestamp? timestamp = null)
 		{
 			//	Démarre une édition après avoir créé un événement.
 			this.isEditing = true;
 			this.Update ();
+
+			if (timestamp.HasValue)
+			{
+				if (this.isWithTimelineView)
+				{
+					this.timelineController.SelectedTimestamp = timestamp.Value;
+				}
+				else
+				{
+					this.eventsController.SelectedTimestamp = timestamp.Value;
+				}
+			}
+
 			this.objectEditor.OpenMainPage (eventType);
 		}
 

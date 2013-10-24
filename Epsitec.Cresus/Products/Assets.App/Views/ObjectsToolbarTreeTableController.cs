@@ -75,14 +75,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			this.accessor.CreateObject (sel+1, modelGuid);
+			var timestamp = this.accessor.CreateObject (sel+1, modelGuid);
 
 			this.UpdateData ();
 			this.UpdateController ();
 			this.UpdateToolbar ();
 
 			this.SelectedRow = sel+1;
-			this.OnStartEditing (EventType.Entrée);
+			this.OnStartEditing (EventType.Entrée, timestamp);
 		}
 
 		protected override void OnDelete()
@@ -202,15 +202,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
-		private void OnStartEditing(EventType eventType)
+		private void OnStartEditing(EventType eventType, Timestamp timestamp)
 		{
 			if (this.StartEditing != null)
 			{
-				this.StartEditing (this, eventType);
+				this.StartEditing (this, eventType, timestamp);
 			}
 		}
 
-		public delegate void StartEditingEventHandler(object sender, EventType eventType);
+		public delegate void StartEditingEventHandler(object sender, EventType eventType, Timestamp timestamp);
 		public event StartEditingEventHandler StartEditing;
 		#endregion
 
