@@ -41,6 +41,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateToolbars ();
 			};
 
+			this.listController.StartEditing += delegate (object sender, EventType eventType)
+			{
+				this.OnStartEdit (eventType);
+			};
+
 			this.timelineController.StartEditing += delegate (object sender, EventType eventType)
 			{
 				this.OnStartEdit (eventType);

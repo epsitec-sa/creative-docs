@@ -143,13 +143,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdatePropertyState()
 		{
-			if (this.frameBox == null)
+			if (this.frameBox != null)
 			{
-				return;
+				this.frameBox.BackColor = this.BackgroundColor;
 			}
 
-			this.frameBox.BackColor = this.BackgroundColor;
-			this.clearButton.Visibility = (this.PropertyState == PropertyState.Single);
+			if (this.clearButton != null)
+			{
+				this.clearButton.Visibility = (this.PropertyState == PropertyState.Single);
+			}
 		}
 
 		protected Color BackgroundColor

@@ -227,6 +227,33 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
+		public DataObject CreateObject(int row, Guid modelGuid)
+		{
+			var o = new DataObject (0);
+			mandat.Objects.Insert (row, o);
+
+			var e = new DataEvent (1, new Timestamp (this.mandat.StartDate, 0), EventType.Entrée);
+			o.AddEvent (e);
+
+			var properties = this.GetObjectSyntheticProperties (modelGuid, null);
+
+			//	On met le même niveau que l'objet modèle.
+			var i = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level);
+			if (i.HasValue)
+			{
+				e.Properties.Add (new DataIntProperty ((int) ObjectField.Level, i.Value));
+			}
+
+			//	On met le même numéro que l'objet modèle.
+			var n = DataAccessor.GetStringProperty (properties, (int) ObjectField.Numéro);
+			if (!string.IsNullOrEmpty (n))
+			{
+				e.Properties.Add (new DataStringProperty ((int) ObjectField.Numéro, n));
+			}
+
+			return o;
+		}
+
 		public Timestamp? CreateObjectEvent(Guid objectGuid, System.DateTime date, EventType type)
 		{
 			var obj = this.mandat.GetObject (objectGuid);

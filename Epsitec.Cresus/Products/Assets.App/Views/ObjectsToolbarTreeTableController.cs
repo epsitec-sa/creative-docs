@@ -63,6 +63,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnNew()
 		{
+			var modelGuid = this.SelectedGuid;
+			if (modelGuid.IsEmpty)
+			{
+				return;
+			}
+
+			int sel = this.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			this.accessor.CreateObject (sel+1, modelGuid);
+
+			this.UpdateData ();
+			this.UpdateController ();
+			this.UpdateToolbar ();
+
+			this.SelectedRow = sel+1;
+			this.OnStartEditing (EventType.Entrée);
 		}
 
 		protected override void OnDelete()
@@ -179,6 +199,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var properties = this.accessor.GetObjectSyntheticProperties (guid, this.timestamp);
 			level = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level).GetValueOrDefault (-1);
 		}
+
+
+		#region Events handler
+		private void OnStartEditing(EventType eventType)
+		{
+			if (this.StartEditing != null)
+			{
+				this.StartEditing (this, eventType);
+			}
+		}
+
+		public delegate void StartEditingEventHandler(object sender, EventType eventType);
+		public event StartEditingEventHandler StartEditing;
+		#endregion
 
 
 		private Timestamp?						timestamp;
