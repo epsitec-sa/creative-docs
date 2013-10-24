@@ -438,7 +438,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		#endregion
 
 
-		public FieldType GetFieldType(ObjectField objectField)
+		public static FieldType GetFieldType(ObjectField objectField)
 		{
 			switch (objectField)
 			{
@@ -465,7 +465,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
-		private static IEnumerable<ObjectField> ObjectFields
+		public static IEnumerable<ObjectField> ObjectFields
 		{
 			get
 			{

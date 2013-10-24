@@ -268,23 +268,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Par exemple "Evénement du 31.03.2014 — Amortissement"
 			get
 			{
-				var list = new List<string> ();
-
-				//	Met la date de l'événement, si elle est connue.
-				if (this.timestamp.Date != System.DateTime.MaxValue)
-				{
-					var d = Helpers.Converters.DateToString (this.timestamp.Date);
-					list.Add ("Evénement du " + d);
-				}
-
-				//	Met le type de l'événement, s'il est connu.
-				var ed = StaticDescriptions.GetEventDescription (this.eventType);
-				if (!string.IsNullOrEmpty (ed))
-				{
-					list.Add (ed);
-				}
-
-				return string.Join (" — ", list);
+				return BusinessLogic.GetEventDescription(this.timestamp, this.eventType);
 			}
 		}
 

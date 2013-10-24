@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			string text = null;
 			var alignment = ContentAlignment.MiddleCenter;
 
-			switch (this.accessor.GetFieldType ((ObjectField) field.Value))
+			switch (DataAccessor.GetFieldType ((ObjectField) field.Value))
 			{
 				case FieldType.Decimal:
 					var d = DataAccessor.GetDecimalProperty (this.properties, field.Value);

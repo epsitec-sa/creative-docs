@@ -37,9 +37,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			y -= dy+NewEventPopup.buttonGap;
 			this.CreateButton (x, y, dx, dy, EventType.Réorganisation, "Réorganisation", "Modification pour MCH2");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, EventType.Augmentation, "Revalorisation", "Augmentation de la valeur");
+			this.CreateButton (x, y, dx, dy, EventType.Augmentation, "Augmentation", "Revalorisation à la hausse de la valeur");
 			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, EventType.Diminution, "Réévaluation", "Baisse de la valeur");
+			this.CreateButton (x, y, dx, dy, EventType.Diminution, "Diminution", "Réévaluation à la baisse de la valeur");
 			y -= dy+NewEventPopup.buttonGap;
 			this.CreateButton (x, y, dx, dy, EventType.AmortissementExtra, "Amortissement extraordinaire", "Amortissement manuel");
 			y -= dy+NewEventPopup.buttonGap;

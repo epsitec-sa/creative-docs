@@ -6,18 +6,21 @@ using System.Linq;
 using System.Text;
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
 	/// Ligne de Timeline affichant les éventuelles pastilles (glyphs).
 	/// </summary>
-	public class TimelineRowGlyphs : AbstractTimelineRow
+	public class TimelineRowGlyphs : AbstractTimelineRow, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
 		public void SetCells(TimelineCellGlyph[] cells)
 		{
 			this.cells = cells;
 			this.Invalidate ();
+
+			ToolTip.Default.RegisterDynamicToolTipHost (this);  // pour voir les tooltips dynamiques
 		}
 
 
@@ -280,6 +283,21 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return -1;
 			}
 		}
+
+
+		#region IToolTipHost Members
+		public object GetToolTipCaption(Point pos)
+		{
+			if (this.detectedHoverRank >= 0 && this.detectedHoverRank < this.cells.Length)
+			{
+				return this.cells[this.detectedHoverRank].Tooltip;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		#endregion
 
 
 		private TimelineCellGlyph[] cells;

@@ -108,6 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var glyph = this.GetGlyph (objectGuid.Value, i);
 
 						var properties = this.accessor.GetObjectSingleProperties (objectGuid.Value, t.Value);
+						var type = this.accessor.GetObjectEventType (objectGuid.Value, t.Value).GetValueOrDefault (EventType.Unknown);
 
 						var value1 = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur1);
 						var value2 = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur2);
@@ -121,6 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							{
 								Timestamp     = t.Value,
 								TimelineGlyph = glyph,
+								Tooltip       = BusinessLogic.GetTooltip (t.Value, type, properties),
 								Values        = new decimal?[] { v1, v2 },
 							};
 
@@ -133,6 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							{
 								Timestamp     = this.cells[index].Timestamp,
 								TimelineGlyph = glyph,
+								Tooltip       = BusinessLogic.GetTooltip (t.Value, type, properties),
 								Values        = new decimal?[] { v1, v2 },
 							};
 
@@ -153,6 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					Timestamp     = new Timestamp(date.Value, 0),
 					TimelineGlyph = TimelineGlyph.Empty,
+					Tooltip       = "Aujourd'hui",
 				};
 
 				int i = this.cells.Where (x => x.Timestamp.Date < date.Value).Count ();
@@ -303,6 +307,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			public Timestamp		Timestamp;
 			public TimelineGlyph	TimelineGlyph;
+			public string			Tooltip;
 			public decimal?[]		Values;
 		}
 

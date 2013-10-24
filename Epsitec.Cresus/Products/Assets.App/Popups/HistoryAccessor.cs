@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.accessor = accessor;
 
 			this.objectField = (ObjectField) field;
-			this.fieldType = this.accessor.GetFieldType ((ObjectField) field);
+			this.fieldType = DataAccessor.GetFieldType ((ObjectField) field);
 
 			this.content    = new List<List<AbstractSimpleTreeTableCell>> ();
 			this.timestamps = new List<Timestamp> ();
