@@ -642,28 +642,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommand (ToolbarCommand.Last,  sel, this.LastEventIndex);
 			this.UpdateCommand (ToolbarCommand.Now,   sel, this.NowEventIndex);
 
-			this.UpdateCommand (ToolbarCommand.New, !this.objectGuid.IsEmpty && this.SelectedTimestamp.HasValue);
-			this.UpdateCommand (ToolbarCommand.Delete, this.HasSelectedEvent);
+			this.toolbar.UpdateCommand (ToolbarCommand.New, !this.objectGuid.IsEmpty && this.SelectedTimestamp.HasValue);
+			this.toolbar.UpdateCommand (ToolbarCommand.Delete, this.HasSelectedEvent);
 
-			this.UpdateCommand (ToolbarCommand.Deselect, sel != -1);
+			this.toolbar.UpdateCommand (ToolbarCommand.Deselect, sel != -1);
 		}
 
 		private void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
-			this.UpdateCommand (command, enable);
-		}
-
-		private void UpdateCommand(ToolbarCommand command, bool enable)
-		{
-			if (enable)
-			{
-				this.toolbar.SetCommandState (command, ToolbarCommandState.Enable);
-			}
-			else
-			{
-				this.toolbar.SetCommandState (command, ToolbarCommandState.Disable);
-			}
+			this.toolbar.UpdateCommand (command, enable);
 		}
 
 

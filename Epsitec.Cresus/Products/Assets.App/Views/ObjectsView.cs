@@ -36,6 +36,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.eventsController.SelectedTimestamp = timestamp;
 			};
 
+			this.objectEditor.ValueChanged += delegate (object sender, ObjectField field)
+			{
+				this.UpdateToolbars ();
+			};
+
 			this.isWithTimelineView = true;
 		}
 
@@ -479,19 +484,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
 
-				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Enable);
+				this.mainToolbar.UpdateCommand (ToolbarCommand.Accept, this.objectEditor.EditionDirty);
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
 			}
 			else
 			{
-				if (this.IsEditingPossible)
-				{
-					this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Enable);
-				}
-				else
-				{
-					this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Disable);
-				}
+				this.mainToolbar.UpdateCommand (ToolbarCommand.Edit, this.IsEditingPossible);
 
 				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);

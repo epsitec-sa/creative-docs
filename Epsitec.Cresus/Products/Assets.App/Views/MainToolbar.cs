@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetActiveState (this.buttonSettings,   this.viewType == ViewType.Settings);
 
 			this.SetCommandState (ToolbarCommand.Amortissement, ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.Simulation, ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.Simulation,    ToolbarCommandState.Enable);
 		}
 
 

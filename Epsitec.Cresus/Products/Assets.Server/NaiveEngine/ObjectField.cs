@@ -9,6 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
 	public enum ObjectField
 	{
+		Unknown,
+
 		Level,
 		Numéro,
 		Nom,

@@ -70,6 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueChanged += delegate
 			{
+				this.OnValueChanged (field);
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target)
@@ -93,6 +94,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueChanged += delegate
 			{
+				this.OnValueChanged (field);
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target)
@@ -115,6 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueChanged += delegate
 			{
+				this.OnValueChanged (field);
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target)
@@ -137,6 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueChanged += delegate
 			{
+				this.OnValueChanged (field);
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target)
@@ -159,6 +163,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueChanged += delegate
 			{
+				this.OnValueChanged (field);
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target)
@@ -242,6 +247,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public delegate void PageOpenEventHandler(object sender, EditionObjectPageType type);
 		public event PageOpenEventHandler PageOpen;
+
+
+		protected void OnValueChanged(ObjectField field)
+		{
+			if (this.ValueChanged != null)
+			{
+				this.ValueChanged (this, field);
+			}
+		}
+
+		public delegate void ValueChangedEventHandler(object sender, ObjectField field);
+		public event ValueChangedEventHandler ValueChanged;
 		#endregion
 
 

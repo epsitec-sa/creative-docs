@@ -15,11 +15,55 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor = accessor;
 		}
 
+
+		public bool EditionDirty
+		{
+			get
+			{
+				return this.editionDirty;
+			}
+		}
+
 		public virtual void CreateUI(Widget parent)
 		{
 		}
 
 
+		protected void ClearEditionDirty()
+		{
+			if (this.editionDirty)
+			{
+				this.editionDirty = false;
+				this.OnValueChanged (ObjectField.Unknown);
+			}
+		}
+
+		protected void SetEditionDirty(ObjectField field)
+		{
+			if (!this.editionDirty)
+			{
+				this.editionDirty = true;
+				this.OnValueChanged (field);
+			}
+		}
+
+
+		#region Events handler
+		private void OnValueChanged(ObjectField field)
+		{
+			if (this.ValueChanged != null)
+			{
+				this.ValueChanged (this, field);
+			}
+		}
+
+		public delegate void ValueChangedEventHandler(object sender, ObjectField field);
+		public event ValueChangedEventHandler ValueChanged;
+		#endregion
+
+
 		protected readonly DataAccessor			accessor;
+
+		private bool							editionDirty;
 	}
 }

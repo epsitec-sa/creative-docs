@@ -128,6 +128,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.currentPage = AbstractObjectEditorPage.CreatePage (this.accessor, type);
 			this.currentPage.SetObject (this.editFrameBox, this.objectGuid, this.timestamp);
 
+			this.currentPage.ValueChanged += delegate (object sender, ObjectField field)
+			{
+				this.SetEditionDirty (field);
+			};
+
 			this.currentPage.Navigate += delegate (object sender, Timestamp timestamp)
 			{
 				this.OnNavigate (timestamp);
@@ -164,6 +169,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public void SetObject(Guid objectGuid, Timestamp? timestamp)
 		{
 			//	Spécifie l'objet sélectionné dans le TreeTable de gauche.
+			this.ClearEditionDirty ();
+
 			if (timestamp == null || !timestamp.HasValue)
 			{
 				timestamp = new Timestamp (System.DateTime.MaxValue, 0);

@@ -521,30 +521,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
 			this.UpdateCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
 
-			this.UpdateCommand (ToolbarCommand.CompactAll, !this.IsAllCompacted);
-			this.UpdateCommand (ToolbarCommand.ExpandAll,  !this.IsAllExpanded);
+			this.toolbar.UpdateCommand (ToolbarCommand.CompactAll, !this.IsAllCompacted);
+			this.toolbar.UpdateCommand (ToolbarCommand.ExpandAll,  !this.IsAllExpanded);
 
-			this.UpdateCommand (ToolbarCommand.New,      true);
-			this.UpdateCommand (ToolbarCommand.Delete,   row != -1);
-			this.UpdateCommand (ToolbarCommand.Deselect, row != -1);
+			this.toolbar.UpdateCommand (ToolbarCommand.New,      true);
+			this.toolbar.UpdateCommand (ToolbarCommand.Delete,   row != -1);
+			this.toolbar.UpdateCommand (ToolbarCommand.Deselect, row != -1);
 		}
 
 		private void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
-			this.UpdateCommand (command, enable);
-		}
-
-		private void UpdateCommand(ToolbarCommand command, bool enable)
-		{
-			if (enable)
-			{
-				this.toolbar.SetCommandState (command, ToolbarCommandState.Enable);
-			}
-			else
-			{
-				this.toolbar.SetCommandState (command, ToolbarCommandState.Disable);
-			}
+			this.toolbar.UpdateCommand (command, enable);
 		}
 
 
