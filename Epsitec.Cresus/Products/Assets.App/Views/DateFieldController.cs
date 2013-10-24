@@ -38,10 +38,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public System.DateTime?					SilentValue
 		{
-			get
-			{
-				return this.value;
-			}
 			set
 			{
 				if (this.value != value)

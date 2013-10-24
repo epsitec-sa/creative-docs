@@ -40,10 +40,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public string							SilentValue
 		{
-			get
-			{
-				return this.value;
-			}
 			set
 			{
 				if (this.value != value)
