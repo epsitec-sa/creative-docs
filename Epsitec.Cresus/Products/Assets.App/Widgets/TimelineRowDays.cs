@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -14,12 +15,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// Par exemple "28", "29", "30", "31".
 	/// Les samedis et dimanches ont une couleur de fond légèrement différente.
 	/// </summary>
-	public class TimelineRowDays : AbstractTimelineRow
+	public class TimelineRowDays : AbstractTimelineRow, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
 		public void SetCells(TimelineCellDate[] cells)
 		{
 			this.cells = cells;
 			this.Invalidate ();
+
+			ToolTip.Default.RegisterDynamicToolTipHost (this);  // pour voir les tooltips dynamiques
 		}
 
 
@@ -111,10 +114,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private static string GetCellText(TimelineCellDate cell)
 		{
 			//	Retourne le jour sous la forme "1" ou "31".
-			//	Voir http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
 			if (cell.IsValid)
 			{
-				//?return cell.Date.ToString ("dd", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 				return cell.Date.Day.ToString (System.Globalization.DateTimeFormatInfo.CurrentInfo);
 			}
 			else
@@ -151,6 +152,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return -1;
 			}
 		}
+
+
+		#region IToolTipHost Members
+		public object GetToolTipCaption(Point pos)
+		{
+			if (this.detectedHoverRank >= 0 && this.detectedHoverRank < this.cells.Length)
+			{
+				var cell = this.GetCell (this.detectedHoverRank);
+				if (cell.IsValid)
+				{
+					return Helpers.Converters.DateToFullString (cell.Date);
+				}
+			}
+
+			return null;
+		}
+		#endregion
 
 
 		private TimelineCellDate[] cells;
