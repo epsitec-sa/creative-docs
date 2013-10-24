@@ -29,8 +29,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected void ClearEditionDirty()
+		protected void StartEdition(Guid objectGuid, Timestamp? timestamp)
 		{
+			this.accessor.StartObjectEdition (objectGuid, timestamp);
+
 			if (this.editionDirty)
 			{
 				this.editionDirty = false;

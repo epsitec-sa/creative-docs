@@ -7,11 +7,18 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractFieldController
 	{
+		public AbstractFieldController()
+		{
+			this.ignoreChanges = new SafeCounter ();
+		}
+
+
 		public int								TabIndex;
 		public int								LabelWidth = 100;
 		public int								EditWidth = 380;
@@ -110,6 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				button.Clicked += delegate
 				{
+					this.ClearValue ();
 				};
 			}
 			else
@@ -121,6 +129,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 				};
 			}
+		}
+
+		protected virtual void ClearValue()
+		{
 		}
 
 
@@ -170,6 +182,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected static readonly int lineHeight = 17;
+
+		protected readonly SafeCounter			ignoreChanges;
 
 		protected FrameBox						frameBox;
 		private string							label;

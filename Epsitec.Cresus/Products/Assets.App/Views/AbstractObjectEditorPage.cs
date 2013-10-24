@@ -70,6 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueChanged += delegate
 			{
+				this.accessor.SetObjectField (field, controller.Value);
 				this.OnValueChanged (field);
 			};
 
@@ -94,6 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueChanged += delegate
 			{
+				this.accessor.SetObjectField (field, controller.Value);
 				this.OnValueChanged (field);
 			};
 
@@ -117,6 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueChanged += delegate
 			{
+				this.accessor.SetObjectField (field, controller.Value);
 				this.OnValueChanged (field);
 			};
 
@@ -140,6 +143,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueChanged += delegate
 			{
+				this.accessor.SetObjectField (field, controller.Value);
 				this.OnValueChanged (field);
 			};
 
@@ -163,6 +167,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueChanged += delegate
 			{
+				this.accessor.SetObjectField (field, controller.Value);
 				this.OnValueChanged (field);
 			};
 

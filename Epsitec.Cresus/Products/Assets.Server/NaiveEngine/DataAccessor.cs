@@ -17,6 +17,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		public DataAccessor(DataMandat mandat)
 		{
 			this.mandat = mandat;
+
+			this.editionAddedProperties = new Dictionary<ObjectField, AbstractDataProperty> ();
+			this.editionRemovedProperties = new HashSet<ObjectField> ();
+			this.editionObjectGuid = Guid.Empty;
 		}
 
 
@@ -258,6 +262,182 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
+		#region Edition manager
+		public void StartObjectEdition(Guid objectGuid, Timestamp? timestamp)
+		{
+			//	Marque le début de l'édition de l'événement d'un objet.
+			if (objectGuid.IsEmpty || timestamp == null)
+			{
+				return;
+			}
+
+			if (!this.editionObjectGuid.IsEmpty)  // déjà une édition en cours ?
+			{
+				if (objectGuid != this.editionObjectGuid ||
+					timestamp  != this.editionTimestamp)  // sur un autre objet/événement ?
+				{
+					this.SaveObjectEdition ();
+				}
+			}
+
+			this.editionObjectGuid = objectGuid;
+			this.editionTimestamp = timestamp;
+
+			this.editionAddedProperties.Clear ();
+			this.editionRemovedProperties.Clear ();
+		}
+
+		public void SetObjectField(ObjectField field, string value)
+		{
+			if (value != null)
+			{
+				this.AddEditionProperty (new DataStringProperty ((int) field, value));
+			}
+			else
+			{
+				this.RemoveEditionProperty (field);
+			}
+		}
+
+		public void SetObjectField(ObjectField field, decimal? value)
+		{
+			if (value.HasValue)
+			{
+				this.AddEditionProperty (new DataDecimalProperty ((int) field, value.Value));
+			}
+			else
+			{
+				this.RemoveEditionProperty (field);
+			}
+		}
+
+		public void SetObjectField(ObjectField field, ComputedAmount? value)
+		{
+			if (value.HasValue)
+			{
+				this.AddEditionProperty (new DataComputedAmountProperty ((int) field, value.Value));
+			}
+			else
+			{
+				this.RemoveEditionProperty (field);
+			}
+		}
+
+		public void SetObjectField(ObjectField field, int? value)
+		{
+			if (value.HasValue)
+			{
+				this.AddEditionProperty (new DataIntProperty ((int) field, value.Value));
+			}
+			else
+			{
+				this.RemoveEditionProperty (field);
+			}
+		}
+
+		public void SetObjectField(ObjectField field, System.DateTime? value)
+		{
+			if (value.HasValue)
+			{
+				this.AddEditionProperty (new DataDateProperty ((int) field, value.Value));
+			}
+			else
+			{
+				this.RemoveEditionProperty (field);
+			}
+		}
+
+		private void RemoveEditionProperty(ObjectField field)
+		{
+			if (this.editionAddedProperties.ContainsKey (field))
+			{
+				this.editionAddedProperties.Remove (field);
+			}
+
+			this.editionRemovedProperties.Add (field);
+		}
+
+		private void AddEditionProperty(AbstractDataProperty property)
+		{
+			var field = (ObjectField) property.Id;
+
+			if (this.editionAddedProperties.ContainsKey (field))
+			{
+				this.editionAddedProperties[field] = property;
+			}
+			else
+			{
+				this.editionAddedProperties.Add (field, property);
+			}
+
+			if (this.editionRemovedProperties.Contains (field))
+			{
+				this.editionRemovedProperties.Remove (field);
+			}
+		}
+
+		public void SaveObjectEdition()
+		{
+			//	Marque la fin de l'édition de l'événement d'un objet.
+			if (!this.editionObjectGuid.IsEmpty && this.editionTimestamp != null)
+			{
+				var e = this.EditionEvent;
+				if (e != null)
+				{
+					//	Répercute les champs modifiés.
+					foreach (var pair in this.editionAddedProperties)
+					{
+						var p = e.Properties.Where (x => x.Id == (int) pair.Key).FirstOrDefault ();
+						if (p != null)
+						{
+							e.Properties.Remove (p);
+						}
+
+						e.Properties.Add (pair.Value);
+					}
+
+					//	Répercute les champs effacés.
+					foreach (var field in this.editionRemovedProperties)
+					{
+						var p = e.Properties.Where (x => x.Id == (int) field).FirstOrDefault ();
+						if (p != null)
+						{
+							e.Properties.Remove (p);
+						}
+					}
+				}
+			}
+
+			this.CancelObjectEdition ();
+		}
+
+		private DataEvent EditionEvent
+		{
+			get
+			{
+				var obj = this.mandat.GetObject (this.editionObjectGuid);
+
+				if (obj != null)
+				{
+					return obj.Events.Where (x => x.Timestamp == this.editionTimestamp).FirstOrDefault ();
+				}
+
+				return null;
+			}
+		}
+
+		public void CancelObjectEdition()
+		{
+			//	Marque la fin de l'édition de l'événement d'un objet.
+			this.editionObjectGuid = Guid.Empty;
+			this.editionTimestamp = null;
+
+			this.editionAddedProperties.Clear ();
+			this.editionRemovedProperties.Clear ();
+		}
+		#endregion
+
+
 		public FieldType GetFieldType(ObjectField objectField)
 		{
 			switch (objectField)
@@ -404,6 +584,11 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		#endregion
 
 
-		private readonly DataMandat mandat;
+		private readonly DataMandat				mandat;
+		private readonly Dictionary<ObjectField, AbstractDataProperty> editionAddedProperties;
+		private readonly HashSet<ObjectField>	editionRemovedProperties;
+
+		private Guid							editionObjectGuid;
+		private Timestamp?						editionTimestamp;
 	}
 }

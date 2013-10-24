@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public void SetObject(Guid objectGuid, Timestamp? timestamp)
 		{
 			//	Spécifie l'objet sélectionné dans le TreeTable de gauche.
-			this.ClearEditionDirty ();
+			this.StartEdition (objectGuid, timestamp);
 
 			if (timestamp == null || !timestamp.HasValue)
 			{

@@ -25,10 +25,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (this.controller != null)
 					{
-						this.controller.ComputedAmount = this.value;
+						using (this.ignoreChanges.Enter ())
+						{
+							this.controller.ComputedAmount = this.value;
+						}
 					}
+
+					this.OnValueChanged ();
 				}
 			}
+		}
+
+		protected override void ClearValue()
+		{
+			this.Value = null;
 		}
 
 
@@ -43,8 +53,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller.ValueChanged += delegate
 			{
-				this.value = this.controller.ComputedAmount;
-				this.OnValueChanged ();
+				if (this.ignoreChanges.IsZero)
+				{
+					this.Value = this.controller.ComputedAmount;
+				}
 			};
 		}
 

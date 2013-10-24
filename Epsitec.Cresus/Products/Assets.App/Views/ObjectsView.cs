@@ -321,6 +321,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnEditCancel()
 		{
+			this.accessor.CancelObjectEdition ();
 			this.isEditing = false;
 			this.Update ();
 		}
@@ -328,6 +329,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void Update()
 		{
+			if (!this.isEditing)
+			{
+				this.accessor.SaveObjectEdition ();
+			}
+
 			this.UpdateGeometryWithWithoutTimeline ();
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
