@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static string GetTooltip(Timestamp timestamp, EventType eventType, IEnumerable<AbstractDataProperty> properties)
+		public static string GetTooltip(Timestamp timestamp, EventType eventType, IEnumerable<AbstractDataProperty> properties, int maxLines = int.MaxValue)
 		{
 			var list = new List<string> ();
 
@@ -58,16 +58,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			foreach (var field in DataAccessor.ObjectFields)
 			{
-				var desc = StaticDescriptions.GetObjectFieldDescription (field) + " :   ";
+				if (field == ObjectField.Level)
+				{
+					continue;
+				}
+
+				string line = null;
 
 				switch (DataAccessor.GetFieldType (field))
 				{
 					case FieldType.String:
-						var t = DataAccessor.GetStringProperty (properties, (int) field);
-						if (!string.IsNullOrEmpty (t))
-						{
-							list.Add (desc + t);
-						}
+						line = DataAccessor.GetStringProperty (properties, (int) field);
 						break;
 
 					case FieldType.Decimal:
@@ -77,15 +78,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 							switch (Format.GetFieldFormat (field))
 							{
 								case DecimalFormat.Rate:
-									list.Add (desc + Helpers.Converters.RateToString (d));
+									line = Helpers.Converters.RateToString (d);
 									break;
 
 								case DecimalFormat.Amount:
-									list.Add (desc + Helpers.Converters.AmountToString (d));
+									line = Helpers.Converters.AmountToString (d);
 									break;
 
 								case DecimalFormat.Real:
-									list.Add (desc + Helpers.Converters.DecimalToString (d));
+									line = Helpers.Converters.DecimalToString (d);
 									break;
 							}
 						}
@@ -95,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var ca = DataAccessor.GetComputedAmountProperty (properties, (int) field);
 						if (ca.HasValue)
 						{
-							list.Add (desc + Helpers.Converters.AmountToString (ca.Value.FinalAmount));
+							line = Helpers.Converters.AmountToString (ca.Value.FinalAmount);
 						}
 						break;
 
@@ -103,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var i = DataAccessor.GetIntProperty (properties, (int) field);
 						if (i.HasValue)
 						{
-							list.Add (desc + Helpers.Converters.IntToString (i));
+							line = Helpers.Converters.IntToString (i);
 						}
 						break;
 
@@ -111,13 +112,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var da = DataAccessor.GetDateProperty (properties, (int) field);
 						if (da.HasValue)
 						{
-							list.Add (desc + Helpers.Converters.DateToString (da));
+							line = Helpers.Converters.DateToString (da);
 						}
 						break;
+				}
+
+				if (!string.IsNullOrEmpty (line))
+				{
+					if (list.Count >= maxLines)
+					{
+						list.Add ("...");
+						break;
+					}
+
+					var desc = StaticDescriptions.GetObjectFieldDescription (field);
+					list.Add (BusinessLogic.GetTooltipLine (desc, line));
 				}
 			}
 
 			return string.Join ("<br/>", list);
+		}
+
+		private static string GetTooltipLine(string desc, string text, int maxLength = 50)
+		{
+			if (!string.IsNullOrEmpty (text))
+			{
+				text = text.Replace ("<br/>", ", ");
+
+				if (text.Length > maxLength)
+				{
+					text = text.Substring (0, maxLength) + "...";
+				}
+
+				return string.Concat (desc, " :   ", text);
+			}
+
+			return null;
 		}
 
 		public static string GetEventDescription(Timestamp timestamp, EventType eventType)

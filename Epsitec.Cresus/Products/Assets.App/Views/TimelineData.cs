@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							{
 								Timestamp     = t.Value,
 								TimelineGlyph = glyph,
-								Tooltip       = BusinessLogic.GetTooltip (t.Value, type, properties),
+								Tooltip       = BusinessLogic.GetTooltip (t.Value, type, properties, 8),
 								Values        = new decimal?[] { v1, v2 },
 							};
 
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							{
 								Timestamp     = this.cells[index].Timestamp,
 								TimelineGlyph = glyph,
-								Tooltip       = BusinessLogic.GetTooltip (t.Value, type, properties),
+								Tooltip       = BusinessLogic.GetTooltip (t.Value, type, properties, 8),
 								Values        = new decimal?[] { v1, v2 },
 							};
 
