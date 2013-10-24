@@ -723,13 +723,13 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if ( dir == Direction.Up )
 				{
-					tabRect.Left  += 2;
-					tabRect.Right -= 2;
+					tabRect.Left  += 4;
+					tabRect.Right -= 4;
 				}
 				if ( dir == Direction.Left )
 				{
-					tabRect.Bottom += 2;
-					tabRect.Top    -= 2;
+					tabRect.Bottom += 4;
+					tabRect.Top    -= 4;
 				}
 				graphics.AddFilledRectangle(tabRect);
 				graphics.RenderSolid(this.colorHilite);
@@ -745,17 +745,18 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine la cabine d'un ascenseur.
 			if ( dir == Direction.Up )
 			{
-				thumbRect.Left  += 2;
-				thumbRect.Right -= 2;
+				thumbRect.Left  += 4;
+				thumbRect.Right -= 4;
 			}
 			if ( dir == Direction.Left )
 			{
-				thumbRect.Bottom += 2;
-				thumbRect.Top    -= 2;
+				thumbRect.Bottom += 4;
+				thumbRect.Top    -= 4;
 			}
 			graphics.AddFilledRectangle(thumbRect);
 			graphics.RenderSolid(this.colorControlDark);
 
+#if false
 			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{
 				switch ( dir )
@@ -797,6 +798,7 @@ namespace Epsitec.Common.Widgets.Adorners
 						break;
 				}
 			}
+#endif
 		}
 
 		public override void PaintScrollerForeground(Drawing.Graphics graphics,
