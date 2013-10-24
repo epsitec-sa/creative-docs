@@ -71,6 +71,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			controller.ValueChanged += delegate
 			{
 				this.accessor.SetObjectField (field, controller.Value);
+
+				controller.SilentValue = DataAccessor.GetStringProperty (this.properties, (int) field);
+				controller.PropertyState = this.GetPropertyState (field);
+
 				this.OnValueChanged (field);
 			};
 
@@ -96,6 +100,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			controller.ValueChanged += delegate
 			{
 				this.accessor.SetObjectField (field, controller.Value);
+
+				controller.SilentValue = DataAccessor.GetDecimalProperty (this.properties, (int) field);
+				controller.PropertyState = this.GetPropertyState (field);
+
 				this.OnValueChanged (field);
 			};
 
@@ -120,6 +128,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			controller.ValueChanged += delegate
 			{
 				this.accessor.SetObjectField (field, controller.Value);
+
+				controller.SilentValue = DataAccessor.GetComputedAmountProperty (this.properties, (int) field);
+				controller.PropertyState = this.GetPropertyState (field);
+
 				this.OnValueChanged (field);
 			};
 
@@ -144,6 +156,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			controller.ValueChanged += delegate
 			{
 				this.accessor.SetObjectField (field, controller.Value);
+
+				controller.SilentValue = DataAccessor.GetIntProperty (this.properties, (int) field);
+				controller.PropertyState = this.GetPropertyState (field);
+
 				this.OnValueChanged (field);
 			};
 
@@ -168,6 +184,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			controller.ValueChanged += delegate
 			{
 				this.accessor.SetObjectField (field, controller.Value);
+
+				controller.SilentValue = DataAccessor.GetDateProperty (this.properties, (int) field);
+				controller.PropertyState = this.GetPropertyState (field);
+
 				this.OnValueChanged (field);
 			};
 

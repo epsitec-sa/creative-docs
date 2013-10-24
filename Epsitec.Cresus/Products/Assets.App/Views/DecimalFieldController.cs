@@ -38,6 +38,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public decimal?							SilentValue
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if (this.value != value)
+				{
+					this.value = value;
+
+					if (this.textField != null)
+					{
+						using (this.ignoreChanges.Enter ())
+						{
+							this.textField.Text = this.ConvDecimalToString (this.value);
+						}
+					}
+				}
+			}
+		}
+
 		protected override void ClearValue()
 		{
 			this.Value = null;

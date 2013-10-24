@@ -18,8 +18,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorControlReadOnly   = Drawing.Color.FromRgb(230.0/255.0, 230.0/255.0, 230.0/255.0);
 			this.colorWindow            = Drawing.Color.FromRgb(220.0/255.0, 220.0/255.0, 220.0/255.0);
 			this.colorCaptionNF         = Drawing.Color.FromRgb(210.0/255.0, 210.0/255.0, 210.0/255.0);
-			this.colorControlBar        = Drawing.Color.FromRgb(200.0/255.0, 200.0/255.0, 200.0/255.0);
-			this.colorBackDisabled      = Drawing.Color.FromRgb(200.0/255.0, 200.0/255.0, 200.0/255.0);
+			this.colorControlBar        = Drawing.Color.FromRgb(204.0/255.0, 204.0/255.0, 204.0/255.0);
+			this.colorBackDisabled      = Drawing.Color.FromRgb(204.0/255.0, 204.0/255.0, 204.0/255.0);
 			this.colorControlLightLight = Drawing.Color.FromRgb(180.0/255.0, 180.0/255.0, 180.0/255.0);
 			this.colorFrontDisabled     = Drawing.Color.FromRgb(170.0/255.0, 170.0/255.0, 170.0/255.0);
 			this.colorControlLight      = Drawing.Color.FromRgb(160.0/255.0, 160.0/255.0, 160.0/255.0);

@@ -59,6 +59,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void OpenMainPage(EventType eventType)
 		{
+			//	Après la création d'un événement, on cherche à ouvrir la page la
+			//	plus pertinente.
 			var pages = ObjectEditor.GetAvailablePages (true, eventType).ToArray ();
 			if (pages.Length >= 2)
 			{

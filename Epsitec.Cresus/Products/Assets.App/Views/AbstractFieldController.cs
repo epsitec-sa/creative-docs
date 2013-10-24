@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent        = this.frameBox,
 				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Field.History"),
 				AutoFocus     = false,
-				Anchor        = AnchorStyles.BottomRight,
+				Anchor        = AnchorStyles.TopRight,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 				Margins       = new Margins (0, AbstractFieldController.lineHeight, 0, 0),
 			};
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent        = this.frameBox,
 				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Field.Clear"),
 				AutoFocus     = false,
-				Anchor        = AnchorStyles.BottomRight,
+				Anchor        = AnchorStyles.TopRight,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
 
