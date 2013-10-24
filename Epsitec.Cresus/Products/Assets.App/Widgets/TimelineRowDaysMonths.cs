@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -13,12 +14,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// Ligne de Timeline affichant les numéros des jours et mois.
 	/// Par exemple "28.03", "29.03", "30.03", "31.03".
 	/// </summary>
-	public class TimelineRowDaysMonths : AbstractTimelineRow
+	public class TimelineRowDaysMonths : AbstractTimelineRow, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
 		public void SetCells(TimelineCellDate[] cells)
 		{
 			this.cells = cells;
 			this.Invalidate ();
+
+			ToolTip.Default.RegisterDynamicToolTipHost (this);  // pour voir les tooltips dynamiques
 		}
 
 
@@ -112,6 +115,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return null;
 			}
 		}
+
+
+		#region IToolTipHost Members
+		public object GetToolTipCaption(Point pos)
+		{
+			if (this.detectedHoverRank >= 0 && this.detectedHoverRank < this.cells.Length)
+			{
+				var cell = this.GetCell (this.detectedHoverRank);
+				if (cell.IsValid)
+				{
+					return Helpers.Converters.DateToFullString (cell.Date);
+				}
+			}
+
+			return null;
+		}
+		#endregion
 
 
 		private TimelineCellDate GetCell(int rank)

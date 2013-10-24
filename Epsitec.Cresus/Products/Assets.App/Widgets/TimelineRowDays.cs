@@ -125,6 +125,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		#region IToolTipHost Members
+		public object GetToolTipCaption(Point pos)
+		{
+			if (this.detectedHoverRank >= 0 && this.detectedHoverRank < this.cells.Length)
+			{
+				var cell = this.GetCell (this.detectedHoverRank);
+				if (cell.IsValid)
+				{
+					return Helpers.Converters.DateToFullString (cell.Date);
+				}
+			}
+
+			return null;
+		}
+		#endregion
+
+
 		private TimelineCellDate GetCell(int rank)
 		{
 			if (rank < this.VisibleCellCount)
@@ -152,23 +169,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return -1;
 			}
 		}
-
-
-		#region IToolTipHost Members
-		public object GetToolTipCaption(Point pos)
-		{
-			if (this.detectedHoverRank >= 0 && this.detectedHoverRank < this.cells.Length)
-			{
-				var cell = this.GetCell (this.detectedHoverRank);
-				if (cell.IsValid)
-				{
-					return Helpers.Converters.DateToFullString (cell.Date);
-				}
-			}
-
-			return null;
-		}
-		#endregion
 
 
 		private TimelineCellDate[] cells;
