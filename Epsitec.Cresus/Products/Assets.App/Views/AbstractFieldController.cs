@@ -22,8 +22,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public int								TabIndex;
 		public int								LabelWidth = 100;
 		public int								EditWidth = 380;
-		public PropertyState					PropertyState;
 		public bool								HideAdditionalButtons;
+
+		public PropertyState					PropertyState
+		{
+			get
+			{
+				return this.propertyState;
+			}
+			set
+			{
+				if (this.propertyState != value)
+				{
+					this.propertyState = value;
+					this.UpdatePropertyState ();
+				}
+			}
+		}
 
 		public string							Label
 		{
@@ -47,7 +62,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Margins         = new Margins (0, 0, 0, 0),
 				Padding         = new Margins (2),
-				BackColor       = this.BackgroundColor,
 			};
 
 			this.CreateLabel ();
@@ -57,6 +71,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.CreateClearButton ();
 				this.CreateHistoryButton ();
 			}
+
+			this.UpdatePropertyState ();
 		}
 
 		public virtual void SetFocus()
@@ -88,8 +104,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent        = this.frameBox,
 				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Field.History"),
 				AutoFocus     = false,
-				Dock          = DockStyle.Right,
+				Anchor        = AnchorStyles.BottomRight,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
+				Margins       = new Margins (0, AbstractFieldController.lineHeight, 0, 0),
 			};
 
 			ToolTip.Default.SetToolTip (button, "Montre l'historique des modifications");
@@ -102,33 +119,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateClearButton()
 		{
-			if (this.PropertyState == PropertyState.Single)
+			this.clearButton = new IconButton
 			{
-				var button = new IconButton
-				{
-					Parent        = this.frameBox,
-					IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Field.Clear"),
-					AutoFocus     = false,
-					Dock          = DockStyle.Right,
-					PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
-				};
+				Parent        = this.frameBox,
+				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Field.Clear"),
+				AutoFocus     = false,
+				Anchor        = AnchorStyles.BottomRight,
+				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
+			};
 
-				ToolTip.Default.SetToolTip (button, "Supprime cette modification de l'événement");
+			ToolTip.Default.SetToolTip (this.clearButton, "Supprime cette modification de l'événement");
 
-				button.Clicked += delegate
-				{
-					this.ClearValue ();
-				};
-			}
-			else
+			this.clearButton.Clicked += delegate
 			{
-				new FrameBox
-				{
-					Parent        = this.frameBox,
-					Dock          = DockStyle.Right,
-					PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
-				};
-			}
+				this.ClearValue ();
+			};
 		}
 
 		protected virtual void ClearValue()
@@ -136,11 +141,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void UpdatePropertyState()
+		{
+			if (this.frameBox == null)
+			{
+				return;
+			}
+
+			this.frameBox.BackColor = this.BackgroundColor;
+			this.clearButton.Visibility = (this.PropertyState == PropertyState.Single);
+		}
+
 		protected Color BackgroundColor
 		{
 			get
 			{
-				switch (this.PropertyState)
+				switch (this.propertyState)
 				{
 					case PropertyState.Single:
 						return ColorManager.EditSinglePropertyColor;
@@ -187,5 +203,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected FrameBox						frameBox;
 		private string							label;
+		private IconButton						clearButton;
+		private PropertyState					propertyState;
 	}
 }
