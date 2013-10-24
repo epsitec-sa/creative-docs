@@ -57,6 +57,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
+		public override void OpenMainPage(EventType eventType)
+		{
+			var pages = ObjectEditor.GetAvailablePages (true, eventType).ToArray ();
+			if (pages.Length >= 2)
+			{
+				this.AddPage (pages[1]);
+			}
+		}
+
 
 		private void NavigatorArrowClicked(Widget target, int rank)
 		{

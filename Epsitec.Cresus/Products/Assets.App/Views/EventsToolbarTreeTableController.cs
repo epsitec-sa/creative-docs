@@ -120,6 +120,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					this.SelectedRow = this.TimestampToRow (timestamp.Value);
 				}
+
+				this.OnStartEditing (type);
 			}
 		}
 
@@ -293,6 +295,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		#region Events handler
+		private void OnStartEditing(EventType eventType)
+		{
+			if (this.StartEditing != null)
+			{
+				this.StartEditing (this, eventType);
+			}
+		}
+
+		public delegate void StartEditingEventHandler(object sender, EventType eventType);
+		public event StartEditingEventHandler StartEditing;
+		#endregion
+
+	
 		private Guid							objectGuid;
 	}
 }

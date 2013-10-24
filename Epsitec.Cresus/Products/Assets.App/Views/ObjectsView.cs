@@ -41,6 +41,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateToolbars ();
 			};
 
+			this.timelineController.StartEditing += delegate (object sender, EventType eventType)
+			{
+				this.OnStartEdit (eventType);
+			};
+
+			this.eventsController.StartEditing += delegate (object sender, EventType eventType)
+			{
+				this.OnStartEdit (eventType);
+			};
+
 			this.isWithTimelineView = true;
 		}
 
@@ -252,6 +262,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.isEditing = !this.isEditing;
 			this.Update ();
+		}
+
+		private void OnStartEdit(EventType eventType)
+		{
+			//	Démarre une édition après avoir créé un événement.
+			this.isEditing = true;
+			this.Update ();
+			this.objectEditor.OpenMainPage (eventType);
 		}
 
 		private void OnMainAmortissement()

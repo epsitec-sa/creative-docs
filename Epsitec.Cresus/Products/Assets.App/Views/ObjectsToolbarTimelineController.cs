@@ -373,6 +373,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						this.SelectedCell = index.Value;
 					}
+
+					this.OnStartEditing (type);
 				}
 			}
 		}
@@ -882,6 +884,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public delegate void CellDoubleClickedEventHandler(object sender, int row);
 		public event CellDoubleClickedEventHandler CellDoubleClicked;
+
+
+		private void OnStartEditing(EventType eventType)
+		{
+			if (this.StartEditing != null)
+			{
+				this.StartEditing (this, eventType);
+			}
+		}
+
+		public delegate void StartEditingEventHandler(object sender, EventType eventType);
+		public event StartEditingEventHandler StartEditing;
 		#endregion
 
 

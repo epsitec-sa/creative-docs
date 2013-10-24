@@ -28,6 +28,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
+		public virtual void OpenMainPage(EventType eventType)
+		{
+		}
+
 
 		protected void StartEdition(Guid objectGuid, Timestamp? timestamp)
 		{
