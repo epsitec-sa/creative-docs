@@ -57,6 +57,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 				IsReadOnly      = this.PropertyState == PropertyState.Readonly,
 			};
 
+			var minus = new GlyphButton
+			{
+				Parent        = this.frameBox,
+				GlyphShape    = GlyphShape.Minus,
+				ButtonStyle   = ButtonStyle.ToolItem,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
+			};
+
+			var plus = new GlyphButton
+			{
+				Parent        = this.frameBox,
+				GlyphShape    = GlyphShape.Plus,
+				ButtonStyle   = ButtonStyle.ToolItem,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
+			};
+
 			this.textField.TextChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
@@ -64,12 +82,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.Value = IntFieldController.ConvStringToInt (this.textField.Text);
 				}
 			};
+
+			minus.Clicked += delegate
+			{
+				this.AddDelta (-1);
+			};
+
+			plus.Clicked += delegate
+			{
+				this.AddDelta (1);
+			};
 		}
 
 		public override void SetFocus()
 		{
 			this.textField.SelectAll ();
 			this.textField.Focus ();
+		}
+
+
+		private void AddDelta(int delta)
+		{
+			if (this.value.HasValue)
+			{
+				this.Value = this.value.Value + delta;
+			}
 		}
 
 
