@@ -58,6 +58,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.fieldControllers[field].SetFocus ();
 			}
+			else
+			{
+				//	Si on n'a pas trouvé le champ, ou s'il n'était pas précisé en
+				//	entrée, on met le focus dans le premier champ.
+				if (this.fieldControllers.Any ())
+				{
+					this.fieldControllers.First ().Value.SetFocus ();
+				}
+			}
 		}
 
 		protected virtual void CreateUI(Widget parent)
