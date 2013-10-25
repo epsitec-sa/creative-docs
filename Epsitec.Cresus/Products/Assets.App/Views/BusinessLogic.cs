@@ -161,7 +161,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (timestamp.Date != System.DateTime.MaxValue)
 			{
 				var d = Helpers.Converters.DateToString (timestamp.Date);
-				list.Add ("Evénement du " + d);
+
+				if (eventType == EventType.Unknown)
+				{
+					list.Add (d);
+				}
+				else
+				{
+					list.Add ("Evénement du " + d);
+				}
 			}
 
 			//	Met le type de l'événement, s'il est connu.
