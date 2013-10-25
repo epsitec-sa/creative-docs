@@ -18,14 +18,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void Update()
-		{
-			this.UpdateData ();
-			this.UpdateController ();
-			this.UpdateToolbar ();
-		}
-
-
 		public Guid								ObjectGuid
 		{
 			get
@@ -55,6 +47,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.VisibleSelectedRow = this.TimestampToRow (value);
 			}
+		}
+
+
+		public void Update()
+		{
+			this.UpdateData ();
+			this.UpdateController ();
+			this.UpdateToolbar ();
 		}
 
 
@@ -122,6 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				this.OnStartEditing (type);
+				this.OnUpdateAll ();
 			}
 		}
 
@@ -306,6 +307,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public delegate void StartEditingEventHandler(object sender, EventType eventType);
 		public event StartEditingEventHandler StartEditing;
+
+
+		private void OnUpdateAll()
+		{
+			if (this.UpdateAll != null)
+			{
+				this.UpdateAll (this);
+			}
+		}
+
+		public delegate void UpdateAllEventHandler(object sender);
+		public event UpdateAllEventHandler UpdateAll;
 		#endregion
 
 	

@@ -34,9 +34,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void CreateUI(Widget parent)
+		public override void CreateUI(Widget parent)
 		{
 			this.summaryController.CreateUI (parent);
+		}
+
+		public override void SetObject(Guid objectGuid, Timestamp timestamp)
+		{
+			base.SetObject (objectGuid, timestamp);
+
 			this.summaryController.UpdateFields (this.objectGuid, this.timestamp);
 		}
 

@@ -56,6 +56,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnStartEdit (eventType);
 			};
 
+			this.timelineController.UpdateAll += delegate
+			{
+				this.Update ();
+				this.eventsController.Update ();
+			};
+
+			this.eventsController.UpdateAll += delegate
+			{
+				this.Update ();
+				this.timelineController.Update ();
+			};
+
 			this.isWithTimelineView = true;
 		}
 

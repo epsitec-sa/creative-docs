@@ -73,10 +73,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					DummyMandat.AddAmortissement1 (e);
 				}
 
-				for (int i=1; i<200; i++)
+				for (int i=1; i<50; i++)
 				{
 					{
-						var e = new DataEvent (1, new Timestamp (start.Date.AddDays (i*3), 0), EventType.AmortissementAuto);
+						var e = new DataEvent (1, new Timestamp (start.Date.AddDays (i*11), 0), EventType.AmortissementAuto);
 						o.AddEvent (e);
 
 						decimal a1 = 3000000.0m-(i-1)*10000;

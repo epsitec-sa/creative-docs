@@ -136,8 +136,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void AddPage(EditionObjectPageType type, ObjectField focusedField = ObjectField.Unknown)
 		{
 			//	Ajoute une nouvelle page à la fin de la liste actuelle.
+			if (this.currentPage != null)
+			{
+				this.currentPage.Dispose ();
+				this.currentPage = null;
+			}
+
+			this.editFrameBox.Children.Clear ();
+
 			this.currentPage = AbstractObjectEditorPage.CreatePage (this.accessor, type);
-			this.currentPage.SetObject (this.editFrameBox, this.objectGuid, this.timestamp);
+			this.currentPage.CreateUI (this.editFrameBox);
+			this.currentPage.SetObject (this.objectGuid, this.timestamp);
 			this.currentPage.SetFocus (focusedField);
 
 			this.currentPage.ValueChanged += delegate (object sender, ObjectField field)
@@ -211,7 +220,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.lastEventType = this.eventType;
 			}
 
-			this.currentPage.SetObject (this.editFrameBox, this.objectGuid, this.timestamp);
+			this.currentPage.SetObject (this.objectGuid, this.timestamp);
 
 			this.topTitle.SetTitle (this.EventDescription);
 		}

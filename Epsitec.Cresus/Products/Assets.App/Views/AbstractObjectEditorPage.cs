@@ -18,6 +18,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.fieldControllers = new Dictionary<ObjectField, AbstractFieldController> ();
 		}
 
+		public void Dispose()
+		{
+		}
+
 
 		public virtual IEnumerable<EditionObjectPageType> ChildrenPageTypes
 		{
@@ -28,28 +32,69 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void SetObject(Widget parent, Guid objectGuid, Timestamp timestamp)
+		public virtual void CreateUI(Widget parent)
+		{
+		}
+
+		public virtual void SetObject(Guid objectGuid, Timestamp timestamp)
 		{
 			this.objectGuid = objectGuid;
 			this.timestamp = timestamp;
 
 			if (this.objectGuid.IsEmpty)
 			{
-				this.hasEvent = false;
-				this.eventType = EventType.Unknown;
+				this.hasEvent   = false;
+				this.eventType  = EventType.Unknown;
 				this.properties = null;
 			}
 			else
 			{
-				this.hasEvent = this.accessor.HasObjectEvent (this.objectGuid, this.timestamp);
-				this.eventType = this.accessor.GetObjectEventType (this.objectGuid, this.timestamp).GetValueOrDefault (EventType.Unknown);
+				this.hasEvent   = this.accessor.HasObjectEvent (this.objectGuid, this.timestamp);
+				this.eventType  = this.accessor.GetObjectEventType (this.objectGuid, this.timestamp).GetValueOrDefault (EventType.Unknown);
 				this.properties = this.accessor.GetObjectSyntheticProperties (this.objectGuid, this.timestamp);
 			}
 
-			parent.Children.Clear ();
-			this.fieldControllers.Clear ();
+			foreach (var pair in this.fieldControllers)
+			{
+				var field      = pair.Key;
+				var controller = pair.Value;
 
-			this.CreateUI (parent);
+				if (controller is StringFieldController)
+				{
+					var c = controller as StringFieldController;
+
+					c.SilentValue   = DataAccessor.GetStringProperty (this.properties, (int) field);
+					c.PropertyState = this.GetPropertyState (field);
+				}
+				else if (controller is DecimalFieldController)
+				{
+					var c = controller as DecimalFieldController;
+
+					c.SilentValue   = DataAccessor.GetDecimalProperty (this.properties, (int) field);
+					c.PropertyState = this.GetPropertyState (field);
+				}
+				else if (controller is ComputedAmountFieldController)
+				{
+					var c = controller as ComputedAmountFieldController;
+
+					c.SilentValue   = DataAccessor.GetComputedAmountProperty (this.properties, (int) field);
+					c.PropertyState = this.GetPropertyState (field);
+				}
+				else if (controller is IntFieldController)
+				{
+					var c = controller as IntFieldController;
+
+					c.SilentValue   = DataAccessor.GetIntProperty (this.properties, (int) field);
+					c.PropertyState = this.GetPropertyState (field);
+				}
+				else if (controller is DateFieldController)
+				{
+					var c = controller as DateFieldController;
+
+					c.SilentValue   = DataAccessor.GetDateProperty (this.properties, (int) field);
+					c.PropertyState = this.GetPropertyState (field);
+				}
+			}
 		}
 
 		public void SetFocus(ObjectField field)
@@ -69,21 +114,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected virtual void CreateUI(Widget parent)
-		{
-		}
-
 
 		protected void CreateStringController(Widget parent, ObjectField field, int editWidth = 380, int lineCount = 1)
 		{
 			var controller = new StringFieldController
 			{
-				Label         = StaticDescriptions.GetObjectFieldDescription (field),
-				Value         = DataAccessor.GetStringProperty (this.properties, (int) field),
-				PropertyState = this.GetPropertyState (field),
-				EditWidth     = editWidth,
-				LineCount     = lineCount,
-				TabIndex      = this.tabIndex++,
+				Label     = StaticDescriptions.GetObjectFieldDescription (field),
+				EditWidth = editWidth,
+				LineCount = lineCount,
+				TabIndex  = this.tabIndex++,
 			};
 
 			controller.CreateUI (parent);
@@ -111,8 +150,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new DecimalFieldController
 			{
 				Label         = StaticDescriptions.GetObjectFieldDescription (field),
-				Value         = DataAccessor.GetDecimalProperty (this.properties, (int) field),
-				PropertyState = this.GetPropertyState (field),
 				DecimalFormat = format,
 				TabIndex      = this.tabIndex++,
 			};
@@ -141,10 +178,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new ComputedAmountFieldController
 			{
-				Label         = StaticDescriptions.GetObjectFieldDescription (field),
-				Value         = DataAccessor.GetComputedAmountProperty (this.properties, (int) field),
-				PropertyState = this.GetPropertyState (field),
-				TabIndex      = this.tabIndex++,
+				Label    = StaticDescriptions.GetObjectFieldDescription (field),
+				TabIndex = this.tabIndex++,
 			};
 
 			controller.CreateUI (parent);
@@ -171,10 +206,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new IntFieldController
 			{
-				Label         = StaticDescriptions.GetObjectFieldDescription (field),
-				Value         = DataAccessor.GetIntProperty (this.properties, (int) field),
-				PropertyState = this.GetPropertyState (field),
-				TabIndex      = this.tabIndex++,
+				Label    = StaticDescriptions.GetObjectFieldDescription (field),
+				TabIndex = this.tabIndex++,
 			};
 
 			controller.CreateUI (parent);
@@ -201,10 +234,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new DateFieldController
 			{
-				Label         = StaticDescriptions.GetObjectFieldDescription (field),
-				Value         = DataAccessor.GetDateProperty (this.properties, (int) field),
-				PropertyState = this.GetPropertyState (field),
-				TabIndex      = this.tabIndex++,
+				Label    = StaticDescriptions.GetObjectFieldDescription (field),
+				TabIndex = this.tabIndex++,
 			};
 
 			controller.CreateUI (parent);

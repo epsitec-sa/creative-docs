@@ -26,31 +26,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void CreateUI(Widget parent)
+		public override void CreateUI(Widget parent)
 		{
-			if (this.properties != null)
-			{
-				this.CreateComputedAmountController (parent, ObjectField.Valeur1);
-				this.CreateComputedAmountController (parent, ObjectField.Valeur2);
-				this.CreateComputedAmountController (parent, ObjectField.Valeur3);
+			this.CreateComputedAmountController (parent, ObjectField.Valeur1);
+			this.CreateComputedAmountController (parent, ObjectField.Valeur2);
+			this.CreateComputedAmountController (parent, ObjectField.Valeur3);
 
 #if true
-				//	Code bidon pour tester la navigation à 3 niveaux.
-				var button = new Button
-				{
-					Parent      = parent,
-					Text        = "Amortissements",
-					ButtonStyle = ButtonStyle.Icon,
-					Dock        = DockStyle.Top,
-					Margins     = new Common.Drawing.Margins (0, 400, 20, 0),
-				};
+			//	Code bidon pour tester la navigation à 3 niveaux.
+			var button = new Button
+			{
+				Parent      = parent,
+				Text        = "Amortissements",
+				ButtonStyle = ButtonStyle.Icon,
+				Dock        = DockStyle.Top,
+				Margins     = new Common.Drawing.Margins (0, 400, 20, 0),
+			};
 
-				button.Clicked += delegate
-				{
-					this.OnPageOpen (EditionObjectPageType.Amortissements, ObjectField.Unknown);
-				};
+			button.Clicked += delegate
+			{
+				this.OnPageOpen (EditionObjectPageType.Amortissements, ObjectField.Unknown);
+			};
 #endif
-			}
 		}
 	}
 }
