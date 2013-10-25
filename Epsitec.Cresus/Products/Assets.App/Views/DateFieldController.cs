@@ -25,9 +25,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (this.textField != null)
 					{
-						using (this.ignoreChanges.Enter ())
+						if (this.ignoreChanges.IsZero)
 						{
-							this.textField.Text = DateFieldController.ConvDateToString (this.value);
+							using (this.ignoreChanges.Enter ())
+							{
+								this.textField.Text = DateFieldController.ConvDateToString (this.value);
+							}
 						}
 					}
 
@@ -98,7 +101,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					this.Value = DateFieldController.ConvStringToDate (this.textField.Text);
+					using (this.ignoreChanges.Enter ())
+					{
+						this.Value = DateFieldController.ConvStringToDate (this.textField.Text);
+					}
 				}
 			};
 

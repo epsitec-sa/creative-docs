@@ -27,7 +27,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						using (this.ignoreChanges.Enter ())
 						{
-							this.controller.ComputedAmount = this.value;
+							using (this.ignoreChanges.Enter ())
+							{
+								this.controller.ComputedAmount = this.value;
+							}
 						}
 					}
 
@@ -74,7 +77,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					this.Value = this.controller.ComputedAmount;
+					using (this.ignoreChanges.Enter ())
+					{
+						this.Value = this.controller.ComputedAmount;
+					}
 				}
 			};
 		}

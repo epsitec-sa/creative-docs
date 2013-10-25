@@ -27,9 +27,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (this.textField != null)
 					{
-						using (this.ignoreChanges.Enter ())
+						if (this.ignoreChanges.IsZero)
 						{
-							this.textField.Text = this.ConvDecimalToString (this.value);
+							using (this.ignoreChanges.Enter ())
+							{
+								this.textField.Text = this.ConvDecimalToString (this.value);
+							}
 						}
 					}
 
@@ -94,7 +97,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					this.Value = this.ConvStringToDecimal (this.textField.Text);
+					using (this.ignoreChanges.Enter ())
+					{
+						this.Value = this.ConvStringToDecimal (this.textField.Text);
+					}
 				}
 			};
 		}

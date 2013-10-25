@@ -25,9 +25,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (this.textField != null)
 					{
-						using (this.ignoreChanges.Enter ())
+						if (this.ignoreChanges.IsZero)
 						{
-							this.textField.Text = IntFieldController.ConvIntToString (this.value);
+							using (this.ignoreChanges.Enter ())
+							{
+								this.textField.Text = IntFieldController.ConvIntToString (this.value);
+							}
 						}
 					}
 
@@ -98,7 +101,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					this.Value = IntFieldController.ConvStringToInt (this.textField.Text);
+					using (this.ignoreChanges.Enter ())
+					{
+						this.Value = IntFieldController.ConvStringToInt (this.textField.Text);
+					}
 				}
 			};
 
