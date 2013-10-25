@@ -29,5 +29,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		TypeAmortissement,
 		FréquenceAmortissement,
 		ValeurRésiduelle,
+
+		Compte1,
+		Compte2,
+		Compte3,
+		Compte4,
+		Compte5,
+		Compte6,
+		Compte7,
+		Compte8,
 	}
 }

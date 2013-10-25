@@ -596,6 +596,15 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			e.Properties.Add (new DataStringProperty  ((int) ObjectField.TypeAmortissement,      "Dégressif"));
 			e.Properties.Add (new DataIntProperty     ((int) ObjectField.FréquenceAmortissement, 12));
 			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.ValeurRésiduelle,       1.0m));
+
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte1, "1300 - Actifs transitoires"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte2, "1410 - Conptes de placement"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte3, "1530 - Véhicules"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte4, "1600 - Immeubles"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte5, "2440 - Hypothèques"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte6, "1510 - Outillage"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte7, "1520 - Informatique"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte8, "1601 - Terrains"));
 		}
 
 		private static void AddAmortissement2(DataEvent e)
@@ -607,6 +616,15 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			e.Properties.Add (new DataStringProperty  ((int) ObjectField.TypeAmortissement,      "Linéaire"));
 			e.Properties.Add (new DataIntProperty     ((int) ObjectField.FréquenceAmortissement, 3));
 			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.ValeurRésiduelle,       1.0m));
+
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte1, "1300 - Actifs transitoires"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte2, "1410 - Conptes de placement"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte3, "1530 - Véhicules"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte4, "1600 - Immeubles"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte5, "2440 - Hypothèques"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte6, "1510 - Outillage"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte7, "1520 - Informatique"));
+			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte8, "1601 - Terrains"));
 		}
 	}
 

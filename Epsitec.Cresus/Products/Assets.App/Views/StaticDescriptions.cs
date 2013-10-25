@@ -64,6 +64,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.ValeurRésiduelle:
 					return "Valeur résiduelle";
 
+				case ObjectField.Compte1:
+					return "Bilan";
+
+				case ObjectField.Compte2:
+					return "Compte d'amortissement";
+
+				case ObjectField.Compte3:
+					return "Contrepartie acquisition";
+
+				case ObjectField.Compte4:
+					return "Contrepartie vente";
+
+				case ObjectField.Compte5:
+					return "Réévaluation";
+
+				case ObjectField.Compte6:
+					return "Revalorisation";
+
+				case ObjectField.Compte7:
+					return "Fonds d’amortissement";
+
+				case ObjectField.Compte8:
+					return "Amortissement extra. ou rééval.";
+
 				default:
 					return null;
 			}

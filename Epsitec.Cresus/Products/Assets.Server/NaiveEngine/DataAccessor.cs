@@ -485,6 +485,15 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				yield return ObjectField.TypeAmortissement;
 				yield return ObjectField.FréquenceAmortissement;
 				yield return ObjectField.ValeurRésiduelle;
+
+				yield return ObjectField.Compte1;
+				yield return ObjectField.Compte2;
+				yield return ObjectField.Compte3;
+				yield return ObjectField.Compte4;
+				yield return ObjectField.Compte5;
+				yield return ObjectField.Compte6;
+				yield return ObjectField.Compte7;
+				yield return ObjectField.Compte8;
 			}
 		}
 
