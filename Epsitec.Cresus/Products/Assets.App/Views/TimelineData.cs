@@ -152,11 +152,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (date.HasValue &&
 				!this.cells.Where (x => x.Timestamp.Date == date.Value).Any ())
 			{
+				string tooltip = null;
+
+				if (date.Value == Timestamp.Now.Date)
+				{
+					tooltip = "Aujourd'hui";
+				}
+
 				var cell = new TimelineCell
 				{
 					Timestamp     = new Timestamp(date.Value, 0),
 					TimelineGlyph = TimelineGlyph.Empty,
-					Tooltip       = "Aujourd'hui",
+					Tooltip       = tooltip,
 				};
 
 				int i = this.cells.Where (x => x.Timestamp.Date < date.Value).Count ();
