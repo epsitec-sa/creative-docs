@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Events handler
-		private void OnButtonClicked(string name)
+		protected void OnButtonClicked(string name)
 		{
 			if (this.ButtonClicked != null)
 			{

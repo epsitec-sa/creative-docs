@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void CreateUI(Widget parent)
 		{
 			this.viewType = ViewType.Objects;
+			this.simulation = 0;
 
 			this.CreateToolbar (parent, AbstractCommandToolbar.PrimaryToolbarHeight);
 			this.UpdateCommandButtons ();
@@ -33,6 +34,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.viewType = value;
 					this.UpdateViewButtons ();
+				}
+			}
+		}
+
+		public int Simulation
+		{
+			get
+			{
+				return this.simulation;
+			}
+			set
+			{
+				if (this.simulation != value)
+				{
+					this.simulation = value;
+					this.UpdateSimulation ();
 				}
 			}
 		}
@@ -76,6 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonSettings.Margins = new Margins (0, 40, 0, 0);
 
 			this.UpdateViewButtons ();
+			this.UpdateSimulation ();
 		}
 
 		private IconButton CreateViewButton(FrameBox toolbar, ViewType view, string icon, string tooltip)
@@ -117,6 +135,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetCommandState (ToolbarCommand.Simulation,    ToolbarCommandState.Enable);
 		}
 
+		private void UpdateSimulation()
+		{
+			string icon = "Main.Simulation";
+
+			if (this.simulation >= 0)
+			{
+				icon += this.simulation.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			}
+
+			this.buttonSimulation.IconUri = AbstractCommandToolbar.GetResourceIconUri (icon);
+		}
+
 
 		#region Events handler
 		private void OnViewChanged(ViewType viewType)
@@ -147,5 +177,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonCancel;
 
 		private ViewType viewType;
+		private int simulation;
 	}
 }

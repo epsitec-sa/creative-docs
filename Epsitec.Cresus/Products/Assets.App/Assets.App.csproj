@@ -79,6 +79,7 @@
     <Compile Include="Helpers\Text.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
+    <Compile Include="Popups\SimulationPopup.cs" />
     <Compile Include="Popups\SmoothShadow.cs" />
     <Compile Include="Popups\SimplePopup.cs" />
     <Compile Include="Popups\HistoryAccessor.cs" />
@@ -252,6 +253,11 @@
     <EmbeddedResource Include="Images\View.WithTimeline.icon" />
     <EmbeddedResource Include="Images\TreeTable.ExpandAll.icon" />
     <EmbeddedResource Include="Images\TreeTable.CompactAll.icon" />
+    <EmbeddedResource Include="Images\Radio.Yes.icon" />
+    <EmbeddedResource Include="Images\Radio.No2.icon" />
+    <EmbeddedResource Include="Images\Main.Simulation1.icon" />
+    <EmbeddedResource Include="Images\Main.Simulation2.icon" />
+    <EmbeddedResource Include="Images\Main.Simulation0.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

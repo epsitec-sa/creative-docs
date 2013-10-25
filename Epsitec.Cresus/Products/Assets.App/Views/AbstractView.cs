@@ -46,16 +46,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null)
 			{
-				var popup = new YesNoPopup
+				var popup = new SimulationPopup
 				{
-					Question = "Voulez-vous débuter une simulation ?",
+					Simulation = this.accessor.Simulation,
 				};
 
 				popup.Create (target);
 
 				popup.ButtonClicked += delegate (object sender, string name)
 				{
-					if (name == "yes")
+					if (name.StartsWith ("use-"))
+					{
+						this.accessor.Simulation = popup.Simulation;
+						this.mainToolbar.Simulation = popup.Simulation;
+					}
+					else if (name.StartsWith ("clear-"))
 					{
 					}
 				};

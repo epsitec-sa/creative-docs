@@ -1785,12 +1785,14 @@ namespace Epsitec.Common.Widgets.Adorners
 
 		public override Drawing.Color AdaptPictogramColor(Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
+#if false
 			if ( paintStyle == Drawing.GlyphPaintStyle.Normal )
 			{
 				double alpha = color.A;
 				double intensity = color.GetBrightness();
 				color = Drawing.Color.FromAlphaRgb(alpha, intensity, intensity, intensity);
 			}
+#endif
 
 			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
 			{
