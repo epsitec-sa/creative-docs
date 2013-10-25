@@ -14,6 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public AbstractObjectEditorPage(DataAccessor accessor)
 		{
 			this.accessor = accessor;
+
+			this.fieldControllers = new Dictionary<ObjectField, AbstractFieldController> ();
 		}
 
 
@@ -45,12 +47,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			parent.Children.Clear ();
+			this.fieldControllers.Clear ();
+
 			this.CreateUI (parent);
+		}
+
+		public void SetFocus(ObjectField field)
+		{
+			if (this.fieldControllers.ContainsKey (field))
+			{
+				this.fieldControllers[field].SetFocus ();
+			}
 		}
 
 		protected virtual void CreateUI(Widget parent)
 		{
-
 		}
 
 
@@ -82,6 +93,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.ShowHistoryPopup (target, field);
 			};
+
+			this.fieldControllers.Add (field, controller);
 		}
 
 		protected void CreateDecimalController(Widget parent, ObjectField field, DecimalFormat format)
@@ -111,6 +124,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.ShowHistoryPopup (target, field);
 			};
+
+			this.fieldControllers.Add (field, controller);
 		}
 
 		protected void CreateComputedAmountController(Widget parent, ObjectField field)
@@ -139,6 +154,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.ShowHistoryPopup (target, field);
 			};
+
+			this.fieldControllers.Add (field, controller);
 		}
 
 		protected void CreateIntController(Widget parent, ObjectField field)
@@ -167,6 +184,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.ShowHistoryPopup (target, field);
 			};
+
+			this.fieldControllers.Add (field, controller);
 		}
 
 		protected void CreateDateController(Widget parent, ObjectField field)
@@ -195,6 +214,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.ShowHistoryPopup (target, field);
 			};
+
+			this.fieldControllers.Add (field, controller);
 		}
 
 
@@ -262,15 +283,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event NavigateEventHandler Navigate;
 
 
-		protected void OnPageOpen(EditionObjectPageType type)
+		protected void OnPageOpen(EditionObjectPageType type, ObjectField field)
 		{
 			if (this.PageOpen != null)
 			{
-				this.PageOpen (this, type);
+				this.PageOpen (this, type, field);
 			}
 		}
 
-		public delegate void PageOpenEventHandler(object sender, EditionObjectPageType type);
+		public delegate void PageOpenEventHandler(object sender, EditionObjectPageType type, ObjectField field);
 		public event PageOpenEventHandler PageOpen;
 
 
@@ -288,6 +309,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected readonly DataAccessor				accessor;
+		private Dictionary<ObjectField, AbstractFieldController> fieldControllers;
 
 		protected Guid								objectGuid;
 		protected Timestamp							timestamp;

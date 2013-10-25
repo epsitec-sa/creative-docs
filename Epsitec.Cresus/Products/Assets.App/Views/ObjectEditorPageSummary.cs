@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (field.HasValue)
 			{
 				var type = ObjectEditorPageSummary.GetPageType ((ObjectField) field.Value);
-				this.OnPageOpen (type);
+				this.OnPageOpen (type, (ObjectField) field);
 			}
 		}
 

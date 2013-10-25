@@ -133,11 +133,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.AddPage (type);
 		}
 
-		private void AddPage(EditionObjectPageType type)
+		private void AddPage(EditionObjectPageType type, ObjectField focusedField = ObjectField.Unknown)
 		{
 			//	Ajoute une nouvelle page à la fin de la liste actuelle.
 			this.currentPage = AbstractObjectEditorPage.CreatePage (this.accessor, type);
 			this.currentPage.SetObject (this.editFrameBox, this.objectGuid, this.timestamp);
+			this.currentPage.SetFocus (focusedField);
 
 			this.currentPage.ValueChanged += delegate (object sender, ObjectField field)
 			{
@@ -149,9 +150,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnNavigate (timestamp);
 			};
 
-			this.currentPage.PageOpen += delegate (object sender, EditionObjectPageType openType)
+			this.currentPage.PageOpen += delegate (object sender, EditionObjectPageType openType, ObjectField field)
 			{
-				this.AddPage (openType);
+				this.AddPage (openType, field);
 			};
 
 			var ccpt = this.CurrentChildrenPageTypes.ToArray ();

@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				button.Clicked += delegate
 				{
-					this.OnPageOpen (EditionObjectPageType.Amortissements);
+					this.OnPageOpen (EditionObjectPageType.Amortissements, ObjectField.Unknown);
 				};
 #endif
 			}
