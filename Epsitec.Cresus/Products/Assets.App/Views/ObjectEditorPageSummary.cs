@@ -3,7 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -37,6 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void CreateUI(Widget parent)
 		{
 			this.summaryController.CreateUI (parent);
+			this.CreateCommentaries (parent);
 		}
 
 		public override void SetObject(Guid objectGuid, Timestamp timestamp)
@@ -44,6 +47,55 @@ namespace Epsitec.Cresus.Assets.App.Views
 			base.SetObject (objectGuid, timestamp);
 
 			this.summaryController.UpdateFields (this.objectGuid, this.timestamp);
+
+			this.commentaries.Visibility = this.hasEvent;
+		}
+
+
+		private void CreateCommentaries(Widget parent)
+		{
+			const int size = 17;
+
+			this.commentaries = new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Bottom,
+				PreferredHeight = size,
+			};
+
+			new FrameBox
+			{
+				Parent        = this.commentaries,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (size, size),
+				BackColor     = ColorManager.NormalFieldColor,
+			};
+
+			new StaticText
+			{
+				Parent        = this.commentaries,
+				Text          = "Champ pouvant être défini par cet événement",
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (250, size),
+				Margins       = new Margins (10, 0, 0, 0),
+			};
+
+			new FrameBox
+			{
+				Parent        = this.commentaries,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (size, size),
+				BackColor     = ColorManager.EditSinglePropertyColor,
+			};
+
+			new StaticText
+			{
+				Parent        = this.commentaries,
+				Text          = "Champ défini par cet événement",
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (200, size),
+				Margins       = new Margins (10, 0, 0, 0),
+			};
 		}
 
 
@@ -112,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private static List<List<int>> SummaryFields
 		{
-			//	Retourne la liste des champs qui peupleront la tableau.
+			//	Retourne la liste des champs qui peupleront le tableau.
 			get
 			{
 				var list = new List<List<int>> ();
@@ -168,5 +220,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 	
 		private readonly ObjectSummaryController			summaryController;
+
+		private FrameBox commentaries;
 	}
 }
