@@ -27,27 +27,197 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void GeneratesAmortissementsAuto(Guid objectGuid)
 		{
+			//	Première ébauche totalement naïve et fausse !
 			//	TODO: ...
 			this.accessor.RemoveAmortissementsAuto (objectGuid);
 
-			this.CreateEvent (objectGuid, new System.DateTime (2013, 3, 1));
-			this.CreateEvent (objectGuid, new System.DateTime (2013, 6, 1));
-			this.CreateEvent (objectGuid, new System.DateTime (2013, 9, 1));
+			System.DateTime? date1, date2;
+			decimal? taux, rest;
+			string type;
+			int? freq;
+			if (!this.GetAmortissement (objectGuid, out date1, out date2, out taux, out type, out freq, out rest))
+			{
+				return;
+			}
+
+			for (int j=0; j<100; j++)
+			{
+				System.DateTime date;
+
+				if (j == 0)
+				{
+					if (!date1.HasValue)
+					{
+						continue;
+					}
+					date = date1.Value;
+				}
+				else
+				{
+					var d = date2.Value.Day;
+					var m = date2.Value.Month;
+					var y = date2.Value.Year;
+
+					m += (j-1)*freq.Value;
+
+					while (m > 12)
+					{
+						m -=12;
+						y++;
+					}
+
+					date = new System.DateTime (y, m, d);
+				}
+
+				var values = this.GetValeur (objectGuid, date);
+				var list = new List<decimal?> ();
+
+				for (int i=0; i<3; i++)
+				{
+					var v = values[i].GetValueOrDefault (0);
+
+					v -= v*taux.Value;
+
+					if (v < rest.Value)
+					{
+						list.Add (null);
+					}
+					else
+					{
+						list.Add (v);
+					}
+				}
+
+				this.CreateAmortissementAuto (objectGuid, date, list);
+			}
 		}
 
-		private void CreateEvent(Guid objectGuid, System.DateTime date)
+		private bool GetAmortissement(Guid objectGuid,
+			out System.DateTime? date1, out System.DateTime? date2,
+			out decimal? taux, out string type, out int? freq, out decimal? rest)
 		{
-			//	TODO: ...
+			date1 = null;
+			date2 = null;
+			taux = null;
+			type = null;
+			freq = null;
+			rest = null;
+
+			var properties = this.accessor.GetObjectSyntheticProperties (objectGuid, null);
+
+			if (properties != null)
+			{
+				date1 = DataAccessor.GetDateProperty    (properties, (int) ObjectField.DateAmortissement1);
+				date2 = DataAccessor.GetDateProperty    (properties, (int) ObjectField.DateAmortissement2);
+				taux  = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.TauxAmortissement);
+				type  = DataAccessor.GetStringProperty  (properties, (int) ObjectField.TypeAmortissement);
+				freq  = DataAccessor.GetIntProperty     (properties, (int) ObjectField.FréquenceAmortissement);
+				rest  = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.ValeurRésiduelle);
+			}
+
+			if (!date2.HasValue && date1.HasValue)
+			{
+				date2 = date1;
+				date1 = null;
+			}
+
+			if (string.IsNullOrEmpty (type))
+			{
+				type = "Linéaire";
+			}
+
+			if (!rest.HasValue)
+			{
+				rest = 1.0m;
+			}
+
+			if (!freq.HasValue)
+			{
+				freq = 1;
+			}
+
+			return (date2.HasValue && taux.HasValue);
+		}
+
+		private List<decimal?> GetValeur(Guid objectGuid, System.DateTime date)
+		{
+			var list = new List<decimal?> ();
+
+			var timestamp = new Timestamp(date, 0);
+			var properties = this.accessor.GetObjectSyntheticProperties (objectGuid, timestamp);
+
+			if (properties != null)
+			{
+				for (int i=0; i<3; i++)  // Valeur1..3
+				{
+					ComputedAmount? m = null;
+					switch (i)
+					{
+						case 0:
+							m = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur1);
+							break;
+
+						case 1:
+							m = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur2);
+							break;
+
+						case 2:
+							m = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur3);
+							break;
+					}
+
+					if (m.HasValue)
+					{
+						list.Add (m.Value.FinalAmount);
+					}
+					else
+					{
+						list.Add (null);
+					}
+				}
+			}
+
+			return list;
+		}
+
+		private void CreateAmortissementAuto(Guid objectGuid, System.DateTime date, List<decimal?> values)
+		{
 			var timestamp = this.accessor.CreateObjectEvent (objectGuid, date, EventType.AmortissementAuto);
 
 			if (timestamp.HasValue)
 			{
-				var v = new ComputedAmount(123.0m);
-				var p = new DataComputedAmountProperty((int) ObjectField.Valeur1, v);
+				for (int i=0; i<3; i++)  // Valeur1..3
+				{
+					if (values[i].HasValue)
+					{
+						var v = new ComputedAmount (values[i]);
+						DataComputedAmountProperty p = null;
 
-				this.accessor.AddObjectEventProperty(objectGuid, timestamp.Value, p);
+						switch (i)
+						{
+							case 0:
+								p = new DataComputedAmountProperty ((int) ObjectField.Valeur1, v);
+								break;
+
+							case 1:
+								p = new DataComputedAmountProperty ((int) ObjectField.Valeur2, v);
+								break;
+
+							case 2:
+								p = new DataComputedAmountProperty ((int) ObjectField.Valeur3, v);
+								break;
+						}
+
+						if (p != null)
+						{
+							this.accessor.AddObjectEventProperty (objectGuid, timestamp.Value, p);
+						}
+					}
+				}
 			}
 		}
+
+
 
 
 		public static string GetTooltip(Timestamp timestamp, EventType eventType, IEnumerable<AbstractDataProperty> properties, int maxLines = int.MaxValue)

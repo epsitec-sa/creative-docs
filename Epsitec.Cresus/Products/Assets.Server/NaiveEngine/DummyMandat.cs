@@ -594,7 +594,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			e.Properties.Add (new DataDateProperty    ((int) ObjectField.DateAmortissement1,     new System.DateTime (2014, 1, 1)));
 			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.TauxAmortissement,      0.035m));
 			e.Properties.Add (new DataStringProperty  ((int) ObjectField.TypeAmortissement,      "Dégressif"));
-			e.Properties.Add (new DataIntProperty     ((int) ObjectField.FréquenceAmortissement, 12));
+			e.Properties.Add (new DataIntProperty     ((int) ObjectField.FréquenceAmortissement, 6));
 			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.ValeurRésiduelle,       1.0m));
 
 			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte1, "1300 - Actifs transitoires"));
@@ -610,11 +610,11 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		private static void AddAmortissement2(DataEvent e)
 		{
 			e.Properties.Add (new DataStringProperty  ((int) ObjectField.NomCatégorie,           "Véhicule"));
-			e.Properties.Add (new DataDateProperty    ((int) ObjectField.DateAmortissement1,     new System.DateTime (2013, 11, 1)));
-			e.Properties.Add (new DataDateProperty    ((int) ObjectField.DateAmortissement2,     new System.DateTime (2013, 1, 1)));
-			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.TauxAmortissement,      0.08m));
+			e.Properties.Add (new DataDateProperty    ((int) ObjectField.DateAmortissement1,     new System.DateTime (2013, 3, 1)));
+			e.Properties.Add (new DataDateProperty    ((int) ObjectField.DateAmortissement2,     new System.DateTime (2014, 1, 1)));
+			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.TauxAmortissement,      0.18m));
 			e.Properties.Add (new DataStringProperty  ((int) ObjectField.TypeAmortissement,      "Linéaire"));
-			e.Properties.Add (new DataIntProperty     ((int) ObjectField.FréquenceAmortissement, 3));
+			e.Properties.Add (new DataIntProperty     ((int) ObjectField.FréquenceAmortissement, 12));
 			e.Properties.Add (new DataDecimalProperty ((int) ObjectField.ValeurRésiduelle,       1.0m));
 
 			e.Properties.Add (new DataStringProperty ((int) ObjectField.Compte1, "1300 - Actifs transitoires"));
