@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.dateController.CreateUI (frame);
 			this.dateController.SetFocus ();
 
-			this.dateController.ValueChanged += delegate
+			this.dateController.ValueEdited += delegate
 			{
 				this.OnDateChanged (this.dateController.Value);
 			};

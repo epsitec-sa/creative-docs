@@ -63,35 +63,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var c = controller as StringFieldController;
 
-					c.SilentValue   = DataAccessor.GetStringProperty (this.properties, (int) field);
+					c.Value         = DataAccessor.GetStringProperty (this.properties, (int) field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is DecimalFieldController)
 				{
 					var c = controller as DecimalFieldController;
 
-					c.SilentValue   = DataAccessor.GetDecimalProperty (this.properties, (int) field);
+					c.Value         = DataAccessor.GetDecimalProperty (this.properties, (int) field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is ComputedAmountFieldController)
 				{
 					var c = controller as ComputedAmountFieldController;
 
-					c.SilentValue   = DataAccessor.GetComputedAmountProperty (this.properties, (int) field);
+					c.Value         = DataAccessor.GetComputedAmountProperty (this.properties, (int) field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is IntFieldController)
 				{
 					var c = controller as IntFieldController;
 
-					c.SilentValue   = DataAccessor.GetIntProperty (this.properties, (int) field);
+					c.Value         = DataAccessor.GetIntProperty (this.properties, (int) field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is DateFieldController)
 				{
 					var c = controller as DateFieldController;
 
-					c.SilentValue   = DataAccessor.GetDateProperty (this.properties, (int) field);
+					c.Value         = DataAccessor.GetDateProperty (this.properties, (int) field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 			}
@@ -127,14 +127,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.CreateUI (parent);
 
-			controller.ValueChanged += delegate
+			controller.ValueEdited += delegate
 			{
 				this.accessor.SetObjectField (field, controller.Value);
 
-				controller.SilentValue = DataAccessor.GetStringProperty (this.properties, (int) field);
+				controller.Value         = DataAccessor.GetStringProperty (this.properties, (int) field);
 				controller.PropertyState = this.GetPropertyState (field);
 
-				this.OnValueChanged (field);
+				this.OnValueEdited (field);
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target)
@@ -156,14 +156,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.CreateUI (parent);
 
-			controller.ValueChanged += delegate
+			controller.ValueEdited += delegate
 			{
 				this.accessor.SetObjectField (field, controller.Value);
 
-				controller.SilentValue = DataAccessor.GetDecimalProperty (this.properties, (int) field);
+				controller.Value         = DataAccessor.GetDecimalProperty (this.properties, (int) field);
 				controller.PropertyState = this.GetPropertyState (field);
 
-				this.OnValueChanged (field);
+				this.OnValueEdited (field);
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target)
@@ -184,14 +184,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.CreateUI (parent);
 
-			controller.ValueChanged += delegate
+			controller.ValueEdited += delegate
 			{
 				this.accessor.SetObjectField (field, controller.Value);
 
-				controller.SilentValue = DataAccessor.GetComputedAmountProperty (this.properties, (int) field);
+				controller.Value         = DataAccessor.GetComputedAmountProperty (this.properties, (int) field);
 				controller.PropertyState = this.GetPropertyState (field);
 
-				this.OnValueChanged (field);
+				this.OnValueEdited (field);
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target)
@@ -212,14 +212,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.CreateUI (parent);
 
-			controller.ValueChanged += delegate
+			controller.ValueEdited += delegate
 			{
 				this.accessor.SetObjectField (field, controller.Value);
 
-				controller.SilentValue = DataAccessor.GetIntProperty (this.properties, (int) field);
+				controller.Value         = DataAccessor.GetIntProperty (this.properties, (int) field);
 				controller.PropertyState = this.GetPropertyState (field);
 
-				this.OnValueChanged (field);
+				this.OnValueEdited (field);
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target)
@@ -240,14 +240,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.CreateUI (parent);
 
-			controller.ValueChanged += delegate
+			controller.ValueEdited += delegate
 			{
 				this.accessor.SetObjectField (field, controller.Value);
 
-				controller.SilentValue = DataAccessor.GetDateProperty (this.properties, (int) field);
+				controller.Value         = DataAccessor.GetDateProperty (this.properties, (int) field);
 				controller.PropertyState = this.GetPropertyState (field);
 
-				this.OnValueChanged (field);
+				this.OnValueEdited (field);
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target)
@@ -335,16 +335,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event PageOpenEventHandler PageOpen;
 
 
-		protected void OnValueChanged(ObjectField field)
+		protected void OnValueEdited(ObjectField field)
 		{
-			if (this.ValueChanged != null)
+			if (this.ValueEdited != null)
 			{
-				this.ValueChanged (this, field);
+				this.ValueEdited (this, field);
 			}
 		}
 
-		public delegate void ValueChangedEventHandler(object sender, ObjectField field);
-		public event ValueChangedEventHandler ValueChanged;
+		public delegate void ValueEditedEventHandler(object sender, ObjectField field);
+		public event ValueEditedEventHandler ValueEdited;
 		#endregion
 
 

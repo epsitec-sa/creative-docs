@@ -35,27 +35,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 							}
 						}
 					}
-
-					this.OnValueChanged ();
-				}
-			}
-		}
-
-		public string							SilentValue
-		{
-			set
-			{
-				if (this.value != value)
-				{
-					this.value = value;
-
-					if (this.textField != null)
-					{
-						using (this.ignoreChanges.Enter ())
-						{
-							this.textField.Text = this.value;
-						}
-					}
 				}
 			}
 		}
@@ -63,6 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ClearValue()
 		{
 			this.Value = null;
+			this.OnValueEdited ();
 		}
 
 
@@ -106,6 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = this.textField.Text;
+						this.OnValueEdited ();
 					}
 				}
 			};

@@ -33,27 +33,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 							}
 						}
 					}
-
-					this.OnValueChanged ();
-				}
-			}
-		}
-
-		public ComputedAmount?					SilentValue
-		{
-			set
-			{
-				if (this.value != value)
-				{
-					this.value = value;
-
-					if (this.controller != null)
-					{
-						using (this.ignoreChanges.Enter ())
-						{
-							this.controller.ComputedAmount = this.value;
-						}
-					}
 				}
 			}
 		}
@@ -61,6 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ClearValue()
 		{
 			this.Value = null;
+			this.OnValueEdited ();
 		}
 
 
@@ -80,6 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = this.controller.ComputedAmount;
+						this.OnValueEdited ();
 					}
 				}
 			};

@@ -174,16 +174,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
-		protected void OnValueChanged()
+		protected void OnValueEdited()
 		{
-			if (this.ValueChanged != null)
+			if (this.ValueEdited != null)
 			{
-				this.ValueChanged (this);
+				this.ValueEdited (this);
 			}
 		}
 
-		public delegate void ValueChangedEventHandler(object sender);
-		public event ValueChangedEventHandler ValueChanged;
+		public delegate void ValueEditedEventHandler(object sender);
+		public event ValueEditedEventHandler ValueEdited;
 
 
 		protected void OnShowHistory(Widget target)

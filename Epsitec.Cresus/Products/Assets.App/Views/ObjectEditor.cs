@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.currentPage.SetObject (this.objectGuid, this.timestamp);
 			this.currentPage.SetFocus (focusedField);
 
-			this.currentPage.ValueChanged += delegate (object sender, ObjectField field)
+			this.currentPage.ValueEdited += delegate (object sender, ObjectField field)
 			{
 				this.SetEditionDirty (field);
 			};

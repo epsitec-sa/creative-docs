@@ -35,27 +35,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 							}
 						}
 					}
-
-					this.OnValueChanged ();
-				}
-			}
-		}
-
-		public decimal?							SilentValue
-		{
-			set
-			{
-				if (this.value != value)
-				{
-					this.value = value;
-
-					if (this.textField != null)
-					{
-						using (this.ignoreChanges.Enter ())
-						{
-							this.textField.Text = this.ConvDecimalToString (this.value);
-						}
-					}
 				}
 			}
 		}
@@ -63,6 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ClearValue()
 		{
 			this.Value = null;
+			this.OnValueEdited ();
 		}
 
 
@@ -100,6 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = this.ConvStringToDecimal (this.textField.Text);
+						this.OnValueEdited ();
 					}
 				}
 			};

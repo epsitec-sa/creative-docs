@@ -33,27 +33,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 							}
 						}
 					}
-
-					this.OnValueChanged ();
-				}
-			}
-		}
-
-		public System.DateTime?					SilentValue
-		{
-			set
-			{
-				if (this.value != value)
-				{
-					this.value = value;
-
-					if (this.textField != null)
-					{
-						using (this.ignoreChanges.Enter ())
-						{
-							this.textField.Text = DateFieldController.ConvDateToString (this.value);
-						}
-					}
 				}
 			}
 		}
@@ -61,6 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ClearValue()
 		{
 			this.Value = null;
+			this.OnValueEdited ();
 		}
 
 
@@ -104,6 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = DateFieldController.ConvStringToDate (this.textField.Text);
+						this.OnValueEdited ();
 					}
 				}
 			};
