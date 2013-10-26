@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
@@ -34,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public bool IsReadOnly
+		public bool								IsReadOnly
 		{
 			get
 			{
@@ -50,6 +51,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public void UpdateValue()
+		{
+			this.UpdateUI ();
+
+			if (this.computedAmount.HasValue)
+			{
+				this.SetArgumentValue (this.computedAmount.Value.ArgumentAmount);
+				this.SetFinalValue    (this.computedAmount.Value.FinalAmount);
+			}
+			else
+			{
+				this.SetArgumentValue (null);
+				this.SetFinalValue    (null);
+			}
+		}
 
 		public void CreateUI(Widget parent)
 		{
@@ -119,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.SwapComputed ();
 				this.UpdateUI ();
 				this.SetFocus (this.finalTextField);
-				this.OnValueChanged ();
+				this.OnValueEdited ();
 			};
 
 			this.addSubButton.Clicked += delegate
@@ -127,7 +143,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.SwapAddSub ();
 				this.UpdateUI ();
 				this.SetFocus (this.argumentTextField);
-				this.OnValueChanged ();
+				this.OnValueEdited ();
 			};
 
 			this.rateButton.Clicked += delegate
@@ -135,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.SwapRate ();
 				this.UpdateUI ();
 				this.SetFocus (this.argumentTextField);
-				this.OnValueChanged ();
+				this.OnValueEdited ();
 			};
 
 			this.argumentTextField.TextChanged += delegate
@@ -144,7 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.ArgumentChanged ();
 					this.UpdateUI ();
-					this.OnValueChanged ();
+					this.OnValueEdited ();
 				}
 			};
 
@@ -154,7 +170,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.FinalChanged ();
 					this.UpdateUI ();
-					this.OnValueChanged ();
+					this.OnValueEdited ();
+				}
+			};
+
+			this.argumentTextField.KeyboardFocusChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
+			{
+				bool focused = (bool) e.NewValue;
+
+				if (focused)  // pris le focus ?
+				{
+					this.SetFocus (this.argumentTextField);
+				}
+				else  // perdu le focus ?
+				{
+					this.OnFocusLost ();
+				}
+			};
+
+			this.finalTextField.KeyboardFocusChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
+			{
+				bool focused = (bool) e.NewValue;
+
+				if (focused)  // pris le focus ?
+				{
+					this.SetFocus (this.finalTextField);
+				}
+				else  // perdu le focus ?
+				{
+					this.OnFocusLost ();
 				}
 			};
 
@@ -389,15 +433,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (current != value)
 				{
-					if (this.computedAmount.GetValueOrDefault ().Rate)
-					{
-						this.argumentTextField.Text = Helpers.Converters.RateToString (value);
-					}
-					else
-					{
-						this.argumentTextField.Text = Helpers.Converters.AmountToString (value);
-					}
+					this.SetArgumentValue (value);
 				}
+			}
+		}
+
+		private void SetArgumentValue(decimal? value)
+		{
+			if (this.computedAmount.GetValueOrDefault ().Rate)
+			{
+				this.argumentTextField.Text = Helpers.Converters.RateToString (value);
+			}
+			else
+			{
+				this.argumentTextField.Text = Helpers.Converters.AmountToString (value);
 			}
 		}
 
@@ -413,23 +462,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (current != value)
 				{
-					this.finalTextField.Text = Helpers.Converters.AmountToString (value);
+					this.SetFinalValue (value);
 				}
 			}
 		}
 
+		private void SetFinalValue(decimal? value)
+		{
+			this.finalTextField.Text = Helpers.Converters.AmountToString (value);
+		}
+
 
 		#region Events handler
-		protected void OnValueChanged()
+		protected void OnValueEdited()
 		{
-			if (this.ValueChanged != null)
+			if (this.ValueEdited != null)
 			{
-				this.ValueChanged (this);
+				this.ValueEdited (this);
 			}
 		}
 
-		public delegate void ValueChangedEventHandler(object sender);
-		public event ValueChangedEventHandler ValueChanged;
+		public delegate void ValueEditedEventHandler(object sender);
+		public event ValueEditedEventHandler ValueEdited;
+
+
+		protected void OnFocusLost()
+		{
+			if (this.FocusLost != null)
+			{
+				this.FocusLost (this);
+			}
+		}
+
+		public delegate void FocusLostEventHandler(object sender);
+		public event FocusLostEventHandler FocusLost;
 		#endregion
 
 

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
@@ -36,6 +37,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 						}
 					}
 				}
+			}
+		}
+
+		private void UpdateValue()
+		{
+			using (this.ignoreChanges.Enter ())
+			{
+				this.textField.Text = this.value;
 			}
 		}
 
@@ -88,6 +97,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.Value = this.textField.Text;
 						this.OnValueEdited ();
 					}
+				}
+			};
+
+			this.textField.KeyboardFocusChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
+			{
+				bool focused = (bool) e.NewValue;
+
+				if (focused)  // pris le focus ?
+				{
+					this.SetFocus ();
+				}
+				else  // perdu le focus ?
+				{
+					this.UpdateValue ();
 				}
 			};
 		}

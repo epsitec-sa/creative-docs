@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Label     = StaticDescriptions.GetObjectFieldDescription (field),
 				EditWidth = editWidth,
 				LineCount = lineCount,
-				TabIndex  = this.tabIndex++,
+				TabIndex  = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Label         = StaticDescriptions.GetObjectFieldDescription (field),
 				DecimalFormat = format,
-				TabIndex      = this.tabIndex++,
+				TabIndex      = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new ComputedAmountFieldController
 			{
 				Label    = StaticDescriptions.GetObjectFieldDescription (field),
-				TabIndex = this.tabIndex++,
+				TabIndex = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new IntFieldController
 			{
 				Label    = StaticDescriptions.GetObjectFieldDescription (field),
-				TabIndex = this.tabIndex++,
+				TabIndex = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new DateFieldController
 			{
 				Label    = StaticDescriptions.GetObjectFieldDescription (field),
-				TabIndex = this.tabIndex++,
+				TabIndex = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);

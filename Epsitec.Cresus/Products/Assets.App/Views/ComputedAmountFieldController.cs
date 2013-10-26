@@ -37,6 +37,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private void UpdateValue()
+		{
+			using (this.ignoreChanges.Enter ())
+			{
+				this.controller.UpdateValue ();
+			}
+		}
+
 		protected override void ClearValue()
 		{
 			this.Value = null;
@@ -51,9 +59,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller = new ComputedAmountController ();
 			this.controller.CreateUI (this.frameBox);
 			this.controller.IsReadOnly = this.PropertyState == PropertyState.Readonly;
-			this.controller.ComputedAmount = this.value == null ? new ComputedAmount () : this.value;
+			this.controller.ComputedAmount = this.value.HasValue ? this.value : new ComputedAmount ();
 
-			this.controller.ValueChanged += delegate
+			this.controller.ValueEdited += delegate
 			{
 				if (this.ignoreChanges.IsZero)
 				{
@@ -63,6 +71,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnValueEdited ();
 					}
 				}
+			};
+
+			this.controller.FocusLost += delegate
+			{
+				this.UpdateValue ();
 			};
 		}
 
