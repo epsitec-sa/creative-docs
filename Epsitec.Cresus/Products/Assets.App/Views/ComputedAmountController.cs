@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -55,15 +56,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.UpdateUI ();
 
-			if (this.computedAmount.HasValue)
+			using (this.ignoreChanges.Enter ())
 			{
-				this.SetArgumentValue (this.computedAmount.Value.ArgumentAmount);
-				this.SetFinalValue    (this.computedAmount.Value.FinalAmount);
-			}
-			else
-			{
-				this.SetArgumentValue (null);
-				this.SetFinalValue    (null);
+				if (this.computedAmount.HasValue)
+				{
+					this.SetArgumentValue (this.computedAmount.Value.ArgumentAmount);
+					this.SetFinalValue (this.computedAmount.Value.FinalAmount);
+				}
+				else
+				{
+					this.SetArgumentValue (null);
+					this.SetFinalValue (null);
+				}
 			}
 		}
 
@@ -86,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredSize = new Size (ComputedAmountController.lineHeight, ComputedAmountController.lineHeight),
 			};
 
-			this.argumentTextField = new TextField
+			this.argumentTextField = new TextFieldBold
 			{
 				Parent        = parent,
 				Dock          = DockStyle.Left,
@@ -112,7 +116,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredSize    = new Size (20, ComputedAmountController.lineHeight),
 			};
 
-			this.finalTextField = new TextField
+			this.finalTextField = new TextFieldBold
 			{
 				Parent        = parent,
 				Dock          = DockStyle.Left,
@@ -239,7 +243,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 							0.0m,
 							final,
 							false,
-							false
+							false,
+							true
 						);
 				}
 			}
@@ -257,7 +262,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						ca.ArgumentAmount,
 						ca.FinalAmount,
 						!ca.Substract,
-						ca.Rate
+						ca.Rate,
+						ca.ArgumentDefined
 					);
 
 				ca = this.computedAmount.Value;
@@ -269,7 +275,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						ca.ArgumentAmount,
 						final,
 						ca.Substract,
-						ca.Rate
+						ca.Rate,
+						ca.ArgumentDefined
 					);
 			}
 		}
@@ -286,7 +293,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						0.0m,
 						ca.FinalAmount,
 						ca.Substract,
-						!ca.Rate
+						!ca.Rate,
+						ca.ArgumentDefined
 					);
 
 				ca = this.computedAmount.Value;
@@ -298,7 +306,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						ca.ArgumentAmount,
 						final,
 						ca.Substract,
-						ca.Rate
+						ca.Rate,
+						ca.ArgumentDefined
 					);
 			}
 		}
@@ -318,7 +327,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						argument,
 						final,
 						ca.Substract,
-						ca.Rate
+						ca.Rate,
+						true
 					);
 			}
 		}
@@ -340,7 +350,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 							argument,
 							final,
 							ca.Substract,
-							ca.Rate
+							ca.Rate,
+							false
 						);
 				}
 				else
@@ -390,6 +401,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						computedButtonEnable = false;
 					}
+
+					this.argumentTextField.Bold =  ca.ArgumentDefined;
+					this.finalTextField   .Bold = !ca.ArgumentDefined;
 				}
 				else
 				{
@@ -510,10 +524,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private TextField						initialTextField;
 		private GlyphButton						addSubButton;
-		private TextField						argumentTextField;
+		private TextFieldBold					argumentTextField;
 		private Button							rateButton;
 		private StaticText						equalText;
-		private TextField						finalTextField;
+		private TextFieldBold					finalTextField;
 		private GlyphButton						computedButton;
 	}
 }

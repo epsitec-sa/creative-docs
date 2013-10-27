@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (this.controller != null)
 					{
-						using (this.ignoreChanges.Enter ())
+						if (this.ignoreChanges.IsZero)
 						{
 							using (this.ignoreChanges.Enter ())
 							{

@@ -11,33 +11,36 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		public ComputedAmount(decimal? finalAmount)
 		{
 			//	Initialise un montant fixe.
-			this.InitialAmount  = null;
-			this.ArgumentAmount = null;
-			this.FinalAmount    = finalAmount;
-			this.Computed       = false;
-			this.Substract      = false;
-			this.Rate           = false;
+			this.InitialAmount   = null;
+			this.ArgumentAmount  = null;
+			this.FinalAmount     = finalAmount;
+			this.Computed        = false;
+			this.Substract       = false;
+			this.Rate            = false;
+			this.ArgumentDefined = false;
 		}
 
 		public ComputedAmount(decimal initialAmount, decimal finalAmount, bool rate = false)
 		{
-			this.InitialAmount  = initialAmount;
-			this.FinalAmount    = finalAmount;
-			this.Substract      = initialAmount > finalAmount;
-			this.Computed       = true;
-			this.Rate           = rate;
-			this.ArgumentAmount = ComputedAmount.ComputeArgument (this.InitialAmount, finalAmount, this.Substract, this.Rate);
+			this.InitialAmount   = initialAmount;
+			this.FinalAmount     = finalAmount;
+			this.Substract       = initialAmount > finalAmount;
+			this.Computed        = true;
+			this.Rate            = rate;
+			this.ArgumentAmount  = ComputedAmount.ComputeArgument (this.InitialAmount, finalAmount, this.Substract, this.Rate);
+			this.ArgumentDefined = true;
 		}
 
-		public ComputedAmount(decimal? initialAmount, decimal? argumentAmount, decimal? finalAmount, bool substract, bool rate)
+		public ComputedAmount(decimal? initialAmount, decimal? argumentAmount, decimal? finalAmount, bool substract, bool rate, bool argumentDefined)
 		{
 			//	Initialise un montant calculé.
-			this.InitialAmount  = initialAmount;
-			this.ArgumentAmount = argumentAmount;
-			this.FinalAmount    = finalAmount;
-			this.Computed       = true;
-			this.Substract      = substract;
-			this.Rate           = rate;
+			this.InitialAmount   = initialAmount;
+			this.ArgumentAmount  = argumentAmount;
+			this.FinalAmount     = finalAmount;
+			this.Computed        = true;
+			this.Substract       = substract;
+			this.Rate            = rate;
+			this.ArgumentDefined = argumentDefined;
 		}
 
 
@@ -133,30 +136,33 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public static bool operator ==(ComputedAmount a, ComputedAmount b)
 		{
-			return (a.InitialAmount  == b.InitialAmount)
-				&& (a.ArgumentAmount == b.ArgumentAmount)
-				&& (a.FinalAmount    == b.FinalAmount)
-				&& (a.Computed       == b.Computed)
-				&& (a.Substract      == b.Substract)
-				&& (a.Rate           == b.Rate);
+			return (a.InitialAmount   == b.InitialAmount)
+				&& (a.ArgumentAmount  == b.ArgumentAmount)
+				&& (a.FinalAmount     == b.FinalAmount)
+				&& (a.Computed        == b.Computed)
+				&& (a.Substract       == b.Substract)
+				&& (a.Rate            == b.Rate)
+				&& (a.ArgumentDefined == b.ArgumentDefined);
 		}
 
 		public static bool operator !=(ComputedAmount a, ComputedAmount b)
 		{
-			return (a.InitialAmount  != b.InitialAmount)
-				|| (a.ArgumentAmount != b.ArgumentAmount)
-				|| (a.FinalAmount    != b.FinalAmount)
-				|| (a.Computed       != b.Computed)
-				|| (a.Substract      != b.Substract)
-				|| (a.Rate           != b.Rate);
+			return (a.InitialAmount   != b.InitialAmount)
+				|| (a.ArgumentAmount  != b.ArgumentAmount)
+				|| (a.FinalAmount     != b.FinalAmount)
+				|| (a.Computed        != b.Computed)
+				|| (a.Substract       != b.Substract)
+				|| (a.Rate            != b.Rate)
+				|| (a.ArgumentDefined != b.ArgumentDefined);
 		}
 
 
-		public readonly decimal?			InitialAmount;
-		public readonly decimal?			ArgumentAmount;
-		public readonly decimal?			FinalAmount;
-		public readonly bool				Computed;
-		public readonly bool				Substract;
-		public readonly bool				Rate;
+		public readonly decimal?				InitialAmount;
+		public readonly decimal?				ArgumentAmount;
+		public readonly decimal?				FinalAmount;
+		public readonly bool					Computed;
+		public readonly bool					Substract;
+		public readonly bool					Rate;
+		public readonly bool					ArgumentDefined;
 	}
 }
