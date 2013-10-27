@@ -69,26 +69,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 					date = new System.DateTime (y, m, d);
 				}
 
-				var values = this.GetValeur (objectGuid, date);
-				var list = new List<decimal?> ();
+				var currentValues = this.GetValeur (objectGuid, date);
+				var newValues = new List<decimal?> ();
 
 				for (int i=0; i<3; i++)
 				{
-					var v = values[i].GetValueOrDefault (0);
+					var v = currentValues[i].GetValueOrDefault (0);
 
 					v -= v*taux.Value;
 
 					if (v < rest.Value)
 					{
-						list.Add (null);
+						newValues.Add (null);
 					}
 					else
 					{
-						list.Add (v);
+						newValues.Add (v);
 					}
 				}
 
-				this.CreateAmortissementAuto (objectGuid, date, list);
+				this.CreateAmortissementAuto (objectGuid, date, currentValues, newValues);
 			}
 		}
 
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return list;
 		}
 
-		private void CreateAmortissementAuto(Guid objectGuid, System.DateTime date, List<decimal?> values)
+		private void CreateAmortissementAuto(Guid objectGuid, System.DateTime date, List<decimal?> currentValues, List<decimal?> newValues)
 		{
 			var timestamp = this.accessor.CreateObjectEvent (objectGuid, date, EventType.AmortissementAuto);
 
@@ -188,9 +188,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				for (int i=0; i<3; i++)  // Valeur1..3
 				{
-					if (values[i].HasValue)
+					if (newValues[i].HasValue)
 					{
-						var v = new ComputedAmount (values[i]);
+						var v = new ComputedAmount (currentValues[i].GetValueOrDefault (0), newValues[i].GetValueOrDefault (0), true);
 						DataComputedAmountProperty p = null;
 
 						switch (i)
