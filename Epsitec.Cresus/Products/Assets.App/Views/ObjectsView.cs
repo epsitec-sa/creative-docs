@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelineController.CellDoubleClicked += delegate
 			{
-				this.OnStartStopEdit ();
+				this.OnStartEdit ();
 			};
 
 			this.eventsController.SelectedRowChanged += delegate
@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.isWithTimelineView)
 			{
-				this.OnStartStopEdit ();
+				this.OnStartEdit ();
 			}
 			else
 			{
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnEventDoubleClicked()
 		{
-			this.OnStartStopEdit ();
+			this.OnStartEdit ();
 		}
 
 		private void OnStartStopEdit()
@@ -278,6 +278,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.isEditing = !this.isEditing;
+			this.Update ();
+		}
+
+		private void OnStartEdit()
+		{
+			if (!this.isEditing && this.selectedGuid.IsEmpty)
+			{
+				return;
+			}
+
+			this.isEditing = true;
 			this.Update ();
 		}
 
