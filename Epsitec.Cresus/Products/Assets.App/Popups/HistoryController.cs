@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			new StaticText
 			{
 				Parent           = parent,
-				Text             = "Historique des modifications",
+				Text             = "Historique",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Top,
 				PreferredHeight  = HistoryController.TitleHeight - 4,

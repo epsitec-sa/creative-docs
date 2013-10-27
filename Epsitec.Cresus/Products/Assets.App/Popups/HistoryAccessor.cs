@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return HistoryAccessor.DateColumnWidth + HistoryAccessor.ValueColumnWidth;
+				return HistoryAccessor.DateColumnWidth + this.ValueColumnWidth;
 			}
 		}
 
@@ -85,33 +85,33 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						switch (Format.GetFieldFormat (this.objectField))
 						{
 							case DecimalFormat.Rate:
-								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, HistoryAccessor.ValueColumnWidth, "Valeur"));
+								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, this.ValueColumnWidth, "Valeur"));
 								break;
 
 							case DecimalFormat.Amount:
-								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, HistoryAccessor.ValueColumnWidth, "Valeur"));
+								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, this.ValueColumnWidth, "Valeur"));
 								break;
 
 							default:
-								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, HistoryAccessor.ValueColumnWidth, "Valeur"));
+								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, this.ValueColumnWidth, "Valeur"));
 								break;
 						}
 						break;
 
 					case FieldType.Date:
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date, HistoryAccessor.ValueColumnWidth, "Valeur"));
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date, this.ValueColumnWidth, "Valeur"));
 						break;
 
 					case FieldType.Int:
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Int, HistoryAccessor.ValueColumnWidth, "Valeur"));
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Int, this.ValueColumnWidth, "Valeur"));
 						break;
 
 					case FieldType.ComputedAmount:
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, HistoryAccessor.ValueColumnWidth, "Valeur"));
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.DetailedComputedAmount, this.ValueColumnWidth, "Valeur"));
 						break;
 
 					default:
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, HistoryAccessor.ValueColumnWidth, "Valeur"));
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
 						break;
 				}
 
@@ -219,8 +219,36 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private int ValueColumnWidth
+		{
+			get
+			{
+				switch (this.fieldType)
+				{
+					case FieldType.Date:
+						return 70;
+
+					case FieldType.Int:
+						return 50;
+
+					case FieldType.Decimal:
+						return 70;
+
+					case FieldType.ComputedAmount:
+						return 200;
+
+					case FieldType.String:
+						return 150;
+
+					default:
+						return 150;
+
+				}
+			}
+		}
+
+
 		private static readonly int DateColumnWidth  = 80;
-		private static readonly int ValueColumnWidth = 150;
 
 		private readonly DataAccessor								accessor;
 		private readonly ObjectField								objectField;

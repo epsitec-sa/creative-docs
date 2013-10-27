@@ -67,7 +67,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 
 				case TreeTableColumnType.ComputedAmount:
-					column = new TreeTableColumnComputedAmount ();
+					column = new TreeTableColumnComputedAmount (details: false);
+					break;
+
+				case TreeTableColumnType.DetailedComputedAmount:
+					column = new TreeTableColumnComputedAmount (details: true);
 					break;
 
 				case TreeTableColumnType.Int:

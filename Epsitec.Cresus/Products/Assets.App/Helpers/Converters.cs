@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Types;
+using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Helpers
 {
@@ -86,6 +87,44 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 				}
 
 				return s + "%";
+			}
+			else
+			{
+				return null;
+			}
+		}
+		#endregion
+
+
+		#region ComputedAmount
+		public static string ComputedAmountToString(ComputedAmount? ca)
+		{
+			if (ca.HasValue)
+			{
+				if (ca.Value.Computed)
+				{
+					string i = Converters.AmountToString (ca.Value.InitialAmount);
+
+					string o = ca.Value.Substract ? " - " : " + ";
+
+					string a;
+					if (ca.Value.Rate)
+					{
+						a = Converters.RateToString (ca.Value.ArgumentAmount);
+					}
+					else
+					{
+						a = Converters.AmountToString (ca.Value.ArgumentAmount);
+					}
+
+					string f = Converters.AmountToString (ca.Value.FinalAmount);
+
+					return string.Concat (i, o, a, " = ", f);
+				}
+				else
+				{
+					return Converters.AmountToString (ca.Value.FinalAmount);
+				}
 			}
 			else
 			{

@@ -110,6 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 							break;
 
 						case TreeTableColumnType.ComputedAmount:
+						case TreeTableColumnType.DetailedComputedAmount:
 							System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellComputedAmount);
 							break;
 
@@ -180,6 +181,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						break;
 
 					case TreeTableColumnType.ComputedAmount:
+					case TreeTableColumnType.DetailedComputedAmount:
 						list.Add (new List<TreeTableCellComputedAmount> ());
 						break;
 
@@ -233,6 +235,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 							break;
 
 						case TreeTableColumnType.ComputedAmount:
+						case TreeTableColumnType.DetailedComputedAmount:
 							{
 								var x = (content as SimpleTreeTableCellComputedAmount).Value;
 								var s = new TreeTableCellComputedAmount (true, x, isSelected: (i == selection));
@@ -289,6 +292,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						break;
 
 					case TreeTableColumnType.ComputedAmount:
+					case TreeTableColumnType.DetailedComputedAmount:
 						{
 							var l = list[c] as List<TreeTableCellComputedAmount>;
 							this.treeTable.SetColumnCells (c, l.ToArray ());

@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		Rate,
 		Amount,
 		ComputedAmount,
+		DetailedComputedAmount,
 		Int,
 		Date,
 	};

@@ -15,8 +15,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnComputedAmount : AbstractTreeTableColumn
 	{
-		public TreeTableColumnComputedAmount()
+		public TreeTableColumnComputedAmount(bool details = false)
 		{
+			this.details = details;
 		}
 
 		public void SetCells(TreeTableCellComputedAmount[] cells)
@@ -47,7 +48,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					{
 						var textRect = this.GetContentDeflateRectangle (rect);
 
-						string text = Helpers.Converters.AmountToString (cell.Value.Value.FinalAmount);
+						string text;
+						if (this.details)
+						{
+							text = Helpers.Converters.ComputedAmountToString (cell.Value);
+						}
+						else
+						{
+							text = Helpers.Converters.AmountToString (cell.Value.Value.FinalAmount);
+						}
 
 						this.PaintText (graphics, textRect, text);
 					}
@@ -69,6 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private readonly bool details;
 		private TreeTableCellComputedAmount[] cells;
 	}
 }
