@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.summaryController.UpdateFields (this.objectGuid, this.timestamp);
 
-			this.UpdateUI ();
+			this.UpdateCommentaries ();
 		}
 
 
@@ -96,10 +96,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins       = new Margins (10, 0, 0, 0),
 			};
 
-			this.UpdateUI ();
+			this.UpdateCommentaries ();
 		}
 
-		private void UpdateUI()
+		private void UpdateCommentaries()
 		{
 			this.commentaries.Visibility = this.hasEvent;
 			this.commentariesDefined.BackColor = ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);

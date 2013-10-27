@@ -60,6 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						DataAccessor.Simulation = popup.Simulation;
 						this.mainToolbar.Simulation = popup.Simulation;
+						this.OnCommand (ToolbarCommand.Accept);
 					}
 					else if (name.StartsWith ("clear-"))
 					{
