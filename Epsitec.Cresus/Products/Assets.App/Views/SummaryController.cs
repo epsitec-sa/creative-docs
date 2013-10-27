@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -91,14 +92,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					//	Rectangle gris ou bleu sans hover.
 					button.NormalColor   = ColorManager.ReadonlyFieldColor;
-					button.SelectedColor = ColorManager.EditSinglePropertyColor;
+					button.SelectedColor = ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
 					button.HoverColor    = Color.Empty;
 				}
 				else
 				{
 					//	Rectangle blanc ou bleu avec hover.
 					button.NormalColor   = ColorManager.NormalFieldColor;
-					button.SelectedColor = ColorManager.EditSinglePropertyColor;
+					button.SelectedColor = ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
 					button.HoverColor    = ColorManager.HoverColor;
 				}
 

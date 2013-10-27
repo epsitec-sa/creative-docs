@@ -113,17 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static Color GetSimulationColor(int rank)
 		{
-			switch (rank)
-			{
-				case 1:
-					return Color.FromHexa ("fa9696");  // rouge
-
-				case 2:
-					return Color.FromHexa ("a1ed97");  // vert
-
-				default:
-					return ColorManager.EditSinglePropertyColor;
-			}
+			return ColorManager.GetEditSinglePropertyColor (rank);
 		}
 
 

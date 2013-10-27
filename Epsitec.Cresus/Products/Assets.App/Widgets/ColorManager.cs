@@ -180,11 +180,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color EditSinglePropertyColor
+		public static Color GetEditSinglePropertyColor(int simulation)
 		{
-			get
+			switch (simulation)
 			{
-				return Color.FromHexa ("bcdfff");  // bleu
+				case 1:
+					return Color.FromHexa ("fa9696");  // rouge
+
+				case 2:
+					return Color.FromHexa ("a1ed97");  // vert
+
+				default:
+					return Color.FromHexa ("bcdfff");  // bleu
 			}
 		}
 

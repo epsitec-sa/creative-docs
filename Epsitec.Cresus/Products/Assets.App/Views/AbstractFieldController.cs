@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				switch (this.propertyState)
 				{
 					case PropertyState.Single:
-						return ColorManager.EditSinglePropertyColor;
+						return ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
 
 					case PropertyState.Inherited:
 						return ColorManager.EditInheritedPropertyColor;

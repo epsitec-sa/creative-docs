@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
-		public int Simulation;
+		public static int Simulation;
 
 
 		public System.DateTime StartDate

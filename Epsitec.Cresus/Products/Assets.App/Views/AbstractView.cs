@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NaiveEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -48,7 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var popup = new SimulationPopup
 				{
-					Simulation = this.accessor.Simulation,
+					Simulation = DataAccessor.Simulation,
 				};
 
 				popup.Create (target);
@@ -57,7 +58,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name.StartsWith ("use-"))
 					{
-						this.accessor.Simulation = popup.Simulation;
+						DataAccessor.Simulation = popup.Simulation;
 						this.mainToolbar.Simulation = popup.Simulation;
 					}
 					else if (name.StartsWith ("clear-"))
