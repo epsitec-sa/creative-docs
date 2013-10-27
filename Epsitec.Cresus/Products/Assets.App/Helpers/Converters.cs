@@ -119,6 +119,16 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 
 					string f = Converters.AmountToString (ca.Value.FinalAmount);
 
+					if (!string.IsNullOrEmpty (a) && ca.Value.ArgumentDefined)
+					{
+						a = string.Concat ("<b>", a, "</b>");
+					}
+
+					if (!string.IsNullOrEmpty (f) && !ca.Value.ArgumentDefined)
+					{
+						f = string.Concat ("<b>", f, "</b>");
+					}
+
 					return string.Concat (i, o, a, " = ", f);
 				}
 				else

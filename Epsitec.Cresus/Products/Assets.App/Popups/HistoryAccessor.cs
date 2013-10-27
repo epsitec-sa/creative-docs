@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						return 70;
 
 					case FieldType.ComputedAmount:
-						return 200;
+						return 250;
 
 					case FieldType.String:
 						return 150;
