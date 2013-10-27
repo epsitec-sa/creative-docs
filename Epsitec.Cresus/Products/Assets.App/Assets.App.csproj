@@ -129,6 +129,9 @@
     <Compile Include="Views\ToolbarCommand.cs" />
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
+    <Compile Include="Widgets\SimpleTreeTableCellGlyph.cs" />
+    <Compile Include="Widgets\TreeTableCellGlyph.cs" />
+    <Compile Include="Widgets\TreeTableColumnGlyph.cs" />
     <Compile Include="Widgets\EventGlyph.cs" />
     <Compile Include="Widgets\TextFieldBold.cs" />
     <Compile Include="Widgets\TreeTableColumnInt.cs" />

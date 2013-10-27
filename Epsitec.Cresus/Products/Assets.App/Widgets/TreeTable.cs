@@ -335,6 +335,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			column.SetCells (cells);
 		}
 
+		public void SetColumnCells(int rank, TreeTableCellGlyph[] cells)
+		{
+			var column = this.GetColumn (rank) as TreeTableColumnGlyph;
+			System.Diagnostics.Debug.Assert (column != null);
+
+			column.SetCells (cells);
+		}
+
 
 		public string Serialize()
 		{

@@ -14,5 +14,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		DetailedComputedAmount,
 		Int,
 		Date,
+		Glyph,
 	};
 }

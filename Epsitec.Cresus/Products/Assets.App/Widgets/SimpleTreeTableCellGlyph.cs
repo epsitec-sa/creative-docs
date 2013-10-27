@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public class SimpleTreeTableCellInt : AbstractSimpleTreeTableCell
+	public class SimpleTreeTableCellGlyph : AbstractSimpleTreeTableCell
 	{
-		public SimpleTreeTableCellInt(int? value)
+		public SimpleTreeTableCellGlyph(TimelineGlyph? value)
 		{
 			this.Value = value;
 		}
 
-		public readonly int?		Value;
+		public readonly TimelineGlyph?		Value;
 	}
 }

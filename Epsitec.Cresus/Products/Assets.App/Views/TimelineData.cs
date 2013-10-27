@@ -184,10 +184,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return TimelineGlyph.FilledCircle;
 		}
 
-		private static TimelineGlyph TypeToGlyph(EventType type)
+		public static TimelineGlyph TypeToGlyph(EventType? type)
 		{
-			switch (type)
+			switch (type.GetValueOrDefault (EventType.Unknown))
 			{
+				case EventType.Unknown:
+					return TimelineGlyph.Empty;
+
 				case EventType.Entrée:
 					return TimelineGlyph.FilledSquare;
 
@@ -213,7 +216,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return TimelineGlyph.OutlinedDiamond;
 
 				default:
-					return TimelineGlyph.FilledCircle;
+					return TimelineGlyph.Undefined;
 			}
 		}
 

@@ -160,6 +160,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.treeTable.SetColumnCells (rank, cells);
 		}
+
+		public void SetColumnCells(int rank, TreeTableCellGlyph[] cells)
+		{
+			this.treeTable.SetColumnCells (rank, cells);
+		}
 		#endregion
 
 

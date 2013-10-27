@@ -81,6 +81,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				case TreeTableColumnType.Date:
 					column = new TreeTableColumnDate ();
 					break;
+
+				case TreeTableColumnType.Glyph:
+					column = new TreeTableColumnGlyph ();
+					break;
 			}
 
 			System.Diagnostics.Debug.Assert (column != null);

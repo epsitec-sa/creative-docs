@@ -10,11 +10,11 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
-	/// Colonne de TreeTable affichant des montants alignés à droite.
+	/// Colonne de TreeTable affichant les glyphs des événements.
 	/// </summary>
-	public class TreeTableColumnDate : AbstractTreeTableColumn
+	public class TreeTableColumnGlyph : AbstractTreeTableColumn
 	{
-		public void SetCells(TreeTableCellDate[] cells)
+		public void SetCells(TreeTableCellGlyph[] cells)
 		{
 			this.cells = cells;
 			this.Invalidate ();
@@ -37,13 +37,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.AddFilledRectangle (rect);
 					graphics.RenderSolid (this.GetCellColor(y == this.hilitedHoverRow, cell.IsSelected));
 
-					//	Dessine le montant.
+					//	Dessine le glyph.
 					if (cell.Value.HasValue)
 					{
-						var textRect = this.GetContentDeflateRectangle (rect);
-						string text = Helpers.Converters.DateToString (cell.Value);
-
-						this.PaintText (graphics, textRect, text);
+						EventGlyph.Paint (graphics, rect, cell.Value.Value);
 					}
 
 					//	Dessine la grille.
@@ -54,15 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		protected override ContentAlignment RowContentAlignment
-		{
-			get
-			{
-				return ContentAlignment.MiddleRight;
-			}
-		}
 
-
-		private TreeTableCellDate[] cells;
+		private TreeTableCellGlyph[] cells;
 	}
 }

@@ -53,7 +53,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return HistoryAccessor.DateColumnWidth + this.ValueColumnWidth;
+				return HistoryAccessor.DateColumnWidth
+					 + HistoryAccessor.GlyphColumnWidth
+					 + this.ValueColumnWidth;
 			}
 		}
 
@@ -78,6 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var list = new List<TreeTableColumnDescription> ();
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, HistoryAccessor.DateColumnWidth, "Date"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,  HistoryAccessor.GlyphColumnWidth, ""));
 
 				switch (this.fieldType)
 				{
@@ -135,6 +138,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				if (eventTimestamp.HasValue)
 				{
 					var properties = this.accessor.GetObjectSingleProperties (objectGuid, eventTimestamp.Value);
+					var eventType = this.accessor.GetObjectEventType (objectGuid, eventTimestamp.Value);
 
 					var state = DataAccessor.GetPropertyState (properties, field);
 					if (state != PropertyState.Undefined)
@@ -142,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						if (!put && timestamp != null && timestamp.Value < eventTimestamp.Value)
 						{
 							var c = this.GetCell (null, field);
-							this.AddRow (timestamp, timestamp.Value, c);
+							this.AddRow (timestamp, timestamp.Value, eventType, c);
 							put = true;
 						}
 
@@ -152,7 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						}
 
 						var cell = this.GetCell (properties, field);
-						this.AddRow (timestamp, eventTimestamp.Value, cell);
+						this.AddRow (timestamp, eventTimestamp.Value, eventType, cell);
 					}
 				}
 			}
@@ -160,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			if (!put && timestamp != null)
 			{
 				var c = this.GetCell (null, field);
-				this.AddRow (timestamp, timestamp.Value, c);
+				this.AddRow (timestamp, timestamp.Value, EventType.Unknown, c);
 			}
 		}
 
@@ -200,12 +204,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private void AddRow(Timestamp? selTimestamp, Timestamp addTimestamp, AbstractSimpleTreeTableCell addCell)
+		private void AddRow(Timestamp? selTimestamp, Timestamp addTimestamp, EventType? eventType, AbstractSimpleTreeTableCell addCell)
 		{
 			var row = new List<AbstractSimpleTreeTableCell> ();
 
 			string d = Helpers.Converters.DateToString (addTimestamp.Date);
 			row.Add (new SimpleTreeTableCellString (d));
+			row.Add (new SimpleTreeTableCellGlyph (TimelineData.TypeToGlyph (eventType)));
 			row.Add (addCell);
 
 			this.content.Add (row);
@@ -249,6 +254,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private static readonly int DateColumnWidth  = 80;
+		private static readonly int GlyphColumnWidth = 20;
 
 		private readonly DataAccessor								accessor;
 		private readonly ObjectField								objectField;

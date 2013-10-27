@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 
 using Epsitec.Common.Drawing;
-using Epsitec.Cresus.Assets.App.Views;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
