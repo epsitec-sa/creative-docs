@@ -164,6 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var list = new List<TreeTableColumnDescription> ();
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          70, "Date"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,           20, ""));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         110, "Type"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur comptable"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur assurance"));
@@ -180,14 +181,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void UpdateContent(int firstRow, int count, int selection, bool crop = true)
 		{
 			var c1 = new List<TreeTableCellString> ();
-			var c2 = new List<TreeTableCellString> ();
-			var c3 = new List<TreeTableCellComputedAmount> ();
+			var c2 = new List<TreeTableCellGlyph> ();
+			var c3 = new List<TreeTableCellString> ();
 			var c4 = new List<TreeTableCellComputedAmount> ();
-			var c5 = new List<TreeTableCellString> ();
+			var c5 = new List<TreeTableCellComputedAmount> ();
 			var c6 = new List<TreeTableCellString> ();
 			var c7 = new List<TreeTableCellString> ();
 			var c8 = new List<TreeTableCellString> ();
 			var c9 = new List<TreeTableCellString> ();
+			var c10 = new List<TreeTableCellString> ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -204,6 +206,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var properties = this.accessor.GetObjectSingleProperties (this.objectGuid, timestamp.Value);
 
 				var date        = Helpers.Converters.DateToString (timestamp.Value.Date);
+				var glyph       = TimelineData.TypeToGlyph (eventType);
 				var type        = StaticDescriptions.GetEventDescription (eventType.Value);
 				var nom         = DataAccessor.GetStringProperty (properties, (int) ObjectField.Nom);
 				var numéro      = DataAccessor.GetStringProperty (properties, (int) ObjectField.Numéro);
@@ -214,14 +217,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var valeur2     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur2);
 
 				var s1 = new TreeTableCellString (true, date, isSelected: (i == selection));
-				var s2 = new TreeTableCellString (true, type, isSelected: (i == selection));
-				var s3 = new TreeTableCellComputedAmount (true, valeur1, isSelected: (i == selection));
-				var s4 = new TreeTableCellComputedAmount (true, valeur2, isSelected: (i == selection));
-				var s5 = new TreeTableCellString (true, responsable, isSelected: (i == selection));
-				var s6 = new TreeTableCellString (true, couleur, isSelected: (i == selection));
-				var s7 = new TreeTableCellString (true, série, isSelected: (i == selection));
-				var s8 = new TreeTableCellString (true, nom, isSelected: (i == selection));
-				var s9 = new TreeTableCellString (true, numéro, isSelected: (i == selection));
+				var s2 = new TreeTableCellGlyph (true, glyph, isSelected: (i == selection));
+				var s3 = new TreeTableCellString (true, type, isSelected: (i == selection));
+				var s4 = new TreeTableCellComputedAmount (true, valeur1, isSelected: (i == selection));
+				var s5 = new TreeTableCellComputedAmount (true, valeur2, isSelected: (i == selection));
+				var s6 = new TreeTableCellString (true, responsable, isSelected: (i == selection));
+				var s7 = new TreeTableCellString (true, couleur, isSelected: (i == selection));
+				var s8 = new TreeTableCellString (true, série, isSelected: (i == selection));
+				var s9 = new TreeTableCellString (true, nom, isSelected: (i == selection));
+				var s10 = new TreeTableCellString (true, numéro, isSelected: (i == selection));
 
 				c1.Add (s1);
 				c2.Add (s2);
@@ -232,6 +236,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				c7.Add (s7);
 				c8.Add (s8);
 				c9.Add (s9);
+				c10.Add (s10);
 			}
 
 			int c = 0;
@@ -244,6 +249,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.SetColumnCells (c++, c7.ToArray ());
 			this.controller.SetColumnCells (c++, c8.ToArray ());
 			this.controller.SetColumnCells (c++, c9.ToArray ());
+			this.controller.SetColumnCells (c++, c10.ToArray ());
 		}
 
 
