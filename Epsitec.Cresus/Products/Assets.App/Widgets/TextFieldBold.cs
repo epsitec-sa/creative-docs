@@ -11,7 +11,21 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public class TextFieldBold : TextField
 	{
-		public bool								Bold;
+		public bool Bold
+		{
+			get
+			{
+				return this.bold;
+			}
+			set
+			{
+				if (this.bold != value)
+				{
+					this.bold = value;
+					this.Invalidate ();
+				}
+			}
+		}
 
 
 		protected override TextLayout GetPaintTextLayout()
@@ -35,5 +49,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				Text = string.Concat ("<b>", TextConverter.ConvertToTaggedText (text), "</b>")
 			};
 		}
+
+
+		private bool bold;
 	}
 }

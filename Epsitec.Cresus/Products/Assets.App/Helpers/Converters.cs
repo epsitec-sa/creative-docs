@@ -103,9 +103,10 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			{
 				if (ca.Value.Computed)
 				{
-					string i = Converters.AmountToString (ca.Value.InitialAmount);
-
-					string o = ca.Value.Substract ? " - " : " + ";
+					//?string i = Converters.AmountToString (ca.Value.InitialAmount);
+					//?string o = ca.Value.Substract ? " − " : " + ";  // 2212: signe moins
+					string i = "";
+					string o = ca.Value.Substract ? "− " : "+ ";  // 2212: signe moins
 
 					string a;
 					if (ca.Value.Rate)
@@ -133,7 +134,8 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 				}
 				else
 				{
-					return Converters.AmountToString (ca.Value.FinalAmount);
+					var a = Converters.AmountToString (ca.Value.FinalAmount);
+					return string.Concat ("<b>", a, "</b>");
 				}
 			}
 			else

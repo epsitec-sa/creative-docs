@@ -91,6 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (ComputedAmountController.editWidth, ComputedAmountController.lineHeight),
 				IsReadOnly    = true,
+				Visibility    = false,  //?
 			};
 
 			this.addSubButton = new GlyphButton
@@ -122,7 +123,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.equalText = new StaticText
 			{
 				Parent           = parent,
-				Text             = "=",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Left,
 				PreferredSize    = new Size (20, ComputedAmountController.lineHeight),
@@ -136,24 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				TabIndex      = 2,
 			};
 
-			this.computedButton = new GlyphButton
-			{
-				Parent        = parent,
-				ButtonStyle   = ButtonStyle.ToolItem,
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (ComputedAmountController.lineHeight, ComputedAmountController.lineHeight),
-			};
-
 			//	Connexion des événements.
-			this.computedButton.Clicked += delegate
-			{
-				this.SwapComputed ();
-				this.UpdateUI ();
-				this.SetFocus (this.finalTextField);
-				this.OnValueEdited ();
-			};
-
 			this.addSubButton.Clicked += delegate
 			{
 				this.SwapAddSub ();
@@ -250,14 +233,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else
 				{
 					this.computedAmount = new ComputedAmount
-						(
-							final,
-							0.0m,
-							final,
-							false,
-							false,
-							true
-						);
+					(
+						final,
+						0.0m,
+						final,
+						false,
+						false,
+						true
+					);
 				}
 			}
 		}
@@ -269,27 +252,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var ca = this.computedAmount.Value;
 
 				this.computedAmount = new ComputedAmount
-					(
-						ca.InitialAmount,
-						ca.ArgumentAmount,
-						ca.FinalAmount,
-						!ca.Substract,
-						ca.Rate,
-						ca.ArgumentDefined
-					);
+				(
+					ca.InitialAmount,
+					ca.ArgumentAmount,
+					ca.FinalAmount,
+					!ca.Substract,
+					ca.Rate,
+					ca.ArgumentDefined
+				);
 
 				ca = this.computedAmount.Value;
 				var final = ca.ComputeFinal (ca.ArgumentAmount);
 
 				this.computedAmount = new ComputedAmount
-					(
-						ca.InitialAmount,
-						ca.ArgumentAmount,
-						final,
-						ca.Substract,
-						ca.Rate,
-						ca.ArgumentDefined
-					);
+				(
+					ca.InitialAmount,
+					ca.ArgumentAmount,
+					final,
+					ca.Substract,
+					ca.Rate,
+					ca.ArgumentDefined
+				);
 			}
 		}
 
@@ -300,27 +283,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var ca = this.computedAmount.Value;
 
 				this.computedAmount = new ComputedAmount
-					(
-						ca.InitialAmount,
-						0.0m,
-						ca.FinalAmount,
-						ca.Substract,
-						!ca.Rate,
-						ca.ArgumentDefined
-					);
+				(
+					ca.InitialAmount,
+					0.0m,
+					ca.FinalAmount,
+					ca.Substract,
+					!ca.Rate,
+					ca.ArgumentDefined
+				);
 
 				ca = this.computedAmount.Value;
-				var final = ca.ComputeFinal (ca.ArgumentAmount);
+				var argument = ca.ComputeArgument (ca.FinalAmount);
 
 				this.computedAmount = new ComputedAmount
-					(
-						ca.InitialAmount,
-						ca.ArgumentAmount,
-						final,
-						ca.Substract,
-						ca.Rate,
-						ca.ArgumentDefined
-					);
+				(
+					ca.InitialAmount,
+					argument,
+					ca.FinalAmount,
+					ca.Substract,
+					ca.Rate,
+					ca.ArgumentDefined
+				);
 			}
 		}
 
@@ -334,14 +317,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var final = ca.ComputeFinal (argument);
 
 				this.computedAmount = new ComputedAmount
-					(
-						ca.InitialAmount,
-						argument,
-						final,
-						ca.Substract,
-						ca.Rate,
-						true
-					);
+				(
+					ca.InitialAmount,
+					argument,
+					final,
+					ca.Substract,
+					ca.Rate,
+					true
+				);
 			}
 		}
 
@@ -357,23 +340,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var argument = ca.ComputeArgument (this.EditedFinalAmount);
 
 					this.computedAmount = new ComputedAmount
-						(
-							ca.InitialAmount,
-							argument,
-							final,
-							ca.Substract,
-							ca.Rate,
-							false
-						);
+					(
+						ca.InitialAmount,
+						argument,
+						final,
+						ca.Substract,
+						ca.Rate,
+						false
+					);
 				}
 				else
 				{
 					var final = this.EditedFinalAmount;
 
 					this.computedAmount = new ComputedAmount
-						(
-							final
-						);
+					(
+						final
+					);
 				}
 			}
 		}
@@ -381,27 +364,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateNoEditingUI()
 		{
-			using (this.ignoreChanges.Enter ())
+			if (this.computedAmount.HasValue)
 			{
-				if (this.computedAmount.HasValue)
+				var ca = this.computedAmount.Value;
+
+				if (ca.ArgumentDefined)
 				{
-					var ca = this.computedAmount.Value;
-
-					this.initialTextField.Text = Helpers.Converters.AmountToString (ca.InitialAmount);
-
-					if (ca.ArgumentDefined)
-					{
-						this.EditedFinalAmount = ca.FinalAmount;
-					}
-					else
-					{
-						this.EditedArgumentAmount = ca.ArgumentAmount;
-					}
+					this.UpdateUI (updateArgument: false);
+				}
+				else
+				{
+					this.UpdateUI (updateFinal: false);
 				}
 			}
 		}
 
-		private void UpdateUI()
+		private void UpdateUI(bool updateArgument = true, bool updateFinal = true)
 		{
 			if (this.initialTextField == null)
 			{
@@ -410,45 +388,49 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			using (this.ignoreChanges.Enter ())
 			{
-				bool computedButtonEnable = !this.isReadOnly;
-
 				if (this.computedAmount.HasValue)
 				{
 					var ca = this.computedAmount.Value;
 
-					this.initialTextField .Visibility = ca.Computed;
-					this.addSubButton     .Visibility = ca.Computed;
-					this.argumentTextField.Visibility = ca.Computed;
-					this.rateButton       .Visibility = ca.Computed;
-					this.equalText        .Visibility = ca.Computed;
+					this.addSubButton.Enable = ca.Computed;
+					this.addSubButton.GlyphShape = ca.Computed ? (ca.Substract ? GlyphShape.Minus : GlyphShape.Plus) : GlyphShape.None;
 
-					this.computedButton.GlyphShape = ca.Computed ? GlyphShape.TriangleLeft : GlyphShape.TriangleRight;
-					this.addSubButton.GlyphShape = ca.Substract ? GlyphShape.Minus : GlyphShape.Plus;
-					this.rateButton.Text = ca.Rate ? "%" : "CHF";
+					this.rateButton.Enable = ca.Computed;
+					this.rateButton.Text = ca.Computed ? (ca.Rate ? "%" : "CHF") : "";
+
+					this.equalText.Text = ca.Computed ? "=" : "";
 
 					this.initialTextField.Text = Helpers.Converters.AmountToString (ca.InitialAmount);
 
-					this.EditedArgumentAmount = ca.ArgumentAmount;
-					this.EditedFinalAmount    = ca.FinalAmount;
+					this.argumentTextField.Enable = ca.Computed;
 
-					if (!ca.Computed && !ca.FinalAmount.HasValue)
+					if (updateArgument)
 					{
-						computedButtonEnable = false;
+						this.EditedArgumentAmount = ca.ArgumentAmount;
+						this.argumentTextField.Bold = ca.ArgumentDefined;
 					}
 
-					this.argumentTextField.Bold =  ca.ArgumentDefined;
-					this.finalTextField   .Bold = !ca.ArgumentDefined;
+					if (updateFinal)
+					{
+						this.EditedFinalAmount = ca.FinalAmount;
+						this.finalTextField.Bold = !ca.ArgumentDefined;
+					}
 				}
 				else
 				{
-					this.initialTextField .Visibility = false;
-					this.addSubButton     .Visibility = false;
-					this.argumentTextField.Visibility = false;
-					this.rateButton       .Visibility = false;
-					this.equalText        .Visibility = false;
+					this.addSubButton.Enable = false;
+					this.addSubButton.GlyphShape = GlyphShape.None;
 
+					this.rateButton.Enable = false;
+					this.rateButton.Text = null;
+
+					this.equalText.Text = null;
+
+					this.argumentTextField.Enable = false;
+					this.argumentTextField.Text = null;
+
+					this.EditedArgumentAmount = null;
 					this.EditedFinalAmount = null;
-					computedButtonEnable = false;
 				}
 
 				this.argumentTextField.IsReadOnly =  this.isReadOnly;
@@ -456,7 +438,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.addSubButton     .Enable     = !this.isReadOnly;
 				this.rateButton       .Enable     = !this.isReadOnly;
 				this.equalText        .Enable     = !this.isReadOnly;
-				this.computedButton   .Enable     = computedButtonEnable;
 			}
 		}
 
@@ -478,7 +459,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var current = this.EditedArgumentAmount;
 
-				if (current != value)
+				//	Si le champ contenait "12%" et qu'on cherche à y mettre null en mode
+				//	Rate = false, on va se trouver avec current == null et value == null !
+				if (current != value || (current == null && value == null))
 				{
 					this.SetArgumentValue (value);
 				}
@@ -561,6 +544,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private Button							rateButton;
 		private StaticText						equalText;
 		private TextFieldBold					finalTextField;
-		private GlyphButton						computedButton;
 	}
 }

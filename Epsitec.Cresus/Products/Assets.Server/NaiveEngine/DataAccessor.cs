@@ -19,6 +19,12 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			this.mandat = mandat;
 
 			this.editionObjectGuid = Guid.Empty;
+
+			//	Recalcule tout.
+			foreach (var obj in this.mandat.Objects)
+			{
+				this.UpdateComputedAmount (obj.Guid);
+			}
 		}
 
 
@@ -270,6 +276,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				var e = new DataEvent (0, ts, type);
 
 				obj.AddEvent (e);
+				this.UpdateComputedAmount (objectGuid);
 				return ts;
 			}
 
@@ -298,7 +305,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (obj != null)
 			{
-				for (int i=0; i<3; i++)
+				for (int i=0; i<3; i++)  // Valeur1..3
 				{
 					decimal? last = null;
 

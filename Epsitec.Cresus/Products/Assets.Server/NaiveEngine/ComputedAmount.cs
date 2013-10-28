@@ -45,38 +45,40 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public ComputedAmount(decimal initial, ComputedAmount current)
 		{
-			if (current.Computed)
+			if (current.ArgumentDefined)
 			{
-				if (current.ArgumentDefined)
+				this.InitialAmount   = initial;
+				this.ArgumentAmount  = current.ArgumentAmount;
+				this.FinalAmount     = ComputedAmount.ComputeFinal (initial, current.ArgumentAmount, current.Substract, current.Rate);
+				this.Computed        = true;
+				this.Substract       = current.Substract;
+				this.Rate            = current.Rate;
+				this.ArgumentDefined = true;
+			}
+			else
+			{
+				var a = ComputedAmount.ComputeArgument (initial, current.FinalAmount, current.Substract, current.Rate).Value;
+
+				if (a < 0.0m)
 				{
 					this.InitialAmount   = initial;
-					this.ArgumentAmount  = current.ArgumentAmount;
-					this.FinalAmount     = ComputedAmount.ComputeFinal (initial, current.ArgumentAmount, current.Substract, current.Rate);
-					this.Computed        = current.Computed;
-					this.Substract       = current.Substract;
+					this.ArgumentAmount  = -a;
+					this.FinalAmount     = current.FinalAmount;
+					this.Computed        = true;
+					this.Substract       = !current.Substract;
 					this.Rate            = current.Rate;
-					this.ArgumentDefined = current.ArgumentDefined;
+					this.ArgumentDefined = false;
 				}
 				else
 				{
 					this.InitialAmount   = initial;
-					this.ArgumentAmount  = ComputedAmount.ComputeArgument (initial, current.FinalAmount, current.Substract, current.Rate);
+					this.ArgumentAmount  = a;
 					this.FinalAmount     = current.FinalAmount;
-					this.Computed        = current.Computed;
+					this.Computed        = true;
 					this.Substract       = current.Substract;
 					this.Rate            = current.Rate;
-					this.ArgumentDefined = current.ArgumentDefined;
+					this.ArgumentDefined = false;
 				}
-			}
-			else
-			{
-				this.InitialAmount   = null;
-				this.ArgumentAmount  = null;
-				this.FinalAmount     = current.FinalAmount;
-				this.Computed        = false;
-				this.Substract       = false;
-				this.Rate            = false;
-				this.ArgumentDefined = false;
 			}
 		}
 
