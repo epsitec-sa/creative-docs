@@ -32,6 +32,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 								this.controller.ComputedAmount = this.value;
 							}
 						}
+						else
+						{
+							using (this.ignoreChanges.Enter ())
+							{
+								this.controller.ComputedAmountNoEditing = this.value;
+							}
+						}
 					}
 				}
 			}

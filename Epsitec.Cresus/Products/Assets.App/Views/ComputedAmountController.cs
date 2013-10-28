@@ -36,6 +36,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public ComputedAmount?					ComputedAmountNoEditing
+		{
+			set
+			{
+				if (this.computedAmount != value)
+				{
+					this.computedAmount = value;
+					this.UpdateNoEditingUI ();
+				}
+			}
+		}
+
 		public bool								IsReadOnly
 		{
 			get
@@ -367,6 +379,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public void UpdateNoEditingUI()
+		{
+			using (this.ignoreChanges.Enter ())
+			{
+				if (this.computedAmount.HasValue)
+				{
+					var ca = this.computedAmount.Value;
+
+					this.initialTextField.Text = Helpers.Converters.AmountToString (ca.InitialAmount);
+
+					if (ca.ArgumentDefined)
+					{
+						this.EditedFinalAmount = ca.FinalAmount;
+					}
+					else
+					{
+						this.EditedArgumentAmount = ca.ArgumentAmount;
+					}
+				}
+			}
+		}
+
 		private void UpdateUI()
 		{
 			if (this.initialTextField == null)
@@ -416,7 +450,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.EditedFinalAmount = null;
 					computedButtonEnable = false;
 				}
-
 
 				this.argumentTextField.IsReadOnly =  this.isReadOnly;
 				this.finalTextField   .IsReadOnly =  this.isReadOnly;

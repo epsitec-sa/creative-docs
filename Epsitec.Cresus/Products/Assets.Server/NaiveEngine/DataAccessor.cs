@@ -292,6 +292,93 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
+		public void UpdateComputedAmount(Guid objectGuid)
+		{
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				for (int i=0; i<3; i++)
+				{
+					decimal? last = null;
+
+					foreach (var e in obj.Events)
+					{
+						var current = DataAccessor.GetComputedAmount (e, i);
+
+						if (current.HasValue)
+						{
+							if (last.HasValue == false)
+							{
+								last = current.Value.FinalAmount;
+								current = new ComputedAmount (last);
+								DataAccessor.SetComputedAmount (e, i, current);
+							}
+							else
+							{
+								current = new ComputedAmount (last.Value, current.Value);
+								last = current.Value.FinalAmount;
+								DataAccessor.SetComputedAmount (e, i, current);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		private static ComputedAmount? GetComputedAmount(DataEvent e, int rank)
+		{
+			int id = DataAccessor.RankToField (rank);
+
+			if (id == -1)
+			{
+				return null;
+			}
+			else
+			{
+				return DataAccessor.GetComputedAmountProperty (e.Properties, id);
+			}
+		}
+
+		private static void SetComputedAmount(DataEvent e, int rank, ComputedAmount? value)
+		{
+			int id = DataAccessor.RankToField (rank);
+
+			if (id != -1)
+			{
+				var currentProperty = e.Properties.Where (x => x.Id == id).FirstOrDefault ();
+				if (currentProperty != null)
+				{
+					e.Properties.Remove (currentProperty);
+				}
+
+				if (value.HasValue)
+				{
+					var newProperty = new DataComputedAmountProperty (id, value.Value);
+					e.Properties.Add (newProperty);
+				}
+			}
+		}
+
+		private static int RankToField(int rank)
+		{
+			switch (rank)
+			{
+				case 0:
+					return (int) ObjectField.Valeur1;
+
+				case 1:
+					return (int) ObjectField.Valeur2;
+
+				case 2:
+					return (int) ObjectField.Valeur3;
+
+				default:
+					return -1;
+			}
+		}
+
+
 		#region Edition manager
 		public void StartObjectEdition(Guid objectGuid, Timestamp? timestamp)
 		{
@@ -368,6 +455,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					var newProperty = new DataComputedAmountProperty ((int) field, value.Value);
 					e.Properties.Add (newProperty);
 				}
+
+				this.UpdateComputedAmount (this.editionObjectGuid);
 			}
 		}
 
