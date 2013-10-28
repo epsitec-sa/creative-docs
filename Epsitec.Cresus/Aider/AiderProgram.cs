@@ -197,6 +197,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-fixzombiesechstatus"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixZombiesEChStatus (args));
+					return;
+				}
+
 				if (args.Contains ("-warnhouseholdwithnosubscription"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.WarnHouseholdWithNoSubscription (args));
@@ -212,6 +218,12 @@ namespace Epsitec.Aider
 				if (args.Contains ("-fixoldechwarnings"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixOldEChWarnings (args));
+					return;
+				}
+
+				if (args.Contains ("-findpotentialduplicatedpersons"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FindPotentialDuplicatedPersons (args));
 					return;
 				}
 
@@ -519,12 +531,30 @@ namespace Epsitec.Aider
 					});
 			
 		}
+
+		private static void FindPotentialDuplicatedPersons(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				PotentialDuplicatedPersonFinder.FindAll (coreData);
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
 		
 		private static void FixZombies(string[] args)
 		{
 			AiderProgram.RunWithCoreData
 			(
 				coreData => PersonDeathFixer.FixAll (coreData)
+			);
+		}
+
+		private static void FixZombiesEChStatus(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => PersonDeathFixer.FixEChStatus(coreData)
 			);
 		}
 

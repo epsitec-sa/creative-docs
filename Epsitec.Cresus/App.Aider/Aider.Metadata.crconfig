@@ -876,6 +876,13 @@ AiderPersonWarning = [LVALB]
         <sort o="Asc" />
         <disp m="Visible" />
       </col>
+      <!-- 
+	Path
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA84].[LVAPC]" title="Chemin" canSort="True" canFilter="True">
+        <sort o="Asc" />
+        <disp m="Visible" />
+      </col>
       <!--
         Group Def data
       -->

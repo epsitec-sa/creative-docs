@@ -69,8 +69,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			if (hidePerson)
 			{
 				person.Visibility = PersonVisibilityStatus.Hidden;
+				person.eCH_Person.RemovalReason = RemovalReason.Unknown;
+			}
+			else
+			{
+				person.eCH_Person.RemovalReason = RemovalReason.Departed;
 			}
 
+			
 			this.ClearWarningAndRefreshCaches ();
 			
 

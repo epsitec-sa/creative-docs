@@ -44,6 +44,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.AutoGroup)
 				.EnableActionMenu<ActionAiderHouseholdViewController2RemoveMemberFromHousehold> ()
 				.EnableActionMenu<ActionAiderHouseholdViewController3ChangeHeadOfHousehold> ()
+				.EnableActionMenu<ActionAiderHouseholdViewController5CleanHousehold> ()
 				.Template ()
 					.Icon ("Data.AiderPersons")
 					.Title ("Membres du ménage")

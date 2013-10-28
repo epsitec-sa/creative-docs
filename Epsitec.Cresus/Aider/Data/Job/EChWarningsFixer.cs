@@ -26,20 +26,57 @@ namespace Epsitec.Aider.Data.Job
 			
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				EChWarningsFixer.LogToConsole ("Migrating old Ech Warnings");
+				EChWarningsFixer.LogToConsole ("Migrating old Ech Warnings: EChPersonMissing -> EChProcessDeparture");
 				
 				EChWarningsFixer.MigrateWarning (businessContext, WarningType.EChPersonMissing, WarningType.EChProcessDeparture);
 
+				EChWarningsFixer.LogToConsole ("Fixing old Ech Status from EChProcessDeparture Warnings");
+
+				EChWarningsFixer.ResetEChStatusForProcessDepartureWarnings (businessContext);
+
+				EChWarningsFixer.LogToConsole ("Migrating old Ech Warnings: EChPersonNew -> EChProcessArrival");
+
 				EChWarningsFixer.MigrateWarning (businessContext, WarningType.EChPersonNew, WarningType.EChProcessArrival);
+
+				EChWarningsFixer.LogToConsole ("Delete old Ech Warnings: EChPersonDuplicated ");
 
 				EChWarningsFixer.DeleteWarning (businessContext, WarningType.EChPersonDuplicated);
 
+				EChWarningsFixer.LogToConsole ("Delete old Ech Warnings: EChHouseholdChanged ");
+
 				EChWarningsFixer.DeleteWarning (businessContext, WarningType.EChHouseholdChanged);
+
+				EChWarningsFixer.LogToConsole ("Delete warnings mismatch in time");
 
 				EChWarningsFixer.RemoveWarningInTimeMismatch (businessContext);
 
+				
+
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
+		}
+
+		private static void ResetEChStatusForProcessDepartureWarnings(BusinessContext businessContext)
+		{
+			var example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.EChProcessDeparture
+			};
+
+			var warningsToFix = businessContext.DataContext.GetByExample<AiderPersonWarningEntity> (example);
+
+			var total = warningsToFix.Count ();
+			EChWarningsFixer.LogToConsole ("{0} EChStatus to Reset", total);
+
+			var current = 1;
+			foreach (var warning in warningsToFix)
+			{
+				warning.Person.eCH_Person.DeclarationStatus = PersonDeclarationStatus.Removed;
+				warning.Person.eCH_Person.RemovalReason = RemovalReason.None;
+				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
+				current++;
+			}
+
 		}
 
 		private static void RemoveWarningInTimeMismatch(BusinessContext businessContext)

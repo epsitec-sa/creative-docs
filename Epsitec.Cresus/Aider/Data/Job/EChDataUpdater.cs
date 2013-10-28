@@ -516,8 +516,8 @@ namespace Epsitec.Aider.Data.Job
 
 						if (existingPersonEntity != null)
 						{
-							this.LogToConsole ("Info: {0} tagged with RemovalReason.Departed",existingPersonEntity.GetCompactSummary ());
-							existingPersonEntity.RemovalReason = RemovalReason.Departed;
+							this.LogToConsole ("Info: {0} tagged with PersonDeclarationStatus.Removed", existingPersonEntity.GetCompactSummary ());
+							existingPersonEntity.DeclarationStatus = PersonDeclarationStatus.Removed;
 
 							this.LogToConsole ("Info: Gathering AiderPerson");
 							var existingAiderPerson = this.GetAiderPersonEntity (businessContext, existingPersonEntity);
@@ -691,33 +691,6 @@ namespace Epsitec.Aider.Data.Job
 					{
 						var eChReportedPersonEntity = this.GetEchReportedPersonEntity (businessContext, eChReportedPerson);
 						
-						/*var aiderPersonEntity     = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
-
-						if (aiderPersonEntity.IsNotNull ())
-						{						
-							var personKey      = businessContext.DataContext.GetNormalizedEntityKey (aiderPersonEntity).Value;
-							this.LogToConsole ("Info: AiderPerson found: PERSONKEY:{0}", personKey);
-
-							if (aiderPersonEntity.MainContact.IsNotNull ())
-							{
-								var aiderHousehold = this.GetAiderHousehold (businessContext, aiderPersonEntity);
-								if (aiderHousehold.IsNotNull ())
-								{
-									this.LogToConsole ("Info: AiderPerson main household found -> adding data to dictionnary");
-									this.aiderPersonEntitiesWithDeletedHousehold.Add (personKey, aiderHousehold);
-								}
-							}
-							else
-							{
-								this.LogToConsole ("Info: No household detected: AiderPerson PERSONKEY:{0}", personKey);
-							}
-
-						}
-						else
-						{
-
-						}*/
-
 						if (eChReportedPersonEntity.IsNotNull ())
 						{
 							this.LogToConsole ("Removed: EChReportedPerson FAMILYKEY:{0}", eChReportedPerson.FamilyKey);
@@ -772,16 +745,6 @@ namespace Epsitec.Aider.Data.Job
 							this.LogToConsole ("COHERENCE ERROR - Person has no household: {0}", eChReportedPerson.Adult1.ToString ());
 							continue;
 						}
-
-#if false
-						var p1 = adult1.ReportedPerson1;
-						var p2 = adult1.ReportedPerson2;
-
-						if (p1 == p2)
-						{
-							adult1.ReportedPerson2 = null;
-						}
-#endif
 
 						var household        = person.HouseholdContact.Household;
 						var householdAddress = household.Address;

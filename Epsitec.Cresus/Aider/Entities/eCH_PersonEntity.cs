@@ -57,7 +57,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText ("ID eCH:", this.PersonId, "\n", this.DeclarationStatus);
+			return TextFormatter.FormatText ("ID eCH:", this.PersonId, "\n", this.DeclarationStatus, "\n","Raison:",this.RemovalReason);
 		}
 
 		public override EntityStatus GetEntityStatus()

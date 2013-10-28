@@ -50,5 +50,41 @@ namespace Epsitec.Aider.Data.Job
 				);
 			}
 		}
+
+		public static void FixEChStatus(CoreData coreData)
+		{
+
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				var personExample = new AiderPersonEntity ()
+				{
+					eCH_Person = new eCH_PersonEntity ()
+				};
+
+				var request = new Request ()
+				{
+					RootEntity = personExample
+				};
+
+				request.AddCondition
+				(
+					businessContext.DataContext,
+					personExample.eCH_Person,
+					p => p.PersonDateOfDeath != null
+				);
+
+				var personsToFix = businessContext.DataContext.GetByRequest<AiderPersonEntity> (request);
+
+				foreach (var personToFix in personsToFix)
+				{
+					personToFix.eCH_Person.RemovalReason = Enumerations.RemovalReason.Deceased;
+				}
+
+				businessContext.SaveChanges
+				(
+					LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors
+				);
+			}
+		}
 	}
 }

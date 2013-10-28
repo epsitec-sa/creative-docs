@@ -80,7 +80,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				foreach (var member in members)
 				{
 					member.Visibility = PersonVisibilityStatus.Hidden;
-				}			
+					member.eCH_Person.RemovalReason = RemovalReason.Unknown;
+				}
+			}
+			else
+			{
+				foreach (var member in members)
+				{
+					member.eCH_Person.RemovalReason = RemovalReason.Departed;
+				}
 			}
 
 

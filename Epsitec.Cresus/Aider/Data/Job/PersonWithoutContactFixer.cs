@@ -136,7 +136,7 @@ namespace Epsitec.Aider.Data.Job
 				System.Console.ForegroundColor = System.ConsoleColor.Red;
 			}
 
-			System.Console.WriteLine ("ContactFixer: {0}", message);
+			System.Console.WriteLine ("PersonWithoutContactFixer: {0}", message);
 			System.Console.ResetColor ();
 
 			var time = new System.Diagnostics.Stopwatch ();

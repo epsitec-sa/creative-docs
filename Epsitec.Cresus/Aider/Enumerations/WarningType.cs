@@ -33,6 +33,7 @@ namespace Epsitec.Aider.Enumerations
 		EChProcessDeparture  = 3001,
 		EChProcessArrival    = 3002,
 
-		EChPersonDuplicated  = 4000
+		EChPersonDuplicated  = 4000,
+		PotentialDuplicatedPerson  = 4001
 	}
 }

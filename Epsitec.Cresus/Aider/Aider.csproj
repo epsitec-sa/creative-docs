@@ -125,6 +125,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController61ProcessDepartureDeceased.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController63ProcessDeparture.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController12ProcessHouseholdMissing.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController5CleanHousehold.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderLegalPersonViewController1Address.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderSubscriptionViewController.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
+    <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_ParishMismatch.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_MissingHousehold.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_EChAddressChanged.cs" />
@@ -177,6 +179,7 @@
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\ContactNameFixer.cs" />
+    <Compile Include="Data\Job\PotentialDuplicatedPersonFinder.cs" />
     <Compile Include="Data\Job\EChWarningsFixer.cs" />
     <Compile Include="Data\Job\EChPersonFixer.cs" />
     <Compile Include="Data\Job\ElasticSearchLoader.cs" />

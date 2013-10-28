@@ -222,6 +222,7 @@ namespace Epsitec.Aider.Entities
 
 			person.Visibility = PersonVisibilityStatus.Deceased;
 			person.eCH_Person.PersonDateOfDeath = date;
+			person.eCH_Person.RemovalReason = RemovalReason.Deceased;
 
 			var deadContact = AiderContactEntity.CreateDeceased (businessContext, person);
 
@@ -297,6 +298,9 @@ namespace Epsitec.Aider.Entities
 
 				group.Contact = officialContact;
 				group.Person  = officialPerson;
+
+				var participationData = new ParticipationData (officialPerson);
+				AiderGroupParticipantEntity.StartParticipation (businessContext, group.Group, participationData, group.StartDate, FormattedText.FromSimpleText ("Fusion"));				
 			}
 
 			//	Migrate contacts...
