@@ -38,6 +38,11 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		PassiveHint,
 
+		/// <summary>
+		/// Displays the text with a background defined by the property BackColor.
+		/// </summary>
+		UseBackColor,
+
 		Transparent,
 	}
 }

@@ -141,13 +141,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdatePropertyState()
+		protected virtual void UpdatePropertyState()
 		{
-			if (this.frameBox != null)
-			{
-				this.frameBox.BackColor = this.BackgroundColor;
-			}
-
 			if (this.clearButton != null)
 			{
 				this.clearButton.Visibility = (this.PropertyState == PropertyState.Single);
@@ -168,6 +163,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					default:
 						return Color.Empty;
+				}
+			}
+		}
+
+		public static void UpdateBackColor(AbstractTextField textField, Color color)
+		{
+			if (textField != null)
+			{
+				if (!color.IsVisible)
+				{
+					textField.BackColor = Color.Empty;
+					textField.TextDisplayMode = TextFieldDisplayMode.Default;
+				}
+				else
+				{
+					textField.BackColor = color;
+					textField.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
 				}
 			}
 		}

@@ -52,6 +52,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnValueEdited ();
 		}
 
+		protected override void UpdatePropertyState()
+		{
+			base.UpdatePropertyState ();
+			AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
+		}
+
 
 		public override void CreateUI(Widget parent)
 		{
@@ -135,6 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.value.HasValue)
 			{
 				this.Value = this.value.Value + delta;
+				this.OnValueEdited ();
 			}
 		}
 
@@ -151,6 +158,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private TextField						textField;
-		private int?								value;
+		private int?							value;
 	}
 }

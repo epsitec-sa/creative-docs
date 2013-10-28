@@ -1936,11 +1936,17 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void PaintTextFieldBackground(Drawing.Graphics graphics, IAdorner adorner, WidgetPaintState state, Drawing.Rectangle fill, Drawing.Point pos)
 		{
-			if ((this.BackColor.IsTransparent) ||
-				(this.textFieldDisplayMode == TextFieldDisplayMode.Transparent))
+			if (this.BackColor.IsTransparent ||
+				this.textFieldDisplayMode == TextFieldDisplayMode.Transparent)
 			{
 				//	Ne peint pas le fond de la ligne éditable si celle-ci a un fond
 				//	explicitement défini comme "transparent".
+			}
+			else if (!this.BackColor.IsTransparent &&
+					 this.textFieldDisplayMode == TextFieldDisplayMode.UseBackColor)
+			{
+				graphics.AddFilledRectangle (fill);
+				graphics.RenderSolid (this.BackColor);
 			}
 			else
 			{

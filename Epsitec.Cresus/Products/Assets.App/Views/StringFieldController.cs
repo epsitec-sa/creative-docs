@@ -54,6 +54,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnValueEdited ();
 		}
 
+		protected override void UpdatePropertyState()
+		{
+			base.UpdatePropertyState ();
+			AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
+		}
+
 
 		public override void CreateUI(Widget parent)
 		{

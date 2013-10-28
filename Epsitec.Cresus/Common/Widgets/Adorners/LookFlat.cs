@@ -1612,7 +1612,8 @@ namespace Epsitec.Common.Widgets.Adorners
 				graphics.AddFilledRectangle(areas[i].Rect);
 				if ( (state&WidgetPaintState.Focused) != 0 )
 				{
-					if ( mode == TextFieldDisplayMode.Default )
+					if (mode == TextFieldDisplayMode.Default ||
+						mode == TextFieldDisplayMode.UseBackColor)
 					{
 						graphics.RenderSolid(this.colorCaption);
 					}

@@ -64,6 +64,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public Color							BackgroundColor
+		{
+			get
+			{
+				return this.backgroundColor;
+			}
+			set
+			{
+				if (this.backgroundColor != value)
+				{
+					this.backgroundColor = value;
+					this.UpdateUI ();
+				}
+			}
+		}
+
+
 		public void UpdateValue()
 		{
 			this.UpdateUI ();
@@ -103,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredSize = new Size (ComputedAmountController.lineHeight, ComputedAmountController.lineHeight),
 			};
 
-			this.argumentTextField = new TextFieldBold
+			this.argumentTextField = new TextField
 			{
 				Parent        = parent,
 				Dock          = DockStyle.Left,
@@ -128,7 +145,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredSize    = new Size (20, ComputedAmountController.lineHeight),
 			};
 
-			this.finalTextField = new TextFieldBold
+			this.finalTextField = new TextField
 			{
 				Parent        = parent,
 				Dock          = DockStyle.Left,
@@ -330,34 +347,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void FinalChanged()
 		{
-			if (this.computedAmount.HasValue)
+			var ca = this.computedAmount.GetValueOrDefault (new ComputedAmount (0.0m));
+
+			if (ca.Computed)
 			{
-				var ca = this.computedAmount.Value;
+				var final = this.EditedFinalAmount;
+				var argument = ca.ComputeArgument (this.EditedFinalAmount);
 
-				if (ca.Computed)
-				{
-					var final = this.EditedFinalAmount;
-					var argument = ca.ComputeArgument (this.EditedFinalAmount);
+				this.computedAmount = new ComputedAmount
+				(
+					ca.InitialAmount,
+					argument,
+					final,
+					ca.Substract,
+					ca.Rate,
+					false
+				);
+			}
+			else
+			{
+				var final = this.EditedFinalAmount;
 
-					this.computedAmount = new ComputedAmount
-					(
-						ca.InitialAmount,
-						argument,
-						final,
-						ca.Substract,
-						ca.Rate,
-						false
-					);
-				}
-				else
-				{
-					var final = this.EditedFinalAmount;
-
-					this.computedAmount = new ComputedAmount
-					(
-						final
-					);
-				}
+				this.computedAmount = new ComputedAmount
+				(
+					final
+				);
 			}
 		}
 
@@ -407,14 +421,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					if (updateArgument)
 					{
 						this.EditedArgumentAmount = ca.ArgumentAmount;
-						this.argumentTextField.Bold = ca.ArgumentDefined;
 					}
 
 					if (updateFinal)
 					{
 						this.EditedFinalAmount = ca.FinalAmount;
-						this.finalTextField.Bold = !ca.ArgumentDefined;
 					}
+
+					AbstractFieldController.UpdateBackColor (this.argumentTextField, ca.ArgumentDefined ? this.BackgroundColor : Color.Empty);
+					AbstractFieldController.UpdateBackColor (this.finalTextField,   !ca.ArgumentDefined ? this.BackgroundColor : Color.Empty);
 				}
 				else
 				{
@@ -431,6 +446,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					this.EditedArgumentAmount = null;
 					this.EditedFinalAmount = null;
+
+					AbstractFieldController.UpdateBackColor (this.argumentTextField, Color.Empty);
+					AbstractFieldController.UpdateBackColor (this.finalTextField,    Color.Empty);
 				}
 
 				this.argumentTextField.IsReadOnly =  this.isReadOnly;
@@ -537,12 +555,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private ComputedAmount?					computedAmount;
 		private bool							isReadOnly;
+		private Color							backgroundColor;
 
 		private TextField						initialTextField;
 		private GlyphButton						addSubButton;
-		private TextFieldBold					argumentTextField;
+		private TextField						argumentTextField;
 		private Button							rateButton;
 		private StaticText						equalText;
-		private TextFieldBold					finalTextField;
+		private TextField						finalTextField;
 	}
 }
