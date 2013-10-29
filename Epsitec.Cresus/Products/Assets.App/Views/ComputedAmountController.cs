@@ -214,7 +214,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void SetFocus()
 		{
-			this.SetFocus (this.finalTextField);
+			if (this.computedAmount.HasValue && this.computedAmount.Value.ArgumentDefined)
+			{
+				this.SetFocus (this.argumentTextField);
+			}
+			else
+			{
+				this.SetFocus (this.finalTextField);
+			}
 		}
 
 		private void SetFocus(TextField textField)

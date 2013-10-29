@@ -229,10 +229,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Remet à zéro la barre de navigation et affiche la page universelle
 			//	du résumé.
+			var currentPageType = this.navigatorLevels.Last ().PageType;
+
 			this.navigatorLevels.Clear ();
 			this.navigatorController.Items.Clear ();
 
 			this.AddPage (EditionObjectPageType.Summary);
+
+			//	Si l'ancienne page est compatible avec le nouveau type d'événement,
+			//	on l'ouvre.
+			if (this.CurrentChildrenPageTypes.Contains (currentPageType))
+			{
+				this.AddPage (currentPageType);
+			}
 		}
 
 		private IEnumerable<EditionObjectPageType> CurrentChildrenPageTypes
