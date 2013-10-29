@@ -11,10 +11,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectSummaryController
 	{
-		public ObjectSummaryController(DataAccessor accessor, List<List<int>> fields)
+		public ObjectSummaryController(DataAccessor accessor, List<string> columnsTitle, List<List<int>> fields)
 		{
-			this.accessor = accessor;
-			this.fields   = fields;
+			this.accessor     = accessor;
+			this.columnsTitle = columnsTitle;
+			this.fields       = fields;
 
 			this.controller = new SummaryController ();
 
@@ -35,7 +36,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins         = new Margins (0, 0, 0, 20),
 			};
 
+			this.header = new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Top,
+				PreferredHeight = 17,
+			};
+
+			this.CreateHeader ();
+
 			this.controller.CreateUI (parent);
+		}
+
+		private void CreateHeader()
+		{
+			foreach (var title in this.columnsTitle)
+			{
+				new StaticText
+				{
+					Parent           = this.header,
+					Text             = title,
+					ContentAlignment = ContentAlignment.MiddleCenter,
+					Dock             = DockStyle.Left,
+					PreferredSize    = new Size (120, 20),
+				};
+			}
 		}
 
 		public void UpdateFields(Guid objectGuid, Timestamp? timestamp)
@@ -326,10 +351,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly DataAccessor				accessor;
+		private readonly List<string>				columnsTitle;
 		private readonly List<List<int>>			fields;
 		private readonly SummaryController			controller;
 
 		private StaticText							informations;
+		private FrameBox							header;
 		private Timestamp?							timestamp;
 		private bool								hasEvent;
 		private EventType							eventType;

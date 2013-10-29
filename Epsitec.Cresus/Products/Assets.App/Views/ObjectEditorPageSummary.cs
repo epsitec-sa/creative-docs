@@ -15,7 +15,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectEditorPageSummary(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.summaryController = new ObjectSummaryController (this.accessor, ObjectEditorPageSummary.SummaryFields);
+			this.summaryController = new ObjectSummaryController
+			(
+				this.accessor,
+				ObjectEditorPageSummary.SummaryColumns,
+				ObjectEditorPageSummary.SummaryFields
+			);
 
 			this.summaryController.TileClicked += delegate (object sender, int row, int column)
 			{
@@ -167,6 +172,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			return null;
+		}
+
+		private static List<string> SummaryColumns
+		{
+			get
+			{
+				var list = new List<string> ();
+
+				list.Add ("Général");
+				list.Add ("Valeurs");
+				list.Add ("Amortissements");
+				list.Add ("Comptabilisation");
+
+				return list;
+			}
 		}
 
 		private static List<List<int>> SummaryFields
