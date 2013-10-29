@@ -19,6 +19,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
+				value = this.Adjust (value);
+
 				if (this.value != value)
 				{
 					this.value = value;
@@ -42,6 +44,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				}
 			}
+		}
+
+		private ComputedAmount? Adjust(ComputedAmount? value)
+		{
+			if (value.HasValue && !value.Value.ArgumentAmount.HasValue)
+			{
+				bool substract = true;
+
+				switch (this.EventType)
+				{
+					case EventType.Augmentation:
+						substract = false;
+						break;
+				}
+
+				value = new ComputedAmount
+				(
+					value.Value.InitialAmount,
+					value.Value.ArgumentAmount,
+					value.Value.FinalAmount,
+					substract,
+					value.Value.Rate,
+					value.Value.ArgumentDefined
+				);
+			}
+
+			return value;
 		}
 
 		private void UpdateValue()
@@ -76,7 +105,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller = new ComputedAmountController ();
 			this.controller.CreateUI (this.frameBox);
 			this.controller.IsReadOnly = this.PropertyState == PropertyState.Readonly;
-			this.controller.ComputedAmount = this.value.HasValue ? this.value : new ComputedAmount ();
+			this.controller.ComputedAmount = this.value;
 
 			this.controller.ValueEdited += delegate
 			{

@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			this.ArgumentAmount  = null;
 			this.FinalAmount     = finalAmount;
 			this.Computed        = false;
-			this.Substract       = false;
-			this.Rate            = false;
+			this.Substract       = true;
+			this.Rate            = true;
 			this.ArgumentDefined = false;
 		}
 
@@ -85,7 +85,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public decimal? ComputeFinal(decimal? argument)
 		{
-			return ComputedAmount.ComputeFinal (this.InitialAmount, argument, this.Substract, this.Rate);
+			if (!this.InitialAmount.HasValue && !argument.HasValue && this.FinalAmount.HasValue)
+			{
+				return this.FinalAmount;
+			}
+			else
+			{
+				return ComputedAmount.ComputeFinal (this.InitialAmount, argument, this.Substract, this.Rate);
+			}
 		}
 
 		public static decimal? ComputeFinal(decimal? initial, decimal? argument, bool substract, bool rate)
@@ -126,7 +133,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public decimal? ComputeArgument(decimal? final)
 		{
-			return ComputedAmount.ComputeArgument (this.InitialAmount, final, this.Substract, this.Rate);
+			if (!this.InitialAmount.HasValue && !final.HasValue && this.ArgumentAmount.HasValue)
+			{
+				return this.ArgumentAmount;
+			}
+			else
+			{
+				return ComputedAmount.ComputeArgument (this.InitialAmount, final, this.Substract, this.Rate);
+			}
 		}
 
 		public static decimal? ComputeArgument(decimal? initial, decimal? final, bool substract, bool rate)

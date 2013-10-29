@@ -103,9 +103,6 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			{
 				if (ca.Value.Computed)
 				{
-					//?string i = Converters.AmountToString (ca.Value.InitialAmount);
-					//?string o = ca.Value.Substract ? " − " : " + ";  // 2212: signe moins
-					string i = "";
 					string o = ca.Value.Substract ? "− " : "+ ";  // 2212: signe moins
 
 					string a;
@@ -130,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 						f = string.Concat ("<b>", f, "</b>");
 					}
 
-					return string.Concat (i, o, a, " = ", f);
+					return string.Concat (o, a, " = ", f);
 				}
 				else
 				{

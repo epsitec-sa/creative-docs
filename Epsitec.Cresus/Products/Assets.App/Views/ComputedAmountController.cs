@@ -102,15 +102,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
-			this.initialTextField = new TextField
-			{
-				Parent        = parent,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (ComputedAmountController.editWidth, ComputedAmountController.lineHeight),
-				IsReadOnly    = true,
-				Visibility    = false,  //?
-			};
-
 			this.addSubButton = new GlyphButton
 			{
 				Parent        = parent,
@@ -232,35 +223,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			textField.Focus ();
 		}
 
-
-		private void SwapComputed()
-		{
-			if (this.computedAmount.HasValue)
-			{
-				var ca = this.computedAmount.Value;
-				var final = this.EditedFinalAmount;
-
-				if (ca.Computed)
-				{
-					this.computedAmount = new ComputedAmount
-						(
-							final
-						);
-				}
-				else
-				{
-					this.computedAmount = new ComputedAmount
-					(
-						final,
-						0.0m,
-						final,
-						false,
-						false,
-						true
-					);
-				}
-			}
-		}
 
 		private void SwapAddSub()
 		{
@@ -395,7 +357,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateUI(bool updateArgument = true, bool updateFinal = true)
 		{
-			if (this.initialTextField == null)
+			if (this.addSubButton == null)
 			{
 				return;
 			}
@@ -406,17 +368,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var ca = this.computedAmount.Value;
 
-					this.addSubButton.Enable = ca.Computed;
-					this.addSubButton.GlyphShape = ca.Computed ? (ca.Substract ? GlyphShape.Minus : GlyphShape.Plus) : GlyphShape.None;
-
-					this.rateButton.Enable = ca.Computed;
-					this.rateButton.Text = ca.Computed ? (ca.Rate ? "%" : "CHF") : "";
-
-					this.equalText.Text = ca.Computed ? "=" : "";
-
-					this.initialTextField.Text = Helpers.Converters.AmountToString (ca.InitialAmount);
-
-					this.argumentTextField.Enable = ca.Computed;
+					this.addSubButton.GlyphShape = ca.Substract ? GlyphShape.Minus : GlyphShape.Plus;
+					this.rateButton.Text = ca.Rate ? "%" : "CHF";
+					this.equalText.Text = "=";
 
 					if (updateArgument)
 					{
@@ -433,15 +387,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					this.addSubButton.Enable = false;
 					this.addSubButton.GlyphShape = GlyphShape.None;
-
-					this.rateButton.Enable = false;
 					this.rateButton.Text = null;
-
 					this.equalText.Text = null;
 
-					this.argumentTextField.Enable = false;
 					this.argumentTextField.Text = null;
 
 					this.EditedArgumentAmount = null;
@@ -451,11 +400,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					AbstractFieldController.UpdateBackColor (this.finalTextField,    Color.Empty);
 				}
 
-				this.argumentTextField.IsReadOnly =  this.isReadOnly;
-				this.finalTextField   .IsReadOnly =  this.isReadOnly;
 				this.addSubButton     .Enable     = !this.isReadOnly;
 				this.rateButton       .Enable     = !this.isReadOnly;
 				this.equalText        .Enable     = !this.isReadOnly;
+				this.argumentTextField.IsReadOnly =  this.isReadOnly;
+				this.finalTextField   .IsReadOnly =  this.isReadOnly;
 			}
 		}
 
@@ -496,6 +445,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.argumentTextField.Text = Helpers.Converters.AmountToString (value);
 			}
+
+			this.argumentTextField.SelectAll ();
 		}
 
 		private decimal? EditedFinalAmount
@@ -518,6 +469,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void SetFinalValue(decimal? value)
 		{
 			this.finalTextField.Text = Helpers.Converters.AmountToString (value);
+			this.finalTextField.SelectAll ();
 		}
 
 
@@ -557,7 +509,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private bool							isReadOnly;
 		private Color							backgroundColor;
 
-		private TextField						initialTextField;
 		private GlyphButton						addSubButton;
 		private TextField						argumentTextField;
 		private Button							rateButton;

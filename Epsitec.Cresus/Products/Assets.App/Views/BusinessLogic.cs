@@ -328,13 +328,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var list = new List<string> ();
 
 			//	Met la date de l'événement, si elle est connue.
-			if (timestamp.Date != System.DateTime.MaxValue)
+			if (timestamp.Date == System.DateTime.MaxValue)
+			{
+				list.Add ("Etat final");
+			}
+			else
 			{
 				var d = Helpers.Converters.DateToString (timestamp.Date);
 
 				if (eventType == EventType.Unknown)
 				{
-					list.Add (d);
+					list.Add ("Etat au " + d);
 				}
 				else
 				{

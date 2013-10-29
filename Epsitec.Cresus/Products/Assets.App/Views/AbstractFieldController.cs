@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public int								LabelWidth = 100;
 		public int								EditWidth = 380;
 		public bool								HideAdditionalButtons;
+		public EventType						EventType;
 
 		public PropertyState					PropertyState
 		{

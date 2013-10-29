@@ -63,6 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var c = controller as StringFieldController;
 
+					c.EventType     = this.eventType;
 					c.Value         = DataAccessor.GetStringProperty (this.properties, (int) field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
@@ -70,6 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var c = controller as DecimalFieldController;
 
+					c.EventType     = this.eventType;
 					c.Value         = DataAccessor.GetDecimalProperty (this.properties, (int) field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
@@ -77,6 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var c = controller as ComputedAmountFieldController;
 
+					c.EventType     = this.eventType;
 					c.Value         = DataAccessor.GetComputedAmountProperty (this.properties, (int) field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
@@ -84,6 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var c = controller as IntFieldController;
 
+					c.EventType     = this.eventType;
 					c.Value         = DataAccessor.GetIntProperty (this.properties, (int) field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
@@ -91,6 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var c = controller as DateFieldController;
 
+					c.EventType     = this.eventType;
 					c.Value         = DataAccessor.GetDateProperty (this.properties, (int) field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
@@ -178,8 +183,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new ComputedAmountFieldController
 			{
-				Label    = StaticDescriptions.GetObjectFieldDescription (field),
-				TabIndex = ++this.tabIndex,
+				Label     = StaticDescriptions.GetObjectFieldDescription (field),
+				TabIndex  = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
@@ -206,8 +211,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new IntFieldController
 			{
-				Label    = StaticDescriptions.GetObjectFieldDescription (field),
-				TabIndex = ++this.tabIndex,
+				Label     = StaticDescriptions.GetObjectFieldDescription (field),
+				TabIndex  = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
@@ -234,8 +239,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new DateFieldController
 			{
-				Label    = StaticDescriptions.GetObjectFieldDescription (field),
-				TabIndex = ++this.tabIndex,
+				Label     = StaticDescriptions.GetObjectFieldDescription (field),
+				TabIndex  = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);

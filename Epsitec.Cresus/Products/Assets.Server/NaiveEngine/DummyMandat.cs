@@ -556,6 +556,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				{
 					var e = new DataEvent (1, date2, EventType.Modification);
 					o.AddEvent (e);
+					e.Properties.Add (new DataStringProperty ((int) ObjectField.Responsable, "Frédérique"));
 					e.Properties.Add (new DataStringProperty ((int) ObjectField.NuméroSérie, "F30T-340407-52118-40721-S"));
 				}
 

@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							using (this.ignoreChanges.Enter ())
 							{
 								this.textField.Text = this.ConvDecimalToString (this.value);
+								this.textField.SelectAll ();
 							}
 						}
 					}
@@ -45,6 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			using (this.ignoreChanges.Enter ())
 			{
 				this.textField.Text = this.ConvDecimalToString (this.value);
+				this.textField.SelectAll ();
 			}
 		}
 
