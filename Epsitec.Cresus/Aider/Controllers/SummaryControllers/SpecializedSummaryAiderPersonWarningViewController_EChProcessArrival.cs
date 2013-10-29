@@ -31,8 +31,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (x => x.WarningType)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderPersonWarningViewController1Details))
-				.EnableActionButton<ActionAiderPersonWarningViewController11CreateSubscription> ()
-				.EnableActionButton<ActionAiderPersonWarningViewController7ProcessArrival> ();
+				.EnableActionButton<ActionAiderPersonWarningViewController11CreateSubscription> ().IfTrue (this.Entity.Person.HouseholdContact.IsNotNull ())
+				.EnableActionButton<ActionAiderPersonWarningViewController13AssignHouseholdFromECh> ().IfTrue (this.Entity.Person.MainContact.IsNull ())
+				.EnableActionButton<ActionAiderPersonWarningViewController7ProcessArrival> ().IfTrue (this.Entity.Person.MainContact.IsNotNull ());
 		}
 	}
 }

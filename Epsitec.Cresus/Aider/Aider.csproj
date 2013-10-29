@@ -126,6 +126,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController63ProcessDeparture.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController12ProcessHouseholdMissing.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController5CleanHousehold.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController13AssignHouseholdFromECh.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />

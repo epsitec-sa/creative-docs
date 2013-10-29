@@ -68,6 +68,11 @@ namespace Epsitec.Aider.Data.Common
 			AiderEnumerator.Execute (coreData, AiderEnumerator.GetLegalPersonBatch, action);
 		}
 
+		public static void Execute(CoreData coreData, Action<BusinessContext, IEnumerable<AiderAddressEntity>> action)
+		{
+			AiderEnumerator.Execute (coreData, AiderEnumerator.GetAddressBatch, action);
+		}
+
 
 		private static void Execute<T>(CoreData coreData, Func<DataContext, int, int, IEnumerable<T>> batchGetter, Action<BusinessContext, IEnumerable<T>> action)
 		{
@@ -171,6 +176,12 @@ namespace Epsitec.Aider.Data.Common
 			return dataContext.GetByRequest<AiderLegalPersonEntity> (request);
 		}
 
+		private static IList<AiderAddressEntity> GetAddressBatch(DataContext dataContext, int skip, int take)
+		{
+			var request = AiderEnumerator.CreateBatchRequest<AiderAddressEntity> (skip, take);
+
+			return dataContext.GetByRequest<AiderAddressEntity> (request);
+		}
 
 		private static Request CreateBatchRequest<T>(int skip, int take)
 			where T : AbstractEntity, new()

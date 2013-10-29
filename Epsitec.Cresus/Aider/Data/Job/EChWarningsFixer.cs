@@ -26,6 +26,11 @@ namespace Epsitec.Aider.Data.Job
 			
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
+
+				EChWarningsFixer.LogToConsole ("Fix Reported Person Linkage For arrivals");
+
+				EChWarningsFixer.FixReportedPersonLinkageForArrivals (businessContext);
+
 				EChWarningsFixer.LogToConsole ("Migrating old Ech Warnings: EChPersonMissing -> EChProcessDeparture");
 				
 				EChWarningsFixer.MigrateWarning (businessContext, WarningType.EChPersonMissing, WarningType.EChProcessDeparture);
@@ -46,6 +51,7 @@ namespace Epsitec.Aider.Data.Job
 
 				EChWarningsFixer.DeleteWarning (businessContext, WarningType.EChHouseholdChanged);
 
+
 				EChWarningsFixer.LogToConsole ("Delete warnings mismatch in time");
 
 				EChWarningsFixer.RemoveWarningInTimeMismatch (businessContext);
@@ -54,6 +60,63 @@ namespace Epsitec.Aider.Data.Job
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
+		}
+
+		private static void FixReportedPersonLinkageForArrivals(BusinessContext businessContext)
+		{
+			var example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.EChProcessArrival
+			};
+
+			var allArrivalsByPersonId = businessContext.DataContext.GetByExample<AiderPersonWarningEntity> (example).Select(k => k.Person.eCH_Person);
+
+			var membersInReportedPerson = new Dictionary<string, List<eCH_ReportedPersonEntity>> ();
+
+			var allReportedPersons = businessContext.GetAllEntities<eCH_ReportedPersonEntity> ();
+
+			var total = allReportedPersons.Count ();
+			var current = 1;
+			foreach (var reportedPerson in allReportedPersons)
+			{
+				System.Console.SetCursorPosition (0, 2);
+				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
+				current++;
+	
+				var reportedPersonList = new List<eCH_ReportedPersonEntity> ();
+				foreach (var member in reportedPerson.Members)
+				{
+					if (member.IsNotNull ())
+					{
+					
+						if (!membersInReportedPerson.TryGetValue (member.PersonId, out reportedPersonList))
+						{
+							reportedPersonList = new List<eCH_ReportedPersonEntity> ();
+							reportedPersonList.Add (reportedPerson);
+							membersInReportedPerson.Add (member.PersonId, reportedPersonList);
+						}
+						else
+						{
+							reportedPersonList.Add (reportedPerson);
+						}
+					}
+				}
+			}
+
+			foreach (var eChPerson in allArrivalsByPersonId)
+			{
+				if (eChPerson.ReportedPersons.Count () < 1)
+				{
+					var reportedPersons = membersInReportedPerson[eChPerson.PersonId];
+					eChPerson.ReportedPerson1 = reportedPersons[0];
+					if (reportedPersons.Count > 1)
+					{
+						eChPerson.ReportedPerson2 = reportedPersons[1];
+					}
+				}
+			}
+
+			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 		}
 
 		private static void ResetEChStatusForProcessDepartureWarnings(BusinessContext businessContext)
@@ -73,10 +136,11 @@ namespace Epsitec.Aider.Data.Job
 			{
 				warning.Person.eCH_Person.DeclarationStatus = PersonDeclarationStatus.Removed;
 				warning.Person.eCH_Person.RemovalReason = RemovalReason.None;
+				System.Console.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
 				current++;
 			}
-
+			System.Console.Clear ();
 		}
 
 		private static void RemoveWarningInTimeMismatch(BusinessContext businessContext)
@@ -141,9 +205,11 @@ namespace Epsitec.Aider.Data.Job
 			foreach (var warn in warningsToDelete)
 			{
 				businessContext.DeleteEntity (warn);
+				System.Console.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
 				current++;
 			}
+			System.Console.Clear ();
 		}
 
 		private static void MigrateWarning(BusinessContext businessContext, WarningType initialValue, WarningType migratedValue)
@@ -162,9 +228,11 @@ namespace Epsitec.Aider.Data.Job
 			foreach (var warn in warningsToMigrate)
 			{
 				warn.WarningType = migratedValue;
+				System.Console.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}",current, total);
 				current++;
 			}
+			System.Console.Clear ();
 		}
 
 		private static System.Diagnostics.Stopwatch LogToConsole(string format, params object[] args)

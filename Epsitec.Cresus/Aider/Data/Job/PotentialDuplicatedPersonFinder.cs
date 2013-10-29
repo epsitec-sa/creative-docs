@@ -14,6 +14,8 @@ using System.Data;
 using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Aider.Data.Common;
 
 
 
@@ -26,31 +28,35 @@ namespace Epsitec.Aider.Data.Job
 			
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				PotentialDuplicatedPersonFinder.LogToConsole ("Perform DataQuality on Persons");
+				PotentialDuplicatedPersonFinder.LogToConsole ("Perform DataQuality on Persons",false);
 				var jobDateTime    = System.DateTime.Now;
 				var jobName        = "PotentialDuplicatedPersonFinder";
 				var jobDescription = string.Format ("Recherches de doublons potentiels");
 
 				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
-				var warningTitleMessage = TextFormatter.FormatText ("Doublon potentiel", jobDateTime.ToShortDateString ());
+				var warningTitleMessage = TextFormatter.FormatText ("Doublon potentiel détécté le ", jobDateTime.ToShortDateString ());
 
-				var allAddresses = businessContext.GetAllEntities<AiderAddressEntity> ();
-				var total = allAddresses.Count ();
-				PotentialDuplicatedPersonFinder.LogToConsole ("{0} Addresses to check...",total);
-				var addressesToCheck = allAddresses.Where (a => !a.StreetUserFriendly.IsNullOrWhiteSpace ());
-				
+
+
+				var addressesToCheckKeys = PotentialDuplicatedPersonFinder.GetAddressesToFix (coreData);
+
+				var total = addressesToCheckKeys.Count ();
+
+				System.Console.Clear ();
 				var current = 1;
-				foreach (var address in addressesToCheck)
+				foreach (var key in addressesToCheckKeys)
 				{
-					PotentialDuplicatedPersonFinder.LogToConsole ("{0}/{1}",current, total);
+					
+					PotentialDuplicatedPersonFinder.LogToConsole ("{0}/{1}",true,current, total);
 					current++;
+					var address = (AiderAddressEntity) businessContext.DataContext.ResolveEntity (key);
 
 					var contactExample = new AiderContactEntity ();
 					contactExample.Address = address;
 					contactExample.AddressType = AddressType.Default;
 
 					var livingContacts = businessContext.DataContext.GetByExample<AiderContactEntity> (contactExample);				
-					PotentialDuplicatedPersonFinder.LogToConsole ("{0} Persons at this address", livingContacts.Count ());
+					
 
 					var potentialDuplicateChecker = new Dictionary<string, AiderPersonEntity> ();
 					foreach (var contact in livingContacts)
@@ -60,18 +66,19 @@ namespace Epsitec.Aider.Data.Job
 							continue;
 						}
 
-						var key =	contact.Person.BirthdayDay.ToString ()
+						var checkKey =	contact.Person.BirthdayDay.ToString ()
 							 +		contact.Person.BirthdayMonth.ToString ()
 							 +		contact.Person.BirthdayYear.ToString ()
 							 +		contact.Person.eCH_Person.PersonFirstNames.Split (",").First ();
 
-						if (!potentialDuplicateChecker.ContainsKey (key))
+						if (!potentialDuplicateChecker.ContainsKey (checkKey))
 						{
-							potentialDuplicateChecker.Add (key, contact.Person);
+							potentialDuplicateChecker.Add (checkKey, contact.Person);
 						}
 						else
 						{
-							//AiderPersonWarningEntity.Create (businessContext, contact.Person, contact.Person.ParishGroupPathCache, WarningType.PotentialDuplicatedPerson, warningTitleMessage, warningSource);
+							PotentialDuplicatedPersonFinder.LogToConsole ("Found! {0}", false, contact.GetDisplayName ());
+							AiderPersonWarningEntity.Create (businessContext, contact.Person, contact.Person.ParishGroupPathCache, WarningType.PotentialDuplicatedPerson, warningTitleMessage, warningSource);
 						}
 					}
 				}
@@ -82,8 +89,38 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
+		private static List<EntityKey> GetAddressesToFix
+		(
+			CoreData coreData
+		)
+		{
+			var keys = new List<EntityKey> ();
+
+			AiderEnumerator.Execute
+			(
+				coreData,
+				(b, a) => PotentialDuplicatedPersonFinder.GetAddressesToFix (b, a, keys)
+			);
+
+			return keys;
+		}
+
+		private static void GetAddressesToFix
+		(
+			BusinessContext businessContext,
+			IEnumerable<AiderAddressEntity> addresses,
+			List<EntityKey> addressKeys
+		)
+		{
+			var addressesToFix = addresses
+				.Where (a => !a.StreetUserFriendly.IsNullOrWhiteSpace ())
+				.Select (a => businessContext.DataContext.GetNormalizedEntityKey (a).Value)
+				.ToList ();
+
+			addressKeys.AddRange (addressesToFix);
+		}
 		
-		private static System.Diagnostics.Stopwatch LogToConsole(string format, params object[] args)
+		private static System.Diagnostics.Stopwatch LogToConsole(string format, bool fixedTop,params object[] args)
 		{
 			var message = string.Format (format, args);
 
@@ -92,6 +129,10 @@ namespace Epsitec.Aider.Data.Job
 				System.Console.ForegroundColor = System.ConsoleColor.Red;
 			}
 
+			if (fixedTop)
+			{
+				System.Console.SetCursorPosition (0, 0);
+			}
 			System.Console.WriteLine ("PotentialDuplicatedPersonFinder: {0}", message);
 			System.Console.ResetColor ();
 
