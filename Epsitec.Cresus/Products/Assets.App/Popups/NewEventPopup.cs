@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			int dx = NewEventPopup.buttonWidth;
 			int dy = NewEventPopup.buttonHeight;
-			int x = NewEventPopup.margins;
-			int y = (int) this.DialogSize.Height - NewEventPopup.margins - NewEventPopup.titleHeight - dy;
+			int x = NewEventPopup.horizontalMargins;
+			int y = (int) this.DialogSize.Height - NewEventPopup.verticalMargins - NewEventPopup.titleHeight - dy;
 
 			this.CreateDateUI ();
 
@@ -77,8 +77,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private Size GetDialogSize(int buttonCount)
 		{
-			int dx = NewEventPopup.margins*2 + NewEventPopup.buttonWidth;
-			int dy = NewEventPopup.margins*2 + NewEventPopup.titleHeight + NewEventPopup.buttonHeight*buttonCount + NewEventPopup.buttonGap*(buttonCount-1);
+			int dx = NewEventPopup.horizontalMargins*2 + NewEventPopup.buttonWidth;
+			int dy = NewEventPopup.verticalMargins*2 + NewEventPopup.titleHeight + NewEventPopup.buttonHeight*buttonCount + NewEventPopup.buttonGap*(buttonCount-1);
 
 			return new Size (dx, dy);
 		}
@@ -98,11 +98,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int margins      = 20;
-		private static readonly int titleHeight  = 24;
-		private static readonly int buttonWidth  = 220;
-		private static readonly int buttonHeight = 30;
-		private static readonly int buttonGap    = 5;
+		private static readonly int horizontalMargins = 40;
+		private static readonly int verticalMargins   = 20;
+		private static readonly int titleHeight       = 24;
+		private static readonly int buttonWidth       = 180;
+		private static readonly int buttonHeight      = 24;
+		private static readonly int buttonGap         = 1;
 
 		private DateFieldController dateController;
 	}
