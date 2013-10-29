@@ -121,6 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         200, "Numéro de série"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur comptable"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur assurance"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur imposable"));
 
 				return list.ToArray ();
 			}
@@ -135,6 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var c4 = new List<TreeTableCellString> ();
 			var c5 = new List<TreeTableCellComputedAmount> ();
 			var c6 = new List<TreeTableCellComputedAmount> ();
+			var c7 = new List<TreeTableCellComputedAmount> ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -157,6 +159,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var série       = DataAccessor.GetStringProperty (properties, (int) ObjectField.NuméroSérie);
 				var valeur1     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur1);
 				var valeur2     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur2);
+				var valeur3     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur3);
 
 				var sf = new TreeTableCellTree (true, level, type, nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString (true, numéro, isSelected: (i == selection));
@@ -165,6 +168,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var s4 = new TreeTableCellString (true, série, isSelected: (i == selection));
 				var s5 = new TreeTableCellComputedAmount (true, valeur1, isSelected: (i == selection));
 				var s6 = new TreeTableCellComputedAmount (true, valeur2, isSelected: (i == selection));
+				var s7 = new TreeTableCellComputedAmount (true, valeur3, isSelected: (i == selection));
 
 				cf.Add (sf);
 				c1.Add (s1);
@@ -173,6 +177,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				c4.Add (s4);
 				c5.Add (s5);
 				c6.Add (s6);
+				c7.Add (s7);
 			}
 
 			this.controller.SetColumnCells (0, cf.ToArray ());
@@ -182,6 +187,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.SetColumnCells (4, c4.ToArray ());
 			this.controller.SetColumnCells (5, c5.ToArray ());
 			this.controller.SetColumnCells (6, c6.ToArray ());
+			this.controller.SetColumnCells (7, c7.ToArray ());
 		}
 
 
