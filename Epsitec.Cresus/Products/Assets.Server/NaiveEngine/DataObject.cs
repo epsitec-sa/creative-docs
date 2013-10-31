@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		{
 			this.guid = Guid.NewGuid ();
 
-			this.events = new List<DataEvent> ();
+			this.events = new GuidList<DataEvent> ();
 		}
 
 		#region IGuid Members
@@ -71,19 +71,12 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public DataEvent GetEvent(int index)
 		{
-			if (index >= 0 && index < this.events.Count)
-			{
-				return this.events[index];
-			}
-			else
-			{
-				return null;
-			}
+			return this.events[index];
 		}
 
 		public DataEvent GetEvent(Guid guid)
 		{
-			return this.events.Where (x => x.Guid == guid).FirstOrDefault ();
+			return this.events[guid];
 		}
 
 		public DataEvent GetEvent(Timestamp timestamp)
@@ -142,6 +135,6 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 
 		private readonly Guid					guid;
-		private readonly List<DataEvent>		events;
+		private readonly GuidList<DataEvent>	events;
 	}
 }

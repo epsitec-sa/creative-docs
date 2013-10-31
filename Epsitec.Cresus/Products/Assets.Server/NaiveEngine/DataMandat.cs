@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		public readonly Guid					Guid;
 
 
-		public GuidList<DataObject> Objects
+		public GuidList<DataObject>				Objects
 		{
 			get
 			{
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public GuidList<DataObject> Categories
+		public GuidList<DataObject>				Categories
 		{
 			get
 			{
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public GuidList<DataObject> Groups
+		public GuidList<DataObject>				Groups
 		{
 			get
 			{
@@ -48,8 +48,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
-		private readonly GuidList<DataObject> objects;
-		private readonly GuidList<DataObject> categories;
-		private readonly GuidList<DataObject> groups;
+		private readonly GuidList<DataObject>	objects;
+		private readonly GuidList<DataObject>	categories;
+		private readonly GuidList<DataObject>	groups;
 	}
 }
