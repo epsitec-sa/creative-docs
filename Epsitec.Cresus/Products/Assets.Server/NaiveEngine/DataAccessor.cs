@@ -415,7 +415,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (id != -1)
 			{
-				var currentProperty = e.Properties.Where (x => x.Id == id).FirstOrDefault ();
+				var currentProperty = e.Properties.Where (x => x.FieldId == id).FirstOrDefault ();
 				if (currentProperty != null)
 				{
 					e.Properties.Remove (currentProperty);
@@ -476,7 +476,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var e = this.EditionEvent;
 			if (e != null)
 			{
-				var currentProperty = e.Properties.Where (x => x.Id == (int) field).FirstOrDefault ();
+				var currentProperty = e.Properties.Where (x => x.FieldId == (int) field).FirstOrDefault ();
 				if (currentProperty != null)
 				{
 					e.Properties.Remove (currentProperty);
@@ -495,7 +495,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var e = this.EditionEvent;
 			if (e != null)
 			{
-				var currentProperty = e.Properties.Where (x => x.Id == (int) field).FirstOrDefault ();
+				var currentProperty = e.Properties.Where (x => x.FieldId == (int) field).FirstOrDefault ();
 				if (currentProperty != null)
 				{
 					e.Properties.Remove (currentProperty);
@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var e = this.EditionEvent;
 			if (e != null)
 			{
-				var currentProperty = e.Properties.Where (x => x.Id == (int) field).FirstOrDefault ();
+				var currentProperty = e.Properties.Where (x => x.FieldId == (int) field).FirstOrDefault ();
 				if (currentProperty != null)
 				{
 					e.Properties.Remove (currentProperty);
@@ -535,7 +535,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var e = this.EditionEvent;
 			if (e != null)
 			{
-				var currentProperty = e.Properties.Where (x => x.Id == (int) field).FirstOrDefault ();
+				var currentProperty = e.Properties.Where (x => x.FieldId == (int) field).FirstOrDefault ();
 				if (currentProperty != null)
 				{
 					e.Properties.Remove (currentProperty);
@@ -554,7 +554,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var e = this.EditionEvent;
 			if (e != null)
 			{
-				var currentProperty = e.Properties.Where (x => x.Id == (int) field).FirstOrDefault ();
+				var currentProperty = e.Properties.Where (x => x.FieldId == (int) field).FirstOrDefault ();
 				if (currentProperty != null)
 				{
 					e.Properties.Remove (currentProperty);
@@ -665,7 +665,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		{
 			if (properties != null)
 			{
-				var p = properties.Where (x => x.Id == id).FirstOrDefault ();
+				var p = properties.Where (x => x.FieldId == id).FirstOrDefault ();
 
 				if (p != null)
 				{
@@ -680,7 +680,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		{
 			if (properties != null)
 			{
-				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataStringProperty;
+				var p = properties.Where (x => x.FieldId == id).FirstOrDefault () as DataStringProperty;
 
 				if (p != null)
 				{
@@ -695,7 +695,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		{
 			if (properties != null)
 			{
-				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataIntProperty;
+				var p = properties.Where (x => x.FieldId == id).FirstOrDefault () as DataIntProperty;
 
 				if (p != null)
 				{
@@ -710,7 +710,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		{
 			if (properties != null)
 			{
-				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataComputedAmountProperty;
+				var p = properties.Where (x => x.FieldId == id).FirstOrDefault () as DataComputedAmountProperty;
 
 				if (p != null)
 				{
@@ -725,7 +725,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		{
 			if (properties != null)
 			{
-				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataDecimalProperty;
+				var p = properties.Where (x => x.FieldId == id).FirstOrDefault () as DataDecimalProperty;
 
 				if (p != null)
 				{
@@ -740,7 +740,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		{
 			if (properties != null)
 			{
-				var p = properties.Where (x => x.Id == id).FirstOrDefault () as DataDateProperty;
+				var p = properties.Where (x => x.FieldId == id).FirstOrDefault () as DataDateProperty;
 
 				if (p != null)
 				{

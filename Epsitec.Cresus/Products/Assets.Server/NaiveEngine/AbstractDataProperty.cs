@@ -9,12 +9,12 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
 	public abstract class AbstractDataProperty
 	{
-		public AbstractDataProperty(int id)
+		public AbstractDataProperty(int fieldId)
 		{
-			this.Id = id;
+			this.FieldId = fieldId;
 		}
 
-		public readonly int Id;
+		public readonly int FieldId;
 
 		public PropertyState State;
 	}

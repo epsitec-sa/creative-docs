@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public AbstractDataProperty GetProperty(int id)
 		{
-			return this.properties.Where (x => x.Id == id).FirstOrDefault ();
+			return this.properties.Where (x => x.FieldId == id).FirstOrDefault ();
 		}
 
 
