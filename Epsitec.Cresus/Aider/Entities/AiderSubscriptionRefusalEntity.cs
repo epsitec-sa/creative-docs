@@ -126,6 +126,7 @@ namespace Epsitec.Aider.Entities
 
 			refusal.RefusalType = SubscriptionType.Household;
 			refusal.Household = household;
+			refusal.ParishGroupPathCache = household.ParishGroupPathCache;
 
 			return refusal;
 		}
@@ -141,7 +142,7 @@ namespace Epsitec.Aider.Entities
 
 			refusal.RefusalType = SubscriptionType.LegalPerson;
 			refusal.LegalPersonContact = legalPersonContact;
-
+			refusal.ParishGroupPathCache = legalPersonContact.ParishGroupPathCache;
 			return refusal;
 		}
 

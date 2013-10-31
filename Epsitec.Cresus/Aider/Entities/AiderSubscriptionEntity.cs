@@ -186,7 +186,7 @@ namespace Epsitec.Aider.Entities
 
 			subscription.SubscriptionType = SubscriptionType.Household;
 			subscription.Household = household;
-
+			subscription.ParishGroupPathCache = household.ParishGroupPathCache;
 			return subscription;
 		}
 
@@ -206,6 +206,7 @@ namespace Epsitec.Aider.Entities
 
 			subscription.SubscriptionType = SubscriptionType.LegalPerson;
 			subscription.LegalPersonContact = legalPersonContact;
+			subscription.ParishGroupPathCache = legalPersonContact.ParishGroupPathCache;
 
 			return subscription;
 		}
@@ -222,7 +223,7 @@ namespace Epsitec.Aider.Entities
 
 			subscription.Count = count;
 			subscription.RegionalEdition = regionalEdition;
-
+			subscription.ParishGroupPathCache = regionalEdition.Path;
 			return subscription;
 		}
 

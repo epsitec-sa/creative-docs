@@ -31,6 +31,67 @@ namespace Epsitec.Aider.Data.Job
 	public static class SubscriptionAndRefusalFixer
 	{
 
+		public static void FixParishGroupPath(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+
+				var subscriptions = businessContext.GetAllEntities<AiderSubscriptionEntity> ().ToList ();
+				var total = subscriptions.Count ();
+
+				System.Console.Clear ();
+				var current = 1;
+				foreach (var subscription in subscriptions)
+				{
+					SubscriptionAndRefusalFixer.LogToConsole (" AiderSubscriptionEntity {0}/{1}", true, current, total);
+					current++;
+
+					if (subscription.ParishGroupPathCache.IsNullOrWhiteSpace ())
+					{
+						if (subscription.LegalPersonContact.IsNotNull () && subscription.Household.IsNull ())
+						{
+							subscription.ParishGroupPathCache = subscription.LegalPersonContact.ParishGroupPathCache;
+						}
+
+						if (subscription.Household.IsNotNull () && subscription.LegalPersonContact.IsNull ())
+						{
+							subscription.ParishGroupPathCache = subscription.Household.ParishGroupPathCache;
+						}
+
+						if (subscription.Household.IsNull () && subscription.LegalPersonContact.IsNull ())
+						{
+							subscription.ParishGroupPathCache = subscription.RegionalEdition.Path;
+						}
+					}
+				}
+
+				var subscriptionsRefusal = businessContext.GetAllEntities<AiderSubscriptionRefusalEntity> ().ToList ();
+				total = subscriptionsRefusal.Count ();
+
+				System.Console.Clear ();
+				current = 1;
+				foreach (var subscription in subscriptionsRefusal)
+				{
+					SubscriptionAndRefusalFixer.LogToConsole ("AiderSubscriptionRefusalEntity {0}/{1}", true, current, total);
+					current++;
+					if (subscription.ParishGroupPathCache.IsNullOrWhiteSpace ())
+					{
+						if (subscription.LegalPersonContact.IsNotNull () && subscription.Household.IsNull ())
+						{
+							subscription.ParishGroupPathCache = subscription.LegalPersonContact.ParishGroupPathCache;
+						}
+
+						if (subscription.Household.IsNotNull () && subscription.LegalPersonContact.IsNull ())
+						{
+							subscription.ParishGroupPathCache = subscription.Household.ParishGroupPathCache;
+						}
+					}
+				}
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+
+		}
 
 		public static void FixEmptySubscriptions(CoreData coreData)
 		{
@@ -143,7 +204,28 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
+		private static System.Diagnostics.Stopwatch LogToConsole(string format, bool fixedTop, params object[] args)
+		{
+			var message = string.Format (format, args);
+
+			if (message.StartsWith ("Error"))
+			{
+				System.Console.ForegroundColor = System.ConsoleColor.Red;
+			}
+
+			if (fixedTop)
+			{
+				System.Console.SetCursorPosition (0, 0);
+			}
+			System.Console.WriteLine ("SubscriptionAndResusalFixer: {0}", message);
+			System.Console.ResetColor ();
+
+			var time = new System.Diagnostics.Stopwatch ();
+
+			time.Start ();
+
+			return time;
+		}
+
 	}
-
-
 }

@@ -7428,6 +7428,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVGP22/LVO803
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO803]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO803]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVO803]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVO803]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnIdChanging(string oldValue, string newValue);
 		partial void OnIdChanged(string oldValue, string newValue);
@@ -7453,6 +7475,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnFullAddressTextSingleLineChanged(string oldValue, string newValue);
 		partial void OnFullAddressTextMultiLineChanging(string oldValue, string newValue);
 		partial void OnFullAddressTextMultiLineChanged(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		
 		partial void GetFullAddressTextSingleLine(ref string value);
 		partial void SetFullAddressTextSingleLine(string value);
@@ -7671,6 +7695,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVGC32/LVO903
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO903]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO903]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVO903]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVO903]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnHouseholdChanging(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
 		partial void OnHouseholdChanged(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
@@ -7688,6 +7734,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnFullAddressTextSingleLineChanged(string oldValue, string newValue);
 		partial void OnFullAddressTextMultiLineChanging(string oldValue, string newValue);
 		partial void OnFullAddressTextMultiLineChanged(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		
 		partial void GetFullAddressTextSingleLine(ref string value);
 		partial void SetFullAddressTextSingleLine(string value);

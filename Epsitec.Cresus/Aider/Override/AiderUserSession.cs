@@ -100,7 +100,15 @@ namespace Epsitec.Aider.Override
                 else if (entityType == typeof(AiderPersonWarningEntity))
                 {
                     return this.GetAiderPersonWarningEntityFilter((AiderPersonWarningEntity)example, pattern + "%");
-                }
+				}
+				else if (entityType == typeof (AiderSubscriptionEntity))
+				{
+					return this.GetAiderSubscriptionEntityFilter ((AiderSubscriptionEntity) example, pattern + "%");
+				}
+				else if (entityType == typeof (AiderSubscriptionRefusalEntity))
+				{
+					return this.GetAiderSubscriptionRefusalEntityFilter ((AiderSubscriptionRefusalEntity) example, pattern + "%");
+				}
 			}
 
 			return null;
@@ -135,6 +143,17 @@ namespace Epsitec.Aider.Override
         {
             return new LambdaFilter<AiderPersonWarningEntity>(x => SqlMethods.Like(x.ParishGroupPath, pattern));
         }
+
+		private IFilter GetAiderSubscriptionEntityFilter(AiderSubscriptionEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderSubscriptionEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+		}
+
+		private IFilter GetAiderSubscriptionRefusalEntityFilter(AiderSubscriptionRefusalEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderSubscriptionRefusalEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+		}
+
 
 		private string GetActiveScopePathPattern()
 		{

@@ -1924,6 +1924,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Id = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 99);
 				//	designer:cap/LVG632
 				public static readonly global::Epsitec.Common.Support.Druid LegalPersonContact = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 102);
+				//	designer:cap/LVO803
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 8);
 				//	designer:cap/LVG532
 				public static readonly global::Epsitec.Common.Support.Druid RegionalEdition = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 101);
 				//	designer:cap/LVG132
@@ -1953,6 +1955,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 109);
 				//	designer:cap/LVGE32
 				public static readonly global::Epsitec.Common.Support.Druid LegalPersonContact = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 110);
+				//	designer:cap/LVO903
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 9);
 				//	designer:cap/LVGF32
 				public static readonly global::Epsitec.Common.Support.Druid RefusalType = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 111);
 			}
