@@ -48,6 +48,68 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
+#if false
+		public DataObject GetObjects(int objectIndex)
+		{
+			//	Retourne un objet ainsi que toute son histoire.
+			//	Il y a toute l'information pour peupler la timeline.
+			if (objectIndex >= 0 && objectIndex < this.mandat.Objects.Count)
+			{
+				return this.mandat.Objects[objectIndex];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public IEnumerable<AbstractDataProperty> GetObjectSingleProperties(Guid objectGuid, Timestamp timestamp)
+		{
+			//	Retourne l'état d'un objet à un instant donné.
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				foreach (var field in DataAccessor.ObjectFields)
+				{
+					var p = obj.GetSingleProperty (timestamp, (int) field);
+					if (p != null)
+					{
+						yield return p;
+					}
+				}
+			}
+		}
+
+		public IEnumerable<AbstractDataProperty> GetObjectSyntheticProperties(Guid objectGuid, Timestamp? timestamp)
+		{
+			//	Retourne l'état d'un objet à un instant donné.
+			var obj = this.mandat.GetObject (objectGuid);
+
+			if (obj != null)
+			{
+				if (!timestamp.HasValue)
+				{
+					timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+				}
+
+				foreach (var field in DataAccessor.ObjectFields)
+				{
+					var p = obj.GetSyntheticProperty (timestamp.Value, (int) field);
+					if (p != null)
+					{
+						yield return p;
+					}
+				}
+			}
+		}
+#endif
+
+
+
+
+
+#if true
 		public Guid GetObjectGuid(int objectIndex)
 		{
 			if (objectIndex >= 0 && objectIndex < this.mandat.Objects.Count)
@@ -240,10 +302,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		{
 			var timestamp = new Timestamp (this.mandat.StartDate, 0);
 
-			var o = new DataObject (0);
+			var o = new DataObject ();
 			mandat.Objects.Insert (row, o);
 
-			var e = new DataEvent (1, timestamp, EventType.Entrée);
+			var e = new DataEvent (timestamp, EventType.Entrée);
 			o.AddEvent (e);
 
 			var properties = this.GetObjectSyntheticProperties (modelGuid, null);
@@ -273,7 +335,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			{
 				var position = obj.GetNewPosition (date);
 				var ts = new Timestamp (date, position);
-				var e = new DataEvent (0, ts, type);
+				var e = new DataEvent (ts, type);
 
 				obj.AddEvent (e);
 				this.UpdateComputedAmount (objectGuid);
@@ -384,6 +446,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					return -1;
 			}
 		}
+#endif
 
 
 		#region Edition manager

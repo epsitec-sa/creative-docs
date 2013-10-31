@@ -12,7 +12,6 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		public static DataMandat GetDummyMandat()
 		{
 			var mandat = new DataMandat (new System.DateTime (2013, 1, 1));
-			int objectId = 0;
 			var start  = new Timestamp (new System.DateTime (2013, 1, 1), 0);
 			var date1  = new Timestamp (new System.DateTime (2013, 1, 7), 0);
 			var date1b = new Timestamp (new System.DateTime (2013, 1, 7), 1);
@@ -26,20 +25,20 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var date8  = new Timestamp (new System.DateTime (2013, 9, 19), 0);
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty    ((int) ObjectField.Level, 0));
 				e.Properties.Add (new DataStringProperty ((int) ObjectField.Nom,   "Immobilisations"));
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty    ((int) ObjectField.Level,  1));
 				e.Properties.Add (new DataStringProperty ((int) ObjectField.Numéro, "1"));
@@ -47,10 +46,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty    ((int) ObjectField.Level,  2));
 				e.Properties.Add (new DataStringProperty ((int) ObjectField.Numéro, "1.1"));
@@ -58,11 +57,11 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
 				{
-					var e = new DataEvent (1, start, EventType.Entrée);
+					var e = new DataEvent (start, EventType.Entrée);
 					o.AddEvent (e);
 					e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "1.1.1"));
@@ -76,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				for (int i=1; i<50; i++)
 				{
 					{
-						var e = new DataEvent (1, new Timestamp (start.Date.AddDays (i*11), 0), EventType.AmortissementAuto);
+						var e = new DataEvent (new Timestamp (start.Date.AddDays (i*11), 0), EventType.AmortissementAuto);
 						o.AddEvent (e);
 
 						decimal a1 = 3000000.0m-(i-1)*10000;
@@ -87,10 +86,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, date1, EventType.Entrée);
+				var e = new DataEvent (date1, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "1.1.2"));
@@ -102,11 +101,11 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
 				{
-					var e = new DataEvent (1, start, EventType.Entrée);
+					var e = new DataEvent (start, EventType.Entrée);
 					o.AddEvent (e);
 					e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "1.1.3"));
@@ -118,7 +117,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 
 				{
-					var e = new DataEvent (1, date1, EventType.Modification);
+					var e = new DataEvent (date1, EventType.Modification);
 					o.AddEvent (e);
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.NomCatégorie,           "Immobilier"));
 					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.TauxAmortissement,      0.075m));
@@ -128,7 +127,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 
 				{
-					var e = new DataEvent (1, date3, EventType.Modification);
+					var e = new DataEvent (date3, EventType.Modification);
 					o.AddEvent (e);
 					e.Properties.Add (new DataDecimalProperty ((int) ObjectField.TauxAmortissement,      0.085m));
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.TypeAmortissement,      "Linéaire"));
@@ -136,10 +135,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       2));
 				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "1.2"));
@@ -147,10 +146,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "1.2.1"));
@@ -162,10 +161,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "1.2.2"));
@@ -177,10 +176,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       2));
 				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "1.3"));
@@ -188,10 +187,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "1.3.1"));
@@ -203,10 +202,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "1.3.2"));
@@ -218,10 +217,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "1.3.3"));
@@ -233,10 +232,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       1));
 				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "2"));
@@ -244,10 +243,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       2));
 				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "2.1"));
@@ -255,10 +254,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.1.1"));
@@ -272,10 +271,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.1.2"));
@@ -289,10 +288,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.1.3"));
@@ -305,10 +304,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.1.4"));
@@ -322,10 +321,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.1.5"));
@@ -338,10 +337,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       2));
 				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "2.2"));
@@ -349,10 +348,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.2.1"));
@@ -366,10 +365,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.2.2"));
@@ -382,10 +381,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty     ((int) ObjectField.Level,       2));
 				e.Properties.Add (new DataStringProperty  ((int) ObjectField.Numéro,      "2.3"));
@@ -393,10 +392,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.3.1"));
@@ -410,10 +409,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.3.2"));
@@ -427,10 +426,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.3.3"));
@@ -442,10 +441,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.3.4"));
@@ -458,10 +457,10 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
-				var e = new DataEvent (1, start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
 				e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 				e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.3.5"));
@@ -475,11 +474,11 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
 				{
-					var e = new DataEvent (1, start, EventType.Entrée);
+					var e = new DataEvent (start, EventType.Entrée);
 					o.AddEvent (e);
 					e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.3.6"));
@@ -492,49 +491,49 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 
 				{
-					var e = new DataEvent (1, date1, EventType.Entrée);
+					var e = new DataEvent (date1, EventType.Entrée);
 					o.AddEvent (e);
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (12000.0m)));
 				}
 
 				{
-					var e = new DataEvent (1, date1b, EventType.Augmentation);
+					var e = new DataEvent (date1b, EventType.Augmentation);
 					o.AddEvent (e);
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (12000.0m, 12500.0m)));
 				}
 
 				{
-					var e = new DataEvent (1, date3, EventType.Modification);
+					var e = new DataEvent (date3, EventType.Modification);
 					o.AddEvent (e);
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Responsable, "Georges"));
 				}
 
 				{
-					var e = new DataEvent (1, date4, EventType.Diminution);
+					var e = new DataEvent (date4, EventType.Diminution);
 					o.AddEvent (e);
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1,     new ComputedAmount (16000.0m, 14500.0m, true)));
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2,     new ComputedAmount (12500.0m, 11000.0m)));
 				}
 
 				{
-					var e = new DataEvent (1, date4b, EventType.Modification);
+					var e = new DataEvent (date4b, EventType.Modification);
 					o.AddEvent (e);
 					e.Properties.Add (new DataStringProperty ((int) ObjectField.Responsable, "Damien"));
 				}
 
 				{
-					var e = new DataEvent (1, date5, EventType.Diminution);
+					var e = new DataEvent (date5, EventType.Diminution);
 					o.AddEvent (e);
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (12000.0m)));
 				}
 			}
 
 			{
-				var o = new DataObject (objectId++);
+				var o = new DataObject ();
 				mandat.Objects.Add (o);
 
 				{
-					var e = new DataEvent (1, start, EventType.Entrée);
+					var e = new DataEvent (start, EventType.Entrée);
 					o.AddEvent (e);
 					e.Properties.Add (new DataIntProperty            ((int) ObjectField.Level,       3));
 					e.Properties.Add (new DataStringProperty         ((int) ObjectField.Numéro,      "2.3.7"));
@@ -548,39 +547,39 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				}
 
 				{
-					var e = new DataEvent (1, date1, EventType.Augmentation);
+					var e = new DataEvent (date1, EventType.Augmentation);
 					o.AddEvent (e);
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (5000.0m, 5200.0m)));
 				}
 
 				{
-					var e = new DataEvent (1, date2, EventType.Modification);
+					var e = new DataEvent (date2, EventType.Modification);
 					o.AddEvent (e);
 					e.Properties.Add (new DataStringProperty ((int) ObjectField.Responsable, "Frédérique"));
 					e.Properties.Add (new DataStringProperty ((int) ObjectField.NuméroSérie, "F30T-340407-52118-40721-S"));
 				}
 
 				{
-					var e = new DataEvent (1, date4, EventType.AmortissementExtra);
+					var e = new DataEvent (date4, EventType.AmortissementExtra);
 					o.AddEvent (e);
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (5200.0m, 4600.0m)));
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (3500.0m, 2400.0m)));
 				}
 
 				{
-					var e = new DataEvent (1, date6, EventType.Modification);
+					var e = new DataEvent (date6, EventType.Modification);
 					o.AddEvent (e);
 					e.Properties.Add (new DataStringProperty  ((int) ObjectField.Responsable, "Daniel"));
 				}
 
 				{
-					var e = new DataEvent (1, date7, EventType.Augmentation);
+					var e = new DataEvent (date7, EventType.Augmentation);
 					o.AddEvent (e);
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur2, new ComputedAmount (2400.0m, 3000.0m, true)));
 				}
 
 				{
-					var e = new DataEvent (1, date8, EventType.Diminution);
+					var e = new DataEvent (date8, EventType.Diminution);
 					o.AddEvent (e);
 					e.Properties.Add (new DataComputedAmountProperty ((int) ObjectField.Valeur1, new ComputedAmount (4600.0m, 2100.0m, true)));
 				}

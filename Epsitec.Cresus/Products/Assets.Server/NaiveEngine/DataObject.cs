@@ -9,16 +9,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
 	public class DataObject
 	{
-		public DataObject(int id)
+		public DataObject()
 		{
 			this.Guid = Guid.NewGuid ();
-			this.Id   = id;
 
 			this.events = new List<DataEvent> ();
 		}
 
 		public readonly Guid					Guid;
-		public readonly int						Id;
 
 		public List<DataEvent>					Events
 		{

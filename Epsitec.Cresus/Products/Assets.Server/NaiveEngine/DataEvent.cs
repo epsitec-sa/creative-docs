@@ -9,10 +9,9 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
 	public class DataEvent
 	{
-		public DataEvent(int id, Timestamp timestamp, EventType type)
+		public DataEvent(Timestamp timestamp, EventType type)
 		{
 			this.Guid      = Guid.NewGuid ();
-			this.Id        = id;
 			this.Timestamp = timestamp;
 			this.Type      = type;
 
@@ -20,7 +19,6 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 		public readonly Guid					Guid;
-		public readonly int						Id;
 		public readonly Timestamp				Timestamp;
 		public readonly EventType				Type;
 
