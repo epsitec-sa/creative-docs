@@ -14,16 +14,16 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			this.StartDate = startDate;
 			this.Guid = Guid.NewGuid ();
 
-			this.objects    = new List<DataObject> ();
-			this.categories = new List<DataObject> ();
-			this.groups     = new List<DataObject> ();
+			this.objects    = new GuidList<DataObject> ();
+			this.categories = new GuidList<DataObject> ();
+			this.groups     = new GuidList<DataObject> ();
 		}
 
 		public readonly System.DateTime			StartDate;
 		public readonly Guid					Guid;
 
 
-		public List<DataObject>					Objects
+		public GuidList<DataObject> Objects
 		{
 			get
 			{
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public List<DataObject>					Categories
+		public GuidList<DataObject> Categories
 		{
 			get
 			{
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-		public List<DataObject>					Groups
+		public GuidList<DataObject> Groups
 		{
 			get
 			{
@@ -48,24 +48,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
-		public DataObject GetObject(Guid guid)
-		{
-			return this.objects.Where (x => x.Guid == guid).FirstOrDefault ();
-		}
-
-		public DataObject GetCategory(Guid guid)
-		{
-			return this.categories.Where (x => x.Guid == guid).FirstOrDefault ();
-		}
-
-		public DataObject GetGroup(Guid guid)
-		{
-			return this.groups.Where (x => x.Guid == guid).FirstOrDefault ();
-		}
-
-
-		private readonly List<DataObject> objects;
-		private readonly List<DataObject> categories;
-		private readonly List<DataObject> groups;
+		private readonly GuidList<DataObject> objects;
+		private readonly GuidList<DataObject> categories;
+		private readonly GuidList<DataObject> groups;
 	}
 }

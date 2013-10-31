@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			this.properties = new List<AbstractDataProperty> ();
 		}
 
+		#region IGuid Members
 		public Guid								Guid
 		{
 			get
@@ -25,6 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				return this.guid;
 			}
 		}
+		#endregion
 
 		public readonly Timestamp				Timestamp;
 		public readonly EventType				Type;

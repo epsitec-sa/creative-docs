@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public int GetObjectEventsCount(Guid objectGuid)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public Guid GetObjectEventGuid(Guid objectGuid, int eventIndex)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public Timestamp? GetObjectEventTimestamp(Guid objectGuid, Guid eventGuid)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public Timestamp? GetObjectEventTimestamp(Guid objectGuid, int eventIndex)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public EventType? GetObjectEventType(Guid objectGuid, int eventIndex)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public EventType? GetObjectEventType(Guid objectGuid, Timestamp timestamp)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		public void RemoveAmortissementsAuto(Guid objectGuid)
 		{
 			//	Supprime tous les événements d'amortissement automatique d'un objet.
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public void RemoveEventeventGuid(Guid objectGuid, Guid eventGuid)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public bool HasObjectEvent(Guid objectGuid, Timestamp timestamp)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public IEnumerable<AbstractDataProperty> GetObjectSingleProperties(Guid objectGuid, Timestamp timestamp)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -278,7 +278,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public IEnumerable<AbstractDataProperty> GetObjectSyntheticProperties(Guid objectGuid, Timestamp? timestamp)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -329,7 +329,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public Timestamp? CreateObjectEvent(Guid objectGuid, System.DateTime date, EventType type)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public void AddObjectEventProperty(Guid objectGuid, Timestamp timestamp, AbstractDataProperty property)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 		public void UpdateComputedAmount(Guid objectGuid)
 		{
-			var obj = this.mandat.GetObject (objectGuid);
+			var obj = this.mandat.Objects[objectGuid];
 
 			if (obj != null)
 			{
@@ -578,7 +578,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		{
 			get
 			{
-				var obj = this.mandat.GetObject (this.editionObjectGuid);
+				var obj = this.mandat.Objects[this.editionObjectGuid];
 
 				if (obj != null)
 				{

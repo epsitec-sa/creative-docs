@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
-	interface IGuid
+	public interface IGuid
 	{
 		Guid Guid
 		{

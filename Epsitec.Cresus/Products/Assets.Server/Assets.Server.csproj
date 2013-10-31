@@ -56,6 +56,7 @@
     <Compile Include="NaiveEngine\AbstractDataProperty.cs" />
     <Compile Include="NaiveEngine\CategoryField.cs" />
     <Compile Include="NaiveEngine\ComputedAmount.cs" />
+    <Compile Include="NaiveEngine\GuidList.cs" />
     <Compile Include="NaiveEngine\DataDateProperty.cs" />
     <Compile Include="NaiveEngine\DataComputedAmountProperty.cs" />
     <Compile Include="NaiveEngine\FieldType.cs" />

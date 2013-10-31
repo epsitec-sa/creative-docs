@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			this.events = new List<DataEvent> ();
 		}
 
+		#region IGuid Members
 		public Guid								Guid
 		{
 			get
@@ -23,6 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				return this.guid;
 			}
 		}
+		#endregion
 
 		public List<DataEvent>					Events
 		{
