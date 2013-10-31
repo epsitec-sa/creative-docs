@@ -60,8 +60,26 @@ namespace Epsitec.Aider.Entities
 			this.DisplayName = this.GetDisplayName ();
 			this.DisplayZipCode = this.GetDisplayZipCode ();
 			this.DisplayAddress = this.GetDisplayAddress ();
+			this.RefreshParishGroupPathCache ();					
 		}
 
+		public void RefreshParishGroupPathCache()
+		{
+			if (this.LegalPersonContact.IsNotNull () && this.Household.IsNull ())
+			{
+				this.ParishGroupPathCache = this.LegalPersonContact.ParishGroupPathCache;
+			}
+
+			if (this.Household.IsNotNull () && this.LegalPersonContact.IsNull ())
+			{
+				this.ParishGroupPathCache = this.Household.ParishGroupPathCache;
+			}
+
+			if (this.Household.IsNull () && this.LegalPersonContact.IsNull ())
+			{
+				this.ParishGroupPathCache = this.RegionalEdition.Path;
+			}
+		}
 
 		private string GetDisplayName()
 		{
@@ -248,7 +266,6 @@ namespace Epsitec.Aider.Entities
 
 			return AiderSubscriptionEntity.FindSubscription (businessContext, example, household);
 		}
-
 
 		public static AiderSubscriptionEntity FindSubscription
 		(
