@@ -116,12 +116,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,           180, "Objet"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          50, "N°"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         120, "Responsable"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          60, "Couleur"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         200, "Numéro de série"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur comptable"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur assurance"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur imposable"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         120, "Responsable"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          60, "Couleur"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         200, "Numéro de série"));
 
 				return list.ToArray ();
 			}
@@ -180,14 +180,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 				c7.Add (s7);
 			}
 
-			this.controller.SetColumnCells (0, cf.ToArray ());
-			this.controller.SetColumnCells (1, c1.ToArray ());
-			this.controller.SetColumnCells (2, c2.ToArray ());
-			this.controller.SetColumnCells (3, c3.ToArray ());
-			this.controller.SetColumnCells (4, c4.ToArray ());
-			this.controller.SetColumnCells (5, c5.ToArray ());
-			this.controller.SetColumnCells (6, c6.ToArray ());
-			this.controller.SetColumnCells (7, c7.ToArray ());
+			{
+				int i = 0;
+				this.controller.SetColumnCells (i++, cf.ToArray ());
+				this.controller.SetColumnCells (i++, c1.ToArray ());
+				this.controller.SetColumnCells (i++, c5.ToArray ());
+				this.controller.SetColumnCells (i++, c6.ToArray ());
+				this.controller.SetColumnCells (i++, c7.ToArray ());
+				this.controller.SetColumnCells (i++, c2.ToArray ());
+				this.controller.SetColumnCells (i++, c3.ToArray ());
+				this.controller.SetColumnCells (i++, c4.ToArray ());
+			}
 		}
 
 
