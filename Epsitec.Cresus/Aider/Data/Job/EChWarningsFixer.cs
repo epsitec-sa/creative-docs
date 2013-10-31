@@ -69,35 +69,44 @@ namespace Epsitec.Aider.Data.Job
 				WarningType = WarningType.EChProcessArrival
 			};
 
-			var allArrivalsByPersonId = businessContext.DataContext.GetByExample<AiderPersonWarningEntity> (example).Select(k => k.Person.eCH_Person);
-
 			var membersInReportedPerson = new Dictionary<string, List<eCH_ReportedPersonEntity>> ();
 
-			var allReportedPersons = businessContext.GetAllEntities<eCH_ReportedPersonEntity> ();
+			var allPersons            = businessContext.GetAllEntities<eCH_PersonEntity> ().ToList ();
+			var allReportedPersons    = businessContext.GetAllEntities<eCH_ReportedPersonEntity> ().ToList ();
+			var allArrivalsByPersonId = businessContext.DataContext.GetByExample<AiderPersonWarningEntity> (example)
+																   .Select (k => k.Person.eCH_Person)
+																   .ToList ();
 
-			var total = allReportedPersons.Count ();
+			//	Loading all persons before looping over the reported persons ensures that all
+			//	entities are already in memory, thus suppressing the need to load each person
+			//	individually...
+
+			var total   = allReportedPersons.Count;
 			var current = 1;
+
 			foreach (var reportedPerson in allReportedPersons)
 			{
 				System.Console.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
 				current++;
-	
-				var reportedPersonList = new List<eCH_ReportedPersonEntity> ();
+
 				foreach (var member in reportedPerson.Members)
 				{
 					if (member.IsNotNull ())
 					{
-					
-						if (!membersInReportedPerson.TryGetValue (member.PersonId, out reportedPersonList))
+						List<eCH_ReportedPersonEntity> reportedPersonList;
+						
+						if (membersInReportedPerson.TryGetValue (member.PersonId, out reportedPersonList))
 						{
-							reportedPersonList = new List<eCH_ReportedPersonEntity> ();
+							System.Diagnostics.Debug.Assert (reportedPersonList.Count < 2);
 							reportedPersonList.Add (reportedPerson);
-							membersInReportedPerson.Add (member.PersonId, reportedPersonList);
 						}
 						else
 						{
+							reportedPersonList = new List<eCH_ReportedPersonEntity> ();
 							reportedPersonList.Add (reportedPerson);
+
+							membersInReportedPerson.Add (member.PersonId, reportedPersonList);
 						}
 					}
 				}
@@ -105,13 +114,19 @@ namespace Epsitec.Aider.Data.Job
 
 			foreach (var eChPerson in allArrivalsByPersonId)
 			{
-				if (eChPerson.ReportedPersons.Count () < 1)
+				if ((eChPerson.ReportedPerson1.IsNull ()) &&
+					(eChPerson.ReportedPerson2.IsNull ()))
 				{
-					var reportedPersons = membersInReportedPerson[eChPerson.PersonId];
-					eChPerson.ReportedPerson1 = reportedPersons[0];
-					if (reportedPersons.Count > 1)
+					List<eCH_ReportedPersonEntity> reportedPersons;
+
+					if (membersInReportedPerson.TryGetValue (eChPerson.PersonId, out reportedPersons))
 					{
-						eChPerson.ReportedPerson2 = reportedPersons[1];
+						eChPerson.ReportedPerson1 = reportedPersons[0];
+						eChPerson.ReportedPerson2 = reportedPersons.Skip (1).FirstOrDefault ();
+					}
+					else
+					{
+						EChWarningsFixer.LogToConsole ("{0} has no reported person", eChPerson.PersonId);
 					}
 				}
 			}
