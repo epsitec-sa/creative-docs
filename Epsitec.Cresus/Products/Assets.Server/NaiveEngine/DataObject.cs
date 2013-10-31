@@ -26,13 +26,6 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 		#endregion
 
-		public List<DataEvent>					Events
-		{
-			get
-			{
-				return this.events;
-			}
-		}
 
 		public int GetNewPosition(System.DateTime date)
 		{
@@ -48,10 +41,49 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
+
+		public int EventsCount
+		{
+			get
+			{
+				return this.events.Count;
+			}
+		}
+
+		public IEnumerable<DataEvent> Events
+		{
+			get
+			{
+				return this.events;
+			}
+		}
+
 		public void AddEvent(DataEvent e)
 		{
 			int i = this.events.Where (x => x.Timestamp < e.Timestamp).Count ();
 			this.events.Insert (i, e);
+		}
+
+		public void RemoveEvent(DataEvent e)
+		{
+			this.events.Remove (e);
+		}
+
+		public DataEvent GetEvent(int index)
+		{
+			if (index >= 0 && index < this.events.Count)
+			{
+				return this.events[index];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public DataEvent GetEvent(Guid guid)
+		{
+			return this.events.Where (x => x.Guid == guid).FirstOrDefault ();
 		}
 
 		public DataEvent GetEvent(Timestamp timestamp)

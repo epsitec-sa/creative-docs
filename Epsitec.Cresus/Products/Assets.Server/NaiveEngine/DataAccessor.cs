@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (obj != null)
 			{
-				return obj.Events.Count;
+				return obj.EventsCount;
 			}
 
 			return 0;
@@ -140,9 +140,11 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (obj != null)
 			{
-				if (eventIndex >= 0 && eventIndex < obj.Events.Count)
+				var e = obj.GetEvent (eventIndex);
+
+				if (e != null)
 				{
-					return obj.Events[eventIndex].Guid;
+					return e.Guid;
 				}
 			}
 
@@ -155,7 +157,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (obj != null)
 			{
-				var e = obj.Events.Where (x => x.Guid == eventGuid).FirstOrDefault ();
+				var e = obj.GetEvent (eventGuid);
 
 				if (e != null)
 				{
@@ -172,9 +174,11 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (obj != null)
 			{
-				if (eventIndex >= 0 && eventIndex < obj.Events.Count)
+				var e = obj.GetEvent (eventIndex);
+
+				if (e != null)
 				{
-					return obj.Events[eventIndex].Timestamp;
+					return e.Timestamp;
 				}
 			}
 
@@ -187,9 +191,11 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (obj != null)
 			{
-				if (eventIndex >= 0 && eventIndex < obj.Events.Count)
+				var e = obj.GetEvent (eventIndex);
+
+				if (e != null)
 				{
-					return obj.Events[eventIndex].Type;
+					return e.Type;
 				}
 			}
 
@@ -202,7 +208,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (obj != null)
 			{
-				var e = obj.Events.Where (x => x.Timestamp == timestamp).FirstOrDefault ();
+				var e = obj.GetEvent (timestamp);
+
 				if (e != null)
 				{
 					return e.Type;
@@ -219,30 +226,12 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (obj != null)
 			{
-				while (true)
+				var guids = obj.Events.Where (x => x.Type == EventType.AmortissementAuto).Select (x => x.Guid);
+
+				foreach (var guid in guids)
 				{
-					var e = obj.Events.Where (x => x.Type == EventType.AmortissementAuto).FirstOrDefault ();
-
-					if (e == null)
-					{
-						break;
-					}
-
-					this.RemoveEventeventGuid (objectGuid, e.Guid);
-				}
-			}
-		}
-
-		public void RemoveEventeventGuid(Guid objectGuid, Guid eventGuid)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				int i = obj.Events.FindIndex (x => x.Guid == eventGuid);
-				if (i != -1)
-				{
-					obj.Events.RemoveAt (i);
+					var e = obj.GetEvent (guid);
+					obj.RemoveEvent (e);
 				}
 			}
 		}
