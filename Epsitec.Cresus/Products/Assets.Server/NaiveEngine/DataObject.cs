@@ -7,16 +7,22 @@ using System.Text;
 
 namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
-	public class DataObject
+	public class DataObject : IGuid
 	{
 		public DataObject()
 		{
-			this.Guid = Guid.NewGuid ();
+			this.guid = Guid.NewGuid ();
 
 			this.events = new List<DataEvent> ();
 		}
 
-		public readonly Guid					Guid;
+		public Guid								Guid
+		{
+			get
+			{
+				return this.guid;
+			}
+		}
 
 		public List<DataEvent>					Events
 		{
@@ -101,6 +107,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
-		private readonly List<DataEvent> events;
+		private readonly Guid					guid;
+		private readonly List<DataEvent>		events;
 	}
 }

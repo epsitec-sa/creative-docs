@@ -7,18 +7,25 @@ using System.Text;
 
 namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
-	public class DataEvent
+	public class DataEvent : IGuid
 	{
 		public DataEvent(Timestamp timestamp, EventType type)
 		{
-			this.Guid      = Guid.NewGuid ();
+			this.guid      = Guid.NewGuid ();
 			this.Timestamp = timestamp;
 			this.Type      = type;
 
 			this.properties = new List<AbstractDataProperty> ();
 		}
 
-		public readonly Guid					Guid;
+		public Guid								Guid
+		{
+			get
+			{
+				return this.guid;
+			}
+		}
+
 		public readonly Timestamp				Timestamp;
 		public readonly EventType				Type;
 
@@ -36,6 +43,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		}
 
 
-		private readonly List<AbstractDataProperty> properties;
+		private readonly Guid						guid;
+		private readonly List<AbstractDataProperty>	properties;
 	}
 }

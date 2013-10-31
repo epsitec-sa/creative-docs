@@ -59,6 +59,7 @@
     <Compile Include="NaiveEngine\DataDateProperty.cs" />
     <Compile Include="NaiveEngine\DataComputedAmountProperty.cs" />
     <Compile Include="NaiveEngine\FieldType.cs" />
+    <Compile Include="NaiveEngine\IGuid.cs" />
     <Compile Include="NaiveEngine\PropertyState.cs" />
     <Compile Include="NaiveEngine\EventType.cs" />
     <Compile Include="NaiveEngine\DummyMandat.cs" />
