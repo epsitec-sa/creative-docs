@@ -340,7 +340,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 			if (obj != null)
 			{
-				var e = obj.Events.Where (x => x.Timestamp == timestamp).FirstOrDefault ();
+				var e = obj.GetEvent (timestamp);
 
 				if (e != null)
 				{
@@ -557,9 +557,9 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			{
 				var obj = this.mandat.Objects[this.editionObjectGuid];
 
-				if (obj != null)
+				if (obj != null && this.editionTimestamp.HasValue)
 				{
-					return obj.Events.Where (x => x.Timestamp == this.editionTimestamp).FirstOrDefault ();
+					return obj.GetEvent (this.editionTimestamp.Value);
 				}
 
 				return null;
