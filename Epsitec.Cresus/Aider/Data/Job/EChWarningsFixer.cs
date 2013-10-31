@@ -31,6 +31,9 @@ namespace Epsitec.Aider.Data.Job
 
 				EChWarningsFixer.FixReportedPersonLinkageForArrivals (businessContext);
 
+				System.Console.WriteLine ("press ENTER to continue");
+				System.Console.ReadLine ();
+
 				EChWarningsFixer.LogToConsole ("Migrating old Ech Warnings: EChPersonMissing -> EChProcessDeparture");
 				
 				EChWarningsFixer.MigrateWarning (businessContext, WarningType.EChPersonMissing, WarningType.EChProcessDeparture);
@@ -76,7 +79,7 @@ namespace Epsitec.Aider.Data.Job
 			var allArrivalsByPersonId = businessContext.DataContext.GetByExample<AiderPersonWarningEntity> (example)
 																   .Select (k => k.Person.eCH_Person)
 																   .ToList ();
-
+			var reportedPersonToCheck = new List<eCH_ReportedPersonEntity> ();
 			//	Loading all persons before looping over the reported persons ensures that all
 			//	entities are already in memory, thus suppressing the need to load each person
 			//	individually...
@@ -98,8 +101,47 @@ namespace Epsitec.Aider.Data.Job
 						
 						if (membersInReportedPerson.TryGetValue (member.PersonId, out reportedPersonList))
 						{
-							System.Diagnostics.Debug.Assert (reportedPersonList.Count < 2);
+							//System.Diagnostics.Debug.Assert (reportedPersonList.Count < 2);
 							reportedPersonList.Add (reportedPerson);
+
+							if (reportedPersonList.Count > 2)
+							{
+								System.Console.Clear ();
+								EChWarningsFixer.LogToConsole ("////////////// {0}", member.GetCompactSummary ());
+								EChWarningsFixer.LogToConsole ("RP Count: {0}", member.ReportedPersons.Count ());
+								EChWarningsFixer.LogToConsole ("DS: {0}", member.DeclarationStatus);
+								for (var i=0; i< reportedPersonList.Count (); i++)
+								{
+									EChWarningsFixer.LogToConsole ("RP{0}: Adult 1 {1}", i, reportedPersonList[i].Adult1.GetCompactSummary ());
+									if(reportedPersonList[i].Adult2.IsNotNull ())
+									{
+										EChWarningsFixer.LogToConsole ("RP{0}: Adult 2 {1}", i, reportedPersonList[i].Adult2.GetCompactSummary ());
+									}
+									foreach (var child in reportedPersonList[i].Children)
+									{
+										EChWarningsFixer.LogToConsole ("RP{0}: Child {1} {2}", i, child.GetCompactSummary (), child.DeclarationStatus);
+									}
+
+									var duplicatedChild = reportedPersonList[i].Children.Where (c => c.PersonId == member.PersonId);
+									EChWarningsFixer.LogToConsole ("Found {0} duplicated child", duplicatedChild.Count ());
+									if (duplicatedChild.Count () > 1)
+									{
+										reportedPersonList[i].Children.Remove (member);
+										EChWarningsFixer.LogToConsole ("Duplicated child removed");
+									}
+
+									if (reportedPersonList[i].Adult1 == member && member.PersonDateOfBirth.Value.Year > Date.Today.Year - 18)
+									{
+										businessContext.DeleteEntity (reportedPersonList[i]);
+										EChWarningsFixer.LogToConsole ("Child as Adult mismatch Found, ReportedPerson removed");
+									}
+								}
+
+
+								
+								System.Console.WriteLine ("press ENTER to continue");
+								System.Console.ReadLine ();
+							}
 						}
 						else
 						{
@@ -123,11 +165,42 @@ namespace Epsitec.Aider.Data.Job
 					{
 						eChPerson.ReportedPerson1 = reportedPersons[0];
 						eChPerson.ReportedPerson2 = reportedPersons.Skip (1).FirstOrDefault ();
+						EChWarningsFixer.LogToConsole ("eCh Person Corrected!");
 					}
 					else
 					{
-						EChWarningsFixer.LogToConsole ("{0} has no reported person", eChPerson.PersonId);
-					}
+						EChWarningsFixer.LogToConsole ("{0} has no reported person\n Details:\n{1}\n{2}", eChPerson.PersonId, eChPerson.RemovalReason, eChPerson.DeclarationStatus);
+
+						eChPerson.DeclarationStatus = PersonDeclarationStatus.Removed;
+
+						var existingAiderPerson = EChWarningsFixer.GetAiderPersonEntity (businessContext, eChPerson);
+
+						if (existingAiderPerson.IsNotNull ())
+						{
+							if (!existingAiderPerson.Warnings.Where (w => w.WarningType == WarningType.EChProcessDeparture).Any ())
+							{
+								EChWarningsFixer.LogToConsole ("Info: warning added: EChProcessDeparture");
+								AiderPersonWarningEntity.Create (businessContext, existingAiderPerson, existingAiderPerson.ParishGroupPathCache, WarningType.EChProcessDeparture, TextFormatter.FormatText ("Correction du modèle ECh", TextFormatter.FormatText (existingAiderPerson.GetDisplayName (), "n'est plus dans le RCH.")));
+							}
+							else
+							{
+								EChWarningsFixer.LogToConsole ("Info: EChProcessDeparture warning already exist");
+							}
+
+
+							//Removing arrival warning
+							var arrivalWarningToRemove = existingAiderPerson.Warnings.Where (w => w.WarningType == WarningType.EChProcessArrival);
+							foreach (var warning in arrivalWarningToRemove)
+							{
+								EChWarningsFixer.LogToConsole ("Info: error detected: EChProcessArrival warning removed");
+								businessContext.DeleteEntity (warning);
+							}
+
+						}
+
+						System.Console.WriteLine ("press ENTER to continue");
+						System.Console.ReadLine ();
+					}	
 				}
 			}
 
@@ -248,6 +321,23 @@ namespace Epsitec.Aider.Data.Job
 				current++;
 			}
 			System.Console.Clear ();
+		}
+
+		private static AiderPersonEntity GetAiderPersonEntity(BusinessContext businessContext, eCH_PersonEntity person)
+		{
+			if (person == null)
+			{
+				return null;
+			}
+
+			var personExample = new AiderPersonEntity ();
+
+			personExample.eCH_Person = new eCH_PersonEntity ()
+			{
+				PersonId = person.PersonId
+			};
+
+			return businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).FirstOrDefault ();
 		}
 
 		private static System.Diagnostics.Stopwatch LogToConsole(string format, params object[] args)

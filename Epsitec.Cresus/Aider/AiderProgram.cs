@@ -559,7 +559,12 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData
 			(
-				coreData => PersonDeathFixer.FixEChStatus(coreData)
+				coreData =>
+				{
+					PersonDeathFixer.FixEChStatus (coreData);
+					System.Console.WriteLine ("Press RETURN to quit");
+					System.Console.ReadLine ();
+				}
 			);
 		}
 
