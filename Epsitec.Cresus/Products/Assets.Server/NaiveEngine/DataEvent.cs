@@ -31,17 +31,45 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		public readonly Timestamp				Timestamp;
 		public readonly EventType				Type;
 
-		public List<AbstractDataProperty>		Properties
+
+		public int PropertiesCount
 		{
 			get
 			{
-				return this.properties;
+				return this.properties.Count;
 			}
 		}
 
-		public AbstractDataProperty GetProperty(int id)
+		public void AddProperty(AbstractDataProperty property)
 		{
-			return this.properties.Where (x => x.FieldId == id).FirstOrDefault ();
+			int i = this.properties.FindIndex (x => x.FieldId == property.FieldId);
+			if (i == -1)
+			{
+				this.properties.Add (property);
+			}
+			else
+			{
+				this.properties[i] = property;
+			}
+
+		}
+
+		public void RemoveProperty(int fieldId)
+		{
+			var p = this.GetProperty(fieldId);
+			if (p != null)
+			{
+				int i = this.properties.IndexOf (p);
+				if (i != -1)
+				{
+					this.properties.RemoveAt (i);
+				}
+			}
+		}
+
+		public AbstractDataProperty GetProperty(int fieldId)
+		{
+			return this.properties.Where (x => x.FieldId == fieldId).FirstOrDefault ();
 		}
 
 

@@ -19,8 +19,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 				var e = new DataEvent (new Timestamp (new System.DateTime (2013, 1, 1), 0), EventType.Entrée);
 				o.AddEvent (e);
-				e.Properties.Add (new DataIntProperty    (1, 0));
-				e.Properties.Add (new DataStringProperty (2, "Immobilisations"));
+				e.AddProperty (new DataIntProperty    (1, 0));
+				e.AddProperty (new DataStringProperty (2, "Immobilisations"));
 			}
 
 			{
@@ -29,9 +29,9 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 				var e = new DataEvent (new Timestamp (new System.DateTime (2013, 1, 1), 0), EventType.Entrée);
 				o.AddEvent (e);
-				e.Properties.Add (new DataIntProperty    (1, 1));
-				e.Properties.Add (new DataStringProperty (2, "1"));
-				e.Properties.Add (new DataStringProperty (3, "Bâtiments"));
+				e.AddProperty (new DataIntProperty    (1, 1));
+				e.AddProperty (new DataStringProperty (2, "1"));
+				e.AddProperty (new DataStringProperty (3, "Bâtiments"));
 			}
 
 			{
@@ -40,9 +40,9 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 				var e = new DataEvent (new Timestamp (new System.DateTime (2013, 1, 1), 0), EventType.Entrée);
 				o.AddEvent (e);
-				e.Properties.Add (new DataIntProperty    (1, 2));
-				e.Properties.Add (new DataStringProperty (2, "1.1"));
-				e.Properties.Add (new DataStringProperty (3, "Immeubles"));
+				e.AddProperty (new DataIntProperty    (1, 2));
+				e.AddProperty (new DataStringProperty (2, "1.1"));
+				e.AddProperty (new DataStringProperty (3, "Immeubles"));
 			}
 
 			{
@@ -52,33 +52,33 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2013, 1, 1), 0), EventType.Entrée);
 					o.AddEvent (e);
-					e.Properties.Add (new DataIntProperty     (1, 3));
-					e.Properties.Add (new DataStringProperty  (2, "1.1.1"));
-					e.Properties.Add (new DataStringProperty  (3, "Centre administratif"));
-					e.Properties.Add (new DataDecimalProperty (4, 2450000.0m));
-					e.Properties.Add (new DataStringProperty  (6, "Paul"));
+					e.AddProperty (new DataIntProperty     (1, 3));
+					e.AddProperty (new DataStringProperty  (2, "1.1.1"));
+					e.AddProperty (new DataStringProperty  (3, "Centre administratif"));
+					e.AddProperty (new DataDecimalProperty (4, 2450000.0m));
+					e.AddProperty (new DataStringProperty  (6, "Paul"));
 				}
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2013, 3, 1), 0), EventType.Entrée);
 					o.AddEvent (e);
-					e.Properties.Add (new DataDecimalProperty (5, 4000000.0m));
-					e.Properties.Add (new DataStringProperty  (6, "René"));
+					e.AddProperty (new DataDecimalProperty (5, 4000000.0m));
+					e.AddProperty (new DataStringProperty  (6, "René"));
 				}
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2013, 2, 1), 0), EventType.Entrée);
 					o.AddEvent (e);
-					e.Properties.Add (new DataDecimalProperty (5, 3000000.0m));
+					e.AddProperty (new DataDecimalProperty (5, 3000000.0m));
 				}
 
 				var e1 = o.GetEvent (new Timestamp (new System.DateTime (2013, 1, 1), 0));
 				var e2 = o.GetEvent (new Timestamp (new System.DateTime (2013, 2, 1), 0));
 				var e3 = o.GetEvent (new Timestamp (new System.DateTime (2013, 3, 1), 0));
 
-				System.Diagnostics.Debug.Assert (e1.Properties.Count == 5);
-				System.Diagnostics.Debug.Assert (e2.Properties.Count == 1);
-				System.Diagnostics.Debug.Assert (e3.Properties.Count == 2);
+				System.Diagnostics.Debug.Assert (e1.PropertiesCount == 5);
+				System.Diagnostics.Debug.Assert (e2.PropertiesCount == 1);
+				System.Diagnostics.Debug.Assert (e3.PropertiesCount == 2);
 
 				var p11 = o.GetSingleProperty (new Timestamp (new System.DateTime (2013, 1, 1), 0), 1) as DataIntProperty;
 				System.Diagnostics.Debug.Assert (p11 != null && p11.Value == 3);

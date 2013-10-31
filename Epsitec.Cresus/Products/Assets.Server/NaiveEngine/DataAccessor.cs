@@ -314,14 +314,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var i = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level);
 			if (i.HasValue)
 			{
-				e.Properties.Add (new DataIntProperty ((int) ObjectField.Level, i.Value));
+				e.AddProperty (new DataIntProperty ((int) ObjectField.Level, i.Value));
 			}
 
 			//	On met le même numéro que l'objet modèle.
 			var n = DataAccessor.GetStringProperty (properties, (int) ObjectField.Numéro);
 			if (!string.IsNullOrEmpty (n))
 			{
-				e.Properties.Add (new DataStringProperty ((int) ObjectField.Numéro, n));
+				e.AddProperty (new DataStringProperty ((int) ObjectField.Numéro, n));
 			}
 
 			return timestamp;
@@ -355,7 +355,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 
 				if (e != null)
 				{
-					e.Properties.Add (property);
+					e.AddProperty (property);
 				}
 			}
 		}
@@ -398,33 +398,31 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 		private static ComputedAmount? GetComputedAmount(DataEvent e, int rank)
 		{
 			int id = DataAccessor.RankToField (rank);
+			if (id != -1)
+			{
+				var p = e.GetProperty (id) as DataComputedAmountProperty;
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
 
-			if (id == -1)
-			{
-				return null;
-			}
-			else
-			{
-				return DataAccessor.GetComputedAmountProperty (e.Properties, id);
-			}
+			return null;
 		}
 
 		private static void SetComputedAmount(DataEvent e, int rank, ComputedAmount? value)
 		{
 			int id = DataAccessor.RankToField (rank);
-
 			if (id != -1)
 			{
-				var currentProperty = e.Properties.Where (x => x.FieldId == id).FirstOrDefault ();
-				if (currentProperty != null)
-				{
-					e.Properties.Remove (currentProperty);
-				}
-
 				if (value.HasValue)
 				{
 					var newProperty = new DataComputedAmountProperty (id, value.Value);
-					e.Properties.Add (newProperty);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty (id);
 				}
 			}
 		}
@@ -476,16 +474,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var e = this.EditionEvent;
 			if (e != null)
 			{
-				var currentProperty = e.Properties.Where (x => x.FieldId == (int) field).FirstOrDefault ();
-				if (currentProperty != null)
+				if (value == null)
 				{
-					e.Properties.Remove (currentProperty);
+					e.RemoveProperty ((int) field);
 				}
-
-				if (value != null)
+				else
 				{
 					var newProperty = new DataStringProperty ((int) field, value);
-					e.Properties.Add (newProperty);
+					e.AddProperty (newProperty);
 				}
 			}
 		}
@@ -495,16 +491,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var e = this.EditionEvent;
 			if (e != null)
 			{
-				var currentProperty = e.Properties.Where (x => x.FieldId == (int) field).FirstOrDefault ();
-				if (currentProperty != null)
-				{
-					e.Properties.Remove (currentProperty);
-				}
-
 				if (value.HasValue)
 				{
 					var newProperty = new DataDecimalProperty ((int) field, value.Value);
-					e.Properties.Add (newProperty);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty ((int) field);
 				}
 			}
 		}
@@ -514,16 +508,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var e = this.EditionEvent;
 			if (e != null)
 			{
-				var currentProperty = e.Properties.Where (x => x.FieldId == (int) field).FirstOrDefault ();
-				if (currentProperty != null)
-				{
-					e.Properties.Remove (currentProperty);
-				}
-
 				if (value.HasValue)
 				{
 					var newProperty = new DataComputedAmountProperty ((int) field, value.Value);
-					e.Properties.Add (newProperty);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty ((int) field);
 				}
 
 				this.UpdateComputedAmount (this.editionObjectGuid);
@@ -535,16 +527,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var e = this.EditionEvent;
 			if (e != null)
 			{
-				var currentProperty = e.Properties.Where (x => x.FieldId == (int) field).FirstOrDefault ();
-				if (currentProperty != null)
-				{
-					e.Properties.Remove (currentProperty);
-				}
-
 				if (value.HasValue)
 				{
 					var newProperty = new DataIntProperty ((int) field, value.Value);
-					e.Properties.Add (newProperty);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty ((int) field);
 				}
 			}
 		}
@@ -554,16 +544,14 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var e = this.EditionEvent;
 			if (e != null)
 			{
-				var currentProperty = e.Properties.Where (x => x.FieldId == (int) field).FirstOrDefault ();
-				if (currentProperty != null)
-				{
-					e.Properties.Remove (currentProperty);
-				}
-
 				if (value.HasValue)
 				{
 					var newProperty = new DataDateProperty ((int) field, value.Value);
-					e.Properties.Add (newProperty);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty ((int) field);
 				}
 			}
 		}
