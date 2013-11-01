@@ -103,12 +103,22 @@ function() {
     initStores: function(){
       this.bagStore = Ext.create('Ext.data.Store', {
           model: 'Bag',
-          data: []
+          data: [],
       });
     },
 
     addEntityToBag: function(entity) {
-      this.bagStore.add(entity);
+      var index = this.bagStore.indexOfId(entity.id);
+      if(index===-1)
+      {
+        this.bagStore.add(entity);
+      }
+      else
+      {
+        this.bagStore.removeAt(index);
+        this.bagStore.insert(index,entity);
+      }
+      
       if(!this.isVisible())
       {
         this.show();
