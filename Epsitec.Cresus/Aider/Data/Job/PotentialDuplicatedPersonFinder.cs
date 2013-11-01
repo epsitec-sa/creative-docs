@@ -55,7 +55,7 @@ namespace Epsitec.Aider.Data.Job
 					contactExample.Address = address;
 					contactExample.AddressType = AddressType.Default;
 
-					var livingContacts = businessContext.DataContext.GetByExample<AiderContactEntity> (contactExample);				
+					var livingContacts = businessContext.DataContext.GetByExample<AiderContactEntity> (contactExample).ToList();				
 					
 
 					var potentialDuplicateChecker = new Dictionary<string, AiderPersonEntity> ();

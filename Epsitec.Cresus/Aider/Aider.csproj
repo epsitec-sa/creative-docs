@@ -134,11 +134,13 @@
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderLegalPersonViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderSubscriptionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderSubscriptionRefusalViewController0.cs" />
+    <Compile Include="Controllers\CreationControllers\BrickCreationAiderMailingViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderUserViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderLegalPersonViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionRefusalViewController0.cs" />
+    <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderMailingController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderPersonViewController0DeceaseDateController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderPersonWarningViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController1Address.cs" />
@@ -214,6 +216,7 @@
     <Compile Include="Entities\AiderWarningExampleFactory.cs" />
     <Compile Include="Entities\AiderWarningExampleFactory`2.cs" />
     <Compile Include="Entities\AiderWarningSourceEntity.cs" />
+    <Compile Include="Entities\AiderMailingEntity.cs" />
     <Compile Include="Entities\eCH_ReportedPersonEntity.cs" />
     <Compile Include="Entities\IAiderWarningExampleFactoryGetter.cs" />
     <Compile Include="Entities\ParticipationData.cs" />

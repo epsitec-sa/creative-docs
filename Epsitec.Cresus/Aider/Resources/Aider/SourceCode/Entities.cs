@@ -38,6 +38,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVGC32]", typeof (Epsitec.Aider.Entities.AiderSubscriptionRefusalEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA1H]", typeof (Epsitec.Aider.Entities.AiderWarningSourceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA6H]", typeof (Epsitec.Aider.Entities.AiderPersonWarningSourceEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVOA03]", typeof (Epsitec.Aider.Entities.AiderMailingEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -7939,6 +7940,188 @@ namespace Epsitec.Aider.Entities
 		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderPersonWarningSourceEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderMailing Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderMailing</c> entity.
+	///	designer:cap/LVOA03
+	///	</summary>
+	public partial class AiderMailingEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/LVOA03/LVOB03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOB03]")]
+		public string Name
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOB03]");
+			}
+			set
+			{
+				string oldValue = this.Name;
+				if (oldValue != value || !this.IsFieldDefined("[LVOB03]"))
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<string> ("[LVOB03]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>IsReady</c> field.
+		///	designer:fld/LVOA03/LVOC03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOC03]")]
+		public bool IsReady
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVOC03]");
+			}
+			set
+			{
+				bool oldValue = this.IsReady;
+				if (oldValue != value || !this.IsFieldDefined("[LVOC03]"))
+				{
+					this.OnIsReadyChanging (oldValue, value);
+					this.SetField<bool> ("[LVOC03]", oldValue, value);
+					this.OnIsReadyChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Exclusions</c> field.
+		///	designer:fld/LVOA03/LVOD03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOD03]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> Exclusions
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVOD03]");
+			}
+		}
+		///	<summary>
+		///	The <c>RecipientGroups</c> field.
+		///	designer:fld/LVOA03/LVOE03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOE03]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity> RecipientGroups
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVOE03]");
+			}
+		}
+		///	<summary>
+		///	The <c>RecipientContacts</c> field.
+		///	designer:fld/LVOA03/LVOF03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOF03]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> RecipientContacts
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVOF03]");
+			}
+		}
+		///	<summary>
+		///	The <c>CreatedBy</c> field.
+		///	designer:fld/LVOA03/LVOG03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOG03]")]
+		public global::Epsitec.Aider.Entities.AiderUserEntity CreatedBy
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVOG03]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderUserEntity oldValue = this.CreatedBy;
+				if (oldValue != value || !this.IsFieldDefined("[LVOG03]"))
+				{
+					this.OnCreatedByChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVOG03]", oldValue, value);
+					this.OnCreatedByChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVOA03/LVOH03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOH03]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOH03]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVOH03]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVOH03]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Recipients</c> field.
+		///	designer:fld/LVOA03/LVOI03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOI03]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> Recipients
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity>);
+				this.GetRecipients (ref value);
+				return value;
+			}
+		}
+		
+		partial void OnNameChanging(string oldValue, string newValue);
+		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnIsReadyChanging(bool oldValue, bool newValue);
+		partial void OnIsReadyChanged(bool oldValue, bool newValue);
+		partial void OnCreatedByChanging(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
+		partial void OnCreatedByChanged(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
+		
+		partial void GetRecipients(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderMailingEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderMailingEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 120, 10);	// [LVOA03]
+		public static readonly string EntityStructuredTypeKey = "[LVOA03]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderMailingEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
 			}
 		}

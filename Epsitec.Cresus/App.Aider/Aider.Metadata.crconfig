@@ -23,6 +23,7 @@ AiderGroupDef = [LVA2A]
 AiderSubscription = [LVGP22]
 AiderSubscriptionRefusal = [LVGC32]
 AiderPersonWarning = [LVALB]
+AiderMailing = [LVOA03]
 
 <meta>
   <T>
@@ -559,6 +560,13 @@ AiderPersonWarning = [LVALB]
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderCountry:[LVAC5]" title="Code ISO" canSort="True" canFilter="True">
         <sort o="None" />
+        <disp m="Visible" />
+      </col>
+    </t>
+
+    <t eid="@AiderMailing" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVOB03]" title="Intitulé" canSort="True" canFilter="True">
+        <sort o="Ascending" />
         <disp m="Visible" />
       </col>
     </t>
@@ -1151,6 +1159,10 @@ AiderPersonWarning = [LVALB]
     </d>
 
 #[Feature:Warnings]    <d cid="[LVGK32]" teid="@AiderPersonWarning" tn="default" df="true" d="true" ec="false" ed="false" dg="">
+#[Feature:Warnings]      <R><r>@user</r></R>
+#[Feature:Warnings]    </d>
+
+#[Feature:Warnings]    <d cid="[LVOJ03]" teid="@AiderMailing" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0">
 #[Feature:Warnings]      <R><r>@user</r></R>
 #[Feature:Warnings]    </d>
 

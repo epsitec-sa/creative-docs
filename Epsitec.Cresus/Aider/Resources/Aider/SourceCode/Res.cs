@@ -39,6 +39,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderLegalPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 528));
 				//	designer:cap/LVG832
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderLegalPersonContact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 104));
+				//	designer:cap/LVOJ03
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderMailing = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 19));
 				//	designer:cap/LVO003
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 0));
 				//	designer:cap/LVGK32
@@ -84,6 +86,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderLegalPerson = 0x3F50000A000210L;
 				//	designer:cap/LVG832
 				public const long ShowAiderLegalPersonContact = 0x3F500050000068L;
+				//	designer:cap/LVOJ03
+				public const long ShowAiderMailing = 0x3F500078000013L;
 				//	designer:cap/LVO003
 				public const long ShowAiderPerson = 0x3F500078000000L;
 				//	designer:cap/LVGK32
@@ -263,6 +267,8 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderHousehold = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 82));
 			//	designer:cap/LVAR6
 			public static readonly Epsitec.Common.Types.StructuredType AiderLegalPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 219));
+			//	designer:cap/LVOA03
+			public static readonly Epsitec.Common.Types.StructuredType AiderMailing = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 10));
 			//	designer:cap/LVAF
 			public static readonly Epsitec.Common.Types.StructuredType AiderPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
 			//	designer:cap/LVAL8
@@ -1739,6 +1745,31 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Visibility = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 482);
 			}
 			
+			public static class AiderMailing
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderMailing.CreatedBy, null);
+				}
+				
+				//	designer:cap/LVOG03
+				public static readonly global::Epsitec.Common.Support.Druid CreatedBy = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 16);
+				//	designer:cap/LVOD03
+				public static readonly global::Epsitec.Common.Support.Druid Exclusions = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 13);
+				//	designer:cap/LVOC03
+				public static readonly global::Epsitec.Common.Support.Druid IsReady = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 12);
+				//	designer:cap/LVOB03
+				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 11);
+				//	designer:cap/LVOH03
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 17);
+				//	designer:cap/LVOF03
+				public static readonly global::Epsitec.Common.Support.Druid RecipientContacts = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 15);
+				//	designer:cap/LVOE03
+				public static readonly global::Epsitec.Common.Support.Druid RecipientGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 14);
+				//	designer:cap/LVOI03
+				public static readonly global::Epsitec.Common.Support.Druid Recipients = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 18);
+			}
+			
 			public static class AiderPerson
 			{
 				internal static void _Initialize()
@@ -2564,6 +2595,7 @@ namespace Epsitec.Aider
 			Fields.AiderGroupPlace._Initialize ();
 			Fields.AiderHousehold._Initialize ();
 			Fields.AiderLegalPerson._Initialize ();
+			Fields.AiderMailing._Initialize ();
 			Fields.AiderPerson._Initialize ();
 			Fields.AiderPersonData._Initialize ();
 			Fields.AiderPersonRelationship._Initialize ();
