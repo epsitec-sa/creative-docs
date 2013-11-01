@@ -287,7 +287,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private int TimestampToRow(Timestamp? timestamp)
 		{
-			if (timestamp.HasValue)
+			if (timestamp.HasValue && this.obj != null)
 			{
 				int count = this.obj.EventsCount;
 				for (int row = 0; row < count; row++)

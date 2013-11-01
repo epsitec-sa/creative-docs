@@ -160,6 +160,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.timestamp, ObjectField.Valeur2);
 				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.timestamp, ObjectField.Valeur3);
 
+				if (this.timestamp.HasValue &&
+					!ObjectCalculator.IsExistingObject (obj, this.timestamp.Value))
+				{
+					nom = "<i>Inconnu à cette date</i>";
+				}
+
 				var sf = new TreeTableCellTree (true, level, type, nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString (true, numéro, isSelected: (i == selection));
 				var s2 = new TreeTableCellString (true, responsable, isSelected: (i == selection));

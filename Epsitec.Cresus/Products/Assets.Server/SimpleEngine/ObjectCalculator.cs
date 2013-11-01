@@ -8,6 +8,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public static class ObjectCalculator
 	{
+		public static bool IsExistingObject(DataObject obj, Timestamp timestamp)
+		{
+			if (obj.EventsCount > 0)
+			{
+				var e = obj.GetEvent (0);
+				return e.Timestamp <= timestamp;
+			}
+
+			return false;
+		}
+
+
 		public static int? GetObjectPropertyInt(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
 		{
 			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataIntProperty;
