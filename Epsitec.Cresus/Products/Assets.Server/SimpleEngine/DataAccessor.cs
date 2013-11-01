@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		#region Objects
 		public int ObjectsCount
 		{
 			get
@@ -102,6 +103,77 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			return null;
 		}
+		#endregion
+
+
+		#region Categories
+		public int CategoriesCount
+		{
+			get
+			{
+				return this.mandat.Categories.Count;
+			}
+		}
+
+		public IEnumerable<Guid> GetCategoryGuids(int start = 0, int count = int.MaxValue)
+		{
+			count = System.Math.Min (count, this.CategoriesCount);
+
+			for (int i=start; i<start+count; i++)
+			{
+				yield return this.mandat.Categories[i].Guid;
+			}
+		}
+
+		public DataObject GetCategory(Guid catGuid)
+		{
+			return this.mandat.Categories[catGuid];
+		}
+
+		public Timestamp CreateCategory(int row, Guid modelGuid)
+		{
+			var timestamp = new Timestamp (this.mandat.StartDate, 0);
+
+			var o = new DataObject ();
+			mandat.Categories.Insert (row, o);
+
+			var e = new DataEvent (timestamp, EventType.Entrée);
+			o.AddEvent (e);
+
+			//	On met le même niveau que l'objet modèle.
+			var catModel = this.GetCategory (modelGuid);
+
+			var i = ObjectCalculator.GetObjectPropertyInt (catModel, null, ObjectField.CatégorieLevel);
+			if (i.HasValue)
+			{
+				e.AddProperty (new DataIntProperty ((int) ObjectField.CatégorieLevel, i.Value));
+			}
+
+			//	On met le même numéro que l'objet modèle.
+			var n = ObjectCalculator.GetObjectPropertyString (catModel, null, ObjectField.CatégorieNuméro);
+			if (!string.IsNullOrEmpty (n))
+			{
+				e.AddProperty (new DataStringProperty ((int) ObjectField.CatégorieNuméro, n));
+			}
+
+			return timestamp;
+		}
+
+		public DataEvent CreateCategoryEvent(DataObject cat, System.DateTime date, EventType type)
+		{
+			if (cat != null)
+			{
+				var position = cat.GetNewPosition (date);
+				var ts = new Timestamp (date, position);
+				var e = new DataEvent (ts, type);
+
+				cat.AddEvent (e);
+				return e;
+			}
+
+			return null;
+		}
+		#endregion
 
 
 		#region Edition manager

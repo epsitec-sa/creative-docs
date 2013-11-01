@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static AbstractDataProperty GetObjectSingleProperty(DataObject obj, Timestamp timestamp, ObjectField field)
 		{
-			//	Retourne l'état d'une propriété d'un objet à un instant donné.
+			//	Retourne l'état d'une propriété d'un objet à la date exacte.
 			if (obj == null)
 			{
 				return null;
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static AbstractDataProperty GetObjectSyntheticProperty(DataObject obj, Timestamp? timestamp, ObjectField field)
 		{
-			//	Retourne l'état d'une propriété d'un objet à un instant donné.
+			//	Retourne l'état d'une propriété d'un objet à la date exacte ou antérieurement.
 			if (obj == null)
 			{
 				return null;

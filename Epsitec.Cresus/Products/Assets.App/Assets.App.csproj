@@ -98,6 +98,7 @@
     <Compile Include="Views\AbstractObjectEditorPage.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\BusinessLogic.cs" />
+    <Compile Include="Views\CategoriesToolbarTreeTableController.cs" />
     <Compile Include="Views\IntFieldController.cs" />
     <Compile Include="Views\Format.cs" />
     <Compile Include="Views\DecimalFormat.cs" />

@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public static DataMandat GetDummyMandat()
 		{
 			var mandat = new DataMandat (new System.DateTime (2013, 1, 1));
+
 			var start  = new Timestamp (new System.DateTime (2013, 1, 1), 0);
 			var date1  = new Timestamp (new System.DateTime (2013, 1, 7), 0);
 			var date1b = new Timestamp (new System.DateTime (2013, 1, 7), 1);
@@ -585,7 +586,121 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
+			DummyMandat.AddCategories (mandat);
+
 			return mandat;
+		}
+
+		private static void AddCategories(DataMandat mandat)
+		{
+			var start  = new Timestamp (new System.DateTime (2013, 1, 1), 0);
+
+			{
+				var o = new DataObject ();
+				mandat.Categories.Add (o);
+
+				var e = new DataEvent (start, EventType.Entrée);
+				o.AddEvent (e);
+				e.AddProperty (new DataIntProperty    ((int) ObjectField.CatégorieLevel, 0));
+				e.AddProperty (new DataStringProperty ((int) ObjectField.CatégorieNom, "Catégories"));
+			}
+
+			{
+				var o = new DataObject ();
+				mandat.Categories.Add (o);
+
+				var e = new DataEvent (start, EventType.Entrée);
+				o.AddEvent (e);
+				e.AddProperty (new DataIntProperty    ((int) ObjectField.CatégorieLevel,  1));
+				e.AddProperty (new DataStringProperty ((int) ObjectField.CatégorieNuméro, "1"));
+				e.AddProperty (new DataStringProperty ((int) ObjectField.CatégorieNom,    "Immobilier"));
+			}
+
+			{
+				var o = new DataObject ();
+				mandat.Categories.Add (o);
+
+				var e = new DataEvent (start, EventType.Entrée);
+				o.AddEvent (e);
+				e.AddProperty (new DataIntProperty     ((int) ObjectField.CatégorieLevel,             2));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieNuméro,            "1.1"));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieNom,               "Bureaux"));
+				e.AddProperty (new DataDecimalProperty ((int) ObjectField.CatégorieTauxAmortissement, 0.075m));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieTypeAmortissement, "Linéaire"));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégoriePériodicité,       "Annuelle"));
+				e.AddProperty (new DataDecimalProperty ((int) ObjectField.CatégorieValeurRésiduelle,  1000.0m));
+			}
+
+			{
+				var o = new DataObject ();
+				mandat.Categories.Add (o);
+
+				var e = new DataEvent (start, EventType.Entrée);
+				o.AddEvent (e);
+				e.AddProperty (new DataIntProperty     ((int) ObjectField.CatégorieLevel,             2));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieNuméro,            "1.2"));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieNom,               "Usine"));
+				e.AddProperty (new DataDecimalProperty ((int) ObjectField.CatégorieTauxAmortissement, 0.12m));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieTypeAmortissement, "Linéaire"));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégoriePériodicité,       "Annuelle"));
+				e.AddProperty (new DataDecimalProperty ((int) ObjectField.CatégorieValeurRésiduelle,  10000.0m));
+			}
+
+			{
+				var o = new DataObject ();
+				mandat.Categories.Add (o);
+
+				var e = new DataEvent (start, EventType.Entrée);
+				o.AddEvent (e);
+				e.AddProperty (new DataIntProperty    ((int) ObjectField.CatégorieLevel,  1));
+				e.AddProperty (new DataStringProperty ((int) ObjectField.CatégorieNuméro, "2"));
+				e.AddProperty (new DataStringProperty ((int) ObjectField.CatégorieNom,    "Véhicule"));
+			}
+
+			{
+				var o = new DataObject ();
+				mandat.Categories.Add (o);
+
+				var e = new DataEvent (start, EventType.Entrée);
+				o.AddEvent (e);
+				e.AddProperty (new DataIntProperty     ((int) ObjectField.CatégorieLevel,             2));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieNuméro,            "2.1"));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieNom,               "Poid lourd"));
+				e.AddProperty (new DataDecimalProperty ((int) ObjectField.CatégorieTauxAmortissement, 0.15m));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieTypeAmortissement, "Dégressif"));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégoriePériodicité,       "Trimestrielle"));
+				e.AddProperty (new DataDecimalProperty ((int) ObjectField.CatégorieValeurRésiduelle,  100.0m));
+			}
+
+			{
+				var o = new DataObject ();
+				mandat.Categories.Add (o);
+
+				var e = new DataEvent (start, EventType.Entrée);
+				o.AddEvent (e);
+				e.AddProperty (new DataIntProperty     ((int) ObjectField.CatégorieLevel,             2));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieNuméro,            "2.2"));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieNom,               "Camionnette"));
+				e.AddProperty (new DataDecimalProperty ((int) ObjectField.CatégorieTauxAmortissement, 0.21m));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieTypeAmortissement, "Dégressif"));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégoriePériodicité,       "Semestrielle"));
+				e.AddProperty (new DataDecimalProperty ((int) ObjectField.CatégorieValeurRésiduelle,  100.0m));
+			}
+
+			{
+				var o = new DataObject ();
+				mandat.Categories.Add (o);
+
+				var e = new DataEvent (start, EventType.Entrée);
+				o.AddEvent (e);
+				e.AddProperty (new DataIntProperty     ((int) ObjectField.CatégorieLevel,             2));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieNuméro,            "2.3"));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieNom,               "Voiture"));
+				e.AddProperty (new DataDecimalProperty ((int) ObjectField.CatégorieTauxAmortissement, 0.25m));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégorieTypeAmortissement, "Dégressif"));
+				e.AddProperty (new DataStringProperty  ((int) ObjectField.CatégoriePériodicité,       "Semestrielle"));
+				e.AddProperty (new DataDecimalProperty ((int) ObjectField.CatégorieValeurRésiduelle,  100.0m));
+			}
 		}
 
 		private static void AddAmortissement1(DataEvent e)
