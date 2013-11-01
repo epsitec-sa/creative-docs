@@ -116,6 +116,12 @@ namespace Epsitec.Cresus.Core.Library
 			set;
 		}
 
+		public static string					SoftwareVersionString
+		{
+			get;
+			set;
+		}
+
 		public static T CreateApplication<T>()
 			where T : CoreApp
 		{
@@ -156,6 +162,11 @@ namespace Epsitec.Cresus.Core.Library
 		public static void DefineBuildDate(string date)
 		{
 			CoreContext.SoftwareReleaseDate = System.DateTime.ParseExact (date, "yyyy-MM-dd HH:mm", System.Globalization.CultureInfo.InvariantCulture);
+		}
+
+		public static void DefineBuildVersion(string version)
+		{
+			CoreContext.SoftwareVersionString = version;
 		}
 
 		public static void DefineDatabase(string name, string host)
