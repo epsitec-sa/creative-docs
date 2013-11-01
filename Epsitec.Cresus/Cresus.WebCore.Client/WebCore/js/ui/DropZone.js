@@ -21,7 +21,7 @@ function() {
       this.label = label;
       this.dropZoneStore = Ext.create('Ext.data.Store', {
           model: 'Bag',
-          data: {}
+          data: {},
       });
 
       config = {
@@ -37,7 +37,8 @@ function() {
           executer: this,
           store: this.dropZoneStore, 
           listeners: {
-              render: this.initializeEntityDropZone
+              render: this.initializeEntityDropZone,
+              destroy: this.unregEntityDragZone
           }
         };
 
@@ -53,6 +54,13 @@ function() {
       this.hide();
     },
 
+    unregEntityDragZone: function (v) {
+      if(v.dragZone)
+      {
+        v.dragZone.unreg();
+      }
+    },
+    
     initializeEntityDropZone: function(v) {
         v.dropZone = Ext.create('Ext.dd.DropZone', v.el, {
 
