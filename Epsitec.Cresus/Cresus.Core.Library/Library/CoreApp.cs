@@ -31,7 +31,16 @@ namespace Epsitec.Cresus.Core.Library
 			this.manualComponents  = new CoreComponentHostImplementation<ICoreManualComponent> ();
 			this.policy            = this.CreateDefaultPolicy ();
 
-			this.PreConfigureBasedOnPolicy ();
+			//********************************************************//
+			//  Message Daniel -> Pierre:                             //
+			//  Tu as remis ce code en fonction le 12 octobre,        //
+			//  malgré un mail t'indiquant que cette ligne empêche    //
+			//  le fonctionnement de Assets.                          //
+			//  Merci de ne pas la remettre avant d'avoir investigué  //
+			//  et corrigé le problème !                              //
+			//********************************************************//
+
+			//-[DR]-this.PreConfigureBasedOnPolicy ();
 			
 			Factories.CoreAppComponentFactory.RegisterComponents (host: this);
 		}
