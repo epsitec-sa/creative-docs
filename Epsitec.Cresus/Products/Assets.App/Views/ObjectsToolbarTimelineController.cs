@@ -360,9 +360,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (!guid.IsEmpty)
 			{
 				var type = ObjectsToolbarTimelineController.ParseEventType (buttonName);
-				var timestamp = this.accessor.CreateObjectEvent (guid, date, type);
+				var obj = this.accessor.GetObject (guid);
+				var e = this.accessor.CreateObjectEvent (obj, date, type);
 
-				if (timestamp.HasValue)
+				if (e != null)
 				{
 					using (new SaveCurrentDate (this))
 					{
@@ -372,7 +373,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.UpdateToolbar ();
 					}
 
-					int? index = this.GetEventIndex (timestamp);
+					int? index = this.GetEventIndex (e.Timestamp);
 					if (index.HasValue)
 					{
 						this.SelectedCell = index.Value;

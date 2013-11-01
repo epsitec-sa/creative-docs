@@ -39,19 +39,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public virtual void SetObject(Guid objectGuid, Timestamp timestamp)
 		{
 			this.objectGuid = objectGuid;
-			this.timestamp = timestamp;
+			this.obj        = this.accessor.GetObject (this.objectGuid);
+			this.timestamp  = timestamp;
+			this.hasEvent   = false;
+			this.eventType  = EventType.Unknown;
 
-			if (this.objectGuid.IsEmpty)
+			if (!this.objectGuid.IsEmpty && this.obj != null)
 			{
-				this.hasEvent   = false;
-				this.eventType  = EventType.Unknown;
-				this.properties = null;
-			}
-			else
-			{
-				this.hasEvent   = this.accessor.HasObjectEvent (this.objectGuid, this.timestamp);
-				this.eventType  = this.accessor.GetObjectEventType (this.objectGuid, this.timestamp).GetValueOrDefault (EventType.Unknown);
-				this.properties = this.accessor.GetObjectSyntheticProperties (this.objectGuid, this.timestamp);
+				var e = this.obj.GetEvent (this.timestamp);
+
+				if (e != null)
+				{
+					this.eventType = e.Type;
+					this.hasEvent  = true;
+				}
 			}
 
 			foreach (var pair in this.fieldControllers)
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as StringFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = DataAccessor.GetStringProperty (this.properties, (int) field);
+					c.Value         = ObjectCalculator.GetObjectPropertyString (this.obj, this.timestamp, field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is DecimalFieldController)
@@ -72,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as DecimalFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = DataAccessor.GetDecimalProperty (this.properties, (int) field);
+					c.Value         = ObjectCalculator.GetObjectPropertyDecimal (this.obj, this.timestamp, field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is ComputedAmountFieldController)
@@ -80,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as ComputedAmountFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = DataAccessor.GetComputedAmountProperty (this.properties, (int) field);
+					c.Value         = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, this.timestamp, field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is IntFieldController)
@@ -88,7 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as IntFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = DataAccessor.GetIntProperty (this.properties, (int) field);
+					c.Value         = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is DateFieldController)
@@ -96,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as DateFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = DataAccessor.GetDateProperty (this.properties, (int) field);
+					c.Value         = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 			}
@@ -136,7 +137,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.accessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = DataAccessor.GetStringProperty (this.properties, (int) field);
+				controller.Value         = ObjectCalculator.GetObjectPropertyString (this.obj, this.timestamp, field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -165,7 +166,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.accessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = DataAccessor.GetDecimalProperty (this.properties, (int) field);
+				controller.Value         = ObjectCalculator.GetObjectPropertyDecimal (this.obj, this.timestamp, field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -193,7 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.accessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = DataAccessor.GetComputedAmountProperty (this.properties, (int) field);
+				controller.Value         = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, this.timestamp, field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -221,7 +222,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.accessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = DataAccessor.GetIntProperty (this.properties, (int) field);
+				controller.Value         = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -249,7 +250,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.accessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = DataAccessor.GetDateProperty (this.properties, (int) field);
+				controller.Value         = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -280,12 +281,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.hasEvent)
 			{
-				return DataAccessor.GetPropertyState (this.properties, (int) field);
+				var p = ObjectCalculator.GetObjectSyntheticProperty (this.obj, this.timestamp, field);
+
+				if (p != null)
+				{
+					return p.State;
+				}
 			}
-			else
-			{
-				return PropertyState.Readonly;
-			}
+
+			return PropertyState.Readonly;
 		}
 
 
@@ -357,10 +361,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private Dictionary<ObjectField, AbstractFieldController> fieldControllers;
 
 		protected Guid								objectGuid;
+		protected DataObject						obj;
 		protected Timestamp							timestamp;
 		protected bool								hasEvent;
 		protected EventType							eventType;
-		protected IEnumerable<AbstractDataProperty>	properties;
 		protected int								tabIndex;
 	}
 }

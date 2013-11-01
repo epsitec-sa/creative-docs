@@ -65,20 +65,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateFields(Guid objectGuid, Timestamp? timestamp)
 		{
+			this.obj       = this.accessor.GetObject (objectGuid);
 			this.timestamp = timestamp;
+			this.hasEvent  = false;
+			this.eventType = EventType.Unknown;
 
-			if (objectGuid.IsEmpty)
+			if (!objectGuid.IsEmpty && this.obj != null)
 			{
-				this.hasEvent = false;
-				this.eventType = EventType.Unknown;
-				this.properties = null;
-			}
-			else
-			{
-				var ts = timestamp.GetValueOrDefault (new Timestamp (System.DateTime.MaxValue, 0));
-				this.hasEvent = this.accessor.HasObjectEvent (objectGuid, ts);
-				this.eventType = this.accessor.GetObjectEventType (objectGuid, ts).GetValueOrDefault (EventType.Unknown);
-				this.properties = this.accessor.GetObjectSyntheticProperties (objectGuid, ts);
+				var e = this.obj.GetEvent (this.timestamp.Value);
+
+				if (e != null)
+				{
+					this.eventType = e.Type;
+					this.hasEvent  = true;
+				}
 			}
 
 			this.UpdateInformations ();
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.hasEvent && this.properties != null)
+				if (this.hasEvent && this.obj != null)
 				{
 					var s1 = StaticDescriptions.GetEventDescription (this.eventType);
 					var s2 = this.SinglePropertiesCount;
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private SummaryControllerTile? GetCell(int? field)
 		{
-			if (!field.HasValue || this.properties == null)
+			if (!field.HasValue || this.obj == null)
 			{
 				return null;
 			}
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (DataAccessor.GetFieldType ((ObjectField) field.Value))
 			{
 				case FieldType.Decimal:
-					var d = DataAccessor.GetDecimalProperty (this.properties, field.Value);
+					var d = ObjectCalculator.GetObjectPropertyDecimal (this.obj, this.timestamp, (ObjectField) field.Value);
 					if (d.HasValue)
 					{
 						switch (Format.GetFieldFormat ((ObjectField) field.Value))
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				case FieldType.Int:
-					var i = DataAccessor.GetIntProperty (this.properties, field.Value);
+					var i = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, (ObjectField) field.Value);
 					if (i.HasValue)
 					{
 						text = Helpers.Converters.IntToString (i);
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				case FieldType.ComputedAmount:
-					var ca = DataAccessor.GetComputedAmountProperty (this.properties, field.Value);
+					var ca = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, this.timestamp, (ObjectField) field.Value);
 					if (ca.HasValue)
 					{
 						text = Helpers.Converters.AmountToString (ca.Value.FinalAmount);
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				case FieldType.Date:
-					var da = DataAccessor.GetDateProperty (this.properties, field.Value);
+					var da = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, (ObjectField) field.Value);
 					if (da.HasValue)
 					{
 						text = Helpers.Converters.DateToString (da.Value);
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				default:
-					string s = DataAccessor.GetStringProperty (this.properties, field.Value);
+					string s = ObjectCalculator.GetObjectPropertyString (this.obj, this.timestamp, (ObjectField) field.Value);
 					if (!string.IsNullOrEmpty (s))
 					{
 						text = s;
@@ -274,26 +274,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.hasEvent)
 			{
-				return DataAccessor.GetPropertyState (this.properties, field);
+				var p = ObjectCalculator.GetObjectSyntheticProperty (this.obj, this.timestamp, (ObjectField) field);
+
+				if (p != null)
+				{
+					return p.State;
+				}
 			}
-			else
-			{
-				return PropertyState.Readonly;
-			}
+
+			return PropertyState.Readonly;
 		}
 
 		private int SinglePropertiesCount
 		{
 			get
 			{
-				if (this.properties == null)
+				if (this.timestamp.HasValue)
 				{
-					return 0;
+					var e = obj.GetEvent (this.timestamp.Value);
+					if (e != null)
+					{
+						return e.PropertiesCount;
+					}
 				}
-				else
-				{
-					return this.properties.Where (x => x.State == PropertyState.Single).Count ();
-				}
+
+				return 0;
 			}
 		}
 
@@ -357,9 +362,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private StaticText							informations;
 		private FrameBox							header;
+		private DataObject							obj;
 		private Timestamp?							timestamp;
 		private bool								hasEvent;
 		private EventType							eventType;
-		private IEnumerable<AbstractDataProperty>	properties;
 	}
 }

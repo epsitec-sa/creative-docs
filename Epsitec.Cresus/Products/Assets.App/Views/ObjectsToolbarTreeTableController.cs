@@ -16,6 +16,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.title = "Objets d'immobilisation";
 			this.hasTreeOperations = true;
+
+			this.objectGuids = new List<Guid> ();
+			this.UpdateObjects ();
 		}
 
 
@@ -23,22 +26,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.accessor.GetObjectGuid (this.SelectedRow);
+				if (this.SelectedRow >= 0 && this.SelectedRow < this.objectGuids.Count)
+				{
+					return this.objectGuids[this.SelectedRow];
+				}
+				else
+				{
+					return Guid.Empty;
+				}
 			}
 			set
 			{
-				int count = this.accessor.ObjectsCount;
-				for (int i=0; i<count; i++)
-				{
-					var guid = this.accessor.GetObjectGuid (i);
-					if (guid == value)
-					{
-						this.SelectedRow = i;
-						return;
-					}
-				}
-
-				this.SelectedRow = -1;
+				this.SelectedRow = this.objectGuids.IndexOf (value);
 			}
 		}
 
@@ -77,6 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var timestamp = this.accessor.CreateObject (sel+1, modelGuid);
 
+			this.UpdateObjects ();
 			this.UpdateData ();
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -145,21 +145,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 				}
 
-				var node = this.GetNode (firstRow+i);
+				var node  = this.GetNode (firstRow+i);
 				var guid  = node.Guid;
 				var level = node.Level;
 				var type  = node.Type;
+				var obj   = this.accessor.GetObject (guid);
 
-				var properties = this.accessor.GetObjectSyntheticProperties (guid, this.timestamp);
-
-				var nom         = DataAccessor.GetStringProperty (properties, (int) ObjectField.Nom);
-				var numéro      = DataAccessor.GetStringProperty (properties, (int) ObjectField.Numéro);
-				var responsable = DataAccessor.GetStringProperty (properties, (int) ObjectField.Responsable);
-				var couleur     = DataAccessor.GetStringProperty (properties, (int) ObjectField.Couleur);
-				var série       = DataAccessor.GetStringProperty (properties, (int) ObjectField.NuméroSérie);
-				var valeur1     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur1);
-				var valeur2     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur2);
-				var valeur3     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur3);
+				var nom         = ObjectCalculator.GetObjectPropertyString (obj, this.timestamp, ObjectField.Nom);
+				var numéro      = ObjectCalculator.GetObjectPropertyString (obj, this.timestamp, ObjectField.Numéro);
+				var responsable = ObjectCalculator.GetObjectPropertyString (obj, this.timestamp, ObjectField.Responsable);
+				var couleur     = ObjectCalculator.GetObjectPropertyString (obj, this.timestamp, ObjectField.Couleur);
+				var série       = ObjectCalculator.GetObjectPropertyString (obj, this.timestamp, ObjectField.NuméroSérie);
+				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.timestamp, ObjectField.Valeur1);
+				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.timestamp, ObjectField.Valeur2);
+				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.timestamp, ObjectField.Valeur3);
 
 				var sf = new TreeTableCellTree (true, level, type, nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString (true, numéro, isSelected: (i == selection));
@@ -204,9 +203,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void GetData(int row, out Guid guid, out int level)
 		{
-			guid = this.accessor.GetObjectGuid (row);
-			var properties = this.accessor.GetObjectSyntheticProperties (guid, this.timestamp);
-			level = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level).GetValueOrDefault (-1);
+			guid = Guid.Empty;
+			level = 0;
+
+			if (row >= 0 && row < this.objectGuids.Count)
+			{
+				guid = this.objectGuids[row];
+
+				var obj = this.accessor.GetObject(guid);
+				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.timestamp, ObjectField.Level) as DataIntProperty;
+				if (p != null)
+				{
+					level = p.Value;
+				}
+			}
+		}
+
+
+		private void UpdateObjects()
+		{
+			this.objectGuids.Clear ();
+			this.objectGuids.AddRange (this.accessor.GetObjectGuids ());
 		}
 
 
@@ -224,6 +241,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
+		private readonly List<Guid>				objectGuids;
 		private Timestamp?						timestamp;
 	}
 }

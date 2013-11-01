@@ -198,18 +198,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.objectGuid = objectGuid;
-			this.timestamp = timestamp.Value;
+			this.timestamp  = timestamp.Value;
+			this.hasEvent   = false;
+			this.eventType  = EventType.Unknown;
 
-			if (this.objectGuid.IsEmpty)
+			var obj = this.accessor.GetObject (this.objectGuid);
+			if (obj != null)
 			{
-				this.hasEvent = false;
-				this.eventType = EventType.Unknown;
-			}
-			else
-			{
-				var ts = timestamp.GetValueOrDefault (new Timestamp (System.DateTime.MaxValue, 0));
-				this.hasEvent = this.accessor.HasObjectEvent (this.objectGuid, ts);
-				this.eventType = this.accessor.GetObjectEventType (this.objectGuid, this.timestamp).GetValueOrDefault (EventType.Unknown);
+				var e = obj.GetEvent (this.timestamp);
+				if (e != null)
+				{
+					this.hasEvent  = true;
+					this.eventType = e.Type;
+				}
 			}
 
 			//	Si le type d'événement à changé, il faut réinitialiser le navigateur,

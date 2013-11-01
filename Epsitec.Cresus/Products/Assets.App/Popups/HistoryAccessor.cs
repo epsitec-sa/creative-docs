@@ -131,81 +131,89 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			bool put = false;
 
-			int count = this.accessor.GetObjectEventsCount (objectGuid);
-			for (int i=0; i<count; i++)
+			var obj = this.accessor.GetObject (objectGuid);
+			if (obj != null)
 			{
-				var eventTimestamp = this.accessor.GetObjectEventTimestamp (objectGuid, i);
-				if (eventTimestamp.HasValue)
+				int count = obj.EventsCount;
+				for (int i=0; i<count; i++)
 				{
-					var properties = this.accessor.GetObjectSingleProperties (objectGuid, eventTimestamp.Value);
-					var eventType = this.accessor.GetObjectEventType (objectGuid, eventTimestamp.Value);
+					var e = obj.GetEvent (i);
+					var eventTimestamp = e.Timestamp;
 
-					var state = DataAccessor.GetPropertyState (properties, field);
-					if (state != PropertyState.Undefined)
+					var p = ObjectCalculator.GetObjectSingleProperty (obj, eventTimestamp, (ObjectField) field);
+
+					if (p != null)
 					{
-						if (!put && timestamp != null && timestamp.Value < eventTimestamp.Value)
+						if (!put && timestamp != null && timestamp.Value < eventTimestamp)
 						{
-							var c = this.GetCell (null, field);
-							this.AddRow (timestamp, timestamp.Value, eventType, c);
+							var c = this.GetCell (null, timestamp.Value, field);
+							this.AddRow (obj, timestamp, timestamp.Value, c);
 							put = true;
 						}
 
-						if (!put && timestamp != null && timestamp.Value == eventTimestamp.Value)
+						if (!put && timestamp != null && timestamp.Value == eventTimestamp)
 						{
 							put = true;
 						}
 
-						var cell = this.GetCell (properties, field);
-						this.AddRow (timestamp, eventTimestamp.Value, eventType, cell);
+						var cell = this.GetCell (obj, eventTimestamp, field);
+						this.AddRow (obj, timestamp, eventTimestamp, cell);
 					}
 				}
-			}
 
-			if (!put && timestamp != null)
-			{
-				var c = this.GetCell (null, field);
-				this.AddRow (timestamp, timestamp.Value, EventType.Unknown, c);
+				if (!put && timestamp != null)
+				{
+					var c = this.GetCell (null, timestamp.Value, field);
+					this.AddRow (obj, timestamp, timestamp.Value, c);
+				}
 			}
 		}
 
-		private AbstractSimpleTreeTableCell GetCell(IEnumerable<AbstractDataProperty> properties, int field)
+		private AbstractSimpleTreeTableCell GetCell(DataObject obj, Timestamp timestamp, int field)
 		{
 			switch (this.fieldType)
 			{
 				case FieldType.Decimal:
 					{
-						var value = DataAccessor.GetDecimalProperty (properties, field);
+						var value = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, (ObjectField) field);
 						return new SimpleTreeTableCellDecimal (value, Format.GetFieldFormat ((ObjectField) field));
 					}
 
 				case FieldType.Int:
 					{
-						var value = DataAccessor.GetIntProperty (properties, field);
+						var value = ObjectCalculator.GetObjectPropertyInt (obj, timestamp, (ObjectField) field);
 						return new SimpleTreeTableCellInt (value);
 					}
 
 				case FieldType.ComputedAmount:
 					{
-						var value = DataAccessor.GetComputedAmountProperty (properties, field);
+						var value = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, (ObjectField) field);
 						return new SimpleTreeTableCellComputedAmount (value);
 					}
 
 				case FieldType.Date:
 					{
-						var value = DataAccessor.GetDateProperty (properties, field);
+						var value = ObjectCalculator.GetObjectPropertyDate (obj, timestamp, (ObjectField) field);
 						return new SimpleTreeTableCellDate (value);
 					}
 
 				default:
 					{
-						string s = DataAccessor.GetStringProperty (properties, field);
-						return new SimpleTreeTableCellString (s);
+						string value = ObjectCalculator.GetObjectPropertyString (obj, timestamp, (ObjectField) field);
+						return new SimpleTreeTableCellString (value);
 					}
 			}
 		}
 
-		private void AddRow(Timestamp? selTimestamp, Timestamp addTimestamp, EventType? eventType, AbstractSimpleTreeTableCell addCell)
+		private void AddRow(DataObject obj, Timestamp? selTimestamp, Timestamp addTimestamp, AbstractSimpleTreeTableCell addCell)
 		{
+			var eventType = EventType.Unknown;
+			var e = obj.GetEvent (addTimestamp);
+			if (e != null)
+			{
+				eventType = e.Type;
+			}
+
 			var row = new List<AbstractSimpleTreeTableCell> ();
 
 			string d = Helpers.Converters.DateToString (addTimestamp.Date);

@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.objectGuid != value)
 				{
 					this.objectGuid = value;
+					this.obj = this.accessor.GetObject (this.objectGuid);
 
 					this.UpdateData ();
 					this.UpdateController ();
@@ -105,20 +106,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateEvent(System.DateTime date, string buttonName)
 		{
-			var guid = this.objectGuid;
-
-			if (!guid.IsEmpty)
+			if (this.obj != null)
 			{
 				var type = EventsToolbarTreeTableController.ParseEventType (buttonName);
-				var timestamp = this.accessor.CreateObjectEvent (guid, date, type);
+				var e = this.accessor.CreateObjectEvent (this.obj, date, type);
 
-				if (timestamp.HasValue)
+				if (e != null)
 				{
 					this.UpdateData ();
 					this.UpdateController ();
 					this.UpdateToolbar ();
 
-					this.SelectedRow = this.TimestampToRow (timestamp.Value);
+					this.SelectedRow = this.TimestampToRow (e.Timestamp);
 				}
 
 				this.OnStartEditing (type);
@@ -200,21 +199,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				var node = this.GetNode (firstRow+i);
 				var guid = node.Guid;
+				var e    = this.obj.GetEvent (guid);
 
-				var timestamp  = this.accessor.GetObjectEventTimestamp (this.objectGuid, guid);
-				var eventType  = this.accessor.GetObjectEventType (this.objectGuid, timestamp.Value);
-				var properties = this.accessor.GetObjectSingleProperties (this.objectGuid, timestamp.Value);
+				var timestamp  = e.Timestamp;
+				var eventType  = e.Type;
 
-				var date        = Helpers.Converters.DateToString (timestamp.Value.Date);
+				var date        = Helpers.Converters.DateToString (timestamp.Date);
 				var glyph       = TimelineData.TypeToGlyph (eventType);
-				var type        = StaticDescriptions.GetEventDescription (eventType.Value);
-				var nom         = DataAccessor.GetStringProperty (properties, (int) ObjectField.Nom);
-				var numéro      = DataAccessor.GetStringProperty (properties, (int) ObjectField.Numéro);
-				var responsable = DataAccessor.GetStringProperty (properties, (int) ObjectField.Responsable);
-				var couleur     = DataAccessor.GetStringProperty (properties, (int) ObjectField.Couleur);
-				var série       = DataAccessor.GetStringProperty (properties, (int) ObjectField.NuméroSérie);
-				var valeur1     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur1);
-				var valeur2     = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur2);
+				var type        = StaticDescriptions.GetEventDescription (eventType);
+				var nom         = ObjectCalculator.GetObjectPropertyString (this.obj, timestamp, ObjectField.Nom);
+				var numéro      = ObjectCalculator.GetObjectPropertyString (this.obj, timestamp, ObjectField.Numéro);
+				var responsable = ObjectCalculator.GetObjectPropertyString (this.obj, timestamp, ObjectField.Responsable);
+				var couleur     = ObjectCalculator.GetObjectPropertyString (this.obj, timestamp, ObjectField.Couleur);
+				var série       = ObjectCalculator.GetObjectPropertyString (this.obj, timestamp, ObjectField.NuméroSérie);
+				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, timestamp, ObjectField.Valeur1);
+				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, timestamp, ObjectField.Valeur2);
+				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, timestamp, ObjectField.Valeur3);
 
 				var s1 = new TreeTableCellString (true, date, isSelected: (i == selection));
 				var s2 = new TreeTableCellGlyph (true, glyph, isSelected: (i == selection));
@@ -257,14 +257,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.accessor.GetObjectEventsCount (this.objectGuid);
+				if (this.obj == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.obj.EventsCount;
+				}
 			}
 		}
 
 		protected override void GetData(int row, out Guid guid, out int level)
 		{
-			guid = this.accessor.GetObjectEventGuid (this.objectGuid, row);
-			level = 0;
+			var e = this.obj.GetEvent (row);
+
+			if (e == null)
+			{
+				guid = Guid.Empty;
+				level = 0;
+			}
+			else
+			{
+				guid = e.Guid;
+				level = 0;
+			}
 		}
 
 
@@ -272,12 +289,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (timestamp.HasValue)
 			{
-				int count = this.accessor.GetObjectEventsCount (this.objectGuid);
+				int count = this.obj.EventsCount;
 				for (int row = 0; row < count; row++)
 				{
-					var ts = this.accessor.GetObjectEventTimestamp (this.objectGuid, row);
+					var e = this.obj.GetEvent (row);
 
-					if (ts.HasValue && ts.Value == timestamp.Value)
+					if (e != null && e.Timestamp == timestamp.Value)
 					{
 						return row;
 					}
@@ -289,15 +306,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private Timestamp? RowToTimestamp(int row)
 		{
-			var timestamp = this.accessor.GetObjectEventTimestamp (this.objectGuid, row);
+			var e = this.obj.GetEvent (row);
 
-			if (timestamp == null || !timestamp.HasValue)
+			if (e == null)
 			{
 				return null;
 			}
 			else
 			{
-				return timestamp.Value;
+				return e.Timestamp;
 			}
 		}
 
@@ -329,5 +346,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 	
 		private Guid							objectGuid;
+		private DataObject						obj;
 	}
 }

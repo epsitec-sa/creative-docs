@@ -7,11 +7,6 @@ using System.Text;
 
 namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
-	/// <summary>
-	/// Cette couche est sensée pouvoir accéder à travers le réseau au mandat.
-	/// On ne retourne jamais un DataObject complet (avec tous ses événements),
-	/// cela serait un trop gros volume de données, mais juste le Guid.
-	/// </summary>
 	public class DataAccessor
 	{
 		public DataAccessor(DataMandat mandat)
@@ -23,7 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			//	Recalcule tout.
 			foreach (var obj in this.mandat.Objects)
 			{
-				this.UpdateComputedAmounts (obj.Guid);
+				ObjectCalculator.UpdateComputedAmounts (obj);
 			}
 		}
 
@@ -48,243 +43,19 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			}
 		}
 
-#if false
-		public DataObject GetObjects(int objectIndex)
+		public IEnumerable<Guid> GetObjectGuids(int start = 0, int count = int.MaxValue)
 		{
-			//	Retourne un objet ainsi que toute son histoire.
-			//	Il y a toute l'information pour peupler la timeline.
-			if (objectIndex >= 0 && objectIndex < this.mandat.Objects.Count)
+			count = System.Math.Min (count, this.ObjectsCount);
+
+			for (int i=start; i<start+count; i++)
 			{
-				return this.mandat.Objects[objectIndex];
-			}
-			else
-			{
-				return null;
+				yield return this.mandat.Objects[i].Guid;
 			}
 		}
 
-		public IEnumerable<AbstractDataProperty> GetObjectSingleProperties(Guid objectGuid, Timestamp timestamp)
+		public DataObject GetObject(Guid objectGuid)
 		{
-			//	Retourne l'état d'un objet à un instant donné.
-			var obj = this.mandat.GetObject (objectGuid);
-
-			if (obj != null)
-			{
-				foreach (var field in DataAccessor.ObjectFields)
-				{
-					var p = obj.GetSingleProperty (timestamp, (int) field);
-					if (p != null)
-					{
-						yield return p;
-					}
-				}
-			}
-		}
-
-		public IEnumerable<AbstractDataProperty> GetObjectSyntheticProperties(Guid objectGuid, Timestamp? timestamp)
-		{
-			//	Retourne l'état d'un objet à un instant donné.
-			var obj = this.mandat.GetObject (objectGuid);
-
-			if (obj != null)
-			{
-				if (!timestamp.HasValue)
-				{
-					timestamp = new Timestamp (System.DateTime.MaxValue, 0);
-				}
-
-				foreach (var field in DataAccessor.ObjectFields)
-				{
-					var p = obj.GetSyntheticProperty (timestamp.Value, (int) field);
-					if (p != null)
-					{
-						yield return p;
-					}
-				}
-			}
-		}
-#endif
-
-
-
-
-
-#if true
-		public Guid GetObjectGuid(int objectIndex)
-		{
-			if (objectIndex >= 0 && objectIndex < this.mandat.Objects.Count)
-			{
-				return this.mandat.Objects[objectIndex].Guid;
-			}
-			else
-			{
-				return Guid.Empty;
-			}
-		}
-
-		public int GetObjectEventsCount(Guid objectGuid)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				return obj.EventsCount;
-			}
-
-			return 0;
-		}
-
-		public Guid GetObjectEventGuid(Guid objectGuid, int eventIndex)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				var e = obj.GetEvent (eventIndex);
-
-				if (e != null)
-				{
-					return e.Guid;
-				}
-			}
-
-			return Guid.Empty;
-		}
-
-		public Timestamp? GetObjectEventTimestamp(Guid objectGuid, Guid eventGuid)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				var e = obj.GetEvent (eventGuid);
-
-				if (e != null)
-				{
-					return e.Timestamp;
-				}
-			}
-
-			return null;
-		}
-
-		public Timestamp? GetObjectEventTimestamp(Guid objectGuid, int eventIndex)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				var e = obj.GetEvent (eventIndex);
-
-				if (e != null)
-				{
-					return e.Timestamp;
-				}
-			}
-
-			return null;
-		}
-
-		public EventType? GetObjectEventType(Guid objectGuid, int eventIndex)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				var e = obj.GetEvent (eventIndex);
-
-				if (e != null)
-				{
-					return e.Type;
-				}
-			}
-
-			return null;
-		}
-
-		public EventType? GetObjectEventType(Guid objectGuid, Timestamp timestamp)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				var e = obj.GetEvent (timestamp);
-
-				if (e != null)
-				{
-					return e.Type;
-				}
-			}
-
-			return null;
-		}
-
-		public void RemoveAmortissementsAuto(Guid objectGuid)
-		{
-			//	Supprime tous les événements d'amortissement automatique d'un objet.
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				var guids = obj.Events.Where (x => x.Type == EventType.AmortissementAuto).Select (x => x.Guid);
-
-				foreach (var guid in guids)
-				{
-					var e = obj.GetEvent (guid);
-					obj.RemoveEvent (e);
-				}
-			}
-		}
-
-		public bool HasObjectEvent(Guid objectGuid, Timestamp timestamp)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				return obj.GetEvent (timestamp) != null;
-			}
-
-			return false;
-		}
-
-		public IEnumerable<AbstractDataProperty> GetObjectSingleProperties(Guid objectGuid, Timestamp timestamp)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				foreach (var field in DataAccessor.ObjectFields)
-				{
-					var p = obj.GetSingleProperty (timestamp, (int) field);
-					if (p != null)
-					{
-						yield return p;
-					}
-				}
-			}
-		}
-
-		public IEnumerable<AbstractDataProperty> GetObjectSyntheticProperties(Guid objectGuid, Timestamp? timestamp)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				if (!timestamp.HasValue)
-				{
-					timestamp = new Timestamp (System.DateTime.MaxValue, 0);
-				}
-
-				foreach (var field in DataAccessor.ObjectFields)
-				{
-					var p = obj.GetSyntheticProperty (timestamp.Value, (int) field);
-					if (p != null)
-					{
-						yield return p;
-					}
-				}
-			}
+			return this.mandat.Objects[objectGuid];
 		}
 
 		public Timestamp CreateObject(int row, Guid modelGuid)
@@ -297,17 +68,17 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			var e = new DataEvent (timestamp, EventType.Entrée);
 			o.AddEvent (e);
 
-			var properties = this.GetObjectSyntheticProperties (modelGuid, null);
-
 			//	On met le même niveau que l'objet modèle.
-			var i = DataAccessor.GetIntProperty (properties, (int) ObjectField.Level);
+			var objectModel = this.GetObject (modelGuid);
+
+			var i = ObjectCalculator.GetObjectPropertyInt (objectModel, null, ObjectField.Level);
 			if (i.HasValue)
 			{
 				e.AddProperty (new DataIntProperty ((int) ObjectField.Level, i.Value));
 			}
 
 			//	On met le même numéro que l'objet modèle.
-			var n = DataAccessor.GetStringProperty (properties, (int) ObjectField.Numéro);
+			var n = ObjectCalculator.GetObjectPropertyString (objectModel, null, ObjectField.Numéro);
 			if (!string.IsNullOrEmpty (n))
 			{
 				e.AddProperty (new DataStringProperty ((int) ObjectField.Numéro, n));
@@ -316,10 +87,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 			return timestamp;
 		}
 
-		public Timestamp? CreateObjectEvent(Guid objectGuid, System.DateTime date, EventType type)
+		public DataEvent CreateObjectEvent(DataObject obj, System.DateTime date, EventType type)
 		{
-			var obj = this.mandat.Objects[objectGuid];
-
 			if (obj != null)
 			{
 				var position = obj.GetNewPosition (date);
@@ -327,35 +96,12 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				var e = new DataEvent (ts, type);
 
 				obj.AddEvent (e);
-				this.UpdateComputedAmounts (objectGuid);
-				return ts;
+				ObjectCalculator.UpdateComputedAmounts (obj);
+				return e;
 			}
 
 			return null;
 		}
-
-		public void AddObjectEventProperty(Guid objectGuid, Timestamp timestamp, AbstractDataProperty property)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-
-			if (obj != null)
-			{
-				var e = obj.GetEvent (timestamp);
-
-				if (e != null)
-				{
-					e.AddProperty (property);
-				}
-			}
-		}
-
-
-		private void UpdateComputedAmounts(Guid objectGuid)
-		{
-			var obj = this.mandat.Objects[objectGuid];
-			ObjectCalculator.UpdateComputedAmounts (obj);
-		}
-#endif
 
 
 		#region Edition manager
@@ -429,7 +175,8 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					e.RemoveProperty ((int) field);
 				}
 
-				this.UpdateComputedAmounts (this.editionObjectGuid);
+				var obj = this.GetObject (this.editionObjectGuid);
+				ObjectCalculator.UpdateComputedAmounts (obj);
 			}
 		}
 
@@ -522,134 +269,6 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 					return FieldType.String;
 			}
 		}
-
-
-		public static IEnumerable<ObjectField> ObjectFields
-		{
-			get
-			{
-				yield return ObjectField.Level;
-				yield return ObjectField.Numéro;
-				yield return ObjectField.Nom;
-				yield return ObjectField.Description;
-				yield return ObjectField.Valeur1;
-				yield return ObjectField.Valeur2;
-				yield return ObjectField.Valeur3;
-				yield return ObjectField.Responsable;
-				yield return ObjectField.Couleur;
-				yield return ObjectField.NuméroSérie;
-
-				yield return ObjectField.NomCatégorie;
-				yield return ObjectField.DateAmortissement1;
-				yield return ObjectField.DateAmortissement2;
-				yield return ObjectField.TauxAmortissement;
-				yield return ObjectField.TypeAmortissement;
-				yield return ObjectField.FréquenceAmortissement;
-				yield return ObjectField.ValeurRésiduelle;
-
-				yield return ObjectField.Compte1;
-				yield return ObjectField.Compte2;
-				yield return ObjectField.Compte3;
-				yield return ObjectField.Compte4;
-				yield return ObjectField.Compte5;
-				yield return ObjectField.Compte6;
-				yield return ObjectField.Compte7;
-				yield return ObjectField.Compte8;
-			}
-		}
-
-
-		#region Easy access
-		public static PropertyState GetPropertyState(IEnumerable<AbstractDataProperty> properties, int id)
-		{
-			if (properties != null)
-			{
-				var p = properties.Where (x => x.FieldId == id).FirstOrDefault ();
-
-				if (p != null)
-				{
-					return p.State;
-				}
-			}
-
-			return PropertyState.Undefined;
-		}
-
-		public static string GetStringProperty(IEnumerable<AbstractDataProperty> properties, int id)
-		{
-			if (properties != null)
-			{
-				var p = properties.Where (x => x.FieldId == id).FirstOrDefault () as DataStringProperty;
-
-				if (p != null)
-				{
-					return p.Value;
-				}
-			}
-
-			return null;
-		}
-
-		public static int? GetIntProperty(IEnumerable<AbstractDataProperty> properties, int id)
-		{
-			if (properties != null)
-			{
-				var p = properties.Where (x => x.FieldId == id).FirstOrDefault () as DataIntProperty;
-
-				if (p != null)
-				{
-					return p.Value;
-				}
-			}
-
-			return null;
-		}
-
-		public static ComputedAmount? GetComputedAmountProperty(IEnumerable<AbstractDataProperty> properties, int id)
-		{
-			if (properties != null)
-			{
-				var p = properties.Where (x => x.FieldId == id).FirstOrDefault () as DataComputedAmountProperty;
-
-				if (p != null)
-				{
-					return p.Value;
-				}
-			}
-
-			return null;
-		}
-
-		public static decimal? GetDecimalProperty(IEnumerable<AbstractDataProperty> properties, int id)
-		{
-			if (properties != null)
-			{
-				var p = properties.Where (x => x.FieldId == id).FirstOrDefault () as DataDecimalProperty;
-
-				if (p != null)
-				{
-					return p.Value;
-				}
-			}
-
-			return null;
-		}
-
-		public static System.DateTime? GetDateProperty(IEnumerable<AbstractDataProperty> properties, int id)
-		{
-			if (properties != null)
-			{
-				var p = properties.Where (x => x.FieldId == id).FirstOrDefault () as DataDateProperty;
-
-				if (p != null)
-				{
-					return p.Value;
-				}
-			}
-
-			return null;
-		}
-		#endregion
 
 
 		private readonly DataMandat				mandat;

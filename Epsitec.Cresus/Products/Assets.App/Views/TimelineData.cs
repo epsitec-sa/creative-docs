@@ -91,55 +91,59 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	cellule pour représenter l'événement de l'objet.
 			if (objectGuid.HasValue)
 			{
-				int eventCount = this.accessor.GetObjectEventsCount (objectGuid.Value);
+				var obj = this.accessor.GetObject (objectGuid.Value);
 
-				for (int i=0; i<eventCount; i++)
+				if (obj != null)
 				{
-					var t = this.accessor.GetObjectEventTimestamp (objectGuid.Value, i);
+					int eventCount = obj.EventsCount;
 
-					if (t.HasValue && t.Value.Date >= start)
+					for (int i=0; i<eventCount; i++)
 					{
-						if (t.Value.Date > end)
+						var e = obj.GetEvent (i);
+						var t = e.Timestamp;
+
+						if (t.Date >= start)
 						{
-							break;
-						}
-
-						var index = this.cells.FindIndex (x => x.Timestamp == t.Value);
-						var glyph = this.GetGlyph (objectGuid.Value, i);
-
-						var properties = this.accessor.GetObjectSingleProperties (objectGuid.Value, t.Value);
-						var type = this.accessor.GetObjectEventType (objectGuid.Value, t.Value).GetValueOrDefault (EventType.Unknown);
-
-						var value1 = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur1);
-						var value2 = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur2);
-
-						decimal? v1 = value1 != null && value1.HasValue ? value1.Value.FinalAmount : null;
-						decimal? v2 = value2 != null && value2.HasValue ? value2.Value.FinalAmount : null;
-
-						if (index == -1)
-						{
-							var cell = new TimelineCell
+							if (t.Date > end)
 							{
-								Timestamp     = t.Value,
-								TimelineGlyph = glyph,
-								Tooltip       = BusinessLogic.GetTooltip (t.Value, type, properties, 8),
-								Values        = new decimal?[] { v1, v2 },
-							};
+								break;
+							}
 
-							index = this.GetIndex (t.Value);
-							this.cells.Insert (index, cell);
-						}
-						else
-						{
-							var cell = new TimelineCell
+							var index = this.cells.FindIndex (x => x.Timestamp == t);
+							var type = e.Type;
+							var glyph = TimelineData.TypeToGlyph ((EventType) type);
+
+							var value1 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Valeur1);
+							var value2 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Valeur2);
+
+							decimal? v1 = value1 != null && value1.HasValue ? value1.Value.FinalAmount : null;
+							decimal? v2 = value2 != null && value2.HasValue ? value2.Value.FinalAmount : null;
+
+							if (index == -1)
 							{
-								Timestamp     = this.cells[index].Timestamp,
-								TimelineGlyph = glyph,
-								Tooltip       = BusinessLogic.GetTooltip (t.Value, type, properties, 8),
-								Values        = new decimal?[] { v1, v2 },
-							};
+								var cell = new TimelineCell
+								{
+									Timestamp     = t,
+									TimelineGlyph = glyph,
+									Tooltip       = BusinessLogic.GetTooltip (obj, t, type, 8),
+									Values        = new decimal?[] { v1, v2 },
+								};
 
-							this.cells[index] = cell;
+								index = this.GetIndex (t);
+								this.cells.Insert (index, cell);
+							}
+							else
+							{
+								var cell = new TimelineCell
+								{
+									Timestamp     = this.cells[index].Timestamp,
+									TimelineGlyph = glyph,
+									Tooltip       = BusinessLogic.GetTooltip (obj, t, type, 8),
+									Values        = new decimal?[] { v1, v2 },
+								};
+
+								this.cells[index] = cell;
+							}
 						}
 					}
 				}
@@ -171,18 +175,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-
-		private TimelineGlyph GetGlyph(Guid objectGuid, int eventIndex)
-		{
-			var type = this.accessor.GetObjectEventType (objectGuid, eventIndex);
-
-			if (type.HasValue)
-			{
-				return TimelineData.TypeToGlyph ((EventType) type.Value);
-			}
-
-			return TimelineGlyph.FilledCircle;
-		}
 
 		public static TimelineGlyph TypeToGlyph(EventType? type)
 		{

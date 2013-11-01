@@ -17,10 +17,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void GeneratesAmortissementsAuto()
 		{
-			int count = this.accessor.ObjectsCount;
-			for (int i=0; i<count; i++)
+			var guids = this.accessor.GetObjectGuids ();
+			foreach (var guid in guids)
 			{
-				var guid = this.accessor.GetObjectGuid (i);
 				this.GeneratesAmortissementsAuto (guid);
 			}
 		}
@@ -29,13 +28,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Première ébauche totalement naïve et fausse !
 			//	TODO: ...
-			this.accessor.RemoveAmortissementsAuto (objectGuid);
+			var obj = this.accessor.GetObject (objectGuid);
+
+			ObjectCalculator.RemoveAmortissementsAuto (obj);
 
 			System.DateTime? date1, date2;
 			decimal? taux, rest;
 			string type;
 			int? freq;
-			if (!this.GetAmortissement (objectGuid, out date1, out date2, out taux, out type, out freq, out rest))
+			if (!this.GetAmortissement (obj, out date1, out date2, out taux, out type, out freq, out rest))
 			{
 				return;
 			}
@@ -69,7 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					date = new System.DateTime (y, m, d);
 				}
 
-				var currentValues = this.GetValeur (objectGuid, date);
+				var currentValues = this.GetValeur (obj, date);
 				var newValues = new List<decimal?> ();
 
 				for (int i=0; i<3; i++)
@@ -88,32 +89,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				}
 
-				this.CreateAmortissementAuto (objectGuid, date, currentValues, newValues);
+				this.CreateAmortissementAuto (obj, date, currentValues, newValues);
 			}
 		}
 
-		private bool GetAmortissement(Guid objectGuid,
+		private bool GetAmortissement(DataObject obj,
 			out System.DateTime? date1, out System.DateTime? date2,
 			out decimal? taux, out string type, out int? freq, out decimal? rest)
 		{
-			date1 = null;
-			date2 = null;
-			taux = null;
-			type = null;
-			freq = null;
-			rest = null;
-
-			var properties = this.accessor.GetObjectSyntheticProperties (objectGuid, null);
-
-			if (properties != null)
-			{
-				date1 = DataAccessor.GetDateProperty    (properties, (int) ObjectField.DateAmortissement1);
-				date2 = DataAccessor.GetDateProperty    (properties, (int) ObjectField.DateAmortissement2);
-				taux  = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.TauxAmortissement);
-				type  = DataAccessor.GetStringProperty  (properties, (int) ObjectField.TypeAmortissement);
-				freq  = DataAccessor.GetIntProperty     (properties, (int) ObjectField.FréquenceAmortissement);
-				rest  = DataAccessor.GetDecimalProperty (properties, (int) ObjectField.ValeurRésiduelle);
-			}
+			date1 = ObjectCalculator.GetObjectPropertyDate    (obj, null, ObjectField.DateAmortissement1);
+			date2 = ObjectCalculator.GetObjectPropertyDate    (obj, null, ObjectField.DateAmortissement2);
+			taux  = ObjectCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.TauxAmortissement);
+			type  = ObjectCalculator.GetObjectPropertyString  (obj, null, ObjectField.TypeAmortissement);
+			freq  = ObjectCalculator.GetObjectPropertyInt     (obj, null, ObjectField.FréquenceAmortissement);
+			rest  = ObjectCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.ValeurRésiduelle);
 
 			if (!date2.HasValue && date1.HasValue)
 			{
@@ -139,52 +128,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return (date2.HasValue && taux.HasValue);
 		}
 
-		private List<decimal?> GetValeur(Guid objectGuid, System.DateTime date)
+		private List<decimal?> GetValeur(DataObject obj, System.DateTime date)
 		{
 			var list = new List<decimal?> ();
-
 			var timestamp = new Timestamp(date, 0);
-			var properties = this.accessor.GetObjectSyntheticProperties (objectGuid, timestamp);
 
-			if (properties != null)
+			for (int i=0; i<3; i++)  // Valeur1..3
 			{
-				for (int i=0; i<3; i++)  // Valeur1..3
+				ComputedAmount? m = null;
+				switch (i)
 				{
-					ComputedAmount? m = null;
-					switch (i)
-					{
-						case 0:
-							m = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur1);
-							break;
+					case 0:
+						m = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, ObjectField.Valeur1);
+						break;
 
-						case 1:
-							m = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur2);
-							break;
+					case 1:
+						m = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, ObjectField.Valeur2);
+						break;
 
-						case 2:
-							m = DataAccessor.GetComputedAmountProperty (properties, (int) ObjectField.Valeur3);
-							break;
-					}
+					case 2:
+						m = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, ObjectField.Valeur3);
+						break;
+				}
 
-					if (m.HasValue)
-					{
-						list.Add (m.Value.FinalAmount);
-					}
-					else
-					{
-						list.Add (null);
-					}
+				if (m.HasValue)
+				{
+					list.Add (m.Value.FinalAmount);
+				}
+				else
+				{
+					list.Add (null);
 				}
 			}
 
 			return list;
 		}
 
-		private void CreateAmortissementAuto(Guid objectGuid, System.DateTime date, List<decimal?> currentValues, List<decimal?> newValues)
+		private void CreateAmortissementAuto(DataObject obj, System.DateTime date, List<decimal?> currentValues, List<decimal?> newValues)
 		{
-			var timestamp = this.accessor.CreateObjectEvent (objectGuid, date, EventType.AmortissementAuto);
+			var e = this.accessor.CreateObjectEvent (obj, date, EventType.AmortissementAuto);
 
-			if (timestamp.HasValue)
+			if (e != null)
 			{
 				for (int i=0; i<3; i++)  // Valeur1..3
 				{
@@ -210,7 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 						if (p != null)
 						{
-							this.accessor.AddObjectEventProperty (objectGuid, timestamp.Value, p);
+							e.AddProperty (p);
 						}
 					}
 				}
@@ -220,13 +204,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 
-		public static string GetTooltip(Timestamp timestamp, EventType eventType, IEnumerable<AbstractDataProperty> properties, int maxLines = int.MaxValue)
+		public static string GetTooltip(DataObject obj, Timestamp timestamp, EventType eventType, int maxLines = int.MaxValue)
 		{
 			var list = new List<string> ();
 
 			list.Add (BusinessLogic.GetEventDescription (timestamp, eventType));
 
-			foreach (var field in DataAccessor.ObjectFields)
+			foreach (var field in BusinessLogic.ObjectFields)
 			{
 				if (field == ObjectField.Level)
 				{
@@ -238,11 +222,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				switch (DataAccessor.GetFieldType (field))
 				{
 					case FieldType.String:
-						line = DataAccessor.GetStringProperty (properties, (int) field);
+						line = ObjectCalculator.GetObjectPropertyString (obj, timestamp, field, false);
 						break;
 
 					case FieldType.Decimal:
-						var d = DataAccessor.GetDecimalProperty (properties, (int) field);
+						var d = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, field, false);
 						if (d.HasValue)
 						{
 							switch (Format.GetFieldFormat (field))
@@ -263,7 +247,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						break;
 
 					case FieldType.ComputedAmount:
-						var ca = DataAccessor.GetComputedAmountProperty (properties, (int) field);
+						var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, field, false);
 						if (ca.HasValue)
 						{
 							line = Helpers.Converters.AmountToString (ca.Value.FinalAmount);
@@ -271,7 +255,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						break;
 
 					case FieldType.Int:
-						var i = DataAccessor.GetIntProperty (properties, (int) field);
+						var i = ObjectCalculator.GetObjectPropertyInt (obj, timestamp, field, false);
 						if (i.HasValue)
 						{
 							line = Helpers.Converters.IntToString (i);
@@ -279,7 +263,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						break;
 
 					case FieldType.Date:
-						var da = DataAccessor.GetDateProperty (properties, (int) field);
+						var da = ObjectCalculator.GetObjectPropertyDate (obj, timestamp, field, false);
 						if (da.HasValue)
 						{
 							line = Helpers.Converters.DateToString (da);
@@ -354,6 +338,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			return string.Join (" — ", list);
+		}
+
+
+		private static IEnumerable<ObjectField> ObjectFields
+		{
+			get
+			{
+				yield return ObjectField.Level;
+				yield return ObjectField.Numéro;
+				yield return ObjectField.Nom;
+				yield return ObjectField.Description;
+				yield return ObjectField.Valeur1;
+				yield return ObjectField.Valeur2;
+				yield return ObjectField.Valeur3;
+				yield return ObjectField.Responsable;
+				yield return ObjectField.Couleur;
+				yield return ObjectField.NuméroSérie;
+
+				yield return ObjectField.NomCatégorie;
+				yield return ObjectField.DateAmortissement1;
+				yield return ObjectField.DateAmortissement2;
+				yield return ObjectField.TauxAmortissement;
+				yield return ObjectField.TypeAmortissement;
+				yield return ObjectField.FréquenceAmortissement;
+				yield return ObjectField.ValeurRésiduelle;
+
+				yield return ObjectField.Compte1;
+				yield return ObjectField.Compte2;
+				yield return ObjectField.Compte3;
+				yield return ObjectField.Compte4;
+				yield return ObjectField.Compte5;
+				yield return ObjectField.Compte6;
+				yield return ObjectField.Compte7;
+				yield return ObjectField.Compte8;
+			}
 		}
 
 

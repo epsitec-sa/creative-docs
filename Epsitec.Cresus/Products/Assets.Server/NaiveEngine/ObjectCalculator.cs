@@ -8,6 +8,137 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 {
 	public static class ObjectCalculator
 	{
+		public static int? GetObjectPropertyInt(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
+		{
+			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataIntProperty;
+
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
+		public static decimal? GetObjectPropertyDecimal(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
+		{
+			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataDecimalProperty;
+
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
+		public static ComputedAmount? GetObjectPropertyComputedAmount(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
+		{
+			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataComputedAmountProperty;
+
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
+		public static System.DateTime? GetObjectPropertyDate(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
+		{
+			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataDateProperty;
+
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
+		public static string GetObjectPropertyString(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
+		{
+			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataStringProperty;
+
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
+
+		public static AbstractDataProperty GetObjectProperty(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic)
+		{
+			if (synthetic || !timestamp.HasValue)
+			{
+				return ObjectCalculator.GetObjectSyntheticProperty (obj, timestamp, field);
+			}
+			else
+			{
+				return ObjectCalculator.GetObjectSingleProperty (obj, timestamp.Value, field);
+			}
+		}
+
+		public static AbstractDataProperty GetObjectSingleProperty(DataObject obj, Timestamp timestamp, ObjectField field)
+		{
+			//	Retourne l'état d'une propriété d'un objet à un instant donné.
+			if (obj == null)
+			{
+				return null;
+			}
+			else
+			{
+				return obj.GetSingleProperty (timestamp, (int) field);
+			}
+		}
+
+		public static AbstractDataProperty GetObjectSyntheticProperty(DataObject obj, Timestamp? timestamp, ObjectField field)
+		{
+			//	Retourne l'état d'une propriété d'un objet à un instant donné.
+			if (obj == null)
+			{
+				return null;
+			}
+			else
+			{
+				if (!timestamp.HasValue)
+				{
+					timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+				}
+
+				return obj.GetSyntheticProperty (timestamp.Value, (int) field);
+			}
+		}
+
+
+		public static void RemoveAmortissementsAuto(DataObject obj)
+		{
+			//	Supprime tous les événements d'amortissement automatique d'un objet.
+			if (obj != null)
+			{
+				var guids = obj.Events.Where (x => x.Type == EventType.AmortissementAuto).Select (x => x.Guid);
+
+				foreach (var guid in guids)
+				{
+					var e = obj.GetEvent (guid);
+					obj.RemoveEvent (e);
+				}
+			}
+		}
+
+	
 		public static void UpdateComputedAmounts(DataObject obj)
 		{
 			if (obj != null)
