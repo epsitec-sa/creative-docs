@@ -12,7 +12,8 @@ Exportation Bonne Nouvelle
   -uploadsubscriptions -input:export-2013-09-26.txt -publicationdate:2013-09-26 -response:tamedia-2013-09-26.log
 
 
-  -exportsubscriptions -output:export-2013-10-31.txt -error:error-2013-10-31.txt -exclude-district-error:false
+  -exportsubscriptions -output:export-2013-10-31.txt -error:error-2013-10-31.txt -exclude-district-error:true
+  -uploadsubscriptions -input:export-2013-10-31.txt -publicationdate:2013-10-31 -response:tamedia-2013-10-31.log
 
 
 eCHReportedPerson: 169772
@@ -25,6 +26,28 @@ Aline Berthe André
 
 -echupdate -newechfile:S:\eerv\eerv-2013-08-22.xml -oldechfile:S:\Epsitec.Cresus\App.Aider\Samples\eerv.xml -output:S:\eerv\ech-diff.md
 
+-echupdate -newechfile:S:\eerv\eerv-2013-09-05.xml -oldechfile:S:\Epsitec.Cresus\App.Aider\Samples\eerv.xml -output:S:\eerv\ech-diff.md -fixhouseholdupdate:true
 -echupdate -newechfile:S:\eerv\eerv-2013-09-05.xml -oldechfile:S:\Epsitec.Cresus\App.Aider\Samples\eerv.xml -output:S:\eerv\ech-diff.md -fixpreviousupdate:false -fixhouseholdupdate:true
 -echupdate -newechfile:S:\eerv\eerv-2013-10-03.xml -oldechfile:S:\eerv\eerv-2013-09-05.xml -output:S:\eerv\ech-diff.md -fixpreviousupdate:false
 -echupdate -newechfile:S:\eerv\eerv-2013-10-17.xml -oldechfile:S:\eerv\eerv-2013-10-03.xml -output:S:\eerv\ech-diff.md
+
+
+-echupdate -newechfile:S:\eerv\eerv-2013-10-03.xml -oldechfile:S:\eerv\eerv-2013-09-05.xml -output:S:\eerv\ech-diff.md -fixpreviousupdate:false -fixhouseholdupdate:false
+-echupdate -newechfile:S:\eerv\eerv-2013-10-03.xml -oldechfile:S:\eerv\eerv-2013-09-05.xml -output:S:\eerv\ech-diff.md -fixpreviousupdate:false -fixhouseholdupdate:true
+
+-fixechpersons
+
+
+Lancé le 31.10.2013
+-------------------
+
+Upgrade de la base de données
+
+-fixsubscriptionsparishgroup
+-fixzombiesechstatus
+-fixoldechwarnings
+
+-echupdate -newechfile:S:\eerv\eerv-2013-10-17.xml -oldechfile:S:\eerv\eerv-2013-10-03.xml -output:S:\eerv\ech-diff.md
+-echupdate -newechfile:S:\eerv\eerv-2013-10-24.xml -oldechfile:S:\eerv\eerv-2013-10-17.xml -output:S:\eerv\ech-diff.md
+-echupdate -newechfile:S:\eerv\eerv-2013-10-31.xml -oldechfile:S:\eerv\eerv-2013-10-24.xml -output:S:\eerv\ech-diff.md
+
