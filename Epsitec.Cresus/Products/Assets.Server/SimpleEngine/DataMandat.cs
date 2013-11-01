@@ -23,27 +23,21 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public readonly Guid					Guid;
 
 
-		public GuidList<DataObject>				Objects
+		public GuidList<DataObject> GetData(BaseType type)
 		{
-			get
+			switch (type)
 			{
-				return this.objects;
-			}
-		}
+				case BaseType.Objects:
+					return this.objects;
 
-		public GuidList<DataObject>				Categories
-		{
-			get
-			{
-				return this.categories;
-			}
-		}
+				case BaseType.Categories:
+					return this.categories;
 
-		public GuidList<DataObject>				Groups
-		{
-			get
-			{
-				return this.groups;
+				case BaseType.Groups:
+					return this.groups;
+
+				default:
+					return null;
 			}
 		}
 

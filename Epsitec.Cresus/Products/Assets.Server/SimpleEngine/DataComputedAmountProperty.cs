@@ -9,8 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public class DataComputedAmountProperty : AbstractDataProperty
 	{
-		public DataComputedAmountProperty(int id, ComputedAmount value)
-			: base (id)
+		public DataComputedAmountProperty(ObjectField field, ComputedAmount value)
+			: base (field)
 		{
 			this.Value = value;
 		}

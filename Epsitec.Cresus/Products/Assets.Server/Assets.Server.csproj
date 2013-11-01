@@ -56,6 +56,7 @@
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
     <Compile Include="SimpleEngine\CategoryField.cs" />
     <Compile Include="SimpleEngine\ComputedAmount.cs" />
+    <Compile Include="SimpleEngine\BaseType.cs" />
     <Compile Include="SimpleEngine\ObjectCalculator.cs" />
     <Compile Include="SimpleEngine\GuidList.cs" />
     <Compile Include="SimpleEngine\DataDateProperty.cs" />

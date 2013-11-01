@@ -11,9 +11,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class HistoryAccessor
 	{
-		public HistoryAccessor(DataAccessor accessor, Guid objectGuid, Timestamp? timestamp, int field)
+		public HistoryAccessor(DataAccessor accessor, BaseType baseType, Guid objectGuid, Timestamp? timestamp, int field)
 		{
 			this.accessor = accessor;
+			this.baseType = baseType;
 
 			this.objectField = (ObjectField) field;
 			this.fieldType = DataAccessor.GetFieldType ((ObjectField) field);
@@ -131,7 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			bool put = false;
 
-			var obj = this.accessor.GetObject (objectGuid);
+			var obj = this.accessor.GetObject (this.baseType, objectGuid);
 			if (obj != null)
 			{
 				int count = obj.EventsCount;
@@ -265,6 +266,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int GlyphColumnWidth = 20;
 
 		private readonly DataAccessor								accessor;
+		private readonly BaseType									baseType;
 		private readonly ObjectField								objectField;
 		private readonly FieldType									fieldType;
 		private readonly List<List<AbstractSimpleTreeTableCell>>	content;

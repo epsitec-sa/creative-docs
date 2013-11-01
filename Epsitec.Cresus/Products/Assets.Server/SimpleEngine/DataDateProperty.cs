@@ -9,8 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public class DataDateProperty : AbstractDataProperty
 	{
-		public DataDateProperty(int id, System.DateTime value)
-			: base (id)
+		public DataDateProperty(ObjectField field, System.DateTime value)
+			: base (field)
 		{
 			this.Value = value;
 		}

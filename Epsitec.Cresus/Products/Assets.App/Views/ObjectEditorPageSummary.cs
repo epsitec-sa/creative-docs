@@ -15,6 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectEditorPageSummary(DataAccessor accessor)
 			: base (accessor)
 		{
+			this.baseType = BaseType.Objects;
+
 			this.summaryController = new ObjectSummaryController
 			(
 				this.accessor,
@@ -47,9 +49,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateCommentaries (parent);
 		}
 
-		public override void SetObject(DataObject obj, Guid objectGuid, Timestamp timestamp)
+		public override void SetObject(Guid objectGuid, Timestamp timestamp)
 		{
-			base.SetObject (obj, objectGuid, timestamp);
+			base.SetObject (objectGuid, timestamp);
 
 			this.summaryController.UpdateFields (this.objectGuid, this.timestamp);
 

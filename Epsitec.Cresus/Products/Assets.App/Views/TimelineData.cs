@@ -16,9 +16,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		/// Cette classe détermine le contenu d'une timeline de façon totalement indépendante
 		/// de la UI (notamment de la classe NavigationTimelineController).
 		/// </summary>
-		public TimelineData(DataAccessor accessor)
+		public TimelineData(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
+			this.baseType = baseType;
+
 			this.cells = new List<TimelineCell> ();
 		}
 
@@ -91,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	cellule pour représenter l'événement de l'objet.
 			if (objectGuid.HasValue)
 			{
-				var obj = this.accessor.GetObject (objectGuid.Value);
+				var obj = this.accessor.GetObject (this.baseType, objectGuid.Value);
 
 				if (obj != null)
 				{
@@ -315,6 +317,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly DataAccessor			accessor;
+		private readonly BaseType				baseType;
 		private readonly List<TimelineCell>		cells;
 	}
 }

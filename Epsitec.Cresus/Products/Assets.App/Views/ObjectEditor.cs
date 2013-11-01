@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectEditor : AbstractEditor
 	{
-		public ObjectEditor(DataAccessor accessor)
-			: base (accessor)
+		public ObjectEditor(DataAccessor accessor, BaseType baseType)
+			: base (accessor, baseType)
 		{
 			this.navigatorLevels = new List<NavigatorLevel> ();
 		}
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor = ColorManager.EditBackgroundColor,
 			};
 
-			this.AddPage (EditionObjectPageType.Summary);
+			this.AddPage (this.DefaultPage);
 
 			this.navigatorController.ItemClicked += delegate (object sender, int rank)
 			{
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Après la création d'un événement, on cherche à ouvrir la page la
 			//	plus pertinente.
-			var pages = ObjectEditor.GetAvailablePages (true, eventType).ToArray ();
+			var pages = this.GetAvailablePages (true, eventType).ToArray ();
 			if (pages.Length >= 2)
 			{
 				this.AddPage (pages[1]);
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.currentPage = AbstractObjectEditorPage.CreatePage (this.accessor, type);
 			this.currentPage.CreateUI (this.editFrameBox);
-			this.currentPage.SetObject (this.accessor.GetObject (this.objectGuid), this.objectGuid, this.timestamp);
+			this.currentPage.SetObject (this.objectGuid, this.timestamp);
 			this.currentPage.SetFocus (focusedField);
 
 			this.currentPage.ValueEdited += delegate (object sender, ObjectField field)
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasEvent   = false;
 			this.eventType  = EventType.Unknown;
 
-			var obj = this.accessor.GetObject (this.objectGuid);
+			var obj = this.accessor.GetObject (this.baseType, this.objectGuid);
 			if (obj != null)
 			{
 				var e = obj.GetEvent (this.timestamp);
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.lastEventType = this.eventType;
 			}
 
-			this.currentPage.SetObject (this.accessor.GetObject (this.objectGuid), this.objectGuid, this.timestamp);
+			this.currentPage.SetObject (this.objectGuid, this.timestamp);
 
 			this.topTitle.SetTitle (this.EventDescription);
 		}
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.navigatorLevels.Clear ();
 			this.navigatorController.Items.Clear ();
 
-			this.AddPage (EditionObjectPageType.Summary);
+			this.AddPage (this.DefaultPage);
 
 			//	Si l'ancienne page est compatible avec le nouveau type d'événement,
 			//	on l'ouvre.
@@ -251,12 +251,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	l'événement courant.
 			get
 			{
-				var types = ObjectEditor.GetAvailablePages (this.hasEvent, this.eventType).ToArray ();
+				var types = this.GetAvailablePages (this.hasEvent, this.eventType).ToArray ();
 				return this.currentPage.ChildrenPageTypes.Where (x => types.Contains (x));
 			}
 		}
 
-		public static IEnumerable<EditionObjectPageType> GetAvailablePages(bool hasEvent, EventType type)
+		public IEnumerable<EditionObjectPageType> GetAvailablePages(bool hasEvent, EventType type)
+		{
+			switch (this.baseType)
+			{
+				case BaseType.Objects:
+					return ObjectEditor.GetObjectAvailablePages (hasEvent, type);
+
+				case BaseType.Categories:
+					return ObjectEditor.GetCategoryAvailablePages (hasEvent, type);
+
+				default:
+					return null;
+			}
+		}
+
+		public static IEnumerable<EditionObjectPageType> GetObjectAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
 			yield return EditionObjectPageType.Summary;
@@ -287,6 +302,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 						yield return EditionObjectPageType.Amortissements;
 						yield return EditionObjectPageType.Compta;
 						break;
+				}
+			}
+		}
+
+		private static IEnumerable<EditionObjectPageType> GetCategoryAvailablePages(bool hasEvent, EventType type)
+		{
+			//	Retourne les pages autorisées pour un type d'événement donné.
+			yield return EditionObjectPageType.Category;
+		}
+
+
+		private EditionObjectPageType DefaultPage
+		{
+			get
+			{
+				switch (this.baseType)
+				{
+					case BaseType.Objects:
+						return EditionObjectPageType.Summary;
+
+					case BaseType.Categories:
+						return EditionObjectPageType.Category;
+
+					default:
+						return EditionObjectPageType.Unknown;
 				}
 			}
 		}

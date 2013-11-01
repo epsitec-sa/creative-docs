@@ -14,13 +14,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectsView : AbstractView
 	{
-		public ObjectsView(DataAccessor accessor, MainToolbar toolbar)
+		public ObjectsView(DataAccessor accessor, BaseType baseType, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
-			this.listController     = new ObjectsToolbarTreeTableController (this.accessor);
-			this.timelineController = new ObjectsToolbarTimelineController (this.accessor);
-			this.eventsController   = new EventsToolbarTreeTableController (this.accessor);
-			this.objectEditor       = new ObjectEditor (this.accessor);
+			this.baseType = baseType;
+
+			this.listController     = new ObjectsToolbarTreeTableController (this.accessor, this.baseType);
+			this.timelineController = new ObjectsToolbarTimelineController (this.accessor, this.baseType);
+			this.eventsController   = new EventsToolbarTreeTableController (this.accessor, this.baseType);
+			this.objectEditor       = new ObjectEditor (this.accessor, this.baseType);
 
 			this.ignoreChanges = new SafeCounter ();
 
@@ -342,7 +344,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						if (popup.RadioSelected == "one")
 						{
-							var guid = this.accessor.GetObjectGuids (this.listController.SelectedRow, 1).First ();
+							var guid = this.accessor.GetObjectGuids (this.baseType, this.listController.SelectedRow, 1).First ();
 							this.businessLogic.GeneratesAmortissementsAuto (guid);
 						}
 						else
@@ -411,7 +413,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				this.selectedGuid = this.accessor.GetObjectGuids (row, 1).First ();
+				this.selectedGuid = this.accessor.GetObjectGuids (this.baseType, row, 1).First ();
 			}
 
 			this.timelineController.ObjectGuid = this.selectedGuid;

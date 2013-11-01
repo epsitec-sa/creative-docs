@@ -9,8 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public class DataDecimalProperty : AbstractDataProperty
 	{
-		public DataDecimalProperty(int id, decimal value)
-			: base (id)
+		public DataDecimalProperty(ObjectField field, decimal value)
+			: base (field)
 		{
 			this.Value = value;
 		}

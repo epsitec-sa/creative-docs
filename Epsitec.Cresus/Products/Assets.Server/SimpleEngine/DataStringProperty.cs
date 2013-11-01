@@ -9,8 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public class DataStringProperty : AbstractDataProperty
 	{
-		public DataStringProperty(int id, string value)
-			: base (id)
+		public DataStringProperty(ObjectField field, string value)
+			: base (field)
 		{
 			this.Value = value;
 		}

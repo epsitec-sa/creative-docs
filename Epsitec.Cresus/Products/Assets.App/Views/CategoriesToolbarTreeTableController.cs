@@ -14,6 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public CategoriesToolbarTreeTableController(DataAccessor accessor)
 			: base (accessor)
 		{
+			this.baseType = BaseType.Categories;
+
 			this.title = "Catégories d'immobilisation";
 			this.hasTreeOperations = true;
 
@@ -74,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			var timestamp = this.accessor.CreateCategory (sel+1, modelGuid);
+			var timestamp = this.accessor.CreateObject (BaseType.Categories, sel+1, modelGuid);
 
 			this.UpdateCategories ();
 			this.UpdateData ();
@@ -145,14 +147,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var guid  = node.Guid;
 				var level = node.Level;
 				var type  = node.Type;
-				var obj   = this.accessor.GetCategory (guid);
+				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
 
-				var nom    = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.CatégorieNom);
-				var numéro = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.CatégorieNuméro);
-				var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, this.timestamp, ObjectField.CatégorieTauxAmortissement);
-				var typeAm = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.CatégorieTypeAmortissement);
-				var period = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.CatégoriePériodicité);
-				var residu = ObjectCalculator.GetObjectPropertyDecimal (obj, this.timestamp, ObjectField.CatégorieValeurRésiduelle);
+				var nom    = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.Nom);
+				var numéro = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.Numéro);
+				var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, this.timestamp, ObjectField.TauxAmortissement);
+				var typeAm = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.TypeAmortissement);
+				var period = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.Périodicité);
+				var residu = ObjectCalculator.GetObjectPropertyDecimal (obj, this.timestamp, ObjectField.ValeurRésiduelle);
 
 				if (this.timestamp.HasValue &&
 					!ObjectCalculator.IsExistingObject (obj, this.timestamp.Value))
@@ -191,7 +193,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.accessor.CategoriesCount;
+				return this.accessor.GetObjectsCount (this.baseType);
 			}
 		}
 
@@ -204,8 +206,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				guid = this.catGuids[row];
 
-				var obj = this.accessor.GetCategory(guid);
-				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.timestamp, ObjectField.CatégorieLevel) as DataIntProperty;
+				var obj = this.accessor.GetObject (this.baseType, guid);
+				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.timestamp, ObjectField.Level) as DataIntProperty;
 				if (p != null)
 				{
 					level = p.Value;
@@ -217,7 +219,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateCategories()
 		{
 			this.catGuids.Clear ();
-			this.catGuids.AddRange (this.accessor.GetCategoryGuids ());
+			this.catGuids.AddRange (this.accessor.GetObjectGuids (this.baseType));
 		}
 
 

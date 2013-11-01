@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class CategoryEditor : AbstractEditor
 	{
-		public CategoryEditor(DataAccessor accessor)
-			: base (accessor)
+		public CategoryEditor(DataAccessor accessor, BaseType baseType)
+			: base (accessor, baseType)
 		{
 		}
 
@@ -45,8 +45,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.categoryPage = new ObjectEditorPageCategory (this.accessor);
 			this.categoryPage.CreateUI (this.editFrameBox);
-			this.categoryPage.SetObject (this.accessor.GetCategory (this.catGuid), this.catGuid, this.timestamp);
-			this.categoryPage.SetFocus (ObjectField.CatégorieNom);
+			this.categoryPage.SetObject (this.catGuid, this.timestamp);
+			this.categoryPage.SetFocus (ObjectField.Nom);
 
 			this.categoryPage.ValueEdited += delegate (object sender, ObjectField field)
 			{
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.catGuid    = catGuid;
 			this.timestamp  = timestamp.Value;
 
-			this.categoryPage.SetObject (this.accessor.GetCategory (this.catGuid), this.catGuid, this.timestamp);
+			this.categoryPage.SetObject (this.catGuid, this.timestamp);
 
 			this.topTitle.SetTitle (this.CategoryDescription);
 		}
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				var cat = this.accessor.GetCategory (this.catGuid);
+				var cat = this.accessor.GetObject (BaseType.Categories, this.catGuid);
 
 				if (cat == null)
 				{
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					return ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.CatégorieNom);
+					return ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Nom);
 				}
 			}
 		}

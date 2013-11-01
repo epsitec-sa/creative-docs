@@ -9,8 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public class DataLinkProperty : AbstractDataProperty
 	{
-		public DataLinkProperty(int id, DataObject value)
-			: base (id)
+		public DataLinkProperty(ObjectField field, DataObject value)
+			: base (field)
 		{
 			this.Value = value;
 		}

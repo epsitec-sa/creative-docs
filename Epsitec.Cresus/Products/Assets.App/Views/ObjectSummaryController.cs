@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateFields(Guid objectGuid, Timestamp? timestamp)
 		{
-			this.obj       = this.accessor.GetObject (objectGuid);
+			this.obj       = this.accessor.GetObject (BaseType.Objects, objectGuid);
 			this.timestamp = timestamp;
 			this.hasEvent  = false;
 			this.eventType = EventType.Unknown;
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.hasEvent && field.HasValue)
 			{
 				var type = ObjectEditorPageSummary.GetPageType ((ObjectField) field.Value);
-				var availables = ObjectEditor.GetAvailablePages (this.hasEvent, this.eventType).ToArray ();
+				var availables = ObjectEditor.GetObjectAvailablePages (this.hasEvent, this.eventType).ToArray ();
 				return !availables.Contains (type);
 			}
 			else

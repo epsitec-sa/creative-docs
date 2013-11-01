@@ -619,6 +619,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly List<Node>				nodes;
 		private readonly List<int>				nodeIndexes;
 
+		protected BaseType						baseType;
 		protected bool							hasTreeOperations;
 		protected string						title;
 		protected TopTitle						topTitle;

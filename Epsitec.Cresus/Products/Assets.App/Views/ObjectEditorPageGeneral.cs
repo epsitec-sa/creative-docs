@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectEditorPageGeneral(DataAccessor accessor)
 			: base (accessor)
 		{
+			this.baseType = BaseType.Objects;
 		}
 
 

@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public GroupsView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
+			this.baseType = BaseType.Groups;
 		}
 
 		public override void CreateUI(Widget parent)

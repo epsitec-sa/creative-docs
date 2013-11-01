@@ -12,11 +12,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectsToolbarTimelineController
 	{
-		public ObjectsToolbarTimelineController(DataAccessor accessor)
+		public ObjectsToolbarTimelineController(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
+			this.baseType = baseType;
 
-			this.timelineData = new TimelineData (this.accessor);
+			this.timelineData = new TimelineData (this.accessor, this.baseType);
 			this.timelineMode = TimelineMode.Expanded;
 		}
 
@@ -360,7 +361,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (!guid.IsEmpty)
 			{
 				var type = ObjectsToolbarTimelineController.ParseEventType (buttonName);
-				var obj = this.accessor.GetObject (guid);
+				var obj = this.accessor.GetObject (this.baseType, guid);
 				var e = this.accessor.CreateObjectEvent (obj, date, type);
 
 				if (e != null)
@@ -920,6 +921,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly DataAccessor			accessor;
+		private readonly BaseType				baseType;
 		private readonly TimelineData			timelineData;
 
 		private FrameBox						frameBox;

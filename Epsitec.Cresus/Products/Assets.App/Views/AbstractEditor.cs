@@ -10,9 +10,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractEditor
 	{
-		public AbstractEditor(DataAccessor accessor)
+		public AbstractEditor(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
+			this.baseType = baseType;
 		}
 
 
@@ -35,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void StartEdition(Guid objectGuid, Timestamp? timestamp)
 		{
-			this.accessor.StartObjectEdition (objectGuid, timestamp);
+			this.accessor.StartObjectEdition (this.baseType, objectGuid, timestamp);
 
 			if (this.editionDirty)
 			{
@@ -69,6 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected readonly DataAccessor			accessor;
+		protected readonly BaseType				baseType;
 
 		private bool							editionDirty;
 	}

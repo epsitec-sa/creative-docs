@@ -86,13 +86,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 
 		//	Retourne la propriété définie à la date exacte.
-		public AbstractDataProperty GetSingleProperty(Timestamp timestamp, int id)
+		public AbstractDataProperty GetSingleProperty(Timestamp timestamp, ObjectField field)
 		{
 			var e = this.GetEvent (timestamp);
 
 			if (e != null)
 			{
-				var p = e.GetProperty (id);
+				var p = e.GetProperty (field);
 				if (p != null)
 				{
 					p.State = PropertyState.Single;
@@ -104,9 +104,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 		//	Retourne la propriété définie à la date exacte ou antérieurement.
-		public AbstractDataProperty GetSyntheticProperty(Timestamp timestamp, int id)
+		public AbstractDataProperty GetSyntheticProperty(Timestamp timestamp, ObjectField field)
 		{
-			var p = this.GetSingleProperty (timestamp, id);
+			var p = this.GetSingleProperty (timestamp, field);
 
 			if (p != null)
 			{
@@ -116,12 +116,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			// On cherche depuis la date donnée en remontant dans le passé.
 			var e = this.events
-				.Where (x => x.Timestamp <= timestamp && x.GetProperty (id) != null)
+				.Where (x => x.Timestamp <= timestamp && x.GetProperty (field) != null)
 				.LastOrDefault ();
 
 			if (e != null)
 			{
-				p = e.GetProperty (id);
+				p = e.GetProperty (field);
 				if (p != null)
 				{
 					p.State = PropertyState.Synthetic;

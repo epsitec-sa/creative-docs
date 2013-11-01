@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void GeneratesAmortissementsAuto()
 		{
-			var guids = this.accessor.GetObjectGuids ();
+			var guids = this.accessor.GetObjectGuids (BaseType.Objects);
 			foreach (var guid in guids)
 			{
 				this.GeneratesAmortissementsAuto (guid);
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Première ébauche totalement naïve et fausse !
 			//	TODO: ...
-			var obj = this.accessor.GetObject (objectGuid);
+			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
 
 			ObjectCalculator.RemoveAmortissementsAuto (obj);
 
@@ -180,15 +180,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 						switch (i)
 						{
 							case 0:
-								p = new DataComputedAmountProperty ((int) ObjectField.Valeur1, v);
+								p = new DataComputedAmountProperty (ObjectField.Valeur1, v);
 								break;
 
 							case 1:
-								p = new DataComputedAmountProperty ((int) ObjectField.Valeur2, v);
+								p = new DataComputedAmountProperty (ObjectField.Valeur2, v);
 								break;
 
 							case 2:
-								p = new DataComputedAmountProperty ((int) ObjectField.Valeur3, v);
+								p = new DataComputedAmountProperty (ObjectField.Valeur3, v);
 								break;
 						}
 

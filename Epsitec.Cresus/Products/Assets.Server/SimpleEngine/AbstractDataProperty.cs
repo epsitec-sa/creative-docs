@@ -9,12 +9,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public abstract class AbstractDataProperty
 	{
-		public AbstractDataProperty(int fieldId)
+		public AbstractDataProperty(ObjectField field)
 		{
-			this.FieldId = fieldId;
+			this.Field = field;
 		}
 
-		public readonly int FieldId;
+		public readonly ObjectField Field;
 
 		public PropertyState State;
 	}

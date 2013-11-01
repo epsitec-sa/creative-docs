@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public void AddProperty(AbstractDataProperty property)
 		{
-			int i = this.properties.FindIndex (x => x.FieldId == property.FieldId);
+			int i = this.properties.FindIndex (x => x.Field == property.Field);
 			if (i == -1)
 			{
 				this.properties.Add (property);
@@ -54,9 +54,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		}
 
-		public void RemoveProperty(int fieldId)
+		public void RemoveProperty(ObjectField field)
 		{
-			var p = this.GetProperty(fieldId);
+			var p = this.GetProperty(field);
 			if (p != null)
 			{
 				int i = this.properties.IndexOf (p);
@@ -67,9 +67,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public AbstractDataProperty GetProperty(int fieldId)
+		public AbstractDataProperty GetProperty(ObjectField field)
 		{
-			return this.properties.Where (x => x.FieldId == fieldId).FirstOrDefault ();
+			return this.properties.Where (x => x.Field == field).FirstOrDefault ();
 		}
 
 

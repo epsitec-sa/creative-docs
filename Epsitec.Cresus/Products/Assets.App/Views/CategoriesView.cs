@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -16,8 +15,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public CategoriesView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
+			this.baseType = BaseType.Categories;
+
 			this.listController = new CategoriesToolbarTreeTableController (this.accessor);
-			this.categoryEditor   = new CategoryEditor (this.accessor);
+			this.objectEditor   = new ObjectEditor (this.accessor, BaseType.Categories);
 
 			this.ignoreChanges = new SafeCounter ();
 
@@ -26,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnStartEdit (eventType, timestamp);
 			};
 
-			this.categoryEditor.ValueChanged += delegate (object sender, ObjectField field)
+			this.objectEditor.ValueChanged += delegate (object sender, ObjectField field)
 			{
 				this.UpdateToolbars ();
 			};
@@ -59,7 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.listController.CreateUI (this.listFrameBox);
-			this.categoryEditor.CreateUI (this.editFrameBox);
+			this.objectEditor.CreateUI (this.editFrameBox);
 
 			this.Update ();
 
@@ -133,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.isEditing = true;
 			this.Update ();
 
-			this.categoryEditor.OpenMainPage (eventType);
+			this.objectEditor.OpenMainPage (eventType);
 		}
 
 		private void OnEditAccept()
@@ -174,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				this.selectedGuid = this.accessor.GetCategoryGuids (row, 1).First ();
+				this.selectedGuid = this.accessor.GetObjectGuids (this.baseType, row, 1).First ();
 			}
 
 			this.Update ();
@@ -182,7 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateEditor()
 		{
-			this.categoryEditor.SetCategory (this.selectedGuid, this.selectedTimestamp);
+			this.objectEditor.SetObject (this.selectedGuid, this.selectedTimestamp);
 		}
 
 		private void UpdateGeometry()
@@ -196,7 +197,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
 
-				this.mainToolbar.UpdateCommand (ToolbarCommand.Accept, this.categoryEditor.EditionDirty);
+				this.mainToolbar.UpdateCommand (ToolbarCommand.Accept, this.objectEditor.EditionDirty);
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
 			}
 			else
@@ -220,7 +221,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly CategoriesToolbarTreeTableController listController;
-		private readonly CategoryEditor			categoryEditor;
+		private readonly ObjectEditor			objectEditor;
 		private readonly SafeCounter			ignoreChanges;
 
 		private FrameBox						listFrameBox;

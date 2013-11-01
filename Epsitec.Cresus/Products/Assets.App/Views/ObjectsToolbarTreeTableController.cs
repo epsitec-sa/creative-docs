@@ -11,10 +11,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectsToolbarTreeTableController : AbstractToolbarTreeTableController
 	{
-		public ObjectsToolbarTreeTableController(DataAccessor accessor)
+		public ObjectsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor)
 		{
-			this.title = "Objets d'immobilisation";
+			this.baseType = baseType;
+
+			switch (this.baseType)
+			{
+				case BaseType.Objects:
+					this.title = "Objets d'immobilisation";
+					break;
+
+				case BaseType.Categories:
+					this.title = "Catégories d'immobilisation";
+					break;
+			}
+
 			this.hasTreeOperations = true;
 
 			this.objectGuids = new List<Guid> ();
@@ -74,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			var timestamp = this.accessor.CreateObject (sel+1, modelGuid);
+			var timestamp = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
 
 			this.UpdateObjects ();
 			this.UpdateData ();
@@ -112,6 +124,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
+				switch (this.baseType)
+				{
+					case BaseType.Objects:
+						return this.ObjectsTreeTableColumns;
+
+					case BaseType.Categories:
+						return this.CategoriesTreeTableColumns;
+
+					default:
+						return null;
+				}
+			}
+		}
+
+		private TreeTableColumnDescription[] ObjectsTreeTableColumns
+		{
+			get
+			{
 				var list = new List<TreeTableColumnDescription> ();
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,           180, "Objet"));
@@ -127,7 +157,39 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private TreeTableColumnDescription[] CategoriesTreeTableColumns
+		{
+			get
+			{
+				var list = new List<TreeTableColumnDescription> ();
+
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   180, "Catégorie"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  50, "N°"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate,    80, "Taux"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  80, "Type"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Périodicité"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, 120, "Valeur résiduelle"));
+
+				return list.ToArray ();
+			}
+		}
+
+
 		protected override void UpdateContent(int firstRow, int count, int selection, bool crop = true)
+		{
+			switch (this.baseType)
+			{
+				case BaseType.Objects:
+					this.UpdateObjectsContent (firstRow, count, selection, crop);
+					break;
+
+				case BaseType.Categories:
+					this.UpdateCategoriesContent (firstRow, count, selection, crop);
+					break;
+			}
+		}
+
+		private void UpdateObjectsContent(int firstRow, int count, int selection, bool crop = true)
 		{
 			var cf = new List<TreeTableCellTree> ();
 			var c1 = new List<TreeTableCellString> ();
@@ -149,7 +211,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var guid  = node.Guid;
 				var level = node.Level;
 				var type  = node.Type;
-				var obj   = this.accessor.GetObject (guid);
+				var obj   = this.accessor.GetObject (this.baseType, guid);
 
 				var nom         = ObjectCalculator.GetObjectPropertyString (obj, this.timestamp, ObjectField.Nom);
 				var numéro      = ObjectCalculator.GetObjectPropertyString (obj, this.timestamp, ObjectField.Numéro);
@@ -198,12 +260,73 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private void UpdateCategoriesContent(int firstRow, int count, int selection, bool crop = true)
+		{
+			var cf = new List<TreeTableCellTree> ();
+			var c1 = new List<TreeTableCellString> ();
+			var c2 = new List<TreeTableCellDecimal> ();
+			var c3 = new List<TreeTableCellString> ();
+			var c4 = new List<TreeTableCellString> ();
+			var c5 = new List<TreeTableCellDecimal> ();
+
+			for (int i=0; i<count; i++)
+			{
+				if (firstRow+i >= this.NodesCount)
+				{
+					break;
+				}
+
+				var node  = this.GetNode (firstRow+i);
+				var guid  = node.Guid;
+				var level = node.Level;
+				var type  = node.Type;
+				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
+
+				var nom    = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.Nom);
+				var numéro = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.Numéro);
+				var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, this.timestamp, ObjectField.TauxAmortissement);
+				var typeAm = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.TypeAmortissement);
+				var period = ObjectCalculator.GetObjectPropertyString  (obj, this.timestamp, ObjectField.Périodicité);
+				var residu = ObjectCalculator.GetObjectPropertyDecimal (obj, this.timestamp, ObjectField.ValeurRésiduelle);
+
+				if (this.timestamp.HasValue &&
+					!ObjectCalculator.IsExistingObject (obj, this.timestamp.Value))
+				{
+					nom = "<i>Inconnu à cette date</i>";
+				}
+
+				var sf = new TreeTableCellTree    (true, level, type, nom, isSelected: (i == selection));
+				var s1 = new TreeTableCellString  (true, numéro, isSelected: (i == selection));
+				var s2 = new TreeTableCellDecimal (true, taux, isSelected: (i == selection));
+				var s3 = new TreeTableCellString  (true, typeAm, isSelected: (i == selection));
+				var s4 = new TreeTableCellString  (true, period, isSelected: (i == selection));
+				var s5 = new TreeTableCellDecimal (true, residu, isSelected: (i == selection));
+
+				cf.Add (sf);
+				c1.Add (s1);
+				c2.Add (s2);
+				c3.Add (s3);
+				c4.Add (s4);
+				c5.Add (s5);
+			}
+
+			{
+				int i = 0;
+				this.controller.SetColumnCells (i++, cf.ToArray ());
+				this.controller.SetColumnCells (i++, c1.ToArray ());
+				this.controller.SetColumnCells (i++, c2.ToArray ());
+				this.controller.SetColumnCells (i++, c3.ToArray ());
+				this.controller.SetColumnCells (i++, c4.ToArray ());
+				this.controller.SetColumnCells (i++, c5.ToArray ());
+			}
+		}
+
 
 		protected override int DataCount
 		{
 			get
 			{
-				return this.accessor.ObjectsCount;
+				return this.accessor.GetObjectsCount (this.baseType);
 			}
 		}
 
@@ -216,7 +339,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				guid = this.objectGuids[row];
 
-				var obj = this.accessor.GetObject(guid);
+				var obj = this.accessor.GetObject (this.baseType, guid);
 				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.timestamp, ObjectField.Level) as DataIntProperty;
 				if (p != null)
 				{
@@ -229,7 +352,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateObjects()
 		{
 			this.objectGuids.Clear ();
-			this.objectGuids.AddRange (this.accessor.GetObjectGuids ());
+			this.objectGuids.AddRange (this.accessor.GetObjectGuids (this.baseType));
 		}
 
 

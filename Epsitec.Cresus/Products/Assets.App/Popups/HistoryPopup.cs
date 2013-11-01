@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class HistoryPopup : AbstractPopup
 	{
-		public HistoryPopup(DataAccessor accessor, Guid objectGuid, Timestamp? timestamp, int field)
+		public HistoryPopup(DataAccessor accessor, BaseType baseType, Guid objectGuid, Timestamp? timestamp, int field)
 		{
-			this.accessor = new HistoryAccessor (accessor, objectGuid, timestamp, field);
+			this.accessor = new HistoryAccessor (accessor, baseType, objectGuid, timestamp, field);
 			this.controller = new HistoryController (this.accessor);
 		}
 

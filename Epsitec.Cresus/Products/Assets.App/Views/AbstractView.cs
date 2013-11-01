@@ -80,10 +80,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (viewType)
 			{
 				case ViewType.Objects:
-					return new ObjectsView (accessor, toolbar);
+					return new ObjectsView (accessor, BaseType.Objects, toolbar);
 
 				case ViewType.Categories:
-					return new CategoriesView (accessor, toolbar);
+					return new ObjectsView (accessor, BaseType.Categories, toolbar);
 
 				case ViewType.Groups:
 					return new GroupsView (accessor, toolbar);
@@ -106,5 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected readonly DataAccessor			accessor;
 		protected readonly MainToolbar			mainToolbar;
 		protected readonly BusinessLogic		businessLogic;
+
+		protected BaseType						baseType;
 	}
 }

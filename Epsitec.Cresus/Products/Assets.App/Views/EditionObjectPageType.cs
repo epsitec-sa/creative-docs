@@ -8,10 +8,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public enum EditionObjectPageType
 	{
+		Unknown,
 		Summary,
 		General,
 		Values,
 		Amortissements,
 		Compta,
+		Category,
 	}
 }

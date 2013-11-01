@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 			else
 			{
-				return obj.GetSingleProperty (timestamp, (int) field);
+				return obj.GetSingleProperty (timestamp, field);
 			}
 		}
 
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					timestamp = new Timestamp (System.DateTime.MaxValue, 0);
 				}
 
-				return obj.GetSyntheticProperty (timestamp.Value, (int) field);
+				return obj.GetSyntheticProperty (timestamp.Value, field);
 			}
 		}
 
@@ -185,10 +185,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static ComputedAmount? GetComputedAmount(DataEvent e, int rank)
 		{
-			int id = ObjectCalculator.RankToField (rank);
-			if (id != -1)
+			var field = ObjectCalculator.RankToField (rank);
+			if (field != ObjectField.Unknown)
 			{
-				var p = e.GetProperty (id) as DataComputedAmountProperty;
+				var p = e.GetProperty (field) as DataComputedAmountProperty;
 				if (p != null)
 				{
 					return p.Value;
@@ -200,36 +200,36 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static void SetComputedAmount(DataEvent e, int rank, ComputedAmount? value)
 		{
-			int id = ObjectCalculator.RankToField (rank);
-			if (id != -1)
+			var field = ObjectCalculator.RankToField (rank);
+			if (field != ObjectField.Unknown)
 			{
 				if (value.HasValue)
 				{
-					var newProperty = new DataComputedAmountProperty (id, value.Value);
+					var newProperty = new DataComputedAmountProperty (field, value.Value);
 					e.AddProperty (newProperty);
 				}
 				else
 				{
-					e.RemoveProperty (id);
+					e.RemoveProperty (field);
 				}
 			}
 		}
 
-		private static int RankToField(int rank)
+		private static ObjectField RankToField(int rank)
 		{
 			switch (rank)
 			{
 				case 0:
-					return (int) ObjectField.Valeur1;
+					return ObjectField.Valeur1;
 
 				case 1:
-					return (int) ObjectField.Valeur2;
+					return ObjectField.Valeur2;
 
 				case 2:
-					return (int) ObjectField.Valeur3;
+					return ObjectField.Valeur3;
 
 				default:
-					return -1;
+					return ObjectField.Unknown;
 			}
 		}
 	}

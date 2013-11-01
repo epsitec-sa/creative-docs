@@ -36,10 +36,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		public virtual void SetObject(DataObject obj, Guid objectGuid, Timestamp timestamp)
+		public virtual void SetObject(Guid objectGuid, Timestamp timestamp)
 		{
-			this.obj        = obj;
 			this.objectGuid = objectGuid;
+			this.obj        = this.accessor.GetObject (this.baseType, this.objectGuid);
 			this.timestamp  = timestamp;
 			this.hasEvent   = false;
 			this.eventType  = EventType.Unknown;
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void ShowHistoryPopup(Widget target, ObjectField field)
 		{
-			var popup = new HistoryPopup (this.accessor, this.objectGuid, this.timestamp, (int) field);
+			var popup = new HistoryPopup (this.accessor, this.baseType, this.objectGuid, this.timestamp, (int) field);
 
 			popup.Create (target, leftOrRight: true);
 
@@ -311,6 +311,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case EditionObjectPageType.Compta:
 					return new ObjectEditorPageCompta (accessor);
+
+				case EditionObjectPageType.Category:
+					return new ObjectEditorPageCategory (accessor);
 
 				default:
 					System.Diagnostics.Debug.Fail ("Unsupported page type");
@@ -358,6 +361,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected readonly DataAccessor				accessor;
+		protected BaseType							baseType;
 		private Dictionary<ObjectField, AbstractFieldController> fieldControllers;
 
 		protected Guid								objectGuid;

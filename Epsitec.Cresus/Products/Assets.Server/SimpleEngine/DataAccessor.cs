@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.editionObjectGuid = Guid.Empty;
 
 			//	Recalcule tout.
-			foreach (var obj in this.mandat.Objects)
+			foreach (var obj in this.mandat.GetData (BaseType.Objects))
 			{
 				ObjectCalculator.UpdateComputedAmounts (obj);
 			}
@@ -36,53 +36,50 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 
 		#region Objects
-		public int ObjectsCount
+		public int GetObjectsCount(BaseType baseType)
 		{
-			get
-			{
-				return this.mandat.Objects.Count;
-			}
+			return this.mandat.GetData (baseType).Count;
 		}
 
-		public IEnumerable<Guid> GetObjectGuids(int start = 0, int count = int.MaxValue)
+		public IEnumerable<Guid> GetObjectGuids(BaseType baseType, int start = 0, int count = int.MaxValue)
 		{
-			count = System.Math.Min (count, this.ObjectsCount);
+			count = System.Math.Min (count, this.GetObjectsCount (baseType));
 
 			for (int i=start; i<start+count; i++)
 			{
-				yield return this.mandat.Objects[i].Guid;
+				yield return this.mandat.GetData (baseType)[i].Guid;
 			}
 		}
 
-		public DataObject GetObject(Guid objectGuid)
+		public DataObject GetObject(BaseType baseType, Guid objectGuid)
 		{
-			return this.mandat.Objects[objectGuid];
+			return this.mandat.GetData (baseType)[objectGuid];
 		}
 
-		public Timestamp CreateObject(int row, Guid modelGuid)
+		public Timestamp CreateObject(BaseType baseType, int row, Guid modelGuid)
 		{
 			var timestamp = new Timestamp (this.mandat.StartDate, 0);
 
 			var o = new DataObject ();
-			mandat.Objects.Insert (row, o);
+			mandat.GetData (baseType).Insert (row, o);
 
 			var e = new DataEvent (timestamp, EventType.Entrée);
 			o.AddEvent (e);
 
 			//	On met le même niveau que l'objet modèle.
-			var objectModel = this.GetObject (modelGuid);
+			var objectModel = this.GetObject (baseType, modelGuid);
 
 			var i = ObjectCalculator.GetObjectPropertyInt (objectModel, null, ObjectField.Level);
 			if (i.HasValue)
 			{
-				e.AddProperty (new DataIntProperty ((int) ObjectField.Level, i.Value));
+				e.AddProperty (new DataIntProperty (ObjectField.Level, i.Value));
 			}
 
 			//	On met le même numéro que l'objet modèle.
 			var n = ObjectCalculator.GetObjectPropertyString (objectModel, null, ObjectField.Numéro);
 			if (!string.IsNullOrEmpty (n))
 			{
-				e.AddProperty (new DataStringProperty ((int) ObjectField.Numéro, n));
+				e.AddProperty (new DataStringProperty (ObjectField.Numéro, n));
 			}
 
 			return timestamp;
@@ -106,80 +103,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
-		#region Categories
-		public int CategoriesCount
-		{
-			get
-			{
-				return this.mandat.Categories.Count;
-			}
-		}
-
-		public IEnumerable<Guid> GetCategoryGuids(int start = 0, int count = int.MaxValue)
-		{
-			count = System.Math.Min (count, this.CategoriesCount);
-
-			for (int i=start; i<start+count; i++)
-			{
-				yield return this.mandat.Categories[i].Guid;
-			}
-		}
-
-		public DataObject GetCategory(Guid catGuid)
-		{
-			return this.mandat.Categories[catGuid];
-		}
-
-		public Timestamp CreateCategory(int row, Guid modelGuid)
-		{
-			var timestamp = new Timestamp (this.mandat.StartDate, 0);
-
-			var o = new DataObject ();
-			mandat.Categories.Insert (row, o);
-
-			var e = new DataEvent (timestamp, EventType.Entrée);
-			o.AddEvent (e);
-
-			//	On met le même niveau que l'objet modèle.
-			var catModel = this.GetCategory (modelGuid);
-
-			var i = ObjectCalculator.GetObjectPropertyInt (catModel, null, ObjectField.CatégorieLevel);
-			if (i.HasValue)
-			{
-				e.AddProperty (new DataIntProperty ((int) ObjectField.CatégorieLevel, i.Value));
-			}
-
-			//	On met le même numéro que l'objet modèle.
-			var n = ObjectCalculator.GetObjectPropertyString (catModel, null, ObjectField.CatégorieNuméro);
-			if (!string.IsNullOrEmpty (n))
-			{
-				e.AddProperty (new DataStringProperty ((int) ObjectField.CatégorieNuméro, n));
-			}
-
-			return timestamp;
-		}
-
-		public DataEvent CreateCategoryEvent(DataObject cat, System.DateTime date, EventType type)
-		{
-			if (cat != null)
-			{
-				var position = cat.GetNewPosition (date);
-				var ts = new Timestamp (date, position);
-				var e = new DataEvent (ts, type);
-
-				cat.AddEvent (e);
-				return e;
-			}
-
-			return null;
-		}
-		#endregion
-
-
 		#region Edition manager
-		public void StartObjectEdition(Guid objectGuid, Timestamp? timestamp)
+		public void StartObjectEdition(BaseType baseType, Guid objectGuid, Timestamp? timestamp)
 		{
 			//	Marque le début de l'édition de l'événement d'un objet.
+			this.editionBaseType = baseType;
+
 			if (objectGuid.IsEmpty || timestamp == null)
 			{
 				return;
@@ -195,7 +124,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			this.editionObjectGuid = objectGuid;
-			this.editionTimestamp = timestamp;
+			this.editionTimestamp  = timestamp;
 		}
 
 		public void SetObjectField(ObjectField field, string value)
@@ -205,11 +134,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				if (value == null)
 				{
-					e.RemoveProperty ((int) field);
+					e.RemoveProperty (field);
 				}
 				else
 				{
-					var newProperty = new DataStringProperty ((int) field, value);
+					var newProperty = new DataStringProperty (field, value);
 					e.AddProperty (newProperty);
 				}
 			}
@@ -222,12 +151,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				if (value.HasValue)
 				{
-					var newProperty = new DataDecimalProperty ((int) field, value.Value);
+					var newProperty = new DataDecimalProperty (field, value.Value);
 					e.AddProperty (newProperty);
 				}
 				else
 				{
-					e.RemoveProperty ((int) field);
+					e.RemoveProperty (field);
 				}
 			}
 		}
@@ -239,15 +168,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				if (value.HasValue)
 				{
-					var newProperty = new DataComputedAmountProperty ((int) field, value.Value);
+					var newProperty = new DataComputedAmountProperty (field, value.Value);
 					e.AddProperty (newProperty);
 				}
 				else
 				{
-					e.RemoveProperty ((int) field);
+					e.RemoveProperty (field);
 				}
 
-				var obj = this.GetObject (this.editionObjectGuid);
+				var obj = this.GetObject (BaseType.Objects, this.editionObjectGuid);
 				ObjectCalculator.UpdateComputedAmounts (obj);
 			}
 		}
@@ -259,12 +188,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				if (value.HasValue)
 				{
-					var newProperty = new DataIntProperty ((int) field, value.Value);
+					var newProperty = new DataIntProperty (field, value.Value);
 					e.AddProperty (newProperty);
 				}
 				else
 				{
-					e.RemoveProperty ((int) field);
+					e.RemoveProperty (field);
 				}
 			}
 		}
@@ -276,12 +205,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				if (value.HasValue)
 				{
-					var newProperty = new DataDateProperty ((int) field, value.Value);
+					var newProperty = new DataDateProperty (field, value.Value);
 					e.AddProperty (newProperty);
 				}
 				else
 				{
-					e.RemoveProperty ((int) field);
+					e.RemoveProperty (field);
 				}
 			}
 		}
@@ -296,7 +225,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			get
 			{
-				var obj = this.mandat.Objects[this.editionObjectGuid];
+				var obj = this.mandat.GetData (this.editionBaseType)[this.editionObjectGuid];
 
 				if (obj != null && this.editionTimestamp.HasValue)
 				{
@@ -345,6 +274,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private readonly DataMandat				mandat;
 
+		private BaseType						editionBaseType;
 		private Guid							editionObjectGuid;
 		private Timestamp?						editionTimestamp;
 	}

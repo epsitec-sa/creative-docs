@@ -13,19 +13,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectEditorPageCategory(DataAccessor accessor)
 			: base (accessor)
 		{
+			this.baseType = BaseType.Categories;
 		}
 
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateIntController     (parent, ObjectField.CatégorieLevel);
-			this.CreateStringController  (parent, ObjectField.CatégorieNuméro, editWidth: 90);
-			this.CreateStringController  (parent, ObjectField.CatégorieNom);
-			this.CreateStringController  (parent, ObjectField.CatégorieDescription, lineCount: 5);
-			this.CreateDecimalController (parent, ObjectField.CatégorieTauxAmortissement, DecimalFormat.Rate);
-			this.CreateStringController  (parent, ObjectField.CatégorieTypeAmortissement, editWidth: 90);
-			this.CreateStringController  (parent, ObjectField.CatégoriePériodicité, editWidth: 90);
-			this.CreateDecimalController (parent, ObjectField.CatégorieValeurRésiduelle, DecimalFormat.Amount);
+			this.CreateIntController     (parent, ObjectField.Level);
+			this.CreateStringController  (parent, ObjectField.Numéro, editWidth: 90);
+			this.CreateStringController  (parent, ObjectField.Nom);
+			this.CreateStringController  (parent, ObjectField.Description, lineCount: 5);
+			this.CreateDecimalController (parent, ObjectField.TauxAmortissement, DecimalFormat.Rate);
+			this.CreateStringController  (parent, ObjectField.TypeAmortissement, editWidth: 90);
+			this.CreateStringController  (parent, ObjectField.Périodicité, editWidth: 90);
+			this.CreateDecimalController (parent, ObjectField.ValeurRésiduelle, DecimalFormat.Amount);
 		}
 	}
 }

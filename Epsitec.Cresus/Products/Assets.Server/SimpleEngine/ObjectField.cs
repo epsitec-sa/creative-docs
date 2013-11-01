@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		TauxAmortissement,
 		TypeAmortissement,
 		FréquenceAmortissement,
+		Périodicité,
 		ValeurRésiduelle,
 
 		Compte1,
@@ -38,15 +39,5 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Compte6,
 		Compte7,
 		Compte8,
-
-		//	Champs d'une catégorie d'immobilisation:
-		CatégorieLevel,
-		CatégorieNom,
-		CatégorieNuméro,
-		CatégorieDescription,
-		CatégorieTauxAmortissement,
-		CatégorieTypeAmortissement,
-		CatégoriePériodicité,
-		CatégorieValeurRésiduelle,
 	}
 }
