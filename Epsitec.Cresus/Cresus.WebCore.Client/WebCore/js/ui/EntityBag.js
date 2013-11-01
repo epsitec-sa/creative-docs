@@ -126,6 +126,13 @@ function() {
       }
     },
 
+    createToolbar: function() {
+      return Ext.create('Ext.Toolbar', {
+        dock: 'top',
+        items: this.createButtons()
+      });
+    },
+
     createEntityView: function() {
       return Ext.create('Ext.view.View', {
         cls: 'entitybag-view',
@@ -142,9 +149,17 @@ function() {
         store: this.bagStore,
         listeners: {
             render: this.initializeEntityDragZone,
+            destroy: this.unregEntityDragZone,
             scope: this
         }
     });      
+    },
+
+    unregEntityDragZone: function (v) {
+      if(v.dragZone)
+      {
+        v.dragZone.unreg();
+      }
     },
 
     initializeEntityDragZone: function (v) {
