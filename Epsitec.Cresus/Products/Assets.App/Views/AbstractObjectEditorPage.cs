@@ -36,10 +36,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		public virtual void SetObject(Guid objectGuid, Timestamp timestamp)
+		public virtual void SetObject(DataObject obj, Guid objectGuid, Timestamp timestamp)
 		{
+			this.obj        = obj;
 			this.objectGuid = objectGuid;
-			this.obj        = this.accessor.GetObject (this.objectGuid);
 			this.timestamp  = timestamp;
 			this.hasEvent   = false;
 			this.eventType  = EventType.Unknown;

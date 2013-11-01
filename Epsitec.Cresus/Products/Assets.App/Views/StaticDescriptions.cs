@@ -88,6 +88,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Compte8:
 					return "Amortissement extra. ou rééval.";
 
+				//	Catégorie d'immobilisation :
+
+				case ObjectField.CatégorieLevel:
+					return "Niveau";
+
+				case ObjectField.CatégorieNom:
+					return "Nom";
+
+				case ObjectField.CatégorieNuméro:
+					return "Numéro";
+
+				case ObjectField.CatégorieDescription:
+					return "Description";
+
+				case ObjectField.CatégorieTauxAmortissement:
+					return "Taux";
+
+				case ObjectField.CatégorieTypeAmortissement:
+					return "Type";
+
+				case ObjectField.CatégoriePériodicité:
+					return "Périodicité";
+
+				case ObjectField.CatégorieValeurRésiduelle:
+					return "Valeur résiduelle";
+
 				default:
 					return null;
 			}

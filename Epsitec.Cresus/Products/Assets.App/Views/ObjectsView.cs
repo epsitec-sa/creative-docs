@@ -559,6 +559,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
 			}
+
+			this.mainToolbar.SetCommandState (ToolbarCommand.Amortissement, ToolbarCommandState.Enable);
 		}
 
 		private bool IsEditingPossible

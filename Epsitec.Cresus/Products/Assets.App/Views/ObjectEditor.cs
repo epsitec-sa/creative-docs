@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.currentPage = AbstractObjectEditorPage.CreatePage (this.accessor, type);
 			this.currentPage.CreateUI (this.editFrameBox);
-			this.currentPage.SetObject (this.objectGuid, this.timestamp);
+			this.currentPage.SetObject (this.accessor.GetObject (this.objectGuid), this.objectGuid, this.timestamp);
 			this.currentPage.SetFocus (focusedField);
 
 			this.currentPage.ValueEdited += delegate (object sender, ObjectField field)
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.lastEventType = this.eventType;
 			}
 
-			this.currentPage.SetObject (this.objectGuid, this.timestamp);
+			this.currentPage.SetObject (this.accessor.GetObject (this.objectGuid), this.objectGuid, this.timestamp);
 
 			this.topTitle.SetTitle (this.EventDescription);
 		}
@@ -320,9 +320,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly List<NavigatorLevel>		navigatorLevels;
 
+		private TopTitle							topTitle;
 		private NavigatorController					navigatorController;
 		private FrameBox							editFrameBox;
-		private TopTitle							topTitle;
 		private AbstractObjectEditorPage			currentPage;
 
 		private Guid								objectGuid;
