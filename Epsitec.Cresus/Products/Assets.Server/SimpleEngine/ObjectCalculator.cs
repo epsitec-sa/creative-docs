@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Server.NaiveEngine
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public static class ObjectCalculator
 	{

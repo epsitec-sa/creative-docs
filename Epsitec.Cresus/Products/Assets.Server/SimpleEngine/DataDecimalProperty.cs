@@ -5,16 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Epsitec.Cresus.Assets.Server.NaiveEngine
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public class DataDateProperty : AbstractDataProperty
+	public class DataDecimalProperty : AbstractDataProperty
 	{
-		public DataDateProperty(int id, System.DateTime value)
+		public DataDecimalProperty(int id, decimal value)
 			: base (id)
 		{
 			this.Value = value;
 		}
 
-		public readonly System.DateTime Value;
+		public readonly decimal Value;
 	}
 }

@@ -5,16 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Epsitec.Cresus.Assets.Server.NaiveEngine
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public class DataComputedAmountProperty : AbstractDataProperty
+	public class DataIntProperty : AbstractDataProperty
 	{
-		public DataComputedAmountProperty(int id, ComputedAmount value)
+		public DataIntProperty(int id, int value)
 			: base (id)
 		{
 			this.Value = value;
 		}
 
-		public readonly ComputedAmount Value;
+		public readonly int Value;
 	}
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Epsitec.Cresus.Assets.Server.NaiveEngine
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public class DataObject : IGuid
 	{
@@ -114,8 +114,7 @@ namespace Epsitec.Cresus.Assets.Server.NaiveEngine
 				return p;
 			}
 
-			// Implémentation totalement naïve qui cherche depuis la date donnée
-			// en remontant dans le passé.
+			// On cherche depuis la date donnée en remontant dans le passé.
 			var e = this.events
 				.Where (x => x.Timestamp <= timestamp && x.GetProperty (id) != null)
 				.LastOrDefault ();

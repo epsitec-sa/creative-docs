@@ -53,30 +53,30 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="NaiveEngine\AbstractDataProperty.cs" />
-    <Compile Include="NaiveEngine\CategoryField.cs" />
-    <Compile Include="NaiveEngine\ComputedAmount.cs" />
-    <Compile Include="NaiveEngine\ObjectCalculator.cs" />
-    <Compile Include="NaiveEngine\GuidList.cs" />
-    <Compile Include="NaiveEngine\DataDateProperty.cs" />
-    <Compile Include="NaiveEngine\DataComputedAmountProperty.cs" />
-    <Compile Include="NaiveEngine\FieldType.cs" />
-    <Compile Include="NaiveEngine\IGuid.cs" />
-    <Compile Include="NaiveEngine\PropertyState.cs" />
-    <Compile Include="NaiveEngine\EventType.cs" />
-    <Compile Include="NaiveEngine\DummyMandat.cs" />
-    <Compile Include="NaiveEngine\Guid.cs" />
-    <Compile Include="NaiveEngine\ObjectField.cs" />
-    <Compile Include="NaiveEngine\DataAccessor.cs" />
-    <Compile Include="NaiveEngine\DataDecimalProperty.cs" />
-    <Compile Include="NaiveEngine\Test.cs" />
-    <Compile Include="NaiveEngine\DataEvent.cs" />
-    <Compile Include="NaiveEngine\DataIntProperty.cs" />
-    <Compile Include="NaiveEngine\DataLinkProperty.cs" />
-    <Compile Include="NaiveEngine\DataMandat.cs" />
-    <Compile Include="NaiveEngine\DataObject.cs" />
-    <Compile Include="NaiveEngine\DataStringProperty.cs" />
-    <Compile Include="NaiveEngine\Timestamp.cs" />
+    <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
+    <Compile Include="SimpleEngine\CategoryField.cs" />
+    <Compile Include="SimpleEngine\ComputedAmount.cs" />
+    <Compile Include="SimpleEngine\ObjectCalculator.cs" />
+    <Compile Include="SimpleEngine\GuidList.cs" />
+    <Compile Include="SimpleEngine\DataDateProperty.cs" />
+    <Compile Include="SimpleEngine\DataComputedAmountProperty.cs" />
+    <Compile Include="SimpleEngine\FieldType.cs" />
+    <Compile Include="SimpleEngine\IGuid.cs" />
+    <Compile Include="SimpleEngine\PropertyState.cs" />
+    <Compile Include="SimpleEngine\EventType.cs" />
+    <Compile Include="SimpleEngine\DummyMandat.cs" />
+    <Compile Include="SimpleEngine\Guid.cs" />
+    <Compile Include="SimpleEngine\ObjectField.cs" />
+    <Compile Include="SimpleEngine\DataAccessor.cs" />
+    <Compile Include="SimpleEngine\DataDecimalProperty.cs" />
+    <Compile Include="SimpleEngine\Test.cs" />
+    <Compile Include="SimpleEngine\DataEvent.cs" />
+    <Compile Include="SimpleEngine\DataIntProperty.cs" />
+    <Compile Include="SimpleEngine\DataLinkProperty.cs" />
+    <Compile Include="SimpleEngine\DataMandat.cs" />
+    <Compile Include="SimpleEngine\DataObject.cs" />
+    <Compile Include="SimpleEngine\DataStringProperty.cs" />
+    <Compile Include="SimpleEngine\Timestamp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,16 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Epsitec.Cresus.Assets.Server.NaiveEngine
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public class DataIntProperty : AbstractDataProperty
+	public class DataStringProperty : AbstractDataProperty
 	{
-		public DataIntProperty(int id, int value)
+		public DataStringProperty(int id, string value)
 			: base (id)
 		{
 			this.Value = value;
 		}
 
-		public readonly int Value;
+		public readonly string Value;
 	}
 }
