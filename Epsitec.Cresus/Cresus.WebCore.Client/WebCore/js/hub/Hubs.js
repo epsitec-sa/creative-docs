@@ -1,4 +1,4 @@
-$.getScript('signalr/hubs', function() {
+//$.getScript('signalr/hubs', function() {
   Ext.require([
   ],
   function() {
@@ -46,4 +46,4 @@ $.getScript('signalr/hubs', function() {
 
     });
   });
-});
+//});
