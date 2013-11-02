@@ -145,11 +145,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case EditionObjectPageType.Amortissements:
 					return "Amortissements";
 
+				case EditionObjectPageType.Category:
+					return "Général";
+
 				case EditionObjectPageType.Compta:
 					return "Comptabilisation";
-
-				case EditionObjectPageType.Category:
-					return "Catégorie";
 
 				default:
 					return null;

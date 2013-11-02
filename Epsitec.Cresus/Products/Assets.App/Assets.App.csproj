@@ -97,7 +97,7 @@
     <Compile Include="Views\AbstractObjectEditorPage.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\BusinessLogic.cs" />
-    <Compile Include="Views\CategoryEditor.cs" />
+    <Compile Include="Views\TabPagesController.cs" />
     <Compile Include="Views\ObjectEditorPageCategory.cs" />
     <Compile Include="Views\IntFieldController.cs" />
     <Compile Include="Views\Format.cs" />
