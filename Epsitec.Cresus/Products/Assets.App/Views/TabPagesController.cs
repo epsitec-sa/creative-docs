@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			button.Clicked += delegate
 			{
-				//?this.Selection = rank;
+				this.Selection = rank;
 				this.OnItemClicked (rank);
 			};
 		}
