@@ -38,7 +38,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				yield return EditionObjectPageType.General;
 				yield return EditionObjectPageType.Values;
 				yield return EditionObjectPageType.Amortissements;
-				yield return EditionObjectPageType.Compta;
 			}
 		}
 
@@ -144,16 +143,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.ValeurRésiduelle:
 					return EditionObjectPageType.Amortissements;
 
-				case ObjectField.Compte1:
-				case ObjectField.Compte2:
-				case ObjectField.Compte3:
-				case ObjectField.Compte4:
-				case ObjectField.Compte5:
-				case ObjectField.Compte6:
-				case ObjectField.Compte7:
-				case ObjectField.Compte8:
-					return EditionObjectPageType.Compta;
-
 				default:
 					return EditionObjectPageType.General;
 			}
@@ -185,7 +174,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				list.Add ("Général");
 				list.Add ("Valeurs");
 				list.Add ("Amortissements");
-				list.Add ("Comptabilisation");
 
 				return list;
 			}
@@ -229,19 +217,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					(int) ObjectField.ValeurRésiduelle,
 				};
 				list.Add (c3);
-
-				var c4 = new List<int> ()
-				{
-					(int) ObjectField.Compte1,
-					(int) ObjectField.Compte2,
-					(int) ObjectField.Compte3,
-					(int) ObjectField.Compte4,
-					(int) ObjectField.Compte5,
-					(int) ObjectField.Compte6,
-					(int) ObjectField.Compte7,
-					(int) ObjectField.Compte8,
-				};
-				list.Add (c4);
 
 				return list;
 			}
