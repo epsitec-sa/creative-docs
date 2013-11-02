@@ -57,7 +57,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void UpdatePropertyState()
 		{
 			base.UpdatePropertyState ();
+
 			AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
+			this.UpdateTextField (this.textField);
 		}
 
 
@@ -73,7 +75,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock            = DockStyle.Left,
 				TabIndex        = this.TabIndex,
 				Text            = DateFieldController.ConvDateToString (this.value),
-				IsReadOnly      = this.PropertyState == PropertyState.Readonly,
 			};
 
 			var minus = new GlyphButton

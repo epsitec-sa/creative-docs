@@ -106,34 +106,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var o = new DataObject ();
 				objects.Add (o);
 
-				{
-					var e = new DataEvent (start, EventType.Entrée);
-					o.AddEvent (e);
-					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
-					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.1.3"));
-					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre d'expédition"));
-					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (2100000.0m)));
-					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (3000000.0m)));
-					e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Sandra"));
-					DummyMandat.AddAmortissement1 (e);
-				}
-
-				{
-					var e = new DataEvent (date1, EventType.Modification);
-					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie,           "Immobilier"));
-					e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement,      0.075m));
-					e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement,      "Dégressif"));
-					e.AddProperty (new DataIntProperty     (ObjectField.FréquenceAmortissement, 12));
-					e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,       1.0m));
-				}
-
-				{
-					var e = new DataEvent (date3, EventType.Modification);
-					o.AddEvent (e);
-					e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement,      0.085m));
-					e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement,      "Linéaire"));
-				}
+				var e = new DataEvent (start, EventType.Entrée);
+				o.AddEvent (e);
+				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.1.3"));
+				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre d'expédition"));
+				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (2100000.0m)));
+				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (3000000.0m)));
+				e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Sandra"));
+				DummyMandat.AddAmortissement1 (e);
 			}
 
 			{
@@ -635,6 +616,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Linéaire"));
 					e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Annuelle"));
 					e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  1000.0m));
+
+					e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
+					e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
+					e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
+					e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
+					e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
+					e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
+					e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
+					e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
 				}
 
 				{
@@ -664,6 +654,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Linéaire"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Annuelle"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  10000.0m));
+
+				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
 			}
 
 			{
@@ -690,6 +689,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Dégressif"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Trimestrielle"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  100.0m));
+
+				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
 			}
 
 			{
@@ -705,6 +713,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Dégressif"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Semestrielle"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  100.0m));
+
+				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
 			}
 
 			{
@@ -720,46 +737,26 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Dégressif"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Semestrielle"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  100.0m));
+
+				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
+				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
 			}
 		}
 
 		private static void AddAmortissement1(DataEvent e)
 		{
-			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie,           "Immobilier"));
-			e.AddProperty (new DataDateProperty    (ObjectField.DateAmortissement1,     new System.DateTime (2014, 1, 1)));
-			e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement,      0.035m));
-			e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement,      "Dégressif"));
-			e.AddProperty (new DataIntProperty     (ObjectField.FréquenceAmortissement, 6));
-			e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,       1.0m));
-
-			e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie1, "Bureaux"));
 		}
 
 		private static void AddAmortissement2(DataEvent e)
 		{
-			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie,           "Véhicule"));
-			e.AddProperty (new DataDateProperty    (ObjectField.DateAmortissement1,     new System.DateTime (2013, 3, 1)));
-			e.AddProperty (new DataDateProperty    (ObjectField.DateAmortissement2,     new System.DateTime (2014, 1, 1)));
-			e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement,      0.18m));
-			e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement,      "Linéaire"));
-			e.AddProperty (new DataIntProperty     (ObjectField.FréquenceAmortissement, 12));
-			e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,       1.0m));
-
-			e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-			e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie1, "Voiture"));
 		}
 	}
 

@@ -283,13 +283,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var p = ObjectCalculator.GetObjectSyntheticProperty (this.obj, this.timestamp, field);
 
-				if (p != null)
+				if (p == null)
+				{
+					return PropertyState.Synthetic;
+				}
+				else
 				{
 					return p.State;
 				}
 			}
-
-			return PropertyState.Readonly;
+			else
+			{
+				return PropertyState.Readonly;
+			}
 		}
 
 

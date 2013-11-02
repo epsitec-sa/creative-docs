@@ -59,7 +59,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void UpdatePropertyState()
 		{
 			base.UpdatePropertyState ();
+
 			AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
+			this.UpdateTextField (this.textField);
 		}
 
 
@@ -78,7 +80,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					Margins         = new Margins (0, 10, 0, 0),
 					TabIndex        = this.TabIndex,
 					Text            = this.value,
-					IsReadOnly      = this.PropertyState == PropertyState.Readonly,
 				};
 			}
 			else
@@ -92,7 +93,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					Margins         = new Margins (0, 10, 0, 0),
 					TabIndex        = this.TabIndex,
 					Text            = this.value,
-					IsReadOnly      = this.PropertyState == PropertyState.Readonly,
 				};
 			}
 

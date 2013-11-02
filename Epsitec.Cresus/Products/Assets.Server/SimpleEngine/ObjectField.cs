@@ -15,14 +15,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Numéro,
 		Nom,
 		Description,
-		Valeur1,
-		Valeur2,
-		Valeur3,
 		Responsable,
 		Couleur,
 		NuméroSérie,
 
-		NomCatégorie,
+		Valeur1,
+		Valeur2,
+		Valeur3,
+
+		NomCatégorie1,
+		NomCatégorie2,
+		NomCatégorie3,
+
 		DateAmortissement1,
 		DateAmortissement2,
 		TauxAmortissement,

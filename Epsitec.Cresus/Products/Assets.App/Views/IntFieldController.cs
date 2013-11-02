@@ -58,12 +58,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.UpdatePropertyState ();
 
-			if (this.textField != null)
-			{
-				this.textField.IsReadOnly = this.PropertyState == PropertyState.Readonly;
-			}
-
 			AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
+			this.UpdateTextField (this.textField);
 		}
 
 
@@ -79,7 +75,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock            = DockStyle.Left,
 				TabIndex        = this.TabIndex,
 				Text            = IntFieldController.ConvIntToString (this.value),
-				//?IsReadOnly      = this.PropertyState == PropertyState.Readonly,
 			};
 
 			var minus = new GlyphButton

@@ -356,7 +356,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				yield return ObjectField.Couleur;
 				yield return ObjectField.NuméroSérie;
 
-				yield return ObjectField.NomCatégorie;
+				yield return ObjectField.NomCatégorie1;
+				yield return ObjectField.NomCatégorie2;
+				yield return ObjectField.NomCatégorie3;
+
 				yield return ObjectField.DateAmortissement1;
 				yield return ObjectField.DateAmortissement2;
 				yield return ObjectField.TauxAmortissement;

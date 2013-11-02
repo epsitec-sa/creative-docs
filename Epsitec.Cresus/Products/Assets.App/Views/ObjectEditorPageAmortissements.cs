@@ -28,13 +28,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateStringController  (parent, ObjectField.NomCatégorie);
-			this.CreateDateController    (parent, ObjectField.DateAmortissement1);
-			this.CreateDateController    (parent, ObjectField.DateAmortissement2);
-			this.CreateDecimalController (parent, ObjectField.TauxAmortissement, DecimalFormat.Rate);
-			this.CreateStringController  (parent, ObjectField.TypeAmortissement, editWidth: 90);
-			this.CreateIntController     (parent, ObjectField.FréquenceAmortissement);
-			this.CreateDecimalController (parent, ObjectField.ValeurRésiduelle, DecimalFormat.Amount);
+			this.CreateStringController (parent, ObjectField.NomCatégorie1);
+			this.CreateStringController (parent, ObjectField.NomCatégorie2);
+			this.CreateStringController (parent, ObjectField.NomCatégorie3);
 		}
 	}
 }

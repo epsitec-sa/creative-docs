@@ -80,6 +80,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public PropertyState					PropertyState
+		{
+			get
+			{
+				return this.propertyState;
+			}
+			set
+			{
+				if (this.propertyState != value)
+				{
+					this.propertyState = value;
+					this.UpdateUI ();
+				}
+			}
+		}
+
 
 		public void UpdateValue()
 		{
@@ -407,6 +423,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					AbstractFieldController.UpdateBackColor (this.finalTextField,    Color.Empty);
 				}
 
+				this.argumentTextField.IsReadOnly = this.propertyState == PropertyState.Readonly;
+				this.finalTextField   .IsReadOnly = this.propertyState == PropertyState.Readonly;
+
 				this.addSubButton     .Enable     = !this.isReadOnly;
 				this.rateButton       .Enable     = !this.isReadOnly;
 				this.equalText        .Enable     = !this.isReadOnly;
@@ -515,6 +534,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private ComputedAmount?					computedAmount;
 		private bool							isReadOnly;
 		private Color							backgroundColor;
+		private PropertyState					propertyState;
 
 		private GlyphButton						addSubButton;
 		private TextField						argumentTextField;

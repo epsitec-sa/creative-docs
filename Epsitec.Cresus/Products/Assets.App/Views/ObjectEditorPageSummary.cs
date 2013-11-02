@@ -134,13 +134,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Valeur3:
 					return EditionObjectPageType.Values;
 
-				case ObjectField.NomCatégorie:
-				case ObjectField.DateAmortissement1:
-				case ObjectField.DateAmortissement2:
-				case ObjectField.TauxAmortissement:
-				case ObjectField.TypeAmortissement:
-				case ObjectField.FréquenceAmortissement:
-				case ObjectField.ValeurRésiduelle:
+				case ObjectField.NomCatégorie1:
+				case ObjectField.NomCatégorie2:
+				case ObjectField.NomCatégorie3:
 					return EditionObjectPageType.Amortissements;
 
 				default:
@@ -208,13 +204,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				var c3 = new List<int> ()
 				{
-					(int) ObjectField.NomCatégorie,
-					(int) ObjectField.DateAmortissement1,
-					(int) ObjectField.DateAmortissement2,
-					(int) ObjectField.TauxAmortissement,
-					(int) ObjectField.TypeAmortissement,
-					(int) ObjectField.FréquenceAmortissement,
-					(int) ObjectField.ValeurRésiduelle,
+					(int) ObjectField.NomCatégorie1,
+					(int) ObjectField.NomCatégorie2,
+					(int) ObjectField.NomCatégorie3,
 				};
 				list.Add (c3);
 

@@ -150,6 +150,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		protected void UpdateTextField(AbstractTextField textField)
+		{
+			if (textField != null)
+			{
+				bool isReadOnly = (this.propertyState == PropertyState.Readonly);
+
+				if (textField.IsReadOnly != isReadOnly)
+				{
+					textField.IsReadOnly = isReadOnly;
+					textField.Invalidate ();  // TODO: pour corriger un bug de Widget !
+				}
+			}
+		}
+
 		protected Color BackgroundColor
 		{
 			get
