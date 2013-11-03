@@ -200,6 +200,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return frame;
 		}
 
+		protected FrameBox CreateFrame(int x, int y, int dx, int dy)
+		{
+			x += (int) this.dialogRect.Left;
+			y += (int) this.dialogRect.Bottom;
+
+			return new FrameBox
+			{
+				Parent        = this,
+				Anchor        = AnchorStyles.BottomLeft,
+				PreferredSize = new Size (dx, dy),
+				Margins       = new Margins (x, 0, 0, y),
+			};
+		}
+
 		protected Button CreateButton(int x, int y, int dx, int dy, string name, string text, string tooltip = null)
 		{
 			x += (int) this.dialogRect.Left;

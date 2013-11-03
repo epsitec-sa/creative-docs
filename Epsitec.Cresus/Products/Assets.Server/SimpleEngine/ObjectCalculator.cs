@@ -8,6 +8,128 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public static class ObjectCalculator
 	{
+		#region Plausible event logic
+		public static IEnumerable<EventType> GetPlausibleEventTypes(BaseType baseType, DataObject obj, Timestamp timestamp)
+		{
+			switch (baseType)
+			{
+				case BaseType.Objects:
+					return ObjectCalculator.GetPlausibleObjectEventTypes (obj, timestamp);
+
+				case BaseType.Categories:
+					return ObjectCalculator.GetPlausibleCategoryEventTypes (obj, timestamp);
+
+				default:
+					return null;
+			}
+		}
+
+		private static IEnumerable<EventType> GetPlausibleObjectEventTypes(DataObject obj, Timestamp timestamp)
+		{
+			var prevEvent = ObjectCalculator.GetPrevEvent (obj, timestamp);
+			var nextEvent = ObjectCalculator.GetNextEvent (obj, timestamp);
+
+			if ((prevEvent == TerminalEvent.None || prevEvent == TerminalEvent.Out) &&
+				nextEvent == TerminalEvent.None)
+			{
+				yield return EventType.Entrée;
+			}
+
+			if ((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
+				nextEvent != TerminalEvent.In)
+			{
+				yield return EventType.Modification;
+				yield return EventType.Réorganisation;
+				yield return EventType.Augmentation;
+				yield return EventType.Diminution;
+				yield return EventType.AmortissementExtra;
+			}
+
+			if ((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
+				nextEvent == TerminalEvent.None)
+			{
+				yield return EventType.Sortie;
+			}
+		}
+
+		private static IEnumerable<EventType> GetPlausibleCategoryEventTypes(DataObject obj, Timestamp timestamp)
+		{
+			var prevEvent = ObjectCalculator.GetPrevEvent (obj, timestamp);
+			var nextEvent = ObjectCalculator.GetNextEvent (obj, timestamp);
+
+			if ((prevEvent == TerminalEvent.None || prevEvent == TerminalEvent.Out) &&
+				nextEvent == TerminalEvent.None)
+			{
+				yield return EventType.Entrée;
+			}
+
+			if ((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
+				nextEvent != TerminalEvent.In)
+			{
+				yield return EventType.Modification;
+			}
+
+			if ((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
+				nextEvent == TerminalEvent.None)
+			{
+				yield return EventType.Sortie;
+			}
+		}
+
+		private static TerminalEvent GetPrevEvent(DataObject obj, Timestamp timestamp)
+		{
+			int i = obj.Events.Where (x => x.Timestamp <= timestamp).Count () - 1;
+
+			if (i >= 0 && i < obj.EventsCount)
+			{
+				switch (obj.GetEvent (i).Type)
+				{
+					case EventType.Entrée:
+						return TerminalEvent.In;
+
+					case EventType.Sortie:
+						return TerminalEvent.Out;
+
+					default:
+						return TerminalEvent.Other;
+				}
+			}
+
+			return TerminalEvent.None;
+		}
+
+		private static TerminalEvent GetNextEvent(DataObject obj, Timestamp timestamp)
+		{
+			int i = obj.Events.Where (x => x.Timestamp <= timestamp).Count ();
+
+			if (i >= 0 && i < obj.EventsCount)
+			{
+				switch (obj.GetEvent (i).Type)
+				{
+					case EventType.Entrée:
+						return TerminalEvent.In;
+
+					case EventType.Sortie:
+						return TerminalEvent.Out;
+
+					default:
+						return TerminalEvent.Other;
+				}
+			}
+
+			return TerminalEvent.None;
+		}
+
+		private enum TerminalEvent
+		{
+			None,
+			In,
+			Out,
+			Other,
+		}
+		#endregion
+
+
 		public static bool IsExistingObject(DataObject obj, Timestamp timestamp)
 		{
 			if (obj.EventsCount > 0)
@@ -20,6 +142,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		#region Get properties
 		public static int? GetObjectPropertyInt(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
 		{
 			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataIntProperty;
@@ -133,6 +256,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return obj.GetSyntheticProperty (timestamp.Value, field);
 			}
 		}
+		#endregion
 
 
 		public static void RemoveAmortissementsAuto(DataObject obj)
@@ -150,7 +274,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-	
+
+		#region Update computed amount
 		public static void UpdateComputedAmounts(DataObject obj)
 		{
 			if (obj != null)
@@ -232,5 +357,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					return ObjectField.Unknown;
 			}
 		}
+		#endregion
 	}
 }

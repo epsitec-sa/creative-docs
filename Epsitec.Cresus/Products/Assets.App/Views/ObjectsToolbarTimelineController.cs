@@ -180,6 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.objectGuid != value)
 				{
 					this.objectGuid = value;
+					this.obj = this.accessor.GetObject (this.baseType, this.objectGuid);
 
 					using (new SaveCurrentDate (this))
 					{
@@ -292,8 +293,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				var popup = new NewEventPopup
 				{
-					BaseType = this.baseType,
-					Date     = timestamp.Value.Date,
+					BaseType   = this.baseType,
+					DataObject = this.obj,
+					Timestamp  = timestamp.Value,
 				};
 
 				popup.Create (target);
@@ -362,8 +364,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (!guid.IsEmpty)
 			{
 				var type = ObjectsToolbarTimelineController.ParseEventType (buttonName);
-				var obj = this.accessor.GetObject (this.baseType, guid);
-				var e = this.accessor.CreateObjectEvent (obj, date, type);
+				var e = this.accessor.CreateObjectEvent (this.obj, date, type);
 
 				if (e != null)
 				{
@@ -931,5 +932,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private int								selectedCell;
 		private TimelineMode					timelineMode;
 		private Guid							objectGuid;
+		private DataObject						obj;
 	}
 }
