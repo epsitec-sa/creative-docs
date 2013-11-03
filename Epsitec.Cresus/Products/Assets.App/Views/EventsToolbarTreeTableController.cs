@@ -76,7 +76,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				var popup = new NewEventPopup
 				{
-					Date = timestamp.Value.Date,
+					BaseType = this.baseType,
+					Date     = timestamp.Value.Date,
 				};
 
 				popup.Create (target);

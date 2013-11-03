@@ -12,13 +12,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class NewEventPopup : AbstractPopup
 	{
+		public BaseType							BaseType;
 		public System.DateTime					Date;
 
 		protected override Size					DialogSize
 		{
 			get
 			{
-				return this.GetDialogSize (7);
+				return this.GetDialogSize (this.ButtonDescriptions.Count ());
 			}
 		}
 
@@ -31,19 +32,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.CreateDateUI ();
 
-			this.CreateButton (x, y, dx, dy, EventType.Entrée, "Entrée", "Entrée dans l'inventaire, acquisition");
-			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, EventType.Modification, "Modification", "Modification de diverses informations");
-			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, EventType.Réorganisation, "Réorganisation", "Modification pour MCH2");
-			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, EventType.Augmentation, "Augmentation", "Revalorisation à la hausse de la valeur");
-			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, EventType.Diminution, "Diminution", "Réévaluation à la baisse de la valeur");
-			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, EventType.AmortissementExtra, "Amortissement extraordinaire", "Amortissement manuel");
-			y -= dy+NewEventPopup.buttonGap;
-			this.CreateButton (x, y, dx, dy, EventType.Sortie, "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.");
+			foreach (var desc in this.ButtonDescriptions)
+			{
+				this.CreateButton (x, y, dx, dy, desc.Type, desc.Text, desc.Tooltip);
+				y -= dy+NewEventPopup.buttonGap;
+			}
 
 			this.CreateCloseButton ();
 		}
@@ -82,6 +75,46 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			return new Size (dx, dy);
 		}
+
+
+		private IEnumerable<ButtonDescription> ButtonDescriptions
+		{
+			get
+			{
+				switch (this.BaseType)
+				{
+					case BaseType.Objects:
+						yield return new ButtonDescription (EventType.Entrée,             "Entrée",                       "Entrée dans l'inventaire, acquisition");
+						yield return new ButtonDescription (EventType.Modification,       "Modification",                 "Modification de diverses informations");
+						yield return new ButtonDescription (EventType.Réorganisation,     "Réorganisation",               "Modification pour MCH2");
+						yield return new ButtonDescription (EventType.Augmentation,       "Augmentation",                 "Revalorisation à la hausse de la valeur");
+						yield return new ButtonDescription (EventType.Diminution,         "Diminution",                   "Réévaluation à la baisse de la valeur");
+						yield return new ButtonDescription (EventType.AmortissementExtra, "Amortissement extraordinaire", "Amortissement manuel");
+						yield return new ButtonDescription (EventType.Sortie,             "Sortie",                       "Sortie de l'inventaire, vente, vol, destruction, etc.");
+						break;
+
+					case BaseType.Categories:
+						yield return new ButtonDescription (EventType.Entrée,       "Création",     "Création de la catégorie d'immobilisation");
+						yield return new ButtonDescription (EventType.Modification, "Modification", "Modification de la catégorie d'immobilisation");
+						yield return new ButtonDescription (EventType.Sortie,       "Suppression",  "Suppression de la catégorie d'immobilisation");
+						break;
+				}
+			}
+		}
+
+		private struct ButtonDescription
+		{
+			public ButtonDescription(EventType type, string text, string tooltip)
+			{
+				this.Type    = type;
+				this.Text    = text;
+				this.Tooltip = tooltip;
+			}
+
+			public readonly EventType	Type;
+			public readonly string		Text;
+			public readonly string		Tooltip;
+		};
 
 
 		#region Events handler
