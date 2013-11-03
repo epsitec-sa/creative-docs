@@ -12,11 +12,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectEditorPageSummary : AbstractObjectEditorPage
 	{
-		public ObjectEditorPageSummary(DataAccessor accessor)
-			: base (accessor)
+		public ObjectEditorPageSummary(DataAccessor accessor, BaseType baseType)
+			: base (accessor, baseType)
 		{
-			this.baseType = BaseType.Objects;
-
 			this.summaryController = new ObjectSummaryController
 			(
 				this.accessor,

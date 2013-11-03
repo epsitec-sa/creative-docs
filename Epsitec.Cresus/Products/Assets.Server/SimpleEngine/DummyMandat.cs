@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public class DummyMandat
+	public static class DummyMandat
 	{
 		public static DataMandat GetDummyMandat()
 		{
@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,   "Immobilisations"));
 			}
@@ -42,6 +43,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,  1));
 				e.AddProperty (new DataStringProperty (ObjectField.Numéro, "1"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Bâtiments"));
@@ -53,6 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,  2));
 				e.AddProperty (new DataStringProperty (ObjectField.Numéro, "1.1"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Immeubles"));
@@ -65,6 +68,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Entrée);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.1.1"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre administratif"));
@@ -79,6 +83,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					{
 						var e = new DataEvent (new Timestamp (start.Date.AddDays (i*3), 0), EventType.AmortissementAuto);
 						o.AddEvent (e);
+						e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 
 						decimal a1 = 3000000.0m-(i-1)*10000;
 						decimal a2 = 3000000.0m-i*10000;
@@ -93,6 +98,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (date1, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.1.2"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre logistique"));
@@ -108,6 +114,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.1.3"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre d'expédition"));
@@ -123,6 +130,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.Level,       2));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "1.2"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Usines"));
@@ -134,6 +142,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.2.1"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre d'usinage"));
@@ -149,6 +158,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.2.2"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre d'assemblage"));
@@ -164,6 +174,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.Level,       2));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "1.3"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Entrepôts"));
@@ -175,6 +186,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.3.1"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Dépôt principal"));
@@ -190,6 +202,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.3.2"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Dépôt secondaire"));
@@ -205,6 +218,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.3.3"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre de recyclage"));
@@ -220,6 +234,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.Level,       1));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "2"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Véhicules"));
@@ -231,6 +246,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.Level,       2));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "2.1"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Camions"));
@@ -242,6 +258,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.1"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Scania X20"));
@@ -259,6 +276,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.2"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Scania X30 semi"));
@@ -276,6 +294,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.3"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Volvo T-200"));
@@ -292,6 +311,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.4"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Volvo R-500"));
@@ -309,6 +329,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.5"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Volvo P-810"));
@@ -325,6 +346,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.Level,       2));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "2.2"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Camionnettes"));
@@ -336,6 +358,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.2.1"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Renault Doblo"));
@@ -353,6 +376,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.2.2"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Ford Transit"));
@@ -369,6 +393,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.Level,       2));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "2.3"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Voitures"));
@@ -380,6 +405,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataIntProperty    (ObjectField.EvNuméro, DummyMandat.EventNumber++));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.1"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Citroën C4 Picasso"));
@@ -397,6 +423,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.2"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Opel Corsa"));
@@ -414,6 +441,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.3"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Fiat Panda"));
@@ -429,6 +457,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.4"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Fiat Uno"));
@@ -445,6 +474,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.5"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Fiat Uno"));
@@ -463,6 +493,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Entrée);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.6"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Toyota Yaris Verso"));
@@ -476,37 +507,43 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (date1, EventType.Entrée);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2, new ComputedAmount (12000.0m)));
 				}
 
 				{
 					var e = new DataEvent (date1b, EventType.Augmentation);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2, new ComputedAmount (12000.0m, 12500.0m)));
 				}
 
 				{
 					var e = new DataEvent (date3, EventType.Modification);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty  (ObjectField.Responsable, "Georges"));
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
+					e.AddProperty (new DataStringProperty (ObjectField.Responsable, "Georges"));
 				}
 
 				{
 					var e = new DataEvent (date4, EventType.Diminution);
 					o.AddEvent (e);
-					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (16000.0m, 14500.0m, true)));
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
+					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (16000.0m, 14500.0m, true)));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (12500.0m, 11000.0m)));
 				}
 
 				{
 					var e = new DataEvent (date4b, EventType.Modification);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataStringProperty (ObjectField.Responsable, "Damien"));
 				}
 
 				{
 					var e = new DataEvent (date5, EventType.Diminution);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (12000.0m)));
 				}
 			}
@@ -518,6 +555,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Entrée);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.7"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Toyota Corolla"));
@@ -532,12 +570,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (date1, EventType.Augmentation);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (5000.0m, 5200.0m)));
 				}
 
 				{
 					var e = new DataEvent (date2, EventType.Modification);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataStringProperty (ObjectField.Responsable, "Frédérique"));
 					e.AddProperty (new DataStringProperty (ObjectField.NuméroSérie, "F30T-340407-52118-40721-S"));
 				}
@@ -545,6 +585,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (date4, EventType.AmortissementExtra);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (5200.0m, 4600.0m)));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2, new ComputedAmount (3500.0m, 2400.0m)));
 				}
@@ -552,18 +593,21 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (date6, EventType.Modification);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty  (ObjectField.Responsable, "Daniel"));
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
+					e.AddProperty (new DataStringProperty (ObjectField.Responsable, "Daniel"));
 				}
 
 				{
 					var e = new DataEvent (date7, EventType.Augmentation);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2, new ComputedAmount (2400.0m, 3000.0m, true)));
 				}
 
 				{
 					var e = new DataEvent (date8, EventType.Diminution);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (4600.0m, 2100.0m, true)));
 				}
 			}
@@ -587,6 +631,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Catégories"));
 			}
@@ -597,6 +642,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,  1));
 				e.AddProperty (new DataStringProperty (ObjectField.Numéro, "1"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Immobilier"));
@@ -609,6 +655,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Entrée);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 					e.AddProperty (new DataIntProperty     (ObjectField.Level,             2));
 					e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "1.1"));
 					e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Bureaux"));
@@ -630,6 +677,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (date1, EventType.Modification);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 					e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.085m));
 					e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  10000.0m));
 				}
@@ -637,6 +685,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (date2, EventType.Modification);
 					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 					e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.09m));
 				}
 			}
@@ -647,6 +696,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.Level,             2));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "1.2"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Usine"));
@@ -671,6 +721,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,  1));
 				e.AddProperty (new DataStringProperty (ObjectField.Numéro, "2"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Véhicule"));
@@ -682,6 +733,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.Level,             2));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "2.1"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Poid lourd"));
@@ -706,6 +758,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.Level,             2));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "2.2"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Camionnette"));
@@ -730,6 +783,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var e = new DataEvent (start, EventType.Entrée);
 				o.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.Level,             2));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "2.3"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Voiture"));
@@ -758,6 +812,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie1, "Voiture"));
 		}
+
+
+		private static int EventNumber = 1;
+		private static int CategoryNumber = 1;
 	}
 
 }

@@ -10,10 +10,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectEditorPageCategory : AbstractObjectEditorPage
 	{
-		public ObjectEditorPageCategory(DataAccessor accessor)
-			: base (accessor)
+		public ObjectEditorPageCategory(DataAccessor accessor, BaseType baseType)
+			: base (accessor, baseType)
 		{
-			this.baseType = BaseType.Categories;
 		}
 
 

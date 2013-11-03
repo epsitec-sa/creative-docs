@@ -10,10 +10,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectEditorPageValues : AbstractObjectEditorPage
 	{
-		public ObjectEditorPageValues(DataAccessor accessor)
-			: base (accessor)
+		public ObjectEditorPageValues(DataAccessor accessor, BaseType baseType)
+			: base (accessor, baseType)
 		{
-			this.baseType = BaseType.Objects;
 		}
 
 

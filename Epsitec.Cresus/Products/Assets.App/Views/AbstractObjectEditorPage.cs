@@ -11,9 +11,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractObjectEditorPage
 	{
-		public AbstractObjectEditorPage(DataAccessor accessor)
+		public AbstractObjectEditorPage(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
+			this.baseType = baseType;
 
 			this.fieldControllers = new Dictionary<ObjectField, AbstractFieldController> ();
 		}
@@ -279,7 +280,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected PropertyState GetPropertyState(ObjectField field)
 		{
-			if (this.hasEvent)
+			if (DataAccessor.IsSingletonField (field))
+			{
+				return PropertyState.Singleton;
+			}
+			else if (this.hasEvent)
 			{
 				var p = ObjectCalculator.GetObjectSyntheticProperty (this.obj, this.timestamp, field);
 
@@ -299,27 +304,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractObjectEditorPage CreatePage(DataAccessor accessor, EditionObjectPageType page)
+		public static AbstractObjectEditorPage CreatePage(DataAccessor accessor, BaseType baseType, EditionObjectPageType page)
 		{
 			switch (page)
 			{
+				case EditionObjectPageType.Singleton:
+					return new ObjectEditorPageSingleton (accessor, baseType);
+
 				case EditionObjectPageType.Summary:
-					return new ObjectEditorPageSummary (accessor);
+					return new ObjectEditorPageSummary (accessor, baseType);
 
 				case EditionObjectPageType.General:
-					return new ObjectEditorPageGeneral (accessor);
+					return new ObjectEditorPageGeneral (accessor, baseType);
 
 				case EditionObjectPageType.Values:
-					return new ObjectEditorPageValues (accessor);
+					return new ObjectEditorPageValues (accessor, baseType);
 
 				case EditionObjectPageType.Amortissements:
-					return new ObjectEditorPageAmortissements (accessor);
+					return new ObjectEditorPageAmortissements (accessor, baseType);
 
 				case EditionObjectPageType.Compta:
-					return new ObjectEditorPageCompta (accessor);
+					return new ObjectEditorPageCompta (accessor, baseType);
 
 				case EditionObjectPageType.Category:
-					return new ObjectEditorPageCategory (accessor);
+					return new ObjectEditorPageCategory (accessor, baseType);
 
 				default:
 					System.Diagnostics.Debug.Fail ("Unsupported page type");
@@ -367,7 +375,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected readonly DataAccessor				accessor;
-		protected BaseType							baseType;
+		protected readonly BaseType					baseType;
 		private Dictionary<ObjectField, AbstractFieldController> fieldControllers;
 
 		protected Guid								objectGuid;

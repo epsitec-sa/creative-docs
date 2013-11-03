@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Single,
 		Synthetic,
 		Inherited,
+		Singleton,
 		Readonly,
 	}
 }

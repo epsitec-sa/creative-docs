@@ -13,6 +13,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (field)
 			{
+				case ObjectField.EvNuméro:
+					return "Evénement numéro";
+
+				case ObjectField.EvCommentaire:
+					return "Commentaire";
+
+				case ObjectField.EvDocuments:
+					return "Documents associés";
+
 				case ObjectField.Level:
 					return "Niveau";
 
@@ -133,6 +142,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (type)
 			{
+				case EditionObjectPageType.Singleton:
+					return "Evénement";
+
 				case EditionObjectPageType.Summary:
 					return "Résumé";
 

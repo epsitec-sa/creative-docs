@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.editFrameBox.Children.Clear ();
 
-			this.currentPage = AbstractObjectEditorPage.CreatePage (this.accessor, type);
+			this.currentPage = AbstractObjectEditorPage.CreatePage (this.accessor, this.baseType, type);
 			this.currentPage.CreateUI (this.editFrameBox);
 			this.currentPage.SetObject (this.objectGuid, this.timestamp);
 			this.currentPage.SetFocus (focusedField);
@@ -196,6 +196,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public static IEnumerable<EditionObjectPageType> GetObjectAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
+			if (hasEvent)
+			{
+				yield return EditionObjectPageType.Singleton;
+			}
+
 			yield return EditionObjectPageType.Summary;
 
 			if (hasEvent)
@@ -229,6 +234,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private static IEnumerable<EditionObjectPageType> GetCategoryAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
+			if (hasEvent)
+			{
+				yield return EditionObjectPageType.Singleton;
+			}
+
 			yield return EditionObjectPageType.Category;
 			yield return EditionObjectPageType.Compta;
 		}

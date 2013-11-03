@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateHistoryButton()
 		{
-			var button = new IconButton
+			this.historyButton = new IconButton
 			{
 				Parent        = this.frameBox,
 				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Field.History"),
@@ -110,11 +110,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins       = new Margins (0, AbstractFieldController.lineHeight, 0, 0),
 			};
 
-			ToolTip.Default.SetToolTip (button, "Montre l'historique des modifications");
+			ToolTip.Default.SetToolTip (this.historyButton, "Montre l'historique des modifications");
 
-			button.Clicked += delegate
+			this.historyButton.Clicked += delegate
 			{
-				this.OnShowHistory (button);
+				this.OnShowHistory (this.historyButton);
 			};
 		}
 
@@ -144,6 +144,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected virtual void UpdatePropertyState()
 		{
+			if (this.historyButton != null)
+			{
+				this.historyButton.Visibility = (this.PropertyState != PropertyState.Singleton);
+			}
+
 			if (this.clearButton != null)
 			{
 				this.clearButton.Visibility = (this.PropertyState == PropertyState.Single);
@@ -232,6 +237,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected FrameBox						frameBox;
 		private string							label;
+		private IconButton						historyButton;
 		private IconButton						clearButton;
 		private PropertyState					propertyState;
 	}

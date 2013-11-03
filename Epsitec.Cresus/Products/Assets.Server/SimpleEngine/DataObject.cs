@@ -115,17 +115,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			// On cherche depuis la date donnée en remontant dans le passé.
-			var e = this.events
-				.Where (x => x.Timestamp <= timestamp && x.GetProperty (field) != null)
-				.LastOrDefault ();
-
-			if (e != null)
+			if (!DataAccessor.IsSingletonField (field))
 			{
-				p = e.GetProperty (field);
-				if (p != null)
+				var e = this.events
+					.Where (x => x.Timestamp <= timestamp && x.GetProperty (field) != null)
+					.LastOrDefault ();
+
+				if (e != null)
 				{
-					p.State = PropertyState.Synthetic;
-					return p;
+					p = e.GetProperty (field);
+					if (p != null)
+					{
+						p.State = PropertyState.Synthetic;
+						return p;
+					}
 				}
 			}
 

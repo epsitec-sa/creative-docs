@@ -9,6 +9,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public enum EditionObjectPageType
 	{
 		Unknown,
+		Singleton,
 		Summary,
 		General,
 		Values,

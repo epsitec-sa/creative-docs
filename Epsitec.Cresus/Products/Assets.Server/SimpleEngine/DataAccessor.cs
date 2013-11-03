@@ -245,6 +245,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
+		public static bool IsSingletonField(ObjectField objectField)
+		{
+			switch (objectField)
+			{
+				case ObjectField.EvNuméro:
+				case ObjectField.EvCommentaire:
+				case ObjectField.EvDocuments:
+					return true;
+
+				default:
+					return false;
+			}
+		}
+
 		public static FieldType GetFieldType(ObjectField objectField)
 		{
 			switch (objectField)
