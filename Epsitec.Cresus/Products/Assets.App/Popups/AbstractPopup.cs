@@ -89,6 +89,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 
 			this.initialDistance = this.Distance;
+
+			this.mainFrameBox = new FrameBox
+			{
+				Parent        = this,
+				Anchor        = AnchorStyles.BottomLeft,
+				PreferredSize = this.dialogRect.Size,
+				Margins       = new Margins (this.dialogRect.Left, 0, 0, this.dialogRect.Bottom),
+			};
 		}
 
 
@@ -104,22 +112,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 		}
 
+		protected void ChangeDialogSize(Size size)
+		{
+			this.dialogRect.Size = size;
+			this.mainFrameBox.PreferredSize = size;
+			this.Invalidate ();
+		}
+
 		protected void CreateCloseButton()
 		{
 			//	Crée le bouton de fermeture en haut à droite.
 			const int size = 20;
 
-			int x = (int) this.dialogRect.Right - size;
-			int y = (int) this.dialogRect.Top - size;
-
 			var button = new GlyphButton
 			{
-				Parent        = this,
+				Parent        = this.mainFrameBox,
 				GlyphShape    = GlyphShape.Close,
 				ButtonStyle   = ButtonStyle.ToolItem,
-				Anchor        = AnchorStyles.BottomLeft,
+				Anchor        = AnchorStyles.TopRight,
 				PreferredSize = new Size (size, size),
-				Margins       = new Margins (x, 0, 0, y),
+				Margins       = new Margins (0, 0, 0, 0),
 			};
 
 			ToolTip.Default.SetToolTip (button, "Ferme la fenêtre");
@@ -132,26 +144,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected StaticText CreateTitle(int dy, string text)
 		{
-			int x = (int) this.dialogRect.Left;
-			int y = (int) (this.dialogRect.Bottom + this.dialogRect.Height - dy);
-
 			var label = new StaticText
 			{
-				Parent           = this,
+				Parent           = this.mainFrameBox,
 				Text             = text,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-				Anchor           = AnchorStyles.BottomLeft,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				Anchor           = AnchorStyles.TopLeft,
 				PreferredSize    = new Size (this.dialogRect.Width, dy-4),
-				Margins          = new Margins (x, 0, 0, y+4),
+				Margins          = new Margins (0, 0, 0, 0),
 				BackColor        = ColorManager.SelectionColor,
 			};
 
 			new FrameBox
 			{
-				Parent           = this,
-				Anchor           = AnchorStyles.BottomLeft,
+				Parent           = this.mainFrameBox,
+				Anchor           = AnchorStyles.TopLeft,
 				PreferredSize    = new Size (this.dialogRect.Width, 4),
-				Margins          = new Margins (x, 0, 0, y),
+				Margins          = new Margins (0, 0, dy-4, 0),
 				BackColor        = ColorManager.SelectionColor,
 			};
 
@@ -160,68 +169,32 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected FrameBox CreateTitleFrame(int dy)
 		{
-			int x = (int) this.dialogRect.Left;
-			int y = (int) (this.dialogRect.Bottom + this.dialogRect.Height - dy);
-
 			var frame = new FrameBox
 			{
-				Parent           = this,
-				Anchor           = AnchorStyles.BottomLeft,
+				Parent           = this.mainFrameBox,
+				Anchor           = AnchorStyles.TopLeft,
 				PreferredSize    = new Size (this.dialogRect.Width, dy-4),
-				Margins          = new Margins (x, 0, 0, y+4),
+				Margins          = new Margins (0, 0, 0, 0),
 				BackColor        = ColorManager.SelectionColor,
 			};
 
 			new FrameBox
 			{
-				Parent           = this,
-				Anchor           = AnchorStyles.BottomLeft,
+				Parent           = this.mainFrameBox,
+				Anchor           = AnchorStyles.TopLeft,
 				PreferredSize    = new Size (this.dialogRect.Width, 4),
-				Margins          = new Margins (x, 0, 0, y),
+				Margins          = new Margins (0, 0, dy-4, 0),
 				BackColor        = ColorManager.SelectionColor,
 			};
 
 			return frame;
 		}
 
-		protected FrameBox CreateFullFrame()
-		{
-			int x = (int) this.dialogRect.Left;
-			int y = (int) this.dialogRect.Bottom;
-
-			var frame = new FrameBox
-			{
-				Parent           = this,
-				Anchor           = AnchorStyles.BottomLeft,
-				PreferredSize    = this.dialogRect.Size,
-				Margins          = new Margins (x, 0, 0, y),
-			};
-
-			return frame;
-		}
-
-		protected FrameBox CreateFrame(int x, int y, int dx, int dy)
-		{
-			x += (int) this.dialogRect.Left;
-			y += (int) this.dialogRect.Bottom;
-
-			return new FrameBox
-			{
-				Parent        = this,
-				Anchor        = AnchorStyles.BottomLeft,
-				PreferredSize = new Size (dx, dy),
-				Margins       = new Margins (x, 0, 0, y),
-			};
-		}
-
 		protected Button CreateButton(int x, int y, int dx, int dy, string name, string text, string tooltip = null)
 		{
-			x += (int) this.dialogRect.Left;
-			y += (int) this.dialogRect.Bottom;
-
 			var button = new Button
 			{
-				Parent        = this,
+				Parent        = this.mainFrameBox,
 				Name          = name,
 				Text          = text,
 				ButtonStyle   = ButtonStyle.Icon,
@@ -246,12 +219,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected RadioButton CreateRadio(int x, int y, int dx, int dy, string name, string text, string tooltip = null, bool activate = false)
 		{
-			x += (int) this.dialogRect.Left;
-			y += (int) this.dialogRect.Bottom;
-
 			var button = new RadioButton
 			{
-				Parent        = this,
+				Parent        = this.mainFrameBox,
 				Name          = name,
 				Text          = text,
 				AutoFocus     = false,
@@ -271,12 +241,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected ColoredButton CreateItem(int x, int y, int dx, int dy, string text)
 		{
-			x += (int) this.dialogRect.Left;
-			y += (int) this.dialogRect.Bottom;
-
 			var button = new ColoredButton
 			{
-				Parent           = this,
+				Parent           = this.mainFrameBox,
 				Text             = text,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Anchor           = AnchorStyles.BottomLeft,
@@ -347,13 +314,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				delta = this.dialogRect.BottomLeft - p;  // recalcule le delta réel
 
-				//	Déplace tous les widgets enfants.
+				//	Déplace le FrameBox parent de tous les enfants.
 				if (!delta.IsZero)
 				{
-					foreach (var widget in this.Children)
-					{
-						widget.Margins = new Margins (widget.Margins.Left+delta.X, 0, 0, widget.Margins.Bottom+delta.Y);
-					}
+					this.mainFrameBox.Margins = new Margins
+					(
+						this.mainFrameBox.Margins.Left + delta.X,
+						0,
+						0,
+						this.mainFrameBox.Margins.Bottom + delta.Y
+					);
 				}
 
 				this.Invalidate ();
@@ -547,6 +517,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private Widget							target;
 		private Rectangle						dialogRect;
 		private Rectangle						targetRect;
+		protected FrameBox						mainFrameBox;
 
 		private double							initialDistance;
 		private bool							isDragging;

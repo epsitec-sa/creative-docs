@@ -32,13 +32,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void CreateUI()
 		{
-			var frame = this.CreateFullFrame ();
+			this.CreateTitle (this.mainFrameBox, "Simulation");
 
-			this.CreateTitle (frame, "Simulation");
-
-			this.CreateLine (frame, 2);
-			this.CreateLine (frame, 1);
-			this.CreateLine (frame, 0);
+			this.CreateLine (this.mainFrameBox, 2);
+			this.CreateLine (this.mainFrameBox, 1);
+			this.CreateLine (this.mainFrameBox, 0);
 		}
 
 		private void CreateTitle(FrameBox parent, string text)

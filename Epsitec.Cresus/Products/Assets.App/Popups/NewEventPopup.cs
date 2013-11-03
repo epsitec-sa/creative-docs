@@ -27,7 +27,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected override void CreateUI()
 		{
 			this.CreateDateUI ();
-			this.buttonsFrame = this.CreateFrame (NewEventPopup.horizontalMargins, NewEventPopup.verticalMargins, NewEventPopup.buttonWidth, 1);
+
+			this.buttonsFrame = new FrameBox
+			{
+				Parent  = this.mainFrameBox,
+				Anchor  = AnchorStyles.All,
+				Margins = new Margins (NewEventPopup.horizontalMargins, NewEventPopup.horizontalMargins, 0, NewEventPopup.verticalMargins),
+			};
+
 			this.CreateButtons ();
 			this.CreateCloseButton ();
 		}
@@ -57,22 +64,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateButtons()
 		{
+			this.ChangeDialogSize (this.DialogSize);
 			this.CreateButtons ();
 		}
 
 		private void CreateButtons()
 		{
-			var list = this.ButtonDescriptions.Reverse ().ToArray ();
-
 			this.buttonsFrame.Children.Clear ();
-			this.buttonsFrame.PreferredHeight = list.Length * (NewEventPopup.buttonWidth+NewEventPopup.buttonGap);
 
 			int dx = NewEventPopup.buttonWidth;
 			int dy = NewEventPopup.buttonHeight;
 			int x = 0;
 			int y = 0;
 
-			foreach (var desc in list)
+			foreach (var desc in this.ButtonDescriptions.Reverse ())
 			{
 				this.CreateButton (x, y, dx, dy, desc.Type, desc.Text, desc.Tooltip);
 				y += dy + NewEventPopup.buttonGap;

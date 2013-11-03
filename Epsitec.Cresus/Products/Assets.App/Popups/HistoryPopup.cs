@@ -27,9 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void CreateUI()
 		{
-			var frame = this.CreateFullFrame ();
-
-			this.controller.CreateUI (frame);
+			this.controller.CreateUI (this.mainFrameBox);
 			this.CreateCloseButton ();
 
 			this.controller.Navigate += delegate (object sender, Timestamp timestamp)
