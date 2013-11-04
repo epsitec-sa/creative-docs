@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateButton(ColoredButton button, SummaryControllerTile? tile)
 		{
-			if (tile.HasValue)
+			if (tile.HasValue && !tile.Value.SimpleText)
 			{
 				if (tile.Value.Readonly)
 				{

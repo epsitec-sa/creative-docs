@@ -18,25 +18,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.summaryController = new ObjectSummaryController
 			(
 				this.accessor,
-				ObjectEditorPageSummary.SummaryColumns,
-				ObjectEditorPageSummary.SummaryFields
+				ObjectEditorPageSummary.SummaryTiles
 			);
 
 			this.summaryController.TileClicked += delegate (object sender, int row, int column)
 			{
 				this.TileClicked (row, column);
 			};
-		}
-
-
-		public override IEnumerable<EditionObjectPageType> ChildrenPageTypes
-		{
-			get
-			{
-				yield return EditionObjectPageType.General;
-				yield return EditionObjectPageType.Values;
-				yield return EditionObjectPageType.Amortissements;
-			}
 		}
 
 
@@ -112,12 +100,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void TileClicked(int row, int column)
 		{
-			var field = ObjectEditorPageSummary.GetField (column, row);
+			var tile = ObjectEditorPageSummary.GetTile (column, row);
 
-			if (field != ObjectField.Unknown)
+			if (!tile.IsEmpty)
 			{
-				var type = ObjectEditorPageSummary.GetPageType (field);
-				this.OnPageOpen (type, field);
+				var type = ObjectEditorPageSummary.GetPageType (tile.Field);
+				this.OnPageOpen (type, tile.Field);
 			}
 		}
 
@@ -144,9 +132,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private static ObjectField GetField(int column, int row)
+		private static ObjectSummaryControllerTile GetTile(int column, int row)
 		{
-			var fields = ObjectEditorPageSummary.SummaryFields;
+			var fields = ObjectEditorPageSummary.SummaryTiles;
 
 			if (column < fields.Count)
 			{
@@ -158,59 +146,46 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			return ObjectField.Unknown;
+			return ObjectSummaryControllerTile.Empty;
 		}
 
-		private static List<string> SummaryColumns
+		private static List<List<ObjectSummaryControllerTile>> SummaryTiles
 		{
+			//	Retourne la liste des tuiles qui peupleront le tableau.
 			get
 			{
-				var list = new List<string> ();
+				var list = new List<List<ObjectSummaryControllerTile>> ();
 
-				list.Add ("Général");
-				list.Add ("Valeurs");
-				list.Add ("Amortissements");
-
-				return list;
-			}
-		}
-
-		private static List<List<ObjectField>> SummaryFields
-		{
-			//	Retourne la liste des champs qui peupleront le tableau.
-			get
-			{
-				var list = new List<List<ObjectField>> ();
-
-				var c1 = new List<ObjectField> ()
+				var c1 = new List<ObjectSummaryControllerTile> ()
 				{
-					ObjectField.Level,
-					ObjectField.Numéro,
-					ObjectField.Nom,
-					ObjectField.Description,
-					ObjectField.Responsable,
-					ObjectField.Couleur,
-					ObjectField.NuméroSérie,
+					new ObjectSummaryControllerTile ("Général"),
+					new ObjectSummaryControllerTile (ObjectField.Level),
+					new ObjectSummaryControllerTile (ObjectField.Numéro),
+					new ObjectSummaryControllerTile (ObjectField.Nom),
+					new ObjectSummaryControllerTile (ObjectField.Description),
+					new ObjectSummaryControllerTile (ObjectField.Responsable),
+					new ObjectSummaryControllerTile (ObjectField.Couleur),
+					new ObjectSummaryControllerTile (ObjectField.NuméroSérie),
 				};
 				list.Add (c1);
 
-				var c2 = new List<ObjectField> ()
+				var c2 = new List<ObjectSummaryControllerTile> ()
 				{
-					ObjectField.Valeur1,
-					ObjectField.Valeur2,
-					ObjectField.Valeur3,
+					new ObjectSummaryControllerTile ("Valeurs"),
+					new ObjectSummaryControllerTile (ObjectField.Valeur1),
+					new ObjectSummaryControllerTile (ObjectField.Valeur2),
+					new ObjectSummaryControllerTile (ObjectField.Valeur3),
+
+					ObjectSummaryControllerTile.Empty,
+
+					new ObjectSummaryControllerTile ("Amortissements"),
+					new ObjectSummaryControllerTile (ObjectField.NomCatégorie1),
+					new ObjectSummaryControllerTile (ObjectField.TauxAmortissement),
+					new ObjectSummaryControllerTile (ObjectField.TypeAmortissement),
+					new ObjectSummaryControllerTile (ObjectField.Périodicité),
+					new ObjectSummaryControllerTile (ObjectField.ValeurRésiduelle),
 				};
 				list.Add (c2);
-
-				var c3 = new List<ObjectField> ()
-				{
-					ObjectField.NomCatégorie1,
-					ObjectField.TauxAmortissement,
-					ObjectField.TypeAmortissement,
-					ObjectField.Périodicité,
-					ObjectField.ValeurRésiduelle,
-				};
-				list.Add (c3);
 
 				return list;
 			}

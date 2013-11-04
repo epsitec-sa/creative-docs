@@ -11,11 +11,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectSummaryController
 	{
-		public ObjectSummaryController(DataAccessor accessor, List<string> columnsTitle, List<List<ObjectField>> fields)
+		public ObjectSummaryController(DataAccessor accessor, List<List<ObjectSummaryControllerTile>> tiles)
 		{
-			this.accessor     = accessor;
-			this.columnsTitle = columnsTitle;
-			this.fields       = fields;
+			this.accessor = accessor;
+			this.tiles    = tiles;
 
 			this.controller = new SummaryController ();
 
@@ -36,31 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins         = new Margins (0, 0, 0, 20),
 			};
 
-			this.header = new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-				PreferredHeight = 17,
-			};
-
-			this.CreateHeader ();
-
 			this.controller.CreateUI (parent);
-		}
-
-		private void CreateHeader()
-		{
-			foreach (var title in this.columnsTitle)
-			{
-				new StaticText
-				{
-					Parent           = this.header,
-					Text             = title,
-					ContentAlignment = ContentAlignment.MiddleCenter,
-					Dock             = DockStyle.Left,
-					PreferredSize    = new Size (120, 20),
-				};
-			}
 		}
 
 		public void UpdateFields(Guid objectGuid, Timestamp? timestamp)
@@ -90,16 +65,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			for (int column = 0; column < columnsCount; column++)
 			{
-				var columns = new List<SummaryControllerTile?> ();
-
-				for (int row = 0; row < rowsCount; row++)
+				//	Génère une colonne avec les noms des champs.
 				{
-					var field = this.GetField (column, row);
-					var cell = this.GetCell (field);
-					columns.Add (cell);
+					var columns = new List<SummaryControllerTile?> ();
+
+					for (int row = 0; row < rowsCount; row++)
+					{
+						var tile = this.GetTile (column, row);
+						var cell = this.GetLabel (tile);
+						columns.Add (cell);
+					}
+
+					cells.Add (columns);
 				}
 
-				cells.Add (columns);
+				//	Génère une colonne avec les valeurs des champs.
+				{
+					var columns = new List<SummaryControllerTile?> ();
+
+					for (int row = 0; row < rowsCount; row++)
+					{
+						var tile = this.GetTile (column, row);
+						var cell = this.GetCell (tile);
+						columns.Add (cell);
+					}
+
+					cells.Add (columns);
+				}
 			}
 
 			this.controller.SetTiles (cells);
@@ -162,23 +154,39 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private SummaryControllerTile? GetCell(ObjectField field)
+		private SummaryControllerTile? GetLabel(ObjectSummaryControllerTile tile)
 		{
-			if (field == ObjectField.Unknown || this.obj == null)
+			if (tile.IsEmpty || tile.Field == ObjectField.Unknown)
 			{
 				return null;
+			}
+
+			string text = StaticDescriptions.GetObjectFieldDescription (tile.Field);
+			return new SummaryControllerTile (text, alignment: ContentAlignment.MiddleRight, simpleText: true);
+		}
+
+		private SummaryControllerTile? GetCell(ObjectSummaryControllerTile tile)
+		{
+			if (tile.IsEmpty || this.obj == null)
+			{
+				return null;
+			}
+
+			if (tile.Text != null)
+			{
+				return new SummaryControllerTile (tile.Text, alignment: ContentAlignment.MiddleCenter, simpleText: true);
 			}
 
 			string text = null;
 			var alignment = ContentAlignment.MiddleCenter;
 
-			switch (DataAccessor.GetFieldType (field))
+			switch (DataAccessor.GetFieldType (tile.Field))
 			{
 				case FieldType.Decimal:
-					var d = ObjectCalculator.GetObjectPropertyDecimal (this.obj, this.timestamp, field);
+					var d = ObjectCalculator.GetObjectPropertyDecimal (this.obj, this.timestamp, tile.Field);
 					if (d.HasValue)
 					{
-						switch (Format.GetFieldFormat (field))
+						switch (Format.GetFieldFormat (tile.Field))
 						{
 							case DecimalFormat.Rate:
 								text = Helpers.Converters.RateToString (d);
@@ -199,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				case FieldType.Int:
-					var i = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, field);
+					var i = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, tile.Field);
 					if (i.HasValue)
 					{
 						text = Helpers.Converters.IntToString (i);
@@ -208,7 +216,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				case FieldType.ComputedAmount:
-					var ca = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, this.timestamp, field);
+					var ca = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, this.timestamp, tile.Field);
 					if (ca.HasValue)
 					{
 						text = Helpers.Converters.AmountToString (ca.Value.FinalAmount);
@@ -217,7 +225,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				case FieldType.Date:
-					var da = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, field);
+					var da = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, tile.Field);
 					if (da.HasValue)
 					{
 						text = Helpers.Converters.DateToString (da.Value);
@@ -226,7 +234,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				default:
-					string s = ObjectCalculator.GetObjectPropertyString (this.obj, this.timestamp, field);
+					string s = ObjectCalculator.GetObjectPropertyString (this.obj, this.timestamp, tile.Field);
 					if (!string.IsNullOrEmpty (s))
 					{
 						text = s;
@@ -235,9 +243,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 			}
 
-			string tooltip = StaticDescriptions.GetObjectFieldDescription (field);
-			bool hilited = this.IsHilited (field);
-			bool readOnly = this.IsReadonly (field);
+			string tooltip = StaticDescriptions.GetObjectFieldDescription (tile.Field);
+			bool hilited   = this.IsHilited (tile.Field);
+			bool readOnly  = this.IsReadonly (tile.Field);
 
 			return new SummaryControllerTile (text, tooltip, alignment, hilited, readOnly);
 		}
@@ -261,7 +269,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.hasEvent && field != ObjectField.Unknown)
 			{
 				var type = ObjectEditorPageSummary.GetPageType (field);
-				var availables = ObjectEditor.GetObjectAvailablePages (this.hasEvent, this.eventType).ToArray ();
+				var availables = ObjectEditor.GetObjectAvailablePages (this.hasEvent, this.eventType);
 				return !availables.Contains (type);
 			}
 			else
@@ -302,11 +310,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private ObjectField GetField(int column, int row)
+		private ObjectSummaryControllerTile GetTile(int column, int row)
 		{
-			if (column < this.fields.Count)
+			if (column < this.tiles.Count)
 			{
-				var rows = this.fields[column];
+				var rows = this.tiles[column];
 
 				if (row < rows.Count)
 				{
@@ -314,14 +322,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			return ObjectField.Unknown;
+			return ObjectSummaryControllerTile.Empty;
 		}
 
 		private int ColumnsCount
 		{
 			get
 			{
-				return this.fields.Count;
+				return this.tiles.Count;
 			}
 		}
 
@@ -331,7 +339,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				int count = 0;
 
-				foreach (var columns in this.fields)
+				foreach (var columns in this.tiles)
 				{
 					count = System.Math.Max (count, columns.Count);
 				}
@@ -346,7 +354,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.TileClicked != null)
 			{
-				this.TileClicked (this, row, column);
+				this.TileClicked (this, row, column/2);
 			}
 		}
 
@@ -356,12 +364,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly DataAccessor				accessor;
-		private readonly List<string>				columnsTitle;
-		private readonly List<List<ObjectField>>	fields;
+		private readonly List<List<ObjectSummaryControllerTile>> tiles;
 		private readonly SummaryController			controller;
 
 		private StaticText							informations;
-		private FrameBox							header;
 		private DataObject							obj;
 		private Timestamp?							timestamp;
 		private bool								hasEvent;

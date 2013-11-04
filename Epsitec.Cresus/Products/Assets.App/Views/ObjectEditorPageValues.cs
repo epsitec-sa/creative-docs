@@ -16,16 +16,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override IEnumerable<EditionObjectPageType> ChildrenPageTypes
-		{
-			get
-			{
-				yield return EditionObjectPageType.Amortissements;
-				yield return EditionObjectPageType.Compta;
-			}
-		}
-
-
 		public override void CreateUI(Widget parent)
 		{
 			this.CreateComputedAmountController (parent, ObjectField.Valeur1);

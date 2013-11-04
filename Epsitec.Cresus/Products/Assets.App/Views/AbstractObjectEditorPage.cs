@@ -24,15 +24,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public virtual IEnumerable<EditionObjectPageType> ChildrenPageTypes
-		{
-			get
-			{
-				return new List<EditionObjectPageType> ();
-			}
-		}
-
-
 		public virtual void CreateUI(Widget parent)
 		{
 		}

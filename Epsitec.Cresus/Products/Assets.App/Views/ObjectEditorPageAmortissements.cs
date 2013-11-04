@@ -16,15 +16,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override IEnumerable<EditionObjectPageType> ChildrenPageTypes
-		{
-			get
-			{
-				yield return EditionObjectPageType.Compta;
-			}
-		}
-
-
 		public override void CreateUI(Widget parent)
 		{
 			this.CreateStringController  (parent, ObjectField.NomCatégorie1);
