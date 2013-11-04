@@ -35,16 +35,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "Description";
 
 				case ObjectField.Valeur1:
-				case ObjectField.NomCatégorie1:
 					return "Valeur comptable";
 
 				case ObjectField.Valeur2:
-				case ObjectField.NomCatégorie2:
 					return "Valeur d'assurance";
 
 				case ObjectField.Valeur3:
-				case ObjectField.NomCatégorie3:
 					return "Valeur imposable";
+
+				case ObjectField.NomCatégorie1:
+				case ObjectField.NomCatégorie2:
+				case ObjectField.NomCatégorie3:
+					return "Catégorie d'immob.";
 
 				case ObjectField.Responsable:
 					return "Responsable";

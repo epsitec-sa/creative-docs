@@ -112,12 +112,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void TileClicked(int row, int column)
 		{
-			int? field = ObjectEditorPageSummary.GetField (column, row);
+			var field = ObjectEditorPageSummary.GetField (column, row);
 
-			if (field.HasValue)
+			if (field != ObjectField.Unknown)
 			{
-				var type = ObjectEditorPageSummary.GetPageType ((ObjectField) field.Value);
-				this.OnPageOpen (type, (ObjectField) field);
+				var type = ObjectEditorPageSummary.GetPageType (field);
+				this.OnPageOpen (type, field);
 			}
 		}
 
@@ -133,8 +133,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return EditionObjectPageType.Values;
 
 				case ObjectField.NomCatégorie1:
-				case ObjectField.NomCatégorie2:
-				case ObjectField.NomCatégorie3:
+				case ObjectField.TauxAmortissement:
+				case ObjectField.TypeAmortissement:
+				case ObjectField.Périodicité:
+				case ObjectField.ValeurRésiduelle:
 					return EditionObjectPageType.Amortissements;
 
 				default:
@@ -142,7 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private static int? GetField(int column, int row)
+		private static ObjectField GetField(int column, int row)
 		{
 			var fields = ObjectEditorPageSummary.SummaryFields;
 
@@ -156,7 +158,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			return null;
+			return ObjectField.Unknown;
 		}
 
 		private static List<string> SummaryColumns
@@ -173,38 +175,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private static List<List<int>> SummaryFields
+		private static List<List<ObjectField>> SummaryFields
 		{
 			//	Retourne la liste des champs qui peupleront le tableau.
 			get
 			{
-				var list = new List<List<int>> ();
+				var list = new List<List<ObjectField>> ();
 
-				var c1 = new List<int> ()
+				var c1 = new List<ObjectField> ()
 				{
-					(int) ObjectField.Level,
-					(int) ObjectField.Numéro,
-					(int) ObjectField.Nom,
-					(int) ObjectField.Description,
-					(int) ObjectField.Responsable,
-					(int) ObjectField.Couleur,
-					(int) ObjectField.NuméroSérie,
+					ObjectField.Level,
+					ObjectField.Numéro,
+					ObjectField.Nom,
+					ObjectField.Description,
+					ObjectField.Responsable,
+					ObjectField.Couleur,
+					ObjectField.NuméroSérie,
 				};
 				list.Add (c1);
 
-				var c2 = new List<int> ()
+				var c2 = new List<ObjectField> ()
 				{
-					(int) ObjectField.Valeur1,
-					(int) ObjectField.Valeur2,
-					(int) ObjectField.Valeur3,
+					ObjectField.Valeur1,
+					ObjectField.Valeur2,
+					ObjectField.Valeur3,
 				};
 				list.Add (c2);
 
-				var c3 = new List<int> ()
+				var c3 = new List<ObjectField> ()
 				{
-					(int) ObjectField.NomCatégorie1,
-					(int) ObjectField.NomCatégorie2,
-					(int) ObjectField.NomCatégorie3,
+					ObjectField.NomCatégorie1,
+					ObjectField.TauxAmortissement,
+					ObjectField.TypeAmortissement,
+					ObjectField.Périodicité,
+					ObjectField.ValeurRésiduelle,
 				};
 				list.Add (c3);
 

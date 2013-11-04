@@ -11,13 +11,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class HistoryAccessor
 	{
-		public HistoryAccessor(DataAccessor accessor, BaseType baseType, Guid objectGuid, Timestamp? timestamp, int field)
+		public HistoryAccessor(DataAccessor accessor, BaseType baseType, Guid objectGuid, Timestamp? timestamp, ObjectField field)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
 
-			this.objectField = (ObjectField) field;
-			this.fieldType = DataAccessor.GetFieldType ((ObjectField) field);
+			this.objectField = field;
+			this.fieldType = DataAccessor.GetFieldType (field);
 
 			this.content    = new List<List<AbstractSimpleTreeTableCell>> ();
 			this.timestamps = new List<Timestamp> ();
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private void InitializeContent(Guid objectGuid, Timestamp? timestamp, int field)
+		private void InitializeContent(Guid objectGuid, Timestamp? timestamp, ObjectField field)
 		{
 			this.selectedRow = -1;
 			this.content.Clear ();
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					var e = obj.GetEvent (i);
 					var eventTimestamp = e.Timestamp;
 
-					var p = ObjectCalculator.GetObjectSingleProperty (obj, eventTimestamp, (ObjectField) field);
+					var p = ObjectCalculator.GetObjectSingleProperty (obj, eventTimestamp, field);
 
 					if (p != null)
 					{
@@ -170,37 +170,37 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private AbstractSimpleTreeTableCell GetCell(DataObject obj, Timestamp timestamp, int field)
+		private AbstractSimpleTreeTableCell GetCell(DataObject obj, Timestamp timestamp, ObjectField field)
 		{
 			switch (this.fieldType)
 			{
 				case FieldType.Decimal:
 					{
-						var value = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, (ObjectField) field);
-						return new SimpleTreeTableCellDecimal (value, Format.GetFieldFormat ((ObjectField) field));
+						var value = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, field);
+						return new SimpleTreeTableCellDecimal (value, Format.GetFieldFormat (field));
 					}
 
 				case FieldType.Int:
 					{
-						var value = ObjectCalculator.GetObjectPropertyInt (obj, timestamp, (ObjectField) field);
+						var value = ObjectCalculator.GetObjectPropertyInt (obj, timestamp, field);
 						return new SimpleTreeTableCellInt (value);
 					}
 
 				case FieldType.ComputedAmount:
 					{
-						var value = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, (ObjectField) field);
+						var value = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, field);
 						return new SimpleTreeTableCellComputedAmount (value);
 					}
 
 				case FieldType.Date:
 					{
-						var value = ObjectCalculator.GetObjectPropertyDate (obj, timestamp, (ObjectField) field);
+						var value = ObjectCalculator.GetObjectPropertyDate (obj, timestamp, field);
 						return new SimpleTreeTableCellDate (value);
 					}
 
 				default:
 					{
-						string value = ObjectCalculator.GetObjectPropertyString (obj, timestamp, (ObjectField) field);
+						string value = ObjectCalculator.GetObjectPropertyString (obj, timestamp, field);
 						return new SimpleTreeTableCellString (value);
 					}
 			}

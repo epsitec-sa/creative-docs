@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectSummaryController
 	{
-		public ObjectSummaryController(DataAccessor accessor, List<string> columnsTitle, List<List<int>> fields)
+		public ObjectSummaryController(DataAccessor accessor, List<string> columnsTitle, List<List<ObjectField>> fields)
 		{
 			this.accessor     = accessor;
 			this.columnsTitle = columnsTitle;
@@ -162,9 +162,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private SummaryControllerTile? GetCell(int? field)
+		private SummaryControllerTile? GetCell(ObjectField field)
 		{
-			if (!field.HasValue || this.obj == null)
+			if (field == ObjectField.Unknown || this.obj == null)
 			{
 				return null;
 			}
@@ -172,13 +172,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			string text = null;
 			var alignment = ContentAlignment.MiddleCenter;
 
-			switch (DataAccessor.GetFieldType ((ObjectField) field.Value))
+			switch (DataAccessor.GetFieldType (field))
 			{
 				case FieldType.Decimal:
-					var d = ObjectCalculator.GetObjectPropertyDecimal (this.obj, this.timestamp, (ObjectField) field.Value);
+					var d = ObjectCalculator.GetObjectPropertyDecimal (this.obj, this.timestamp, field);
 					if (d.HasValue)
 					{
-						switch (Format.GetFieldFormat ((ObjectField) field.Value))
+						switch (Format.GetFieldFormat (field))
 						{
 							case DecimalFormat.Rate:
 								text = Helpers.Converters.RateToString (d);
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				case FieldType.Int:
-					var i = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, (ObjectField) field.Value);
+					var i = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, field);
 					if (i.HasValue)
 					{
 						text = Helpers.Converters.IntToString (i);
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				case FieldType.ComputedAmount:
-					var ca = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, this.timestamp, (ObjectField) field.Value);
+					var ca = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, this.timestamp, field);
 					if (ca.HasValue)
 					{
 						text = Helpers.Converters.AmountToString (ca.Value.FinalAmount);
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				case FieldType.Date:
-					var da = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, (ObjectField) field.Value);
+					var da = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, field);
 					if (da.HasValue)
 					{
 						text = Helpers.Converters.DateToString (da.Value);
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				default:
-					string s = ObjectCalculator.GetObjectPropertyString (this.obj, this.timestamp, (ObjectField) field.Value);
+					string s = ObjectCalculator.GetObjectPropertyString (this.obj, this.timestamp, field);
 					if (!string.IsNullOrEmpty (s))
 					{
 						text = s;
@@ -235,18 +235,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 			}
 
-			string tooltip = StaticDescriptions.GetObjectFieldDescription ((ObjectField) field.GetValueOrDefault (-1));
+			string tooltip = StaticDescriptions.GetObjectFieldDescription (field);
 			bool hilited = this.IsHilited (field);
 			bool readOnly = this.IsReadonly (field);
 
 			return new SummaryControllerTile (text, tooltip, alignment, hilited, readOnly);
 		}
 
-		private bool IsHilited(int? field)
+		private bool IsHilited(ObjectField field)
 		{
-			if (field.HasValue)
+			if (field != ObjectField.Unknown)
 			{
-				return this.GetPropertyState (field.Value) == PropertyState.Single;
+				return this.GetPropertyState (field) == PropertyState.Single;
 			}
 			else
 			{
@@ -254,13 +254,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private bool IsReadonly(int? field)
+		private bool IsReadonly(ObjectField field)
 		{
 			//	Un champ est non modifiable s'il appartient à une page interdite
 			//	pour le type de l'événement en cours.
-			if (this.hasEvent && field.HasValue)
+			if (this.hasEvent && field != ObjectField.Unknown)
 			{
-				var type = ObjectEditorPageSummary.GetPageType ((ObjectField) field.Value);
+				var type = ObjectEditorPageSummary.GetPageType (field);
 				var availables = ObjectEditor.GetObjectAvailablePages (this.hasEvent, this.eventType).ToArray ();
 				return !availables.Contains (type);
 			}
@@ -270,11 +270,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private PropertyState GetPropertyState(int field)
+		private PropertyState GetPropertyState(ObjectField field)
 		{
 			if (this.hasEvent)
 			{
-				var p = ObjectCalculator.GetObjectSyntheticProperty (this.obj, this.timestamp, (ObjectField) field);
+				var p = ObjectCalculator.GetObjectSyntheticProperty (this.obj, this.timestamp, field);
 
 				if (p != null)
 				{
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private int? GetField(int column, int row)
+		private ObjectField GetField(int column, int row)
 		{
 			if (column < this.fields.Count)
 			{
@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			return null;
+			return ObjectField.Unknown;
 		}
 
 		private int ColumnsCount
@@ -357,7 +357,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly DataAccessor				accessor;
 		private readonly List<string>				columnsTitle;
-		private readonly List<List<int>>			fields;
+		private readonly List<List<ObjectField>>	fields;
 		private readonly SummaryController			controller;
 
 		private StaticText							informations;

@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void ShowHistoryPopup(Widget target, ObjectField field)
 		{
-			var popup = new HistoryPopup (this.accessor, this.baseType, this.objectGuid, this.timestamp, (int) field);
+			var popup = new HistoryPopup (this.accessor, this.baseType, this.objectGuid, this.timestamp, field);
 
 			popup.Create (target, leftOrRight: true);
 
