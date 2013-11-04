@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Après la création d'un événement, on cherche à ouvrir la page la
 			//	plus pertinente.
 			this.eventType = eventType;
-			this.OpenPage (this.AvailablePages.First ());
+			this.OpenPage (EditionObjectPageType.Singleton);
 		}
 
 
@@ -196,15 +196,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public static IEnumerable<EditionObjectPageType> GetObjectAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
-			if (hasEvent)
-			{
-				yield return EditionObjectPageType.Singleton;
-			}
-
 			yield return EditionObjectPageType.Summary;
 
 			if (hasEvent)
 			{
+				yield return EditionObjectPageType.Singleton;
+
 				switch (type)
 				{
 					case EventType.AmortissementAuto:

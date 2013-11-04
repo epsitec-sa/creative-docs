@@ -252,7 +252,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private bool IsHilited(ObjectField field)
 		{
-			if (field != ObjectField.Unknown)
+			if (field != ObjectField.Unknown &&
+				!DataAccessor.IsSingletonField(field))
 			{
 				return this.GetPropertyState (field) == PropertyState.Single;
 			}

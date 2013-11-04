@@ -115,6 +115,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne la page permettant d'éditer un champ donné.
 			switch (field)
 			{
+				case ObjectField.EvNuméro:
+				case ObjectField.EvCommentaire:
+				case ObjectField.EvDocuments:
+					return EditionObjectPageType.Singleton;
+
 				case ObjectField.Valeur1:
 				case ObjectField.Valeur2:
 				case ObjectField.Valeur3:
@@ -158,6 +163,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				var c1 = new List<ObjectSummaryControllerTile> ()
 				{
+					new ObjectSummaryControllerTile ("Evénement"),
+					new ObjectSummaryControllerTile (ObjectField.EvNuméro),
+					new ObjectSummaryControllerTile (ObjectField.EvCommentaire),
+					new ObjectSummaryControllerTile (ObjectField.EvDocuments),
+
+					ObjectSummaryControllerTile.Empty,
+
 					new ObjectSummaryControllerTile ("Général"),
 					new ObjectSummaryControllerTile (ObjectField.Level),
 					new ObjectSummaryControllerTile (ObjectField.Numéro),
