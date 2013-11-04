@@ -75,6 +75,13 @@
     <Compile Include="Controllers\TimelineCellController.cs" />
     <Compile Include="Converters\TimelineCellConverter.cs" />
     <Compile Include="AssetsUI.cs" />
+    <Compile Include="DataFillers\AbstractDataFiller.cs" />
+    <Compile Include="DataFillers\CategoriesDataFiller.cs" />
+    <Compile Include="DataFillers\EventsCategoriesDataFiller.cs" />
+    <Compile Include="DataFillers\EventsObjectsDataFiller.cs" />
+    <Compile Include="DataFillers\Node.cs" />
+    <Compile Include="DataFillers\AbstractNodeFiller.cs" />
+    <Compile Include="DataFillers\ObjectsDataFiller.cs" />
     <Compile Include="Helpers\Converters.cs" />
     <Compile Include="Helpers\Text.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
@@ -132,6 +139,7 @@
     <Compile Include="Views\ToolbarCommand.cs" />
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
+    <Compile Include="Widgets\ITreeTableFiller.cs" />
     <Compile Include="Widgets\SimpleTreeTableCellGlyph.cs" />
     <Compile Include="Widgets\TreeTableCellGlyph.cs" />
     <Compile Include="Widgets\TreeTableColumnGlyph.cs" />

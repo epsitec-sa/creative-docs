@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -33,6 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.HasTreeOperations = this.hasTreeOperations;
 
 			this.CreateTreeTable (parent);
+			this.CreateNodeFiller ();
 
 			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
 			{
@@ -192,14 +194,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.controller.CreateUI (frame, footerHeight: 0);
-			this.controller.SetColumns (this.TreeTableColumns, 1);
 
 			//	Pour que le calcul du nombre de lignes visibles soit correct.
 			parent.Window.ForceLayout ();
-
-			this.UpdateData ();
-			this.UpdateController ();
-			this.UpdateToolbar ();
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -222,6 +219,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
 			};
+		}
+
+		protected virtual void CreateNodeFiller()
+		{
+			this.dataFiller.UpdateColumns (1);
+
+			this.UpdateData ();
+			this.UpdateController ();
+			this.UpdateToolbar ();
 		}
 
 		protected virtual TreeTableColumnDescription[] TreeTableColumns
@@ -266,6 +272,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected virtual void UpdateContent(int firstRow, int count, int selection, bool crop = true)
 		{
+			this.dataFiller.UpdateContent (firstRow, count, selection, crop);
 		}
 
 
@@ -477,7 +484,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected int NodesCount
+		public int NodesCount
 		{
 			//	Retourne le nombre de noeuds visibles.
 			get
@@ -490,25 +497,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Retourne un noeud visible.
 			return this.nodes[this.nodeIndexes[i]];
-		}
-
-		protected struct Node
-		{
-			//	Noeud correspondant à une ligne.
-			//	Si Type == TreeTableTreeType.Final, il s'agit d'une ligne ne pouvant
-			//	être ni compactée ni étendue (feuille de l'arbre).
-			//	Si Type == TreeTableTreeType.Compacted ou TreeTableTreeType.Expanded,
-			//	il s'agit d'une ligne avec un petit bouton triangulaire.
-			public Node(Guid guid, int level, TreeTableTreeType type)
-			{
-				this.Guid  = guid;
-				this.Level = level;
-				this.Type  = type;
-			}
-
-			public readonly Guid				Guid;
-			public readonly int					Level;
-			public readonly TreeTableTreeType	Type;
 		}
 
 
@@ -619,6 +607,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly List<Node>				nodes;
 		private readonly List<int>				nodeIndexes;
 
+		protected AbstractDataFiller			dataFiller;
 		protected BaseType						baseType;
 		protected bool							hasTreeOperations;
 		protected string						title;

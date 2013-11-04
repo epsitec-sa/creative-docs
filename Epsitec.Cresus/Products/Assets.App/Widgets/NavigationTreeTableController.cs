@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// navigation en fonction du nombre de lignes RowsCount.
 	/// Il cache complètement le TreeTable sous-jacent à l'aide d'une Facade.
 	/// </summary>
-	public class NavigationTreeTableController
+	public class NavigationTreeTableController : ITreeTableFiller
 	{
 		public void CreateUI(Widget parent, int rowHeight = 18, int headerHeight = 22, int footerHeight = 22)
 		{
@@ -126,6 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		#region ITreeTableFiller
 		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
 		{
 			this.treeTable.SetColumns (descriptions, dockToLeftCount);
@@ -165,6 +166,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.treeTable.SetColumnCells (rank, cells);
 		}
+		#endregion
 		#endregion
 
 
@@ -255,8 +257,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		private TreeTable treeTable;
-		private VScroller scroller;
-		private int rowsCount;
+		private TreeTable						treeTable;
+		private VScroller						scroller;
+		private int								rowsCount;
 	}
 }

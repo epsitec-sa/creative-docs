@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// On se contente d'afficher les AbstractTreeTableColumn passées avec SetColumns.
 	/// Un seul événement RowClicked permet de connaître la colonne et la ligne cliquée.
 	/// </summary>
-	public class TreeTable : Widget
+	public class TreeTable : Widget, ITreeTableFiller
 	{
 		public TreeTable(int rowHeight, int headerHeight, int footerHeight)
 		{
