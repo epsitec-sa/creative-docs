@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		public Timestamp?						Timestamp;
 		public DataObject						DataObject;
 
-		public virtual void UpdateColumns(int dockToLeftCount)
+		public virtual void UpdateColumns()
 		{
 		}
 

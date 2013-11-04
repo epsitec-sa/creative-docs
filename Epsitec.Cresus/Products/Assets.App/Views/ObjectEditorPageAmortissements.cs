@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -46,7 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Text          = "Importer",
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
-				PreferredSize = new Common.Drawing.Size (100, h),
+				PreferredSize = new Common.Drawing.Size (70, h),
 				Dock          = DockStyle.Left,
 				Margins       = new Common.Drawing.Margins (0, 0, 0, 0),
 			};
@@ -75,7 +76,60 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			button.Clicked += delegate
 			{
+				this.ShowCategoriesPopup (button);
 			};
+		}
+
+		private void ShowCategoriesPopup(Widget target)
+		{
+			var popup = new CategoriesPopup (this.accessor);
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.Navigate += delegate (object sender, Guid guid)
+			{
+				this.Import (guid);
+			};
+		}
+
+		private void Import(Guid guid)
+		{
+			//	Importe par copie.
+			var obj = this.accessor.GetObject (BaseType.Categories, guid);
+
+			//	Copie les champs nécessaires.
+			var nom = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
+			if (!string.IsNullOrEmpty (nom))
+			{
+				this.accessor.SetObjectField (ObjectField.NomCatégorie1, nom);
+			}
+
+			var taux = ObjectCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.TauxAmortissement);
+			if (taux.HasValue)
+			{
+				this.accessor.SetObjectField (ObjectField.TauxAmortissement, taux);
+			}
+
+			var type = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.TypeAmortissement);
+			if (!string.IsNullOrEmpty (type))
+			{
+				this.accessor.SetObjectField (ObjectField.TypeAmortissement, type);
+			}
+
+			var period = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Périodicité);
+			if (!string.IsNullOrEmpty (period))
+			{
+				this.accessor.SetObjectField (ObjectField.Périodicité, period);
+			}
+
+			var residu = ObjectCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.ValeurRésiduelle);
+			if (residu.HasValue)
+			{
+				this.accessor.SetObjectField (ObjectField.ValeurRésiduelle, residu);
+			}
+
+			//	Met à jour les contrôleurs.
+			this.SetObject (this.objectGuid, this.timestamp);
 		}
 	}
 }

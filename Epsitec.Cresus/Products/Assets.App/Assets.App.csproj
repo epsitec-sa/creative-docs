@@ -86,6 +86,7 @@
     <Compile Include="Helpers\Text.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
+    <Compile Include="Popups\CategoriesPopup.cs" />
     <Compile Include="Popups\SimulationPopup.cs" />
     <Compile Include="Popups\SmoothShadow.cs" />
     <Compile Include="Popups\SimplePopup.cs" />

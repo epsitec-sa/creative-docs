@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected virtual void CreateNodeFiller()
 		{
-			this.dataFiller.UpdateColumns (1);
+			this.dataFiller.UpdateColumns ();
 
 			this.UpdateData ();
 			this.UpdateController ();
@@ -267,11 +267,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				selection -= this.controller.TopVisibleRow;
 			}
 
-			this.UpdateContent (firstRow, count, selection, crop);
-		}
-
-		protected virtual void UpdateContent(int firstRow, int count, int selection, bool crop = true)
-		{
 			this.dataFiller.UpdateContent (firstRow, count, selection, crop);
 		}
 

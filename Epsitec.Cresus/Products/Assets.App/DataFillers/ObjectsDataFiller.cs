@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		}
 
 
-		public override void UpdateColumns(int dockToLeftCount)
+		public override void UpdateColumns()
 		{
-			this.controller.SetColumns (ObjectsDataFiller.TreeTableColumns, dockToLeftCount);
+			this.controller.SetColumns (ObjectsDataFiller.TreeTableColumns, 1);
 		}
 
 		public override void UpdateContent(int firstRow, int count, int selection, bool crop = true)
