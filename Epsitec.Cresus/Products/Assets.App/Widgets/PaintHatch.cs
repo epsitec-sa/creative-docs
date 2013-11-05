@@ -12,11 +12,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public static void Paint(Graphics graphics, Rectangle rect)
 		{
+			PaintHatch.Paint (graphics, rect, Point.Zero);
+		}
+
+		public static void Paint(Graphics graphics, Rectangle rect, Point reference)
+		{
 			//	Dessine des hachures à 45 degrés "/" dans un rectangle.
 			//	On s'arrange pour qu'elles soient forcément jointives avec celles
 			//	d'autres rectangles.
-			rect.Deflate (0.25);
-			var path = PaintHatch.GetHatchPath (rect, PaintHatch.distance, Point.Zero);
+			rect.Deflate (0.25);  // pour avoir des jointures parfaites
+			var path = PaintHatch.GetHatchPath (rect, PaintHatch.distance, reference);
 
 			graphics.AddPath (path);
 			graphics.RenderSolid (Color.FromAlphaColor (0.5, ColorManager.GlyphColor));

@@ -103,6 +103,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					button.HoverColor    = ColorManager.HoverColor;
 				}
 
+				button.Hatch = tile.Value.Hatch;
+
 				if (tile.Value.Hilited)
 				{
 					button.ActiveState = ActiveState.Yes;

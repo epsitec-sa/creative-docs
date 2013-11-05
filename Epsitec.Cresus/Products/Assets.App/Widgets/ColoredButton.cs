@@ -65,6 +65,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public bool								Hatch
+		{
+			get
+			{
+				return this.hatch;
+			}
+			set
+			{
+				if (this.hatch != value)
+				{
+					this.hatch = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 
 		protected override void OnActiveStateChanged()
 		{
@@ -89,8 +105,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var rect = new Rectangle (0, 0, this.ActualWidth, this.ActualHeight);
 
 			//	Dessine le fond coloré.
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (this.BackColor);
+			if (this.hatch)
+			{
+				var reference = this.MapClientToParent (rect.BottomLeft);
+				PaintHatch.Paint (graphics, rect, reference);
+			}
+			else
+			{
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.BackColor);
+			}
 
 			//	Dessine le texte.
 			this.textLayout.Text            = this.Text;
@@ -129,5 +153,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private Color							normalColor;
 		private Color							selectedColor;
 		private Color							hoverColor;
+		private bool							hatch;
 	}
 }

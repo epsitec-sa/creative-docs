@@ -9,13 +9,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public struct SummaryControllerTile
 	{
-		public SummaryControllerTile(string text, string tooltip = null, ContentAlignment alignment = ContentAlignment.MiddleLeft, bool hilited = false, bool readOnly = false, bool simpleText = false)
+		public SummaryControllerTile(string text, string tooltip = null, ContentAlignment alignment = ContentAlignment.MiddleLeft, bool hilited = false, bool readOnly = false, bool hatch = false, bool simpleText = false)
 		{
 			this.Text       = text;
 			this.Tootip     = tooltip;
 			this.Alignment  = alignment;
 			this.Hilited    = hilited;
 			this.Readonly   = readOnly;
+			this.Hatch      = hatch;
 			this.SimpleText = simpleText;
 		}
 
@@ -24,6 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public readonly ContentAlignment	Alignment;
 		public readonly bool				Hilited;
 		public readonly bool				Readonly;
+		public readonly bool				Hatch;
 		public readonly bool				SimpleText;
 	}
 }

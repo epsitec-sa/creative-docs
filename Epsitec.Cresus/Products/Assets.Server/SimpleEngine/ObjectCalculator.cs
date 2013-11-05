@@ -9,6 +9,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	public static class ObjectCalculator
 	{
 		#region Plausible event logic
+		public static bool IsEventLocked(DataObject obj, Timestamp timestamp)
+		{
+			var prevEvent = ObjectCalculator.GetPrevEvent (obj, timestamp);
+			var nextEvent = ObjectCalculator.GetNextEvent (obj, timestamp);
+
+			return !((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
+					 nextEvent != TerminalEvent.In);
+		}
+
 		public static IEnumerable<EventType> GetPlausibleEventTypes(BaseType baseType, DataObject obj, Timestamp timestamp)
 		{
 			switch (baseType)

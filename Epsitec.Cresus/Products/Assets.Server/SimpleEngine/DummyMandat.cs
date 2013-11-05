@@ -731,7 +731,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var o = new DataObject ();
 				categories.Add (o);
 
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (date1, EventType.Entrée);
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.Level,             2));

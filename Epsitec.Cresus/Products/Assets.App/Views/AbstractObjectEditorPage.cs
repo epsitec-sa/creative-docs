@@ -34,16 +34,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.obj        = this.accessor.GetObject (this.baseType, this.objectGuid);
 			this.timestamp  = timestamp;
 			this.hasEvent   = false;
+			this.isLocked   = true;
 			this.eventType  = EventType.Unknown;
 
 			if (!this.objectGuid.IsEmpty && this.obj != null)
 			{
 				var e = this.obj.GetEvent (this.timestamp);
 
-				if (e != null)
+				if (e == null)
+				{
+					this.isLocked = ObjectCalculator.IsEventLocked (this.obj, this.timestamp);
+				}
+				else
 				{
 					this.eventType = e.Type;
 					this.hasEvent  = true;
+					this.isLocked  = false;
 				}
 			}
 
@@ -57,6 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as StringFieldController;
 
 					c.EventType     = this.eventType;
+					c.IsLocked      = this.isLocked;
 					c.Value         = ObjectCalculator.GetObjectPropertyString (this.obj, this.timestamp, field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
@@ -65,6 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as DecimalFieldController;
 
 					c.EventType     = this.eventType;
+					c.IsLocked      = this.isLocked;
 					c.Value         = ObjectCalculator.GetObjectPropertyDecimal (this.obj, this.timestamp, field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
@@ -73,6 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as ComputedAmountFieldController;
 
 					c.EventType     = this.eventType;
+					c.IsLocked      = this.isLocked;
 					c.Value         = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, this.timestamp, field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
@@ -81,6 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as IntFieldController;
 
 					c.EventType     = this.eventType;
+					c.IsLocked      = this.isLocked;
 					c.Value         = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
@@ -89,6 +99,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as DateFieldController;
 
 					c.EventType     = this.eventType;
+					c.IsLocked      = this.isLocked;
 					c.Value         = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
@@ -373,6 +384,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected DataObject						obj;
 		protected Timestamp							timestamp;
 		protected bool								hasEvent;
+		protected bool								isLocked;
 		protected EventType							eventType;
 		protected int								tabIndex;
 	}
