@@ -31,57 +31,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if ((mode & TimelineMode.Expanded) != 0)
 			{
-				//	Crée des cellules pour tous les jours compris entre 'start' et 'end'.
-				for (int i = 0; i < 365*100; i++)
-				{
-					var date = start.Date.AddDays (i);
-
-					if (date > end.Date)
-					{
-						break;
-					}
-
-					var cell = new TimelineCell
-					{
-						Timestamp     = new Timestamp (date, 0),
-						TimelineGlyph = TimelineGlyph.Empty,
-					};
-
-					this.cells.Add (cell);
-				}
+				this.AddStartEnd (start, end);
 			}
 
 			//if ((mode & TimelineMode.Compacted) != 0)
 			if (false)
 			{
-				//	Crée des cellules pour tous les premiers du mois compris entre 'start' et 'end'.
-				int year  = start.Year;
-				int month = start.Month;
-
-				for (int i = 0; i < 12*100; i++)
-				{
-					var date = new System.DateTime (year, month, 1);
-
-					if (date > end.Date)
-					{
-						break;
-					}
-
-					var cell = new TimelineCell
-					{
-						Timestamp     = new Timestamp (date, 0),
-						TimelineGlyph = TimelineGlyph.Empty,
-					};
-
-					this.cells.Add (cell);
-
-					month++;
-					if (month > 12)
-					{
-						month = 1;
-						year++;
-					}
-				}
+				this.AddFirstMonthDay (start, end);
 			}
 
 			//	Si nécessaire, ajoute les cellules forcées.
@@ -89,63 +45,128 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.AddForcedDate (forcedDate);
 
 			//	Ajoute les cellules correspondant aux événements de l'objet.
-			//	S'il existe déjà une cellule à la date concernée, on modifie la
-			//	cellule pour représenter l'événement de l'objet.
 			if (objectGuid.HasValue)
 			{
-				var obj = this.accessor.GetObject (this.baseType, objectGuid.Value);
+				this.AddObject (start, end, objectGuid.Value);
 
-				if (obj != null)
+				if ((mode & TimelineMode.Expanded) != 0)
 				{
-					int eventCount = obj.EventsCount;
+					this.UpdateLocked (objectGuid.Value);
+				}
+			}
+		}
 
-					for (int i=0; i<eventCount; i++)
+		private void AddStartEnd(System.DateTime start, System.DateTime end)
+		{
+			//	Crée des cellules pour tous les jours compris entre 'start' et 'end'.
+			for (int i = 0; i < 365*100; i++)
+			{
+				var date = start.Date.AddDays (i);
+
+				if (date > end.Date)
+				{
+					break;
+				}
+
+				var cell = new TimelineCell
+				{
+					Timestamp     = new Timestamp (date, 0),
+					TimelineGlyph = TimelineGlyph.Empty,
+				};
+
+				this.cells.Add (cell);
+			}
+		}
+
+		private void AddFirstMonthDay(System.DateTime start, System.DateTime end)
+		{
+			//	Crée des cellules pour tous les premiers du mois compris entre 'start' et 'end'.
+			int year  = start.Year;
+			int month = start.Month;
+
+			for (int i = 0; i < 12*100; i++)
+			{
+				var date = new System.DateTime (year, month, 1);
+
+				if (date > end.Date)
+				{
+					break;
+				}
+
+				var cell = new TimelineCell
+				{
+					Timestamp     = new Timestamp (date, 0),
+					TimelineGlyph = TimelineGlyph.Empty,
+				};
+
+				this.cells.Add (cell);
+
+				month++;
+				if (month > 12)
+				{
+					month = 1;
+					year++;
+				}
+			}
+		}
+
+		private void AddObject(System.DateTime start, System.DateTime end, Guid objectGuid)
+		{
+			//	Ajoute les cellules correspondant aux événements de l'objet.
+			//	S'il existe déjà une cellule à la date concernée, on modifie la
+			//	cellule pour représenter l'événement de l'objet.
+			var obj = this.accessor.GetObject (this.baseType, objectGuid);
+
+			if (obj != null)
+			{
+				int eventCount = obj.EventsCount;
+
+				for (int i=0; i<eventCount; i++)
+				{
+					var e = obj.GetEvent (i);
+					var t = e.Timestamp;
+
+					if (t.Date >= start)
 					{
-						var e = obj.GetEvent (i);
-						var t = e.Timestamp;
-
-						if (t.Date >= start)
+						if (t.Date > end)
 						{
-							if (t.Date > end)
+							break;
+						}
+
+						var index = this.cells.FindIndex (x => x.Timestamp == t);
+						var type = e.Type;
+						var glyph = TimelineData.TypeToGlyph ((EventType) type);
+
+						var value1 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Valeur1);
+						var value2 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Valeur2);
+
+						decimal? v1 = value1 != null && value1.HasValue ? value1.Value.FinalAmount : null;
+						decimal? v2 = value2 != null && value2.HasValue ? value2.Value.FinalAmount : null;
+
+						if (index == -1)
+						{
+							var cell = new TimelineCell
 							{
-								break;
-							}
+								Timestamp     = t,
+								TimelineGlyph = glyph,
+								Tooltip       = BusinessLogic.GetTooltip (obj, t, type, 8),
+								Values        = new decimal?[] { v1, v2 },
+							};
 
-							var index = this.cells.FindIndex (x => x.Timestamp == t);
-							var type = e.Type;
-							var glyph = TimelineData.TypeToGlyph ((EventType) type);
-
-							var value1 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Valeur1);
-							var value2 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Valeur2);
-
-							decimal? v1 = value1 != null && value1.HasValue ? value1.Value.FinalAmount : null;
-							decimal? v2 = value2 != null && value2.HasValue ? value2.Value.FinalAmount : null;
-
-							if (index == -1)
+							index = this.GetIndex (t);
+							this.cells.Insert (index, cell);
+						}
+						else
+						{
+							var cell = new TimelineCell
 							{
-								var cell = new TimelineCell
-								{
-									Timestamp     = t,
-									TimelineGlyph = glyph,
-									Tooltip       = BusinessLogic.GetTooltip (obj, t, type, 8),
-									Values        = new decimal?[] { v1, v2 },
-								};
+								Timestamp     = this.cells[index].Timestamp,
+								TimelineGlyph = glyph,
+								Tooltip       = BusinessLogic.GetTooltip (obj, t, type, 8),
+								Values        = new decimal?[] { v1, v2 },
+							};
 
-								index = this.GetIndex (t);
-								this.cells.Insert (index, cell);
-							}
-							else
-							{
-								var cell = new TimelineCell
-								{
-									Timestamp     = this.cells[index].Timestamp,
-									TimelineGlyph = glyph,
-									Tooltip       = BusinessLogic.GetTooltip (obj, t, type, 8),
-									Values        = new decimal?[] { v1, v2 },
-								};
-
-								this.cells[index] = cell;
-							}
+							this.cells[index] = cell;
 						}
 					}
 				}
@@ -172,10 +193,100 @@ namespace Epsitec.Cresus.Assets.App.Views
 					Tooltip       = tooltip,
 				};
 
+				//	On calcule l'index où insérer la cellule, pour que la liste reste
+				//	triée chronologiquement.
 				int i = this.cells.Where (x => x.Timestamp.Date < date.Value).Count ();
-				this.cells.Insert (i, cell);  // la liste doit être triée chronologiquement
+				this.cells.Insert (i, cell);
 			}
 		}
+
+
+		#region Locked update
+		private void UpdateLocked(Guid objectGuid)
+		{
+			var lockedInterval = this.GetLockedInterval (objectGuid);
+
+			for (int i=0; i<this.cells.Count; i++)
+			{
+				var cell = this.cells[i];
+
+				if (TimelineData.IsLocked (lockedInterval, cell.Timestamp))
+				{
+					cell.TimelineLocked = true;
+					this.cells[i] = cell;
+				}
+			}
+		}
+
+		private static bool IsLocked(List<LockedInterval> lockedInterval, Timestamp timestamp)
+		{
+			foreach (var i in lockedInterval)
+			{
+				if (timestamp > i.Start &&
+					timestamp < i.End)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		private List<LockedInterval> GetLockedInterval(Guid objectGuid)
+		{
+			var list = new List<LockedInterval> ();
+			var obj = this.accessor.GetObject (this.baseType, objectGuid);
+
+			if (obj != null)
+			{
+				var start = new Timestamp (System.DateTime.MinValue, 0);
+				bool isLocked = true;
+
+				int eventCount = obj.EventsCount;
+				for (int i=0; i<eventCount; i++)
+				{
+					var e = obj.GetEvent (i);
+
+					if (e.Type == EventType.Entrée)
+					{
+						var li = new LockedInterval
+						{
+							Start = start,
+							End   = e.Timestamp,
+						};
+
+						list.Add (li);
+						isLocked = false;
+					}
+
+					if (e.Type == EventType.Sortie)
+					{
+						start = e.Timestamp;
+						isLocked = true;
+					}
+				}
+
+				if (isLocked)
+				{
+					var li = new LockedInterval
+					{
+						Start = start,
+						End   = new Timestamp (System.DateTime.MaxValue, 0),
+					};
+
+					list.Add (li);
+				}
+			}
+
+			return list;
+		}
+
+		private struct LockedInterval
+		{
+			public Timestamp Start;
+			public Timestamp End;
+		}
+		#endregion
 
 
 		public static TimelineGlyph TypeToGlyph(EventType? type)
@@ -311,6 +422,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			public Timestamp		Timestamp;
 			public TimelineGlyph	TimelineGlyph;
+			public bool				TimelineLocked;
 			public string			Tooltip;
 			public decimal?[]		Values;
 		}

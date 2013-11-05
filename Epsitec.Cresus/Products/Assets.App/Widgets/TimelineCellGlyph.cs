@@ -8,9 +8,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineCellGlyph
 	{
-		public TimelineCellGlyph(TimelineGlyph glyph, string tooltip, bool isSelected = false, bool isError = false)
+		public TimelineCellGlyph(TimelineGlyph glyph, bool isLocked, string tooltip, bool isSelected = false, bool isError = false)
 		{
 			this.Glyph      = glyph;
+			this.IsLocked   = isLocked;
 			this.Tooltip    = tooltip;
 			this.IsSelected = isSelected;
 			this.IsError    = isError;
@@ -34,6 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public readonly TimelineGlyph			Glyph;
+		public readonly bool					IsLocked;
 		public readonly string					Tooltip;
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
