@@ -95,41 +95,57 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void Import(Guid guid)
 		{
 			//	Importe par copie.
-			var obj = this.accessor.GetObject (BaseType.Categories, guid);
+			var catObj = this.accessor.GetObject (BaseType.Categories, guid);
 
 			//	Copie les champs nécessaires.
-			var nom = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
-			if (!string.IsNullOrEmpty (nom))
-			{
-				this.accessor.SetObjectField (ObjectField.NomCatégorie1, nom);
-			}
-
-			var taux = ObjectCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.TauxAmortissement);
-			if (taux.HasValue)
-			{
-				this.accessor.SetObjectField (ObjectField.TauxAmortissement, taux);
-			}
-
-			var type = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.TypeAmortissement);
-			if (!string.IsNullOrEmpty (type))
-			{
-				this.accessor.SetObjectField (ObjectField.TypeAmortissement, type);
-			}
-
-			var period = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Périodicité);
-			if (!string.IsNullOrEmpty (period))
-			{
-				this.accessor.SetObjectField (ObjectField.Périodicité, period);
-			}
-
-			var residu = ObjectCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.ValeurRésiduelle);
-			if (residu.HasValue)
-			{
-				this.accessor.SetObjectField (ObjectField.ValeurRésiduelle, residu);
-			}
+			this.ImportField (catObj, ObjectField.Nom,               ObjectField.NomCatégorie1);
+			this.ImportField (catObj, ObjectField.TauxAmortissement, ObjectField.TauxAmortissement);
+			this.ImportField (catObj, ObjectField.TypeAmortissement, ObjectField.TypeAmortissement);
+			this.ImportField (catObj, ObjectField.Périodicité,       ObjectField.Périodicité);
+			this.ImportField (catObj, ObjectField.ValeurRésiduelle,  ObjectField.ValeurRésiduelle);
 
 			//	Met à jour les contrôleurs.
 			this.SetObject (this.objectGuid, this.timestamp);
+		}
+
+		private void ImportField(DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
+		{
+			var typeSrc = DataAccessor.GetFieldType (fieldSrc);
+			var typeDst = DataAccessor.GetFieldType (fieldDst);
+			System.Diagnostics.Debug.Assert (typeSrc == typeDst);
+
+			switch (typeSrc)
+			{
+				case FieldType.String:
+					this.ImportFieldString (catObj, fieldSrc, fieldDst);
+					break;
+
+				case FieldType.Decimal:
+					this.ImportFieldDecimal (catObj, fieldSrc, fieldDst);
+					break;
+
+				default:
+					System.Diagnostics.Debug.Fail ("Not supported");
+					break;
+			}
+		}
+
+		private void ImportFieldString(DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
+		{
+			var s = ObjectCalculator.GetObjectPropertyString (catObj, null, fieldSrc);
+			if (!string.IsNullOrEmpty (s))
+			{
+				this.accessor.SetObjectField (fieldDst, s);
+			}
+		}
+
+		private void ImportFieldDecimal(DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
+		{
+			var d = ObjectCalculator.GetObjectPropertyDecimal (catObj, null, fieldSrc);
+			if (d.HasValue)
+			{
+				this.accessor.SetObjectField (fieldDst, d);
+			}
 		}
 	}
 }

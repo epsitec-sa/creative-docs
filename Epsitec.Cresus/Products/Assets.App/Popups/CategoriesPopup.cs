@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			new StaticText
 			{
 				Parent           = parent,
-				Text             = "Choix d'une catégorie d'immobilisation",
+				Text             = "Choix de la catégorie d'immobilisation à importer",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Top,
 				PreferredHeight  = CategoriesPopup.TitleHeight - 4,
