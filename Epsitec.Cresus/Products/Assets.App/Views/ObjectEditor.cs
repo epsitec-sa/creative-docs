@@ -179,21 +179,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				switch (this.baseType)
-				{
-					case BaseType.Objects:
-						return ObjectEditor.GetObjectAvailablePages (this.hasEvent, this.eventType);
-
-					case BaseType.Categories:
-						return ObjectEditor.GetCategoryAvailablePages (this.hasEvent, this.eventType);
-
-					default:
-						return null;
-				}
+				return ObjectEditor.GetAvailablePages (this.baseType, this.hasEvent, this.eventType);
 			}
 		}
 
-		public static IEnumerable<EditionObjectPageType> GetObjectAvailablePages(bool hasEvent, EventType type)
+		public static IEnumerable<EditionObjectPageType> GetAvailablePages(BaseType baseType, bool hasEvent, EventType type)
+		{
+			switch (baseType)
+			{
+				case BaseType.Objects:
+					return ObjectEditor.GetObjectAvailablePages (hasEvent, type);
+
+				case BaseType.Categories:
+					return ObjectEditor.GetCategoryAvailablePages (hasEvent, type);
+
+				default:
+					return null;
+			}
+		}
+
+		private static IEnumerable<EditionObjectPageType> GetObjectAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
 			yield return EditionObjectPageType.Summary;
@@ -216,11 +221,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case EventType.Modification:
 					case EventType.Réorganisation:
-						yield return EditionObjectPageType.General;
+						yield return EditionObjectPageType.Object;
 						break;
 
 					default:  // accès à toutes les pages
-						yield return EditionObjectPageType.General;
+						yield return EditionObjectPageType.Object;
 						yield return EditionObjectPageType.Values;
 						yield return EditionObjectPageType.Amortissements;
 						break;
@@ -231,13 +236,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private static IEnumerable<EditionObjectPageType> GetCategoryAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
+			yield return EditionObjectPageType.Summary;
+
 			if (hasEvent)
 			{
 				yield return EditionObjectPageType.Singleton;
-			}
 
-			yield return EditionObjectPageType.Category;
-			yield return EditionObjectPageType.Compta;
+				yield return EditionObjectPageType.Category;
+				yield return EditionObjectPageType.Compta;
+			}
 		}
 
 

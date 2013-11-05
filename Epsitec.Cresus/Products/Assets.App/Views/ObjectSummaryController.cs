@@ -11,9 +11,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectSummaryController
 	{
-		public ObjectSummaryController(DataAccessor accessor, List<List<ObjectSummaryControllerTile>> tiles)
+		public ObjectSummaryController(DataAccessor accessor, BaseType baseType, List<List<ObjectSummaryControllerTile>> tiles)
 		{
 			this.accessor = accessor;
+			this.baseType = baseType;
 			this.tiles    = tiles;
 
 			this.controller = new SummaryController ();
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateFields(Guid objectGuid, Timestamp? timestamp)
 		{
-			this.obj       = this.accessor.GetObject (BaseType.Objects, objectGuid);
+			this.obj       = this.accessor.GetObject (this.baseType, objectGuid);
 			this.timestamp = timestamp;
 			this.hasEvent  = false;
 			this.isLocked  = true;
@@ -145,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (ObjectSummaryController.IsDefined (this.timestamp))
 				{
 					string d = Helpers.Converters.DateToString (this.timestamp.Value.Date);
-					return string.Format ("Le tableau ci-dessous montre l'état de l'objet en date du {0} :", d);
+					return string.Format ("Le tableau ci-dessous montre l'état en date du {0} :", d);
 				}
 				else
 				{
@@ -275,8 +276,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	pour le type de l'événement en cours.
 			if (this.hasEvent && field != ObjectField.Unknown)
 			{
-				var type = ObjectEditorPageSummary.GetPageType (field);
-				var availables = ObjectEditor.GetObjectAvailablePages (this.hasEvent, this.eventType);
+				var type = ObjectEditorPageSummary.GetPageType (this.baseType, field);
+				var availables = ObjectEditor.GetAvailablePages (this.baseType, this.hasEvent, this.eventType);
 				return !availables.Contains (type);
 			}
 			else
@@ -371,6 +372,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly DataAccessor				accessor;
+		private readonly BaseType					baseType;
 		private readonly List<List<ObjectSummaryControllerTile>> tiles;
 		private readonly SummaryController			controller;
 

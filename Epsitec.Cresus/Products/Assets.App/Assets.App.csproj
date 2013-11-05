@@ -121,7 +121,7 @@
     <Compile Include="Widgets\ColoredButton.cs" />
     <Compile Include="Views\ObjectEditorPageValues.cs" />
     <Compile Include="Views\ObjectEditorPageAmortissements.cs" />
-    <Compile Include="Views\ObjectEditorPageGeneral.cs" />
+    <Compile Include="Views\ObjectEditorPageObject.cs" />
     <Compile Include="Views\EditionObjectPageType.cs" />
     <Compile Include="Views\ObjectEditorPageSummary.cs" />
     <Compile Include="Views\NavigatorController.cs" />

@@ -41,22 +41,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public bool								IsLocked
-		{
-			get
-			{
-				return this.isLocked;
-			}
-			set
-			{
-				if (this.isLocked != value)
-				{
-					this.isLocked = value;
-					this.UpdatePropertyState ();
-				}
-			}
-		}
-
 		public string							Label
 		{
 			get
@@ -189,11 +173,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.isLocked)
-				{
-					return Color.FromName ("Red");
-				}
-
 				switch (this.propertyState)
 				{
 					case PropertyState.Single:
@@ -261,6 +240,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						historyButton;
 		private IconButton						clearButton;
 		private PropertyState					propertyState;
-		private bool							isLocked;
 	}
 }

@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Unknown,
 		Singleton,
 		Summary,
-		General,
+		Object,
 		Values,
 		Amortissements,
 		Compta,

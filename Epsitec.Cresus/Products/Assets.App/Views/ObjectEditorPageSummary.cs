@@ -18,7 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.summaryController = new ObjectSummaryController
 			(
 				this.accessor,
-				ObjectEditorPageSummary.SummaryTiles
+				this.baseType,
+				this.SummaryTiles
 			);
 
 			this.summaryController.TileClicked += delegate (object sender, int row, int column)
@@ -100,17 +101,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void TileClicked(int row, int column)
 		{
-			var tile = ObjectEditorPageSummary.GetTile (column, row);
+			var tile = this.GetTile (column, row);
 
 			if (!tile.IsEmpty)
 			{
-				var type = ObjectEditorPageSummary.GetPageType (tile.Field);
+				var type = ObjectEditorPageSummary.GetPageType (this.baseType, tile.Field);
 				this.OnPageOpen (type, tile.Field);
 			}
 		}
 
 
-		public static EditionObjectPageType GetPageType(ObjectField field)
+		public static EditionObjectPageType GetPageType(BaseType baseType, ObjectField field)
+		{
+			switch (baseType)
+			{
+				case BaseType.Objects:
+					return ObjectEditorPageSummary.GetObjectPageType (field);
+
+				case BaseType.Categories:
+					return ObjectEditorPageSummary.GetCategoryPageType (field);
+
+				default:
+					return EditionObjectPageType.Unknown;
+			}
+		}
+
+		public static EditionObjectPageType GetObjectPageType(ObjectField field)
 		{
 			//	Retourne la page permettant d'éditer un champ donné.
 			switch (field)
@@ -133,13 +149,39 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return EditionObjectPageType.Amortissements;
 
 				default:
-					return EditionObjectPageType.General;
+					return EditionObjectPageType.Object;
 			}
 		}
 
-		private static ObjectSummaryControllerTile GetTile(int column, int row)
+		public static EditionObjectPageType GetCategoryPageType(ObjectField field)
 		{
-			var fields = ObjectEditorPageSummary.SummaryTiles;
+			//	Retourne la page permettant d'éditer un champ donné.
+			switch (field)
+			{
+				case ObjectField.EvNuméro:
+				case ObjectField.EvCommentaire:
+				case ObjectField.EvDocuments:
+					return EditionObjectPageType.Singleton;
+
+				case ObjectField.Compte1:
+				case ObjectField.Compte2:
+				case ObjectField.Compte3:
+				case ObjectField.Compte4:
+				case ObjectField.Compte5:
+				case ObjectField.Compte6:
+				case ObjectField.Compte7:
+				case ObjectField.Compte8:
+					return EditionObjectPageType.Compta;
+
+				default:
+					return EditionObjectPageType.Category;
+			}
+		}
+
+
+		private ObjectSummaryControllerTile GetTile(int column, int row)
+		{
+			var fields = this.SummaryTiles;
 
 			if (column < fields.Count)
 			{
@@ -154,7 +196,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return ObjectSummaryControllerTile.Empty;
 		}
 
-		private static List<List<ObjectSummaryControllerTile>> SummaryTiles
+
+		private List<List<ObjectSummaryControllerTile>> SummaryTiles
+		{
+			get
+			{
+				switch (this.baseType)
+				{
+					case BaseType.Objects:
+						return ObjectEditorPageSummary.ObjectSummaryTiles;
+
+					case BaseType.Categories:
+						return ObjectEditorPageSummary.CategorySummaryTiles;
+
+					default:
+						return null;
+				}
+			}
+		}
+
+		private static List<List<ObjectSummaryControllerTile>> ObjectSummaryTiles
 		{
 			//	Retourne la liste des tuiles qui peupleront le tableau.
 			get
@@ -196,6 +257,52 @@ namespace Epsitec.Cresus.Assets.App.Views
 					new ObjectSummaryControllerTile (ObjectField.TypeAmortissement),
 					new ObjectSummaryControllerTile (ObjectField.Périodicité),
 					new ObjectSummaryControllerTile (ObjectField.ValeurRésiduelle),
+				};
+				list.Add (c2);
+
+				return list;
+			}
+		}
+
+		private static List<List<ObjectSummaryControllerTile>> CategorySummaryTiles
+		{
+			//	Retourne la liste des tuiles qui peupleront le tableau.
+			get
+			{
+				var list = new List<List<ObjectSummaryControllerTile>> ();
+
+				var c1 = new List<ObjectSummaryControllerTile> ()
+				{
+					new ObjectSummaryControllerTile ("Evénement"),
+					new ObjectSummaryControllerTile (ObjectField.EvNuméro),
+					new ObjectSummaryControllerTile (ObjectField.EvCommentaire),
+					new ObjectSummaryControllerTile (ObjectField.EvDocuments),
+
+					ObjectSummaryControllerTile.Empty,
+
+					new ObjectSummaryControllerTile ("Général"),
+					new ObjectSummaryControllerTile (ObjectField.Level),
+					new ObjectSummaryControllerTile (ObjectField.Numéro),
+					new ObjectSummaryControllerTile (ObjectField.Nom),
+					new ObjectSummaryControllerTile (ObjectField.Description),
+					new ObjectSummaryControllerTile (ObjectField.TauxAmortissement),
+					new ObjectSummaryControllerTile (ObjectField.TypeAmortissement),
+					new ObjectSummaryControllerTile (ObjectField.Périodicité),
+					new ObjectSummaryControllerTile (ObjectField.ValeurRésiduelle),
+				};
+				list.Add (c1);
+
+				var c2 = new List<ObjectSummaryControllerTile> ()
+				{
+					new ObjectSummaryControllerTile ("Comptabilisation"),
+					new ObjectSummaryControllerTile (ObjectField.Compte1),
+					new ObjectSummaryControllerTile (ObjectField.Compte2),
+					new ObjectSummaryControllerTile (ObjectField.Compte3),
+					new ObjectSummaryControllerTile (ObjectField.Compte4),
+					new ObjectSummaryControllerTile (ObjectField.Compte5),
+					new ObjectSummaryControllerTile (ObjectField.Compte6),
+					new ObjectSummaryControllerTile (ObjectField.Compte7),
+					new ObjectSummaryControllerTile (ObjectField.Compte8),
 				};
 				list.Add (c2);
 
