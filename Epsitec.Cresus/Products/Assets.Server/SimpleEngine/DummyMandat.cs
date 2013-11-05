@@ -809,8 +809,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var categories = mandat.GetData (BaseType.Groups);
 
 			var start  = new Timestamp (new System.DateTime (2013, 1, 1), 0);
-			var date1  = new Timestamp (new System.DateTime (2013, 3, 12), 0);
-			var date2  = new Timestamp (new System.DateTime (2013, 7, 2), 0);
+			var date1  = new Timestamp (new System.DateTime (2013, 1, 19), 0);
+			var date2  = new Timestamp (new System.DateTime (2013, 1, 22), 0);
+			var date3  = new Timestamp (new System.DateTime (2013, 1, 28), 0);
 
 			{
 				var o = new DataObject ();
@@ -820,7 +821,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   0));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Groupes"));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Groupes"));
 			}
 
@@ -832,8 +832,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   1));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "1"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Secteurs"));
 			}
 
@@ -845,8 +843,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "1.1"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Secteur"));
 				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Nord"));
 			}
@@ -855,21 +851,42 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var o = new DataObject ();
 				categories.Add (o);
 
-				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "1.2"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Emplacement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Secteur"));
-				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Sud"));
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
+					e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+					e.AddProperty (new DataStringProperty (ObjectField.Famille, "Secteur"));
+					e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Sud"));
+				}
+
+				{
+					var e = new DataEvent (date1, EventType.Modification);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
+					e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Sud-est"));
+				}
+
+				{
+					var e = new DataEvent (date2, EventType.Modification);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
+					e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Sud-ouest"));
+				}
+
+				{
+					var e = new DataEvent (date3, EventType.Modification);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
+					e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Sud"));
+				}
 			}
 
 			{
 				var o = new DataObject ();
 				categories.Add (o);
 
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (date1, EventType.Entrée);
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
@@ -883,12 +900,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var o = new DataObject ();
 				categories.Add (o);
 
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (date1, EventType.Entrée);
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "1.4"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Secteur"));
 				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Ouest"));
 			}
@@ -901,8 +916,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   1));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "2"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Centres de frais"));
 			}
 
@@ -914,8 +927,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "2.1"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Centre de frais"));
 				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Atelier"));
 			}
@@ -928,8 +939,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "2.2"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Centre de frais"));
 				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Bureaux"));
 			}
@@ -942,8 +951,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "2.3"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Centre de frais"));
 				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Distribution"));
 			}
@@ -956,8 +963,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "2.4"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Centre de frais"));
 				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Stockage"));
 			}
@@ -970,8 +975,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   1));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "3"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placements"));
 			}
 
@@ -983,8 +986,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "3.1"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placement"));
 				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Portefeuille d’actions suisses"));
 			}
@@ -993,26 +994,30 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var o = new DataObject ();
 				categories.Add (o);
 
-				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "3.2"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
-				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Portefeuille d’actions européennes"));
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
+					e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+					e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placement"));
+					e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Portefeuille d’actions européennes"));
+				}
+
+				{
+					var e = new DataEvent (date3, EventType.Sortie);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
+				}
 			}
 
 			{
 				var o = new DataObject ();
 				categories.Add (o);
 
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (date1, EventType.Entrée);
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "3.3"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placement"));
 				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Portefeuille d’actions nord-américaines"));
 			}
@@ -1021,12 +1026,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var o = new DataObject ();
 				categories.Add (o);
 
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (date1, EventType.Entrée);
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "3.4"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placement"));
 				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Portefeuille d’actions sub-américaines"));
 			}
@@ -1035,12 +1038,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var o = new DataObject ();
 				categories.Add (o);
 
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (date2, EventType.Entrée);
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.EvNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "3.5"));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placement"));
 				e.AddProperty (new DataStringProperty (ObjectField.Membre,  "Portefeuille d’actions asiatiques"));
 			}

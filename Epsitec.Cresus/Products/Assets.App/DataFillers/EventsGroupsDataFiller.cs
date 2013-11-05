@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  70, "Date"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,   20, ""));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 110, "Type"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 200, "Famille"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Famille"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 250, "Membre"));
 
 				return list.ToArray ();

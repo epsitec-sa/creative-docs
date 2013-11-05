@@ -360,7 +360,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 	
-		private readonly ObjectSummaryController			summaryController;
+		private readonly ObjectSummaryController summaryController;
 
 		private FrameBox commentaries;
 		private FrameBox commentariesDefined;
