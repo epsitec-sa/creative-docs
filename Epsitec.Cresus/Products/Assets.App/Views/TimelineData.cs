@@ -204,13 +204,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Locked update
 		private void UpdateLocked(Guid objectGuid)
 		{
-			var lockedInterval = this.GetLockedInterval (objectGuid);
+			//	Toutes les dates avant un événement d'entrée ou après un événement de
+			//	sortie sont marquées comme bloquées. Elles auront un fond hachuré.
+			var lockedIntervals = this.GetLockedIntervals (objectGuid);
 
 			for (int i=0; i<this.cells.Count; i++)
 			{
 				var cell = this.cells[i];
 
-				if (TimelineData.IsLocked (lockedInterval, cell.Timestamp))
+				if (TimelineData.IsLocked (lockedIntervals, cell.Timestamp))
 				{
 					cell.TimelineLocked = true;
 					this.cells[i] = cell;
@@ -218,12 +220,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private static bool IsLocked(List<LockedInterval> lockedInterval, Timestamp timestamp)
+		private static bool IsLocked(List<LockedInterval> lockedIntervals, Timestamp timestamp)
 		{
-			foreach (var i in lockedInterval)
+			//	Indique si une date est à l'intérieur d'un invervalle bloqué.
+			foreach (var interval in lockedIntervals)
 			{
-				if (timestamp > i.Start &&
-					timestamp < i.End)
+				if (timestamp > interval.Start &&
+					timestamp < interval.End)
 				{
 					return true;
 				}
@@ -232,15 +235,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return false;
 		}
 
-		private List<LockedInterval> GetLockedInterval(Guid objectGuid)
+		private List<LockedInterval> GetLockedIntervals(Guid objectGuid)
 		{
-			var list = new List<LockedInterval> ();
+			//	Retourne la liste des intervalles bloqués, en fonction des événements
+			//	d'entrée/sortie d'un objet.
+			var intervals = new List<LockedInterval> ();
 			var obj = this.accessor.GetObject (this.baseType, objectGuid);
 
 			if (obj != null)
 			{
 				var start = new Timestamp (System.DateTime.MinValue, 0);
-				bool isLocked = true;
+				bool isLocked = true;  // bloqué jusqu'au premier événement d'entrée
 
 				int eventCount = obj.EventsCount;
 				for (int i=0; i<eventCount; i++)
@@ -255,7 +260,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							End   = e.Timestamp,
 						};
 
-						list.Add (li);
+						intervals.Add (li);
 						isLocked = false;
 					}
 
@@ -274,11 +279,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 						End   = new Timestamp (System.DateTime.MaxValue, 0),
 					};
 
-					list.Add (li);
+					intervals.Add (li);
 				}
 			}
 
-			return list;
+			return intervals;
 		}
 
 		private struct LockedInterval

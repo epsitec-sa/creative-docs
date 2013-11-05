@@ -74,6 +74,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.RenderSolid (color);
 			}
 
+			//	S'il s'agit d'une date bloquée (avant un événement d'entrée ou après un
+			//	événement de sortie), on dessine des hachures.
 			if (isLocked)
 			{
 				PaintHatch.Paint (graphics, rect);
