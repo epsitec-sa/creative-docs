@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return new ObjectsView (accessor, BaseType.Categories, toolbar);
 
 				case ViewType.Groups:
-					return new GroupsView (accessor, toolbar);
+					return new ObjectsView (accessor, BaseType.Groups, toolbar);
 
 				case ViewType.Events:
 				//?return new ObjectsTreeTableView (accessor, toolbar);

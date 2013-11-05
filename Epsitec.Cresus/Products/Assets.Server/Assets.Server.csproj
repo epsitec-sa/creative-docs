@@ -54,7 +54,6 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
-    <Compile Include="SimpleEngine\CategoryField.cs" />
     <Compile Include="SimpleEngine\ComputedAmount.cs" />
     <Compile Include="SimpleEngine\BaseType.cs" />
     <Compile Include="SimpleEngine\ObjectCalculator.cs" />

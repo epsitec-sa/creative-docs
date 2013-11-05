@@ -47,5 +47,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Compte6,
 		Compte7,
 		Compte8,
+
+		Famille,
+		Membre,
 	}
 }

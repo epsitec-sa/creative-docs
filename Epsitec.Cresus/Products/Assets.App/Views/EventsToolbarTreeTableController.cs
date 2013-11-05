@@ -175,6 +175,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case BaseType.Categories:
 					this.dataFiller = new EventsCategoriesDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					break;
+
+				case BaseType.Groups:
+					this.dataFiller = new EventsGroupsDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					break;
 			}
 
 			base.CreateNodeFiller ();

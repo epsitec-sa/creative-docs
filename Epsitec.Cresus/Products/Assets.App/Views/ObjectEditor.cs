@@ -193,6 +193,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case BaseType.Categories:
 					return ObjectEditor.GetCategoryAvailablePages (hasEvent, type);
 
+				case BaseType.Groups:
+					return ObjectEditor.GetGroupAvailablePages (hasEvent, type);
+
 				default:
 					return null;
 			}
@@ -244,6 +247,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				yield return EditionObjectPageType.Category;
 				yield return EditionObjectPageType.Compta;
+			}
+		}
+
+		private static IEnumerable<EditionObjectPageType> GetGroupAvailablePages(bool hasEvent, EventType type)
+		{
+			//	Retourne les pages autorisées pour un type d'événement donné.
+			yield return EditionObjectPageType.Summary;
+
+			if (hasEvent)
+			{
+				yield return EditionObjectPageType.Singleton;
+
+				yield return EditionObjectPageType.Group;
 			}
 		}
 

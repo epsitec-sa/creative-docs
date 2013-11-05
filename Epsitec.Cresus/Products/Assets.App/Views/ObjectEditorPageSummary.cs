@@ -121,12 +121,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case BaseType.Categories:
 					return ObjectEditorPageSummary.GetCategoryPageType (field);
 
+				case BaseType.Groups:
+					return ObjectEditorPageSummary.GetGroupPageType (field);
+
 				default:
 					return EditionObjectPageType.Unknown;
 			}
 		}
 
-		public static EditionObjectPageType GetObjectPageType(ObjectField field)
+		private static EditionObjectPageType GetObjectPageType(ObjectField field)
 		{
 			//	Retourne la page permettant d'éditer un champ donné.
 			switch (field)
@@ -153,7 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public static EditionObjectPageType GetCategoryPageType(ObjectField field)
+		private static EditionObjectPageType GetCategoryPageType(ObjectField field)
 		{
 			//	Retourne la page permettant d'éditer un champ donné.
 			switch (field)
@@ -175,6 +178,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				default:
 					return EditionObjectPageType.Category;
+			}
+		}
+
+		private static EditionObjectPageType GetGroupPageType(ObjectField field)
+		{
+			//	Retourne la page permettant d'éditer un champ donné.
+			switch (field)
+			{
+				case ObjectField.EvNuméro:
+				case ObjectField.EvCommentaire:
+				case ObjectField.EvDocuments:
+					return EditionObjectPageType.Singleton;
+
+				default:
+					return EditionObjectPageType.Group;
 			}
 		}
 
@@ -208,6 +226,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case BaseType.Categories:
 						return ObjectEditorPageSummary.CategorySummaryTiles;
+
+					case BaseType.Groups:
+						return ObjectEditorPageSummary.GroupSummaryTiles;
 
 					default:
 						return null;
@@ -305,6 +326,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 					new ObjectSummaryControllerTile (ObjectField.Compte8),
 				};
 				list.Add (c2);
+
+				return list;
+			}
+		}
+
+		private static List<List<ObjectSummaryControllerTile>> GroupSummaryTiles
+		{
+			//	Retourne la liste des tuiles qui peupleront le tableau.
+			get
+			{
+				var list = new List<List<ObjectSummaryControllerTile>> ();
+
+				var c1 = new List<ObjectSummaryControllerTile> ()
+				{
+					new ObjectSummaryControllerTile ("Evénement"),
+					new ObjectSummaryControllerTile (ObjectField.EvNuméro),
+					new ObjectSummaryControllerTile (ObjectField.EvCommentaire),
+					new ObjectSummaryControllerTile (ObjectField.EvDocuments),
+
+					ObjectSummaryControllerTile.Empty,
+
+					new ObjectSummaryControllerTile ("Général"),
+					new ObjectSummaryControllerTile (ObjectField.Level),
+					new ObjectSummaryControllerTile (ObjectField.Description),
+					new ObjectSummaryControllerTile (ObjectField.Famille),
+					new ObjectSummaryControllerTile (ObjectField.Membre),
+				};
+				list.Add (c1);
 
 				return list;
 			}

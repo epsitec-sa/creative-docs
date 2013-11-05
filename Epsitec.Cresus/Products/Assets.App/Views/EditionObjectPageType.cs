@@ -16,5 +16,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Amortissements,
 		Compta,
 		Category,
+		Group,
 	}
 }

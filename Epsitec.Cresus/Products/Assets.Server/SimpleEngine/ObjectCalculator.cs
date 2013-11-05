@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					return ObjectCalculator.GetPlausibleObjectEventTypes (obj, timestamp);
 
 				case BaseType.Categories:
+				case BaseType.Groups:
 					return ObjectCalculator.GetPlausibleCategoryEventTypes (obj, timestamp);
 
 				default:

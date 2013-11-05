@@ -102,6 +102,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Compte8:
 					return "Amortissement extra. ou rééval.";
 
+				case ObjectField.Famille:
+					return "Famille";
+
+				case ObjectField.Membre:
+					return "Membre";
+
 				default:
 					return null;
 			}
@@ -164,6 +170,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case EditionObjectPageType.Compta:
 					return "Comptabilisation";
+
+				case EditionObjectPageType.Group:
+					return "Général";
 
 				default:
 					return null;

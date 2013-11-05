@@ -29,6 +29,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.dataFiller = new CategoriesDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					this.title = "Catégories d'immobilisation";
 					break;
+
+				case BaseType.Groups:
+					this.dataFiller = new GroupsDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.title = "Groupes d'immobilisation";
+					break;
 			}
 
 			this.hasTreeOperations = true;
@@ -137,6 +142,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case BaseType.Categories:
 					this.dataFiller = new CategoriesDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					break;
+
+				case BaseType.Groups:
+					this.dataFiller = new GroupsDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					break;
 			}
 

@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var guid  = node.Guid;
 				var level = node.Level;
 				var type  = node.Type;
-				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
+				var obj   = this.accessor.GetObject (this.baseType, guid);
 
 				var nom    = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Nom);
 				var numéro = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Numéro);

@@ -77,6 +77,8 @@
     <Compile Include="AssetsUI.cs" />
     <Compile Include="DataFillers\AbstractDataFiller.cs" />
     <Compile Include="DataFillers\CategoriesDataFiller.cs" />
+    <Compile Include="DataFillers\EventsGroupsDataFiller.cs" />
+    <Compile Include="DataFillers\GroupsDataFiller.cs" />
     <Compile Include="DataFillers\EventsCategoriesDataFiller.cs" />
     <Compile Include="DataFillers\EventsObjectsDataFiller.cs" />
     <Compile Include="DataFillers\Node.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="Views\AbstractObjectEditorPage.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\BusinessLogic.cs" />
+    <Compile Include="Views\ObjectEditorPageGroup.cs" />
     <Compile Include="Views\ObjectSummaryControllerTile.cs" />
     <Compile Include="Views\ObjectEditorPageSingleton.cs" />
     <Compile Include="Views\TabPagesController.cs" />

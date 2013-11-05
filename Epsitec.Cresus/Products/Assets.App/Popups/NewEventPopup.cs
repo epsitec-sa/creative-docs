@@ -134,6 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+
 		private ButtonDescription GetButtonDescription(EventType type)
 		{
 			switch (this.BaseType)
@@ -143,6 +144,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				case BaseType.Categories:
 					return this.GetCategoryButtonDescription (type);
+
+				case BaseType.Groups:
+					return this.GetGroupButtonDescription (type);
 
 				default:
 					return new ButtonDescription (EventType.Unknown, null, null);
@@ -196,6 +200,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					return new ButtonDescription (EventType.Unknown, null, null);
 			}
 		}
+
+		private ButtonDescription GetGroupButtonDescription(EventType type)
+		{
+			switch (type)
+			{
+				case EventType.Entrée:
+					return new ButtonDescription (EventType.Entrée, "Création", "Création du goupe");
+
+				case EventType.Modification:
+					return new ButtonDescription (EventType.Modification, "Modification", "Modification du groupe");
+
+				case EventType.Sortie:
+					return new ButtonDescription (EventType.Sortie, "Suppression", "Suppression du groupe");
+
+				default:
+					return new ButtonDescription (EventType.Unknown, null, null);
+			}
+		}
+
 
 		private struct ButtonDescription
 		{
