@@ -140,6 +140,7 @@
     <Compile Include="Views\ToolbarCommand.cs" />
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
+    <Compile Include="Widgets\PaintHatch.cs" />
     <Compile Include="Widgets\ITreeTableFiller.cs" />
     <Compile Include="Widgets\SimpleTreeTableCellGlyph.cs" />
     <Compile Include="Widgets\TreeTableCellGlyph.cs" />
