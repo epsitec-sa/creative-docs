@@ -12,47 +12,60 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public static void Paint(Graphics graphics, Rectangle rect)
 		{
-			//	Dessine des hachures à 45 degrés dans un rectangle. On s'arrange pour
-			//	qu'elles soient forcément jointives avec celle du rectangle suivant.
-			double d = rect.Height/3.0;  // distance entre 2 hachures
+			//	Dessine des hachures à 45 degrés "/" dans un rectangle.
+			//	On s'arrange pour qu'elles soient forcément jointives avec celles
+			//	d'autres rectangles.
+			rect.Deflate (0.25);
+			var path = PaintHatch.GetHatchPath (rect, PaintHatch.distance, Point.Zero);
 
-			for (double y=d; y<=rect.Height; y+=d)
-			{
-				var start = new Point (rect.Left, rect.Top-y);
-				var end = PaintHatch.GetHatchEnd (start, rect);
-				graphics.AddLine (start, end);
-			}
-
-			for (double x=d; x<=rect.Width; x+=d)
-			{
-				var start = new Point (rect.Left+x, rect.Bottom);
-				var end = PaintHatch.GetHatchEnd (start, rect);
-				graphics.AddLine (start, end);
-			}
-
+			graphics.AddPath (path);
 			graphics.RenderSolid (Color.FromAlphaColor (0.5, ColorManager.GlyphColor));
 		}
 
-		private static Point GetHatchEnd(Point start, Rectangle rect)
+		//	Importé de Epsitec.Common.Designer.Misc :
+		private static Path GetHatchPath(Rectangle rect, double distance, Point reference)
 		{
-			//	Calcule le point d'arrivée de la jointure.
-			double x = start.X + rect.Width;
-			double y = start.Y + rect.Width;  // juste, mais trop loin
+			//	Retourne des hachures à 45 degrés remplissant sans déborder un rectangle.
+			//	Une hachure passe toujours par le point de référence.
+			Path path = new Path ();
 
-			//	Effectue un clipping dans le rectangle.
-			if (x > rect.Right)
+			//	Déplace le point de référence sur le bord gauche du rectangle.
+			reference.Y += rect.Left - reference.X;
+			reference.X = rect.Left;
+			double d = reference.Y - rect.Bottom;
+
+			double v = System.Math.Ceiling (rect.Width/distance) * distance;
+			v -= d % distance;
+
+			for (double y=rect.Bottom-v; y<rect.Top; y+=distance)
 			{
-				y -= x - rect.Right + 0.5;
-				x -= x - rect.Right + 0.5;
+				double x1 = rect.Left;
+				double y1 = y;
+				double x2 = rect.Right;
+				double y2 = y+rect.Width;
+
+				if (y1 < rect.Bottom)
+				{
+					x1 += rect.Bottom-y1;
+					y1 = rect.Bottom;
+				}
+
+				if (y2 > rect.Top)
+				{
+					x2 -= y2-rect.Top;
+					y2 = rect.Top;
+				}
+
+				if (x1 < x2)
+				{
+					path.MoveTo (x1, y1);
+					path.LineTo (x2, y2);
+				}
 			}
 
-			if (y > rect.Top)
-			{
-				x -= y - rect.Top + 0.5;
-				y -= y - rect.Top + 0.5;
-			}
-
-			return new Point (x, y);
+			return path;
 		}
+
+		private static readonly int distance = 7;
 	}
 }
