@@ -8,6 +8,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public static class ObjectCalculator
 	{
+		public static Timestamp? GetLastTimestamp(DataObject obj)
+		{
+			if (obj.EventsCount > 0)
+			{
+				return obj.GetEvent (obj.EventsCount-1).Timestamp;
+			}
+
+			return null;
+		}
+
+
 		#region Plausible event logic
 		public static bool IsEventLocked(DataObject obj, Timestamp timestamp)
 		{

@@ -419,6 +419,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelineController.ObjectGuid = this.selectedGuid;
 			this.eventsController.ObjectGuid = this.selectedGuid;
 
+			//	On sélectionne le dernier événement de l'objet dans la timeline.
+			var obj = this.accessor.GetObject (this.baseType, this.selectedGuid);
+			if (obj != null)
+			{
+				var timestamp = ObjectCalculator.GetLastTimestamp (obj);
+				if (timestamp.HasValue)
+				{
+					this.timelineController.SelectedTimestamp = timestamp;
+				}
+			}
+
 			using (this.ignoreChanges.Enter ())
 			{
 				this.eventsController.SelectedTimestamp = this.selectedTimestamp;
