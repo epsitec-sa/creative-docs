@@ -9,6 +9,7 @@ ConfigureExperimentalFeature ("Notifications");
 # ConfigureExperimentalFeature ("ElasticSearch");
 ConfigureExperimentalFeature ("QuickSearch");
 # ConfigureExperimentalFeature ("Search");
+# ConfigureExperimentalFeature ("Mailing");
 ConfigureExperimentalFeature ("Warnings");
 # ConfigureExperimentalFeature ("EntityBag");
 # ConfigureExperimentalFeature ("DropZones");

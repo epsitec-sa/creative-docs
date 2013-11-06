@@ -564,12 +564,12 @@ AiderMailing = [LVOA03]
       </col>
     </t>
 
-    <t eid="@AiderMailing" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVOB03]" title="Intitulé" canSort="True" canFilter="True">
-        <sort o="Ascending" />
-        <disp m="Visible" />
-      </col>
-    </t>
+#[Feature:Mailing]    <t eid="@AiderMailing" n="default">
+#[Feature:Mailing]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVOB03]" title="Intitulé" canSort="True" canFilter="True">
+#[Feature:Mailing]        <sort o="Ascending" />
+#[Feature:Mailing]        <disp m="Visible" />
+#[Feature:Mailing]      </col>
+#[Feature:Mailing]    </t>
 
     <t eid="@AiderUser" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVA7]" title="Nom complet" canSort="True" canFilter="True">
@@ -1162,9 +1162,9 @@ AiderMailing = [LVOA03]
 #[Feature:Warnings]      <R><r>@user</r></R>
 #[Feature:Warnings]    </d>
 
-#[Feature:Warnings]    <d cid="[LVOJ03]" teid="@AiderMailing" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0">
-#[Feature:Warnings]      <R><r>@user</r></R>
-#[Feature:Warnings]    </d>
+#[Feature:Mailing]    <d cid="[LVOJ03]" teid="@AiderMailing" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0">
+#[Feature:Mailing]      <R><r>@user</r></R>
+#[Feature:Mailing]    </d>
 
   </D>
   <G/>
