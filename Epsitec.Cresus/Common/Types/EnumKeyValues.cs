@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -65,7 +66,7 @@ namespace Epsitec.Common.Types
 			{
 				var enumKey = (T) (object) item.Value;
 				var caption = TextFormatter.GetCurrentCultureCaption (item.Caption);
-				var labels  = caption.Labels.ToArray ();
+				var labels  = caption == null ? EmptyArray<string>.Instance : caption.Labels.ToArray ();
 
 				if (labels.Length == 0)
 				{
