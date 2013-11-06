@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent     = parent,
 				Dock       = DockStyle.Right,
-				Margins    = new Margins (0, 0, EventsView.lineHeight*2, AbstractScroller.DefaultBreadth),
+				Margins    = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
 				IsInverted = true,  // le zéro est en haut
 			};
 
@@ -42,11 +42,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateScroller ();
 			
 			//	Connexion des événements.
-			parent.SizeChanged += delegate
-			{
-				this.UpdateScroller ();
-			};
-
 			this.controller.ContentChanged += delegate (object sender, bool crop)
 			{
 				this.UpdateController (crop);
@@ -60,33 +55,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 			};
 
+			this.scroller.SizeChanged += delegate
+			{
+				this.UpdateController ();
+				this.UpdateScroller ();
+			};
+
 			this.scroller.ValueChanged += delegate
 			{
 				this.UpdateController ();
 			};
 
 			this.Update ();
-		}
-
-
-		private TimelineRowDescription[] TimelineRows
-		{
-			//	Retourne les descriptions des lignes, de bas en haut.
-			get
-			{
-				var list = new List<TimelineRowDescription> ();
-
-				foreach (var row in this.EnumVisibleRows.Reverse ())
-				{
-					string desc = this.dataArray.RowsLabel[row];
-					list.Add (new TimelineRowDescription (TimelineRowType.Glyph, desc));
-				}
-
-				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jour"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Months, "Mois"));
-
-				return list.ToArray ();
-			}
 		}
 
 
@@ -121,6 +101,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			int line = 0;
 
+			//	Ajoute les lignes vides bidon.
+			int dummy = this.DummyCount;
+			for (int row=0; row<dummy; row++)
+			{
+				var glyphs = new List<TimelineCellGlyph> ();
+				this.controller.SetRowGlyphCells (line++, glyphs.ToArray ());
+			}
+
 			//	Ajoute les lignes des objets, de bas en haut.
 			foreach (var row in this.EnumVisibleRows.Reverse ())
 			{
@@ -154,6 +142,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.SetRowMonthCells (line++, dates.ToArray ());
 
 			this.controller.PermanentGrid = true;
+		}
+
+		private TimelineRowDescription[] TimelineRows
+		{
+			//	Retourne les descriptions des lignes, de bas en haut.
+			get
+			{
+				var list = new List<TimelineRowDescription> ();
+
+				int dummy = this.DummyCount;
+				for (int row=0; row<dummy; row++)
+				{
+					list.Add (new TimelineRowDescription (TimelineRowType.Glyph, null));
+				}
+
+				foreach (var row in this.EnumVisibleRows.Reverse ())
+				{
+					string desc = this.dataArray.RowsLabel[row];
+					list.Add (new TimelineRowDescription (TimelineRowType.Glyph, desc));
+				}
+
+				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jour"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Months, "Mois"));
+
+				return list.ToArray ();
+			}
 		}
 
 		private void UpdateScroller()
@@ -207,6 +221,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private int DummyCount
+		{
+			get
+			{
+				return this.VisibleRows - this.dataArray.RowsCount;
+			}
+		}
+
 		private int VisibleRows
 		{
 			get
@@ -218,6 +240,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateData()
 		{
+			//	Met à jour this.dataArray en fonction de l'ensemble des événements de
+			//	tous les objets. Cela nécessite d'accéder à l'ensemble des données, ce
+			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
+			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
+			//	les colonnes pour lesquelles il existe un événement.
+
 			var nodeFiller = new FinalObjectsNodeFiller (this.accessor, this.baseType);
 			this.dataArray.Clear (nodeFiller.NodesCount);
 
@@ -232,12 +260,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				foreach (var e in obj.Events)
 				{
 					var column = this.dataArray.GetColumn (e.Timestamp);
-					column[row] = this.GetCell (obj, e);
+					column[row] = this.EventToCell (obj, e);
 				}
 			}
 		}
 
-		private DataCell GetCell(DataObject obj, DataEvent e)
+		private DataCell EventToCell(DataObject obj, DataEvent e)
 		{
 			var glyph      = TimelineData.TypeToGlyph (e.Type);
 			string tooltip = BusinessLogic.GetTooltip (obj, e.Timestamp, e.Type, 8);

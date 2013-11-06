@@ -96,23 +96,38 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var o = new DataObject ();
 				objects.Add (o);
 
-				var e = new DataEvent (date1, EventType.Entrée);
-				o.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
-				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.1.2"));
-				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre logistique"));
-				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (4550000.0m)));
-				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (6000000.0m)));
-				e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Paul"));
-				DummyMandat.AddAmortissement1 (e);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
+					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.1.2"));
+					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre logistique"));
+					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (4550000.0m)));
+					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (6000000.0m)));
+					e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Paul"));
+					DummyMandat.AddAmortissement1 (e);
+				}
+
+				for (int i=1; i<50; i++)
+				{
+					{
+						var e = new DataEvent (new Timestamp (start.Date.AddDays (i*13), 0), EventType.AmortissementAuto);
+						o.AddEvent (e);
+						e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
+
+						decimal a1 = 4550000.0m-(i-1)*100000;
+						decimal a2 = 4550000.0m-i*100000;
+						e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (a1, a2)));
+					}
+				}
 			}
 
 			{
 				var o = new DataObject ();
 				objects.Add (o);
 
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (date1, EventType.Entrée);
 				o.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
