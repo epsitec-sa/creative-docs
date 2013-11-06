@@ -6,12 +6,11 @@
 
 ConfigureExperimentalFeature ("ContextualMenu");
 ConfigureExperimentalFeature ("Notifications");
-# ConfigureExperimentalFeature ("ElasticSearch");
+ConfigureExperimentalFeature ("ElasticSearch");
 ConfigureExperimentalFeature ("QuickSearch");
 ConfigureExperimentalFeature ("Search");
-# ConfigureExperimentalFeature ("Mailing");
-ConfigureExperimentalFeature ("Warnings");
 ConfigureExperimentalFeature ("Mailing");
+ConfigureExperimentalFeature ("Warnings");
 ConfigureExperimentalFeature ("EntityBag");
 ConfigureExperimentalFeature ("DropZones");
 ConfigureExperimentalFeature ("Faq");
