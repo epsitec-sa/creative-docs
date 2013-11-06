@@ -93,6 +93,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var ts = new Timestamp (date, position);
 				var e = new DataEvent (ts, type);
 
+				//	Ajoute la date du jour comme date valeur.
+				var p = new DataDateProperty (ObjectField.EvDateValeur, Timestamp.Now.Date);
+				e.AddProperty (p);
+
 				obj.AddEvent (e);
 				ObjectCalculator.UpdateComputedAmounts (obj);
 				return e;
@@ -250,6 +254,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			switch (objectField)
 			{
 				case ObjectField.EvNuméro:
+				case ObjectField.EvDateValeur:
 				case ObjectField.EvCommentaire:
 				case ObjectField.EvDocuments:
 					return true;
@@ -276,6 +281,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.ValeurRésiduelle:
 					return FieldType.Decimal;
 
+				case ObjectField.EvDateValeur:
 				case ObjectField.DateAmortissement1:
 				case ObjectField.DateAmortissement2:
 					return FieldType.Date;

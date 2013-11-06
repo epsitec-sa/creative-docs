@@ -10,6 +10,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		public static Timestamp? GetLastTimestamp(DataObject obj)
 		{
+			//	Retourne la date à sélectionner dans la timeline après la sélection
+			//	de l'objet.
 			if (obj.EventsCount > 0)
 			{
 				return obj.GetEvent (obj.EventsCount-1).Timestamp;

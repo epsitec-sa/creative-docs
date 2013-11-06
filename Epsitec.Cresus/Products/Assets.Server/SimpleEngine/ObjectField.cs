@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Unknown,
 
 		EvNuméro,
+		EvDateValeur,
 		EvCommentaire,
 		EvDocuments,
 

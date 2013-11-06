@@ -135,6 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (field)
 			{
 				case ObjectField.EvNuméro:
+				case ObjectField.EvDateValeur:
 				case ObjectField.EvCommentaire:
 				case ObjectField.EvDocuments:
 					return EditionObjectPageType.Singleton;
@@ -162,6 +163,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (field)
 			{
 				case ObjectField.EvNuméro:
+				case ObjectField.EvDateValeur:
 				case ObjectField.EvCommentaire:
 				case ObjectField.EvDocuments:
 					return EditionObjectPageType.Singleton;
@@ -187,6 +189,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (field)
 			{
 				case ObjectField.EvNuméro:
+				case ObjectField.EvDateValeur:
 				case ObjectField.EvCommentaire:
 				case ObjectField.EvDocuments:
 					return EditionObjectPageType.Singleton;
@@ -247,6 +250,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					new ObjectSummaryControllerTile ("Evénement"),
 					new ObjectSummaryControllerTile (ObjectField.EvNuméro),
+					new ObjectSummaryControllerTile (ObjectField.EvDateValeur),
 					new ObjectSummaryControllerTile (ObjectField.EvCommentaire),
 					new ObjectSummaryControllerTile (ObjectField.EvDocuments),
 
@@ -296,6 +300,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					new ObjectSummaryControllerTile ("Evénement"),
 					new ObjectSummaryControllerTile (ObjectField.EvNuméro),
+					new ObjectSummaryControllerTile (ObjectField.EvDateValeur),
 					new ObjectSummaryControllerTile (ObjectField.EvCommentaire),
 					new ObjectSummaryControllerTile (ObjectField.EvDocuments),
 
@@ -342,6 +347,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					new ObjectSummaryControllerTile ("Evénement"),
 					new ObjectSummaryControllerTile (ObjectField.EvNuméro),
+					new ObjectSummaryControllerTile (ObjectField.EvDateValeur),
 					new ObjectSummaryControllerTile (ObjectField.EvCommentaire),
 					new ObjectSummaryControllerTile (ObjectField.EvDocuments),
 

@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.CreateStringController (parent, ObjectField.EvNuméro,      editWidth: 90);
+			this.CreateDateController   (parent, ObjectField.EvDateValeur);
 			this.CreateStringController (parent, ObjectField.EvCommentaire, lineCount: 5);
 			this.CreateStringController (parent, ObjectField.EvDocuments,   lineCount: 5);
 		}

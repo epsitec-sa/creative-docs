@@ -346,6 +346,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				yield return ObjectField.EvNuméro;
+				yield return ObjectField.EvDateValeur;
 				yield return ObjectField.EvCommentaire;
 				yield return ObjectField.EvDocuments;
 

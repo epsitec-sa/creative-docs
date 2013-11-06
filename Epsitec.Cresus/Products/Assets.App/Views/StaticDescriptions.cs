@@ -16,6 +16,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.EvNuméro:
 					return "Evénement numéro";
 
+				case ObjectField.EvDateValeur:
+					return "Date valeur";
+
 				case ObjectField.EvCommentaire:
 					return "Commentaire";
 
