@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listController     = new ObjectsToolbarTreeTableController (this.accessor, this.baseType);
 			this.timelineController = new ObjectsToolbarTimelineController (this.accessor, this.baseType);
 			this.eventsController   = new EventsToolbarTreeTableController (this.accessor, this.baseType);
+			this.multipleController = new ObjectsToolbarTimelinesController (this.accessor, this.baseType);
 			this.objectEditor       = new ObjectEditor (this.accessor, this.baseType);
 
 			this.ignoreChanges = new SafeCounter ();
@@ -109,6 +110,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor      = ColorManager.GetBackgroundColor (),
 			};
 
+			this.multipleFrameBox = new FrameBox
+			{
+				Parent = topBox,
+				Dock   = DockStyle.Fill,
+			};
+
 			this.timelineFrameBox = new FrameBox
 			{
 				Parent = parent,
@@ -119,6 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listController.CreateUI (this.listFrameBox);
 			this.timelineController.CreateUI (this.timelineFrameBox);
 			this.eventsController.CreateUI (this.eventsFrameBox);
+			this.multipleController.CreateUI (this.multipleFrameBox);
 			this.objectEditor.CreateUI (this.editFrameBox);
 
 			this.closeButton = new GlyphButton
@@ -177,6 +185,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.OnEventDoubleClicked ();
 			};
+
+			this.multipleController.SelectedCellChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					this.UpdateAfterMultipleChanged ();
+				}
+			};
+
+			this.multipleController.CellDoubleClicked += delegate
+			{
+				this.OnStartEdit ();
+			};
 		}
 
 
@@ -233,7 +254,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 			}
 
-			this.UpdateGeometryWithWithoutTimeline ();
+			this.UpdateViewModeGeometry ();
 		}
 
 		private void OnListDoubleClicked()
@@ -384,7 +405,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.accessor.SaveObjectEdition ();
 			}
 
-			this.UpdateGeometryWithWithoutTimeline ();
+			this.UpdateViewModeGeometry ();
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
 		}
@@ -455,6 +476,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateEditor ();
 		}
 
+		private void UpdateAfterMultipleChanged()
+		{
+			this.selectedGuid      = this.multipleController.SelectedGuid;
+			this.selectedTimestamp = this.multipleController.Timestamp;
+			this.Update ();
+		}
+
 
 		private void UpdateEditor()
 		{
@@ -462,22 +490,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateGeometryWithWithoutTimeline()
+		private void UpdateViewModeGeometry()
 		{
 			if (this.viewMode == ViewMode.Single)
 			{
-				this.UpdateGeometryWithTimeline ();
+				this.UpdateSingleGeometry ();
 			}
 			else if (this.viewMode == ViewMode.Event)
 			{
-				this.UpdateGeometryWithoutTimeline ();
+				this.UpdateEventGeometry ();
 			}
 			else if (this.viewMode == ViewMode.Multiple)
 			{
+				this.UpdateMultipleGeometry ();
 			}
 		}
 
-		private void UpdateGeometryWithTimeline()
+		private void UpdateSingleGeometry()
 		{
 			this.eventsFrameBox.Visibility = false;
 			this.closeButton   .Visibility = false;
@@ -485,15 +514,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listFrameBox    .Visibility = true;
 			this.timelineFrameBox.Visibility = true;
 			this.editFrameBox    .Visibility = this.isEditing;
+			this.multipleFrameBox.Visibility = false;
 
 			this.listFrameBox.Dock = DockStyle.Fill;
 
 			this.editFrameBox.Dock = DockStyle.Right;
 		}
 
-		private void UpdateGeometryWithoutTimeline()
+		private void UpdateEventGeometry()
 		{
 			this.timelineFrameBox.Visibility = false;
+			this.multipleFrameBox.Visibility = false;
 
 			if (this.isEditing)
 			{
@@ -521,9 +552,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else if (this.isEditing)
 			{
-				this.listFrameBox.Visibility   = false;
+				this.listFrameBox  .Visibility = false;
 				this.eventsFrameBox.Visibility = true;
-				this.editFrameBox.Visibility   = true;
+				this.editFrameBox  .Visibility = true;
 
 				this.eventsFrameBox.Dock = DockStyle.Fill;
 
@@ -535,6 +566,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.closeButton.Visibility = this.isShowEvents || this.isEditing;
+		}
+
+		private void UpdateMultipleGeometry()
+		{
+			this.eventsFrameBox.Visibility = false;
+			this.closeButton   .Visibility = false;
+
+			this.listFrameBox    .Visibility = false;
+			this.timelineFrameBox.Visibility = false;
+			this.editFrameBox    .Visibility = this.isEditing;
+			this.multipleFrameBox.Visibility = true;
+
+			this.editFrameBox.Dock = DockStyle.Right;
 		}
 
 
@@ -568,11 +612,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else if (this.viewMode == ViewMode.Event)
 				{
-					return this.listController.SelectedRow != -1 && this.isShowEvents;
+					return this.listController.SelectedRow != -1
+						&& this.isShowEvents;
 				}
 				else if (this.viewMode == ViewMode.Multiple)
 				{
-					return false;
+					return !this.multipleController.SelectedGuid.IsEmpty
+						&& this.multipleController.Timestamp != null;
 				}
 
 				return false;
@@ -583,12 +629,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly ObjectsToolbarTreeTableController	listController;
 		private readonly ObjectsToolbarTimelineController	timelineController;
 		private readonly EventsToolbarTreeTableController	eventsController;
+		private readonly ObjectsToolbarTimelinesController	multipleController;
 		private readonly ObjectEditor						objectEditor;
 		private readonly SafeCounter						ignoreChanges;
 
 		private FrameBox									listFrameBox;
 		private FrameBox									timelineFrameBox;
 		private FrameBox									eventsFrameBox;
+		private FrameBox									multipleFrameBox;
 		private FrameBox									editFrameBox;
 
 		private GlyphButton									closeButton;
