@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.editFrameBox.Children.Clear ();
 
-			this.currentPage = AbstractObjectEditorPage.CreatePage (this.accessor, this.baseType, type);
+			this.currentPage = AbstractEditorPage.CreatePage (this.accessor, this.baseType, type);
 			this.currentPage.CreateUI (this.editFrameBox);
 			this.currentPage.SetObject (this.objectGuid, this.timestamp);
 			this.currentPage.SetFocus (focusedField);
@@ -293,7 +293,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TopTitle							topTitle;
 		private TabPagesController					tabPagesController;
 		private FrameBox							editFrameBox;
-		private AbstractObjectEditorPage			currentPage;
+		private AbstractEditorPage			currentPage;
 		private EditionObjectPageType				currentPageType;
 
 		private Guid								objectGuid;

@@ -10,9 +10,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectEditorPageSummary : AbstractObjectEditorPage
+	public class EditorPageSummary : AbstractEditorPage
 	{
-		public ObjectEditorPageSummary(DataAccessor accessor, BaseType baseType)
+		public EditorPageSummary(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
 		{
 			this.summaryController = new ObjectSummaryController
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (!tile.IsEmpty)
 			{
-				var type = ObjectEditorPageSummary.GetPageType (this.baseType, tile.Field);
+				var type = EditorPageSummary.GetPageType (this.baseType, tile.Field);
 				this.OnPageOpen (type, tile.Field);
 			}
 		}
@@ -116,13 +116,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (baseType)
 			{
 				case BaseType.Objects:
-					return ObjectEditorPageSummary.GetObjectPageType (field);
+					return EditorPageSummary.GetObjectPageType (field);
 
 				case BaseType.Categories:
-					return ObjectEditorPageSummary.GetCategoryPageType (field);
+					return EditorPageSummary.GetCategoryPageType (field);
 
 				case BaseType.Groups:
-					return ObjectEditorPageSummary.GetGroupPageType (field);
+					return EditorPageSummary.GetGroupPageType (field);
 
 				default:
 					return EditionObjectPageType.Unknown;
@@ -222,13 +222,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				switch (this.baseType)
 				{
 					case BaseType.Objects:
-						return ObjectEditorPageSummary.ObjectSummaryTiles;
+						return EditorPageSummary.ObjectSummaryTiles;
 
 					case BaseType.Categories:
-						return ObjectEditorPageSummary.CategorySummaryTiles;
+						return EditorPageSummary.CategorySummaryTiles;
 
 					case BaseType.Groups:
-						return ObjectEditorPageSummary.GroupSummaryTiles;
+						return EditorPageSummary.GroupSummaryTiles;
 
 					default:
 						return null;

@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	pour le type de l'événement en cours.
 			if (this.hasEvent && field != ObjectField.Unknown)
 			{
-				var type = ObjectEditorPageSummary.GetPageType (this.baseType, field);
+				var type = EditorPageSummary.GetPageType (this.baseType, field);
 				var availables = ObjectEditor.GetAvailablePages (this.baseType, this.hasEvent, this.eventType);
 				return !availables.Contains (type);
 			}

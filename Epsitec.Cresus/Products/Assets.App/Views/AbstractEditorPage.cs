@@ -9,9 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public abstract class AbstractObjectEditorPage
+	public abstract class AbstractEditorPage
 	{
-		public AbstractObjectEditorPage(DataAccessor accessor, BaseType baseType)
+		public AbstractEditorPage(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
@@ -295,33 +295,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractObjectEditorPage CreatePage(DataAccessor accessor, BaseType baseType, EditionObjectPageType page)
+		public static AbstractEditorPage CreatePage(DataAccessor accessor, BaseType baseType, EditionObjectPageType page)
 		{
 			switch (page)
 			{
 				case EditionObjectPageType.Singleton:
-					return new ObjectEditorPageSingleton (accessor, baseType);
+					return new EditorPageSingleton (accessor, baseType);
 
 				case EditionObjectPageType.Summary:
-					return new ObjectEditorPageSummary (accessor, baseType);
+					return new EditorPageSummary (accessor, baseType);
 
 				case EditionObjectPageType.Object:
-					return new ObjectEditorPageObject (accessor, baseType);
+					return new EditorPageObject (accessor, baseType);
 
 				case EditionObjectPageType.Values:
-					return new ObjectEditorPageValues (accessor, baseType);
+					return new EditorPageValues (accessor, baseType);
 
 				case EditionObjectPageType.Amortissements:
-					return new ObjectEditorPageAmortissements (accessor, baseType);
+					return new EditorPageAmortissements (accessor, baseType);
 
 				case EditionObjectPageType.Compta:
-					return new ObjectEditorPageCompta (accessor, baseType);
+					return new EditorPageCompta (accessor, baseType);
 
 				case EditionObjectPageType.Category:
-					return new ObjectEditorPageCategory (accessor, baseType);
+					return new EditorPageCategory (accessor, baseType);
 
 				case EditionObjectPageType.Group:
-					return new ObjectEditorPageGroup (accessor, baseType);
+					return new EditorPageGroup (accessor, baseType);
 
 				default:
 					System.Diagnostics.Debug.Fail ("Unsupported page type");

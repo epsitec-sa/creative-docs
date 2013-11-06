@@ -8,9 +8,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectEditorPageValues : AbstractObjectEditorPage
+	public class EditorPageValues : AbstractEditorPage
 	{
-		public ObjectEditorPageValues(DataAccessor accessor, BaseType baseType)
+		public EditorPageValues(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
 		{
 		}
