@@ -41,6 +41,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderLegalPersonContact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 104));
 				//	designer:cap/LVOJ03
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderMailing = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 19));
+				//	designer:cap/LVOO03
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderMailingExclusions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 24));
+				//	designer:cap/LVOK03
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderMailingParticipants = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 20));
 				//	designer:cap/LVO003
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 0));
 				//	designer:cap/LVGK32
@@ -88,6 +92,10 @@ namespace Epsitec.Aider
 				public const long ShowAiderLegalPersonContact = 0x3F500050000068L;
 				//	designer:cap/LVOJ03
 				public const long ShowAiderMailing = 0x3F500078000013L;
+				//	designer:cap/LVOO03
+				public const long ShowAiderMailingExclusions = 0x3F500078000018L;
+				//	designer:cap/LVOK03
+				public const long ShowAiderMailingParticipants = 0x3F500078000014L;
 				//	designer:cap/LVO003
 				public const long ShowAiderPerson = 0x3F500078000000L;
 				//	designer:cap/LVGK32
@@ -269,6 +277,8 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderLegalPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 219));
 			//	designer:cap/LVOA03
 			public static readonly Epsitec.Common.Types.StructuredType AiderMailing = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 10));
+			//	designer:cap/LVOL03
+			public static readonly Epsitec.Common.Types.StructuredType AiderMailingParticipant = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 21));
 			//	designer:cap/LVAF
 			public static readonly Epsitec.Common.Types.StructuredType AiderPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
 			//	designer:cap/LVAL8
@@ -1770,6 +1780,19 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Recipients = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 18);
 			}
 			
+			public static class AiderMailingParticipant
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderMailingParticipant.Contact, null);
+				}
+				
+				//	designer:cap/LVON03
+				public static readonly global::Epsitec.Common.Support.Druid Contact = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 23);
+				//	designer:cap/LVOM03
+				public static readonly global::Epsitec.Common.Support.Druid Mailing = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 22);
+			}
+			
 			public static class AiderPerson
 			{
 				internal static void _Initialize()
@@ -2596,6 +2619,7 @@ namespace Epsitec.Aider
 			Fields.AiderHousehold._Initialize ();
 			Fields.AiderLegalPerson._Initialize ();
 			Fields.AiderMailing._Initialize ();
+			Fields.AiderMailingParticipant._Initialize ();
 			Fields.AiderPerson._Initialize ();
 			Fields.AiderPersonData._Initialize ();
 			Fields.AiderPersonRelationship._Initialize ();

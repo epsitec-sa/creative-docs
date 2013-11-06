@@ -24,6 +24,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         searchLabel: 'Rechercher',
         refreshLabel: 'Rafra\u00EEchir',
         refreshTip: 'Rafra\u00EEchir',
+        pinToBag: 'Ajouter \u00E0 l\'arche',
         addLabel: 'Ajouter',
         addTip: 'Ajoute un nouvel \u00E9l\u00E9ment',
         removeLabel: 'Enlever',

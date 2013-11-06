@@ -267,6 +267,11 @@ namespace Epsitec.Aider.Entities
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
 		}
 
+		public IList<AiderContactEntity> GetAllGroupAndSubGroupParticipants()
+		{
+			return this.GetGroupAndSubGroupParticipants (this.GetGroupAndSubGroupParticipantCount ());
+		}
+
 
 		public static string GetPath(AiderGroupEntity group)
 		{

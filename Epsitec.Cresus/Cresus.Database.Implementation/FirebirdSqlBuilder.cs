@@ -1113,12 +1113,28 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				case SqlFieldType.Set:
 					SqlSet set = field.AsSet;
-
+					
 					var values = set.Values.Select (c => this.MakeCommandParam (c));
-										
+					//!HACK FOR IN LIMITATION OF 1500 PARAMETERS
+					/*var firstline = true;
+					foreach(var batch in values.ToBatches(1500))
+					{
+						if (firstline == false)
+						{
+							this.Append (" OR ");
+							this.Append ("alias0.CR_ID");
+							this.Append (" IN ");
+						}
+						this.Append ('(');
+						this.Append (string.Join(", ", batch));
+						this.Append (')');
+						firstline = false;
+					}*/
+
 					this.Append ('(');
 					this.Append (string.Join(", ", values));
 					this.Append (')');
+
 					break;
 				
 				default:

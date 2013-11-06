@@ -24,6 +24,7 @@ AiderSubscription = [LVGP22]
 AiderSubscriptionRefusal = [LVGC32]
 AiderPersonWarning = [LVALB]
 AiderMailing = [LVOA03]
+AiderMailingParticipant = [LVOL03]
 
 <meta>
   <T>
@@ -564,12 +565,39 @@ AiderMailing = [LVOA03]
       </col>
     </t>
 
-#[Feature:Mailing]    <t eid="@AiderMailing" n="default">
-#[Feature:Mailing]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVOB03]" title="Intitulé" canSort="True" canFilter="True">
-#[Feature:Mailing]        <sort o="Ascending" />
-#[Feature:Mailing]        <disp m="Visible" />
-#[Feature:Mailing]      </col>
-#[Feature:Mailing]    </t>
+    <t eid="@AiderMailing" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVOB03]" title="Intitulé" canSort="True" canFilter="True">
+        <sort o="Ascending" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVOG03].[AVA9]" title="Créé par" canSort="True" canFilter="True">
+        <sort o="Ascending" />
+        <disp m="Visible" />
+      </col>
+    </t>
+
+    <t eid="@AiderMailingParticipant" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVACE]" title="Intitulé" canSort="True" canFilter="True">
+        <sort o="Ascending" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVAEE]" title="NPA" dw="45" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVADE]" title="Adresse (résumé)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVG342]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVG442]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+    </t>
 
     <t eid="@AiderUser" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVA7]" title="Nom complet" canSort="True" canFilter="True">
@@ -1166,6 +1194,18 @@ AiderMailing = [LVOA03]
 #[Feature:Mailing]      <R><r>@user</r></R>
 #[Feature:Mailing]    </d>
 
+#[Feature:Mailing]    <d cid="[LVOK03]" teid="@AiderMailingParticipant" tn="default" df="false" d="false" ec="true" ed="true" dg="">
+#[Feature:Mailing]      <R><r>@user</r></R>
+#[Feature:Mailing]   	 <M><m t="Voir le contact" d="[LVAFE]" p="@AiderMailingParticipant:[LVON03]" /></M>
+#[Feature:Mailing]   	  <L>
+#[Feature:Mailing]	     <l t="Adresse normale" f="0"/>
+#[Feature:Mailing]   	     <l t="Adresse aux parents de..." f="1"/>
+#[Feature:Mailing]   	  </L>
+#[Feature:Mailing]    </d>
+
+#[Feature:Mailing]    <d cid="[LVO003]" teid="@AiderContact" tn="default" df="false" d="false" ec="true" ed="true" dg="">
+#[Feature:Mailing]      <R><r>@user</r></R>
+#[Feature:Mailing]    </d>
   </D>
   <G/>
 </meta>

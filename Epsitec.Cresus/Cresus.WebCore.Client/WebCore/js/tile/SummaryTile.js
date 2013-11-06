@@ -66,6 +66,32 @@ function() {
           handler: function() { this.column.refresh(); },
           scope: this
         });
+
+        tools.push({
+          type: 'pin',
+          tooltip: Epsitec.Texts.getPinToBagTip(),
+          handler: function(e, t) { 
+            var app = Epsitec.Cresus.Core.getApplication();
+            var summaryLines = this.body.dom.innerText.replace(/\r\n/g, '\n').split('\n');
+
+            var cleanSummaryLines = new Array();
+            for(var i = 0; i<summaryLines.length; i++){
+                if (summaryLines[i]){
+                  cleanSummaryLines.push(summaryLines[i]);
+              }
+            }
+
+            var entity = {
+                  summary: cleanSummaryLines[0],
+                  entityType: Epsitec.Cresus.Core.app.getCurrentDatabaseEntityType(),
+                  id: this.entityId
+                };
+        
+            app.addEntityToBag(entity);
+          },
+          scope: this
+        });
+
       }
 
       return tools;

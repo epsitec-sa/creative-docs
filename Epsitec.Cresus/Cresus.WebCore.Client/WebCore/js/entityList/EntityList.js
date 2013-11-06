@@ -787,11 +787,11 @@ function() {
 
     onRefreshHandler: function() {
       this.resetStore(true);
+      this.getSelectionModel().deselectAll();
     },
 
     resetStore: function(autoLoad) {
       var oldStore, newStore, columnDefinitions, sorterDefinitions;
-
       oldStore = this.store;
 
       // Here we can simply reuse the initial column definitions, as we only

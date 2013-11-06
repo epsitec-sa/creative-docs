@@ -39,6 +39,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA1H]", typeof (Epsitec.Aider.Entities.AiderWarningSourceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA6H]", typeof (Epsitec.Aider.Entities.AiderPersonWarningSourceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVOA03]", typeof (Epsitec.Aider.Entities.AiderMailingEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVOL03]", typeof (Epsitec.Aider.Entities.AiderMailingParticipantEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -8120,6 +8121,89 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderMailingEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderMailingParticipant Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderMailingParticipant</c> entity.
+	///	designer:cap/LVOL03
+	///	</summary>
+	public partial class AiderMailingParticipantEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Mailing</c> field.
+		///	designer:fld/LVOL03/LVOM03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOM03]")]
+		public global::Epsitec.Aider.Entities.AiderMailingEntity Mailing
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderMailingEntity> ("[LVOM03]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderMailingEntity oldValue = this.Mailing;
+				if (oldValue != value || !this.IsFieldDefined("[LVOM03]"))
+				{
+					this.OnMailingChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderMailingEntity> ("[LVOM03]", oldValue, value);
+					this.OnMailingChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Contact</c> field.
+		///	designer:fld/LVOL03/LVON03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVON03]")]
+		public global::Epsitec.Aider.Entities.AiderContactEntity Contact
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVON03]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderContactEntity oldValue = this.Contact;
+				if (oldValue != value || !this.IsFieldDefined("[LVON03]"))
+				{
+					this.OnContactChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVON03]", oldValue, value);
+					this.OnContactChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnMailingChanging(global::Epsitec.Aider.Entities.AiderMailingEntity oldValue, global::Epsitec.Aider.Entities.AiderMailingEntity newValue);
+		partial void OnMailingChanged(global::Epsitec.Aider.Entities.AiderMailingEntity oldValue, global::Epsitec.Aider.Entities.AiderMailingEntity newValue);
+		partial void OnContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderMailingParticipantEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderMailingParticipantEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 120, 21);	// [LVOL03]
+		public static readonly string EntityStructuredTypeKey = "[LVOL03]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderMailingParticipantEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

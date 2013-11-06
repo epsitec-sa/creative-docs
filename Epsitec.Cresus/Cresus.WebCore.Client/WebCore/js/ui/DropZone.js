@@ -38,7 +38,8 @@ function() {
           store: this.dropZoneStore, 
           listeners: {
               render: this.initializeEntityDropZone,
-              destroy: this.unregEntityDragZone
+              destroy: this.unregEntityDragZone,
+              scope: this
           }
         };
 

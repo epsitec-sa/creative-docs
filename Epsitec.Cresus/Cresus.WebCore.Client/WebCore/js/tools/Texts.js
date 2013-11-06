@@ -55,6 +55,10 @@ function() {
         return this.texts.refreshTip;
       },
 
+      getPinToBagTip: function() {
+        return this.texts.pinToBag;
+      },
+
       getAddLabel: function() {
         return this.texts.addLabel;
       },
