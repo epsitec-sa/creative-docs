@@ -18,6 +18,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.baseType = BaseType.Objects;
 
+			this.selectedRow = -1;
+			this.selectedColumn = -1;
+
 			this.dataArray = new DataArray ();
 			this.UpdateData ();
 		}
@@ -49,6 +52,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			
 			this.controller.CellClicked += delegate (object sender, int row, int rank)
 			{
+				int sel = this.LineToRow (row);
+				if (sel != -1)
+				{
+					this.selectedRow = sel;
+					this.selectedColumn = this.controller.LeftVisibleCell + rank;
+					this.UpdateController ();
+				}
 			};
 			
 			this.controller.CellDoubleClicked += delegate (object sender, int row, int rank)
@@ -78,7 +88,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			int cellsCount   = this.dataArray.ColumnsCount;
 			int count        = System.Math.Min (visibleCount, cellsCount);
 			int firstCell    = this.controller.LeftVisibleCell;
-			int selection    = -1;
+			int selection    = this.selectedColumn;
 
 			if (selection != -1)
 			{
@@ -117,8 +127,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				for (int i = 0; i < count; i++)
 				{
 					var cell = this.dataArray.GetCell (row, firstCell+i);
+					bool selected = (row == this.selectedRow && firstCell+i == this.selectedColumn);
 
-					var g = new TimelineCellGlyph (cell.Glyph, cell.Locked, cell.Tooltip);
+					var g = new TimelineCellGlyph (cell.Glyph, cell.Locked, cell.Tooltip, selected);
 					glyphs.Add (g);
 				}
 
@@ -208,16 +219,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				int firstRow = (int) this.scroller.Value;
+				int firstRow = this.FirstVisibleRow;
 				int visibleRows = this.VisibleRows;
+				int count = System.Math.Min (this.dataArray.RowsCount, firstRow+visibleRows);
 
-				for (int row=0; row<this.dataArray.RowsCount; row++)
+				for (int row=firstRow; row<count; row++)
 				{
-					if (row >= firstRow && row < firstRow+visibleRows)
-					{
-						yield return row;
-					}
+					yield return row;
 				}
+			}
+		}
+
+		private int LineToRow(int line)
+		{
+			var dummy = this.DummyCount;
+			int count = System.Math.Min (this.dataArray.RowsCount, this.VisibleRows);
+
+			if (line >= dummy && line < dummy+count)
+			{
+				return this.FirstVisibleRow + count + dummy - 2 + 1 - line;
+			}
+			else
+			{
+				return -1;
 			}
 		}
 
@@ -225,7 +249,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.VisibleRows - this.dataArray.RowsCount;
+				return System.Math.Max (this.VisibleRows - this.dataArray.RowsCount, 0);
+			}
+		}
+
+		private int FirstVisibleRow
+		{
+			get
+			{
+				return (int) this.scroller.Value;
 			}
 		}
 
@@ -427,5 +459,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private NavigationTimelineController	controller;
 		private VScroller						scroller;
+		private int								selectedRow;
+		private int								selectedColumn;
 	}
 }
