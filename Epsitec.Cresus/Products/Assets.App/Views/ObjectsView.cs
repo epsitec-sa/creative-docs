@@ -69,8 +69,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.Update ();
 				this.timelineController.Update ();
 			};
-
-			this.isWithTimelineView = true;
 		}
 
 
@@ -123,26 +121,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.eventsController.CreateUI (this.eventsFrameBox);
 			this.objectEditor.CreateUI (this.editFrameBox);
 
-			this.withoutButton = new IconButton
-			{
-				Parent        = this.timelineFrameBox,
-				AutoFocus     = false,
-				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("View.WithoutTimeline"),
-				Anchor        = AnchorStyles.TopRight,
-				PreferredSize = new Size (AbstractCommandToolbar.SecondaryToolbarHeight, AbstractCommandToolbar.SecondaryToolbarHeight),
-			};
-			ToolTip.Default.SetToolTip (this.withoutButton, "Cache l'axe du temps");
-
-			this.withButton = new IconButton
-			{
-				Parent        = parent,
-				AutoFocus     = false,
-				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("View.WithTimeline"),
-				Anchor        = AnchorStyles.BottomRight,
-				PreferredSize = new Size (AbstractCommandToolbar.SecondaryToolbarHeight, AbstractCommandToolbar.SecondaryToolbarHeight),
-			};
-			ToolTip.Default.SetToolTip (this.withButton, "Montre l'axe du temps");
-
 			this.closeButton = new GlyphButton
 			{
 				Parent        = parent,
@@ -156,16 +134,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Update ();
 
 			//	Connexion des événements.
-			this.withoutButton.Clicked += delegate
-			{
-				this.OnChangeWithWithout (false);
-			};
-
-			this.withButton.Clicked += delegate
-			{
-				this.OnChangeWithWithout (true);
-			};
-
 			this.closeButton.Clicked += delegate
 			{
 				this.OnCloseColumn ();
@@ -233,21 +201,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ToolbarCommand.Cancel:
 					this.OnEditCancel ();
 					break;
+
+				case ToolbarCommand.ViewModeSingle:
+					this.OnChangeViewMode (ViewMode.Single);
+					break;
+
+				case ToolbarCommand.ViewModeEvent:
+					this.OnChangeViewMode (ViewMode.Event);
+					break;
+
+				case ToolbarCommand.ViewModeMultiple:
+					this.OnChangeViewMode (ViewMode.Multiple);
+					break;
 			}
 		}
 
 
-		private void OnChangeWithWithout(bool isWith)
+		private void OnChangeViewMode(ViewMode viewMode)
 		{
-			this.isWithTimelineView = isWith;
+			this.viewMode = viewMode;
 
-			if (this.isWithTimelineView)
+			if (this.viewMode == ViewMode.Single)
 			{
 				this.listController.Timestamp = this.selectedTimestamp;
 			}
-			else
+			else if (this.viewMode == ViewMode.Event)
 			{
 				this.listController.Timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+			}
+			else if (this.viewMode == ViewMode.Multiple)
+			{
 			}
 
 			this.UpdateGeometryWithWithoutTimeline ();
@@ -255,15 +238,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnListDoubleClicked()
 		{
-			if (this.isWithTimelineView)
+			if (this.viewMode == ViewMode.Single)
 			{
 				this.OnStartEdit ();
 			}
-			else
+			else if (this.viewMode == ViewMode.Event)
 			{
 				this.isShowEvents = !this.isShowEvents;
 				this.isEditing = false;
 				this.Update ();
+			}
+			else if (this.viewMode == ViewMode.Multiple)
+			{
 			}
 		}
 
@@ -302,13 +288,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (timestamp.HasValue)
 			{
-				if (this.isWithTimelineView)
+				if (this.viewMode == ViewMode.Single)
 				{
 					this.timelineController.SelectedTimestamp = timestamp.Value;
 				}
-				else
+				else if (this.viewMode == ViewMode.Event)
 				{
 					this.eventsController.SelectedTimestamp = timestamp.Value;
+				}
+				else if (this.viewMode == ViewMode.Multiple)
+				{
 				}
 			}
 
@@ -475,16 +464,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateGeometryWithWithoutTimeline()
 		{
-			this.withoutButton.Visibility =  this.isWithTimelineView;
-			this.withButton   .Visibility = !this.isWithTimelineView;
-
-			if (this.isWithTimelineView)
+			if (this.viewMode == ViewMode.Single)
 			{
 				this.UpdateGeometryWithTimeline ();
 			}
-			else
+			else if (this.viewMode == ViewMode.Event)
 			{
 				this.UpdateGeometryWithoutTimeline ();
+			}
+			else if (this.viewMode == ViewMode.Multiple)
+			{
 			}
 		}
 
@@ -497,11 +486,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelineFrameBox.Visibility = true;
 			this.editFrameBox    .Visibility = this.isEditing;
 
-			this.listFrameBox.Dock    = DockStyle.Fill;
-			this.listFrameBox.Margins = new Margins (0);
+			this.listFrameBox.Dock = DockStyle.Fill;
 
-			this.editFrameBox.Dock    = DockStyle.Right;
-			this.editFrameBox.Margins = new Margins (10, 0, 0, 0);
+			this.editFrameBox.Dock = DockStyle.Right;
 		}
 
 		private void UpdateGeometryWithoutTimeline()
@@ -519,8 +506,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.eventsFrameBox.Visibility = false;
 				this.editFrameBox  .Visibility = false;
 
-				this.listFrameBox.Dock    = DockStyle.Fill;
-				this.listFrameBox.Margins = new Margins (0, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
+				this.listFrameBox.Dock = DockStyle.Fill;
 			}
 			else if (this.isShowEvents && !this.isEditing)
 			{
@@ -530,10 +516,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.listFrameBox.Dock           = DockStyle.Left;
 				this.listFrameBox.PreferredWidth = 190;
-				this.listFrameBox.Margins        = new Margins (0, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
 
 				this.eventsFrameBox.Dock = DockStyle.Fill;
-				this.eventsFrameBox.Margins = new Margins (10, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
 			}
 			else if (this.isEditing)
 			{
@@ -541,11 +525,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.eventsFrameBox.Visibility = true;
 				this.editFrameBox.Visibility   = true;
 
-				this.eventsFrameBox.Dock    = DockStyle.Fill;
-				this.eventsFrameBox.Margins = new Margins (0, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
+				this.eventsFrameBox.Dock = DockStyle.Fill;
 
-				this.editFrameBox.Dock    = DockStyle.Right;
-				this.editFrameBox.Margins = new Margins (10, 0, 0, AbstractCommandToolbar.SecondaryToolbarHeight);
+				this.editFrameBox.Dock = DockStyle.Right;
 			}
 			else
 			{
@@ -580,14 +562,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.isWithTimelineView)
+				if (this.viewMode == ViewMode.Single)
 				{
 					return this.listController.SelectedRow != -1;
 				}
-				else
+				else if (this.viewMode == ViewMode.Event)
 				{
 					return this.listController.SelectedRow != -1 && this.isShowEvents;
 				}
+				else if (this.viewMode == ViewMode.Multiple)
+				{
+					return false;
+				}
+
+				return false;
 			}
 		}
 
@@ -603,11 +591,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox									eventsFrameBox;
 		private FrameBox									editFrameBox;
 
-		private IconButton									withoutButton;
-		private IconButton									withButton;
 		private GlyphButton									closeButton;
 
-		private bool										isWithTimelineView;
+		private ViewMode									viewMode;
 		private bool										isShowEvents;
 		private bool										isEditing;
 		private Guid										selectedGuid;

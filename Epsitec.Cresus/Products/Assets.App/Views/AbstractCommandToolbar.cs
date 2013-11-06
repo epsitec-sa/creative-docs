@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
-		private void OnCommandClicked(ToolbarCommand command)
+		protected void OnCommandClicked(ToolbarCommand command)
 		{
 			if (this.CommandClicked != null)
 			{

@@ -26,5 +26,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Simulation,
 		Accept,
 		Cancel,
+		ViewModeSingle,
+		ViewModeEvent,
+		ViewModeMultiple,
 	}
 }

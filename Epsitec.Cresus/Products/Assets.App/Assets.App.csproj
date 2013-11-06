@@ -108,6 +108,7 @@
     <Compile Include="Views\AbstractEditorPage.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\BusinessLogic.cs" />
+    <Compile Include="Views\ViewMode.cs" />
     <Compile Include="Views\EventsView.cs" />
     <Compile Include="Views\EditorPageGroup.cs" />
     <Compile Include="Views\ObjectSummaryControllerTile.cs" />
@@ -283,6 +284,9 @@
     <EmbeddedResource Include="Images\Main.Simulation1.icon" />
     <EmbeddedResource Include="Images\Main.Simulation2.icon" />
     <EmbeddedResource Include="Images\Main.Simulation0.icon" />
+    <EmbeddedResource Include="Images\Show.TimelineEvent.icon" />
+    <EmbeddedResource Include="Images\Show.TimelineSingle.icon" />
+    <EmbeddedResource Include="Images\Show.TimelineMultiple.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

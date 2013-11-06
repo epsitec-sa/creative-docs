@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void CreateUI(Widget parent)
 		{
 			this.viewType = ViewType.Objects;
+			this.viewMode = ViewMode.Single;
 			this.simulation = 0;
 
 			this.CreateToolbar (parent, AbstractCommandToolbar.PrimaryToolbarHeight);
@@ -33,7 +34,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.viewType != value)
 				{
 					this.viewType = value;
-					this.UpdateViewButtons ();
+					this.UpdateViewTypeButtons ();
+				}
+			}
+		}
+
+		public ViewMode ViewMode
+		{
+			get
+			{
+				return this.viewMode;
+			}
+			set
+			{
+				if (this.viewMode != value)
+				{
+					this.viewMode = value;
+					this.UpdateViewModeButtons ();
 				}
 			}
 		}
@@ -76,12 +93,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonObjects    = this.CreateViewButton (toolbar, ViewType.Objects,    "View.Objects",    "Objets d'immobilisation");
-			this.buttonCategories = this.CreateViewButton (toolbar, ViewType.Categories, "View.Categories", "Catégories d'immobilisations");
-			this.buttonGroups     = this.CreateViewButton (toolbar, ViewType.Groups,     "View.Groups",     "Sections");
-			this.buttonEvents     = this.CreateViewButton (toolbar, ViewType.Events,     "View.Events",     "Evénements");
-			this.buttonReports    = this.CreateViewButton (toolbar, ViewType.Reports,    "View.Reports",    "Rapports et statistiques");
-			this.buttonSettings   = this.CreateViewButton (toolbar, ViewType.Settings,   "View.Settings",   "Réglages");
+			this.buttonObjects    = this.CreateViewTypeButton (toolbar, ViewType.Objects,    "View.Objects",    "Objets d'immobilisation");
+			this.buttonCategories = this.CreateViewTypeButton (toolbar, ViewType.Categories, "View.Categories", "Catégories d'immobilisations");
+			this.buttonGroups     = this.CreateViewTypeButton (toolbar, ViewType.Groups,     "View.Groups",     "Sections");
+			this.buttonEvents     = this.CreateViewTypeButton (toolbar, ViewType.Events,     "View.Events",     "Evénements");
+			this.buttonReports    = this.CreateViewTypeButton (toolbar, ViewType.Reports,    "View.Reports",    "Rapports et statistiques");
+			this.buttonSettings   = this.CreateViewTypeButton (toolbar, ViewType.Settings,   "View.Settings",   "Réglages");
+
+			this.buttonSingle   = this.CreateViewModeButton (toolbar, ViewMode.Single,   ToolbarCommand.ViewModeSingle,   "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
+			this.buttonEvent    = this.CreateViewModeButton (toolbar, ViewMode.Event,    ToolbarCommand.ViewModeEvent,    "Show.TimelineEvent",    "Tableau des événements");
+			this.buttonMultiple = this.CreateViewModeButton (toolbar, ViewMode.Multiple, ToolbarCommand.ViewModeMultiple, "Show.TimelineMultiple", "Axe du temps pour tous les objets");
 
 			this.buttonEdit          = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Edit,          "Main.Edit",          "Edition");
 			this.buttonAmortissement = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Amortissement, "Main.Amortissement", "Amortissements");
@@ -91,12 +112,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonAccept = this.CreateCommandButton (toolbar, DockStyle.Right, ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
 
 			this.buttonSettings.Margins = new Margins (0, 40, 0, 0);
+			this.buttonMultiple.Margins = new Margins (0, 40, 0, 0);
 
-			this.UpdateViewButtons ();
+			this.UpdateViewTypeButtons ();
+			this.UpdateViewModeButtons ();
 			this.UpdateSimulation ();
 		}
 
-		private IconButton CreateViewButton(FrameBox toolbar, ViewType view, string icon, string tooltip)
+		private IconButton CreateViewTypeButton(FrameBox toolbar, ViewType view, string icon, string tooltip)
 		{
 			var size = toolbar.PreferredHeight;
 
@@ -115,14 +138,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 			button.Clicked += delegate
 			{
 				this.viewType = view;
-				this.UpdateViewButtons ();
+				this.UpdateViewTypeButtons ();
 				this.OnViewChanged (this.viewType);
 			};
 
 			return button;
 		}
 
-		private void UpdateViewButtons()
+		private IconButton CreateViewModeButton(FrameBox toolbar, ViewMode view, ToolbarCommand command, string icon, string tooltip)
+		{
+			var size = toolbar.PreferredHeight;
+
+			var button = new IconButton
+			{
+				Parent        = toolbar,
+				ButtonStyle   = ButtonStyle.ActivableIcon,
+				AutoFocus     = false,
+				Dock          = DockStyle.Left,
+				IconUri       = MainToolbar.GetResourceIconUri (icon),
+				PreferredSize = new Size (size, size),
+			};
+
+			ToolTip.Default.SetToolTip (button, tooltip);
+
+			button.Clicked += delegate
+			{
+				this.viewMode = view;
+				this.UpdateViewModeButtons ();
+				this.OnCommandClicked (command);
+			};
+
+			return button;
+		}
+
+		private void UpdateViewTypeButtons()
 		{
 			this.SetActiveState (this.buttonObjects,    this.viewType == ViewType.Objects);
 			this.SetActiveState (this.buttonCategories, this.viewType == ViewType.Categories);
@@ -133,6 +182,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.SetCommandState (ToolbarCommand.Amortissement, ToolbarCommandState.Enable);
 			this.SetCommandState (ToolbarCommand.Simulation,    ToolbarCommandState.Enable);
+		}
+
+		private void UpdateViewModeButtons()
+		{
+			this.SetActiveState (this.buttonSingle,   this.viewMode == ViewMode.Single);
+			this.SetActiveState (this.buttonEvent,    this.viewMode == ViewMode.Event);
+			this.SetActiveState (this.buttonMultiple, this.viewMode == ViewMode.Multiple);
 		}
 
 		private void UpdateSimulation()
@@ -169,6 +225,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonReports;
 		private IconButton buttonSettings;
 
+		private IconButton buttonSingle;
+		private IconButton buttonEvent;
+		private IconButton buttonMultiple;
+
 		private IconButton buttonEdit;
 		private IconButton buttonAmortissement;
 		private IconButton buttonSimulation;
@@ -177,6 +237,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonCancel;
 
 		private ViewType viewType;
+		private ViewMode viewMode;
 		private int simulation;
 	}
 }
