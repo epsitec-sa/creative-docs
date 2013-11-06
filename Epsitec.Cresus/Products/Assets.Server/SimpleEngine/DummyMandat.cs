@@ -292,35 +292,51 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var o = new DataObject ();
 				objects.Add (o);
 
-				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
-				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.3"));
-				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Volvo T-200"));
-				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (90000.0m)));
-				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (75000.0m)));
-				e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Jean-Pierre"));
-				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Blanc"));
-				DummyMandat.AddAmortissement2 (e);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
+					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.3"));
+					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Volvo T-200"));
+					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (90000.0m)));
+					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (75000.0m)));
+					e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Jean-Pierre"));
+					e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Blanc"));
+					DummyMandat.AddAmortissement2 (e);
+				}
+
+				{
+					var e = new DataEvent (date4, EventType.Sortie);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
+				}
 			}
 
 			{
 				var o = new DataObject ();
 				objects.Add (o);
 
-				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
-				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.4"));
-				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Volvo R-500"));
-				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (110000.0m)));
-				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (120000.0m)));
-				e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Olivier"));
-				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Jaune/Noir"));
-				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "T40-56-200-65E4"));
-				DummyMandat.AddAmortissement2 (e);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
+					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.4"));
+					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Volvo R-500"));
+					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (110000.0m)));
+					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (120000.0m)));
+					e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Olivier"));
+					e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Jaune/Noir"));
+					e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "T40-56-200-65E4"));
+					DummyMandat.AddAmortissement2 (e);
+				}
+
+				{
+					var e = new DataEvent (date3, EventType.Sortie);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
+				}
 			}
 
 			{

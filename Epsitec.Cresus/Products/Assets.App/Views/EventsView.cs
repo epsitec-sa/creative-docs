@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -23,27 +24,45 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			this.scroller = new VScroller
+			{
+				Parent     = parent,
+				Dock       = DockStyle.Right,
+				Margins    = new Margins (0, 0, EventsView.lineHeight*2, AbstractScroller.DefaultBreadth),
+				IsInverted = true,  // le zéro est en haut
+			};
+
 			this.controller = new NavigationTimelineController ();
 			this.controller.CreateUI (parent);
 			this.controller.RelativeWidth = 1.0;
 			this.controller.ShowLabels = true;
-			this.controller.SetRows (this.TimelineRows);
 			this.controller.CellsCount = this.dataArray.ColumnsCount;
-
+			
 			this.UpdateController ();
-
+			this.UpdateScroller ();
+			
 			//	Connexion des événements.
+			parent.SizeChanged += delegate
+			{
+				this.UpdateScroller ();
+			};
+
 			this.controller.ContentChanged += delegate (object sender, bool crop)
 			{
 				this.UpdateController (crop);
 			};
-
+			
 			this.controller.CellClicked += delegate (object sender, int row, int rank)
 			{
 			};
-
+			
 			this.controller.CellDoubleClicked += delegate (object sender, int row, int rank)
 			{
+			};
+
+			this.scroller.ValueChanged += delegate
+			{
+				this.UpdateController ();
 			};
 
 			this.Update ();
@@ -57,9 +76,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var list = new List<TimelineRowDescription> ();
 
-				for (int i=this.dataArray.RowsCount-1; i>=0; i--)
+				foreach (var row in this.EnumVisibleRows.Reverse ())
 				{
-					string desc = this.dataArray.RowsLabel[i];
+					string desc = this.dataArray.RowsLabel[row];
 					list.Add (new TimelineRowDescription (TimelineRowType.Glyph, desc));
 				}
 
@@ -73,6 +92,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateController(bool crop = true)
 		{
+			this.controller.SetRows (this.TimelineRows);
+
 			int visibleCount = this.controller.VisibleCellsCount;
 			int cellsCount   = this.dataArray.ColumnsCount;
 			int count        = System.Math.Min (visibleCount, cellsCount);
@@ -101,7 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			int line = 0;
 
 			//	Ajoute les lignes des objets, de bas en haut.
-			for (int row=this.dataArray.RowsCount-1; row>=0; row--)
+			foreach (var row in this.EnumVisibleRows.Reverse ())
 			{
 				var glyphs = new List<TimelineCellGlyph> ();
 
@@ -133,6 +154,65 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.SetRowMonthCells (line++, dates.ToArray ());
 
 			this.controller.PermanentGrid = true;
+		}
+
+		private void UpdateScroller()
+		{
+			if (this.scroller == null)
+			{
+				return;
+			}
+
+			var totalRows   = (decimal) this.dataArray.RowsCount;
+			var visibleRows = (decimal) this.VisibleRows;
+
+			if (visibleRows < 0 || totalRows == 0)
+			{
+				this.scroller.Resolution = 1.0m;
+				this.scroller.VisibleRangeRatio = 1.0m;
+
+				this.scroller.MinValue = 0.0m;
+				this.scroller.MaxValue = 1.0m;
+
+				this.scroller.SmallChange = 1.0m;
+				this.scroller.LargeChange = 1.0m;
+			}
+			else
+			{
+				this.scroller.Resolution = 1.0m;
+				this.scroller.VisibleRangeRatio = System.Math.Min (visibleRows/totalRows, 1.0m);
+
+				this.scroller.MinValue = 0.0m;
+				this.scroller.MaxValue = System.Math.Max (totalRows - visibleRows, 0.0m);
+
+				this.scroller.SmallChange = 1.0m;
+				this.scroller.LargeChange = visibleRows;
+			}
+		}
+
+		private IEnumerable<int> EnumVisibleRows
+		{
+			get
+			{
+				int firstRow = (int) this.scroller.Value;
+				int visibleRows = this.VisibleRows;
+
+				for (int row=0; row<this.dataArray.RowsCount; row++)
+				{
+					if (row >= firstRow && row < firstRow+visibleRows)
+					{
+						yield return row;
+					}
+				}
+			}
+		}
+
+		private int VisibleRows
+		{
+			get
+			{
+				return (int) (this.scroller.ActualHeight / EventsView.lineHeight);
+			}
 		}
 
 
@@ -313,8 +393,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
+		private static readonly int lineHeight = 20;
+
 		private readonly DataArray				dataArray;
 
 		private NavigationTimelineController	controller;
+		private VScroller						scroller;
 	}
 }

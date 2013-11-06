@@ -50,7 +50,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			};
 		}
 
-
 		public int								CellsCount
 		{
 			get
