@@ -109,7 +109,7 @@
     <Compile Include="Views\BusinessLogic.cs" />
     <Compile Include="Views\EditorPageGroup.cs" />
     <Compile Include="Views\ObjectSummaryControllerTile.cs" />
-    <Compile Include="Views\EditorPageSingleton.cs" />
+    <Compile Include="Views\EditorPageOneShot.cs" />
     <Compile Include="Views\TabPagesController.cs" />
     <Compile Include="Views\EditorPageCategory.cs" />
     <Compile Include="Views\IntFieldController.cs" />

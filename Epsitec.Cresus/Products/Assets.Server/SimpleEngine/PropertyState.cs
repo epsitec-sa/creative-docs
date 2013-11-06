@@ -13,8 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Single,			// propriété définie directement dans l'événement
 		Synthetic,		// propriété définie dans un événement précédent
 		Inherited,		// pas utilisé
-		Singleton,		// propriété sans influence sur les événements futurs
+		OneShot,		// propriété sans influence sur les événements futurs
 		Readonly,		// pas d'événement à la date choisie
-		//?Locked,			// hors des périodes définies par les événements d'entrée/sortie
 	}
 }

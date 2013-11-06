@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Après la création d'un événement, on cherche à ouvrir la page la
 			//	plus pertinente.
 			this.eventType = eventType;
-			this.OpenPage (EditionObjectPageType.Singleton);
+			this.OpenPage (EditionObjectPageType.OneShot);
 		}
 
 
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (hasEvent)
 			{
-				yield return EditionObjectPageType.Singleton;
+				yield return EditionObjectPageType.OneShot;
 
 				switch (type)
 				{
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (hasEvent)
 			{
-				yield return EditionObjectPageType.Singleton;
+				yield return EditionObjectPageType.OneShot;
 
 				yield return EditionObjectPageType.Category;
 				yield return EditionObjectPageType.Compta;
@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (hasEvent)
 			{
-				yield return EditionObjectPageType.Singleton;
+				yield return EditionObjectPageType.OneShot;
 
 				yield return EditionObjectPageType.Group;
 			}

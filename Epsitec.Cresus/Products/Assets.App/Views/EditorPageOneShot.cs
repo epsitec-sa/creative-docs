@@ -8,9 +8,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class EditorPageSingleton : AbstractEditorPage
+	public class EditorPageOneShot : AbstractEditorPage
 	{
-		public EditorPageSingleton(DataAccessor accessor, BaseType baseType)
+		public EditorPageOneShot(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
 		{
 		}
@@ -26,10 +26,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins = new Epsitec.Common.Drawing.Margins (0, 0, 0, 20),
 			};
 
-			this.CreateStringController (parent, ObjectField.EvNuméro,      editWidth: 90);
-			this.CreateDateController   (parent, ObjectField.EvDateValeur);
-			this.CreateStringController (parent, ObjectField.EvCommentaire, lineCount: 5);
-			this.CreateStringController (parent, ObjectField.EvDocuments,   lineCount: 5);
+			this.CreateStringController (parent, ObjectField.OneShotNuméro,      editWidth: 90);
+			this.CreateDateController   (parent, ObjectField.OneShotDateValeur);
+			this.CreateStringController (parent, ObjectField.OneShotCommentaire, lineCount: 5);
+			this.CreateStringController (parent, ObjectField.OneShotDocuments,   lineCount: 5);
 		}
 	}
 }

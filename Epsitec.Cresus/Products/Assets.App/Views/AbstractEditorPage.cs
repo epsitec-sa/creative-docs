@@ -271,9 +271,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected PropertyState GetPropertyState(ObjectField field)
 		{
-			if (DataAccessor.IsSingletonField (field))
+			if (DataAccessor.IsOneShotField (field))
 			{
-				return PropertyState.Singleton;
+				return PropertyState.OneShot;
 			}
 			else if (this.hasEvent)
 			{
@@ -299,8 +299,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (page)
 			{
-				case EditionObjectPageType.Singleton:
-					return new EditorPageSingleton (accessor, baseType);
+				case EditionObjectPageType.OneShot:
+					return new EditorPageOneShot (accessor, baseType);
 
 				case EditionObjectPageType.Summary:
 					return new EditorPageSummary (accessor, baseType);

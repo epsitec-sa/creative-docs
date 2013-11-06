@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			// On cherche depuis la date donnée en remontant dans le passé.
-			if (!DataAccessor.IsSingletonField (field))
+			if (!DataAccessor.IsOneShotField (field))
 			{
 				var e = this.events
 					.Where (x => x.Timestamp <= timestamp && x.GetProperty (field) != null)

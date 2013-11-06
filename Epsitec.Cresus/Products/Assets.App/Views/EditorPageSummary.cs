@@ -134,11 +134,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne la page permettant d'éditer un champ donné.
 			switch (field)
 			{
-				case ObjectField.EvNuméro:
-				case ObjectField.EvDateValeur:
-				case ObjectField.EvCommentaire:
-				case ObjectField.EvDocuments:
-					return EditionObjectPageType.Singleton;
+				case ObjectField.OneShotNuméro:
+				case ObjectField.OneShotDateValeur:
+				case ObjectField.OneShotCommentaire:
+				case ObjectField.OneShotDocuments:
+					return EditionObjectPageType.OneShot;
 
 				case ObjectField.Valeur1:
 				case ObjectField.Valeur2:
@@ -162,11 +162,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne la page permettant d'éditer un champ donné.
 			switch (field)
 			{
-				case ObjectField.EvNuméro:
-				case ObjectField.EvDateValeur:
-				case ObjectField.EvCommentaire:
-				case ObjectField.EvDocuments:
-					return EditionObjectPageType.Singleton;
+				case ObjectField.OneShotNuméro:
+				case ObjectField.OneShotDateValeur:
+				case ObjectField.OneShotCommentaire:
+				case ObjectField.OneShotDocuments:
+					return EditionObjectPageType.OneShot;
 
 				case ObjectField.Compte1:
 				case ObjectField.Compte2:
@@ -188,11 +188,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne la page permettant d'éditer un champ donné.
 			switch (field)
 			{
-				case ObjectField.EvNuméro:
-				case ObjectField.EvDateValeur:
-				case ObjectField.EvCommentaire:
-				case ObjectField.EvDocuments:
-					return EditionObjectPageType.Singleton;
+				case ObjectField.OneShotNuméro:
+				case ObjectField.OneShotDateValeur:
+				case ObjectField.OneShotCommentaire:
+				case ObjectField.OneShotDocuments:
+					return EditionObjectPageType.OneShot;
 
 				default:
 					return EditionObjectPageType.Group;
@@ -249,10 +249,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var c1 = new List<ObjectSummaryControllerTile> ()
 				{
 					new ObjectSummaryControllerTile ("Evénement"),
-					new ObjectSummaryControllerTile (ObjectField.EvNuméro),
-					new ObjectSummaryControllerTile (ObjectField.EvDateValeur),
-					new ObjectSummaryControllerTile (ObjectField.EvCommentaire),
-					new ObjectSummaryControllerTile (ObjectField.EvDocuments),
+					new ObjectSummaryControllerTile (ObjectField.OneShotNuméro),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDateValeur),
+					new ObjectSummaryControllerTile (ObjectField.OneShotCommentaire),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
 
 					ObjectSummaryControllerTile.Empty,
 
@@ -299,10 +299,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var c1 = new List<ObjectSummaryControllerTile> ()
 				{
 					new ObjectSummaryControllerTile ("Evénement"),
-					new ObjectSummaryControllerTile (ObjectField.EvNuméro),
-					new ObjectSummaryControllerTile (ObjectField.EvDateValeur),
-					new ObjectSummaryControllerTile (ObjectField.EvCommentaire),
-					new ObjectSummaryControllerTile (ObjectField.EvDocuments),
+					new ObjectSummaryControllerTile (ObjectField.OneShotNuméro),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDateValeur),
+					new ObjectSummaryControllerTile (ObjectField.OneShotCommentaire),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
 
 					ObjectSummaryControllerTile.Empty,
 
@@ -346,10 +346,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var c1 = new List<ObjectSummaryControllerTile> ()
 				{
 					new ObjectSummaryControllerTile ("Evénement"),
-					new ObjectSummaryControllerTile (ObjectField.EvNuméro),
-					new ObjectSummaryControllerTile (ObjectField.EvDateValeur),
-					new ObjectSummaryControllerTile (ObjectField.EvCommentaire),
-					new ObjectSummaryControllerTile (ObjectField.EvDocuments),
+					new ObjectSummaryControllerTile (ObjectField.OneShotNuméro),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDateValeur),
+					new ObjectSummaryControllerTile (ObjectField.OneShotCommentaire),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
 
 					ObjectSummaryControllerTile.Empty,
 

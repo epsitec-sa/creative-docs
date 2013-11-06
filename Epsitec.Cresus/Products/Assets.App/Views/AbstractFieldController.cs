@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.historyButton != null)
 			{
-				this.historyButton.Visibility = (this.PropertyState != PropertyState.Singleton);
+				this.historyButton.Visibility = (this.PropertyState != PropertyState.OneShot);
 			}
 
 			if (this.clearButton != null)

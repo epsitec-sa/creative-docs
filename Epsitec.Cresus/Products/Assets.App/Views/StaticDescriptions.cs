@@ -13,16 +13,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (field)
 			{
-				case ObjectField.EvNuméro:
+				case ObjectField.OneShotNuméro:
 					return "Evénement numéro";
 
-				case ObjectField.EvDateValeur:
+				case ObjectField.OneShotDateValeur:
 					return "Date valeur";
 
-				case ObjectField.EvCommentaire:
+				case ObjectField.OneShotCommentaire:
 					return "Commentaire";
 
-				case ObjectField.EvDocuments:
+				case ObjectField.OneShotDocuments:
 					return "Documents associés";
 
 				case ObjectField.Level:
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (type)
 			{
-				case EditionObjectPageType.Singleton:
+				case EditionObjectPageType.OneShot:
 					return "Evénement";
 
 				case EditionObjectPageType.Summary:
