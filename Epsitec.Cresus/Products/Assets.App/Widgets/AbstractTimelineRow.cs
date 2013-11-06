@@ -94,6 +94,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public bool								PermanentGrid
+		{
+			get
+			{
+				return this.permanentGrid;
+			}
+			set
+			{
+				if (this.permanentGrid != value)
+				{
+					this.permanentGrid = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 		public void ClearDetectedHoverRank()
 		{
 			this.SetDetectedHoverRank (-1);
@@ -172,16 +188,25 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Dessine une portion de grille dans une cellule, sous forme de 2 traits,
 			//	en bas et à droite. Plus la distance jusqu'à la cellule survolée est
 			//	grande et plus l'effet est estompé.
-			if (hilitedRank != -1)
+			if (hilitedRank != -1 || this.permanentGrid)
 			{
 				rect.Deflate (0.5);
 
 				graphics.AddLine (rect.BottomLeft, rect.BottomRight);
 				graphics.AddLine (rect.BottomRight, rect.TopRight);
 
-				var delta = System.Math.Abs (currentRank - hilitedRank);
-				var alpha = System.Math.Max (1.0 - delta * decrease, 0.0);
-				var color = Color.FromAlphaColor (alpha, ColorManager.GridColor);
+				Color color;
+
+				if (this.permanentGrid)
+				{
+					color = ColorManager.GridColor;
+				}
+				else
+				{
+					var delta = System.Math.Abs (currentRank - hilitedRank);
+					var alpha = System.Math.Max (1.0 - delta * decrease, 0.0);
+					color = Color.FromAlphaColor (alpha, ColorManager.GridColor);
+				}
 
 				graphics.RenderSolid (color);
 			}
@@ -189,7 +214,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected void PaintLabel(Graphics graphics)
 		{
-			if (this.LabelWidth > 0 && this.hilitedHoverRank != -1)
+			if (this.LabelWidth > 0 && (this.hilitedHoverRank != -1 || this.permanentGrid))
 			{
 				this.PaintGrid (graphics, this.BoxLabelRect, 0, 0);
 			}
@@ -292,5 +317,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		protected double						pivot;
 		protected int							detectedHoverRank;
 		protected int							hilitedHoverRank;
+		protected bool							permanentGrid;
 	}
 }

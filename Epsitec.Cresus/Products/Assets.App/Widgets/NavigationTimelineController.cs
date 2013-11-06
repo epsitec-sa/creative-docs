@@ -104,6 +104,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public bool								PermanentGrid
+		{
+			get
+			{
+				return this.timeline.PermanentGrid;
+			}
+			set
+			{
+				this.timeline.PermanentGrid = value;
+			}
+		}
+
 		public double							Pivot
 		{
 			get

@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 						var index = this.cells.FindIndex (x => x.Timestamp == t);
 						var type = e.Type;
-						var glyph = TimelineData.TypeToGlyph ((EventType) type);
+						var glyph = TimelineData.TypeToGlyph (type);
 
 						var value1 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Valeur1);
 						var value2 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Valeur2);

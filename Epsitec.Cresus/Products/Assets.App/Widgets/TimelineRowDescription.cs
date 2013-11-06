@@ -11,10 +11,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public TimelineRowDescription
 		(
-			TimelineRowType type, string description, double relativeHeight = 1.0,
-			TimelineValueDisplayMode valueDisplayMode = TimelineValueDisplayMode.All,
-			Color? valueColor1 = null,
-			Color? valueColor2 = null
+			TimelineRowType				type,
+			string						description,
+			double						relativeHeight		= 1.0,
+			TimelineValueDisplayMode	valueDisplayMode	= TimelineValueDisplayMode.All,
+			Color?						valueColor1			= null,
+			Color?						valueColor2			= null
 		)
 		{
 			this.Type             = type;

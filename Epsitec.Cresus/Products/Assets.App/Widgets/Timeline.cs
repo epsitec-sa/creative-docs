@@ -84,6 +84,28 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public bool								PermanentGrid
+		{
+			get
+			{
+				if (this.timelineRows.Any ())
+				{
+					return this.timelineRows.First ().PermanentGrid;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			set
+			{
+				foreach (var row in this.timelineRows)
+				{
+					row.PermanentGrid = value;
+				}
+			}
+		}
+
 		private int								CellHeight
 		{
 			get
@@ -266,7 +288,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Met à jour la largeur nécessaire pour les labels de gauche.
 			this.labelsWidth = 0;
 
-			if (this.showLabels)
+			if (this.showLabels && this.timelineRows.Any ())
 			{
 				this.labelsWidth = this.timelineRows.Max
 				(

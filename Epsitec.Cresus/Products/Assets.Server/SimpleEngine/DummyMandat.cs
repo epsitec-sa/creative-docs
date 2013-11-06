@@ -505,7 +505,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 
 				{
-					var e = new DataEvent (date1, EventType.Entrée);
+					var e = new DataEvent (date1, EventType.Augmentation);
 					o.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2, new ComputedAmount (12000.0m)));

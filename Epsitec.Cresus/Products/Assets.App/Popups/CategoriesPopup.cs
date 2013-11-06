@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.visibleSelectedRow = -1;
 
 			this.controller = new NavigationTreeTableController();
-			this.nodeFiller = new NodeFiller (this.accessor);
+			this.nodeFiller = new FinalObjectsNodeFiller (this.accessor, BaseType.Categories);
 			this.dataFiller = new CategoriesDataFiller(this.accessor, BaseType.Categories, this.controller, this.nodeFiller);
 
 			//	Connexion des événements.
@@ -140,95 +140,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		/// <summary>
-		/// Donne accès à toutes les catégories finales.
-		/// </summary>
-		private class NodeFiller : AbstractNodeFiller
-		{
-			public NodeFiller(DataAccessor accessor)
-			{
-				this.accessor = accessor;
-
-				this.nodes = new List<Node> ();
-				this.UpdateData ();
-			}
-
-			public override int NodesCount
-			{
-				get
-				{
-					return this.nodes.Count;
-				}
-			}
-
-			public override Node GetNode(int index)
-			{
-				return this.nodes[index];
-			}
-
-			private void UpdateData()
-			{
-				//	Met à jour toutes les catégories d'immobilisation finales.
-				this.nodes.Clear ();
-
-				int count = this.accessor.GetObjectsCount (BaseType.Categories);
-				for (int i=0; i<count; i++)
-				{
-					Guid currentGuid;
-					int currentLevel;
-					this.GetData (i, out currentGuid, out currentLevel);
-
-					//	Par défaut, on considére que la ligne ne peut être ni étendue
-					//	ni compactée.
-					var type = TreeTableTreeType.Final;
-
-					if (i < count-2)
-					{
-						Guid nextGuid;
-						int nextLevel;
-						this.GetData (i+1, out nextGuid, out nextLevel);
-
-						//	Si le noeud suivant a un niveau plus élevé, il s'agit d'une
-						//	ligne pouvant être étendue ou compactée.
-						if (nextLevel > currentLevel)
-						{
-							type = TreeTableTreeType.Expanded;
-						}
-					}
-
-					if (type == TreeTableTreeType.Final)
-					{
-						var node = new Node (currentGuid, -1, type);
-						this.nodes.Add (node);
-					}
-				}
-			}
-
-			private void GetData(int row, out Guid guid, out int level)
-			{
-				//	Retourne une donnée.
-				guid = Guid.Empty;
-				level = 0;
-
-				if (row >= 0 && row < this.accessor.GetObjectsCount (BaseType.Categories))
-				{
-					guid = this.accessor.GetObjectGuids (BaseType.Categories, row, 1).FirstOrDefault ();
-
-					var obj = this.accessor.GetObject (BaseType.Categories, guid);
-					var timestamp = new Timestamp (System.DateTime.MaxValue, 0);
-					var p = ObjectCalculator.GetObjectSyntheticProperty (obj, timestamp, ObjectField.Level) as DataIntProperty;
-					if (p != null)
-					{
-						level = p.Value;
-					}
-				}
-			}
-
-			private readonly DataAccessor					accessor;
-			private readonly List<Node>						nodes;
-		}
-
-
 		#region Events handler
 		private void OnNavigate(Guid guid)
 		{
@@ -250,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly NodeFiller						nodeFiller;
+		private readonly FinalObjectsNodeFiller			nodeFiller;
 		private readonly CategoriesDataFiller			dataFiller;
 
 		private int										visibleSelectedRow;
