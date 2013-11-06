@@ -31,8 +31,8 @@ namespace Epsitec.Aider.Data.Job
 
 				EChWarningsFixer.FixReportedPersonLinkageForArrivals (businessContext);
 
-				System.Console.WriteLine ("press ENTER to continue");
-				System.Console.ReadLine ();
+//				System.Console.WriteLine ("press ENTER to continue");
+//				System.Console.ReadLine ();
 
 				EChWarningsFixer.LogToConsole ("Migrating old Ech Warnings: EChPersonMissing -> EChProcessDeparture");
 				
@@ -139,8 +139,8 @@ namespace Epsitec.Aider.Data.Job
 
 
 								
-								System.Console.WriteLine ("press ENTER to continue");
-								System.Console.ReadLine ();
+//								System.Console.WriteLine ("press ENTER to continue");
+//								System.Console.ReadLine ();
 							}
 						}
 						else
@@ -198,8 +198,8 @@ namespace Epsitec.Aider.Data.Job
 
 						}
 
-						System.Console.WriteLine ("press ENTER to continue");
-						System.Console.ReadLine ();
+//						System.Console.WriteLine ("press ENTER to continue");
+//						System.Console.ReadLine ();
 					}	
 				}
 			}

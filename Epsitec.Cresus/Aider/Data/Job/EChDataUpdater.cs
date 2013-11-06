@@ -1187,7 +1187,7 @@ namespace Epsitec.Aider.Data.Job
 			else
 			{
 				this.LogToConsole ("Warning: No household to update detected, warning: MissingHousehold added");
-				this.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.MissingHousehold, this.warningTitleMessage,
+				this.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.EChHouseholdMissing, this.warningTitleMessage,
 					/**/			FormattedText.FromSimpleText (person.GetDisplayName () + " n'a pas de ménage dans Aider."));
 			}
 

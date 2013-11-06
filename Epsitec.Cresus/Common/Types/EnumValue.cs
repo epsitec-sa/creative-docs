@@ -1,7 +1,8 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Types
 {
@@ -58,11 +59,12 @@ namespace Epsitec.Common.Types
 			this.DefineCaptionId (captionId);
 		}
 
+
 		/// <summary>
 		/// Gets the name of the object.
 		/// </summary>
 		/// <value>The name.</value>
-		public string Name
+		public string							Name
 		{
 			get
 			{
@@ -87,7 +89,7 @@ namespace Epsitec.Common.Types
 		/// Gets the caption of the object.
 		/// </summary>
 		/// <value>The caption.</value>
-		public Caption Caption
+		public Caption							Caption
 		{
 			get
 			{
@@ -120,7 +122,7 @@ namespace Epsitec.Common.Types
 		/// Gets a value indicating whether this value belongs to a native <c>enum</c>.
 		/// </summary>
 		/// <value><c>true</c> if this value belongs to a native <c>enum</c>; otherwise, <c>false</c>.</value>
-		public bool IsNative
+		public bool								IsNative
 		{
 			get
 			{
@@ -128,6 +130,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		
 		public void DefineValue(System.Enum value)
 		{
 			if (this.Value != value)
@@ -395,7 +398,7 @@ namespace Epsitec.Common.Types
 			{
 				dstValue.captionId = srcValue.captionId;
 				dstValue.caption   = srcValue.caption;
-				dstValue.rank      = srcValue.rank;
+//				dstValue.rank      = srcValue.rank;
 			}
 		}
 		
@@ -408,13 +411,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private string name;
-		private bool isReadOnly;
-		private bool isHidden;
-		private bool isNative;
-		private Support.Druid captionId;
-		private Caption caption;
-		private System.Enum value;
-		private int rank;
+		private string							name;
+		private bool							isReadOnly;
+		private bool							isHidden;
+		private bool							isNative;
+		private Support.Druid					captionId;
+		private Caption							caption;
+		private System.Enum						value;
+		private int								rank;
 	}
 }

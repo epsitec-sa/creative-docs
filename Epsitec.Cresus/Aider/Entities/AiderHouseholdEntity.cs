@@ -315,7 +315,7 @@ namespace Epsitec.Aider.Entities
 						//Warn childs
 						foreach (var child in childrens)
 						{
-							AiderPersonWarningEntity.Create (businessContext, child, child.ParishGroupPathCache, WarningType.MissingHousehold, new FormattedText ("Cet enfant n'est plus assigné à un ménage"));
+							AiderPersonWarningEntity.Create (businessContext, child, child.ParishGroupPathCache, WarningType.EChHouseholdMissing, new FormattedText ("Cet enfant n'est plus assigné à un ménage"));
 						}
 
 						AiderHouseholdEntity.Delete (businessContext, household);

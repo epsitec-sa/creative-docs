@@ -1326,7 +1326,7 @@ namespace Epsitec.Aider
 						}
 					}
 					//	designer:cap/LVO203
-					public static global::Epsitec.Common.Types.Caption HouseholdWithoutSubscription
+					public static global::Epsitec.Common.Types.Caption SubscriptionMissing
 					{
 						get
 						{
@@ -1334,7 +1334,7 @@ namespace Epsitec.Aider
 						}
 					}
 					//	designer:cap/LVA5C
-					public static global::Epsitec.Common.Types.Caption MissingHousehold
+					public static global::Epsitec.Common.Types.Caption HouseholdMissing
 					{
 						get
 						{
@@ -1374,7 +1374,7 @@ namespace Epsitec.Aider
 						}
 					}
 					//	designer:cap/LVO703
-					public static global::Epsitec.Common.Types.Caption PotentialDuplicatedPerson
+					public static global::Epsitec.Common.Types.Caption PersonProbablyDuplicated
 					{
 						get
 						{

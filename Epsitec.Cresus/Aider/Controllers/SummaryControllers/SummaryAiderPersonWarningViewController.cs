@@ -53,11 +53,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				case WarningType.ParishDeparture:
 					return new SpecializedSummaryAiderPersonWarningViewController_ParishDeparture ();
 
-				case WarningType.HouseholdWithoutSubscription:
+				case WarningType.SubscriptionMissing:
 					return new SpecializedSummaryAiderPersonWarningViewController_HouseholdWithoutSubscription ();
 
 				case WarningType.EChHouseholdMissing:
-				case WarningType.MissingHousehold:
+				case WarningType.HouseholdMissing:
 					return new SpecializedSummaryAiderPersonWarningViewController_MissingHousehold ();
 
 				case WarningType.ParishMismatch://JokeInCode: it's like Paris Match ?! 

@@ -61,7 +61,7 @@ namespace Epsitec.Common.Types
 				yield break;
 			}
 
-			foreach (var item in enumType.Values)
+			foreach (var item in enumType.Values.Where (x => !x.IsHidden) /*.OrderBy (x => x.Rank) */)
 			{
 				var enumKey = (T) (object) item.Value;
 				var caption = TextFormatter.GetCurrentCultureCaption (item.Caption);

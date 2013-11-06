@@ -1,7 +1,10 @@
-//	Copyright © 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
+using System.Linq;
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.EnumType))]
 
@@ -352,7 +355,7 @@ namespace Epsitec.Common.Types
 			{
 				if (this.enumType != null)
 				{
-					if (this.enumType.GetCustomAttributes (typeof (System.FlagsAttribute), false).Length > 0)
+					if (this.enumType.GetCustomAttributes<System.FlagsAttribute> ().Any ())
 					{
 						return true;
 					}
@@ -753,21 +756,18 @@ namespace Epsitec.Common.Types
 
 				for (int i = 0; i < fields.Length; i++)
 				{
-					object[] hiddenAttributes;
-					object[] rankAttributes;
-
-					hiddenAttributes = fields[i].GetCustomAttributes (typeof (HiddenAttribute), false);
-					rankAttributes   = fields[i].GetCustomAttributes (typeof (RankAttribute), false);
+					var hiddenAttribute = fields[i].GetCustomAttributes<HiddenAttribute> ().FirstOrDefault ();
+					var rankAttribute   = fields[i].GetCustomAttributes<RankAttribute> ().FirstOrDefault ();
 
 					string name = fields[i].Name;
-					bool hide = hiddenAttributes.Length == 1;
+					bool   hide = hiddenAttribute != null;
+					
 					int rank;
 
 					System.Enum value = (System.Enum) System.Enum.Parse (this.enumType, name);
 
-					if (rankAttributes.Length == 1)
+					if (rankAttribute != null)
 					{
-						RankAttribute rankAttribute = rankAttributes[0] as RankAttribute;
 						rank = rankAttribute.Rank;
 					}
 					else

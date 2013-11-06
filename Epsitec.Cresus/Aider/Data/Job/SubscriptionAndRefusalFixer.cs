@@ -193,7 +193,7 @@ namespace Epsitec.Aider.Data.Job
 							person = household.Members.FirstOrDefault ();
 						}
 
-						AiderPersonWarningEntity.Create (businessContext, person, person.ParishGroupPathCache, WarningType.HouseholdWithoutSubscription, "Ménage sans abonnement", "Ce ménage n'est référencé ni dans les abonnements,\n" + "ni dans les refus.", warningSource);
+						AiderPersonWarningEntity.Create (businessContext, person, person.ParishGroupPathCache, WarningType.SubscriptionMissing, "Ménage sans abonnement", "Ce ménage n'est référencé ni dans les abonnements,\n" + "ni dans les refus.", warningSource);
 					}
 					else
 					{

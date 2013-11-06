@@ -78,7 +78,7 @@ namespace Epsitec.Aider.Data.Job
 						else
 						{
 							PotentialDuplicatedPersonFinder.LogToConsole ("Found! {0}", false, contact.GetDisplayName ());
-							AiderPersonWarningEntity.Create (businessContext, contact.Person, contact.Person.ParishGroupPathCache, WarningType.PotentialDuplicatedPerson, warningTitleMessage, warningSource);
+							AiderPersonWarningEntity.Create (businessContext, contact.Person, contact.Person.ParishGroupPathCache, WarningType.PersonProbablyDuplicated, warningTitleMessage, warningSource);
 						}
 					}
 				}

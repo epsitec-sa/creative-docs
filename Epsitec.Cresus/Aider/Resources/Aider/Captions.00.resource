@@ -248,7 +248,7 @@
   <data name="Fld.AiderGroupDef.Classification" id="A1C">&lt;s:data id="_0" f:Name="Classification" f:Labels="{Collection {Text 'Classification'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.None" id="A3C">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.Generic" id="A4C">&lt;s:data id="_0" f:Name="Generic" f:Labels="{Collection {Text 'Avertissement générique'}}" /&gt;</data>
-  <data name="Val.Enum.WarningType.MissingHousehold" id="A5C">&lt;s:data id="_0" f:Name="MissingHousehold" f:Labels="{Collection {Text 'Différence'}}" /&gt;</data>
+  <data name="Val.Enum.WarningType.HouseholdMissing" id="A5C">&lt;s:data id="_0" f:Name="HouseholdMissing" f:Labels="{Collection {Text 'Personne sans ménage'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.ParishMismatch" id="A6C">&lt;s:data id="_0" f:Name="ParishMismatch" f:Labels="{Collection {Text 'Paroisse différente'}}" /&gt;</data>
   <data name="Typ.Enum.WarningType" id="A2C">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.WarningType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.WarningType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA3C]'}, {Text '1 [LVA4C]'}, {Text '2 [LVA5C]'}, {Text '3 [LVA6C]'}, {Text '4 [LVGN32]'}, {Text '5 [LVGO32]'}, {Text '6 [LVGP32]'}, {Text '7 [LVGQ32]'}, {Text '8 [LVGR32]'}, {Text '9 [LVQ102]'}, {Text '10 [LVQ202]'}, {Text '11 [LVQ302]'}, {Text '12 [LVQ402]'}, {Text '13 [LVAVG]'}, {Text '14 [LVA0H]'}, {Text '15 [LVGB42]'}, {Text '16 [LVO203]'}, {Text '17 [LVO703]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.WarningType, Aider/None" f:Labels="{Collection {Text 'Type d&amp;amp;apos;avertissement'}}" /&gt;</data>
   <data name="Fld.IAiderWarning.WarningType" id="A7C">&lt;s:data id="_0" f:Name="WarningType" f:Labels="{Collection {Text 'Type d&amp;amp;apos;avertissement'}}" /&gt;</data>
@@ -468,11 +468,11 @@
   <data name="Val.Enum.ContactType.Deceased" id="AGH">&lt;s:data id="_0" f:Name="Deceased" f:Labels="{Collection {Text 'Personne décédée'}}" /&gt;</data>
   <data name="Fld.AiderPerson.AllPhoneNumbers" id="AHH">&lt;s:data id="_0" f:Name="AllPhoneNumbers" f:Labels="{Collection {Text 'Numéros de téléphone'}}" /&gt;</data>
   <data name="Fld.AiderPerson.AllEmails" id="AIH">&lt;s:data id="_0" f:Name="AllEmails" f:Labels="{Collection {Text 'E-mails'}}" /&gt;</data>
-  <data name="Val.Enum.WarningType.HouseholdWithoutSubscription" id="O203">&lt;s:data id="_0" f:Name="HouseholdWithoutSubscription" f:Labels="{Collection {Text 'Ménage sans abo. BN '}}" /&gt;</data>
+  <data name="Val.Enum.WarningType.SubscriptionMissing" id="O203">&lt;s:data id="_0" f:Name="SubscriptionMissing" f:Labels="{Collection {Text 'Ménage sans abo. BN '}}" /&gt;</data>
   <data name="Val.Enum.AddressType.Confidential" id="O403">&lt;s:data id="_0" f:Name="Confidential" f:Labels="{Collection {Text 'Confidentielle'}}" /&gt;</data>
   <data name="Fld.AiderPerson.ConfidentialAddresses" id="O503">&lt;s:data id="_0" f:Name="ConfidentialAddresses" /&gt;</data>
   <data name="Cmd.Base.ShowAiderGroupMemberByFunction" id="O603">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderGroupMemberByFunction" f:Icon="manifest:Epsitec.Aider.Images.Base.AiderPerson.Male-German.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Participations par fonctions métiers'}}" /&gt;</data>
-  <data name="Val.Enum.WarningType.PotentialDuplicatedPerson" id="O703">&lt;s:data id="_0" f:Name="PotentialDuplicatedPerson" f:Description="Un doublon potentiel à été détécté entre deux personnes" f:Labels="{Collection {Text 'Doublon potentiel'}}" /&gt;</data>
+  <data name="Val.Enum.WarningType.PersonProbablyDuplicated" id="O703">&lt;s:data id="_0" f:Name="PersonProbablyDuplicated" f:Description="Un doublon potentiel à été détécté entre deux personnes" f:Labels="{Collection {Text 'Doublon potentiel'}}" /&gt;</data>
   <data name="Fld.AiderSubscription.ParishGroupPathCache" id="O803">&lt;s:data id="_0" f:Name="ParishGroupPathCache" /&gt;</data>
   <data name="Fld.AiderSubscriptionRefusal.ParishGroupPathCache" id="O903">&lt;s:data id="_0" f:Name="ParishGroupPathCache" /&gt;</data>
   <data name="Fld.AiderMailing.Name" id="OB03">&lt;s:data id="_0" f:Name="Name" f:Labels="{Collection {Text 'Intitulé'}}" /&gt;</data>
