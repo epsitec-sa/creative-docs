@@ -59,6 +59,20 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 					break;
 
+				case LabelLayout.Sheet_A4_Simple:
+				case LabelLayout.Sheet_A4_SimplePP:
+				case LabelLayout.Sheet_A4_SimplePPPriority:
+
+					labelSetup = new LabelPageLayout
+					{
+						PageMargins = new Margins (0, 0, 5, 5),
+						LabelGap = new Size (0, 0),
+						LabelSize = new Size (2100, 2960),
+						LabelMargins = new Margins (0, 0, 0, 0),
+					};
+
+					break;
+
 				default:
 					throw new System.NotImplementedException ();
 			}
@@ -74,6 +88,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 				case LabelLayout.Sheet_A5_Simple:
 				case LabelLayout.Sheet_A5_SimplePP:
 				case LabelLayout.Sheet_A5_SimplePPPriority:
+				case LabelLayout.Sheet_A4_Simple:
+				case LabelLayout.Sheet_A4_SimplePP:
+				case LabelLayout.Sheet_A4_SimplePPPriority:
 					return new ExportPdfInfo ()
 					{
 						PageSize = PaperSize.A4,
@@ -103,6 +120,18 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 						IncludesPrioritySymbol = layout == LabelLayout.Sheet_A5_SimplePPPriority
 					};
 
+				case LabelLayout.Sheet_A4_Simple:
+					return new LabelRendererSheetA4 ();
+
+				case LabelLayout.Sheet_A4_SimplePP:
+				case LabelLayout.Sheet_A4_SimplePPPriority:
+					return new LabelRendererSheetA4
+					{
+						EmitterZipCode = 1002,
+						EmitterPostOffice = "Lausanne",
+						IncludesPrioritySymbol = layout == LabelLayout.Sheet_A4_SimplePPPriority
+					};
+				
 				default:
 					throw new System.NotImplementedException ();
 			}

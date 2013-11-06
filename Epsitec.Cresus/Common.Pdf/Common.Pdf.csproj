@@ -96,6 +96,8 @@
     <Compile Include="Engine\PdfFunctionType.cs" />
     <Compile Include="Engine\PdfImageStream.cs" />
     <Compile Include="Engine\Port.cs" />
+    <Compile Include="Labels\LabelRendererSheetA4.cs" />
+    <Compile Include="Labels\LabelRendererSheetAx.cs" />
     <Compile Include="Labels\LabelRenderer.cs" />
     <Compile Include="Labels\LabelRendererSheetA5.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

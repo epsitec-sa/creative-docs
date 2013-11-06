@@ -17,5 +17,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		Sheet_A5_Simple,
 		Sheet_A5_SimplePP,
 		Sheet_A5_SimplePPPriority,
+
+		Sheet_A4_Simple,
+		Sheet_A4_SimplePP,
+		Sheet_A4_SimplePPPriority,
 	}
 }
