@@ -51,7 +51,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					bool isHover = (this.detectedHoverRank >= x && this.detectedHoverRank < rank);
 
 					TimelineRowGlyphs.PaintCellBackground (graphics, rect, lastCell, isHover, index, lastCell.IsLocked);
-					TimelineRowGlyphs.PaintCellForeground (graphics, rect, lastCell, isHover, index);
+
+					//	Ajuste le rectangle pour avoir une hauteur constante.
+					double h = this.CellWidth / this.RelativeWidth;
+					var glyphRect = rect;
+					glyphRect.Deflate ((rect.Height - h)/2);
+
+					TimelineRowGlyphs.PaintCellForeground (graphics, glyphRect, lastCell, isHover, index);
 
 					this.PaintGrid (graphics, rect, index, this.hilitedHoverRank);
 

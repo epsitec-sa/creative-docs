@@ -19,23 +19,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public bool HasTreeOperations
-		{
-			get
-			{
-				return this.hasTreeOperations;
-			}
-			set
-			{
-				if (this.hasTreeOperations != value)
-				{
-					this.hasTreeOperations = value;
-					this.Adjust ();
-				}
-			}
-		}
-
-
 		protected override void UpdateCommandButtons()
 		{
 			this.UpdateCommandButton (this.buttonFirst,      ToolbarCommand.First);
@@ -60,16 +43,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonFirst      = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First,      "Timeline.First",      "Retour sur la première ligne");
-			this.buttonPrev       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,       "Timeline.Prev",       "Recule sur la ligne précédente");
-			this.buttonNext       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Next,       "Timeline.Next",       "Avance sur la ligne suivante");
-			this.buttonLast       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Last,       "Timeline.Last",       "Avance sur la dernière ligne");
+			this.buttonFirst    = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First,    "Timeline.First",    "Retour sur la première ligne");
+			this.buttonPrev     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur la ligne précédente");
+			this.buttonNext     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Next,     "Timeline.Next",     "Avance sur la ligne suivante");
+			this.buttonLast     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur la dernière ligne");
 
-			this.separator1       = this.CreateSeparator     (this.toolbar, 0);
+			this.separator1     = this.CreateSeparator     (this.toolbar, 0);
 			
-			this.buttonNew        = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.New,        "Timeline.New",        "Nouvel ligne");
-			this.buttonDelete     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Delete,     "Timeline.Delete",     "Supprimer la ligne");
-			this.buttonDeselect   = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Deselect,   "Timeline.Deselect",   "Désélectionne la ligne");
+			this.buttonNew      = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.New,      "Timeline.New",      "Nouvel ligne");
+			this.buttonDelete   = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Delete,   "Timeline.Delete",   "Supprimer la ligne");
+			this.buttonDeselect = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne la ligne");
 
 			this.toolbar.SizeChanged += delegate
 			{
@@ -155,7 +138,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonNew;
 		private IconButton						buttonDelete;
 		private IconButton						buttonDeselect;
-
-		private bool							hasTreeOperations;
 	}
 }
