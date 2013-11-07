@@ -597,6 +597,210 @@ AiderMailingParticipant = [LVOL03]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <!--
+        Person data
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAU1].[LVA2]" title="Nom de famille" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAU1].[LVA3]" title="Prénom (complet)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVGS32]" title="Prénom (usuel)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAL2]" title="Nom de naissance" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAU1].[LVA8B]" title="Date de naissance" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAU1].[LVA9B]" title="Date de décès" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAPE]" title="Année de naissance" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAOE]" title="Moi de naissance" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVANE]" title="Jour de naissance" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAU1].[LVA6]" title="Sexe" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAU1].[LVA9]" title="Etat civil" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAU]" title="Titre" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAT]" title="Appellation" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAP7]" title="Profession" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAI5]" title="Confession" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAU1].[LVA7]" title="Nationalité (code)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAU1].[LVGT32]" title="Nationalité (nom)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAU1].[LVAB]" title="Origine" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAO7]" title="Langue" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVALG].[LVAA4]" title="Paroisse" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAA8].[LVA88]" title="Commentaire (personne)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <!--
+        Address data
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVA15]" title="Ligne d'adresse supplémentaire" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVAP5]" title="Case postale" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVACG]" title="Rue" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVA25]" title="Nom de rue (tri)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVAJD]" title="Nom de rue (affichage)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVA35]" title="N° de maison" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVA45]" title="Complément au n°" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVA55].[LVAH8]" title="Code postal" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVA55].[LVA95]" title="Localité" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVA55].[LVAA5].[LVAD5]" title="Pays" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVG142]" title="Addresse (une ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVG242]" title="Addresse (multi ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVAE5]" title="Téléphone 1" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVAM5]" title="Télphone 2" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVA6B]" title="Téléphone mobile" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVA5B]" title="Fax" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVAN5]" title="E-mail" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVAI8]" title="Page web" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVAA8].[LVA88]" title="Commentaire (adresse)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <!--
+        Legal person data
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA7E].[LVAV8]" title="Raison sociale" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA7E].[LVAS6]" title="Type de personne morale" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA7E].[LVACF].[LVAA4]" title="Paroisse de la personne morale" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA7E].[LVAN7]" title="Langue de la personne morale" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA7E].[LVAA8].[LVA88]" title="Commentaire (personne morale)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <!--
+        Legal person contact data
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVAEG]" title="Titre de la personne de contact" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVAAE]" title="Rôle de la personne de contact" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVAFG]" title="Nom de la personne de contact" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
     </t>
 
     <t eid="@AiderUser" n="default">
