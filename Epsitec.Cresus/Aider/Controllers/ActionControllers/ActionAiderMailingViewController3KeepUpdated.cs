@@ -23,7 +23,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Mettre à jour");
+			return Resources.FormattedText ("Mettre à jour les destinataires");
 		}
 
 		public override ActionExecutor GetExecutor()

@@ -21,6 +21,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.Input ()
 					.Field (x => x.Name)
 					.Field (x => x.IsReady)
+					.Field (x => x.Description)
 				.End ();
 		}
 	}

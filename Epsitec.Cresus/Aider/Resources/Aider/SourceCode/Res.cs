@@ -1335,14 +1335,6 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 388));
 						}
 					}
-					//	designer:cap/LVO203
-					public static global::Epsitec.Common.Types.Caption SubscriptionMissing
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 2));
-						}
-					}
 					//	designer:cap/LVA5C
 					public static global::Epsitec.Common.Types.Caption HouseholdMissing
 					{
@@ -1389,6 +1381,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 7));
+						}
+					}
+					//	designer:cap/LVO203
+					public static global::Epsitec.Common.Types.Caption SubscriptionMissing
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 2));
 						}
 					}
 				}
@@ -1764,10 +1764,14 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVOG03
 				public static readonly global::Epsitec.Common.Support.Druid CreatedBy = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 16);
+				//	designer:cap/LVOQ03
+				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 26);
 				//	designer:cap/LVOD03
 				public static readonly global::Epsitec.Common.Support.Druid Exclusions = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 13);
 				//	designer:cap/LVOC03
 				public static readonly global::Epsitec.Common.Support.Druid IsReady = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 12);
+				//	designer:cap/LVOP03
+				public static readonly global::Epsitec.Common.Support.Druid LastUpdate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 25);
 				//	designer:cap/LVOB03
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 11);
 				//	designer:cap/LVOH03
@@ -1776,6 +1780,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid RecipientContacts = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 15);
 				//	designer:cap/LVOE03
 				public static readonly global::Epsitec.Common.Support.Druid RecipientGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 14);
+				//	designer:cap/LVOR03
+				public static readonly global::Epsitec.Common.Support.Druid RecipientHouseholds = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 27);
 				//	designer:cap/LVOI03
 				public static readonly global::Epsitec.Common.Support.Druid Recipients = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 18);
 			}
@@ -1789,8 +1795,14 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVON03
 				public static readonly global::Epsitec.Common.Support.Druid Contact = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 23);
+				//	designer:cap/LVOS03
+				public static readonly global::Epsitec.Common.Support.Druid Houshold = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 28);
+				//	designer:cap/LVOU03
+				public static readonly global::Epsitec.Common.Support.Druid IsExclude = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 30);
 				//	designer:cap/LVOM03
 				public static readonly global::Epsitec.Common.Support.Druid Mailing = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 22);
+				//	designer:cap/LVOT03
+				public static readonly global::Epsitec.Common.Support.Druid ParticipantLetterCode = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 29);
 			}
 			
 			public static class AiderPerson

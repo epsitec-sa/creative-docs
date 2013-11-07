@@ -28,7 +28,7 @@ namespace Epsitec.Aider.Entities
 			var participantExample = new AiderMailingParticipantEntity ();
 			participantExample.Mailing = mailing;
 
-			return context.DataContext.GetByExample<AiderMailingParticipantEntity> (participantExample);
+			return context.DataContext.GetByExample<AiderMailingParticipantEntity> (participantExample).Where(p => !p.IsExclude);
 		}
 
 		public static AiderMailingParticipantEntity Create(BusinessContext context, AiderMailingEntity mailing, AiderContactEntity contact)
@@ -37,8 +37,29 @@ namespace Epsitec.Aider.Entities
 
 			participant.Contact = contact;
 			participant.Mailing = mailing;
+			participant.ParticipantLetterCode = "C";
 
 			return participant;
+		}
+
+		public static AiderMailingParticipantEntity CreateForGroup(BusinessContext context, AiderMailingEntity mailing, AiderContactEntity contact)
+		{
+			var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
+
+			participant.Contact = contact;
+			participant.Mailing = mailing;
+			participant.ParticipantLetterCode = "G";
+
+			return participant;
+		}
+
+		public static void Create(BusinessContext context, AiderMailingEntity mailing, AiderHouseholdEntity household)
+		{
+				var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
+				participant.Contact = household.Contacts[0];
+				participant.Houshold = household;
+				participant.Mailing = mailing;
+				participant.ParticipantLetterCode = "M";
 		}
 
 		public static void Create(BusinessContext context, AiderMailingEntity mailing, AiderGroupEntity group)
@@ -48,6 +69,7 @@ namespace Epsitec.Aider.Entities
 				var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
 				participant.Contact = contact;
 				participant.Mailing = mailing;
+				participant.ParticipantLetterCode = "G";
 			}
 		}
 
@@ -62,6 +84,28 @@ namespace Epsitec.Aider.Entities
 			{
 				businessContext.DeleteEntity (participant);
 			}
+		}
+
+		public static void ExcludeContact(BusinessContext businessContext, AiderMailingEntity mailing, AiderContactEntity contact)
+		{
+			var participantExample = new AiderMailingParticipantEntity ();
+			participantExample.Mailing = mailing;
+			participantExample.Contact = contact;
+
+			var result = businessContext.DataContext.GetByExample<AiderMailingParticipantEntity> (participantExample).First ();
+			result.IsExclude = true;
+			
+		}
+
+		public static void UnExcludeContact(BusinessContext businessContext, AiderMailingEntity mailing, AiderContactEntity contact)
+		{
+			var participantExample = new AiderMailingParticipantEntity ();
+			participantExample.Mailing = mailing;
+			participantExample.Contact = contact;
+
+			var result = businessContext.DataContext.GetByExample<AiderMailingParticipantEntity> (participantExample).First ();
+			result.IsExclude = false;
+
 		}
 
 		public static void DeleteByMailing(BusinessContext businessContext, AiderMailingEntity mailing)

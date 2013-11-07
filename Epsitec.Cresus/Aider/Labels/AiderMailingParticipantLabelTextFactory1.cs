@@ -3,7 +3,7 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Labels;
-
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Labels
 {
@@ -16,7 +16,11 @@ namespace Epsitec.Aider.Labels
 
 		public override FormattedText GetLabelText(AiderMailingParticipantEntity entity)
 		{
-			return entity.Contact.GetAddressOfParentsLabelText ();
+			if (entity.Houshold.IsNotNull ())
+				return entity.Houshold.GetAddressLabelText ();
+			else
+				return entity.Contact.GetAddressOfParentsLabelText ();
+				
 		}
 
 

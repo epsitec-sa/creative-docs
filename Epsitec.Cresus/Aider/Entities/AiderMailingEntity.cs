@@ -32,17 +32,18 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			FormattedText summary = new FormattedText (this.Name);
-			if (this.IsReady)
-			{
-				summary += ("\nActif");
-			}
-			else
-			{
-				summary += ("\nInactif");
-			}
+			return TextFormatter.FormatText (this.Name,"\n",
+											 this.Description,"\n",
+											 this.GetReadyText (),"\n",
+											 "Dernière mise à jour: ",this.LastUpdate.Value.ToString ());
+		}
 
-			return summary;
+		public string GetReadyText()
+		{
+			if (this.IsReady)
+				return "Prêt pour l'envoi";
+			else
+				return "En préparation";
 		}
 
 		public void RefreshCache()
@@ -50,8 +51,13 @@ namespace Epsitec.Aider.Entities
 			
 		}
 
+		/// <summary>
+		/// Sync groups changes that affect participants dataset
+		/// </summary>
+		/// <param name="businessContext"></param>
 		public void SyncParticipants(BusinessContext businessContext)
 		{
+			this.LastUpdate = Date.Today;
 
 			var participants = AiderMailingParticipantEntity.GetAllParticipants (businessContext, this).Select( p => p.Contact);
 			var recipientsDict = this.GetRecipients().ToDictionary(k => k);
@@ -70,17 +76,28 @@ namespace Epsitec.Aider.Entities
 			{
 				if (!participantsDict.ContainsKey (contact))
 				{
-					AiderMailingParticipantEntity.Create (businessContext, this, contact);
+					AiderMailingParticipantEntity.CreateForGroup (businessContext, this, contact);
 				}
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
 		}
 
+		public void AddHousehold(BusinessContext businessContext, AiderHouseholdEntity householdToAdd)
+		{
+			if (!this.RecipientHouseholds.Contains (householdToAdd))
+			{
+				this.LastUpdate = Date.Today;
+				this.RecipientHouseholds.Add (householdToAdd);
+				AiderMailingParticipantEntity.Create (businessContext, this, householdToAdd);
+			}
+		}
+
 		public void AddGroup(BusinessContext businessContext, AiderGroupEntity groupToAdd)
 		{
 			if (!this.RecipientGroups.Contains (groupToAdd))
 			{
+				this.LastUpdate = Date.Today;
 				this.RecipientGroups.Add (groupToAdd);
 				AiderMailingParticipantEntity.Create (businessContext, this, groupToAdd);
 			}
@@ -90,6 +107,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if(!this.RecipientContacts.Contains(contactToAdd))
 			{
+				this.LastUpdate = Date.Today;
 				this.RecipientContacts.Add (contactToAdd);
 				AiderMailingParticipantEntity.Create (businessContext, this, contactToAdd);
 			}
@@ -101,6 +119,7 @@ namespace Epsitec.Aider.Entities
 			{
 				if (!this.RecipientContacts.Contains (contact))
 				{
+					this.LastUpdate = Date.Today;
 					this.RecipientContacts.Add (contact);
 					AiderMailingParticipantEntity.Create (businessContext, this, contact);
 				}
@@ -111,8 +130,9 @@ namespace Epsitec.Aider.Entities
 		{
 			if (!this.Exclusions.Contains (contactToExclude))
 			{
+				this.LastUpdate = Date.Today;
 				this.Exclusions.Add (contactToExclude);
-				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contactToExclude);
+				AiderMailingParticipantEntity.ExcludeContact (businessContext, this, contactToExclude);
 			}
 		}
 
@@ -122,19 +142,26 @@ namespace Epsitec.Aider.Entities
 			{
 				if (!this.Exclusions.Contains (contact))
 				{
+					this.LastUpdate = Date.Today;
 					this.Exclusions.Add(contact);
-					AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact);
+					AiderMailingParticipantEntity.ExcludeContact (businessContext, this, contact);
 				}
 			}
 		}
 
 		public void UnExludeContacts(BusinessContext businessContext, IEnumerable<AiderContactEntity> contactsToUnExclude)
 		{
+			this.LastUpdate = Date.Today;
 			this.Exclusions.RemoveAll(r => contactsToUnExclude.Contains(r));
 			foreach (var contact in contactsToUnExclude)
 			{
-				AiderMailingParticipantEntity.Create (businessContext, this, contact);
+				AiderMailingParticipantEntity.UnExcludeContact (businessContext, this, contact);
 			}
+		}
+
+		public FormattedText GetRecipientsTitleSummary()
+		{
+			return FormattedText.FromSimpleText ("Destinataires (",this.GetRecipients ().Count ().ToString (),")");
 		}
 
 		public FormattedText GetRecipientsSummary()
@@ -144,6 +171,11 @@ namespace Epsitec.Aider.Entities
 				.CreateSummarySequence (10, "...");
 
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), recipients);
+		}
+
+		public FormattedText GetExclusionsTitleSummary()
+		{
+			return FormattedText.FromSimpleText ("Exclusions (", this.Exclusions.Count ().ToString (), ")");
 		}
 
 		public FormattedText GetExclusionsSummary()
@@ -166,6 +198,11 @@ namespace Epsitec.Aider.Entities
 					contacts.AddRange (group.GetAllGroupAndSubGroupParticipants ());
 				}
 
+				foreach (var household in this.RecipientHouseholds)
+				{
+					contacts.Add (household.Contacts[0]);
+				}
+
 				contacts.RemoveAll (c => this.Exclusions.Contains (c));
 
 				this.recipientsCache = contacts.Distinct().ToList();
@@ -174,7 +211,7 @@ namespace Epsitec.Aider.Entities
 			return this.recipientsCache;
 		}
 
-		public static AiderMailingEntity Create(BusinessContext context, SoftwareUserEntity creator, string name, bool isReady)
+		public static AiderMailingEntity Create(BusinessContext context, SoftwareUserEntity creator, string name,string desc, bool isReady)
 		{
 			var mailing = context.CreateAndRegisterEntity<AiderMailingEntity> ();
 
@@ -183,9 +220,10 @@ namespace Epsitec.Aider.Entities
 				People = creator.People
 			};
 			mailing.Name = name;
+			mailing.Description = desc;
 			mailing.IsReady = isReady;
 			mailing.CreatedBy = context.DataContext.GetByExample<AiderUserEntity> (aiderUserExample).FirstOrDefault ();
-
+			mailing.LastUpdate = Date.Today;
 			return mailing;
 		}
 

@@ -131,6 +131,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController1AddContactToExclusionsOnDrop.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController2AddGroupToRecipientsOnDrop.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController3KeepUpdated.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController4AddHouseholdToRecipientsOnDrop.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />

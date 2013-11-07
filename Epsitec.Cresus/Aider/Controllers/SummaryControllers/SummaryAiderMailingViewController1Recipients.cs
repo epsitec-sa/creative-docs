@@ -37,14 +37,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			wall.AddBrick ()
 					.Icon ("Data.AiderGroup.People")
-					.Title ("Destinataires")
+					.Title (p => p.GetRecipientsTitleSummary ())
 					.Text (p => p.GetRecipientsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
-					.WithSpecialController (typeof (SetAiderMailingViewController0RecipientsContact));
+					.WithSpecialController (typeof (SetAiderMailingViewController0RecipientsContact))
+					.EnableActionMenu<ActionAiderMailingViewController3KeepUpdated> ();
 
 			wall.AddBrick ()
 					.Icon ("Data.AiderGroup.People")
-					.Title ("Exclusions")
+					.Title (p => p.GetExclusionsTitleSummary ())
 					.Text (p => p.GetExclusionsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.WithSpecialController (typeof (SetAiderMailingViewController1ExcludedContact));
