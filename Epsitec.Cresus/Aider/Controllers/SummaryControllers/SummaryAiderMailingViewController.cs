@@ -32,9 +32,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Text (x => x.GetSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderMailingViewController1Recipients))
-				.EnableActionMenu<ActionAiderMailingViewController3KeepUpdated> ();
+				.EnableActionMenu<ActionAiderMailingViewController3KeepUpdated> ()
+				.EnableActionOnDrop<ActionAiderMailingViewController0AddContactToRecipientsOnDrop> ()
+				.EnableActionOnDrop<ActionAiderMailingViewController2AddGroupToRecipientsOnDrop> ()
+				.EnableActionOnDrop<ActionAiderMailingViewController4AddHouseholdToRecipientsOnDrop> ()
+				.EnableActionOnDrop<ActionAiderMailingViewController1AddContactToExclusionsOnDrop> ();
 	
-			wall.AddBrick ()
+			/*wall.AddBrick ()
 				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
 				.Title ("Ajouter un contact")
 				.Text ("Uniquement disponible à l'aide de l'arche")
@@ -56,7 +60,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
 				.Title ("Exclure un contact")
 				.Text ("Uniquement disponible à l'aide de l'arche")
-				.EnableActionOnDrop<ActionAiderMailingViewController1AddContactToExclusionsOnDrop> ();
+				.EnableActionOnDrop<ActionAiderMailingViewController1AddContactToExclusionsOnDrop> ();*/
 		}
 	}
 }

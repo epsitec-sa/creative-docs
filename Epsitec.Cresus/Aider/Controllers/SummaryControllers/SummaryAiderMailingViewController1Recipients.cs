@@ -32,7 +32,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick ()
 				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
 				.Title ("Modifier")
-				.Text (x => x.GetSummary ())
+				.Text (x => x.GetRecipientsOverview ())
 				.WithSpecialController (typeof (EditionAiderMailingViewController1Mailing));
 
 			wall.AddBrick ()

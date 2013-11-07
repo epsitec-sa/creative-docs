@@ -79,7 +79,8 @@ function() {
     },
 
     createEntityWithViewCallback: function(entityId) {
-      this.selectEntity(entityId, false);
+        //this.selectEntity(entityId, true);
+        Epsitec.Cresus.Core.app.reloadCurrentDatabase(false);
     },
 
     createEntityWithoutView: function() {
@@ -98,7 +99,6 @@ function() {
     createEntityWithoutViewCallback: function(options, success, response) {
       var json, entityId;
 
-      this.setLoading(false);
 
       json = Epsitec.Tools.processResponse(success, response);
       if (json === null) {
@@ -106,7 +106,7 @@ function() {
       }
 
       entityId = json.content.id;
-      this.selectEntity(entityId, false);
+      this.selectEntity(entityId, true);
     },
 
     // Overrides the method defined in EditableEntityList.
@@ -174,12 +174,10 @@ function() {
     },
 
     reload: function(columnManager) {
-      this.resetStore(false);
-      this.setLoading(false,true);
       columnManager.removeAllColumns();
-
+      this.setLoading(false,true);
+      this.resetStore(false);  
       this.store.load();
-      
     },
 
     reloadAndScrollToEntity: function(columnManager,entityId,entityIndex,samePage) {
@@ -229,7 +227,7 @@ function() {
 
     selectEntity: function(entityId, suppressEvent) {
       this.resetStore(false);
-      this.setLoading();
+      this.setLoading(false);
 
       // The first step of the entity selection is to get its index within the
       // list. The selectEntityCallback method will be called once the server
@@ -283,7 +281,7 @@ function() {
       // range of entities around the index, the selectEntityCallback2 will be
       // called and we'll be able to proceed.
 
-      this.store.reload({
+      this.store.load({
         callback: function() {
           this.view.bufferedRenderer.scrollTo(
               index,
@@ -307,6 +305,9 @@ function() {
       // away from the index that we got. If that's the case, we'll still be
       // able to find it in the data that has been loaded by the call to the
       // scrollTo method.
+
+      this.setLoading(false);
+
       var result = this.store.data.findBy(function(record) {
             return record.getId() === entityId;
         });

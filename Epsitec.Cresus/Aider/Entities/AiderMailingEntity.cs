@@ -38,6 +38,15 @@ namespace Epsitec.Aider.Entities
 											 "Dernière mise à jour: ",this.LastUpdate.Value.ToString ());
 		}
 
+
+		public FormattedText GetRecipientsOverview()
+		{
+			return TextFormatter.FormatText ("Destinataires:", "\n",
+											 this.RecipientContacts.Count(),"contacts individuel(s)", "\n",
+											 this.RecipientGroups.Count (), "groupe(s)", "\n",
+											 this.RecipientHouseholds.Count (), "ménage(s)", "\n",
+											 "Dernière mise à jour: ", this.LastUpdate.Value.ToString ());
+		}
 		public string GetReadyText()
 		{
 			if (this.IsReady)
@@ -48,7 +57,35 @@ namespace Epsitec.Aider.Entities
 
 		public void RefreshCache()
 		{
+		
 			
+		}
+
+		public void RecreateFromScratch(BusinessContext businessContext)
+		{
+			this.LastUpdate = Date.Today;
+
+			AiderMailingParticipantEntity.DeleteByMailing (businessContext, this);
+
+			foreach (var contact in this.RecipientContacts)
+			{
+				AiderMailingParticipantEntity.Create (businessContext, this, contact);
+			}
+
+			foreach (var group in this.RecipientGroups)
+			{
+				AiderMailingParticipantEntity.Create (businessContext, this, group);
+			}
+
+			foreach (var household in this.RecipientHouseholds)
+			{
+				AiderMailingParticipantEntity.Create (businessContext, this, household);
+			}
+
+			foreach (var excluded in this.Exclusions)
+			{
+				AiderMailingParticipantEntity.ExcludeContact (businessContext, this, excluded);
+			}
 		}
 
 		/// <summary>

@@ -72,17 +72,17 @@ function() {
           tooltip: Epsitec.Texts.getPinToBagTip(),
           handler: function(e, t) { 
             var app = Epsitec.Cresus.Core.getApplication();
-            var summaryLines = this.body.dom.innerText.replace(/\r\n/g, '\n').split('\n');
+            /*var summaryLines = this.body.dom.textContent.replace(/\r\n/g, '\n').split('\n');
 
             var cleanSummaryLines = new Array();
             for(var i = 0; i<summaryLines.length; i++){
                 if (summaryLines[i]){
                   cleanSummaryLines.push(summaryLines[i]);
               }
-            }
+            }*/
 
             var entity = {
-                  summary: cleanSummaryLines[0],
+                  summary: this.entityId,
                   entityType: Epsitec.Cresus.Core.app.getCurrentDatabaseEntityType(),
                   id: this.entityId
                 };
