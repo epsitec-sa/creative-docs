@@ -672,14 +672,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				int count = this.timelineData.CellsCount;
-				for (int i = 0; i < count; i++)
+				if (this.PrevEventIndex.HasValue)
 				{
-					var cell = this.timelineData.GetCell (i);
-
-					if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+					int count = this.timelineData.CellsCount;
+					for (int i = 0; i < count; i++)
 					{
-						return i;
+						var cell = this.timelineData.GetCell (i);
+
+						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+						{
+							return i;
+						}
 					}
 				}
 
@@ -740,14 +743,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				int count = this.timelineData.CellsCount;
-				for (int i = count-1; i >= 0; i--)
+				if (this.NextEventIndex.HasValue)
 				{
-					var cell = this.timelineData.GetCell (i);
-
-					if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+					int count = this.timelineData.CellsCount;
+					for (int i = count-1; i >= 0; i--)
 					{
-						return i;
+						var cell = this.timelineData.GetCell (i);
+
+						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+						{
+							return i;
+						}
 					}
 				}
 
