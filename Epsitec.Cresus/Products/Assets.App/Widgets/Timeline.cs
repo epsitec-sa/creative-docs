@@ -256,24 +256,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Met à jour la géométrie de toutes les lignes-enfant.
 			this.UpdateLabelsWidth ();
 
-#if false
-			int ch = this.CellHeight;
-			int bottom = 0;
-
-			foreach (var row in this.timelineRows)
-			{
-				var h = (int) (ch * row.RelativeHeight);
-				var top = this.ActualHeight-bottom-h;
-
-				row.Anchor          = AnchorStyles.All;
-				row.CellWidth       = (int) (ch * this.RelativeWidth);
-				row.RelativeWidth   = this.RelativeWidth;
-				row.Margins         = new Margins (0, 0, top, bottom);
-				row.PreferredHeight = h;
-
-				bottom += h;
-			}
-#else
+			//	La hauteur totale est répartie entre les différentes lignes, afin
+			//	d'occuper toujours toute la hauteur. Il en résulte des hauteurs
+			//	légèrement différentes (1 pixel) d'une ligne à l'autre.
 			int ch = this.CellHeight;
 			var h = this.ActualHeight / this.timelineRows.Count;
 
@@ -290,7 +275,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var rect = new Rectangle (0, bottom, this.ActualWidth, top-bottom);
 				row.SetManualBounds (rect);
 			}
-#endif
 		}
 
 		private void UpdateChildrensPivot()
