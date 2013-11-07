@@ -8,6 +8,17 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 {
 	public abstract class AbstractNodeFiller
 	{
+		public IEnumerable<Node> Nodes
+		{
+			get
+			{
+				for (int i=0; i<this.NodesCount; i++)
+				{
+					yield return this.GetNode (i);
+				}
+			}
+		}
+
 		public virtual int NodesCount
 		{
 			get

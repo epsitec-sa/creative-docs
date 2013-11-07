@@ -59,6 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
+				this.selectedRow = this.nodeFiller.Nodes.ToList ().FindIndex (x => x.Guid == value);
 			}
 		}
 
@@ -77,7 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				// TODO...
+				this.selectedColumn = this.dataArray.Columns.ToList ().FindIndex (x => x.Timestamp == value);
 			}
 		}
 	
@@ -431,6 +432,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.rowsCount = rowsCount;
 				this.columns.Clear ();
+			}
+
+			public IEnumerable<DataColumn> Columns
+			{
+				get
+				{
+					return this.columns;
+				}
 			}
 
 			public DataColumn GetColumn(int column)
