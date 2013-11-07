@@ -480,6 +480,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.selectedGuid      = this.multipleController.SelectedGuid;
 			this.selectedTimestamp = this.multipleController.Timestamp;
+
+			if (this.selectedTimestamp == null)
+			{
+				this.isEditing    = false;
+			}
+
 			this.Update ();
 		}
 

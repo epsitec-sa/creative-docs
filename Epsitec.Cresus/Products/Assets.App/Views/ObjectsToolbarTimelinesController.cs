@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public Guid SelectedGuid
+		public Guid								SelectedGuid
 		{
 			get
 			{
@@ -60,17 +60,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				int sel = this.nodeFiller.Nodes.ToList ().FindIndex (x => x.Guid == value);
-
-				if (this.selectedRow != sel)
-				{
-					this.selectedRow = sel;
-					this.UpdateController ();
-				}
+				this.SetSelection (this.nodeFiller.Nodes.ToList ().FindIndex (x => x.Guid == value), this.selectedColumn);
 			}
 		}
 
-		public Timestamp? Timestamp
+		public Timestamp?						Timestamp
 		{
 			get
 			{
@@ -87,14 +81,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (value.HasValue)
 				{
-					int sel = this.dataArray.FindColumnIndex (value.Value);
-
-					if (this.selectedColumn != sel)
-					{
-						this.selectedColumn = sel;
-						this.UpdateController ();
-					}
+					this.SetSelection (this.selectedRow, this.dataArray.FindColumnIndex (value.Value));
 				}
+			}
+		}
+
+		private void SetSelection(int selectedRow, int selectedColumn)
+		{
+			if (this.selectedRow != selectedRow || this.selectedColumn != selectedColumn)
+			{
+				this.selectedRow    = selectedRow;
+				this.selectedColumn = selectedColumn;
+
+				this.UpdateController ();
+				this.UpdateToolbar ();
+				this.OnSelectedCellChanged ();
 			}
 		}
 	
@@ -147,11 +148,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				int sel = this.LineToRow (row);
 				if (sel != -1)
 				{
-					this.selectedRow = sel;
-					this.selectedColumn = this.controller.LeftVisibleCell + rank;
-					this.UpdateController ();
-					this.UpdateToolbar ();
-					this.OnSelectedCellChanged ();
+					this.SetSelection (sel, this.controller.LeftVisibleCell + rank);
 				}
 			};
 			
@@ -160,10 +157,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				int sel = this.LineToRow (row);
 				if (sel != -1)
 				{
-					this.selectedRow = sel;
-					this.selectedColumn = this.controller.LeftVisibleCell + rank;
-					this.UpdateController ();
-					this.UpdateToolbar ();
 					this.OnCellDoubleClicked ();
 				}
 			};
@@ -222,9 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (index.HasValue)
 			{
-				this.selectedColumn = index.Value;
-				this.UpdateController ();
-				this.UpdateToolbar ();
+				this.SetSelection (this.selectedRow, index.Value);
 			}
 		}
 
@@ -234,9 +225,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (index.HasValue)
 			{
-				this.selectedColumn = index.Value;
-				this.UpdateController ();
-				this.UpdateToolbar ();
+				this.SetSelection (this.selectedRow, index.Value);
 			}
 		}
 
@@ -246,9 +235,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (index.HasValue)
 			{
-				this.selectedColumn = index.Value;
-				this.UpdateController ();
-				this.UpdateToolbar ();
+				this.SetSelection (this.selectedRow, index.Value);
 			}
 		}
 
@@ -258,9 +245,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (index.HasValue)
 			{
-				this.selectedColumn = index.Value;
-				this.UpdateController ();
-				this.UpdateToolbar ();
+				this.SetSelection (this.selectedRow, index.Value);
 			}
 		}
 
@@ -337,9 +322,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnDeselect()
 		{
-			this.selectedColumn = -1;
-			this.UpdateController ();
-			this.UpdateToolbar ();
+			this.SetSelection (-1, -1);
 		}
 
 	
@@ -735,17 +718,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommand (ToolbarCommand.Next,  this.selectedColumn, this.NextColumnIndex);
 			this.UpdateCommand (ToolbarCommand.Last,  this.selectedColumn, this.LastColumnIndex);
 
-			this.toolbar.UpdateCommand (ToolbarCommand.New,      true);
-			this.toolbar.UpdateCommand (ToolbarCommand.Delete,   this.selectedColumn != -1);
+			this.toolbar.UpdateCommand (ToolbarCommand.New,      this.selectedColumn != -1);
+			this.toolbar.UpdateCommand (ToolbarCommand.Delete,   this.HasSelectedEvent);
 			this.toolbar.UpdateCommand (ToolbarCommand.Deselect, this.selectedColumn != -1);
 		}
 
-		private void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		private void UpdateCommand(ToolbarCommand command, int currentSelection, int? newSelection)
 		{
-			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
+			bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
 			this.toolbar.UpdateCommand (command, enable);
 		}
 
+
+		private bool HasSelectedEvent
+		{
+			get
+			{
+				var obj = this.SelectedObject;
+				if (obj != null && obj.Events.Any ())
+				{
+					var column = this.dataArray.GetColumn (this.selectedColumn);
+					if (column != null)
+					{
+						return obj.Events.Where (x => x.Timestamp == column.Timestamp).Any ();
+					}
+				}
+
+				return false;
+			}
+		}
 
 		private int? FirstColumnIndex
 		{
