@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.DataFillers;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -59,7 +60,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				this.selectedRow = this.nodeFiller.Nodes.ToList ().FindIndex (x => x.Guid == value);
+				int sel = this.nodeFiller.Nodes.ToList ().FindIndex (x => x.Guid == value);
+
+				if (this.selectedRow != sel)
+				{
+					this.selectedRow = sel;
+					this.UpdateController ();
+				}
 			}
 		}
 
@@ -78,7 +85,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				this.selectedColumn = this.dataArray.Columns.ToList ().FindIndex (x => x.Timestamp == value);
+				if (value.HasValue)
+				{
+					int sel = this.dataArray.FindColumnIndex (value.Value);
+
+					if (this.selectedColumn != sel)
+					{
+						this.selectedColumn = sel;
+						this.UpdateController ();
+					}
+				}
 			}
 		}
 	
@@ -117,11 +133,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			
 			this.UpdateController ();
 			this.UpdateScroller ();
+			this.UpdateToolbar ();
 			
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
 			{
 				this.UpdateController (crop);
+				this.UpdateToolbar ();
 			};
 			
 			this.controller.CellClicked += delegate (object sender, int row, int rank)
@@ -132,6 +150,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.selectedRow = sel;
 					this.selectedColumn = this.controller.LeftVisibleCell + rank;
 					this.UpdateController ();
+					this.UpdateToolbar ();
 					this.OnSelectedCellChanged ();
 				}
 			};
@@ -144,6 +163,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.selectedRow = sel;
 					this.selectedColumn = this.controller.LeftVisibleCell + rank;
 					this.UpdateController ();
+					this.UpdateToolbar ();
 					this.OnCellDoubleClicked ();
 				}
 			};
@@ -157,10 +177,172 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.scroller.ValueChanged += delegate
 			{
 				this.UpdateController ();
+				this.UpdateToolbar ();
+			};
+
+			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.First:
+						this.OnFirst ();
+						break;
+
+					case ToolbarCommand.Last:
+						this.OnLast ();
+						break;
+
+					case ToolbarCommand.Prev:
+						this.OnPrev ();
+						break;
+
+					case ToolbarCommand.Next:
+						this.OnNext ();
+						break;
+
+					case ToolbarCommand.New:
+						this.OnNew ();
+						break;
+
+					case ToolbarCommand.Delete:
+						this.OnDelete ();
+						break;
+
+					case ToolbarCommand.Deselect:
+						this.OnDeselect ();
+						break;
+				}
 			};
 		}
 
 
+		private void OnFirst()
+		{
+			var index = this.FirstColumnIndex;
+
+			if (index.HasValue)
+			{
+				this.selectedColumn = index.Value;
+				this.UpdateController ();
+				this.UpdateToolbar ();
+			}
+		}
+
+		private void OnPrev()
+		{
+			var index = this.PrevColumnIndex;
+
+			if (index.HasValue)
+			{
+				this.selectedColumn = index.Value;
+				this.UpdateController ();
+				this.UpdateToolbar ();
+			}
+		}
+
+		private void OnNext()
+		{
+			var index = this.NextColumnIndex;
+
+			if (index.HasValue)
+			{
+				this.selectedColumn = index.Value;
+				this.UpdateController ();
+				this.UpdateToolbar ();
+			}
+		}
+
+		private void OnLast()
+		{
+			var index = this.LastColumnIndex;
+
+			if (index.HasValue)
+			{
+				this.selectedColumn = index.Value;
+				this.UpdateController ();
+				this.UpdateToolbar ();
+			}
+		}
+
+		private void OnNew()
+		{
+#if false
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
+			var timestamp = this.SelectedTimestamp;
+
+			if (target != null && timestamp.HasValue)
+			{
+				System.DateTime? createDate = timestamp.Value.Date;
+
+				var popup = new NewEventPopup
+				{
+					BaseType   = this.baseType,
+					DataObject = this.obj,
+					Timestamp  = timestamp.Value,
+				};
+
+				popup.Create (target);
+
+				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
+				{
+					var index = this.GetEventIndex (dateTime);
+
+					if (index.HasValue)
+					{
+						this.SelectedCell = index.Value;
+					}
+					else
+					{
+						this.SelectedCell = -1;
+					}
+
+					if (dateTime.HasValue)
+					{
+						createDate = dateTime.Value;
+					}
+				};
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (createDate.HasValue)
+					{
+						this.CreateEvent (createDate.Value, name);
+					}
+				};
+			}
+#endif
+		}
+
+		private void OnDelete()
+		{
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Delete);
+
+			if (target != null)
+			{
+				var popup = new YesNoPopup
+				{
+					Question = "Voulez-vous supprimer l'événement sélectionné ?",
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+					}
+				};
+			}
+		}
+
+		private void OnDeselect()
+		{
+			this.selectedColumn = -1;
+			this.UpdateController ();
+			this.UpdateToolbar ();
+		}
+
+	
 		private void UpdateController(bool crop = true)
 		{
 			this.controller.SetRows (this.TimelineRows);
@@ -434,6 +616,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.columns.Clear ();
 			}
 
+			public int FindColumnIndex(Timestamp timestamp)
+			{
+				return this.columns.FindIndex (x => x.Timestamp == timestamp);
+			}
+
 			public IEnumerable<DataColumn> Columns
 			{
 				get
@@ -541,6 +728,119 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
+		protected void UpdateToolbar()
+		{
+			this.UpdateCommand (ToolbarCommand.First, this.selectedColumn, this.FirstColumnIndex);
+			this.UpdateCommand (ToolbarCommand.Prev,  this.selectedColumn, this.PrevColumnIndex);
+			this.UpdateCommand (ToolbarCommand.Next,  this.selectedColumn, this.NextColumnIndex);
+			this.UpdateCommand (ToolbarCommand.Last,  this.selectedColumn, this.LastColumnIndex);
+
+			this.toolbar.UpdateCommand (ToolbarCommand.New,      true);
+			this.toolbar.UpdateCommand (ToolbarCommand.Delete,   this.selectedColumn != -1);
+			this.toolbar.UpdateCommand (ToolbarCommand.Deselect, this.selectedColumn != -1);
+		}
+
+		private void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		{
+			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
+			this.toolbar.UpdateCommand (command, enable);
+		}
+
+
+		private int? FirstColumnIndex
+		{
+			get
+			{
+				var obj = this.SelectedObject;
+				if (obj != null && obj.Events.Any ())
+				{
+					var timestamp = obj.Events.First().Timestamp;
+					return this.dataArray.FindColumnIndex (timestamp);
+				}
+
+				return null;
+			}
+		}
+
+		private int? PrevColumnIndex
+		{
+			get
+			{
+				var obj = this.SelectedObject;
+				if (obj != null && obj.Events.Any ())
+				{
+					var column = this.dataArray.GetColumn (this.selectedColumn);
+					if (column != null)
+					{
+						int i = obj.Events.Where (x => x.Timestamp < column.Timestamp).Count () - 1;
+						if (i >= 0)
+						{
+							var e = obj.GetEvent (i);
+							return this.dataArray.FindColumnIndex (e.Timestamp);
+						}
+					}
+				}
+
+				return null;
+			}
+		}
+
+		private int? NextColumnIndex
+		{
+			get
+			{
+				var obj = this.SelectedObject;
+				if (obj != null && obj.Events.Any ())
+				{
+					var column = this.dataArray.GetColumn (this.selectedColumn);
+					if (column != null)
+					{
+						int i = obj.Events.Where (x => x.Timestamp < column.Timestamp).Count () + 1;
+						if (i < obj.EventsCount)
+						{
+							var e = obj.GetEvent (i);
+							return this.dataArray.FindColumnIndex (e.Timestamp);
+						}
+					}
+				}
+
+				return null;
+			}
+		}
+
+		private int? LastColumnIndex
+		{
+			get
+			{
+				var obj = this.SelectedObject;
+				if (obj != null && obj.Events.Any ())
+				{
+					var timestamp = obj.Events.Last ().Timestamp;
+					return this.dataArray.FindColumnIndex (timestamp);
+				}
+
+				return null;
+			}
+		}
+
+		private DataObject SelectedObject
+		{
+			get
+			{
+				if (this.selectedRow != -1)
+				{
+					var node = this.nodeFiller.GetNode (this.selectedRow);
+					if (!node.IsEmpty)
+					{
+						return this.accessor.GetObject (this.baseType, node.Guid);
+					}
+				}
+
+				return null;
+			}
+		}
+
+	
 		#region Events handler
 		private void OnSelectedCellChanged()
 		{
