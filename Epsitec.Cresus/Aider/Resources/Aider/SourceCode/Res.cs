@@ -2192,6 +2192,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid PersonDateOfBirth = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 360);
 				//	designer:cap/LVA9B
 				public static readonly global::Epsitec.Common.Support.Druid PersonDateOfDeath = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 361);
+				//	designer:cap/LVAJH
+				public static readonly global::Epsitec.Common.Support.Druid PersonDateOfDeathIsUncertain = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 563);
 				//	designer:cap/LVA3
 				public static readonly global::Epsitec.Common.Support.Druid PersonFirstNames = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
 				//	designer:cap/LVA1

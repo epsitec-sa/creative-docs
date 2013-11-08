@@ -292,6 +292,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>PersonDateOfDeathIsUncertain</c> field.
+		///	designer:fld/LVA/LVAJH
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAJH]")]
+		public bool PersonDateOfDeathIsUncertain
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVAJH]");
+			}
+			set
+			{
+				bool oldValue = this.PersonDateOfDeathIsUncertain;
+				if (oldValue != value || !this.IsFieldDefined("[LVAJH]"))
+				{
+					this.OnPersonDateOfDeathIsUncertainChanging (oldValue, value);
+					this.SetField<bool> ("[LVAJH]", oldValue, value);
+					this.OnPersonDateOfDeathIsUncertainChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>PersonSex</c> field.
 		///	designer:fld/LVA/LVA6
 		///	</summary>
@@ -516,6 +538,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnPersonDateOfBirthChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnPersonDateOfDeathChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnPersonDateOfDeathChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnPersonDateOfDeathIsUncertainChanging(bool oldValue, bool newValue);
+		partial void OnPersonDateOfDeathIsUncertainChanged(bool oldValue, bool newValue);
 		partial void OnPersonSexChanging(global::Epsitec.Aider.Enumerations.PersonSex oldValue, global::Epsitec.Aider.Enumerations.PersonSex newValue);
 		partial void OnPersonSexChanged(global::Epsitec.Aider.Enumerations.PersonSex oldValue, global::Epsitec.Aider.Enumerations.PersonSex newValue);
 		partial void OnNationalityStatusChanging(global::Epsitec.Aider.Enumerations.PersonNationalityStatus oldValue, global::Epsitec.Aider.Enumerations.PersonNationalityStatus newValue);
