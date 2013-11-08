@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor      = ColorManager.GetBackgroundColor (),
 			};
 
-			this.multipleFrameBox = new FrameBox
+			this.timelinesArrayFrameBox = new FrameBox
 			{
 				Parent = topBox,
 				Dock   = DockStyle.Fill,
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listController.CreateUI (this.listFrameBox);
 			this.timelineController.CreateUI (this.timelineFrameBox);
 			this.eventsController.CreateUI (this.eventsFrameBox);
-			this.timelinesArrayController.CreateUI (this.multipleFrameBox);
+			this.timelinesArrayController.CreateUI (this.timelinesArrayFrameBox);
 			this.objectEditor.CreateUI (this.editFrameBox);
 
 			this.closeButton = new GlyphButton
@@ -517,10 +517,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.eventsFrameBox.Visibility = false;
 			this.closeButton   .Visibility = false;
 
-			this.listFrameBox    .Visibility = true;
-			this.timelineFrameBox.Visibility = true;
-			this.editFrameBox    .Visibility = this.isEditing;
-			this.multipleFrameBox.Visibility = false;
+			this.listFrameBox          .Visibility = true;
+			this.timelineFrameBox      .Visibility = true;
+			this.editFrameBox          .Visibility = this.isEditing;
+			this.timelinesArrayFrameBox.Visibility = false;
 
 			this.listFrameBox.Dock = DockStyle.Fill;
 
@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateEventGeometry()
 		{
 			this.timelineFrameBox.Visibility = false;
-			this.multipleFrameBox.Visibility = false;
+			this.timelinesArrayFrameBox.Visibility = false;
 
 			if (this.isEditing)
 			{
@@ -579,10 +579,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.eventsFrameBox.Visibility = false;
 			this.closeButton   .Visibility = false;
 
-			this.listFrameBox    .Visibility = false;
-			this.timelineFrameBox.Visibility = false;
-			this.editFrameBox    .Visibility = this.isEditing;
-			this.multipleFrameBox.Visibility = true;
+			this.listFrameBox          .Visibility = false;
+			this.timelineFrameBox      .Visibility = false;
+			this.editFrameBox          .Visibility = this.isEditing;
+			this.timelinesArrayFrameBox.Visibility = true;
 
 			this.editFrameBox.Dock = DockStyle.Right;
 		}
@@ -642,7 +642,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox									listFrameBox;
 		private FrameBox									timelineFrameBox;
 		private FrameBox									eventsFrameBox;
-		private FrameBox									multipleFrameBox;
+		private FrameBox									timelinesArrayFrameBox;
 		private FrameBox									editFrameBox;
 
 		private GlyphButton									closeButton;

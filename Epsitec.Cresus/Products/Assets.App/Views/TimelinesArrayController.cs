@@ -118,6 +118,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock   = DockStyle.Fill,
 			};
 
+			this.treeColumn = new TreeTableColumnTree
+			{
+				Parent         = box,
+				Dock           = DockStyle.Left,
+				PreferredWidth = 200,
+				HeaderHeight   = 0,
+				FooterHeight   = 0,
+				RowHeight      = TimelinesArrayController.lineHeight,
+				Margins        = new Margins (0, 1, TimelinesArrayController.lineHeight*2-1, AbstractScroller.DefaultBreadth+1),
+			};
+
 			this.scroller = new VScroller
 			{
 				Parent     = box,
@@ -129,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller = new NavigationTimelineController ();
 			this.controller.CreateUI (box);
 			this.controller.RelativeWidth = 1.0;
-			this.controller.ShowLabels = true;
+			//?this.controller.ShowLabels = true;
 			this.controller.CellsCount = this.dataArray.ColumnsCount;
 			
 			this.UpdateController ();
@@ -325,8 +336,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetSelection (-1, -1);
 		}
 
-	
+
 		private void UpdateController(bool crop = true)
+		{
+			this.UpdateTree (crop);
+			this.UpdateTimelines (crop);
+		}
+
+		private void UpdateTree(bool crop = true)
+		{
+			var list = new List<TreeTableCellTree> ();
+
+			foreach (var row in this.EnumVisibleRows)
+			{
+				var node = this.nodeGetter.GetNode (row);
+				var obj  = this.accessor.GetObject (this.baseType, node.Guid);
+				var nom  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
+
+				var cell = new TreeTableCellTree (true, node.Level, node.Type, nom);
+				list.Add (cell);
+			}
+
+			this.treeColumn.SetCells (list.ToArray ());
+		}
+
+		private void UpdateTimelines(bool crop = true)
 		{
 			this.controller.SetRows (this.TimelineRows);
 
@@ -915,6 +949,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private string							title;
 		private TopTitle						topTitle;
 		private TimelinesToolbar				toolbar;
+		private TreeTableColumnTree				treeColumn;
 		private NavigationTimelineController	controller;
 		private VScroller						scroller;
 		private int								selectedRow;
