@@ -21,17 +21,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (this.baseType)
 			{
 				case BaseType.Objects:
-					this.dataFiller = new ObjectsDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					this.title = "Objets d'immobilisation";
 					break;
 
 				case BaseType.Categories:
-					this.dataFiller = new CategoriesDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					this.title = "Catégories d'immobilisation";
 					break;
 
 				case BaseType.Groups:
-					this.dataFiller = new GroupsDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					this.title = "Groupes d'immobilisation";
 					break;
 			}
@@ -137,15 +137,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (this.baseType)
 			{
 				case BaseType.Objects:
-					this.dataFiller = new ObjectsDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					break;
 
 				case BaseType.Categories:
-					this.dataFiller = new CategoriesDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					break;
 
 				case BaseType.Groups:
-					this.dataFiller = new GroupsDataFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					break;
 			}
 

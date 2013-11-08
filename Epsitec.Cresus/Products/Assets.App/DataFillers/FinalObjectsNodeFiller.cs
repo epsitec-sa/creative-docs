@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 		private void UpdateData()
 		{
-			//	Met à jour toutes les catégories d'immobilisation finales.
+			//	Met à jour tous les objets finaux.
 			this.nodes.Clear ();
 
 			int count = this.accessor.GetObjectsCount (this.baseType);
@@ -92,6 +92,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				}
 			}
 		}
+
 
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;

@@ -8,9 +8,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
-	public class GroupsDataFiller : AbstractDataFiller
+	public class GroupsTreeTableFiller : AbstractTreeTableFiller
 	{
-		public GroupsDataFiller(DataAccessor accessor, BaseType baseType, NavigationTreeTableController controller, AbstractNodeFiller nodeFiller)
+		public GroupsTreeTableFiller(DataAccessor accessor, BaseType baseType, NavigationTreeTableController controller, AbstractNodeFiller nodeFiller)
 			: base (accessor, baseType, controller, nodeFiller)
 		{
 		}
@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 		public override void UpdateColumns()
 		{
-			this.controller.SetColumns (GroupsDataFiller.TreeTableColumns, 1);
+			this.controller.SetColumns (GroupsTreeTableFiller.TreeTableColumns, 1);
 		}
 
 		public override void UpdateContent(int firstRow, int count, int selection, bool crop = true)
