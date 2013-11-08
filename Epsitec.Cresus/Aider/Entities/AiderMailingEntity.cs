@@ -275,22 +275,15 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.recipientsCache == null)
 			{
-				var contacts = new List<AiderContactEntity> ();
-				contacts.AddRange (this.RecipientContacts);
+				var contacts = new HashSet<AiderContactEntity> ();
 
-				foreach (var group in this.RecipientGroups)
-				{
-					contacts.AddRange (group.GetAllGroupAndSubGroupParticipants ());
-				}
+				contacts.UnionWith (this.RecipientContacts);
+				contacts.UnionWith (this.RecipientGroups.SelectMany (x => x.GetAllGroupAndSubGroupParticipants ()));
+				contacts.UnionWith (this.RecipientHouseholds.Select (x => x.Contacts.First ()));
+				
+				contacts.ExceptWith (this.Exclusions);
 
-				foreach (var household in this.RecipientHouseholds)
-				{
-					contacts.Add (household.Contacts[0]);
-				}
-
-				contacts.RemoveAll (c => this.Exclusions.Contains (c));
-
-				this.recipientsCache = contacts.Distinct().ToList();
+				this.recipientsCache = contacts.OrderBy (x => x.DisplayName).ToList ();
 			}
 
 			return this.recipientsCache;
