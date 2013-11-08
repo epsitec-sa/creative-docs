@@ -9,11 +9,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 {
 	public interface IGetData
 	{
-		int DataCount
-		{
-			get;
-		}
-
+		int DataCount { get; }
 		void GetData(int row, out Guid guid, out int level);
 	}
 }

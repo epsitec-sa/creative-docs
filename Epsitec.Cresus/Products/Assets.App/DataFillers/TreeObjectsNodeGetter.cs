@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		}
 
 
-		#region GetData accessor
+		#region Access to input data
 		private int DataCount
 		{
 			get
@@ -227,7 +227,6 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 		private void GetData(int row, out Guid guid, out int level)
 		{
-			//	Retourne une donnée.
 			this.inputData.GetData (row, out guid, out level);
 		}
 		#endregion
