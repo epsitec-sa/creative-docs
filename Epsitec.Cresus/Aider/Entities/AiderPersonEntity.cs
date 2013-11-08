@@ -206,6 +206,20 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+
+		public static void HidePerson(BusinessContext businessContext, AiderPersonEntity person)
+		{
+			var household = person.MainContact.Household;
+
+			person.Visibility = PersonVisibilityStatus.Hidden;
+			person.eCH_Person.RemovalReason = RemovalReason.Unknown;
+
+			if (household.Members.All (x => x.Visibility != PersonVisibilityStatus.Default))
+			{
+				AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
+			}
+		}
+		
 		/// <summary>
 		/// Kills the person... which will mark it as deceased, removing any live contacts and
 		/// associated households; groups will be remapped to the deceased contact.

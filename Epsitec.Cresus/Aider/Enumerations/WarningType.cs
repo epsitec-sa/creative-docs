@@ -11,7 +11,7 @@ namespace Epsitec.Aider.Enumerations
 	[DesignerVisible]
 	public enum WarningType
 	{
-		[Rank (0)]
+		[Hidden]
 		None = 0,
 
 		[Hidden]
@@ -20,6 +20,7 @@ namespace Epsitec.Aider.Enumerations
 		[Hidden]
 		HouseholdMissing	 = 1000,
 
+		[Hidden]
 		[Rank (5)]
 		ParishMismatch		 = 1001,
 
@@ -38,6 +39,7 @@ namespace Epsitec.Aider.Enumerations
 		[Hidden]
 		EChPersonMissing     = 2001,
 		
+		[Hidden]
 		[Rank (6)]
 		EChHouseholdMissing  = 2002,
 		
@@ -47,6 +49,7 @@ namespace Epsitec.Aider.Enumerations
 		[Hidden]
 		EChHouseholdChanged  = 2004,
 
+		[Hidden]
 		[Rank (7)]
 		EChHouseholdAdded    = 2005,
 		

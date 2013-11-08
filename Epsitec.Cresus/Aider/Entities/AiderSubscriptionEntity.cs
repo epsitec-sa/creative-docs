@@ -246,15 +246,27 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static void Delete
-		(
-			BusinessContext businessContext,
-			AiderSubscriptionEntity subscription
-		)
+		public static void Delete(BusinessContext businessContext, AiderSubscriptionEntity subscription)
 		{
 			businessContext.DeleteEntity (subscription);
 		}
 
+
+		public static bool DeleteSubscription(BusinessContext businessContext, AiderHouseholdEntity household)
+		{
+			var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, household);
+
+			if (subscription.IsNotNull ())
+			{
+				AiderSubscriptionEntity.Delete (businessContext, subscription);
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
 		public static AiderSubscriptionEntity FindSubscription(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
