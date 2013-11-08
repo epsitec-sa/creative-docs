@@ -139,13 +139,13 @@ namespace Epsitec.Cresus.WebCore.Server
 
 			if (CoreContext.EnableTestEnvironment)
 			{
-				bannerMessage.Add ("Environnement de test destiné à la formation");
+				bannerMessage.Add ("Environnement de test destiné à la formation.");
 				Logger.LogToConsole ("Configuration: test environment");
 			}
 
 			if (CoreContext.EnableReadOnlyMode)
 			{
-				bannerMessage.Add ("Aucune modification n\\'est possible pour l\\'instant");
+				bannerMessage.Add ("En raison de travaux de maintenance, AIDER est en mode lecture seule. La consultation reste possible, mais aucune modification n\\'est possible pour l\\'instant.");
 				Logger.LogToConsole ("Configuration: read-only mode");
 			}
 

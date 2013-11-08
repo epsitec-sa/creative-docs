@@ -33,6 +33,30 @@ namespace Epsitec.Cresus.WebCore.Server
 						return global::Epsitec.Cresus.WebCore.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 1));
 					}
 				}
+				//	designer:cap/A1A3
+				public static global::Epsitec.Common.Types.Caption Sheet_A4_Simple
+				{
+					get
+					{
+						return global::Epsitec.Cresus.WebCore.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3));
+					}
+				}
+				//	designer:cap/A1A4
+				public static global::Epsitec.Common.Types.Caption Sheet_A4_SimplePP
+				{
+					get
+					{
+						return global::Epsitec.Cresus.WebCore.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
+					}
+				}
+				//	designer:cap/A1A5
+				public static global::Epsitec.Common.Types.Caption Sheet_A4_SimplePPPriority
+				{
+					get
+					{
+						return global::Epsitec.Cresus.WebCore.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5));
+					}
+				}
 				//	designer:cap/A1A
 				public static global::Epsitec.Common.Types.Caption Sheet_A5_Simple
 				{
