@@ -10,7 +10,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public abstract class AbstractToolbarTreeTableController : IGetData
+	public abstract class AbstractToolbarTreeTableController : IInputData
 	{
 		public AbstractToolbarTreeTableController(DataAccessor accessor)
 		{
@@ -323,8 +323,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		#region IGetData Members
-		int IGetData.DataCount
+		#region IInputData Members
+		int IInputData.DataCount
 		{
 			get
 			{
@@ -332,7 +332,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		void IGetData.GetData(int row, out Guid guid, out int level)
+		void IInputData.GetData(int row, out Guid guid, out int level)
 		{
 			this.GetData (row, out guid, out level);
 		}

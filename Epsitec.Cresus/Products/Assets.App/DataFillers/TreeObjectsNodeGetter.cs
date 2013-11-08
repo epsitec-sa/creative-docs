@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 	/// </summary>
 	public class TreeObjectsNodeGetter
 	{
-		public TreeObjectsNodeGetter(IGetData inputData)
+		public TreeObjectsNodeGetter(IInputData inputData)
 		{
 			this.inputData = inputData;
 
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		#endregion
 
 
-		private readonly IGetData				inputData;
+		private readonly IInputData				inputData;
 		private readonly List<Node>				nodes;
 		private readonly List<int>				nodeIndexes;
 	}
