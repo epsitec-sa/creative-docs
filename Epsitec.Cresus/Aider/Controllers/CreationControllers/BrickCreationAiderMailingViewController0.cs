@@ -11,6 +11,8 @@ using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
+using Epsitec.Aider.Override;
+using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
@@ -29,6 +31,9 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 					.Title ("Description")
 					.InitialValue ("Nouveau publipostage")
 				.End ()
+				.Field<AiderMailingCategoryEntity> ()
+					.Title ("Catégorie")
+				.End ()
 				.Field<bool> ()
 					.Title ("Prêt pour l'envoi?")
 					.InitialValue (false)
@@ -37,19 +42,21 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<string, string, bool,AiderMailingEntity> (this.Execute);
+			return FunctionExecutor.Create<string, string,AiderMailingCategoryEntity, bool,AiderMailingEntity> (this.Execute);
 		}
 
-		private AiderMailingEntity Execute(string name,string desc,bool ready)
+		private AiderMailingEntity Execute(string name, string desc, AiderMailingCategoryEntity cat, bool ready)
 		{
-			var currentUser = UserManager.Current.AuthenticatedUser;
+			var currentUser = AiderUserManager.Current.AuthenticatedUser;
 
+			var userKey = AiderUserManager.Current.BusinessContext.DataContext.GetNormalizedEntityKey (currentUser);
+			var aiderUser = this.DataContext.GetByRequest<AiderUserEntity> (Request.Create (new AiderUserEntity(), userKey.Value.RowKey)).First ();
 			if (string.IsNullOrEmpty(name))
 			{
 				throw new BusinessRuleException ("L'intitulé est obligatoire");
 			}
 
-			return AiderMailingEntity.Create (this.BusinessContext, currentUser, name, desc,ready);
+			return AiderMailingEntity.Create (this.BusinessContext, aiderUser, name, desc, cat, ready);
 		}
 	}
 }

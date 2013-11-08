@@ -10,19 +10,15 @@ using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
-	[ControllerSubType (1)]
-	public sealed class EditionAiderMailingViewController1Mailing : EditionViewController<AiderMailingEntity>
+	public sealed class EditionAiderMailingCategoryViewController : EditionViewController<AiderMailingCategoryEntity>
 	{
-		protected override void CreateBricks(BrickWall<AiderMailingEntity> wall)
+		protected override void CreateBricks(BrickWall<AiderMailingCategoryEntity> wall)
 		{
 			wall.AddBrick ()
 				.Title (this.Entity.GetCompactSummary())
-				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
+				.Icon (Res.Commands.Base.ShowAiderMailingCategory.Caption.Icon)
 				.Input ()
 					.Field (x => x.Name)
-					.Field (x => x.Category)
-					.Field (x => x.IsReady)
-					.Field (x => x.Description)
 				.End ();
 		}
 	}

@@ -24,6 +24,7 @@ AiderSubscription = [LVGP22]
 AiderSubscriptionRefusal = [LVGC32]
 AiderPersonWarning = [LVALB]
 AiderMailing = [LVOA03]
+AiderMailingCategory = [LVO013]
 AiderMailingParticipant = [LVOL03]
 
 <meta>
@@ -566,11 +567,22 @@ AiderMailingParticipant = [LVOL03]
     </t>
 
     <t eid="@AiderMailing" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVO313].[LVO113]" title="Catégorie" canSort="True" canFilter="True">
+        <sort o="Ascending" />
+        <disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVOB03]" title="Intitulé" canSort="True" canFilter="True">
         <sort o="Ascending" />
         <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVOG03].[AVA9]" title="Créé par" canSort="True" canFilter="True">
+        <sort o="Ascending" />
+        <disp m="Visible" />
+      </col>
+    </t>
+
+    <t eid="@AiderMailingCategory" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingCategory:[LVO113]" title="Nom de la catégorie" canSort="True" canFilter="True">
         <sort o="Ascending" />
         <disp m="Visible" />
       </col>
@@ -1186,10 +1198,9 @@ AiderMailingParticipant = [LVOL03]
 #[Feature:Warnings]      <R><r>@user</r></R>
 #[Feature:Warnings]    </d>
 
-#[Feature:Mailing]    <d cid="[LVOJ03]" teid="@AiderMailing" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0">
+#[Feature:Mailing]    <d cid="[LVOJ03]" teid="@AiderMailing" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="">
 #[Feature:Mailing]      <R><r>@user</r></R>
 #[Feature:Mailing]    </d>
-
 #[Feature:Mailing]    <d cid="[LVOK03]" teid="@AiderMailingParticipant" tn="default" df="false" d="false" ec="true" ed="true" dg="">
 #[Feature:Mailing]      <R><r>@user</r></R>
 #[Feature:Mailing]   	 <M><m t="Voir le contact" d="[LVAFE]" p="@AiderMailingParticipant:[LVON03]" /></M>
@@ -1203,7 +1214,9 @@ AiderMailingParticipant = [LVOL03]
 #[Feature:Mailing]	    <C><c id="[LVOU03]"><v><comp c="1" v="Bfalse" /></v></c></C>
 #[Feature:Mailing]	</f>
 #[Feature:Mailing]    </d>
-
+#[Feature:Mailing]    <d cid="[LVO413]" teid="@AiderMailingCategory" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuDefs">
+#[Feature:Mailing]      <R><r>@user</r></R>
+#[Feature:Mailing]    </d>
 #[Feature:Mailing]    <d cid="[LVO003]" teid="@AiderContact" tn="default" df="false" d="false" ec="true" ed="true" dg="">
 #[Feature:Mailing]      <R><r>@user</r></R>
 #[Feature:Mailing]    </d>

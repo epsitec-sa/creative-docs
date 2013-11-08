@@ -140,12 +140,14 @@
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderSubscriptionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderMailingViewController0.cs" />
+    <Compile Include="Controllers\CreationControllers\BrickCreationAiderMailingCategoryViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderUserViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderLegalPersonViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderMailingController0.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderMailingCategoryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderMailingViewController1Mailing.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderPersonViewController0DeceaseDateController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderPersonWarningViewController.cs" />
@@ -158,6 +160,7 @@
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController1ExcludedContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController0RecipientsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderMailingCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderMailingViewController1Recipients.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderMailingViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_ParishMismatch.cs" />
@@ -228,6 +231,7 @@
     <Compile Include="Entities\AiderWarningSourceEntity.cs" />
     <Compile Include="Entities\AiderMailingEntity.cs" />
     <Compile Include="Entities\AiderMailingParticipantEntity.cs" />
+    <Compile Include="Entities\AiderMailingCategoryEntity.cs" />
     <Compile Include="Entities\eCH_ReportedPersonEntity.cs" />
     <Compile Include="Entities\IAiderWarningExampleFactoryGetter.cs" />
     <Compile Include="Entities\ParticipationData.cs" />

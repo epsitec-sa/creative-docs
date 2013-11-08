@@ -47,6 +47,7 @@ namespace Epsitec.Aider.Entities
 											 this.RecipientHouseholds.Count (), "ménage(s)", "\n",
 											 "Dernière mise à jour: ", this.LastUpdate.Value.ToString ());
 		}
+
 		public string GetReadyText()
 		{
 			if (this.IsReady)
@@ -63,7 +64,7 @@ namespace Epsitec.Aider.Entities
 
 		public void RecreateFromScratch(BusinessContext businessContext)
 		{
-			this.LastUpdate = Date.Today;
+			this.LastUpdate = System.DateTime.Today;
 
 			AiderMailingParticipantEntity.DeleteByMailing (businessContext, this);
 
@@ -94,7 +95,7 @@ namespace Epsitec.Aider.Entities
 		/// <param name="businessContext"></param>
 		public void SyncParticipants(BusinessContext businessContext)
 		{
-			this.LastUpdate = Date.Today;
+			this.LastUpdate = System.DateTime.Today;
 
 			var participants = AiderMailingParticipantEntity.GetAllParticipants (businessContext, this).Select( p => p.Contact);
 			var recipientsDict = this.GetRecipients().ToDictionary(k => k);
@@ -124,7 +125,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (!this.RecipientHouseholds.Contains (householdToAdd))
 			{
-				this.LastUpdate = Date.Today;
+				this.LastUpdate = System.DateTime.Today;
 				this.RecipientHouseholds.Add (householdToAdd);
 				AiderMailingParticipantEntity.Create (businessContext, this, householdToAdd);
 			}
@@ -134,7 +135,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (!this.RecipientGroups.Contains (groupToAdd))
 			{
-				this.LastUpdate = Date.Today;
+				this.LastUpdate = System.DateTime.Today;
 				this.RecipientGroups.Add (groupToAdd);
 				AiderMailingParticipantEntity.Create (businessContext, this, groupToAdd);
 			}
@@ -144,7 +145,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if(!this.RecipientContacts.Contains(contactToAdd))
 			{
-				this.LastUpdate = Date.Today;
+				this.LastUpdate = System.DateTime.Today;
 				this.RecipientContacts.Add (contactToAdd);
 				AiderMailingParticipantEntity.Create (businessContext, this, contactToAdd);
 			}
@@ -156,7 +157,7 @@ namespace Epsitec.Aider.Entities
 			{
 				if (!this.RecipientContacts.Contains (contact))
 				{
-					this.LastUpdate = Date.Today;
+					this.LastUpdate = System.DateTime.Today;
 					this.RecipientContacts.Add (contact);
 					AiderMailingParticipantEntity.Create (businessContext, this, contact);
 				}
@@ -167,7 +168,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (!this.Exclusions.Contains (contactToExclude))
 			{
-				this.LastUpdate = Date.Today;
+				this.LastUpdate = System.DateTime.Today;
 				this.Exclusions.Add (contactToExclude);
 				AiderMailingParticipantEntity.ExcludeContact (businessContext, this, contactToExclude);
 			}
@@ -179,7 +180,7 @@ namespace Epsitec.Aider.Entities
 			{
 				if (!this.Exclusions.Contains (contact))
 				{
-					this.LastUpdate = Date.Today;
+					this.LastUpdate = System.DateTime.Today;
 					this.Exclusions.Add(contact);
 					AiderMailingParticipantEntity.ExcludeContact (businessContext, this, contact);
 				}
@@ -188,7 +189,7 @@ namespace Epsitec.Aider.Entities
 
 		public void UnExludeContacts(BusinessContext businessContext, IEnumerable<AiderContactEntity> contactsToUnExclude)
 		{
-			this.LastUpdate = Date.Today;
+			this.LastUpdate = System.DateTime.Today;
 			this.Exclusions.RemoveAll(r => contactsToUnExclude.Contains(r));
 			foreach (var contact in contactsToUnExclude)
 			{
@@ -248,19 +249,17 @@ namespace Epsitec.Aider.Entities
 			return this.recipientsCache;
 		}
 
-		public static AiderMailingEntity Create(BusinessContext context, SoftwareUserEntity creator, string name,string desc, bool isReady)
+		public static AiderMailingEntity Create(BusinessContext context, AiderUserEntity aiderUser, string name, string desc, AiderMailingCategoryEntity cat, bool isReady)
 		{
 			var mailing = context.CreateAndRegisterEntity<AiderMailingEntity> ();
-
-			var aiderUserExample = new AiderUserEntity()
-			{
-				People = creator.People
-			};
 			mailing.Name = name;
+			mailing.Category = cat;
 			mailing.Description = desc;
 			mailing.IsReady = isReady;
-			mailing.CreatedBy = context.DataContext.GetByExample<AiderUserEntity> (aiderUserExample).FirstOrDefault ();
-			mailing.LastUpdate = Date.Today;
+			mailing.CreatedBy = aiderUser;
+			mailing.ParishGroupPathCache = aiderUser.ParishGroupPathCache;
+			mailing.LastUpdate = System.DateTime.Today;
+
 			return mailing;
 		}
 
