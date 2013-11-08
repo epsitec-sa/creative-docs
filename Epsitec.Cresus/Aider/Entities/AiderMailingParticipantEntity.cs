@@ -86,6 +86,19 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public static void FindAndRemove(BusinessContext businessContext, AiderMailingEntity mailing, AiderHouseholdEntity household)
+		{
+			var participantExample = new AiderMailingParticipantEntity ();
+			participantExample.Mailing = mailing;
+			participantExample.Houshold = household;
+
+			var results = businessContext.DataContext.GetByExample<AiderMailingParticipantEntity> (participantExample);
+			foreach (var participant in results)
+			{
+				businessContext.DeleteEntity (participant);
+			}
+		}
+
 		public static void ExcludeContact(BusinessContext businessContext, AiderMailingEntity mailing, AiderContactEntity contact)
 		{
 			var participantExample = new AiderMailingParticipantEntity ();
@@ -103,9 +116,11 @@ namespace Epsitec.Aider.Entities
 			participantExample.Mailing = mailing;
 			participantExample.Contact = contact;
 
-			var result = businessContext.DataContext.GetByExample<AiderMailingParticipantEntity> (participantExample).First ();
-			result.IsExclude = false;
-
+			var result = businessContext.DataContext.GetByExample<AiderMailingParticipantEntity> (participantExample).FirstOrDefault ();
+			if (result.IsNotNull ())
+			{
+				result.IsExclude = false;
+			}		
 		}
 
 		public static void DeleteByMailing(BusinessContext businessContext, AiderMailingEntity mailing)

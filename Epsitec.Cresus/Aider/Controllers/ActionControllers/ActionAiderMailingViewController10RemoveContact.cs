@@ -18,12 +18,12 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (2)]
-	public sealed class ActionAiderMailingViewController2AddGroupToRecipientsOnDrop : TemplateActionViewController<AiderMailingEntity, AiderGroupEntity>
+	[ControllerSubType (10)]
+	public sealed class ActionAiderMailingViewController10RemoveContact : TemplateActionViewController<AiderMailingEntity, AiderContactEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter un groupe aux destinataires");
+			return Resources.FormattedText ("Enlever ce contact");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -33,7 +33,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			this.Entity.AddGroup (this.BusinessContext, this.AdditionalEntity);
+			this.Entity.RemoveContact (this.BusinessContext,this.AdditionalEntity);
 		}
 	}
 }

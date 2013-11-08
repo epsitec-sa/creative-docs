@@ -166,22 +166,34 @@ namespace Epsitec.Aider.Entities
 
 		public void RemoveContact(BusinessContext businessContext, AiderContactEntity contactToRemove)
 		{
-			if (!this.Exclusions.Contains (contactToRemove))
+			this.LastUpdate = System.DateTime.Today;
+			this.RecipientContacts.Remove (contactToRemove);
+			AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contactToRemove);	
+		}
+
+		public void RemoveGroup(BusinessContext businessContext, AiderGroupEntity groupToRemove)
+		{
+			this.LastUpdate = System.DateTime.Today;
+			this.RecipientGroups.Remove (groupToRemove);
+			foreach (var contact in groupToRemove.GetAllGroupAndSubGroupParticipants ().Distinct ())
 			{
-				this.LastUpdate = System.DateTime.Today;
-				this.RecipientContacts.Remove (contactToRemove);
-				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contactToRemove);
-			}
+				this.Exclusions.RemoveAll (r => r == contact);
+				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact);
+			}			
 		}
 
 		public void RemoveHousehold(BusinessContext businessContext, AiderContactEntity contactToRemove,AiderHouseholdEntity householdToRemove)
 		{
-			if (!this.Exclusions.Contains (contactToRemove))
-			{
-				this.LastUpdate = System.DateTime.Today;
-				this.RecipientHouseholds.Remove (householdToRemove);
-				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contactToRemove);
-			}
+			this.LastUpdate = System.DateTime.Today;
+			this.RecipientHouseholds.Remove (householdToRemove);
+			AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contactToRemove);		
+		}
+
+		public void RemoveHousehold(BusinessContext businessContext, AiderHouseholdEntity householdToRemove)
+		{
+			this.LastUpdate = System.DateTime.Today;
+			this.RecipientHouseholds.Remove (householdToRemove);
+			AiderMailingParticipantEntity.FindAndRemove (businessContext, this, householdToRemove);
 		}
 
 		public void ExludeContact(BusinessContext businessContext, AiderContactEntity contactToExclude)
@@ -239,6 +251,20 @@ namespace Epsitec.Aider.Entities
 		public FormattedText GetExclusionsSummary()
 		{
 			var recipients = this.Exclusions
+				.Select (r => r.GetCompactSummary ())
+				.CreateSummarySequence (10, "...");
+
+			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), recipients);
+		}
+
+		public FormattedText GetGroupsTitleSummary()
+		{
+			return FormattedText.FromSimpleText ("Groupes (", this.RecipientGroups.Count ().ToString (), ")");
+		}
+
+		public FormattedText GetGroupsSummary()
+		{
+			var recipients = this.RecipientGroups
 				.Select (r => r.GetCompactSummary ())
 				.CreateSummarySequence (10, "...");
 

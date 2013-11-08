@@ -49,6 +49,48 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (p => p.GetExclusionsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.WithSpecialController (typeof (SetAiderMailingViewController1ExcludedContact));
+
+			wall.AddBrick (p => p.RecipientGroups)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.EnableActionMenu<ActionAiderMailingViewController5AddGroup> ()
+					.EnableActionMenu<ActionAiderMailingViewController6RemoveGroup> ()
+					.EnableActionButton<ActionAiderMailingViewController5AddGroup> ()
+					.EnableActionButton<ActionAiderMailingViewController6RemoveGroup> ()
+					.Template ()
+						.Title ("Groupes")
+						.Text (x => x.GetCompactSummary ())
+					.End ();
+
+			wall.AddBrick (p => p.RecipientHouseholds)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.EnableActionMenu<ActionAiderMailingViewController7AddHousehold> ()
+					.EnableActionMenu<ActionAiderMailingViewController8RemoveHousehold> ()
+					.EnableActionButton<ActionAiderMailingViewController7AddHousehold> ()
+					.EnableActionButton<ActionAiderMailingViewController8RemoveHousehold> ()
+					.Template ()
+						.Title ("Ménages")
+						.Text (x => x.GetCompactSummary ())
+					.End ();
+
+			wall.AddBrick (p => p.RecipientContacts)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.EnableActionMenu<ActionAiderMailingViewController9AddContact> ()
+					.EnableActionMenu<ActionAiderMailingViewController10RemoveContact> ()
+					.EnableActionButton<ActionAiderMailingViewController9AddContact> ()
+					.EnableActionButton<ActionAiderMailingViewController10RemoveContact> ()
+					.Template ()
+						.Title ("Contacts")
+						.Text (x => x.GetCompactSummary ())
+					.End ();
 		}
 	}
 }
