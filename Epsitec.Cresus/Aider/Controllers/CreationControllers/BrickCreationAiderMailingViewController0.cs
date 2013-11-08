@@ -48,9 +48,9 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		private AiderMailingEntity Execute(string name, string desc, AiderMailingCategoryEntity cat, bool ready)
 		{
 			var currentUser = AiderUserManager.Current.AuthenticatedUser;
-
 			var userKey = AiderUserManager.Current.BusinessContext.DataContext.GetNormalizedEntityKey (currentUser);
 			var aiderUser = this.DataContext.GetByRequest<AiderUserEntity> (Request.Create (new AiderUserEntity(), userKey.Value.RowKey)).First ();
+
 			if (string.IsNullOrEmpty(name))
 			{
 				throw new BusinessRuleException ("L'intitulé est obligatoire");

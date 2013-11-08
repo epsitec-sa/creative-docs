@@ -89,7 +89,15 @@ namespace Epsitec.Aider.Controllers.SetControllers
 		{
 			foreach (var participant in entitiesToRemove)
 			{
-				this.Entity.ExludeContact (this.BusinessContext,participant.Contact);
+				switch(participant.ParticipantLetterCode)
+				{
+					case "G": this.Entity.ExludeContact (this.BusinessContext, participant.Contact);
+						break;
+					case "C": this.Entity.RemoveContact (this.BusinessContext, participant.Contact);
+						break;
+					case "M": this.Entity.RemoveHousehold (this.BusinessContext,participant.Contact,participant.Houshold);
+						break;
+				}			
 			}
 		}
 	}

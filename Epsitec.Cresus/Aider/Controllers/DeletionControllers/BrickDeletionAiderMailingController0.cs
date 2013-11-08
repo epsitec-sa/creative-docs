@@ -13,6 +13,8 @@ using Epsitec.Cresus.Core.Business.UserManagement;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DeletionControllers;
+using Epsitec.Aider.Override;
+using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Aider.Controllers.DeletionControllers
 {
@@ -34,14 +36,10 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 
 		private void Execute()
 		{
-			
-			var user = UserManager.Current.AuthenticatedUser;
 
-			var aiderUserExample = new AiderUserEntity ()
-			{
-				People = user.People
-			};
-			var aiderUser = this.BusinessContext.DataContext.GetByExample<AiderUserEntity> (aiderUserExample).FirstOrDefault ();
+			var currentUser = AiderUserManager.Current.AuthenticatedUser;
+			var userKey = AiderUserManager.Current.BusinessContext.DataContext.GetNormalizedEntityKey (currentUser);
+			var aiderUser = this.DataContext.GetByRequest<AiderUserEntity> (Request.Create (new AiderUserEntity (), userKey.Value.RowKey)).First ();
 			
 			if (this.Entity.CreatedBy != aiderUser)
 			{
