@@ -1,6 +1,8 @@
 //	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -126,6 +128,19 @@ namespace Epsitec.Cresus.Core.Library
 			ICoreComponentHost<ICoreManualComponent> self = this as ICoreComponentHost<ICoreManualComponent>;
 
 			self.RegisterComponentAsDisposable (disposable);
+		}
+
+		
+		public static void Exit()
+		{
+			try
+			{
+				CoreApp.ExitCalled.Raise (CoreApp.current);
+			}
+			finally
+			{
+				System.Environment.Exit (0);
+			}
 		}
 
 
@@ -277,6 +292,11 @@ namespace Epsitec.Cresus.Core.Library
 
 		[System.ThreadStatic]
 		protected static CoreApp				current;
+
+
+
+		public static event EventHandler		ExitCalled;
+
 
 		private readonly string					creatorThreadName;
 		private readonly CoreComponentHostImplementation<CoreAppComponent> components;

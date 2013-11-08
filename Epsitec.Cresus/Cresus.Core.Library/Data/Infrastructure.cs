@@ -131,7 +131,8 @@ namespace Epsitec.Cresus.Core.Data
 					ex
 				);
 
-				System.Environment.Exit (0);
+				CoreApp.Exit ();
+				
 				throw;
 			}
 		}

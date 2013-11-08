@@ -196,33 +196,29 @@ namespace Epsitec.Cresus.WebCore.Server
 			Logger.LogToConsole ("Server set up");
 		}
 
-		private void Run
-		(
-			bool enableUserNotifications,
-			bool nGinxAutorun,
-			FileInfo nGinxPath,
-			Uri nancyUri,
-			Uri owinUri,
-			int nbCoreWorkers,
-			CultureInfo uiCulture,
-			DirectoryInfo backupDirectory,
-			TimeSpan backupInterval,
-			Time? backupStart
-		)
+		private void Run(bool enableUserNotifications, bool nGinxAutorun, FileInfo nGinxPath, Uri nancyUri, Uri owinUri, int nbCoreWorkers,
+			/**/		 CultureInfo uiCulture, DirectoryInfo backupDirectory, TimeSpan backupInterval, Time? backupStart)
 		{
 			Logger.LogToConsole ("Launching server...");
 
 			using (var backupManager = new BackupManager (backupDirectory, backupInterval, backupStart))
 			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)
-			using (var coreServer = new CoreServer (nbCoreWorkers, uiCulture))
-			using (var owinServer = enableUserNotifications ? new OwinServer (owinUri, coreServer) : null)
-			using (var nancyServer = new NancyServer (coreServer, nancyUri))
 			{
-				Logger.LogToConsole ("Server launched");
-				Logger.LogToConsole ("Press [ENTER] to shut down");
-				Console.ReadLine ();
+				if (nGinxServer != null)
+				{
+					CoreApp.ExitCalled += o => nGinxServer.Dispose ();
+				}
 
-				Logger.LogToConsole ("Shutting down server...");
+				using (var coreServer = new CoreServer (nbCoreWorkers, uiCulture))
+				using (var owinServer = enableUserNotifications ? new OwinServer (owinUri, coreServer) : null)
+				using (var nancyServer = new NancyServer (coreServer, nancyUri))
+				{
+					Logger.LogToConsole ("Server launched");
+					Logger.LogToConsole ("Press [ENTER] to shut down");
+					Console.ReadLine ();
+
+					Logger.LogToConsole ("Shutting down server...");
+				}
 			}
 
 			Logger.LogToConsole ("Server shut down");
