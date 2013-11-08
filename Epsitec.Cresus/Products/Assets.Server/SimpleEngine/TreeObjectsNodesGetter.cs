@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	/// <summary>
-	/// Gère l'accès "en arbre" à des données quelconques en provenance de INodeGetter.
+	/// Gère l'accès "en arbre" à des données quelconques en provenance de inputNodes.
 	/// </summary>
 	public class TreeObjectsNodesGetter : AbstractNodesGetter
 	{

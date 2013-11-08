@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
+	/// <summary>
+	/// Accès à des données quelconques, enrichies du niveau (Node.Level) selon
+	/// la propriété ObjectField.Level.
+	/// </summary>
 	public class LevelNodesGetter : AbstractNodesGetter
 	{
 		public LevelNodesGetter(AbstractNodesGetter inputNodes, DataAccessor accessor, BaseType baseType)

@@ -9,9 +9,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	public struct Node
 	{
 		//	Noeud correspondant à une ligne d'un TreeTable.
-		//	Si Type == TreeTableTreeType.Final, il s'agit d'une ligne ne pouvant
+		//	Si Type == NodeType.Final, il s'agit d'une ligne ne pouvant
 		//	être ni compactée ni étendue (feuille de l'arbre).
-		//	Si Type == TreeTableTreeType.Compacted ou TreeTableTreeType.Expanded,
+		//	Si Type == NodeType.Compacted ou NodeType.Expanded,
 		//	il s'agit d'une ligne avec un petit bouton triangulaire.
 		public Node(Guid guid, int level = 0, NodeType type = NodeType.None)
 		{
