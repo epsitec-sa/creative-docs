@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
 	/// <summary>
-	/// Gère l'accès "en arbre" à des données quelconques en provenance de IGetData.
+	/// Gère l'accès "en arbre" à des données quelconques en provenance de IInputData.
 	/// </summary>
 	public class TreeObjectsNodeGetter
 	{
@@ -21,6 +21,17 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			this.nodeIndexes = new List<int> ();
 		}
 
+
+		public IEnumerable<Node> Nodes
+		{
+			get
+			{
+				for (int i=0; i<this.NodesCount; i++)
+				{
+					yield return this.GetNode (i);
+				}
+			}
+		}
 
 		public int NodesCount
 		{

@@ -110,6 +110,7 @@
     <Compile Include="Views\AbstractEditorPage.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\BusinessLogic.cs" />
+    <Compile Include="Views\TimelinesArrayController.cs" />
     <Compile Include="Views\TimelinesToolbar.cs" />
     <Compile Include="Views\ObjectsToolbarTimelinesController.cs" />
     <Compile Include="Views\ViewMode.cs" />

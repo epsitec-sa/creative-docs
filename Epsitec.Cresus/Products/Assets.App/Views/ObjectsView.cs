@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listController     = new ObjectsToolbarTreeTableController (this.accessor, this.baseType);
 			this.timelineController = new ObjectsToolbarTimelineController (this.accessor, this.baseType);
 			this.eventsController   = new EventsToolbarTreeTableController (this.accessor, this.baseType);
-			this.multipleController = new ObjectsToolbarTimelinesController (this.accessor, this.baseType);
+			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.baseType);
 			this.objectEditor       = new ObjectEditor (this.accessor, this.baseType);
 
 			this.ignoreChanges = new SafeCounter ();
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listController.CreateUI (this.listFrameBox);
 			this.timelineController.CreateUI (this.timelineFrameBox);
 			this.eventsController.CreateUI (this.eventsFrameBox);
-			this.multipleController.CreateUI (this.multipleFrameBox);
+			this.timelinesArrayController.CreateUI (this.multipleFrameBox);
 			this.objectEditor.CreateUI (this.editFrameBox);
 
 			this.closeButton = new GlyphButton
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnEventDoubleClicked ();
 			};
 
-			this.multipleController.SelectedCellChanged += delegate
+			this.timelinesArrayController.SelectedCellChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
 				{
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			};
 
-			this.multipleController.CellDoubleClicked += delegate
+			this.timelinesArrayController.CellDoubleClicked += delegate
 			{
 				this.OnStartEdit ();
 			};
@@ -478,8 +478,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateAfterMultipleChanged()
 		{
-			this.selectedGuid      = this.multipleController.SelectedGuid;
-			this.selectedTimestamp = this.multipleController.Timestamp;
+			this.selectedGuid      = this.timelinesArrayController.SelectedGuid;
+			this.selectedTimestamp = this.timelinesArrayController.Timestamp;
 
 			if (this.selectedTimestamp == null)
 			{
@@ -623,8 +623,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else if (this.viewMode == ViewMode.Multiple)
 				{
-					return !this.multipleController.SelectedGuid.IsEmpty
-						&& this.multipleController.Timestamp != null;
+					return !this.timelinesArrayController.SelectedGuid.IsEmpty
+						&& this.timelinesArrayController.Timestamp != null;
 				}
 
 				return false;
@@ -635,7 +635,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly ObjectsToolbarTreeTableController	listController;
 		private readonly ObjectsToolbarTimelineController	timelineController;
 		private readonly EventsToolbarTreeTableController	eventsController;
-		private readonly ObjectsToolbarTimelinesController	multipleController;
+		private readonly TimelinesArrayController			timelinesArrayController;
 		private readonly ObjectEditor						objectEditor;
 		private readonly SafeCounter						ignoreChanges;
 
