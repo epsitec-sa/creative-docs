@@ -9,9 +9,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// <summary>
 	/// Gère l'accès "en arbre" à des données quelconques en provenance de INodeGetter.
 	/// </summary>
-	public class TreeObjectsNodesGetter : INodesGetter
+	public class TreeObjectsNodesGetter : AbstractNodesGetter
 	{
-		public TreeObjectsNodesGetter(INodesGetter inputNodes)
+		public TreeObjectsNodesGetter(AbstractNodesGetter inputNodes)
 		{
 			this.inputNodes = inputNodes;
 
@@ -20,19 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		#region INodeGetter Members
-		public IEnumerable<Node> Nodes
-		{
-			get
-			{
-				for (int i=0; i<this.NodesCount; i++)
-				{
-					yield return this.GetNode (i);
-				}
-			}
-		}
-
-		public int NodesCount
+		public override int NodesCount
 		{
 			get
 			{
@@ -40,11 +28,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public Node GetNode(int index)
+		public override Node GetNode(int index)
 		{
 			return this.nodes[this.nodeIndexes[index]];
 		}
-		#endregion
 
 
 		public bool IsAllCompacted
@@ -223,7 +210,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private readonly INodesGetter			inputNodes;
+		private readonly AbstractNodesGetter			inputNodes;
 		private readonly List<Node>				nodes;
 		private readonly List<int>				nodeIndexes;
 	}

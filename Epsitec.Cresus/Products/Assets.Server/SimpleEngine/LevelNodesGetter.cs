@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public class LevelNodesGetter : INodesGetter
+	public class LevelNodesGetter : AbstractNodesGetter
 	{
-		public LevelNodesGetter(INodesGetter inputNodes, DataAccessor accessor, BaseType baseType)
+		public LevelNodesGetter(AbstractNodesGetter inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
@@ -19,19 +19,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public Timestamp? Timestamp;
 
 
-		#region INodeGetter Members
-		public IEnumerable<Node> Nodes
-		{
-			get
-			{
-				for (int i=0; i<this.NodesCount; i++)
-				{
-					yield return this.GetNode (i);
-				}
-			}
-		}
-
-		public int NodesCount
+		public override int NodesCount
 		{
 			get
 			{
@@ -39,14 +27,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public Node GetNode(int index)
+		public override Node GetNode(int index)
 		{
 			var node = this.inputNodes.GetNode (index);
 			var level = this.GetLevel (node.Guid);
 
 			return new Node (node.Guid, level);
 		}
-		#endregion
 
 
 		private int GetLevel(Guid guid)
@@ -65,7 +52,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private readonly INodesGetter			inputNodes;
+		private readonly AbstractNodesGetter	inputNodes;
 		private readonly DataAccessor			accessor;
 		private readonly BaseType				baseType;
 	}

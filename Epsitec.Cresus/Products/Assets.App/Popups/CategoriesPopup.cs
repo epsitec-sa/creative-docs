@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly INodesGetter					nodesGetter;
+		private readonly AbstractNodesGetter			nodesGetter;
 		private readonly CategoriesTreeTableFiller		dataFiller;
 
 		private int										visibleSelectedRow;

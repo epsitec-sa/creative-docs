@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 {
 	public abstract class AbstractTreeTableFiller
 	{
-		public AbstractTreeTableFiller(DataAccessor accessor, BaseType baseType, NavigationTreeTableController controller, INodesGetter nodesGetter)
+		public AbstractTreeTableFiller(DataAccessor accessor, BaseType baseType, NavigationTreeTableController controller, AbstractNodesGetter nodesGetter)
 		{
 			this.accessor    = accessor;
 			this.baseType    = baseType;
@@ -34,6 +34,6 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		protected readonly DataAccessor						accessor;
 		protected readonly BaseType							baseType;
 		protected readonly NavigationTreeTableController	controller;
-		protected readonly INodesGetter						nodesGetter;
+		protected readonly AbstractNodesGetter				nodesGetter;
 	}
 }

@@ -6,24 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public class ObjectEventsNodesGetter : INodesGetter
+	public class ObjectEventsNodesGetter : AbstractNodesGetter
 	{
 		public DataObject DataObject;
 
 
-		#region INodeGetter Members
-		public IEnumerable<Node> Nodes
-		{
-			get
-			{
-				for (int i=0; i<this.NodesCount; i++)
-				{
-					yield return this.GetNode (i);
-				}
-			}
-		}
-
-		public int NodesCount
+		public override int NodesCount
 		{
 			get
 			{
@@ -38,7 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public Node GetNode(int index)
+		public override Node GetNode(int index)
 		{
 			var e = this.DataObject.GetEvent (index);
 
@@ -51,6 +39,5 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return new Node (e.Guid);
 			}
 		}
-		#endregion
 	}
 }

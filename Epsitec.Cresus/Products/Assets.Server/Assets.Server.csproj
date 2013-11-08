@@ -59,7 +59,7 @@
     <Compile Include="SimpleEngine\BaseType.cs" />
     <Compile Include="SimpleEngine\ObjectEventsNodesGetter.cs" />
     <Compile Include="SimpleEngine\LevelNodesGetter.cs" />
-    <Compile Include="SimpleEngine\INodesGetter.cs" />
+    <Compile Include="SimpleEngine\AbstractNodesGetter.cs" />
     <Compile Include="SimpleEngine\Node.cs" />
     <Compile Include="SimpleEngine\ObjectCalculator.cs" />
     <Compile Include="SimpleEngine\GuidList.cs" />

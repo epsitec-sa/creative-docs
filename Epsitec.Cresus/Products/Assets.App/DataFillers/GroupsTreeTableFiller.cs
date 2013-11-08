@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 {
 	public class GroupsTreeTableFiller : AbstractTreeTableFiller
 	{
-		public GroupsTreeTableFiller(DataAccessor accessor, BaseType baseType, NavigationTreeTableController controller, INodesGetter nodesGetter)
+		public GroupsTreeTableFiller(DataAccessor accessor, BaseType baseType, NavigationTreeTableController controller, AbstractNodesGetter nodesGetter)
 			: base (accessor, baseType, controller, nodesGetter)
 		{
 		}
