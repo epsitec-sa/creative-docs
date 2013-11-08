@@ -34,6 +34,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.Title ("Dates de naissance et de décès")
 						.Field (x => x.eCH_Person.PersonDateOfBirth)
 						.Field (x => x.eCH_Person.PersonDateOfDeath)
+						.Field (x => x.eCH_Person.PersonDateOfDeathIsUncertain)
 					.End ()
 				.End ();
 		}
@@ -47,6 +48,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.Title ("Dates de naissance et de décès")
 						.Field (x => x.eCH_Person.PersonDateOfBirth).ReadOnly ()
 						.Field (x => x.eCH_Person.PersonDateOfDeath)
+						.Field (x => x.eCH_Person.PersonDateOfDeathIsUncertain)
 					.End ()
 				.End ();
 		}

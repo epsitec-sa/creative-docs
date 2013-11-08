@@ -41,15 +41,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<Date> (this.Execute);
+			return ActionExecutor.Create<Date, bool> (this.Execute);
 		}
 
-		private void Execute(Date date)
+		private void Execute(Date date, bool uncertain)
 		{
 			var warning = this.Entity;
 			var person  = warning.Person;
 
-			AiderPersonEntity.KillPerson (this.BusinessContext, person, date);
+			AiderPersonEntity.KillPerson (this.BusinessContext, person, date, uncertain);
 
 		//	No need to clear the warning -- killing the person removes all warnings...
 		//	this.ClearWarningAndRefreshCaches ();
@@ -58,9 +58,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
 		{
-			var warning = this.Entity;
-			var person  = warning.Person;
-			var date    = person.eCH_Person.PersonDateOfDeath ?? Date.Today;
+			var warning   = this.Entity;
+			var person    = warning.Person;
+			var date      = person.eCH_Person.PersonDateOfDeath ?? new Date (warning.WarningSource.CreationDate);
+			var uncertain = true;
 
 			form
 				.Title ("Marquer la personne comme décédée")
@@ -68,6 +69,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Field<Date> ()
 					.Title ("Date du décès")
 					.InitialValue (date)
+				.End ()
+				.Field<bool> ()
+					.Title ("Date du décès incertaine")
+					.InitialValue (uncertain)
 				.End ()
 			.End ();           
 		}

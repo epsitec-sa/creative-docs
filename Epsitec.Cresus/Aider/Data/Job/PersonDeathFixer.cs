@@ -41,7 +41,7 @@ namespace Epsitec.Aider.Data.Job
 
 				foreach (var personToFix in personsToFix)
 				{
-					AiderPersonEntity.KillPerson (businessContext, personToFix, personToFix.eCH_Person.PersonDateOfDeath.Value);
+					AiderPersonEntity.KillPerson (businessContext, personToFix, personToFix.eCH_Person.PersonDateOfDeath.Value, personToFix.eCH_Person.PersonDateOfDeathIsUncertain);
 				}
 
 				businessContext.SaveChanges

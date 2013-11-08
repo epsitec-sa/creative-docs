@@ -213,7 +213,8 @@ namespace Epsitec.Aider.Entities
 		/// <param name="businessContext">The business context.</param>
 		/// <param name="person">The dead person.</param>
 		/// <param name="date">The date of the death.</param>
-		public static void KillPerson(BusinessContext businessContext, AiderPersonEntity person, Date date)
+		/// <param name="uncertain">If set to <c>true</c>, the date is uncertain.</param>
+		public static void KillPerson(BusinessContext businessContext, AiderPersonEntity person, Date date, bool uncertain)
 		{
 			var contacts       = person.Contacts.ToList ();
 			var households     = person.Households.ToList ();
@@ -222,6 +223,7 @@ namespace Epsitec.Aider.Entities
 
 			person.Visibility = PersonVisibilityStatus.Deceased;
 			person.eCH_Person.PersonDateOfDeath = date;
+			person.eCH_Person.PersonDateOfDeathIsUncertain = uncertain;
 			person.eCH_Person.RemovalReason = RemovalReason.Deceased;
 
 			var deadContact = AiderContactEntity.CreateDeceased (businessContext, person);

@@ -26,27 +26,34 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<Date> (this.Execute);
+			return ActionExecutor.Create<Date, bool> (this.Execute);
 		}
 
-		private void Execute(Date date)
+		private void Execute(Date date, bool uncertain)
 		{
 			var person = this.Entity;
 
-			AiderPersonEntity.KillPerson (this.BusinessContext, person, date);
+			AiderPersonEntity.KillPerson (this.BusinessContext, person, date, uncertain);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
-			var person  = this.Entity;
-			var date    = person.eCH_Person.PersonDateOfDeath ?? Date.Today;
-			
-			form.Title ("Marque la personne comme décédée")
+			var person    = this.Entity;
+			var date      = person.eCH_Person.PersonDateOfDeath ?? Date.Today;
+			var uncertain = true;
+
+			form
+				.Title ("Marque la personne comme décédée")
 				.Text ("Attention: cette opération est irréversible.")
 				.Field<Date> ()
 					.Title ("Date du décès")
 					.InitialValue (date)
-				.End ();
+				.End ()
+				.Field<bool> ()
+					.Title ("Date du décès incertaine")
+					.InitialValue (uncertain)
+				.End ()
+			.End ();
 		}
 	}
 }
