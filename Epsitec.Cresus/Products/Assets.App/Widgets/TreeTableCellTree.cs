@@ -3,12 +3,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TreeTableCellTree
 	{
-		public TreeTableCellTree(bool isValid, int level, TreeTableTreeType type, string value, bool isSelected = false, bool isError = false)
+		public TreeTableCellTree(bool isValid, int level, NodeType type, string value, bool isSelected = false, bool isError = false)
 		{
 			this.IsValid    = isValid;
 			this.Level      = level;
@@ -21,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public readonly bool					IsValid;
 		public readonly int						Level;
-		public readonly TreeTableTreeType		Type;
+		public readonly NodeType				Type;
 		public readonly string					Value;
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;

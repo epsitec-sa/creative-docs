@@ -54,8 +54,13 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
+    <Compile Include="SimpleEngine\BypassNodesGetter.cs" />
     <Compile Include="SimpleEngine\ComputedAmount.cs" />
     <Compile Include="SimpleEngine\BaseType.cs" />
+    <Compile Include="SimpleEngine\ObjectEventsNodesGetter.cs" />
+    <Compile Include="SimpleEngine\LevelNodesGetter.cs" />
+    <Compile Include="SimpleEngine\INodesGetter.cs" />
+    <Compile Include="SimpleEngine\Node.cs" />
     <Compile Include="SimpleEngine\ObjectCalculator.cs" />
     <Compile Include="SimpleEngine\GuidList.cs" />
     <Compile Include="SimpleEngine\DataDateProperty.cs" />
@@ -78,6 +83,8 @@
     <Compile Include="SimpleEngine\DataStringProperty.cs" />
     <Compile Include="SimpleEngine\Timestamp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleEngine\TreeObjectsNodesGetter.cs" />
+    <Compile Include="SimpleEngine\NodeType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Solution Items\Epsitec.Cresus.snk">

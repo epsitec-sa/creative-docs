@@ -77,15 +77,10 @@
     <Compile Include="AssetsUI.cs" />
     <Compile Include="DataFillers\AbstractTreeTableFiller.cs" />
     <Compile Include="DataFillers\CategoriesTreeTableFiller.cs" />
-    <Compile Include="DataFillers\IInputData.cs" />
-    <Compile Include="DataFillers\TreeObjectsNodeGetter.cs" />
-    <Compile Include="DataFillers\FinalObjectsNodeFiller.cs" />
     <Compile Include="DataFillers\EventsGroupsTreeTableFiller.cs" />
     <Compile Include="DataFillers\GroupsTreeTableFiller.cs" />
     <Compile Include="DataFillers\EventsCategoriesTreeTableFiller.cs" />
     <Compile Include="DataFillers\EventsObjectsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\Node.cs" />
-    <Compile Include="DataFillers\AbstractNodeFiller.cs" />
     <Compile Include="DataFillers\ObjectsTreeTableFiller.cs" />
     <Compile Include="Helpers\Converters.cs" />
     <Compile Include="Helpers\Text.cs" />
@@ -112,9 +107,7 @@
     <Compile Include="Views\BusinessLogic.cs" />
     <Compile Include="Views\TimelinesArrayController.cs" />
     <Compile Include="Views\TimelinesToolbar.cs" />
-    <Compile Include="Views\ObjectsToolbarTimelinesController.cs" />
     <Compile Include="Views\ViewMode.cs" />
-    <Compile Include="Views\EventsView.cs" />
     <Compile Include="Views\EditorPageGroup.cs" />
     <Compile Include="Views\ObjectSummaryControllerTile.cs" />
     <Compile Include="Views\EditorPageOneShot.cs" />
@@ -206,7 +199,6 @@
     <Compile Include="Widgets\TreeTableColumnString.cs" />
     <Compile Include="Widgets\TreeTableCellString.cs" />
     <Compile Include="Widgets\TreeTable.cs" />
-    <Compile Include="Widgets\TreeTableTreeType.cs" />
     <Compile Include="Widgets\TreeTableCellTree.cs" />
     <Compile Include="Widgets\NavigationTimelineController.cs" />
     <Compile Include="Widgets\Essai.cs" />

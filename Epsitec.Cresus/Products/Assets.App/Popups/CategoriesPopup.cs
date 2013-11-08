@@ -20,8 +20,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.visibleSelectedRow = -1;
 
 			this.controller = new NavigationTreeTableController();
-			this.nodeFiller = new FinalObjectsNodeFiller (this.accessor, BaseType.Categories);
-			this.dataFiller = new CategoriesTreeTableFiller(this.accessor, BaseType.Categories, this.controller, this.nodeFiller);
+			this.nodesGetter = this.accessor.GetNodesGetter (BaseType.Categories);
+			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, BaseType.Categories, this.controller, this.nodesGetter);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.UpdateController ();
 
-				var node = this.nodeFiller.GetNode (this.visibleSelectedRow);
+				var node = this.nodesGetter.GetNode (this.visibleSelectedRow);
 				this.OnNavigate (node.Guid);
 				this.ClosePopup ();
 			};
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Utilise au maximum les 3/4 de la hauteur.
 			int max = (int) (h*0.75) / CategoriesPopup.RowHeight;
 
-			int rows = System.Math.Min (this.nodeFiller.NodesCount, max);
+			int rows = System.Math.Min (this.nodesGetter.NodesCount, max);
 			rows = System.Math.Max (rows, 3);
 
 			int dx = CategoriesPopup.PopupWidth
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateController(bool crop = true)
 		{
-			this.controller.RowsCount = this.nodeFiller.NodesCount;
+			this.controller.RowsCount = this.nodesGetter.NodesCount;
 
 			int visibleCount = this.controller.VisibleRowsCount;
 			int rowsCount    = this.controller.RowsCount;
@@ -161,8 +161,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly FinalObjectsNodeFiller			nodeFiller;
-		private readonly CategoriesTreeTableFiller			dataFiller;
+		private readonly INodesGetter					nodesGetter;
+		private readonly CategoriesTreeTableFiller		dataFiller;
 
 		private int										visibleSelectedRow;
 	}

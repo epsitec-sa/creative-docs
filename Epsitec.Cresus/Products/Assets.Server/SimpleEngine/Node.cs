@@ -3,10 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.DataFillers
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public struct Node
 	{
@@ -15,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		//	être ni compactée ni étendue (feuille de l'arbre).
 		//	Si Type == TreeTableTreeType.Compacted ou TreeTableTreeType.Expanded,
 		//	il s'agit d'une ligne avec un petit bouton triangulaire.
-		public Node(Guid guid, int level, TreeTableTreeType type)
+		public Node(Guid guid, int level = 0, NodeType type = NodeType.None)
 		{
 			this.Guid  = guid;
 			this.Level = level;
@@ -28,14 +26,14 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				return this.Guid.IsEmpty
 					&& this.Level == -1
-					&& this.Type == TreeTableTreeType.None;
+					&& this.Type == NodeType.None;
 			}
 		}
 
-		public static Node Empty = new Node (Guid.Empty, -1, TreeTableTreeType.None);
+		public static Node Empty = new Node (Guid.Empty, -1, NodeType.None);
 
 		public readonly Guid				Guid;
 		public readonly int					Level;
-		public readonly TreeTableTreeType	Type;
+		public readonly NodeType			Type;
 	}
 }

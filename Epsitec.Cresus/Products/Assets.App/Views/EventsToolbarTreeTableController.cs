@@ -17,6 +17,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.baseType = baseType;
 
+			this.eventsNodesGetter = new ObjectEventsNodesGetter ();
+			this.nodesGetter = new TreeObjectsNodesGetter (this.eventsNodesGetter);
+
 			this.title = "Evénements";
 		}
 
@@ -34,7 +37,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.objectGuid = value;
 					this.obj = this.accessor.GetObject (this.baseType, this.objectGuid);
 
+					this.eventsNodesGetter.DataObject = this.obj;
 					this.dataFiller.DataObject = this.obj;
+
 					this.UpdateData ();
 					this.UpdateController ();
 					this.UpdateToolbar ();
@@ -164,51 +169,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateNodeFiller()
 		{
-			var nodeFiller = new NodeFiller (this);
-
 			switch (this.baseType)
 			{
 				case BaseType.Objects:
-					this.dataFiller = new EventsObjectsTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new EventsObjectsTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
 					break;
 
 				case BaseType.Categories:
-					this.dataFiller = new EventsCategoriesTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new EventsCategoriesTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
 					break;
 
 				case BaseType.Groups:
-					this.dataFiller = new EventsGroupsTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new EventsGroupsTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
 					break;
 			}
 
 			base.CreateNodeFiller ();
 		}
 
-		private class NodeFiller : AbstractNodeFiller
-		{
-			public NodeFiller(EventsToolbarTreeTableController controller)
-			{
-				this.controller = controller;
-			}
 
-			public override int NodesCount
-			{
-				get
-				{
-					return this.controller.NodesCount;
-				}
-			}
-
-			public override Node GetNode(int index)
-			{
-				return this.controller.GetNode (index);
-			}
-
-			private readonly EventsToolbarTreeTableController controller;
-		}
-
-
-		protected override int DataCount
+#if false
+		protected override int NodesCount
 		{
 			get
 			{
@@ -223,21 +204,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected override void GetData(int row, out Guid guid, out int level)
+		protected override Node GetNode(int row)
 		{
 			var e = this.obj.GetEvent (row);
 
 			if (e == null)
 			{
-				guid = Guid.Empty;
-				level = 0;
+				return Node.Empty;
 			}
 			else
 			{
-				guid = e.Guid;
-				level = 0;
+				return new Node (e.Guid);
 			}
 		}
+#endif
 
 
 		private int TimestampToRow(Timestamp? timestamp)
@@ -299,7 +279,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event UpdateAllEventHandler UpdateAll;
 		#endregion
 
-	
+
+		private ObjectEventsNodesGetter			eventsNodesGetter;
 		private Guid							objectGuid;
 		private DataObject						obj;
 	}

@@ -36,6 +36,48 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 
 		#region Objects
+		public INodesGetter GetNodesGetter(BaseType baseType)
+		{
+			return new NodesGetter (this.mandat.GetData (baseType));
+		}
+
+		private class NodesGetter : INodesGetter
+		{
+			public NodesGetter(GuidList<DataObject> dataObjects)
+			{
+				this.dataObjects = dataObjects;
+			}
+
+			public IEnumerable<Node> Nodes
+			{
+				get
+				{
+					for (int i=0; i<this.NodesCount; i++)
+					{
+						yield return this.GetNode (i);
+					}
+				}
+			}
+
+			public int NodesCount
+			{
+				get
+				{
+					return this.dataObjects.Count;
+				}
+			}
+
+			public Node GetNode(int row)
+			{
+				var obj = this.dataObjects[row];
+				return new Node (obj.Guid);
+			}
+
+			private readonly GuidList<DataObject> dataObjects;
+		}
+		#endregion
+
+		#region Objects
 		public int GetObjectsCount(BaseType baseType)
 		{
 			return this.mandat.GetData (baseType).Count;

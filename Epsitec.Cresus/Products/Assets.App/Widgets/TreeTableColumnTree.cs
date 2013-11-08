@@ -7,6 +7,7 @@ using System.Text;
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -74,14 +75,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				foreach (var cell in this.cells)
 				{
-					if (cell.Type == TreeTableTreeType.Compacted ||
-						cell.Type == TreeTableTreeType.Expanded)
+					if (cell.Type == NodeType.Compacted ||
+						cell.Type == NodeType.Expanded)
 					{
 						var rect = this.GetGlyphRectangle (y, cell.Level);
 
 						var button = new GlyphButton
 						{
-							GlyphShape    = cell.Type == TreeTableTreeType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
+							GlyphShape    = cell.Type == NodeType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
 							ButtonStyle   = ButtonStyle.ToolItem,
 							PreferredSize = rect.Size,
 							Anchor        = AnchorStyles.BottomLeft,
@@ -97,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 							//	au widget sous-jacent (TreeTable), afin que la ligne survolée soit
 							//	mise en évidence.
 							int row;
-							TreeTableTreeType type;
+							NodeType type;
 							TreeTableColumnTree.Deserialize (button.Name, out row, out type);
 							this.OnChildrenMouseMove (row);
 						};
@@ -105,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						button.Clicked += delegate
 						{
 							int row;
-							TreeTableTreeType type;
+							NodeType type;
 							TreeTableColumnTree.Deserialize (button.Name, out row, out type);
 							this.OnTreeButtonClicked (row, type);
 						};
@@ -135,7 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private static string Serialize(int row, TreeTableTreeType type)
+		private static string Serialize(int row, NodeType type)
 		{
 			string s1 = row.ToString ();
 			string s2 = ((int) type).ToString ();
@@ -143,19 +144,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return string.Concat (s1, " ", s2);
 		}
 
-		private static void Deserialize(string text, out int row, out TreeTableTreeType type)
+		private static void Deserialize(string text, out int row, out NodeType type)
 		{
 			var p = text.Split (' ');
 
 			row = int.Parse (p[0]);
 
 			int t = int.Parse (p[1]);
-			type = (TreeTableTreeType) t;
+			type = (NodeType) t;
 		}
 
 
 		#region Events handler
-		private void OnTreeButtonClicked(int row, TreeTableTreeType type)
+		private void OnTreeButtonClicked(int row, NodeType type)
 		{
 			if (this.TreeButtonClicked != null)
 			{
@@ -163,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableTreeType type);
+		public delegate void TreeButtonClickedEventHandler(object sender, int row, NodeType type);
 		public event TreeButtonClickedEventHandler TreeButtonClicked;
 		#endregion
 

@@ -16,22 +16,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.baseType = baseType;
 
-			var nodeFiller = new NodeFiller (this);
+			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
+			var levelNodesGetter = new LevelNodesGetter (primaryNodesGetter, this.accessor, this.baseType);
+			this.nodesGetter = new TreeObjectsNodesGetter (levelNodesGetter);
 
 			switch (this.baseType)
 			{
 				case BaseType.Objects:
-					this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					this.title = "Objets d'immobilisation";
 					break;
 
 				case BaseType.Categories:
-					this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					this.title = "Catégories d'immobilisation";
 					break;
 
 				case BaseType.Groups:
-					this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
 					this.title = "Groupes d'immobilisation";
 					break;
 			}
@@ -132,51 +131,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateNodeFiller()
 		{
-			var nodeFiller = new NodeFiller (this);
-
 			switch (this.baseType)
 			{
 				case BaseType.Objects:
-					this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
 					break;
 
 				case BaseType.Categories:
-					this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
 					break;
 
 				case BaseType.Groups:
-					this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.baseType, this.controller, nodeFiller);
+					this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
 					break;
 			}
 
 			base.CreateNodeFiller ();
 		}
 
-		private class NodeFiller : AbstractNodeFiller
-		{
-			public NodeFiller(ObjectsToolbarTreeTableController controller)
-			{
-				this.controller = controller;
-			}
 
-			public override int NodesCount
-			{
-				get
-				{
-					return this.controller.NodesCount;
-				}
-			}
-
-			public override Node GetNode(int index)
-			{
-				return this.controller.GetNode (index);
-			}
-
-			private readonly ObjectsToolbarTreeTableController controller;
-		}
-
-
-		protected override int DataCount
+#if false
+		protected override int NodesCount
 		{
 			get
 			{
@@ -184,23 +159,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected override void GetData(int row, out Guid guid, out int level)
+		protected override Node GetNode(int row)
 		{
-			guid = Guid.Empty;
-			level = 0;
-
 			if (row >= 0 && row < this.objectGuids.Count)
 			{
-				guid = this.objectGuids[row];
+				var guid = this.objectGuids[row];
 
 				var obj = this.accessor.GetObject (this.baseType, guid);
 				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.timestamp, ObjectField.Level) as DataIntProperty;
 				if (p != null)
 				{
-					level = p.Value;
+					return new Node (guid, p.Value);
 				}
 			}
+
+			return Node.Empty;
 		}
+#endif
 
 
 		private void UpdateObjects()

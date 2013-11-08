@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return new ObjectsView (accessor, BaseType.Groups, toolbar);
 
 				case ViewType.Events:
-					return new EventsView (accessor, toolbar);
+					//return new EventsView (accessor, toolbar);
 
 				case ViewType.Reports:
 					return new ReportsView (accessor, toolbar);

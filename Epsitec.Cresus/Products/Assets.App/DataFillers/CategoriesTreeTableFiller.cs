@@ -10,8 +10,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 {
 	public class CategoriesTreeTableFiller : AbstractTreeTableFiller
 	{
-		public CategoriesTreeTableFiller(DataAccessor accessor, BaseType baseType, NavigationTreeTableController controller, AbstractNodeFiller nodeFiller)
-			: base (accessor, baseType, controller, nodeFiller)
+		public CategoriesTreeTableFiller(DataAccessor accessor, BaseType baseType, NavigationTreeTableController controller, INodesGetter nodesGetter)
+			: base (accessor, baseType, controller, nodesGetter)
 		{
 		}
 
@@ -32,12 +32,12 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= this.nodeFiller.NodesCount)
+				if (firstRow+i >= this.nodesGetter.NodesCount)
 				{
 					break;
 				}
 
-				var node  = this.nodeFiller.GetNode (firstRow+i);
+				var node  = this.nodesGetter.GetNode (firstRow+i);
 				var guid  = node.Guid;
 				var level = node.Level;
 				var type  = node.Type;

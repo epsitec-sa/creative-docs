@@ -3,25 +3,24 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.DataFillers
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	/// <summary>
-	/// Gère l'accès "en arbre" à des données quelconques en provenance de IInputData.
+	/// Gère l'accès "en arbre" à des données quelconques en provenance de INodeGetter.
 	/// </summary>
-	public class TreeObjectsNodeGetter
+	public class TreeObjectsNodesGetter : INodesGetter
 	{
-		public TreeObjectsNodeGetter(IInputData inputData)
+		public TreeObjectsNodesGetter(INodesGetter inputNodes)
 		{
-			this.inputData = inputData;
+			this.inputNodes = inputNodes;
 
 			this.nodes       = new List<Node> ();
 			this.nodeIndexes = new List<int> ();
 		}
 
 
+		#region INodeGetter Members
 		public IEnumerable<Node> Nodes
 		{
 			get
@@ -45,13 +44,14 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			return this.nodes[this.nodeIndexes[index]];
 		}
+		#endregion
 
 
 		public bool IsAllCompacted
 		{
 			get
 			{
-				return !this.nodes.Where (x => x.Type == TreeTableTreeType.Expanded).Any ();
+				return !this.nodes.Where (x => x.Type == NodeType.Expanded).Any ();
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			get
 			{
-				return !this.nodes.Where (x => x.Type == TreeTableTreeType.Compacted).Any ();
+				return !this.nodes.Where (x => x.Type == NodeType.Compacted).Any ();
 			}
 		}
 
@@ -108,13 +108,13 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			int i = this.nodeIndexes[index];
 			var node = this.nodes[i];
 
-			if (node.Type == TreeTableTreeType.Compacted)
+			if (node.Type == NodeType.Compacted)
 			{
-				this.nodes[i] = new Node (node.Guid, node.Level, TreeTableTreeType.Expanded);
+				this.nodes[i] = new Node (node.Guid, node.Level, NodeType.Expanded);
 			}
-			else if (node.Type == TreeTableTreeType.Expanded)
+			else if (node.Type == NodeType.Expanded)
 			{
-				this.nodes[i] = new Node (node.Guid, node.Level, TreeTableTreeType.Compacted);
+				this.nodes[i] = new Node (node.Guid, node.Level, NodeType.Compacted);
 			}
 
 			this.UpdateNodeIndexes ();
@@ -127,9 +127,9 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var node = this.nodes[i];
 
-				if (node.Type == TreeTableTreeType.Expanded)
+				if (node.Type == NodeType.Expanded)
 				{
-					this.nodes[i] = new Node (node.Guid, node.Level, TreeTableTreeType.Compacted);
+					this.nodes[i] = new Node (node.Guid, node.Level, NodeType.Compacted);
 				}
 			}
 
@@ -143,9 +143,9 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var node = this.nodes[i];
 
-				if (node.Type == TreeTableTreeType.Compacted)
+				if (node.Type == NodeType.Compacted)
 				{
-					this.nodes[i] = new Node (node.Guid, node.Level, TreeTableTreeType.Expanded);
+					this.nodes[i] = new Node (node.Guid, node.Level, NodeType.Expanded);
 				}
 			}
 
@@ -158,32 +158,28 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			//	Met à jour toutes les données en mode étendu.
 			this.nodes.Clear ();
 
-			int count = this.DataCount;
+			int count = this.inputNodes.NodesCount;
 			for (int i=0; i<count; i++)
 			{
-				Guid currentGuid;
-				int currentLevel;
-				this.GetData (i, out currentGuid, out currentLevel);
+				var currentNode = this.inputNodes.GetNode (i);
 
 				//	Par défaut, on considére que la ligne ne peut être ni étendue
 				//	ni compactée.
-				var type = TreeTableTreeType.Final;
+				var type = NodeType.Final;
 
 				if (i < count-2)
 				{
-					Guid nextGuid;
-					int nextLevel;
-					this.GetData (i+1, out nextGuid, out nextLevel);
+					var nextNode = this.inputNodes.GetNode (i+1);
 
 					//	Si le noeud suivant a un niveau plus élevé, il s'agit d'une
 					//	ligne pouvant être étendue ou compactée.
-					if (nextLevel > currentLevel)
+					if (nextNode.Level > currentNode.Level)
 					{
-						type = TreeTableTreeType.Expanded;
+						type = NodeType.Expanded;
 					}
 				}
 
-				var node = new Node (currentGuid, currentLevel, type);
+				var node = new Node (currentNode.Guid, currentNode.Level, type);
 				this.nodes.Add (node);
 			}
 
@@ -216,7 +212,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 					}
 				}
 
-				if (node.Type == TreeTableTreeType.Compacted)
+				if (node.Type == NodeType.Compacted)
 				{
 					skip = true;
 					skipLevel = node.Level;
@@ -227,23 +223,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		}
 
 
-		#region Access to input data
-		private int DataCount
-		{
-			get
-			{
-				return this.inputData.DataCount;
-			}
-		}
-
-		private void GetData(int row, out Guid guid, out int level)
-		{
-			this.inputData.GetData (row, out guid, out level);
-		}
-		#endregion
-
-
-		private readonly IInputData				inputData;
+		private readonly INodesGetter			inputNodes;
 		private readonly List<Node>				nodes;
 		private readonly List<int>				nodeIndexes;
 	}

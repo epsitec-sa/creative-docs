@@ -10,13 +10,11 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public abstract class AbstractToolbarTreeTableController : IInputData
+	public abstract class AbstractToolbarTreeTableController
 	{
 		public AbstractToolbarTreeTableController(DataAccessor accessor)
 		{
 			this.accessor = accessor;
-
-			this.nodeGetter = new TreeObjectsNodeGetter (this);
 		}
 
 		public void CreateUI(Widget parent)
@@ -103,11 +101,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.nodeGetter.AllToVisible (this.selectedRow);
+				return this.nodesGetter.AllToVisible (this.selectedRow);
 			}
 			set
 			{
-				this.SelectedRow = this.nodeGetter.VisibleToAll (value);
+				this.SelectedRow = this.nodesGetter.VisibleToAll (value);
 			}
 		}
 
@@ -200,7 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnRowDoubleClicked (this.VisibleSelectedRow);
 			};
 
-			this.controller.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
+			this.controller.TreeButtonClicked += delegate (object sender, int row, NodeType type)
 			{
 				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
 			};
@@ -225,7 +223,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateController(bool crop = true)
 		{
-			this.controller.RowsCount = this.nodeGetter.NodesCount;
+			this.controller.RowsCount = this.nodesGetter.NodesCount;
 
 			int visibleCount = this.controller.VisibleRowsCount;
 			int rowsCount    = this.controller.RowsCount;
@@ -261,7 +259,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Etend ou compacte une ligne (inverse son mode actuel).
 			var guid = this.SelectedGuid;
 
-			this.nodeGetter.CompactOrExpand (row);
+			this.nodesGetter.CompactOrExpand (row);
 			this.UpdateController ();
 			this.UpdateToolbar ();
 
@@ -273,7 +271,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Compacte toutes les lignes.
 			var guid = this.SelectedGuid;
 
-			this.nodeGetter.CompactAll ();
+			this.nodesGetter.CompactAll ();
 			this.UpdateController ();
 			this.UpdateToolbar ();
 
@@ -285,7 +283,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Etend toutes les lignes.
 			var guid = this.SelectedGuid;
 
-			this.nodeGetter.ExpandAll ();
+			this.nodesGetter.ExpandAll ();
 			this.UpdateController ();
 			this.UpdateToolbar ();
 
@@ -298,9 +296,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				int sel = this.VisibleSelectedRow;
-				if (sel != -1 && sel < this.nodeGetter.NodesCount)
+				if (sel != -1 && sel < this.nodesGetter.NodesCount)
 				{
-					return this.nodeGetter.GetNode (sel).Guid;
+					return this.nodesGetter.GetNode (sel).Guid;
 				}
 				else
 				{
@@ -312,34 +310,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	visible, vers le haut.
 			set
 			{
-				this.VisibleSelectedRow = this.nodeGetter.SearchBestIndex (value);
+				this.VisibleSelectedRow = this.nodesGetter.SearchBestIndex (value);
 			}
 		}
 
 		protected void UpdateData()
 		{
 			//	Met à jour toutes les données en mode étendu.
-			this.nodeGetter.UpdateData ();
+			this.nodesGetter.UpdateData ();
 		}
 
 
-		#region IInputData Members
-		int IInputData.DataCount
-		{
-			get
-			{
-				return this.DataCount;
-			}
-		}
-
-		void IInputData.GetData(int row, out Guid guid, out int level)
-		{
-			this.GetData (row, out guid, out level);
-		}
-		#endregion
-
-
-		protected virtual int DataCount
+#if false
+		protected virtual int NodesCount
 		{
 			//	Retourne le nombre total de données disponibles.
 			get
@@ -348,11 +331,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected virtual void GetData(int row, out Guid guid, out int level)
+		protected virtual Node GetNode(int row)
 		{
 			//	Retourne une donnée.
-			guid  = Guid.Empty;
-			level = 0;
+			return Node.Empty;
 		}
 
 
@@ -370,6 +352,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne un noeud visible.
 			return this.nodeGetter.GetNode (i);
 		}
+#endif
 
 
 		protected void UpdateToolbar()
@@ -381,8 +364,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
 			this.UpdateCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
 
-			this.toolbar.UpdateCommand (ToolbarCommand.CompactAll, !this.nodeGetter.IsAllCompacted);
-			this.toolbar.UpdateCommand (ToolbarCommand.ExpandAll,  !this.nodeGetter.IsAllExpanded);
+			this.toolbar.UpdateCommand (ToolbarCommand.CompactAll, !this.nodesGetter.IsAllCompacted);
+			this.toolbar.UpdateCommand (ToolbarCommand.ExpandAll,  !this.nodesGetter.IsAllExpanded);
 
 			this.toolbar.UpdateCommand (ToolbarCommand.New,      true);
 			this.toolbar.UpdateCommand (ToolbarCommand.Delete,   row != -1);
@@ -416,7 +399,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					int i = this.VisibleSelectedRow - 1;
 					i = System.Math.Max (i, 0);
-					i = System.Math.Min (i, this.NodesCount - 1);
+					i = System.Math.Min (i, this.nodesGetter.NodesCount - 1);
 					return i;
 				}
 			}
@@ -434,7 +417,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					int i = this.VisibleSelectedRow + 1;
 					i = System.Math.Max (i, 0);
-					i = System.Math.Min (i, this.NodesCount - 1);
+					i = System.Math.Min (i, this.nodesGetter.NodesCount - 1);
 					return i;
 				}
 			}
@@ -444,7 +427,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.NodesCount - 1;
+				return this.nodesGetter.NodesCount - 1;
 			}
 		}
 
@@ -476,8 +459,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected readonly DataAccessor			accessor;
-		private readonly TreeObjectsNodeGetter	nodeGetter;
 
+		protected TreeObjectsNodesGetter		nodesGetter;
 		protected AbstractTreeTableFiller		dataFiller;
 		protected BaseType						baseType;
 		protected bool							hasTreeOperations;

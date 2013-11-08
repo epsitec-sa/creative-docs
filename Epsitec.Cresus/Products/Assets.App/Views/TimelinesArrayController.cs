@@ -5,14 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class TimelinesArrayController : IInputData
+	public class TimelinesArrayController
 	{
 		public TimelinesArrayController(DataAccessor accessor, BaseType baseType)
 		{
@@ -37,8 +36,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 			}
 
-			this.nodeGetter = new TreeObjectsNodeGetter (this);
+			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
+			var levelNodesGetter = new LevelNodesGetter (primaryNodesGetter, this.accessor, this.baseType);
+			this.nodesGetter = new TreeObjectsNodesGetter (levelNodesGetter);
+
 			this.dataArray = new DataArray ();
+
 			this.UpdateData ();
 		}
 
@@ -49,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.selectedRow != -1)
 				{
-					var node = this.nodeGetter.GetNode (this.selectedRow);
+					var node = this.nodesGetter.GetNode (this.selectedRow);
 					if (!node.IsEmpty)
 					{
 						return node.Guid;
@@ -60,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				this.SetSelection (this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == value), this.selectedColumn);
+				this.SetSelection (this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == value), this.selectedColumn);
 			}
 		}
 
@@ -349,7 +352,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			foreach (var row in this.EnumVisibleRows)
 			{
-				var node = this.nodeGetter.GetNode (row);
+				var node = this.nodesGetter.GetNode (row);
 				var obj  = this.accessor.GetObject (this.baseType, node.Guid);
 				var nom  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
 
@@ -558,13 +561,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
 
-			this.nodeGetter.UpdateData ();
+			this.nodesGetter.UpdateData ();
 
-			this.dataArray.Clear (this.nodeGetter.NodesCount);
+			this.dataArray.Clear (this.nodesGetter.NodesCount);
 
-			for (int row=0; row<this.nodeGetter.NodesCount; row++)
+			for (int row=0; row<this.nodesGetter.NodesCount; row++)
 			{
-				var node = this.nodeGetter.GetNode (row);
+				var node = this.nodesGetter.GetNode (row);
 				var obj = this.accessor.GetObject (this.baseType, node.Guid);
 
 				var label = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
@@ -587,7 +590,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		#region IInputData Members
-		public int DataCount
+		public int NodesCount
 		{
 			get
 			{
@@ -901,7 +904,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.selectedRow != -1)
 				{
-					var node = this.nodeGetter.GetNode (this.selectedRow);
+					var node = this.nodesGetter.GetNode (this.selectedRow);
 					if (!node.IsEmpty)
 					{
 						return this.accessor.GetObject (this.baseType, node.Guid);
@@ -943,7 +946,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly DataAccessor			accessor;
 		private readonly BaseType				baseType;
-		private readonly TreeObjectsNodeGetter	nodeGetter;
+		private readonly TreeObjectsNodesGetter	nodesGetter;
 		private readonly DataArray				dataArray;
 
 		private string							title;

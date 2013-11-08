@@ -19,11 +19,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.baseType = baseType;
 
-			this.listController     = new ObjectsToolbarTreeTableController (this.accessor, this.baseType);
-			this.timelineController = new ObjectsToolbarTimelineController (this.accessor, this.baseType);
-			this.eventsController   = new EventsToolbarTreeTableController (this.accessor, this.baseType);
+			this.listController           = new ObjectsToolbarTreeTableController (this.accessor, this.baseType);
+			this.timelineController       = new ObjectsToolbarTimelineController (this.accessor, this.baseType);
+			this.eventsController         = new EventsToolbarTreeTableController (this.accessor, this.baseType);
 			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.baseType);
-			this.objectEditor       = new ObjectEditor (this.accessor, this.baseType);
+			this.objectEditor             = new ObjectEditor (this.accessor, this.baseType);
 
 			this.ignoreChanges = new SafeCounter ();
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -53,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.OnContentChanged (crop);
 			};
 
-			this.treeTable.TreeButtonClicked += delegate (object sender, int row, TreeTableTreeType type)
+			this.treeTable.TreeButtonClicked += delegate (object sender, int row, NodeType type)
 			{
 				this.OnTreeButtonClicked (row, type);
 			};
@@ -244,7 +245,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event ContentChangedEventHandler ContentChanged;
 
 
-		private void OnTreeButtonClicked(int row, TreeTableTreeType type)
+		private void OnTreeButtonClicked(int row, NodeType type)
 		{
 			if (this.TreeButtonClicked != null)
 			{
@@ -252,7 +253,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public delegate void TreeButtonClickedEventHandler(object sender, int row, TreeTableTreeType type);
+		public delegate void TreeButtonClickedEventHandler(object sender, int row, NodeType type);
 		public event TreeButtonClickedEventHandler TreeButtonClicked;
 		#endregion
 
