@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			this.UpdateData ();
 		}
 
+
 		public override int NodesCount
 		{
 			get
@@ -34,6 +35,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			return this.nodes[index];
 		}
+
 
 		private void UpdateData()
 		{
