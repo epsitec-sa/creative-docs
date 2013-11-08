@@ -41,30 +41,24 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetRecipientsOverview()
 		{
-			return TextFormatter.FormatText ("Destinataires:", "\n",
-											 this.RecipientContacts.Count(),"contacts individuel(s)", "\n",
-											 this.RecipientGroups.Count (), "groupe(s)", "\n",
-											 this.RecipientHouseholds.Count (), "ménage(s)", "\n",
-											 "Dernière mise à jour: ", this.LastUpdate.Value.ToString ());
+			int contactCount   = this.RecipientContacts.Count;
+			int groupCount     = this.RecipientGroups.Count;
+			int householdCount = this.RecipientHouseholds.Count;
+
+			return TextFormatter.FormatText (contactCount, contactCount > 1 ? "contacts individuels" : "contact individuel", "\n",
+				/**/						 groupCount, groupCount > 1 ? "groupes" : "groupe", "\n",
+				/**/						 householdCount, householdCount > 1 ? "ménages" : "ménage", "\n",
+				/**/						 "Mis à jour le", this.LastUpdate.Value.ToString ());
 		}
 
 		public string GetReadyText()
 		{
-			if (this.IsReady)
-				return "Prêt pour l'envoi";
-			else
-				return "En préparation";
-		}
-
-		public void RefreshCache()
-		{
-		
-			
+			return this.IsReady ? "Prêt pour l'envoi" : "En préparation";
 		}
 
 		public void RecreateFromScratch(BusinessContext businessContext)
 		{
-			this.LastUpdate = System.DateTime.Now;
+			this.UpdateLastUpdateDate ();
 
 			AiderMailingParticipantEntity.DeleteByMailing (businessContext, this);
 
@@ -95,7 +89,7 @@ namespace Epsitec.Aider.Entities
 		/// <param name="businessContext"></param>
 		public void SyncParticipants(BusinessContext businessContext)
 		{
-			this.LastUpdate = System.DateTime.Now;
+			this.UpdateLastUpdateDate ();
 
 			var participants = AiderMailingParticipantEntity.GetAllParticipants (businessContext, this).Select( p => p.Contact);
 			var recipientsDict = this.GetRecipients().ToDictionary(k => k);
@@ -125,7 +119,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (!this.RecipientHouseholds.Contains (householdToAdd))
 			{
-				this.LastUpdate = System.DateTime.Now;
+				this.UpdateLastUpdateDate ();
 				this.RecipientHouseholds.Add (householdToAdd);
 				AiderMailingParticipantEntity.Create (businessContext, this, householdToAdd);
 			}
@@ -135,7 +129,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (!this.RecipientGroups.Contains (groupToAdd))
 			{
-				this.LastUpdate = System.DateTime.Now;
+				this.UpdateLastUpdateDate ();
 				this.RecipientGroups.Add (groupToAdd);
 				AiderMailingParticipantEntity.Create (businessContext, this, groupToAdd);
 			}
@@ -145,7 +139,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if(!this.RecipientContacts.Contains(contactToAdd))
 			{
-				this.LastUpdate = System.DateTime.Now;
+				this.UpdateLastUpdateDate ();
 				this.RecipientContacts.Add (contactToAdd);
 				AiderMailingParticipantEntity.Create (businessContext, this, contactToAdd);
 			}
@@ -157,7 +151,7 @@ namespace Epsitec.Aider.Entities
 			{
 				if (!this.RecipientContacts.Contains (contact))
 				{
-					this.LastUpdate = System.DateTime.Now;
+					this.UpdateLastUpdateDate ();
 					this.RecipientContacts.Add (contact);
 					AiderMailingParticipantEntity.Create (businessContext, this, contact);
 				}
@@ -166,14 +160,14 @@ namespace Epsitec.Aider.Entities
 
 		public void RemoveContact(BusinessContext businessContext, AiderContactEntity contactToRemove)
 		{
-			this.LastUpdate = System.DateTime.Now;
+			this.UpdateLastUpdateDate ();
 			this.RecipientContacts.Remove (contactToRemove);
 			AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contactToRemove);	
 		}
 
 		public void RemoveGroup(BusinessContext businessContext, AiderGroupEntity groupToRemove)
 		{
-			this.LastUpdate = System.DateTime.Now;
+			this.UpdateLastUpdateDate ();
 			this.RecipientGroups.Remove (groupToRemove);
 			foreach (var contact in groupToRemove.GetAllGroupAndSubGroupParticipants ().Distinct ())
 			{
@@ -184,14 +178,14 @@ namespace Epsitec.Aider.Entities
 
 		public void RemoveHousehold(BusinessContext businessContext, AiderContactEntity contactToRemove,AiderHouseholdEntity householdToRemove)
 		{
-			this.LastUpdate = System.DateTime.Now;
+			this.UpdateLastUpdateDate ();
 			this.RecipientHouseholds.Remove (householdToRemove);
 			AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contactToRemove);		
 		}
 
 		public void RemoveHousehold(BusinessContext businessContext, AiderHouseholdEntity householdToRemove)
 		{
-			this.LastUpdate = System.DateTime.Now;
+			this.UpdateLastUpdateDate ();
 			this.RecipientHouseholds.Remove (householdToRemove);
 			AiderMailingParticipantEntity.FindAndRemove (businessContext, this, householdToRemove);
 		}
@@ -212,7 +206,7 @@ namespace Epsitec.Aider.Entities
 			{
 				if (!this.Exclusions.Contains (contact))
 				{
-					this.LastUpdate = System.DateTime.Now;
+					this.UpdateLastUpdateDate ();
 					this.Exclusions.Add(contact);
 					AiderMailingParticipantEntity.ExcludeContact (businessContext, this, contact);
 				}
@@ -221,7 +215,7 @@ namespace Epsitec.Aider.Entities
 
 		public void UnExludeContacts(BusinessContext businessContext, IEnumerable<AiderContactEntity> contactsToUnExclude)
 		{
-			this.LastUpdate = System.DateTime.Now;
+			this.UpdateLastUpdateDate ();
 			this.Exclusions.RemoveAll(r => contactsToUnExclude.Contains(r));
 			foreach (var contact in contactsToUnExclude)
 			{
@@ -292,13 +286,16 @@ namespace Epsitec.Aider.Entities
 		public static AiderMailingEntity Create(BusinessContext context, AiderUserEntity aiderUser, string name, string desc, AiderMailingCategoryEntity cat, bool isReady)
 		{
 			var mailing = context.CreateAndRegisterEntity<AiderMailingEntity> ();
-			mailing.Name = name;
-			mailing.Category = cat;
+
+			mailing.Name        = name;
+			mailing.Category    = cat;
 			mailing.Description = desc;
-			mailing.IsReady = isReady;
-			mailing.CreatedBy = aiderUser;
+			mailing.IsReady     = isReady;
+			mailing.CreatedBy   = aiderUser;
+			
 			mailing.ParishGroupPathCache = aiderUser.ParishGroupPathCache;
-			mailing.LastUpdate = System.DateTime.Now;
+
+			mailing.UpdateLastUpdateDate ();
 
 			return mailing;
 		}
@@ -308,6 +305,11 @@ namespace Epsitec.Aider.Entities
 		{
 			AiderMailingParticipantEntity.DeleteByMailing (businessContext, mailing);
 			businessContext.DeleteEntity (mailing);
+		}
+
+		private void UpdateLastUpdateDate()
+		{
+			this.LastUpdate = System.DateTime.Now;
 		}
 
 		//	These properties are only meant as an in memory cache of the members of the household.
