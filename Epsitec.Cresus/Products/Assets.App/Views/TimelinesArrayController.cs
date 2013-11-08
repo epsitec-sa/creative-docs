@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.dataArray = new DataArray ();
 
+			this.nodesGetter.UpdateData ();
 			this.UpdateData ();
 		}
 
@@ -126,10 +127,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent         = box,
 				Dock           = DockStyle.Left,
 				PreferredWidth = 200,
-				HeaderHeight   = 0,
+				DockToLeft     = true,  // pour avoir la couleur grise
+				HeaderHeight   = TimelinesArrayController.lineHeight*2-1,
 				FooterHeight   = 0,
 				RowHeight      = TimelinesArrayController.lineHeight,
-				Margins        = new Margins (0, 1, TimelinesArrayController.lineHeight*2-1, AbstractScroller.DefaultBreadth+1),
+				Margins        = new Margins (0, 1, 0, AbstractScroller.DefaultBreadth+1),
 			};
 
 			this.scroller = new VScroller
@@ -143,14 +145,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller = new NavigationTimelineController ();
 			this.controller.CreateUI (box);
 			this.controller.RelativeWidth = 1.0;
-			//?this.controller.ShowLabels = true;
-			this.controller.CellsCount = this.dataArray.ColumnsCount;
 			
 			this.UpdateController ();
 			this.UpdateScroller ();
 			this.UpdateToolbar ();
 			
 			//	Connexion des événements.
+			this.treeColumn.TreeButtonClicked += delegate (object sender, int row, NodeType type)
+			{
+				this.OnCompactOrExpand (this.FirstVisibleRow + row);
+			};
+
 			this.controller.ContentChanged += delegate (object sender, bool crop)
 			{
 				this.UpdateController (crop);
@@ -339,6 +344,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetSelection (-1, -1);
 		}
 
+		private void OnCompactOrExpand(int row)
+		{
+			//	Etend ou compacte une ligne (inverse son mode actuel).
+			var guid = this.SelectedGuid;
+
+			this.nodesGetter.CompactOrExpand (row);
+			this.UpdateData ();
+			this.UpdateController ();
+			this.UpdateScroller ();
+			this.UpdateToolbar ();
+
+			this.SelectedGuid = guid;
+		}
+
 
 		private void UpdateController(bool crop = true)
 		{
@@ -366,6 +385,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateTimelines(bool crop = true)
 		{
 			this.controller.SetRows (this.TimelineRows);
+			this.controller.CellsCount = this.dataArray.ColumnsCount;
 
 			int visibleCount = this.controller.VisibleCellsCount;
 			int cellsCount   = this.dataArray.ColumnsCount;
@@ -471,7 +491,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			var totalRows   = (decimal) this.dataArray.RowsCount;
+			var totalRows   = (decimal) this.nodesGetter.NodesCount;
 			var visibleRows = (decimal) this.VisibleRows;
 
 			if (visibleRows < 0 || totalRows == 0)
@@ -502,9 +522,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				int firstRow = this.FirstVisibleRow;
+				int firstRow    = this.FirstVisibleRow;
 				int visibleRows = this.VisibleRows;
-				int count = System.Math.Min (this.dataArray.RowsCount, firstRow+visibleRows);
+				int count = System.Math.Min (this.nodesGetter.NodesCount, firstRow+visibleRows);
 
 				for (int row=firstRow; row<count; row++)
 				{
@@ -516,7 +536,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private int LineToRow(int line)
 		{
 			var dummy = this.DummyCount;
-			int count = System.Math.Min (this.dataArray.RowsCount, this.VisibleRows);
+			int count = System.Math.Min (this.nodesGetter.NodesCount, this.VisibleRows);
 
 			if (line >= dummy && line < dummy+count)
 			{
@@ -532,7 +552,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return System.Math.Max (this.VisibleRows - this.dataArray.RowsCount, 0);
+				return System.Math.Max (this.VisibleRows - this.nodesGetter.NodesCount, 0);
 			}
 		}
 
@@ -548,7 +568,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return (int) (this.scroller.ActualHeight / TimelinesArrayController.lineHeight);
+				return (int) (this.scroller.ActualHeight / TimelinesArrayController.lineHeight) - 2;
 			}
 		}
 
@@ -560,9 +580,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
-
-			this.nodesGetter.UpdateData ();
-
 			this.dataArray.Clear (this.nodesGetter.NodesCount);
 
 			for (int row=0; row<this.nodesGetter.NodesCount; row++)

@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#region Objects
 		public AbstractNodesGetter GetNodesGetter(BaseType baseType)
 		{
+			//	Retourne un moyen d'accès standardisé aux données d'une base.
 			return new NodesGetter (this.mandat.GetData (baseType));
 		}
 
@@ -65,6 +66,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			private readonly GuidList<DataObject> dataObjects;
 		}
 		#endregion
+
 
 		#region Objects
 		public int GetObjectsCount(BaseType baseType)

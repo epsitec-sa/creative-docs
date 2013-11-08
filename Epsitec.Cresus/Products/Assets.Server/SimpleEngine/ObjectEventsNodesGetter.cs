@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	/// <summary>
-	/// Accès au événements d'un objet.
+	/// Accès aux événements d'un objet.
 	/// </summary>
 	public class ObjectEventsNodesGetter : AbstractNodesGetter
 	{

@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	/// <summary>
-	/// Accès à des données quelconques.
+	/// Accès à des données quelconques constituées de Node.
 	/// </summary>
 	public abstract class AbstractNodesGetter
 	{

@@ -269,8 +269,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		private Timeline timeline;
-		private HScroller scroller;
-		private int cellsCount;
+		private Timeline						timeline;
+		private HScroller						scroller;
+		private int								cellsCount;
 	}
 }
