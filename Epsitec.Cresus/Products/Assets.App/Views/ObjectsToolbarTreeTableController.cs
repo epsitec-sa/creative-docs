@@ -150,34 +150,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-#if false
-		protected override int NodesCount
-		{
-			get
-			{
-				return this.accessor.GetObjectsCount (this.baseType);
-			}
-		}
-
-		protected override Node GetNode(int row)
-		{
-			if (row >= 0 && row < this.objectGuids.Count)
-			{
-				var guid = this.objectGuids[row];
-
-				var obj = this.accessor.GetObject (this.baseType, guid);
-				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.timestamp, ObjectField.Level) as DataIntProperty;
-				if (p != null)
-				{
-					return new Node (guid, p.Value);
-				}
-			}
-
-			return Node.Empty;
-		}
-#endif
-
-
 		private void UpdateObjects()
 		{
 			this.objectGuids.Clear ();

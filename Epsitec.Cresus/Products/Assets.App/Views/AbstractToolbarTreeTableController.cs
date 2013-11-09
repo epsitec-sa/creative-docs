@@ -321,40 +321,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-#if false
-		protected virtual int NodesCount
-		{
-			//	Retourne le nombre total de données disponibles.
-			get
-			{
-				return 0;
-			}
-		}
-
-		protected virtual Node GetNode(int row)
-		{
-			//	Retourne une donnée.
-			return Node.Empty;
-		}
-
-
-		public int NodesCount
-		{
-			//	Retourne le nombre de noeuds visibles.
-			get
-			{
-				return this.nodeGetter.NodesCount;
-			}
-		}
-
-		protected Node GetNode(int i)
-		{
-			//	Retourne un noeud visible.
-			return this.nodeGetter.GetNode (i);
-		}
-#endif
-
-
 		protected void UpdateToolbar()
 		{
 			int row = this.VisibleSelectedRow;

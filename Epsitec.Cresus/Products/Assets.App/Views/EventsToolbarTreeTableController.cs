@@ -188,38 +188,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-#if false
-		protected override int NodesCount
-		{
-			get
-			{
-				if (this.obj == null)
-				{
-					return 0;
-				}
-				else
-				{
-					return this.obj.EventsCount;
-				}
-			}
-		}
-
-		protected override Node GetNode(int row)
-		{
-			var e = this.obj.GetEvent (row);
-
-			if (e == null)
-			{
-				return Node.Empty;
-			}
-			else
-			{
-				return new Node (e.Guid);
-			}
-		}
-#endif
-
-
 		private int TimestampToRow(Timestamp? timestamp)
 		{
 			if (timestamp.HasValue && this.obj != null)
