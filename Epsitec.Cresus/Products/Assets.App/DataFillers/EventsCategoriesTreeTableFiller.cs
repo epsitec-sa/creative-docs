@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 {
 	public class EventsCategoriesTreeTableFiller : AbstractTreeTableFiller
 	{
-		public EventsCategoriesTreeTableFiller(DataAccessor accessor, BaseType baseType, NavigationTreeTableController controller, AbstractNodesGetter<TreeNode> nodesGetter)
+		public EventsCategoriesTreeTableFiller(DataAccessor accessor, BaseType baseType, NavigationTreeTableController controller, AbstractNodesGetter<GuidNode> nodesGetter)
 			: base (accessor, baseType, controller)
 		{
 			this.nodesGetter = nodesGetter;
@@ -114,6 +114,6 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		}
 
 
-		private AbstractNodesGetter<TreeNode> nodesGetter;
+		private AbstractNodesGetter<GuidNode> nodesGetter;
 	}
 }
