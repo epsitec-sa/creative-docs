@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// <summary>
 	/// Accès aux événements d'un objet.
 	/// </summary>
-	public class ObjectEventsNodesGetter : AbstractNodesGetter
+	public class ObjectEventsNodesGetter : AbstractNodesGetter<GuidNode>
 	{
 		public DataObject DataObject;
 
@@ -29,17 +29,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public override Node GetNode(int index)
+		public override GuidNode GetNode(int index)
 		{
 			var e = this.DataObject.GetEvent (index);
 
 			if (e == null)
 			{
-				return Node.Empty;
+				return GuidNode.Empty;
 			}
 			else
 			{
-				return new Node (e.Guid);
+				return new GuidNode (e.Guid);
 			}
 		}
 	}

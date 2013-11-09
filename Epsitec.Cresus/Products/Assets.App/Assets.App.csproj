@@ -188,7 +188,6 @@
     <Compile Include="Widgets\Foreground.cs" />
     <Compile Include="Widgets\TimelineRowType.cs" />
     <Compile Include="Widgets\TimelineRowDescription.cs" />
-    <Compile Include="Widgets\Tree.cs" />
     <Compile Include="Widgets\TreeTableColumnSeparator.cs" />
     <Compile Include="Widgets\TreeTableColumnType.cs" />
     <Compile Include="Widgets\TreeTableColumnDescription.cs" />

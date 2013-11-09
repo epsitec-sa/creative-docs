@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// Classe totalement inutile, juste pour l'exemple !
 	/// Pourra servir de base pour implémenter un filtre, par exemple.
 	/// </summary>
-	public class BypassNodesGetter : AbstractNodesGetter
+	public class BypassNodesGetter : AbstractNodesGetter<GuidNode>
 	{
-		public BypassNodesGetter(AbstractNodesGetter inputNodes)
+		public BypassNodesGetter(AbstractNodesGetter<GuidNode> inputNodes)
 		{
 			this.inputNodes = inputNodes;
 		}
@@ -26,12 +26,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public override Node GetNode(int index)
+		public override GuidNode GetNode(int index)
 		{
 			return this.inputNodes.GetNode (index);
 		}
 
 
-		private readonly AbstractNodesGetter			inputNodes;
+		private readonly AbstractNodesGetter<GuidNode> inputNodes;
 	}
 }

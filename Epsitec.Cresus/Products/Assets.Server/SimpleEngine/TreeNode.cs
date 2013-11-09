@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public struct Node
+	public struct TreeNode
 	{
 		//	Noeud correspondant à une ligne d'un TreeTable.
 		//	Si Type == NodeType.Final, il s'agit d'une ligne ne pouvant
 		//	être ni compactée ni étendue (feuille de l'arbre).
 		//	Si Type == NodeType.Compacted ou NodeType.Expanded,
 		//	il s'agit d'une ligne avec un petit bouton triangulaire.
-		public Node(Guid guid, int level = 0, NodeType type = NodeType.None)
+		public TreeNode(Guid guid, int level = 0, NodeType type = NodeType.None)
 		{
 			this.Guid  = guid;
 			this.Level = level;
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public static Node Empty = new Node (Guid.Empty, -1, NodeType.None);
+		public static TreeNode Empty = new TreeNode (Guid.Empty, -1, NodeType.None);
 
 		public readonly Guid				Guid;
 		public readonly int					Level;

@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// Accès à des données quelconques, enrichies du niveau (Node.Level) selon
 	/// la propriété ObjectField.Level.
 	/// </summary>
-	public class LevelNodesGetter : AbstractNodesGetter
+	public class LevelNodesGetter : AbstractNodesGetter<LevelNode>
 	{
-		public LevelNodesGetter(AbstractNodesGetter inputNodes, DataAccessor accessor, BaseType baseType)
+		public LevelNodesGetter(AbstractNodesGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
@@ -31,12 +31,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public override Node GetNode(int index)
+		public override LevelNode GetNode(int index)
 		{
 			var node = this.inputNodes.GetNode (index);
 			var level = this.GetLevel (node.Guid);
 
-			return new Node (node.Guid, level);
+			return new LevelNode (node.Guid, level);
 		}
 
 
@@ -56,8 +56,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private readonly AbstractNodesGetter	inputNodes;
-		private readonly DataAccessor			accessor;
-		private readonly BaseType				baseType;
+		private readonly AbstractNodesGetter<GuidNode>	inputNodes;
+		private readonly DataAccessor					accessor;
+		private readonly BaseType						baseType;
 	}
 }

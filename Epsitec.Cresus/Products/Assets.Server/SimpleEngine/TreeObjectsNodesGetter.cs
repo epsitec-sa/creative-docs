@@ -9,13 +9,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// <summary>
 	/// Gère l'accès "en arbre" à des données quelconques en provenance de inputNodes.
 	/// </summary>
-	public class TreeObjectsNodesGetter : AbstractNodesGetter
+	public class TreeObjectsNodesGetter : AbstractNodesGetter<TreeNode>
 	{
-		public TreeObjectsNodesGetter(AbstractNodesGetter inputNodes)
+		public TreeObjectsNodesGetter(AbstractNodesGetter<LevelNode> inputNodes)
 		{
 			this.inputNodes = inputNodes;
 
-			this.nodes       = new List<Node> ();
+			this.nodes       = new List<TreeNode> ();
 			this.nodeIndexes = new List<int> ();
 		}
 
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public override Node GetNode(int index)
+		public override TreeNode GetNode(int index)
 		{
 			return this.nodes[this.nodeIndexes[index]];
 		}
@@ -97,11 +97,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			if (node.Type == NodeType.Compacted)
 			{
-				this.nodes[i] = new Node (node.Guid, node.Level, NodeType.Expanded);
+				this.nodes[i] = new TreeNode (node.Guid, node.Level, NodeType.Expanded);
 			}
 			else if (node.Type == NodeType.Expanded)
 			{
-				this.nodes[i] = new Node (node.Guid, node.Level, NodeType.Compacted);
+				this.nodes[i] = new TreeNode (node.Guid, node.Level, NodeType.Compacted);
 			}
 
 			this.UpdateNodeIndexes ();
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				if (node.Type == NodeType.Expanded)
 				{
-					this.nodes[i] = new Node (node.Guid, node.Level, NodeType.Compacted);
+					this.nodes[i] = new TreeNode (node.Guid, node.Level, NodeType.Compacted);
 				}
 			}
 
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				if (node.Type == NodeType.Compacted)
 				{
-					this.nodes[i] = new Node (node.Guid, node.Level, NodeType.Expanded);
+					this.nodes[i] = new TreeNode (node.Guid, node.Level, NodeType.Expanded);
 				}
 			}
 
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 				}
 
-				var node = new Node (currentNode.Guid, currentNode.Level, type);
+				var node = new TreeNode (currentNode.Guid, currentNode.Level, type);
 				this.nodes.Add (node);
 			}
 
@@ -210,8 +210,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private readonly AbstractNodesGetter			inputNodes;
-		private readonly List<Node>				nodes;
-		private readonly List<int>				nodeIndexes;
+		private readonly AbstractNodesGetter<LevelNode>	inputNodes;
+		private readonly List<TreeNode>					nodes;
+		private readonly List<int>					nodeIndexes;
 	}
 }

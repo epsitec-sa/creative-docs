@@ -17,8 +17,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.baseType = baseType;
 
-			this.eventsNodesGetter = new ObjectEventsNodesGetter ();
-			this.nodesGetter = new TreeObjectsNodesGetter (this.eventsNodesGetter);
+			var guidNodesGetter = new ObjectEventsNodesGetter ();
+			var levelNodesGetter = new LevelNodesGetter (guidNodesGetter, this.accessor, BaseType.Categories);
+			this.nodesGetter = new TreeObjectsNodesGetter (levelNodesGetter);
 
 			this.title = "Evénements";
 		}

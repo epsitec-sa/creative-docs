@@ -57,10 +57,12 @@
     <Compile Include="SimpleEngine\BypassNodesGetter.cs" />
     <Compile Include="SimpleEngine\ComputedAmount.cs" />
     <Compile Include="SimpleEngine\BaseType.cs" />
+    <Compile Include="SimpleEngine\TreeNode.cs" />
+    <Compile Include="SimpleEngine\LevelNode.cs" />
     <Compile Include="SimpleEngine\ObjectEventsNodesGetter.cs" />
     <Compile Include="SimpleEngine\LevelNodesGetter.cs" />
     <Compile Include="SimpleEngine\AbstractNodesGetter.cs" />
-    <Compile Include="SimpleEngine\Node.cs" />
+    <Compile Include="SimpleEngine\GuidNode.cs" />
     <Compile Include="SimpleEngine\ObjectCalculator.cs" />
     <Compile Include="SimpleEngine\GuidList.cs" />
     <Compile Include="SimpleEngine\DataDateProperty.cs" />

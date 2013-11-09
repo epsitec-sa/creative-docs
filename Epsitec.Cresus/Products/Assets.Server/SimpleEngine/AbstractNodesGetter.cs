@@ -7,11 +7,12 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	/// <summary>
-	/// Accès à des données quelconques constituées de Node.
+	/// Accès à des données quelconques constituées de GuidNode/LevelNode/TreeNode.
 	/// </summary>
-	public abstract class AbstractNodesGetter
+	public abstract class AbstractNodesGetter<T>
+		where T : struct
 	{
-		public IEnumerable<Node> Nodes
+		public IEnumerable<T> Nodes
 		{
 			get
 			{
@@ -30,9 +31,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public virtual Node GetNode(int row)
+		public virtual T GetNode(int row)
 		{
-			return Node.Empty;
+			return new T();
 		}
 	}
 }
