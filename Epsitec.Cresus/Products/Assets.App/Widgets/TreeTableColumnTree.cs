@@ -26,6 +26,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			if (message.IsMouseType)
+			{
+				if (message.MessageType == MessageType.MouseDown)
+				{
+					this.ProcessMouseClick (pos);
+				}
+			}
+
+			base.ProcessMessage (message, pos);
+		}
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation(graphics, clipRect);
@@ -63,6 +76,45 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.CreateTreeButtons ();
 		}
+
+
+		private void ProcessMouseClick(Point pos)
+		{
+			int row = this.DetectRow (pos);
+			if (row != -1)
+			{
+				this.OnRowClicked (row);
+			}
+		}
+
+		private int DetectRow(Point pos)
+		{
+			int max = this.VisibleRowsCount;
+			double h = this.ActualHeight - this.HeaderHeight - this.FooterHeight;
+			double dy = h / max;
+
+			double y = this.ActualHeight - this.HeaderHeight - pos.Y;
+			if (y >= 0)
+			{
+				int row = (int) (y / dy);
+
+				if (row >= 0 && row < max)
+				{
+					return row;
+				}
+			}
+
+			return -1;
+		}
+
+		private int VisibleRowsCount
+		{
+			get
+			{
+				return (int) ((this.ActualHeight - this.HeaderHeight - this.FooterHeight) / this.RowHeight);
+			}
+		}
+
 
 		private void CreateTreeButtons()
 		{
@@ -156,6 +208,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Events handler
+		private void OnRowClicked(int row)
+		{
+			if (this.RowClicked != null)
+			{
+				this.RowClicked (this, row);
+			}
+		}
+
+		public delegate void RowClickedEventHandler(object sender, int row);
+		public event RowClickedEventHandler RowClicked;
+
+	
 		private void OnTreeButtonClicked(int row, NodeType type)
 		{
 			if (this.TreeButtonClicked != null)

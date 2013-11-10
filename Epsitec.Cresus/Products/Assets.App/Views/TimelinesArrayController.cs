@@ -142,10 +142,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock           = DockStyle.Left,
 				PreferredWidth = TimelinesArrayController.leftColumnWidth,
 				DockToLeft     = true,  // pour avoir la couleur grise
-				HeaderHeight   = TimelinesArrayController.lineHeight*2-1,
+				HeaderHeight   = TimelinesArrayController.lineHeight*2,
 				FooterHeight   = 0,
 				RowHeight      = TimelinesArrayController.lineHeight,
-				Margins        = new Margins (0, 1, 0, AbstractScroller.DefaultBreadth+1),
+				Margins        = new Margins (0, 1, 0, AbstractScroller.DefaultBreadth),
 			};
 
 			this.scroller = new VScroller
@@ -165,6 +165,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateToolbar ();
 			
 			//	Connexion des événements.
+			this.treeColumn.RowClicked += delegate (object sender, int row)
+			{
+				this.SetSelection (this.FirstVisibleRow + row, this.selectedColumn);
+			};
+
 			this.treeColumn.TreeButtonClicked += delegate (object sender, int row, NodeType type)
 			{
 				this.OnCompactOrExpand (this.FirstVisibleRow + row);
@@ -206,83 +211,118 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateToolbar ();
 			};
 
+			this.objectsToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.First:
+						this.OnObjectFirst ();
+						break;
+
+					case ToolbarCommand.Last:
+						this.OnObjectLast ();
+						break;
+
+					case ToolbarCommand.Prev:
+						this.OnObjectPrev ();
+						break;
+
+					case ToolbarCommand.Next:
+						this.OnObjectNext ();
+						break;
+
+					case ToolbarCommand.New:
+						this.OnObjectNew ();
+						break;
+
+					case ToolbarCommand.Delete:
+						this.OnObjectDelete ();
+						break;
+
+					case ToolbarCommand.Deselect:
+						this.OnObjectDeselect ();
+						break;
+				}
+			};
+
 			this.timelinesToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
 			{
 				switch (command)
 				{
 					case ToolbarCommand.First:
-						this.OnFirst ();
+						this.OnTimelineFirst ();
 						break;
 
 					case ToolbarCommand.Last:
-						this.OnLast ();
+						this.OnTimelineLast ();
 						break;
 
 					case ToolbarCommand.Prev:
-						this.OnPrev ();
+						this.OnTimelinePrev ();
 						break;
 
 					case ToolbarCommand.Next:
-						this.OnNext ();
+						this.OnTimelineNext ();
 						break;
 
 					case ToolbarCommand.New:
-						this.OnNew ();
+						this.OnTimelineNew ();
 						break;
 
 					case ToolbarCommand.Delete:
-						this.OnDelete ();
+						this.OnTimelineDelete ();
 						break;
 
 					case ToolbarCommand.Deselect:
-						this.OnDeselect ();
+						this.OnTimelineDeselect ();
 						break;
 				}
 			};
 		}
 
 
-		private void OnFirst()
+		#region Objects commands
+		private void OnObjectFirst()
 		{
-			var index = this.FirstColumnIndex;
+			var index = this.FirstRowIndex;
 
 			if (index.HasValue)
 			{
-				this.SetSelection (this.selectedRow, index.Value);
+				this.SetSelection (index.Value, this.selectedColumn);
 			}
 		}
 
-		private void OnPrev()
+		private void OnObjectPrev()
 		{
-			var index = this.PrevColumnIndex;
+			var index = this.PrevRowIndex;
 
 			if (index.HasValue)
 			{
-				this.SetSelection (this.selectedRow, index.Value);
+				this.SetSelection (index.Value, this.selectedColumn);
 			}
 		}
 
-		private void OnNext()
+		private void OnObjectNext()
 		{
-			var index = this.NextColumnIndex;
+			var index = this.NextRowIndex;
 
 			if (index.HasValue)
 			{
-				this.SetSelection (this.selectedRow, index.Value);
+				this.SetSelection (index.Value, this.selectedColumn);
 			}
 		}
 
-		private void OnLast()
+		private void OnObjectLast()
 		{
-			var index = this.LastColumnIndex;
+			var index = this.LastRowIndex;
 
 			if (index.HasValue)
 			{
-				this.SetSelection (this.selectedRow, index.Value);
+				this.SetSelection (index.Value, this.selectedColumn);
 			}
 		}
 
-		private void OnNew()
+		private void OnObjectNew()
 		{
 #if false
 			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
@@ -331,7 +371,140 @@ namespace Epsitec.Cresus.Assets.App.Views
 #endif
 		}
 
-		private void OnDelete()
+		private void OnObjectDelete()
+		{
+			var target = this.objectsToolbar.GetCommandWidget (ToolbarCommand.Delete);
+
+			if (target != null)
+			{
+				var popup = new YesNoPopup
+				{
+					Question = "Voulez-vous supprimer l'objet sélectionné ?",
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+					}
+				};
+			}
+		}
+
+		private void OnObjectDeselect()
+		{
+			this.SetSelection (-1, -1);
+		}
+
+		private void OnCompactOrExpand(int row)
+		{
+			//	Etend ou compacte une ligne (inverse son mode actuel).
+			var guid = this.SelectedGuid;
+
+			this.nodesGetter.CompactOrExpand (row);
+			this.UpdateData ();
+			this.UpdateController ();
+			this.UpdateScroller ();
+			this.UpdateToolbar ();
+
+			this.SelectedGuid = guid;
+		}
+		#endregion
+
+
+		#region Timeline commands
+		private void OnTimelineFirst()
+		{
+			var index = this.FirstColumnIndex;
+
+			if (index.HasValue)
+			{
+				this.SetSelection (this.selectedRow, index.Value);
+			}
+		}
+
+		private void OnTimelinePrev()
+		{
+			var index = this.PrevColumnIndex;
+
+			if (index.HasValue)
+			{
+				this.SetSelection (this.selectedRow, index.Value);
+			}
+		}
+
+		private void OnTimelineNext()
+		{
+			var index = this.NextColumnIndex;
+
+			if (index.HasValue)
+			{
+				this.SetSelection (this.selectedRow, index.Value);
+			}
+		}
+
+		private void OnTimelineLast()
+		{
+			var index = this.LastColumnIndex;
+
+			if (index.HasValue)
+			{
+				this.SetSelection (this.selectedRow, index.Value);
+			}
+		}
+
+		private void OnTimelineNew()
+		{
+#if false
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
+			var timestamp = this.SelectedTimestamp;
+
+			if (target != null && timestamp.HasValue)
+			{
+				System.DateTime? createDate = timestamp.Value.Date;
+
+				var popup = new NewEventPopup
+				{
+					BaseType   = this.baseType,
+					DataObject = this.obj,
+					Timestamp  = timestamp.Value,
+				};
+
+				popup.Create (target);
+
+				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
+				{
+					var index = this.GetEventIndex (dateTime);
+
+					if (index.HasValue)
+					{
+						this.SelectedCell = index.Value;
+					}
+					else
+					{
+						this.SelectedCell = -1;
+					}
+
+					if (dateTime.HasValue)
+					{
+						createDate = dateTime.Value;
+					}
+				};
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (createDate.HasValue)
+					{
+						this.CreateEvent (createDate.Value, name);
+					}
+				};
+			}
+#endif
+		}
+
+		private void OnTimelineDelete()
 		{
 			var target = this.timelinesToolbar.GetCommandWidget (ToolbarCommand.Delete);
 
@@ -353,24 +526,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnDeselect()
+		private void OnTimelineDeselect()
 		{
-			this.SetSelection (-1, -1);
+			this.SetSelection (this.selectedRow, -1);
 		}
-
-		private void OnCompactOrExpand(int row)
-		{
-			//	Etend ou compacte une ligne (inverse son mode actuel).
-			var guid = this.SelectedGuid;
-
-			this.nodesGetter.CompactOrExpand (row);
-			this.UpdateData ();
-			this.UpdateController ();
-			this.UpdateScroller ();
-			this.UpdateToolbar ();
-
-			this.SelectedGuid = guid;
-		}
+		#endregion
 
 
 		private void UpdateController(bool crop = true)
@@ -388,8 +548,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var node = this.nodesGetter[row];
 				var obj  = this.accessor.GetObject (this.baseType, node.Guid);
 				var nom  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
+				bool isSelected = node.Guid == this.SelectedGuid;
 
-				var cell = new TreeTableCellTree (true, node.Level, node.Type, nom);
+				var cell = new TreeTableCellTree (true, node.Level, node.Type, nom, isSelected);
 				list.Add (cell);
 			}
 
@@ -812,17 +973,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateToolbar()
 		{
-			this.UpdateCommand (ToolbarCommand.First, this.selectedColumn, this.FirstColumnIndex);
-			this.UpdateCommand (ToolbarCommand.Prev,  this.selectedColumn, this.PrevColumnIndex);
-			this.UpdateCommand (ToolbarCommand.Next,  this.selectedColumn, this.NextColumnIndex);
-			this.UpdateCommand (ToolbarCommand.Last,  this.selectedColumn, this.LastColumnIndex);
+			this.UpdateObjectCommand (ToolbarCommand.First, this.selectedRow, this.FirstRowIndex);
+			this.UpdateObjectCommand (ToolbarCommand.Prev,  this.selectedRow, this.PrevRowIndex);
+			this.UpdateObjectCommand (ToolbarCommand.Next,  this.selectedRow, this.NextRowIndex);
+			this.UpdateObjectCommand (ToolbarCommand.Last,  this.selectedRow, this.LastRowIndex);
+
+			this.objectsToolbar.UpdateCommand (ToolbarCommand.New,      this.selectedRow != -1);
+			this.objectsToolbar.UpdateCommand (ToolbarCommand.Delete,   this.SelectedObject != null);
+			this.objectsToolbar.UpdateCommand (ToolbarCommand.Deselect, this.selectedRow != -1);
+
+			this.UpdateTimelineCommand (ToolbarCommand.First, this.selectedColumn, this.FirstColumnIndex);
+			this.UpdateTimelineCommand (ToolbarCommand.Prev,  this.selectedColumn, this.PrevColumnIndex);
+			this.UpdateTimelineCommand (ToolbarCommand.Next,  this.selectedColumn, this.NextColumnIndex);
+			this.UpdateTimelineCommand (ToolbarCommand.Last,  this.selectedColumn, this.LastColumnIndex);
 
 			this.timelinesToolbar.UpdateCommand (ToolbarCommand.New,      this.selectedColumn != -1);
 			this.timelinesToolbar.UpdateCommand (ToolbarCommand.Delete,   this.HasSelectedEvent);
 			this.timelinesToolbar.UpdateCommand (ToolbarCommand.Deselect, this.selectedColumn != -1);
 		}
 
-		private void UpdateCommand(ToolbarCommand command, int currentSelection, int? newSelection)
+		private void UpdateObjectCommand(ToolbarCommand command, int currentSelection, int? newSelection)
+		{
+			bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
+			this.objectsToolbar.UpdateCommand (command, enable);
+		}
+
+		private void UpdateTimelineCommand(ToolbarCommand command, int currentSelection, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
 			this.timelinesToolbar.UpdateCommand (command, enable);
@@ -847,17 +1023,86 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		#region Objects
+		protected int? FirstRowIndex
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
+		protected int? PrevRowIndex
+		{
+			get
+			{
+				if (this.selectedRow == -1)
+				{
+					return null;
+				}
+				else
+				{
+					int i = this.selectedRow - 1;
+					i = System.Math.Max (i, 0);
+					i = System.Math.Min (i, this.nodesGetter.Count - 1);
+					return i;
+				}
+			}
+		}
+
+		protected int? NextRowIndex
+		{
+			get
+			{
+				if (this.selectedRow == -1)
+				{
+					return null;
+				}
+				else
+				{
+					int i = this.selectedRow + 1;
+					i = System.Math.Max (i, 0);
+					i = System.Math.Min (i, this.nodesGetter.Count - 1);
+					return i;
+				}
+			}
+		}
+
+		protected int? LastRowIndex
+		{
+			get
+			{
+				return this.nodesGetter.Count - 1;
+			}
+		}
+		#endregion
+
+
+		#region Timeline
 		private int? FirstColumnIndex
 		{
 			get
 			{
-				if (this.PrevColumnIndex.HasValue)
+				var obj = this.SelectedObject;
+
+				if (this.selectedColumn == -1)
 				{
-					var obj = this.SelectedObject;
 					if (obj != null && obj.Events.Any ())
 					{
 						var timestamp = obj.Events.First ().Timestamp;
 						return this.dataArray.FindColumnIndex (timestamp);
+					}
+				}
+				else
+				{
+					if (this.PrevColumnIndex.HasValue)
+					{
+						if (obj != null && obj.Events.Any ())
+						{
+							var timestamp = obj.Events.First ().Timestamp;
+							return this.dataArray.FindColumnIndex (timestamp);
+						}
 					}
 				}
 
@@ -915,19 +1160,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.NextColumnIndex.HasValue)
+				var obj = this.SelectedObject;
+
+				if (this.selectedColumn == -1)
 				{
-					var obj = this.SelectedObject;
 					if (obj != null && obj.Events.Any ())
 					{
 						var timestamp = obj.Events.Last ().Timestamp;
 						return this.dataArray.FindColumnIndex (timestamp);
 					}
 				}
+				else
+				{
+					if (this.NextColumnIndex.HasValue)
+					{
+						if (obj != null && obj.Events.Any ())
+						{
+							var timestamp = obj.Events.Last ().Timestamp;
+							return this.dataArray.FindColumnIndex (timestamp);
+						}
+					}
+				}
 
 				return null;
 			}
 		}
+		#endregion
+
 
 		private DataObject SelectedObject
 		{

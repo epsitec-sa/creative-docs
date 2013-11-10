@@ -643,6 +643,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
+#if false
 			for (int j=0; j<2000; j++)
 			{
 				var o = new DataObject ();
@@ -676,6 +677,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 				}
 			}
+#endif
 
 			DummyMandat.AddCategories (mandat);
 			DummyMandat.AddGroups (mandat);
