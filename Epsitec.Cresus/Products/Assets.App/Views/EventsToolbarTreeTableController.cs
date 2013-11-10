@@ -249,7 +249,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-
 		private Guid							objectGuid;
 		private DataObject						obj;
 	}

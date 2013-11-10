@@ -12,14 +12,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MainToolbar : AbstractCommandToolbar
 	{
-		public override void CreateUI(Widget parent)
+		public override FrameBox CreateUI(Widget parent)
 		{
 			this.viewType = ViewType.Objects;
 			this.viewMode = ViewMode.Single;
 			this.simulation = 0;
 
-			this.CreateToolbar (parent, AbstractCommandToolbar.PrimaryToolbarHeight);
+			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.PrimaryToolbarHeight);
 			this.UpdateCommandButtons ();
+
+			return toolbar;
 		}
 
 
@@ -83,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void CreateToolbar(Widget parent, int size)
+		protected override FrameBox CreateToolbar(Widget parent, int size)
 		{
 			var toolbar = new FrameBox
 			{
@@ -117,6 +119,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateViewTypeButtons ();
 			this.UpdateViewModeButtons ();
 			this.UpdateSimulation ();
+
+			return toolbar;
 		}
 
 		private IconButton CreateViewTypeButton(FrameBox toolbar, ViewType view, string icon, string tooltip)

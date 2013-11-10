@@ -19,8 +19,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.commandWidgets = new Dictionary<ToolbarCommand, Widget> ();
 		}
 
-		public virtual void CreateUI(Widget parent)
+		public virtual FrameBox CreateUI(Widget parent)
 		{
+			return null;
 		}
 
 
@@ -104,8 +105,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected virtual void CreateToolbar(Widget parent, int size)
+		protected virtual FrameBox CreateToolbar(Widget parent, int size)
 		{
+			return null;
 		}
 
 		protected void SetActiveState(IconButton button, bool state)

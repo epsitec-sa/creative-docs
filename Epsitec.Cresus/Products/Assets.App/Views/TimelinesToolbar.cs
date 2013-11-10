@@ -12,10 +12,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TimelinesToolbar : AbstractCommandToolbar
 	{
-		public override void CreateUI(Widget parent)
+		public override FrameBox CreateUI(Widget parent)
 		{
-			this.CreateToolbar (parent, AbstractCommandToolbar.SecondaryToolbarHeight);
+			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.SecondaryToolbarHeight);
 			this.UpdateCommandButtons ();
+
+			return toolbar;
 		}
 
 
@@ -31,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void CreateToolbar(Widget parent, int size)
+		protected override FrameBox CreateToolbar(Widget parent, int size)
 		{
 			//	La toolbar s'adapte en fonction de la largeur disponible. Certains
 			//	boutons non indispensables disparaissent s'il manque de la place.
@@ -58,6 +60,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.Adjust ();
 			};
+
+			return this.toolbar;
 		}
 
 		private void Adjust()

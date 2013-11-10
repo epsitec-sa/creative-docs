@@ -12,10 +12,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EditToolbar : AbstractCommandToolbar
 	{
-		public override void CreateUI(Widget parent)
+		public override FrameBox CreateUI(Widget parent)
 		{
-			this.CreateToolbar (parent, AbstractCommandToolbar.SecondaryToolbarHeight);
+			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.SecondaryToolbarHeight);
 			this.UpdateCommandButtons ();
+
+			return toolbar;
 		}
 
 
@@ -26,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void CreateToolbar(Widget parent, int size)
+		protected override FrameBox CreateToolbar(Widget parent, int size)
 		{
 			var toolbar = new FrameBox
 			{
@@ -38,6 +40,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.buttonAccept = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
 			this.buttonCancel = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
+
+			return toolbar;
 		}
 
 

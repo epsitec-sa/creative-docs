@@ -12,10 +12,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TimelineToolbar : AbstractCommandToolbar
 	{
-		public override void CreateUI(Widget parent)
+		public override FrameBox CreateUI(Widget parent)
 		{
-			this.CreateToolbar (parent, AbstractCommandToolbar.SecondaryToolbarHeight);
+			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.SecondaryToolbarHeight);
 			this.UpdateCommandButtons ();
+
+			return toolbar;
 		}
 
 
@@ -49,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void CreateToolbar(Widget parent, int size)
+		protected override FrameBox CreateToolbar(Widget parent, int size)
 		{
 			var toolbar = new FrameBox
 			{
@@ -85,6 +87,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonFirst.Margins       = new Margins (10, 0, 0, 0);
 
 			this.UpdateModeButtons ();
+
+			return toolbar;
 		}
 
 		private IconButton CreateModeButton(FrameBox toolbar, TimelineMode mode, string icon, string tooltip)

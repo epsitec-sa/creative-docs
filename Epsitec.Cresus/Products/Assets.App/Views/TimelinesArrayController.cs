@@ -72,14 +72,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.selectedColumn == -1)
+				if (this.selectedColumn != -1)
 				{
-					return null;
+					var column = this.dataArray.GetColumn (this.selectedColumn);
+					if (column != null)
+					{
+						return column.Timestamp;
+					}
 				}
-				else
-				{
-					return this.dataArray.GetColumn (this.selectedColumn).Timestamp;
-				}
+
+				return null;
 			}
 			set
 			{
@@ -113,8 +115,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.topTitle.SetTitle (this.title);
 
-			this.toolbar = new TimelinesToolbar ();
-			this.toolbar.CreateUI (parent);
+			var toolbarFrame = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Top,
+			};
+
+			this.objectsToolbar = new TreeTableToolbar ();
+			var objectsToolbarFrame = this.objectsToolbar.CreateUI (toolbarFrame);
+			objectsToolbarFrame.PreferredWidth = TimelinesArrayController.leftColumnWidth;
+			objectsToolbarFrame.Dock = DockStyle.Left;
+
+			this.timelinesToolbar = new TimelinesToolbar ();
+			var timelinesToolbarFrame = this.timelinesToolbar.CreateUI (toolbarFrame);
+			timelinesToolbarFrame.Dock = DockStyle.Fill;
 
 			var box = new FrameBox
 			{
@@ -126,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent         = box,
 				Dock           = DockStyle.Left,
-				PreferredWidth = 200,
+				PreferredWidth = TimelinesArrayController.leftColumnWidth,
 				DockToLeft     = true,  // pour avoir la couleur grise
 				HeaderHeight   = TimelinesArrayController.lineHeight*2-1,
 				FooterHeight   = 0,
@@ -192,7 +206,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateToolbar ();
 			};
 
-			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			this.timelinesToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
 			{
 				switch (command)
 				{
@@ -319,7 +333,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnDelete()
 		{
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Delete);
+			var target = this.timelinesToolbar.GetCommandWidget (ToolbarCommand.Delete);
 
 			if (target != null)
 			{
@@ -803,15 +817,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommand (ToolbarCommand.Next,  this.selectedColumn, this.NextColumnIndex);
 			this.UpdateCommand (ToolbarCommand.Last,  this.selectedColumn, this.LastColumnIndex);
 
-			this.toolbar.UpdateCommand (ToolbarCommand.New,      this.selectedColumn != -1);
-			this.toolbar.UpdateCommand (ToolbarCommand.Delete,   this.HasSelectedEvent);
-			this.toolbar.UpdateCommand (ToolbarCommand.Deselect, this.selectedColumn != -1);
+			this.timelinesToolbar.UpdateCommand (ToolbarCommand.New,      this.selectedColumn != -1);
+			this.timelinesToolbar.UpdateCommand (ToolbarCommand.Delete,   this.HasSelectedEvent);
+			this.timelinesToolbar.UpdateCommand (ToolbarCommand.Deselect, this.selectedColumn != -1);
 		}
 
 		private void UpdateCommand(ToolbarCommand command, int currentSelection, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
-			this.toolbar.UpdateCommand (command, enable);
+			this.timelinesToolbar.UpdateCommand (command, enable);
 		}
 
 
@@ -959,7 +973,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private static readonly int lineHeight = 20;
+		private static readonly int lineHeight      = 20;
+		private static readonly int leftColumnWidth = 220;
 
 		private readonly DataAccessor			accessor;
 		private readonly BaseType				baseType;
@@ -968,7 +983,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string							title;
 		private TopTitle						topTitle;
-		private TimelinesToolbar				toolbar;
+		private TreeTableToolbar				objectsToolbar;
+		private TimelinesToolbar				timelinesToolbar;
 		private TreeTableColumnTree				treeColumn;
 		private NavigationTimelineController	controller;
 		private VScroller						scroller;
