@@ -10,12 +10,15 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public abstract class AbstractToolbarTreeTableController
+	public abstract class AbstractToolbarTreeTableController<T>
+		where T : struct
 	{
-		public AbstractToolbarTreeTableController(DataAccessor accessor)
+		public AbstractToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
+			this.baseType = baseType;
 		}
+
 
 		public void CreateUI(Widget parent)
 		{
@@ -97,20 +100,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected int							VisibleSelectedRow
+		protected virtual int					VisibleSelectedRow
 		{
 			get
 			{
-				return this.nodesGetter.AllToVisible (this.selectedRow);
+				return this.SelectedRow;
 			}
 			set
 			{
-				this.SelectedRow = this.nodesGetter.VisibleToAll (value);
+				this.SelectedRow = value;
 			}
 		}
 
 
-		private void OnFirst()
+		protected void OnFirst()
 		{
 			var index = this.FirstRowIndex;
 
@@ -120,7 +123,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnPrev()
+		protected void OnPrev()
 		{
 			var index = this.PrevRowIndex;
 
@@ -130,7 +133,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnNext()
+		protected void OnNext()
 		{
 			var index = this.NextRowIndex;
 
@@ -140,7 +143,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnLast()
+		protected void OnLast()
 		{
 			var index = this.LastRowIndex;
 
@@ -148,6 +151,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.VisibleSelectedRow = index.Value;
 			}
+		}
+
+		protected virtual void OnCompactAll()
+		{
+		}
+
+		protected virtual void OnExpandAll()
+		{
+		}
+
+		protected virtual void OnDeselect()
+		{
 		}
 
 		protected virtual void OnNew()
@@ -158,17 +173,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		private void OnDeselect()
+
+		protected virtual void CreateNodeFiller()
 		{
-			this.VisibleSelectedRow = -1;
 		}
 
-
-		private void CreateTreeTable(Widget parent)
+		protected virtual void CreateTreeTable(Widget parent)
 		{
 			this.selectedRow = -1;
 
-			this.controller = new NavigationTreeTableController();
+			this.controller = new NavigationTreeTableController ();
 
 			var frame = new FrameBox
 			{
@@ -197,28 +211,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.VisibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.OnRowDoubleClicked (this.VisibleSelectedRow);
 			};
-
-			this.controller.TreeButtonClicked += delegate (object sender, int row, NodeType type)
-			{
-				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
-			};
-		}
-
-		protected virtual void CreateNodeFiller()
-		{
-			this.dataFiller.UpdateColumns ();
-
-			this.UpdateData ();
-			this.UpdateController ();
-			this.UpdateToolbar ();
-		}
-
-		protected virtual TreeTableColumnDescription[] TreeTableColumns
-		{
-			get
-			{
-				return null;
-			}
 		}
 
 		protected void UpdateController(bool crop = true)
@@ -253,75 +245,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller.UpdateContent (firstRow, count, selection, crop);
 		}
 
-
-		private void OnCompactOrExpand(int row)
-		{
-			//	Etend ou compacte une ligne (inverse son mode actuel).
-			var guid = this.SelectedGuid;
-
-			this.nodesGetter.CompactOrExpand (row);
-			this.UpdateController ();
-			this.UpdateToolbar ();
-
-			this.SelectedGuid = guid;
-		}
-
-		private void OnCompactAll()
-		{
-			//	Compacte toutes les lignes.
-			var guid = this.SelectedGuid;
-
-			this.nodesGetter.CompactAll ();
-			this.UpdateController ();
-			this.UpdateToolbar ();
-
-			this.SelectedGuid = guid;
-		}
-
-		private void OnExpandAll()
-		{
-			//	Etend toutes les lignes.
-			var guid = this.SelectedGuid;
-
-			this.nodesGetter.ExpandAll ();
-			this.UpdateController ();
-			this.UpdateToolbar ();
-
-			this.SelectedGuid = guid;
-		}
-
-		private Guid SelectedGuid
-		{
-			//	Retourne le Guid de l'objet actuellement sélectionné.
-			get
-			{
-				int sel = this.VisibleSelectedRow;
-				if (sel != -1 && sel < this.nodesGetter.Count)
-				{
-					return this.nodesGetter[sel].Guid;
-				}
-				else
-				{
-					return Guid.Empty;
-				}
-			}
-			//	Sélectionne l'objet ayant un Guid donné. Si la ligne correspondante
-			//	est cachée, on est assez malin pour sélectionner la prochaine ligne
-			//	visible, vers le haut.
-			set
-			{
-				this.VisibleSelectedRow = this.nodesGetter.SearchBestIndex (value);
-			}
-		}
-
-		protected void UpdateData()
-		{
-			//	Met à jour toutes les données en mode étendu.
-			this.nodesGetter.UpdateData ();
-		}
-
-
-		protected void UpdateToolbar()
+		protected virtual void UpdateToolbar()
 		{
 			int row = this.VisibleSelectedRow;
 
@@ -330,22 +254,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
 			this.UpdateCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
 
-			this.toolbar.UpdateCommand (ToolbarCommand.CompactAll, !this.nodesGetter.IsAllCompacted);
-			this.toolbar.UpdateCommand (ToolbarCommand.ExpandAll,  !this.nodesGetter.IsAllExpanded);
-
-			this.toolbar.UpdateCommand (ToolbarCommand.New,      true);
-			this.toolbar.UpdateCommand (ToolbarCommand.Delete,   row != -1);
+			this.toolbar.UpdateCommand (ToolbarCommand.New, true);
+			this.toolbar.UpdateCommand (ToolbarCommand.Delete, row != -1);
 			this.toolbar.UpdateCommand (ToolbarCommand.Deselect, row != -1);
 		}
 
-		private void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		protected void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
 			this.toolbar.UpdateCommand (command, enable);
 		}
 
 
-		private int? FirstRowIndex
+		protected int? FirstRowIndex
 		{
 			get
 			{
@@ -353,7 +274,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private int? PrevRowIndex
+		protected int? PrevRowIndex
 		{
 			get
 			{
@@ -371,7 +292,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private int? NextRowIndex
+		protected int? NextRowIndex
 		{
 			get
 			{
@@ -389,7 +310,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private int? LastRowIndex
+		protected int? LastRowIndex
 		{
 			get
 			{
@@ -399,7 +320,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
-		private void OnSelectedRowChanged(int row)
+		protected void OnSelectedRowChanged(int row)
 		{
 			if (this.SelectedRowChanged != null)
 			{
@@ -411,7 +332,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event SelectedRowChangedEventHandler SelectedRowChanged;
 
 
-		private void OnRowDoubleClicked(int row)
+		protected void OnRowDoubleClicked(int row)
 		{
 			if (this.RowDoubleClicked != null)
 			{
@@ -421,19 +342,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public delegate void RowDoubleClickedEventHandler(object sender, int row);
 		public event RowDoubleClickedEventHandler RowDoubleClicked;
+
+
+		protected void OnStartEditing(EventType eventType, Timestamp timestamp)
+		{
+			if (this.StartEditing != null)
+			{
+				this.StartEditing (this, eventType, timestamp);
+			}
+		}
+
+		public delegate void StartEditingEventHandler(object sender, EventType eventType, Timestamp timestamp);
+		public event StartEditingEventHandler StartEditing;
 		#endregion
 
 
 		protected readonly DataAccessor			accessor;
+		protected readonly BaseType				baseType;
 
-		protected TreeObjectsNodesGetter		nodesGetter;
-		protected AbstractTreeTableFiller		dataFiller;
-		protected BaseType						baseType;
-		protected bool							hasTreeOperations;
 		protected string						title;
+		protected bool							hasTreeOperations;
+		protected AbstractNodesGetter<T>		nodesGetter;
+		protected AbstractTreeTableFiller		dataFiller;
 		protected TopTitle						topTitle;
-		protected TreeTableToolbar				toolbar;
 		protected NavigationTreeTableController	controller;
-		private int								selectedRow;
+		protected int							selectedRow;
+		protected TreeTableToolbar				toolbar;
 	}
 }

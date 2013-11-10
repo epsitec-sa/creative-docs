@@ -54,9 +54,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnStartEdit (eventType);
 			};
 
-			this.eventsController.StartEditing += delegate (object sender, EventType eventType)
+			this.eventsController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
 			{
-				this.OnStartEdit (eventType);
+				this.OnStartEdit (eventType, timestamp);
 			};
 
 			this.timelineController.UpdateAll += delegate
