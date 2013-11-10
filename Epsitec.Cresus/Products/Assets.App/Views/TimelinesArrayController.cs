@@ -167,12 +167,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Connexion des événements.
 			this.treeColumn.RowClicked += delegate (object sender, int row)
 			{
-				this.SetSelection (this.FirstVisibleRow + row, this.selectedColumn);
+				this.SetSelection (this.TopVisibleRow + row, this.selectedColumn);
 			};
 
 			this.treeColumn.TreeButtonClicked += delegate (object sender, int row, NodeType type)
 			{
-				this.OnCompactOrExpand (this.FirstVisibleRow + row);
+				this.OnCompactOrExpand (this.TopVisibleRow + row);
 			};
 
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -539,8 +539,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateTimelines (crop);
 		}
 
+
 		private void UpdateTree(bool crop = true)
 		{
+			int visibleCount = this.VisibleRows;
+			int rowsCount    = this.dataArray.RowsCount;
+			int count        = System.Math.Min (visibleCount, rowsCount);
+			int firstRow     = this.TopVisibleRow;
+			int selection    = this.selectedRow;
+
+			if (selection != -1)
+			{
+				//	La sélection ne peut pas dépasser le nombre maximal de lignes.
+				selection = System.Math.Min (selection, rowsCount-1);
+
+				//	Si la sélection est hors de la zone visible, on choisit un autre cadrage.
+				if (crop && (selection < firstRow || selection >= firstRow+count))
+				{
+					firstRow = this.GetTopVisibleRow (selection);
+				}
+
+				if (this.TopVisibleRow != firstRow)
+				{
+					this.TopVisibleRow = firstRow;
+				}
+
+				selection -= this.TopVisibleRow;
+			}
+	
 			var list = new List<TreeTableCellTree> ();
 
 			foreach (var row in this.EnumVisibleRows)
@@ -556,6 +582,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.treeColumn.SetCells (list.ToArray ());
 		}
+
+		private int GetTopVisibleRow(int sel)
+		{
+			System.Diagnostics.Debug.Assert (this.VisibleRows > 0);
+			int count = System.Math.Min (this.VisibleRows, this.dataArray.RowsCount);
+
+			sel = System.Math.Min (sel + count/2, this.dataArray.RowsCount-1);
+			sel = System.Math.Max (sel - count+1, 0);
+
+			return sel;
+		}
+
 
 		private void UpdateTimelines(bool crop = true)
 		{
@@ -659,6 +697,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
 		private void UpdateScroller()
 		{
 			if (this.scroller == null)
@@ -697,7 +736,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				int firstRow    = this.FirstVisibleRow;
+				int firstRow    = this.TopVisibleRow;
 				int visibleRows = this.VisibleRows;
 				int count = System.Math.Min (this.nodesGetter.Count, firstRow+visibleRows);
 
@@ -715,7 +754,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (line >= dummy && line < dummy+count)
 			{
-				return this.FirstVisibleRow + count + dummy - 2 + 1 - line;
+				return this.TopVisibleRow + count + dummy - 2 + 1 - line;
 			}
 			else
 			{
@@ -731,11 +770,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private int FirstVisibleRow
+		private int TopVisibleRow
 		{
 			get
 			{
 				return (int) this.scroller.Value;
+			}
+			set
+			{
+				this.scroller.Value = value;
 			}
 		}
 
