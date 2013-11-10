@@ -44,9 +44,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		private AiderMailingEntity Execute(string name, string desc, AiderMailingCategoryEntity cat)
 		{
-			var currentUser = AiderUserManager.Current.AuthenticatedUser;
-			var userKey = AiderUserManager.Current.BusinessContext.DataContext.GetNormalizedEntityKey (currentUser);
-			var aiderUser = this.DataContext.GetByRequest<AiderUserEntity> (Request.Create (new AiderUserEntity (), userKey.Value.RowKey)).First ();
+			var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
 
 			if (string.IsNullOrEmpty (name))
 			{
