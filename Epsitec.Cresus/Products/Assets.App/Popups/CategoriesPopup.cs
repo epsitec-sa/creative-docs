@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				selection -= this.controller.TopVisibleRow;
 			}
 
-			this.dataFiller.UpdateContent (firstRow, count, selection, crop);
+			this.dataFiller.UpdateContent (firstRow, count, selection);
 		}
 
 

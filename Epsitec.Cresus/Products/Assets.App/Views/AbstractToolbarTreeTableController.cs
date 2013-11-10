@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				selection -= this.controller.TopVisibleRow;
 			}
 
-			this.dataFiller.UpdateContent (firstRow, count, selection, crop);
+			this.dataFiller.UpdateContent (firstRow, count, selection);
 		}
 
 		protected virtual void UpdateToolbar()

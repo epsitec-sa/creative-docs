@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			this.controller.SetColumns (EventsObjectsTreeTableFiller.TreeTableColumns, 1);
 		}
 
-		public override void UpdateContent(int firstRow, int count, int selection, bool crop = true)
+		public override void UpdateContent(int firstRow, int count, int selection)
 		{
 			var c1 = new List<TreeTableCellString> ();
 			var c2 = new List<TreeTableCellGlyph> ();

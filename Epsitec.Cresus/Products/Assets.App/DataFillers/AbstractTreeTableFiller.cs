@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 		}
 
-		public virtual void UpdateContent(int firstRow, int count, int selection, bool crop = true)
+		public virtual void UpdateContent(int firstRow, int count, int selection)
 		{
 		}
 
