@@ -643,6 +643,40 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
+			for (int j=0; j<2000; j++)
+			{
+				var o = new DataObject ();
+				objects.Add (o);
+
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataIntProperty    (ObjectField.OneShotNuméro, DummyMandat.EventNumber++));
+					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.99"));
+					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Ford T "+j));
+					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (22000.0m)));
+					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (25000.0m)));
+					e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Simon"));
+					e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Noir"));
+					e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "D456-0003232-0005"));
+					DummyMandat.AddAmortissement2 (e);
+				}
+
+				for (int i=1; i<20; i++)
+				{
+					{
+						var e = new DataEvent (new Timestamp (start.Date.AddDays (i*30), 0), EventType.AmortissementAuto);
+						o.AddEvent (e);
+						e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
+
+						decimal a1 = 22000.0m-(i-1)*1000;
+						decimal a2 = 22000.0m-i*1000;
+						e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (a1, a2)));
+					}
+				}
+			}
+
 			DummyMandat.AddCategories (mandat);
 			DummyMandat.AddGroups (mandat);
 
