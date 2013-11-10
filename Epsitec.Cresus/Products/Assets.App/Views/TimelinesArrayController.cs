@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.selectedRow != -1)
 				{
-					var node = this.nodesGetter.GetNode (this.selectedRow);
+					var node = this.nodesGetter[this.selectedRow];
 					if (!node.IsEmpty)
 					{
 						return node.Guid;
@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			foreach (var row in this.EnumVisibleRows)
 			{
-				var node = this.nodesGetter.GetNode (row);
+				var node = this.nodesGetter[row];
 				var obj  = this.accessor.GetObject (this.baseType, node.Guid);
 				var nom  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
 
@@ -491,7 +491,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			var totalRows   = (decimal) this.nodesGetter.NodesCount;
+			var totalRows   = (decimal) this.nodesGetter.Count;
 			var visibleRows = (decimal) this.VisibleRows;
 
 			if (visibleRows < 0 || totalRows == 0)
@@ -524,7 +524,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				int firstRow    = this.FirstVisibleRow;
 				int visibleRows = this.VisibleRows;
-				int count = System.Math.Min (this.nodesGetter.NodesCount, firstRow+visibleRows);
+				int count = System.Math.Min (this.nodesGetter.Count, firstRow+visibleRows);
 
 				for (int row=firstRow; row<count; row++)
 				{
@@ -536,7 +536,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private int LineToRow(int line)
 		{
 			var dummy = this.DummyCount;
-			int count = System.Math.Min (this.nodesGetter.NodesCount, this.VisibleRows);
+			int count = System.Math.Min (this.nodesGetter.Count, this.VisibleRows);
 
 			if (line >= dummy && line < dummy+count)
 			{
@@ -552,7 +552,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return System.Math.Max (this.VisibleRows - this.nodesGetter.NodesCount, 0);
+				return System.Math.Max (this.VisibleRows - this.nodesGetter.Count, 0);
 			}
 		}
 
@@ -580,11 +580,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
-			this.dataArray.Clear (this.nodesGetter.NodesCount);
+			this.dataArray.Clear (this.nodesGetter.Count);
 
-			for (int row=0; row<this.nodesGetter.NodesCount; row++)
+			for (int row=0; row<this.nodesGetter.Count; row++)
 			{
-				var node = this.nodesGetter.GetNode (row);
+				var node = this.nodesGetter[row];
 				var obj = this.accessor.GetObject (this.baseType, node.Guid);
 
 				var label = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
@@ -921,7 +921,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.selectedRow != -1)
 				{
-					var node = this.nodesGetter.GetNode (this.selectedRow);
+					var node = this.nodesGetter[this.selectedRow];
 					if (!node.IsEmpty)
 					{
 						return this.accessor.GetObject (this.baseType, node.Guid);

@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public DataObject DataObject;
 
 
-		public override int NodesCount
+		public override int Count
 		{
 			get
 			{
@@ -29,17 +29,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public override GuidNode GetNode(int index)
+		public override GuidNode this[int index]
 		{
-			var e = this.DataObject.GetEvent (index);
+			get
+			{
+				var e = this.DataObject.GetEvent (index);
 
-			if (e == null)
-			{
-				return GuidNode.Empty;
-			}
-			else
-			{
-				return new GuidNode (e.Guid);
+				if (e == null)
+				{
+					return GuidNode.Empty;
+				}
+				else
+				{
+					return new GuidNode (e.Guid);
+				}
 			}
 		}
 	}

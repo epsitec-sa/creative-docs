@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.UpdateController ();
 
-				var node = this.nodesGetter.GetNode (this.visibleSelectedRow);
+				var node = this.nodesGetter[this.visibleSelectedRow];
 				this.OnNavigate (node.Guid);
 				this.ClosePopup ();
 			};
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Utilise au maximum les 3/4 de la hauteur.
 			int max = (int) (h*0.75) / CategoriesPopup.RowHeight;
 
-			int rows = System.Math.Min (this.nodesGetter.NodesCount, max);
+			int rows = System.Math.Min (this.nodesGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
 
 			int dx = CategoriesPopup.PopupWidth
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateController(bool crop = true)
 		{
-			this.controller.RowsCount = this.nodesGetter.NodesCount;
+			this.controller.RowsCount = this.nodesGetter.Count;
 
 			int visibleCount = this.controller.VisibleRowsCount;
 			int rowsCount    = this.controller.RowsCount;

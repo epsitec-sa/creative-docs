@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public override int NodesCount
+		public override int Count
 		{
 			get
 			{
@@ -28,9 +28,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public override TreeNode GetNode(int index)
+		public override TreeNode this[int index]
 		{
-			return this.nodes[this.nodeIndexes[index]];
+			get
+			{
+				return this.nodes[this.nodeIndexes[index]];
+			}
 		}
 
 
@@ -145,10 +148,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	Met à jour toutes les données en mode étendu.
 			this.nodes.Clear ();
 
-			int count = this.inputNodes.NodesCount;
+			int count = this.inputNodes.Count;
 			for (int i=0; i<count; i++)
 			{
-				var currentNode = this.inputNodes.GetNode (i);
+				var currentNode = this.inputNodes[i];
 
 				//	Par défaut, on considére que la ligne ne peut être ni étendue
 				//	ni compactée.
@@ -156,7 +159,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				if (i < count-2)
 				{
-					var nextNode = this.inputNodes.GetNode (i+1);
+					var nextNode = this.inputNodes[i+1];
 
 					//	Si le noeud suivant a un niveau plus élevé, il s'agit d'une
 					//	ligne pouvant être étendue ou compactée.

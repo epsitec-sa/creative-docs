@@ -37,12 +37,12 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= this.nodesGetter.NodesCount)
+				if (firstRow+i >= this.nodesGetter.Count)
 				{
 					break;
 				}
 
-				var node = this.nodesGetter.GetNode (firstRow+i);
+				var node = this.nodesGetter[firstRow+i];
 				var guid = node.Guid;
 				var e    = this.DataObject.GetEvent (guid);
 

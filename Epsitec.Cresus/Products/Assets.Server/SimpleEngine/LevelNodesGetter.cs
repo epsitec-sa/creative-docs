@@ -23,20 +23,23 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public Timestamp? Timestamp;
 
 
-		public override int NodesCount
+		public override int Count
 		{
 			get
 			{
-				return this.inputNodes.NodesCount;
+				return this.inputNodes.Count;
 			}
 		}
 
-		public override LevelNode GetNode(int index)
+		public override LevelNode this[int index]
 		{
-			var node = this.inputNodes.GetNode (index);
-			var level = this.GetLevel (node.Guid);
+			get
+			{
+				var node = this.inputNodes[index];
+				var level = this.GetLevel (node.Guid);
 
-			return new LevelNode (node.Guid, level);
+				return new LevelNode (node.Guid, level);
+			}
 		}
 
 

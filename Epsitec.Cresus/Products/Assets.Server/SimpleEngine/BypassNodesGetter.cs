@@ -18,17 +18,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public override int NodesCount
+		public override int Count
 		{
 			get
 			{
-				return this.inputNodes.NodesCount;
+				return this.inputNodes.Count;
 			}
 		}
 
-		public override GuidNode GetNode(int index)
+		public override GuidNode this[int index]
 		{
-			return this.inputNodes.GetNode (index);
+			get
+			{
+				return this.inputNodes[index];
+			}
 		}
 
 

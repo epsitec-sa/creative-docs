@@ -16,14 +16,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			get
 			{
-				for (int i=0; i<this.NodesCount; i++)
+				for (int i=0; i<this.Count; i++)
 				{
-					yield return this.GetNode (i);
+					yield return this[i];
 				}
 			}
 		}
 
-		public virtual int NodesCount
+		public virtual int Count
 		{
 			get
 			{
@@ -31,9 +31,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public virtual T GetNode(int row)
+		public virtual T this[int row]
 		{
-			return new T();
+			get
+			{
+				return new T ();
+			}
 		}
 	}
 }

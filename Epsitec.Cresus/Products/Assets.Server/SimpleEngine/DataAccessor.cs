@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				this.dataObjects = dataObjects;
 			}
 
-			public override int NodesCount
+			public override int Count
 			{
 				get
 				{
@@ -57,10 +57,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
-			public override GuidNode GetNode(int row)
+			public override GuidNode this[int index]
 			{
-				var obj = this.dataObjects[row];
-				return new GuidNode (obj.Guid);
+				get
+				{
+					var obj = this.dataObjects[index];
+					return new GuidNode (obj.Guid);
+				}
 			}
 
 			private readonly GuidList<DataObject> dataObjects;

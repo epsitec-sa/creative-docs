@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateController(bool crop = true)
 		{
-			this.controller.RowsCount = this.nodesGetter.NodesCount;
+			this.controller.RowsCount = this.nodesGetter.Count;
 
 			int visibleCount = this.controller.VisibleRowsCount;
 			int rowsCount    = this.controller.RowsCount;
@@ -296,9 +296,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				int sel = this.VisibleSelectedRow;
-				if (sel != -1 && sel < this.nodesGetter.NodesCount)
+				if (sel != -1 && sel < this.nodesGetter.Count)
 				{
-					return this.nodesGetter.GetNode (sel).Guid;
+					return this.nodesGetter[sel].Guid;
 				}
 				else
 				{
@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					int i = this.VisibleSelectedRow - 1;
 					i = System.Math.Max (i, 0);
-					i = System.Math.Min (i, this.nodesGetter.NodesCount - 1);
+					i = System.Math.Min (i, this.nodesGetter.Count - 1);
 					return i;
 				}
 			}
@@ -383,7 +383,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					int i = this.VisibleSelectedRow + 1;
 					i = System.Math.Max (i, 0);
-					i = System.Math.Min (i, this.nodesGetter.NodesCount - 1);
+					i = System.Math.Min (i, this.nodesGetter.Count - 1);
 					return i;
 				}
 			}
@@ -393,7 +393,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.nodesGetter.NodesCount - 1;
+				return this.nodesGetter.Count - 1;
 			}
 		}
 
