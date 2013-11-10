@@ -589,9 +589,9 @@ AiderMailingParticipant = [LVOL03]
     </t>
 
     <t eid="@AiderMailingParticipant" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVOT03]" title="T" dw="15" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVASH]" title="T" dw="15" canSort="True" canFilter="True">
         <sort o="None" />
-        <disp m="Visible" />
+        <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVACE]" title="Intitulé" canSort="True" canFilter="True">
         <sort o="Ascending" />
@@ -921,7 +921,7 @@ AiderMailingParticipant = [LVOL03]
         <disp m="Visible" />
       </col>
       <!-- 
-	Path
+        Path
       -->
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA84].[LVAPC]" title="Chemin" canSort="True" canFilter="True">
         <sort o="Asc" />
@@ -1071,6 +1071,9 @@ AiderMailingParticipant = [LVOL03]
       </col>	  
     </t>
   </T>
+
+  <!-- DataSets -->
+
   <D>
     <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" ec="false" ed="false" dg="">
       <R><r>@user</r></R>
@@ -1201,6 +1204,7 @@ AiderMailingParticipant = [LVOL03]
 #[Feature:Mailing]    <d cid="[LVOJ03]" teid="@AiderMailing" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="">
 #[Feature:Mailing]      <R><r>@user</r></R>
 #[Feature:Mailing]    </d>
+
 #[Feature:Mailing]    <d cid="[LVOK03]" teid="@AiderMailingParticipant" tn="default" df="false" d="false" ec="true" ed="true" dg="">
 #[Feature:Mailing]      <R><r>@user</r></R>
 #[Feature:Mailing]   	 <M><m t="Voir le contact" d="[LVAFE]" p="@AiderMailingParticipant:[LVON03]" /></M>
@@ -1210,13 +1214,15 @@ AiderMailingParticipant = [LVOL03]
 #[Feature:Mailing]   	  </L>
 #[Feature:Mailing]	 <!-- Filter -->
 #[Feature:Mailing]	 <f id="@AiderMailingParticipant">
-#[Feature:Mailing]	    <!-- Column id=IsExclude (Valeur) (Comparaison) c=(1=equals) v="false" -->
-#[Feature:Mailing]	    <C><c id="[LVOU03]"><v><comp c="1" v="Bfalse" /></v></c></C>
+#[Feature:Mailing]	    <!-- Column id=IsExcluded (Valeur) (Comparaison) c=(1=equals) v="false" -->
+#[Feature:Mailing]	    <C><c id="[LVATH]"><v><comp c="1" v="Bfalse" /></v></c></C>
 #[Feature:Mailing]	</f>
 #[Feature:Mailing]    </d>
+
 #[Feature:Mailing]    <d cid="[LVO413]" teid="@AiderMailingCategory" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuDefs">
 #[Feature:Mailing]      <R><r>@user</r></R>
 #[Feature:Mailing]    </d>
+
 #[Feature:Mailing]    <d cid="[LVO003]" teid="@AiderContact" tn="default" df="false" d="false" ec="true" ed="true" dg="">
 #[Feature:Mailing]      <R><r>@user</r></R>
 #[Feature:Mailing]    </d>

@@ -8301,46 +8301,46 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	Lettre code du type de participation au publipostage<br/>C = Contact individuel<br/>G = Groupe<br/>M = Ménage
-		///	designer:fld/LVOL03/LVOT03
+		///	The <c>ParticipantType</c> field.
+		///	designer:fld/LVOL03/LVASH
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOT03]")]
-		public string ParticipantLetterCode
+		[global::Epsitec.Common.Support.EntityField ("[LVASH]")]
+		public global::Epsitec.Aider.Enumerations.MailingParticipantType ParticipantType
 		{
 			get
 			{
-				return this.GetField<string> ("[LVOT03]");
+				return this.GetField<global::Epsitec.Aider.Enumerations.MailingParticipantType> ("[LVASH]");
 			}
 			set
 			{
-				string oldValue = this.ParticipantLetterCode;
-				if (oldValue != value || !this.IsFieldDefined("[LVOT03]"))
+				global::Epsitec.Aider.Enumerations.MailingParticipantType oldValue = this.ParticipantType;
+				if (oldValue != value || !this.IsFieldDefined("[LVASH]"))
 				{
-					this.OnParticipantLetterCodeChanging (oldValue, value);
-					this.SetField<string> ("[LVOT03]", oldValue, value);
-					this.OnParticipantLetterCodeChanged (oldValue, value);
+					this.OnParticipantTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.MailingParticipantType> ("[LVASH]", oldValue, value);
+					this.OnParticipantTypeChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>IsExclude</c> field.
-		///	designer:fld/LVOL03/LVOU03
+		///	The <c>IsExcluded</c> field.
+		///	designer:fld/LVOL03/LVATH
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOU03]")]
-		public bool IsExclude
+		[global::Epsitec.Common.Support.EntityField ("[LVATH]")]
+		public bool IsExcluded
 		{
 			get
 			{
-				return this.GetField<bool> ("[LVOU03]");
+				return this.GetField<bool> ("[LVATH]");
 			}
 			set
 			{
-				bool oldValue = this.IsExclude;
-				if (oldValue != value || !this.IsFieldDefined("[LVOU03]"))
+				bool oldValue = this.IsExcluded;
+				if (oldValue != value || !this.IsFieldDefined("[LVATH]"))
 				{
-					this.OnIsExcludeChanging (oldValue, value);
-					this.SetField<bool> ("[LVOU03]", oldValue, value);
-					this.OnIsExcludeChanged (oldValue, value);
+					this.OnIsExcludedChanging (oldValue, value);
+					this.SetField<bool> ("[LVATH]", oldValue, value);
+					this.OnIsExcludedChanged (oldValue, value);
 				}
 			}
 		}
@@ -8351,10 +8351,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnHousholdChanging(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
 		partial void OnHousholdChanged(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
-		partial void OnParticipantLetterCodeChanging(string oldValue, string newValue);
-		partial void OnParticipantLetterCodeChanged(string oldValue, string newValue);
-		partial void OnIsExcludeChanging(bool oldValue, bool newValue);
-		partial void OnIsExcludeChanged(bool oldValue, bool newValue);
+		partial void OnParticipantTypeChanging(global::Epsitec.Aider.Enumerations.MailingParticipantType oldValue, global::Epsitec.Aider.Enumerations.MailingParticipantType newValue);
+		partial void OnParticipantTypeChanged(global::Epsitec.Aider.Enumerations.MailingParticipantType oldValue, global::Epsitec.Aider.Enumerations.MailingParticipantType newValue);
+		partial void OnIsExcludedChanging(bool oldValue, bool newValue);
+		partial void OnIsExcludedChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -8411,9 +8411,57 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Group</c> field.
+		///	designer:fld/LVO013/LVAKH
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAKH]")]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity Group
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVAKH]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.Group;
+				if (oldValue != value || !this.IsFieldDefined("[LVAKH]"))
+				{
+					this.OnGroupChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVAKH]", oldValue, value);
+					this.OnGroupChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>GroupPathCache</c> field.
+		///	designer:fld/LVO013/LVALH
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVALH]")]
+		public string GroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVALH]");
+			}
+			set
+			{
+				string oldValue = this.GroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVALH]"))
+				{
+					this.OnGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVALH]", oldValue, value);
+					this.OnGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnGroupPathCacheChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

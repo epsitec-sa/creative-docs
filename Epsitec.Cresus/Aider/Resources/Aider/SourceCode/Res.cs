@@ -204,6 +204,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType Language = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 244));
 				//	designer:cap/LVA27
 				public static readonly Epsitec.Common.Types.EnumType LegalPersonType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 226));
+				//	designer:cap/LVAMH
+				public static readonly Epsitec.Common.Types.EnumType MailingParticipantType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 566));
 				//	designer:cap/LVATA
 				public static readonly Epsitec.Common.Types.EnumType Mutability = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 349));
 				//	designer:cap/LVAJ5
@@ -687,6 +689,50 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 541));
+						}
+					}
+				}
+				
+				public static class MailingParticipantType
+				{
+					//	designer:cap/LVAOH
+					public static global::Epsitec.Common.Types.Caption Contact
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 568));
+						}
+					}
+					//	designer:cap/LVARH
+					public static global::Epsitec.Common.Types.Caption ExcludedContact
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 571));
+						}
+					}
+					//	designer:cap/LVAQH
+					public static global::Epsitec.Common.Types.Caption Group
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 570));
+						}
+					}
+					//	designer:cap/LVAPH
+					public static global::Epsitec.Common.Types.Caption Household
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 569));
+						}
+					}
+					//	designer:cap/LVANH
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 567));
 						}
 					}
 				}
@@ -1796,9 +1842,13 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderMailingCategory.Name, null);
+					global::System.Object.Equals (AiderMailingCategory.Group, null);
 				}
 				
+				//	designer:cap/LVAKH
+				public static readonly global::Epsitec.Common.Support.Druid Group = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 564);
+				//	designer:cap/LVALH
+				public static readonly global::Epsitec.Common.Support.Druid GroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 565);
 				//	designer:cap/LVO113
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 33);
 			}
@@ -1814,12 +1864,12 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Contact = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 23);
 				//	designer:cap/LVOS03
 				public static readonly global::Epsitec.Common.Support.Druid Houshold = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 28);
-				//	designer:cap/LVOU03
-				public static readonly global::Epsitec.Common.Support.Druid IsExclude = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 30);
+				//	designer:cap/LVATH
+				public static readonly global::Epsitec.Common.Support.Druid IsExcluded = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 573);
 				//	designer:cap/LVOM03
 				public static readonly global::Epsitec.Common.Support.Druid Mailing = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 22);
-				//	designer:cap/LVOT03
-				public static readonly global::Epsitec.Common.Support.Druid ParticipantLetterCode = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 29);
+				//	designer:cap/LVASH
+				public static readonly global::Epsitec.Common.Support.Druid ParticipantType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 572);
 			}
 			
 			public static class AiderPerson

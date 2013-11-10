@@ -1,21 +1,20 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
-using System.Linq;
+
+using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Support;
-
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.SetControllers;
-
 using Epsitec.Cresus.Core.Data;
 
-using System.Collections.Generic;
 using Epsitec.Cresus.DataLayer.Expressions;
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Loader;
+
+using System.Collections.Generic;
+using System.Linq;
 
 
 namespace Epsitec.Aider.Controllers.SetControllers
@@ -76,7 +75,6 @@ namespace Epsitec.Aider.Controllers.SetControllers
 						ids
 					)
 				);
-
 			});
 		}
 
@@ -89,15 +87,20 @@ namespace Epsitec.Aider.Controllers.SetControllers
 		{
 			foreach (var participant in entitiesToRemove)
 			{
-				switch(participant.ParticipantLetterCode)
+				switch (participant.ParticipantType)
 				{
-					case "G": this.Entity.ExludeContact (this.BusinessContext, participant.Contact);
+					case MailingParticipantType.Group:
+						this.Entity.ExludeContact (this.BusinessContext, participant.Contact);
 						break;
-					case "C": this.Entity.RemoveContact (this.BusinessContext, participant.Contact);
+
+					case MailingParticipantType.Contact:
+						this.Entity.RemoveContact (this.BusinessContext, participant.Contact);
 						break;
-					case "M": this.Entity.RemoveHousehold (this.BusinessContext,participant.Contact,participant.Houshold);
+
+					case MailingParticipantType.Household:
+						this.Entity.RemoveHousehold (this.BusinessContext, participant.Contact, participant.Houshold);
 						break;
-				}			
+				}
 			}
 		}
 	}

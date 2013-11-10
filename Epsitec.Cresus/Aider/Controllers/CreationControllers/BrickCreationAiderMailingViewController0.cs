@@ -25,38 +25,40 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.Title ("Création d'un publipostage")
 				.Field<string> ()
 					.Title ("Intitulé du publipostage")
-					.InitialValue ("Publipostage du " + Date.Today.Day + "." + Date.Today.Month)
+					.InitialValue (TextFormatter.FormatText ("Publipostage du", Date.Today).ToSimpleText ())
 				.End ()
 				.Field<string> ()
 					.Title ("Description")
-					.InitialValue ("Nouveau publipostage")
+					.InitialValue ("")
 				.End ()
 				.Field<AiderMailingCategoryEntity> ()
 					.Title ("Catégorie")
 				.End ()
-				.Field<bool> ()
-					.Title ("Prêt pour l'envoi?")
-					.InitialValue (false)
-				.End ();
+			.End ();
 		}
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<string, string,AiderMailingCategoryEntity, bool,AiderMailingEntity> (this.Execute);
+			return FunctionExecutor.Create<string, string, AiderMailingCategoryEntity, AiderMailingEntity> (this.Execute);
 		}
 
-		private AiderMailingEntity Execute(string name, string desc, AiderMailingCategoryEntity cat, bool ready)
+		private AiderMailingEntity Execute(string name, string desc, AiderMailingCategoryEntity cat)
 		{
 			var currentUser = AiderUserManager.Current.AuthenticatedUser;
 			var userKey = AiderUserManager.Current.BusinessContext.DataContext.GetNormalizedEntityKey (currentUser);
-			var aiderUser = this.DataContext.GetByRequest<AiderUserEntity> (Request.Create (new AiderUserEntity(), userKey.Value.RowKey)).First ();
+			var aiderUser = this.DataContext.GetByRequest<AiderUserEntity> (Request.Create (new AiderUserEntity (), userKey.Value.RowKey)).First ();
 
-			if (string.IsNullOrEmpty(name))
+			if (string.IsNullOrEmpty (name))
 			{
 				throw new BusinessRuleException ("L'intitulé est obligatoire");
 			}
+			
+			if (cat.IsNull ())
+			{
+				throw new BusinessRuleException ("La catégorie est obligatoire");
+			}
 
-			return AiderMailingEntity.Create (this.BusinessContext, aiderUser, name, desc, cat, ready);
+			return AiderMailingEntity.Create (this.BusinessContext, aiderUser, name, desc, cat, isReady: false);
 		}
 	}
 }
