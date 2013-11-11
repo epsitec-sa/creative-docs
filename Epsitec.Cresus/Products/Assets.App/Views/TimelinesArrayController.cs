@@ -265,6 +265,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnTimelineNext ();
 						break;
 
+					case ToolbarCommand.CompactAll:
+						this.OnCompactAll ();
+						break;
+
+					case ToolbarCommand.ExpandAll:
+						this.OnExpandAll ();
+						break;
+
 					case ToolbarCommand.New:
 						this.OnTimelineNew ();
 						break;
@@ -402,6 +410,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Etend ou compacte une ligne (inverse son mode actuel).
 			var guid = this.SelectedGuid;
+			var timestamp = this.Timestamp;
 
 			this.nodesGetter.CompactOrExpand (row);
 			this.UpdateData ();
@@ -410,6 +419,39 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateToolbar ();
 
 			this.SelectedGuid = guid;
+			this.Timestamp = timestamp;
+		}
+
+		protected void OnCompactAll()
+		{
+			//	Compacte toutes les lignes.
+			var guid = this.SelectedGuid;
+			var timestamp = this.Timestamp;
+
+			this.nodesGetter.CompactAll ();
+			this.UpdateData ();
+			this.UpdateController ();
+			this.UpdateScroller ();
+			this.UpdateToolbar ();
+
+			this.SelectedGuid = guid;
+			this.Timestamp = timestamp;
+		}
+
+		protected void OnExpandAll()
+		{
+			//	Etend toutes les lignes.
+			var guid = this.SelectedGuid;
+			var timestamp = this.Timestamp;
+
+			this.nodesGetter.ExpandAll ();
+			this.UpdateData ();
+			this.UpdateController ();
+			this.UpdateScroller ();
+			this.UpdateToolbar ();
+
+			this.SelectedGuid = guid;
+			this.Timestamp = timestamp;
 		}
 		#endregion
 
