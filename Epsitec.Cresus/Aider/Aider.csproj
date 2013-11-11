@@ -127,11 +127,8 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController12ProcessHouseholdMissing.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController5CleanHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController13AssignHouseholdFromECh.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController0AddContactToRecipientsOnDrop.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController1AddContactToExclusionsOnDrop.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController2AddGroupToRecipientsOnDrop.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController0AddRecipientOnDrop.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController3KeepUpdated.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController4AddHouseholdToRecipientsOnDrop.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController5AddGroup.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController6RemoveGroup.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController7AddHousehold.cs" />

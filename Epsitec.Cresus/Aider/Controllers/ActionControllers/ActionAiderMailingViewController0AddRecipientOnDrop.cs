@@ -15,15 +15,16 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (2)]
-	public sealed class ActionAiderMailingViewController2AddGroupToRecipientsOnDrop : TemplateActionViewController<AiderMailingEntity, AiderGroupEntity>
+	[ControllerSubType (0)]
+	public sealed class ActionAiderMailingViewController0AddRecipientOnDrop : AbstractTemplateActionViewController<AiderMailingEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter un groupe aux destinataires");
+			return Resources.FormattedText ("Ajouter aux destinataires");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -33,7 +34,21 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			this.Entity.AddGroup (this.BusinessContext, this.AdditionalEntity);
+			if (this.AdditionalEntity is AiderContactEntity)
+			{
+				this.Entity.AddContact (this.BusinessContext, (AiderContactEntity) this.AdditionalEntity);
+			}
+
+			if (this.AdditionalEntity is AiderGroupEntity)
+			{
+				this.Entity.AddGroup (this.BusinessContext, (AiderGroupEntity) this.AdditionalEntity);
+			}
+
+			if (this.AdditionalEntity is AiderHouseholdEntity)
+			{
+				this.Entity.AddHousehold (this.BusinessContext, (AiderHouseholdEntity) this.AdditionalEntity);
+			}
+			
 		}
 	}
 }

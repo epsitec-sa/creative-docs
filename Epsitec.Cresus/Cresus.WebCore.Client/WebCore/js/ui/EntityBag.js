@@ -38,8 +38,8 @@ function() {
         cls: 'entitybag-window',
         iconCls: 'epsitec-aider-images-general-bag-icon16',
         autoHeight: true,
-        draggable: false,
-        resizable: false,
+        draggable: true,
+        resizable: true,
         closable: false,
         margins: '0 5 5 5',
         layout: {
