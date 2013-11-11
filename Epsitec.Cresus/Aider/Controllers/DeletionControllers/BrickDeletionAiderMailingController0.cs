@@ -41,7 +41,7 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 			var userKey = AiderUserManager.Current.BusinessContext.DataContext.GetNormalizedEntityKey (currentUser);
 			var aiderUser = this.DataContext.GetByRequest<AiderUserEntity> (Request.Create (new AiderUserEntity (), userKey.Value.RowKey)).First ();
 			
-			if (this.Entity.CreatedBy != aiderUser)
+			if (this.Entity.CreatedBy != aiderUser && !aiderUser.CanRemoveMailing())
 			{
 				var message = "Vous ne pouvez pas détruire le publipostage d'un autre utilisateur";
 

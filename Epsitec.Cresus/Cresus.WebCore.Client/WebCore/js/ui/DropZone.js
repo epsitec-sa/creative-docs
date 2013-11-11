@@ -73,12 +73,18 @@ function() {
 
 //      On entry into a target node, highlight that node.
         onNodeEnter : function(target, dd, e, data){
-            Ext.fly(target).addCls('entitybag-target-hover');
+          if(target)
+          {
+             Ext.fly(target).addCls('entitybag-target-hover');
+          }          
         },
 
 //      On exit from a target node, unhighlight that node.
         onNodeOut : function(target, dd, e, data){
+          if(target)
+          {
             Ext.fly(target).removeCls('entitybag-target-hover');
+          }        
         },
 
 //      While over a target node, return the default drop allowed class which

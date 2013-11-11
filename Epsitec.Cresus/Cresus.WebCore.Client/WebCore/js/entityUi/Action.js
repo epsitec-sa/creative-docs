@@ -132,12 +132,9 @@ function() {
         this.close();
         
         this.handleSave(json);
-
-        Epsitec.Cresus.Core.app.reloadCurrentDatabase(true);
       }
       else {
         Epsitec.ErrorHandler.handleFormError(action);
-        Epsitec.Cresus.Core.app.reloadCurrentDatabase(true);
         
         if(Ext.isDefined(json))
         {

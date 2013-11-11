@@ -74,6 +74,11 @@ namespace Epsitec.Aider.Entities
 			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);
 		}
 
+		public bool CanRemoveMailing()
+		{
+			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);
+		}
+
 		public void SetPassword(string password, string confirmation)
 		{
 			if (password == null)

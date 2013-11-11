@@ -266,6 +266,7 @@ $.getScript('signalr/hubs', function() {
             if(currentSelection.length>0)
             {
               selectionIndex = currentSelection[0].index;
+              columnManager.leftList.entityList.getSelectionModel().deselectAll();
               columnManager.leftList.entityList.reloadAndScrollToEntity(columnManager,currentSelection[0].internalId,selectionIndex,samePage);
             }
             else
@@ -273,6 +274,45 @@ $.getScript('signalr/hubs', function() {
               columnManager.leftList.entityList.reload(columnManager);
             }
                 
+        }
+        
+      },
+
+      reloadCurrentTile: function(callback) {
+        var key = this.tabManager.currentTab;
+        var columnManager = this.tabManager.entityTabs[key];
+        var currentSelection, selectionIndex;
+        var path = {};
+        
+        if(Ext.isDefined(columnManager))
+        {   
+          currentSelection = columnManager.leftList.entityList.getSelectionModel().getSelection();
+          if(Ext.isDefined(currentSelection[0]))
+          {
+            path.entityId = currentSelection[0].internalId;
+            path.databaseName = key;
+
+            if(columnManager.columns.length > 1)
+            {
+              if(Ext.isDefined(columnManager.columns[1].viewId))
+              {
+                this.showEditableEntity(path,callback);
+              }
+              else
+              {
+                this.showEntity(path,callback);
+              }
+              
+            }
+            else
+            {
+              this.showEntity(path,callback);
+            } 
+          }              
+        }
+        else
+        {
+          this.reloadCurrentDatabase(true);
         }
         
       },
