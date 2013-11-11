@@ -8412,6 +8412,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DisplayName</c> field.
+		///	designer:fld/LVO013/LVAUH
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAUH]")]
+		public string DisplayName
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAUH]");
+			}
+			set
+			{
+				string oldValue = this.DisplayName;
+				if (oldValue != value || !this.IsFieldDefined("[LVAUH]"))
+				{
+					this.OnDisplayNameChanging (oldValue, value);
+					this.SetField<string> ("[LVAUH]", oldValue, value);
+					this.OnDisplayNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Group</c> field.
 		///	designer:fld/LVO013/LVAKH
 		///	</summary>
@@ -8458,6 +8480,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnDisplayNameChanging(string oldValue, string newValue);
+		partial void OnDisplayNameChanged(string oldValue, string newValue);
 		partial void OnGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnGroupPathCacheChanging(string oldValue, string newValue);

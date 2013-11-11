@@ -1834,9 +1834,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderMailingCategory.Group, null);
+					global::System.Object.Equals (AiderMailingCategory.DisplayName, null);
 				}
 				
+				//	designer:cap/LVAUH
+				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 574);
 				//	designer:cap/LVAKH
 				public static readonly global::Epsitec.Common.Support.Druid Group = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 564);
 				//	designer:cap/LVALH

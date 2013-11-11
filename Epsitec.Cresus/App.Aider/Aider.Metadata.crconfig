@@ -567,7 +567,7 @@ AiderMailingParticipant = [LVOL03]
     </t>
 
     <t eid="@AiderMailing" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVO313].[LVO113]" title="Catégorie" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVO313].[LVAUH]" title="Catégorie" canSort="True" canFilter="True">
         <sort o="Ascending" />
         <disp m="Visible" />
       </col>
@@ -582,7 +582,7 @@ AiderMailingParticipant = [LVOL03]
     </t>
 
     <t eid="@AiderMailingCategory" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingCategory:[LVO113]" title="Nom de la catégorie" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingCategory:[LVAUH]" title="Nom complet" canSort="True" canFilter="True">
         <sort o="Ascending" />
         <disp m="Visible" />
       </col>

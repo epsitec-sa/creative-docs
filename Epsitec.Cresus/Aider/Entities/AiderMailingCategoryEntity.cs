@@ -23,23 +23,21 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText
-			(
-				this.Name
-			);
+			return TextFormatter.FormatText (this.DisplayName);
 		}
-
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return TextFormatter.FormatText (this.DisplayName);
 		}
 
+	
 		public void RefreshCache()
 		{
 			this.UpdateGroupPathCache ();
-			
+			this.UpdateDisplayName ();
 		}
+
 
 		public static AiderMailingCategoryEntity Create(BusinessContext context, string name, AiderGroupEntity group)
 		{
@@ -48,17 +46,17 @@ namespace Epsitec.Aider.Entities
 			mailingCategory.Name  = name;
 			mailingCategory.Group = group;
 
-			mailingCategory.UpdateGroupPathCache ();
+			mailingCategory.RefreshCache ();
 
 			return mailingCategory;
 		}
-
 
 		public static void Delete(BusinessContext businessContext, AiderMailingCategoryEntity mailingCategory)
 		{
 			businessContext.DeleteEntity (mailingCategory);			
 		}
 
+		
 		public static IEnumerable<AiderMailingCategoryEntity> GetCantonCategories(BusinessContext context, string groupPath)
 		{
 			return AiderMailingCategoryEntity.GetMailingCategories (context, AiderGroupIds.GlobalPrefix)
@@ -81,6 +79,22 @@ namespace Epsitec.Aider.Entities
 		{
 			this.GroupPathCache = this.Group.IsNull () ? "" : this.Group.Path;
 		}
+
+		private void UpdateDisplayName()
+		{
+			var groupName   = AiderMailingCategoryEntity.GetGroupName (this.Group);
+			var groupSuffix = this.Name;
+
+			if (string.IsNullOrWhiteSpace (groupSuffix))
+			{
+				this.DisplayName = groupName;
+			}
+			else
+			{
+				this.DisplayName = groupName + ", " + groupSuffix;
+			}
+		}
+
 		
 		private static IEnumerable<AiderMailingCategoryEntity> GetMailingCategories(BusinessContext context, string groupPath)
 		{
@@ -116,6 +130,12 @@ namespace Epsitec.Aider.Entities
 
 		private static string GetGroupName(AiderGroupEntity group)
 		{
+			if ((group.IsNull ()) ||
+				(group.GroupDef.IsNull ()))
+			{
+				return "";
+			}
+
 			if (group.GroupDef.IsParish ())
 			{
 				return group.Parent.Name + ", " + group.Name;
