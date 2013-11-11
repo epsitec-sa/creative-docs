@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public bool								Freeze;
+		public bool								DataFreezed;
 
 
 		public void CreateUI(Widget parent)

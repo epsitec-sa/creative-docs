@@ -465,7 +465,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelineController.ObjectGuid = this.selectedGuid;
 
-			if (!this.eventsController.Freeze)
+			if (!this.eventsController.DataFreezed)
 			{
 				this.eventsController.ObjectGuid = this.selectedGuid;
 			}
@@ -477,13 +477,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var timestamp = ObjectCalculator.GetLastTimestamp (obj);
 				if (timestamp.HasValue)
 				{
-					this.timelineController.SelectedTimestamp = timestamp;
+					this.selectedTimestamp = timestamp;
 				}
 			}
 
-			if (!this.eventsController.Freeze)
+			using (this.ignoreChanges.Enter ())
 			{
-				using (this.ignoreChanges.Enter ())
+				if (!this.timelineController.DataFreezed)
+				{
+					this.timelineController.SelectedTimestamp = this.selectedTimestamp;
+				}
+
+				if (!this.eventsController.DataFreezed)
 				{
 					this.eventsController.SelectedTimestamp = this.selectedTimestamp;
 				}
@@ -498,11 +503,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.listController.Timestamp = this.selectedTimestamp;
 
-			//?using (this.ignoreChanges.Enter ())
-			//?{
-			//?	this.eventsController.SelectedTimestamp = this.selectedTimestamp;
-			//?}
-
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
 		}
@@ -510,11 +510,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateAfterEventsChanged()
 		{
 			this.selectedTimestamp = this.eventsController.SelectedTimestamp;
-
-			using (this.ignoreChanges.Enter ())
-			{
-				this.timelineController.SelectedTimestamp = this.selectedTimestamp;
-			}
 
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
@@ -558,10 +553,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateSingleGeometry()
 		{
-			this.listController          .Freeze = false;
-			this.eventsController        .Freeze = true;
-			this.timelineController      .Freeze = false;
-			this.timelinesArrayController.Freeze = true;
+			this.listController          .DataFreezed = false;
+			this.eventsController        .DataFreezed = true;
+			this.timelineController      .DataFreezed = false;
+			this.timelinesArrayController.DataFreezed = true;
 
 			this.eventsFrameBox.Visibility = false;
 			this.closeButton   .Visibility = false;
@@ -578,10 +573,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateEventGeometry()
 		{
-			this.listController          .Freeze = false;
-			this.eventsController        .Freeze = false;
-			this.timelineController      .Freeze = true;
-			this.timelinesArrayController.Freeze = true;
+			this.listController          .DataFreezed = false;
+			this.eventsController        .DataFreezed = false;
+			this.timelineController      .DataFreezed = true;
+			this.timelinesArrayController.DataFreezed = true;
 
 			this.timelineFrameBox      .Visibility = false;
 			this.timelinesArrayFrameBox.Visibility = false;
@@ -630,10 +625,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateMultipleGeometry()
 		{
-			this.listController          .Freeze = true;
-			this.eventsController        .Freeze = true;
-			this.timelineController      .Freeze = true;
-			this.timelinesArrayController.Freeze = false;
+			this.listController          .DataFreezed = true;
+			this.eventsController        .DataFreezed = true;
+			this.timelineController      .DataFreezed = true;
+			this.timelinesArrayController.DataFreezed = false;
 
 			this.eventsFrameBox.Visibility = false;
 			this.closeButton   .Visibility = false;

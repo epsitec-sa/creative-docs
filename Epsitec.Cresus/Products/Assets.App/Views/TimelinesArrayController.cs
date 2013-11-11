@@ -41,13 +41,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.nodesGetter = new TreeObjectsNodesGetter (levelNodesGetter);
 
 			this.dataArray = new DataArray ();
-
-			//?this.nodesGetter.UpdateData ();
-			//?this.UpdateDataArray ();
 		}
 
 
-		public bool								Freeze;
+		public bool								DataFreezed;
 
 		public void UpdateData()
 		{
@@ -247,7 +244,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.scroller.ValueChanged += delegate
 			{
-				this.UpdateController ();
+				this.UpdateController (crop: false);
 				this.UpdateToolbar ();
 			};
 
