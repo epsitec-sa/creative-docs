@@ -11,7 +11,6 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
@@ -38,7 +37,7 @@ namespace Epsitec.Aider.Entities
 
 		public void RefreshCache()
 		{
-		
+			this.UpdateGroupPathCache ();
 			
 		}
 
@@ -46,9 +45,10 @@ namespace Epsitec.Aider.Entities
 		{
 			var mailingCategory = context.CreateAndRegisterEntity<AiderMailingCategoryEntity> ();
 
-			mailingCategory.Name = name;
+			mailingCategory.Name  = name;
 			mailingCategory.Group = group;
-			mailingCategory.GroupPathCache = group.Path;
+
+			mailingCategory.UpdateGroupPathCache ();
 
 			return mailingCategory;
 		}
@@ -74,6 +74,12 @@ namespace Epsitec.Aider.Entities
 		public static IEnumerable<AiderMailingCategoryEntity> GetParishCategories(BusinessContext context, string groupPath)
 		{
 			return AiderMailingCategoryEntity.GetMailingCategories (context, groupPath);
+		}
+
+		
+		private void UpdateGroupPathCache()
+		{
+			this.GroupPathCache = this.Group.IsNull () ? "" : this.Group.Path;
 		}
 		
 		private static IEnumerable<AiderMailingCategoryEntity> GetMailingCategories(BusinessContext context, string groupPath)

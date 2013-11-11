@@ -33,11 +33,9 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.Title ("Création d'un publipostage")
 				.Field<string> ()
 					.Title ("Intitulé du publipostage")
-					.InitialValue (TextFormatter.FormatText ("Publipostage du", Date.Today).ToSimpleText ())
 				.End ()
 				.Field<string> ()
 					.Title ("Description")
-					.InitialValue ("")
 				.End ()
 				.Field<AiderMailingCategoryEntity> ()
 					.WithFavorites (categories, favoritesOnly: true)
@@ -57,12 +55,12 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 			if (string.IsNullOrEmpty (name))
 			{
-				throw new BusinessRuleException ("L'intitulé est obligatoire");
+				Logic.BusinessRuleException (this.Entity, "L'intitulé est obligatoire.");
 			}
 			
 			if (cat.IsNull ())
 			{
-				throw new BusinessRuleException ("La catégorie est obligatoire");
+				Logic.BusinessRuleException (this.Entity, "La catégorie est obligatoire.");
 			}
 
 			return AiderMailingEntity.Create (this.BusinessContext, aiderUser, name, desc, cat, isReady: false);

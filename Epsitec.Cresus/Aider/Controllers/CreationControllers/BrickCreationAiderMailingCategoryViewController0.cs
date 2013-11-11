@@ -1,7 +1,13 @@
-﻿using Epsitec.Aider.Data.Common;
-using Epsitec.Common.Types;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Controllers.SpecialFieldControllers;
+using Epsitec.Aider.Data.Common;
+
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Business;
@@ -19,14 +25,17 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 	{
 		protected override void GetForm(ActionBrick<AiderMailingCategoryEntity, SimpleBrick<AiderMailingCategoryEntity>> action)
 		{
+			AiderGroupEntity defaultGroup = null;
+
 			action
 				.Title ("Création d'une catégorie de publipostage")
 				.Field<string> ()
 					.Title ("Nom de la catégorie")
-					.InitialValue ("Nouvelle catégorie")
 				.End ()
 				.Field<AiderGroupEntity> ()
-					.Title ("Niveau auquel lier la catégorie")
+					.WithSpecialField<AiderGroupSpecialField<AiderMailingCategoryEntity>> ()
+					.Title ("Groupe auquel lier la catégorie")
+					.InitialValue (defaultGroup)
 				.End ()
 			.End ();
 		}
@@ -38,26 +47,6 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		private AiderMailingCategoryEntity Execute(string name, AiderGroupEntity group)
 		{
-			if (group.IsNull ())
-			{
-				Logic.BusinessRuleException (this.Entity, TextFormatter.FormatText ("Il faut lier cette catégorie à un groupe"));
-			}
-
-			
-
-			var pathItems = group.Path.Split ('.');
-
-			if (pathItems.Length == 2)
-			{
-				if ((pathItems[0].StartsWith ("R")) &&
-					(pathItems[1].StartsWith ("P")))
-				{
-					//	OK - parish
-				}
-			}
-
-			System.Diagnostics.Debug.WriteLine ("Group path: " + group.Path);
-
 			return AiderMailingCategoryEntity.Create (this.BusinessContext, name, group);
 		}
 	}

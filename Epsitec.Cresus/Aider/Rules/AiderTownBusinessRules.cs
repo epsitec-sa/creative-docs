@@ -5,6 +5,7 @@ using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using Epsitec.Data.Platform;
 

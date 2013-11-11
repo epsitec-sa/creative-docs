@@ -298,6 +298,7 @@
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
     <Compile Include="Rules\AiderGroupParticipantEntityBusinessRules.cs" />
     <Compile Include="Rules\AiderLegalPersonBusinessRules.cs" />
+    <Compile Include="Rules\AiderMailingCategoryBusinessRules.cs" />
     <Compile Include="Rules\AiderSubscriptionBusinessRules.cs" />
     <Compile Include="Rules\AiderSubscriptionRefusalBusinessRules.cs" />
     <Compile Include="Rules\AiderTownBusinessRules.cs" />

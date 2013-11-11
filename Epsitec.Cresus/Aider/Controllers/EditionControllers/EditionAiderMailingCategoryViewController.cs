@@ -2,6 +2,7 @@
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Controllers.ActionControllers;
+using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
@@ -19,6 +20,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.Icon (Res.Commands.Base.ShowAiderMailingCategory.Caption.Icon)
 				.Input ()
 					.Field (x => x.Name)
+					.Field (x => x.Group).WithSpecialField<AiderGroupSpecialField<AiderMailingCategoryEntity>> ()
 				.End ();
 		}
 	}
