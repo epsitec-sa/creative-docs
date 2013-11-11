@@ -61,7 +61,8 @@ namespace Epsitec.Aider.Entities
 
 		public static IEnumerable<AiderMailingCategoryEntity> GetRegionCategories(BusinessContext context, string groupPath)
 		{
-			return AiderMailingCategoryEntity.GetMailingCategories (context, groupPath.Substring (0, 5));
+			return AiderMailingCategoryEntity.GetMailingCategories (context, groupPath.Substring (0, 5))
+				.Where (x => x.Group.IsParishOrParishSubgroup () == false);
 		}
 
 		public static IEnumerable<AiderMailingCategoryEntity> GetParishCategories(BusinessContext context, string groupPath)

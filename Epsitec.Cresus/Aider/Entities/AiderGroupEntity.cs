@@ -68,6 +68,19 @@ namespace Epsitec.Aider.Entities
 			return this.GroupDef.IsNotNull () && this.GroupDef.IsNoParish ();
 		}
 
+		public bool IsParishOrParishSubgroup()
+		{
+			return this.IsParish ()
+				|| AiderGroupIds.IsWithinParish (this.Path);
+		}
+
+		public bool IsRegionOrRegionSubgroup()
+		{
+			return this.IsRegion ()
+				|| AiderGroupIds.IsWithinRegion (this.Path);
+		}
+		
+		
 		public int GetRegionId()
 		{
 			if (!this.IsRegion ())
@@ -130,7 +143,7 @@ namespace Epsitec.Aider.Entities
 			//	This enables staff at the canton level to edit groups at the parish level if
 			//	property EnableGroupEditionParish is set for them.
 
-			if (this.IsParish () || AiderGroupIds.IsWithinParish (path))
+			if (this.IsParishOrParishSubgroup ())
 			{
 				if (user.EnableGroupEditionParish)
 				{
@@ -141,7 +154,7 @@ namespace Epsitec.Aider.Entities
 					}
 				}
 			}
-			else if (this.IsRegion () || AiderGroupIds.IsWithinRegion (path))
+			else if (this.IsRegionOrRegionSubgroup ())
 			{
 				var userRegionPath = AiderGroupIds.GetParentPath (userParishPath);
 
