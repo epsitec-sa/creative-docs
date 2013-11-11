@@ -32,6 +32,9 @@ function() {
       this.removeFromBagDropZone = Ext.create('Epsitec.DropZone', 'removezoneid','Retirer de l\'arche', this.removeEntityFromBag, this);
       this.registerDropZone(this.removeFromBagDropZone);
 
+      this.createMailingDropZone = Ext.create('Epsitec.DropZone', 'mailingzoneid','To Mailing', this.createMailing, this);
+      this.registerDropZone(this.createMailingDropZone);
+
       config = {
         headerPosition: 'left',
         title: 'Arche',
@@ -47,7 +50,7 @@ function() {
             align: 'stretch',    
             padding: 5
         },
-        items: [this.createEntityView(),this.removeFromBagDropZone],
+        items: [this.createEntityView(),this.removeFromBagDropZone,this.createMailingDropZone],
         listeners: {
           beforerender: this.setSizeAndPosition,
           score: this
@@ -90,7 +93,7 @@ function() {
       if(Ext.isDefined(viewport))
       {
         this.width = 280;
-        this.height = (this.bagStore.count() * 25) + 50;
+        this.height = (this.bagStore.count() * 25) + 250;
         this.x = viewport.width - this.width;
         this.y = menu.el.lastBox.height;
         if(this.isVisible())
@@ -104,6 +107,26 @@ function() {
       this.bagStore = Ext.create('Ext.data.Store', {
           model: 'Bag',
           data: [],
+      });
+    },
+
+    ///WORK IN PROGRESS
+    createMailing: function(mailing) {
+      this.setLoading();
+      Ext.Ajax.request({
+        url: Epsitec.EntityBag.getUrl(
+            'proxy/entity/action/entity', 6, 0, mailing.id
+        ),
+        method: 'POST',
+        params: {
+          entityIds: this.bagStore.data.items.map(function(e) { return e.internalId; }).join(';')
+        },
+        callback: function ()
+        {
+          this.setLoading(false);
+          Epsitec.Cresus.Core.app.reloadCurrentTile(null);
+        },
+        scope: this
       });
     },
 
@@ -212,6 +235,13 @@ function() {
             v.entityBag.hideRegistredDropZone();
           }
       });
+    },
+
+    statics: {
+       getUrl: function(prefix, viewMode, viewId, entityId) {
+        var url = prefix + '/' + viewMode + '/' + viewId + '/' + entityId + '/list';
+        return url;
+      }
     }
   });
 });

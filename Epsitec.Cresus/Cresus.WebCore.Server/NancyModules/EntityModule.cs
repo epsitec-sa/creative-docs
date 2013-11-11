@@ -90,6 +90,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Post["/action/entity/{viewMode}/{viewId}/{entityId}/{additionalEntityId}"] = p =>
 				this.Execute (b => this.ExecuteEntityAction (b, p));
 
+			// Executes an action on an entity, with an additional entity. This is used for
+			// instance in actions on an entity list.
+			// URL arguments:
+			// - viewMode:             The view mode of the EntityViewController to use, as used by
+			//                         the DataIO class.
+			// - viewId:               The view id of the EntityViewController to use, as used by
+			//                         the DataIO class.
+			// - entityId:             The entity key of the entity on which the EntityViewController
+			//                         will be used, in the format used by the EntityIO class.
+			// POST arguments:
+			// - entityIds: The entity keys of the additional entities to batches, in the
+			//              format used by the EntityIO class.
+			Post["/action/entity/{viewMode}/{viewId}/{entityId}/list"] = p =>
+				this.Execute (b => this.ExecuteActionForEntityList (b, p));
+
 			// Executes an action on an entity type. This is used for the creation controllers for
 			// instance.
 			// URL arguments:
@@ -225,6 +240,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return this.ExecuteAction (businessContext, entity, additionalEntity, parameters);
 		}
 
+		private Response ExecuteActionForEntityList(BusinessContext businessContext, dynamic parameters)
+		{
+			var entity = EntityIO.ResolveEntity (businessContext, (string) parameters.entityId);
+
+			return this.ExecuteActionForEntityList (businessContext, entity, parameters);
+		}
+
 
 		private Response ExecuteAction(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, dynamic parameters)
 		{
@@ -292,6 +314,35 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 
 			return this.CreateEntityIdResponse (businessContext, newEntity);
+		}
+
+		private Response ExecuteActionForEntityList(BusinessContext businessContext, AbstractEntity entity, dynamic parameters)
+		{
+			var viewMode = DataIO.ParseViewMode ((string) parameters.viewMode);
+			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
+
+			string rawEntityIds = this.Request.Form.entityIds;
+			var entities = EntityIO.ResolveEntities (businessContext, rawEntityIds).ToList ();
+			foreach (var additionalEntity in entities)
+			{
+				using (var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId))
+				{
+					var actionProvider = controller as IActionExecutorProvider;
+					var executor = actionProvider.GetExecutor ();
+					DynamicDictionary form = new DynamicDictionary ();
+					var arguments = this.GetArguments (executor, form, businessContext);
+
+					using (businessContext.Bind (entity))
+					using (businessContext.Bind (additionalEntity))
+					{
+						executor.Call (arguments);
+
+						businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
+					}
+				}
+			}
+			return CoreResponse.Success ();
+			
 		}
 
 
