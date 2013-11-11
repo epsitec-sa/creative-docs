@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
@@ -13,26 +16,20 @@ using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
 
-using System;
-
 using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
-
-
 	using Database = Core.Databases.Database;
 
 
 	/// <summary>
-	/// This class provies a view over a database, possible filtered and sorted. It can be used to
+	/// This class provides a view over a database, possible filtered and sorted. It can be used to
 	/// access ranges of entities within this view.
 	/// </summary>
-	internal sealed class EntityExtractor : IDisposable
+	internal sealed class EntityExtractor : System.IDisposable
 	{
-
-
 		private EntityExtractor(Database database, DataSetMetadata metadata, DataSetAccessor accessor)
 		{
 			this.database = database;
@@ -41,7 +38,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		}
 
 
-		public Database Database
+		public Database							Database
 		{
 			get
 			{
@@ -49,8 +46,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			}
 		}
 
-
-		public DataSetMetadata Metadata
+		public DataSetMetadata					Metadata
 		{
 			get
 			{
@@ -58,8 +54,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			}
 		}
 
-
-		public DataSetAccessor Accessor
+		public DataSetAccessor					Accessor
 		{
 			get
 			{
@@ -80,7 +75,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		#endregion
 
 
-		public static EntityExtractor Create(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, Action<DataContext, Request, AbstractEntity> customizer = null)
+		public static EntityExtractor Create(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, System.Func<Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, System.Action<DataContext, Request, AbstractEntity> customizer = null)
 		{
 			var database = databaseManager.GetDatabase (databaseId);
 
@@ -88,16 +83,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			var sorters = SorterIO.ParseSorters (caches, database, rawSorters);
 			var filter = FilterIO.ParseFilter (businessContext, caches, database, rawFilters);
 
-			var accessor = EntityExtractor.CreateAccessor
-			(
-				userManager, dataSetAccessorGetter, database, sorters, filter, customizer
-			);
+			var accessor = EntityExtractor.CreateAccessor (userManager, dataSetAccessorGetter, database, sorters, filter, customizer);
 
 			return new EntityExtractor (database, dataSetMetadata, accessor);
 		}
 
 
-		private static DataSetAccessor CreateAccessor(UserManager userManager, Func<Database, DataSetAccessor> dataSetAccessorGetter, Database database, IEnumerable<ColumnRef<EntityColumnSort>> sorters, EntityFilter filter, Action<DataContext, Request, AbstractEntity> customizer)
+		private static DataSetAccessor CreateAccessor(UserManager userManager, System.Func<Database, DataSetAccessor> dataSetAccessorGetter, Database database, IEnumerable<ColumnRef<EntityColumnSort>> sorters, EntityFilter filter, System.Action<DataContext, Request, AbstractEntity> customizer)
 		{
 			var dataSetMetadata = database.DataSetMetadata;
 
@@ -136,16 +128,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		}
 
 
-		private readonly Database database;
-
-
-		private readonly DataSetMetadata metadata;
-
-
-		private readonly DataSetAccessor accessor;
-
-
+		private readonly Database				database;
+		private readonly DataSetMetadata		metadata;
+		private readonly DataSetAccessor		accessor;
 	}
-
-
 }

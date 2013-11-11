@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Favorites;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
@@ -28,15 +29,21 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			if (collection != null)
 			{
 				object firstItem;
+				System.Type type;
 
 				if (Collection.TryGetFirst (collection, out firstItem))
 				{
-					var type = firstItem.GetType ();
-					var databaseId = Druid.Parse (this.DatabaseName);
-
-					this.favoritesId   = FavoritesCache.Current.Push (collection, type, databaseId);
-					this.favoritesOnly = favoritesOnly;
+					type = firstItem.GetType ();
 				}
+				else
+				{
+					type = collection.GetType ().GetGenericArguments ().First ();
+				}
+
+				var databaseId = Druid.Parse (this.DatabaseName);
+
+				this.favoritesId   = FavoritesCache.Current.Push (collection, type, databaseId);
+				this.favoritesOnly = favoritesOnly;
 			}
 		}
 

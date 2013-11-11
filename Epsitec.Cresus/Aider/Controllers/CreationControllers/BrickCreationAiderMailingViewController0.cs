@@ -76,6 +76,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 			if (aiderUser.EnableGroupEditionCanton)
 			{
+				categories.AddRange (AiderMailingCategoryEntity.GetCantonCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
 			}
 
 			if (aiderUser.EnableGroupEditionRegion)

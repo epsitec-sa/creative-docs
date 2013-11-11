@@ -7,7 +7,6 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Context;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,9 +18,10 @@ namespace Epsitec.Cresus.Core.Favorites
 	/// </summary>
 	public sealed class FavoritesCollection
 	{
-		public FavoritesCollection(IEnumerable<AbstractEntity> collection, Type type, Druid databaseId)
+		public FavoritesCollection(IEnumerable<AbstractEntity> collection, System.Type type, Druid databaseId)
 		{
 			var buffer = new List<long> ();
+			
 			this.databaseId = databaseId;
 
 			if (collection.Any ())
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Favorites
 			this.strongHash = Epsitec.Common.IO.Checksum.ComputeMd5Hash (stream);
 		}
 
-		public string StrongHash
+		public string							StrongHash
 		{
 			get
 			{
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Favorites
 			}
 		}
 
-		public Druid DatabaseId
+		public Druid							DatabaseId
 		{
 			get
 			{
@@ -59,13 +59,21 @@ namespace Epsitec.Cresus.Core.Favorites
 			}
 		}
 
+		
 		public DataExpression CreateCondition (AbstractEntity example)
 		{
-			return new ValueSetComparison
-			(
-				InternalField.CreateId (example),
-				SetComparator.In, this.ids.Select (id => new Constant (id))
-			);
+			if (this.ids.Length == 0)
+			{
+				//	Return an empty set. We could probable use another type of Data Expression
+				//	here, which would be more efficient yet, but this does the job, as there is
+				//	no entity with a zero ID:
+
+				return new ValueSetComparison (InternalField.CreateId (example), SetComparator.In, new Constant[] { new Constant (0) });
+			}
+			else
+			{
+				return new ValueSetComparison (InternalField.CreateId (example), SetComparator.In, this.ids.Select (id => new Constant (id)));
+			}
 		}
 
 		

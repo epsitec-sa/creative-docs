@@ -703,14 +703,6 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 568));
 						}
 					}
-					//	designer:cap/LVARH
-					public static global::Epsitec.Common.Types.Caption ExcludedContact
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 571));
-						}
-					}
 					//	designer:cap/LVAQH
 					public static global::Epsitec.Common.Types.Caption Group
 					{

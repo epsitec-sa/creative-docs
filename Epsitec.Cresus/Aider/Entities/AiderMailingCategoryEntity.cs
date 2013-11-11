@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
@@ -58,6 +59,11 @@ namespace Epsitec.Aider.Entities
 			businessContext.DeleteEntity (mailingCategory);			
 		}
 
+		public static IEnumerable<AiderMailingCategoryEntity> GetCantonCategories(BusinessContext context, string groupPath)
+		{
+			return AiderMailingCategoryEntity.GetMailingCategories (context, AiderGroupIds.GlobalPrefix)
+				.Where (x => x.Group.IsGlobalOrGlobalSubgroup ());
+		}
 
 		public static IEnumerable<AiderMailingCategoryEntity> GetRegionCategories(BusinessContext context, string groupPath)
 		{
@@ -81,7 +87,8 @@ namespace Epsitec.Aider.Entities
 
 			var categories = dataContext.GetByRequest (request).ToList ();
 
-			if (categories.Count == 0)
+			if ((categories.Count == 0) &&
+				(groupPath.Length > 1))
 			{
 				using (var localContext = new BusinessContext (context.Data, false))
 				{

@@ -8006,6 +8006,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	Texte libre
+		///	designer:fld/LVOA03/LVOQ03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOQ03]")]
+		public string Description
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOQ03]");
+			}
+			set
+			{
+				string oldValue = this.Description;
+				if (oldValue != value || !this.IsFieldDefined("[LVOQ03]"))
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<string> ("[LVOQ03]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	Catégorie du publipostage
 		///	designer:fld/LVOA03/LVO313
 		///	</summary>
@@ -8024,6 +8046,72 @@ namespace Epsitec.Aider.Entities
 					this.OnCategoryChanging (oldValue, value);
 					this.SetField<global::Epsitec.Aider.Entities.AiderMailingCategoryEntity> ("[LVO313]", oldValue, value);
 					this.OnCategoryChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVOA03/LVOH03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOH03]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOH03]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVOH03]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVOH03]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>CreatedBy</c> field.
+		///	designer:fld/LVOA03/LVOG03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOG03]")]
+		public global::Epsitec.Aider.Entities.AiderUserEntity CreatedBy
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVOG03]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderUserEntity oldValue = this.CreatedBy;
+				if (oldValue != value || !this.IsFieldDefined("[LVOG03]"))
+				{
+					this.OnCreatedByChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVOG03]", oldValue, value);
+					this.OnCreatedByChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LastUpdate</c> field.
+		///	designer:fld/LVOA03/LVOV03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOV03]")]
+		public global::System.DateTime? LastUpdate
+		{
+			get
+			{
+				return this.GetField<global::System.DateTime?> ("[LVOV03]");
+			}
+			set
+			{
+				global::System.DateTime? oldValue = this.LastUpdate;
+				if (oldValue != value || !this.IsFieldDefined("[LVOV03]"))
+				{
+					this.OnLastUpdateChanging (oldValue, value);
+					this.SetField<global::System.DateTime?> ("[LVOV03]", oldValue, value);
+					this.OnLastUpdateChanged (oldValue, value);
 				}
 			}
 		}
@@ -8097,109 +8185,21 @@ namespace Epsitec.Aider.Entities
 				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderHouseholdEntity> ("[LVOR03]");
 			}
 		}
-		///	<summary>
-		///	The <c>CreatedBy</c> field.
-		///	designer:fld/LVOA03/LVOG03
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOG03]")]
-		public global::Epsitec.Aider.Entities.AiderUserEntity CreatedBy
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVOG03]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderUserEntity oldValue = this.CreatedBy;
-				if (oldValue != value || !this.IsFieldDefined("[LVOG03]"))
-				{
-					this.OnCreatedByChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVOG03]", oldValue, value);
-					this.OnCreatedByChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>ParishGroupPathCache</c> field.
-		///	designer:fld/LVOA03/LVOH03
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOH03]")]
-		public string ParishGroupPathCache
-		{
-			get
-			{
-				return this.GetField<string> ("[LVOH03]");
-			}
-			set
-			{
-				string oldValue = this.ParishGroupPathCache;
-				if (oldValue != value || !this.IsFieldDefined("[LVOH03]"))
-				{
-					this.OnParishGroupPathCacheChanging (oldValue, value);
-					this.SetField<string> ("[LVOH03]", oldValue, value);
-					this.OnParishGroupPathCacheChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>LastUpdate</c> field.
-		///	designer:fld/LVOA03/LVOV03
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOV03]")]
-		public global::System.DateTime? LastUpdate
-		{
-			get
-			{
-				return this.GetField<global::System.DateTime?> ("[LVOV03]");
-			}
-			set
-			{
-				global::System.DateTime? oldValue = this.LastUpdate;
-				if (oldValue != value || !this.IsFieldDefined("[LVOV03]"))
-				{
-					this.OnLastUpdateChanging (oldValue, value);
-					this.SetField<global::System.DateTime?> ("[LVOV03]", oldValue, value);
-					this.OnLastUpdateChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	Texte libre
-		///	designer:fld/LVOA03/LVOQ03
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOQ03]")]
-		public string Description
-		{
-			get
-			{
-				return this.GetField<string> ("[LVOQ03]");
-			}
-			set
-			{
-				string oldValue = this.Description;
-				if (oldValue != value || !this.IsFieldDefined("[LVOQ03]"))
-				{
-					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<string> ("[LVOQ03]", oldValue, value);
-					this.OnDescriptionChanged (oldValue, value);
-				}
-			}
-		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
-		partial void OnCategoryChanging(global::Epsitec.Aider.Entities.AiderMailingCategoryEntity oldValue, global::Epsitec.Aider.Entities.AiderMailingCategoryEntity newValue);
-		partial void OnCategoryChanged(global::Epsitec.Aider.Entities.AiderMailingCategoryEntity oldValue, global::Epsitec.Aider.Entities.AiderMailingCategoryEntity newValue);
-		partial void OnIsReadyChanging(bool oldValue, bool newValue);
-		partial void OnIsReadyChanged(bool oldValue, bool newValue);
-		partial void OnCreatedByChanging(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
-		partial void OnCreatedByChanged(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
-		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
-		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
-		partial void OnLastUpdateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
-		partial void OnLastUpdateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnCategoryChanging(global::Epsitec.Aider.Entities.AiderMailingCategoryEntity oldValue, global::Epsitec.Aider.Entities.AiderMailingCategoryEntity newValue);
+		partial void OnCategoryChanged(global::Epsitec.Aider.Entities.AiderMailingCategoryEntity oldValue, global::Epsitec.Aider.Entities.AiderMailingCategoryEntity newValue);
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
+		partial void OnCreatedByChanging(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
+		partial void OnCreatedByChanged(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
+		partial void OnLastUpdateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnLastUpdateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnIsReadyChanging(bool oldValue, bool newValue);
+		partial void OnIsReadyChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

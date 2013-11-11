@@ -68,6 +68,11 @@ namespace Epsitec.Aider.Entities
 			return this.GroupDef.IsNotNull () && this.GroupDef.IsNoParish ();
 		}
 
+		public bool IsGlobal()
+		{
+			return this.GroupDef.IsNotNull () && this.GroupDef.IsGlobal ();
+		}
+
 		public bool IsParishOrParishSubgroup()
 		{
 			return this.IsParish ()
@@ -79,7 +84,12 @@ namespace Epsitec.Aider.Entities
 			return this.IsRegion ()
 				|| AiderGroupIds.IsWithinRegion (this.Path);
 		}
-		
+
+		public bool IsGlobalOrGlobalSubgroup()
+		{
+			return this.IsGlobal ()
+				|| AiderGroupIds.IsWithinGlobal (this.Path);
+		}
 		
 		public int GetRegionId()
 		{

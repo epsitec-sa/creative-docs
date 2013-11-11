@@ -21,9 +21,10 @@ namespace Epsitec.Aider.Data.Common
 		private const string GroupFormat			= "{0}{1:000}.";
 		private const string PlaceholderFormat		= "<{0}>.";
 
-		private const string ParishPrefix			= "P";
-		private const string RegionPrefix			= "R";
-		private const string Suffix					= ".";
+		public const string GlobalPrefix			= "D";
+		public const string ParishPrefix			= "P";
+		public const string RegionPrefix			= "R";
+		public const string Suffix					= ".";
 
 		private const int PartLength				= 5;
 		private const int PrefixStart				= 0;
@@ -66,6 +67,11 @@ namespace Epsitec.Aider.Data.Common
 		public static bool IsWithinParish(string path)
 		{
 			return AiderGroupIds.IsWithinGroup (path, AiderGroupIds.ParishLevel, AiderGroupIds.ParishPrefix);
+		}
+
+		public static bool IsWithinGlobal(string path)
+		{
+			return AiderGroupIds.IsWithinGroup (path, AiderGroupIds.TopLevel, AiderGroupIds.GlobalPrefix);
 		}
 
 		private static bool IsWithinGroup(string path, int index, string prefix)

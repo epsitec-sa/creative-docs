@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -103,6 +103,12 @@ namespace Epsitec.Aider.Entities
 		{
 			return this.Level == AiderGroupIds.NoParishLevel
 				&& this.Classification == GroupClassification.NoParish;
+		}
+
+		public bool IsGlobal()
+		{
+			return this.Level == AiderGroupIds.TopLevel
+				&& this.Classification == GroupClassification.None;
 		}
 	}
 }
