@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -54,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				if (this.Timestamp.HasValue &&
 					!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
 				{
-					nom = "<i>Inconnu à cette date</i>";
+					nom = StaticDescriptions.OutOfDateName;
 				}
 
 				var sf = new TreeTableCellTree    (true, level, type, nom, isSelected: (i == selection));

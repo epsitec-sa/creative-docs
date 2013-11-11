@@ -610,6 +610,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 	
 			var list = new List<TreeTableCellTree> ();
+			var timestamp = this.Timestamp;
 
 			foreach (var row in this.EnumVisibleRows)
 			{
@@ -617,6 +618,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var obj  = this.accessor.GetObject (this.baseType, node.Guid);
 				var nom  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
 				bool isSelected = node.Guid == this.SelectedGuid;
+
+				if (timestamp.HasValue &&
+					!ObjectCalculator.IsExistingObject (obj, timestamp.Value))
+				{
+					nom = StaticDescriptions.OutOfDateName;
+				}
 
 				var cell = new TreeTableCellTree (true, node.Level, node.Type, nom, isSelected);
 				list.Add (cell);

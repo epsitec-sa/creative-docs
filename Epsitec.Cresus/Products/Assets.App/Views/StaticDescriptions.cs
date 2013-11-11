@@ -181,5 +181,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return null;
 			}
 		}
+
+
+		public readonly static string OutOfDateName = "<i>Inconnu à cette date</i>";
 	}
 }
