@@ -11,11 +11,11 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Expressions;
+using Epsitec.Cresus.DataLayer.Loader;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-
 
 namespace Epsitec.Aider.Entities
 {
@@ -41,10 +41,14 @@ namespace Epsitec.Aider.Entities
 			
 		}
 
-		public static AiderMailingCategoryEntity Create(BusinessContext context, string name)
+		public static AiderMailingCategoryEntity Create(BusinessContext context, string name, AiderGroupEntity group)
 		{
 			var mailingCategory = context.CreateAndRegisterEntity<AiderMailingCategoryEntity> ();
+
 			mailingCategory.Name = name;
+			mailingCategory.Group = group;
+			mailingCategory.GroupPathCache = group.Path;
+
 			return mailingCategory;
 		}
 
@@ -52,6 +56,62 @@ namespace Epsitec.Aider.Entities
 		public static void Delete(BusinessContext businessContext, AiderMailingCategoryEntity mailingCategory)
 		{
 			businessContext.DeleteEntity (mailingCategory);			
+		}
+
+
+		public static IEnumerable<AiderMailingCategoryEntity> GetRegionCategories(BusinessContext context, string groupPath)
+		{
+			return AiderMailingCategoryEntity.GetMailingCategories (context, groupPath.Substring (0, 5));
+		}
+
+		public static IEnumerable<AiderMailingCategoryEntity> GetParishCategories(BusinessContext context, string groupPath)
+		{
+			return AiderMailingCategoryEntity.GetMailingCategories (context, groupPath);
+		}
+		
+		private static IEnumerable<AiderMailingCategoryEntity> GetMailingCategories(BusinessContext context, string groupPath)
+		{
+			var dataContext = context.DataContext;
+
+			var example = new AiderMailingCategoryEntity ();
+			var request = Request.Create (example);
+
+			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.GroupPathCache, groupPath + "%"));
+
+			var categories = dataContext.GetByRequest (request).ToList ();
+
+			if (categories.Count == 0)
+			{
+				using (var localContext = new BusinessContext (context.Data, false))
+				{
+					var group = AiderGroupEntity.FindGroups (localContext, groupPath).FirstOrDefault ();
+
+					if (group.IsNotNull ())
+					{
+						var name = AiderMailingCategoryEntity.GetGroupName (group);
+						AiderMailingCategoryEntity.Create (localContext, name, group);
+						localContext.SaveChanges (LockingPolicy.ReleaseLock);
+					}
+				}
+
+				categories = dataContext.GetByRequest (request).ToList ();
+			}
+
+			return categories;
+		}
+
+		private static string GetGroupName(AiderGroupEntity group)
+		{
+			if (group.GroupDef.IsParish ())
+			{
+				return group.Parent.Name + ", " + group.Name;
+			}
+			if (group.GroupDef.IsRegion ())
+			{
+				return group.Name;
+			}
+
+			return group.Name;
 		}
 	}
 }

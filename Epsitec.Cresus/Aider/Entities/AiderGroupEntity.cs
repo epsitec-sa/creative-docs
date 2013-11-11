@@ -297,7 +297,17 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		
+
+		public static IEnumerable<AiderGroupEntity> FindGroups(BusinessContext context, string groupPath)
+		{
+			var example = new AiderGroupEntity
+			{
+				Path = groupPath
+			};
+
+			return context.DataContext.GetByExample (example);
+		}
+
 		public static IList<AiderGroupEntity> FindRegionRootGroups(BusinessContext businessContext)
 		{
 			var dataContext = businessContext.DataContext;

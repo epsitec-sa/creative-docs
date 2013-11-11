@@ -24,17 +24,41 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.Field<string> ()
 					.Title ("Nom de la catégorie")
 					.InitialValue ("Nouvelle catégorie")
-				.End ();
+				.End ()
+				.Field<AiderGroupEntity> ()
+					.Title ("Niveau auquel lier la catégorie")
+				.End ()
+			.End ();
 		}
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<string,AiderMailingCategoryEntity> (this.Execute);
+			return FunctionExecutor.Create<string, AiderGroupEntity, AiderMailingCategoryEntity> (this.Execute);
 		}
 
-		private AiderMailingCategoryEntity Execute(string name)
+		private AiderMailingCategoryEntity Execute(string name, AiderGroupEntity group)
 		{
-			return AiderMailingCategoryEntity.Create (this.BusinessContext,name);
+			if (group.IsNull ())
+			{
+				Logic.BusinessRuleException (this.Entity, TextFormatter.FormatText ("Il faut lier cette catégorie à un groupe"));
+			}
+
+			
+
+			var pathItems = group.Path.Split ('.');
+
+			if (pathItems.Length == 2)
+			{
+				if ((pathItems[0].StartsWith ("R")) &&
+					(pathItems[1].StartsWith ("P")))
+				{
+					//	OK - parish
+				}
+			}
+
+			System.Diagnostics.Debug.WriteLine ("Group path: " + group.Path);
+
+			return AiderMailingCategoryEntity.Create (this.BusinessContext, name, group);
 		}
 	}
 }
