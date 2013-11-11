@@ -48,6 +48,10 @@ namespace Epsitec.Aider.Override
 			{
 				return this.GetAiderGroupDefEntityFilter ((AiderGroupDefEntity) example);
 			}
+			else if (entityType == typeof (AiderMailingEntity))
+			{
+				return this.GetAiderMailingAdditionalFilter ((AiderMailingEntity) example);
+			}
 
 			return null;
 		}
@@ -67,6 +71,19 @@ namespace Epsitec.Aider.Override
 		private IFilter GetAiderGroupDefEntityFilter(AiderGroupDefEntity example)
 		{
 			return new LambdaFilter<AiderGroupDefEntity> (x => x.Level == AiderGroupIds.TopLevel);
+		}
+
+		private IFilter GetAiderMailingAdditionalFilter(AiderMailingEntity example)
+		{
+			var mailing = this.UserManager.BusinessContext.DataContext.GetByExample(example).FirstOrDefault ();
+			if (mailing.Category.Group.CanBeEditedByCurrentUser ())
+			{
+				return new LambdaFilter<AiderMailingEntity> (x => SqlMethods.Like("ok","ok"));
+			}
+			else
+			{
+				return new LambdaFilter<AiderMailingEntity> (x => SqlMethods.Like ("ko", "ok"));
+			}
 		}
 
 		public override IFilter GetScopeFilter(DataSetMetadata dataSetMetadata, AbstractEntity example)
@@ -108,6 +125,14 @@ namespace Epsitec.Aider.Override
 				else if (entityType == typeof (AiderSubscriptionRefusalEntity))
 				{
 					return this.GetAiderSubscriptionRefusalEntityFilter ((AiderSubscriptionRefusalEntity) example, pattern + "%");
+				}
+				else if (entityType == typeof (AiderMailingEntity))
+				{
+					return this.GetAiderMailingFilter ((AiderMailingEntity) example, pattern + "%");
+				}
+				else if (entityType == typeof (AiderMailingCategoryEntity))
+				{
+					return this.GetAiderMailingCategoryFilter ((AiderMailingCategoryEntity) example, pattern + "%");
 				}
 			}
 
@@ -152,6 +177,16 @@ namespace Epsitec.Aider.Override
 		private IFilter GetAiderSubscriptionRefusalEntityFilter(AiderSubscriptionRefusalEntity example, string pattern)
 		{
 			return new LambdaFilter<AiderSubscriptionRefusalEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+		}
+
+		private IFilter GetAiderMailingFilter(AiderMailingEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderMailingEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+		}
+
+		private IFilter GetAiderMailingCategoryFilter(AiderMailingCategoryEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderMailingCategoryEntity> (x => SqlMethods.Like (x.GroupPathCache, pattern));
 		}
 
 
