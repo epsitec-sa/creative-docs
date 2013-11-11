@@ -895,6 +895,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 					column[row] = this.EventToCell (obj, e);
 				}
 			}
+
+			//	Marque les intervalles bloqués, qui seront hachurés.
+			for (int row=0; row<this.nodesGetter.Count; row++)
+			{
+				var node = this.nodesGetter[row];
+				var obj = this.accessor.GetObject (this.baseType, node.Guid);
+				var lockedIntervals = ObjectCalculator.GetLockedIntervals (obj);
+
+				for (int c=0; c<this.dataArray.ColumnsCount; c++)
+				{
+					var column = this.dataArray.GetColumn (c);
+					if (ObjectCalculator.IsLocked (lockedIntervals, column.Timestamp))
+					{
+						column[row] = new DataCell (column[row].Glyph, true, column[row].Tooltip);
+					}
+				}
+			}
 		}
 
 		private DataCell EventToCell(DataObject obj, DataEvent e)

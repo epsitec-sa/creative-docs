@@ -201,97 +201,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		#region Locked update
 		private void UpdateLocked(Guid objectGuid)
 		{
 			//	Toutes les dates avant un événement d'entrée ou après un événement de
 			//	sortie sont marquées comme bloquées. Elles auront un fond hachuré.
-			var lockedIntervals = this.GetLockedIntervals (objectGuid);
+			var obj = this.accessor.GetObject (this.baseType, objectGuid);
+			var lockedIntervals = ObjectCalculator.GetLockedIntervals (obj);
 
 			for (int i=0; i<this.cells.Count; i++)
 			{
 				var cell = this.cells[i];
 
-				if (TimelineData.IsLocked (lockedIntervals, cell.Timestamp))
+				if (ObjectCalculator.IsLocked (lockedIntervals, cell.Timestamp))
 				{
 					cell.TimelineLocked = true;
 					this.cells[i] = cell;
 				}
 			}
 		}
-
-		private static bool IsLocked(List<LockedInterval> lockedIntervals, Timestamp timestamp)
-		{
-			//	Indique si une date est à l'intérieur d'un invervalle bloqué.
-			foreach (var interval in lockedIntervals)
-			{
-				if (timestamp > interval.Start &&
-					timestamp < interval.End)
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		private List<LockedInterval> GetLockedIntervals(Guid objectGuid)
-		{
-			//	Retourne la liste des intervalles bloqués, en fonction des événements
-			//	d'entrée/sortie d'un objet.
-			var intervals = new List<LockedInterval> ();
-			var obj = this.accessor.GetObject (this.baseType, objectGuid);
-
-			if (obj != null)
-			{
-				var start = new Timestamp (System.DateTime.MinValue, 0);
-				bool isLocked = true;  // bloqué jusqu'au premier événement d'entrée
-
-				int eventCount = obj.EventsCount;
-				for (int i=0; i<eventCount; i++)
-				{
-					var e = obj.GetEvent (i);
-
-					if (e.Type == EventType.Entrée)
-					{
-						var li = new LockedInterval
-						{
-							Start = start,
-							End   = e.Timestamp,
-						};
-
-						intervals.Add (li);
-						isLocked = false;
-					}
-
-					if (e.Type == EventType.Sortie)
-					{
-						start = e.Timestamp;
-						isLocked = true;
-					}
-				}
-
-				if (isLocked)
-				{
-					var li = new LockedInterval
-					{
-						Start = start,
-						End   = new Timestamp (System.DateTime.MaxValue, 0),
-					};
-
-					intervals.Add (li);
-				}
-			}
-
-			return intervals;
-		}
-
-		private struct LockedInterval
-		{
-			public Timestamp Start;
-			public Timestamp End;
-		}
-		#endregion
 
 
 		public static TimelineGlyph TypeToGlyph(EventType? type)

@@ -21,6 +21,80 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		#region Locked intervals logic
+		public static bool IsLocked(List<LockedInterval> lockedIntervals, Timestamp timestamp)
+		{
+			//	Indique si une date est à l'intérieur d'un invervalle bloqué.
+			foreach (var interval in lockedIntervals)
+			{
+				if (timestamp > interval.Start &&
+					timestamp < interval.End)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public static List<LockedInterval> GetLockedIntervals(DataObject obj)
+		{
+			//	Retourne la liste des intervalles bloqués, en fonction des événements
+			//	d'entrée/sortie d'un objet.
+			var intervals = new List<LockedInterval> ();
+
+			if (obj != null)
+			{
+				var start = new Timestamp (System.DateTime.MinValue, 0);
+				bool isLocked = true;  // bloqué jusqu'au premier événement d'entrée
+
+				int eventCount = obj.EventsCount;
+				for (int i=0; i<eventCount; i++)
+				{
+					var e = obj.GetEvent (i);
+
+					if (e.Type == EventType.Entrée)
+					{
+						var li = new LockedInterval
+						{
+							Start = start,
+							End   = e.Timestamp,
+						};
+
+						intervals.Add (li);
+						isLocked = false;
+					}
+
+					if (e.Type == EventType.Sortie)
+					{
+						start = e.Timestamp;
+						isLocked = true;
+					}
+				}
+
+				if (isLocked)
+				{
+					var li = new LockedInterval
+					{
+						Start = start,
+						End   = new Timestamp (System.DateTime.MaxValue, 0),
+					};
+
+					intervals.Add (li);
+				}
+			}
+
+			return intervals;
+		}
+
+		public struct LockedInterval
+		{
+			public Timestamp Start;
+			public Timestamp End;
+		}
+		#endregion
+
+
 		#region Plausible event logic
 		public static bool IsEventLocked(DataObject obj, Timestamp timestamp)
 		{
