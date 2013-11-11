@@ -146,7 +146,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public void UpdateData()
 		{
 			//	Met à jour toutes les données en conservant le mode compacté/étendu.
-			var compactedGuids = this.nodes.Where (x => x.Type == NodeType.Compacted).Select (x => x.Guid).ToArray ();
+			var compactedGuids = this.nodes
+				.Where (node => node.Type == NodeType.Compacted)
+				.Select (node => node.Guid)
+				.ToArray ();  // check initial
+
 			this.nodes.Clear ();
 
 			int count = this.inputNodes.Count;
@@ -162,11 +166,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var nextNode = this.inputNodes[i+1];
 
-					//	Si le noeud suivant a un niveau plus élevé, il s'agit d'une
-					//	ligne pouvant être étendue ou compactée.
+					//	Si le prochain noeud a un niveau plus élevé, il s'agit d'une
+					//	ligne pouvant être étendue ou compactée. On lui redonne alors
+					//	son mode initial. S'il s'agit d'une nouvelle ligne (inconnue
+					//	lors du check initial), on lui met le mode étendu.
 					if (nextNode.Level > currentNode.Level)
 					{
-						bool isCompacted = compactedGuids.Where (x => x == currentNode.Guid).Any ();
+						bool isCompacted = compactedGuids.Where (guid => guid == currentNode.Guid).Any ();
 						type = isCompacted ? NodeType.Compacted : NodeType.Expanded;
 					}
 				}
