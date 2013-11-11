@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return this.mandat.GetData (baseType)[objectGuid];
 		}
 
-		public Timestamp CreateObject(BaseType baseType, int row, Guid modelGuid)
+		public DataEvent CreateObject(BaseType baseType, int row, Guid modelGuid)
 		{
 			var timestamp = new Timestamp (this.mandat.StartDate, 0);
 
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.Numéro, n));
 			}
 
-			return timestamp;
+			return e;
 		}
 
 		public DataEvent CreateObjectEvent(DataObject obj, System.DateTime date, EventType type)

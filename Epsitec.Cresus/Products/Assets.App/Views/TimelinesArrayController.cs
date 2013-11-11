@@ -42,8 +42,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.dataArray = new DataArray ();
 
+			//?this.nodesGetter.UpdateData ();
+			//?this.UpdateDataArray ();
+		}
+
+
+		public bool								Freeze;
+
+		public void UpdateData()
+		{
 			this.nodesGetter.UpdateData ();
-			this.UpdateData ();
+
+			this.UpdateDataArray ();
+			this.UpdateController ();
+			this.UpdateScroller ();
+			this.UpdateToolbar ();
 		}
 
 
@@ -64,7 +77,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				this.SetSelection (this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == value), this.selectedColumn);
+				var selectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == value);
+				this.SetSelection (selectedRow, this.selectedColumn);
 			}
 		}
 
@@ -370,18 +384,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			var timestamp = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
+			var e = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
 
-			this.nodesGetter.UpdateData ();
 			this.UpdateData ();
-			this.UpdateController ();
-			this.UpdateScroller ();
-			this.UpdateToolbar ();
 
-			var column = this.dataArray.FindColumnIndex (timestamp);
+			var column = this.dataArray.FindColumnIndex (e.Timestamp);
 			this.SetSelection (sel+1, column);
 
-			this.OnStartEditing (EventType.Entrée, timestamp);
+			this.OnStartEditing (e.Type, e.Timestamp);
 		}
 
 		private void OnObjectDelete()
@@ -418,7 +428,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var timestamp = this.SelectedTimestamp;
 
 			this.nodesGetter.CompactOrExpand (row);
-			this.UpdateData ();
+			this.UpdateDataArray ();
 			this.UpdateController ();
 			this.UpdateScroller ();
 			this.UpdateToolbar ();
@@ -434,7 +444,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var timestamp = this.SelectedTimestamp;
 
 			this.nodesGetter.CompactAll ();
-			this.UpdateData ();
+			this.UpdateDataArray ();
 			this.UpdateController ();
 			this.UpdateScroller ();
 			this.UpdateToolbar ();
@@ -450,7 +460,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var timestamp = this.SelectedTimestamp;
 
 			this.nodesGetter.ExpandAll ();
-			this.UpdateData ();
+			this.UpdateDataArray ();
 			this.UpdateController ();
 			this.UpdateScroller ();
 			this.UpdateToolbar ();
@@ -580,7 +590,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (e != null)
 				{
-					this.UpdateData ();
+					this.UpdateDataArray ();
 					this.UpdateController ();
 					this.UpdateScroller ();
 					this.UpdateToolbar ();
@@ -865,7 +875,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateData()
+		private void UpdateDataArray()
 		{
 			//	Met à jour this.dataArray en fonction de l'ensemble des événements de
 			//	tous les objets. Cela nécessite d'accéder à l'ensemble des données, ce

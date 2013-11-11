@@ -39,6 +39,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public bool								Freeze;
+
+		public void UpdateData()
+		{
+			this.NodesGetter.UpdateData ();
+
+			this.UpdateController ();
+			this.UpdateToolbar ();
+		}
+
+
 		protected override int					VisibleSelectedRow
 		{
 			get
@@ -70,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private Guid							SelectedGuid
+		public Guid								SelectedGuid
 		{
 			//	Retourne le Guid de l'objet actuellement sélectionné.
 			get
@@ -115,8 +126,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller.UpdateColumns ();
 
 			this.UpdateData ();
-			this.UpdateController ();
-			this.UpdateToolbar ();
 		}
 
 
@@ -175,14 +184,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			var timestamp = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
+			var e = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
 
 			this.UpdateData ();
-			this.UpdateController ();
-			this.UpdateToolbar ();
 
 			this.SelectedRow = sel+1;
-			this.OnStartEditing (EventType.Entrée, timestamp);
+			this.OnStartEditing (e.Type, e.Timestamp);
 		}
 
 		protected override void OnDelete()
@@ -216,13 +223,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
 			};
-		}
-
-
-		private void UpdateData()
-		{
-			//	Met à jour toutes les données en mode étendu.
-			this.NodesGetter.UpdateData ();
 		}
 
 

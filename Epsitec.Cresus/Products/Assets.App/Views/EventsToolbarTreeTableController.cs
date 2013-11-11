@@ -24,6 +24,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public bool								Freeze;
+
+
 		public Guid								ObjectGuid
 		{
 			get

@@ -22,6 +22,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public bool								Freeze;
+
+
 		public void CreateUI(Widget parent)
 		{
 			this.toolbar = new TimelineToolbar ();

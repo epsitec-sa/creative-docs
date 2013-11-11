@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.Update ();
 
-			//	Connexion des événements.
+			//	Connexion des événements de la liste des objets à gauche.
 			{
 				this.listController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
 				{
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				};
 			}
 
-			//	Connexion des événements.
+			//	Connexion des événements de la timeline en bas.
 			{
 				this.timelineController.StartEditing += delegate (object sender, EventType eventType)
 				{
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				};
 			}
 
-			//	Connexion des événements.
+			//	Connexion des événements de la liste des événements.
 			{
 				this.eventsController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
 				{
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				};
 			}
 
-			//	Connexion des événements.
+			//	Connexion des événements du tableau des objets et timelines.
 			{
 				this.timelinesArrayController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
 				{
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				};
 			}
 
-			//	Connexion des événements.
+			//	Connexion des événements de l'éditeur.
 			{
 				this.objectEditor.Navigate += delegate (object sender, Timestamp timestamp)
 				{
@@ -260,21 +260,37 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnChangeViewMode(ViewMode viewMode)
 		{
 			this.viewMode = viewMode;
-
-			if (this.viewMode == ViewMode.Single)
-			{
-				this.listController.Timestamp = this.selectedTimestamp;
-			}
-			else if (this.viewMode == ViewMode.Event)
-			{
-				this.listController.Timestamp = new Timestamp (System.DateTime.MaxValue, 0);
-			}
-			else if (this.viewMode == ViewMode.Multiple)
-			{
-				this.listController.Timestamp = this.selectedTimestamp;
-			}
-
 			this.UpdateViewModeGeometry ();
+
+			this.editFrameBox.Window.ForceLayout ();
+
+			using (this.ignoreChanges.Enter ())
+			{
+				if (this.viewMode == ViewMode.Single)
+				{
+					this.listController.UpdateData ();
+					this.listController.SelectedGuid = this.selectedGuid;
+					this.listController.Timestamp = this.selectedTimestamp;
+
+					this.timelineController.ObjectGuid = this.selectedGuid;
+					this.timelineController.SelectedTimestamp = this.selectedTimestamp;
+				}
+				else if (this.viewMode == ViewMode.Event)
+				{
+					this.listController.UpdateData ();
+					this.listController.SelectedGuid = this.selectedGuid;
+					this.listController.Timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+
+					this.eventsController.ObjectGuid = this.selectedGuid;
+					this.eventsController.SelectedTimestamp = this.selectedTimestamp;
+				}
+				else if (this.viewMode == ViewMode.Multiple)
+				{
+					this.timelinesArrayController.UpdateData ();
+					this.timelinesArrayController.SelectedGuid = this.selectedGuid;
+					this.timelinesArrayController.SelectedTimestamp = this.selectedTimestamp;
+				}
+			}
 		}
 
 		private void OnListDoubleClicked()
@@ -448,7 +464,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.timelineController.ObjectGuid = this.selectedGuid;
-			this.eventsController.ObjectGuid = this.selectedGuid;
+
+			if (!this.eventsController.Freeze)
+			{
+				this.eventsController.ObjectGuid = this.selectedGuid;
+			}
 
 			//	On sélectionne le dernier événement de l'objet dans la timeline.
 			var obj = this.accessor.GetObject (this.baseType, this.selectedGuid);
@@ -461,9 +481,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			using (this.ignoreChanges.Enter ())
+			if (!this.eventsController.Freeze)
 			{
-				this.eventsController.SelectedTimestamp = this.selectedTimestamp;
+				using (this.ignoreChanges.Enter ())
+				{
+					this.eventsController.SelectedTimestamp = this.selectedTimestamp;
+				}
 			}
 
 			this.Update ();
@@ -475,10 +498,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.listController.Timestamp = this.selectedTimestamp;
 
-			using (this.ignoreChanges.Enter ())
-			{
-				this.eventsController.SelectedTimestamp = this.selectedTimestamp;
-			}
+			//?using (this.ignoreChanges.Enter ())
+			//?{
+			//?	this.eventsController.SelectedTimestamp = this.selectedTimestamp;
+			//?}
 
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
@@ -504,7 +527,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.selectedTimestamp == null)
 			{
-				this.isEditing    = false;
+				this.isEditing = false;
 			}
 
 			this.Update ();
@@ -535,6 +558,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateSingleGeometry()
 		{
+			this.listController          .Freeze = false;
+			this.eventsController        .Freeze = true;
+			this.timelineController      .Freeze = false;
+			this.timelinesArrayController.Freeze = true;
+
 			this.eventsFrameBox.Visibility = false;
 			this.closeButton   .Visibility = false;
 
@@ -550,7 +578,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateEventGeometry()
 		{
-			this.timelineFrameBox.Visibility = false;
+			this.listController          .Freeze = false;
+			this.eventsController        .Freeze = false;
+			this.timelineController      .Freeze = true;
+			this.timelinesArrayController.Freeze = true;
+
+			this.timelineFrameBox      .Visibility = false;
 			this.timelinesArrayFrameBox.Visibility = false;
 
 			if (this.isEditing)
@@ -597,6 +630,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateMultipleGeometry()
 		{
+			this.listController          .Freeze = true;
+			this.eventsController        .Freeze = true;
+			this.timelineController      .Freeze = true;
+			this.timelinesArrayController.Freeze = false;
+
 			this.eventsFrameBox.Visibility = false;
 			this.closeButton   .Visibility = false;
 
