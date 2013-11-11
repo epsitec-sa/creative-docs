@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Unknown,
 
 		OneShotNuméro,
-		OneShotDateValeur,
+		OneShotDateOpération,
 		OneShotCommentaire,
 		OneShotDocuments,
 

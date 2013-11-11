@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (field)
 			{
 				case ObjectField.OneShotNuméro:
-				case ObjectField.OneShotDateValeur:
+				case ObjectField.OneShotDateOpération:
 				case ObjectField.OneShotCommentaire:
 				case ObjectField.OneShotDocuments:
 					return EditionObjectPageType.OneShot;
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (field)
 			{
 				case ObjectField.OneShotNuméro:
-				case ObjectField.OneShotDateValeur:
+				case ObjectField.OneShotDateOpération:
 				case ObjectField.OneShotCommentaire:
 				case ObjectField.OneShotDocuments:
 					return EditionObjectPageType.OneShot;
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (field)
 			{
 				case ObjectField.OneShotNuméro:
-				case ObjectField.OneShotDateValeur:
+				case ObjectField.OneShotDateOpération:
 				case ObjectField.OneShotCommentaire:
 				case ObjectField.OneShotDocuments:
 					return EditionObjectPageType.OneShot;
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					new ObjectSummaryControllerTile ("Evénement"),
 					new ObjectSummaryControllerTile (ObjectField.OneShotNuméro),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDateValeur),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDateOpération),
 					new ObjectSummaryControllerTile (ObjectField.OneShotCommentaire),
 					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
 
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					new ObjectSummaryControllerTile ("Evénement"),
 					new ObjectSummaryControllerTile (ObjectField.OneShotNuméro),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDateValeur),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDateOpération),
 					new ObjectSummaryControllerTile (ObjectField.OneShotCommentaire),
 					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
 
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					new ObjectSummaryControllerTile ("Evénement"),
 					new ObjectSummaryControllerTile (ObjectField.OneShotNuméro),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDateValeur),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDateOpération),
 					new ObjectSummaryControllerTile (ObjectField.OneShotCommentaire),
 					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
 

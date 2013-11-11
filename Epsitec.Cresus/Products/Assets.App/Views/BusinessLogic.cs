@@ -346,7 +346,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				yield return ObjectField.OneShotNuméro;
-				yield return ObjectField.OneShotDateValeur;
+				yield return ObjectField.OneShotDateOpération;
 				yield return ObjectField.OneShotCommentaire;
 				yield return ObjectField.OneShotDocuments;
 

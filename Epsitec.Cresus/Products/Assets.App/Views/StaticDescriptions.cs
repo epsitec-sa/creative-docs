@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.OneShotNuméro:
 					return "Evénement numéro";
 
-				case ObjectField.OneShotDateValeur:
-					return "Date valeur";
+				case ObjectField.OneShotDateOpération:
+					return "Date opération";
 
 				case ObjectField.OneShotCommentaire:
 					return "Commentaire";
