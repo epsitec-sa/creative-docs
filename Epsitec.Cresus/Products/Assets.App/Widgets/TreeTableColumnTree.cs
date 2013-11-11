@@ -17,6 +17,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnTree : AbstractTreeTableColumn
 	{
+		public bool								IndependentColumn;
+
 		public void SetCells(TreeTableCellTree[] cells)
 		{
 			this.cells = cells;
@@ -28,11 +30,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if (message.IsMouseType)
+			if (this.IndependentColumn)
 			{
-				if (message.MessageType == MessageType.MouseDown)
+				if (message.IsMouseType)
 				{
-					this.ProcessMouseClick (pos);
+					if (message.MessageType == MessageType.MouseDown)
+					{
+						this.ProcessMouseClick (pos);
+					}
+					else if (message.MessageType == MessageType.MouseMove)
+					{
+						this.ProcessMouseMove (pos);
+					}
+					else if (message.MessageType == MessageType.MouseLeave)
+					{
+						this.ProcessMouseLeave (pos);
+					}
 				}
 			}
 
@@ -87,6 +100,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		private void ProcessMouseMove(Point pos)
+		{
+			this.HilitedHoverRow = this.DetectRow (pos);
+		}
+
+		private void ProcessMouseLeave(Point pos)
+		{
+			this.HilitedHoverRow = -1;
+		}
+
 		private int DetectRow(Point pos)
 		{
 			int max = this.VisibleRowsCount;
@@ -134,15 +157,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 						var button = new GlyphButton
 						{
-							GlyphShape    = cell.Type == NodeType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
-							ButtonStyle   = ButtonStyle.ToolItem,
-							PreferredSize = rect.Size,
-							Anchor        = AnchorStyles.BottomLeft,
-							Margins       = new Margins (rect.Left, 0, 0, rect.Bottom),
-							Name          = TreeTableColumnTree.Serialize (y, cell.Type),
+							Parent      = this,
+							GlyphShape  = cell.Type == NodeType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
+							ButtonStyle = ButtonStyle.ToolItem,
+							Name        = TreeTableColumnTree.Serialize (y, cell.Type),
 						};
 
-						this.Children.Add (button);
+						button.SetManualBounds (rect);
 
 						button.MouseMove += delegate (object sender, MessageEventArgs e)
 						{

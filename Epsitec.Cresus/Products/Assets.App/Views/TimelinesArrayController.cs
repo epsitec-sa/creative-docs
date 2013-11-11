@@ -115,51 +115,77 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.topTitle.SetTitle (this.title);
 
-			var toolbarFrame = new FrameBox
-			{
-				Parent = parent,
-				Dock   = DockStyle.Top,
-			};
-
-			this.objectsToolbar = new TreeTableToolbar ();
-			var objectsToolbarFrame = this.objectsToolbar.CreateUI (toolbarFrame);
-			objectsToolbarFrame.PreferredWidth = TimelinesArrayController.leftColumnWidth;
-			objectsToolbarFrame.Dock = DockStyle.Left;
-
-			this.timelinesToolbar = new TimelinesToolbar ();
-			var timelinesToolbarFrame = this.timelinesToolbar.CreateUI (toolbarFrame);
-			timelinesToolbarFrame.Dock = DockStyle.Fill;
-
 			var box = new FrameBox
 			{
 				Parent = parent,
 				Dock   = DockStyle.Fill,
 			};
 
-			this.treeColumn = new TreeTableColumnTree
+			var leftBox = new FrameBox
 			{
 				Parent         = box,
 				Dock           = DockStyle.Left,
 				PreferredWidth = TimelinesArrayController.leftColumnWidth,
-				DockToLeft     = true,  // pour avoir la couleur grise
-				HeaderHeight   = TimelinesArrayController.lineHeight*2,
-				FooterHeight   = 0,
-				RowHeight      = TimelinesArrayController.lineHeight,
-				Margins        = new Margins (0, 1, 0, AbstractScroller.DefaultBreadth),
 			};
+
+			this.splitter = new VSplitter
+			{
+				Parent = box,
+				Dock   = DockStyle.Left,
+			};
+
+			var rightBox = new FrameBox
+			{
+				Parent = box,
+				Dock   = DockStyle.Fill,
+			};
+
+			//	Partie gauche.
+			this.objectsToolbar = new TreeTableToolbar ();
+			this.objectsToolbar.CreateUI (leftBox);
+			this.objectsToolbar.HasTreeOperations = true;
+
+			this.treeColumn = new TreeTableColumnTree
+			{
+				Parent            = leftBox,
+				Dock              = DockStyle.Fill,
+				IndependentColumn = true,
+				DockToLeft        = true,  // pour avoir la couleur grise
+				HoverMode         = TreeTableHoverMode.VerticalGradient,
+				HeaderHeight      = TimelinesArrayController.lineHeight*2,
+				FooterHeight      = 0,
+				RowHeight         = TimelinesArrayController.lineHeight,
+				Margins           = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
+			};
+
+			//	Partie droite.
+			this.timelinesToolbar = new TimelinesToolbar ();
+			this.timelinesToolbar.CreateUI (rightBox);
+
+			var bottomRightBox = new FrameBox
+			{
+				Parent = rightBox,
+				Dock   = DockStyle.Fill,
+			};
+
+			var timelinesBox = new FrameBox
+			{
+				Parent = bottomRightBox,
+				Dock   = DockStyle.Fill,
+			};
+
+			this.controller = new NavigationTimelineController ();
+			this.controller.CreateUI (timelinesBox);
+			this.controller.RelativeWidth = 1.0;
 
 			this.scroller = new VScroller
 			{
-				Parent     = box,
+				Parent     = bottomRightBox,
 				Dock       = DockStyle.Right,
 				Margins    = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
 				IsInverted = true,  // le zéro est en haut
 			};
 
-			this.controller = new NavigationTimelineController ();
-			this.controller.CreateUI (box);
-			this.controller.RelativeWidth = 1.0;
-			
 			this.UpdateController ();
 			this.UpdateScroller ();
 			this.UpdateToolbar ();
@@ -231,6 +257,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnObjectNext ();
 						break;
 
+					case ToolbarCommand.CompactAll:
+						this.OnCompactAll ();
+						break;
+
+					case ToolbarCommand.ExpandAll:
+						this.OnExpandAll ();
+						break;
+
 					case ToolbarCommand.New:
 						this.OnObjectNew ();
 						break;
@@ -263,14 +297,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case ToolbarCommand.Next:
 						this.OnTimelineNext ();
-						break;
-
-					case ToolbarCommand.CompactAll:
-						this.OnCompactAll ();
-						break;
-
-					case ToolbarCommand.ExpandAll:
-						this.OnExpandAll ();
 						break;
 
 					case ToolbarCommand.New:
@@ -1070,6 +1096,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateObjectCommand (ToolbarCommand.Next,  this.selectedRow, this.NextRowIndex);
 			this.UpdateObjectCommand (ToolbarCommand.Last,  this.selectedRow, this.LastRowIndex);
 
+			this.objectsToolbar.UpdateCommand (ToolbarCommand.CompactAll, !this.nodesGetter.IsAllCompacted);
+			this.objectsToolbar.UpdateCommand (ToolbarCommand.ExpandAll,  !this.nodesGetter.IsAllExpanded);
+
 			this.objectsToolbar.UpdateCommand (ToolbarCommand.New,      this.selectedRow != -1);
 			this.objectsToolbar.UpdateCommand (ToolbarCommand.Delete,   this.SelectedObject != null);
 			this.objectsToolbar.UpdateCommand (ToolbarCommand.Deselect, this.selectedRow != -1);
@@ -1335,6 +1364,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private string							title;
 		private TopTitle						topTitle;
 		private TreeTableToolbar				objectsToolbar;
+		private VSplitter						splitter;
 		private TimelinesToolbar				timelinesToolbar;
 		private TreeTableColumnTree				treeColumn;
 		private NavigationTimelineController	controller;
