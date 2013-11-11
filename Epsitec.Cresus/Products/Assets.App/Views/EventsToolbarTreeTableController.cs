@@ -83,12 +83,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected virtual void OnDeselect()
+		protected override void OnDeselect()
 		{
 			this.SelectedRow = -1;
 		}
 
-		protected virtual void OnNew()
+		protected override void OnNew()
 		{
 			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
 			var timestamp = this.SelectedTimestamp;
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected virtual void OnDelete()
+		protected override void OnDelete()
 		{
 			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Delete);
 

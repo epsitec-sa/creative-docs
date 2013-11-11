@@ -80,7 +80,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public int GetLeftVisibleCell(int sel)
 		{
-			System.Diagnostics.Debug.Assert (this.timeline.VisibleCellsCount > 0);
 			int count = System.Math.Min (this.timeline.VisibleCellsCount, this.cellsCount);
 
 			sel = System.Math.Min (sel + count/2, this.cellsCount-1);

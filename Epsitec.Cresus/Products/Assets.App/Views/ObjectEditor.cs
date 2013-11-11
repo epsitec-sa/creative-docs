@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Après la création d'un événement, on cherche à ouvrir la page la
 			//	plus pertinente.
 			this.eventType = eventType;
-			this.OpenPage (EditionObjectPageType.OneShot);
+			this.OpenPage (this.MainPage);
 		}
 
 
@@ -174,6 +174,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.tabPagesController.UpdateUI ();
 		}
 
+
+		private EditionObjectPageType MainPage
+		{
+			get
+			{
+				var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
+
+				if (pages.Length >= 2)
+				{
+					return pages[2];
+				}
+				else
+				{
+					return EditionObjectPageType.OneShot;
+				}
+			}
+		}
 
 		public IEnumerable<EditionObjectPageType> AvailablePages
 		{

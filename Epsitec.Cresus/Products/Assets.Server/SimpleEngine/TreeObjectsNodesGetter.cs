@@ -215,6 +215,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private readonly AbstractNodesGetter<LevelNode>	inputNodes;
 		private readonly List<TreeNode>					nodes;
-		private readonly List<int>					nodeIndexes;
+		private readonly List<int>						nodeIndexes;
 	}
 }

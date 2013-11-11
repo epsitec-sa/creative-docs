@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public Timestamp?						Timestamp
+		public Timestamp?						SelectedTimestamp
 		{
 			get
 			{
@@ -358,51 +358,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnObjectNew()
 		{
-#if false
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
-			var timestamp = this.SelectedTimestamp;
-
-			if (target != null && timestamp.HasValue)
+			var modelGuid = this.SelectedGuid;
+			if (modelGuid.IsEmpty)
 			{
-				System.DateTime? createDate = timestamp.Value.Date;
-
-				var popup = new NewEventPopup
-				{
-					BaseType   = this.baseType,
-					DataObject = this.obj,
-					Timestamp  = timestamp.Value,
-				};
-
-				popup.Create (target);
-
-				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
-				{
-					var index = this.GetEventIndex (dateTime);
-
-					if (index.HasValue)
-					{
-						this.SelectedCell = index.Value;
-					}
-					else
-					{
-						this.SelectedCell = -1;
-					}
-
-					if (dateTime.HasValue)
-					{
-						createDate = dateTime.Value;
-					}
-				};
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (createDate.HasValue)
-					{
-						this.CreateEvent (createDate.Value, name);
-					}
-				};
+				return;
 			}
-#endif
+
+			int sel = this.selectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			var timestamp = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
+
+			this.nodesGetter.UpdateData ();
+			this.UpdateData ();
+			this.UpdateController ();
+			this.UpdateScroller ();
+			this.UpdateToolbar ();
+
+			var column = this.dataArray.FindColumnIndex (timestamp);
+			this.SetSelection (sel+1, column);
+
+			this.OnStartEditing (EventType.Entrée, timestamp);
 		}
 
 		private void OnObjectDelete()
@@ -436,7 +415,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Etend ou compacte une ligne (inverse son mode actuel).
 			var guid = this.SelectedGuid;
-			var timestamp = this.Timestamp;
+			var timestamp = this.SelectedTimestamp;
 
 			this.nodesGetter.CompactOrExpand (row);
 			this.UpdateData ();
@@ -445,14 +424,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateToolbar ();
 
 			this.SelectedGuid = guid;
-			this.Timestamp = timestamp;
+			this.SelectedTimestamp = timestamp;
 		}
 
 		protected void OnCompactAll()
 		{
 			//	Compacte toutes les lignes.
 			var guid = this.SelectedGuid;
-			var timestamp = this.Timestamp;
+			var timestamp = this.SelectedTimestamp;
 
 			this.nodesGetter.CompactAll ();
 			this.UpdateData ();
@@ -461,14 +440,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateToolbar ();
 
 			this.SelectedGuid = guid;
-			this.Timestamp = timestamp;
+			this.SelectedTimestamp = timestamp;
 		}
 
 		protected void OnExpandAll()
 		{
 			//	Etend toutes les lignes.
 			var guid = this.SelectedGuid;
-			var timestamp = this.Timestamp;
+			var timestamp = this.SelectedTimestamp;
 
 			this.nodesGetter.ExpandAll ();
 			this.UpdateData ();
@@ -477,7 +456,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateToolbar ();
 
 			this.SelectedGuid = guid;
-			this.Timestamp = timestamp;
+			this.SelectedTimestamp = timestamp;
 		}
 		#endregion
 
@@ -525,8 +504,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnTimelineNew()
 		{
-#if false
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
+			var target = this.timelinesToolbar.GetCommandWidget (ToolbarCommand.New);
 			var timestamp = this.SelectedTimestamp;
 
 			if (target != null && timestamp.HasValue)
@@ -536,7 +514,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var popup = new NewEventPopup
 				{
 					BaseType   = this.baseType,
-					DataObject = this.obj,
+					DataObject = this.accessor.GetObject (this.baseType, this.SelectedGuid),
 					Timestamp  = timestamp.Value,
 				};
 
@@ -544,20 +522,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
 				{
-					var index = this.GetEventIndex (dateTime);
-
-					if (index.HasValue)
-					{
-						this.SelectedCell = index.Value;
-					}
-					else
-					{
-						this.SelectedCell = -1;
-					}
-
 					if (dateTime.HasValue)
 					{
 						createDate = dateTime.Value;
+
+						int column = this.dataArray.FindColumnIndex (new Timestamp (dateTime.Value, 0));
+						this.SetSelection (this.selectedRow, column);
 					}
 				};
 
@@ -569,7 +539,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 			}
-#endif
 		}
 
 		private void OnTimelineDelete()
@@ -599,6 +568,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetSelection (this.selectedRow, -1);
 		}
 		#endregion
+
+
+		private void CreateEvent(System.DateTime date, string buttonName)
+		{
+			var obj = this.accessor.GetObject (this.baseType, this.SelectedGuid);
+			if (obj != null)
+			{
+				var type = TimelinesArrayController.ParseEventType (buttonName);
+				var e = this.accessor.CreateObjectEvent (obj, date, type);
+
+				if (e != null)
+				{
+					this.UpdateData ();
+					this.UpdateController ();
+					this.UpdateScroller ();
+					this.UpdateToolbar ();
+
+					this.SetSelection (this.selectedRow, this.dataArray.FindColumnIndex (e.Timestamp));
+				}
+
+				this.OnStartEditing (e.Type, e.Timestamp);
+			}
+		}
+
+		private static EventType ParseEventType(string text)
+		{
+			var type = EventType.Unknown;
+			System.Enum.TryParse<EventType> (text, out type);
+			return type;
+		}
 
 
 		private void UpdateController(bool crop = true)
@@ -636,13 +635,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 	
 			var list = new List<TreeTableCellTree> ();
-			var timestamp = this.Timestamp;
+			var timestamp = this.SelectedTimestamp;
 
 			foreach (var row in this.EnumVisibleRows)
 			{
 				var node = this.nodesGetter[row];
 				var obj  = this.accessor.GetObject (this.baseType, node.Guid);
-				var nom  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
+				var nom  = ObjectCalculator.GetObjectPropertyString (obj, this.SelectedTimestamp, ObjectField.Nom);
 				bool isSelected = node.Guid == this.SelectedGuid;
 
 				if (timestamp.HasValue &&
@@ -898,35 +897,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			return new DataCell (glyph, false, tooltip);
 		}
-
-		#region IInputData Members
-		public int NodesCount
-		{
-			get
-			{
-				return this.accessor.GetObjectsCount (this.baseType);
-			}
-		}
-
-		public void GetData(int row, out Guid guid, out int level)
-		{
-			guid = Guid.Empty;
-			level = 0;
-
-			if (row >= 0 && row < this.accessor.GetObjectsCount (this.baseType))
-			{
-				guid = this.accessor.GetObjectGuids (this.baseType, row, 1).FirstOrDefault ();
-
-				var obj = this.accessor.GetObject (this.baseType, guid);
-				var timestamp = new Timestamp (System.DateTime.MaxValue, 0);
-				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, timestamp, ObjectField.Level) as DataIntProperty;
-				if (p != null)
-				{
-					level = p.Value;
-				}
-			}
-		}
-		#endregion
 
 
 		#region Data manager
@@ -1350,11 +1320,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public delegate void CellDoubleClickedEventHandler(object sender);
 		public event CellDoubleClickedEventHandler CellDoubleClicked;
+
+
+		private void OnStartEditing(EventType eventType, Timestamp timestamp)
+		{
+			if (this.StartEditing != null)
+			{
+				this.StartEditing (this, eventType, timestamp);
+			}
+		}
+
+		public delegate void StartEditingEventHandler(object sender, EventType eventType, Timestamp timestamp);
+		public event StartEditingEventHandler StartEditing;
 		#endregion
 
 
-		private static readonly int lineHeight      = 20;
-		private static readonly int leftColumnWidth = 220;
+		private static readonly int lineHeight      = 18;
+		private static readonly int leftColumnWidth = 180;
 
 		private readonly DataAccessor			accessor;
 		private readonly BaseType				baseType;

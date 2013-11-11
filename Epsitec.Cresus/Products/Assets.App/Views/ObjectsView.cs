@@ -26,50 +26,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.objectEditor             = new ObjectEditor (this.accessor, this.baseType);
 
 			this.ignoreChanges = new SafeCounter ();
-
-			this.objectEditor.Navigate += delegate (object sender, Timestamp timestamp)
-			{
-				var index = this.timelineController.GetEventIndex (timestamp);
-
-				if (index.HasValue)
-				{
-					this.timelineController.SelectedCell = index.Value;
-				}
-
-				this.eventsController.SelectedTimestamp = timestamp;
-			};
-
-			this.objectEditor.ValueChanged += delegate (object sender, ObjectField field)
-			{
-				this.UpdateToolbars ();
-			};
-
-			this.listController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
-			{
-				this.OnStartEdit (eventType, timestamp);
-			};
-
-			this.timelineController.StartEditing += delegate (object sender, EventType eventType)
-			{
-				this.OnStartEdit (eventType);
-			};
-
-			this.eventsController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
-			{
-				this.OnStartEdit (eventType, timestamp);
-			};
-
-			this.timelineController.UpdateAll += delegate
-			{
-				this.Update ();
-				this.eventsController.Update ();
-			};
-
-			this.eventsController.UpdateAll += delegate
-			{
-				this.Update ();
-				this.timelineController.Update ();
-			};
 		}
 
 
@@ -142,61 +98,124 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Update ();
 
 			//	Connexion des événements.
+			{
+				this.listController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
+				{
+					this.OnStartEdit (eventType, timestamp);
+				};
+
+				this.listController.SelectedRowChanged += delegate
+				{
+					if (this.ignoreChanges.IsZero)
+					{
+						this.UpdateAfterListChanged ();
+					}
+				};
+
+				this.listController.RowDoubleClicked += delegate
+				{
+					this.OnListDoubleClicked ();
+				};
+			}
+
+			//	Connexion des événements.
+			{
+				this.timelineController.StartEditing += delegate (object sender, EventType eventType)
+				{
+					this.OnStartEdit (eventType);
+				};
+
+				this.timelineController.UpdateAll += delegate
+				{
+					this.Update ();
+					this.eventsController.Update ();
+				};
+
+				this.timelineController.SelectedCellChanged += delegate
+				{
+					if (this.ignoreChanges.IsZero)
+					{
+						this.UpdateAfterTimelineChanged ();
+					}
+				};
+
+				this.timelineController.CellDoubleClicked += delegate
+				{
+					this.OnStartEdit ();
+				};
+			}
+
+			//	Connexion des événements.
+			{
+				this.eventsController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
+				{
+					this.OnStartEdit (eventType, timestamp);
+				};
+
+				this.eventsController.UpdateAll += delegate
+				{
+					this.Update ();
+					this.timelineController.Update ();
+				};
+
+				this.eventsController.SelectedRowChanged += delegate
+				{
+					if (this.ignoreChanges.IsZero)
+					{
+						this.UpdateAfterEventsChanged ();
+					}
+				};
+
+				this.eventsController.RowDoubleClicked += delegate
+				{
+					this.OnEventDoubleClicked ();
+				};
+			}
+
+			//	Connexion des événements.
+			{
+				this.timelinesArrayController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
+				{
+					this.OnStartEdit (eventType, timestamp);
+				};
+
+				this.timelinesArrayController.SelectedCellChanged += delegate
+				{
+					if (this.ignoreChanges.IsZero)
+					{
+						this.UpdateAfterMultipleChanged ();
+					}
+				};
+
+				this.timelinesArrayController.CellDoubleClicked += delegate
+				{
+					this.OnStartEdit ();
+				};
+			}
+
+			//	Connexion des événements.
+			{
+				this.objectEditor.Navigate += delegate (object sender, Timestamp timestamp)
+				{
+					var index = this.timelineController.GetEventIndex (timestamp);
+
+					if (index.HasValue)
+					{
+						this.timelineController.SelectedCell = index.Value;
+					}
+
+					this.eventsController.SelectedTimestamp = timestamp;
+				};
+
+				this.objectEditor.ValueChanged += delegate (object sender, ObjectField field)
+				{
+					this.UpdateToolbars ();
+				};
+			}
+
 			this.closeButton.Clicked += delegate
 			{
 				this.OnCloseColumn ();
-			};
-
-			this.listController.SelectedRowChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.UpdateAfterListChanged ();
-				}
-			};
-
-			this.listController.RowDoubleClicked += delegate
-			{
-				this.OnListDoubleClicked ();
-			};
-
-			this.timelineController.SelectedCellChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.UpdateAfterTimelineChanged ();
-				}
-			};
-
-			this.timelineController.CellDoubleClicked += delegate
-			{
-				this.OnStartEdit ();
-			};
-
-			this.eventsController.SelectedRowChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.UpdateAfterEventsChanged ();
-				}
-			};
-
-			this.eventsController.RowDoubleClicked += delegate
-			{
-				this.OnEventDoubleClicked ();
-			};
-
-			this.timelinesArrayController.SelectedCellChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.UpdateAfterMultipleChanged ();
-				}
-			};
-
-			this.timelinesArrayController.CellDoubleClicked += delegate
-			{
-				this.OnStartEdit ();
 			};
 		}
 
@@ -252,6 +271,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else if (this.viewMode == ViewMode.Multiple)
 			{
+				this.listController.Timestamp = this.selectedTimestamp;
 			}
 
 			this.UpdateViewModeGeometry ();
@@ -319,6 +339,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else if (this.viewMode == ViewMode.Multiple)
 				{
+					this.timelinesArrayController.SelectedTimestamp = timestamp.Value;
 				}
 			}
 
@@ -479,7 +500,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateAfterMultipleChanged()
 		{
 			this.selectedGuid      = this.timelinesArrayController.SelectedGuid;
-			this.selectedTimestamp = this.timelinesArrayController.Timestamp;
+			this.selectedTimestamp = this.timelinesArrayController.SelectedTimestamp;
 
 			if (this.selectedTimestamp == null)
 			{
@@ -624,7 +645,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else if (this.viewMode == ViewMode.Multiple)
 				{
 					return !this.timelinesArrayController.SelectedGuid.IsEmpty
-						&& this.timelinesArrayController.Timestamp != null;
+						&& this.timelinesArrayController.SelectedTimestamp != null;
 				}
 
 				return false;

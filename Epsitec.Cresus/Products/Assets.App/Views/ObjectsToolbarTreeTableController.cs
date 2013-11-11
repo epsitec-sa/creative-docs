@@ -156,12 +156,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedGuid = guid;
 		}
 
-		protected virtual void OnDeselect()
+		protected override void OnDeselect()
 		{
 			this.VisibleSelectedRow = -1;
 		}
 
-		protected virtual void OnNew()
+		protected override void OnNew()
 		{
 			var modelGuid = this.SelectedGuid;
 			if (modelGuid.IsEmpty)
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnStartEditing (EventType.Entrée, timestamp);
 		}
 
-		protected virtual void OnDelete()
+		protected override void OnDelete()
 		{
 			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Delete);
 
