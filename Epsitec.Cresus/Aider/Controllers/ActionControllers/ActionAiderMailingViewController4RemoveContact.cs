@@ -18,8 +18,8 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (10)]
-	public sealed class ActionAiderMailingViewController10RemoveContact : TemplateActionViewController<AiderMailingEntity, AiderContactEntity>
+	[ControllerSubType (4)]
+	public sealed class ActionAiderMailingViewController4RemoveContact : TemplateActionViewController<AiderMailingEntity, AiderContactEntity>
 	{
 		public override FormattedText GetTitle()
 		{

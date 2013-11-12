@@ -33,6 +33,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderMailingViewController1Recipients))
 				.EnableActionMenu<ActionAiderMailingViewController3KeepUpdated> ()
+				.EnableActionMenu<ActionAiderMailingViewController2Duplicate> ()
+				.EnableActionButton<ActionAiderMailingViewController2Duplicate> ()
 				.EnableActionOnDrop<ActionAiderMailingViewController0AddRecipientOnDrop> ();
 	
 			/*wall.AddBrick ()

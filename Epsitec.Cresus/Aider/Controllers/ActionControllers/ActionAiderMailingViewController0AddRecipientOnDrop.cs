@@ -47,7 +47,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			if (this.AdditionalEntity is AiderHouseholdEntity)
 			{
 				this.Entity.AddHousehold (this.BusinessContext, (AiderHouseholdEntity) this.AdditionalEntity);
-			}		
+			}
+
+			if (this.AdditionalEntity is AiderLegalPersonEntity)
+			{
+				var legalPerson = (AiderLegalPersonEntity) this.AdditionalEntity;
+
+				this.Entity.AddContact (this.BusinessContext, legalPerson.GetMainContact ());
+			}	
 		}
 	}
 }

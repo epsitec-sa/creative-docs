@@ -50,6 +50,7 @@ $.getScript('signalr/hubs', function() {
         this.fixFilterMenuLocalizationError();
         this.fixBooleanColumnLocalizationError();
         this.fixBackspaceHandling();
+        this.fixDragAndDropManager();
         this.showLoginPanel();
       },
 
@@ -178,6 +179,40 @@ $.getScript('signalr/hubs', function() {
           });
         }
       },
+
+      fixDragAndDropManager: function () {
+        Ext.dd.DragDropMgr.getLocation = function (i) {
+          if (!this.isTypeOfDD(i)) { 
+            return null 
+          }
+          if (i.getRegion){ 
+            return i.getRegion() 
+          }
+          var g = i.getEl(), m, d, c, o, n, p, a, k, h;
+
+          if(g!=null) {
+            try { 
+              m = Ext.Element.getXY(g) 
+            }
+            catch (j) { }
+
+            if (!m) { 
+              return null 
+            }
+            
+            d = m[0];
+            c = d + g.offsetWidth;
+            o = m[1];
+            n = o + g.offsetHeight;
+            p = o - i.padding[0];
+            a = c + i.padding[1];
+            k = n + i.padding[2];
+            h = d - i.padding[3];       
+            return new Ext.util.Region(p, a, k, h)
+          }
+        };
+      },
+      
 
       showLoginPanel: function() {
         this.loginPanel = Ext.create('Epsitec.LoginPanel', {

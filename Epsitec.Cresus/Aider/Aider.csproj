@@ -134,7 +134,8 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController7AddHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController8RemoveHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController9AddContact.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController10RemoveContact.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController4RemoveContact.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController2Duplicate.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />
