@@ -41,8 +41,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (this.baseType, guid);
 
+				var nom    = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
 				var family = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Famille);
-				var member = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Membre);
 
 				if (this.Timestamp.HasValue &&
 					!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
@@ -50,8 +50,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 					family = StaticDescriptions.OutOfDateName;
 				}
 
-				var sf = new TreeTableCellTree   (true, level, type, family, isSelected: (i == selection));
-				var s1 = new TreeTableCellString (true, member, isSelected: (i == selection));
+				var sf = new TreeTableCellTree   (true, level, type, nom, isSelected: (i == selection));
+				var s1 = new TreeTableCellString (true, family, isSelected: (i == selection));
 
 				cf.Add (sf);
 				c1.Add (s1);
@@ -71,8 +71,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   150, "Famille"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 250, "Membre"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   250, "Membre"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Famille"));
 
 				return list.ToArray ();
 			}

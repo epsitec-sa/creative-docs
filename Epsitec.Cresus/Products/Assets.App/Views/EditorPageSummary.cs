@@ -355,9 +355,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					new ObjectSummaryControllerTile ("Général"),
 					new ObjectSummaryControllerTile (ObjectField.Level),
-					new ObjectSummaryControllerTile (ObjectField.Description),
 					new ObjectSummaryControllerTile (ObjectField.Famille),
-					new ObjectSummaryControllerTile (ObjectField.Membre),
+					new ObjectSummaryControllerTile (ObjectField.Nom),
+					new ObjectSummaryControllerTile (ObjectField.Description),
 				};
 				list.Add (c1);
 

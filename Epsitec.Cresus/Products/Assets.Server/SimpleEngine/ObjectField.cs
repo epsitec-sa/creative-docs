@@ -50,6 +50,5 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Compte8,
 
 		Famille,
-		Membre,
 	}
 }

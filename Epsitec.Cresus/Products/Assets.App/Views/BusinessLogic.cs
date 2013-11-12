@@ -382,7 +382,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				yield return ObjectField.Compte8;
 
 				yield return ObjectField.Famille;
-				yield return ObjectField.Membre;
 			}
 		}
 

@@ -48,14 +48,14 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var date   = Helpers.Converters.DateToString (timestamp.Date);
 				var glyph  = TimelineData.TypeToGlyph (eventType);
 				var type   = StaticDescriptions.GetEventDescription (eventType);
+				var nom    = ObjectCalculator.GetObjectPropertyString (this.DataObject, timestamp, ObjectField.Nom);
 				var family = ObjectCalculator.GetObjectPropertyString (this.DataObject, timestamp, ObjectField.Famille);
-				var member = ObjectCalculator.GetObjectPropertyString (this.DataObject, timestamp, ObjectField.Membre);
 
 				var s1 = new TreeTableCellString (true, date,   isSelected: (i == selection));
 				var s2 = new TreeTableCellGlyph  (true, glyph,  isSelected: (i == selection));
 				var s3 = new TreeTableCellString (true, type,   isSelected: (i == selection));
-				var s4 = new TreeTableCellString (true, family, isSelected: (i == selection));
-				var s5 = new TreeTableCellString (true, member, isSelected: (i == selection));
+				var s4 = new TreeTableCellString (true, nom,    isSelected: (i == selection));
+				var s5 = new TreeTableCellString (true, family, isSelected: (i == selection));
 
 				c1.Add (s1);
 				c2.Add (s2);
@@ -82,8 +82,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  70, "Date"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,   20, ""));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 110, "Type"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Famille"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 250, "Membre"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Famille"));
 
 				return list.ToArray ();
 			}

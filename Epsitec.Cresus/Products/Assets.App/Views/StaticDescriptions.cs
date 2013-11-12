@@ -108,9 +108,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Famille:
 					return "Famille";
 
-				case ObjectField.Membre:
-					return "Membre";
-
 				default:
 					return null;
 			}
