@@ -96,6 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.Update ();
+			this.OnChangeViewMode (this.mainToolbar.ViewMode);
 
 			//	Connexion des événements de la liste des objets à gauche.
 			{

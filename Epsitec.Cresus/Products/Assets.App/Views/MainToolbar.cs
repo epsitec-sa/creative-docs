@@ -141,8 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			button.Clicked += delegate
 			{
-				this.viewType = view;
-				this.UpdateViewTypeButtons ();
+				this.ViewType = view;
 				this.OnViewChanged (this.viewType);
 			};
 
@@ -167,8 +166,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			button.Clicked += delegate
 			{
-				this.viewMode = view;
-				this.UpdateViewModeButtons ();
+				this.ViewMode = view;
 				this.OnCommandClicked (command);
 			};
 
