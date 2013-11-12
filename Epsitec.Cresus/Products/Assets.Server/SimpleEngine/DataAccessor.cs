@@ -90,21 +90,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 
 		#region Objects
-		public int GetObjectsCount(BaseType baseType)
-		{
-			return this.mandat.GetData (baseType).Count;
-		}
-
-		public IEnumerable<Guid> GetObjectGuids(BaseType baseType, int start = 0, int count = int.MaxValue)
-		{
-			count = System.Math.Min (count, this.GetObjectsCount (baseType));
-
-			for (int i=start; i<start+count; i++)
-			{
-				yield return this.mandat.GetData (baseType)[i].Guid;
-			}
-		}
-
 		public DataObject GetObject(BaseType baseType, Guid objectGuid)
 		{
 			return this.mandat.GetData (baseType)[objectGuid];

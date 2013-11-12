@@ -17,10 +17,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void GeneratesAmortissementsAuto()
 		{
-			var guids = this.accessor.GetObjectGuids (BaseType.Objects);
-			foreach (var guid in guids)
+			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
+
+			foreach (var node in getter.Nodes)
 			{
-				this.GeneratesAmortissementsAuto (guid);
+				this.GeneratesAmortissementsAuto (node.Guid);
 			}
 		}
 

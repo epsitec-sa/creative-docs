@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						if (popup.RadioSelected == "one")
 						{
-							var guid = this.accessor.GetObjectGuids (this.baseType, this.listController.SelectedRow, 1).First ();
+							var guid = this.listController.SelectedGuid;
 							this.businessLogic.GeneratesAmortissementsAuto (guid);
 						}
 						else
@@ -451,17 +451,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateAfterListChanged()
 		{
-			int row = this.listController.SelectedRow;
-			if (row == -1)
-			{
-				this.selectedGuid = Guid.Empty;
+			this.selectedGuid = this.listController.SelectedGuid;
 
+			if (this.selectedGuid.IsEmpty)
+			{
 				this.isShowEvents = false;
 				this.isEditing    = false;
-			}
-			else
-			{
-				this.selectedGuid = this.accessor.GetObjectGuids (this.baseType, row, 1).First ();
 			}
 
 			this.timelineController.ObjectGuid = this.selectedGuid;
