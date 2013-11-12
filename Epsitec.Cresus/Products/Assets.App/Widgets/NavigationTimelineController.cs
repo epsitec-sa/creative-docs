@@ -149,6 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public void SetRows(TimelineRowDescription[] descriptions)
 		{
 			this.timeline.SetRows (descriptions);
+			this.UpdateScroller (updateContent: false);
 		}
 
 		public void SetRowYearCells(int rank, TimelineCellDate[] cells)
@@ -193,7 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		private void UpdateScroller()
+		private void UpdateScroller(bool updateContent = true)
 		{
 			if (this.timeline == null || this.scroller == null)
 			{
@@ -226,7 +227,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.scroller.LargeChange = visibleCells;
 			}
 
-			this.OnContentChanged (true);  // on demande de mettre à jour le contenu
+			if (updateContent)
+			{
+				this.OnContentChanged (true);  // on demande de mettre à jour le contenu
+			}
 		}
 
 

@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var path = PaintHatch.GetHatchPath (rect, PaintHatch.distance, reference);
 
 			graphics.AddPath (path);
-			graphics.RenderSolid (Color.FromAlphaColor (0.5, ColorManager.GlyphColor));
+			graphics.RenderSolid (Color.FromAlphaColor (0.3, ColorManager.GlyphColor));
 		}
 
 		//	Importé de Epsitec.Common.Designer.Misc :

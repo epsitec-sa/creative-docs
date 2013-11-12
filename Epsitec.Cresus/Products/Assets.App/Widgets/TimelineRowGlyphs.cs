@@ -50,14 +50,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					var rect = this.GetCellsRect (x, rank);
 					bool isHover = (this.detectedHoverRank >= x && this.detectedHoverRank < rank);
 
-					TimelineRowGlyphs.PaintCellBackground (graphics, rect, lastCell, isHover, index, lastCell.IsLocked);
+					this.PaintCellBackground (graphics, rect, lastCell, isHover, index, lastCell.IsLocked);
 
 					//	Ajuste le rectangle pour avoir une hauteur constante.
 					double h = this.CellWidth / this.RelativeWidth;
 					var glyphRect = rect;
 					glyphRect.Deflate ((rect.Height - h)/2);
 
-					TimelineRowGlyphs.PaintCellForeground (graphics, glyphRect, lastCell, isHover, index);
+					this.PaintCellForeground (graphics, glyphRect, lastCell, isHover, index);
 
 					this.PaintGrid (graphics, rect, index, this.hilitedHoverRank);
 
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private static void PaintCellBackground(Graphics graphics, Rectangle rect, TimelineCellGlyph cell, bool isHover, int index, bool isLocked)
+		private void PaintCellBackground(Graphics graphics, Rectangle rect, TimelineCellGlyph cell, bool isHover, int index, bool isLocked)
 		{
 			//	Dessine le fond.
 			var color = TimelineRowGlyphs.GetCellColor (cell, isHover, index);
@@ -84,11 +84,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	événement de sortie), on dessine des hachures.
 			if (isLocked)
 			{
-				PaintHatch.Paint (graphics, rect);
+				var reference = this.MapClientToParent (Point.Zero);
+				PaintHatch.Paint (graphics, rect, reference);
 			}
 		}
 
-		private static void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellGlyph cell, bool isHover, int index)
+		private void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellGlyph cell, bool isHover, int index)
 		{
 			EventGlyph.Paint (graphics, rect, cell.Glyph);
 		}
