@@ -643,8 +643,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateTree(bool crop = true)
 		{
-			int lines = (this.timelineMode == TimelineMode.Compacted) ? 3 : 2;
-			this.treeColumn.HeaderHeight = TimelinesArrayController.lineHeight*lines;
+			this.treeColumn.HeaderHeight = TimelinesArrayController.lineHeight * this.HeaderLinesCount;
 			
 			int visibleCount = this.VisibleRows;
 			int rowsCount    = this.dataArray.RowsCount;
@@ -884,7 +883,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (line >= dummy && line < dummy+count)
 			{
-				return this.TopVisibleRow + count + dummy - 2 + 1 - line;
+				return this.TopVisibleRow + count + dummy - this.HeaderLinesCount + 1 - line;
 			}
 			else
 			{
@@ -916,7 +915,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return (int) (this.scroller.ActualHeight / TimelinesArrayController.lineHeight) - 2;
+				return (int) (this.scroller.ActualHeight / TimelinesArrayController.lineHeight)
+					 - this.HeaderLinesCount;
+			}
+		}
+
+		private int HeaderLinesCount
+		{
+			get
+			{
+				if (this.timelineMode == TimelineMode.Compacted)
+				{
+					return 3;  // Years, Months, Days
+				}
+				else
+				{
+					return 2;  // Years, DaysMonths
+				}
 			}
 		}
 
