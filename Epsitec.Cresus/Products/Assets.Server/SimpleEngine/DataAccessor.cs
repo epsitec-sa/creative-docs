@@ -34,6 +34,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public System.DateTime EndDate
+		{
+			get
+			{
+				return this.mandat.EndDate;
+			}
+		}
+
 
 		#region NodesGetter
 		public GuidNodesGetter GetNodesGetter(BaseType baseType)

@@ -9,9 +9,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public class DataMandat
 	{
-		public DataMandat(System.DateTime startDate)
+		public DataMandat(System.DateTime startDate, System.DateTime endDate)
 		{
 			this.StartDate = startDate;
+			this.EndDate   = endDate;
+
 			this.Guid = Guid.NewGuid ();
 
 			this.objects    = new GuidList<DataObject> ();
@@ -20,6 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 		public readonly System.DateTime			StartDate;
+		public readonly System.DateTime			EndDate;
 		public readonly Guid					Guid;
 
 

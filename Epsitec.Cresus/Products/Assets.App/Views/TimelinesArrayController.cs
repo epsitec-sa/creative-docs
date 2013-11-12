@@ -42,6 +42,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.arrayLogic = new TimelinesArrayLogic (this.accessor, this.baseType);
 			this.dataArray = new TimelinesArrayLogic.DataArray ();
+
+			this.timelineMode = TimelineMode.Expanded;
 		}
 
 
@@ -173,6 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Partie droite.
 			this.timelinesToolbar = new TimelinesToolbar ();
 			this.timelinesToolbar.CreateUI (rightBox);
+			this.timelinesToolbar.TimelineMode = this.timelineMode;
 
 			var bottomRightBox = new FrameBox
 			{
@@ -188,7 +191,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller = new NavigationTimelineController ();
 			this.controller.CreateUI (timelinesBox);
-			this.controller.RelativeWidth = 1.0;
 
 			this.scroller = new VScroller
 			{
@@ -324,6 +326,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 						break;
 				}
 			};
+
+			this.timelinesToolbar.ModeChanged += delegate
+			{
+				this.TimelineMode = this.timelinesToolbar.TimelineMode;
+			};
+		}
+
+
+		public TimelineMode						TimelineMode
+		{
+			get
+			{
+				return this.timelineMode;
+			}
+			set
+			{
+				if (this.timelineMode != value)
+				{
+					this.timelineMode = value;
+
+					this.UpdateController ();
+					this.UpdateToolbar ();
+				}
+			}
 		}
 
 
@@ -679,6 +705,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateTimelines(bool crop = true)
 		{
+			this.controller.RelativeWidth = (this.timelineMode == TimelineMode.Compacted) ? 1.0 : 2.0;
 			this.controller.SetRows (this.TimelineRows);
 			this.controller.CellsCount = this.dataArray.ColumnsCount;
 
@@ -747,8 +774,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			this.controller.SetRowDayCells   (line++, dates.ToArray ());
-			this.controller.SetRowMonthCells (line++, dates.ToArray ());
+			if (this.timelineMode == TimelineMode.Compacted)
+			{
+				this.controller.SetRowDayCells   (line++, dates.ToArray ());
+				this.controller.SetRowMonthCells (line++, dates.ToArray ());
+			}
+			else
+			{
+				this.controller.SetRowDayMonthCells (line++, dates.ToArray ());
+				this.controller.SetRowYearCells     (line++, dates.ToArray ());
+			}
 
 			this.controller.PermanentGrid = true;
 		}
@@ -772,8 +807,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 					list.Add (new TimelineRowDescription (TimelineRowType.Glyph, desc));
 				}
 
-				list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jour"));
-				list.Add (new TimelineRowDescription (TimelineRowType.Months, "Mois"));
+				if (this.timelineMode == TimelineMode.Compacted)
+				{
+					list.Add (new TimelineRowDescription (TimelineRowType.Days,   "Jour"));
+					list.Add (new TimelineRowDescription (TimelineRowType.Months, "Mois"));
+				}
+				else
+				{
+					list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, "Jour"));
+					list.Add (new TimelineRowDescription (TimelineRowType.Years,      "Années"));
+				}
 
 				return list.ToArray ();
 			}
@@ -1171,6 +1214,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string									title;
 		private TopTitle								topTitle;
+		private TimelineMode							timelineMode;
 		private TreeTableToolbar						objectsToolbar;
 		private VSplitter								splitter;
 		private TimelinesToolbar						timelinesToolbar;

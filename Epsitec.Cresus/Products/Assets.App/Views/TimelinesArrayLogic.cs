@@ -107,7 +107,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			public DataCell GetCell(int row, int column)
 			{
-				return this.columns[column][row];
+				if (column < this.ColumnsCount && row < this.RowsCount)
+				{
+					return this.columns[column][row];
+				}
+				else
+				{
+					return DataCell.Empty;
+				}
 			}
 
 			public void Clear(int rowsCount)

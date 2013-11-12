@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseType = baseType;
 
 			this.timelineData = new TimelineData (this.accessor, this.baseType);
-			this.timelineMode = TimelineMode.Expanded;
+			this.timelineMode = TimelineMode.Compacted;
 		}
 
 
@@ -536,10 +536,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateData()
 		{
-			//	Initialise la timeline pour 10 ans.
-			//	TODO: ...
-			var start = new System.DateTime (this.accessor.StartDate.Year, 1, 1);
-			var end   = new System.DateTime (this.accessor.StartDate.Year+9, 12, 31);
+			var start = this.accessor.StartDate;
+			var end   = this.accessor.EndDate;
 
 			this.timelineData.Compute (this.objectGuid, this.timelineMode, start, end, this.CurrentDate);
 

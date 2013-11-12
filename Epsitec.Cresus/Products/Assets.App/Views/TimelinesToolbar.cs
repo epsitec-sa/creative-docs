@@ -21,6 +21,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public TimelineMode TimelineMode
+		{
+			get
+			{
+				return this.timelineMode;
+			}
+			set
+			{
+				if (this.timelineMode != value)
+				{
+					this.timelineMode = value;
+					this.UpdateModeButtons ();
+				}
+			}
+		}
+
+
 		protected override void UpdateCommandButtons()
 		{
 			this.UpdateCommandButton (this.buttonFirst,      ToolbarCommand.First);
@@ -45,6 +62,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
+			this.buttonCompacted   = this.CreateModeButton (toolbar, TimelineMode.Compacted,   "Timeline.Compacted",   "Affichage compact");
+			this.buttonExpended    = this.CreateModeButton (toolbar, TimelineMode.Expanded,    "Timeline.Expanded",    "Affichage étendu");
+
 			this.buttonFirst    = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First,    "Timeline.First",    "Retour sur la première ligne");
 			this.buttonPrev     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur la ligne précédente");
 			this.buttonNext     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Next,     "Timeline.Next",     "Avance sur la ligne suivante");
@@ -63,6 +83,54 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			return this.toolbar;
 		}
+
+		private IconButton CreateModeButton(FrameBox toolbar, TimelineMode mode, string icon, string tooltip)
+		{
+			var button = new IconButton
+			{
+				Parent        = toolbar,
+				ButtonStyle   = ButtonStyle.ActivableIcon,
+				AutoFocus     = false,
+				IconUri       = MainToolbar.GetResourceIconUri (icon),
+			};
+
+			ToolTip.Default.SetToolTip (button, tooltip);
+
+			button.Clicked += delegate
+			{
+				this.ChangeMode (mode);
+				this.UpdateModeButtons ();
+				this.OnModeChanged (this.timelineMode);
+			};
+
+			return button;
+		}
+
+
+		private void ChangeMode(TimelineMode mode)
+		{
+			if (mode == Views.TimelineMode.Compacted)
+			{
+				this.timelineMode |=  Views.TimelineMode.Compacted;
+				this.timelineMode &= ~Views.TimelineMode.Expanded;
+			}
+			else if (mode == Views.TimelineMode.Expanded)
+			{
+				this.timelineMode |=  Views.TimelineMode.Expanded;
+				this.timelineMode &= ~Views.TimelineMode.Compacted;
+			}
+			else
+			{
+				this.timelineMode ^= mode;
+			}
+		}
+
+		private void UpdateModeButtons()
+		{
+			this.SetActiveState (this.buttonCompacted, (this.timelineMode & TimelineMode.Compacted) != 0);
+			this.SetActiveState (this.buttonExpended,  (this.timelineMode & TimelineMode.Expanded ) != 0);
+		}
+
 
 		private void Adjust()
 		{
@@ -102,8 +170,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IEnumerable<ButtonState> GetButtons(double width, double size)
 		{
-			bool prevNext  = width > size*5 + AbstractCommandToolbar.SeparatorWidth;
-			bool firstLast = width > size*7 + AbstractCommandToolbar.SeparatorWidth;
+			bool prevNext  = width > size*7 + AbstractCommandToolbar.SeparatorWidth*2;
+			bool firstLast = width > size*9 + AbstractCommandToolbar.SeparatorWidth;
+
+			yield return new ButtonState (this.buttonCompacted);
+			yield return new ButtonState (this.buttonExpended);
+
+			yield return new ButtonState (this.separator1, firstLast || prevNext);
 
 			yield return new ButtonState (this.buttonFirst, firstLast);
 			yield return new ButtonState (this.buttonPrev,  prevNext);
@@ -130,7 +203,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		#region Events handler
+		private void OnModeChanged(TimelineMode timelineMode)
+		{
+			if (this.ModeChanged != null)
+			{
+				this.ModeChanged (this, timelineMode);
+			}
+		}
+
+		public delegate void ModeChangedEventHandler(object sender, TimelineMode timelineMode);
+		public event ModeChangedEventHandler ModeChanged;
+		#endregion
+
+
 		private FrameBox						toolbar;
+
+		private IconButton						buttonCompacted;
+		private IconButton						buttonExpended;
 
 		private IconButton						buttonFirst;
 		private IconButton						buttonPrev;
@@ -142,5 +232,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonNew;
 		private IconButton						buttonDelete;
 		private IconButton						buttonDeselect;
+
+		private TimelineMode					timelineMode;
 	}
 }

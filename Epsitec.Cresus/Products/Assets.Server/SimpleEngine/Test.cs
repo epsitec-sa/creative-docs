@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		public static void Test1()
 		{
-			var mandat = new DataMandat (new System.DateTime (2013, 1, 1));
+			var mandat = new DataMandat (new System.DateTime (2013, 1, 1), new System.DateTime (2023, 12, 31));
 			var objects = mandat.GetData (BaseType.Objects);
 
 			{
