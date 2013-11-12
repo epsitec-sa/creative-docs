@@ -62,8 +62,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonCompacted   = this.CreateModeButton (toolbar, TimelineMode.Compacted,   "Timeline.Compacted",   "Affichage compact");
-			this.buttonExpended    = this.CreateModeButton (toolbar, TimelineMode.Expanded,    "Timeline.Expanded",    "Affichage étendu");
+			this.buttonCompacted   = this.CreateModeButton (toolbar, TimelineMode.Compacted, "Timeline.Single", "Affichage compact");
+			this.buttonExpended    = this.CreateModeButton (toolbar, TimelineMode.Expanded,  "Timeline.Double", "Affichage étendu");
 
 			this.buttonFirst    = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First,    "Timeline.First",    "Retour sur la première ligne");
 			this.buttonPrev     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur la ligne précédente");
