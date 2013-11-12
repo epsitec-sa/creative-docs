@@ -116,8 +116,7 @@ namespace Epsitec.Aider.Entities
 
 					if (group.IsNotNull ())
 					{
-						var name = AiderMailingCategoryEntity.GetGroupName (group);
-						AiderMailingCategoryEntity.Create (localContext, name, group);
+						AiderMailingCategoryEntity.Create (localContext, name: "", group: group);
 						localContext.SaveChanges (LockingPolicy.ReleaseLock);
 					}
 				}
