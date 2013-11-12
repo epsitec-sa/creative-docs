@@ -75,11 +75,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
 		{
-			//	Dessine le contenu.
-			var text = TimelineRowYears.GetCellText (cell);
-			var font = Font.DefaultFont;
-			graphics.Color = ColorManager.TextColor;
-			graphics.PaintText (rect, text, font, this.FontSize, ContentAlignment.MiddleCenter);
+			//	Dessine le contenu, plus ou moins détaillé selon la place disponible.
+			var text = this.GetCellText (rect, cell);
+
+			if (!string.IsNullOrEmpty (text))
+			{
+				var font = Font.DefaultFont;
+
+				graphics.Color = ColorManager.TextColor;
+				graphics.PaintText (rect, text, font, this.FontSize, ContentAlignment.MiddleCenter);
+			}
 		}
 
 		private static bool IsSame(TimelineCellDate c1, TimelineCellDate c2)
@@ -99,18 +104,36 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private static string GetCellText(TimelineCellDate cell)
+		private string GetCellText(Rectangle rect, TimelineCellDate cell)
 		{
 			//	Retourne le jour sous la forme "1" ou "31".
 			//	Voir http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
 			if (cell.IsValid)
 			{
-				return cell.Date.ToString ("yyyy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
+				var font = Font.DefaultFont;
+
+				for (int detailLevel = 1; detailLevel >= 0; detailLevel--)
+				{
+					string text;
+
+					if (detailLevel == 1)
+					{
+						text = cell.Date.ToString ("yyyy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
+					}
+					else
+					{
+						text = cell.Date.ToString ("yy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
+					}
+
+					var width = Helpers.Text.GetTextWidth (text, font, this.FontSize);
+					if (width <= rect.Width)
+					{
+						return text;
+					}
+				}
 			}
-			else
-			{
-				return null;
-			}
+
+			return null;
 		}
 
 

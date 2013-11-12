@@ -77,7 +77,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool square)
 		{
-			//	Dessine le contenu.
 			//	Dessine le contenu, plus ou moins détaillé selon la place disponible.
 			var text = this.GetCellText (rect, cell, square);
 
