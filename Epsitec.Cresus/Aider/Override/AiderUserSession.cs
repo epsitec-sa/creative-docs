@@ -75,7 +75,16 @@ namespace Epsitec.Aider.Override
 
 		private IFilter GetAiderMailingAdditionalFilter(AiderMailingEntity example)
 		{
-			var mailing = this.UserManager.BusinessContext.DataContext.GetByExample(example).FirstOrDefault ();
+			var context = this.UserManager.BusinessContext;
+			var mailing = context.GetByExample (example).FirstOrDefault ();
+
+			if ((mailing.IsNull ()) ||
+				(mailing.Category.IsNull ()) ||
+				(mailing.Category.Group.IsNull ()))
+			{
+				return null;
+			}
+			
 			if (mailing.Category.Group.CanBeEditedByCurrentUser ())
 			{
 				return new LambdaFilter<AiderMailingEntity> (x => SqlMethods.Like("ok","ok"));
@@ -114,9 +123,9 @@ namespace Epsitec.Aider.Override
 				{
 					return this.GetAiderHouseholdEntityFilter ((AiderHouseholdEntity) example, pattern + "%");
 				}
-                else if (entityType == typeof(AiderPersonWarningEntity))
-                {
-                    return this.GetAiderPersonWarningEntityFilter((AiderPersonWarningEntity)example, pattern + "%");
+				else if (entityType == typeof(AiderPersonWarningEntity))
+				{
+					return this.GetAiderPersonWarningEntityFilter((AiderPersonWarningEntity)example, pattern + "%");
 				}
 				else if (entityType == typeof (AiderSubscriptionEntity))
 				{
@@ -164,10 +173,10 @@ namespace Epsitec.Aider.Override
 			return new LambdaFilter<AiderHouseholdEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
 		}
 
-        private IFilter GetAiderPersonWarningEntityFilter(AiderPersonWarningEntity example, string pattern)
-        {
-            return new LambdaFilter<AiderPersonWarningEntity>(x => SqlMethods.Like(x.ParishGroupPath, pattern));
-        }
+		private IFilter GetAiderPersonWarningEntityFilter(AiderPersonWarningEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderPersonWarningEntity>(x => SqlMethods.Like(x.ParishGroupPath, pattern));
+		}
 
 		private IFilter GetAiderSubscriptionEntityFilter(AiderSubscriptionEntity example, string pattern)
 		{
