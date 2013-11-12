@@ -124,6 +124,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public double							RelativeWidth;
 
+		public int								TopRowsWithExactHeight;
+
 
 		public void SetRows(TimelineRowDescription[] descriptions)
 		{
@@ -259,21 +261,37 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	La hauteur totale est répartie entre les différentes lignes, afin
 			//	d'occuper toujours toute la hauteur. Il en résulte des hauteurs
 			//	légèrement différentes (1 pixel) d'une ligne à l'autre.
-			int ch = this.CellHeight;
-			var h = this.ActualHeight / this.timelineRows.Count;
-
-			for (int i=0; i<this.timelineRows.Count; i++)
+			if (this.timelineRows.Count > 0)
 			{
-				var row = this.timelineRows[i];
+				int ch = this.CellHeight;
+				int hi = (int) this.ActualHeight / this.timelineRows.Count;
+				var h = (this.ActualHeight - hi*this.TopRowsWithExactHeight) / (this.timelineRows.Count - this.TopRowsWithExactHeight);
 
-				row.CellWidth     = (int) (ch * this.RelativeWidth);
-				row.RelativeWidth = this.RelativeWidth;
+				double bottom = 0;
 
-				var top    = (int) (h * (i+1));
-				var bottom = (int) (h * (i+0));
+				for (int i=0; i<this.timelineRows.Count; i++)
+				{
+					var row = this.timelineRows[i];
 
-				var rect = new Rectangle (0, bottom, this.ActualWidth, top-bottom);
-				row.SetManualBounds (rect);
+					row.CellWidth     = (int) (ch * this.RelativeWidth);
+					row.RelativeWidth = this.RelativeWidth;
+
+					double top = bottom + h;
+
+					if (i == this.timelineRows.Count - this.TopRowsWithExactHeight - 1)
+					{
+						h = hi;
+						top = System.Math.Floor (top+0.5);
+					}
+
+					int bi = (int) bottom;
+					int ti = (int) top;
+
+					var rect = new Rectangle (0, bi, this.ActualWidth, ti-bi);
+					row.SetManualBounds (rect);
+
+					bottom = top;
+				}
 			}
 		}
 

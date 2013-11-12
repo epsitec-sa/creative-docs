@@ -56,6 +56,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			set;
 		}
 
+		public int								VerticalAdjust
+		{
+			get;
+			set;
+		}
+
 		public int								VisibleCellCount
 		{
 			get
@@ -117,6 +123,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					rect = this.GetContentDeflateRectangle (rect);
 					this.PaintText (graphics, rect, this.HeaderDescription);
+				}
+
+				//	Si l'en-tête est haute, on dessine un trait de séparation en dessous.
+				if (this.HeaderHeight >= this.RowHeight*2)
+				{
+					rect = this.HeaderRect;
+					rect.Deflate (0, 0.5);
+
+					graphics.AddLine (rect.BottomLeft, rect.BottomRight);
+					graphics.RenderSolid (ColorManager.GridColor);
 				}
 			}
 		}
@@ -251,6 +267,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			int p1 = this.GetVerticalPosition (y+1);
 			int p2 = this.GetVerticalPosition (y);
+
+			p1 += this.VerticalAdjust;
+
+			if (y > 0)
+			{
+				p2 += this.VerticalAdjust;
+			}
 
 			return new Rectangle (0, p1, this.ActualWidth, p2-p1);
 		}

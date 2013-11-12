@@ -146,6 +146,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public int								TopRowsWithExactHeight
+		{
+			get
+			{
+				return this.timeline.TopRowsWithExactHeight;
+			}
+			set
+			{
+				this.timeline.TopRowsWithExactHeight = value;
+			}
+		}
+
 		public void SetRows(TimelineRowDescription[] descriptions)
 		{
 			this.timeline.SetRows (descriptions);

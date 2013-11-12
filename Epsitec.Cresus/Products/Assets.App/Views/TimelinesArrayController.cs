@@ -25,14 +25,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				case BaseType.Objects:
 					this.title = "Objets d'immobilisation";
+					this.subtitle = "Objets";
 					break;
 
 				case BaseType.Categories:
 					this.title = "Catégories d'immobilisation";
+					this.subtitle = "Catégories";
 					break;
 
 				case BaseType.Groups:
 					this.title = "Groupes d'immobilisation";
+					this.subtitle = "Groupes";
 					break;
 			}
 
@@ -168,8 +171,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				HoverMode         = TreeTableHoverMode.VerticalGradient,
 				HeaderHeight      = TimelinesArrayController.lineHeight*2,
 				FooterHeight      = 0,
+				HeaderDescription = this.subtitle,
 				RowHeight         = TimelinesArrayController.lineHeight,
 				Margins           = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
+				VerticalAdjust    = -1,
 			};
 
 			//	Partie droite.
@@ -707,6 +712,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateTimelines(bool crop = true)
 		{
+			this.controller.TopRowsWithExactHeight = this.HeaderLinesCount;
 			this.controller.RelativeWidth = (this.timelineMode == TimelineMode.Compacted) ? 1.0 : 2.0;
 			this.controller.SetRows (this.TimelineRows);
 			this.controller.CellsCount = this.dataArray.ColumnsCount;
@@ -1231,8 +1237,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly TreeObjectsNodesGetter			nodesGetter;
 		private readonly TimelinesArrayLogic			arrayLogic;
 		private readonly TimelinesArrayLogic.DataArray	dataArray;
+		private readonly string							title;
+		private readonly string							subtitle;
 
-		private string									title;
 		private TopTitle								topTitle;
 		private TimelineMode							timelineMode;
 		private TreeTableToolbar						objectsToolbar;
