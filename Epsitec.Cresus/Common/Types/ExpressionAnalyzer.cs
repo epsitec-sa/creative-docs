@@ -1,7 +1,6 @@
-//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -76,7 +75,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="properties">The properties.</param>
 		/// <returns></returns>
-		public static LambdaExpression BuildLambdaExpression(Type objectType, IEnumerable<PropertyInfo> properties)
+		public static LambdaExpression BuildLambdaExpression(System.Type objectType, IEnumerable<PropertyInfo> properties)
 		{
 			var item = Expression.Parameter (objectType, "x");
 			var expr = item as Expression;

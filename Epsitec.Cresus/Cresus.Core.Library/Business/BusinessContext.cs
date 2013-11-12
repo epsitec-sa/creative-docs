@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -219,6 +220,26 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			return this.data.GetAllEntities<T> (dataContext: this.dataContext);
 		}
+
+
+		public IList<TEntity> GetByExample<TEntity>(TEntity example)
+			where TEntity : AbstractEntity
+		{
+			return this.DataContext.GetByExample (example);
+		}
+
+		public IList<TEntity> GetByRequest<TEntity>(Request request)
+			where TEntity : AbstractEntity
+		{
+			return this.DataContext.GetByRequest<TEntity> (request);
+		}
+
+		public IList<TEntity> GetByRequest<TEntity>(Request<TEntity> request)
+			where TEntity : AbstractEntity
+		{
+			return this.DataContext.GetByRequest (request);
+		}
+
 
 
 		/// <summary>
