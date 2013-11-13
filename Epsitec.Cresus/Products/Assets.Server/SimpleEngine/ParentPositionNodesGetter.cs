@@ -9,6 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// <summary>
 	/// Accès en lecture à des données quelconques, enrichies du parent (Guid)
 	/// et de la position (int).
+	/// GuidNode -> ParentPositionNode
 	/// </summary>
 	public class ParentPositionNodesGetter : AbstractNodesGetter<ParentPositionNode>  // outputNodes
 	{

@@ -14,62 +14,58 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var mandat = new DataMandat (new System.DateTime (2000, 1, 1), new System.DateTime (2050, 12, 31));
 			var objects = mandat.GetData (BaseType.Objects);
 
-			var date2000  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
-			var date2001  = new Timestamp (new System.DateTime (2001, 1, 1), 0);
-			var date2002  = new Timestamp (new System.DateTime (2002, 1, 1), 0);
-			var date2003  = new Timestamp (new System.DateTime (2003, 1, 1), 0);
-			var date2003b = new Timestamp (new System.DateTime (2003, 1, 1), 1);
-			var date2010  = new Timestamp (new System.DateTime (2010, 1, 4), 0);
-			var date2011  = new Timestamp (new System.DateTime (2011, 1, 1), 0);
-			var date2012  = new Timestamp (new System.DateTime (2012, 1, 1), 0);
-			var date2013  = new Timestamp (new System.DateTime (2013, 1, 1), 0);
-			var date2013b = new Timestamp (new System.DateTime (2013, 1, 1), 1);
-			var date2014  = new Timestamp (new System.DateTime (2014, 1, 1), 0);
+			var date2000 = new Timestamp (new System.DateTime (2000, 1, 1), 0);
+			var date2001 = new Timestamp (new System.DateTime (2001, 1, 1), 0);
+			var date2002 = new Timestamp (new System.DateTime (2002, 1, 1), 0);
+			var date2003 = new Timestamp (new System.DateTime (2003, 1, 1), 0);
+			var date2010 = new Timestamp (new System.DateTime (2010, 1, 4), 0);
+			var date2011 = new Timestamp (new System.DateTime (2011, 1, 1), 0);
+			var date2012 = new Timestamp (new System.DateTime (2012, 1, 1), 0);
+			var date2013 = new Timestamp (new System.DateTime (2013, 1, 1), 0);
 
+			var o0 = new DataObject ();
+			objects.Add (o0);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
 
 				var e = new DataEvent (date2000, EventType.Entrée);
-				o.AddEvent (e);
+				o0.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,   "Immobilisations"));
 			}
 
+			var o1 = new DataObject ();
+			objects.Add (o1);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2000, EventType.Entrée);
-				o.AddEvent (e);
+				o1.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,  1));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Numéro, "1"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Bâtiments"));
 			}
 
+			var o11 = new DataObject ();
+			objects.Add (o11);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2000, EventType.Entrée);
-				o.AddEvent (e);
+				o11.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,  2));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o1.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Numéro, "1.1"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Immeubles"));
 			}
 
+			var o111 = new DataObject ();
+			objects.Add (o111);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				{
 					var e = new DataEvent (date2000, EventType.Entrée);
-					o.AddEvent (e);
+					o111.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o11.Guid));
+					e.AddProperty (new DataIntProperty            (ObjectField.Position,    0));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.1.1"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre administratif"));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (3000000.0m)));
@@ -82,7 +78,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					{
 						var e = new DataEvent (new Timestamp (new System.DateTime (date2000.Date.Year+i, 12, 31), 0), EventType.AmortissementAuto);
-						o.AddEvent (e);
+						o111.AddEvent (e);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 
 						decimal a1 = 3000000.0m-(i-1)*100000;
@@ -92,15 +88,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
+			var o112 = new DataObject ();
+			objects.Add (o112);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				{
 					var e = new DataEvent (date2002, EventType.Entrée);
-					o.AddEvent (e);
+					o112.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o11.Guid));
+					e.AddProperty (new DataIntProperty            (ObjectField.Position,    1));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.1.2"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre logistique"));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (4550000.0m)));
@@ -113,7 +109,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					{
 						var e = new DataEvent (new Timestamp (new System.DateTime (date2002.Date.Year+i, 12, 31), 0), EventType.AmortissementAuto);
-						o.AddEvent (e);
+						o112.AddEvent (e);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 
 						decimal a1 = 4550000.0m-(i-1)*200000;
@@ -123,14 +119,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
+			var o113 = new DataObject ();
+			objects.Add (o113);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2013, EventType.Entrée);
-				o.AddEvent (e);
+				o113.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o11.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    2));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.1.3"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre d'expédition"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (2100000.0m)));
@@ -139,26 +135,26 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement1 (e);
 			}
 
+			var o12 = new DataObject ();
+			objects.Add (o12);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2000, EventType.Entrée);
-				o.AddEvent (e);
+				o12.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.Level,       2));
+				e.AddProperty (new DataGuidProperty    (ObjectField.Parent,      o1.Guid));
+				e.AddProperty (new DataIntProperty     (ObjectField.Position,    0));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "1.2"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Usines"));
 			}
 
+			var o121 = new DataObject ();
+			objects.Add (o121);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2001, EventType.Entrée);
-				o.AddEvent (e);
+				o121.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o12.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    0));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.2.1"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre d'usinage"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (10400000.0m)));
@@ -167,14 +163,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement1 (e);
 			}
 
+			var o122 = new DataObject ();
+			objects.Add (o122);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2002, EventType.Entrée);
-				o.AddEvent (e);
+				o122.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o12.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    1));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.2.2"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre d'assemblage"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (8000000.0m)));
@@ -183,26 +179,26 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement1 (e);
 			}
 
+			var o13 = new DataObject ();
+			objects.Add (o13);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2000, EventType.Entrée);
-				o.AddEvent (e);
+				o13.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.Level,       2));
+				e.AddProperty (new DataGuidProperty    (ObjectField.Parent,      o1.Guid));
+				e.AddProperty (new DataIntProperty     (ObjectField.Position,    0));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "1.3"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Entrepôts"));
 			}
 
+			var o131 = new DataObject ();
+			objects.Add (o131);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2002, EventType.Entrée);
-				o.AddEvent (e);
+				o131.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o13.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    0));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.3.1"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Dépôt principal"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (2100000.0m)));
@@ -211,14 +207,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement1 (e);
 			}
 
+			var o132 = new DataObject ();
+			objects.Add (o132);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2010, EventType.Entrée);
-				o.AddEvent (e);
+				o132.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o13.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    1));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.3.2"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Dépôt secondaire"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (5320000.0m)));
@@ -227,14 +223,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement1 (e);
 			}
 
+			var o133 = new DataObject ();
+			objects.Add (o133);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2012, EventType.Entrée);
-				o.AddEvent (e);
+				o133.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o13.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    2));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.3.3"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre de recyclage"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (1200000.0m)));
@@ -243,38 +239,38 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement1 (e);
 			}
 
+			var o2 = new DataObject ();
+			objects.Add (o2);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2000, EventType.Entrée);
-				o.AddEvent (e);
+				o2.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.Level,       1));
+				e.AddProperty (new DataIntProperty     (ObjectField.Position,    0));
+				e.AddProperty (new DataGuidProperty    (ObjectField.Parent,      o0.Guid));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "2"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Véhicules"));
 			}
 
+			var o21 = new DataObject ();
+			objects.Add (o21);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2000, EventType.Entrée);
-				o.AddEvent (e);
+				o21.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.Level,       2));
+				e.AddProperty (new DataGuidProperty    (ObjectField.Parent,      o2.Guid));
+				e.AddProperty (new DataIntProperty     (ObjectField.Position,    0));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "2.1"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Camions"));
 			}
 
+			var o211 = new DataObject ();
+			objects.Add (o211);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2003, EventType.Entrée);
-				o.AddEvent (e);
+				o211.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o21.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    0));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.1"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Scania X20"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (150000.0m)));
@@ -285,14 +281,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement2 (e);
 			}
 
+			var o212 = new DataObject ();
+			objects.Add (o212);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2003, EventType.Entrée);
-				o.AddEvent (e);
+				o212.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o21.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    1));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.2"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Scania X30 semi"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (180000.0m)));
@@ -303,15 +299,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement2 (e);
 			}
 
+			var o213 = new DataObject ();
+			objects.Add (o213);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				{
 					var e = new DataEvent (date2000, EventType.Entrée);
-					o.AddEvent (e);
+					o213.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o21.Guid));
+					e.AddProperty (new DataIntProperty            (ObjectField.Position,    2));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.3"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Volvo T-200"));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (90000.0m)));
@@ -323,20 +319,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2005, 3, 20), 0), EventType.Sortie);
-					o.AddEvent (e);
+					o213.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 				}
 			}
 
+			var o214 = new DataObject ();
+			objects.Add (o214);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2008, 9, 1), 0), EventType.Entrée);
-					o.AddEvent (e);
+					o214.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o21.Guid));
+					e.AddProperty (new DataIntProperty            (ObjectField.Position,    3));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.4"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Volvo R-500"));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (110000.0m)));
@@ -349,19 +345,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 11, 5), 0), EventType.Sortie);
-					o.AddEvent (e);
+					o214.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 				}
 			}
 
+			var o215 = new DataObject ();
+			objects.Add (o215);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2011, EventType.Entrée);
-				o.AddEvent (e);
+				o215.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o21.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    4));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.1.5"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Volvo P-810"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (195000.0m)));
@@ -371,26 +367,26 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement2 (e);
 			}
 
+			var o22 = new DataObject ();
+			objects.Add (o22);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2000, EventType.Entrée);
-				o.AddEvent (e);
+				o22.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.Level,       2));
+				e.AddProperty (new DataGuidProperty    (ObjectField.Parent,      o2.Guid));
+				e.AddProperty (new DataIntProperty     (ObjectField.Position,    0));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "2.2"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Camionnettes"));
 			}
 
+			var o221 = new DataObject ();
+			objects.Add (o221);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (new Timestamp (new System.DateTime (2007, 4, 17), 0), EventType.Entrée);
-				o.AddEvent (e);
+				o221.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o22.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    0));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.2.1"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Renault Doblo"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (25000.0m)));
@@ -401,14 +397,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement2 (e);
 			}
 
+			var o222 = new DataObject ();
+			objects.Add (o222);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (new Timestamp (new System.DateTime (2013, 2, 6), 0), EventType.Entrée);
-				o.AddEvent (e);
+				o222.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o22.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    1));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.2.2"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Ford Transit"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (30000.0m)));
@@ -418,26 +414,26 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement2 (e);
 			}
 
+			var o23 = new DataObject ();
+			objects.Add (o23);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2000, EventType.Entrée);
-				o.AddEvent (e);
+				o23.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.Level,       2));
+				e.AddProperty (new DataGuidProperty    (ObjectField.Parent,      o2.Guid));
+				e.AddProperty (new DataIntProperty     (ObjectField.Position,    0));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,      "2.3"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Voitures"));
 			}
 
+			var o231 = new DataObject ();
+			objects.Add (o231);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (date2010, EventType.Entrée);
-				o.AddEvent (e);
-				e.AddProperty (new DataIntProperty    (ObjectField.OneShotNuméro, DummyMandat.EventNumber++));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				o231.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o23.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    0));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.1"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Citroën C4 Picasso"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (22000.0m)));
@@ -448,14 +444,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement2 (e);
 			}
 
+			var o232 = new DataObject ();
+			objects.Add (o232);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (new Timestamp (new System.DateTime (2011, 8, 27), 0), EventType.Entrée);
-				o.AddEvent (e);
+				o232.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o23.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    1));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.2"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Opel Corsa"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (9000.0m)));
@@ -466,14 +462,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement2 (e);
 			}
 
+			var o233 = new DataObject ();
+			objects.Add (o233);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (new Timestamp (new System.DateTime (2005, 5, 1), 0), EventType.Entrée);
-				o.AddEvent (e);
+				o233.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o23.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    2));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.3"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Fiat Panda"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (8000.0m)));
@@ -482,14 +478,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement2 (e);
 			}
 
+			var o234 = new DataObject ();
+			objects.Add (o234);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (new Timestamp (new System.DateTime (2004, 5, 12), 0), EventType.Entrée);
-				o.AddEvent (e);
+				o234.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o23.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    3));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.4"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Fiat Uno"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (11000.0m)));
@@ -499,14 +495,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement2 (e);
 			}
 
+			var o235 = new DataObject ();
+			objects.Add (o235);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				var e = new DataEvent (new Timestamp (new System.DateTime (2011, 2, 1), 0), EventType.Entrée);
-				o.AddEvent (e);
+				o235.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o23.Guid));
+				e.AddProperty (new DataIntProperty            (ObjectField.Position,    4));
 				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.5"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Fiat Uno"));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (12000.0m)));
@@ -517,15 +513,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DummyMandat.AddAmortissement2 (e);
 			}
 
+			var o236 = new DataObject ();
+			objects.Add (o236);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2002, 11, 19), 0), EventType.Entrée);
-					o.AddEvent (e);
+					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o23.Guid));
+					e.AddProperty (new DataIntProperty            (ObjectField.Position,    5));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.6"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Toyota Yaris Verso"));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (16000.0m)));
@@ -537,28 +533,28 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2003, 5, 1), 0), EventType.Augmentation);
-					o.AddEvent (e);
+					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2, new ComputedAmount (12000.0m)));
 				}
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2003, 5, 1), 1), EventType.Augmentation);
-					o.AddEvent (e);
+					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2, new ComputedAmount (12000.0m, 12500.0m)));
 				}
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2005, 12, 1), 0), EventType.Modification);
-					o.AddEvent (e);
+					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataStringProperty (ObjectField.Responsable, "Georges"));
 				}
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2009, 8, 25), 0), EventType.Diminution);
-					o.AddEvent (e);
+					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (16000.0m, 14500.0m, true)));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (12500.0m, 11000.0m)));
@@ -566,28 +562,28 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2010, 3, 1), 0), EventType.Modification);
-					o.AddEvent (e);
+					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataStringProperty (ObjectField.Responsable, "Damien"));
 				}
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 7, 12), 0), EventType.Diminution);
-					o.AddEvent (e);
+					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (12000.0m)));
 				}
 			}
 
+			var o237 = new DataObject ();
+			objects.Add (o237);
 			{
-				var o = new DataObject ();
-				objects.Add (o);
-
 				{
 					var e = new DataEvent (date2012, EventType.Entrée);
-					o.AddEvent (e);
+					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o23.Guid));
+					e.AddProperty (new DataIntProperty            (ObjectField.Position,    6));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.7"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Toyota Corolla"));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (5000.0m)));
@@ -600,14 +596,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 7, 1), 0), EventType.Augmentation);
-					o.AddEvent (e);
+					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (5000.0m, 5200.0m)));
 				}
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 8, 20), 0), EventType.Modification);
-					o.AddEvent (e);
+					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataStringProperty (ObjectField.Responsable, "Frédérique"));
 					e.AddProperty (new DataStringProperty (ObjectField.NuméroSérie, "F30T-340407-52118-40721-S"));
@@ -615,7 +611,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 12, 31), 0), EventType.AmortissementExtra);
-					o.AddEvent (e);
+					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (5200.0m, 4600.0m)));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2, new ComputedAmount (3500.0m, 2400.0m)));
@@ -623,21 +619,21 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2013, 3, 31), 0), EventType.Modification);
-					o.AddEvent (e);
+					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataStringProperty (ObjectField.Responsable, "Daniel"));
 				}
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2013, 4, 14), 0), EventType.Augmentation);
-					o.AddEvent (e);
+					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2, new ComputedAmount (2400.0m, 3000.0m, true)));
 				}
 
 				{
 					var e = new DataEvent (new Timestamp (new System.DateTime (2013, 6, 1), 0), EventType.Diminution);
-					o.AddEvent (e);
+					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1, new ComputedAmount (4600.0m, 2100.0m, true)));
 				}
@@ -652,8 +648,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Entrée);
 					o.AddEvent (e);
-					e.AddProperty (new DataIntProperty    (ObjectField.OneShotNuméro, DummyMandat.EventNumber++));
-					e.AddProperty (new DataIntProperty            (ObjectField.Level,       3));
+					e.AddProperty (new DataGuidProperty   (ObjectField.OneShotNuméro, DummyMandat.EventNumber++));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Parent,       3));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "2.3.99"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Ford T "+j));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (22000.0m)));
@@ -693,38 +689,36 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var date1  = new Timestamp (new System.DateTime (2013, 3, 12), 0);
 			var date2  = new Timestamp (new System.DateTime (2013, 7, 2), 0);
 
+			var o0 = new DataObject ();
+			categories.Add (o0);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o0.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Catégories"));
 			}
 
+			var o1 = new DataObject ();
+			categories.Add (o1);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o1.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,  1));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o0.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Numéro, "1"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Immobilier"));
 			}
 
+			var o11 = new DataObject ();
+			categories.Add (o11);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				{
 					var e = new DataEvent (start, EventType.Entrée);
-					o.AddEvent (e);
+					o11.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
-					e.AddProperty (new DataIntProperty     (ObjectField.Level,             2));
+					e.AddProperty (new DataGuidProperty    (ObjectField.Parent,            o1.Guid));
+					e.AddProperty (new DataIntProperty     (ObjectField.Position,          0));
 					e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "1.1"));
 					e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Bureaux"));
 					e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.075m));
@@ -744,7 +738,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				{
 					var e = new DataEvent (date1, EventType.Modification);
-					o.AddEvent (e);
+					o11.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 					e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.085m));
 					e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  10000.0m));
@@ -752,20 +746,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				{
 					var e = new DataEvent (date2, EventType.Modification);
-					o.AddEvent (e);
+					o11.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 					e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.09m));
 				}
 			}
 
+			var o12 = new DataObject ();
+			categories.Add (o12);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o12.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.Level,             2));
+				e.AddProperty (new DataGuidProperty    (ObjectField.Parent,            o1.Guid));
+				e.AddProperty (new DataIntProperty     (ObjectField.Position,          1));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "1.2"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Usine"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.12m));
@@ -783,26 +777,26 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
 			}
 
+			var o2 = new DataObject ();
+			categories.Add (o2);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o2.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,  1));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Numéro, "2"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Véhicule"));
 			}
 
+			var o21 = new DataObject ();
+			categories.Add (o21);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (date1, EventType.Entrée);
-				o.AddEvent (e);
+				o21.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.Level,             2));
+				e.AddProperty (new DataGuidProperty    (ObjectField.Parent,            o2.Guid));
+				e.AddProperty (new DataIntProperty     (ObjectField.Position,          0));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "2.1"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Poid lourd"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.15m));
@@ -820,14 +814,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
 			}
 
+			var o22 = new DataObject ();
+			categories.Add (o22);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o22.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.Level,             2));
+				e.AddProperty (new DataGuidProperty    (ObjectField.Parent,            o2.Guid));
+				e.AddProperty (new DataIntProperty     (ObjectField.Position,          1));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "2.2"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Camionnette"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.21m));
@@ -845,14 +839,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
 			}
 
+			var o23 = new DataObject ();
+			categories.Add (o23);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o23.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.Level,             2));
+				e.AddProperty (new DataGuidProperty    (ObjectField.Parent,            o2.Guid));
+				e.AddProperty (new DataIntProperty     (ObjectField.Position,          2));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "2.3"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Voiture"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.25m));
@@ -880,235 +874,232 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var date2  = new Timestamp (new System.DateTime (2013, 1, 22), 0);
 			var date3  = new Timestamp (new System.DateTime (2013, 1, 28), 0);
 
+			var o0 = new DataObject ();
+			categories.Add (o0);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o0.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   0));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Groupes"));
 			}
 
+			var o1 = new DataObject ();
+			categories.Add (o1);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o1.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   1));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Secteurs"));
 			}
 
+			var o11 = new DataObject ();
+			categories.Add (o11);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o11.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o1.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Secteur"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Nord"));
 			}
 
+			var o12 = new DataObject ();
+			categories.Add (o12);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				{
 					var e = new DataEvent (start, EventType.Entrée);
-					o.AddEvent (e);
+					o12.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-					e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+					e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o1.Guid));
+					e.AddProperty (new DataIntProperty    (ObjectField.Position, 1));
 					e.AddProperty (new DataStringProperty (ObjectField.Famille, "Secteur"));
 					e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Sud"));
 				}
 
 				{
 					var e = new DataEvent (date1, EventType.Modification);
-					o.AddEvent (e);
+					o12.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
 					e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Sud-est"));
 				}
 
 				{
 					var e = new DataEvent (date2, EventType.Modification);
-					o.AddEvent (e);
+					o12.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
 					e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Sud-ouest"));
 				}
 
 				{
 					var e = new DataEvent (date3, EventType.Modification);
-					o.AddEvent (e);
+					o12.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
 					e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Sud"));
 				}
 			}
 
+			var o13 = new DataObject ();
+			categories.Add (o13);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (date1, EventType.Entrée);
-				o.AddEvent (e);
+				o13.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro,  "1.3"));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o1.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 2));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     ""));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Secteur"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Est"));
 			}
 
+			var o14 = new DataObject ();
+			categories.Add (o14);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (date1, EventType.Entrée);
-				o.AddEvent (e);
+				o14.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o1.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 3));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Secteur"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Ouest"));
 			}
 
+			var o2 = new DataObject ();
+			categories.Add (o2);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o2.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   1));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Centres de frais"));
 			}
 
+			var o21 = new DataObject ();
+			categories.Add (o21);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o21.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o2.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Centre de frais"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Atelier"));
 			}
 
+			var o22 = new DataObject ();
+			categories.Add (o22);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o22.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o2.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 1));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Centre de frais"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Bureaux"));
 			}
 
+			var o23 = new DataObject ();
+			categories.Add (o23);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o23.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o2.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 2));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Centre de frais"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Distribution"));
 			}
 
+			var o24 = new DataObject ();
+			categories.Add (o24);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o24.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o2.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 3));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Centre de frais"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Stockage"));
 			}
 
+			var o3 = new DataObject ();
+			categories.Add (o3);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o3.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   1));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Placements"));
 			}
 
+			var o31 = new DataObject ();
+			categories.Add (o31);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (start, EventType.Entrée);
-				o.AddEvent (e);
+				o31.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o3.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 0));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placement"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions suisses"));
 			}
 
+			var o32 = new DataObject ();
+			categories.Add (o32);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				{
 					var e = new DataEvent (start, EventType.Entrée);
-					o.AddEvent (e);
+					o32.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-					e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+					e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o3.Guid));
+					e.AddProperty (new DataIntProperty    (ObjectField.Position, 1));
 					e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placement"));
 					e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions européennes"));
 				}
 
 				{
 					var e = new DataEvent (date3, EventType.Sortie);
-					o.AddEvent (e);
+					o32.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				}
 			}
 
+			var o33 = new DataObject ();
+			categories.Add (o33);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (date1, EventType.Entrée);
-				o.AddEvent (e);
+				o33.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o3.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 2));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placement"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions nord-américaines"));
 			}
 
+			var o34 = new DataObject ();
+			categories.Add (o34);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (date1, EventType.Entrée);
-				o.AddEvent (e);
+				o34.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o3.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 3));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placement"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions sub-américaines"));
 			}
 
+			var o35 = new DataObject ();
+			categories.Add (o35);
 			{
-				var o = new DataObject ();
-				categories.Add (o);
-
 				var e = new DataEvent (date2, EventType.Entrée);
-				o.AddEvent (e);
+				o35.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataIntProperty    (ObjectField.Level,   2));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o3.Guid));
+				e.AddProperty (new DataIntProperty    (ObjectField.Position, 4));
 				e.AddProperty (new DataStringProperty (ObjectField.Famille, "Placement"));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions asiatiques"));
 			}

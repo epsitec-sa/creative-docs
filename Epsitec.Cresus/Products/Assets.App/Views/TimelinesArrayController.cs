@@ -39,9 +39,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 			}
 
+			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
-			var levelNodesGetter = new LevelNodesGetter (primaryNodesGetter, this.accessor, this.baseType);
-			this.nodesGetter = new TreeObjectsNodesGetter (levelNodesGetter);
+			var ppNodeGetter = new ParentPositionNodesGetter (primaryNodesGetter, this.accessor, this.baseType);
+			this.pp2lNodesGetter = new ParentPositionToLevelNodesGetter (ppNodeGetter, this.accessor, this.baseType);
+			this.nodesGetter = new TreeObjectsNodesGetter (this.pp2lNodesGetter);
 
 			this.arrayLogic = new TimelinesArrayLogic (this.accessor, this.baseType);
 			this.dataArray = new TimelinesArrayLogic.DataArray ();
@@ -54,6 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateData()
 		{
+			this.pp2lNodesGetter.UpdateData ();
 			this.nodesGetter.UpdateData ();
 
 			this.UpdateDataArray ();
@@ -1236,23 +1239,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private static readonly int lineHeight      = 18;
 		private static readonly int leftColumnWidth = 180;
 
-		private readonly DataAccessor					accessor;
-		private readonly BaseType						baseType;
-		private readonly TreeObjectsNodesGetter			nodesGetter;
-		private readonly TimelinesArrayLogic			arrayLogic;
-		private readonly TimelinesArrayLogic.DataArray	dataArray;
-		private readonly string							title;
-		private readonly string							subtitle;
+		private readonly DataAccessor						accessor;
+		private readonly BaseType							baseType;
+		private readonly ParentPositionToLevelNodesGetter	pp2lNodesGetter;
+		private readonly TreeObjectsNodesGetter				nodesGetter;
+		private readonly TimelinesArrayLogic				arrayLogic;
+		private readonly TimelinesArrayLogic.DataArray		dataArray;
+		private readonly string								title;
+		private readonly string								subtitle;
 
-		private TopTitle								topTitle;
-		private TimelineMode							timelineMode;
-		private TreeTableToolbar						objectsToolbar;
-		private VSplitter								splitter;
-		private TimelinesToolbar						timelinesToolbar;
-		private TreeTableColumnTree						treeColumn;
-		private NavigationTimelineController			controller;
-		private VScroller								scroller;
-		private int										selectedRow;
-		private int										selectedColumn;
+		private TopTitle									topTitle;
+		private TimelineMode								timelineMode;
+		private TreeTableToolbar							objectsToolbar;
+		private VSplitter									splitter;
+		private TimelinesToolbar							timelinesToolbar;
+		private TreeTableColumnTree							treeColumn;
+		private NavigationTimelineController				controller;
+		private VScroller									scroller;
+		private int											selectedRow;
+		private int											selectedColumn;
 	}
 }

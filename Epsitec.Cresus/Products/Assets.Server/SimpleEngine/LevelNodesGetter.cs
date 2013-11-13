@@ -9,6 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// <summary>
 	/// Accès en lecture à des données quelconques, enrichies du niveau (Node.Level)
 	/// selon la propriété ObjectField.Level.
+	/// GuidNode -> LevelNode
 	/// </summary>
 	public class LevelNodesGetter : AbstractNodesGetter<LevelNode>  // outputNodes
 	{

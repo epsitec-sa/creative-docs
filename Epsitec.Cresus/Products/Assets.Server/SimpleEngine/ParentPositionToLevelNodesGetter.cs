@@ -6,6 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
+	/// <summary>
+	/// Accès en lecture à des données. En entrée, on reçoit des données parent/position
+	/// désordonnées qui servent à reconstruire un arbre. En sortie, on fourni des données
+	/// ordonnées avec une indication du level.
+	/// ParentPositionNode -> LevelNode
+	/// </summary>
 	public class ParentPositionToLevelNodesGetter : AbstractNodesGetter<LevelNode>  // outputNodes
 	{
 		public ParentPositionToLevelNodesGetter(AbstractNodesGetter<ParentPositionNode> inputNodes, DataAccessor accessor, BaseType baseType)
@@ -14,7 +20,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.accessor   = accessor;
 			this.baseType   = baseType;
 
-			this.ppNodes = new List<ParentPositionNode> ();
 			this.levelNodes = new List<LevelNode> ();
 		}
 
@@ -48,77 +53,48 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public void UpdateData()
 		{
-			this.ppNodes.Clear ();
 			this.levelNodes.Clear ();
 
-			foreach (var node in this.inputNodes.Nodes)
+			var p = this.inputNodes.Nodes.Where (x => x.Parent.IsEmpty).FirstOrDefault ();
+			if (p.IsEmpty)
 			{
-				if (!this.Insert (node))  // parent pas inséré ?
-				{
-					//	Cherche tous les aïeuls.
-					var list = new List<ParentPositionNode> ();
-					var n = node;
-
-					while (!n.IsEmpty &&
-						   !this.ppNodes.Where (x => x.Guid == n.Guid).Any ())
-					{
-						list.Insert (0, n);
-						n = this.inputNodes.Nodes.Where (x => x.Guid == n.Parent).FirstOrDefault ();
-					}
-
-					//	Insère tous les aïeuls, depuis le plus ancien.
-					foreach (var nn in list)
-					{
-						this.Insert (nn);
-					}
-				}
+				return;
 			}
 
-			foreach (var node in this.ppNodes)
+			var tree = new TreeNode (null, p);
+			this.Insert (tree);
+
+			var list = new List<TreeNode> ();
+			list.Add (tree);
+			tree.GetNodes (list);
+
+			foreach (var treeNode in list)
 			{
-				var n = new LevelNode (node.Guid, this.GetLevel (node));
+				var n = new LevelNode (treeNode.Node.Guid, this.GetLevel (treeNode));
 				this.levelNodes.Add (n);
 			}
 		}
 
-		private bool Insert(ParentPositionNode node)
+		private void Insert(TreeNode tree)
 		{
-			int i = 0;
+			var childrens = this.inputNodes.Nodes.Where (x => x.Parent == tree.Node.Guid).OrderBy (x => x.Position);
 
-			if (!node.Parent.IsEmpty)  // est-ce que le noeud a un parent ?
+			foreach (var children in childrens)
 			{
-				int parentIndex = this.ppNodes.FindIndex (x => x.Guid == node.Parent);
+				var n = new TreeNode (tree, children);
+				tree.Childrens.Add (n);
 
-				//	Si le parent n'est pas déjà inséré, on retourne false.
-				if (parentIndex == -1)
-				{
-					return false;
-				}
-
-				//	Cherche l'index où insérer le noeud.
-				i = parentIndex + 1;
-
-				while (i < this.ppNodes.Count                   &&
-					   this.ppNodes[i].Parent   == node.Parent  &&
-					   this.ppNodes[i].Position <= node.Position)
-				{
-					i++;
-				}
+				this.Insert (n);
 			}
-
-			//	Insère le noeud à la bonne place.
-			this.ppNodes.Insert (i, node);
-
-			return true;
 		}
 
-		private int GetLevel(ParentPositionNode node)
+		private int GetLevel(TreeNode treeNode)
 		{
 			int level = 0;
 
-			while (!node.Parent.IsEmpty)
+			while (treeNode.Parent != null)
 			{
-				node = this.inputNodes.Nodes.Where (x => x.Guid == node.Parent).FirstOrDefault ();
+				treeNode = treeNode.Parent;
 				level++;
 			}
 
@@ -126,12 +102,58 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		private class TreeNode
+		{
+			public TreeNode(TreeNode parent, ParentPositionNode node)
+			{
+				this.parent = parent;
+				this.node   = node;
+
+				this.childrens = new List<TreeNode> ();
+			}
+
+			public TreeNode Parent
+			{
+				get
+				{
+					return this.parent;
+				}
+			}
+
+			public ParentPositionNode Node
+			{
+				get
+				{
+					return this.node;
+				}
+			}
+
+			public List<TreeNode> Childrens
+			{
+				get
+				{
+					return this.childrens;
+				}
+			}
+
+			public void GetNodes(List<TreeNode> list)
+			{
+				foreach (var children in this.childrens)
+				{
+					list.Add (children);
+					children.GetNodes (list);
+				}
+			}
+
+			private readonly TreeNode parent;
+			private readonly ParentPositionNode node;
+			private readonly List<TreeNode> childrens;
+		}
 
 
 		private readonly AbstractNodesGetter<ParentPositionNode> inputNodes;
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
-		private readonly List<ParentPositionNode>		ppNodes;
 		private readonly List<LevelNode>				levelNodes;
 	}
 }

@@ -6,7 +6,6 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Popups;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -18,9 +17,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.hasTreeOperations = true;
 
+			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
-			var levelNodesGetter = new LevelNodesGetter (primaryNodesGetter, this.accessor, this.baseType);
-			this.nodesGetter = new TreeObjectsNodesGetter (levelNodesGetter);
+			var ppNodeGetter = new ParentPositionNodesGetter (primaryNodesGetter, this.accessor, this.baseType);
+			this.pp2lNodesGetter = new ParentPositionToLevelNodesGetter (ppNodeGetter, this.accessor, this.baseType);
+			this.nodesGetter = new TreeObjectsNodesGetter (this.pp2lNodesGetter);
 
 			switch (this.baseType)
 			{
@@ -43,6 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateData()
 		{
+			this.pp2lNodesGetter.UpdateData ();
 			this.NodesGetter.UpdateData ();
 
 			this.UpdateController ();
@@ -246,6 +248,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private Timestamp?						timestamp;
+		private ParentPositionToLevelNodesGetter	pp2lNodesGetter;
+		private Timestamp?							timestamp;
 	}
 }
