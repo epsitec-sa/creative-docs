@@ -194,17 +194,33 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o131 = new DataObject ();
 			objects.Add (o131);
 			{
-				var e = new DataEvent (date2002, EventType.Entrée);
-				o131.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o13.Guid));
-				e.AddProperty (new DataIntProperty            (ObjectField.Position,    0));
-				e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.3.1"));
-				e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Dépôt principal"));
-				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (2100000.0m)));
-				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (3500000.0m)));
-				e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Anne-Sophie"));
-				DummyMandat.AddAmortissement1 (e);
+				{
+					var e = new DataEvent (date2002, EventType.Entrée);
+					o131.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Parent,      o13.Guid));
+					e.AddProperty (new DataIntProperty            (ObjectField.Position,    0));
+					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1.3.1"));
+					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Dépôt principal"));
+					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (2100000.0m)));
+					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (3500000.0m)));
+					e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Anne-Sophie"));
+					DummyMandat.AddAmortissement1 (e);
+				}
+
+				{
+					var e = new DataEvent (date2010, EventType.Réorganisation);
+					o131.AddEvent (e);
+					e.AddProperty (new DataGuidProperty (ObjectField.Parent, o11.Guid));
+					e.AddProperty (new DataIntProperty (ObjectField.Position, 10));
+				}
+
+				{
+					var e = new DataEvent (date2011, EventType.Réorganisation);
+					o131.AddEvent (e);
+					e.AddProperty (new DataGuidProperty (ObjectField.Parent, o12.Guid));
+					e.AddProperty (new DataIntProperty (ObjectField.Position, 10));
+				}
 			}
 
 			var o132 = new DataObject ();
