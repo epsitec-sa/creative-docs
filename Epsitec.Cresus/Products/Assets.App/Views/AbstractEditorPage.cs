@@ -92,6 +92,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.Value         = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
+				else if (controller is GuidFieldController)
+				{
+					var c = controller as GuidFieldController;
+
+					c.EventType     = this.eventType;
+					c.Value         = ObjectCalculator.GetObjectPropertyGuid (this.obj, this.timestamp, field);
+					c.PropertyState = this.GetPropertyState (field);
+				}
 			}
 		}
 
@@ -115,12 +123,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreateGuidController(Widget parent, ObjectField field)
 		{
-			// TODO: ...
-			var controller = new StringFieldController
+			var controller = new GuidFieldController
 			{
+				Accessor  = this.accessor,
+				BaseType  = this.baseType,
 				Label     = StaticDescriptions.GetObjectFieldDescription (field),
 				EditWidth = 380,
-				LineCount = 1,
 				TabIndex  = ++this.tabIndex,
 			};
 
@@ -130,7 +138,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.accessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = ObjectCalculator.GetObjectPropertyGuid (this.obj, this.timestamp, field).ToString ();
+				controller.Value         = ObjectCalculator.GetObjectPropertyGuid (this.obj, this.timestamp, field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
