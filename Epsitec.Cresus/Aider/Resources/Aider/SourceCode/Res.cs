@@ -1419,6 +1419,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 390));
 						}
 					}
+					//	designer:cap/LVAVH
+					public static global::Epsitec.Common.Types.Caption PersonBirth
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 575));
+						}
+					}
 					//	designer:cap/LVO703
 					public static global::Epsitec.Common.Types.Caption PersonProbablyDuplicated
 					{

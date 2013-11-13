@@ -21,7 +21,6 @@ namespace Epsitec.Aider.Enumerations
 		HouseholdMissing	 = 1000,
 
 		[Hidden]
-		[Rank (5)]
 		ParishMismatch		 = 1001,
 
 		[Rank (3)]
@@ -67,6 +66,9 @@ namespace Epsitec.Aider.Enumerations
 		
 		//	Not yet fully implemented...
 		[Hidden]
-		PersonProbablyDuplicated  = 4001
+		PersonProbablyDuplicated  = 4001,
+
+		[Rank (5)]
+		PersonBirth			 = 4002,
 	}
 }
