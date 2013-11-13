@@ -24,6 +24,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var guidNodesGetter = this.accessor.GetNodesGetter (BaseType.Categories);
 			var levelNodesGetter = new LevelNodesGetter (guidNodesGetter, this.accessor, BaseType.Categories);
 			this.nodesGetter = new TreeObjectsNodesGetter (levelNodesGetter);
+			this.nodesGetter.UpdateData ();
+
 			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, BaseType.Categories, this.controller, this.nodesGetter);
 
 			//	Connexion des événements.
@@ -164,7 +166,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly AbstractNodesGetter<TreeNode>	nodesGetter;
+		private readonly TreeObjectsNodesGetter			nodesGetter;
 		private readonly CategoriesTreeTableFiller		dataFiller;
 
 		private int										visibleSelectedRow;

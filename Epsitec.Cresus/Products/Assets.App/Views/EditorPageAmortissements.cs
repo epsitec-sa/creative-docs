@@ -24,6 +24,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStringController  (parent, ObjectField.TypeAmortissement, editWidth: 90);
 			this.CreateStringController  (parent, ObjectField.Périodicité, editWidth: 90);
 			this.CreateDecimalController (parent, ObjectField.ValeurRésiduelle, DecimalFormat.Amount);
+			this.CreateStringController  (parent, ObjectField.Compte1);
+			this.CreateStringController  (parent, ObjectField.Compte2);
+			this.CreateStringController  (parent, ObjectField.Compte3);
+			this.CreateStringController  (parent, ObjectField.Compte4);
+			this.CreateStringController  (parent, ObjectField.Compte5);
+			this.CreateStringController  (parent, ObjectField.Compte6);
+			this.CreateStringController  (parent, ObjectField.Compte7);
+			this.CreateStringController  (parent, ObjectField.Compte8);
 
 			this.CreateImportButton (parent);
 		}
@@ -103,6 +111,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.ImportField (catObj, ObjectField.TypeAmortissement, ObjectField.TypeAmortissement);
 			this.ImportField (catObj, ObjectField.Périodicité,       ObjectField.Périodicité);
 			this.ImportField (catObj, ObjectField.ValeurRésiduelle,  ObjectField.ValeurRésiduelle);
+			this.ImportField (catObj, ObjectField.Compte1,           ObjectField.Compte1);
+			this.ImportField (catObj, ObjectField.Compte2,           ObjectField.Compte2);
+			this.ImportField (catObj, ObjectField.Compte3,           ObjectField.Compte3);
+			this.ImportField (catObj, ObjectField.Compte4,           ObjectField.Compte4);
+			this.ImportField (catObj, ObjectField.Compte5,           ObjectField.Compte5);
+			this.ImportField (catObj, ObjectField.Compte6,           ObjectField.Compte6);
+			this.ImportField (catObj, ObjectField.Compte7,           ObjectField.Compte7);
+			this.ImportField (catObj, ObjectField.Compte8,           ObjectField.Compte8);
 
 			//	Met à jour les contrôleurs.
 			this.SetObject (this.objectGuid, this.timestamp);

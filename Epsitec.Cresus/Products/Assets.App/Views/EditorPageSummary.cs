@@ -150,6 +150,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.TypeAmortissement:
 				case ObjectField.Périodicité:
 				case ObjectField.ValeurRésiduelle:
+				case ObjectField.Compte1:
+				case ObjectField.Compte2:
+				case ObjectField.Compte3:
+				case ObjectField.Compte4:
+				case ObjectField.Compte5:
+				case ObjectField.Compte6:
+				case ObjectField.Compte7:
+				case ObjectField.Compte8:
 					return EditionObjectPageType.Amortissements;
 
 				default:
@@ -282,6 +290,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 					new ObjectSummaryControllerTile (ObjectField.TypeAmortissement),
 					new ObjectSummaryControllerTile (ObjectField.Périodicité),
 					new ObjectSummaryControllerTile (ObjectField.ValeurRésiduelle),
+					new ObjectSummaryControllerTile (ObjectField.Compte1),
+					new ObjectSummaryControllerTile (ObjectField.Compte2),
+					new ObjectSummaryControllerTile (ObjectField.Compte3),
+					new ObjectSummaryControllerTile (ObjectField.Compte4),
+					new ObjectSummaryControllerTile (ObjectField.Compte5),
+					new ObjectSummaryControllerTile (ObjectField.Compte6),
+					new ObjectSummaryControllerTile (ObjectField.Compte7),
+					new ObjectSummaryControllerTile (ObjectField.Compte8),
 				};
 				list.Add (c2);
 
