@@ -50,19 +50,15 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 					.Title ("Nationalité du chef de famille")
 					.InitialValue (switzerland)
 					.WithFavorites (countries)
-				.End ()
-				.Field<bool> ()
-					.Title ("Inscription au Bonne Nouvelle")
-					.InitialValue (false)
 				.End ();
 		}
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<PersonMrMrs, string, string, AiderTownEntity, string, PersonConfession, AiderCountryEntity, bool, AiderHouseholdEntity> (this.Execute);
+			return FunctionExecutor.Create<PersonMrMrs, string, string, AiderTownEntity, string, PersonConfession, AiderCountryEntity, AiderHouseholdEntity> (this.Execute);
 		}
 
-		private AiderHouseholdEntity Execute(PersonMrMrs mrMrs, string firstname, string lastname, AiderTownEntity town, string streetHouseNumberAndComplement, PersonConfession confession, AiderCountryEntity nationality, bool generateSubscription)
+		private AiderHouseholdEntity Execute(PersonMrMrs mrMrs, string firstname, string lastname, AiderTownEntity town, string streetHouseNumberAndComplement, PersonConfession confession, AiderCountryEntity nationality)
 		{
 			if (mrMrs == PersonMrMrs.None)
 			{
@@ -116,6 +112,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			var parishRepository = ParishAddressRepository.Current;
 			ParishAssigner.AssignToParish (parishRepository, this.BusinessContext, person);
 
+			var generateSubscription = address.Town.SwissCantonCode.Equals ("VD");
 			if (generateSubscription)
 			{
 				// Here we know that the parish has been set up just before, so we reuse that

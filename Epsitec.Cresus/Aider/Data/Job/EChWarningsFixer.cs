@@ -48,17 +48,31 @@ namespace Epsitec.Aider.Data.Job
 
 				EChWarningsFixer.LogToConsole ("Delete old Ech Warnings: EChPersonDuplicated ");
 
-				EChWarningsFixer.DeleteWarning (businessContext, WarningType.EChPersonDuplicated);
+				EChWarningsFixer.DeleteWarnings (businessContext, WarningType.EChPersonDuplicated);
 
 				EChWarningsFixer.LogToConsole ("Delete old Ech Warnings: EChHouseholdChanged ");
 
-				EChWarningsFixer.DeleteWarning (businessContext, WarningType.EChHouseholdChanged);
+				EChWarningsFixer.DeleteWarnings (businessContext, WarningType.EChHouseholdChanged);
 
+				EChWarningsFixer.LogToConsole ("Delete old Ech Warnings: ParishMismatch ");
+
+				EChWarningsFixer.DeleteWarnings (businessContext, WarningType.ParishMismatch);
+
+				EChWarningsFixer.LogToConsole ("Delete old Ech Warnings: EChHouseholdMissing ");
+
+				EChWarningsFixer.DeleteWarnings (businessContext, WarningType.EChHouseholdMissing);
+
+				EChWarningsFixer.LogToConsole ("Delete old Ech Warnings: EChHouseholdAdded ");
+
+				EChWarningsFixer.DeleteWarnings (businessContext, WarningType.EChHouseholdAdded);
 
 				EChWarningsFixer.LogToConsole ("Delete warnings mismatch in time");
 
 				EChWarningsFixer.RemoveWarningInTimeMismatch (businessContext);
 
+				EChWarningsFixer.LogToConsole ("Detecting birth: EChProcessArrival -> PersonBirth");
+
+				EChWarningsFixer.DetectBirthAndMigrate (businessContext);
 				
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
@@ -277,7 +291,7 @@ namespace Epsitec.Aider.Data.Job
 			}			
 		}
 
-		private static void DeleteWarning(BusinessContext businessContext, WarningType deleteValue)
+		private static void DeleteWarnings(BusinessContext businessContext, WarningType deleteValue)
 		{
 			var example = new AiderPersonWarningEntity ()
 			{
@@ -292,7 +306,30 @@ namespace Epsitec.Aider.Data.Job
 			var current = 1;
 			foreach (var warn in warningsToDelete)
 			{
-				businessContext.DeleteEntity (warn);
+				EChWarningsFixer.ClearWarningAndRefreshCaches (businessContext, warn);
+				System.Console.SetCursorPosition (0, 2);
+				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
+				current++;
+			}
+			System.Console.Clear ();
+		}
+
+		private static void DeleteEChHouseholdMissingWarnings (BusinessContext businessContext)
+		{
+			var example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.EChHouseholdMissing
+			};
+
+			var warningsToDelete = businessContext.DataContext.GetByExample<AiderPersonWarningEntity> (example);
+
+			var total = warningsToDelete.Count ();
+			EChWarningsFixer.LogToConsole ("{0} warnings to delete", total);
+
+			var current = 1;
+			foreach (var warn in warningsToDelete)
+			{
+				EChWarningsFixer.ClearWarningAndRefreshCaches (businessContext, warn);
 				System.Console.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
 				current++;
@@ -323,6 +360,45 @@ namespace Epsitec.Aider.Data.Job
 			System.Console.Clear ();
 		}
 
+
+		private static void DetectBirthAndMigrate(BusinessContext businessContext)
+		{
+			var example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.EChProcessArrival
+			};
+
+			var warningsToCheck = businessContext.DataContext.GetByExample<AiderPersonWarningEntity> (example);
+
+			var total = warningsToCheck.Count ();
+			EChWarningsFixer.LogToConsole ("{0} warnings to check", total);
+
+			var current = 1;
+			foreach (var warn in warningsToCheck)
+			{
+				if (warn.Person.Age == 0)
+				{
+					if (warn.Person.MainContact.IsNotNull ())
+					{
+						var household = warn.Person.MainContact.Household;
+						var anyOtherArrivalInHousehold = household.Members.Where(m => m != warn.Person).Any (m => m.Warnings.Any (w => w.WarningType == WarningType.EChProcessArrival));
+
+						if (!anyOtherArrivalInHousehold)
+						{
+							warn.WarningType = WarningType.PersonBirth;
+							EChWarningsFixer.LogToConsole ("{0} detected and migrated", warn.Person.GetCompactSummary ());
+						}
+					}
+
+				}
+
+				System.Console.SetCursorPosition (0, 2);
+				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
+				current++;
+			}
+			System.Console.Clear ();
+		}
+
 		private static AiderPersonEntity GetAiderPersonEntity(BusinessContext businessContext, eCH_PersonEntity person)
 		{
 			if (person == null)
@@ -338,6 +414,29 @@ namespace Epsitec.Aider.Data.Job
 			};
 
 			return businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).FirstOrDefault ();
+		}
+
+		private static void ClearWarningAndRefreshCaches(BusinessContext businessContext, AiderPersonWarningEntity warning)
+		{
+			var person  = warning.Person;
+			var context = businessContext;
+
+			person.Contacts.ForEach (x => x.RefreshCache ());
+			person.Households.ForEach (x => x.RefreshCache ());
+
+			AiderPersonWarningEntity.Delete (context, warning);
+
+			EChWarningsFixer.CleanUpEchPerson (person);
+		}
+
+		private static void CleanUpEchPerson(AiderPersonEntity person)
+		{
+			var reportedPersons = person.eCH_Person.ReportedPersons.ToArray ();
+
+			foreach (var reportedPerson in reportedPersons)
+			{
+				reportedPerson.RemoveDuplicates ();
+			}
 		}
 
 		private static System.Diagnostics.Stopwatch LogToConsole(string format, params object[] args)

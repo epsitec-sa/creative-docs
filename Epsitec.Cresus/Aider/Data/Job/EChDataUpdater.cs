@@ -660,6 +660,7 @@ namespace Epsitec.Aider.Data.Job
 
 							//Update EChDATA
 							existingAiderPersonEntity.eCH_Person = eChPersonEntity;
+							existingAiderPersonEntity.Visibility = PersonVisibilityStatus.Default;
 
 							this.CreateArrivalWarningForNewHousehold (businessContext, existingAiderPersonEntity);				
 						}
@@ -932,6 +933,12 @@ namespace Epsitec.Aider.Data.Job
 							foreach (var child in existingEChReportedPerson.Children)
 							{
 								this.SetupAndAiderHouseholdForMember (businessContext, child, existingEChReportedPerson, aiderHousehold, false, false);
+							}
+
+							//Bonne Nouvelle Automatic Subscription
+							if (AiderSubscriptionEntity.FindSubscription (businessContext, aiderHousehold).IsNull ())
+							{
+								AiderSubscriptionEntity.Create (businessContext, aiderHousehold);
 							}
 						}
 						

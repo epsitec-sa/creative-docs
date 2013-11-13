@@ -36,30 +36,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionMenu<ActionAiderMailingViewController2Duplicate> ()
 				.EnableActionButton<ActionAiderMailingViewController2Duplicate> ()
 				.EnableActionOnDrop<ActionAiderMailingViewController0AddRecipientOnDrop> ();
-	
-			/*wall.AddBrick ()
-				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
-				.Title ("Ajouter un contact")
-				.Text ("Uniquement disponible à l'aide de l'arche")
-				.EnableActionOnDrop<ActionAiderMailingViewController0AddContactToRecipientsOnDrop> ();
-
-			wall.AddBrick ()
-				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
-				.Title ("Ajouter un groupe")
-				.Text ("Uniquement disponible à l'aide de l'arche")
-				.EnableActionOnDrop<ActionAiderMailingViewController2AddGroupToRecipientsOnDrop> ();
-
-			wall.AddBrick ()
-				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
-				.Title ("Ajouter un ménage")
-				.Text ("Uniquement disponible à l'aide de l'arche")
-				.EnableActionOnDrop<ActionAiderMailingViewController4AddHouseholdToRecipientsOnDrop> ();
-
-			wall.AddBrick ()
-				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
-				.Title ("Exclure un contact")
-				.Text ("Uniquement disponible à l'aide de l'arche")
-				.EnableActionOnDrop<ActionAiderMailingViewController1AddContactToExclusionsOnDrop> ();*/
 		}
 	}
 }

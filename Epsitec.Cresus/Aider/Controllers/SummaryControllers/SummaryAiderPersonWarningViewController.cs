@@ -60,6 +60,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				case WarningType.HouseholdMissing:
 					return new SpecializedSummaryAiderPersonWarningViewController_MissingHousehold ();
 
+				case WarningType.PersonBirth:
 				case WarningType.ParishMismatch://JokeInCode: it's like Paris Match ?! 
 					return new SpecializedSummaryAiderPersonWarningViewController_ParishMismatch (); 
 			}
