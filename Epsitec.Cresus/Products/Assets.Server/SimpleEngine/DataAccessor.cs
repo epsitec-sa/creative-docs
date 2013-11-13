@@ -265,6 +265,23 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public void SetObjectField(ObjectField field, Guid value)
+		{
+			var e = this.EditionEvent;
+			if (e != null)
+			{
+				if (!value.IsEmpty)
+				{
+					var newProperty = new DataGuidProperty (field, value);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty (field);
+				}
+			}
+		}
+
 		public void SetObjectField(ObjectField field, System.DateTime? value)
 		{
 			var e = this.EditionEvent;

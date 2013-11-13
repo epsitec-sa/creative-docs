@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// Gère l'accès en lecture "en arbre" à des données quelconques en provenance
 	/// de inputNodes.
 	/// </summary>
-	public class TreeObjectsNodesGetter : AbstractNodesGetter<TreeNode>
+	public class TreeObjectsNodesGetter : AbstractNodesGetter<TreeNode>  // outputNodes
 	{
 		public TreeObjectsNodesGetter(AbstractNodesGetter<LevelNode> inputNodes)
 		{

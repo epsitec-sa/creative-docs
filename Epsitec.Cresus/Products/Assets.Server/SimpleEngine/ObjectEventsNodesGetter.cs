@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// <summary>
 	/// Accès en lecture aux événements d'un objet.
 	/// </summary>
-	public class ObjectEventsNodesGetter : AbstractNodesGetter<GuidNode>
+	public class ObjectEventsNodesGetter : AbstractNodesGetter<GuidNode>  // outputNodes
 	{
 		public DataObject DataObject;
 

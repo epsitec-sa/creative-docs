@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// Classe totalement inutile, juste pour l'exemple !
 	/// Pourra servir de base pour implémenter un filtre, par exemple.
 	/// </summary>
-	public class BypassNodesGetter : AbstractNodesGetter<GuidNode>
+	public class BypassNodesGetter : AbstractNodesGetter<GuidNode>  // outputNodes
 	{
 		public BypassNodesGetter(AbstractNodesGetter<GuidNode> inputNodes)
 		{

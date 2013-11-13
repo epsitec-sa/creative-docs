@@ -17,6 +17,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		OneShotDocuments,
 
 		Level,
+		Parent,
+		Position,
 		Numéro,
 		Nom,
 		Description,

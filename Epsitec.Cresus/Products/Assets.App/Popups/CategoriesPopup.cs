@@ -58,7 +58,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.CreateTitle (this.mainFrameBox);
 			this.CreateCloseButton ();
+			
 			this.controller.CreateUI (this.mainFrameBox, headerHeight: CategoriesPopup.HeaderHeight, footerHeight: 0);
+			this.controller.AllowsMovement = false;
+
 			this.dataFiller.UpdateColumns ();
 			this.UpdateController ();
 		}

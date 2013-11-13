@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// <summary>
 	/// Accès en lecture à des données quelconques constituées de GuidNode/LevelNode/TreeNode.
 	/// </summary>
-	public abstract class AbstractNodesGetter<T>
+	public abstract class AbstractNodesGetter<T>  // outputNodes
 		where T : struct
 	{
 		public IEnumerable<T> Nodes
