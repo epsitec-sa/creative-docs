@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#region NodesGetter
 		public GuidNodesGetter GetNodesGetter(BaseType baseType)
 		{
-			//	Retourne un moyen d'accès standardisé aux données d'une base.
+			//	Retourne un moyen standardisé d'accès en lecture aux données d'une base.
 			return new GuidNodesGetter (this.mandat, baseType);
 		}
 
@@ -142,6 +142,30 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			return null;
+		}
+
+		public void RemoveObject(BaseType baseType, Guid objectGuid)
+		{
+			var list = this.mandat.GetData (baseType);
+			var obj = this.GetObject (baseType, objectGuid);
+
+			if (obj != null)
+			{
+				list.Remove (obj);
+			}
+		}
+
+		public void RemoveObjectEvent(DataObject obj, Timestamp? timestamp)
+		{
+			if (obj != null && timestamp.HasValue)
+			{
+				var e = obj.GetEvent (timestamp.Value);
+				if (e != null)
+				{
+					obj.RemoveEvent (e);
+					ObjectCalculator.UpdateComputedAmounts (obj);
+				}
+			}
 		}
 		#endregion
 

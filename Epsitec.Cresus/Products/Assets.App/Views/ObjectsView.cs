@@ -198,13 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.objectEditor.Navigate += delegate (object sender, Timestamp timestamp)
 				{
-					var index = this.timelineController.GetEventIndex (timestamp);
-
-					if (index.HasValue)
-					{
-						this.timelineController.SelectedCell = index.Value;
-					}
-
+					this.timelineController.SelectedTimestamp = timestamp;
 					this.eventsController.SelectedTimestamp = timestamp;
 				};
 

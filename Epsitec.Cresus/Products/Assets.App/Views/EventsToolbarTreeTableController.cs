@@ -155,6 +155,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "yes")
 					{
+						this.accessor.RemoveObjectEvent (this.obj, this.SelectedTimestamp);
+						this.UpdateController ();
+						this.UpdateToolbar ();
+						this.OnUpdateAll ();
 					}
 				};
 			}

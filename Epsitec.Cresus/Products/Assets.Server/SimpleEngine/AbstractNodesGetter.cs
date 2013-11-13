@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	/// <summary>
-	/// Accès à des données quelconques constituées de GuidNode/LevelNode/TreeNode.
+	/// Accès en lecture à des données quelconques constituées de GuidNode/LevelNode/TreeNode.
 	/// </summary>
 	public abstract class AbstractNodesGetter<T>
 		where T : struct

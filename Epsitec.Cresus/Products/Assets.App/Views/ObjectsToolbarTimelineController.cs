@@ -112,53 +112,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public int								SelectedCell
-		{
-			get
-			{
-				return this.selectedCell;
-			}
-			set
-			{
-				if (this.selectedCell != value)
-				{
-					this.selectedCell = value;
-
-					this.UpdateController ();
-					this.UpdateToolbar ();
-
-					this.OnSelectedCellChanged (this.selectedCell);
-				}
-			}
-		}
-
 		public Timestamp?						SelectedTimestamp
 		{
 			get
 			{
-				if (this.selectedCell != -1 && this.controller != null)
-				{
-					var cell = this.timelineData.GetCell (this.selectedCell);
-
-					if (cell.HasValue)
-					{
-						return cell.Value.Timestamp;
-					}
-				}
-
-				return null;
+				return this.selectedTimestamp;
 			}
 			set
 			{
-				var sel = this.GetEventIndex (value);
-
-				if (sel.HasValue)
+				if (this.selectedTimestamp != value)
 				{
-					this.SelectedCell = sel.Value;
+					this.selectedTimestamp = value;
+
+					this.UpdateController ();
+					this.UpdateToolbar ();
+
+					this.OnSelectedCellChanged (this.SelectedCell);
+				}
+			}
+		}
+
+		public int								SelectedCell
+		{
+			get
+			{
+				return this.timelineData.GetCellIndex (this.selectedTimestamp);
+			}
+			set
+			{
+				var cell = this.timelineData[value];
+				if (cell.HasValue)
+				{
+					this.SelectedTimestamp = cell.Value.Timestamp;
 				}
 				else
 				{
-					this.SelectedCell = -1;
+					this.SelectedTimestamp = null;
 				}
 			}
 		}
@@ -167,8 +156,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				var cell = this.timelineData.GetCell (this.selectedCell);
-				return (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty);
+				var cell = this.timelineData[this.selectedTimestamp];
+				return (cell.HasValue && cell.Value.Glyph != TimelineGlyph.Empty);
 			}
 		}
 
@@ -196,23 +185,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public int? GetEventIndex(System.DateTime? dateTime)
+		public int GetEventIndex(System.DateTime? dateTime)
 		{
-			if (dateTime.HasValue)
-			{
-				int count = this.timelineData.CellsCount;
-				for (int i = 0; i < count; i++)
-				{
-					var cell = this.timelineData.GetCell (i);
-
-					if (cell.HasValue && cell.Value.Timestamp.Date == dateTime.Value)
-					{
-						return i;
-					}
-				}
-			}
-
-			return null;
+			return this.timelineData.GetCellIndex (dateTime);
 		}
 
 		public int? GetEventIndex(Timestamp? timestamp)
@@ -222,7 +197,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				int count = this.timelineData.CellsCount;
 				for (int i = 0; i < count; i++)
 				{
-					var cell = this.timelineData.GetCell (i);
+					var cell = this.timelineData[i];
 
 					if (cell.HasValue && cell.Value.Timestamp == timestamp)
 					{
@@ -305,15 +280,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
 				{
-					var index = this.GetEventIndex (dateTime);
-
-					if (index.HasValue)
+					if (dateTime.HasValue)
 					{
-						this.SelectedCell = index.Value;
+						this.SelectedTimestamp = new Timestamp (dateTime.Value, 0);
 					}
 					else
 					{
-						this.SelectedCell = -1;
+						this.SelectedTimestamp = null;
 					}
 
 					if (dateTime.HasValue)
@@ -349,6 +322,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "yes")
 					{
+						this.accessor.RemoveObjectEvent (this.obj, this.SelectedTimestamp);
+						this.Update ();
+						this.OnUpdateAll ();
 					}
 				};
 			}
@@ -356,7 +332,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnDeselect()
 		{
-			this.SelectedCell = -1;
+			this.SelectedTimestamp = null;
 		}
 
 
@@ -371,20 +347,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (e != null)
 				{
-					using (new SaveCurrentDate (this))
-					{
-						this.UpdateRows ();
-						this.UpdateData ();
-						this.UpdateController ();
-						this.UpdateToolbar ();
-					}
-
-					int? index = this.GetEventIndex (e.Timestamp);
-					if (index.HasValue)
-					{
-						this.SelectedCell = index.Value;
-					}
-
+					this.Update ();
+					this.SelectedTimestamp = e.Timestamp;
 					this.OnStartEditing (type);
 					this.OnUpdateAll ();
 				}
@@ -402,7 +366,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateTimeline(Widget parent)
 		{
-			this.selectedCell = -1;
+			this.selectedTimestamp = null;
 
 			this.controller = new NavigationTimelineController ();
 
@@ -551,7 +515,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			int cellsCount   = this.timelineData.CellsCount;
 			int count        = System.Math.Min (visibleCount, cellsCount);
 			int firstCell    = this.controller.LeftVisibleCell;
-			int selection    = this.selectedCell;
+			int selection    = this.SelectedCell;
 
 			if (selection != -1)
 			{
@@ -587,7 +551,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			for (int i = 0; i < count; i++)
 			{
-				var cell = this.timelineData.GetCell (firstCell+i);
+				var cell = this.timelineData[firstCell+i];
 
 				if (cell == null)
 				{
@@ -596,7 +560,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else
 				{
 					var d = new TimelineCellDate (cell.Value.Timestamp.Date, isSelected: (i == selection));
-					var g = new TimelineCellGlyph (cell.Value.TimelineGlyph, cell.Value.TimelineLocked, cell.Value.Tooltip, isSelected: (i == selection));
+					var g = new TimelineCellGlyph (cell.Value.Glyph, cell.Value.Locked, cell.Value.Tooltip, isSelected: (i == selection));
 					var v = new TimelineCellValue (i, cell.Value.Values, isSelected: (i == selection));
 
 					dates.Add (d);
@@ -678,9 +642,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					int count = this.timelineData.CellsCount;
 					for (int i = 0; i < count; i++)
 					{
-						var cell = this.timelineData.GetCell (i);
+						var cell = this.timelineData[i];
 
-						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+						if (cell.HasValue && cell.Value.Glyph != TimelineGlyph.Empty)
 						{
 							return i;
 						}
@@ -695,14 +659,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.selectedCell != -1)
+				if (this.SelectedCell != -1)
 				{
-					int i = this.selectedCell - 1;
+					int i = this.SelectedCell - 1;
 					while (i >= 0)
 					{
-						var cell = this.timelineData.GetCell (i);
+						var cell = this.timelineData[i];
 
-						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+						if (cell.HasValue && cell.Value.Glyph != TimelineGlyph.Empty)
 						{
 							return i;
 						}
@@ -719,15 +683,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.selectedCell != -1)
+				if (this.SelectedCell != -1)
 				{
 					int count = this.timelineData.CellsCount;
-					int i = this.selectedCell + 1;
+					int i = this.SelectedCell + 1;
 					while (i < count)
 					{
-						var cell = this.timelineData.GetCell (i);
+						var cell = this.timelineData[i];
 
-						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+						if (cell.HasValue && cell.Value.Glyph != TimelineGlyph.Empty)
 						{
 							return i;
 						}
@@ -749,9 +713,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					int count = this.timelineData.CellsCount;
 					for (int i = count-1; i >= 0; i--)
 					{
-						var cell = this.timelineData.GetCell (i);
+						var cell = this.timelineData[i];
 
-						if (cell.HasValue && cell.Value.TimelineGlyph != TimelineGlyph.Empty)
+						if (cell.HasValue && cell.Value.Glyph != TimelineGlyph.Empty)
 						{
 							return i;
 						}
@@ -771,7 +735,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				int count = this.timelineData.CellsCount;
 				for (int i = 0; i < count; i++)
 				{
-					var cell = this.timelineData.GetCell (i);
+					var cell = this.timelineData[i];
 
 					if (cell.HasValue && cell.Value.Timestamp == now)
 					{
@@ -821,9 +785,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (value.HasValue)
 				{
 					var index = this.GetEventIndex (value.Value);
-					if (index.HasValue)
+					if (index != -1)
 					{
-						this.SelectedCell = index.Value;
+						this.SelectedCell = index;
 					}
 				}
 			}
@@ -936,7 +900,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox						frameBox;
 		private TimelineToolbar					toolbar;
 		private NavigationTimelineController	controller;
-		private int								selectedCell;
+		private	Timestamp?						selectedTimestamp;
 		private TimelineMode					timelineMode;
 		private Guid							objectGuid;
 		private DataObject						obj;

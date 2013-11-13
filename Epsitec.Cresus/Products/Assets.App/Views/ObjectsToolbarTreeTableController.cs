@@ -209,6 +209,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "yes")
 					{
+						this.accessor.RemoveObject (this.baseType, this.SelectedGuid);
+						this.UpdateData ();
 					}
 				};
 			}

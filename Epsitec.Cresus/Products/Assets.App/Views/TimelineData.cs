@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var cell = new TimelineCell
 				{
 					Timestamp     = new Timestamp (date, 0),
-					TimelineGlyph = TimelineGlyph.Empty,
+					Glyph = TimelineGlyph.Empty,
 				};
 
 				this.cells.Add (cell);
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var cell = new TimelineCell
 				{
 					Timestamp     = new Timestamp (date, 0),
-					TimelineGlyph = TimelineGlyph.Empty,
+					Glyph = TimelineGlyph.Empty,
 				};
 
 				this.cells.Add (cell);
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							var cell = new TimelineCell
 							{
 								Timestamp     = t,
-								TimelineGlyph = glyph,
+								Glyph = glyph,
 								Tooltip       = BusinessLogic.GetTooltip (obj, t, type, 8),
 								Values        = new decimal?[] { v1, v2 },
 							};
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							var cell = new TimelineCell
 							{
 								Timestamp     = this.cells[index].Timestamp,
-								TimelineGlyph = glyph,
+								Glyph = glyph,
 								Tooltip       = BusinessLogic.GetTooltip (obj, t, type, 8),
 								Values        = new decimal?[] { v1, v2 },
 							};
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var cell = new TimelineCell
 				{
 					Timestamp     = new Timestamp(date.Value, 0),
-					TimelineGlyph = TimelineGlyph.Empty,
+					Glyph = TimelineGlyph.Empty,
 					Tooltip       = tooltip,
 				};
 
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (ObjectCalculator.IsLocked (lockedIntervals, cell.Timestamp))
 				{
-					cell.TimelineLocked = true;
+					cell.Locked = true;
 					this.cells[i] = cell;
 				}
 			}
@@ -304,14 +304,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			while (index >= 0)
 			{
-				var cell = this.GetCell (index--);
+				var cell = this[index--];
 
 				if (cell.HasValue)
 				{
 					if (first)
 					{
 						syntheticCell.Timestamp     = cell.Value.Timestamp;
-						syntheticCell.TimelineGlyph = cell.Value.TimelineGlyph;
+						syntheticCell.Glyph = cell.Value.Glyph;
 						first = false;
 					}
 
@@ -337,15 +337,59 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return syntheticCell;
 		}
 
-		public TimelineCell? GetCell(int index)
+
+		public int GetCellIndex(System.DateTime? dateTime)
 		{
-			if (index >= 0 && index < this.cells.Count)
+			if (dateTime.HasValue)
 			{
-				return this.cells[index];
+				return this.cells.FindIndex (x => x.Timestamp.Date == dateTime.Value);
 			}
 			else
 			{
-				return null;
+				return -1;
+			}
+		}
+
+		public int GetCellIndex(Timestamp? timestamp)
+		{
+			if (timestamp.HasValue)
+			{
+				return this.cells.FindIndex (x => x.Timestamp == timestamp.Value);
+			}
+			else
+			{
+				return -1;
+			}
+		}
+
+
+		public TimelineCell? this[Timestamp? timestamp]
+		{
+			get
+			{
+				if (timestamp.HasValue)
+				{
+					return this.cells.Where (x => x.Timestamp == timestamp.Value).FirstOrDefault ();
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+		public TimelineCell? this[int index]
+		{
+			get
+			{
+				if (index >= 0 && index < this.cells.Count)
+				{
+					return this.cells[index];
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 
@@ -353,8 +397,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public struct TimelineCell
 		{
 			public Timestamp		Timestamp;
-			public TimelineGlyph	TimelineGlyph;
-			public bool				TimelineLocked;
+			public TimelineGlyph	Glyph;
+			public bool				Locked;
 			public string			Tooltip;
 			public decimal?[]		Values;
 		}
