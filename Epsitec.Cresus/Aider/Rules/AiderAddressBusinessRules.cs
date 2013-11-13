@@ -103,8 +103,11 @@ namespace Epsitec.Aider.Rules
 
 		private static void UpdatePostBox(AiderAddressEntity address)
 		{
-			var postBox = address.PostBox;
-
+			AiderAddressBusinessRules.UpdatePostBox (address, address.PostBox);
+		}
+		
+		public static void UpdatePostBox(AiderAddressEntity address, string postBox)
+		{
 			if (string.IsNullOrEmpty (postBox))
 			{
 				return;
@@ -114,8 +117,8 @@ namespace Epsitec.Aider.Rules
 
 			if (prefix != null)
 			{
-				var tuple = postBox.SplitAfter (x => !char.IsDigit (x));
-				address.PostBox = string.Format ("{0} {1}", prefix, tuple.Item2);
+				var number = postBox.SplitAfter (x => !char.IsDigit (x)).Item2;
+				address.PostBox = string.Format ("{0} {1}", prefix, number);
 			}
 		}
 

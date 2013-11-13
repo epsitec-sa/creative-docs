@@ -176,7 +176,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var tuple = this.HouseNumberAndComplement.SplitAfter (x => char.IsDigit (x));
 
-			var houseNumber = tuple.Item1;
+			var houseNumber = InvariantConverter.ParseNullableInt (tuple.Item1);
 			var complement  = AiderAddressEntity.ParseHouseNumberComplement (tuple.Item2) ?? "";
 
 			return AiderAddressEntity.GetCleanHouseNumberAndComplement (houseNumber, complement);
@@ -234,14 +234,14 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetHouseNumberAndComplement(ref string value)
 		{
-			var houseNumber = this.HouseNumber.HasValue ? InvariantConverter.ToString (this.HouseNumber.Value) : "";
-			var complement  = this.HouseNumberComplement ?? "";
-
-			value = AiderAddressEntity.GetCleanHouseNumberAndComplement (houseNumber, complement);
+			value = AiderAddressEntity.GetCleanHouseNumberAndComplement (this.HouseNumber, this.HouseNumberComplement);
 		}
 
-		private static string GetCleanHouseNumberAndComplement(string houseNumber, string complement)
+		public static string GetCleanHouseNumberAndComplement(int? houseNumberValue, string houseNumberComplement)
 		{
+			var houseNumber = houseNumberValue.HasValue ? InvariantConverter.ToString (houseNumberValue) : "";
+			var complement  = houseNumberComplement ?? "";
+
 			switch (complement.Length)
 			{
 				case 0:  return houseNumber;

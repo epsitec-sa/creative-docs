@@ -1207,8 +1207,35 @@ namespace Epsitec.Aider.Data.Job
 
 			var address = aiderHousehold.Address;
 			var town    = this.GetAiderTownEntity (businessContext, family.Address.SwissZipCodeId);
+			var line1   = family.Address.AddressLine1;
 
-			address.AddressLine1          = family.Address.AddressLine1;
+			//	Properly maps the post box to the post box field...
+			
+			if (line1.StartsWith ("case postale", System.StringComparison.OrdinalIgnoreCase))
+			{
+				AiderAddressBusinessRules.UpdatePostBox (address, line1);
+				line1 = "";
+			}
+
+			if ((string.IsNullOrEmpty (line1)) &&
+				(string.IsNullOrEmpty (address.AddressLine1) == false))
+			{
+				//	The eCH address has no address complement (e.g. "c/o ...", "p/a ...", "Chalet Xyz", "EMS Zzz", etc.)
+
+				var houseNumberAndComplement = AiderAddressEntity.GetCleanHouseNumberAndComplement (houseNumber, houseNumberComplement);
+
+				if ((address.Street == family.Address.Street) &&
+					((address.HouseNumberAndComplement == houseNumberComplement) || string.IsNullOrEmpty (address.HouseNumberAndComplement)))
+				{
+					//	The person did not move to a new address, as the house number did not
+					//	change (or was simply missing before). Keep the extra address line !
+
+					line1 = address.AddressLine1;
+				}
+			}
+
+
+			address.AddressLine1          = line1;
 			address.Street                = family.Address.Street;
 			address.HouseNumber           = houseNumber;
 			address.HouseNumberComplement = houseNumberComplement;
