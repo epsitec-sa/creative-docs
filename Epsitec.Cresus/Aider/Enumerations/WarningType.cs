@@ -31,9 +31,6 @@ namespace Epsitec.Aider.Enumerations
 		
 		[Rank (10)]
 		SubscriptionMissing  = 1004,
-
-		[Rank (11)]
-		PersonBirth			 = 1005,
 		
 		[Hidden]
 		EChPersonNew         = 2000,
