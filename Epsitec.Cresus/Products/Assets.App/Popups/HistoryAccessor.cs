@@ -114,6 +114,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						list.Add (new TreeTableColumnDescription (TreeTableColumnType.DetailedComputedAmount, this.ValueColumnWidth, "Valeur"));
 						break;
 
+					case FieldType.Guid:
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Guid, this.ValueColumnWidth, "Valeur"));
+						break;
+
 					default:
 						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
 						break;
@@ -196,6 +200,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					{
 						var value = ObjectCalculator.GetObjectPropertyDate (obj, timestamp, field);
 						return new SimpleTreeTableCellDate (value);
+					}
+
+				case FieldType.Guid:
+					{
+						var value = ObjectCalculator.GetObjectPropertyGuid (obj, timestamp, field);
+						return new SimpleTreeTableCellGuid (value);
 					}
 
 				default:

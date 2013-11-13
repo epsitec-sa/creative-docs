@@ -105,13 +105,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var e = new DataEvent (timestamp, EventType.Entrée);
 			o.AddEvent (e);
 
-			//	On met le même niveau que l'objet modèle.
 			var objectModel = this.GetObject (baseType, modelGuid);
 
-			var i = ObjectCalculator.GetObjectPropertyInt (objectModel, null, ObjectField.Level);
-			if (i.HasValue)
+			//	On met le même parent que l'objet modèle.
+			var guid = ObjectCalculator.GetObjectPropertyGuid (objectModel, null, ObjectField.Parent);
+			if (!guid.IsEmpty)
 			{
-				e.AddProperty (new DataIntProperty (ObjectField.Level, i.Value));
+				e.AddProperty (new DataGuidProperty (ObjectField.Parent, guid));
 			}
 
 			//	On met le même numéro que l'objet modèle.
@@ -348,7 +348,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			switch (objectField)
 			{
-				case ObjectField.Level:
 				case ObjectField.FréquenceAmortissement:
 					return FieldType.Int;
 
@@ -365,6 +364,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.DateAmortissement1:
 				case ObjectField.DateAmortissement2:
 					return FieldType.Date;
+
+				case ObjectField.Parent:
+					return FieldType.Guid;
 
 				default:
 					return FieldType.String;

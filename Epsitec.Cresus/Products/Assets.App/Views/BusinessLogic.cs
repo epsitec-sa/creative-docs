@@ -213,11 +213,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			foreach (var field in BusinessLogic.ObjectFields)
 			{
-				if (field == ObjectField.Level)
-				{
-					continue;
-				}
-
 				string line = null;
 
 				switch (DataAccessor.GetFieldType (field))
@@ -268,6 +263,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 						if (da.HasValue)
 						{
 							line = Helpers.Converters.DateToString (da);
+						}
+						break;
+
+					case FieldType.Guid:
+						var g = ObjectCalculator.GetObjectPropertyGuid (obj, timestamp, field, false);
+						if (!g.IsEmpty)
+						{
+							line = g.ToString ();  // TODO
 						}
 						break;
 				}
@@ -351,7 +354,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				yield return ObjectField.OneShotCommentaire;
 				yield return ObjectField.OneShotDocuments;
 
-				yield return ObjectField.Level;
+				yield return ObjectField.Parent;
 				yield return ObjectField.Numéro;
 				yield return ObjectField.Nom;
 				yield return ObjectField.Famille;

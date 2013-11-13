@@ -296,6 +296,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public static Guid GetObjectPropertyGuid(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
+		{
+			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataGuidProperty;
+
+			if (p == null)
+			{
+				return Guid.Empty;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
 		public static string GetObjectPropertyString(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
 		{
 			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataStringProperty;

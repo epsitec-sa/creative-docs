@@ -240,6 +240,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 					break;
 
+				case FieldType.Guid:
+					var g = ObjectCalculator.GetObjectPropertyGuid (this.obj, this.timestamp, tile.Field);
+					if (!g.IsEmpty)
+					{
+						text = g.ToString ();  // TODO
+						alignment = ContentAlignment.MiddleLeft;
+					}
+					break;
+
 				default:
 					string s = ObjectCalculator.GetObjectPropertyString (this.obj, this.timestamp, tile.Field);
 					if (!string.IsNullOrEmpty (s))

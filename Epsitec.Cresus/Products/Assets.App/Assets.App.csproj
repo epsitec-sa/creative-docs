@@ -145,6 +145,9 @@
     <Compile Include="Views\ToolbarCommand.cs" />
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
+    <Compile Include="Widgets\TreeTableColumnGuid.cs" />
+    <Compile Include="Widgets\TreeTableCellGuid.cs" />
+    <Compile Include="Widgets\SimpleTreeTableCellGuid.cs" />
     <Compile Include="Widgets\HatchFrameBox.cs" />
     <Compile Include="Widgets\TextFieldController.cs" />
     <Compile Include="Widgets\PaintHatch.cs" />

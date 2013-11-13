@@ -25,8 +25,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.OneShotDocuments:
 					return "Documents associés";
 
-				case ObjectField.Level:
-					return "Niveau";
+				case ObjectField.Parent:
+					return "Parent";
 
 				case ObjectField.Numéro:
 					return "Numéro";

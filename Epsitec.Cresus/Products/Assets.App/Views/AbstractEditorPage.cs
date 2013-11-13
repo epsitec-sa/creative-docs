@@ -113,6 +113,37 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected void CreateGuidController(Widget parent, ObjectField field)
+		{
+			// TODO: ...
+			var controller = new StringFieldController
+			{
+				Label     = StaticDescriptions.GetObjectFieldDescription (field),
+				EditWidth = 380,
+				LineCount = 1,
+				TabIndex  = ++this.tabIndex,
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueEdited += delegate
+			{
+				this.accessor.SetObjectField (field, controller.Value);
+
+				controller.Value         = ObjectCalculator.GetObjectPropertyGuid (this.obj, this.timestamp, field).ToString ();
+				controller.PropertyState = this.GetPropertyState (field);
+
+				this.OnValueEdited (field);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target)
+			{
+				this.ShowHistoryPopup (target, field);
+			};
+
+			this.fieldControllers.Add (field, controller);
+		}
+
 		protected void CreateStringController(Widget parent, ObjectField field, int editWidth = 380, int lineCount = 1)
 		{
 			var controller = new StringFieldController

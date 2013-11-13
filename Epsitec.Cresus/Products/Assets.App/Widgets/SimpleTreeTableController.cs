@@ -126,6 +126,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 							System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellGlyph);
 							break;
 
+						case TreeTableColumnType.Guid:
+							System.Diagnostics.Debug.Assert (row[c] is SimpleTreeTableCellGuid);
+							break;
+
 						default:
 							System.Diagnostics.Debug.Fail ("Unsupported type exception");
 							break;
@@ -199,6 +203,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					case TreeTableColumnType.Glyph:
 						list.Add (new List<TreeTableCellGlyph> ());
+						break;
+
+					case TreeTableColumnType.Guid:
+						list.Add (new List<TreeTableCellGuid> ());
 						break;
 				}
 			}
@@ -282,6 +290,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 								l.Add (s);
 							}
 							break;
+
+						case TreeTableColumnType.Guid:
+							{
+								var x = (content as SimpleTreeTableCellGuid).Value;
+								var s = new TreeTableCellGuid (true, x, isSelected: (i == selection));
+
+								var l = list[c] as List<TreeTableCellGuid>;
+								l.Add (s);
+							}
+							break;
 					}
 				}
 			}
@@ -334,6 +352,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					case TreeTableColumnType.Glyph:
 						{
 							var l = list[c] as List<TreeTableCellGlyph>;
+							this.treeTable.SetColumnCells (c, l.ToArray ());
+						}
+						break;
+
+					case TreeTableColumnType.Guid:
+						{
+							var l = list[c] as List<TreeTableCellGuid>;
 							this.treeTable.SetColumnCells (c, l.ToArray ());
 						}
 						break;

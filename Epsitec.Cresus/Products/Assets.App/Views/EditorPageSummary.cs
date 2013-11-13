@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ObjectSummaryControllerTile.Empty,
 
 					new ObjectSummaryControllerTile ("Général"),
-					new ObjectSummaryControllerTile (ObjectField.Level),
+					new ObjectSummaryControllerTile (ObjectField.Parent),
 					new ObjectSummaryControllerTile (ObjectField.Numéro),
 					new ObjectSummaryControllerTile (ObjectField.Nom),
 					new ObjectSummaryControllerTile (ObjectField.Description),
@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ObjectSummaryControllerTile.Empty,
 
 					new ObjectSummaryControllerTile ("Général"),
-					new ObjectSummaryControllerTile (ObjectField.Level),
+					new ObjectSummaryControllerTile (ObjectField.Parent),
 					new ObjectSummaryControllerTile (ObjectField.Numéro),
 					new ObjectSummaryControllerTile (ObjectField.Nom),
 					new ObjectSummaryControllerTile (ObjectField.Description),
@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ObjectSummaryControllerTile.Empty,
 
 					new ObjectSummaryControllerTile ("Général"),
-					new ObjectSummaryControllerTile (ObjectField.Level),
+					new ObjectSummaryControllerTile (ObjectField.Parent),
 					new ObjectSummaryControllerTile (ObjectField.Nom),
 					new ObjectSummaryControllerTile (ObjectField.Famille),
 					new ObjectSummaryControllerTile (ObjectField.Description),

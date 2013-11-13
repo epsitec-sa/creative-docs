@@ -15,5 +15,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		Int,
 		Date,
 		Glyph,
+		Guid,
 	};
 }
