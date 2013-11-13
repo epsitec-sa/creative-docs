@@ -676,13 +676,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 	
 			var list = new List<TreeTableCellTree> ();
-			var timestamp = this.SelectedTimestamp;
+			Timestamp? timestamp = null;  // pour ne jamais voir "inconnu à cette date"
 
 			foreach (var row in this.EnumVisibleRows)
 			{
 				var node = this.nodesGetter[row];
 				var obj  = this.accessor.GetObject (this.baseType, node.Guid);
-				var nom  = ObjectCalculator.GetObjectPropertyString (obj, this.SelectedTimestamp, ObjectField.Nom);
+				var nom  = ObjectCalculator.GetObjectPropertyString (obj, timestamp, ObjectField.Nom);
 				bool isSelected = node.Guid == this.SelectedGuid;
 
 				if (timestamp.HasValue &&
