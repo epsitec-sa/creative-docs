@@ -239,6 +239,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private string							label;
 		private IconButton						historyButton;
 		private IconButton						clearButton;
-		private PropertyState					propertyState;
+		protected PropertyState					propertyState;
 	}
 }

@@ -11,9 +11,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class CategoriesPopup : AbstractPopup
+	public class ObjectsPopup : AbstractPopup
 	{
-		public CategoriesPopup(DataAccessor accessor)
+		public ObjectsPopup(DataAccessor accessor, bool onlyContainers)
 		{
 			this.accessor = accessor;
 
@@ -22,12 +22,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller = new NavigationTreeTableController();
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Categories);
-			this.nodesGetter = new TreeNodesGetter (this.accessor, BaseType.Categories, primaryNodesGetter);
+			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
+			this.nodesGetter = new TreeNodesGetter (this.accessor, BaseType.Objects, primaryNodesGetter);
 
+			// TODO: Gérer onlyContainers
 			this.nodesGetter.UpdateData ();
 
-			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, BaseType.Categories, this.controller, this.nodesGetter);
+			this.dataFiller = new ObjectsTreeTableFiller (this.accessor, BaseType.Objects, this.controller, this.nodesGetter);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -60,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateTitle (this.mainFrameBox);
 			this.CreateCloseButton ();
 			
-			this.controller.CreateUI (this.mainFrameBox, headerHeight: CategoriesPopup.HeaderHeight, footerHeight: 0);
+			this.controller.CreateUI (this.mainFrameBox, headerHeight: ObjectsPopup.HeaderHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
 			this.dataFiller.UpdateColumns ();
@@ -72,10 +73,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			new StaticText
 			{
 				Parent           = parent,
-				Text             = "Choix de la catégorie d'immobilisation à importer",
+				Text             = "Choix de l'objet parent",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Top,
-				PreferredHeight  = CategoriesPopup.TitleHeight - 4,
+				PreferredHeight  = ObjectsPopup.TitleHeight - 4,
 				BackColor        = ColorManager.SelectionColor,
 			};
 
@@ -91,26 +92,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private Size GetSize()
 		{
+			// TODO: faire autrement, car le mode est leftOrRight = false !
 			var parent = this.GetParent ();
 
 			//	On calcule une hauteur adaptée au contenu, mais qui ne dépasse
 			//	évidement pas la hauteur de la fenêtre principale.
 			double h = parent.ActualHeight
-					 - CategoriesPopup.HeaderHeight
+					 - ObjectsPopup.HeaderHeight
 					 - AbstractScroller.DefaultBreadth;
 
-			//	Utilise au maximum les 3/4 de la hauteur.
-			int max = (int) (h*0.75) / CategoriesPopup.RowHeight;
+			//	Utilise au maximum les 1/2 de la hauteur.
+			int max = (int) (h*0.5) / ObjectsPopup.RowHeight;
 
 			int rows = System.Math.Min (this.nodesGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
 
-			int dx = CategoriesPopup.PopupWidth
+			int dx = ObjectsPopup.PopupWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
-			int dy = CategoriesPopup.TitleHeight
-				   + CategoriesPopup.HeaderHeight
-				   + rows * CategoriesPopup.RowHeight
+			int dy = ObjectsPopup.TitleHeight
+				   + ObjectsPopup.HeaderHeight
+				   + rows * ObjectsPopup.RowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			return new Size (dx, dy);
@@ -171,7 +173,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
 		private readonly TreeNodesGetter				nodesGetter;
-		private readonly CategoriesTreeTableFiller		dataFiller;
+		private readonly ObjectsTreeTableFiller			dataFiller;
 
 		private int										visibleSelectedRow;
 	}

@@ -4,8 +4,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -27,27 +28,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.value = value;
 
-					if (this.textField != null)
+					if (this.button != null)
 					{
-						if (this.ignoreChanges.IsZero)
-						{
-							using (this.ignoreChanges.Enter ())
-							{
-								this.textField.Text = this.GuidToString (value);
-								this.textField.SelectAll ();
-							}
-						}
+						this.button.Text = this.GuidToString (value);
 					}
 				}
-			}
-		}
-
-		private void UpdateValue()
-		{
-			using (this.ignoreChanges.Enter ())
-			{
-				this.textField.Text = this.GuidToString (this.value);
-				this.textField.SelectAll ();
 			}
 		}
 
@@ -61,8 +46,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
-			this.UpdateTextField (this.textField);
+			if (this.button != null)
+			{
+				if (this.propertyState == PropertyState.Readonly)
+				{
+					this.button.NormalColor = ColorManager.ReadonlyFieldColor;
+				}
+				else
+				{
+					this.button.NormalColor = this.BackgroundColor;
+				}
+			}
 		}
 
 
@@ -70,50 +64,37 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
-			this.textField = new TextField
+			this.button = new ColoredButton
 			{
 				Parent          = this.frameBox,
+				HoverColor      = ColorManager.HoverColor,
 				Dock            = DockStyle.Left,
-				PreferredWidth  = this.EditWidth,
+				PreferredWidth  = 160,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Margins         = new Margins (0, 10, 0, 0),
 				TabIndex        = this.TabIndex,
 				Text            = this.value.ToString (),
 			};
 
-			this.textField.TextChanged += delegate
+			this.button.Clicked += delegate
 			{
-				if (this.ignoreChanges.IsZero)
-				{
-					using (this.ignoreChanges.Enter ())
-					{
-						this.Value = this.StringToGuid (this.textField.Text);
-						this.OnValueEdited ();
-					}
-				}
-			};
-
-			this.textField.KeyboardFocusChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
-			{
-				bool focused = (bool) e.NewValue;
-
-				if (focused)  // pris le focus ?
-				{
-					this.SetFocus ();
-				}
-				else  // perdu le focus ?
-				{
-					this.UpdateValue ();
-				}
+				this.ShowPopup ();
 			};
 		}
 
-		public override void SetFocus()
+
+		private void ShowPopup()
 		{
-			this.textField.SelectAll ();
-			this.textField.Focus ();
-		}
+			var popup = new ObjectsPopup (this.Accessor, true);
 
+			popup.Create (this.button, leftOrRight: false);
+
+			popup.Navigate += delegate (object sender, Guid guid)
+			{
+				this.Value = guid;
+				this.OnValueEdited ();
+			};
+		}
 
 		private string GuidToString(Guid guid)
 		{
@@ -129,26 +110,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return null;
 		}
 
-		private Guid StringToGuid(string text)
-		{
-			var getter = this.Accessor.GetNodesGetter (this.BaseType);
 
-			foreach (var node in getter.Nodes)
-			{
-				var obj = this.Accessor.GetObject (this.BaseType, node.Guid);
-				var nom = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
-
-				if (nom == text)
-				{
-					return node.Guid;
-				}
-			}
-
-			return Guid.Empty;
-		}
-
-
-		private TextField						textField;
+		private ColoredButton					button;
 		private Guid							value;
 	}
 }
