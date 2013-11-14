@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public int GetTopVisibleRow(int sel)
 		{
-			System.Diagnostics.Debug.Assert (this.treeTable.VisibleRowsCount > 0);
+			//?System.Diagnostics.Debug.Assert (this.treeTable.VisibleRowsCount > 0);
 			int count = System.Math.Min (this.treeTable.VisibleRowsCount, this.rowsCount);
 
 			sel = System.Math.Min (sel + count/2, this.rowsCount-1);

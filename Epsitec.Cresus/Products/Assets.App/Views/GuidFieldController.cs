@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowPopup()
 		{
-			var popup = new ObjectsPopup (this.Accessor, true);
+			var popup = new ObjectsPopup (this.Accessor, this.Value, true);
 
 			popup.Create (this.button, leftOrRight: false);
 

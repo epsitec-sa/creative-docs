@@ -13,11 +13,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class ObjectsPopup : AbstractPopup
 	{
-		public ObjectsPopup(DataAccessor accessor, bool onlyContainers)
+		public ObjectsPopup(DataAccessor accessor, Guid selectedGuid, bool onlyContainers)
 		{
 			this.accessor = accessor;
-
-			this.visibleSelectedRow = -1;
 
 			this.controller = new NavigationTreeTableController();
 
@@ -27,6 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			// TODO: Gérer onlyContainers
 			this.nodesGetter.UpdateData ();
+			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 
 			this.dataFiller = new ObjectsTreeTableFiller (this.accessor, BaseType.Objects, this.controller, this.nodesGetter);
 
