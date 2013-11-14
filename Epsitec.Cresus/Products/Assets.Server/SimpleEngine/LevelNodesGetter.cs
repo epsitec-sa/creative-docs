@@ -55,19 +55,22 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			this.levelNodes.Clear ();
 
-			var p = this.inputNodes.Nodes.Where (x => x.Parent.IsEmpty).FirstOrDefault ();
-			if (p.IsEmpty)
+			//	Crée un véritable arbre de tous les noeuds.
+			var root = this.inputNodes.Nodes.Where (x => x.Parent.IsEmpty).FirstOrDefault ();
+			if (root.IsEmpty)
 			{
 				return;
 			}
 
-			var tree = new TreeNode (null, p);
+			var tree = new TreeNode (null, root);
 			this.Insert (tree);
 
+			//	Parcourt tout l'arbre pour obtenir une liste "à plat" des noeuds.
 			var list = new List<TreeNode> ();
 			list.Add (tree);
 			tree.GetNodes (list);
 
+			//	Construit la liste finale consultable en sortie.
 			foreach (var treeNode in list)
 			{
 				var n = new LevelNode (treeNode.Node.Guid, this.GetLevel (treeNode));
@@ -77,6 +80,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private void Insert(TreeNode tree)
 		{
+			//	Insertion récursive des noeuds dans l'arbre.
 			var childrens = this.inputNodes.Nodes.Where (x => x.Parent == tree.Node.Guid).OrderBy (x => x.Position);
 
 			foreach (var children in childrens)
@@ -90,6 +94,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private int GetLevel(TreeNode treeNode)
 		{
+			//	Retourne le niveau d'une feuille dans l'arbre.
 			int level = 0;
 
 			while (treeNode.Parent != null)
@@ -138,6 +143,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			public void GetNodes(List<TreeNode> list)
 			{
+				//	Rempli la liste des noeuds récursivement.
 				foreach (var children in this.childrens)
 				{
 					list.Add (children);
