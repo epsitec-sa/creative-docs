@@ -23,20 +23,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public virtual int Count
+		public abstract int Count
 		{
-			get
-			{
-				return 0;
-			}
+			get;
 		}
 
-		public virtual T this[int row]
+		public abstract T this[int row]
 		{
-			get
-			{
-				return new T ();
-			}
+			get;
 		}
 	}
 }
