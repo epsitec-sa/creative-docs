@@ -6,7 +6,6 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -123,12 +122,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			minus.Clicked += delegate
 			{
-				this.AddDays (-1);
+				this.AddYears (-1);
 			};
 
 			plus.Clicked += delegate
 			{
-				this.AddDays (1);
+				this.AddYears (1);
 			};
 		}
 
@@ -138,6 +137,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.textField.Focus ();
 		}
 
+
+		private void AddYears(int years)
+		{
+			if (this.value.HasValue)
+			{
+				this.Value = this.value.Value.AddYears (years);
+				this.OnValueEdited ();
+			}
+		}
 
 		private void AddDays(int days)
 		{
