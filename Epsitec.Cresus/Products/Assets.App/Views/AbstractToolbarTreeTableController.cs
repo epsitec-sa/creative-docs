@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void CreateUI(Widget parent)
+		public virtual void CreateUI(Widget parent)
 		{
 			this.topTitle = new TopTitle
 			{

@@ -87,6 +87,7 @@
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
     <Compile Include="Popups\CategoriesPopup.cs" />
+    <Compile Include="Popups\DatePopup.cs" />
     <Compile Include="Popups\SimulationPopup.cs" />
     <Compile Include="Popups\SmoothShadow.cs" />
     <Compile Include="Popups\SimplePopup.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Views\AbstractEditorPage.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\BusinessLogic.cs" />
+    <Compile Include="Views\StateAtController.cs" />
     <Compile Include="Views\GuidFieldController.cs" />
     <Compile Include="Views\TimelinesArrayLogic.cs" />
     <Compile Include="Views\TimelinesArrayController.cs" />

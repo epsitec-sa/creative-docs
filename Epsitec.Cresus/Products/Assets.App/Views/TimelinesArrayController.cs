@@ -177,6 +177,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				VerticalAdjust    = -1,
 			};
 
+			this.CreateStateAt (leftBox);
+
 			//	Partie droite.
 			this.timelinesToolbar = new TimelinesToolbar ();
 			this.timelinesToolbar.CreateUI (rightBox);
@@ -335,6 +337,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelinesToolbar.ModeChanged += delegate
 			{
 				this.TimelineMode = this.timelinesToolbar.TimelineMode;
+			};
+		}
+
+		private void CreateStateAt(Widget parent)
+		{
+			this.stateAtController = new StateAtController ();
+			this.stateAtController.CreateUI (parent);
+
+			this.stateAtController.DateChanged += delegate
+			{
+				if (this.stateAtController.Date.HasValue)
+				{
+					this.nodesGetter.Timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
+				}
+				else
+				{
+					this.nodesGetter.Timestamp = null;
+				}
+
+				this.UpdateDataArray ();
+				this.UpdateController ();
+				this.UpdateScroller ();
+				this.UpdateToolbar ();
 			};
 		}
 
@@ -1254,6 +1279,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TreeTableColumnTree							treeColumn;
 		private NavigationTimelineController				controller;
 		private VScroller									scroller;
+		private StateAtController							stateAtController;
 		private int											selectedRow;
 		private int											selectedColumn;
 	}
