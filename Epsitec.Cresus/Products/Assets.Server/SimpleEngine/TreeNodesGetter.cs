@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public void UpdateData()
 		{
-			this.ppNodesGetter.Timestamp = this.Timestamp;
+			this.ppNodesGetter.Timestamp = this.timestamp;
 			this.levelNodesGetter.UpdateData ();
 			this.treeObjectsGetter.UpdateData ();
 		}

@@ -42,7 +42,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateData()
 		{
-			this.NodesGetter.Timestamp = this.Timestamp;
 			this.NodesGetter.UpdateData ();
 
 			this.UpdateController ();
@@ -76,9 +75,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					this.dataFiller.Timestamp = this.timestamp;
 
-					//?this.UpdateController ();
-					//?this.UpdateToolbar ();
-					this.UpdateData ();  // PROVISOIRE !!!
+					this.UpdateController ();
+					this.UpdateToolbar ();
 				}
 			}
 		}

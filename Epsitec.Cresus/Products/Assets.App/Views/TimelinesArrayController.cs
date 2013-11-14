@@ -54,7 +54,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateData()
 		{
-			this.nodesGetter.Timestamp = this.SelectedTimestamp;
 			this.nodesGetter.UpdateData ();
 
 			this.UpdateDataArray ();
@@ -904,6 +903,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private int DummyCount
 		{
+			//	Retourne le nombre de lignes vides à ajouter en bas des timelines,
+			//	pour occuper l'espace vide.
 			get
 			{
 				return System.Math.Max (this.VisibleRows - this.nodesGetter.Count, 0);
