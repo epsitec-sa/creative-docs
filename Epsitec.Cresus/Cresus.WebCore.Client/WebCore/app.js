@@ -199,7 +199,7 @@ $.getScript('signalr/hubs', function() {
             if (!m) { 
               return null 
             }
-            
+
             d = m[0];
             c = d + g.offsetWidth;
             o = m[1];
@@ -377,7 +377,8 @@ $.getScript('signalr/hubs', function() {
         // Todo complete this object. Otherwhise, the header of the list with the
         // title and the icon won't be shown.
         database = {
-          name: path.databaseName
+          name: path.databaseName,
+          title: path.entityType
         };
 
         columnManager = this.tabManager.showEntityTab(database);

@@ -80,14 +80,14 @@ function() {
                   cleanSummaryLines.push(summaryLines[i]);
               }
             }*/
-
+            //var summary = this.initialConfig.html.split(/<br\s*[\/]?>/gi)[0];
             var entity = {
-                  summary: this.entityId,
-                  entityType: Epsitec.Cresus.Core.app.getCurrentDatabaseEntityType(),
+                  summary: this.initialConfig.html,
+                  entityType: this.title,
                   id: this.entityId
                 };
         
-            app.addEntityToBag(entity);
+            app.addEntityToBag(entity,this.bodyClickHandler);
           },
           scope: this
         });

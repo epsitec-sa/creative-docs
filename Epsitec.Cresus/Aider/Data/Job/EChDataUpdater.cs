@@ -40,7 +40,8 @@ namespace Epsitec.Aider.Data.Job
 
 			this.warningTitleMessage = TextFormatter.FormatText ("Mise à jour ECh ", this.jobDateTime.ToShortDateString ());
 
-
+			this.logFilePath = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (reportFile), System.IO.Path.GetFileNameWithoutExtension (reportFile)) + ".log.md";
+			
 			this.aiderPersonsTaggedForDeletion = new Dictionary<EntityKey, AiderPersonEntity> ();
 			this.aiderPersonEntitiesWithDeletedHousehold = new Dictionary<EntityKey, AiderHouseholdEntity> ();
 
@@ -239,6 +240,7 @@ namespace Epsitec.Aider.Data.Job
 						catch (System.Exception exception)
 						{
 							this.LogToConsole ("Error: EChPerson {0} {1} threw an exception.\n{2}", item.OldValue.OfficialName, item.NewValue.FirstNames, exception.GetFullText ());
+							this.LogToFile ("Error: EChPerson {0} {1} threw an exception.\n{2}", item.OldValue.OfficialName, item.NewValue.FirstNames, exception.GetFullText ());
 						}
 					}
 				});
@@ -497,6 +499,7 @@ namespace Epsitec.Aider.Data.Job
 						catch (System.Exception)
 						{
 							this.LogToConsole ("Error: EChReportedPerson (FAMILYKEY:{0}) threw an exception", item.OldValue.FamilyKey);
+							this.LogToFile ("Error: EChReportedPerson (FAMILYKEY:{0}) threw an exception", item.OldValue.FamilyKey);
 						}
 					}
 				});
@@ -701,6 +704,7 @@ namespace Epsitec.Aider.Data.Job
 						else
 						{
 							this.LogToConsole ("Warning: Entity not found: EChReportedPerson FAMILYKEY:{0}", eChReportedPerson.FamilyKey);
+							this.LogToFile ("Warning: Entity not found: EChReportedPerson FAMILYKEY:{0}", eChReportedPerson.FamilyKey);
 						}
 					}
 				});
@@ -738,12 +742,14 @@ namespace Epsitec.Aider.Data.Job
 						if (person.IsNull ())
 						{
 							this.LogToConsole ("COHERENCE ERROR - Person not found: {0}", eChReportedPerson.Adult1.ToString ());
+							this.LogToFile ("COHERENCE ERROR - Person not found: {0}", eChReportedPerson.Adult1.ToString ());
 							continue;
 						}
 
 						if (person.HouseholdContact.IsNull ())
 						{
 							this.LogToConsole ("COHERENCE ERROR - Person has no household: {0}", eChReportedPerson.Adult1.ToString ());
+							this.LogToFile ("COHERENCE ERROR - Person has no household: {0}", eChReportedPerson.Adult1.ToString ());
 							continue;
 						}
 
@@ -787,7 +793,8 @@ namespace Epsitec.Aider.Data.Job
 							}
 							else
 							{
-								this.LogToConsole ("COHERENCE ERROR - Address update did not detect any change");
+								this.LogToConsole ("COHERENCE ERROR - Address update did not detect any change {0}", tuple.Item1.Adult1.ToString ());
+								this.LogToFile ("COHERENCE ERROR - Address update did not detect any change {0}", tuple.Item1.Adult1.ToString ());
 							}
 						}
 					}
@@ -922,7 +929,8 @@ namespace Epsitec.Aider.Data.Job
 							}
 							else
 							{
-								this.LogToConsole ("Warning: Adult 1 is null");
+								this.LogToConsole ("Warning: Adult 1 is null ID:{0}", businessContext.DataContext.GetNormalizedEntityKey (existingEChReportedPerson).Value.RowKey.Id);
+								this.LogToFile ("Warning: Adult 1 is null ID:{0}", businessContext.DataContext.GetNormalizedEntityKey (existingEChReportedPerson).Value.RowKey.Id);
 							}
 
 							if (existingEChReportedPerson.Adult2.IsNotNull ())
@@ -1217,11 +1225,13 @@ namespace Epsitec.Aider.Data.Job
 			var line1   = family.Address.AddressLine1;
 
 			//	Properly maps the post box to the post box field...
-			
-			if (line1.StartsWith ("case postale", System.StringComparison.OrdinalIgnoreCase))
+			if (!string.IsNullOrEmpty(line1))
 			{
-				AiderAddressBusinessRules.UpdatePostBox (address, line1);
-				line1 = "";
+				if (line1.StartsWith ("case postale", System.StringComparison.OrdinalIgnoreCase))
+				{
+					AiderAddressBusinessRules.UpdatePostBox (address, line1);
+					line1 = "";
+				}
 			}
 
 			if ((string.IsNullOrEmpty (line1)) &&
@@ -1312,6 +1322,7 @@ namespace Epsitec.Aider.Data.Job
 			else
 			{
 				this.LogToConsole ("Duplicate warning: {0}", fullKey);
+				this.LogToFile ("Duplicate warning: {0}", fullKey);
 			}
 		}
 
@@ -1547,6 +1558,16 @@ namespace Epsitec.Aider.Data.Job
 			System.Console.WriteLine ("EChDataUpdater: {0} - {1} ms", message, time.ElapsedMilliseconds);
 		}
 
+		private void LogToFile (string format, params object[] args)
+		{
+			List<string> lines = new List<string> ();
+			lines.Add ("## Event@" + System.DateTime.Now);
+			var message = string.Format (format, args);
+			lines.Add (message);
+			System.IO.File.AppendAllLines (this.logFilePath, lines);
+
+		}
+
 		private bool AddressComparator(AiderAddressEntity householdAddress, EChAddress rchAddress)
 		{
 			if (householdAddress.Street.IsNullOrWhiteSpace () || householdAddress.Town.IsNull ())
@@ -1606,6 +1627,7 @@ namespace Epsitec.Aider.Data.Job
 		private AiderWarningSourceEntity		warningSource;
 		private FormattedText					warningTitleMessage;
 
+		private string							logFilePath;
 		private bool							verboseLogging;
 	}
 }

@@ -40,6 +40,7 @@ function() {
       var key, entityTab;
 
       key = database.name;
+      this.currentTab = key;
       entityTab = this.entityTabs[key] || null;
 
       if (entityTab === null || entityTab.isDestroyed) {
@@ -51,7 +52,7 @@ function() {
 
         this.add(entityTab);
         this.entityTabs[key] = entityTab;
-        this.currentTab = key;
+        
       }
 
       this.showTab(entityTab);

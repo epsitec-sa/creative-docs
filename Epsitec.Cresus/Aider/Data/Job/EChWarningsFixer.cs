@@ -21,6 +21,18 @@ namespace Epsitec.Aider.Data.Job
 {
 	internal static class EChWarningsFixer
 	{
+		public static void TryFixMissingSubscriptions(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				EChWarningsFixer.LogToConsole ("Try to fix Missing subscriptions...");
+
+				EChWarningsFixer.FixSubscriptionMissingWarnings (businessContext);
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
+
 		public static void TryFixAll(CoreData coreData)
 		{
 			
@@ -219,6 +231,48 @@ namespace Epsitec.Aider.Data.Job
 			}
 
 			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+		}
+
+		private static void FixSubscriptionMissingWarnings(BusinessContext businessContext)
+		{
+			var example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.SubscriptionMissing
+			};
+
+			var warningsToCheck = businessContext.DataContext.GetByExample<AiderPersonWarningEntity> (example);
+
+			var total = warningsToCheck.Count ();
+			EChWarningsFixer.LogToConsole ("{0} SubscriptionMissing to check", total);
+
+			var current = 1;
+			foreach (var warning in warningsToCheck)
+			{
+				var person = warning.Person;
+				if(person.MainContact.IsNotNull())
+				{
+					if (person.Address.Town.SwissCantonCode == "VD")
+					{
+						var household = person.MainContact.Household;
+
+						var existingSubscription = AiderSubscriptionEntity.FindSubscription (businessContext, household);
+
+						if (existingSubscription.IsNull ())
+						{
+							AiderSubscriptionEntity.Create (businessContext, household);
+						
+						}
+
+						businessContext.DeleteEntity (warning);
+					}
+				}
+
+				System.Console.SetCursorPosition (0, 2);
+				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
+				current++;
+				
+			}
+			System.Console.Clear ();
 		}
 
 		private static void ResetEChStatusForProcessDepartureWarnings(BusinessContext businessContext)

@@ -42,6 +42,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick ()
 				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator))
 				.Icon (this.Entity.GetIconName ("Data"))
+				.Title (x => TextFormatter.FormatText ("Détails techniques"))
+				.Text (x => TextFormatter.FormatText ("Visibilité: " + x.Visibility));
+
+			wall.AddBrick ()
+				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator))
+				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText ("Détails techniques du RCH"))
 				.Text (x => SummaryAiderPersonViewController.GetTechnicalSummary (x));
 

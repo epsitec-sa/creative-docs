@@ -21,7 +21,6 @@ function() {
     /* Properties */
     bagStore: null,
     dropZones: null,
-    removeFromBagDropZone: null,
     /* Constructor */
 
     constructor: function(menu) {
@@ -32,8 +31,11 @@ function() {
       this.removeFromBagDropZone = Ext.create('Epsitec.DropZone', 'removezoneid','Retirer de l\'arche', this.removeEntityFromBag, this);
       this.registerDropZone(this.removeFromBagDropZone);
 
-      this.createMailingDropZone = Ext.create('Epsitec.DropZone', 'mailingzoneid','To Mailing', this.createMailing, this);
+      this.createMailingDropZone = Ext.create('Epsitec.DropZone', 'mailingzoneid','Ajouter tout dans ce publipostage', this.createMailing, this);
       this.registerDropZone(this.createMailingDropZone);
+
+      this.showEntityDropZone = Ext.create('Epsitec.DropZone', 'showentityid','Voir dans la base', this.showEntity, this);
+      this.registerDropZone(this.showEntityDropZone);
 
       config = {
         headerPosition: 'left',
@@ -50,7 +52,7 @@ function() {
             align: 'stretch',    
             padding: 5
         },
-        items: [this.createEntityView(),this.removeFromBagDropZone,this.createMailingDropZone],
+        items: [this.createEntityView(),this.removeFromBagDropZone,this.createMailingDropZone,this.showEntityDropZone],
         listeners: {
           beforerender: this.setSizeAndPosition,
           score: this
@@ -130,7 +132,12 @@ function() {
       });
     },
 
-    addEntityToBag: function(entity) {
+    showEntity: function(entity)
+    {
+      alert(entity.id);
+    },
+
+    addEntityToBag: function(entity,clickHandler) {
       var index = this.bagStore.indexOfId(entity.id);
       if(index===-1)
       {

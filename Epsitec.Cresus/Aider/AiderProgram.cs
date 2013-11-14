@@ -227,6 +227,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-fixmissingsubscriptions"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixMissingSubscriptions (args));
+					return;
+				}
+
 				if (args.Contains ("-findpotentialduplicatedpersons"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FindPotentialDuplicatedPersons (args));
@@ -549,6 +555,17 @@ namespace Epsitec.Aider
 						System.Console.ReadLine ();
 					});
 			
+		}
+
+		private static void FixMissingSubscriptions(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				EChWarningsFixer.TryFixMissingSubscriptions (coreData);
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+
 		}
 
 		private static void FindPotentialDuplicatedPersons(string[] args)

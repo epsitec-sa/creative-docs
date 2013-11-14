@@ -3,9 +3,7 @@ function ElasticSearch() {
 
   //Initialize
   this.init = function(con) {
-    this.hub = con.elasticSearchHub;
-    //this.hub.state.connectionId = this.hub.connection.id;
-    
+    this.hub = con.elasticSearchHub;    
   };
 
   //Entry points for calling hub
@@ -20,15 +18,13 @@ function ElasticSearch() {
 
 
         Ext.Array.each(result.Documents, function (doc)
-        {       
-
-         // Generate or pull any HTML you want for the back.
-        
+        {               
           htmlMenu += "<li id='"+id+"'><a href='#' onclick='" +
                       "var target = document.getElementById(\""+id+"\");" +
                       "var spinner = new Spinner().spin(target);" + 
                       "var path = { " +
                       "databaseName: \"" + doc.DatasetId + "\"," + 
+                      "entityType: \"Contacts\"," + 
                       "entityId: \"" + doc.EntityId + "\"};" + 
                       "Epsitec.Cresus.Core.app.showEntity(path,Epsitec.Callback.create(function(){spinner.stop()},this));'>" + 
                       doc.Name + 
@@ -36,38 +32,13 @@ function ElasticSearch() {
           id++;
         });
 
-        htmlMenu += "<li><a href='#' onclick='$.sidr(\"close\",\"sidr\");'>fermer</a></li></ul>";
+        htmlMenu += "<li><a href='#' onclick='$.sidr(\"close\",\"sidr\");'>Fermer le volet</a></li></ul>";
 
         return htmlMenu;
       }
     });
 
     $.sidr('open','sidr');
-
-    /*Ext.Array.each(result.Documents, function (doc)
-    {
-
-      var path = {
-          databaseName: doc.DatasetId,
-          entityId: doc.EntityId
-        };
-
-      toastr.options = null;
-      toastr.options = {
-          debug: false,
-          positionClass: 'toast-top-full-width',
-          fadeOut: 1000,
-          timeOut: 5000,
-          extendedTimeOut: 1000
-      };
-
-      toastr.options.onclick = function() {
-        Epsitec.Cresus.Core.app.showEntity(path, null);
-      };
-
-      toastr.info(doc.Text, doc.Name);
-    });*/
-      
   };
 
   this.query = function(q) {
