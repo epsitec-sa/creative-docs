@@ -38,10 +38,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public void UpdateData()
+		public void UpdateData(TreeNodeOutputMode mode = TreeNodeOutputMode.All)
 		{
 			this.ppNodesGetter.Timestamp = this.timestamp;
-			this.levelNodesGetter.UpdateData ();
+			this.levelNodesGetter.UpdateData (mode);
 			this.treeObjectsGetter.UpdateData ();
 		}
 

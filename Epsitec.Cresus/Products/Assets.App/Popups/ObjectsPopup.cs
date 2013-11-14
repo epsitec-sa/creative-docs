@@ -23,8 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
 			this.nodesGetter = new TreeNodesGetter (this.accessor, BaseType.Objects, primaryNodesGetter);
 
-			// TODO: Gérer onlyContainers
-			this.nodesGetter.UpdateData ();
+			this.nodesGetter.UpdateData (onlyContainers ? TreeNodeOutputMode.OnlyParents : TreeNodeOutputMode.All);
 			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 
 			this.dataFiller = new ObjectsTreeTableFiller (this.accessor, BaseType.Objects, this.controller, this.nodesGetter);

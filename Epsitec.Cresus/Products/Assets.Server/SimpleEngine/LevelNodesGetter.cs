@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public void UpdateData()
+		public void UpdateData(TreeNodeOutputMode mode)
 		{
 			this.levelNodes.Clear ();
 
@@ -70,10 +70,37 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			list.Add (tree);
 			tree.GetNodes (list);
 
+			if (mode == TreeNodeOutputMode.OnlyDescendants)
+			{
+				list = list.Where (x => x.Childrens.Any ()).ToList ();
+			}
+
+			if (mode == TreeNodeOutputMode.OnlyParents)
+			{
+				list = list.Where (x => LevelNodesGetter.IsParent (x)).ToList ();
+			}
+
+			if (mode == TreeNodeOutputMode.OnlyFinals)
+			{
+				list = list.Where (x => !x.Childrens.Any ()).ToList ();
+			}
+
 			//	Construit la liste finale consultable en sortie.
 			foreach (var treeNode in list)
 			{
-				var n = new LevelNode (treeNode.Node.Guid, this.GetLevel (treeNode));
+				int level;
+
+				if (mode == TreeNodeOutputMode.OnlyFinals ||
+					mode == TreeNodeOutputMode.OnlyParents)
+				{
+					level = 0;
+				}
+				else
+				{
+					level = LevelNodesGetter.GetLevel (treeNode);
+				}
+
+				var n = new LevelNode (treeNode.Node.Guid, level);
 				this.levelNodes.Add (n);
 			}
 		}
@@ -92,7 +119,26 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		private int GetLevel(TreeNode treeNode)
+		private static bool IsParent(TreeNode treeNode)
+		{
+			//	Indique si un noeud est un parent direct (pas un grand-parent).
+			if (!treeNode.Childrens.Any ())
+			{
+				return false;
+			}
+
+			foreach (var children in treeNode.Childrens)
+			{
+				if (children.Childrens.Any ())
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private static int GetLevel(TreeNode treeNode)
 		{
 			//	Retourne le niveau d'une feuille dans l'arbre.
 			int level = 0;
