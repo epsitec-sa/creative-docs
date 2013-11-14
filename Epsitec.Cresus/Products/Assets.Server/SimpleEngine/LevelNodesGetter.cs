@@ -12,9 +12,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// ordonnées avec une indication du level.
 	/// ParentPositionNode -> LevelNode
 	/// </summary>
-	public class ParentPositionToLevelNodesGetter : AbstractNodesGetter<LevelNode>  // outputNodes
+	public class LevelNodesGetter : AbstractNodesGetter<LevelNode>  // outputNodes
 	{
-		public ParentPositionToLevelNodesGetter(AbstractNodesGetter<ParentPositionNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public LevelNodesGetter(AbstractNodesGetter<ParentPositionNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;

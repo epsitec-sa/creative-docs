@@ -57,7 +57,8 @@
     <Compile Include="SimpleEngine\BypassNodesGetter.cs" />
     <Compile Include="SimpleEngine\ComputedAmount.cs" />
     <Compile Include="SimpleEngine\BaseType.cs" />
-    <Compile Include="SimpleEngine\ParentPositionToLevelNodesGetter.cs" />
+    <Compile Include="SimpleEngine\TreeNodesGetter.cs" />
+    <Compile Include="SimpleEngine\LevelNodesGetter.cs" />
     <Compile Include="SimpleEngine\DataGuidProperty.cs" />
     <Compile Include="SimpleEngine\ParentPositionNode.cs" />
     <Compile Include="SimpleEngine\ParentPositionNodesGetter.cs" />

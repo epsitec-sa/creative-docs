@@ -19,9 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
-			this.ppNodesGetter = new ParentPositionNodesGetter (primaryNodesGetter, this.accessor, this.baseType);
-			this.pp2lNodesGetter = new ParentPositionToLevelNodesGetter (this.ppNodesGetter, this.accessor, this.baseType);
-			this.nodesGetter = new TreeObjectsNodesGetter (this.pp2lNodesGetter);
+			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
 
 			switch (this.baseType)
 			{
@@ -44,8 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateData()
 		{
-			this.ppNodesGetter.Timestamp = this.Timestamp;
-			this.pp2lNodesGetter.UpdateData ();
+			this.NodesGetter.Timestamp = this.Timestamp;
 			this.NodesGetter.UpdateData ();
 
 			this.UpdateController ();
@@ -242,17 +239,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private TreeObjectsNodesGetter NodesGetter
+		private TreeNodesGetter NodesGetter
 		{
 			get
 			{
-				return this.nodesGetter as TreeObjectsNodesGetter;
+				return this.nodesGetter as TreeNodesGetter;
 			}
 		}
 
 
-		private ParentPositionNodesGetter			ppNodesGetter;
-		private ParentPositionToLevelNodesGetter	pp2lNodesGetter;
 		private Timestamp?							timestamp;
 	}
 }

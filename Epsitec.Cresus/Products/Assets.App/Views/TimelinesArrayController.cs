@@ -41,9 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
-			this.ppNodesGetter = new ParentPositionNodesGetter (primaryNodesGetter, this.accessor, this.baseType);
-			this.pp2lNodesGetter = new ParentPositionToLevelNodesGetter (this.ppNodesGetter, this.accessor, this.baseType);
-			this.nodesGetter = new TreeObjectsNodesGetter (this.pp2lNodesGetter);
+			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
 
 			this.arrayLogic = new TimelinesArrayLogic (this.accessor, this.baseType);
 			this.dataArray = new TimelinesArrayLogic.DataArray ();
@@ -56,8 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateData()
 		{
-			this.ppNodesGetter.Timestamp = this.SelectedTimestamp;
-			this.pp2lNodesGetter.UpdateData ();
+			this.nodesGetter.Timestamp = this.SelectedTimestamp;
 			this.nodesGetter.UpdateData ();
 
 			this.UpdateDataArray ();
@@ -1242,9 +1239,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly DataAccessor						accessor;
 		private readonly BaseType							baseType;
-		private readonly ParentPositionNodesGetter			ppNodesGetter;
-		private readonly ParentPositionToLevelNodesGetter	pp2lNodesGetter;
-		private readonly TreeObjectsNodesGetter				nodesGetter;
+		private readonly TreeNodesGetter					nodesGetter;
 		private readonly TimelinesArrayLogic				arrayLogic;
 		private readonly TimelinesArrayLogic.DataArray		dataArray;
 		private readonly string								title;
