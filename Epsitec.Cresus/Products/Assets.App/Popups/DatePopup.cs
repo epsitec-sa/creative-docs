@@ -65,8 +65,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.dateController = new DateFieldController
 			{
-				Label      = "Date",
-				LabelWidth = 40,
+				Label      = null,
+				LabelWidth = 0,
 				Value      = this.Date.HasValue ? this.Date : new Timestamp (System.DateTime.Now, 0).Date,
 			};
 
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static readonly int titleHeight  = 25;
 		private static readonly int margins      = 20;
-		private static readonly int dialogWidth  = 200;
+		private static readonly int dialogWidth  = 150;
 		private static readonly int dialogHeight = 130;
 
 		private FrameBox dateFrame;

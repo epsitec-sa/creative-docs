@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -32,13 +33,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
-			this.mainButton = new Button
+			this.mainButton = new ColoredButton
 			{
 				Parent        = parent,
-				ButtonStyle   = ButtonStyle.Icon,
+				NormalColor   = Color.Empty,
+				HoverColor    = ColorManager.HoverColor,
 				AutoFocus     = false,
 				Anchor        = AnchorStyles.BottomLeft,
-				PreferredSize = new Size (120, AbstractScroller.DefaultBreadth),
+				PreferredSize = new Size (100, AbstractScroller.DefaultBreadth),
 			};
 
 			this.mainButton.Clicked += delegate
@@ -102,6 +104,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private System.DateTime?				date;
-		private Button							mainButton;
+		private ColoredButton					mainButton;
 	}
 }
