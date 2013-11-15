@@ -16,12 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public override void SetGenericCells(TreeTableColumnItem columnItem)
 		{
-			this.SetCells (columnItem.GetArray<TreeTableCellDate> ());
-		}
-
-		public void SetCells(TreeTableCellDate[] cells)
-		{
-			this.cells = cells;
+			this.cells = columnItem.GetArray<TreeTableCellDate> ();
 			this.Invalidate ();
 		}
 

@@ -23,12 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public override void SetGenericCells(TreeTableColumnItem columnItem)
 		{
-			this.SetCells (columnItem.GetArray<TreeTableCellDecimal> ());
-		}
-
-		public void SetCells(TreeTableCellDecimal[] cells)
-		{
-			this.cells = cells;
+			this.cells = columnItem.GetArray<TreeTableCellDecimal> ();
 			this.Invalidate ();
 		}
 

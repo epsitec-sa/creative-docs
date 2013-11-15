@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -44,6 +45,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
 			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
+
+			this.dataFiller = new ObjectsTreeTableFiller3 (this.accessor, this.baseType, this.nodesGetter);
 
 			this.arrayLogic = new TimelinesArrayLogic (this.accessor, this.baseType);
 			this.dataArray = new TimelinesArrayLogic.DataArray ();
@@ -706,27 +709,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				selection -= this.TopVisibleRow;
 			}
 	
-			var list = new List<TreeTableCellTree> ();
-			Timestamp? timestamp = null;  // pour ne jamais voir "inconnu à cette date"
-
-			foreach (var row in this.EnumVisibleRows)
-			{
-				var node = this.nodesGetter[row];
-				var obj  = this.accessor.GetObject (this.baseType, node.Guid);
-				var nom  = ObjectCalculator.GetObjectPropertyString (obj, timestamp, ObjectField.Nom);
-				bool isSelected = node.Guid == this.SelectedGuid;
-
-				if (timestamp.HasValue &&
-					!ObjectCalculator.IsExistingObject (obj, timestamp.Value))
-				{
-					nom = DataDescriptions.OutOfDateName;
-				}
-
-				var cell = new TreeTableCellTree (true, node.Level, node.Type, nom, isSelected);
-				list.Add (cell);
-			}
-
-			this.treeColumn.SetCells (list.ToArray ());
+			var contentIrem = this.dataFiller.GetContent (firstRow, count, selection);
+			this.treeColumn.SetGenericCells (contentIrem.Columns.First ());
 		}
 
 		private int GetTopVisibleRow(int sel)
@@ -1268,6 +1252,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor						accessor;
 		private readonly BaseType							baseType;
 		private readonly TreeNodesGetter					nodesGetter;
+		private readonly ObjectsTreeTableFiller3			dataFiller;
 		private readonly TimelinesArrayLogic				arrayLogic;
 		private readonly TimelinesArrayLogic.DataArray		dataArray;
 		private readonly string								title;

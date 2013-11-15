@@ -78,6 +78,7 @@
     <Compile Include="DataFillers\AbstractTreeTableFiller.cs" />
     <Compile Include="DataFillers\CategoriesTreeTableFiller.cs" />
     <Compile Include="DataFillers\AbstractTreeTableFiller2.cs" />
+    <Compile Include="DataFillers\ObjectsTreeTableFiller3.cs" />
     <Compile Include="DataFillers\EventsObjectsTreeTableFiller2.cs" />
     <Compile Include="DataFillers\TreeTableColumnItem`1.cs" />
     <Compile Include="DataFillers\TreeTableFiller2.cs" />

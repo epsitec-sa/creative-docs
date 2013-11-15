@@ -20,16 +20,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public override void SetGenericCells(TreeTableColumnItem columnItem)
 		{
-			this.SetCells (columnItem.GetArray<TreeTableCellTree> ());
-		}
-
-		public void SetCells(TreeTableCellTree[] cells)
-		{
-			this.cells = cells;
+			this.cells = columnItem.GetArray<TreeTableCellTree> ();
 
 			this.CreateTreeButtons ();
 			this.Invalidate ();
 		}
+
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
