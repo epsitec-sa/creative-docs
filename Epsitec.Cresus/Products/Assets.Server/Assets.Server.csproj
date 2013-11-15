@@ -57,7 +57,6 @@
     <Compile Include="BusinessLogic\Descriptions.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
-    <Compile Include="BusinessLogic\BusinessLogic.cs" />
     <Compile Include="NodesGetter\BypassNodesGetter.cs" />
     <Compile Include="SimpleEngine\ComputedAmount.cs" />
     <Compile Include="SimpleEngine\BaseType.cs" />
