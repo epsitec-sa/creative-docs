@@ -710,7 +710,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 	
 			var contentIrem = this.dataFiller.GetContent (firstRow, count, selection);
-			this.treeColumn.SetGenericCells (contentIrem.Columns.First ());
+			this.treeColumn.SetCells (contentIrem.Columns.First ());
 		}
 
 		private int GetTopVisibleRow(int sel)

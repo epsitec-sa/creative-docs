@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public virtual void SetGenericCells(TreeTableColumnItem columnItem)
+		public virtual void SetCells(TreeTableColumnItem columnItem)
 		{
 		}
 

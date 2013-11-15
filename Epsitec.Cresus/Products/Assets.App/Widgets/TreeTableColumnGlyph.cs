@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnGlyph : AbstractTreeTableColumn
 	{
-		public override void SetGenericCells(TreeTableColumnItem columnItem)
+		public override void SetCells(TreeTableColumnItem columnItem)
 		{
 			this.cells = columnItem.GetArray<TreeTableCellGlyph> ();
 			this.Invalidate ();

@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public void SetColumnCells(int rank, DataFillers.TreeTableColumnItem columnItem)
 		{
 			var columnWidget = this.GetColumn (rank);
-			columnWidget.SetGenericCells (columnItem);
+			columnWidget.SetCells (columnItem);
 		}
 
 #if false
