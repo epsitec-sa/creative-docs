@@ -61,8 +61,8 @@
     <Compile Include="SimpleEngine\ComputedAmount.cs" />
     <Compile Include="SimpleEngine\BaseType.cs" />
     <Compile Include="SimpleEngine\DataDescriptions.cs" />
-    <Compile Include="SimpleEngine\DecimalFormat.cs" />
-    <Compile Include="SimpleEngine\Format.cs" />
+    <Compile Include="BusinessLogic\DecimalFormat.cs" />
+    <Compile Include="BusinessLogic\Format.cs" />
     <Compile Include="BusinessLogic\TimelineData.cs" />
     <Compile Include="BusinessLogic\TimelineGlyph.cs" />
     <Compile Include="BusinessLogic\TimelineMode.cs" />
