@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public struct TreeTableCellComputedAmount
+	public struct TreeTableCellComputedAmount : ITreeTableCell
 	{
 		public TreeTableCellComputedAmount(bool isValid, ComputedAmount? value, bool isSelected = false, bool isError = false)
 		{

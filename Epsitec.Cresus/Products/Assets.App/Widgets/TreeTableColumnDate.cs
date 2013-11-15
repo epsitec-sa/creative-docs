@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.Server.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -14,6 +14,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnDate : AbstractTreeTableColumn
 	{
+		public override void SetGenericCells(TreeTableColumnItem columnItem)
+		{
+			this.SetCells (columnItem.GetArray<TreeTableCellDate> ());
+		}
+
 		public void SetCells(TreeTableCellDate[] cells)
 		{
 			this.cells = cells;

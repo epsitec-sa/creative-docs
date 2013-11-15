@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -17,6 +18,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public bool								IndependentColumn;
 
+		public override void SetGenericCells(TreeTableColumnItem columnItem)
+		{
+			this.SetCells (columnItem.GetArray<TreeTableCellTree> ());
+		}
+
 		public void SetCells(TreeTableCellTree[] cells)
 		{
 			this.cells = cells;
@@ -24,7 +30,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.CreateTreeButtons ();
 			this.Invalidate ();
 		}
-
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{

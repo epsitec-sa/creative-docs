@@ -9,9 +9,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
-	public abstract class AbstractTreeTableFiller2
+	public abstract class AbstractTreeTableFiller2<T>
+		where T : struct
 	{
-		public AbstractTreeTableFiller2(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<TreeNode> nodesGetter)
+		public AbstractTreeTableFiller2(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<T> nodesGetter)
 		{
 			this.accessor    = accessor;
 			this.baseType    = baseType;
@@ -27,11 +28,11 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			get;
 		}
 
-		public abstract TreeTableContent GetContent(int firstRow, int count, int selection);
+		public abstract TreeTableContentItem GetContent(int firstRow, int count, int selection);
 
 
-		protected readonly DataAccessor						accessor;
-		protected readonly BaseType							baseType;
-		protected readonly AbstractNodesGetter<TreeNode>	nodesGetter;
+		protected readonly DataAccessor				accessor;
+		protected readonly BaseType					baseType;
+		protected readonly AbstractNodesGetter<T>	nodesGetter;
 	}
 }

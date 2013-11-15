@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.Server.NodesGetter;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public struct TreeTableCellTree
+	public struct TreeTableCellTree : ITreeTableCell
 	{
 		public TreeTableCellTree(bool isValid, int level, NodeType type, string value, bool isSelected = false, bool isError = false)
 		{

@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.Server.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -19,7 +19,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.details = details;
 		}
 
-		public void SetCells(TreeTableCellComputedAmount[] cells)
+
+		public override void SetGenericCells(TreeTableColumnItem columnItem)
+		{
+			this.SetCells (columnItem.GetArray<TreeTableCellComputedAmount> ());
+		}
+
+		private void SetCells(TreeTableCellComputedAmount[] cells)
 		{
 			this.cells = cells;
 			this.Invalidate ();

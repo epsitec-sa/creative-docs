@@ -7,6 +7,7 @@ using System.Text;
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.DataFillers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -100,6 +101,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.Invalidate ();
 				}
 			}
+		}
+
+
+		public virtual void SetGenericCells(TreeTableColumnItem columnItem)
+		{
 		}
 
 

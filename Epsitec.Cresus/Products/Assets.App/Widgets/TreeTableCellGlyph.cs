@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public struct TreeTableCellGlyph
+	public struct TreeTableCellGlyph : ITreeTableCell
 	{
 		public TreeTableCellGlyph(bool isValid, TimelineGlyph? value, bool isSelected = false, bool isError = false)
 		{

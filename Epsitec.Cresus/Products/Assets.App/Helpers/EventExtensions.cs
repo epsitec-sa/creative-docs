@@ -8,9 +8,6 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 {
 	public static class EventExtensions
 	{
-		public delegate void EventHandler<T1>    (object sender, T1 val1);
-		public delegate void EventHandler<T1, T2>(object sender, T1 val1, T2 val2);
-
 		public static void Raise<T>(this EventHandler<T> handler, object sender, T val1)
 		{
 			if (handler != null)

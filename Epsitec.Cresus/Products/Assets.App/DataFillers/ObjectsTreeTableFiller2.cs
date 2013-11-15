@@ -10,12 +10,13 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
-	public class ObjectsTreeTableFiller2 : AbstractTreeTableFiller2
+	public class ObjectsTreeTableFiller2 : AbstractTreeTableFiller2<TreeNode>
 	{
 		public ObjectsTreeTableFiller2(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<TreeNode> nodesGetter)
 			: base (accessor, baseType, nodesGetter)
 		{
 		}
+
 
 		public override TreeTableColumnDescription[] Columns
 		{
@@ -36,16 +37,16 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			}
 		}
 
-		public override TreeTableContent GetContent(int firstRow, int count, int selection)
+		public override TreeTableContentItem GetContent(int firstRow, int count, int selection)
 		{
-			var cf = new TreeTableColumn ();
-			var c1 = new TreeTableColumn ();
-			var c2 = new TreeTableColumn ();
-			var c3 = new TreeTableColumn ();
-			var c4 = new TreeTableColumn ();
-			var c5 = new TreeTableColumn ();
-			var c6 = new TreeTableColumn ();
-			var c7 = new TreeTableColumn ();
+			var cf = new TreeTableColumnItem<TreeTableCellTree> ();
+			var c1 = new TreeTableColumnItem<TreeTableCellString> ();
+			var c2 = new TreeTableColumnItem<TreeTableCellComputedAmount> ();
+			var c3 = new TreeTableColumnItem<TreeTableCellComputedAmount> ();
+			var c4 = new TreeTableColumnItem<TreeTableCellComputedAmount> ();
+			var c5 = new TreeTableColumnItem<TreeTableCellString> ();
+			var c6 = new TreeTableColumnItem<TreeTableCellString> ();
+			var c7 = new TreeTableColumnItem<TreeTableCellString> ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -62,12 +63,12 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var nom         = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Nom);
 				var numéro      = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Numéro);
-				var responsable = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Responsable);
-				var couleur     = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Couleur);
-				var série       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.NuméroSérie);
 				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur1);
 				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur2);
 				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur3);
+				var responsable = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Responsable);
+				var couleur     = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Couleur);
+				var série       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.NuméroSérie);
 
 				if (this.Timestamp.HasValue &&
 					!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
@@ -77,24 +78,24 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var sf = new TreeTableCellTree           (true, level, type, nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString         (true, numéro,      isSelected: (i == selection));
-				var s2 = new TreeTableCellString         (true, responsable, isSelected: (i == selection));
-				var s3 = new TreeTableCellString         (true, couleur,     isSelected: (i == selection));
-				var s4 = new TreeTableCellString         (true, série,       isSelected: (i == selection));
-				var s5 = new TreeTableCellComputedAmount (true, valeur1,     isSelected: (i == selection));
-				var s6 = new TreeTableCellComputedAmount (true, valeur2,     isSelected: (i == selection));
-				var s7 = new TreeTableCellComputedAmount (true, valeur3,     isSelected: (i == selection));
+				var s2 = new TreeTableCellComputedAmount (true, valeur1,     isSelected: (i == selection));
+				var s3 = new TreeTableCellComputedAmount (true, valeur2,     isSelected: (i == selection));
+				var s4 = new TreeTableCellComputedAmount (true, valeur3,     isSelected: (i == selection));
+				var s5 = new TreeTableCellString         (true, responsable, isSelected: (i == selection));
+				var s6 = new TreeTableCellString         (true, couleur,     isSelected: (i == selection));
+				var s7 = new TreeTableCellString         (true, série,       isSelected: (i == selection));
 
 				cf.AddRow (sf);
 				c1.AddRow (s1);
-				c2.AddRow (s5);
-				c3.AddRow (s6);
-				c4.AddRow (s7);
-				c5.AddRow (s2);
-				c6.AddRow (s3);
-				c7.AddRow (s4);
+				c2.AddRow (s2);
+				c3.AddRow (s3);
+				c4.AddRow (s4);
+				c5.AddRow (s5);
+				c6.AddRow (s6);
+				c7.AddRow (s7);
 			}
 
-			var content = new TreeTableContent ();
+			var content = new TreeTableContentItem ();
 
 			content.Columns.Add (cf);
 			content.Columns.Add (c1);

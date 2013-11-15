@@ -60,8 +60,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 			{
 				int i = 0;
-				this.controller.SetColumnCells (i++, cf.ToArray ());
-				this.controller.SetColumnCells (i++, c1.ToArray ());
+				//-this.controller.SetColumnCells (i++, cf.ToArray ());
+				//-this.controller.SetColumnCells (i++, c1.ToArray ());
 			}
 		}
 

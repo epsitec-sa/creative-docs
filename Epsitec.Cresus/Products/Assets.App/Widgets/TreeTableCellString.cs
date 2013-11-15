@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public struct TreeTableCellString
+	public struct TreeTableCellString : ITreeTableCell
 	{
 		public TreeTableCellString(bool isValid, string value, bool isSelected = false, bool isError = false)
 		{

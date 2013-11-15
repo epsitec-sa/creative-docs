@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.DataFillers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -14,7 +15,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnGlyph : AbstractTreeTableColumn
 	{
-		public void SetCells(TreeTableCellGlyph[] cells)
+		public override void SetGenericCells(TreeTableColumnItem columnItem)
+		{
+			this.SetCells (columnItem.GetArray<TreeTableCellGlyph> ());
+		}
+
+		private void SetCells(TreeTableCellGlyph[] cells)
 		{
 			this.cells = cells;
 			this.Invalidate ();

@@ -7,6 +7,7 @@ using System.Text;
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.DataFillers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -15,7 +16,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnString : AbstractTreeTableColumn
 	{
-		public void SetCells(TreeTableCellString[] cells)
+		public override void SetGenericCells(TreeTableColumnItem columnItem)
+		{
+			this.SetCells (columnItem.GetArray<TreeTableCellString> ());
+		}
+
+		private void SetCells(TreeTableCellString[] cells)
 		{
 			this.cells = cells;
 			this.Invalidate ();

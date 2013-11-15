@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.AllowsMovement = false;
 
 			//?this.dataFiller.UpdateColumns ();
-			TreeTableFiller2.FillColumns (this.dataFiller2, this.controller);
+			TreeTableFiller2<TreeNode>.FillColumns (this.dataFiller2, this.controller);
 			this.UpdateController ();
 		}
 
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 
 			//?this.dataFiller.UpdateContent (firstRow, count, selection);
-			TreeTableFiller2.FillContent (this.dataFiller2, this.controller, firstRow, count, selection);
+			TreeTableFiller2<TreeNode>.FillContent (this.dataFiller2, this.controller, firstRow, count, selection);
 		}
 
 

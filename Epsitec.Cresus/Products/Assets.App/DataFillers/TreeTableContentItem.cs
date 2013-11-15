@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
-	public class TreeTableContent
+	public class TreeTableContentItem
 	{
-		public TreeTableContent()
+		public TreeTableContentItem()
 		{
-			this.columns = new List<TreeTableColumn> ();
+			this.columns = new List<TreeTableColumnItem> ();
 		}
 
-		public List<TreeTableColumn> Columns
+		public List<TreeTableColumnItem> Columns
 		{
 			get
 			{
@@ -21,6 +21,6 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			}
 		}
 
-		private readonly List<TreeTableColumn> columns;
+		private readonly List<TreeTableColumnItem> columns;
 	}
 }

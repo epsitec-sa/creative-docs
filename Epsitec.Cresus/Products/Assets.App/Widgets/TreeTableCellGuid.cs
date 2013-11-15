@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public struct TreeTableCellGuid
+	public struct TreeTableCellGuid : ITreeTableCell
 	{
 		public TreeTableCellGuid(bool isValid, Guid value, bool isSelected = false, bool isError = false)
 		{

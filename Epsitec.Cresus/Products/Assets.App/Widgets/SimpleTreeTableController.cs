@@ -309,6 +309,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var description = this.columnDescriptions[c];
 
+#if false
 				switch (description.Type)
 				{
 					case TreeTableColumnType.String:
@@ -363,6 +364,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						}
 						break;
 				}
+#endif
 			}
 		}
 

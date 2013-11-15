@@ -76,12 +76,12 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 			{
 				int i = 0;
-				this.controller.SetColumnCells (i++, cf.ToArray ());
-				this.controller.SetColumnCells (i++, c1.ToArray ());
-				this.controller.SetColumnCells (i++, c2.ToArray ());
-				this.controller.SetColumnCells (i++, c3.ToArray ());
-				this.controller.SetColumnCells (i++, c4.ToArray ());
-				this.controller.SetColumnCells (i++, c5.ToArray ());
+				//-this.controller.SetColumnCells (i++, cf.ToArray ());
+				//-this.controller.SetColumnCells (i++, c1.ToArray ());
+				//-this.controller.SetColumnCells (i++, c2.ToArray ());
+				//-this.controller.SetColumnCells (i++, c3.ToArray ());
+				//-this.controller.SetColumnCells (i++, c4.ToArray ());
+				//-this.controller.SetColumnCells (i++, c5.ToArray ());
 			}
 		}
 

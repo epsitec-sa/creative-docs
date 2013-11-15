@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
+using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -17,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// On se contente d'afficher les AbstractTreeTableColumn passées avec SetColumns.
 	/// Un seul événement RowClicked permet de connaître la colonne et la ligne cliquée.
 	/// </summary>
-	public class TreeTable : Widget, ITreeTableFiller
+	public class TreeTable : Widget
 	{
 		public TreeTable(int rowHeight, int headerHeight, int footerHeight)
 		{
@@ -287,6 +288,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.UpdateChildrensGeometry ();
 		}
 
+		public void SetColumnCells(int rank, DataFillers.TreeTableColumnItem columnItem)
+		{
+			var columnWidget = this.GetColumn (rank);
+			columnWidget.SetGenericCells (columnItem);
+		}
+
+#if false
 		public void SetColumnCells(int rank, TreeTableCellTree[] cells)
 		{
 			var column = this.GetColumn (rank) as TreeTableColumnTree;
@@ -350,6 +358,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			column.SetCells (cells);
 		}
+#endif
 
 
 		public string Serialize()
@@ -709,7 +718,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event RowDoubleClickedEventHandler RowDoubleClicked;
 
 
-#if true
+#if false
 		private void OnContentChanged(bool crop)
 		{
 			if (this.ContentChanged != null)
@@ -738,7 +747,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.ContentChanged.Raise (this, crop);
 		}
 		
-		public event Helpers.EventExtensions.EventHandler<bool> ContentChanged;
+		public event EventHandler<bool> ContentChanged;
 		
 		
 		private void OnTreeButtonClicked(int row, NodeType type)
@@ -746,7 +755,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.TreeButtonClicked.Raise (this, row, type);
 		}
 		
-		public event Helpers.EventExtensions.EventHandler<int, NodeType> TreeButtonClicked;
+		public event EventHandler<int, NodeType> TreeButtonClicked;
 #endif
 		#endregion
 

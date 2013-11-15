@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Helpers;
 
@@ -17,6 +18,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public TreeTableColumnDecimal(DecimalFormat format)
 		{
 			this.format = format;
+		}
+
+
+		public override void SetGenericCells(TreeTableColumnItem columnItem)
+		{
+			this.SetCells (columnItem.GetArray<TreeTableCellDecimal> ());
 		}
 
 		public void SetCells(TreeTableCellDecimal[] cells)

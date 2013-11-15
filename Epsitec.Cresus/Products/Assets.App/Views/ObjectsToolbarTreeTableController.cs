@@ -98,7 +98,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.timestamp = value;
 
-					this.dataFiller.Timestamp = this.timestamp;
+					//?this.dataFiller.Timestamp = this.timestamp;
+					this.dataFiller2.Timestamp = this.timestamp;
 
 					this.UpdateController ();
 					this.UpdateToolbar ();
@@ -136,19 +137,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (this.baseType)
 			{
 				case BaseType.Objects:
-					this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
+					this.dataFiller2 = new ObjectsTreeTableFiller2 (this.accessor, this.baseType, this.nodesGetter);
 					break;
 
 				case BaseType.Categories:
-					this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
+					//?this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
 					break;
 
 				case BaseType.Groups:
-					this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
+					//?this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
 					break;
 			}
 
-			this.dataFiller.UpdateColumns ();
+			//?this.dataFiller.UpdateColumns ();
+			TreeTableFiller2<TreeNode>.FillColumns (this.dataFiller2, this.controller);
 
 			this.UpdateData ();
 		}

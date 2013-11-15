@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public struct TreeTableCellDate
+	public struct TreeTableCellDate : ITreeTableCell
 	{
 		public TreeTableCellDate(bool isValid, System.DateTime? value, bool isSelected = false, bool isError = false)
 		{

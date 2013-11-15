@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public struct TreeTableCellDecimal
+	public struct TreeTableCellDecimal : ITreeTableCell
 	{
 		public TreeTableCellDecimal(bool isValid, decimal? value, bool isSelected = false, bool isError = false)
 		{

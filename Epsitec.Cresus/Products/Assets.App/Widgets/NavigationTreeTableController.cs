@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -14,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// navigation en fonction du nombre de lignes RowsCount.
 	/// Il cache complètement le TreeTable sous-jacent à l'aide d'une Facade.
 	/// </summary>
-	public class NavigationTreeTableController : ITreeTableFiller
+	public class NavigationTreeTableController
 	{
 		public void CreateUI(Widget parent, int rowHeight = 18, int headerHeight = 22, int footerHeight = 22)
 		{
@@ -133,6 +134,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.treeTable.SetColumns (descriptions, dockToLeftCount);
 		}
 
+		public void SetColumnCells(int rank, TreeTableColumnItem columnItem)
+		{
+			this.treeTable.SetColumnCells (rank, columnItem);
+		}
+
+#if false
 		public void SetColumnCells(int rank, TreeTableCellTree[] cells)
 		{
 			this.treeTable.SetColumnCells (rank, cells);
@@ -172,6 +179,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.treeTable.SetColumnCells (rank, cells);
 		}
+#endif
 		#endregion
 		#endregion
 
