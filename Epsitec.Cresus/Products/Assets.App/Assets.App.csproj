@@ -77,11 +77,16 @@
     <Compile Include="AssetsUI.cs" />
     <Compile Include="DataFillers\AbstractTreeTableFiller.cs" />
     <Compile Include="DataFillers\CategoriesTreeTableFiller.cs" />
+    <Compile Include="DataFillers\AbstractTreeTableFiller2.cs" />
+    <Compile Include="DataFillers\TreeTableFiller2.cs" />
+    <Compile Include="DataFillers\ObjectsTreeTableFiller2.cs" />
     <Compile Include="DataFillers\EventsGroupsTreeTableFiller.cs" />
     <Compile Include="DataFillers\GroupsTreeTableFiller.cs" />
     <Compile Include="DataFillers\EventsCategoriesTreeTableFiller.cs" />
     <Compile Include="DataFillers\EventsObjectsTreeTableFiller.cs" />
     <Compile Include="DataFillers\ObjectsTreeTableFiller.cs" />
+    <Compile Include="DataFillers\TreeTableContent.cs" />
+    <Compile Include="DataFillers\TreeTableColumn.cs" />
     <Compile Include="Helpers\Text.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
