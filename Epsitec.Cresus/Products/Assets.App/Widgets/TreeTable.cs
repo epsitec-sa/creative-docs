@@ -709,6 +709,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event RowDoubleClickedEventHandler RowDoubleClicked;
 
 
+#if true
 		private void OnContentChanged(bool crop)
 		{
 			if (this.ContentChanged != null)
@@ -731,22 +732,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public delegate void TreeButtonClickedEventHandler(object sender, int row, NodeType type);
 		public event TreeButtonClickedEventHandler TreeButtonClicked;
-
-
-		//?private void OnContentChanged(bool crop)
-		//?{
-		//?	this.ContentChanged.Raise (this, crop);
-		//?}
-		//?
-		//?public event Helpers.EventExtensions.EventHandler<bool> ContentChanged;
-		//?
-		//?
-		//?private void OnTreeButtonClicked(int row, NodeType type)
-		//?{
-		//?	this.TreeButtonClicked.Raise (this, row, type);
-		//?}
-		//?
-		//?public event Helpers.EventExtensions.EventHandler<int, NodeType> TreeButtonClicked;
+#else
+		private void OnContentChanged(bool crop)
+		{
+			this.ContentChanged.Raise (this, crop);
+		}
+		
+		public event Helpers.EventExtensions.EventHandler<bool> ContentChanged;
+		
+		
+		private void OnTreeButtonClicked(int row, NodeType type)
+		{
+			this.TreeButtonClicked.Raise (this, row, type);
+		}
+		
+		public event Helpers.EventExtensions.EventHandler<int, NodeType> TreeButtonClicked;
+#endif
 		#endregion
 
 

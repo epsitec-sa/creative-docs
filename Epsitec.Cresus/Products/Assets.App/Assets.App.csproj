@@ -203,7 +203,6 @@
     <Compile Include="Widgets\TreeTable.cs" />
     <Compile Include="Widgets\TreeTableCellTree.cs" />
     <Compile Include="Widgets\NavigationTimelineController.cs" />
-    <Compile Include="Widgets\Essai.cs" />
     <Compile Include="Widgets\TimelineCellValue.cs" />
     <Compile Include="Widgets\TimelineCellGlyph.cs" />
     <Compile Include="Widgets\TimelineCellDate.cs" />
