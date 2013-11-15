@@ -8,6 +8,7 @@
 Ext.require([
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.Tools',
+  'Epsitec.cresus.webcore.ui.ActionPage',
   'Epsitec.cresus.webcore.ui.ScopeSelector'
 ],
 function() {
@@ -194,6 +195,13 @@ function() {
           iconCls: 'epsitec-aider-images-general-bag-icon32'
         }));
       }
+      if(epsitecConfig.featureActionPage) {
+        buttons.push(this.createButton({
+          text: 'Actions',
+          handler: this.actionPageButtonHandler,
+          iconCls: 'epsitec-cresus-core-images-data-specialcontroller-icon32'
+        }));
+      }
 
       if(epsitecConfig.featureFaq) {
         buttons.push(this.createButton({
@@ -214,6 +222,12 @@ function() {
         headerPosition: 'bottom',
         items: buttons
       });
+    },
+
+    actionPageButtonHandler: function() {
+      var actionPage = Ext.create('Epsitec.ActionPage');
+
+      this.application.tabManager.showComponentTab('action', actionPage);
     },
 
     aboutButtonHandler: function() {

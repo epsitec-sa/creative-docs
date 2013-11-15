@@ -440,6 +440,11 @@ $.getScript('signalr/hubs', function() {
         this.showEditableEntity(path, callback);
       },
 
+      testAlert: function(message)
+      {
+        alert(message);
+      },
+
       createBanner: function(region, cls) {
         return Ext.create('Ext.Panel', {
           region: region,

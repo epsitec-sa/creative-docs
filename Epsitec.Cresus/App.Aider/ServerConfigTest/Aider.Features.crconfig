@@ -12,6 +12,7 @@ ConfigureExperimentalFeature ("QuickSearch");
 # ConfigureExperimentalFeature ("Mailing");
 ConfigureExperimentalFeature ("Warnings");
 ConfigureExperimentalFeature ("EntityBag");
+# ConfigureExperimentalFeature ("ActionPage");
 ConfigureExperimentalFeature ("DropZones");
 ConfigureExperimentalFeature ("Chat");
 ConfigureExperimentalFeature ("Faq");

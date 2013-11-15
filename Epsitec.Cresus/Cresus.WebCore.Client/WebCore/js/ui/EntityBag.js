@@ -31,9 +31,6 @@ function() {
       this.removeFromBagDropZone = Ext.create('Epsitec.DropZone', 'removezoneid','Retirer de l\'arche', this.removeEntityFromBag, this);
       this.registerDropZone(this.removeFromBagDropZone);
 
-      this.createMailingDropZone = Ext.create('Epsitec.DropZone', 'mailingzoneid','Ajouter tout dans ce publipostage', this.createMailing, this);
-      this.registerDropZone(this.createMailingDropZone);
-
       this.showEntityDropZone = Ext.create('Epsitec.DropZone', 'showentityid','Voir dans la base', this.showEntity, this);
       this.registerDropZone(this.showEntityDropZone);
 
@@ -52,7 +49,7 @@ function() {
             align: 'stretch',    
             padding: 5
         },
-        items: [this.createEntityView(),this.removeFromBagDropZone,this.createMailingDropZone,this.showEntityDropZone],
+        items: [this.createEntityView(),this.removeFromBagDropZone,this.showEntityDropZone],
         listeners: {
           beforerender: this.setSizeAndPosition,
           score: this
@@ -74,7 +71,6 @@ function() {
     showRegistredDropZone: function (){
       for(d in this.dropZones)
       {
-        //TODO
         this.dropZones[d].show();
       }       
     },
@@ -110,26 +106,6 @@ function() {
       this.bagStore = Ext.create('Ext.data.Store', {
           model: 'Bag',
           data: [],
-      });
-    },
-
-    ///WORK IN PROGRESS
-    createMailing: function(mailing) {
-      this.setLoading();
-      Ext.Ajax.request({
-        url: Epsitec.EntityBag.getUrl(
-            'proxy/entity/action/entity', 6, 0, mailing.id
-        ),
-        method: 'POST',
-        params: {
-          entityIds: this.bagStore.data.items.map(function(e) { return e.internalId; }).join(';')
-        },
-        callback: function ()
-        {
-          this.setLoading(false);
-          Epsitec.Cresus.Core.app.reloadCurrentTile(null);
-        },
-        scope: this
       });
     },
 

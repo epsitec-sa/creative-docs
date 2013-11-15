@@ -67,7 +67,9 @@ function() {
         pageTab = Ext.create('Ext.panel.Panel', {
           title: title,
           border: false,
-          id: url,
+          itemId: url,
+          styleHtmlContent: true,
+          loadMask: true,
           loader: {
             url: url,
             autoLoad: true
@@ -76,6 +78,8 @@ function() {
 
         this.add(pageTab);
         this.pageTabs[url] = pageTab;
+
+
       }
 
       this.showTab(pageTab);
@@ -83,9 +87,27 @@ function() {
       return pageTab;
     },
 
+    showComponentTab: function(id,component) {
+      var pageTab = this.pageTabs[id] || null;
+
+      if (pageTab === null || pageTab.isDestroyed) {
+        pageTab = component;
+        this.add(component);
+        this.pageTabs[id] = pageTab;
+      }
+      
+      this.showTab(pageTab);
+
+      return pageTab;
+    },
+
     showTab: function(tab) {
       this.getLayout().setActiveItem(tab);
-      this.currentTab = tab.database.name;
+      if(Ext.isDefined(tab.database))
+      {
+        this.currentTab = tab.database.name;
+      }
+      
     }
   });
 });
