@@ -54,7 +54,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="BusinessLogic\Amortissements.cs" />
-    <Compile Include="BusinessLogic\Descriptions.cs" />
+    <Compile Include="BusinessLogic\LogicDescriptions.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
     <Compile Include="NodesGetter\BypassNodesGetter.cs" />

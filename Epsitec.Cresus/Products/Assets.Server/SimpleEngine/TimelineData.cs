@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							{
 								Timestamp = t,
 								Glyph     = glyph,
-								Tooltip   = Descriptions.GetTooltip (obj, t, type, 8),
+								Tooltip   = LogicDescriptions.GetTooltip (obj, t, type, 8),
 								Values    = new decimal?[] { v1, v2 },
 							};
 
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							{
 								Timestamp = this.cells[index].Timestamp,
 								Glyph     = glyph,
-								Tooltip   = Descriptions.GetTooltip (obj, t, type, 8),
+								Tooltip   = LogicDescriptions.GetTooltip (obj, t, type, 8),
 								Values    = new decimal?[] { v1, v2 },
 							};
 

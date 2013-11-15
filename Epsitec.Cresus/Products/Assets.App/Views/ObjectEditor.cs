@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Par exemple "Evénement du 31.03.2014 — Amortissement"
 			get
 			{
-				return Descriptions.GetEventDescription (this.timestamp, this.eventType);
+				return LogicDescriptions.GetEventDescription (this.timestamp, this.eventType);
 			}
 		}
 

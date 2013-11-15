@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private DataCell EventToCell(DataObject obj, DataEvent e)
 		{
 			var glyph      = TimelineData.TypeToGlyph (e.Type);
-			string tooltip = Descriptions.GetTooltip (obj, e.Timestamp, e.Type, 8);
+			string tooltip = LogicDescriptions.GetTooltip (obj, e.Timestamp, e.Type, 8);
 
 			return new DataCell (glyph, false, tooltip);
 		}

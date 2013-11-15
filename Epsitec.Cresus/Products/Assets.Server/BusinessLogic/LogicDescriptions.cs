@@ -7,15 +7,15 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public static class Descriptions
+	public static class LogicDescriptions
 	{
 		public static string GetTooltip(DataObject obj, Timestamp timestamp, EventType eventType, int maxLines = int.MaxValue)
 		{
 			var list = new List<string> ();
 
-			list.Add (Descriptions.GetEventDescription (timestamp, eventType));
+			list.Add (LogicDescriptions.GetEventDescription (timestamp, eventType));
 
-			foreach (var field in Descriptions.ObjectFields)
+			foreach (var field in LogicDescriptions.ObjectFields)
 			{
 				string line = null;
 
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					}
 
 					var desc = DataDescriptions.GetObjectFieldDescription (field);
-					list.Add (Descriptions.GetTooltipLine (desc, line));
+					list.Add (LogicDescriptions.GetTooltipLine (desc, line));
 				}
 			}
 
