@@ -60,19 +60,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else
 			{
-				var treeTable = new SimpleTreeTableController ();
+				var treeTable = new SimpleTreeTableController (this.accessor.Filler, this.accessor.RowsCount);
 
 				treeTable.CreateUI (parent, rowHeight: HistoryController.RowHeight, headerHeight: HistoryController.HeaderHeight, footerHeight: 0);
 				treeTable.AllowsMovement = false;
-				treeTable.SetColumns (this.accessor.Columns);
-				treeTable.SetContent (this.accessor.Content);
 
 				//	Il faut forcer le calcul du layout pour pouvoir calculer la
 				//	première ligne visible dans le TreeTable.
 				parent.Window.ForceLayout ();
 
 				treeTable.SelectedRow = this.accessor.SelectedRow;
-				treeTable.ShowSelection ();
 
 				treeTable.RowClicked += delegate (object sender, int row)
 				{

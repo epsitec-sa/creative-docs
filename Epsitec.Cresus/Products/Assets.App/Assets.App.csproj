@@ -77,6 +77,7 @@
     <Compile Include="AssetsUI.cs" />
     <Compile Include="DataFillers\AbstractTreeTableFiller.cs" />
     <Compile Include="DataFillers\CategoriesTreeTableFiller.cs" />
+    <Compile Include="DataFillers\HistoryTreeTableFiller.cs" />
     <Compile Include="DataFillers\EventsCategoriesTreeTableFiller.cs" />
     <Compile Include="DataFillers\EventsGroupsTreeTableFiller.cs" />
     <Compile Include="DataFillers\GroupsTreeTableFiller.cs" />
