@@ -63,9 +63,9 @@
     <Compile Include="SimpleEngine\DataDescriptions.cs" />
     <Compile Include="SimpleEngine\DecimalFormat.cs" />
     <Compile Include="SimpleEngine\Format.cs" />
-    <Compile Include="SimpleEngine\TimelineData.cs" />
-    <Compile Include="SimpleEngine\TimelineGlyph.cs" />
-    <Compile Include="SimpleEngine\TimelineMode.cs" />
+    <Compile Include="BusinessLogic\TimelineData.cs" />
+    <Compile Include="BusinessLogic\TimelineGlyph.cs" />
+    <Compile Include="BusinessLogic\TimelineMode.cs" />
     <Compile Include="NodesGetter\TreeNodeOutputMode.cs" />
     <Compile Include="NodesGetter\TreeNodesGetter.cs" />
     <Compile Include="NodesGetter\LevelNodesGetter.cs" />
