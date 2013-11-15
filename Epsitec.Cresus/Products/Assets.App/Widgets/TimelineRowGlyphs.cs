@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellGlyph cell, bool isHover, int index)
 		{
-			EventGlyph.Paint (graphics, rect, cell.Glyph);
+			PaintEventGlyph.Paint (graphics, rect, cell.Glyph);
 		}
 
 

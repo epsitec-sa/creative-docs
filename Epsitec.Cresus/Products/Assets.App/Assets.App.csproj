@@ -143,7 +143,7 @@
     <Compile Include="Views\ToolbarCommand.cs" />
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
-    <Compile Include="Widgets\EventExtensions.cs" />
+    <Compile Include="Helpers\EventExtensions.cs" />
     <Compile Include="Widgets\TreeTableColumnGuid.cs" />
     <Compile Include="Widgets\TreeTableCellGuid.cs" />
     <Compile Include="Widgets\SimpleTreeTableCellGuid.cs" />
@@ -154,7 +154,7 @@
     <Compile Include="Widgets\SimpleTreeTableCellGlyph.cs" />
     <Compile Include="Widgets\TreeTableCellGlyph.cs" />
     <Compile Include="Widgets\TreeTableColumnGlyph.cs" />
-    <Compile Include="Widgets\EventGlyph.cs" />
+    <Compile Include="Widgets\PaintEventGlyph.cs" />
     <Compile Include="Widgets\TextFieldBold.cs" />
     <Compile Include="Widgets\TreeTableColumnInt.cs" />
     <Compile Include="Widgets\TreeTableCellInt.cs" />

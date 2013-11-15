@@ -711,18 +711,42 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void OnContentChanged(bool crop)
 		{
-			this.ContentChanged.Raise (this, crop);
+			if (this.ContentChanged != null)
+			{
+				this.ContentChanged (this, crop);
+			}
 		}
 
-		public event EventExtensions.EventHandler<bool> ContentChanged;
+		public delegate void ContentChangedEventHandler(object sender, bool crop);
+		public event ContentChangedEventHandler ContentChanged;
 
 
 		private void OnTreeButtonClicked(int row, NodeType type)
 		{
-			this.TreeButtonClicked.Raise (this, row, type);
+			if (this.TreeButtonClicked != null)
+			{
+				this.TreeButtonClicked (this, row, type);
+			}
 		}
 
-		public event EventExtensions.EventHandler<int, NodeType> TreeButtonClicked;
+		public delegate void TreeButtonClickedEventHandler(object sender, int row, NodeType type);
+		public event TreeButtonClickedEventHandler TreeButtonClicked;
+
+
+		//?private void OnContentChanged(bool crop)
+		//?{
+		//?	this.ContentChanged.Raise (this, crop);
+		//?}
+		//?
+		//?public event Helpers.EventExtensions.EventHandler<bool> ContentChanged;
+		//?
+		//?
+		//?private void OnTreeButtonClicked(int row, NodeType type)
+		//?{
+		//?	this.TreeButtonClicked.Raise (this, row, type);
+		//?}
+		//?
+		//?public event Helpers.EventExtensions.EventHandler<int, NodeType> TreeButtonClicked;
 		#endregion
 
 

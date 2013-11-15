@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					//	Dessine le glyph.
 					if (cell.Value.HasValue)
 					{
-						EventGlyph.Paint (graphics, rect, cell.Value.Value);
+						PaintEventGlyph.Paint (graphics, rect, cell.Value.Value);
 					}
 
 					//	Dessine la grille.

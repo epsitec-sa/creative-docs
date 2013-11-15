@@ -4,13 +4,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.App.Widgets
+namespace Epsitec.Cresus.Assets.App.Helpers
 {
 	public static class EventExtensions
 	{
-		public delegate void EventHandler<T>         (object sender, T val1);
-		public delegate void EventHandler<T1, T2>    (object sender, T1 val1, T2 val2);
-		public delegate void EventHandler<T1, T2, T3>(object sender, T1 val1, T2 val2, T3 val3);
+		public delegate void EventHandler<T1>    (object sender, T1 val1);
+		public delegate void EventHandler<T1, T2>(object sender, T1 val1, T2 val2);
 
 		public static void Raise<T>(this EventHandler<T> handler, object sender, T val1)
 		{
@@ -25,14 +24,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (handler != null)
 			{
 				handler (sender, val1, val2);
-			}
-		}
-
-		public static void Raise<T1, T2, T3>(this EventHandler<T1, T2, T3> handler, object sender, T1 val1, T2 val2, T3 val3)
-		{
-			if (handler != null)
-			{
-				handler (sender, val1, val2, val3);
 			}
 		}
 	}

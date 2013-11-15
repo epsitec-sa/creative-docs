@@ -8,7 +8,7 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public static class EventGlyph
+	public static class PaintEventGlyph
 	{
 		public static void Paint(Graphics graphics, Rectangle rect, TimelineGlyph glyph)
 		{
@@ -32,14 +32,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 
 				case TimelineGlyph.FilledSquare:
-					r = EventGlyph.GetGlyphSquare (rect, 0.25);
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.25);
 
 					graphics.AddFilledRectangle (r);
 					graphics.RenderSolid (ColorManager.TextColor);
 					break;
 
 				case TimelineGlyph.OutlinedSquare:
-					r = EventGlyph.GetGlyphSquare (rect, 0.25);
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.25);
 					r.Deflate (0.5);
 
 					graphics.AddFilledRectangle (r);
@@ -50,17 +50,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 
 				case TimelineGlyph.FilledDiamond:
-					r = EventGlyph.GetGlyphSquare (rect, 0.35);
-					path = EventGlyph.GetDiamondPath (r);
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.35);
+					path = PaintEventGlyph.GetDiamondPath (r);
 
 					graphics.AddFilledPath (path);
 					graphics.RenderSolid (ColorManager.TextColor);
 					break;
 
 				case TimelineGlyph.OutlinedDiamond:
-					r = EventGlyph.GetGlyphSquare (rect, 0.35);
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.35);
 					r.Deflate (0.5);
-					path = EventGlyph.GetDiamondPath (r);
+					path = PaintEventGlyph.GetDiamondPath (r);
 
 					graphics.AddFilledPath (path);
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
@@ -70,17 +70,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 
 				case TimelineGlyph.FilledDown:
-					r = EventGlyph.GetGlyphSquare (rect, 0.3);
-					path = EventGlyph.GetDownPath (r);
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
+					path = PaintEventGlyph.GetDownPath (r);
 
 					graphics.AddFilledPath (path);
 					graphics.RenderSolid (ColorManager.TextColor);
 					break;
 
 				case TimelineGlyph.OutlinedDown:
-					r = EventGlyph.GetGlyphSquare (rect, 0.3);
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
 					r.Deflate (0.5);
-					path = EventGlyph.GetDownPath (r);
+					path = PaintEventGlyph.GetDownPath (r);
 
 					graphics.AddFilledPath (path);
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
@@ -90,17 +90,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 
 				case TimelineGlyph.FilledUp:
-					r = EventGlyph.GetGlyphSquare (rect, 0.3);
-					path = EventGlyph.GetUpPath (r);
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
+					path = PaintEventGlyph.GetUpPath (r);
 
 					graphics.AddFilledPath (path);
 					graphics.RenderSolid (ColorManager.TextColor);
 					break;
 
 				case TimelineGlyph.OutlinedUp:
-					r = EventGlyph.GetGlyphSquare (rect, 0.3);
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
 					r.Deflate (0.5);
-					path = EventGlyph.GetUpPath (r);
+					path = PaintEventGlyph.GetUpPath (r);
 
 					graphics.AddFilledPath (path);
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
