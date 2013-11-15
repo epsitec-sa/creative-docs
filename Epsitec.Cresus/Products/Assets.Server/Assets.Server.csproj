@@ -64,6 +64,8 @@
     <Compile Include="DataFillers\TreeTableCellInt.cs" />
     <Compile Include="DataFillers\TreeTableCellString.cs" />
     <Compile Include="DataFillers\TreeTableCellTree.cs" />
+    <Compile Include="DataFillers\TreeTableColumnDescription.cs" />
+    <Compile Include="DataFillers\TreeTableColumnType.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="NodesGetter\HistoryNodesGetter.cs" />
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />

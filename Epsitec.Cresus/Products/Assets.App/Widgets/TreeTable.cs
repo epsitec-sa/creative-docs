@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -249,7 +250,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var ii = this.MapRelativeToAbsolute (i);
 				var description = this.columnDescriptions[ii];
 
-				var column = TreeTableColumnDescription.Create (description);
+				var column = TreeTableColumnHelper.Create (description);
 				column.PreferredWidth = this.columnWidths[ii].FinalWidth;
 				column.Index = index++;
 

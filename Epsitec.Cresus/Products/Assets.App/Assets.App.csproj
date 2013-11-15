@@ -151,6 +151,7 @@
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
     <Compile Include="Helpers\EventExtensions.cs" />
+    <Compile Include="Widgets\TreeTableColumnHelper.cs" />
     <Compile Include="Widgets\TreeTableColumnGuid.cs" />
     <Compile Include="Widgets\HatchFrameBox.cs" />
     <Compile Include="Widgets\TextFieldController.cs" />
@@ -186,8 +187,6 @@
     <Compile Include="Widgets\TimelineRowType.cs" />
     <Compile Include="Widgets\TimelineRowDescription.cs" />
     <Compile Include="Widgets\TreeTableColumnSeparator.cs" />
-    <Compile Include="Widgets\TreeTableColumnType.cs" />
-    <Compile Include="Widgets\TreeTableColumnDescription.cs" />
     <Compile Include="Widgets\TreeTableColumnDecimal.cs" />
     <Compile Include="Widgets\NavigationTreeTableController.cs" />
     <Compile Include="Widgets\TreeTableColumnTree.cs" />
