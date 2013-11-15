@@ -82,7 +82,6 @@
     <Compile Include="DataFillers\EventsCategoriesTreeTableFiller.cs" />
     <Compile Include="DataFillers\EventsObjectsTreeTableFiller.cs" />
     <Compile Include="DataFillers\ObjectsTreeTableFiller.cs" />
-    <Compile Include="Helpers\Converters.cs" />
     <Compile Include="Helpers\Text.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
@@ -106,7 +105,6 @@
     <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\AbstractEditorPage.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
-    <Compile Include="Views\BusinessLogic.cs" />
     <Compile Include="Views\StateAtController.cs" />
     <Compile Include="Views\GuidFieldController.cs" />
     <Compile Include="Views\TimelinesArrayLogic.cs" />

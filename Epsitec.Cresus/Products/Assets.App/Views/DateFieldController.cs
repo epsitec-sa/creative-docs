@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -159,12 +160,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private static string ConvDateToString(System.DateTime? value)
 		{
-			return Helpers.Converters.DateToString (value);
+			return TypeConverters.DateToString (value);
 		}
 
 		private static System.DateTime? ConvStringToDate(string text)
 		{
-			return Helpers.Converters.ParseDate (text);
+			return TypeConverters.ParseDate (text);
 		}
 
 

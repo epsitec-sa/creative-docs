@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -227,7 +228,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var row = new List<AbstractSimpleTreeTableCell> ();
 
-			string d = Helpers.Converters.DateToString (addTimestamp.Date);
+			string d = TypeConverters.DateToString (addTimestamp.Date);
 			row.Add (new SimpleTreeTableCellString (d));
 			row.Add (new SimpleTreeTableCellGlyph (TimelineData.TypeToGlyph (eventType)));
 			row.Add (addCell);

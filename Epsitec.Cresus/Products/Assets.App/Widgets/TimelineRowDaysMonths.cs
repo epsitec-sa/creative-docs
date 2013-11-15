@@ -3,10 +3,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var cell = this.GetCell (this.detectedHoverRank);
 				if (cell.IsValid)
 				{
-					return Helpers.Converters.DateToFullString (cell.Date);
+					return TypeConverters.DateToFullString (cell.Date);
 				}
 			}
 

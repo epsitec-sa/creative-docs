@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -145,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (ObjectSummaryController.IsDefined (this.timestamp))
 				{
-					string d = Helpers.Converters.DateToString (this.timestamp.Value.Date);
+					string d = TypeConverters.DateToString (this.timestamp.Value.Date);
 					return string.Format ("Le tableau ci-dessous montre l'état en date du {0} :", d);
 				}
 				else
@@ -196,17 +197,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 						switch (Format.GetFieldFormat (tile.Field))
 						{
 							case DecimalFormat.Rate:
-								text = Helpers.Converters.RateToString (d);
+								text = TypeConverters.RateToString (d);
 								alignment = ContentAlignment.MiddleRight;
 								break;
 
 							case DecimalFormat.Amount:
-								text = Helpers.Converters.AmountToString (d);
+								text = TypeConverters.AmountToString (d);
 								alignment = ContentAlignment.MiddleRight;
 								break;
 
 							case DecimalFormat.Real:
-								text = Helpers.Converters.DecimalToString (d);
+								text = TypeConverters.DecimalToString (d);
 								alignment = ContentAlignment.MiddleRight;
 								break;
 						}
@@ -217,7 +218,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var i = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, tile.Field);
 					if (i.HasValue)
 					{
-						text = Helpers.Converters.IntToString (i);
+						text = TypeConverters.IntToString (i);
 						alignment = ContentAlignment.MiddleRight;
 					}
 					break;
@@ -226,7 +227,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var ca = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, this.timestamp, tile.Field);
 					if (ca.HasValue)
 					{
-						text = Helpers.Converters.AmountToString (ca.Value.FinalAmount);
+						text = TypeConverters.AmountToString (ca.Value.FinalAmount);
 						alignment = ContentAlignment.MiddleRight;
 					}
 					break;
@@ -235,7 +236,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var da = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, tile.Field);
 					if (da.HasValue)
 					{
-						text = Helpers.Converters.DateToString (da.Value);
+						text = TypeConverters.DateToString (da.Value);
 						alignment = ContentAlignment.MiddleLeft;
 					}
 					break;

@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -162,13 +163,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (this.DecimalFormat)
 			{
 				case DecimalFormat.Rate:
-					return Helpers.Converters.RateToString (value);
+					return TypeConverters.RateToString (value);
 
 				case DecimalFormat.Amount:
-					return Helpers.Converters.AmountToString (value);
+					return TypeConverters.AmountToString (value);
 
 				case DecimalFormat.Real:
-					return Helpers.Converters.DecimalToString (value);
+					return TypeConverters.DecimalToString (value);
 
 				default:
 					return null;
@@ -180,13 +181,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (this.DecimalFormat)
 			{
 				case DecimalFormat.Rate:
-					return Helpers.Converters.ParseRate (text);
+					return TypeConverters.ParseRate (text);
 
 				case DecimalFormat.Amount:
-					return Helpers.Converters.ParseAmount (text);
+					return TypeConverters.ParseAmount (text);
 
 				case DecimalFormat.Real:
-					return Helpers.Converters.ParseDecimal (text);
+					return TypeConverters.ParseDecimal (text);
 
 				default:
 					return null;

@@ -6,14 +6,14 @@ using System.Linq;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Helpers
+namespace Epsitec.Cresus.Assets.Server.Helpers
 {
-	public static class Converters
+	public static class TypeConverters
 	{
 		#region Pourcentage
 		public static decimal? ParseRate(FormattedText text)
 		{
-			return Converters.ParseRate (text.ToSimpleText ());
+			return TypeConverters.ParseRate (text.ToSimpleText ());
 		}
 
 		public static decimal? ParseRate(string text)
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			{
 				string s;
 
-				if (Converters.rateFracFormat == SettingsEnum.RateFloating)
+				if (TypeConverters.rateFracFormat == SettingsEnum.RateFloating)
 				{
 					s = (rate.Value*100).ToString (System.Globalization.CultureInfo.InvariantCulture);
 
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 				{
 					string format = null;
 
-					switch (Converters.rateFracFormat)
+					switch (TypeConverters.rateFracFormat)
 					{
 						case SettingsEnum.RateFrac1:
 							format = "0.0";
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 					s = (rate.Value*100).ToString (format);
 				}
 
-				if (Converters.rateDecimalSeparator == SettingsEnum.SeparatorComma)
+				if (TypeConverters.rateDecimalSeparator == SettingsEnum.SeparatorComma)
 				{
 					s = s.Replace (".", ",");
 				}
@@ -108,14 +108,14 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 					string a;
 					if (ca.Value.Rate)
 					{
-						a = Converters.RateToString (ca.Value.ArgumentAmount);
+						a = TypeConverters.RateToString (ca.Value.ArgumentAmount);
 					}
 					else
 					{
-						a = Converters.AmountToString (ca.Value.ArgumentAmount);
+						a = TypeConverters.AmountToString (ca.Value.ArgumentAmount);
 					}
 
-					string f = Converters.AmountToString (ca.Value.FinalAmount);
+					string f = TypeConverters.AmountToString (ca.Value.FinalAmount);
 
 					if (!string.IsNullOrEmpty (a) && ca.Value.ArgumentDefined)
 					{
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 				}
 				else
 				{
-					var a = Converters.AmountToString (ca.Value.FinalAmount);
+					var a = TypeConverters.AmountToString (ca.Value.FinalAmount);
 					return string.Concat ("<b>", a, "</b>");
 				}
 			}
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 		#region Amount
 		public static decimal? ParseAmount(FormattedText text)
 		{
-			return Converters.ParseAmount (text.ToSimpleText ());
+			return TypeConverters.ParseAmount (text.ToSimpleText ());
 		}
 
 		public static decimal? ParseAmount(string text)
@@ -165,8 +165,8 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 				text = text.Substring (1).Replace (")", "");
 			}
 
-			if (Converters.numberFormatNullParts != SettingsEnum.NullPartsDashZero &&
-				Converters.numberFormatNullParts != SettingsEnum.NullPartsDashDash)  // ne commence pas par un tiret si zéro ?
+			if (TypeConverters.numberFormatNullParts != SettingsEnum.NullPartsDashZero &&
+				TypeConverters.numberFormatNullParts != SettingsEnum.NullPartsDashDash)  // ne commence pas par un tiret si zéro ?
 			{
 				if (text.StartsWith ("-"))
 				{
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			//	Conversion d'un montant, selon les réglages.
 			if (amount.HasValue)
 			{
-				Converters.numberFormatAmount.CurrencyDecimalDigits = decimalDigits;
+				TypeConverters.numberFormatAmount.CurrencyDecimalDigits = decimalDigits;
 
 				bool neg = false;
 				if (amount < 0)
@@ -201,22 +201,22 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 					amount = -amount;
 				}
 
-				string s = amount.Value.ToString ("C", Converters.numberFormatAmount);
+				string s = amount.Value.ToString ("C", TypeConverters.numberFormatAmount);
 
-				if (Converters.numberFormatNullParts == SettingsEnum.NullPartsDashZero ||
-					Converters.numberFormatNullParts == SettingsEnum.NullPartsDashDash)  // commence par un tiret si zéro ?
+				if (TypeConverters.numberFormatNullParts == SettingsEnum.NullPartsDashZero ||
+					TypeConverters.numberFormatNullParts == SettingsEnum.NullPartsDashDash)  // commence par un tiret si zéro ?
 				{
-					string pattern = "0" + Converters.numberFormatAmount.CurrencyDecimalSeparator;  // "0."
+					string pattern = "0" + TypeConverters.numberFormatAmount.CurrencyDecimalSeparator;  // "0."
 					if (s.StartsWith (pattern))
 					{
 						s = "-" + s.Substring (1);
 					}
 				}
 
-				if (Converters.numberFormatNullParts == SettingsEnum.NullPartsZeroDash ||
-					Converters.numberFormatNullParts == SettingsEnum.NullPartsDashDash)  // termine par un tiret long ?
+				if (TypeConverters.numberFormatNullParts == SettingsEnum.NullPartsZeroDash ||
+					TypeConverters.numberFormatNullParts == SettingsEnum.NullPartsDashDash)  // termine par un tiret long ?
 				{
-					string pattern = Converters.numberFormatAmount.CurrencyDecimalSeparator + new string ('0', Converters.numberFormatAmount.CurrencyDecimalDigits);  // ".00"
+					string pattern = TypeConverters.numberFormatAmount.CurrencyDecimalSeparator + new string ('0', TypeConverters.numberFormatAmount.CurrencyDecimalDigits);  // ".00"
 					if (s.EndsWith (pattern))
 					{
 						s = s.Substring (0, s.Length-pattern.Length+1) + "—";  // tiret long
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 
 				if (neg)
 				{
-					if (Converters.numberFormatNegative == SettingsEnum.NegativeParentheses)
+					if (TypeConverters.numberFormatNegative == SettingsEnum.NegativeParentheses)
 					{
 						s = "(" + s + ")";
 					}
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 		#region Decimal
 		public static decimal? ParseDecimal(FormattedText text)
 		{
-			return Converters.ParseAmount (text.ToSimpleText ());
+			return TypeConverters.ParseAmount (text.ToSimpleText ());
 		}
 
 		public static decimal? ParseDecimal(string text)
@@ -294,7 +294,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 		#region Int
 		public static int? ParseInt(FormattedText text)
 		{
-			return Converters.ParseInt (text.ToSimpleText ());
+			return TypeConverters.ParseInt (text.ToSimpleText ());
 		}
 
 		public static int? ParseInt(string text)
@@ -326,14 +326,14 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 		#region Date
 		public static System.DateTime? ParseDate(FormattedText text)
 		{
-			return Converters.ParseDate (text.ToSimpleText ());
+			return TypeConverters.ParseDate (text.ToSimpleText ());
 		}
 
 		public static System.DateTime? ParseDate(string text)
 		{
 			//	Parse une date située dans n'importe quelle période.
 			System.DateTime? date;
-			Converters.ParseDate (text, System.DateTime.Today, null, null, out date);
+			TypeConverters.ParseDate (text, System.DateTime.Today, null, null, out date);
 			return date;
 		}
 
@@ -362,22 +362,22 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 
 			if (words.Length >= 1)
 			{
-				n1 = Converters.ParseInt (words[0]);
+				n1 = TypeConverters.ParseInt (words[0]);
 			}
 
 			if (words.Length >= 2)
 			{
-				n2 = Converters.ParseInt (words[1]);
+				n2 = TypeConverters.ParseInt (words[1]);
 			}
 
 			if (words.Length >= 3)
 			{
-				n3 = Converters.ParseInt (words[2]);
+				n3 = TypeConverters.ParseInt (words[2]);
 			}
 
 			int y, m, d;
 
-			if (Converters.dateFormatOrder == SettingsEnum.YearYMD)
+			if (TypeConverters.dateFormatOrder == SettingsEnum.YearYMD)
 			{
 				if (n1.HasValue)
 				{
@@ -497,7 +497,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 				d = date.Value.Day.ToString ("00");
 				m = date.Value.Month.ToString ("00");
 
-				if (Converters.dateFormatYear == SettingsEnum.YearDigits2)
+				if (TypeConverters.dateFormatYear == SettingsEnum.YearDigits2)
 				{
 					y = (date.Value.Year % 100).ToString ("00");
 				}
@@ -506,9 +506,9 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 					y = date.Value.Year.ToString ("0000");
 				}
 
-				string s = Converters.SettingsEnumToChar (Converters.dateFormatSeparator);
+				string s = TypeConverters.SettingsEnumToChar (TypeConverters.dateFormatSeparator);
 
-				if (Converters.dateFormatOrder == SettingsEnum.YearYMD)
+				if (TypeConverters.dateFormatOrder == SettingsEnum.YearYMD)
 				{
 					return y+s+m+s+d;
 				}
@@ -622,17 +622,17 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 		}
 
 
-		static Converters()
+		static TypeConverters()
 		{
 			//	Constructeur statique.
-			Converters.numberFormatAmount = new System.Globalization.CultureInfo ("fr-CH").NumberFormat;
+			TypeConverters.numberFormatAmount = new System.Globalization.CultureInfo ("fr-CH").NumberFormat;
 
-			Converters.numberFormatAmount.CurrencySymbol           = "";
-			Converters.numberFormatAmount.CurrencyDecimalSeparator = ".";
-			Converters.numberFormatAmount.CurrencyGroupSeparator   = " ";
-			Converters.numberFormatAmount.CurrencyGroupSizes       = new int[] { 3 };
-			Converters.numberFormatAmount.CurrencyPositivePattern  = 1;  // $n
-			Converters.numberFormatAmount.CurrencyNegativePattern  = 1;  // -$n
+			TypeConverters.numberFormatAmount.CurrencySymbol           = "";
+			TypeConverters.numberFormatAmount.CurrencyDecimalSeparator = ".";
+			TypeConverters.numberFormatAmount.CurrencyGroupSeparator   = " ";
+			TypeConverters.numberFormatAmount.CurrencyGroupSizes       = new int[] { 3 };
+			TypeConverters.numberFormatAmount.CurrencyPositivePattern  = 1;  // $n
+			TypeConverters.numberFormatAmount.CurrencyNegativePattern  = 1;  // -$n
 		}
 
 		private static readonly System.Globalization.NumberFormatInfo numberFormatAmount;

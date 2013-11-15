@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -78,7 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.date.HasValue)
 				{
-					var date = Helpers.Converters.DateToString (this.date);
+					var date = TypeConverters.DateToString (this.date);
 					return "Etat au " + date;
 				}
 				else

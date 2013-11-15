@@ -3,10 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -51,11 +50,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						string text;
 						if (this.details)
 						{
-							text = Helpers.Converters.ComputedAmountToString (cell.Value);
+							text = TypeConverters.ComputedAmountToString (cell.Value);
 						}
 						else
 						{
-							text = Helpers.Converters.AmountToString (cell.Value.Value.FinalAmount);
+							text = TypeConverters.AmountToString (cell.Value.Value.FinalAmount);
 						}
 
 						this.PaintText (graphics, textRect, text);

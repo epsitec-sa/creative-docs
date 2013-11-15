@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var timestamp  = e.Timestamp;
 				var eventType  = e.Type;
 
-				var date        = Helpers.Converters.DateToString (timestamp.Date);
+				var date        = TypeConverters.DateToString (timestamp.Date);
 				var glyph       = TimelineData.TypeToGlyph (eventType);
 				var type        = DataDescriptions.GetEventDescription (eventType);
 				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Valeur1);

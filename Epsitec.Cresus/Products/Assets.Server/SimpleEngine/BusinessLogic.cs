@@ -227,15 +227,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							switch (Format.GetFieldFormat (field))
 							{
 								case DecimalFormat.Rate:
-									line = Helpers.Converters.RateToString (d);
+									line = Helpers.TypeConverters.RateToString (d);
 									break;
 
 								case DecimalFormat.Amount:
-									line = Helpers.Converters.AmountToString (d);
+									line = Helpers.TypeConverters.AmountToString (d);
 									break;
 
 								case DecimalFormat.Real:
-									line = Helpers.Converters.DecimalToString (d);
+									line = Helpers.TypeConverters.DecimalToString (d);
 									break;
 							}
 						}
@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, field, false);
 						if (ca.HasValue)
 						{
-							line = Helpers.Converters.AmountToString (ca.Value.FinalAmount);
+							line = Helpers.TypeConverters.AmountToString (ca.Value.FinalAmount);
 						}
 						break;
 
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						var i = ObjectCalculator.GetObjectPropertyInt (obj, timestamp, field, false);
 						if (i.HasValue)
 						{
-							line = Helpers.Converters.IntToString (i);
+							line = Helpers.TypeConverters.IntToString (i);
 						}
 						break;
 
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						var da = ObjectCalculator.GetObjectPropertyDate (obj, timestamp, field, false);
 						if (da.HasValue)
 						{
-							line = Helpers.Converters.DateToString (da);
+							line = Helpers.TypeConverters.DateToString (da);
 						}
 						break;
 
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 			else
 			{
-				var d = Helpers.Converters.DateToString (timestamp.Date);
+				var d = Helpers.TypeConverters.DateToString (timestamp.Date);
 
 				if (eventType == EventType.Unknown)
 				{

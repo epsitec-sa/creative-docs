@@ -7,7 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -441,11 +441,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.computedAmount.GetValueOrDefault ().Rate)
 				{
-					return Helpers.Converters.ParseRate (this.argumentTextField.Text);
+					return TypeConverters.ParseRate (this.argumentTextField.Text);
 				}
 				else
 				{
-					return Helpers.Converters.ParseAmount (this.argumentTextField.Text);
+					return TypeConverters.ParseAmount (this.argumentTextField.Text);
 				}
 			}
 			set
@@ -465,11 +465,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.computedAmount.GetValueOrDefault ().Rate)
 			{
-				this.argumentTextField.Text = Helpers.Converters.RateToString (value);
+				this.argumentTextField.Text = TypeConverters.RateToString (value);
 			}
 			else
 			{
-				this.argumentTextField.Text = Helpers.Converters.AmountToString (value);
+				this.argumentTextField.Text = TypeConverters.AmountToString (value);
 			}
 
 			this.argumentTextField.SelectAll ();
@@ -479,7 +479,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return Helpers.Converters.ParseAmount (this.finalTextField.Text);
+				return TypeConverters.ParseAmount (this.finalTextField.Text);
 			}
 			set
 			{
@@ -494,7 +494,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void SetFinalValue(decimal? value)
 		{
-			this.finalTextField.Text = Helpers.Converters.AmountToString (value);
+			this.finalTextField.Text = TypeConverters.AmountToString (value);
 			this.finalTextField.SelectAll ();
 		}
 

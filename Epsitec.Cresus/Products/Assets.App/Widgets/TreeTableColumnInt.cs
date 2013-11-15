@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Server.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					if (cell.Value.HasValue)
 					{
 						var textRect = this.GetContentDeflateRectangle (rect);
-						string text = Helpers.Converters.IntToString (cell.Value);
+						string text = TypeConverters.IntToString (cell.Value);
 
 						this.PaintText (graphics, textRect, text);
 					}

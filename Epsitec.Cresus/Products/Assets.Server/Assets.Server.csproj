@@ -53,7 +53,7 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Helpers\Converters.cs" />
+    <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
     <Compile Include="SimpleEngine\BusinessLogic.cs" />
     <Compile Include="SimpleEngine\BypassNodesGetter.cs" />

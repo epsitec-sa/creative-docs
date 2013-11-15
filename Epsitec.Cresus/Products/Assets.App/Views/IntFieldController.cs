@@ -6,7 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.Server.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -151,12 +151,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private static string ConvIntToString(int? value)
 		{
-			return Helpers.Converters.IntToString (value);
+			return TypeConverters.IntToString (value);
 		}
 
 		private static int? ConvStringToInt(string text)
 		{
-			return Helpers.Converters.ParseInt (text);
+			return TypeConverters.ParseInt (text);
 		}
 
 

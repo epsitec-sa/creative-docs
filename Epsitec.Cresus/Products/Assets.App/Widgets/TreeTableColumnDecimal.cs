@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -52,15 +52,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						switch (this.format)
 						{
 							case DecimalFormat.Rate:
-								text = Helpers.Converters.RateToString (cell.Value);
+								text = TypeConverters.RateToString (cell.Value);
 								break;
 
 							case DecimalFormat.Amount:
-								text = Helpers.Converters.AmountToString (cell.Value);
+								text = TypeConverters.AmountToString (cell.Value);
 								break;
 
 							case DecimalFormat.Real:
-								text = Helpers.Converters.DecimalToString (cell.Value);
+								text = TypeConverters.DecimalToString (cell.Value);
 								break;
 						}
 
