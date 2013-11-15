@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.App.DataFillers
+namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public abstract class TreeTableColumnItem
 	{

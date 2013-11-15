@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.UpdateChildrensGeometry ();
 		}
 
-		public void SetColumnCells(int rank, DataFillers.TreeTableColumnItem columnItem)
+		public void SetColumnCells(int rank, TreeTableColumnItem columnItem)
 		{
 			var columnWidget = this.GetColumn (rank);
 			columnWidget.SetCells (columnItem);

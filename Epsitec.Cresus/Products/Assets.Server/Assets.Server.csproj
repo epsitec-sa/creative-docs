@@ -55,7 +55,16 @@
     </Compile>
     <Compile Include="BusinessLogic\Amortissements.cs" />
     <Compile Include="BusinessLogic\LogicDescriptions.cs" />
+    <Compile Include="DataFillers\AbstractTreeTableFiller.cs" />
+    <Compile Include="DataFillers\CategoriesTreeTableFiller.cs" />
+    <Compile Include="DataFillers\EventsCategoriesTreeTableFiller.cs" />
+    <Compile Include="DataFillers\EventsGroupsTreeTableFiller.cs" />
+    <Compile Include="DataFillers\EventsObjectsTreeTableFiller.cs" />
+    <Compile Include="DataFillers\GroupsTreeTableFiller.cs" />
+    <Compile Include="DataFillers\HistoryTreeTableFiller.cs" />
     <Compile Include="DataFillers\ITreeTableCell.cs" />
+    <Compile Include="DataFillers\ObjectsTreeTableFiller.cs" />
+    <Compile Include="DataFillers\SingleObjectsTreeTableFiller.cs" />
     <Compile Include="DataFillers\TreeTableCellComputedAmount.cs" />
     <Compile Include="DataFillers\TreeTableCellDate.cs" />
     <Compile Include="DataFillers\TreeTableCellDecimal.cs" />
@@ -65,7 +74,10 @@
     <Compile Include="DataFillers\TreeTableCellString.cs" />
     <Compile Include="DataFillers\TreeTableCellTree.cs" />
     <Compile Include="DataFillers\TreeTableColumnDescription.cs" />
+    <Compile Include="DataFillers\TreeTableColumnItem.cs" />
+    <Compile Include="DataFillers\TreeTableColumnItem`1.cs" />
     <Compile Include="DataFillers\TreeTableColumnType.cs" />
+    <Compile Include="DataFillers\TreeTableContentItem.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="NodesGetter\HistoryNodesGetter.cs" />
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />

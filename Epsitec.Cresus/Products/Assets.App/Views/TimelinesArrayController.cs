@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -1252,7 +1252,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor						accessor;
 		private readonly BaseType							baseType;
 		private readonly TreeNodesGetter					nodesGetter;
-		private readonly SingleObjectsTreeTableFiller			dataFiller;
+		private readonly SingleObjectsTreeTableFiller		dataFiller;
 		private readonly TimelinesArrayLogic				arrayLogic;
 		private readonly TimelinesArrayLogic.DataArray		dataArray;
 		private readonly string								title;

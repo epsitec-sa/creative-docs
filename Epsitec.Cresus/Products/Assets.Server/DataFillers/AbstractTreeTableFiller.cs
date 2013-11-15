@@ -3,11 +3,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.DataFillers
+namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public abstract class AbstractTreeTableFiller<T>
 		where T : struct
