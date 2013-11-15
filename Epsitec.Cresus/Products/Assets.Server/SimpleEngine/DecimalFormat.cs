@@ -4,9 +4,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public enum DecimalFormat2
+	public enum DecimalFormat
 	{
 		Unknown,
 		Real,

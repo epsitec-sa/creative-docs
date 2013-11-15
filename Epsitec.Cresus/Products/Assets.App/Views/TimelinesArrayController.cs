@@ -717,7 +717,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (timestamp.HasValue &&
 					!ObjectCalculator.IsExistingObject (obj, timestamp.Value))
 				{
-					nom = StaticDescriptions.OutOfDateName;
+					nom = DataDescriptions.OutOfDateName;
 				}
 
 				var cell = new TreeTableCellTree (true, node.Level, node.Type, nom, isSelected);

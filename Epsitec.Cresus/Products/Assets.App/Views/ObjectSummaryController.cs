@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.hasEvent && this.obj != null)
 				{
-					var s1 = StaticDescriptions.GetEventDescription (this.eventType);
+					var s1 = DataDescriptions.GetEventDescription (this.eventType);
 					var s2 = this.SinglePropertiesCount;
 
 					if (s2 <= 1)
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return null;
 			}
 
-			string text = StaticDescriptions.GetObjectFieldDescription (tile.Field);
+			string text = DataDescriptions.GetObjectFieldDescription (tile.Field);
 			return new SummaryControllerTile (text, alignment: ContentAlignment.MiddleRight, simpleText: true);
 		}
 
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 			}
 
-			string tooltip = StaticDescriptions.GetObjectFieldDescription (tile.Field);
+			string tooltip = DataDescriptions.GetObjectFieldDescription (tile.Field);
 			bool hilited   = this.IsHilited (tile.Field);
 			bool readOnly  = this.IsReadonly (tile.Field);
 

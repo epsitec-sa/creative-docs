@@ -45,8 +45,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
 
-		public static readonly int MaxValues = 2;
-
 		
 		public override string ToString()
 		{

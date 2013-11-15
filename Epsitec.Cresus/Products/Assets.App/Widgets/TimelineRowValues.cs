@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -58,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (this.HasMinMax)
 			{
-				for (int i=0; i<TimelineCellValue.MaxValues; i++)
+				for (int i=0; i<TimelineData.MaxValues; i++)
 				{
 					for (int rank = -1; rank <= this.VisibleCellCount; rank++)
 					{
@@ -92,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0 ||
 				(this.ValueDisplayMode & TimelineValueDisplayMode.Lines   ) != 0)
 			{
-				for (int i=0; i<TimelineCellValue.MaxValues; i++)
+				for (int i=0; i<TimelineData.MaxValues; i++)
 				{
 					var points = dots.Where (x => x.Index == i).Select (x => x.Point).ToArray ();
 					this.PaintSurfaces (graphics, points, i);

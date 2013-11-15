@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var date   = Helpers.Converters.DateToString (timestamp.Date);
 				var glyph  = TimelineData.TypeToGlyph (eventType);
-				var type   = StaticDescriptions.GetEventDescription (eventType);
+				var type   = DataDescriptions.GetEventDescription (eventType);
 				var nom    = ObjectCalculator.GetObjectPropertyString (this.DataObject, timestamp, ObjectField.Nom);
 				var family = ObjectCalculator.GetObjectPropertyString (this.DataObject, timestamp, ObjectField.Famille);
 

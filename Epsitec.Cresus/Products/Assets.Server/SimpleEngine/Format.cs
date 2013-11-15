@@ -3,11 +3,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public static class Format2
+	public static class Format
 	{
 		public static DecimalFormat GetFieldFormat(ObjectField objectField)
 		{

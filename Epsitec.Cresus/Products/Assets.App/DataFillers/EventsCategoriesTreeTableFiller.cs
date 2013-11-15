@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var date   = Helpers.Converters.DateToString (timestamp.Date);
 				var glyph  = TimelineData.TypeToGlyph (eventType);
-				var type   = StaticDescriptions.GetEventDescription (eventType);
+				var type   = DataDescriptions.GetEventDescription (eventType);
 				var taux   = ObjectCalculator.GetObjectPropertyDecimal (this.DataObject, timestamp, ObjectField.TauxAmortissement);
 				var typeAm = ObjectCalculator.GetObjectPropertyString  (this.DataObject, timestamp, ObjectField.TypeAmortissement);
 				var period = ObjectCalculator.GetObjectPropertyString  (this.DataObject, timestamp, ObjectField.Périodicité);

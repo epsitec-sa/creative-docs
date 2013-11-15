@@ -4,10 +4,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	[System.Flags]
-	public enum TimelineMode2
+	public enum TimelineMode
 	{
 		Compacted	= 0x00000001,
 		Expanded	= 0x00000002,

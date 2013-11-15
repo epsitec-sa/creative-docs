@@ -7,6 +7,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -120,15 +121,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ChangeMode(TimelineMode mode)
 		{
-			if (mode == Views.TimelineMode.Compacted)
+			if (mode == TimelineMode.Compacted)
 			{
-				this.timelineMode |=  Views.TimelineMode.Compacted;
-				this.timelineMode &= ~Views.TimelineMode.Expanded;
+				this.timelineMode |=  TimelineMode.Compacted;
+				this.timelineMode &= ~TimelineMode.Expanded;
 			}
-			else if (mode == Views.TimelineMode.Expanded)
+			else if (mode == TimelineMode.Expanded)
 			{
-				this.timelineMode |=  Views.TimelineMode.Expanded;
-				this.timelineMode &= ~Views.TimelineMode.Compacted;
+				this.timelineMode |=  TimelineMode.Expanded;
+				this.timelineMode &= ~TimelineMode.Compacted;
 			}
 			else
 			{

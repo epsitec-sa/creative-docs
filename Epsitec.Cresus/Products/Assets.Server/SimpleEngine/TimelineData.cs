@@ -4,18 +4,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-//using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
-
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public class TimelineData2
+	public class TimelineData
 	{
 		/// <summary>
 		/// Cette classe détermine le contenu d'une timeline de façon totalement indépendante
 		/// de la UI (notamment de la classe NavigationTimelineController).
 		/// </summary>
-		public TimelineData2(DataAccessor accessor, BaseType baseType)
+		public TimelineData(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
@@ -146,10 +143,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 						{
 							var cell = new TimelineCell
 							{
-								Timestamp     = t,
-								Glyph = glyph,
-								Tooltip       = BusinessLogic.GetTooltip (obj, t, type, 8),
-								Values        = new decimal?[] { v1, v2 },
+								Timestamp = t,
+								Glyph     = glyph,
+								Tooltip   = BusinessLogic.GetTooltip (obj, t, type, 8),
+								Values    = new decimal?[] { v1, v2 },
 							};
 
 							index = this.GetIndex (t);
@@ -159,10 +156,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 						{
 							var cell = new TimelineCell
 							{
-								Timestamp     = this.cells[index].Timestamp,
-								Glyph = glyph,
-								Tooltip       = BusinessLogic.GetTooltip (obj, t, type, 8),
-								Values        = new decimal?[] { v1, v2 },
+								Timestamp = this.cells[index].Timestamp,
+								Glyph     = glyph,
+								Tooltip   = BusinessLogic.GetTooltip (obj, t, type, 8),
+								Values    = new decimal?[] { v1, v2 },
 							};
 
 							this.cells[index] = cell;
@@ -187,9 +184,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				var cell = new TimelineCell
 				{
-					Timestamp     = new Timestamp(date.Value, 0),
-					Glyph = TimelineGlyph.Empty,
-					Tooltip       = tooltip,
+					Timestamp = new Timestamp(date.Value, 0),
+					Glyph     = TimelineGlyph.Empty,
+					Tooltip   = tooltip,
 				};
 
 				//	On calcule l'index où insérer la cellule, pour que la liste reste
@@ -402,6 +399,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			public decimal?[]		Values;
 		}
 
+
+		public static readonly int MaxValues = 2;
 
 		private readonly DataAccessor			accessor;
 		private readonly BaseType				baseType;

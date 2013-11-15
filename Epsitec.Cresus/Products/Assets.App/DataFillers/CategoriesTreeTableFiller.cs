@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				if (this.Timestamp.HasValue &&
 					!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
 				{
-					nom = StaticDescriptions.OutOfDateName;
+					nom = DataDescriptions.OutOfDateName;
 				}
 
 				var sf = new TreeTableCellTree    (true, level, type, nom, isSelected: (i == selection));

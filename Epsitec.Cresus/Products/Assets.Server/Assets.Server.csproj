@@ -53,10 +53,18 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Helpers\Converters.cs" />
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
+    <Compile Include="SimpleEngine\BusinessLogic.cs" />
     <Compile Include="SimpleEngine\BypassNodesGetter.cs" />
     <Compile Include="SimpleEngine\ComputedAmount.cs" />
     <Compile Include="SimpleEngine\BaseType.cs" />
+    <Compile Include="SimpleEngine\DataDescriptions.cs" />
+    <Compile Include="SimpleEngine\DecimalFormat.cs" />
+    <Compile Include="SimpleEngine\Format.cs" />
+    <Compile Include="SimpleEngine\TimelineData.cs" />
+    <Compile Include="SimpleEngine\TimelineGlyph.cs" />
+    <Compile Include="SimpleEngine\TimelineMode.cs" />
     <Compile Include="SimpleEngine\TreeNodeOutputMode.cs" />
     <Compile Include="SimpleEngine\TreeNodesGetter.cs" />
     <Compile Include="SimpleEngine\LevelNodesGetter.cs" />
