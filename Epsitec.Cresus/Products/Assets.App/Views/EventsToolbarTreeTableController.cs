@@ -3,10 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Popups;
-using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.NodesGetter;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views

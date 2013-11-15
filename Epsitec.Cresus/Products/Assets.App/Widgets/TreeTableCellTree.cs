@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.Server.NodesGetter;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {

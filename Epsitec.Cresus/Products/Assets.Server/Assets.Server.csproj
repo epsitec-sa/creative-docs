@@ -56,7 +56,7 @@
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
     <Compile Include="SimpleEngine\BusinessLogic.cs" />
-    <Compile Include="SimpleEngine\BypassNodesGetter.cs" />
+    <Compile Include="NodesGetter\BypassNodesGetter.cs" />
     <Compile Include="SimpleEngine\ComputedAmount.cs" />
     <Compile Include="SimpleEngine\BaseType.cs" />
     <Compile Include="SimpleEngine\DataDescriptions.cs" />
@@ -65,17 +65,17 @@
     <Compile Include="SimpleEngine\TimelineData.cs" />
     <Compile Include="SimpleEngine\TimelineGlyph.cs" />
     <Compile Include="SimpleEngine\TimelineMode.cs" />
-    <Compile Include="SimpleEngine\TreeNodeOutputMode.cs" />
-    <Compile Include="SimpleEngine\TreeNodesGetter.cs" />
-    <Compile Include="SimpleEngine\LevelNodesGetter.cs" />
+    <Compile Include="NodesGetter\TreeNodeOutputMode.cs" />
+    <Compile Include="NodesGetter\TreeNodesGetter.cs" />
+    <Compile Include="NodesGetter\LevelNodesGetter.cs" />
     <Compile Include="SimpleEngine\DataGuidProperty.cs" />
-    <Compile Include="SimpleEngine\ParentPositionNode.cs" />
-    <Compile Include="SimpleEngine\ParentPositionNodesGetter.cs" />
-    <Compile Include="SimpleEngine\TreeNode.cs" />
-    <Compile Include="SimpleEngine\LevelNode.cs" />
-    <Compile Include="SimpleEngine\ObjectEventsNodesGetter.cs" />
-    <Compile Include="SimpleEngine\AbstractNodesGetter.cs" />
-    <Compile Include="SimpleEngine\GuidNode.cs" />
+    <Compile Include="NodesGetter\ParentPositionNode.cs" />
+    <Compile Include="NodesGetter\ParentPositionNodesGetter.cs" />
+    <Compile Include="NodesGetter\TreeNode.cs" />
+    <Compile Include="NodesGetter\LevelNode.cs" />
+    <Compile Include="NodesGetter\ObjectEventsNodesGetter.cs" />
+    <Compile Include="NodesGetter\AbstractNodesGetter.cs" />
+    <Compile Include="NodesGetter\GuidNode.cs" />
     <Compile Include="SimpleEngine\ObjectCalculator.cs" />
     <Compile Include="SimpleEngine\GuidList.cs" />
     <Compile Include="SimpleEngine\DataDateProperty.cs" />
@@ -97,8 +97,8 @@
     <Compile Include="SimpleEngine\DataStringProperty.cs" />
     <Compile Include="SimpleEngine\Timestamp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleEngine\TreeObjectsNodesGetter.cs" />
-    <Compile Include="SimpleEngine\NodeType.cs" />
+    <Compile Include="NodesGetter\TreeObjectsNodesGetter.cs" />
+    <Compile Include="NodesGetter\NodeType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Solution Items\Epsitec.Cresus.snk">
