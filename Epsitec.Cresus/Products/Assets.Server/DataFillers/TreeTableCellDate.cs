@@ -3,13 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
-namespace Epsitec.Cresus.Assets.App.Widgets
+namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public struct TreeTableCellGlyph : ITreeTableCell
+	public struct TreeTableCellDate : ITreeTableCell
 	{
-		public TreeTableCellGlyph(bool isValid, TimelineGlyph? value, bool isSelected = false, bool isError = false)
+		public TreeTableCellDate(bool isValid, System.DateTime? value, bool isSelected = false, bool isError = false)
 		{
 			this.IsValid    = isValid;
 			this.Value      = value;
@@ -19,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		public readonly bool					IsValid;
-		public readonly TimelineGlyph?			Value;
+		public readonly System.DateTime?		Value;
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
 

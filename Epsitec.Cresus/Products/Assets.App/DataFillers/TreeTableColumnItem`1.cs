@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {

@@ -3,12 +3,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Widgets
+namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public struct TreeTableCellString : ITreeTableCell
+	public struct TreeTableCellComputedAmount : ITreeTableCell
 	{
-		public TreeTableCellString(bool isValid, string value, bool isSelected = false, bool isError = false)
+		public TreeTableCellComputedAmount(bool isValid, ComputedAmount? value, bool isSelected = false, bool isError = false)
 		{
 			this.IsValid    = isValid;
 			this.Value      = value;
@@ -18,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		public readonly bool					IsValid;
-		public readonly string					Value;
+		public readonly ComputedAmount?			Value;
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
 

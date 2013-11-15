@@ -3,14 +3,17 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.NodesGetter;
 
-namespace Epsitec.Cresus.Assets.App.Widgets
+namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public struct TreeTableCellInt : ITreeTableCell
+	public struct TreeTableCellTree : ITreeTableCell
 	{
-		public TreeTableCellInt(bool isValid, int? value, bool isSelected = false, bool isError = false)
+		public TreeTableCellTree(bool isValid, int level, NodeType type, string value, bool isSelected = false, bool isError = false)
 		{
 			this.IsValid    = isValid;
+			this.Level      = level;
+			this.Type       = type;
 			this.Value      = value;
 			this.IsSelected = isSelected;
 			this.IsError    = isError;
@@ -18,7 +21,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		public readonly bool					IsValid;
-		public readonly int?					Value;
+		public readonly int						Level;
+		public readonly NodeType				Type;
+		public readonly string					Value;
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
 
@@ -32,6 +37,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				buffer.Append ("invalid ");
 			}
 
+			buffer.Append (this.Level);
+			buffer.Append (" ");
+			buffer.Append (this.Type);
+			buffer.Append (" ");
 			buffer.Append (this.Value);
 			buffer.Append (" ");
 

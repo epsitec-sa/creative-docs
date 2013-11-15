@@ -10,9 +10,7 @@ using Epsitec.Cresus.Assets.Server.NodesGetter;
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
-	/// Ce contrôleur simplifie l'usage d'un NavigationTreeTableController, en supposant
-	/// une liste complète connue à l'avance.
-	/// A n'utiliser que pour les listes pas trop longues !
+	/// Ce contrôleur pilote un NavigationTreeTableController d'après un filler.
 	/// </summary>
 	public class SimpleTreeTableController
 	{

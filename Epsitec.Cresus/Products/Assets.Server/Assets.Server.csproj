@@ -55,6 +55,15 @@
     </Compile>
     <Compile Include="BusinessLogic\Amortissements.cs" />
     <Compile Include="BusinessLogic\LogicDescriptions.cs" />
+    <Compile Include="DataFillers\ITreeTableCell.cs" />
+    <Compile Include="DataFillers\TreeTableCellComputedAmount.cs" />
+    <Compile Include="DataFillers\TreeTableCellDate.cs" />
+    <Compile Include="DataFillers\TreeTableCellDecimal.cs" />
+    <Compile Include="DataFillers\TreeTableCellGlyph.cs" />
+    <Compile Include="DataFillers\TreeTableCellGuid.cs" />
+    <Compile Include="DataFillers\TreeTableCellInt.cs" />
+    <Compile Include="DataFillers\TreeTableCellString.cs" />
+    <Compile Include="DataFillers\TreeTableCellTree.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="NodesGetter\HistoryNodesGetter.cs" />
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />

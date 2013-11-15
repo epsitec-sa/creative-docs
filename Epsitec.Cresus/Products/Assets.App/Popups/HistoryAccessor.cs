@@ -87,8 +87,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public Timestamp? GetTimestamp(int row)
 		{
 			var node = this.getter[row];
-			var e = this.obj.GetEvent (node.Guid);
-			return e.Timestamp;
+			if (!node.IsEmpty)
+			{
+				var e = this.obj.GetEvent (node.Guid);
+				if (e != null)
+				{
+					return e.Timestamp;
+				}
+			}
+
+			return null;
 		}
 
 
