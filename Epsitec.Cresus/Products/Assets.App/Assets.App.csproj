@@ -75,7 +75,7 @@
     <Compile Include="Controllers\TimelineCellController.cs" />
     <Compile Include="Converters\TimelineCellConverter.cs" />
     <Compile Include="AssetsUI.cs" />
-    <Compile Include="DataFillers\TreeTableFiller.cs" />
+    <Compile Include="Helpers\TreeTableFiller.cs" />
     <Compile Include="EventHandler.cs" />
     <Compile Include="Helpers\Text.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
@@ -305,6 +305,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="DataFillers\" />
     <Folder Include="Resources\Assets.App\SourceCode\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
