@@ -28,7 +28,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.nodesGetter.UpdateData (TreeNodeOutputMode.OnlyFinals);
 
-			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, BaseType.Categories, this.controller, this.nodesGetter);
+			//?this.dataFiller = new CategoriesTreeTableFiller (this.accessor, BaseType.Categories, this.controller, this.nodesGetter);
+			this.dataFiller2 = new CategoriesTreeTableFiller2 (this.accessor, BaseType.Categories, this.nodesGetter);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -64,7 +65,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.CreateUI (this.mainFrameBox, headerHeight: CategoriesPopup.HeaderHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			this.dataFiller.UpdateColumns ();
+			//?this.dataFiller.UpdateColumns ();
+			TreeTableFiller2<TreeNode>.FillColumns (this.dataFiller2, this.controller);
 			this.UpdateController ();
 		}
 
@@ -146,7 +148,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				selection -= this.controller.TopVisibleRow;
 			}
 
-			this.dataFiller.UpdateContent (firstRow, count, selection);
+			//?this.dataFiller.UpdateContent (firstRow, count, selection);
+			TreeTableFiller2<TreeNode>.FillContent (this.dataFiller2, this.controller, firstRow, count, selection);
 		}
 
 
@@ -172,7 +175,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
 		private readonly TreeNodesGetter				nodesGetter;
-		private readonly CategoriesTreeTableFiller		dataFiller;
+		//?private readonly CategoriesTreeTableFiller		dataFiller;
+		private readonly CategoriesTreeTableFiller2		dataFiller2;
 
 		private int										visibleSelectedRow;
 	}
