@@ -53,9 +53,11 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BusinessLogic\Amortissements.cs" />
+    <Compile Include="BusinessLogic\Descriptions.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
-    <Compile Include="SimpleEngine\BusinessLogic.cs" />
+    <Compile Include="BusinessLogic\BusinessLogic.cs" />
     <Compile Include="NodesGetter\BypassNodesGetter.cs" />
     <Compile Include="SimpleEngine\ComputedAmount.cs" />
     <Compile Include="SimpleEngine\BaseType.cs" />
@@ -76,7 +78,7 @@
     <Compile Include="NodesGetter\ObjectEventsNodesGetter.cs" />
     <Compile Include="NodesGetter\AbstractNodesGetter.cs" />
     <Compile Include="NodesGetter\GuidNode.cs" />
-    <Compile Include="SimpleEngine\ObjectCalculator.cs" />
+    <Compile Include="BusinessLogic\ObjectCalculator.cs" />
     <Compile Include="SimpleEngine\GuidList.cs" />
     <Compile Include="SimpleEngine\DataDateProperty.cs" />
     <Compile Include="SimpleEngine\DataComputedAmountProperty.cs" />

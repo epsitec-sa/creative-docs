@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+
 		#region IEnumerable<T> Members
 		public IEnumerator<T> GetEnumerator()
 		{
@@ -37,6 +38,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return this.list.GetEnumerator ();
 		}
 		#endregion
+
 
 		public void Clear()
 		{
@@ -68,6 +70,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.list.RemoveAt (index);
 		}
 
+
 		public T this[Guid key]
 		{
 			get
@@ -97,6 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 		}
+
 
 		private readonly List<T>				list;
 		private readonly Dictionary<Guid, T>	dict;

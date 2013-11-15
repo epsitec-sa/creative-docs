@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -17,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor = accessor;
 			this.mainToolbar = toolbar;
 
-			this.businessLogic = new BusinessLogic (this.accessor);
+			this.amortissements = new Amortissements (this.accessor);
 		}
 
 
@@ -105,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected readonly DataAccessor			accessor;
 		protected readonly MainToolbar			mainToolbar;
-		protected readonly BusinessLogic		businessLogic;
+		protected readonly Amortissements		amortissements;
 
 		protected BaseType						baseType;
 	}

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
@@ -145,7 +146,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							{
 								Timestamp = t,
 								Glyph     = glyph,
-								Tooltip   = BusinessLogic.GetTooltip (obj, t, type, 8),
+								Tooltip   = Descriptions.GetTooltip (obj, t, type, 8),
 								Values    = new decimal?[] { v1, v2 },
 							};
 
@@ -158,7 +159,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							{
 								Timestamp = this.cells[index].Timestamp,
 								Glyph     = glyph,
-								Tooltip   = BusinessLogic.GetTooltip (obj, t, type, 8),
+								Tooltip   = Descriptions.GetTooltip (obj, t, type, 8),
 								Values    = new decimal?[] { v1, v2 },
 							};
 

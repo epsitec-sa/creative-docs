@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -62,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private DataCell EventToCell(DataObject obj, DataEvent e)
 		{
 			var glyph      = TimelineData.TypeToGlyph (e.Type);
-			string tooltip = BusinessLogic.GetTooltip (obj, e.Timestamp, e.Type, 8);
+			string tooltip = Descriptions.GetTooltip (obj, e.Timestamp, e.Type, 8);
 
 			return new DataCell (glyph, false, tooltip);
 		}

@@ -8,6 +8,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -387,11 +388,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 						if (popup.RadioSelected == "one")
 						{
 							var guid = this.listController.SelectedGuid;
-							this.businessLogic.GeneratesAmortissementsAuto (guid);
+							this.amortissements.GeneratesAmortissementsAuto (guid);
 						}
 						else
 						{
-							this.businessLogic.GeneratesAmortissementsAuto ();
+							this.amortissements.GeneratesAmortissementsAuto ();
 						}
 
 						this.Update ();
