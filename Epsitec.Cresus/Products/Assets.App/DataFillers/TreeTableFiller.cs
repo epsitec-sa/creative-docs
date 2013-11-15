@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
-	public static class TreeTableFiller2<T>
+	public static class TreeTableFiller<T>
 		where T : struct
 	{
 		public static void FillColumns(AbstractTreeTableFiller<T> filler, NavigationTreeTableController controller)

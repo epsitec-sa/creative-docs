@@ -138,48 +138,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.treeTable.SetColumnCells (rank, columnItem);
 		}
-
-#if false
-		public void SetColumnCells(int rank, TreeTableCellTree[] cells)
-		{
-			this.treeTable.SetColumnCells (rank, cells);
-		}
-
-		public void SetColumnCells(int rank, TreeTableCellString[] cells)
-		{
-			this.treeTable.SetColumnCells (rank, cells);
-		}
-
-		public void SetColumnCells(int rank, TreeTableCellDecimal[] cells)
-		{
-			this.treeTable.SetColumnCells (rank, cells);
-		}
-
-		public void SetColumnCells(int rank, TreeTableCellComputedAmount[] cells)
-		{
-			this.treeTable.SetColumnCells (rank, cells);
-		}
-
-		public void SetColumnCells(int rank, TreeTableCellDate[] cells)
-		{
-			this.treeTable.SetColumnCells (rank, cells);
-		}
-
-		public void SetColumnCells(int rank, TreeTableCellInt[] cells)
-		{
-			this.treeTable.SetColumnCells (rank, cells);
-		}
-
-		public void SetColumnCells(int rank, TreeTableCellGlyph[] cells)
-		{
-			this.treeTable.SetColumnCells (rank, cells);
-		}
-
-		public void SetColumnCells(int rank, TreeTableCellGuid[] cells)
-		{
-			this.treeTable.SetColumnCells (rank, cells);
-		}
-#endif
 		#endregion
 		#endregion
 

@@ -25,11 +25,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Categories);
 			this.nodesGetter = new TreeNodesGetter (this.accessor, BaseType.Categories, primaryNodesGetter);
-
 			this.nodesGetter.UpdateData (TreeNodeOutputMode.OnlyFinals);
 
-			//?this.dataFiller = new CategoriesTreeTableFiller (this.accessor, BaseType.Categories, this.controller, this.nodesGetter);
-			this.dataFiller2 = new CategoriesTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodesGetter);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -65,8 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.CreateUI (this.mainFrameBox, headerHeight: CategoriesPopup.HeaderHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			//?this.dataFiller.UpdateColumns ();
-			TreeTableFiller2<TreeNode>.FillColumns (this.dataFiller2, this.controller);
+			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
 			this.UpdateController ();
 		}
 
@@ -148,8 +145,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				selection -= this.controller.TopVisibleRow;
 			}
 
-			//?this.dataFiller.UpdateContent (firstRow, count, selection);
-			TreeTableFiller2<TreeNode>.FillContent (this.dataFiller2, this.controller, firstRow, count, selection);
+			TreeTableFiller<TreeNode>.FillContent (this.dataFiller, this.controller, firstRow, count, selection);
 		}
 
 
@@ -175,8 +171,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
 		private readonly TreeNodesGetter				nodesGetter;
-		//?private readonly CategoriesTreeTableFiller		dataFiller;
-		private readonly CategoriesTreeTableFiller		dataFiller2;
+		private readonly CategoriesTreeTableFiller		dataFiller;
 
 		private int										visibleSelectedRow;
 	}

@@ -40,8 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.obj = this.accessor.GetObject (this.baseType, this.objectGuid);
 
 					this.NodesGetter.DataObject = this.obj;
-					//?this.dataFiller.DataObject = this.obj;
-					this.dataFiller2.DataObject = this.obj;
+					this.dataFiller.DataObject = this.obj;
 
 					this.UpdateController ();
 					this.UpdateToolbar ();
@@ -67,20 +66,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (this.baseType)
 			{
 				case BaseType.Objects:
-					this.dataFiller2 = new EventsObjectsTreeTableFiller (this.accessor, this.nodesGetter);
+					this.dataFiller = new EventsObjectsTreeTableFiller (this.accessor, this.nodesGetter);
 					break;
 
 				case BaseType.Categories:
-					this.dataFiller2 = new EventsCategoriesTreeTableFiller (this.accessor, this.nodesGetter);
+					this.dataFiller = new EventsCategoriesTreeTableFiller (this.accessor, this.nodesGetter);
 					break;
 
 				case BaseType.Groups:
-					this.dataFiller2 = new EventsGroupsTreeTableFiller (this.accessor, this.nodesGetter);
+					this.dataFiller = new EventsGroupsTreeTableFiller (this.accessor, this.nodesGetter);
 					break;
 			}
 
-			//?this.dataFiller.UpdateColumns ();
-			TreeTableFiller2<GuidNode>.FillColumns (this.dataFiller2, this.controller);
+			TreeTableFiller<GuidNode>.FillColumns (this.dataFiller, this.controller);
 
 			this.UpdateController ();
 			this.UpdateToolbar ();

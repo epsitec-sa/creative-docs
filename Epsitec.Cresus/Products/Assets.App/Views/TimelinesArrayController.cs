@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
 			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
 
-			this.dataFiller = new ObjectsTreeTableFiller3 (this.accessor, this.baseType, this.nodesGetter);
+			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.baseType, this.nodesGetter);
 
 			this.arrayLogic = new TimelinesArrayLogic (this.accessor, this.baseType);
 			this.dataArray = new TimelinesArrayLogic.DataArray ();
@@ -1252,7 +1252,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor						accessor;
 		private readonly BaseType							baseType;
 		private readonly TreeNodesGetter					nodesGetter;
-		private readonly ObjectsTreeTableFiller3			dataFiller;
+		private readonly SingleObjectsTreeTableFiller			dataFiller;
 		private readonly TimelinesArrayLogic				arrayLogic;
 		private readonly TimelinesArrayLogic.DataArray		dataArray;
 		private readonly string								title;

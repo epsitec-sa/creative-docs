@@ -243,8 +243,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				selection -= this.controller.TopVisibleRow;
 			}
 
-			//?this.dataFiller.UpdateContent (firstRow, count, selection);
-			TreeTableFiller2<T>.FillContent (this.dataFiller2, this.controller, firstRow, count, selection);
+			TreeTableFiller<T>.FillContent (this.dataFiller, this.controller, firstRow, count, selection);
 		}
 
 		protected virtual void UpdateToolbar()
@@ -365,8 +364,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected string						title;
 		protected bool							hasTreeOperations;
 		protected AbstractNodesGetter<T>		nodesGetter;
-		//?protected AbstractTreeTableFiller		dataFiller;
-		protected AbstractTreeTableFiller<T>	dataFiller2;
+		protected AbstractTreeTableFiller<T>	dataFiller;
 		protected TopTitle						topTitle;
 		protected NavigationTreeTableController	controller;
 		protected int							selectedRow;
