@@ -714,7 +714,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.ContentChanged.Raise (this, crop);
 		}
 
-		public event EventHandler<bool> ContentChanged;
+		public event EventExtensions.EventHandler<bool> ContentChanged;
 
 
 		private void OnTreeButtonClicked(int row, NodeType type)
@@ -722,7 +722,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.TreeButtonClicked.Raise (this, row, type);
 		}
 
-		public event EventHandler<int, NodeType> TreeButtonClicked;
+		public event EventExtensions.EventHandler<int, NodeType> TreeButtonClicked;
 		#endregion
 
 
@@ -739,26 +739,5 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private int										footerHeight;
 		private int										rowHeight;
 		private TreeTableHoverMode						hoverMode;
-	}
-
-	public delegate void EventHandler<T>(object sender, T val1);
-	public delegate void EventHandler<T1, T2>(object sender, T1 val1, T2 val2);
-
-	public static class EventExtensions
-	{
-		public static void Raise<T>(this EventHandler<T> handler, object sender, T val1)
-		{
-			if (handler != null)
-			{
-				handler (sender, val1);
-			}
-		}
-		public static void Raise<T1, T2>(this EventHandler<T1, T2> handler, object sender, T1 val1, T2 val2)
-		{
-			if (handler != null)
-			{
-				handler (sender, val1, val2);
-			}
-		}
 	}
 }
