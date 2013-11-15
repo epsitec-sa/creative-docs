@@ -1,5 +1,5 @@
-﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
@@ -102,14 +102,29 @@ namespace Epsitec.Aider.Rules
 
 		private void CheckParishIsParishOrRegionGroup(AiderUserEntity user)
 		{
+			if (user.EnableGroupEditionParish)
+			{
+				if ((user.Parish.IsNull ()) ||
+					(user.Parish.IsParish () == false))
+				{
+					Logic.BusinessRuleException (user, "L'utilisateur doit être rattaché à une paroisse.");
+				}
+			}
+			if (user.EnableGroupEditionRegion)
+			{
+				if ((user.Parish.IsNull ()) ||
+					((user.Parish.IsParish () == false) && (user.Parish.IsRegion () == false)))
+				{
+					Logic.BusinessRuleException (user, "L'utilisateur doit être rattaché à une paroisse ou région.");
+				}
+			}
+
 			if (user.Parish.IsNull () || user.Parish.IsParish () || user.Parish.IsRegion ())
 			{
 				return;
 			}
 
-			var message = "L'utilisateur n'est pas rattaché à un groupe de type paroisse ou région";
-
-			Logic.BusinessRuleException (user, message);
+			Logic.BusinessRuleException (user, "L'utilisateur doit être rattaché à une paroisse ou région.");
 		}
 
 		private void CheckEmail(AiderUserEntity user)

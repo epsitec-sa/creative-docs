@@ -16,6 +16,7 @@ using Epsitec.Cresus.Core.Metadata;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Override
 {
@@ -75,6 +76,34 @@ namespace Epsitec.Aider.Override
 
 		private IFilter GetAiderMailingAdditionalFilter(AiderMailingEntity example)
 		{
+			var user = this.UserManager.AuthenticatedUser;
+			var path = user.ParishGroupPathCache;
+
+			if ((user.EnableGroupEditionCanton) ||
+				(user.HasPowerLevel (UserPowerLevel.Administrator)))
+			{
+				return null;
+			}
+
+			if ((string.IsNullOrEmpty (path)) ||
+				((path.Length < 5) && (user.EnableGroupEditionRegion)) ||
+				((path.Length < 10) && (user.EnableGroupEditionParish)))
+			{
+				Logic.BusinessRuleException (user, TextFormatter.FormatText ("L'utilisateur", user.DisplayName, "n'a pas de paroisse ou région associée."));
+			}
+			
+			if (user.EnableGroupEditionRegion)
+			{
+				path = path.Substring (0, 5);
+				return new LambdaFilter<AiderMailingEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, path));
+			}
+			if (user.EnableGroupEditionParish)
+			{
+				return new LambdaFilter<AiderMailingEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, path));
+			}
+
+			return null;
+#if false
 			var context = this.UserManager.BusinessContext;
 			var mailing = context.GetByExample (example).FirstOrDefault ();
 
@@ -93,6 +122,7 @@ namespace Epsitec.Aider.Override
 			{
 				return new LambdaFilter<AiderMailingEntity> (x => SqlMethods.Like ("ko", "ok"));
 			}
+#endif
 		}
 
 		public override IFilter GetScopeFilter(DataSetMetadata dataSetMetadata, AbstractEntity example)
