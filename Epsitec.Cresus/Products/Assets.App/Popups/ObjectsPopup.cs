@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 
 			//?this.dataFiller = new ObjectsTreeTableFiller (this.accessor, BaseType.Objects, this.controller, this.nodesGetter);
-			this.dataFiller2 = new ObjectsTreeTableFiller2 (this.accessor, BaseType.Objects, this.nodesGetter);
+			this.dataFiller2 = new ObjectsTreeTableFiller2 (this.accessor, this.nodesGetter);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)

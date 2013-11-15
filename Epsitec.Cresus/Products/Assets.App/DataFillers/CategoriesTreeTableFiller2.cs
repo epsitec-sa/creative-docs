@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 {
 	public class CategoriesTreeTableFiller2 : AbstractTreeTableFiller2<TreeNode>
 	{
-		public CategoriesTreeTableFiller2(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<TreeNode> nodesGetter)
-			: base (accessor, baseType, nodesGetter)
+		public CategoriesTreeTableFiller2(DataAccessor accessor, AbstractNodesGetter<TreeNode> nodesGetter)
+			: base (accessor, nodesGetter)
 		{
 		}
 
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var guid  = node.Guid;
 				var level = node.Level;
 				var type  = node.Type;
-				var obj   = this.accessor.GetObject (this.baseType, guid);
+				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
 
 				var nom    = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Nom);
 				var numéro = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Numéro);

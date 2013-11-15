@@ -13,8 +13,9 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 	public class ObjectsTreeTableFiller3 : AbstractTreeTableFiller2<TreeNode>
 	{
 		public ObjectsTreeTableFiller3(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<TreeNode> nodesGetter)
-			: base (accessor, baseType, nodesGetter)
+			: base (accessor, nodesGetter)
 		{
+			this.baseType = baseType;
 		}
 
 
@@ -66,5 +67,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 			return content;
 		}
+
+
+		private readonly BaseType baseType;
 	}
 }

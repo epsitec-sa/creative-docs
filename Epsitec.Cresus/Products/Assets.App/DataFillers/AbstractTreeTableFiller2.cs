@@ -12,10 +12,9 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 	public abstract class AbstractTreeTableFiller2<T>
 		where T : struct
 	{
-		public AbstractTreeTableFiller2(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<T> nodesGetter)
+		public AbstractTreeTableFiller2(DataAccessor accessor, AbstractNodesGetter<T> nodesGetter)
 		{
 			this.accessor    = accessor;
-			this.baseType    = baseType;
 			this.nodesGetter = nodesGetter;
 		}
 
@@ -32,7 +31,6 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 
 		protected readonly DataAccessor				accessor;
-		protected readonly BaseType					baseType;
 		protected readonly AbstractNodesGetter<T>	nodesGetter;
 	}
 }

@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 {
 	public class EventsGroupsTreeTableFiller2 : AbstractTreeTableFiller2<GuidNode>
 	{
-		public EventsGroupsTreeTableFiller2(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<GuidNode> nodesGetter)
-			: base (accessor, baseType, nodesGetter)
+		public EventsGroupsTreeTableFiller2(DataAccessor accessor, AbstractNodesGetter<GuidNode> nodesGetter)
+			: base (accessor, nodesGetter)
 		{
 		}
 
