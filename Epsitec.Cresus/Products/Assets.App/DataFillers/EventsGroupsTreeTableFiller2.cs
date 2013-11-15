@@ -1,0 +1,90 @@
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using System.Collections.Generic;
+using System.Linq;
+using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.Helpers;
+using Epsitec.Cresus.Assets.Server.NodesGetter;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
+
+namespace Epsitec.Cresus.Assets.App.DataFillers
+{
+	public class EventsGroupsTreeTableFiller2 : AbstractTreeTableFiller2<GuidNode>
+	{
+		public EventsGroupsTreeTableFiller2(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<GuidNode> nodesGetter)
+			: base (accessor, baseType, nodesGetter)
+		{
+		}
+
+
+		public override TreeTableColumnDescription[] Columns
+		{
+			get
+			{
+				var list = new List<TreeTableColumnDescription> ();
+
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  70, "Date"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,   20, ""));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 110, "Type"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 250, "Membre"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Famille"));
+
+				return list.ToArray ();
+			}
+		}
+
+		public override TreeTableContentItem GetContent(int firstRow, int count, int selection)
+		{
+			var c1 = new TreeTableColumnItem<TreeTableCellString> ();
+			var c2 = new TreeTableColumnItem<TreeTableCellGlyph> ();
+			var c3 = new TreeTableColumnItem<TreeTableCellString> ();
+			var c4 = new TreeTableColumnItem<TreeTableCellString> ();
+			var c5 = new TreeTableColumnItem<TreeTableCellString> ();
+
+			for (int i=0; i<count; i++)
+			{
+				if (firstRow+i >= this.nodesGetter.Count)
+				{
+					break;
+				}
+
+				var node = this.nodesGetter[firstRow+i];
+				var guid = node.Guid;
+				var e    = this.DataObject.GetEvent (guid);
+
+				var timestamp  = e.Timestamp;
+				var eventType  = e.Type;
+
+				var date   = TypeConverters.DateToString (timestamp.Date);
+				var glyph  = TimelineData.TypeToGlyph (eventType);
+				var type   = DataDescriptions.GetEventDescription (eventType);
+				var nom    = ObjectCalculator.GetObjectPropertyString (this.DataObject, timestamp, ObjectField.Nom);
+				var family = ObjectCalculator.GetObjectPropertyString (this.DataObject, timestamp, ObjectField.Famille);
+
+				var s1 = new TreeTableCellString (true, date,   isSelected: (i == selection));
+				var s2 = new TreeTableCellGlyph  (true, glyph,  isSelected: (i == selection));
+				var s3 = new TreeTableCellString (true, type,   isSelected: (i == selection));
+				var s4 = new TreeTableCellString (true, nom,    isSelected: (i == selection));
+				var s5 = new TreeTableCellString (true, family, isSelected: (i == selection));
+
+				c1.AddRow (s1);
+				c2.AddRow (s2);
+				c3.AddRow (s3);
+				c4.AddRow (s4);
+				c5.AddRow (s5);
+			}
+
+			var content = new TreeTableContentItem ();
+
+			content.Columns.Add (c1);
+			content.Columns.Add (c2);
+			content.Columns.Add (c3);
+			content.Columns.Add (c4);
+			content.Columns.Add (c5);
+
+			return content;
+		}
+	}
+}

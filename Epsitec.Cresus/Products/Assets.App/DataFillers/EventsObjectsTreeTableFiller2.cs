@@ -122,7 +122,5 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 			return content;
 		}
-
-
 	}
 }

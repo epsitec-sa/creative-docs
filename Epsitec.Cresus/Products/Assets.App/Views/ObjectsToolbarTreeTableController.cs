@@ -141,11 +141,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				case BaseType.Categories:
-					//?this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
+					this.dataFiller2 = new CategoriesTreeTableFiller2 (this.accessor, this.baseType, this.nodesGetter);
 					break;
 
 				case BaseType.Groups:
-					//?this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.baseType, this.controller, this.nodesGetter);
+					this.dataFiller2 = new GroupsTreeTableFiller2 (this.accessor, this.baseType, this.nodesGetter);
 					break;
 			}
 
