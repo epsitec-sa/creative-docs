@@ -43,6 +43,8 @@ namespace Epsitec.Aider.Data.Job
 
 				EChWarningsFixer.FixReportedPersonLinkageForArrivals (businessContext);
 
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+
 //				System.Console.WriteLine ("press ENTER to continue");
 //				System.Console.ReadLine ();
 
@@ -57,6 +59,8 @@ namespace Epsitec.Aider.Data.Job
 				EChWarningsFixer.LogToConsole ("Migrating old Ech Warnings: EChPersonNew -> EChProcessArrival");
 
 				EChWarningsFixer.MigrateWarning (businessContext, WarningType.EChPersonNew, WarningType.EChProcessArrival);
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 
 				EChWarningsFixer.LogToConsole ("Delete old Ech Warnings: EChPersonDuplicated ");
 
@@ -86,7 +90,6 @@ namespace Epsitec.Aider.Data.Job
 
 				EChWarningsFixer.DetectBirthAndMigrate (businessContext);
 				
-
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
 		}
@@ -435,13 +438,17 @@ namespace Epsitec.Aider.Data.Job
 					if (warn.Person.MainContact.IsNotNull ())
 					{
 						var household = warn.Person.MainContact.Household;
-						var anyOtherArrivalInHousehold = household.Members.Where(m => m != warn.Person).Any (m => m.Warnings.Any (w => w.WarningType == WarningType.EChProcessArrival));
+						var anyOtherArrivalInHousehold = household.Members.Where (m => m != warn.Person).Any (m => m.Warnings.Any (w => w.WarningType == WarningType.EChProcessArrival));
 
 						if (!anyOtherArrivalInHousehold)
 						{
 							warn.WarningType = WarningType.PersonBirth;
 							EChWarningsFixer.LogToConsole ("{0} detected and migrated", warn.Person.GetCompactSummary ());
 						}
+					}
+					else
+					{
+						
 					}
 
 				}

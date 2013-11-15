@@ -74,6 +74,7 @@ function() {
     showRegistredDropZone: function (){
       for(d in this.dropZones)
       {
+        //TODO
         this.dropZones[d].show();
       }       
     },
@@ -134,6 +135,9 @@ function() {
 
     showEntity: function(entity)
     {
+      var path = {};
+      path.entityId = entity.id;
+
       alert(entity.id);
     },
 

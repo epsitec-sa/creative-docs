@@ -134,8 +134,8 @@ namespace Epsitec.Aider.Data.Job
 
 
 		/// <summary>
-		/// This Fixer Method can't run correctly without ad'hoc databases view's :
-		/// See 
+		/// This Fixer Method can't run correctly without ad'hoc databases view's
+		///  
 		/// </summary>
 		/// <param name="coreData"></param>
 		public static void WarnHouseholdWithNoSubscription(CoreData coreData)
@@ -194,6 +194,87 @@ namespace Epsitec.Aider.Data.Job
 						}
 
 						AiderPersonWarningEntity.Create (businessContext, person, person.ParishGroupPathCache, WarningType.SubscriptionMissing, "Ménage sans abonnement", "Ce ménage n'est référencé ni dans les abonnements,\n" + "ni dans les refus.", warningSource);
+					}
+					else
+					{
+						AiderHouseholdEntity.Delete (businessContext, household);
+					}
+				}
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
+
+		/// <summary>
+		/// This Fixer Method can't run correctly without ad'hoc databases view's
+		///  
+		/// </summary>
+		/// <param name="coreData"></param>
+		public static void CreateMissingSubscriptionsOrWarnHousehold(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				var jobDateTime    = System.DateTime.Now;
+				var jobName        = "SubscriptionAndRefusalFixer.WarnHouseholdWithNoSubscription()";
+				var jobDescription = string.Format ("Ménages sans abonnement à Bonne Nouvelle");
+
+				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
+
+
+				var db = businessContext.DataContext.DbInfrastructure;
+				var dbAbstraction = DbFactory.CreateDatabaseAbstraction (db.Access);
+				var sqlEngine = dbAbstraction.SqlEngine;
+
+				var sqlCommand = "select H1.id " +
+									"from " +
+									"HOUSEHOLDS H1 " + 
+									"where " +
+									"H1.id not in ( " +
+									"select h2.id " +
+									"from SUBSCRIPTIONS S1 " +
+									"inner join HOUSEHOLDS H2 on s1.household_id = h2.id) " +
+									"and " +
+									"H1.id not in ( " +
+									"select h3.id " +
+									"from SUBSCRIPTIONREFUSALS S2 " +
+									"inner join HOUSEHOLDS H3 on s2.household_id = h3.id);";
+
+				var sqlBuilder = dbAbstraction.SqlBuilder;
+				var command = sqlBuilder.CreateCommand (dbAbstraction.BeginReadOnlyTransaction (), sqlCommand);
+				DataSet dataSet;
+				sqlEngine.Execute (command, DbCommandType.ReturningData, 1, out dataSet);
+
+				var householdIdsToCorrect = new List<DbId> ();
+				foreach (DataRow row in dataSet.Tables[0].Rows)
+				{
+					if (!row[0].ToString ().IsNullOrWhiteSpace ())
+					{
+						householdIdsToCorrect.Add (new DbId ((long) row[0]));
+					}
+				}
+
+
+				foreach (var householdId in householdIdsToCorrect)
+				{
+					var household = businessContext.DataContext.ResolveEntity<AiderHouseholdEntity> (new DbKey (householdId));
+					if (household.Members.Count > 0)
+					{
+						var person = household.Members.Where (m => household.IsHead (m)).FirstOrDefault ();
+						if (person.IsNull ())
+						{
+							person = household.Members.FirstOrDefault ();
+						}
+
+						if (person.Address.Town.SwissCantonCode == "VD")
+						{
+							AiderSubscriptionEntity.Create (businessContext, household);
+						}
+						else
+						{
+							if (!person.Warnings.Any (w => w.WarningType == WarningType.SubscriptionMissing))
+							{
+								AiderPersonWarningEntity.Create (businessContext, person, person.ParishGroupPathCache, WarningType.SubscriptionMissing, "Ménage sans abonnement", "Ce ménage n'est référencé ni dans les abonnements,\n ni dans les refus.", warningSource);
+							}
+						}			
 					}
 					else
 					{

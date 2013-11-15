@@ -58,7 +58,10 @@ namespace Epsitec.Aider.Entities
 		public void RefreshCache()
 		{
 			this.DisplayName = this.GetDisplayName ();
+
+			//TODO CHECK CHANGES VD ?
 			this.DisplayZipCode = this.GetDisplayZipCode ();
+
 			this.DisplayAddress = this.GetDisplayAddress ();
 			this.RefreshParishGroupPathCache ();					
 		}

@@ -26,6 +26,11 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 			action
 				.Title ("Détruire le publipostage")
 				.Text ("Êtes vous sûr de vouloir détruire ce publipostage ?")
+				.Field<string> ()
+					.Title ("Intitulé")
+					.InitialValue (x => x.Name)
+					.ReadOnly ()
+				.End ()
 			.End ();
 		}
 

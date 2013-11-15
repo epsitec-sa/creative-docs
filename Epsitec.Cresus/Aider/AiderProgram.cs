@@ -209,6 +209,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-createmissingsubscriptions"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.CreateMissingSubscriptionsOrWarnHousehold (args));
+					return;
+				}
+
 				if (args.Contains ("-warnhouseholdwithnosubscription"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.WarnHouseholdWithNoSubscription (args));
@@ -544,6 +550,14 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData
 			(
 				coreData => SubscriptionAndRefusalFixer.WarnHouseholdWithNoSubscription (coreData)
+			);
+		}
+
+		private static void CreateMissingSubscriptionsOrWarnHousehold(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => SubscriptionAndRefusalFixer.CreateMissingSubscriptionsOrWarnHousehold (coreData)
 			);
 		}
 
