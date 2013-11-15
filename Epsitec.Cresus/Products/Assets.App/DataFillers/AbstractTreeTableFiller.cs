@@ -9,10 +9,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
-	public abstract class AbstractTreeTableFiller2<T>
+	public abstract class AbstractTreeTableFiller<T>
 		where T : struct
 	{
-		public AbstractTreeTableFiller2(DataAccessor accessor, AbstractNodesGetter<T> nodesGetter)
+		public AbstractTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<T> nodesGetter)
 		{
 			this.accessor    = accessor;
 			this.nodesGetter = nodesGetter;

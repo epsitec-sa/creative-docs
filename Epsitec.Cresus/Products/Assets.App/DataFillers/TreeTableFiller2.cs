@@ -10,12 +10,12 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 	public static class TreeTableFiller2<T>
 		where T : struct
 	{
-		public static void FillColumns(AbstractTreeTableFiller2<T> filler, NavigationTreeTableController controller)
+		public static void FillColumns(AbstractTreeTableFiller<T> filler, NavigationTreeTableController controller)
 		{
 			controller.SetColumns (filler.Columns, 1);
 		}
 
-		public static void FillContent(AbstractTreeTableFiller2<T> filler, NavigationTreeTableController controller, int firstRow, int count, int selection)
+		public static void FillContent(AbstractTreeTableFiller<T> filler, NavigationTreeTableController controller, int firstRow, int count, int selection)
 		{
 			var content = filler.GetContent (firstRow, count, selection);
 

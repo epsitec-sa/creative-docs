@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected bool							hasTreeOperations;
 		protected AbstractNodesGetter<T>		nodesGetter;
 		//?protected AbstractTreeTableFiller		dataFiller;
-		protected AbstractTreeTableFiller2<T>	dataFiller2;
+		protected AbstractTreeTableFiller<T>	dataFiller2;
 		protected TopTitle						topTitle;
 		protected NavigationTreeTableController	controller;
 		protected int							selectedRow;

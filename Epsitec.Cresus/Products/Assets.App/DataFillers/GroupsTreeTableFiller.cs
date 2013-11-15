@@ -10,9 +10,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
-	public class GroupsTreeTableFiller2 : AbstractTreeTableFiller2<TreeNode>
+	public class GroupsTreeTableFiller : AbstractTreeTableFiller<TreeNode>
 	{
-		public GroupsTreeTableFiller2(DataAccessor accessor, AbstractNodesGetter<TreeNode> nodesGetter)
+		public GroupsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<TreeNode> nodesGetter)
 			: base (accessor, nodesGetter)
 		{
 		}

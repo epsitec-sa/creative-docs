@@ -11,9 +11,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
-	public class EventsCategoriesTreeTableFiller2 : AbstractTreeTableFiller2<GuidNode>
+	public class EventsCategoriesTreeTableFiller : AbstractTreeTableFiller<GuidNode>
 	{
-		public EventsCategoriesTreeTableFiller2(DataAccessor accessor, AbstractNodesGetter<GuidNode> nodesGetter)
+		public EventsCategoriesTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<GuidNode> nodesGetter)
 			: base (accessor, nodesGetter)
 		{
 		}
