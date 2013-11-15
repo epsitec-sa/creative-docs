@@ -157,7 +157,6 @@
     <Compile Include="Widgets\HatchFrameBox.cs" />
     <Compile Include="Widgets\TextFieldController.cs" />
     <Compile Include="Widgets\PaintHatch.cs" />
-    <Compile Include="Widgets\ITreeTableFiller.cs" />
     <Compile Include="Widgets\SimpleTreeTableCellGlyph.cs" />
     <Compile Include="Widgets\TreeTableCellGlyph.cs" />
     <Compile Include="Widgets\TreeTableColumnGlyph.cs" />

@@ -128,7 +128,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		#region ITreeTableFiller
 		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
 		{
 			this.treeTable.SetColumns (descriptions, dockToLeftCount);
@@ -138,7 +137,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.treeTable.SetColumnCells (rank, columnItem);
 		}
-		#endregion
 		#endregion
 
 
