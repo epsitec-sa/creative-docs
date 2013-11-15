@@ -75,8 +75,6 @@
     <Compile Include="Controllers\TimelineCellController.cs" />
     <Compile Include="Converters\TimelineCellConverter.cs" />
     <Compile Include="AssetsUI.cs" />
-    <Compile Include="DataFillers\AbstractTreeTableFiller.cs" />
-    <Compile Include="DataFillers\CategoriesTreeTableFiller.cs" />
     <Compile Include="DataFillers\AbstractTreeTableFiller2.cs" />
     <Compile Include="DataFillers\CategoriesTreeTableFiller2.cs" />
     <Compile Include="DataFillers\EventsCategoriesTreeTableFiller2.cs" />
@@ -87,11 +85,6 @@
     <Compile Include="DataFillers\TreeTableColumnItem`1.cs" />
     <Compile Include="DataFillers\TreeTableFiller2.cs" />
     <Compile Include="DataFillers\ObjectsTreeTableFiller2.cs" />
-    <Compile Include="DataFillers\EventsGroupsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\GroupsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\EventsCategoriesTreeTableFiller.cs" />
-    <Compile Include="DataFillers\EventsObjectsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\ObjectsTreeTableFiller.cs" />
     <Compile Include="DataFillers\TreeTableContentItem.cs" />
     <Compile Include="DataFillers\TreeTableColumnItem.cs" />
     <Compile Include="EventHandler.cs" />
