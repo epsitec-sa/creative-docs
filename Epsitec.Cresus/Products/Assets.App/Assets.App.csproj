@@ -119,8 +119,6 @@
     <Compile Include="Views\TabPagesController.cs" />
     <Compile Include="Views\EditorPageCategory.cs" />
     <Compile Include="Views\IntFieldController.cs" />
-    <Compile Include="Views\Format.cs" />
-    <Compile Include="Views\DecimalFormat.cs" />
     <Compile Include="Views\EventsToolbarTreeTableController.cs" />
     <Compile Include="Views\ObjectsToolbarTreeTableController.cs" />
     <Compile Include="Views\ObjectsView.cs" />
@@ -141,11 +139,9 @@
     <Compile Include="Views\StringFieldController.cs" />
     <Compile Include="Views\ObjectEditor.cs" />
     <Compile Include="Views\ObjectsToolbarTimelineController.cs" />
-    <Compile Include="Views\TimelineMode.cs" />
     <Compile Include="Views\TimelineToolbar.cs" />
     <Compile Include="Views\EditToolbar.cs" />
     <Compile Include="Views\TreeTableToolbar.cs" />
-    <Compile Include="Views\TimelineData.cs" />
     <Compile Include="Views\ToolbarCommand.cs" />
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
@@ -220,7 +216,6 @@
     <Compile Include="Widgets\TimelineRowWeeksOfYear.cs" />
     <Compile Include="Widgets\TimelineRowMonths.cs" />
     <Compile Include="Widgets\Timeline.cs" />
-    <Compile Include="Widgets\TimelineGlyph.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Solution Items\Epsitec.Cresus.snk">
