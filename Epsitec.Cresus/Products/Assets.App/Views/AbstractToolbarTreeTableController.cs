@@ -324,38 +324,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		protected void OnSelectedRowChanged(int row)
 		{
-			if (this.SelectedRowChanged != null)
-			{
-				this.SelectedRowChanged (this, row);
-			}
+			this.SelectedRowChanged.Raise (this, row);
 		}
 
-		public delegate void SelectedRowChangedEventHandler(object sender, int row);
-		public event SelectedRowChangedEventHandler SelectedRowChanged;
+		public event EventHandler<int> SelectedRowChanged;
 
 
 		protected void OnRowDoubleClicked(int row)
 		{
-			if (this.RowDoubleClicked != null)
-			{
-				this.RowDoubleClicked (this, row);
-			}
+			this.RowDoubleClicked.Raise (this, row);
 		}
 
-		public delegate void RowDoubleClickedEventHandler(object sender, int row);
-		public event RowDoubleClickedEventHandler RowDoubleClicked;
+		public event EventHandler<int> RowDoubleClicked;
 
 
 		protected void OnStartEditing(EventType eventType, Timestamp timestamp)
 		{
-			if (this.StartEditing != null)
-			{
-				this.StartEditing (this, eventType, timestamp);
-			}
+			this.StartEditing.Raise (this, eventType, timestamp);
 		}
 
-		public delegate void StartEditingEventHandler(object sender, EventType eventType, Timestamp timestamp);
-		public event StartEditingEventHandler StartEditing;
+		public event EventHandler<EventType, Timestamp> StartEditing;
 		#endregion
 
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -113,26 +114,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		private void OnItemClicked(int rank)
 		{
-			if (this.ItemClicked != null)
-			{
-				this.ItemClicked (this, rank);
-			}
+			this.ItemClicked.Raise (this, rank);
 		}
 
-		public delegate void ItemClickedEventHandler(object sender, int rank);
-		public event ItemClickedEventHandler ItemClicked;
+		public event EventHandler<int> ItemClicked;
 
 
 		private void OnArrowClicked(Widget button, int rank)
 		{
-			if (this.ArrowClicked != null)
-			{
-				this.ArrowClicked (this, button, rank);
-			}
+			this.ArrowClicked.Raise (this, button, rank);
 		}
 
-		public delegate void ArrowClickedEventHandler(object sender, Widget button, int rank);
-		public event ArrowClickedEventHandler ArrowClicked;
+		public event EventHandler<Widget, int> ArrowClicked;
 		#endregion
 
 

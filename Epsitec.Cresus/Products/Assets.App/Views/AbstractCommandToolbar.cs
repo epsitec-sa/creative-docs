@@ -7,6 +7,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -217,14 +218,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		protected void OnCommandClicked(ToolbarCommand command)
 		{
-			if (this.CommandClicked != null)
-			{
-				this.CommandClicked (this, command);
-			}
+			this.CommandClicked.Raise (this, command);
 		}
 
-		public delegate void CommandClickedEventHandler(object sender, ToolbarCommand command);
-		public event CommandClickedEventHandler CommandClicked;
+		public event EventHandler<ToolbarCommand> CommandClicked;
 		#endregion
 
 

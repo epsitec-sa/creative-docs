@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -373,38 +374,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		private void OnNavigate(Timestamp timestamp)
 		{
-			if (this.Navigate != null)
-			{
-				this.Navigate (this, timestamp);
-			}
+			this.Navigate.Raise (this, timestamp);
 		}
 
-		public delegate void NavigateEventHandler(object sender, Timestamp timestamp);
-		public event NavigateEventHandler Navigate;
+		public event EventHandler<Timestamp> Navigate;
 
 
 		protected void OnPageOpen(EditionObjectPageType type, ObjectField field)
 		{
-			if (this.PageOpen != null)
-			{
-				this.PageOpen (this, type, field);
-			}
+			this.PageOpen.Raise (this, type, field);
 		}
 
-		public delegate void PageOpenEventHandler(object sender, EditionObjectPageType type, ObjectField field);
-		public event PageOpenEventHandler PageOpen;
+		public event EventHandler<EditionObjectPageType, ObjectField> PageOpen;
 
 
 		protected void OnValueEdited(ObjectField field)
 		{
-			if (this.ValueEdited != null)
-			{
-				this.ValueEdited (this, field);
-			}
+			this.ValueEdited.Raise (this, field);
 		}
 
-		public delegate void ValueEditedEventHandler(object sender, ObjectField field);
-		public event ValueEditedEventHandler ValueEdited;
+		public event EventHandler<ObjectField> ValueEdited;
 		#endregion
 
 

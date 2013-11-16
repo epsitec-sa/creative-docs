@@ -3,7 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -847,50 +849,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		private void OnSelectedCellChanged(int cell)
 		{
-			if (this.SelectedCellChanged != null)
-			{
-				this.SelectedCellChanged (this, cell);
-			}
+			this.SelectedCellChanged.Raise (this, cell);
 		}
 
-		public delegate void SelectedCellChangedEventHandler(object sender, int cell);
-		public event SelectedCellChangedEventHandler SelectedCellChanged;
+		public event EventHandler<int> SelectedCellChanged;
 
 
 		private void OnCellDoubleClicked(int row)
 		{
-			if (this.CellDoubleClicked != null)
-			{
-				this.CellDoubleClicked (this, row);
-			}
+			this.CellDoubleClicked.Raise (this, row);
 		}
 
-		public delegate void CellDoubleClickedEventHandler(object sender, int row);
-		public event CellDoubleClickedEventHandler CellDoubleClicked;
+		public event EventHandler<int> CellDoubleClicked;
 
 
 		private void OnStartEditing(EventType eventType)
 		{
-			if (this.StartEditing != null)
-			{
-				this.StartEditing (this, eventType);
-			}
+			this.StartEditing.Raise (this, eventType);
 		}
 
-		public delegate void StartEditingEventHandler(object sender, EventType eventType);
-		public event StartEditingEventHandler StartEditing;
+		public event EventHandler<EventType> StartEditing;
 
 
 		private void OnUpdateAll()
 		{
-			if (this.UpdateAll != null)
-			{
-				this.UpdateAll (this);
-			}
+			this.UpdateAll.Raise (this);
 		}
 
-		public delegate void UpdateAllEventHandler(object sender);
-		public event UpdateAllEventHandler UpdateAll;
+		public event EventHandler UpdateAll;
 		#endregion
 
 

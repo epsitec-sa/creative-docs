@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -297,21 +297,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		private void OnNavigate(Timestamp timestamp)
 		{
-			if (this.Navigate != null)
-			{
-				this.Navigate (this, timestamp);
-			}
+			this.Navigate.Raise (this, timestamp);
 		}
 
-		public delegate void NavigateEventHandler(object sender, Timestamp timestamp);
-		public event NavigateEventHandler Navigate;
+		public event EventHandler<Timestamp> Navigate;
 		#endregion
 
 
 		private TopTitle							topTitle;
 		private TabPagesController					tabPagesController;
 		private FrameBox							editFrameBox;
-		private AbstractEditorPage			currentPage;
+		private AbstractEditorPage					currentPage;
 		private EditionObjectPageType				currentPageType;
 
 		private Guid								objectGuid;

@@ -6,6 +6,7 @@ using System.Linq;
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -209,14 +210,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		private void OnViewChanged(ViewType viewType)
 		{
-			if (this.ViewChanged != null)
-			{
-				this.ViewChanged (this, viewType);
-			}
+			this.ViewChanged.Raise (this, viewType);
 		}
 
-		public delegate void ViewChangedEventHandler(object sender, ViewType viewType);
-		public event ViewChangedEventHandler ViewChanged;
+		public event EventHandler<ViewType> ViewChanged;
 		#endregion
 
 

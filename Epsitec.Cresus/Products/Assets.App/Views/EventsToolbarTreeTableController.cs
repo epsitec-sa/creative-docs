@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -233,17 +234,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
 		#region Events handler
 		private void OnUpdateAll()
 		{
-			if (this.UpdateAll != null)
-			{
-				this.UpdateAll (this);
-			}
+			this.UpdateAll.Raise (this);
 		}
 
-		public delegate void UpdateAllEventHandler(object sender);
-		public event UpdateAllEventHandler UpdateAll;
+		public event EventHandler UpdateAll;
 		#endregion
 
 

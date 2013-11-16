@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Common.Support;
@@ -208,26 +209,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		protected void OnValueEdited()
 		{
-			if (this.ValueEdited != null)
-			{
-				this.ValueEdited (this);
-			}
+			this.ValueEdited.Raise (this);
 		}
 
-		public delegate void ValueEditedEventHandler(object sender);
-		public event ValueEditedEventHandler ValueEdited;
+		public event EventHandler ValueEdited;
 
 
 		protected void OnShowHistory(Widget target)
 		{
-			if (this.ShowHistory != null)
-			{
-				this.ShowHistory (this, target);
-			}
+			this.ShowHistory.Raise (this, target);
 		}
 
-		public delegate void ShowHistoryEventHandler(object sender, Widget target);
-		public event ShowHistoryEventHandler ShowHistory;
+		public event EventHandler<Widget> ShowHistory;
 		#endregion
 
 

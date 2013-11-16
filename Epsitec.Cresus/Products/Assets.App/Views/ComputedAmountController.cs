@@ -500,28 +500,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
-		protected void OnValueEdited()
+		private void OnValueEdited()
 		{
-			if (this.ValueEdited != null)
-			{
-				this.ValueEdited (this);
-			}
+			this.ValueEdited.Raise (this);
 		}
 
-		public delegate void ValueEditedEventHandler(object sender);
-		public event ValueEditedEventHandler ValueEdited;
+		public event EventHandler ValueEdited;
 
 
 		protected void OnFocusLost()
 		{
-			if (this.FocusLost != null)
-			{
-				this.FocusLost (this);
-			}
+			this.FocusLost.Raise (this);
 		}
 
-		public delegate void FocusLostEventHandler(object sender);
-		public event FocusLostEventHandler FocusLost;
+		public event EventHandler FocusLost;
 		#endregion
 
 

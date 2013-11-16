@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -58,14 +59,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		private void OnValueChanged(ObjectField field)
 		{
-			if (this.ValueChanged != null)
-			{
-				this.ValueChanged (this, field);
-			}
+			this.ValueChanged.Raise (this, field);
 		}
 
-		public delegate void ValueChangedEventHandler(object sender, ObjectField field);
-		public event ValueChangedEventHandler ValueChanged;
+		public event EventHandler<ObjectField> ValueChanged;
 		#endregion
 
 
