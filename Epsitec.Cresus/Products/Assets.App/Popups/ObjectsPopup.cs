@@ -154,14 +154,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#region Events handler
 		private void OnNavigate(Guid guid)
 		{
-			if (this.Navigate != null)
-			{
-				this.Navigate (this, guid);
-			}
+			this.Navigate.Raise (this, guid);
 		}
 
-		public delegate void NavigateEventHandler(object sender, Guid guid);
-		public event NavigateEventHandler Navigate;
+		public event EventHandler<Guid> Navigate;
 		#endregion
 
 

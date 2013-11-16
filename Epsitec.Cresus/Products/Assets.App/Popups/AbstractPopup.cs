@@ -7,6 +7,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
@@ -513,14 +514,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#region Events handler
 		protected void OnButtonClicked(string name)
 		{
-			if (this.ButtonClicked != null)
-			{
-				this.ButtonClicked (this, name);
-			}
+			this.ButtonClicked.Raise (this, name);
 		}
 
-		public delegate void ButtonClickedEventHandler(object sender, string name);
-		public event ButtonClickedEventHandler ButtonClicked;
+		public event EventHandler<string> ButtonClicked;
 		#endregion
 
 

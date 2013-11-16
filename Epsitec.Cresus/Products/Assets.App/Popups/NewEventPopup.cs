@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -239,14 +240,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#region Events handler
 		private void OnDateChanged(System.DateTime? dateTime)
 		{
-			if (this.DateChanged != null)
-			{
-				this.DateChanged (this, dateTime);
-			}
+			this.DateChanged.Raise (this, dateTime);
 		}
 
-		public delegate void DateChangedEventHandler(object sender, System.DateTime? dateTime);
-		public event DateChangedEventHandler DateChanged;
+		public event EventHandler<System.DateTime?> DateChanged;
 		#endregion
 
 
