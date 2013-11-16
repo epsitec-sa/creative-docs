@@ -3,10 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -279,38 +278,26 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#region Events handler
 		private void OnCellClicked(int rank)
 		{
-			if (this.CellClicked != null)
-			{
-				this.CellClicked (this, rank);
-			}
+			this.CellClicked.Raise (this, rank);
 		}
 
-		public delegate void CellClickedEventHandler(object sender, int rank);
-		public event CellClickedEventHandler CellClicked;
+		public event EventHandler<int> CellClicked;
 
 
 		private void OnCellDoubleClicked(int rank)
 		{
-			if (this.CellDoubleClicked != null)
-			{
-				this.CellDoubleClicked (this, rank);
-			}
+			this.CellDoubleClicked.Raise (this, rank);
 		}
 
-		public delegate void CellDoubleClickedEventHandler(object sender, int rank);
-		public event CellDoubleClickedEventHandler CellDoubleClicked;
+		public event EventHandler<int> CellDoubleClicked;
 
 
 		private void OnCellHovered(int rank)
 		{
-			if (this.CellHovered != null)
-			{
-				this.CellHovered (this, rank);
-			}
+			this.CellHovered.Raise (this, rank);
 		}
 
-		public delegate void CellHoveredEventHandler(object sender, int rank);
-		public event CellHoveredEventHandler CellHovered;
+		public event EventHandler<int> CellHovered;
 		#endregion
 
 

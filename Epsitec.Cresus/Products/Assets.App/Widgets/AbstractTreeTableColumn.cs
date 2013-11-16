@@ -3,10 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -316,14 +315,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#region Events handler
 		protected void OnChildrenMouseMove(int row)
 		{
-			if (this.ChildrenMouseMove != null)
-			{
-				this.ChildrenMouseMove (this, row);
-			}
+			this.ChildrenMouseMove.Raise (this, row);
 		}
 
-		public delegate void ChildrenMouseMoveEventHandler(object sender, int row);
-		public event ChildrenMouseMoveEventHandler ChildrenMouseMove;
+		public event EventHandler<int> ChildrenMouseMove;
 		#endregion
 
 
