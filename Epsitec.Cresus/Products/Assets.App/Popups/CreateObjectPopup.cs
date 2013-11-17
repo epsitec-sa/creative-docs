@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			new StaticText
 			{
 				Parent           = parent,
-				Text             = "Création d'un nouveal objet",
+				Text             = this.Title,
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Top,
 				PreferredHeight  = CreateObjectPopup.TitleHeight - 4,
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.groupButton = new CheckButton
 			{
 				Parent           = parent,
-				Text             = "Objet de groupement",
+				Text             = GroupLabel,
 				AutoFocus        = false,
 				Dock             = DockStyle.Fill,
 				Margins          = new Margins (CreateObjectPopup.Indent + 10, 0, 0, 0),
@@ -331,6 +331,49 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.createButton.Enable = this.ObjectDate.HasValue &&
 									   !string.IsNullOrEmpty (this.ObjectName) &&
 									   !this.ObjectParent.IsEmpty;
+		}
+
+
+		private string Title
+		{
+			get
+			{
+				switch (this.baseType)
+				{
+					case BaseType.Objects:
+						return "Création d'un nouveal objet";
+
+					case BaseType.Categories:
+						return "Création d'une nouvelle catégorie";
+
+					case BaseType.Groups:
+						return "Création d'un nouveau groupe";
+
+					default:
+						return null;
+				}
+			}
+		}
+
+		private string GroupLabel
+		{
+			get
+			{
+				switch (this.baseType)
+				{
+					case BaseType.Objects:
+						return "Objet de regroupement";
+
+					case BaseType.Categories:
+						return "Catégorie de regroupement";
+
+					case BaseType.Groups:
+						return "Groupe de regroupement";
+
+					default:
+						return null;
+				}
+			}
 		}
 
 

@@ -64,19 +64,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonCompacted = this.CreateModeButton (toolbar, TimelineMode.Compacted, "Timeline.Single", "Affichage compact");
-			this.buttonExpended  = this.CreateModeButton (toolbar, TimelineMode.Expanded,  "Timeline.Double", "Affichage étendu");
+			this.buttonCompacted = this.CreateModeButton (toolbar, TimelineMode.Compacted, "Timeline.Single", "Affichage étroit");
+			this.buttonExpended  = this.CreateModeButton (toolbar, TimelineMode.Expanded,  "Timeline.Double", "Affichage large");
 
-			this.buttonFirst    = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First,    "Timeline.First",    "Retour sur la première ligne");
-			this.buttonPrev     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur la ligne précédente");
-			this.buttonNext     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Next,     "Timeline.Next",     "Avance sur la ligne suivante");
-			this.buttonLast     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur la dernière ligne");
+			this.buttonFirst    = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First,    "Timeline.First",    "Retour sur le premier événement");
+			this.buttonPrev     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur l'événement précédent");
+			this.buttonNext     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Next,     "Timeline.Next",     "Avance sur l'événement suivant");
+			this.buttonLast     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur le dernier événement");
 
 			this.separator1     = this.CreateSeparator     (this.toolbar, 0);
 			
-			this.buttonNew      = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.New,      "Timeline.New",      "Nouvel ligne");
-			this.buttonDelete   = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Delete,   "Timeline.Delete",   "Supprimer la ligne");
-			this.buttonDeselect = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne la ligne");
+			this.buttonNew      = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.New,      "Timeline.New",      "Nouvel événement");
+			this.buttonDelete   = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Delete,   "Timeline.Delete",   "Supprimer l'événement");
+			this.buttonDeselect = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne l'événement");
 
 			this.toolbar.SizeChanged += delegate
 			{

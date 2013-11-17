@@ -64,8 +64,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.nodesGetter.UpdateData ();
 
 			this.UpdateDataArray ();
-			this.UpdateController ();
 			this.UpdateScroller ();
+			this.UpdateController ();
 			this.UpdateToolbar ();
 		}
 
@@ -214,8 +214,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				IsInverted = true,  // le zéro est en haut
 			};
 
-			this.UpdateController ();
 			this.UpdateScroller ();
+			this.UpdateController ();
 			this.UpdateToolbar ();
 			
 			//	Connexion des événements.
@@ -255,8 +255,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.scroller.SizeChanged += delegate
 			{
-				this.UpdateController ();
 				this.UpdateScroller ();
+				this.UpdateController ();
 			};
 
 			this.scroller.ValueChanged += delegate
@@ -364,8 +364,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				this.UpdateDataArray ();
-				this.UpdateController ();
 				this.UpdateScroller ();
+				this.UpdateController ();
 				this.UpdateToolbar ();
 			};
 		}
@@ -383,6 +383,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.timelineMode = value;
 
+					this.UpdateScroller ();
 					this.UpdateController ();
 					this.UpdateToolbar ();
 				}
@@ -494,8 +495,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.nodesGetter.CompactOrExpand (row);
 			this.UpdateDataArray ();
-			this.UpdateController ();
 			this.UpdateScroller ();
+			this.UpdateController ();
 			this.UpdateToolbar ();
 
 			this.SelectedGuid = guid;
@@ -510,8 +511,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.nodesGetter.CompactAll ();
 			this.UpdateDataArray ();
-			this.UpdateController ();
 			this.UpdateScroller ();
+			this.UpdateController ();
 			this.UpdateToolbar ();
 
 			this.SelectedGuid = guid;
@@ -526,8 +527,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.nodesGetter.ExpandAll ();
 			this.UpdateDataArray ();
-			this.UpdateController ();
 			this.UpdateScroller ();
+			this.UpdateController ();
 			this.UpdateToolbar ();
 
 			this.SelectedGuid = guid;
@@ -688,8 +689,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (e != null)
 				{
 					this.UpdateDataArray ();
-					this.UpdateController ();
 					this.UpdateScroller ();
+					this.UpdateController ();
 					this.UpdateToolbar ();
 
 					this.SetSelection (this.selectedRow, this.dataArray.FindColumnIndex (e.Timestamp));
@@ -938,7 +939,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (line >= dummy && line < dummy+count)
 			{
-				return this.TopVisibleRow + count + dummy - this.HeaderLinesCount + 1 - line;
+				return this.TopVisibleRow + count + dummy - line - 1;
 			}
 			else
 			{
