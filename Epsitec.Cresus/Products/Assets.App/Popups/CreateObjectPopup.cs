@@ -76,6 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateTreeTable (line3);
 			this.CreateButtons   (line4);
 
+			this.UpdateButtons ();
 			this.textField.Focus ();
 		}
 
@@ -102,9 +103,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateName(Widget parent)
 		{
-			parent.BackColor = ColorManager.WindowBackgroundColor;
-			parent.Padding   = new Margins (2);
-
 			new StaticText
 			{
 				Parent           = parent,
@@ -115,10 +113,24 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
-			this.textField = new TextField
+			var framne = new FrameBox
 			{
 				Parent           = parent,
 				Dock             = DockStyle.Fill,
+				BackColor        = ColorManager.WindowBackgroundColor,
+				Padding          = new Margins (1),
+			};
+
+			this.textField = new TextField
+			{
+				Parent           = framne,
+				Dock             = DockStyle.Fill,
+			};
+
+			this.textField.TextChanged += delegate
+			{
+				this.ObjectName = this.textField.Text;
+				this.UpdateButtons ();
 			};
 		}
 
@@ -139,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			new StaticText
 			{
 				Parent           = parent,
-				Text             = "Parent",
+				Text             = "Dans le groupe",
 				ContentAlignment = ContentAlignment.TopRight,
 				Dock             = DockStyle.Left,
 				PreferredWidth   = CreateObjectPopup.Indent,
@@ -157,11 +169,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
 			this.UpdateController ();
+
+			this.controller.RowClicked += delegate (object sender, int row)
+			{
+				var node = this.nodesGetter[row];
+				this.ObjectParent = node.Guid;
+				this.UpdateButtons ();
+			};
 		}
 
 		private void CreateButtons(Widget parent)
 		{
-			var ok = new Button
+			this.createButton = new Button
 			{
 				Parent        = parent,
 				Name          = "create",
@@ -173,7 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Margins       = new Margins (0, 5, 0, 0),
 			};
 
-			var cancel = new Button
+			this.cancelButton = new Button
 			{
 				Parent        = parent,
 				Name          = "cancel",
@@ -185,17 +204,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Margins       = new Margins (5, 0, 0, 0),
 			};
 
-			ok.Clicked += delegate
-			{
-				this.ClosePopup ();
-				this.OnButtonClicked (ok.Name);
-			};
+			this.createButton.Clicked += this.HandleButtonClicked;
+			this.cancelButton.Clicked += this.HandleButtonClicked;
+		}
 
-			cancel.Clicked += delegate
-			{
-				this.ClosePopup ();
-				this.OnButtonClicked (cancel.Name);
-			};
+		private void HandleButtonClicked(object sender, MessageEventArgs e)
+		{
+			var button = sender as Button;
+
+			this.ClosePopup ();
+			this.OnButtonClicked (button.Name);
 		}
 
 
@@ -231,11 +249,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			TreeTableFiller<TreeNode>.FillContent (this.dataFiller, this.controller, firstRow, count, selection);
 		}
 
+		private void UpdateButtons()
+		{
+			this.createButton.Enable = !string.IsNullOrEmpty (this.ObjectName) &&
+									   !this.ObjectParent.IsEmpty;
+		}
+
 
 		private static readonly int TitleHeight      = 24;
-		private static readonly int LineHeight       = 2+17+2;
-		private static readonly int Indent           = 50;
-		private static readonly int PopupWidth       = 300;
+		private static readonly int LineHeight       = 1+17+1;
+		private static readonly int Indent           = 80;
+		private static readonly int PopupWidth       = 330;
 		private static readonly int PopupHeight      = 400;
 		private static readonly int Margins          = 20;
 
@@ -246,6 +270,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly SingleObjectsTreeTableFiller	dataFiller;
 
 		private TextField								textField;
+		private Button									createButton;
+		private Button									cancelButton;
 		private int										visibleSelectedRow;
 	}
 }
