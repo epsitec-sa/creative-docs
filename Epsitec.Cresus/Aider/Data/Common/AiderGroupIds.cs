@@ -59,6 +59,46 @@ namespace Epsitec.Aider.Data.Common
 			return AiderGroupIds.CreateSubgroupPath ("", AiderGroupIds.ParishPrefix, parishCode);
 		}
 
+		public static bool IsRegion(string path)
+		{
+			if (path == null)
+			{
+				return false;
+			}
+			if ((path.Length == 5) &&
+				(path.StartsWith (AiderGroupIds.RegionPrefix)) &&
+				(path.EndsWith (AiderGroupIds.Suffix)))
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		public static bool IsParish(string path)
+		{
+			if (path == null)
+			{
+				return false;
+			}
+			
+			if ((path.Length == 10) &&
+				(AiderGroupIds.IsRegion (path.Substring (0, 5))))
+			{
+				path = path.Substring (5);
+
+				if ((path.StartsWith (AiderGroupIds.RegionPrefix)) &&
+					(path.EndsWith (AiderGroupIds.Suffix)))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+
 		public static bool IsWithinRegion(string path)
 		{
 			return AiderGroupIds.IsWithinGroup (path, AiderGroupIds.RegionLevel, AiderGroupIds.RegionPrefix);

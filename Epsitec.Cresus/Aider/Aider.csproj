@@ -293,6 +293,7 @@
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
+    <Compile Include="Rules\AiderGroupDefEntityBusinessRules.cs" />
     <Compile Include="Rules\AiderGroupParticipantEntityBusinessRules.cs" />
     <Compile Include="Rules\AiderLegalPersonBusinessRules.cs" />
     <Compile Include="Rules\AiderMailingCategoryBusinessRules.cs" />
