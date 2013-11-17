@@ -107,14 +107,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#region Events handler
 		private void OnRowClicked(int row)
 		{
-			if (this.RowClicked != null)
-			{
-				this.RowClicked (this, row);
-			}
+			this.RowClicked.Raise (this, row);
 		}
 
-		public delegate void RowClickedEventHandler(object sender, int row);
-		public event RowClickedEventHandler RowClicked;
+		public event EventHandler<int> RowClicked;
 		#endregion
 
 

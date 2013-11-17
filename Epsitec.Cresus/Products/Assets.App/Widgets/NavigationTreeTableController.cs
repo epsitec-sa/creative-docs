@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
 
@@ -180,50 +181,34 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#region Events handler
 		private void OnRowClicked(int row)
 		{
-			if (this.RowClicked != null)
-			{
-				this.RowClicked (this, row);
-			}
+			this.RowClicked.Raise (this, row);
 		}
 
-		public delegate void RowClickedEventHandler(object sender, int row);
-		public event RowClickedEventHandler RowClicked;
+		public event EventHandler<int> RowClicked;
 
 
 		private void OnRowDoubleClicked(int row)
 		{
-			if (this.RowDoubleClicked != null)
-			{
-				this.RowDoubleClicked (this, row);
-			}
+			this.RowDoubleClicked.Raise (this, row);
 		}
 
-		public delegate void RowDoubleClickedEventHandler(object sender, int row);
-		public event RowDoubleClickedEventHandler RowDoubleClicked;
+		public event EventHandler<int> RowDoubleClicked;
 
 
 		private void OnContentChanged(bool crop)
 		{
-			if (this.ContentChanged != null)
-			{
-				this.ContentChanged (this, crop);
-			}
+			this.ContentChanged.Raise (this, crop);
 		}
 
-		public delegate void ContentChangedEventHandler(object sender, bool crop);
-		public event ContentChangedEventHandler ContentChanged;
+		public event EventHandler<bool> ContentChanged;
 
 
 		private void OnTreeButtonClicked(int row, NodeType type)
 		{
-			if (this.TreeButtonClicked != null)
-			{
-				this.TreeButtonClicked (this, row, type);
-			}
+			this.TreeButtonClicked.Raise (this, row, type);
 		}
 
-		public delegate void TreeButtonClickedEventHandler(object sender, int row, NodeType type);
-		public event TreeButtonClickedEventHandler TreeButtonClicked;
+		public event EventHandler<int, NodeType> TreeButtonClicked;
 		#endregion
 
 

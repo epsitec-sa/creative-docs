@@ -6,6 +6,7 @@ using System.Linq;
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
@@ -207,14 +208,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		private void OnModeChanged(TimelineMode timelineMode)
 		{
-			if (this.ModeChanged != null)
-			{
-				this.ModeChanged (this, timelineMode);
-			}
+			this.ModeChanged.Raise (this, timelineMode);
 		}
 
-		public delegate void ModeChangedEventHandler(object sender, TimelineMode timelineMode);
-		public event ModeChangedEventHandler ModeChanged;
+		public event EventHandler<TimelineMode> ModeChanged;
 		#endregion
 
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -215,14 +216,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		private void OnTileClicked(int row, int column)
 		{
-			if (this.TileClicked != null)
-			{
-				this.TileClicked (this, row, column);
-			}
+			this.TileClicked.Raise (this, row, column);
 		}
 
-		public delegate void TileClickedEventHandler(object sender, int row, int column);
-		public event TileClickedEventHandler TileClicked;
+		public event EventHandler<int, int> TileClicked;
 		#endregion
 
 

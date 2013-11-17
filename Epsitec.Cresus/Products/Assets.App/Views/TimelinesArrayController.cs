@@ -4,7 +4,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -1211,38 +1213,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Events handler
 		private void OnSelectedCellChanged()
 		{
-			if (this.SelectedCellChanged != null)
-			{
-				this.SelectedCellChanged (this);
-			}
+			this.SelectedCellChanged.Raise (this);
 		}
 
-		public delegate void SelectedCellChangedEventHandler(object sender);
-		public event SelectedCellChangedEventHandler SelectedCellChanged;
+		public event EventHandler SelectedCellChanged;
 
 
 		private void OnCellDoubleClicked()
 		{
-			if (this.CellDoubleClicked != null)
-			{
-				this.CellDoubleClicked (this);
-			}
+			this.CellDoubleClicked.Raise (this);
 		}
 
-		public delegate void CellDoubleClickedEventHandler(object sender);
-		public event CellDoubleClickedEventHandler CellDoubleClicked;
+		public event EventHandler CellDoubleClicked;
 
 
 		private void OnStartEditing(EventType eventType, Timestamp timestamp)
 		{
-			if (this.StartEditing != null)
-			{
-				this.StartEditing (this, eventType, timestamp);
-			}
+			this.StartEditing.Raise (this, eventType, timestamp);
 		}
 
-		public delegate void StartEditingEventHandler(object sender, EventType eventType, Timestamp timestamp);
-		public event StartEditingEventHandler StartEditing;
+		public event EventHandler<EventType, Timestamp> StartEditing;
 		#endregion
 
 
