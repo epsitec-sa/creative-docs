@@ -51,3 +51,17 @@ Upgrade de la base de données
 -echupdate -newechfile:S:\eerv\eerv-2013-10-24.xml -oldechfile:S:\eerv\eerv-2013-10-17.xml -output:S:\eerv\ech-diff.md
 -echupdate -newechfile:S:\eerv\eerv-2013-10-31.xml -oldechfile:S:\eerv\eerv-2013-10-24.xml -output:S:\eerv\ech-diff.md
 
+
+Lancé le 16.11.2013
+-------------------
+
+SVN Update > r22229
+
+Upgrade de la base de données
+
+-fixoldechwarnings
+-fixmissingsubscriptions
+
+-echupdate -newechfile:S:\eerv\eerv-2013-11-07.xml -oldechfile:S:\eerv\eerv-2013-10-31.xml -output:S:\eerv\ech-diff-2013-11-07.md
+-echupdate -newechfile:S:\eerv\eerv-2013-11-14.xml -oldechfile:S:\eerv\eerv-2013-11-07.xml -output:S:\eerv\ech-diff-2013-11-14.md
+
