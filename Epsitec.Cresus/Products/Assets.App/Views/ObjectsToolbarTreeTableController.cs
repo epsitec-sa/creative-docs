@@ -198,24 +198,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnNew()
 		{
-			var modelGuid = this.SelectedGuid;
-			if (modelGuid.IsEmpty)
-			{
-				return;
-			}
-
-			int sel = this.SelectedRow;
-			if (sel == -1)
-			{
-				return;
-			}
-
-			var e = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
-
-			this.UpdateData ();
-
-			this.SelectedRow = sel+1;
-			this.OnStartEditing (e.Type, e.Timestamp);
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
+			this.ShowCreatePopup (target);
 		}
 
 		protected override void OnDelete()
@@ -243,6 +227,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void ShowCreatePopup(Widget target)
+		{
+			var popup = new CreateObjectPopup (this.accessor, this.baseType, this.SelectedGuid);
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "create")
+				{
+					this.CreateObject (popup.ObjectName, popup.ObjectParent, popup.ObjectGroup);
+				}
+			};
+		}
+
+		private void CreateObject(string name, Guid parent, bool group)
+		{
+			var modelGuid = this.SelectedGuid;
+			if (modelGuid.IsEmpty)
+			{
+				return;
+			}
+
+			int sel = this.SelectedRow;
+			if (sel == -1)
+			{
+				return;
+			}
+
+			var e = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
+
+			this.UpdateData ();
+
+			this.SelectedRow = sel+1;
+			this.OnStartEditing (e.Type, e.Timestamp);
+		}
+
+	
 		protected override void CreateTreeTable(Widget parent)
 		{
 			base.CreateTreeTable (parent);
