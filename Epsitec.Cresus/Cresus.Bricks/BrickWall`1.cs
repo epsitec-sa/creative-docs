@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.Bricks
 			this.Add (brick);
 			this.NotifyBrickAdded (typeof (TBrick), brick);
 
+			brick.EndOfInitialization ();
+
 			return brick;
 		}
 	}

@@ -96,9 +96,9 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
-		internal bool HasProperty()
+		internal bool ContainsProperties()
 		{
-			return this.properties.Count > 0;
+			return this.properties.Count > this.initialPropertyCount;
 		}
 
 		internal void DebugDump(string prefix = "")
@@ -116,6 +116,10 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+		internal void EndOfInitialization()
+		{
+			this.initialPropertyCount = this.properties.Count;
+		}
 
 		public static T AddProperty<T>(T brick, BrickProperty brickProperty)
 			where T : Brick
@@ -153,5 +157,6 @@ namespace Epsitec.Cresus.Bricks
 		private readonly List<BrickProperty>	properties;
 		private readonly BrickWall				brickWall;
 		private readonly Expression				resolver;
+		private int								initialPropertyCount;
 	}
 }

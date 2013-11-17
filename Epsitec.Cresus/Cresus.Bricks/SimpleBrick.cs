@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Bricks
 		{
 			if (value == false)
 			{
-				if (this.HasProperty ())
+				if (this.ContainsProperties ())
 				{
 					this.RemoveLastProperty ();
 				}
