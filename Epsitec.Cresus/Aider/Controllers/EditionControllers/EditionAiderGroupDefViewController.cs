@@ -1,10 +1,11 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
 
+using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
@@ -17,6 +18,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.Input ()
 					.Field (x => x.Name)
 						.ReadOnly ()
+						.IfFalse (this.HasUserPowerLevel (UserPowerLevel.Administrator))
 					.Field (x => x.Number)
 						.ReadOnly ()
 					.Field (x => x.Level)

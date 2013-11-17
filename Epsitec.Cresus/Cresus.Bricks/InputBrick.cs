@@ -58,6 +58,24 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+		public InputBrick<T, TParent> IfTrue(bool value)
+		{
+			if (value == false)
+			{
+				if (this.ContainsProperties ())
+				{
+					this.RemoveLastProperty ();
+				}
+			}
+
+			return this;
+		}
+
+		public InputBrick<T, TParent> IfFalse(bool value)
+		{
+			return this.IfTrue (value == false);
+		}
+
 		public InputBrick<T, TParent> Password()
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Password));
