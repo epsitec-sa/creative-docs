@@ -346,6 +346,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case EditionObjectPageType.Summary:
 					return new EditorPageSummary (accessor, baseType);
 
+				case EditionObjectPageType.Grouping:
+					return new EditorPageGrouping (accessor, baseType);
+
 				case EditionObjectPageType.Object:
 					return new EditorPageObject (accessor, baseType);
 

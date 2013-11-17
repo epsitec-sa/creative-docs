@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case EditionObjectPageType.Summary:
 					return "Résumé";
 
+				case EditionObjectPageType.Grouping:
 				case EditionObjectPageType.Object:
 					return "Général";
 

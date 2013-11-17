@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public System.DateTime?					ObjectDate;
 		public string							ObjectName;
-		public bool								ObjectGroup;
+		public bool								ObjectGrouping;
 		public Guid								ObjectParent;
 
 
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.CreateDate      (line1);
 			this.CreateName      (line2);
-			this.CreateGroup     (line3);
+			this.CreateGrouping  (line3);
 			this.CreateTreeTable (line4);
 			this.CreateButtons   (line5);
 
@@ -178,21 +178,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		private void CreateGroup(Widget parent)
+		private void CreateGrouping(Widget parent)
 		{
-			this.groupButton = new CheckButton
+			this.groupingButton = new CheckButton
 			{
 				Parent           = parent,
-				Text             = GroupLabel,
+				Text             = GroupingLabel,
 				AutoFocus        = false,
 				Dock             = DockStyle.Fill,
 				Margins          = new Margins (CreateObjectPopup.Indent + 10, 0, 0, 0),
 			};
 
-			this.groupButton.ActiveStateChanged += delegate
+			this.groupingButton.ActiveStateChanged += delegate
 			{
-				this.ObjectGroup = this.groupButton.ActiveState == ActiveState.Yes;
-				this.lastGroup = this.ObjectGroup;
+				this.ObjectGrouping = this.groupingButton.ActiveState == ActiveState.Yes;
+				this.lastGrouping = this.ObjectGrouping;
 			};
 		}
 
@@ -307,25 +307,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.ObjectParent = node.Guid;
 
 				var next = this.nodesGetter[this.visibleSelectedRow+1];
-				this.groupEnable = next.Level <= node.Level;
+				this.groupingEnable = next.Level <= node.Level;
 			}
 		}
 
 		private void UpdateButtons()
 		{
-			this.groupButton.Enable = this.groupEnable;
+			this.groupingButton.Enable = this.groupingEnable;
 
-			if (this.groupEnable)
+			if (this.groupingEnable)
 			{
-				this.groupButton.ActiveState = this.lastGroup ? ActiveState.Yes : ActiveState.No;
-				this.ObjectGroup = this.lastGroup;
+				this.groupingButton.ActiveState = this.lastGrouping ? ActiveState.Yes : ActiveState.No;
+				this.ObjectGrouping = this.lastGrouping;
 			}
 			else
 			{
-				var g = this.lastGroup;
-				this.groupButton.ActiveState = ActiveState.Yes;
-				this.ObjectGroup = true;
-				this.lastGroup = g;
+				var g = this.lastGrouping;
+				this.groupingButton.ActiveState = ActiveState.Yes;
+				this.ObjectGrouping = true;
+				this.lastGrouping = g;
 			}
 
 			this.createButton.Enable = this.ObjectDate.HasValue &&
@@ -355,7 +355,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private string GroupLabel
+		private string GroupingLabel
 		{
 			get
 			{
@@ -391,11 +391,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly SingleObjectsTreeTableFiller	dataFiller;
 
 		private TextField								textField;
-		private CheckButton								groupButton;
+		private CheckButton								groupingButton;
 		private Button									createButton;
 		private Button									cancelButton;
 		private int										visibleSelectedRow;
-		private bool									groupEnable;
-		private bool									lastGroup;
+		private bool									groupingEnable;
+		private bool									lastGrouping;
 	}
 }

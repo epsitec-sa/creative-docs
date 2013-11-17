@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -15,12 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public EditorPageSummary(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
 		{
-			this.summaryController = new ObjectSummaryController
-			(
-				this.accessor,
-				this.baseType,
-				this.SummaryTiles
-			);
+			this.summaryController = new ObjectSummaryController (this.accessor, this.baseType);
 
 			this.summaryController.TileClicked += delegate (object sender, int row, int column)
 			{
@@ -39,6 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.SetObject (objectGuid, timestamp);
 
+			this.summaryController.SetTiles (this.SummaryTiles);
 			this.summaryController.UpdateFields (this.objectGuid, this.timestamp);
 
 			this.UpdateCommentaries ();
@@ -101,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void TileClicked(int row, int column)
 		{
-			var tile = this.GetTile (column, row);
+			var tile = this.GetTile (column/2, row);
 
 			if (!tile.IsEmpty)
 			{
@@ -230,20 +227,56 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				switch (this.baseType)
+				if (this.IsGrouping)
 				{
-					case BaseType.Objects:
-						return EditorPageSummary.ObjectSummaryTiles;
-
-					case BaseType.Categories:
-						return EditorPageSummary.CategorySummaryTiles;
-
-					case BaseType.Groups:
-						return EditorPageSummary.GroupSummaryTiles;
-
-					default:
-						return null;
+					return EditorPageSummary.GroupingSummaryTiles;
 				}
+				else
+				{
+					switch (this.baseType)
+					{
+						case BaseType.Objects:
+							return EditorPageSummary.ObjectSummaryTiles;
+
+						case BaseType.Categories:
+							return EditorPageSummary.CategorySummaryTiles;
+
+						case BaseType.Groups:
+							return EditorPageSummary.GroupSummaryTiles;
+
+						default:
+							return null;
+					}
+				}
+			}
+		}
+
+		private static List<List<ObjectSummaryControllerTile>> GroupingSummaryTiles
+		{
+			//	Retourne la liste des tuiles qui peupleront le tableau.
+			get
+			{
+				var list = new List<List<ObjectSummaryControllerTile>> ();
+
+				var c1 = new List<ObjectSummaryControllerTile> ()
+				{
+					new ObjectSummaryControllerTile ("Evénement"),
+					new ObjectSummaryControllerTile (ObjectField.OneShotNuméro),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDateOpération),
+					new ObjectSummaryControllerTile (ObjectField.OneShotCommentaire),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
+
+					ObjectSummaryControllerTile.Empty,
+
+					new ObjectSummaryControllerTile ("Général"),
+					new ObjectSummaryControllerTile (ObjectField.Parent),
+					new ObjectSummaryControllerTile (ObjectField.Numéro),
+					new ObjectSummaryControllerTile (ObjectField.Nom),
+					new ObjectSummaryControllerTile (ObjectField.Description),
+				};
+				list.Add (c1);
+
+				return list;
 			}
 		}
 
@@ -371,6 +404,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					new ObjectSummaryControllerTile ("Général"),
 					new ObjectSummaryControllerTile (ObjectField.Parent),
+					new ObjectSummaryControllerTile (ObjectField.Numéro),
 					new ObjectSummaryControllerTile (ObjectField.Nom),
 					new ObjectSummaryControllerTile (ObjectField.Famille),
 					new ObjectSummaryControllerTile (ObjectField.Description),
@@ -378,6 +412,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				list.Add (c1);
 
 				return list;
+			}
+		}
+
+
+		private bool IsGrouping
+		{
+			get
+			{
+				var g = ObjectCalculator.GetObjectPropertyInt (this.obj, null, ObjectField.Regroupement);
+				return g.HasValue && g.Value == 1;
 			}
 		}
 

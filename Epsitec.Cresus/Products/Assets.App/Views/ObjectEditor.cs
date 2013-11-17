@@ -115,6 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.objectGuid = objectGuid;
+			this.obj        = this.accessor.GetObject (this.baseType, this.objectGuid);
 			this.timestamp  = timestamp.Value;
 			this.hasEvent   = false;
 			this.eventType  = EventType.Unknown;
@@ -132,13 +133,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateTabPages ();
 
-			//	Si le type d'événement à changé, il faut réinitialiser le navigateur,
-			//	car il permet peut-être d'atteindre des pages interdites.
-			if (this.lastEventType != this.eventType)
-			{
-				this.AdaptPages ();
-				this.lastEventType = this.eventType;
-			}
+			//	Il faut réinitialiser le navigateur, car il permet peut-être d'atteindre
+			//	des pages interdites.
+			this.AdaptPages ();
 
 			this.currentPage.SetObject (this.objectGuid, this.timestamp);
 
@@ -197,7 +194,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return ObjectEditor.GetAvailablePages (this.baseType, this.hasEvent, this.eventType);
+				if (this.IsGrouping)
+				{
+					return ObjectEditor.GetGroupingAvailablePages (this.hasEvent);
+				}
+				else
+				{
+					return ObjectEditor.GetAvailablePages (this.baseType, this.hasEvent, this.eventType);
+				}
 			}
 		}
 
@@ -216,6 +220,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				default:
 					return null;
+			}
+		}
+
+		private static IEnumerable<EditionObjectPageType> GetGroupingAvailablePages(bool hasEvent)
+		{
+			//	Retourne les pages autorisées pour un type d'événement donné.
+			yield return EditionObjectPageType.Summary;
+
+			if (hasEvent)
+			{
+				yield return EditionObjectPageType.OneShot;
+				yield return EditionObjectPageType.Grouping;
 			}
 		}
 
@@ -293,6 +309,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private bool IsGrouping
+		{
+			get
+			{
+				var g = ObjectCalculator.GetObjectPropertyInt (this.obj, null, ObjectField.Regroupement);
+				return g.HasValue && g.Value == 1;
+			}
+		}
+
 
 		#region Events handler
 		private void OnNavigate(Timestamp timestamp)
@@ -311,9 +336,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private EditionObjectPageType				currentPageType;
 
 		private Guid								objectGuid;
+		private DataObject							obj;
 		private Timestamp							timestamp;
 		private bool								hasEvent;
 		private EventType							eventType;
-		private EventType							lastEventType;
 	}
 }

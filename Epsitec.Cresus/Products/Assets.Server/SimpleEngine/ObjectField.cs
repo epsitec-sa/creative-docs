@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		Parent,
 		Position,
+		Regroupement,
 		Numéro,
 		Nom,
 		Description,

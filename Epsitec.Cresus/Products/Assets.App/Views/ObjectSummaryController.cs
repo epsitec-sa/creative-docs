@@ -14,11 +14,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectSummaryController
 	{
-		public ObjectSummaryController(DataAccessor accessor, BaseType baseType, List<List<ObjectSummaryControllerTile>> tiles)
+		public ObjectSummaryController(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
-			this.tiles    = tiles;
 
 			this.controller = new SummaryController ();
 
@@ -40,6 +39,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.controller.CreateUI (parent);
+		}
+
+		public void SetTiles(List<List<ObjectSummaryControllerTile>> tiles)
+		{
+			this.tiles = tiles;
 		}
 
 		public void UpdateFields(Guid objectGuid, Timestamp? timestamp)
@@ -381,9 +385,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly DataAccessor				accessor;
 		private readonly BaseType					baseType;
-		private readonly List<List<ObjectSummaryControllerTile>> tiles;
 		private readonly SummaryController			controller;
 
+		private List<List<ObjectSummaryControllerTile>> tiles;
 		private StaticText							informations;
 		private DataObject							obj;
 		private Timestamp?							timestamp;

@@ -546,14 +546,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "create")
 				{
-					this.CreateObject (popup.ObjectDate.Value, popup.ObjectName, popup.ObjectParent, popup.ObjectGroup);
+					this.CreateObject (popup.ObjectDate.Value, popup.ObjectName, popup.ObjectParent, popup.ObjectGrouping);
 				}
 			};
 		}
 
-		private void CreateObject(System.DateTime date, string name, Guid parent, bool group)
+		private void CreateObject(System.DateTime date, string name, Guid parent, bool grouping)
 		{
-			var guid = this.accessor.CreateObject (this.baseType, date, name, parent, group);
+			var guid = this.accessor.CreateObject (this.baseType, date, name, parent, grouping);
 			var obj = this.accessor.GetObject (this.baseType, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 

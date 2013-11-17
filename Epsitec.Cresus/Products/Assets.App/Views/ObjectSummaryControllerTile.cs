@@ -11,12 +11,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public ObjectSummaryControllerTile(string text)
 		{
+			//	Texte fixe.
 			this.Text  = text;
 			this.Field = ObjectField.Unknown;
 		}
 
 		public ObjectSummaryControllerTile(ObjectField field)
 		{
+			//	Contenu d'un champ.
 			this.Text  = null;
 			this.Field = field;
 		}
