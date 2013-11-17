@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
@@ -46,9 +47,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.UpdateController ();
 				this.UpdateSelectedRow ();
 			};
+
+			this.ObjectDate = new Timestamp (new System.DateTime (System.DateTime.Now.Year, 1, 1), 0).Date;
 		}
 
 
+		public System.DateTime?					ObjectDate;
 		public string							ObjectName;
 		public bool								ObjectGroup;
 		public Guid								ObjectParent;
@@ -69,13 +73,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var line1 = this.CreateFrame (CreateObjectPopup.Margin, 337, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
 			var line2 = this.CreateFrame (CreateObjectPopup.Margin, 310, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
-			var line3 = this.CreateFrame (CreateObjectPopup.Margin,  60, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, 240);
-			var line4 = this.CreateFrame (CreateObjectPopup.Margin,  20, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, 24);
+			var line3 = this.CreateFrame (CreateObjectPopup.Margin, 283, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
+			var line4 = this.CreateFrame (CreateObjectPopup.Margin,  60, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, 210);
+			var line5 = this.CreateFrame (CreateObjectPopup.Margin,  20, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, 24);
 
-			this.CreateName      (line1);
-			this.CreateGroup     (line2);
-			this.CreateTreeTable (line3);
-			this.CreateButtons   (line4);
+			this.CreateDate      (line1);
+			this.CreateName      (line2);
+			this.CreateGroup     (line3);
+			this.CreateTreeTable (line4);
+			this.CreateButtons   (line5);
 
 			this.UpdateButtons ();
 			this.textField.Focus ();
@@ -102,6 +108,43 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
+		private void CreateDate(Widget parent)
+		{
+			new StaticText
+			{
+				Parent           = parent,
+				Text             = "Date d'entrée",
+				ContentAlignment = ContentAlignment.MiddleRight,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = CreateObjectPopup.Indent,
+				Margins          = new Margins (0, 10, 0, 0),
+			};
+
+			var frame = new FrameBox
+			{
+				Parent           = parent,
+				Dock             = DockStyle.Fill,
+				BackColor        = ColorManager.WindowBackgroundColor,
+			};
+
+			var dateController = new DateFieldController
+			{
+				Label      = null,
+				LabelWidth = 0,
+				Value      = this.ObjectDate,
+			};
+
+			dateController.HideAdditionalButtons = true;
+			dateController.CreateUI (frame);
+			dateController.SetFocus ();
+
+			dateController.ValueEdited += delegate
+			{
+				this.ObjectDate = dateController.Value;
+				this.UpdateButtons ();
+			};
+		}
+
 		private void CreateName(Widget parent)
 		{
 			new StaticText
@@ -114,17 +157,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
-			var framne = new FrameBox
+			var frame = new FrameBox
 			{
 				Parent           = parent,
 				Dock             = DockStyle.Fill,
 				BackColor        = ColorManager.WindowBackgroundColor,
-				Padding          = new Margins (1),
+				Padding          = new Margins (2),
 			};
 
 			this.textField = new TextField
 			{
-				Parent           = framne,
+				Parent           = frame,
 				Dock             = DockStyle.Fill,
 			};
 
@@ -285,13 +328,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.lastGroup = g;
 			}
 
-			this.createButton.Enable = !string.IsNullOrEmpty (this.ObjectName) &&
+			this.createButton.Enable = this.ObjectDate.HasValue &&
+									   !string.IsNullOrEmpty (this.ObjectName) &&
 									   !this.ObjectParent.IsEmpty;
 		}
 
 
 		private static readonly int TitleHeight = 24;
-		private static readonly int LineHeight  = 1+17+1;
+		private static readonly int LineHeight  = 2+17+2;
 		private static readonly int Indent      = 80;
 		private static readonly int PopupWidth  = 330;
 		private static readonly int PopupHeight = 400;

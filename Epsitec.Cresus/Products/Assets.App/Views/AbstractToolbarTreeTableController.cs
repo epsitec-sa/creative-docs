@@ -256,8 +256,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
 			this.UpdateCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
 
-			this.toolbar.UpdateCommand (ToolbarCommand.New, true);
-			this.toolbar.UpdateCommand (ToolbarCommand.Delete, row != -1);
+			this.toolbar.UpdateCommand (ToolbarCommand.New,      true);
+			this.toolbar.UpdateCommand (ToolbarCommand.Delete,   row != -1);
 			this.toolbar.UpdateCommand (ToolbarCommand.Deselect, row != -1);
 		}
 

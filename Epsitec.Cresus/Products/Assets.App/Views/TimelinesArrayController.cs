@@ -433,26 +433,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnObjectNew()
 		{
-			var modelGuid = this.SelectedGuid;
-			if (modelGuid.IsEmpty)
-			{
-				return;
-			}
-
-			int sel = this.selectedRow;
-			if (sel == -1)
-			{
-				return;
-			}
-
-			var e = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
-
-			this.UpdateData ();
-
-			var column = this.dataArray.FindColumnIndex (e.Timestamp);
-			this.SetSelection (sel+1, column);
-
-			this.OnStartEditing (e.Type, e.Timestamp);
+			var target = this.objectsToolbar.GetCommandWidget (ToolbarCommand.New);
+			this.ShowCreatePopup (target);
+			//-var modelGuid = this.SelectedGuid;
+			//-if (modelGuid.IsEmpty)
+			//-{
+			//-	return;
+			//-}
+			//-
+			//-int sel = this.selectedRow;
+			//-if (sel == -1)
+			//-{
+			//-	return;
+			//-}
+			//-
+			//-var e = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
+			//-
+			//-this.UpdateData ();
+			//-
+			//-var column = this.dataArray.FindColumnIndex (e.Timestamp);
+			//-this.SetSelection (sel+1, column);
+			//-
+			//-this.OnStartEditing (e.Type, e.Timestamp);
 		}
 
 		private void OnObjectDelete()
@@ -530,6 +532,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.SelectedGuid = guid;
 			this.SelectedTimestamp = timestamp;
+		}
+
+
+		private void ShowCreatePopup(Widget target)
+		{
+			var popup = new CreateObjectPopup (this.accessor, this.baseType, this.SelectedGuid);
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "create")
+				{
+					this.CreateObject (popup.ObjectDate.Value, popup.ObjectName, popup.ObjectParent, popup.ObjectGroup);
+				}
+			};
+		}
+
+		private void CreateObject(System.DateTime date, string name, Guid parent, bool group)
+		{
+			var guid = this.accessor.CreateObject (this.baseType, date, name, parent, group);
+			var obj = this.accessor.GetObject (this.baseType, guid);
+			System.Diagnostics.Debug.Assert (obj != null);
+
+			this.UpdateData ();
+
+			this.SelectedGuid = guid;
+			this.SelectedTimestamp = ObjectCalculator.GetLastTimestamp (obj);
+
+			this.OnStartEditing (EventType.Entrée, this.SelectedTimestamp.GetValueOrDefault ());
 		}
 		#endregion
 
@@ -982,7 +1014,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.objectsToolbar.UpdateCommand (ToolbarCommand.CompactAll, !this.nodesGetter.IsAllCompacted);
 			this.objectsToolbar.UpdateCommand (ToolbarCommand.ExpandAll,  !this.nodesGetter.IsAllExpanded);
 
-			this.objectsToolbar.UpdateCommand (ToolbarCommand.New,      this.selectedRow != -1);
+			this.objectsToolbar.UpdateCommand (ToolbarCommand.New,      true);
 			this.objectsToolbar.UpdateCommand (ToolbarCommand.Delete,   this.SelectedObject != null);
 			this.objectsToolbar.UpdateCommand (ToolbarCommand.Deselect, this.selectedRow != -1);
 

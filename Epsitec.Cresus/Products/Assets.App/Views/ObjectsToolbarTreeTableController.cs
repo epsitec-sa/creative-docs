@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -237,31 +238,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "create")
 				{
-					this.CreateObject (popup.ObjectName, popup.ObjectParent, popup.ObjectGroup);
+					this.CreateObject (popup.ObjectDate.Value, popup.ObjectName, popup.ObjectParent, popup.ObjectGroup);
 				}
 			};
 		}
 
-		private void CreateObject(string name, Guid parent, bool group)
+		private void CreateObject(System.DateTime date, string name, Guid parent, bool group)
 		{
-			var modelGuid = this.SelectedGuid;
-			if (modelGuid.IsEmpty)
-			{
-				return;
-			}
-
-			int sel = this.SelectedRow;
-			if (sel == -1)
-			{
-				return;
-			}
-
-			var e = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
-
+			var guid = this.accessor.CreateObject (this.baseType, date, name, parent, group);
+			var obj = this.accessor.GetObject (this.baseType, guid);
+			System.Diagnostics.Debug.Assert (obj != null);
+			
 			this.UpdateData ();
 
-			this.SelectedRow = sel+1;
-			this.OnStartEditing (e.Type, e.Timestamp);
+			this.SelectedGuid = guid;
+			this.Timestamp = ObjectCalculator.GetLastTimestamp (obj);
+			
+			this.OnStartEditing (EventType.Entrée, this.timestamp.GetValueOrDefault ());
 		}
 
 	
