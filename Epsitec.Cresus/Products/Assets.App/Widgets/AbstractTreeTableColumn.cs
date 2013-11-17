@@ -160,6 +160,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		protected void PaintUnavailable(Graphics graphics, Rectangle rect)
+		{
+			//	Dessine une cellule inaccessible d'un objet de regroupement.
+#if false
+			var color = ColorManager.GetTreeTableDockToLeftBackgroundColor ();
+
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (Color.FromAlphaColor (0.4, color));
+#else
+			var reference = this.MapParentToClient (Point.Zero);
+			PaintHatch.Paint (graphics, rect, reference, 0.1);
+#endif
+		}
+
 		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRow, int hilitedRow)
 		{
 			//	Dessine une portion de grille dans une cellule, selon le mode choisi.

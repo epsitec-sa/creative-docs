@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	événement de sortie), on dessine des hachures.
 			if (isLocked)
 			{
-				var reference = this.MapClientToParent (Point.Zero);
+				var reference = this.MapParentToClient (Point.Zero);
 				PaintHatch.Paint (graphics, rect, reference);
 			}
 		}

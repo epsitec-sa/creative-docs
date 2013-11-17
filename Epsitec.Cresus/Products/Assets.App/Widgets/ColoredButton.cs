@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Dessine le fond coloré.
 			if (this.hatch)
 			{
-				var reference = this.MapClientToParent (rect.BottomLeft);
+				var reference = this.MapParentToClient (rect.BottomLeft);
 				PaintHatch.Paint (graphics, rect, reference);
 			}
 			else

@@ -60,14 +60,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (BaseType.Objects, guid);
 
-				var nom         = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Nom);
-				var numéro      = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Numéro);
-				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur1);
-				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur2);
-				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur3);
-				var responsable = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Responsable);
-				var couleur     = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Couleur);
-				var série       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.NuméroSérie);
+				var regroupement = ObjectCalculator.GetObjectPropertyInt            (obj, this.Timestamp, ObjectField.Regroupement);
+				var nom          = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Nom);
+				var numéro       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Numéro);
+				var valeur1      = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur1);
+				var valeur2      = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur2);
+				var valeur3      = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur3);
+				var responsable  = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Responsable);
+				var couleur      = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Couleur);
+				var série        = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.NuméroSérie);
 
 				if (this.Timestamp.HasValue &&
 					!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
@@ -75,14 +76,16 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					nom = DataDescriptions.OutOfDateName;
 				}
 
+				var grouping = regroupement.HasValue && regroupement.Value == 1;
+
 				var sf = new TreeTableCellTree           (true, level, type, nom, isSelected: (i == selection));
-				var s1 = new TreeTableCellString         (true, numéro,      isSelected: (i == selection));
-				var s2 = new TreeTableCellComputedAmount (true, valeur1,     isSelected: (i == selection));
-				var s3 = new TreeTableCellComputedAmount (true, valeur2,     isSelected: (i == selection));
-				var s4 = new TreeTableCellComputedAmount (true, valeur3,     isSelected: (i == selection));
-				var s5 = new TreeTableCellString         (true, responsable, isSelected: (i == selection));
-				var s6 = new TreeTableCellString         (true, couleur,     isSelected: (i == selection));
-				var s7 = new TreeTableCellString         (true, série,       isSelected: (i == selection));
+				var s1 = new TreeTableCellString         (true, numéro,           isSelected: (i == selection));
+				var s2 = new TreeTableCellComputedAmount (true, valeur1,          isSelected: (i == selection), isUnavailable: grouping);
+				var s3 = new TreeTableCellComputedAmount (true, valeur2,          isSelected: (i == selection), isUnavailable: grouping);
+				var s4 = new TreeTableCellComputedAmount (true, valeur3,          isSelected: (i == selection), isUnavailable: grouping);
+				var s5 = new TreeTableCellString         (true, responsable,      isSelected: (i == selection), isUnavailable: grouping);
+				var s6 = new TreeTableCellString         (true, couleur,          isSelected: (i == selection), isUnavailable: grouping);
+				var s7 = new TreeTableCellString         (true, série,            isSelected: (i == selection), isUnavailable: grouping);
 
 				cf.AddRow (sf);
 				c1.AddRow (s1);

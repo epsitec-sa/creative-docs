@@ -37,6 +37,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.AddFilledRectangle (rect);
 					graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected));
 
+					if (cell.IsUnavailable)
+					{
+						this.PaintUnavailable (graphics, rect);
+					}
+
 					//	Dessine le texte.
 					if (!string.IsNullOrEmpty (cell.Value))
 					{

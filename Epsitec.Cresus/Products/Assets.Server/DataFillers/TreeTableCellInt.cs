@@ -8,12 +8,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public struct TreeTableCellInt : ITreeTableCell
 	{
-		public TreeTableCellInt(bool isValid, int? value, bool isSelected = false, bool isError = false)
+		public TreeTableCellInt(bool isValid, int? value, bool isSelected = false, bool isError = false, bool isUnavailable = false)
 		{
-			this.IsValid    = isValid;
-			this.Value      = value;
-			this.IsSelected = isSelected;
-			this.IsError    = isError;
+			this.IsValid       = isValid;
+			this.Value         = value;
+			this.IsSelected    = isSelected;
+			this.IsError       = isError;
+			this.IsUnavailable = isUnavailable;
 		}
 
 
@@ -21,6 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public readonly int?					Value;
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
+		public readonly bool					IsUnavailable;
 
 		
 		public override string ToString()
