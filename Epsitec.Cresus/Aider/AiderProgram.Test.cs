@@ -97,15 +97,15 @@ namespace Epsitec.Aider
 					id: "..\\..\\Samples\\EERV Région 11\\id.xlsx"
 				);
 
-				AiderProgram.Test
-				(
-					coreData: coreData,
-					person: "..\\..\\Samples\\EERV Région 5\\5070\\person.xlsx",
-					activity: "..\\..\\Samples\\EERV Région 5\\5070\\activity.xlsx",
-					group: "..\\..\\Samples\\EERV Région 5\\5070\\group.xlsx",
-					supergroup: "..\\..\\Samples\\EERV Région 5\\5070\\supergroup.xlsx",
-					id: "..\\..\\Samples\\EERV Région 5\\id.xlsx"
-				);
+				//AiderProgram.Test
+				//(
+				//	coreData: coreData,
+				//	person: "..\\..\\Samples\\EERV Région 5\\5070\\person.xlsx",
+				//	activity: "..\\..\\Samples\\EERV Région 5\\5070\\activity.xlsx",
+				//	group: "..\\..\\Samples\\EERV Région 5\\5070\\group.xlsx",
+				//	supergroup: "..\\..\\Samples\\EERV Région 5\\5070\\supergroup.xlsx",
+				//	id: "..\\..\\Samples\\EERV Région 5\\id.xlsx"
+				//);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 1");
 
@@ -199,7 +199,7 @@ namespace Epsitec.Aider
 
 			foreach (var eervParishDatum in eervParishData)
 			{
-//				EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum, considerDateOfBirth, considerSex);
+//-				EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum, considerDateOfBirth, considerSex);
 			}
 		}
 
