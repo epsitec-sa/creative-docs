@@ -26,8 +26,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
 			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
 
-			this.nodesGetter.UpdateData (TreeNodeOutputMode.OnlyDescendants);
-			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
+			this.nodesGetter.UpdateData (TreeNodeOutputMode.All);
+			this.nodesGetter.CompactFinals ();
+
+			this.visibleSelectedRow = this.nodesGetter.SearchBestIndex (selectedGuid);
+			this.UpdateSelectedRow ();
 
 			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.baseType, this.nodesGetter);
 
@@ -41,9 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.UpdateController ();
-
-				var node = this.nodesGetter[this.visibleSelectedRow];
-				this.ObjectParent = node.Guid;
+				this.UpdateSelectedRow ();
 			};
 		}
 
@@ -66,7 +67,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateTitle (this.mainFrameBox);
 			this.CreateCloseButton ();
 
-			var line1 = this.CreateFrame (CreateObjectPopup.Margins, 340, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margins*2, CreateObjectPopup.LineHeight);
+			var line1 = this.CreateFrame (CreateObjectPopup.Margins, 337, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margins*2, CreateObjectPopup.LineHeight);
 			var line2 = this.CreateFrame (CreateObjectPopup.Margins, 310, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margins*2, CreateObjectPopup.LineHeight);
 			var line3 = this.CreateFrame (CreateObjectPopup.Margins,  60, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margins*2, 240);
 			var line4 = this.CreateFrame (CreateObjectPopup.Margins,  20, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margins*2, 24);
@@ -249,6 +250,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			TreeTableFiller<TreeNode>.FillContent (this.dataFiller, this.controller, firstRow, count, selection);
 		}
 
+		private void UpdateSelectedRow()
+		{
+			if (this.visibleSelectedRow != -1)
+			{
+				var node = this.nodesGetter[this.visibleSelectedRow];
+				this.ObjectParent = node.Guid;
+			}
+		}
+
 		private void UpdateButtons()
 		{
 			this.createButton.Enable = !string.IsNullOrEmpty (this.ObjectName) &&
@@ -256,12 +266,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private static readonly int TitleHeight      = 24;
-		private static readonly int LineHeight       = 1+17+1;
-		private static readonly int Indent           = 80;
-		private static readonly int PopupWidth       = 330;
-		private static readonly int PopupHeight      = 400;
-		private static readonly int Margins          = 20;
+		private static readonly int TitleHeight = 24;
+		private static readonly int LineHeight  = 1+17+1;
+		private static readonly int Indent      = 80;
+		private static readonly int PopupWidth  = 330;
+		private static readonly int PopupHeight = 400;
+		private static readonly int Margins     = 20;
 
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;

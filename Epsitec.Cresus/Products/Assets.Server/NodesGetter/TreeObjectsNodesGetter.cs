@@ -153,7 +153,25 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 			this.UpdateNodeIndexes ();
 		}
-	
+
+		public void CompactFinals()
+		{
+			//	Compacte les parents directs, pour ne plus voir les enfants.
+			for (int i=0; i<this.nodes.Count-1; i++)
+			{
+				var node = this.nodes[i];
+				var next = this.nodes[i+1];
+
+				if (node.Type == NodeType.Expanded &&
+					next.Type == NodeType.Final)
+				{
+					this.nodes[i] = new TreeNode (node.Guid, node.Level, NodeType.Compacted);
+				}
+			}
+
+			this.UpdateNodeIndexes ();
+		}
+
 		
 		public void UpdateData()
 		{

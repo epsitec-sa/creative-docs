@@ -711,8 +711,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				selection -= this.TopVisibleRow;
 			}
 	
-			var contentIrem = this.dataFiller.GetContent (firstRow, count, selection);
-			this.treeColumn.SetCells (contentIrem.Columns.First ());
+			var contentItem = this.dataFiller.GetContent (firstRow, count, selection);
+			this.treeColumn.SetCells (contentItem.Columns.First ());
 		}
 
 		private int GetTopVisibleRow(int sel)

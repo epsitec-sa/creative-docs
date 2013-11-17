@@ -96,6 +96,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.treeObjectsGetter.ExpandAll ();
 		}
 
+		public void CompactFinals()
+		{
+			this.treeObjectsGetter.CompactFinals ();
+		}
+
 		public int SearchBestIndex(Guid value)
 		{
 			return this.treeObjectsGetter.SearchBestIndex (value);
