@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	/// <summary>
 	/// Accès en lecture aux événements d'un objet pour l'historique d'une propriété.
 	/// On ne s'intéresse donc qu'aux événements qui définissent la propriété, en
-	/// plus de celui placé à Timestamp.
+	/// plus de celui placé à ForcedTimestamp.
 	/// événements d'un objet -> GuidNode
 	/// </summary>
 	public class HistoryNodesGetter : AbstractNodesGetter<GuidNode>  // outputNodes
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		public DataObject						DataObject;
 		public ObjectField						Field;
-		public Timestamp?						Timestamp;
+		public Timestamp?						ForcedTimestamp;
 
 
 		public override int Count
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			{
 				foreach (var e in this.DataObject.Events)
 				{
-					if (e.Timestamp != this.Timestamp)
+					if (e.Timestamp != this.ForcedTimestamp)
 					{
 						var p = e.GetProperty (this.Field);
 						if (p == null)

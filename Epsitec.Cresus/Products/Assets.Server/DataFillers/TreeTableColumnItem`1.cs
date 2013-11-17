@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
@@ -16,14 +15,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public IEnumerable<T> Rows
-		{
-			get
-			{
-				return this.rows;
-			}
-		}
-
 		public void AddRow(T value)
 		{
 			this.rows.Add (value);
@@ -33,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			if (typeof (T) == typeof (TItem))
 			{
-				var rows = this.Rows as IEnumerable<TItem>;
+				var rows = this.rows as IEnumerable<TItem>;
 				return rows.ToArray ();
 			}
 

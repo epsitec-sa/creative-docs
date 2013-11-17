@@ -18,12 +18,12 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 
 		public static void FillContent(AbstractTreeTableFiller<T> filler, NavigationTreeTableController controller, int firstRow, int count, int selection)
 		{
-			var content = filler.GetContent (firstRow, count, selection);
+			var contentItem = filler.GetContent (firstRow, count, selection);
 
 			int i = 0;
-			foreach (var column in content.Columns)
+			foreach (var columnItem in contentItem.Columns)
 			{
-				controller.SetColumnCells (i++, column);
+				controller.SetColumnCells (i++, columnItem);
 			}
 		}
 	}

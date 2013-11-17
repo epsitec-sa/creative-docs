@@ -14,17 +14,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public HistoryAccessor(DataAccessor accessor, BaseType baseType, Guid objectGuid, Timestamp? timestamp, ObjectField field)
 		{
 			this.accessor    = accessor;
-			this.baseType    = baseType;
 			this.objectField = field;
-			this.fieldType   = DataAccessor.GetFieldType (field);
-			this.obj         = this.accessor.GetObject (this.baseType, objectGuid);
+			this.obj         = this.accessor.GetObject (baseType, objectGuid);
 			this.timestamp   = timestamp;
 
 			this.getter = new HistoryNodesGetter
 			{
-				DataObject = this.obj,
-				Field      = this.objectField,
-				Timestamp  = this.timestamp,
+				DataObject       = this.obj,
+				Field            = this.objectField,
+				ForcedTimestamp  = this.timestamp,
 			};
 			this.getter.UpdateData ();
 
@@ -101,9 +99,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private readonly DataAccessor								accessor;
-		private readonly BaseType									baseType;
 		private readonly ObjectField								objectField;
-		private readonly FieldType									fieldType;
 		private readonly DataObject									obj;
 		private readonly Timestamp?									timestamp;
 
