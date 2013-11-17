@@ -67,10 +67,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateTitle (this.mainFrameBox);
 			this.CreateCloseButton ();
 
-			var line1 = this.CreateFrame (CreateObjectPopup.Margins, 337, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margins*2, CreateObjectPopup.LineHeight);
-			var line2 = this.CreateFrame (CreateObjectPopup.Margins, 310, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margins*2, CreateObjectPopup.LineHeight);
-			var line3 = this.CreateFrame (CreateObjectPopup.Margins,  60, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margins*2, 240);
-			var line4 = this.CreateFrame (CreateObjectPopup.Margins,  20, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margins*2, 24);
+			var line1 = this.CreateFrame (CreateObjectPopup.Margin, 337, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
+			var line2 = this.CreateFrame (CreateObjectPopup.Margin, 310, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
+			var line3 = this.CreateFrame (CreateObjectPopup.Margin,  60, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, 240);
+			var line4 = this.CreateFrame (CreateObjectPopup.Margin,  20, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, 24);
 
 			this.CreateName      (line1);
 			this.CreateGroup     (line2);
@@ -137,13 +137,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateGroup(Widget parent)
 		{
-			new CheckButton
+			this.groupButton = new CheckButton
 			{
 				Parent           = parent,
 				Text             = "Objet de groupement",
 				AutoFocus        = false,
 				Dock             = DockStyle.Fill,
 				Margins          = new Margins (CreateObjectPopup.Indent + 10, 0, 0, 0),
+			};
+
+			this.groupButton.ActiveStateChanged += delegate
+			{
+				this.ObjectGroup = this.groupButton.ActiveState == ActiveState.Yes;
+				this.lastGroup = this.ObjectGroup;
 			};
 		}
 
@@ -189,7 +195,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margins - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5, parent.PreferredHeight),
 				Margins       = new Margins (0, 5, 0, 0),
 			};
 
@@ -201,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margins - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5, parent.PreferredHeight),
 				Margins       = new Margins (5, 0, 0, 0),
 			};
 
@@ -256,11 +262,29 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var node = this.nodesGetter[this.visibleSelectedRow];
 				this.ObjectParent = node.Guid;
+
+				var next = this.nodesGetter[this.visibleSelectedRow+1];
+				this.groupEnable = next.Level <= node.Level;
 			}
 		}
 
 		private void UpdateButtons()
 		{
+			this.groupButton.Enable = this.groupEnable;
+
+			if (this.groupEnable)
+			{
+				this.groupButton.ActiveState = this.lastGroup ? ActiveState.Yes : ActiveState.No;
+				this.ObjectGroup = this.lastGroup;
+			}
+			else
+			{
+				var g = this.lastGroup;
+				this.groupButton.ActiveState = ActiveState.Yes;
+				this.ObjectGroup = true;
+				this.lastGroup = g;
+			}
+
 			this.createButton.Enable = !string.IsNullOrEmpty (this.ObjectName) &&
 									   !this.ObjectParent.IsEmpty;
 		}
@@ -271,7 +295,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int Indent      = 80;
 		private static readonly int PopupWidth  = 330;
 		private static readonly int PopupHeight = 400;
-		private static readonly int Margins     = 20;
+		private static readonly int Margin      = 20;
 
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
@@ -280,8 +304,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly SingleObjectsTreeTableFiller	dataFiller;
 
 		private TextField								textField;
+		private CheckButton								groupButton;
 		private Button									createButton;
 		private Button									cancelButton;
 		private int										visibleSelectedRow;
+		private bool									groupEnable;
+		private bool									lastGroup;
 	}
 }
