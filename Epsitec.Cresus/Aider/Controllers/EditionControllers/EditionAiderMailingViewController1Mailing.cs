@@ -22,6 +22,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Name)
 					.Field (x => x.Category)
 					.Field (x => x.IsReady)
+					.Field (x => x.Sharing)
 					.Field (x => x.Description)
 				.End ();
 		}

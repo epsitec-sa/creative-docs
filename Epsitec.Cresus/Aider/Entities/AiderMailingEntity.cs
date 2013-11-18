@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Name,"\n",
 											 this.Description,"\n",
 											 this.GetReadyText (),"\n",
-											 "Dernière mise à jour: ",this.LastUpdate.Value.ToString ());
+											 this.LastUpdate.Value.ToString ());
 		}
 
 

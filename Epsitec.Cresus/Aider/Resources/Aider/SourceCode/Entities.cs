@@ -8138,6 +8138,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Sharing</c> field.
+		///	designer:fld/LVOA03/LVA3I
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA3I]")]
+		public global::Epsitec.Aider.Enumerations.SharingType Sharing
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.SharingType> ("[LVA3I]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.SharingType oldValue = this.Sharing;
+				if (oldValue != value || !this.IsFieldDefined("[LVA3I]"))
+				{
+					this.OnSharingChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.SharingType> ("[LVA3I]", oldValue, value);
+					this.OnSharingChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Exclusions</c> field.
 		///	designer:fld/LVOA03/LVOD03
 		///	</summary>
@@ -8200,6 +8222,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnLastUpdateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnIsReadyChanging(bool oldValue, bool newValue);
 		partial void OnIsReadyChanged(bool oldValue, bool newValue);
+		partial void OnSharingChanging(global::Epsitec.Aider.Enumerations.SharingType oldValue, global::Epsitec.Aider.Enumerations.SharingType newValue);
+		partial void OnSharingChanged(global::Epsitec.Aider.Enumerations.SharingType oldValue, global::Epsitec.Aider.Enumerations.SharingType newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

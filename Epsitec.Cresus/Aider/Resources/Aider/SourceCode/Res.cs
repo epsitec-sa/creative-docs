@@ -226,6 +226,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType PesonNationalityStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 58));
 				//	designer:cap/LVAK6
 				public static readonly Epsitec.Common.Types.EnumType RemovalReason = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 212));
+				//	designer:cap/LVA0I
+				public static readonly Epsitec.Common.Types.EnumType SharingType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 576));
 				//	designer:cap/LVA8H
 				public static readonly Epsitec.Common.Types.EnumType SubscriptionFlag = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 552));
 				//	designer:cap/LVGU22
@@ -1161,6 +1163,26 @@ namespace Epsitec.Aider
 					}
 				}
 				
+				public static class SharingType
+				{
+					//	designer:cap/LVA1I
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 577));
+						}
+					}
+					//	designer:cap/LVA2I
+					public static global::Epsitec.Common.Types.Caption Public
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 578));
+						}
+					}
+				}
+				
 				public static class SubscriptionFlag
 				{
 					//	designer:cap/LVA9H
@@ -1836,6 +1858,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid RecipientGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 14);
 				//	designer:cap/LVOR03
 				public static readonly global::Epsitec.Common.Support.Druid RecipientHouseholds = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 27);
+				//	designer:cap/LVA3I
+				public static readonly global::Epsitec.Common.Support.Druid Sharing = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 579);
 			}
 			
 			public static class AiderMailingCategory

@@ -243,6 +243,7 @@
     <Compile Include="Enumerations\HouseholdRole.cs" />
     <Compile Include="Enumerations\MailingParticipantType.cs" />
     <Compile Include="Enumerations\PersonVisibilityStatus.cs" />
+    <Compile Include="Enumerations\SharingType.cs" />
     <Compile Include="Enumerations\SubscriptionFlag.cs" />
     <Compile Include="Enumerations\SubscriptionType.cs" />
     <Compile Include="Enumerations\TextParser.cs" />
