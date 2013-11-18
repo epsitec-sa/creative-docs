@@ -99,12 +99,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public Guid CreateObject(BaseType baseType, System.DateTime date, string name, Guid parent, bool grouping)
 		{
-			var o = new DataObject ();
-			mandat.GetData (baseType).Add (o);
+			var obj = new DataObject ();
+			mandat.GetData (baseType).Add (obj);
 
 			var timestamp = new Timestamp (date, 0);
 			var e = new DataEvent (timestamp, EventType.Entrée);
-			o.AddEvent (e);
+			obj.AddEvent (e);
 
 			int position = this.GetCreatePosition (baseType, parent);
 
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			e.AddProperty (new DataIntProperty    (ObjectField.Regroupement, grouping ? 1:0));
 			e.AddProperty (new DataStringProperty (ObjectField.Nom,          name));
 		
-			return o.Guid;
+			return obj.Guid;
 		}
 
 		private int GetCreatePosition(BaseType baseType, Guid parent)
@@ -136,35 +136,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			return position;
-		}
-
-		public DataEvent CreateObject(BaseType baseType, int row, Guid modelGuid)
-		{
-			var timestamp = new Timestamp (this.mandat.StartDate, 0);
-
-			var o = new DataObject ();
-			mandat.GetData (baseType).Insert (row, o);
-
-			var e = new DataEvent (timestamp, EventType.Entrée);
-			o.AddEvent (e);
-
-			var objectModel = this.GetObject (baseType, modelGuid);
-
-			//	On met le même parent que l'objet modèle.
-			var guid = ObjectCalculator.GetObjectPropertyGuid (objectModel, null, ObjectField.Parent);
-			if (!guid.IsEmpty)
-			{
-				e.AddProperty (new DataGuidProperty (ObjectField.Parent, guid));
-			}
-
-			//	On met le même numéro que l'objet modèle.
-			var n = ObjectCalculator.GetObjectPropertyString (objectModel, null, ObjectField.Numéro);
-			if (!string.IsNullOrEmpty (n))
-			{
-				e.AddProperty (new DataStringProperty (ObjectField.Numéro, n));
-			}
-
-			return e;
 		}
 
 		public DataEvent CreateObjectEvent(DataObject obj, System.DateTime date, EventType type)
