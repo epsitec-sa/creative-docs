@@ -371,6 +371,8 @@
     <Compile Include="Features\FeatureManager.cs" />
     <Compile Include="Helpers\EntityPreviewHelper.cs" />
     <Compile Include="IChartProvider.cs" />
+    <Compile Include="Library\EntityBagManager.cs" />
+    <Compile Include="Library\IEntityBagHub.cs" />
     <Compile Include="Library\CoreInteractiveApp.cs" />
     <Compile Include="Library\DatabaseInitializer.cs" />
     <Compile Include="Library\INotificationHub.cs" />

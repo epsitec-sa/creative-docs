@@ -4,24 +4,20 @@
 
 .entitybag-label {
   background-color: #cbddf3;
-  background-image: -webkit-linear-gradient(top,#dae7f6,#cddef3 45%,#abc7ec 46%,#abc7ec 50%,#b8cfee 51%,#cbddf3);
-  display: inline-block;
-  padding: 2px 4px;
-  color: #04408c;
-  font-size: 11px;
-  font-weight: bold;
-  font-family: tahoma,arial,verdana,sans-serif;
-  line-height: 15px;
-  white-space: nowrap;
-  vertical-align: baseline;
-  background-color: #FFCC00;
-  -webkit-border-radius: 3px;
-   -moz-border-radius: 3px;
-        border-radius: 3px;
+    background-image: -webkit-linear-gradient(top,#dae7f6,#cddef3 45%,#abc7ec 46%,#abc7ec 50%,#b8cfee 51%,#cbddf3);
+    border-bottom: 1px solid #D7D7D7;
+    cursor: pointer;
+    color: #04408c;
+    font-size: 11px;
+    font-weight: bold;
+    font-family: tahoma,arial,verdana,sans-serif;
+    line-height: 15px;
+    text-transform: none;
+    padding: 6px;
+    overflow: hidden;
 }
 
 .entitybag-view {
-  background-color: #EFEFEF;
 }
 
 .entitybag-view table {
@@ -30,6 +26,27 @@
 }
 
 .entitybag-source {
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: rgb(153, 188, 232);
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(153, 188, 232);
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: rgb(153, 188, 232);
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: rgb(153, 188, 232);
+    width: 205px;
+    height: auto;
+    right: auto;
+    left: 0px;
+    top: 0px;
+    margin: 0px;
+    border-color: #99bce8;
+    padding: 0;
+    outline: 0;
     cursor: pointer;
 }
 

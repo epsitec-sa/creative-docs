@@ -22,6 +22,7 @@ $.getScript('signalr/hubs', function() {
     'Epsitec.cresus.webcore.ui.LoginPanel',
     'Epsitec.cresus.webcore.ui.Menu',
     'Epsitec.cresus.webcore.ui.TabManager',
+    'Epsitec.cresus.webcore.ui.ActionPage',
     'Epsitec.cresus.webcore.ui.EntityBag',
     'Epsitec.cresus.webcore.ui.FaqWindow',
     'Epsitec.cresus.webcore.tools.Texts',
@@ -38,6 +39,7 @@ $.getScript('signalr/hubs', function() {
       loginPanel: null,
       tabManager: null,
       entityBag: null,
+      actionPage: null,
       faqWindow: null,
       hubs: null,
 
@@ -271,6 +273,10 @@ $.getScript('signalr/hubs', function() {
           this.hubs.registerHub("toastr",NotificationsToastr);
         }
 
+        if(epsitecConfig.featureEntityBag) {
+          this.hubs.registerHub("entitybag",EntityBagHub);
+        }
+
         this.hubs.start();
 
         this.viewport = Ext.create('Ext.container.Viewport', {
@@ -283,6 +289,10 @@ $.getScript('signalr/hubs', function() {
 
         if(epsitecConfig.featureEntityBag) {
           this.entityBag = Ext.create('Epsitec.EntityBag',this.menu);
+        }
+
+        if(epsitecConfig.featureActionPage) {
+          this.actionPage = Ext.create('Epsitec.ActionPage');
         }
 
         if(epsitecConfig.featureFaq) {
@@ -366,6 +376,11 @@ $.getScript('signalr/hubs', function() {
       addEntityToBag: function(entity) {
         this.entityBag.addEntityToBag(entity);      
       },
+
+      addEntityToTarget: function(entity) {
+        this.actionPage.addTargetEntity(entity);      
+      },
+
 
       showEntity: function(path, callback) {
         if (!Ext.isDefined(path.entityId) || !Ext.isDefined(path.databaseName)) {

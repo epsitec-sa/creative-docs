@@ -27,29 +27,83 @@ function() {
 
       this.actionStores = [];
       
-      this.registerActionStore('mailing');
+      
+      this.registerActionStore('target');
 
       config = {
-        title: 'Outils Actions Aider',
+        title: 'Gestion de la cible',
         iconCls: 'epsitec-cresus-core-images-data-specialcontroller-icon16',
         bodyCls: 'tile',
         margins: '0 5 5 5',
         layout: 'column',
-        items: [this.createMailingActionPanel(),this.createGroupActionPanel(),this.createHouseholdActionPanel(),this.createContactsMergeActionPanel()],
+        items: [this.createTargetEntityToolContainer(),this.createTargetEntityContainer()],
         listeners: {
           score: this
         } 
       };
 
       this.callParent([config]);
-
-      this.initMailingActionPanel();
       
       return this;
     },
 
     /* Methods */
-    
+    createEntityView: function(store) {
+      return Ext.create('Ext.view.View', {
+        cls: 'entitybag-view',
+        tpl: '<tpl for=".">' +
+                '<div class="entitybag-source">' +
+                    '<div class="entitybag-label">{entityType}</div>{summary}' +
+                '</div>' +
+             '</tpl>',
+        itemSelector: 'div.entitybag-source',
+        selectedItemClass: 'entitybag-selected',
+        singleSelect: true,
+        entityBag: this,
+        store: this.actionStores[store],
+        listeners: {
+            scope: this
+        }
+    });      
+    },
+
+    addTargetEntity: function(entity) {
+      var store = this.actionStores['target'];
+      var index = 0;
+      store.removeAt(index);
+      store.insert(index,entity);    
+
+      var targetToolPanel = this.items.items[0];
+      targetToolPanel.items.add(this.addDefaultEntityActionButtons());
+      targetToolPanel.items.add(this.addEntityActionButtons());
+
+      targetToolPanel.doLayout();
+
+    },
+
+    createTargetEntityToolContainer: function ()
+    {
+      return Ext.create('Ext.panel.Panel', {
+          flex : 20 / 100,
+          title: 'Outils Cible',
+          height: 150,
+          bodyCls: 'tile',
+          layout: 'hbox',
+          items: [this.addDefaultEntityActionButtons()]
+        });
+    },
+
+    createTargetEntityContainer: function ()
+    {
+      return Ext.create('Ext.panel.Panel', {
+          columnWidth: 80 / 100,
+          title: 'Cible',
+          height: 150,
+          bodyCls: 'tile',
+          items: [this.createEntityView('target')]
+        });
+    },
+
     registerActionStore: function (action) {
       this.actionStores[action] = Ext.create('Ext.data.Store', {
           model: 'Bag',
@@ -57,58 +111,93 @@ function() {
         });
     },
 
-    initMailingActionPanel : function()
+    getEntityStoreKey: function(entity)
     {
-      var addMailingDropZone = Ext.create('Epsitec.DropZone', 'addmailingzoneid','Ajouter un publipostage', this.addMailing, this);
-      Epsitec.Cresus.Core.app.entityBag.registerDropZone(addMailingDropZone);
+      if(Ext.isDefined(entity.id))
+      {
+        return entity.id.split('-')[0];
+      }
+      else
+        return 'undefinedEntity';
     },
 
-    createMailingActionPanel: function()
+    createEntityContainer: function(entity)
     {
-      return Ext.create('Ext.panel.Panel', {
+      var storeKey = this.getEntityStoreKey(entity);
+      if(Ext.isDefined(this.actionStores[storeKey]))
+      {
+        return null;
+      }
+      else
+      {
+        this.registerActionStore(storeKey);
+        return Ext.create('Ext.panel.Panel', {
           columnWidth: 1/5,
-          title: 'Création de publipostage',
-          height: 500,
+          title: entity.entityType.split(' ')[0],
+          height: 'auto',
           bodyCls: 'tile',
-          items: [this.createMailingEntityView(),this.createMailingActionButton()]
+          items: [this.createEntityView(storeKey)]
         });
+      }      
     },
-    createMailingActionButton: function () {
+
+    addDefaultEntityActionButtons: function () {
       var button = {};
           button.xtype = 'button';
-          button.text = 'Créer le publipostage';
+          button.text = 'Charger le contenu de l\'arche';
           button.width = 400;
+          button.width = 200;
           button.cls = 'tile-button';
           button.overCls = 'tile-button-over';
           button.textAlign = 'left';
-          button.handler = this.createMailing;
+          button.handler = this.loadEntityBagContent;
           button.scope = this;
       return button;
     },
 
-    createMailingEntityView: function() {
-      return Ext.create('Ext.view.View', {
-        cls: 'entitybag-view',
-        tpl: '<tpl for=".">' +
-                '<div class="entitybag-source">' +
-                    '<tr><span class="entitybag-label">{entityType}</span>{summary}' +
-                '</div>' +
-             '</tpl>',
-        itemSelector: 'div.entitybag-source',
-        overItemCls: 'entitybag-over',
-        selectedItemClass: 'entitybag-selected',
-        singleSelect: true,
-        entityBag: this,
-        store: this.actionStores['mailing'],
-        listeners: {
-            scope: this
-        }
-    });      
+    addEntityActionButtons: function() {
+      var store = this.actionStores['target'];
+      var target = store.getAt(0);
+      var storeKey = this.getEntityStoreKey(target.data);
+
+      if(storeKey=='[LVOA03]')
+      {
+        var button = {};
+          button.xtype = 'button';
+          button.text = 'Ajouter au publipostage';
+          button.width = 400;
+          button.width = 200;
+          button.cls = 'tile-button';
+          button.overCls = 'tile-button-over';
+          button.textAlign = 'left';
+          button.handler = function () {
+                            this.createMailing(target);
+                          };
+          button.scope = this;
+
+
+      }
+
+      return button;
     },
 
-    addMailing: function(mailing) {
-      var store = this.actionStores['mailing'];
-      var index = store.indexOfId(mailing.id);
+    loadEntityBagContent: function () {
+      var bag = Epsitec.Cresus.Core.app.entityBag.bagStore;
+      var me = this;
+      bag.each(function(record,id){
+
+          console.info(record);
+          me.add(me.createEntityContainer(record.data));
+          me.addEntityToStore(record.data);
+          me.doLayout();
+      });
+    },
+
+    addEntityToStore: function(entity)
+    {
+      var storeKey = this.getEntityStoreKey(entity);
+      var store = this.actionStores[storeKey];
+      var index = store.indexOfId(entity.id);
       if(index===-1)
       {
         store.add(entity);
@@ -128,12 +217,11 @@ function() {
         ),
         method: 'POST',
         params: {
-          entityIds: this.bagStore.data.items.map(function(e) { return e.internalId; }).join(';')
+          entityIds: this.actionStores['[LVOA03]'].data.items.map(function(e) { return e.internalId; }).join(';')
         },
         callback: function ()
         {
           this.setLoading(false);
-          Epsitec.Cresus.Core.app.reloadCurrentTile(null);
         },
         scope: this
       });

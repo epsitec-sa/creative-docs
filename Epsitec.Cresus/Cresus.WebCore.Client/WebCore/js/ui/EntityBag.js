@@ -158,8 +158,8 @@ function() {
         cls: 'entitybag-view',
         tpl: '<tpl for=".">' +
                 '<div class="entitybag-source">' +
-                    '<tr><span class="entitybag-label">{entityType}</span>{summary}' +
-                '</div>' +
+                    '<div class="entitybag-label">{entityType}</div>{summary}' +
+                '</div><br/>' +
              '</tpl>',
         itemSelector: 'div.entitybag-source',
         overItemCls: 'entitybag-over',

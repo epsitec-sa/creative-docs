@@ -170,6 +170,8 @@
     <Compile Include="Chat\ChatUserStatusType.cs" />
     <Compile Include="Gravatar\GravatarHelper.cs" />
     <Compile Include="Gravatar\GravatarImageSize.cs" />
+    <Compile Include="Owin\Hubs\EntityBagClient.cs" />
+    <Compile Include="Owin\Hubs\EntityBagHub.cs" />
     <Compile Include="Owin\Hubs\ElasticSearchHub.cs" />
     <Compile Include="Owin\Hubs\NotificationHub.cs" />
     <Compile Include="Owin\Hubs\NotificationClient.cs" />

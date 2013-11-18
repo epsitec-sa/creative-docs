@@ -19,6 +19,7 @@ using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Linq;
 using System.Collections.Generic;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
@@ -64,6 +65,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			}
 
 			return AiderMailingEntity.Create (this.BusinessContext, aiderUser, name, desc, cat, isReady: false);
+			;
 		}
 		
 		private List<AiderMailingCategoryEntity> GetCategories()

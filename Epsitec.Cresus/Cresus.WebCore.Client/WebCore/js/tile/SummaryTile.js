@@ -66,32 +66,42 @@ function() {
           handler: function() { this.column.refresh(); },
           scope: this
         });
-
-        tools.push({
-          type: 'pin',
-          tooltip: Epsitec.Texts.getPinToBagTip(),
-          handler: function(e, t) { 
-            var app = Epsitec.Cresus.Core.getApplication();
-            /*var summaryLines = this.body.dom.textContent.replace(/\r\n/g, '\n').split('\n');
-
-            var cleanSummaryLines = new Array();
-            for(var i = 0; i<summaryLines.length; i++){
-                if (summaryLines[i]){
-                  cleanSummaryLines.push(summaryLines[i]);
-              }
-            }*/
-            //var summary = this.initialConfig.html.split(/<br\s*[\/]?>/gi)[0];
-            var entity = {
-                  summary: this.initialConfig.html,
-                  entityType: this.title,
-                  id: this.entityId
-                };
-        
-            app.addEntityToBag(entity,this.bodyClickHandler);
-          },
-          scope: this
-        });
-
+        if(epsitecConfig.featureEntityBag) {
+          tools.push({
+            type: 'pin',
+            tooltip: Epsitec.Texts.getPinToBagTip(),
+            handler: function(e, t) { 
+              var app = Epsitec.Cresus.Core.getApplication();
+              var summary = this.initialConfig.html.replace(/class="\s*(\w*)/g,"").replace(/id="\s*(\w*)/g,"");
+              var entity = {
+                    summary: summary,
+                    entityType: this.title,
+                    id: this.entityId
+                  };
+          
+              app.addEntityToBag(entity);
+            },
+            scope: this
+          });
+        }
+        if(epsitecConfig.featureActionPage) {
+          tools.push({
+            type: 'down',
+            tooltip: 'cibler',
+            handler: function(e, t) { 
+              var app = Epsitec.Cresus.Core.getApplication();
+              var summary = this.initialConfig.html.replace(/class="\s*(\w*)/g,"").replace(/id="\s*(\w*)/g,"");
+              var entity = {
+                    summary: summary,
+                    entityType: this.title,
+                    id: this.entityId
+                  };
+          
+              app.addEntityToTarget(entity);
+            },
+            scope: this
+          });
+        }
       }
 
       return tools;
