@@ -66,6 +66,25 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
+		public int SearchGroupIndex(Guid value)
+		{
+			int index = -1;
+
+			if (!value.IsEmpty)
+			{
+				index = this.nodes.FindIndex (x => x.Guid == value);
+				if (index != -1)
+				{
+					while (index >= 0 && this.nodes[index].Type == NodeType.Final)
+					{
+						index--;
+					}
+				}
+			}
+
+			return index;
+		}
+
 		public int SearchBestIndex(Guid value)
 		{
 			//	Retourne l'index ayant un Guid donné. Si la ligne correspondante

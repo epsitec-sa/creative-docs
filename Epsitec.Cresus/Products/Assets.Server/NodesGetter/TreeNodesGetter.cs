@@ -59,7 +59,14 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		{
 			get
 			{
-				return this.treeObjectsGetter[index];
+				if (index >= 0 && index < this.treeObjectsGetter.Count)
+				{
+					return this.treeObjectsGetter[index];
+				}
+				else
+				{
+					return TreeNode.Empty;
+				}
 			}
 		}
 
@@ -94,6 +101,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		public void ExpandAll()
 		{
 			this.treeObjectsGetter.ExpandAll ();
+		}
+
+		public int SearchGroupIndex(Guid value)
+		{
+			return this.treeObjectsGetter.SearchGroupIndex (value);
 		}
 
 		public int SearchBestIndex(Guid value)

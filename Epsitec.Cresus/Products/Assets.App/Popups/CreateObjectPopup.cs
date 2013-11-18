@@ -27,10 +27,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
 			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
 
-			this.nodesGetter.UpdateData (TreeNodeOutputMode.OnlyGrouping);
-			//-this.nodesGetter.CompactFinals ();
+			this.nodesGetter.UpdateData (TreeNodeOutputMode.All);
+			int sel = this.nodesGetter.SearchGroupIndex (selectedGuid);
+			var groupGuid = this.nodesGetter[sel].Guid;
 
-			this.visibleSelectedRow = this.nodesGetter.SearchBestIndex (selectedGuid);
+			this.nodesGetter.UpdateData (TreeNodeOutputMode.OnlyGrouping);
+
+			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList().FindIndex(x => x.Guid == groupGuid);
 			this.UpdateSelectedRow ();
 
 			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.baseType, this.nodesGetter);
