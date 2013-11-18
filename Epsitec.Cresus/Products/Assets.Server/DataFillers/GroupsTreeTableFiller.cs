@@ -48,8 +48,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (BaseType.Groups, guid);
 
-				var nom    = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
-				var family = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Famille);
+				var regroupement = ObjectCalculator.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.Regroupement);
+				var nom          = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
+				var family       = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Famille);
 
 				if (this.Timestamp.HasValue &&
 					!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
@@ -57,8 +58,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					family = DataDescriptions.OutOfDateName;
 				}
 
+				var grouping = regroupement.HasValue && regroupement.Value == 1;
+
 				var sf = new TreeTableCellTree   (true, level, type, nom, isSelected: (i == selection));
-				var s1 = new TreeTableCellString (true, family, isSelected: (i == selection));
+				var s1 = new TreeTableCellString (true, family,           isSelected: (i == selection), isUnavailable: grouping);
 
 				cf.AddRow (sf);
 				c1.AddRow (s1);

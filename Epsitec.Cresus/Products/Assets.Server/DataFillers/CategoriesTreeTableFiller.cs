@@ -56,12 +56,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
 
-				var nom    = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Nom);
-				var numéro = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Numéro);
-				var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.TauxAmortissement);
-				var typeAm = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.TypeAmortissement);
-				var period = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Périodicité);
-				var residu = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ValeurRésiduelle);
+				var regroupement = ObjectCalculator.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Regroupement);
+				var nom          = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Nom);
+				var numéro       = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Numéro);
+				var taux         = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.TauxAmortissement);
+				var typeAm       = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.TypeAmortissement);
+				var period       = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Périodicité);
+				var residu       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ValeurRésiduelle);
 
 				if (this.Timestamp.HasValue &&
 					!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
@@ -69,12 +70,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					nom = DataDescriptions.OutOfDateName;
 				}
 
+				var grouping = regroupement.HasValue && regroupement.Value == 1;
+
 				var sf = new TreeTableCellTree    (true, level, type, nom, isSelected: (i == selection));
-				var s1 = new TreeTableCellString  (true, numéro, isSelected: (i == selection));
-				var s2 = new TreeTableCellDecimal (true, taux,   isSelected: (i == selection));
-				var s3 = new TreeTableCellString  (true, typeAm, isSelected: (i == selection));
-				var s4 = new TreeTableCellString  (true, period, isSelected: (i == selection));
-				var s5 = new TreeTableCellDecimal (true, residu, isSelected: (i == selection));
+				var s1 = new TreeTableCellString  (true, numéro,           isSelected: (i == selection));
+				var s2 = new TreeTableCellDecimal (true, taux,             isSelected: (i == selection), isUnavailable: grouping);
+				var s3 = new TreeTableCellString  (true, typeAm,           isSelected: (i == selection), isUnavailable: grouping);
+				var s4 = new TreeTableCellString  (true, period,           isSelected: (i == selection), isUnavailable: grouping);
+				var s5 = new TreeTableCellDecimal (true, residu,           isSelected: (i == selection), isUnavailable: grouping);
 
 				cf.AddRow (sf);
 				c1.AddRow (s1);
