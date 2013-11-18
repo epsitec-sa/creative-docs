@@ -112,7 +112,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			var parishRepository = ParishAddressRepository.Current;
 			ParishAssigner.AssignToParish (parishRepository, this.BusinessContext, person);
 
-			var generateSubscription = address.Town.SwissCantonCode.Equals ("VD");
+			var generateSubscription = (address.Town.SwissCantonCode.Equals ("VD")) && (person.Confession == PersonConfession.Protestant);
 			if (generateSubscription)
 			{
 				// Here we know that the parish has been set up just before, so we reuse that

@@ -28,7 +28,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			wall.AddBrick ()
 				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
-				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
+				.Title (x => TextFormatter.FormatText ("Publipostage"))
 				.Text (x => x.GetSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderMailingViewController1Recipients))

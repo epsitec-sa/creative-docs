@@ -185,6 +185,13 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-fixsubscriptionsfromto"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixSubscriptionsFromTo (args));
+					return;
+				}
+
+				
 				if (args.Contains ("-fixsubscriptionsparishgroup"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixSubscriptionsParishGroup (args));
@@ -502,6 +509,14 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData
 			(
 				coreData => ChardonneSubscriptionFixer.FixChardonneSubscriptions (coreData)
+			);
+		}
+
+		private static void FixSubscriptionsFromTo(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => SubscriptionAndRefusalFixer.DeleteSubscriptionsFromNumberToNumber (coreData,"1158168","1192848")
 			);
 		}
 

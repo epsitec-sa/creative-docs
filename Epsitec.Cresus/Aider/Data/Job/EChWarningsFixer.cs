@@ -254,7 +254,7 @@ namespace Epsitec.Aider.Data.Job
 				var person = warning.Person;
 				if(person.MainContact.IsNotNull())
 				{
-					if (person.Address.Town.SwissCantonCode == "VD")
+					if (person.Address.Town.SwissCantonCode == "VD" && person.Confession == PersonConfession.Protestant)
 					{
 						var household = person.MainContact.Household;
 
