@@ -42,8 +42,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				var obj      = this.accessor.GetObject (this.baseType, node.Guid);
 				var parent   = this.GetParent   (obj);
 				var position = this.GetPosition (obj);
+				var grouping = this.GetGrouping (obj);
 
-				return new ParentPositionNode (node.Guid, parent, position);
+				return new ParentPositionNode (node.Guid, parent, position, grouping);
 			}
 		}
 
@@ -74,6 +75,20 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 
 			return 0;
+		}
+
+		private bool GetGrouping(DataObject obj)
+		{
+			if (obj != null)
+			{
+				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.Timestamp, ObjectField.Regroupement) as DataIntProperty;
+				if (p != null)
+				{
+					return p.Value == 1;
+				}
+			}
+
+			return false;
 		}
 
 

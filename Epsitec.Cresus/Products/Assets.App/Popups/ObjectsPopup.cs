@@ -15,20 +15,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class ObjectsPopup : AbstractPopup
 	{
-		public ObjectsPopup(DataAccessor accessor, Guid selectedGuid, bool onlyContainers)
+		public ObjectsPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid, TreeNodeOutputMode mode)
 		{
 			this.accessor = accessor;
+			this.baseType = baseType;
 
 			this.controller = new NavigationTreeTableController();
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
-			this.nodesGetter = new TreeNodesGetter (this.accessor, BaseType.Objects, primaryNodesGetter);
+			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
+			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
 
-			this.nodesGetter.UpdateData (onlyContainers ? TreeNodeOutputMode.OnlyParents : TreeNodeOutputMode.All);
+			this.nodesGetter.UpdateData (mode);
 			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 
-			this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.baseType, this.nodesGetter);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -73,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			new StaticText
 			{
 				Parent           = parent,
-				Text             = "Choix de l'objet parent",
+				Text             = "Choix du groupe",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Top,
 				PreferredHeight  = ObjectsPopup.TitleHeight - 4,
@@ -164,12 +165,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int TitleHeight      = 24;
 		private static readonly int HeaderHeight     = 22;
 		private static readonly int RowHeight        = 18;
-		private static readonly int PopupWidth       = 390;
+		private static readonly int PopupWidth       = 180;
 
 		private readonly DataAccessor					accessor;
+		private readonly BaseType						baseType;
 		private readonly NavigationTreeTableController	controller;
 		private readonly TreeNodesGetter				nodesGetter;
-		private readonly ObjectsTreeTableFiller			dataFiller;
+		private readonly SingleObjectsTreeTableFiller	dataFiller;
 
 		private int										visibleSelectedRow;
 	}

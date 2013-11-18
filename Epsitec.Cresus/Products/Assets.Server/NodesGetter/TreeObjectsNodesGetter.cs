@@ -154,24 +154,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.UpdateNodeIndexes ();
 		}
 
-		public void CompactFinals()
-		{
-			//	Compacte les parents directs, pour ne plus voir les enfants.
-			for (int i=0; i<this.nodes.Count-1; i++)
-			{
-				var node = this.nodes[i];
-				var next = this.nodes[i+1];
-
-				if (node.Type == NodeType.Expanded &&
-					next.Type == NodeType.Final)
-				{
-					this.nodes[i] = new TreeNode (node.Guid, node.Level, NodeType.Compacted);
-				}
-			}
-
-			this.UpdateNodeIndexes ();
-		}
-
 		
 		public void UpdateData()
 		{
@@ -192,18 +174,26 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				//	ni compactée.
 				var type = NodeType.Final;
 
-				if (i < count-2)
+				if (currentNode.Grouping)
 				{
-					var nextNode = this.inputNodes[i+1];
-
-					//	Si le prochain noeud a un niveau plus élevé, il s'agit d'une
-					//	ligne pouvant être étendue ou compactée. On lui redonne alors
-					//	son mode initial. S'il s'agit d'une nouvelle ligne (inconnue
-					//	lors du check initial), on lui met le mode étendu.
-					if (nextNode.Level > currentNode.Level)
+					bool isCompacted = compactedGuids.Where (guid => guid == currentNode.Guid).Any ();
+					type = isCompacted ? NodeType.Compacted : NodeType.Expanded;
+				}
+				else
+				{
+					if (i < count-2)
 					{
-						bool isCompacted = compactedGuids.Where (guid => guid == currentNode.Guid).Any ();
-						type = isCompacted ? NodeType.Compacted : NodeType.Expanded;
+						var nextNode = this.inputNodes[i+1];
+
+						//	Si le prochain noeud a un niveau plus élevé, il s'agit d'une
+						//	ligne pouvant être étendue ou compactée. On lui redonne alors
+						//	son mode initial. S'il s'agit d'une nouvelle ligne (inconnue
+						//	lors du check initial), on lui met le mode étendu.
+						if (nextNode.Level > currentNode.Level)
+						{
+							bool isCompacted = compactedGuids.Where (guid => guid == currentNode.Guid).Any ();
+							type = isCompacted ? NodeType.Compacted : NodeType.Expanded;
+						}
 					}
 				}
 

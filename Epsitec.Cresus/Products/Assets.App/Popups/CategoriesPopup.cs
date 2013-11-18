@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Categories);
 			this.nodesGetter = new TreeNodesGetter (this.accessor, BaseType.Categories, primaryNodesGetter);
-			this.nodesGetter.UpdateData (TreeNodeOutputMode.OnlyFinals);
+			this.nodesGetter.UpdateData (TreeNodeOutputMode.NotGrouping);
 
 			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodesGetter);
 

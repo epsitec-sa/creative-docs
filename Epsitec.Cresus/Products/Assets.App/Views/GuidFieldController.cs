@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.NodesGetter;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -86,7 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowPopup()
 		{
-			var popup = new ObjectsPopup (this.Accessor, this.Value, true);
+			var popup = new ObjectsPopup (this.Accessor, this.BaseType, this.Value, TreeNodeOutputMode.OnlyGrouping);
 
 			popup.Create (this.button, leftOrRight: false);
 

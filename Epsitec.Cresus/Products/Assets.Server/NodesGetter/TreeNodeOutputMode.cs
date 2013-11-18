@@ -10,8 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	public enum TreeNodeOutputMode
 	{
 		All,				// tous les noeuds
-		OnlyDescendants,	// tous les descendants
-		OnlyParents,		// seulement les parents directs (pas les grands-parents)
-		OnlyFinals,			// seulement les enfants
+		NotGrouping,		// seulement les enfants
+		OnlyGrouping,		// seulement les regroupements
 	}
 }

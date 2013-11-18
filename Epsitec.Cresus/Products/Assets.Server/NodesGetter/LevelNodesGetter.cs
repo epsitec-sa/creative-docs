@@ -25,9 +25,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		public Timestamp? Timestamp;
-
-
 		public override int Count
 		{
 			get
@@ -71,19 +68,15 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			list.Add (tree);
 			tree.GetNodes (list);
 
-			if (mode == TreeNodeOutputMode.OnlyDescendants)
+			switch (mode)
 			{
-				list = list.Where (x => x.Childrens.Any ()).ToList ();
-			}
+				case TreeNodeOutputMode.NotGrouping:
+					list = list.Where (x => !x.Node.Grouping).ToList ();
+					break;
 
-			if (mode == TreeNodeOutputMode.OnlyParents)
-			{
-				list = list.Where (x => LevelNodesGetter.IsParent (x)).ToList ();
-			}
-
-			if (mode == TreeNodeOutputMode.OnlyFinals)
-			{
-				list = list.Where (x => !x.Childrens.Any ()).ToList ();
+				case TreeNodeOutputMode.OnlyGrouping:
+					list = list.Where (x => x.Node.Grouping).ToList ();
+					break;
 			}
 
 			//	Construit la liste finale consultable en sortie.
@@ -91,8 +84,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			{
 				int level;
 
-				if (mode == TreeNodeOutputMode.OnlyFinals ||
-					mode == TreeNodeOutputMode.OnlyParents)
+				if (mode == TreeNodeOutputMode.NotGrouping)
 				{
 					level = 0;
 				}
@@ -101,7 +93,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 					level = LevelNodesGetter.GetLevel (treeNode);
 				}
 
-				var n = new LevelNode (treeNode.Node.Guid, level);
+				var n = new LevelNode (treeNode.Node.Guid, level, treeNode.Node.Grouping);
 				this.levelNodes.Add (n);
 			}
 		}
@@ -118,25 +110,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 				this.Insert (n);
 			}
-		}
-
-		private static bool IsParent(TreeNode treeNode)
-		{
-			//	Indique si un noeud est un parent direct (pas un grand-parent).
-			if (!treeNode.Childrens.Any ())
-			{
-				return false;
-			}
-
-			foreach (var children in treeNode.Childrens)
-			{
-				if (children.Childrens.Any ())
-				{
-					return false;
-				}
-			}
-
-			return true;
 		}
 
 		private static int GetLevel(TreeNode treeNode)
@@ -198,9 +171,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				}
 			}
 
-			private readonly TreeNode parent;
-			private readonly ParentPositionNode node;
-			private readonly List<TreeNode> childrens;
+			private readonly TreeNode				parent;
+			private readonly ParentPositionNode		node;
+			private readonly List<TreeNode>			childrens;
 		}
 
 

@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
 			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
 
-			this.nodesGetter.UpdateData (TreeNodeOutputMode.All);
-			this.nodesGetter.CompactFinals ();
+			this.nodesGetter.UpdateData (TreeNodeOutputMode.OnlyGrouping);
+			//-this.nodesGetter.CompactFinals ();
 
 			this.visibleSelectedRow = this.nodesGetter.SearchBestIndex (selectedGuid);
 			this.UpdateSelectedRow ();
@@ -313,20 +313,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateButtons()
 		{
-			this.groupingButton.Enable = this.groupingEnable;
-
-			if (this.groupingEnable)
-			{
-				this.groupingButton.ActiveState = this.lastGrouping ? ActiveState.Yes : ActiveState.No;
-				this.ObjectGrouping = this.lastGrouping;
-			}
-			else
-			{
-				var g = this.lastGrouping;
-				this.groupingButton.ActiveState = ActiveState.Yes;
-				this.ObjectGrouping = true;
-				this.lastGrouping = g;
-			}
+			//-this.groupingButton.Enable = this.groupingEnable;
+			//-
+			//-if (this.groupingEnable)
+			//-{
+			//-	this.groupingButton.ActiveState = this.lastGrouping ? ActiveState.Yes : ActiveState.No;
+			//-	this.ObjectGrouping = this.lastGrouping;
+			//-}
+			//-else
+			//-{
+			//-	var g = this.lastGrouping;
+			//-	this.groupingButton.ActiveState = ActiveState.Yes;
+			//-	this.ObjectGrouping = true;
+			//-	this.lastGrouping = g;
+			//-}
 
 			this.createButton.Text = this.GetCreateButtonText (this.ObjectGrouping);
 
