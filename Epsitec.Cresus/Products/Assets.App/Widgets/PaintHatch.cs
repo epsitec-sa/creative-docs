@@ -10,16 +10,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public static class PaintHatch
 	{
-		public static void Paint(Graphics graphics, Rectangle rect)
-		{
-			PaintHatch.Paint (graphics, rect, Point.Zero);
-		}
-
-		public static void Paint(Graphics graphics, Rectangle rect, Point reference)
-		{
-			PaintHatch.Paint (graphics, rect, reference, 0.3);
-		}
-
 		public static void Paint(Graphics graphics, Rectangle rect, Point reference, double alpha)
 		{
 			//	Dessine des hachures à 45 degrés "/" dans un rectangle.

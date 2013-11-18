@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (isLocked)
 			{
 				var reference = this.MapParentToClient (Point.Zero);
-				PaintHatch.Paint (graphics, rect, reference);
+				PaintHatch.Paint (graphics, rect, reference, 0.3);
 			}
 		}
 

@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (this.hatch)
 			{
 				var reference = this.MapParentToClient (rect.BottomLeft);
-				PaintHatch.Paint (graphics, rect, reference);
+				PaintHatch.Paint (graphics, rect, reference, 0.2);
 			}
 			else
 			{

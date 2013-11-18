@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -36,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (this.hatch)
 			{
 				var rect = new Rectangle (0, 0, this.ActualWidth, this.ActualHeight);
-				PaintHatch.Paint (graphics, rect);
+				PaintHatch.Paint (graphics, rect, Point.Zero, 0.3);
 			}
 		}
 
