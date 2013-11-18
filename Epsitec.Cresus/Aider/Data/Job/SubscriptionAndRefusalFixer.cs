@@ -16,6 +16,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Database;
 using System.Data;
 using System.Collections.Generic;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 
 namespace Epsitec.Aider.Data.Job
@@ -264,7 +265,7 @@ namespace Epsitec.Aider.Data.Job
 							person = household.Members.FirstOrDefault ();
 						}
 
-						if (person.Address.Town.SwissCantonCode == "VD")
+						if (person.Address.Town.SwissCantonCode == "VD" && person.Confession == PersonConfession.Protestant)
 						{
 							AiderSubscriptionEntity.Create (businessContext, household);
 						}
@@ -284,6 +285,59 @@ namespace Epsitec.Aider.Data.Job
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
 		}
+
+		public static void DeleteSubscriptionsFromNumberToNumber(CoreData coreData, string fromNumber, string toNumber)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				var db = businessContext.DataContext.DbInfrastructure;
+				var dbAbstraction = DbFactory.CreateDatabaseAbstraction (db.Access);
+				var sqlEngine = dbAbstraction.SqlEngine;
+
+				var sqlCommand = "select S1.id " +
+									"from SUBSCRIPTIONS S1 " +
+									"where cast(SUB_NUMBER as integer) > "+fromNumber+" and cast(SUB_NUMBER as integer) <= "+ toNumber;
+
+				var sqlBuilder = dbAbstraction.SqlBuilder;
+				var command = sqlBuilder.CreateCommand (dbAbstraction.BeginReadOnlyTransaction (), sqlCommand);
+				DataSet dataSet;
+				sqlEngine.Execute (command, DbCommandType.ReturningData, 1, out dataSet);
+
+				var subscriptionsIdsToCorrect = new List<DbId> ();
+				foreach (DataRow row in dataSet.Tables[0].Rows)
+				{
+					if (!row[0].ToString ().IsNullOrWhiteSpace ())
+					{
+						subscriptionsIdsToCorrect.Add (new DbId ((long) row[0]));
+					}
+				}
+
+				foreach (var subsriptionId in subscriptionsIdsToCorrect)
+				{
+					var subscription = businessContext.DataContext.ResolveEntity<AiderSubscriptionEntity> (new DbKey (subsriptionId));
+					if (subscription.SubscriptionType == SubscriptionType.Household)
+					{
+						if (subscription.Household.IsNotNull ())
+						{
+							if (!subscription.Household.Members.Any (m => m.Confession == PersonConfession.Protestant))
+							{
+								businessContext.DeleteEntity (subscription);
+							}					
+						}
+						else
+						{
+							businessContext.DeleteEntity (subscription);
+						}
+					}
+					else
+					{
+						businessContext.DeleteEntity (subscription);
+					}
+				}
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
+
 
 		private static System.Diagnostics.Stopwatch LogToConsole(string format, bool fixedTop, params object[] args)
 		{
