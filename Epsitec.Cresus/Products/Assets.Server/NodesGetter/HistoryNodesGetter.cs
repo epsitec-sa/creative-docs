@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public void UpdateData()
+		public override void UpdateData()
 		{
 			this.nodes.Clear ();
 

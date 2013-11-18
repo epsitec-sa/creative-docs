@@ -39,14 +39,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public void UpdateData(TreeNodeOutputMode mode = TreeNodeOutputMode.All)
-		{
-			this.ppNodesGetter.Timestamp = this.timestamp;
-			this.levelNodesGetter.UpdateData (mode);
-			this.treeObjectsGetter.UpdateData ();
-		}
-
-
 		public override int Count
 		{
 			get
@@ -68,6 +60,18 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 					return TreeNode.Empty;
 				}
 			}
+		}
+
+		public override void UpdateData()
+		{
+			this.UpdateData (TreeNodeOutputMode.All);
+		}
+
+		public void UpdateData(TreeNodeOutputMode mode)
+		{
+			this.ppNodesGetter.Timestamp = this.timestamp;
+			this.levelNodesGetter.UpdateData (mode);
+			this.treeObjectsGetter.UpdateData ();
 		}
 
 

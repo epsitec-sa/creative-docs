@@ -32,5 +32,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		{
 			get;
 		}
+
+		public virtual void UpdateData()
+		{
+		}
 	}
 }

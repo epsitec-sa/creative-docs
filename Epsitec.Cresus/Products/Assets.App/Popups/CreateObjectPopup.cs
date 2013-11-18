@@ -39,10 +39,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				if (grouping.HasValue && grouping.Value == 1)
 				{
+					//	Si l'objet sélectionné est un objet de regroupement, on le prend.
 					groupGuid = selectedGuid;
 				}
 				else
 				{
+					//	Si l'objet sélectionné n'est pas un objet de regroupement,
+					//	on prend son parent.
 					groupGuid = ObjectCalculator.GetObjectPropertyGuid (obj, null, ObjectField.Parent);
 				}
 			}

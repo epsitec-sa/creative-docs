@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 		
-		public void UpdateData()
+		public override void UpdateData()
 		{
 			//	Met à jour toutes les données en conservant le mode compacté/étendu.
 			var compactedGuids = this.nodes
