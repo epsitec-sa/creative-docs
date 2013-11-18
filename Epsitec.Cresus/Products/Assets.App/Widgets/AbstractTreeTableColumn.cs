@@ -160,18 +160,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected void PaintUnavailable(Graphics graphics, Rectangle rect)
+		protected void PaintUnavailable(Graphics graphics, Rectangle rect, int currentRow, int hilitedRow)
 		{
 			//	Dessine une cellule inaccessible d'un objet de regroupement.
-#if false
-			var color = ColorManager.GetTreeTableDockToLeftBackgroundColor ();
+			if (currentRow == hilitedRow)
+			{
+				var reference = this.MapParentToClient (Point.Zero);
 
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.4, color));
-#else
-			var reference = this.MapParentToClient (Point.Zero);
-			PaintHatch.Paint (graphics, rect, reference, 0.1);
-#endif
+				PaintHatch.Paint (graphics, rect, reference, 0.3);
+			}
 		}
 
 		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRow, int hilitedRow)

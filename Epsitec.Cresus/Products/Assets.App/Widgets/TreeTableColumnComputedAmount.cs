@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					if (cell.IsUnavailable)
 					{
-						this.PaintUnavailable (graphics, rect);
+						this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
 					}
 
 					//	Dessine le montant.
