@@ -307,8 +307,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					if (first)
 					{
-						syntheticCell.Timestamp     = cell.Value.Timestamp;
-						syntheticCell.Glyph = cell.Value.Glyph;
+						syntheticCell.Timestamp = cell.Value.Timestamp;
+						syntheticCell.Glyph     = cell.Value.Glyph;
 						first = false;
 					}
 

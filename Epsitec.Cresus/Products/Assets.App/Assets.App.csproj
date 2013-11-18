@@ -104,7 +104,6 @@
     <Compile Include="Views\EditorPageGrouping.cs" />
     <Compile Include="Views\StateAtController.cs" />
     <Compile Include="Views\GuidFieldController.cs" />
-    <Compile Include="Views\TimelinesArrayLogic.cs" />
     <Compile Include="Views\TimelinesArrayController.cs" />
     <Compile Include="Views\TimelinesToolbar.cs" />
     <Compile Include="Views\ViewMode.cs" />

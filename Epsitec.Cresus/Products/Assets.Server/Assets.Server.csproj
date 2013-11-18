@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="BusinessLogic\Amortissements.cs" />
     <Compile Include="BusinessLogic\LogicDescriptions.cs" />
+    <Compile Include="BusinessLogic\TimelinesArrayLogic.cs" />
     <Compile Include="DataFillers\AbstractTreeTableFiller.cs" />
     <Compile Include="DataFillers\CategoriesTreeTableFiller.cs" />
     <Compile Include="DataFillers\EventsCategoriesTreeTableFiller.cs" />
