@@ -193,6 +193,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				this.ObjectGrouping = this.groupingButton.ActiveState == ActiveState.Yes;
 				this.lastGrouping = this.ObjectGrouping;
+				this.UpdateButtons ();
 			};
 		}
 
@@ -234,11 +235,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent        = parent,
 				Name          = "create",
-				Text          = "Créer",
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5 + 60, parent.PreferredHeight),
 				Margins       = new Margins (0, 5, 0, 0),
 			};
 
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5 - 60, parent.PreferredHeight),
 				Margins       = new Margins (5, 0, 0, 0),
 			};
 
@@ -328,6 +328,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.lastGrouping = g;
 			}
 
+			this.createButton.Text = this.GetCreateButtonText (this.ObjectGrouping);
+
 			this.createButton.Enable = this.ObjectDate.HasValue &&
 									   !string.IsNullOrEmpty (this.ObjectName) &&
 									   !this.ObjectParent.IsEmpty;
@@ -373,6 +375,45 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					default:
 						return null;
 				}
+			}
+		}
+
+		private string GetCreateButtonText(bool grouping)
+		{
+			switch (this.baseType)
+			{
+				case BaseType.Objects:
+					if (grouping)
+					{
+						return "Créer un objet de regroupement";
+					}
+					else
+					{
+						return "Créer un objet final";
+					}
+
+				case BaseType.Categories:
+					if (grouping)
+					{
+						return "Créer une catégorie de regroupement";
+					}
+					else
+					{
+						return "Créer une catégorie finale";
+					}
+
+				case BaseType.Groups:
+					if (grouping)
+					{
+						return "Créer un groupe de regroupement";
+					}
+					else
+					{
+						return "Créer un groupe final";
+					}
+
+				default:
+					return null;
 			}
 		}
 
