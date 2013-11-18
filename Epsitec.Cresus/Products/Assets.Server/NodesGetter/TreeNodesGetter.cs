@@ -103,11 +103,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.treeObjectsGetter.ExpandAll ();
 		}
 
-		public int SearchGroupIndex(Guid value)
-		{
-			return this.treeObjectsGetter.SearchGroupIndex (value);
-		}
-
 		public int SearchBestIndex(Guid value)
 		{
 			return this.treeObjectsGetter.SearchBestIndex (value);

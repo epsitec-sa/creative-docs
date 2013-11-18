@@ -66,25 +66,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		public int SearchGroupIndex(Guid value)
-		{
-			int index = -1;
-
-			if (!value.IsEmpty)
-			{
-				index = this.nodes.FindIndex (x => x.Guid == value);
-				if (index != -1)
-				{
-					while (index >= 0 && this.nodes[index].Type == NodeType.Final)
-					{
-						index--;
-					}
-				}
-			}
-
-			return index;
-		}
-
 		public int SearchBestIndex(Guid value)
 		{
 			//	Retourne l'index ayant un Guid donné. Si la ligne correspondante
@@ -191,28 +172,20 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 				//	Par défaut, on considére que la ligne ne peut être ni étendue
 				//	ni compactée.
-				var type = NodeType.Final;
+				var type = (currentNode.Grouping) ? NodeType.Compacted : NodeType.Final;
 
-				if (currentNode.Grouping)
+				if (i < count-2)
 				{
-					bool isCompacted = compactedGuids.Where (guid => guid == currentNode.Guid).Any ();
-					type = isCompacted ? NodeType.Compacted : NodeType.Expanded;
-				}
-				else
-				{
-					if (i < count-2)
+					var nextNode = this.inputNodes[i+1];
+
+					//	Si le prochain noeud a un niveau plus élevé, il s'agit d'une
+					//	ligne pouvant être étendue ou compactée. On lui redonne alors
+					//	son mode initial. S'il s'agit d'une nouvelle ligne (inconnue
+					//	lors du check initial), on lui met le mode étendu.
+					if (nextNode.Level > currentNode.Level)
 					{
-						var nextNode = this.inputNodes[i+1];
-
-						//	Si le prochain noeud a un niveau plus élevé, il s'agit d'une
-						//	ligne pouvant être étendue ou compactée. On lui redonne alors
-						//	son mode initial. S'il s'agit d'une nouvelle ligne (inconnue
-						//	lors du check initial), on lui met le mode étendu.
-						if (nextNode.Level > currentNode.Level)
-						{
-							bool isCompacted = compactedGuids.Where (guid => guid == currentNode.Guid).Any ();
-							type = isCompacted ? NodeType.Compacted : NodeType.Expanded;
-						}
+						bool isCompacted = compactedGuids.Where (guid => guid == currentNode.Guid).Any ();
+						type = isCompacted ? NodeType.Compacted : NodeType.Expanded;
 					}
 				}
 
