@@ -56,7 +56,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					this.button.NormalColor = this.BackgroundColor;
+					if (this.BackgroundColor.IsVisible)
+					{
+						this.button.NormalColor = this.BackgroundColor;
+					}
+					else
+					{
+						this.button.NormalColor = ColorManager.NormalFieldColor;
+					}
 				}
 			}
 		}
@@ -68,17 +75,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.button = new ColoredButton
 			{
-				Parent          = this.frameBox,
-				HoverColor      = ColorManager.HoverColor,
-				Dock            = DockStyle.Left,
-				PreferredWidth  = 160,
-				PreferredHeight = AbstractFieldController.lineHeight,
-				Margins         = new Margins (0, 10, 0, 0),
-				TabIndex        = this.TabIndex,
-				Text            = this.value.ToString (),
+				Parent           = this.frameBox,
+				HoverColor       = ColorManager.HoverColor,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = 160,
+				PreferredHeight  = AbstractFieldController.lineHeight,
+				Margins          = new Margins (0, 10, 0, 0),
+				TabIndex         = this.TabIndex,
+				Text             = this.value.ToString (),
+			};
+
+			//	Petit triangle "v" par-dessus la droite du bouton principal, sans fond
+			//	afin de prendre la couleur du bouton principal.
+			var arrowButton = new GlyphButton
+			{
+				Parent           = this.button,
+				GlyphShape       = GlyphShape.TriangleDown,
+				ButtonStyle      = ButtonStyle.ToolItem,
+				Anchor           = AnchorStyles.Right,
+				PreferredWidth   = AbstractFieldController.lineHeight,
+				PreferredHeight  = AbstractFieldController.lineHeight,
 			};
 
 			this.button.Clicked += delegate
+			{
+				this.ShowPopup ();
+			};
+
+			arrowButton.Clicked += delegate
 			{
 				this.ShowPopup ();
 			};

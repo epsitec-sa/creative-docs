@@ -117,6 +117,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			//	Dessine le texte.
+			rect.Deflate (3, 0);
+
 			this.textLayout.Text            = this.Text;
 			this.textLayout.DefaultFont     = Font.DefaultFont;
 			this.textLayout.DefaultFontSize = Font.DefaultFontSize;
