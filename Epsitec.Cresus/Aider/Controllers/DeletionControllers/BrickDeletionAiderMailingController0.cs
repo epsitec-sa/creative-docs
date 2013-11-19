@@ -36,10 +36,10 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create (this.Execute);
+			return ActionExecutor.Create<string> (this.Execute);
 		}
 
-		private void Execute()
+		private void Execute(string _1)
 		{
 
 			var currentUser = AiderUserManager.Current.AuthenticatedUser;
