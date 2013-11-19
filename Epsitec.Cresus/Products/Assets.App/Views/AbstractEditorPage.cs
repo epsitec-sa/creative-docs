@@ -367,6 +367,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case EditionObjectPageType.Group:
 					return new EditorPageGroup (accessor, baseType);
 
+				case EditionObjectPageType.Groups:
+					return new EditorPageGroups (accessor, baseType);
+
 				default:
 					System.Diagnostics.Debug.Fail ("Unsupported page type");
 					return null;

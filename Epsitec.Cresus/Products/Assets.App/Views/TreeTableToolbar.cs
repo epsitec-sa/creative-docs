@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateCommandButtons()
 		{
+			this.UpdateCommandButton (this.buttonFilter,     ToolbarCommand.Filter);
 			this.UpdateCommandButton (this.buttonFirst,      ToolbarCommand.First);
 			this.UpdateCommandButton (this.buttonPrev,       ToolbarCommand.Prev);
 			this.UpdateCommandButton (this.buttonNext,       ToolbarCommand.Next);
@@ -64,17 +65,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonFirst      = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First,      "TreeTable.First",      "Retour sur la première ligne");
+			this.buttonFilter     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Filter,     "TreeTable.Filter",     "Filtre");
+
+			this.separator1       = this.CreateSeparator     (this.toolbar, 0);
+
+			this.buttonFirst      = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First, "TreeTable.First", "Retour sur la première ligne");
 			this.buttonPrev       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,       "TreeTable.Prev",       "Recule sur la ligne précédente");
 			this.buttonNext       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Next,       "TreeTable.Next",       "Avance sur la ligne suivante");
 			this.buttonLast       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Last,       "TreeTable.Last",       "Avance sur la dernière ligne");
 
-			this.separator1       = this.CreateSeparator     (this.toolbar, 0);
+			this.separator2       = this.CreateSeparator     (this.toolbar, 0);
 			
 			this.buttonCompactAll = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacte tout");
 			this.buttonExpandAll  = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etend tout");
 			
-			this.separator2       = this.CreateSeparator     (this.toolbar, 0);
+			this.separator3       = this.CreateSeparator     (this.toolbar, 0);
 			
 			this.buttonNew        = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.New,        "TreeTable.New",        "Nouvel ligne");
 			this.buttonDelete     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
@@ -126,21 +131,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IEnumerable<ButtonState> GetButtons(double width, double size)
 		{
-			bool prevNext      = width > size*5 + AbstractCommandToolbar.SeparatorWidth;
-			bool firstLast     = width > size*7 + AbstractCommandToolbar.SeparatorWidth;
-			bool compactExpand = width > size*9 + AbstractCommandToolbar.SeparatorWidth*2 && this.hasTreeOperations;
+			bool prevNext      = width > size*6  + AbstractCommandToolbar.SeparatorWidth*1;
+			bool firstLast     = width > size*8  + AbstractCommandToolbar.SeparatorWidth*2;
+			bool compactExpand = width > size*10 + AbstractCommandToolbar.SeparatorWidth*3 && this.hasTreeOperations;
+
+			yield return new ButtonState (this.buttonFilter);
+
+			yield return new ButtonState (this.separator1);
 
 			yield return new ButtonState (this.buttonFirst, firstLast);
 			yield return new ButtonState (this.buttonPrev,  prevNext);
 			yield return new ButtonState (this.buttonNext,  prevNext);
 			yield return new ButtonState (this.buttonLast,  firstLast);
 
-			yield return new ButtonState (this.separator1, firstLast || prevNext);
+			yield return new ButtonState (this.separator2, firstLast || prevNext);
 
 			yield return new ButtonState (this.buttonCompactAll, compactExpand);
 			yield return new ButtonState (this.buttonExpandAll,  compactExpand);
 
-			yield return new ButtonState (this.separator2, compactExpand);
+			yield return new ButtonState (this.separator3, compactExpand);
 
 			yield return new ButtonState (this.buttonNew);
 			yield return new ButtonState (this.buttonDelete);
@@ -162,17 +171,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private FrameBox						toolbar;
 
+		private IconButton						buttonFilter;
+
+		private FrameBox						separator1;
+
 		private IconButton						buttonFirst;
 		private IconButton						buttonPrev;
 		private IconButton						buttonNext;
 		private IconButton						buttonLast;
 
-		private FrameBox						separator1;
+		private FrameBox						separator2;
 		
 		private IconButton						buttonCompactAll;
 		private IconButton						buttonExpandAll;
 
-		private FrameBox						separator2;
+		private FrameBox						separator3;
 
 		private IconButton						buttonNew;
 		private IconButton						buttonDelete;

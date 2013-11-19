@@ -38,6 +38,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case EditionObjectPageType.Group:
 					return "Général";
 
+				case EditionObjectPageType.Groups:
+					return "Regroupements";
+
 				default:
 					return null;
 			}

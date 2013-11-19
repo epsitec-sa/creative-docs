@@ -380,6 +380,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					return FieldType.Date;
 
 				case ObjectField.Parent:
+				case ObjectField.GroupGuid+0:
+				case ObjectField.GroupGuid+1:
+				case ObjectField.GroupGuid+2:
+				case ObjectField.GroupGuid+3:
+				case ObjectField.GroupGuid+4:
+				case ObjectField.GroupGuid+5:
+				case ObjectField.GroupGuid+6:
+				case ObjectField.GroupGuid+7:
+				case ObjectField.GroupGuid+8:
+				case ObjectField.GroupGuid+9:
 					return FieldType.Guid;
 
 				default:

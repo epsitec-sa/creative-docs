@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
@@ -42,6 +43,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				switch (command)
 				{
+					case ToolbarCommand.Filter:
+						this.OnFilter ();
+						break;
+
 					case ToolbarCommand.First:
 						this.OnFirst ();
 						break;
@@ -114,6 +119,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		protected virtual void OnFilter()
+		{
+		}
 
 		protected void OnFirst()
 		{
@@ -250,6 +259,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected virtual void UpdateToolbar()
 		{
 			int row = this.VisibleSelectedRow;
+
+			this.toolbar.UpdateCommand (ToolbarCommand.Filter, true);
 
 			this.UpdateCommand (ToolbarCommand.First, row, this.FirstRowIndex);
 			this.UpdateCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);

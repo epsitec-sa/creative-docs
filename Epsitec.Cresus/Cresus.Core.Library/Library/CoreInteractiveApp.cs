@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Core.Library
 
 		private void CreateUIMainWindow()
 		{
-			this.Window = this.CreateWindow ();
+			this.Window = this.CreateWindow (new Epsitec.Common.Drawing.Size (800, 600));
 			
 			if (CoreContext.DatabaseType == CoreDatabaseType.PureTemplateData)
 			{
@@ -185,13 +185,13 @@ namespace Epsitec.Cresus.Core.Library
 			this.UpdateWindowText ();
 		}
 
-		protected virtual Window CreateWindow()
+		protected virtual Window CreateWindow(Epsitec.Common.Drawing.Size size)
 		{
 			string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
 
 			return new Window
 			{
-				ClientSize = new Epsitec.Common.Drawing.Size (800, 600),
+				ClientSize = size,
 				Icon       = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48)
 			};
 		}

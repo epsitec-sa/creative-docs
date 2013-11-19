@@ -42,9 +42,9 @@ namespace Epsitec.Cresus.Compta
 			return true;
 		}
 
-		protected override Window CreateWindow()
+		protected override Window CreateWindow(Epsitec.Common.Drawing.Size size)
 		{
-			var window = base.CreateWindow ();
+			var window = base.CreateWindow (size);
 			
 			window.MakeTitlelessResizableWindow ();
 			

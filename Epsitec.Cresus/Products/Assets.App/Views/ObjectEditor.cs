@@ -29,8 +29,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var box = new FrameBox
 			{
-				Parent = parent,
-				Dock   = DockStyle.Fill,
+				Parent    = parent,
+				Dock      = DockStyle.Fill,
+				BackColor = ColorManager.EditBackgroundColor,
 			};
 
 			this.tabPagesController = new TabPagesController ();
@@ -38,10 +39,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.editFrameBox = new FrameBox
 			{
-				Parent    = box,
-				Dock      = DockStyle.Fill,
-				Padding   = new Margins (10),
-				BackColor = ColorManager.EditBackgroundColor,
+				Parent         = box,
+				Dock           = DockStyle.Left,
+				PreferredWidth = 560,
+				Padding        = new Margins (10),
+				BackColor      = ColorManager.EditBackgroundColor,
 			};
 
 			this.OpenPage (this.AvailablePages.First ());
@@ -259,10 +261,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case EventType.Modification:
 					case EventType.Réorganisation:
 						yield return EditionObjectPageType.Object;
+						yield return EditionObjectPageType.Groups;
 						break;
 
 					default:  // accès à toutes les pages
 						yield return EditionObjectPageType.Object;
+						yield return EditionObjectPageType.Groups;
 						yield return EditionObjectPageType.Values;
 						yield return EditionObjectPageType.Amortissements;
 						break;

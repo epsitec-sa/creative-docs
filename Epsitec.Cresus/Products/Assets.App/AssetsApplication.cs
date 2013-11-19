@@ -46,10 +46,10 @@ namespace Epsitec.Cresus.Assets.App
 			return true;
 		}
 
-		
-		protected override Window CreateWindow()
+
+		protected override Window CreateWindow(Size size)
 		{
-			var window = base.CreateWindow ();
+			var window = base.CreateWindow (new Size (1000, 700));
 
 //-			window.MakeTitlelessResizableWindow ();
 

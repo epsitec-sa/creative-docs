@@ -50,15 +50,31 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		public override void UpdateData()
 		{
-			this.UpdateData (TreeNodeOutputMode.All);
+			this.UpdateData (TreeNodeOutputMode.All, Guid.Empty);
 		}
 
 		public void UpdateData(TreeNodeOutputMode mode)
 		{
+			this.UpdateData (mode, Guid.Empty);
+		}
+
+		public void UpdateData(TreeNodeOutputMode mode, Guid rootGuid)
+		{
 			this.levelNodes.Clear ();
 
 			//	Crée un véritable arbre de tous les noeuds.
-			var root = this.inputNodes.Nodes.Where (x => x.Parent.IsEmpty).FirstOrDefault ();
+			ParentPositionNode root;
+
+			if (rootGuid.IsEmpty)
+			{
+				root = this.inputNodes.Nodes.Where (x => x.Parent.IsEmpty).FirstOrDefault ();
+			}
+			else
+			{
+				root = new ParentPositionNode (rootGuid, Guid.Empty, 0, true);
+			}
+
+
 			if (root.IsEmpty)
 			{
 				return;

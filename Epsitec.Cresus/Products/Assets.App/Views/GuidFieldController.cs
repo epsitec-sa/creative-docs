@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (this.button != null)
 					{
-						this.button.Text = this.GuidToString (value);
+						this.button.Text = this.GuidToString (this.value);
 					}
 				}
 			}
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
 				TabIndex         = this.TabIndex,
-				Text             = this.value.ToString (),
+				Text             = this.GuidToString (this.value),
 			};
 
 			//	Petit triangle "v" par-dessus la droite du bouton principal, sans fond

@@ -80,6 +80,8 @@
     <Compile Include="DataFillers\TreeTableColumnType.cs" />
     <Compile Include="DataFillers\TreeTableContentItem.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
+    <Compile Include="NodesGetter\TreeNodesGetter2.cs" />
+    <Compile Include="NodesGetter\MergeNodesGetter.cs" />
     <Compile Include="NodesGetter\HistoryNodesGetter.cs" />
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
     <Compile Include="NodesGetter\BypassNodesGetter.cs" />

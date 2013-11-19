@@ -108,6 +108,30 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.Famille:
 					return "Famille";
 
+				case ObjectField.GroupGuid+0:
+				case ObjectField.GroupGuid+1:
+				case ObjectField.GroupGuid+2:
+				case ObjectField.GroupGuid+3:
+				case ObjectField.GroupGuid+4:
+				case ObjectField.GroupGuid+5:
+				case ObjectField.GroupGuid+6:
+				case ObjectField.GroupGuid+7:
+				case ObjectField.GroupGuid+8:
+				case ObjectField.GroupGuid+9:
+					return "Dans le groupe";
+
+				case ObjectField.GroupRate+0:
+				case ObjectField.GroupRate+1:
+				case ObjectField.GroupRate+2:
+				case ObjectField.GroupRate+3:
+				case ObjectField.GroupRate+4:
+				case ObjectField.GroupRate+5:
+				case ObjectField.GroupRate+6:
+				case ObjectField.GroupRate+7:
+				case ObjectField.GroupRate+8:
+				case ObjectField.GroupRate+9:
+					return "Au taux de";
+
 				default:
 					return null;
 			}

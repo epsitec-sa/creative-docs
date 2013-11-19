@@ -60,6 +60,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (BaseType.Objects, guid);
 
+				if (obj == null)
+				{
+					obj   = this.accessor.GetObject (BaseType.Groups, guid);
+				}
+
 				var regroupement = ObjectCalculator.GetObjectPropertyInt            (obj, this.Timestamp, ObjectField.Regroupement);
 				var nom          = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Nom);
 				var numéro       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Numéro);

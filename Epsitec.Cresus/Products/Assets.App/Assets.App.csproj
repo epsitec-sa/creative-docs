@@ -101,6 +101,7 @@
     <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\AbstractEditorPage.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
+    <Compile Include="Views\EditorPageGroups.cs" />
     <Compile Include="Views\EditorPageGrouping.cs" />
     <Compile Include="Views\StateAtController.cs" />
     <Compile Include="Views\GuidFieldController.cs" />
@@ -265,6 +266,7 @@
     <EmbeddedResource Include="Images\Show.TimelineMultiple.icon" />
     <EmbeddedResource Include="Images\Timeline.Double.icon" />
     <EmbeddedResource Include="Images\Timeline.Single.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Filter.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -52,5 +52,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Compte8,
 
 		Famille,
+
+		GroupGuid = 10000,
+		GroupRate = 10100,
 	}
 }

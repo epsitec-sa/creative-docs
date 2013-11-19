@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent         = topBox,
 				Dock           = DockStyle.Right,
-				PreferredWidth = 600,
+				PreferredWidth = 750,
 				BackColor      = ColorManager.GetBackgroundColor (),
 			};
 

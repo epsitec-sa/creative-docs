@@ -21,8 +21,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
+#if false
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
 			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
+#else
+			var groupNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
+			var objectNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
+			this.nodesGetter = new TreeNodesGetter2 (this.accessor, groupNodesGetter, objectNodesGetter);
+#endif
 
 			switch (this.baseType)
 			{
@@ -156,6 +162,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected override void OnFilter()
+		{
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Filter);
+			var popup = new ObjectsPopup (this.accessor, BaseType.Groups, this.NodesGetter.RootGuid, TreeNodeOutputMode.All);
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.Navigate += delegate (object sender, Guid guid)
+			{
+				this.NodesGetter.RootGuid = guid;
+				this.UpdateData ();
+			};
+		}
+
 		private void OnCompactOrExpand(int row)
 		{
 			//	Etend ou compacte une ligne (inverse son mode actuel).
@@ -278,11 +298,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private TreeNodesGetter NodesGetter
+		private TreeNodesGetter2 NodesGetter
 		{
 			get
 			{
-				return this.nodesGetter as TreeNodesGetter;
+				return this.nodesGetter as TreeNodesGetter2;
 			}
 		}
 

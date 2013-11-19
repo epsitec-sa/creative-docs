@@ -157,6 +157,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Compte8:
 					return EditionObjectPageType.Amortissements;
 
+				case ObjectField.GroupGuid+0:
+				case ObjectField.GroupGuid+1:
+				case ObjectField.GroupGuid+2:
+				case ObjectField.GroupGuid+3:
+				case ObjectField.GroupGuid+4:
+				case ObjectField.GroupGuid+5:
+				case ObjectField.GroupGuid+6:
+				case ObjectField.GroupGuid+7:
+				case ObjectField.GroupGuid+8:
+				case ObjectField.GroupGuid+9:
+					return EditionObjectPageType.Groups;
+
 				default:
 					return EditionObjectPageType.Object;
 			}
@@ -310,6 +322,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				var c2 = new List<ObjectSummaryControllerTile> ()
 				{
+					new ObjectSummaryControllerTile ("Regroupements"),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuid+0),
+					new ObjectSummaryControllerTile (ObjectField.GroupRate+0),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuid+1),
+					new ObjectSummaryControllerTile (ObjectField.GroupRate+1),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuid+2),
+					new ObjectSummaryControllerTile (ObjectField.GroupRate+2),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuid+3),
+					new ObjectSummaryControllerTile (ObjectField.GroupRate+3),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuid+4),
+					new ObjectSummaryControllerTile (ObjectField.GroupRate+4),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuid+5),
+					new ObjectSummaryControllerTile (ObjectField.GroupRate+5),
+				};
+				list.Add (c2);
+
+				var c3 = new List<ObjectSummaryControllerTile> ()
+				{
 					new ObjectSummaryControllerTile ("Valeurs"),
 					new ObjectSummaryControllerTile (ObjectField.Valeur1),
 					new ObjectSummaryControllerTile (ObjectField.Valeur2),
@@ -332,7 +362,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					new ObjectSummaryControllerTile (ObjectField.Compte7),
 					new ObjectSummaryControllerTile (ObjectField.Compte8),
 				};
-				list.Add (c2);
+				list.Add (c3);
 
 				return list;
 			}
