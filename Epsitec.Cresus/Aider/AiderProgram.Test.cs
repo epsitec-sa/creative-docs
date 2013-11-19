@@ -87,28 +87,33 @@ namespace Epsitec.Aider
 					id: "..\\..\\Samples\\EERV Région 8\\id.xlsx"
 				);
 
-				AiderProgram.Test
-				(
-					coreData: coreData,
-					person: "..\\..\\Samples\\EERV Région 11\\11010\\person.xlsx",
-					activity: "..\\..\\Samples\\EERV Région 11\\11010\\activity.xlsx",
-					group: "..\\..\\Samples\\EERV Région 11\\11010\\group.xlsx",
-					supergroup: "..\\..\\Samples\\EERV Région 11\\11010\\supergroup.xlsx",
-					id: "..\\..\\Samples\\EERV Région 11\\id.xlsx"
-				);
+				//	Data for Aigle is full of garbage... Importing it would product a lot
+				//	of junk.
 
 				//AiderProgram.Test
 				//(
 				//	coreData: coreData,
-				//	person: "..\\..\\Samples\\EERV Région 5\\5070\\person.xlsx",
-				//	activity: "..\\..\\Samples\\EERV Région 5\\5070\\activity.xlsx",
-				//	group: "..\\..\\Samples\\EERV Région 5\\5070\\group.xlsx",
-				//	supergroup: "..\\..\\Samples\\EERV Région 5\\5070\\supergroup.xlsx",
-				//	id: "..\\..\\Samples\\EERV Région 5\\id.xlsx"
+				//	person: "..\\..\\Samples\\EERV Région 11\\11010\\person.xlsx",
+				//	activity: "..\\..\\Samples\\EERV Région 11\\11010\\activity.xlsx",
+				//	group: "..\\..\\Samples\\EERV Région 11\\11010\\group.xlsx",
+				//	supergroup: "..\\..\\Samples\\EERV Région 11\\11010\\supergroup.xlsx",
+				//	id: "..\\..\\Samples\\EERV Région 11\\id.xlsx"
 				//);
+
+				AiderProgram.Test
+				(
+					coreData: coreData,
+					person: "..\\..\\Samples\\EERV Région 5\\5070\\person.xlsx",
+					activity: "..\\..\\Samples\\EERV Région 5\\5070\\activity.xlsx",
+					group: "..\\..\\Samples\\EERV Région 5\\5070\\group.xlsx",
+					supergroup: "..\\..\\Samples\\EERV Région 5\\5070\\supergroup.xlsx",
+					id: "..\\..\\Samples\\EERV Région 5\\id.xlsx"
+				);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 1");
 
+				return;
+#if false
 				AiderProgram.Test
 				(
 					coreData: coreData,
@@ -180,6 +185,7 @@ namespace Epsitec.Aider
 				);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV ALE");
+#endif
 			}
 		}
 
@@ -199,7 +205,7 @@ namespace Epsitec.Aider
 
 			foreach (var eervParishDatum in eervParishData)
 			{
-//-				EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum, considerDateOfBirth, considerSex);
+				EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum, considerDateOfBirth, considerSex);
 			}
 		}
 
