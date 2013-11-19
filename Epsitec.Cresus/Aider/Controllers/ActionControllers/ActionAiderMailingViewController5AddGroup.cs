@@ -16,6 +16,8 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Controllers.SpecialFieldControllers;
+using Epsitec.Aider.Override;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {

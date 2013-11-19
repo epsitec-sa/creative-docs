@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Common.Support;
 
 using System.Linq;
+using Epsitec.Aider.Controllers.ActionControllers;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -17,7 +18,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(Cresus.Bricks.BrickWall<AiderLegalPersonEntity> wall)
 		{
-			wall.AddBrick ();
+			wall.AddBrick ()
+				.EnableActionMenu<ActionAiderLegalPersonViewController0AddToBag> ();
 
 			wall.AddBrick ()
 				.Title ("Adresse de base")

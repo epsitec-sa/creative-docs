@@ -378,7 +378,7 @@
     <Compile Include="Library\INotificationHub.cs" />
     <Compile Include="Library\NotificationManager.cs" />
     <Compile Include="Library\NotificationMessage.cs" />
-    <Compile Include="Library\NotificationTime.cs" />
+    <Compile Include="Library\EnumWhen.cs" />
     <Compile Include="Library\Settings\UserDataSetSettings.cs" />
     <Compile Include="Library\Settings\UserFilterSettings.cs" />
     <Compile Include="Library\ViewControllerComponent.cs" />

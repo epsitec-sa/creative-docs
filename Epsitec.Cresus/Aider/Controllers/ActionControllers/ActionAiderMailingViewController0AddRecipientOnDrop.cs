@@ -16,6 +16,8 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Library;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -34,19 +36,29 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
+			var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
+
+			EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
+
 			if (this.AdditionalEntity is AiderContactEntity)
 			{
 				this.Entity.AddContact (this.BusinessContext, (AiderContactEntity) this.AdditionalEntity);
+				//Remove entity from the bag
+				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
 			}
 
 			if (this.AdditionalEntity is AiderGroupEntity)
 			{
 				this.Entity.AddGroup (this.BusinessContext, (AiderGroupEntity) this.AdditionalEntity);
+				//Remove entity from the bag
+				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
 			}
 
 			if (this.AdditionalEntity is AiderHouseholdEntity)
 			{
 				this.Entity.AddHousehold (this.BusinessContext, (AiderHouseholdEntity) this.AdditionalEntity);
+				//Remove entity from the bag
+				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
 			}
 
 			if (this.AdditionalEntity is AiderLegalPersonEntity)
@@ -54,7 +66,17 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				var legalPerson = (AiderLegalPersonEntity) this.AdditionalEntity;
 
 				this.Entity.AddContact (this.BusinessContext, legalPerson.GetMainContact ());
+				//Remove entity from the bag
+				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
 			}	
+		}
+
+		private void ConfirmByRemoveFromBag(string aiderUser)
+		{
+			
+			var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (this.AdditionalEntity).Value.ToString ().Replace ('/', '-');
+			EntityBagManager.GetCurrentEntityBagManager ().RemoveFromBag (aiderUser, id, When.Now);
+			EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser, false);
 		}
 	}
 }

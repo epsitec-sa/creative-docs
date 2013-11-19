@@ -136,14 +136,14 @@ function() {
       else {
         Epsitec.ErrorHandler.handleFormError(action);
         
-        if(Ext.isDefined(json))
+        if(json!=null)
         {
           businessError = json.content.businesserror;     
           if (Ext.isDefined(businessError))
           {
             this.showError(businessError);
-          }
-        }     
+          } 
+        }  
       }
     },
 

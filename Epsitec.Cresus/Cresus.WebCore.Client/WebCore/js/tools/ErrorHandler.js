@@ -67,8 +67,20 @@ function() {
 
       handleDefaultFailure: function() {
         var title = Epsitec.Texts.getErrorTitle(),
-            message = Epsitec.Texts.getServerErrorMessage();
-        this.showError(title, message);
+            message = 'Une demande occupe le serveur pour le moment';
+        this.showWarning(title, message);
+      },
+
+      showWarning: function(title, message) {
+        toastr.options = null;
+        toastr.options = {
+          debug: false,
+          positionClass: 'toast-top-right',
+          fadeOut: 1000,
+          timeOut: 5000,
+          extendedTimeOut: 1000
+        };
+        toastr.warning(message, title);
       },
 
       showError: function(title, message) {

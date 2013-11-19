@@ -34,6 +34,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.WithSpecialController (typeof (SummaryAiderMailingViewController1Recipients))
 				.EnableActionMenu<ActionAiderMailingViewController3KeepUpdated> ()
 				.EnableActionMenu<ActionAiderMailingViewController2Duplicate> ()
+				.EnableActionMenu<ActionAiderMailingViewController10AddToBag> ()
 				.EnableActionButton<ActionAiderMailingViewController2Duplicate> ()
 				.EnableActionOnDrop<ActionAiderMailingViewController0AddRecipientOnDrop> ();
 		}

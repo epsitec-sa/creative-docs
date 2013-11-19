@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
-		public void AddToBag(string userName, string title, string summary, string entityId,NotificationTime when)
+		public void AddToBag(string userName, string title, FormattedText summary, string entityId,When when)
 		{
 			if (EntityBagManager.hub != null)
 			{
@@ -26,11 +26,19 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public void RemoveFromBag(string userName, string title, string summary, string entityId,NotificationTime when)
+		public void RemoveFromBag(string userName, string entityId, When when)
 		{
 			if (EntityBagManager.hub != null)
 			{
-				EntityBagManager.hub.RemoveFromBag (userName, title, summary, entityId, when);
+				EntityBagManager.hub.RemoveFromBag (userName, entityId, when);
+			}
+		}
+
+		public void SetLoading(string userName,bool state)
+		{
+			if (EntityBagManager.hub != null)
+			{
+				EntityBagManager.hub.SetLoading (userName,state);
 			}
 		}
 

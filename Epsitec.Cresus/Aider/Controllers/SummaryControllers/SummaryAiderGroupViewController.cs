@@ -18,6 +18,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			if (this.Entity.CanBeEdited ())
 			{
 				var bricks = wall.AddBrick ()
+					.EnableActionMenu<ActionAiderGroupViewController6AddToBag> ()
 					.EnableActionMenu<ActionAiderGroupViewController2MoveGroup> ();
 
 				if (this.Entity.Subgroups.Count == 0)
@@ -28,7 +29,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			}
 			else
 			{
-				wall.AddBrick ();
+				wall.AddBrick ()
+					.EnableActionMenu<ActionAiderGroupViewController6AddToBag> ();
 			}
 
 			if (this.Entity.CanHaveSubgroups ())
@@ -82,6 +84,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);
+					
 		}
 	}
 }

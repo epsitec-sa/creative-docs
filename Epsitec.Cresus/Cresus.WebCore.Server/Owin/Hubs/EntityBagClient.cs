@@ -11,6 +11,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 
 using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 {
@@ -62,9 +63,9 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		#region IEntityBagHub Members
 
-		void IEntityBagHub.AddToBag(string userName, string title, string summary, string entityId, NotificationTime when)
+		void IEntityBagHub.AddToBag(string userName, string title, FormattedText summary, string entityId, When when)
 		{
-			if (when == NotificationTime.OnConnect)
+			if (when == When.OnConnect)
 			{
 				using (this.queueLock.LockWrite ())
 				{
@@ -80,21 +81,27 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			}
 		}
 
-		void IEntityBagHub.RemoveFromBag(string userName, string title, string summary, string entityId, NotificationTime when)
+		void IEntityBagHub.RemoveFromBag(string userName, string entityId, When when)
 		{
-			if (when == NotificationTime.OnConnect)
+			if (when == When.OnConnect)
 			{
 				using (this.queueLock.LockWrite ())
 				{
-					this.bagEntityQueue.Add (new BagEntity ("REMOVE", userName, title, summary, entityId));
+					this.bagEntityQueue.Add (new BagEntity ("REMOVE", userName, null, null, entityId));
 				}
 
 			}
 			else
 			{
 				var context = GlobalHost.ConnectionManager.GetHubContext<EntityBagHub> ();
-				context.Clients.Group (userName).RemoveFromBag (title, summary, entityId);
+				context.Clients.Group (userName).RemoveFromBag (entityId);
 			}
+		}
+
+		void IEntityBagHub.SetLoading(string userName,bool state)
+		{			
+			var context = GlobalHost.ConnectionManager.GetHubContext<EntityBagHub> ();
+			context.Clients.Group (userName).SetLoading (state);			
 		}
 
 		#endregion
@@ -139,7 +146,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 											context.Clients.Client (connectionId).AddToBag (bagEntity.Title,bagEntity.Summary,bagEntity.EntityId);
 											break;
 										case "REMOVE":
-											context.Clients.Client (connectionId).RemoveFromBag (bagEntity.Title, bagEntity.Summary, bagEntity.EntityId);
+											context.Clients.Client (connectionId).RemoveFromBag (bagEntity.EntityId);
 											break;
 									}
 								}
@@ -182,7 +189,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		private sealed class BagEntity
 		{
-			public BagEntity(string userName, string action, string title, string summary,string entityId)
+			public BagEntity(string userName, string action, string title, FormattedText summary,string entityId)
 			{
 				this.Action = action;
 				this.Title = title;
@@ -193,7 +200,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 			public string						Action;
 			public string						Title;
-			public string						Summary;
+			public FormattedText				Summary;
 			public string						EntityId;
 			public string						DestinationUserName;
 		}

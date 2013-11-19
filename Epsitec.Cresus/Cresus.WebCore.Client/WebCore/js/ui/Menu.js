@@ -195,15 +195,7 @@ function() {
           iconCls: 'epsitec-aider-images-general-bag-icon32'
         }));
       }
-
-      if(epsitecConfig.featureActionPage) {
-        buttons.push(this.createButton({
-          text: 'Cible',
-          handler: this.actionPageButtonHandler,
-          iconCls: 'epsitec-cresus-core-images-data-specialcontroller-icon32'
-        }));
-      }
-
+      
       if(epsitecConfig.featureFaq) {
         buttons.push(this.createButton({
           text: 'F.A.Q.',

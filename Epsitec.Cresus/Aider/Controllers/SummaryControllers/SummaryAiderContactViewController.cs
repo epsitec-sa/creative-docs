@@ -48,6 +48,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableActionMenu<ActionAiderContactViewController0CreatePerson> ();
 			}
 
+			wall.AddBrick ()
+					.EnableActionMenu<ActionAiderContactViewController1AddToBag> ();
+
 			var contactSummary = SummaryAiderContactViewController.GetPersonContactSummary (contact);
 
 			//	TODO: add phone/...

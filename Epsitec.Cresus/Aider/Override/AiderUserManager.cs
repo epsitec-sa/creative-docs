@@ -107,7 +107,7 @@ namespace Epsitec.Aider.Override
 					Title = "Information AIDER",
 					Body = "Bienvenue..."
 				},
-				NotificationTime.OnConnect);
+				When.OnConnect);
 
 			notif.NotifyAll (
 				new NotificationMessage ()
@@ -115,7 +115,7 @@ namespace Epsitec.Aider.Override
 					Title = "Information AIDER",
 					Body = user.DisplayName + " vient de se connecter."
 				},
-				NotificationTime.Now);
+				When.Now);
 		}
 
 		private void NotifyChangePassword(AiderUserEntity user, NotificationManager notif)
@@ -130,7 +130,7 @@ namespace Epsitec.Aider.Override
 				HeaderErrorMessage = "Réinitialisez votre mot de passe à l'aide du bouton d'action"
 			};
 
-			notif.WarnUser (user.LoginName, message, NotificationTime.OnConnect);
+			notif.WarnUser (user.LoginName, message, When.OnConnect);
 		}
 
 		private void NotifyMissingEMail(AiderUserEntity user, NotificationManager notif)
@@ -150,7 +150,7 @@ namespace Epsitec.Aider.Override
 					ErrorFieldMessage = "votre adresse e-mail"
 				};
 
-				notif.WarnUser (user.LoginName, message, NotificationTime.OnConnect);
+				notif.WarnUser (user.LoginName, message, When.OnConnect);
 			}
 		}
 

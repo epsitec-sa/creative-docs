@@ -94,28 +94,11 @@ function() {
         {
           contextMenu = this.createContextMenu(options);
 
-          if(epsitecConfig.featureEntityBag)
-          {          
-            contextMenu.add(this.createContextMenuDefaultItems())
-          }
-
           newOptions.listeners.itemcontextmenu = function(v, r, n, i, e) {
               e.stopEvent();
               contextMenu.showAt(e.getXY());
               return false;
             };       
-        }
-        else
-        {          
-          if(epsitecConfig.featureEntityBag)
-          {
-            contextMenu = this.createDefaultContextMenu();
-              newOptions.listeners.itemcontextmenu = function(v, r, n, i, e) {
-                e.stopEvent();
-                contextMenu.showAt(e.getXY());
-                return false;
-            };
-          }          
         }
       }
 
@@ -126,13 +109,6 @@ function() {
     },
 
     /* Methods */
-
-    createDefaultContextMenu: function(options) {
-      return Ext.create('Ext.menu.Menu', {
-        items: this.createContextMenuDefaultItems()
-      });
-    },
-
     createContextMenu: function(options) {
       return Ext.create('Ext.menu.Menu', {
         items: this.createContextMenuItems(options.menuItems)
@@ -164,20 +140,7 @@ function() {
         scope: this
       });
     },
-
-    createContextMenuDefaultItems: function() {
-      if(epsitecConfig.featureEntityBag)
-      {
-        return Ext.create('Ext.Action', {
-          icon: '/images/Epsitec/Aider/Images/General/Bag/icon16.png',
-          text: 'Ajouter &agrave; l\'arche',
-          disabled: false,
-          handler: this.onEntityBagAddHandler,
-          scope: this
-        });
-      }
-    },
-
+    
     summaryNavigationMenuHandler: function(widget, event) {
       var rec, path, app;
 

@@ -219,7 +219,7 @@ namespace Epsitec.Aider.Rules
 							Body = FormattedText.FromSimpleText (string.Format (Resources.Text ("La rue \"{0}\" n'a pas été trouvée pour \"{1}\"."), street, townName))
 						};
 
-						notif.WarnUser (user.LoginName, message, NotificationTime.Now);
+						notif.WarnUser (user.LoginName, message, When.Now);
 
 						return;
 					}

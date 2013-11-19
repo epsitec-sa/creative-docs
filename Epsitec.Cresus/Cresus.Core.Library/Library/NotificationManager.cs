@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
-		public void Notify(string userName, NotificationMessage message, NotificationTime when)
+		public void Notify(string userName, NotificationMessage message, When when)
 		{
 			if (NotificationManager.hub != null)
 			{
@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public void WarnUser(string userName, NotificationMessage message, NotificationTime when)
+		public void WarnUser(string userName, NotificationMessage message, When when)
 		{
 			if (NotificationManager.hub != null)
 			{
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public void NotifyAll(NotificationMessage message, NotificationTime when)
+		public void NotifyAll(NotificationMessage message, When when)
 		{
 			if (NotificationManager.hub != null)
 			{
