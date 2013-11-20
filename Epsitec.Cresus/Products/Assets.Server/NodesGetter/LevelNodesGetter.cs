@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 			else
 			{
-				root = new ParentPositionNode (rootGuid, Guid.Empty, 0, true);
+				root = new ParentPositionNode (rootGuid, Guid.Empty, 0);
 			}
 
 
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			foreach (var treeNode in list)
 			{
 				int level = LevelNodesGetter.GetLevel (treeNode);
-				var n = new LevelNode (treeNode.Node.Guid, level, treeNode.Node.Grouping);
+				var n = new LevelNode (treeNode.Node.Guid, level);
 				this.levelNodes.Add (n);
 			}
 		}

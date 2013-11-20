@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return this.mandat.GetData (baseType)[objectGuid];
 		}
 
-		public Guid CreateObject(BaseType baseType, System.DateTime date, string name, Guid parent, bool grouping)
+		public Guid CreateObject(BaseType baseType, System.DateTime date, string name, Guid parent)
 		{
 			var obj = new DataObject ();
 			mandat.GetData (baseType).Add (obj);
@@ -108,10 +108,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			int position = this.GetCreatePosition (baseType, parent);
 
-			e.AddProperty (new DataGuidProperty   (ObjectField.Parent,       parent));
-			e.AddProperty (new DataIntProperty    (ObjectField.Position,     position));
-			e.AddProperty (new DataIntProperty    (ObjectField.Regroupement, grouping ? 1:0));
-			e.AddProperty (new DataStringProperty (ObjectField.Nom,          name));
+			if (!parent.IsEmpty)
+			{
+				e.AddProperty (new DataGuidProperty (ObjectField.Parent, parent));
+			}
+
+			e.AddProperty (new DataIntProperty    (ObjectField.Position, position));
+			e.AddProperty (new DataStringProperty (ObjectField.Nom,      name));
 		
 			return obj.Guid;
 		}

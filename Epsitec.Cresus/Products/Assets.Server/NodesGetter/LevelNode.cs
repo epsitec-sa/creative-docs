@@ -9,11 +9,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	public struct LevelNode
 	{
-		public LevelNode(Guid guid, int level, bool grouping)
+		public LevelNode(Guid guid, int level)
 		{
 			this.Guid     = guid;
 			this.Level    = level;
-			this.Grouping = grouping;
 		}
 
 		public bool IsEmpty
@@ -25,10 +24,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public static LevelNode Empty = new LevelNode (Guid.Empty, -1, false);
+		public static LevelNode Empty = new LevelNode (Guid.Empty, -1);
 
 		public readonly Guid				Guid;
 		public readonly int					Level;
-		public readonly bool				Grouping;
 	}
 }

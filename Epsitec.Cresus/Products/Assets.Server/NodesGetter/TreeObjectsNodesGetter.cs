@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 				//	Par défaut, on considére que la ligne ne peut être ni étendue
 				//	ni compactée.
-				var type = (currentNode.Grouping) ? NodeType.Compacted : NodeType.Final;
+				var type = NodeType.Final;
 
 				if (i < count-2)
 				{

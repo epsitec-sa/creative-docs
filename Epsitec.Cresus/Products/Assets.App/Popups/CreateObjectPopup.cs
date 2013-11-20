@@ -32,25 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	On cherche l'objet de regroupement qui sera sélectionné.
 			var groupGuid = Guid.Empty;
 
-			var obj = this.accessor.GetObject (this.baseType, selectedGuid);
-			if (obj != null)
-			{
-				var grouping = ObjectCalculator.GetObjectPropertyInt (obj, null, ObjectField.Regroupement);
-
-				if (grouping.HasValue && grouping.Value == 1)
-				{
-					//	Si l'objet sélectionné est un objet de regroupement, on le prend.
-					groupGuid = selectedGuid;
-				}
-				else
-				{
-					//	Si l'objet sélectionné n'est pas un objet de regroupement,
-					//	on prend son parent.
-					groupGuid = ObjectCalculator.GetObjectPropertyGuid (obj, null, ObjectField.Parent);
-				}
-			}
-
-			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList().FindIndex(x => x.Guid == groupGuid);
+			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 			this.UpdateSelectedRow ();
 
 			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.baseType, this.nodesGetter);
@@ -74,7 +56,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public System.DateTime?					ObjectDate;
 		public string							ObjectName;
-		public bool								ObjectGrouping;
 		public Guid								ObjectParent;
 
 
@@ -99,7 +80,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.CreateDate      (line1);
 			this.CreateName      (line2);
-			this.CreateGrouping  (line3);
 			this.CreateTreeTable (line4);
 			this.CreateButtons   (line5);
 
@@ -198,25 +178,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		private void CreateGrouping(Widget parent)
-		{
-			this.groupingButton = new CheckButton
-			{
-				Parent           = parent,
-				Text             = GroupingLabel,
-				AutoFocus        = false,
-				Dock             = DockStyle.Fill,
-				Margins          = new Margins (CreateObjectPopup.Indent + 10, 0, 0, 0),
-			};
-
-			this.groupingButton.ActiveStateChanged += delegate
-			{
-				this.ObjectGrouping = this.groupingButton.ActiveState == ActiveState.Yes;
-				this.lastGrouping = this.ObjectGrouping;
-				this.UpdateButtons ();
-			};
-		}
-
 		private void CreateTreeTable(Widget parent)
 		{
 			new StaticText
@@ -255,10 +216,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent        = parent,
 				Name          = "create",
+				Text          = "Créer",
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5 + 60, parent.PreferredHeight),
+				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5, parent.PreferredHeight),
 				Margins       = new Margins (0, 5, 0, 0),
 			};
 
@@ -270,7 +232,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5 - 60, parent.PreferredHeight),
+				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5, parent.PreferredHeight),
 				Margins       = new Margins (5, 0, 0, 0),
 			};
 
@@ -325,31 +287,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var node = this.nodesGetter[this.visibleSelectedRow];
 				this.ObjectParent = node.Guid;
-
-				var next = this.nodesGetter[this.visibleSelectedRow+1];
-				this.groupingEnable = next.Level <= node.Level;
 			}
 		}
 
 		private void UpdateButtons()
 		{
-			//-this.groupingButton.Enable = this.groupingEnable;
-			//-
-			//-if (this.groupingEnable)
-			//-{
-			//-	this.groupingButton.ActiveState = this.lastGrouping ? ActiveState.Yes : ActiveState.No;
-			//-	this.ObjectGrouping = this.lastGrouping;
-			//-}
-			//-else
-			//-{
-			//-	var g = this.lastGrouping;
-			//-	this.groupingButton.ActiveState = ActiveState.Yes;
-			//-	this.ObjectGrouping = true;
-			//-	this.lastGrouping = g;
-			//-}
-
-			this.createButton.Text = this.GetCreateButtonText (this.ObjectGrouping);
-
 			this.createButton.Enable = this.ObjectDate.HasValue &&
 									   !string.IsNullOrEmpty (this.ObjectName) &&
 									   !this.ObjectParent.IsEmpty;
@@ -377,66 +319,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private string GroupingLabel
-		{
-			get
-			{
-				switch (this.baseType)
-				{
-					case BaseType.Objects:
-						return "Objet de regroupement";
-
-					case BaseType.Categories:
-						return "Catégorie de regroupement";
-
-					case BaseType.Groups:
-						return "Groupe de regroupement";
-
-					default:
-						return null;
-				}
-			}
-		}
-
-		private string GetCreateButtonText(bool grouping)
-		{
-			switch (this.baseType)
-			{
-				case BaseType.Objects:
-					if (grouping)
-					{
-						return "Créer un objet de regroupement";
-					}
-					else
-					{
-						return "Créer un objet final";
-					}
-
-				case BaseType.Categories:
-					if (grouping)
-					{
-						return "Créer une catégorie de regroupement";
-					}
-					else
-					{
-						return "Créer une catégorie finale";
-					}
-
-				case BaseType.Groups:
-					if (grouping)
-					{
-						return "Créer un groupe de regroupement";
-					}
-					else
-					{
-						return "Créer un groupe final";
-					}
-
-				default:
-					return null;
-			}
-		}
-
 
 		private static readonly int TitleHeight = 24;
 		private static readonly int LineHeight  = 2+17+2;
@@ -452,11 +334,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly SingleObjectsTreeTableFiller	dataFiller;
 
 		private TextField								textField;
-		private CheckButton								groupingButton;
 		private Button									createButton;
 		private Button									cancelButton;
 		private int										visibleSelectedRow;
-		private bool									groupingEnable;
-		private bool									lastGrouping;
 	}
 }
