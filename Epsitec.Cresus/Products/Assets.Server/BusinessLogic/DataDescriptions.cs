@@ -105,9 +105,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.Compte8:
 					return "Amortissement extra. ou rééval.";
 
-				case ObjectField.Famille:
-					return "Famille";
-
 				case ObjectField.GroupGuid+0:
 				case ObjectField.GroupGuid+1:
 				case ObjectField.GroupGuid+2:

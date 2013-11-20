@@ -13,10 +13,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class GroupsView : AbstractView
 	{
-		public GroupsView(DataAccessor accessor, BaseType baseType, MainToolbar toolbar)
+		public GroupsView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
-			this.baseType = baseType;
+			this.baseType = BaseType.Groups;
 
 			this.listController = new GroupsToolbarTreeTableController (this.accessor);
 			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, isTimeless: true);

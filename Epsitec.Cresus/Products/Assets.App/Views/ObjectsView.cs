@@ -8,17 +8,16 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectsView : AbstractView
 	{
-		public ObjectsView(DataAccessor accessor, BaseType baseType, MainToolbar toolbar)
+		public ObjectsView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
-			this.baseType = baseType;
+			this.baseType = BaseType.Objects;
 
 			this.listController           = new ObjectsToolbarTreeTableController (this.accessor);
 			this.timelineController       = new ObjectsToolbarTimelineController (this.accessor, this.baseType);

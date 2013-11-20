@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -93,13 +92,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (viewType)
 			{
 				case ViewType.Objects:
-					return new ObjectsView (accessor, BaseType.Objects, toolbar);
+					return new ObjectsView (accessor, toolbar);
 
 				case ViewType.Categories:
-					return new CategoriesView (accessor, BaseType.Categories, toolbar);
+					return new CategoriesView (accessor, toolbar);
 
 				case ViewType.Groups:
-					return new GroupsView (accessor, BaseType.Groups, toolbar);
+					return new GroupsView (accessor, toolbar);
 
 				case ViewType.Events:
 					//return new EventsView (accessor, toolbar);

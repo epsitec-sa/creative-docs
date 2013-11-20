@@ -13,10 +13,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class CategoriesView : AbstractView
 	{
-		public CategoriesView(DataAccessor accessor, BaseType baseType, MainToolbar toolbar)
+		public CategoriesView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
-			this.baseType = baseType;
+			this.baseType = BaseType.Categories;
 
 			this.listController = new CategoriesToolbarTreeTableController (this.accessor);
 			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, isTimeless: true);
