@@ -112,8 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowPopup()
 		{
-			var mode = (this.BaseType == BaseType.Groups) ? TreeNodeOutputMode.All : TreeNodeOutputMode.OnlyGrouping;
-			var popup = new ObjectsPopup (this.Accessor, this.BaseType, this.Value, mode);
+			var popup = new ObjectsPopup (this.Accessor, this.BaseType, this.Value);
 
 			popup.Create (this.button, leftOrRight: false);
 

@@ -62,7 +62,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var baseType = (type == NodeType.Final) ? BaseType.Objects : BaseType.Groups;
 				var obj = this.accessor.GetObject (baseType, guid);
 
-				var regroupement = ObjectCalculator.GetObjectPropertyInt            (obj, this.Timestamp, ObjectField.Regroupement);
 				var nom          = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Nom);
 				var numéro       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Numéro);
 				var valeur1      = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur1);
@@ -78,7 +77,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					nom = DataDescriptions.OutOfDateName;
 				}
 
-				var grouping = regroupement.HasValue && regroupement.Value == 1;
+				var grouping = (type != NodeType.Final);
 
 				var sf = new TreeTableCellTree           (true, level, type, nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString         (true, numéro,           isSelected: (i == selection));

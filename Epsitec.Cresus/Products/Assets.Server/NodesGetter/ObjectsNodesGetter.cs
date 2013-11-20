@@ -76,13 +76,13 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		public override void UpdateData()
 		{
-			this.UpdateData (TreeNodeOutputMode.All, this.RootGuid);
+			this.UpdateData (this.RootGuid);
 		}
 
-		public void UpdateData(TreeNodeOutputMode mode, Guid rootGuid)
+		public void UpdateData(Guid rootGuid)
 		{
 			this.ppNodesGetter.Timestamp = this.timestamp;
-			this.levelNodesGetter.UpdateData (mode, rootGuid);
+			this.levelNodesGetter.UpdateData (rootGuid);
 			this.mergeNodesGetter.UpdateData ();
 			this.treeObjectsGetter.UpdateData ();
 		}

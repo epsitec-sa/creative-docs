@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
 			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
-			this.nodesGetter.UpdateData (TreeNodeOutputMode.OnlyGrouping);
+			this.nodesGetter.UpdateData ();
 
 			//	On cherche l'objet de regroupement qui sera sélectionné.
 			var groupGuid = Guid.Empty;

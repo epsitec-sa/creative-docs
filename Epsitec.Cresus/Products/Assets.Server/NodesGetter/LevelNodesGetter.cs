@@ -50,15 +50,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		public override void UpdateData()
 		{
-			this.UpdateData (TreeNodeOutputMode.All, Guid.Empty);
+			this.UpdateData (Guid.Empty);
 		}
 
-		public void UpdateData(TreeNodeOutputMode mode)
-		{
-			this.UpdateData (mode, Guid.Empty);
-		}
-
-		public void UpdateData(TreeNodeOutputMode mode, Guid rootGuid)
+		public void UpdateData(Guid rootGuid)
 		{
 			this.levelNodes.Clear ();
 
@@ -88,31 +83,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			list.Add (tree);
 			tree.GetNodes (list);
 
-			switch (mode)
-			{
-				case TreeNodeOutputMode.NotGrouping:
-					list = list.Where (x => !x.Node.Grouping).ToList ();
-					break;
-
-				case TreeNodeOutputMode.OnlyGrouping:
-					list = list.Where (x => x.Node.Grouping).ToList ();
-					break;
-			}
-
 			//	Construit la liste finale consultable en sortie.
 			foreach (var treeNode in list)
 			{
-				int level;
-
-				if (mode == TreeNodeOutputMode.NotGrouping)
-				{
-					level = 0;
-				}
-				else
-				{
-					level = LevelNodesGetter.GetLevel (treeNode);
-				}
-
+				int level = LevelNodesGetter.GetLevel (treeNode);
 				var n = new LevelNode (treeNode.Node.Guid, level, treeNode.Node.Grouping);
 				this.levelNodes.Add (n);
 			}

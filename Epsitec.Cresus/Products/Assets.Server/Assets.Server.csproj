@@ -92,7 +92,6 @@
     <Compile Include="BusinessLogic\TimelineData.cs" />
     <Compile Include="BusinessLogic\TimelineGlyph.cs" />
     <Compile Include="BusinessLogic\TimelineMode.cs" />
-    <Compile Include="NodesGetter\TreeNodeOutputMode.cs" />
     <Compile Include="NodesGetter\TreeNodesGetter.cs" />
     <Compile Include="NodesGetter\LevelNodesGetter.cs" />
     <Compile Include="SimpleEngine\DataGuidProperty.cs" />

@@ -260,16 +260,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private bool IsGrouping
-		{
-			get
-			{
-				var g = ObjectCalculator.GetObjectPropertyInt (this.obj, null, ObjectField.Regroupement);
-				return g.HasValue && g.Value == 1;
-			}
-		}
-
-	
 		private readonly ObjectSummaryController summaryController;
 
 		private FrameBox commentaries;

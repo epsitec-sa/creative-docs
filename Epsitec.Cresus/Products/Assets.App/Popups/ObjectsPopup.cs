@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class ObjectsPopup : AbstractPopup
 	{
-		public ObjectsPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid, TreeNodeOutputMode mode)
+		public ObjectsPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
 			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
 
-			this.nodesGetter.UpdateData (mode);
+			this.nodesGetter.UpdateData ();
 			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 
 			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.baseType, this.nodesGetter);
