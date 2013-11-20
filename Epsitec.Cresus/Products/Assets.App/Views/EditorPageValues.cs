@@ -10,8 +10,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EditorPageValues : AbstractEditorPage
 	{
-		public EditorPageValues(DataAccessor accessor, BaseType baseType)
-			: base (accessor, baseType)
+		public EditorPageValues(DataAccessor accessor, BaseType baseType, bool isTimeless)
+			: base (accessor, baseType, isTimeless)
 		{
 		}
 
@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateComputedAmountController (parent, ObjectField.Valeur2);
 			this.CreateComputedAmountController (parent, ObjectField.Valeur3);
 
-#if true
+#if false
 			//	Code bidon pour tester la navigation à 3 niveaux.
 			var button = new Button
 			{

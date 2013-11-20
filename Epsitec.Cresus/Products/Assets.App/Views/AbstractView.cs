@@ -76,6 +76,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected Timestamp? GetLastTimestamp(Guid guid)
+		{
+			var obj = this.accessor.GetObject (this.baseType, guid);
+			if (obj != null)
+			{
+				return ObjectCalculator.GetLastTimestamp (obj);
+			}
+
+			return null;
+		}
+
+
 		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor, MainToolbar toolbar)
 		{
 			switch (viewType)
@@ -84,10 +96,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return new ObjectsView (accessor, BaseType.Objects, toolbar);
 
 				case ViewType.Categories:
-					return new ObjectsView (accessor, BaseType.Categories, toolbar);
+					return new CategoriesView (accessor, BaseType.Categories, toolbar);
 
 				case ViewType.Groups:
-					return new ObjectsView (accessor, BaseType.Groups, toolbar);
+					return new GroupsView (accessor, BaseType.Groups, toolbar);
 
 				case ViewType.Events:
 					//return new EventsView (accessor, toolbar);

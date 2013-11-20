@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ObjectEditor : AbstractEditor
 	{
-		public ObjectEditor(DataAccessor accessor, BaseType baseType)
-			: base (accessor, baseType)
+		public ObjectEditor(DataAccessor accessor, BaseType baseType, bool isTimeless)
+			: base (accessor, baseType, isTimeless)
 		{
 		}
 
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Spécifie l'objet sélectionné dans le TreeTable de gauche.
 			this.StartEdition (objectGuid, timestamp);
 
-			if (timestamp == null || !timestamp.HasValue)
+			if (!timestamp.HasValue)
 			{
 				timestamp = new Timestamp (System.DateTime.MaxValue, 0);
 			}
@@ -196,14 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.IsGrouping)
-				{
-					return ObjectEditor.GetGroupingAvailablePages (this.hasEvent);
-				}
-				else
-				{
-					return ObjectEditor.GetAvailablePages (this.baseType, this.hasEvent, this.eventType);
-				}
+				return ObjectEditor.GetAvailablePages (this.baseType, this.hasEvent, this.eventType);
 			}
 		}
 
@@ -222,18 +215,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				default:
 					return null;
-			}
-		}
-
-		private static IEnumerable<EditionObjectPageType> GetGroupingAvailablePages(bool hasEvent)
-		{
-			//	Retourne les pages autorisées pour un type d'événement donné.
-			yield return EditionObjectPageType.Summary;
-
-			if (hasEvent)
-			{
-				yield return EditionObjectPageType.OneShot;
-				yield return EditionObjectPageType.Grouping;
 			}
 		}
 
@@ -277,28 +258,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private static IEnumerable<EditionObjectPageType> GetCategoryAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
-			yield return EditionObjectPageType.Summary;
-
-			if (hasEvent)
-			{
-				yield return EditionObjectPageType.OneShot;
-
-				yield return EditionObjectPageType.Category;
-				yield return EditionObjectPageType.Compta;
-			}
+			yield return EditionObjectPageType.Category;
 		}
 
 		private static IEnumerable<EditionObjectPageType> GetGroupAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
-			yield return EditionObjectPageType.Summary;
-
-			if (hasEvent)
-			{
-				yield return EditionObjectPageType.OneShot;
-
-				yield return EditionObjectPageType.Group;
-			}
+			yield return EditionObjectPageType.Group;
 		}
 
 
@@ -309,16 +275,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Par exemple "Evénement du 31.03.2014 — Amortissement"
 			get
 			{
-				return LogicDescriptions.GetEventDescription (this.timestamp, this.eventType);
-			}
-		}
-
-		private bool IsGrouping
-		{
-			get
-			{
-				var g = ObjectCalculator.GetObjectPropertyInt (this.obj, null, ObjectField.Regroupement);
-				return g.HasValue && g.Value == 1;
+				if (this.isTimeless)
+				{
+					return null;
+				}
+				else
+				{
+					return LogicDescriptions.GetEventDescription (this.timestamp, this.eventType);
+				}
 			}
 		}
 

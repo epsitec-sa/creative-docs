@@ -14,9 +14,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EventsToolbarTreeTableController : AbstractToolbarTreeTableController<GuidNode>
 	{
-		public EventsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
-			: base(accessor, baseType)
+		public EventsToolbarTreeTableController(DataAccessor accessor)
+			: base(accessor)
 		{
+			this.hasFilter         = false;
 			this.hasTreeOperations = false;
 
 			this.nodesGetter = new ObjectEventsNodesGetter ();
@@ -39,7 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.objectGuid != value)
 				{
 					this.objectGuid = value;
-					this.obj = this.accessor.GetObject (this.baseType, this.objectGuid);
+					this.obj = this.accessor.GetObject (BaseType.Objects, this.objectGuid);
 
 					this.NodesGetter.DataObject = this.obj;
 					this.dataFiller.DataObject = this.obj;
@@ -65,21 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateNodeFiller()
 		{
-			switch (this.baseType)
-			{
-				case BaseType.Objects:
-					this.dataFiller = new EventsObjectsTreeTableFiller (this.accessor, this.nodesGetter);
-					break;
-
-				case BaseType.Categories:
-					this.dataFiller = new EventsCategoriesTreeTableFiller (this.accessor, this.nodesGetter);
-					break;
-
-				case BaseType.Groups:
-					this.dataFiller = new EventsGroupsTreeTableFiller (this.accessor, this.nodesGetter);
-					break;
-			}
-
+			this.dataFiller = new EventsObjectsTreeTableFiller (this.accessor, this.nodesGetter);
 			TreeTableFiller<GuidNode>.FillColumns (this.dataFiller, this.controller);
 
 			this.UpdateController ();
@@ -108,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				var popup = new NewEventPopup
 				{
-					BaseType   = this.baseType,
+					BaseType   = BaseType.Objects,
 					DataObject = this.obj,
 					Timestamp  = timestamp.Value,
 				};

@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -19,7 +18,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case EditionObjectPageType.Summary:
 					return "Résumé";
 
-				case EditionObjectPageType.Grouping:
 				case EditionObjectPageType.Object:
 					return "Général";
 
@@ -29,17 +27,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case EditionObjectPageType.Amortissements:
 					return "Amortissements";
 
-				case EditionObjectPageType.Category:
-					return "Général";
-
-				case EditionObjectPageType.Compta:
-					return "Comptabilisation";
-
-				case EditionObjectPageType.Group:
-					return "Général";
-
 				case EditionObjectPageType.Groups:
 					return "Regroupements";
+
+				case EditionObjectPageType.Category:
+					return "Définitions de la catégorie";
+
+				case EditionObjectPageType.Group:
+					return "Définitions du groupe";
 
 				default:
 					return null;

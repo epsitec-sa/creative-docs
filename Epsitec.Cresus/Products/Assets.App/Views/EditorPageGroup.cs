@@ -10,8 +10,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EditorPageGroup : AbstractEditorPage
 	{
-		public EditorPageGroup(DataAccessor accessor, BaseType baseType)
-			: base (accessor, baseType)
+		public EditorPageGroup(DataAccessor accessor, BaseType baseType, bool isTimeless)
+			: base (accessor, baseType, isTimeless)
 		{
 		}
 
@@ -20,7 +20,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateGuidController   (parent, ObjectField.Parent);
 			this.CreateStringController (parent, ObjectField.Nom);
-			this.CreateStringController (parent, ObjectField.Famille);
 			this.CreateStringController (parent, ObjectField.Description, lineCount: 5);
 		}
 	}

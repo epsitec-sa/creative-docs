@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EditorPageSummary : AbstractEditorPage
 	{
-		public EditorPageSummary(DataAccessor accessor, BaseType baseType)
-			: base (accessor, baseType)
+		public EditorPageSummary(DataAccessor accessor, BaseType baseType, bool isTimeless)
+			: base (accessor, baseType, isTimeless)
 		{
 			this.summaryController = new ObjectSummaryController (this.accessor, this.baseType);
 
@@ -102,31 +102,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (!tile.IsEmpty)
 			{
-				var type = EditorPageSummary.GetPageType (this.baseType, tile.Field);
+				var type = EditorPageSummary.GetPageType (tile.Field);
 				this.OnPageOpen (type, tile.Field);
 			}
 		}
 
 
-		public static EditionObjectPageType GetPageType(BaseType baseType, ObjectField field)
-		{
-			switch (baseType)
-			{
-				case BaseType.Objects:
-					return EditorPageSummary.GetObjectPageType (field);
-
-				case BaseType.Categories:
-					return EditorPageSummary.GetCategoryPageType (field);
-
-				case BaseType.Groups:
-					return EditorPageSummary.GetGroupPageType (field);
-
-				default:
-					return EditionObjectPageType.Unknown;
-			}
-		}
-
-		private static EditionObjectPageType GetObjectPageType(ObjectField field)
+		public static EditionObjectPageType GetPageType(ObjectField field)
 		{
 			//	Retourne la page permettant d'éditer un champ donné.
 			switch (field)
@@ -184,48 +166,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private static EditionObjectPageType GetCategoryPageType(ObjectField field)
-		{
-			//	Retourne la page permettant d'éditer un champ donné.
-			switch (field)
-			{
-				case ObjectField.OneShotNuméro:
-				case ObjectField.OneShotDateOpération:
-				case ObjectField.OneShotCommentaire:
-				case ObjectField.OneShotDocuments:
-					return EditionObjectPageType.OneShot;
-
-				case ObjectField.Compte1:
-				case ObjectField.Compte2:
-				case ObjectField.Compte3:
-				case ObjectField.Compte4:
-				case ObjectField.Compte5:
-				case ObjectField.Compte6:
-				case ObjectField.Compte7:
-				case ObjectField.Compte8:
-					return EditionObjectPageType.Compta;
-
-				default:
-					return EditionObjectPageType.Category;
-			}
-		}
-
-		private static EditionObjectPageType GetGroupPageType(ObjectField field)
-		{
-			//	Retourne la page permettant d'éditer un champ donné.
-			switch (field)
-			{
-				case ObjectField.OneShotNuméro:
-				case ObjectField.OneShotDateOpération:
-				case ObjectField.OneShotCommentaire:
-				case ObjectField.OneShotDocuments:
-					return EditionObjectPageType.OneShot;
-
-				default:
-					return EditionObjectPageType.Group;
-			}
-		}
-
 
 		private ObjectSummaryControllerTile GetTile(int column, int row)
 		{
@@ -249,35 +189,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.IsGrouping)
-				{
-					return EditorPageSummary.GroupingSummaryTiles;
-				}
-				else
-				{
-					switch (this.baseType)
-					{
-						case BaseType.Objects:
-							return EditorPageSummary.ObjectSummaryTiles;
-
-						case BaseType.Categories:
-							return EditorPageSummary.CategorySummaryTiles;
-
-						case BaseType.Groups:
-							return EditorPageSummary.GroupSummaryTiles;
-
-						default:
-							return null;
-					}
-				}
-			}
-		}
-
-		private static List<List<ObjectSummaryControllerTile>> GroupingSummaryTiles
-		{
-			//	Retourne la liste des tuiles qui peupleront le tableau.
-			get
-			{
 				var list = new List<List<ObjectSummaryControllerTile>> ();
 
 				var c1 = new List<ObjectSummaryControllerTile> ()
@@ -291,36 +202,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ObjectSummaryControllerTile.Empty,
 
 					new ObjectSummaryControllerTile ("Général"),
-					new ObjectSummaryControllerTile (ObjectField.Parent),
-					new ObjectSummaryControllerTile (ObjectField.Numéro),
-					new ObjectSummaryControllerTile (ObjectField.Nom),
-					new ObjectSummaryControllerTile (ObjectField.Description),
-				};
-				list.Add (c1);
-
-				return list;
-			}
-		}
-
-		private static List<List<ObjectSummaryControllerTile>> ObjectSummaryTiles
-		{
-			//	Retourne la liste des tuiles qui peupleront le tableau.
-			get
-			{
-				var list = new List<List<ObjectSummaryControllerTile>> ();
-
-				var c1 = new List<ObjectSummaryControllerTile> ()
-				{
-					new ObjectSummaryControllerTile ("Evénement"),
-					new ObjectSummaryControllerTile (ObjectField.OneShotNuméro),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDateOpération),
-					new ObjectSummaryControllerTile (ObjectField.OneShotCommentaire),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
-
-					ObjectSummaryControllerTile.Empty,
-
-					new ObjectSummaryControllerTile ("Général"),
-					new ObjectSummaryControllerTile (ObjectField.Parent),
 					new ObjectSummaryControllerTile (ObjectField.Numéro),
 					new ObjectSummaryControllerTile (ObjectField.Nom),
 					new ObjectSummaryControllerTile (ObjectField.Description),
@@ -373,83 +254,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					new ObjectSummaryControllerTile (ObjectField.Compte8),
 				};
 				list.Add (c3);
-
-				return list;
-			}
-		}
-
-		private static List<List<ObjectSummaryControllerTile>> CategorySummaryTiles
-		{
-			//	Retourne la liste des tuiles qui peupleront le tableau.
-			get
-			{
-				var list = new List<List<ObjectSummaryControllerTile>> ();
-
-				var c1 = new List<ObjectSummaryControllerTile> ()
-				{
-					new ObjectSummaryControllerTile ("Evénement"),
-					new ObjectSummaryControllerTile (ObjectField.OneShotNuméro),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDateOpération),
-					new ObjectSummaryControllerTile (ObjectField.OneShotCommentaire),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
-
-					ObjectSummaryControllerTile.Empty,
-
-					new ObjectSummaryControllerTile ("Général"),
-					new ObjectSummaryControllerTile (ObjectField.Parent),
-					new ObjectSummaryControllerTile (ObjectField.Numéro),
-					new ObjectSummaryControllerTile (ObjectField.Nom),
-					new ObjectSummaryControllerTile (ObjectField.Description),
-					new ObjectSummaryControllerTile (ObjectField.TauxAmortissement),
-					new ObjectSummaryControllerTile (ObjectField.TypeAmortissement),
-					new ObjectSummaryControllerTile (ObjectField.Périodicité),
-					new ObjectSummaryControllerTile (ObjectField.ValeurRésiduelle),
-				};
-				list.Add (c1);
-
-				var c2 = new List<ObjectSummaryControllerTile> ()
-				{
-					new ObjectSummaryControllerTile ("Comptabilisation"),
-					new ObjectSummaryControllerTile (ObjectField.Compte1),
-					new ObjectSummaryControllerTile (ObjectField.Compte2),
-					new ObjectSummaryControllerTile (ObjectField.Compte3),
-					new ObjectSummaryControllerTile (ObjectField.Compte4),
-					new ObjectSummaryControllerTile (ObjectField.Compte5),
-					new ObjectSummaryControllerTile (ObjectField.Compte6),
-					new ObjectSummaryControllerTile (ObjectField.Compte7),
-					new ObjectSummaryControllerTile (ObjectField.Compte8),
-				};
-				list.Add (c2);
-
-				return list;
-			}
-		}
-
-		private static List<List<ObjectSummaryControllerTile>> GroupSummaryTiles
-		{
-			//	Retourne la liste des tuiles qui peupleront le tableau.
-			get
-			{
-				var list = new List<List<ObjectSummaryControllerTile>> ();
-
-				var c1 = new List<ObjectSummaryControllerTile> ()
-				{
-					new ObjectSummaryControllerTile ("Evénement"),
-					new ObjectSummaryControllerTile (ObjectField.OneShotNuméro),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDateOpération),
-					new ObjectSummaryControllerTile (ObjectField.OneShotCommentaire),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
-
-					ObjectSummaryControllerTile.Empty,
-
-					new ObjectSummaryControllerTile ("Général"),
-					new ObjectSummaryControllerTile (ObjectField.Parent),
-					new ObjectSummaryControllerTile (ObjectField.Numéro),
-					new ObjectSummaryControllerTile (ObjectField.Nom),
-					new ObjectSummaryControllerTile (ObjectField.Famille),
-					new ObjectSummaryControllerTile (ObjectField.Description),
-				};
-				list.Add (c1);
 
 				return list;
 			}

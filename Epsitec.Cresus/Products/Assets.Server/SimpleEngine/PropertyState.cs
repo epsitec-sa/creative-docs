@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Synthetic,		// propriété définie dans un événement précédent
 		Inherited,		// pas utilisé
 		OneShot,		// propriété sans influence sur les événements futurs
+		Timeless,		// propriété intemporelle
 		Readonly,		// pas d'événement à la date choisie
 	}
 }

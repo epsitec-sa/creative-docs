@@ -20,11 +20,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.baseType = baseType;
 
-			this.listController           = new ObjectsToolbarTreeTableController (this.accessor, this.baseType);
+			this.listController           = new ObjectsToolbarTreeTableController (this.accessor);
 			this.timelineController       = new ObjectsToolbarTimelineController (this.accessor, this.baseType);
-			this.eventsController         = new EventsToolbarTreeTableController (this.accessor, this.baseType);
+			this.eventsController         = new EventsToolbarTreeTableController (this.accessor);
 			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.baseType);
-			this.objectEditor             = new ObjectEditor (this.accessor, this.baseType);
+			this.objectEditor             = new ObjectEditor (this.accessor, this.baseType, isTimeless: false);
 
 			this.ignoreChanges = new SafeCounter ();
 		}
@@ -462,14 +462,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			//	On sélectionne le dernier événement de l'objet dans la timeline.
-			var obj = this.accessor.GetObject (this.baseType, this.selectedGuid);
-			if (obj != null)
+			var timestamp = this.GetLastTimestamp (this.selectedGuid);
+			if (timestamp.HasValue)
 			{
-				var timestamp = ObjectCalculator.GetLastTimestamp (obj);
-				if (timestamp.HasValue)
-				{
-					this.selectedTimestamp = timestamp;
-				}
+				this.selectedTimestamp = timestamp;
 			}
 
 			using (this.ignoreChanges.Enter ())

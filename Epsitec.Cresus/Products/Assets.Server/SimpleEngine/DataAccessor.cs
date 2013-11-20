@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	Marque le début de l'édition de l'événement d'un objet.
 			this.editionBaseType = baseType;
 
-			if (objectGuid.IsEmpty || timestamp == null)
+			if (objectGuid.IsEmpty || !timestamp.HasValue)
 			{
 				return;
 			}

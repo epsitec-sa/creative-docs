@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EditorPageAmortissements : AbstractEditorPage
 	{
-		public EditorPageAmortissements(DataAccessor accessor, BaseType baseType)
-			: base (accessor, baseType)
+		public EditorPageAmortissements(DataAccessor accessor, BaseType baseType, bool isTimeless)
+			: base (accessor, baseType, isTimeless)
 		{
 		}
 

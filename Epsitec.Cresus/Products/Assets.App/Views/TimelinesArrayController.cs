@@ -167,6 +167,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Partie gauche.
 			this.objectsToolbar = new TreeTableToolbar ();
 			this.objectsToolbar.CreateUI (leftBox);
+			this.objectsToolbar.HasFilter = true;
 			this.objectsToolbar.HasTreeOperations = true;
 
 			this.treeColumn = new TreeTableColumnTree

@@ -6,55 +6,27 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectsToolbarTreeTableController : AbstractToolbarTreeTableController<TreeNode>
+	public class GroupsToolbarTreeTableController : AbstractToolbarTreeTableController<TreeNode>
 	{
-		public ObjectsToolbarTreeTableController(DataAccessor accessor)
+		public GroupsToolbarTreeTableController(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.hasFilter         = true;
+			this.hasFilter         = false;
 			this.hasTreeOperations = true;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var groupNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
-			var objectNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
-			this.nodesGetter = new ObjectsNodesGetter (this.accessor, groupNodesGetter, objectNodesGetter);
+			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
+			this.nodesGetter = new TreeNodesGetter (this.accessor, BaseType.Groups, primaryNodesGetter);
 
-			this.title = "Objets d'immobilisation";
+			this.title = "Groupes d'immobilisation";
 		}
 
-
-		public override void CreateUI(Widget parent)
-		{
-			base.CreateUI (parent);
-
-			this.stateAtController = new StateAtController ();
-			this.stateAtController.CreateUI (parent);
-
-			this.stateAtController.DateChanged += delegate
-			{
-				if (this.stateAtController.Date.HasValue)
-				{
-					this.NodesGetter.Timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
-				}
-				else
-				{
-					this.NodesGetter.Timestamp = null;
-				}
-
-				this.UpdateController ();
-				this.UpdateToolbar ();
-			};
-		}
-
-
-		public bool								DataFreezed;
 
 		public void UpdateData()
 		{
@@ -74,26 +46,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			set
 			{
 				this.SelectedRow = this.NodesGetter.VisibleToAll (value);
-			}
-		}
-
-		public Timestamp?						Timestamp
-		{
-			get
-			{
-				return this.timestamp;
-			}
-			set
-			{
-				if (this.timestamp != value)
-				{
-					this.timestamp = value;
-
-					this.dataFiller.Timestamp = this.timestamp;
-
-					this.UpdateController ();
-					this.UpdateToolbar ();
-				}
 			}
 		}
 
@@ -124,26 +76,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.nodesGetter);
 			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
 
 			this.UpdateData ();
 		}
 
-
-		protected override void OnFilter()
-		{
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Filter);
-			var popup = new ObjectsPopup (this.accessor, BaseType.Groups, this.NodesGetter.RootGuid, TreeNodeOutputMode.All);
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.Navigate += delegate (object sender, Guid guid)
-			{
-				this.NodesGetter.RootGuid = guid;
-				this.UpdateData ();
-			};
-		}
 
 		private void OnCompactOrExpand(int row)
 		{
@@ -200,7 +138,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var popup = new YesNoPopup
 				{
-					Question = "Voulez-vous supprimer l'objet sélectionné ?",
+					Question = "Voulez-vous supprimer le groupe sélectionné ?",
 				};
 
 				popup.Create (target);
@@ -209,7 +147,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "yes")
 					{
-						this.accessor.RemoveObject (BaseType.Objects, this.SelectedGuid);
+						this.accessor.RemoveObject (BaseType.Groups, this.SelectedGuid);
 						this.UpdateData ();
 					}
 				};
@@ -219,7 +157,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateObjectPopup (this.accessor, BaseType.Objects, this.SelectedGuid);
+			var popup = new CreateObjectPopup (this.accessor, BaseType.Groups, this.SelectedGuid);
 
 			popup.Create (target, leftOrRight: true);
 
@@ -234,16 +172,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateObject(System.DateTime date, string name, Guid parent, bool grouping)
 		{
-			var guid = this.accessor.CreateObject (BaseType.Objects, date, name, parent, grouping);
-			var obj = this.accessor.GetObject (BaseType.Objects, guid);
+			var guid = this.accessor.CreateObject (BaseType.Groups, date, name, parent, grouping);
+			var obj = this.accessor.GetObject (BaseType.Groups, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 			
 			this.UpdateData ();
 
 			this.SelectedGuid = guid;
-			this.Timestamp = ObjectCalculator.GetLastTimestamp (obj);
-			
-			this.OnStartEditing (EventType.Entrée, this.timestamp.GetValueOrDefault ());
+			this.OnStartEditing (EventType.Entrée, Timestamp.Now);  // Timestamp quelconque !
 		}
 
 	
@@ -267,16 +203,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private ObjectsNodesGetter NodesGetter
+		private TreeNodesGetter NodesGetter
 		{
 			get
 			{
-				return this.nodesGetter as ObjectsNodesGetter;
+				return this.nodesGetter as TreeNodesGetter;
 			}
 		}
-
-
-		private StateAtController					stateAtController;
-		private Timestamp?							timestamp;
 	}
 }

@@ -10,15 +10,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EditorPageObject : AbstractEditorPage
 	{
-		public EditorPageObject(DataAccessor accessor, BaseType baseType)
-			: base (accessor, baseType)
+		public EditorPageObject(DataAccessor accessor, BaseType baseType, bool isTimeless)
+			: base (accessor, baseType, isTimeless)
 		{
 		}
 
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateGuidController   (parent, ObjectField.Parent);
 			this.CreateStringController (parent, ObjectField.Numéro, editWidth: 90);
 			this.CreateStringController (parent, ObjectField.Nom);
 			this.CreateStringController (parent, ObjectField.Description, lineCount: 5);

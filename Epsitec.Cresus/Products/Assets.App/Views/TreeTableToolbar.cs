@@ -21,6 +21,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public bool HasFilter
+		{
+			get
+			{
+				return this.hasFilter;
+			}
+			set
+			{
+				if (this.hasFilter != value)
+				{
+					this.hasFilter = value;
+					this.Adjust ();
+				}
+			}
+		}
+
 		public bool HasTreeOperations
 		{
 			get
@@ -131,13 +147,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IEnumerable<ButtonState> GetButtons(double width, double size)
 		{
-			bool prevNext      = width > size*6  + AbstractCommandToolbar.SeparatorWidth*1;
-			bool firstLast     = width > size*8  + AbstractCommandToolbar.SeparatorWidth*2;
-			bool compactExpand = width > size*10 + AbstractCommandToolbar.SeparatorWidth*3 && this.hasTreeOperations;
+			int f = this.hasFilter ? 1:0;
 
-			yield return new ButtonState (this.buttonFilter);
+			bool prevNext      = width > size*(f+5) + AbstractCommandToolbar.SeparatorWidth*1;
+			bool firstLast     = width > size*(f+7) + AbstractCommandToolbar.SeparatorWidth*2;
+			bool compactExpand = width > size*(f+9) + AbstractCommandToolbar.SeparatorWidth*3 && this.hasTreeOperations;
 
-			yield return new ButtonState (this.separator1);
+			yield return new ButtonState (this.buttonFilter, this.hasFilter);
+
+			yield return new ButtonState (this.separator1, this.hasFilter);
 
 			yield return new ButtonState (this.buttonFirst, firstLast);
 			yield return new ButtonState (this.buttonPrev,  prevNext);
@@ -191,6 +209,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonDelete;
 		private IconButton						buttonDeselect;
 
+		private bool							hasFilter;
 		private bool							hasTreeOperations;
 	}
 }

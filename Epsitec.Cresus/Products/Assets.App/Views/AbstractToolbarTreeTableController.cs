@@ -16,10 +16,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public abstract class AbstractToolbarTreeTableController<T>
 		where T : struct
 	{
-		public AbstractToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
+		public AbstractToolbarTreeTableController(DataAccessor accessor)
 		{
 			this.accessor = accessor;
-			this.baseType = baseType;
 		}
 
 
@@ -34,6 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.toolbar = new TreeTableToolbar ();
 			this.toolbar.CreateUI (parent);
+			this.toolbar.HasFilter         = this.hasFilter;
 			this.toolbar.HasTreeOperations = this.hasTreeOperations;
 
 			this.CreateTreeTable (parent);
@@ -359,9 +359,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected readonly DataAccessor			accessor;
-		protected readonly BaseType				baseType;
 
 		protected string						title;
+		protected bool							hasFilter;
 		protected bool							hasTreeOperations;
 		protected AbstractNodesGetter<T>		nodesGetter;
 		protected AbstractTreeTableFiller<T>	dataFiller;

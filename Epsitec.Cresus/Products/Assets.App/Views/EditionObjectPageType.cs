@@ -11,13 +11,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Unknown,
 		OneShot,
 		Summary,
-		Grouping,
 		Object,
 		Values,
 		Amortissements,
-		Compta,
+		Groups,
+
 		Category,
 		Group,
-		Groups,
 	}
 }

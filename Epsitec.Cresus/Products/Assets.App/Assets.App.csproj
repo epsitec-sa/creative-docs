@@ -101,8 +101,11 @@
     <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\AbstractEditorPage.cs" />
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
+    <Compile Include="Views\CategoriesToolbarTreeTableController.cs" />
+    <Compile Include="Views\CategoriesView.cs" />
+    <Compile Include="Views\GroupsToolbarTreeTableController.cs" />
+    <Compile Include="Views\GroupsView.cs" />
     <Compile Include="Views\EditorPageGroups.cs" />
-    <Compile Include="Views\EditorPageGrouping.cs" />
     <Compile Include="Views\StateAtController.cs" />
     <Compile Include="Views\GuidFieldController.cs" />
     <Compile Include="Views\TimelinesArrayController.cs" />
@@ -159,7 +162,6 @@
     <Compile Include="Widgets\MouseCursorManager.cs" />
     <Compile Include="Views\SettingsView.cs" />
     <Compile Include="Views\ReportsView.cs" />
-    <Compile Include="Views\GroupsView.cs" />
     <Compile Include="Views\MainToolbar.cs" />
     <Compile Include="Views\MainView.cs" />
     <Compile Include="Views\ViewType.cs" />
