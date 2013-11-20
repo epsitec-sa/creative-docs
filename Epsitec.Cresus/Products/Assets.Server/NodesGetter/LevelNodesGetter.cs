@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			foreach (var treeNode in list)
 			{
 				int level = LevelNodesGetter.GetLevel (treeNode);
-				var n = new LevelNode (treeNode.Node.Guid, level);
+				var n = new LevelNode (treeNode.Node.Guid, this.baseType, level);
 				this.levelNodes.Add (n);
 			}
 		}

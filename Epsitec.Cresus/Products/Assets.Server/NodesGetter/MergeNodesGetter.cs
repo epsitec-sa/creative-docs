@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 			foreach (var inputNode in this.groupNodes.Nodes)
 			{
-				this.outputNodes.Add (new LevelNode (inputNode.Guid, inputNode.Level));
+				this.outputNodes.Add (new LevelNode (inputNode.Guid, BaseType.Groups, inputNode.Level));
 
 				foreach (var objectNode in this.objectNodes.Nodes)
 				{
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 						var groupGuid = ObjectCalculator.GetObjectPropertyGuid (obj, null, ObjectField.GroupGuid+i);
 						if (groupGuid == inputNode.Guid)
 						{
-							this.outputNodes.Add (new LevelNode (objectNode.Guid, inputNode.Level+1));
+							this.outputNodes.Add (new LevelNode (objectNode.Guid, BaseType.Objects, inputNode.Level+1));
 						}
 					}
 				}

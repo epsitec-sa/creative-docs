@@ -11,6 +11,23 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	/// Gère l'accès en lecture "en arbre" à des données quelconques en provenance de inputNodes.
 	/// En fait, c'est la mise en série de 3 getters:
 	/// 
+	///     |
+	///     o  GuidNode (BaseType.Groups)
+	///     V
+	/// ParentPositionNodesGetter
+	///     |
+	///     o  ParentPositionNode
+	///     V
+	/// LevelNodesGetter
+	///     |
+	///     o  LevelNode
+	///     V
+	/// TreeObjectsNodesGetter
+	///     |
+	///     o  TreeNode
+	///     V
+	/// 
+	/// 
 	///   -o-> ParentPositionNodesGetter -o-> LevelNodesGetter -o-> TreeObjectsNodesGetter -o->
 	///    |                              |                     |                           |
 	/// GuidNode                  ParentPositionNode        LevelNode                   TreeNode

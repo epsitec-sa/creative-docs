@@ -14,11 +14,12 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		//	être ni compactée ni étendue (feuille de l'arbre).
 		//	Si Type == NodeType.Compacted ou NodeType.Expanded,
 		//	il s'agit d'une ligne avec un petit bouton triangulaire.
-		public TreeNode(Guid guid, int level, NodeType type)
+		public TreeNode(Guid guid, BaseType baseType, int level, NodeType type)
 		{
-			this.Guid  = guid;
-			this.Level = level;
-			this.Type  = type;
+			this.Guid     = guid;
+			this.BaseType = baseType;
+			this.Level    = level;
+			this.Type     = type;
 		}
 
 		public bool IsEmpty
@@ -31,9 +32,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public static TreeNode Empty = new TreeNode (Guid.Empty, -1, NodeType.None);
+		public static TreeNode Empty = new TreeNode (Guid.Empty, BaseType.Objects, -1, NodeType.None);
 
 		public readonly Guid				Guid;
+		public readonly BaseType			BaseType;
 		public readonly int					Level;
 		public readonly NodeType			Type;
 	}

@@ -54,16 +54,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					break;
 				}
 
-				var node  = this.nodesGetter[firstRow+i];
-				var guid  = node.Guid;
-				var level = node.Level;
-				var type  = node.Type;
+				var node     = this.nodesGetter[firstRow+i];
+				var guid     = node.Guid;
+				var baseType = node.BaseType;
+				var level    = node.Level;
+				var type     = node.Type;
 
-				var obj = this.accessor.GetObject (BaseType.Groups, guid);
-				if (obj == null)  // TODO: faire mieux
-				{
-					obj = this.accessor.GetObject (BaseType.Objects, guid);
-				}
+				var obj = this.accessor.GetObject (baseType, guid);
 
 				var nom          = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Nom);
 				var numéro       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Numéro);

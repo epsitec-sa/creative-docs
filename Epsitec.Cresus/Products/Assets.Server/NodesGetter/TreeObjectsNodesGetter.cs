@@ -112,11 +112,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 			if (node.Type == NodeType.Compacted)
 			{
-				this.nodes[i] = new TreeNode (node.Guid, node.Level, NodeType.Expanded);
+				this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, NodeType.Expanded);
 			}
 			else if (node.Type == NodeType.Expanded)
 			{
-				this.nodes[i] = new TreeNode (node.Guid, node.Level, NodeType.Compacted);
+				this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, NodeType.Compacted);
 			}
 
 			this.UpdateNodeIndexes ();
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 				if (node.Type == NodeType.Expanded)
 				{
-					this.nodes[i] = new TreeNode (node.Guid, node.Level, NodeType.Compacted);
+					this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, NodeType.Compacted);
 				}
 			}
 
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 				if (node.Type == NodeType.Compacted)
 				{
-					this.nodes[i] = new TreeNode (node.Guid, node.Level, NodeType.Expanded);
+					this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, NodeType.Expanded);
 				}
 			}
 
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 					}
 				}
 
-				var node = new TreeNode (currentNode.Guid, currentNode.Level, type);
+				var node = new TreeNode (currentNode.Guid, currentNode.BaseType, currentNode.Level, type);
 				this.nodes.Add (node);
 			}
 
