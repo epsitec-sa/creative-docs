@@ -167,6 +167,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.GroupGuid+7:
 				case ObjectField.GroupGuid+8:
 				case ObjectField.GroupGuid+9:
+				case ObjectField.GroupRate+0:
+				case ObjectField.GroupRate+1:
+				case ObjectField.GroupRate+2:
+				case ObjectField.GroupRate+3:
+				case ObjectField.GroupRate+4:
+				case ObjectField.GroupRate+5:
+				case ObjectField.GroupRate+6:
+				case ObjectField.GroupRate+7:
+				case ObjectField.GroupRate+8:
+				case ObjectField.GroupRate+9:
 					return EditionObjectPageType.Groups;
 
 				default:

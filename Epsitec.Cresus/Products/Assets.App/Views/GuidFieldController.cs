@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				HoverColor       = ColorManager.HoverColor,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = 160,
+				PreferredWidth   = this.EditWidth,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
 				TabIndex         = this.TabIndex,
@@ -112,7 +112,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowPopup()
 		{
-			var popup = new ObjectsPopup (this.Accessor, this.BaseType, this.Value, TreeNodeOutputMode.OnlyGrouping);
+			var mode = (this.BaseType == BaseType.Groups) ? TreeNodeOutputMode.All : TreeNodeOutputMode.OnlyGrouping;
+			var popup = new ObjectsPopup (this.Accessor, this.BaseType, this.Value, mode);
 
 			popup.Create (this.button, leftOrRight: false);
 
@@ -125,16 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string GuidToString(Guid guid)
 		{
-			if (!guid.IsEmpty)
-			{
-				var obj = this.Accessor.GetObject (this.BaseType, guid);
-				if (obj != null)
-				{
-					return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
-				}
-			}
-
-			return null;
+			return GroupsLogic.GetFullName (this.Accessor, guid);
 		}
 
 

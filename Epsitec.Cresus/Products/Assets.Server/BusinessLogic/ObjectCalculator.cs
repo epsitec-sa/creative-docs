@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static bool IsExistingObject(DataObject obj, Timestamp timestamp)
 		{
-			if (obj.EventsCount > 0)
+			if (obj != null && obj.EventsCount > 0)
 			{
 				var e = obj.GetEvent (0);
 				return e.Timestamp <= timestamp;

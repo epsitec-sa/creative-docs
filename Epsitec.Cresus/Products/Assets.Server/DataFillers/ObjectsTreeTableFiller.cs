@@ -58,12 +58,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid  = node.Guid;
 				var level = node.Level;
 				var type  = node.Type;
-				var obj   = this.accessor.GetObject (BaseType.Objects, guid);
 
-				if (obj == null)
-				{
-					obj   = this.accessor.GetObject (BaseType.Groups, guid);
-				}
+				var baseType = (type == NodeType.Final) ? BaseType.Objects : BaseType.Groups;
+				var obj = this.accessor.GetObject (baseType, guid);
 
 				var regroupement = ObjectCalculator.GetObjectPropertyInt            (obj, this.Timestamp, ObjectField.Regroupement);
 				var nom          = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Nom);
