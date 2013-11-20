@@ -48,8 +48,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableActionMenu<ActionAiderContactViewController0CreatePerson> ();
 			}
 
-			wall.AddBrick ()
-					.EnableActionMenu<ActionAiderContactViewController1AddToBag> ();
 
 			var contactSummary = SummaryAiderContactViewController.GetPersonContactSummary (contact);
 
@@ -64,6 +62,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Title (personTitle)
 							.Icon (contact.Person.GetIconName ("Data"))
 							.Text (contactSummary)
+							.EnableActionMenu<ActionAiderPersonViewController10AddToBag> ()
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					break;
@@ -75,6 +74,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Title (personTitle)
 							.Icon (contact.Person.GetIconName ("Data"))
 							.Text (contactSummary)
+							.EnableActionMenu<ActionAiderPersonViewController10AddToBag> ()
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					
@@ -88,6 +88,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 								.Title (new FormattedText (Resources.Text ("Adresse de domicile") + html))
 								.Text (contact.Address.GetSummary ())
 								.Icon ("Data.AiderAddress")
+								.EnableActionMenu<ActionAiderContactViewController3AddAddressToBag> ()
 								.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 						}
 
@@ -95,10 +96,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						{
 							wall.AddBrick (x => x.Household.Members)
 								.Title (Resources.Text ("Membres du ménage"))
-								.Icon ("Data.AiderPersons")
+								.Icon ("Data.AiderPersons")							
 								.Attribute (BrickMode.HideAddButton)
 								.Attribute (BrickMode.HideRemoveButton)
 								.Attribute (BrickMode.AutoGroup)
+								.EnableActionMenu<ActionAiderContactViewController2AddHouseholdMembersToBag> ()
 								.Template ()
 									.Text (x => x.GetCompactSummary (household))
 								.End ()
@@ -126,6 +128,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 								.Title (TextFormatter.FormatText (contact.AddressType))
 								.Text (contact.Address.GetSummary ())
 								.Icon ("Data.AiderAddress")
+								.EnableActionMenu<ActionAiderContactViewController3AddAddressToBag> ()
 								.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 							}
 						}
@@ -135,6 +138,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Title (TextFormatter.FormatText (contact.AddressType))
 							.Text (contact.Address.GetSummary ())
 							.Icon ("Data.AiderAddress")
+							.EnableActionMenu<ActionAiderContactViewController3AddAddressToBag> ()
 							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 						}
 						
@@ -151,6 +155,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Title ("Adresse de base")
 							.Icon ("Data.AiderAddress")
 							.Text (x => x.LegalPerson.Address.GetSummary ())
+							.EnableActionMenu<ActionAiderContactViewController3AddAddressToBag> ()
 							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 					}
 
@@ -162,6 +167,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Icon (AiderPersonEntity.GetIconName ("Data", contact.LegalPersonContactMrMrs, contact.LegalPerson.Language))
 						.Title ("Personne de contact")
 						.Text (contactPersonSummary)
+						.EnableActionMenu<ActionAiderContactViewController1AddToBag> ()
 						.WithSpecialController (typeof (EditionAiderContactViewController2LegalContact));
 					break;
 

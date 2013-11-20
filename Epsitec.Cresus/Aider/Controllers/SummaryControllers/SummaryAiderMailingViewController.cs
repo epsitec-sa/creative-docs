@@ -36,6 +36,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionMenu<ActionAiderMailingViewController2Duplicate> ()
 				.EnableActionMenu<ActionAiderMailingViewController10AddToBag> ()
 				.EnableActionButton<ActionAiderMailingViewController2Duplicate> ()
+				.EnableActionButton<ActionAiderMailingViewController11AddRecipientFromBag> ()
 				.EnableActionOnDrop<ActionAiderMailingViewController0AddRecipientOnDrop> ();
 		}
 	}

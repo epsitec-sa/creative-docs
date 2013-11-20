@@ -1,5 +1,5 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
 
@@ -18,12 +18,12 @@ using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (1)]
-	public sealed class ActionAiderContactViewController1AddToBag : ActionViewController<AiderContactEntity>
+	[ControllerSubType (10)]
+	public sealed class ActionAiderPersonViewController10AddToBag : ActionViewController<AiderPersonEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Ajouter le contact à l'arche");
+			return Resources.Text ("Ajouter la personne à l'arche");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -34,12 +34,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-			var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (this.Entity).Value.ToString ().Replace ('/', '-');
+			var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (this.Entity.MainContact).Value.ToString ().Replace ('/', '-');
 
 			EntityBagManager.GetCurrentEntityBagManager ().AddToBag (
 				aiderUser.LoginName,
 				"Contact",
-				this.Entity.GetSummary (),
+				this.Entity.MainContact.GetSummary (),
 				id,
 				When.Now
 			);

@@ -1,5 +1,5 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
 
@@ -18,12 +18,12 @@ using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (1)]
-	public sealed class ActionAiderContactViewController1AddToBag : ActionViewController<AiderContactEntity>
+	[ControllerSubType (2)]
+	public sealed class ActionAiderContactViewController2AddHouseholdMembersToBag : ActionViewController<AiderContactEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Ajouter le contact à l'arche");
+			return Resources.Text ("Ajouter les membres dans l'arche");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -34,15 +34,20 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-			var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (this.Entity).Value.ToString ().Replace ('/', '-');
 
-			EntityBagManager.GetCurrentEntityBagManager ().AddToBag (
-				aiderUser.LoginName,
-				"Contact",
-				this.Entity.GetSummary (),
-				id,
-				When.Now
-			);
+			foreach (var person in this.Entity.Household.Members)
+			{
+				var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (person.MainContact).Value.ToString ().Replace ('/', '-');
+
+				EntityBagManager.GetCurrentEntityBagManager ().AddToBag (
+					aiderUser.LoginName,
+					"Contact",
+					person.MainContact.GetSummary (),
+					id,
+					When.Now
+				);
+			}
+			
 		}
 	}
 }

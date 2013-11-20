@@ -138,8 +138,16 @@ function() {
 
     removeEntityFromBag: function(entity) {
       var record = this.bagStore.getById(entity.id);
+      var hub = Epsitec.Cresus.Core.app.hubs.getHubByName('entitybag');
+
+      hub.RemoveFromMyBag(entity.id);
+    },
+
+    removeEntityFromClientBag: function(entity) {
+      var record = this.bagStore.getById(entity.id);
+      
       this.bagStore.remove(record);
-      this.setSizeAndPosition();
+
       if(this.bagStore.count()==0)
       {
         this.hide();

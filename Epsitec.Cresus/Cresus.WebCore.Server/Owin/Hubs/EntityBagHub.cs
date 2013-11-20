@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 	public class EntityBagHub : Hub
 	{
 
-		public void AddToBag(string connectionId, string title, string summary, string entityId)
+		/*public void AddToBag(string connectionId, string title, string summary, string entityId)
 		{
 			Clients.Client (connectionId).AddToBag (title, summary, entityId);
 		}
@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		public void RemoveFromBag(string connectionId, string title, string summary, string entityId)
 		{
 			Clients.Client (connectionId).RemoveFromBag (title, summary, entityId);
-		}
+		}*/
 
 
 		public override Task OnDisconnected()
@@ -43,6 +43,12 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			var backendClient = EntityBagClient.Instance;
 			Clients.Client (backendClient.GetConnectionId ()).SetUserConnectionId (Clients.Caller.userName, Clients.Caller.connectionId);
+		}
+
+		public void RemoveFromMyBag(string entityId)
+		{
+			var backendClient = EntityBagClient.Instance;
+			Clients.Client (backendClient.GetConnectionId ()).RemoveFromMyBag (Clients.Caller.userName, entityId);
 		}
 	}
 }

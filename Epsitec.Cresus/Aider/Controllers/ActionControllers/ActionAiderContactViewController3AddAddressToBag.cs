@@ -18,12 +18,12 @@ using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (1)]
-	public sealed class ActionAiderContactViewController1AddToBag : ActionViewController<AiderContactEntity>
+	[ControllerSubType (3)]
+	public sealed class ActionAiderContactViewController3AddAddressToBag : ActionViewController<AiderContactEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Ajouter le contact à l'arche");
+			return Resources.Text ("Ajouter l'adresse à l'arche");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -34,12 +34,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-			var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (this.Entity).Value.ToString ().Replace ('/', '-');
+			var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (this.Entity.Address).Value.ToString ().Replace ('/', '-');
 
 			EntityBagManager.GetCurrentEntityBagManager ().AddToBag (
 				aiderUser.LoginName,
-				"Contact",
-				this.Entity.GetSummary (),
+				"Adresse",
+				this.Entity.Address.GetSummary (),
 				id,
 				When.Now
 			);

@@ -11,7 +11,14 @@ function EntityBagHub() {
     this.hub.server.setupUserConnection();
   };
 
+
   //Entry points for calling hub
+  this.RemoveFromMyBag = function(entityId) {
+    this.hub.server.removeFromMyBag(entityId);
+
+  };
+
+  //Entry points for hub call
   this.hub.client.AddToBag = function(title, summary, entityId) {
     var app = Epsitec.Cresus.Core.getApplication();
     var entity = {
@@ -29,7 +36,7 @@ function EntityBagHub() {
           id: entityId
         };
 
-    app.removeEntityFromBag(entity);
+    app.removeEntityFromClientBag(entity);
   };
 
   this.hub.client.SetLoading = function(state) {

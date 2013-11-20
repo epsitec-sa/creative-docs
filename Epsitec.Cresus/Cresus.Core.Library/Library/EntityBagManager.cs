@@ -42,6 +42,16 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		public IEnumerable<string> GetUserBagEntitiesId(string userName)
+		{
+			if (EntityBagManager.hub != null)
+			{
+				return EntityBagManager.hub.GetUserBagEntitiesId (userName);
+			}
+
+			return Enumerable.Empty<string> ();
+		}
+
 		public static EntityBagManager GetCurrentEntityBagManager()
 		{
 			return CoreApp.FindCurrentAppSessionComponent<EntityBagManager> ();

@@ -11,6 +11,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 
 using System.Collections.Generic;
+using System.Linq;
 using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
@@ -26,7 +27,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 				this.server = server;
 
 				this.hubClients = new List<HubClient> ();
-				this.bagEntityQueue = new List<BagEntity> ();
+				this.bagEntityCache = new List<BagEntity> ();
 
 				this.hubConnection = new HubConnection ("http://localhost:9002/");
 				this.hub = hubConnection.CreateHubProxy ("EntityBagHub");
@@ -35,11 +36,12 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 				//Register Hub Listener
 				this.hub.On ("SetUserConnectionId", (string u, string c) => this.SetUserConnectionId (u, c));
 				this.hub.On ("FlushConnectionId", c => RemoveUserConnectionIdWithLock (c));
+				this.hub.On ("RemoveFromMyBag", (string u, string id) => RemoveFromMyBag (u,id));
 
 				this.hubConnection.Start ().Wait ();
 
 				this.setupLock = new ReaderWriterLockWrapper ();
-				this.queueLock = new ReaderWriterLockWrapper ();
+				this.cacheLock = new ReaderWriterLockWrapper ();
 			}
 
 		}
@@ -67,9 +69,9 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			if (when == When.OnConnect)
 			{
-				using (this.queueLock.LockWrite ())
+				using (this.cacheLock.LockWrite ())
 				{
-					this.bagEntityQueue.Add (new BagEntity ("ADD", userName, title,summary,entityId));
+					this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, summary, entityId));
 				}
 
 			}
@@ -78,6 +80,10 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 				var context = GlobalHost.ConnectionManager.GetHubContext<EntityBagHub> ();
 				context.Clients.Group (userName).AddToBag (title, summary, entityId);
+				using (this.cacheLock.LockWrite ())
+				{
+					this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, summary, entityId));
+				}
 			}
 		}
 
@@ -85,9 +91,9 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			if (when == When.OnConnect)
 			{
-				using (this.queueLock.LockWrite ())
+				using (this.cacheLock.LockWrite ())
 				{
-					this.bagEntityQueue.Add (new BagEntity ("REMOVE", userName, null, null, entityId));
+					this.bagEntityCache.Add (new BagEntity (userName, "REMOVE", null, null, entityId));
 				}
 
 			}
@@ -95,6 +101,10 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			{
 				var context = GlobalHost.ConnectionManager.GetHubContext<EntityBagHub> ();
 				context.Clients.Group (userName).RemoveFromBag (entityId);
+				using (this.cacheLock.LockWrite ())
+				{
+					this.bagEntityCache.RemoveAll(e => e.DestinationUserName == userName && e.EntityId == entityId);
+				}
 			}
 		}
 
@@ -102,6 +112,11 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{			
 			var context = GlobalHost.ConnectionManager.GetHubContext<EntityBagHub> ();
 			context.Clients.Group (userName).SetLoading (state);			
+		}
+
+		IEnumerable<string> IEntityBagHub.GetUserBagEntitiesId(string userName)
+		{
+			return this.bagEntityCache.Where (b => b.DestinationUserName == userName).Select(b => "db:" + b.EntityId.Replace('-',':'));
 		}
 
 		#endregion
@@ -115,7 +130,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		public void Dispose()
 		{
-			this.queueLock.Dispose ();
+			this.cacheLock.Dispose ();
 			this.setupLock.Dispose ();
 		}
 
@@ -134,9 +149,9 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 						this.hubClients.Add (new HubClient (connectionId, userName));
 						context.Groups.Add (connectionId, userName);
 						//send and flush pending user notification from queue
-						using (this.queueLock.LockRead ())
+						using (this.cacheLock.LockRead ())
 						{
-							foreach (var bagEntity in this.bagEntityQueue)
+							foreach (var bagEntity in this.bagEntityCache)
 							{
 								if (bagEntity.DestinationUserName == userName)
 								{
@@ -152,11 +167,6 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 								}
 							}
 						}
-						using (this.queueLock.LockWrite ())
-						{
-							this.bagEntityQueue.RemoveAll (m => m.DestinationUserName == userName);
-						}
-
 					}
 					else
 					{
@@ -170,6 +180,17 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 					}
 				}
 			}
+		}
+
+		private void RemoveFromMyBag(string userName,string entityId)
+		{
+			using (this.cacheLock.LockWrite ())
+			{
+				this.bagEntityCache.RemoveAll (e => e.DestinationUserName == userName && e.EntityId == entityId);
+			}
+
+			var context = GlobalHost.ConnectionManager.GetHubContext<EntityBagHub> ();
+			context.Clients.Group (userName).RemoveFromBag (entityId);
 		}
 
 		private void RemoveUserConnectionIdWithLock(string connectionId)
@@ -222,13 +243,13 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		private static EntityBagClient		instance;
 
 		private readonly ReaderWriterLockWrapper setupLock;
-		private readonly ReaderWriterLockWrapper queueLock;
+		private readonly ReaderWriterLockWrapper cacheLock;
 
 		private readonly CoreServer				server;
 		private readonly HubConnection			hubConnection;
 		private readonly IHubProxy				hub;
 		private readonly List<HubClient>		hubClients;
-		private readonly List<BagEntity>		bagEntityQueue;
+		private readonly List<BagEntity>		bagEntityCache;
 
 		
 	}

@@ -38,10 +38,20 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
 
-			EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
+			if (this.AdditionalEntity is AiderPersonEntity)
+			{
+				var aiderPerson = (AiderPersonEntity) this.AdditionalEntity;
+				EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
+
+				this.Entity.AddContact (this.BusinessContext, aiderPerson.MainContact);
+				//Remove entity from the bag
+				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
+			}
 
 			if (this.AdditionalEntity is AiderContactEntity)
 			{
+				EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
+
 				this.Entity.AddContact (this.BusinessContext, (AiderContactEntity) this.AdditionalEntity);
 				//Remove entity from the bag
 				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
@@ -49,6 +59,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (this.AdditionalEntity is AiderGroupEntity)
 			{
+				EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
+
 				this.Entity.AddGroup (this.BusinessContext, (AiderGroupEntity) this.AdditionalEntity);
 				//Remove entity from the bag
 				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
@@ -56,6 +68,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (this.AdditionalEntity is AiderHouseholdEntity)
 			{
+				EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
+
 				this.Entity.AddHousehold (this.BusinessContext, (AiderHouseholdEntity) this.AdditionalEntity);
 				//Remove entity from the bag
 				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
@@ -64,6 +78,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			if (this.AdditionalEntity is AiderLegalPersonEntity)
 			{
 				var legalPerson = (AiderLegalPersonEntity) this.AdditionalEntity;
+				EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
 
 				this.Entity.AddContact (this.BusinessContext, legalPerson.GetMainContact ());
 				//Remove entity from the bag

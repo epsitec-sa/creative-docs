@@ -381,6 +381,10 @@ $.getScript('signalr/hubs', function() {
         this.entityBag.removeEntityFromBag(entity);      
       },
 
+      removeEntityFromClientBag: function(entity) {
+        this.entityBag.removeEntityFromClientBag(entity);      
+      },
+
       addEntityToTarget: function(entity) {
         this.actionPage.addTargetEntity(entity);      
       },
