@@ -401,7 +401,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnObjectFilter()
 		{
 			var target = this.objectsToolbar.GetCommandWidget (ToolbarCommand.Filter);
-			var popup = new ObjectsPopup (this.accessor, BaseType.Groups, this.nodesGetter.RootGuid);
+			var popup = new GroupsPopup (this.accessor, this.nodesGetter.RootGuid);
 
 			popup.Create (target, leftOrRight: true);
 

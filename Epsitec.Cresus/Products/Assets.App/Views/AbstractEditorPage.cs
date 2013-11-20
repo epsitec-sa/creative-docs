@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new GuidFieldController
 			{
 				Accessor  = this.accessor,
-				BaseType  = (this is EditorPageGroups) ? BaseType.Groups : this.baseType,
+				BaseType  = BaseType.Groups,
 				Label     = DataDescriptions.GetObjectFieldDescription (field),
 				EditWidth = 380,
 				TabIndex  = ++this.tabIndex,

@@ -82,7 +82,7 @@
     <Compile Include="Popups\BalloonPath.cs" />
     <Compile Include="Popups\CategoriesPopup.cs" />
     <Compile Include="Popups\CreateObjectPopup.cs" />
-    <Compile Include="Popups\ObjectsPopup.cs" />
+    <Compile Include="Popups\GroupsPopup.cs" />
     <Compile Include="Popups\DatePopup.cs" />
     <Compile Include="Popups\SimulationPopup.cs" />
     <Compile Include="Popups\SmoothShadow.cs" />

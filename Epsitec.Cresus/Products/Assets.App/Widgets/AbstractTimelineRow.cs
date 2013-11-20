@@ -193,6 +193,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				graphics.AddLine (rect.BottomLeft, rect.BottomRight);
 				
+				//	Les lignes correspondant à un groupe n'ont pas les séparateurs verticaux.
 				if (!isGroup)
 				{
 					graphics.AddLine (rect.BottomRight, rect.TopRight);

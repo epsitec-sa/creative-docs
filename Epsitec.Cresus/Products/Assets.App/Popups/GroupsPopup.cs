@@ -13,18 +13,17 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class ObjectsPopup : AbstractPopup
+	public class GroupsPopup : AbstractPopup
 	{
-		public ObjectsPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid)
+		public GroupsPopup(DataAccessor accessor, Guid selectedGuid)
 		{
 			this.accessor = accessor;
-			this.baseType = baseType;
 
 			this.controller = new NavigationTreeTableController();
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
-			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
+			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
+			this.nodesGetter = new TreeNodesGetter (this.accessor, BaseType.Groups, primaryNodesGetter);
 
 			this.nodesGetter.UpdateData ();
 			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
@@ -62,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateTitle (this.mainFrameBox);
 			this.CreateCloseButton ();
 			
-			this.controller.CreateUI (this.mainFrameBox, headerHeight: ObjectsPopup.HeaderHeight, footerHeight: 0);
+			this.controller.CreateUI (this.mainFrameBox, headerHeight: GroupsPopup.HeaderHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
 			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
@@ -77,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Text             = "Choix du groupe",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Top,
-				PreferredHeight  = ObjectsPopup.TitleHeight - 4,
+				PreferredHeight  = GroupsPopup.TitleHeight - 4,
 				BackColor        = ColorManager.SelectionColor,
 			};
 
@@ -99,21 +98,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	On calcule une hauteur adaptée au contenu, mais qui ne dépasse
 			//	évidement pas la hauteur de la fenêtre principale.
 			double h = parent.ActualHeight
-					 - ObjectsPopup.HeaderHeight
+					 - GroupsPopup.HeaderHeight
 					 - AbstractScroller.DefaultBreadth;
 
 			//	Utilise au maximum les 1/2 de la hauteur.
-			int max = (int) (h*0.5) / ObjectsPopup.RowHeight;
+			int max = (int) (h*0.5) / GroupsPopup.RowHeight;
 
 			int rows = System.Math.Min (this.nodesGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
 
-			int dx = ObjectsPopup.PopupWidth
+			int dx = GroupsPopup.PopupWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
-			int dy = ObjectsPopup.TitleHeight
-				   + ObjectsPopup.HeaderHeight
-				   + rows * ObjectsPopup.RowHeight
+			int dy = GroupsPopup.TitleHeight
+				   + GroupsPopup.HeaderHeight
+				   + rows * GroupsPopup.RowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			return new Size (dx, dy);
@@ -168,7 +167,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int PopupWidth       = 180;
 
 		private readonly DataAccessor					accessor;
-		private readonly BaseType						baseType;
 		private readonly NavigationTreeTableController	controller;
 		private readonly TreeNodesGetter				nodesGetter;
 		private readonly SingleObjectsTreeTableFiller	dataFiller;
