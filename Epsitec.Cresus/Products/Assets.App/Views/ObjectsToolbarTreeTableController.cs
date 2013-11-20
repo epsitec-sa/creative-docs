@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void OnFilter()
 		{
 			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Filter);
-			var popup = new GroupsPopup (this.accessor, this.NodesGetter.RootGuid);
+			var popup = new GroupsPopup (this.accessor, this.NodesGetter.RootGuid, initialCompact: true);
 
 			popup.Create (target, leftOrRight: true);
 

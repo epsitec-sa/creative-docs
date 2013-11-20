@@ -50,7 +50,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (BaseType.Groups, guid);
 
-//				var regroupement = ObjectCalculator.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.Regroupement);
 				var nom          = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
 				var numéro       = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Numéro);
 				var description  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Description);
@@ -60,8 +59,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				{
 					description = DataDescriptions.OutOfDateName;
 				}
-
-//				var grouping = regroupement.HasValue && regroupement.Value == 1;
 
 				var sf = new TreeTableCellTree   (true, level, type, nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString (true, numéro,           isSelected: (i == selection));

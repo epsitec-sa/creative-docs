@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 			this.UpdateSelectedRow ();
 
-			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodesGetter);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int TitleHeight = 24;
 		private static readonly int LineHeight  = 2+17+2;
 		private static readonly int Indent      = 80;
-		private static readonly int PopupWidth  = 330;
+		private static readonly int PopupWidth  = 350;
 		private static readonly int PopupHeight = 400;
 		private static readonly int Margin      = 20;
 
@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly BaseType						baseType;
 		private readonly NavigationTreeTableController	controller;
 		private readonly TreeNodesGetter				nodesGetter;
-		private readonly SingleObjectsTreeTableFiller	dataFiller;
+		private readonly SingleGroupsTreeTableFiller	dataFiller;
 
 		private TextField								textField;
 		private Button									createButton;

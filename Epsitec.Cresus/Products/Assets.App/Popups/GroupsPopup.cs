@@ -18,9 +18,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class GroupsPopup : AbstractPopup
 	{
-		public GroupsPopup(DataAccessor accessor, Guid selectedGuid)
+		public GroupsPopup(DataAccessor accessor, Guid selectedGuid, bool initialCompact = false)
 		{
-			this.accessor = accessor;
+			this.accessor       = accessor;
+			this.initialCompact = initialCompact;
 
 			this.controller = new NavigationTreeTableController();
 
@@ -31,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.nodesGetter.UpdateData ();
 			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 
-			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodesGetter);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -47,6 +48,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var node = this.nodesGetter[this.visibleSelectedRow];
 				this.OnNavigate (node.Guid);
 				this.ClosePopup ();
+			};
+
+			this.controller.TreeButtonClicked += delegate (object sender, int row, NodeType type)
+			{
+				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
 			};
 		}
 
@@ -64,11 +70,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateTitle (this.mainFrameBox);
 			this.CreateCloseButton ();
 			
-			this.controller.CreateUI (this.mainFrameBox, headerHeight: GroupsPopup.HeaderHeight, footerHeight: 0);
+			this.controller.CreateUI (this.mainFrameBox, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
 			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
 			this.UpdateController ();
+
+			if (this.initialCompact)
+			{
+				this.InitialCompact ();
+			}
 		}
 
 		private void CreateTitle(Widget parent)
@@ -93,6 +104,63 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private void InitialCompact()
+		{
+			var guid = this.SelectedGuid;
+
+			int row = 0;
+			while (row < this.nodesGetter.Count)
+			{
+				var node = this.nodesGetter[row];
+
+				if (node.Level == 1)
+				{
+					this.nodesGetter.CompactOrExpand (row);
+				}
+
+				row++;
+			}
+
+			this.SelectedGuid = guid;
+		}
+
+		private void OnCompactOrExpand(int row)
+		{
+			//	Etend ou compacte une ligne (inverse son mode actuel).
+			var guid = this.SelectedGuid;
+
+			this.nodesGetter.CompactOrExpand (row);
+			this.UpdateController ();
+
+			this.SelectedGuid = guid;
+		}
+
+		private Guid SelectedGuid
+		{
+			//	Retourne le Guid de l'objet actuellement sélectionné.
+			get
+			{
+				int sel = this.visibleSelectedRow;
+				if (sel != -1 && sel < this.nodesGetter.Count)
+				{
+					return this.nodesGetter[sel].Guid;
+				}
+				else
+				{
+					return Guid.Empty;
+				}
+			}
+			//	Sélectionne l'objet ayant un Guid donné. Si la ligne correspondante
+			//	est cachée, on est assez malin pour sélectionner la prochaine ligne
+			//	visible, vers le haut.
+			set
+			{
+				this.visibleSelectedRow = this.nodesGetter.SearchBestIndex (value);
+				this.UpdateController ();
+			}
+		}
+
+
 		private Size GetSize()
 		{
 			// TODO: faire autrement, car le mode est leftOrRight = false !
@@ -101,7 +169,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	On calcule une hauteur adaptée au contenu, mais qui ne dépasse
 			//	évidement pas la hauteur de la fenêtre principale.
 			double h = parent.ActualHeight
-					 - GroupsPopup.HeaderHeight
 					 - AbstractScroller.DefaultBreadth;
 
 			//	Utilise au maximum les 1/2 de la hauteur.
@@ -114,7 +181,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			int dy = GroupsPopup.TitleHeight
-				   + GroupsPopup.HeaderHeight
 				   + rows * GroupsPopup.RowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
 
@@ -165,14 +231,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private static readonly int TitleHeight      = 24;
-		private static readonly int HeaderHeight     = 22;
 		private static readonly int RowHeight        = 18;
-		private static readonly int PopupWidth       = 180;
+		private static readonly int PopupWidth       = 200;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
 		private readonly TreeNodesGetter				nodesGetter;
-		private readonly SingleObjectsTreeTableFiller	dataFiller;
+		private readonly SingleGroupsTreeTableFiller	dataFiller;
+		private readonly bool							initialCompact;
 
 		private int										visibleSelectedRow;
 	}

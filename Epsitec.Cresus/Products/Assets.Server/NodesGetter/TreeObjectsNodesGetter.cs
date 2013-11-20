@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				//	ni compactée.
 				var type = NodeType.Final;
 
-				if (i < count-2)
+				if (i < count-1)
 				{
 					var nextNode = this.inputNodes[i+1];
 
