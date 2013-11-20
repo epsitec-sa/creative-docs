@@ -13,6 +13,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Choix d'un objet dans la base de données des groupes.
+	/// </summary>
 	public class GroupsPopup : AbstractPopup
 	{
 		public GroupsPopup(DataAccessor accessor, Guid selectedGuid)

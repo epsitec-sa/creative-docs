@@ -18,31 +18,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TimelinesArrayController
 	{
-		public TimelinesArrayController(DataAccessor accessor, BaseType baseType)
+		public TimelinesArrayController(DataAccessor accessor)
 		{
 			this.accessor = accessor;
-			this.baseType = baseType;
 
 			this.selectedRow    = -1;
 			this.selectedColumn = -1;
-
-			switch (this.baseType)
-			{
-				case BaseType.Objects:
-					this.title = "Objets d'immobilisation";
-					this.subtitle = "Objets";
-					break;
-
-				case BaseType.Categories:
-					this.title = "Catégories d'immobilisation";
-					this.subtitle = "Catégories";
-					break;
-
-				case BaseType.Groups:
-					this.title = "Groupes d'immobilisation";
-					this.subtitle = "Groupes";
-					break;
-			}
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var groupNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
@@ -138,7 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent = parent,
 			};
 
-			this.topTitle.SetTitle (this.title);
+			this.topTitle.SetTitle ("Objets d'immobilisation");
 
 			var box = new FrameBox
 			{
@@ -180,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				HoverMode         = TreeTableHoverMode.VerticalGradient,
 				HeaderHeight      = TimelinesArrayController.lineHeight*2,
 				FooterHeight      = 0,
-				HeaderDescription = this.subtitle,
+				HeaderDescription = "Object",
 				RowHeight         = TimelinesArrayController.lineHeight,
 				Margins           = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
 				VerticalAdjust    = -1,
@@ -456,26 +437,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.objectsToolbar.GetCommandWidget (ToolbarCommand.New);
 			this.ShowCreatePopup (target);
-			//-var modelGuid = this.SelectedGuid;
-			//-if (modelGuid.IsEmpty)
-			//-{
-			//-	return;
-			//-}
-			//-
-			//-int sel = this.selectedRow;
-			//-if (sel == -1)
-			//-{
-			//-	return;
-			//-}
-			//-
-			//-var e = this.accessor.CreateObject (this.baseType, sel+1, modelGuid);
-			//-
-			//-this.UpdateData ();
-			//-
-			//-var column = this.dataArray.FindColumnIndex (e.Timestamp);
-			//-this.SetSelection (sel+1, column);
-			//-
-			//-this.OnStartEditing (e.Type, e.Timestamp);
 		}
 
 		private void OnObjectDelete()
@@ -495,7 +456,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "yes")
 					{
-						this.accessor.RemoveObject (this.baseType, this.SelectedGuid);
+						this.accessor.RemoveObject (BaseType.Objects, this.SelectedGuid);
 						this.UpdateData ();
 					}
 				};
@@ -558,7 +519,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateObjectPopup (this.accessor, this.baseType, this.SelectedGuid);
+			var popup = new CreateObjectPopup (this.accessor, BaseType.Objects, this.SelectedGuid);
 
 			popup.Create (target, leftOrRight: true);
 
@@ -573,8 +534,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateObject(System.DateTime date, string name, Guid parent)
 		{
-			var guid = this.accessor.CreateObject (this.baseType, date, name, parent);
-			var obj = this.accessor.GetObject (this.baseType, guid);
+			var guid = this.accessor.CreateObject (BaseType.Objects, date, name, parent);
+			var obj = this.accessor.GetObject (BaseType.Objects, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
 			this.UpdateData ();
@@ -639,8 +600,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				var popup = new NewEventPopup
 				{
-					BaseType   = this.baseType,
-					DataObject = this.accessor.GetObject (this.baseType, this.SelectedGuid),
+					BaseType   = BaseType.Objects,
+					DataObject = this.accessor.GetObject (BaseType.Objects, this.SelectedGuid),
 					Timestamp  = timestamp.Value,
 				};
 
@@ -700,7 +661,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateEvent(System.DateTime date, string buttonName)
 		{
-			var obj = this.accessor.GetObject (this.baseType, this.SelectedGuid);
+			var obj = this.accessor.GetObject (BaseType.Objects, this.SelectedGuid);
 			if (obj != null)
 			{
 				var type = TimelinesArrayController.ParseEventType (buttonName);
@@ -1324,13 +1285,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private static readonly int leftColumnWidth = 180;
 
 		private readonly DataAccessor						accessor;
-		private readonly BaseType							baseType;
 		private readonly ObjectsNodesGetter					nodesGetter;
 		private readonly SingleObjectsTreeTableFiller		dataFiller;
 		private readonly TimelinesArrayLogic				arrayLogic;
 		private readonly TimelinesArrayLogic.DataArray		dataArray;
-		private readonly string								title;
-		private readonly string								subtitle;
 
 		private TopTitle									topTitle;
 		private TimelineMode								timelineMode;

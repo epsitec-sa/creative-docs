@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listController           = new ObjectsToolbarTreeTableController (this.accessor);
 			this.timelineController       = new ObjectsToolbarTimelineController (this.accessor, this.baseType);
 			this.eventsController         = new EventsToolbarTreeTableController (this.accessor);
-			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.baseType);
+			this.timelinesArrayController = new TimelinesArrayController (this.accessor);
 			this.objectEditor             = new ObjectEditor (this.accessor, this.baseType, isTimeless: false);
 
 			this.ignoreChanges = new SafeCounter ();
