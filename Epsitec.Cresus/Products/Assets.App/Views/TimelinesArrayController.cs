@@ -45,12 +45,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
-			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
+			var groupNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
+			var objectNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
+			this.nodesGetter = new ObjectsNodesGetter (this.accessor, groupNodesGetter, objectNodesGetter);
 
-			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.baseType, this.nodesGetter);
+			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.nodesGetter);
 
-			this.arrayLogic = new TimelinesArrayLogic (this.accessor, this.baseType);
+			this.arrayLogic = new TimelinesArrayLogic (this.accessor);
 			this.dataArray = new TimelinesArrayLogic.DataArray ();
 
 			this.timelineMode = TimelineMode.Expanded;
@@ -270,6 +271,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				switch (command)
 				{
+					case ToolbarCommand.Filter:
+						this.OnObjectFilter ();
+						break;
+
 					case ToolbarCommand.First:
 						this.OnObjectFirst ();
 						break;
@@ -393,6 +398,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Objects commands
+		private void OnObjectFilter()
+		{
+			var target = this.objectsToolbar.GetCommandWidget (ToolbarCommand.Filter);
+			var popup = new ObjectsPopup (this.accessor, BaseType.Groups, this.nodesGetter.RootGuid);
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.Navigate += delegate (object sender, Guid guid)
+			{
+				this.nodesGetter.RootGuid = guid;
+				this.UpdateData ();
+			};
+		}
+
 		private void OnObjectFirst()
 		{
 			var index = this.FirstRowIndex;
@@ -813,7 +832,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var cell = this.dataArray.GetCell (row, firstCell+i);
 					bool selected = (row == this.selectedRow && firstCell+i == this.selectedColumn);
 
-					var g = new TimelineCellGlyph (cell.Glyph, cell.Locked, cell.Tooltip, selected);
+					var g = new TimelineCellGlyph (cell.Glyph, cell.IsLocked, cell.IsGroup, cell.Tooltip, selected);
 					glyphs.Add (g);
 				}
 
@@ -1008,6 +1027,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateToolbar()
 		{
+			this.objectsToolbar.UpdateCommand (ToolbarCommand.Filter, true);
+
 			this.UpdateObjectCommand (ToolbarCommand.First, this.selectedRow, this.FirstRowIndex);
 			this.UpdateObjectCommand (ToolbarCommand.Prev,  this.selectedRow, this.PrevRowIndex);
 			this.UpdateObjectCommand (ToolbarCommand.Next,  this.selectedRow, this.NextRowIndex);
@@ -1025,7 +1046,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateTimelineCommand (ToolbarCommand.Next,  this.selectedColumn, this.NextColumnIndex);
 			this.UpdateTimelineCommand (ToolbarCommand.Last,  this.selectedColumn, this.LastColumnIndex);
 
-			this.timelinesToolbar.UpdateCommand (ToolbarCommand.New,      this.selectedColumn != -1);
+			this.timelinesToolbar.UpdateCommand (ToolbarCommand.New,      this.selectedColumn != -1 && this.HasSelectedTimeline);
 			this.timelinesToolbar.UpdateCommand (ToolbarCommand.Delete,   this.HasSelectedEvent);
 			this.timelinesToolbar.UpdateCommand (ToolbarCommand.Deselect, this.selectedColumn != -1);
 		}
@@ -1042,6 +1063,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelinesToolbar.UpdateCommand (command, enable);
 		}
 
+
+		private bool HasSelectedTimeline
+		{
+			get
+			{
+				if (this.selectedRow != -1)
+				{
+					var node = this.nodesGetter[this.selectedRow];
+					if (!node.IsEmpty)
+					{
+						return node.BaseType == BaseType.Objects;
+					}
+				}
+
+				return false;
+			}
+		}
 
 		private bool HasSelectedEvent
 		{
@@ -1122,24 +1160,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				var obj = this.SelectedObject;
+				if (this.HasSelectedTimeline)
+				{
+					var obj = this.SelectedObject;
 
-				if (this.selectedColumn == -1)
-				{
-					if (obj != null && obj.Events.Any ())
-					{
-						var timestamp = obj.Events.First ().Timestamp;
-						return this.dataArray.FindColumnIndex (timestamp);
-					}
-				}
-				else
-				{
-					if (this.PrevColumnIndex.HasValue)
+					if (this.selectedColumn == -1)
 					{
 						if (obj != null && obj.Events.Any ())
 						{
 							var timestamp = obj.Events.First ().Timestamp;
 							return this.dataArray.FindColumnIndex (timestamp);
+						}
+					}
+					else
+					{
+						if (this.PrevColumnIndex.HasValue)
+						{
+							if (obj != null && obj.Events.Any ())
+							{
+								var timestamp = obj.Events.First ().Timestamp;
+								return this.dataArray.FindColumnIndex (timestamp);
+							}
 						}
 					}
 				}
@@ -1152,17 +1193,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				var obj = this.SelectedObject;
-				if (obj != null && obj.Events.Any ())
+				if (this.HasSelectedTimeline)
 				{
-					var column = this.dataArray.GetColumn (this.selectedColumn);
-					if (column != null)
+					var obj = this.SelectedObject;
+					if (obj != null && obj.Events.Any ())
 					{
-						int i = obj.Events.Where (x => x.Timestamp < column.Timestamp).Count () - 1;
-						if (i >= 0)
+						var column = this.dataArray.GetColumn (this.selectedColumn);
+						if (column != null)
 						{
-							var e = obj.GetEvent (i);
-							return this.dataArray.FindColumnIndex (e.Timestamp);
+							int i = obj.Events.Where (x => x.Timestamp < column.Timestamp).Count () - 1;
+							if (i >= 0)
+							{
+								var e = obj.GetEvent (i);
+								return this.dataArray.FindColumnIndex (e.Timestamp);
+							}
 						}
 					}
 				}
@@ -1175,17 +1219,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				var obj = this.SelectedObject;
-				if (obj != null && obj.Events.Any ())
+				if (this.HasSelectedTimeline)
 				{
-					var column = this.dataArray.GetColumn (this.selectedColumn);
-					if (column != null)
+					var obj = this.SelectedObject;
+					if (obj != null && obj.Events.Any ())
 					{
-						int i = obj.Events.Where (x => x.Timestamp <= column.Timestamp).Count ();
-						if (i < obj.EventsCount)
+						var column = this.dataArray.GetColumn (this.selectedColumn);
+						if (column != null)
 						{
-							var e = obj.GetEvent (i);
-							return this.dataArray.FindColumnIndex (e.Timestamp);
+							int i = obj.Events.Where (x => x.Timestamp <= column.Timestamp).Count ();
+							if (i < obj.EventsCount)
+							{
+								var e = obj.GetEvent (i);
+								return this.dataArray.FindColumnIndex (e.Timestamp);
+							}
 						}
 					}
 				}
@@ -1198,24 +1245,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				var obj = this.SelectedObject;
+				if (this.HasSelectedTimeline)
+				{
+					var obj = this.SelectedObject;
 
-				if (this.selectedColumn == -1)
-				{
-					if (obj != null && obj.Events.Any ())
-					{
-						var timestamp = obj.Events.Last ().Timestamp;
-						return this.dataArray.FindColumnIndex (timestamp);
-					}
-				}
-				else
-				{
-					if (this.NextColumnIndex.HasValue)
+					if (this.selectedColumn == -1)
 					{
 						if (obj != null && obj.Events.Any ())
 						{
 							var timestamp = obj.Events.Last ().Timestamp;
 							return this.dataArray.FindColumnIndex (timestamp);
+						}
+					}
+					else
+					{
+						if (this.NextColumnIndex.HasValue)
+						{
+							if (obj != null && obj.Events.Any ())
+							{
+								var timestamp = obj.Events.Last ().Timestamp;
+								return this.dataArray.FindColumnIndex (timestamp);
+							}
 						}
 					}
 				}
@@ -1235,7 +1285,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var node = this.nodesGetter[this.selectedRow];
 					if (!node.IsEmpty)
 					{
-						return this.accessor.GetObject (this.baseType, node.Guid);
+						return this.accessor.GetObject (node.BaseType, node.Guid);
 					}
 				}
 
@@ -1275,7 +1325,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly DataAccessor						accessor;
 		private readonly BaseType							baseType;
-		private readonly TreeNodesGetter					nodesGetter;
+		private readonly ObjectsNodesGetter					nodesGetter;
 		private readonly SingleObjectsTreeTableFiller		dataFiller;
 		private readonly TimelinesArrayLogic				arrayLogic;
 		private readonly TimelinesArrayLogic.DataArray		dataArray;

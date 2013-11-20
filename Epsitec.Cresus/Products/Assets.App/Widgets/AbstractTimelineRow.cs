@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRank, int hilitedRank, double decrease = 0.1)
+		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRank, int hilitedRank, bool isGroup = false, double decrease = 0.1)
 		{
 			//	Dessine une portion de grille dans une cellule, sous forme de 2 traits,
 			//	en bas et à droite. Plus la distance jusqu'à la cellule survolée est
@@ -192,7 +192,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				rect.Deflate (0.5);
 
 				graphics.AddLine (rect.BottomLeft, rect.BottomRight);
-				graphics.AddLine (rect.BottomRight, rect.TopRight);
+				
+				if (!isGroup)
+				{
+					graphics.AddLine (rect.BottomRight, rect.TopRight);
+				}
 
 				Color color;
 

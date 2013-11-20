@@ -11,10 +11,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class SingleObjectsTreeTableFiller : AbstractTreeTableFiller<TreeNode>
 	{
-		public SingleObjectsTreeTableFiller(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<TreeNode> nodesGetter)
+		public SingleObjectsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<TreeNode> nodesGetter)
 			: base (accessor, nodesGetter)
 		{
-			this.baseType = baseType;
 		}
 
 
@@ -42,10 +41,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var node  = this.nodesGetter[firstRow+i];
-				var guid  = node.Guid;
 				var level = node.Level;
 				var type  = node.Type;
-				var obj   = this.accessor.GetObject (this.baseType, guid);
+				var obj   = this.accessor.GetObject (node.BaseType, node.Guid);
 
 				var nom = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
 
@@ -66,8 +64,5 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			return content;
 		}
-
-
-		private readonly BaseType baseType;
 	}
 }

@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.PaintCellBackground (graphics, rect, lastCell, isHover, index);
 					this.PaintCellForeground (graphics, rect, lastCell, isHover, index);
 
-					this.PaintGrid (graphics, rect, index, this.hilitedHoverRank, 0.0);
+					this.PaintGrid (graphics, rect, index, this.hilitedHoverRank, false, 0.0);
 
 					index++;
 					x = rank;

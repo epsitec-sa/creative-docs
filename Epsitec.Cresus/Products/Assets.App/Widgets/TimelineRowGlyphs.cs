@@ -7,6 +7,7 @@ using System.Text;
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -59,7 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					this.PaintCellForeground (graphics, glyphRect, lastCell, isHover, index);
 
-					this.PaintGrid (graphics, rect, index, this.hilitedHoverRank);
+					this.PaintGrid (graphics, rect, index, this.hilitedHoverRank, lastCell.IsGroup);
 
 					index++;
 					x = rank;

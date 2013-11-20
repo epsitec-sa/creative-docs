@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (ObjectCalculator.IsLocked (lockedIntervals, cell.Timestamp))
 				{
-					cell.Locked = true;
+					cell.IsLocked = true;
 					this.cells[i] = cell;
 				}
 			}
@@ -395,7 +395,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			public Timestamp		Timestamp;
 			public TimelineGlyph	Glyph;
-			public bool				Locked;
+			public bool				IsLocked;
 			public string			Tooltip;
 			public decimal?[]		Values;
 		}

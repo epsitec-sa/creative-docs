@@ -10,14 +10,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public class TimelinesArrayLogic
 	{
-		public TimelinesArrayLogic(DataAccessor accessor, BaseType baseType)
+		public TimelinesArrayLogic(DataAccessor accessor)
 		{
 			this.accessor = accessor;
-			this.baseType = baseType;
 		}
 
 
-		public void Update(DataArray dataArray, TreeNodesGetter nodesGetter)
+		public void Update(DataArray dataArray, ObjectsNodesGetter nodesGetter)
 		{
 			//	Met à jour this.dataArray en fonction de l'ensemble des événements de
 			//	tous les objets. Cela nécessite d'accéder à l'ensemble des données, ce
@@ -29,15 +28,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			for (int row=0; row<nodesGetter.Count; row++)
 			{
 				var node = nodesGetter[row];
-				var obj = this.accessor.GetObject (this.baseType, node.Guid);
+				var obj = this.accessor.GetObject (node.BaseType, node.Guid);
 
 				var label = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
 				dataArray.RowsLabel.Add (label);
 
-				foreach (var e in obj.Events)
+				if (node.BaseType == BaseType.Objects)
 				{
-					var column = dataArray.GetColumn (e.Timestamp);
-					column[row] = this.EventToCell (obj, e);
+					foreach (var e in obj.Events)
+					{
+						var column = dataArray.GetColumn (e.Timestamp);
+						column[row] = this.EventToCell (obj, e);
+					}
 				}
 			}
 
@@ -45,15 +47,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			for (int row=0; row<nodesGetter.Count; row++)
 			{
 				var node = nodesGetter[row];
-				var obj = this.accessor.GetObject (this.baseType, node.Guid);
-				var lockedIntervals = ObjectCalculator.GetLockedIntervals (obj);
 
-				for (int c=0; c<dataArray.ColumnsCount; c++)
+				if (node.BaseType == BaseType.Objects)
 				{
-					var column = dataArray.GetColumn (c);
-					if (ObjectCalculator.IsLocked (lockedIntervals, column.Timestamp))
+					var obj = this.accessor.GetObject (node.BaseType, node.Guid);
+					var lockedIntervals = ObjectCalculator.GetLockedIntervals (obj);
+
+					for (int c=0; c<dataArray.ColumnsCount; c++)
 					{
-						column[row] = new DataCell (column[row].Glyph, true, column[row].Tooltip);
+						var column = dataArray.GetColumn (c);
+						if (ObjectCalculator.IsLocked (lockedIntervals, column.Timestamp))
+						{
+							column[row] = new DataCell (column[row].Glyph, true, false, column[row].Tooltip);
+						}
+					}
+				}
+				else
+				{
+					for (int c=0; c<dataArray.ColumnsCount; c++)
+					{
+						var column = dataArray.GetColumn (c);
+						column[row] = new DataCell (column[row].Glyph, false, true, null);
 					}
 				}
 			}
@@ -64,7 +78,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var glyph      = TimelineData.TypeToGlyph (e.Type);
 			string tooltip = LogicDescriptions.GetTooltip (obj, e.Timestamp, e.Type, 8);
 
-			return new DataCell (glyph, false, tooltip);
+			return new DataCell (glyph, false, false, tooltip);
 		}
 
 
@@ -211,11 +225,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		/// </summary>
 		public class DataCell
 		{
-			public DataCell(TimelineGlyph glyph, bool locked = false, string tooltip = null)
+			public DataCell(TimelineGlyph glyph, bool isLocked = false, bool isGroup = false, string tooltip = null)
 			{
-				this.Glyph   = glyph;
-				this.Locked  = locked;
-				this.Tooltip = tooltip;
+				this.Glyph    = glyph;
+				this.IsLocked = isLocked;
+				this.IsGroup  = isGroup;
+				this.Tooltip  = tooltip;
 			}
 
 			public bool IsEmpty
@@ -229,7 +244,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			public static DataCell Empty = new DataCell (TimelineGlyph.Empty);
 
 			public readonly TimelineGlyph	Glyph;
-			public readonly bool			Locked;
+			public readonly bool			IsLocked;
+			public readonly bool			IsGroup;
 			public readonly string			Tooltip;
 		}
 		#endregion
@@ -237,6 +253,5 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 		private readonly DataAccessor			accessor;
-		private readonly BaseType				baseType;
 	}
 }
