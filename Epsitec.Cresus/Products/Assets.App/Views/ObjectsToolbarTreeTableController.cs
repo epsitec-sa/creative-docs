@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 #else
 			var groupNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
 			var objectNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
-			this.nodesGetter = new TreeNodesGetter2 (this.accessor, groupNodesGetter, objectNodesGetter);
+			this.nodesGetter = new ObjectsNodesGetter (this.accessor, groupNodesGetter, objectNodesGetter);
 #endif
 
 			switch (this.baseType)
@@ -298,11 +298,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private TreeNodesGetter2 NodesGetter
+		private ObjectsNodesGetter NodesGetter
 		{
 			get
 			{
-				return this.nodesGetter as TreeNodesGetter2;
+				return this.nodesGetter as ObjectsNodesGetter;
 			}
 		}
 

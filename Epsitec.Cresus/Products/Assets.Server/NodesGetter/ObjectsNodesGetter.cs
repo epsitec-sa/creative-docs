@@ -8,17 +8,22 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
-	/// Gère l'accès en lecture "en arbre" à des données quelconques en provenance de inputNodes.
-	/// En fait, c'est la mise en série de 3 getters:
+	/// Gère l'accès en lecture "en arbre" à des objets en provenance de inputNodes.
+	/// On part des groupes, qui sont ensuite fusionnés avec les objets.
+	/// En fait, c'est la mise en série de 4 getters:
 	/// 
-	///   -o-> ParentPositionNodesGetter -o-> LevelNodesGetter -o-> TreeObjectsNodesGetter -o->
-	///    |                              |                     |                           |
-	/// GuidNode                  ParentPositionNode        LevelNode                   TreeNode
+	///                       rootGuid         GuidNode (BaseType.Objects)
+	///                           v                v
+	///        ParentPosition   Level            Merge            TreeObjects
+	///   -o-> NodesGetter -o-> NodesGetter -o-> NodesGetter -o-> NodesGetter -o->
+	///    |                |                |                |                |
+	/// GuidNode   ParentPositionNode    LevelNode        LevelNode         TreeNode
+	/// (BaseType.Groups)
 	/// 
 	/// </summary>
-	public class TreeNodesGetter2 : AbstractNodesGetter<TreeNode>  // outputNodes
+	public class ObjectsNodesGetter : AbstractNodesGetter<TreeNode>  // outputNodes
 	{
-		public TreeNodesGetter2(DataAccessor accessor, AbstractNodesGetter<GuidNode> groupNodes, AbstractNodesGetter<GuidNode> objectNodes)
+		public ObjectsNodesGetter(DataAccessor accessor, AbstractNodesGetter<GuidNode> groupNodes, AbstractNodesGetter<GuidNode> objectNodes)
 		{
 			this.ppNodesGetter     = new ParentPositionNodesGetter (groupNodes, accessor, BaseType.Groups);
 			this.levelNodesGetter  = new LevelNodesGetter (this.ppNodesGetter, accessor, BaseType.Groups);
