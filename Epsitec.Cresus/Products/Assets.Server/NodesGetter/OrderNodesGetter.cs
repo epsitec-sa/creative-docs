@@ -9,13 +9,12 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
-	/// Accès en lecture à des données quelconques, enrichies du parent (Guid)
-	/// et de la OrderValue (string).
-	/// GuidNode -> ParentNode
+	/// Accès en lecture à des données quelconques, enrichies de la OrderValue (string).
+	/// GuidNode -> OrderNode
 	/// </summary>
-	public class ParentNodesGetter : AbstractNodesGetter<ParentNode>  // outputNodes
+	public class OrderNodesGetter : AbstractNodesGetter<OrderNode>  // outputNodes
 	{
-		public ParentNodesGetter(AbstractNodesGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public OrderNodesGetter(AbstractNodesGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
@@ -37,33 +36,18 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public override ParentNode this[int index]
+		public override OrderNode this[int index]
 		{
 			get
 			{
 				var node       = this.inputNodes[index];
 				var obj        = this.accessor.GetObject (this.baseType, node.Guid);
-				var parent     = this.GetParent (obj);
 				var orderValue = this.GetOrderValue (obj);
 
-				return new ParentNode (node.Guid, parent, orderValue);
+				return new OrderNode (node.Guid, orderValue);
 			}
 		}
 
-
-		private Guid GetParent(DataObject obj)
-		{
-			if (obj != null)
-			{
-				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.Timestamp, ObjectField.Parent) as DataGuidProperty;
-				if (p != null)
-				{
-					return p.Value;
-				}
-			}
-
-			return Guid.Empty;
-		}
 
 		private string GetOrderValue(DataObject obj)
 		{

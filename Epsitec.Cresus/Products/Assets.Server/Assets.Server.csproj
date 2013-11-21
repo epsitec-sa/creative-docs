@@ -80,6 +80,9 @@
     <Compile Include="DataFillers\TreeTableColumnType.cs" />
     <Compile Include="DataFillers\TreeTableContentItem.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
+    <Compile Include="NodesGetter\SortNodesGetter.cs" />
+    <Compile Include="NodesGetter\OrderNodesGetter.cs" />
+    <Compile Include="NodesGetter\OrderNode.cs" />
     <Compile Include="NodesGetter\ObjectsNodesGetter.cs" />
     <Compile Include="NodesGetter\MergeNodesGetter.cs" />
     <Compile Include="NodesGetter\HistoryNodesGetter.cs" />

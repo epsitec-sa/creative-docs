@@ -21,9 +21,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	///     V
 	/// LevelNodesGetter
 	///     |
-	///     o  LevelNode
+	///     o  LevelNode                                           GuidNode (BaseType.Objects)
 	///     V
-	/// MergeNodesGetter <-o- GuidNode (BaseType.Objects)
+	/// MergeNodesGetter <-o- SortNodesGetter <-o- OrderNodesGetter <-o-
 	///     |
 	///     o  LevelNode
 	///     V
@@ -37,14 +37,20 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	{
 		public ObjectsNodesGetter(DataAccessor accessor, AbstractNodesGetter<GuidNode> groupNodes, AbstractNodesGetter<GuidNode> objectNodes)
 		{
-			this.ppNodesGetter     = new ParentNodesGetter (groupNodes, accessor, BaseType.Groups);
-			this.levelNodesGetter  = new LevelNodesGetter (this.ppNodesGetter, accessor, BaseType.Groups);
-			this.mergeNodesGetter  = new MergeNodesGetter (accessor, this.levelNodesGetter, objectNodes);
+			this.objectNodesGetter1 = new OrderNodesGetter (objectNodes, accessor, BaseType.Objects);
+			this.objectNodesGetter2 = new SortNodesGetter (this.objectNodesGetter1);
+
+			this.groupNodesGetter1 = new ParentNodesGetter (groupNodes, accessor, BaseType.Groups);
+			this.groupNodesGetter2 = new LevelNodesGetter (this.groupNodesGetter1, accessor, BaseType.Groups);
+			this.mergeNodesGetter  = new MergeNodesGetter (accessor, this.groupNodesGetter2, this.objectNodesGetter2);
 			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.mergeNodesGetter);
+
+			this.OrderField = ObjectField.Nom;
 		}
 
 
-		public Guid RootGuid;
+		public Guid								RootGuid;
+		public ObjectField						OrderField;
 
 
 		public Timestamp? Timestamp
@@ -93,12 +99,16 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		private void UpdateData(Guid rootGuid)
 		{
-			this.ppNodesGetter.Timestamp = this.timestamp;
+			this.objectNodesGetter1.Timestamp = this.timestamp;
+			this.objectNodesGetter1.OrderField = this.OrderField;
 
-			this.levelNodesGetter.ForceEmpty = rootGuid.IsEmpty;
-			this.levelNodesGetter.RootGuid = rootGuid;
+			this.groupNodesGetter1.Timestamp = this.timestamp;
 
-			this.levelNodesGetter.UpdateData ();
+			this.groupNodesGetter2.ForceEmpty = rootGuid.IsEmpty;
+			this.groupNodesGetter2.RootGuid = rootGuid;
+
+			this.objectNodesGetter2.UpdateData ();
+			this.groupNodesGetter2.UpdateData ();
 			this.mergeNodesGetter.UpdateData ();
 			this.treeObjectsGetter.UpdateData ();
 		}
@@ -153,11 +163,13 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		#endregion
 
 
-		private readonly ParentNodesGetter		ppNodesGetter;
-		private readonly LevelNodesGetter				levelNodesGetter;
-		private readonly MergeNodesGetter				mergeNodesGetter;
-		private readonly TreeObjectsNodesGetter			treeObjectsGetter;
+		private readonly OrderNodesGetter			objectNodesGetter1;
+		private readonly SortNodesGetter			objectNodesGetter2;
+		private readonly ParentNodesGetter			groupNodesGetter1;
+		private readonly LevelNodesGetter			groupNodesGetter2;
+		private readonly MergeNodesGetter			mergeNodesGetter;
+		private readonly TreeObjectsNodesGetter		treeObjectsGetter;
 
-		private Timestamp?								timestamp;
+		private Timestamp?							timestamp;
 	}
 }

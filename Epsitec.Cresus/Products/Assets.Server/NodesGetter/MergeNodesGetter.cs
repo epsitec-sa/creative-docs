@@ -8,9 +8,12 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
+	/// <summary>
+	/// Gère l'accès en lecture à la fusion des objets dans les groupes.
+	/// </summary>
 	public class MergeNodesGetter : AbstractNodesGetter<LevelNode>  // outputNodes
 	{
-		public MergeNodesGetter(DataAccessor accessor, AbstractNodesGetter<LevelNode> groupNodes, AbstractNodesGetter<GuidNode> objectNodes)
+		public MergeNodesGetter(DataAccessor accessor, AbstractNodesGetter<LevelNode> groupNodes, AbstractNodesGetter<OrderNode> objectNodes)
 		{
 			this.accessor    = accessor;
 			this.groupNodes  = groupNodes;
@@ -90,7 +93,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		private readonly DataAccessor						accessor;
 		private readonly AbstractNodesGetter<LevelNode>		groupNodes;
-		private readonly AbstractNodesGetter<GuidNode>		objectNodes;
+		private readonly AbstractNodesGetter<OrderNode>		objectNodes;
 		private readonly List<LevelNode>					outputNodes;
 	}
 }

@@ -8,7 +8,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
-	/// Accès en lecture à des données. En entrée, on reçoit des données parent/position
+	/// Accès en lecture à des données. En entrée, on reçoit des données parent/orderValue
 	/// désordonnées qui servent à reconstruire un arbre. En sortie, on fourni des données
 	/// ordonnées avec une indication du level.
 	/// ParentNode -> LevelNode
@@ -25,8 +25,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		public bool ForceEmpty;
-		public Guid RootGuid;
+		public bool								ForceEmpty;
+		public Guid								RootGuid;
 
 
 		public override int Count

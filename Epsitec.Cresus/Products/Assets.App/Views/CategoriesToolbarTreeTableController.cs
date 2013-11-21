@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class CategoriesToolbarTreeTableController : AbstractToolbarTreeTableController<GuidNode>
+	public class CategoriesToolbarTreeTableController : AbstractToolbarTreeTableController<OrderNode>
 	{
 		public CategoriesToolbarTreeTableController(DataAccessor accessor)
 			: base (accessor)
@@ -20,7 +20,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
 
-			this.nodesGetter = this.accessor.GetNodesGetter (BaseType.Categories);
+			var primary = this.accessor.GetNodesGetter (BaseType.Categories);
+			this.secondaryGetter = new OrderNodesGetter (primary, this.accessor, BaseType.Categories);
+			this.nodesGetter = new SortNodesGetter (this.secondaryGetter);
 
 			this.title = "Catégories d'immobilisation";
 		}
@@ -28,6 +30,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateData()
 		{
+			this.secondaryGetter.OrderField = ObjectField.Nom;
+			this.nodesGetter.UpdateData ();
+
 			this.UpdateController ();
 			this.UpdateToolbar ();
 		}
@@ -59,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodesGetter);
-			TreeTableFiller<GuidNode>.FillColumns (this.dataFiller, this.controller);
+			TreeTableFiller<OrderNode>.FillColumns (this.dataFiller, this.controller);
 
 			this.UpdateData ();
 		}
@@ -128,5 +133,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedGuid = guid;
 			this.OnStartEditing (EventType.Entrée, Timestamp.Now);  // Timestamp quelconque !
 		}
+
+
+		private OrderNodesGetter secondaryGetter;
 	}
 }
