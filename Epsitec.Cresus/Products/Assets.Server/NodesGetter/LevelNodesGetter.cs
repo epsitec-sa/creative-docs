@@ -25,6 +25,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
+		public bool ForceEmpty;
+		public Guid RootGuid;
+
+
 		public override int Count
 		{
 			get
@@ -50,12 +54,17 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		public override void UpdateData()
 		{
-			this.UpdateData (Guid.Empty);
+			this.UpdateData (this.ForceEmpty, this.RootGuid);
 		}
 
-		public void UpdateData(Guid rootGuid)
+		private void UpdateData(bool forceEmpty, Guid rootGuid)
 		{
 			this.levelNodes.Clear ();
+
+			if (forceEmpty)
+			{
+				return;
+			}
 
 			//	Crée un véritable arbre de tous les noeuds.
 			ParentPositionNode root;

@@ -23,8 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   250, "Membre"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  50, "N°"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   250, "Groupe"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 400, "Description"));
 
 				return list.ToArray ();
@@ -35,7 +34,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var cf = new TreeTableColumnItem<TreeTableCellTree> ();
 			var c1 = new TreeTableColumnItem<TreeTableCellString> ();
-			var c2 = new TreeTableColumnItem<TreeTableCellString> ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -45,14 +43,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var node  = this.nodesGetter[firstRow+i];
-				var guid  = node.Guid;
 				var level = node.Level;
 				var type  = node.Type;
-				var obj   = this.accessor.GetObject (BaseType.Groups, guid);
+				var obj   = this.accessor.GetObject (BaseType.Groups, node.Guid);
 
-				var nom          = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
-				var numéro       = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Numéro);
-				var description  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Description);
+				var nom         = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom);
+				var description = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Description);
 
 				if (this.Timestamp.HasValue &&
 					!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
@@ -61,19 +57,16 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var sf = new TreeTableCellTree   (true, level, type, nom, isSelected: (i == selection));
-				var s1 = new TreeTableCellString (true, numéro,           isSelected: (i == selection));
-				var s2 = new TreeTableCellString (true, description,      isSelected: (i == selection));
+				var s1 = new TreeTableCellString (true, description,      isSelected: (i == selection));
 
 				cf.AddRow (sf);
 				c1.AddRow (s1);
-				c2.AddRow (s2);
 			}
 
 			var content = new TreeTableContentItem ();
 
 			content.Columns.Add (cf);
 			content.Columns.Add (c1);
-			content.Columns.Add (c2);
 
 			return content;
 		}

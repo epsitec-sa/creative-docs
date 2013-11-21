@@ -47,6 +47,26 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		{
 			this.outputNodes.Clear ();
 
+			if (this.groupNodes.Count == 0)
+			{
+				this.AddObjects ();
+			}
+			else
+			{
+				this.MergeObjects ();
+			}
+		}
+
+		private void AddObjects()
+		{
+			foreach (var objectNode in this.objectNodes.Nodes)
+			{
+				this.outputNodes.Add (new LevelNode (objectNode.Guid, BaseType.Objects, 0));
+			}
+		}
+
+		private void MergeObjects()
+		{
 			foreach (var inputNode in this.groupNodes.Nodes)
 			{
 				this.outputNodes.Add (new LevelNode (inputNode.Guid, BaseType.Groups, inputNode.Level));

@@ -86,6 +86,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		public override void UpdateData()
 		{
 			this.ppNodesGetter.Timestamp = this.timestamp;
+
 			this.levelNodesGetter.UpdateData ();
 			this.treeObjectsGetter.UpdateData ();
 		}

@@ -91,10 +91,14 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.UpdateData (this.RootGuid);
 		}
 
-		public void UpdateData(Guid rootGuid)
+		private void UpdateData(Guid rootGuid)
 		{
 			this.ppNodesGetter.Timestamp = this.timestamp;
-			this.levelNodesGetter.UpdateData (rootGuid);
+
+			this.levelNodesGetter.ForceEmpty = rootGuid.IsEmpty;
+			this.levelNodesGetter.RootGuid = rootGuid;
+
+			this.levelNodesGetter.UpdateData ();
 			this.mergeNodesGetter.UpdateData ();
 			this.treeObjectsGetter.UpdateData ();
 		}
