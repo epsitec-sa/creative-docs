@@ -14,9 +14,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	///     |
 	///     o  GuidNode (BaseType.Groups)
 	///     V
-	/// ParentPositionNodesGetter
+	/// ParentNodesGetter
 	///     |
-	///     o  ParentPositionNode
+	///     o  ParentNode
 	///     V
 	/// LevelNodesGetter
 	///     |
@@ -27,18 +27,13 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	///     o  TreeNode
 	///     V
 	/// 
-	/// 
-	///   -o-> ParentPositionNodesGetter -o-> LevelNodesGetter -o-> TreeObjectsNodesGetter -o->
-	///    |                              |                     |                           |
-	/// GuidNode                  ParentPositionNode        LevelNode                   TreeNode
-	/// 
 	/// </summary>
 	public class TreeNodesGetter : AbstractNodesGetter<TreeNode>  // outputNodes
 	{
 		public TreeNodesGetter(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<GuidNode> inputNodes)
 		{
 			this.inputNodes        = inputNodes;
-			this.ppNodesGetter     = new ParentPositionNodesGetter (inputNodes, accessor, baseType);
+			this.ppNodesGetter     = new ParentNodesGetter (inputNodes, accessor, baseType);
 			this.levelNodesGetter  = new LevelNodesGetter (this.ppNodesGetter, accessor, baseType);
 			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.levelNodesGetter);
 		}
@@ -142,7 +137,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 
 		private readonly AbstractNodesGetter<GuidNode>	inputNodes;
-		private readonly ParentPositionNodesGetter		ppNodesGetter;
+		private readonly ParentNodesGetter		ppNodesGetter;
 		private readonly LevelNodesGetter				levelNodesGetter;
 		private readonly TreeObjectsNodesGetter			treeObjectsGetter;
 

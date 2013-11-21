@@ -93,6 +93,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		#region Getters
 		public ComputedAmount? GetFieldComputedAmount(ObjectField field)
 		{
 			var p = this.GetProperty (field) as DataComputedAmountProperty;
@@ -176,8 +177,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return p.Value;
 			}
 		}
+		#endregion
 
 
+		#region Setters
 		public void SetField(ObjectField field, ComputedAmount? value)
 		{
 			var e = this.dataEvent;
@@ -292,6 +295,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				this.dirty = true;
 			}
 		}
+		#endregion
 
 
 		private AbstractDataProperty GetProperty(ObjectField field)

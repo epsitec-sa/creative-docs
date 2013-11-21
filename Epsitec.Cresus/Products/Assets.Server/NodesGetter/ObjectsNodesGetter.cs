@@ -15,9 +15,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	///     |
 	///     o  GuidNode (BaseType.Groups)
 	///     V
-	/// ParentPositionNodesGetter
+	/// ParentNodesGetter
 	///     |
-	///     o  ParentPositionNode
+	///     o  ParentNode
 	///     V
 	/// LevelNodesGetter
 	///     |
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	{
 		public ObjectsNodesGetter(DataAccessor accessor, AbstractNodesGetter<GuidNode> groupNodes, AbstractNodesGetter<GuidNode> objectNodes)
 		{
-			this.ppNodesGetter     = new ParentPositionNodesGetter (groupNodes, accessor, BaseType.Groups);
+			this.ppNodesGetter     = new ParentNodesGetter (groupNodes, accessor, BaseType.Groups);
 			this.levelNodesGetter  = new LevelNodesGetter (this.ppNodesGetter, accessor, BaseType.Groups);
 			this.mergeNodesGetter  = new MergeNodesGetter (accessor, this.levelNodesGetter, objectNodes);
 			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.mergeNodesGetter);
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		#endregion
 
 
-		private readonly ParentPositionNodesGetter		ppNodesGetter;
+		private readonly ParentNodesGetter		ppNodesGetter;
 		private readonly LevelNodesGetter				levelNodesGetter;
 		private readonly MergeNodesGetter				mergeNodesGetter;
 		private readonly TreeObjectsNodesGetter			treeObjectsGetter;

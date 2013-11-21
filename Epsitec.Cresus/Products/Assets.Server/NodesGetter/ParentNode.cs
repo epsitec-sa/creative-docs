@@ -7,13 +7,13 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
-	public struct ParentPositionNode
+	public struct ParentNode
 	{
-		public ParentPositionNode(Guid guid, Guid parent, int position)
+		public ParentNode(Guid guid, Guid parent, string orderValue)
 		{
-			this.Guid     = guid;
-			this.Parent   = parent;
-			this.Position = position;
+			this.Guid       = guid;
+			this.Parent     = parent;
+			this.OrderValue = orderValue;
 		}
 
 		public bool IsEmpty
@@ -24,10 +24,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public static ParentPositionNode Empty = new ParentPositionNode (Guid.Empty, Guid.Empty, 0);
+		public static ParentNode Empty = new ParentNode (Guid.Empty, Guid.Empty, null);
 
 		public readonly Guid				Guid;
 		public readonly Guid				Parent;
-		public readonly int					Position;
+		public readonly string				OrderValue;
 	}
 }

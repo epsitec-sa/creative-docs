@@ -11,19 +11,22 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	/// <summary>
 	/// Accès en lecture à des données quelconques, enrichies du parent (Guid)
 	/// et de la position (int).
-	/// GuidNode -> ParentPositionNode
+	/// GuidNode -> ParentNode
 	/// </summary>
-	public class ParentPositionNodesGetter : AbstractNodesGetter<ParentPositionNode>  // outputNodes
+	public class ParentNodesGetter : AbstractNodesGetter<ParentNode>  // outputNodes
 	{
-		public ParentPositionNodesGetter(AbstractNodesGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public ParentNodesGetter(AbstractNodesGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
 			this.baseType   = baseType;
+
+			this.OrderField = ObjectField.Nom;
 		}
 
 
-		public Timestamp? Timestamp;
+		public Timestamp?						Timestamp;
+		public ObjectField						OrderField;
 
 
 		public override int Count
@@ -34,16 +37,16 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public override ParentPositionNode this[int index]
+		public override ParentNode this[int index]
 		{
 			get
 			{
-				var node     = this.inputNodes[index];
-				var obj      = this.accessor.GetObject (this.baseType, node.Guid);
-				var parent   = this.GetParent   (obj);
-				var position = this.GetPosition (obj);
+				var node       = this.inputNodes[index];
+				var obj        = this.accessor.GetObject (this.baseType, node.Guid);
+				var parent     = this.GetParent (obj);
+				var orderValue = this.GetOrderValue (obj);
 
-				return new ParentPositionNode (node.Guid, parent, position);
+				return new ParentNode (node.Guid, parent, orderValue);
 			}
 		}
 
@@ -62,18 +65,18 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			return Guid.Empty;
 		}
 
-		private int GetPosition(DataObject obj)
+		private string GetOrderValue(DataObject obj)
 		{
 			if (obj != null)
 			{
-				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.Timestamp, ObjectField.Position) as DataIntProperty;
+				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.Timestamp, this.OrderField) as DataStringProperty;
 				if (p != null)
 				{
 					return p.Value;
 				}
 			}
 
-			return 0;
+			return null;
 		}
 
 

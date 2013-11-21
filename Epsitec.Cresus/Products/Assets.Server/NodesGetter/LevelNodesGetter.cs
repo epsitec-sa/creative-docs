@@ -11,11 +11,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	/// Accès en lecture à des données. En entrée, on reçoit des données parent/position
 	/// désordonnées qui servent à reconstruire un arbre. En sortie, on fourni des données
 	/// ordonnées avec une indication du level.
-	/// ParentPositionNode -> LevelNode
+	/// ParentNode -> LevelNode
 	/// </summary>
 	public class LevelNodesGetter : AbstractNodesGetter<LevelNode>  // outputNodes
 	{
-		public LevelNodesGetter(AbstractNodesGetter<ParentPositionNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public LevelNodesGetter(AbstractNodesGetter<ParentNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 
 			//	Crée un véritable arbre de tous les noeuds.
-			ParentPositionNode root;
+			ParentNode root;
 
 			if (rootGuid.IsEmpty)
 			{
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 			else
 			{
-				root = new ParentPositionNode (rootGuid, Guid.Empty, 0);
+				root = new ParentNode (rootGuid, Guid.Empty, null);
 			}
 
 
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private void Insert(TreeNode tree)
 		{
 			//	Insertion récursive des noeuds dans l'arbre.
-			var childrens = this.inputNodes.Nodes.Where (x => x.Parent == tree.Node.Guid).OrderBy (x => x.Position);
+			var childrens = this.inputNodes.Nodes.Where (x => x.Parent == tree.Node.Guid).OrderBy (x => x.OrderValue);
 
 			foreach (var children in childrens)
 			{
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		private class TreeNode
 		{
-			public TreeNode(TreeNode parent, ParentPositionNode node)
+			public TreeNode(TreeNode parent, ParentNode node)
 			{
 				this.parent = parent;
 				this.node   = node;
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				}
 			}
 
-			public ParentPositionNode Node
+			public ParentNode Node
 			{
 				get
 				{
@@ -175,12 +175,12 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 
 			private readonly TreeNode				parent;
-			private readonly ParentPositionNode		node;
+			private readonly ParentNode		node;
 			private readonly List<TreeNode>			childrens;
 		}
 
 
-		private readonly AbstractNodesGetter<ParentPositionNode> inputNodes;
+		private readonly AbstractNodesGetter<ParentNode> inputNodes;
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
 		private readonly List<LevelNode>				levelNodes;

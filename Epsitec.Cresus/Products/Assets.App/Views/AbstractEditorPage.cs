@@ -324,16 +324,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else if (this.hasEvent)
 			{
 				return this.accessor.EditionAccessor.GetEditionPropertyState (field);
-				//-var p = this.accessor.EditionAccessor.GetEditionProperty (field);
-				//-
-				//-if (p == null)
-				//-{
-				//-	return PropertyState.Synthetic;
-				//-}
-				//-else
-				//-{
-				//-	return p.State;
-				//-}
 			}
 			else
 			{
