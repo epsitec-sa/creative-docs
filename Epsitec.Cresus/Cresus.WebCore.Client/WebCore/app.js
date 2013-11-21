@@ -373,8 +373,12 @@ $.getScript('signalr/hubs', function() {
           return "type inconnu";
       },
 
-      addEntityToBag: function(entity) {
-        this.entityBag.addEntityToBag(entity);      
+      addEntityToBag: function(entityId) {
+        this.entityBag.addEntityToBag(entityId);      
+      },
+
+      addEntityToClientBag: function(entity) {
+        this.entityBag.addEntityToClientBag(entity);      
       },
 
       removeEntityFromBag: function(entity) {

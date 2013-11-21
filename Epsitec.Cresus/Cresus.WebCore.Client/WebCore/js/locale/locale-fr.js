@@ -77,6 +77,8 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         exportImpossibleEmpty: 'Vous ne pouvez pas exporter une liste vide.',
         exportImpossibleTooMany: 'Vous ne pouvez pas exporter une liste avec ' +
             'plus de 10000 elements.',
+        exportImpossibleTooManyForBag: 'Vous ne pouvez pas exporter une liste avec ' +
+            'plus de 100 elements dans l\'arche.',
         timeFilterBefore: 'Avant',
         timeFilterOn: 'A',
         timeFilterAfter: 'Apr\u00E8s'

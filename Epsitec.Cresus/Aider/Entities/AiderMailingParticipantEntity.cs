@@ -18,6 +18,21 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderMailingParticipantEntity
 	{
+
+		public override FormattedText GetCompactSummary()
+		{
+			return TextFormatter.FormatText
+			(
+				this.Contact.DisplayName
+			);
+		}
+
+		public override FormattedText GetSummary()
+		{
+
+			return TextFormatter.FormatText (this.Contact.DisplayName, "\n", this.Contact.DisplayZipCode, this.Contact.DisplayAddress);
+		}
+
 		public static IEnumerable<AiderMailingParticipantEntity> GetAllParticipants(BusinessContext context, AiderMailingEntity mailing)
 		{
 			var participantExample = new AiderMailingParticipantEntity ()

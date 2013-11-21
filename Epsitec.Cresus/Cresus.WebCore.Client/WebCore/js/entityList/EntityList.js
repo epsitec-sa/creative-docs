@@ -562,6 +562,14 @@ function() {
         }
       });
 
+      items.push({
+        text: 'Exporter dans l\'arche',
+        listeners: {
+          click: function() { this.onExportToBagHandler(); },
+          scope: this
+        }
+      });
+
       if (!Ext.isEmpty(options.labelExportDefinitions)) {
         items.push({
           text: Epsitec.Texts.getExportLabelLabel(),
@@ -721,6 +729,26 @@ function() {
       }
     },
 
+    onExportToBagHandler: function() {
+      var count = this.store.getTotalCount();
+
+      if (count === 0) {
+        Epsitec.ErrorHandler.showError(
+            Epsitec.Texts.getExportImpossibleTitle(),
+            Epsitec.Texts.getExportImpossibleEmpty()
+        );
+      }
+      else if (count > 100) {
+        Epsitec.ErrorHandler.showError(
+            Epsitec.Texts.getExportImpossibleTitle(),
+            Epsitec.Texts.getExportImpossibleTooManyForBag()
+        );
+      }
+      else {
+        this.doExportToBag();
+      }
+    },
+
     doExport: function(type) {
       var exportUrl, exportWindow;
 
@@ -746,6 +774,16 @@ function() {
       }
 
       exportWindow.show();
+    },
+
+    doExportToBag: function() {
+      //Iterate over the buffered store
+      for (j=01; j<=this.store.data.length; j++) {
+        var data = this.store.data.map[j].value;
+        for (i=0; i<data.length; i++) {
+           Epsitec.Cresus.Core.app.addEntityToBag(data[i].internalId);
+        }
+      } 
     },
 
     onRefreshHandler: function() {

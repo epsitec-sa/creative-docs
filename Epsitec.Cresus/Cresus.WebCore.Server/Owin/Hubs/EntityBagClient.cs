@@ -13,6 +13,8 @@ using Microsoft.AspNet.SignalR.Client.Hubs;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Types;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 {
@@ -37,6 +39,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 				this.hub.On ("SetUserConnectionId", (string u, string c) => this.SetUserConnectionId (u, c));
 				this.hub.On ("FlushConnectionId", c => RemoveUserConnectionIdWithLock (c));
 				this.hub.On ("RemoveFromMyBag", (string u, string id) => RemoveFromMyBag (u,id));
+				this.hub.On ("AddToMyBag", (string u, string id) => AddToMyBag (u, id));
 
 				this.hubConnection.Start ().Wait ();
 
@@ -191,6 +194,22 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 			var context = GlobalHost.ConnectionManager.GetHubContext<EntityBagHub> ();
 			context.Clients.Group (userName).RemoveFromBag (entityId);
+		}
+
+		private void AddToMyBag(string userName, string entityId)
+		{
+			var entity = this.server.CoreWorkerPool.Execute (userName, null, (b) => EntityIO.ResolveEntity (b, entityId));
+			if (entity.IsNotNull ())
+			{
+				var context = GlobalHost.ConnectionManager.GetHubContext<EntityBagHub> ();
+				context.Clients.Group (userName).AddToBag ("Export de liste", entity.GetSummary (), entityId);
+
+
+				using (this.cacheLock.LockWrite ())
+				{
+					this.bagEntityCache.Add (new BagEntity (userName, "ADD", "Export de liste", entity.GetSummary (), entityId));
+				}
+			}
 		}
 
 		private void RemoveUserConnectionIdWithLock(string connectionId)

@@ -240,6 +240,10 @@ function() {
         return this.texts.exportImpossibleTooMany;
       },
 
+      getExportImpossibleTooManyForBag: function() {
+        return this.texts.exportImpossibleTooManyForBag;
+      },
+
       getTimeFilterBefore: function() {
         return this.texts.timeFilterBefore;
       },
