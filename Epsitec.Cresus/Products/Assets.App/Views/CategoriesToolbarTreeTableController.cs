@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateObjectPopup (this.accessor, BaseType.Categories, this.SelectedGuid);
+			var popup = new CreateCategoryPopup (this.accessor, BaseType.Categories, this.SelectedGuid);
 
 			popup.Create (target, leftOrRight: true);
 
@@ -111,13 +111,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "create")
 				{
-					this.CreateObject (popup.ObjectDate.Value, popup.ObjectName);
+					this.CreateObject (popup.ObjectName);
 				}
 			};
 		}
 
-		private void CreateObject(System.DateTime date, string name)
+		private void CreateObject(string name)
 		{
+			var date = Timestamp.Now.Date;
 			var guid = this.accessor.CreateObject (BaseType.Categories, date, name, Guid.Empty);
 			var obj = this.accessor.GetObject (BaseType.Categories, guid);
 			System.Diagnostics.Debug.Assert (obj != null);

@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		protected override void CreateUI()
+		public override void CreateUI()
 		{
 			this.CreateTitle (this.mainFrameBox, "Simulation");
 

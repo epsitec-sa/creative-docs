@@ -5,24 +5,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class CreateObjectPopup : AbstractPopup
+	public class CreateCategoryPopup : AbstractPopup
 	{
-		public CreateObjectPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid)
+		public CreateCategoryPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
-
-			this.ObjectDate = new Timestamp (new System.DateTime (System.DateTime.Now.Year, 1, 1), 0).Date;
 		}
 
 
-		public System.DateTime?					ObjectDate;
 		public string							ObjectName;
 
 
@@ -30,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new Size (CreateObjectPopup.PopupWidth, CreateObjectPopup.PopupHeight);
+				return new Size (CreateCategoryPopup.PopupWidth, CreateCategoryPopup.PopupHeight);
 			}
 		}
 
@@ -39,13 +35,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateTitle (this.mainFrameBox);
 			this.CreateCloseButton ();
 
-			var line1 = this.CreateFrame (CreateObjectPopup.Margin, 87, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
-			var line2 = this.CreateFrame (CreateObjectPopup.Margin, 60, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
-			var line3 = this.CreateFrame (CreateObjectPopup.Margin, 20, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, 24);
+			var line1 = this.CreateFrame (CreateCategoryPopup.Margin, 67, CreateCategoryPopup.PopupWidth-CreateCategoryPopup.Margin*2, CreateCategoryPopup.LineHeight);
+			var line2 = this.CreateFrame (CreateCategoryPopup.Margin, 20, CreateCategoryPopup.PopupWidth-CreateCategoryPopup.Margin*2, 24);
 
-			this.CreateDate      (line1);
-			this.CreateName      (line2);
-			this.CreateButtons   (line3);
+			this.CreateName    (line1);
+			this.CreateButtons (line2);
 
 			this.UpdateButtons ();
 			this.textField.Focus ();
@@ -56,10 +50,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			new StaticText
 			{
 				Parent           = parent,
-				Text             = "Création d'un nouveal objet",
+				Text             = "Création d'une nouvelle catégorie",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Top,
-				PreferredHeight  = CreateObjectPopup.TitleHeight - 4,
+				PreferredHeight  = CreateCategoryPopup.TitleHeight - 4,
 				BackColor        = ColorManager.SelectionColor,
 			};
 
@@ -72,43 +66,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		private void CreateDate(Widget parent)
-		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = "Date d'entrée",
-				ContentAlignment = ContentAlignment.MiddleRight,
-				Dock             = DockStyle.Left,
-				PreferredWidth   = CreateObjectPopup.Indent,
-				Margins          = new Margins (0, 10, 0, 0),
-			};
-
-			var frame = new FrameBox
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Fill,
-				BackColor        = ColorManager.WindowBackgroundColor,
-			};
-
-			var dateController = new DateFieldController
-			{
-				Label      = null,
-				LabelWidth = 0,
-				Value      = this.ObjectDate,
-			};
-
-			dateController.HideAdditionalButtons = true;
-			dateController.CreateUI (frame);
-			dateController.SetFocus ();
-
-			dateController.ValueEdited += delegate
-			{
-				this.ObjectDate = dateController.Value;
-				this.UpdateButtons ();
-			};
-		}
-
 		private void CreateName(Widget parent)
 		{
 			new StaticText
@@ -117,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Text             = "Nom",
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = CreateObjectPopup.Indent,
+				PreferredWidth   = CreateCategoryPopup.Indent,
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
@@ -152,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateCategoryPopup.PopupWidth/2 - CreateCategoryPopup.Margin - 5, parent.PreferredHeight),
 				Margins       = new Margins (0, 5, 0, 0),
 			};
 
@@ -164,7 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateCategoryPopup.PopupWidth/2 - CreateCategoryPopup.Margin - 5, parent.PreferredHeight),
 				Margins       = new Margins (5, 0, 0, 0),
 			};
 
@@ -183,16 +140,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateButtons()
 		{
-			this.createButton.Enable = this.ObjectDate.HasValue &&
-									   !string.IsNullOrEmpty (this.ObjectName);
+			this.createButton.Enable = !string.IsNullOrEmpty (this.ObjectName);
 		}
 
 
 		private static readonly int TitleHeight = 24;
 		private static readonly int LineHeight  = 2+17+2;
-		private static readonly int Indent      = 80;
-		private static readonly int PopupWidth  = 300;
-		private static readonly int PopupHeight = 150;
+		private static readonly int Indent      = 40;
+		private static readonly int PopupWidth  = 250;
+		private static readonly int PopupHeight = 130;
 		private static readonly int Margin      = 20;
 
 		private readonly DataAccessor					accessor;

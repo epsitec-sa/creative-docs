@@ -389,7 +389,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
 				this.nodesGetter.RootGuid = guid;
+
+				var selectedGuid = this.SelectedGuid;
 				this.UpdateData ();
+				this.SelectedGuid = selectedGuid;
 			};
 		}
 
@@ -527,14 +530,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "create")
 				{
-					this.CreateObject (popup.ObjectDate.Value, popup.ObjectName, popup.ObjectParent);
+					this.CreateObject (popup.ObjectDate.Value, popup.ObjectName);
 				}
 			};
 		}
 
-		private void CreateObject(System.DateTime date, string name, Guid parent)
+		private void CreateObject(System.DateTime date, string name)
 		{
-			var guid = this.accessor.CreateObject (BaseType.Objects, date, name, parent);
+			var guid = this.accessor.CreateObject (BaseType.Objects, date, name, Guid.Empty);
 			var obj = this.accessor.GetObject (BaseType.Objects, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 

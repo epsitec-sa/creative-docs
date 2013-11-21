@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		protected virtual void CreateUI()
+		public virtual void CreateUI()
 		{
 		}
 

@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		protected override void CreateUI()
+		public override void CreateUI()
 		{
 			this.CreateTitle (YesNoPopup.titleHeight, this.Question);
 

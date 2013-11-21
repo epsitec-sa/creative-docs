@@ -81,6 +81,8 @@
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
     <Compile Include="Popups\CategoriesPopup.cs" />
+    <Compile Include="Popups\CreateCategoryPopup.cs" />
+    <Compile Include="Popups\CreateGroupPopup.cs" />
     <Compile Include="Popups\FilterPopup.cs" />
     <Compile Include="Popups\CreateObjectPopup.cs" />
     <Compile Include="Popups\GroupsPopup.cs" />

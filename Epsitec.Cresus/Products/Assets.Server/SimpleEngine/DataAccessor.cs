@@ -106,15 +106,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var e = new DataEvent (timestamp, EventType.Entrée);
 			obj.AddEvent (e);
 
-			int position = this.GetCreatePosition (baseType, parent);
-
 			if (!parent.IsEmpty)
 			{
+				int position = this.GetCreatePosition (baseType, parent);
+
 				e.AddProperty (new DataGuidProperty (ObjectField.Parent, parent));
+				e.AddProperty (new DataIntProperty (ObjectField.Position, position));
 			}
 
-			e.AddProperty (new DataIntProperty    (ObjectField.Position, position));
-			e.AddProperty (new DataStringProperty (ObjectField.Nom,      name));
+			e.AddProperty (new DataStringProperty (ObjectField.Nom, name));
 		
 			return obj.Guid;
 		}

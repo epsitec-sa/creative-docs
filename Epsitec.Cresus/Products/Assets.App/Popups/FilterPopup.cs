@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		protected override void CreateUI()
+		public override void CreateUI()
 		{
 			this.CreateTitle (this.mainFrameBox);
 			this.CreateCloseButton ();
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			int dx = FilterPopup.PopupWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
-			int dy = (int) (h * 0.3);
+			int dy = (int) (h * 0.5);
 
 			return new Size (dx, dy);
 		}

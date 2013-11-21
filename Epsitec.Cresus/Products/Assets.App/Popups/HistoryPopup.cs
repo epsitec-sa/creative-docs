@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		protected override void CreateUI()
+		public override void CreateUI()
 		{
 			this.controller.CreateUI (this.mainFrameBox);
 			this.CreateCloseButton ();
