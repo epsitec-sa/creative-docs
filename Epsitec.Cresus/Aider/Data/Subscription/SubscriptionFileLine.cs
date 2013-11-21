@@ -9,34 +9,18 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 
 using System.IO;
+using System.Linq;
 
 using System.Text;
 using System.Text.RegularExpressions;
-
 
 namespace Epsitec.Aider.Data.Subscription
 {
 	internal sealed class SubscriptionFileLine
 	{
-
-
-		public SubscriptionFileLine (
-			string subscriptionNumber,
-			int copiesCount,
-			string editionId,
-			string title,
-			string lastname,
-			string firstname,
-			string addressComplement,
-			string street,
-			string houseNumber,
-			int? districtNumber,
-			string zipCode,
-			string town,
-			string country,
-			DistributionMode distributionMode,
-			bool isSwitzerland,
-			string canton)
+		public SubscriptionFileLine (string subscriptionNumber, int copiesCount, string editionId, string title, string lastname, string firstname,
+									 string addressComplement, string street, string houseNumber, int? districtNumber, string zipCode, string town,
+									 string country, DistributionMode distributionMode, bool isSwitzerland, string canton)
 		{
 			this.CheckArguments (subscriptionNumber, copiesCount, editionId, title, lastname, firstname,
 								 addressComplement, street, houseNumber, districtNumber, zipCode, town, country,
@@ -60,21 +44,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private void CheckArguments(
-			string subscriptionNumber,
-			int copiesCount,
-			string editionId,
-			string title,
-			string lastname,
-			string firstname,
-			string addressComplement,
-			string street,
-			string houseNumber,
-			int? districtNumber,
-			string zipCode,
-			string town,
-			string country,
-			bool isSwitzerland)
+		private void CheckArguments(string subscriptionNumber, int copiesCount, string editionId, string title, string lastname, string firstname, string addressComplement, string street, string houseNumber, int? districtNumber, string zipCode, string town, string country, bool isSwitzerland)
 		{
 			var encodingHelper = new EncodingHelper (SubscriptionFileLine.DefaultEncoding);
 
@@ -209,8 +179,7 @@ namespace Epsitec.Aider.Data.Subscription
 				districtNumber.ThrowIf (x => x != SubscriptionFileLine.ForeignDistrictNumber, "invalid foreign district number");
 			}
 		}
-
-
+	
 		private void CheckString(string value, string name, int length, bool allowEmpty, EncodingHelper encodingHelper)
 		{
 			value.ThrowIfNull (name);
@@ -243,6 +212,7 @@ namespace Epsitec.Aider.Data.Subscription
 				+ SubscriptionFileLine.LineEnding;
 		}
 
+		
 		private string GetCopiesCount()
 		{
 			return InvariantConverter.ToString (this.CopiesCount);
@@ -265,6 +235,11 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 		}
 
+		
+		public override string ToString()
+		{
+			return this.GetText ();
+		}
 
 		public static void Write(IEnumerable<SubscriptionFileLine> lines, FileInfo file)
 		{
@@ -315,32 +290,32 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly DistributionMode		DistributionMode;
 		public readonly string					Canton;
 
-		public static readonly int		SubscriptionNumberLength = 10;
-		public static readonly int		CopiesCountLength        = 5;
-		public static readonly int		EditionIdLength          = 2;
-		public static readonly int		TitleLength              = 20;
-		public static readonly int		LastnameLength           = 30;
-		public static readonly int		FirstnameLength          = 30;
-		public static readonly int		AddressComplementLength  = 30;
-		public static readonly int		StreetLength             = 30;
-		public static readonly int		HouseNumberLength        = 10;
-		public static readonly int		DistrictNumberLength     = 3;
-		public static readonly int		ZipCodeLength            = 10;
-		public static readonly int		TownLength               = 30;
-		public static readonly int		CountryLength            = 30;
-		public static readonly int		DistributionModeLength   = 1;
+		public static readonly int				SubscriptionNumberLength = 10;
+		public static readonly int				CopiesCountLength        = 5;
+		public static readonly int				EditionIdLength          = 2;
+		public static readonly int				TitleLength              = 20;
+		public static readonly int				LastnameLength           = 30;
+		public static readonly int				FirstnameLength          = 30;
+		public static readonly int				AddressComplementLength  = 30;
+		public static readonly int				StreetLength             = 30;
+		public static readonly int				HouseNumberLength        = 10;
+		public static readonly int				DistrictNumberLength     = 3;
+		public static readonly int				ZipCodeLength            = 10;
+		public static readonly int				TownLength               = 30;
+		public static readonly int				CountryLength            = 30;
+		public static readonly int				DistributionModeLength   = 1;
 
 
-		public static readonly int		CopiesCountMin             = 1;
-		public static readonly int		CopiesCountMax             = 99999;
-		public static readonly int		NameLengthMax              = 47;
-		public static readonly int		SwissZipCodeLength         = 6;
-		public static readonly int		SwissDistrictNumberMin     = 1;
-		public static readonly int		SwissDistrictNumberMax     = 999;
-		public static readonly int		SwissDistrictNumberPostbox = 999;
-		public static readonly Regex	SwissHouseNumberRegex      = new Regex (@"^\d{0,7}[a-zA-z]{0,3}$");
-		public static readonly int		ForeignDistrictNumber      = 0;
+		public static readonly int				CopiesCountMin             = 1;
+		public static readonly int				CopiesCountMax             = 99999;
+		public static readonly int				NameLengthMax              = 47;
+		public static readonly int				SwissZipCodeLength         = 6;
+		public static readonly int				SwissDistrictNumberMin     = 1;
+		public static readonly int				SwissDistrictNumberMax     = 999;
+		public static readonly int				SwissDistrictNumberPostbox = 999;
+		public static readonly Regex			SwissHouseNumberRegex      = new Regex (@"^\d{0,7}[a-zA-z]{0,3}$");
+		public static readonly int				ForeignDistrictNumber      = 0;
 		
-		private static readonly string	LineEnding				   = "\r\n";
+		private static readonly string			LineEnding				   = "\r\n";
 	}
 }

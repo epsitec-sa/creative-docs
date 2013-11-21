@@ -44,16 +44,23 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			this.errors.Clear ();
 
-			SubscriptionFileLine.Write (this.GetLines (), this.outputFile);
+			var lines    = this.GetLines ();
+			var multiple = new List<SubscriptionFileLine> ();
 
-			this.LogErrors ();
+			var filteredLines = SubscriptionFileWriter.Filter (lines, multiple);
+
+			this.ComputeStats (filteredLines);
+
+			SubscriptionFileLine.Write (filteredLines, this.outputFile);
+
+			this.LogErrors (multiple);
 			this.LogStats ();
 		}
 
 
-		private void LogErrors()
+		private void LogErrors(List<SubscriptionFileLine> multiple)
 		{
-			if ((this.errors.Count > 0 || this.districtNumberErrors.Count > 0) && this.errorFile != null)
+			if ((this.errors.Count > 0 || this.districtNumberErrors.Count > 0 || multiple.Count > 0) && this.errorFile != null)
 			{
 				using (var stream = this.errorFile.Open (FileMode.Create, FileAccess.Write))
 				using (var streamWriter = new StreamWriter (stream))
@@ -61,6 +68,10 @@ namespace Epsitec.Aider.Data.Subscription
 					foreach (var error in this.errors.Concat (this.districtNumberErrors))
 					{
 						streamWriter.WriteLine (error.Item1 + " => " + error.Item2);
+					}
+					foreach (var line in multiple)
+					{
+						streamWriter.WriteLine (line.SubscriptionNumber + " => multiple " + line.Firstname + " " + line.Lastname + ", " + line.Street + " " + line.HouseNumber + ", " + line.ZipCode + " " + line.Town);
 					}
 				}
 			}
@@ -110,6 +121,60 @@ namespace Epsitec.Aider.Data.Subscription
 			return lines;
 		}
 
+		public static IEnumerable<SubscriptionFileLine> Filter(IEnumerable<SubscriptionFileLine> lines, List<SubscriptionFileLine> multiple)
+		{
+			var sorted = (from line in lines
+						  orderby line.SubscriptionNumber
+						  select line).ToList ();
+
+			var distinct = new HashSet<SubscriptionFileLine> (new LineComparer ());
+
+			foreach (var line in sorted)
+			{
+				if (distinct.Add (line))
+				{
+					yield return line;
+				}
+				else
+				{
+					multiple.Add (line);
+				}
+			}
+
+			System.Diagnostics.Debug.WriteLine ("Sorted: {0} items, Distinct: {1} items", sorted.Count, distinct.Count);
+		}
+
+		private class LineComparer : IEqualityComparer<SubscriptionFileLine>
+		{
+			#region IEqualityComparer<SubscriptionFileLine> Members
+
+			public bool Equals(SubscriptionFileLine x, SubscriptionFileLine y)
+			{
+				if ((x.ZipCode == y.ZipCode) &&
+					(x.Town == y.Town) &&
+					(x.Street == y.Street) &&
+					(x.Lastname == y.Lastname))
+				{
+					if ((x.HouseNumber == y.HouseNumber) ||
+						((x.HouseNumber.Length >= 1) && (y.HouseNumber.Length == 0)) ||
+						((x.HouseNumber.Length == 0) && (y.HouseNumber.Length >= 1)))
+					{
+						return x.Firstname == y.Firstname;
+					}
+				}
+
+				return false;
+			}
+
+			public int GetHashCode(SubscriptionFileLine obj)
+			{
+				return obj.ZipCode.GetHashCode () ^ obj.Town.GetHashCode () ^ obj.Street.GetHashCode () ^ obj.Lastname.GetHashCode ();
+			}
+
+			#endregion
+		}
+
+
 		private IEnumerable<SubscriptionFileLine> GetLines(IEnumerable<AiderSubscriptionEntity> subscriptions, MatchSortEtl etl, EncodingHelper encodingHelper)
 		{
 			foreach (var subscription in subscriptions)
@@ -128,13 +193,16 @@ namespace Epsitec.Aider.Data.Subscription
 				}
 				catch (System.Exception e)
 				{
-					line = null;
-
 					this.errors.Add (System.Tuple.Create (subscription.Id, e.Message));
+					continue;
 				}
 
-				if ((line != null) &&
-					(line.DistrictNumber == null))
+				if (line == null)
+				{
+					continue;
+				}
+
+				if (line.DistrictNumber == null)
 				{
 					if ((this.skipLinesWithDistrictNumberError) ||
 						(string.IsNullOrEmpty (line.Street)) ||
@@ -143,44 +211,43 @@ namespace Epsitec.Aider.Data.Subscription
 						(string.IsNullOrEmpty (line.Lastname)))
 					{
 						this.errors.Add (System.Tuple.Create (subscription.Id, "Address not found in MAT[CH]sort"));
-						line = null;
-					}
-					else
-					{
-						//	Keep line without district number...
+						continue;
 					}
 				}
 
-				if (line != null)
+				yield return line;
+			}
+		}
+
+		private void ComputeStats(IEnumerable<SubscriptionFileLine> lines)
+		{
+			foreach (var line in lines)
+			{
+				int id = line.EditionId[1];
+
+				if (id >= '0' && id <= '9')
 				{
-					int id = line.EditionId[1];
-
-					if (id >= '0' && id <= '9')
-					{
-						id = id - '0';
-					}
-					else if (id >= 'A' && id <= 'F')
-					{
-						id = id - 'A' + 10;
-					}
-					else
-					{
-						throw new System.ArgumentException ();
-					}
-
-					int  count = line.CopiesCount;
-					bool swiss = line.Country == "Suisse";
-
-					this.editionStats[id] += count;
-					this.countries.Add (line.Country);
-
-					this.totalCount   += count;
-					this.totalVaud    += (line.Canton == "VD") ? count : 0;
-					this.totalSwiss   += swiss ? count : 0;
-					this.totalForeign += swiss ? 0 : count;
-
-					yield return line;
+					id = id - '0';
 				}
+				else if (id >= 'A' && id <= 'F')
+				{
+					id = id - 'A' + 10;
+				}
+				else
+				{
+					throw new System.ArgumentException ();
+				}
+
+				int  count = line.CopiesCount;
+				bool swiss = line.Country == "Suisse";
+
+				this.editionStats[id] += count;
+				this.countries.Add (line.Country);
+
+				this.totalCount   += count;
+				this.totalVaud    += (line.Canton == "VD") ? count : 0;
+				this.totalSwiss   += swiss ? count : 0;
+				this.totalForeign += swiss ? 0 : count;
 			}
 		}
 
@@ -204,12 +271,12 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			if (subscription.Household.IsNull ())
 			{
-				return null;
+				throw new System.NotSupportedException ("No household");
 			}
 
-			if (subscription.Household.Members.Count == 0)
+			if (subscription.Household.Members.Any (x => (x.Age == null) || (x.Age > 17)) == false)
 			{
-				return null;
+				throw new System.NotSupportedException ("No adult in household");
 			}
 
 			return this.GetLine (subscription, etl, encodingHelper, this.GetHouseholdReceiverData);
