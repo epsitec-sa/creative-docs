@@ -110,6 +110,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController4ProcessNewHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController3ProcessParishDeparture.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController62ProcessDeparture.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController64ProcessDeparture.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController7ProcessArrival.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController8ProcessNewPerson.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController91ProcessAddressChange.cs" />
