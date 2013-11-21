@@ -44,6 +44,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.UpdateController ();
 				this.UpdateSelectedRow ();
 			};
+
+			this.controller.TreeButtonClicked += delegate (object sender, int row, NodeType type)
+			{
+				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
+			};
 		}
 
 
@@ -198,6 +203,43 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.ClosePopup ();
 			this.OnButtonClicked (button.Name);
+		}
+
+
+		private void OnCompactOrExpand(int row)
+		{
+			//	Etend ou compacte une ligne (inverse son mode actuel).
+			var guid = this.SelectedGuid;
+
+			this.nodesGetter.CompactOrExpand (row);
+			this.UpdateController ();
+
+			this.SelectedGuid = guid;
+		}
+
+		private Guid SelectedGuid
+		{
+			//	Retourne le Guid de l'objet actuellement sélectionné.
+			get
+			{
+				int sel = this.visibleSelectedRow;
+				if (sel != -1 && sel < this.nodesGetter.Count)
+				{
+					return this.nodesGetter[sel].Guid;
+				}
+				else
+				{
+					return Guid.Empty;
+				}
+			}
+			//	Sélectionne l'objet ayant un Guid donné. Si la ligne correspondante
+			//	est cachée, on est assez malin pour sélectionner la prochaine ligne
+			//	visible, vers le haut.
+			set
+			{
+				this.visibleSelectedRow = this.nodesGetter.SearchBestIndex (value);
+				this.UpdateController ();
+			}
 		}
 
 
