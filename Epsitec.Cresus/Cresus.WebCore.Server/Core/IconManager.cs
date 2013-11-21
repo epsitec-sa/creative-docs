@@ -123,9 +123,26 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			var relativePath = this.GetImageRelativeFilePath (iconName, IconSize.ThirtyTwo);
 			this.AddToCSS (iconUri, relativePath, IconSize.ThirtyTwo);
 
-			// Save in 16
-			icon.DefineZoom (0.5);
-			bitmap = icon.BitmapImage;
+			
+			
+			key = new Canvas.IconKey ();
+
+			key.Size.Width  = 16;
+			key.Size.Height = 16;
+			
+			var icon16 = icon.GetImageForIconKey (key) as Canvas;
+
+			if ((icon16 == null) ||
+				(icon16.Width != 16))
+			{
+				// Generate 16x16 base on scaled down 32x32
+				icon.DefineZoom (0.5);
+				bitmap = icon.BitmapImage;
+			}
+			else
+			{
+				bitmap = icon16.BitmapImage;
+			}
 
 			// Save the image
 			bytes = bitmap.Save (ImageFormat.Png);
