@@ -19,8 +19,8 @@ using Epsitec.Cresus.Core.Business.UserManagement;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (10)]
-	public sealed class ActionAiderPersonWarningViewController10DismissNoSubscription : ActionAiderPersonWarningViewControllerPassive
+	[ControllerSubType (14)]
+	public sealed class ActionAiderPersonWarningViewController14DismissNoSubscription : ActionAiderPersonWarningViewControllerPassive
 	{
 		protected override void Execute()
 		{

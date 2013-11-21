@@ -38,6 +38,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				wall.AddBrick (x => x.Person)
 					.Icon (person.GetIconName ("Data"))
 					.Text (contactSummary)
+					.EnableActionMenu <ActionAiderPersonViewController10AddToBag> ()
 					.Attribute (BrickMode.DefaultToSummarySubView);
 			}
 			else
@@ -55,6 +56,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Title (Resources.Text ("Adresse de domicile"))
 						.Text (contact.Address.GetSummary ())
 						.Icon ("Data.AiderAddress")
+						.EnableActionMenu <ActionAiderContactViewController3AddAddressToBag> ()
 						.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 				}
 
@@ -63,6 +65,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					wall.AddBrick (x => x.Person.MainContact.Household.Members)
 						.Title (Resources.Text ("Membres du ménage"))
 						.Icon ("Data.AiderPersons")
+						.EnableActionMenu <ActionAiderPersonWarningViewController50AddHouseholdMembersToBag> ()
 						.Attribute (BrickMode.HideAddButton)
 						.Attribute (BrickMode.HideRemoveButton)
 						.Attribute (BrickMode.AutoGroup)

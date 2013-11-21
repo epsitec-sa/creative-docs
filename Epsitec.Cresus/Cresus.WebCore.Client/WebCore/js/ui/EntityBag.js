@@ -43,13 +43,16 @@ function() {
         draggable: true,
         resizable: true,
         closable: false,
-        margins: '0 5 5 5',
+        autoScroll: true,
         layout: {
-            type: 'vbox',       
-            align: 'stretch',    
-            padding: 5
+            type: 'column'
         },
-        items: [this.createEntityView(),this.removeFromBagDropZone,this.showEntityDropZone],
+        dockedItems: [{
+          xtype: 'toolbar',
+          dock: 'top',
+          items: this.removeFromBagDropZone
+        }],
+        items: [this.createEntityView()],
         listeners: {
           beforerender: this.setSizeAndPosition,
           score: this
@@ -91,8 +94,12 @@ function() {
           menu = Epsitec.Cresus.Core.app.menu;
       if(Ext.isDefined(viewport))
       {
+        var newHeight = ((this.bagStore.count() * 250));
         this.width = 280;
-        this.height = (this.bagStore.count() * 25) + 250;
+        if(newHeight < (viewport.height - 250))
+        {
+          this.height = newHeight;
+        }
         this.x = viewport.width - this.width;
         this.y = menu.el.lastBox.height;
         if(this.isVisible())
@@ -152,6 +159,8 @@ function() {
       {
         this.hide();
       }
+
+      this.setSizeAndPosition();
     },
 
     createToolbar: function() {
@@ -163,6 +172,7 @@ function() {
 
     createEntityView: function() {
       return Ext.create('Ext.view.View', {
+        flex : 100,
         cls: 'entitybag-view',
         tpl: '<tpl for=".">' +
                 '<div class="entitybag-source">' +

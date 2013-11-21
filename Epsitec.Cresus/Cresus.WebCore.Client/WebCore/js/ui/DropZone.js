@@ -34,6 +34,7 @@ function() {
           overItemCls: 'entitybag-target-over',
           selectedItemClass: 'entitybag-selected',
           singleSelect: true,
+          width: '100%',
           executer: this,
           store: this.dropZoneStore, 
           listeners: {
