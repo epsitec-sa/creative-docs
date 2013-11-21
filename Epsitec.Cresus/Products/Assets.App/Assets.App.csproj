@@ -147,6 +147,7 @@
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
     <Compile Include="Helpers\EventExtensions.cs" />
+    <Compile Include="Widgets\SortedType.cs" />
     <Compile Include="Widgets\TreeTableColumnHelper.cs" />
     <Compile Include="Widgets\TreeTableColumnGuid.cs" />
     <Compile Include="Widgets\HatchFrameBox.cs" />

@@ -554,14 +554,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private bool HasDraggingLayer
-		{
-			get
-			{
-				return this.DraggingLayer != null;
-			}
-		}
-
 		private AbstractInteractiveLayer DraggingLayer
 		{
 			get

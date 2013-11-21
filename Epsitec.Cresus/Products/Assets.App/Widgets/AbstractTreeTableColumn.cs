@@ -26,6 +26,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			set;
 		}
 
+		public SortedType						SortedColumn
+		{
+			get;
+			set;
+		}
+
 		public string							HeaderDescription
 		{
 			get;
@@ -130,6 +136,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.PaintText (graphics, rect, this.HeaderDescription);
 				}
 
+				if (this.SortedColumn != SortedType.None)
+				{
+					this.PaintSorted (graphics, this.HeaderRect, this.SortedColumn);
+				}
+
 				//	Si l'en-tête est haute, on dessine un trait de séparation en dessous.
 				if (this.HeaderHeight >= this.RowHeight*2)
 				{
@@ -203,6 +214,40 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		private void PaintSorted(Graphics graphics, Rectangle rect, SortedType type)
+		{
+			var path = AbstractTreeTableColumn.GetSortedPath (rect, type);
+
+			graphics.AddFilledPath (path);
+			graphics.RenderSolid (ColorManager.TextColor);
+		}
+
+		private static Path GetSortedPath(Rectangle rect, SortedType type)
+		{
+			var path = new Path ();
+
+			rect = new Rectangle (rect.Right-rect.Height, rect.Bottom, rect.Height, rect.Height);
+			rect.Deflate (rect.Height*0.2);
+
+			if (type == SortedType.Ascendant)
+			{
+				path.MoveTo (rect.Center.X, rect.Bottom);
+				path.LineTo (rect.Left, rect.Top);
+				path.LineTo (rect.Right, rect.Top);
+				path.Close ();
+			}
+
+			if (type == SortedType.Descendant)
+			{
+				path.MoveTo (rect.Center.X, rect.Top);
+				path.LineTo (rect.Left, rect.Bottom);
+				path.LineTo (rect.Right, rect.Bottom);
+				path.Close ();
+			}
+
+			return path;
+		}
+
 		protected void PaintText(Graphics graphics, Rectangle rect, string text)
 		{
 			//	Dessine un texte inclu dans un rectangle, avec un effet visible si
@@ -224,15 +269,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected Rectangle GetContentDeflateRectangle(Rectangle rect)
 		{
+			var m = (this.SortedColumn == SortedType.None) ? 0 : rect.Height;
+
 			if (this.RowContentAlignment == ContentAlignment.TopLeft    ||
 				this.RowContentAlignment == ContentAlignment.MiddleLeft ||
 				this.RowContentAlignment == ContentAlignment.BottomLeft )
 			{
-				rect.Deflate (this.DescriptionMargin, 0, 0, 0);
+				rect.Deflate (this.DescriptionMargin, m, 0, 0);
 			}
 			else
 			{
-				rect.Deflate (0, this.DescriptionMargin, 0, 0);
+				rect.Deflate (0, this.DescriptionMargin+m, 0, 0);
 			}
 
 			return rect;
