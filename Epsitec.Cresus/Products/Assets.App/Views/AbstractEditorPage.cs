@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as StringFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = ObjectCalculator.GetObjectPropertyString (this.obj, this.timestamp, field);
+					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyString (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is DecimalFieldController)
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as DecimalFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = ObjectCalculator.GetObjectPropertyDecimal (this.obj, this.timestamp, field);
+					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyDecimal (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is ComputedAmountFieldController)
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as ComputedAmountFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, this.timestamp, field);
+					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyComputedAmount (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is IntFieldController)
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as IntFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, field);
+					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyInt (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is DateFieldController)
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as DateFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, field);
+					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyDate (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is GuidFieldController)
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as GuidFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = ObjectCalculator.GetObjectPropertyGuid (this.obj, this.timestamp, field);
+					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyGuid (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 			}
@@ -139,9 +139,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = ObjectCalculator.GetObjectPropertyGuid (this.obj, this.timestamp, field);
+				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyGuid (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -169,9 +169,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = ObjectCalculator.GetObjectPropertyString (this.obj, this.timestamp, field);
+				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyString (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -198,9 +198,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = ObjectCalculator.GetObjectPropertyDecimal (this.obj, this.timestamp, field);
+				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyDecimal (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -226,9 +226,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = ObjectCalculator.GetObjectPropertyComputedAmount (this.obj, this.timestamp, field);
+				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyComputedAmount (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -254,9 +254,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, field);
+				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyInt (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -282,9 +282,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
 
-				controller.Value         = ObjectCalculator.GetObjectPropertyDate (this.obj, this.timestamp, field);
+				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyDate (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -323,16 +323,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else if (this.hasEvent)
 			{
-				var p = ObjectCalculator.GetObjectSyntheticProperty (this.obj, this.timestamp, field);
-
-				if (p == null)
-				{
-					return PropertyState.Synthetic;
-				}
-				else
-				{
-					return p.State;
-				}
+				return this.accessor.EditionAccessor.GetEditionPropertyState (field);
+				//-var p = this.accessor.EditionAccessor.GetEditionProperty (field);
+				//-
+				//-if (p == null)
+				//-{
+				//-	return PropertyState.Synthetic;
+				//-}
+				//-else
+				//-{
+				//-	return p.State;
+				//-}
 			}
 			else
 			{

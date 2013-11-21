@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
 
@@ -15,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			this.mandat = mandat;
 
-			this.editionObjectGuid = Guid.Empty;
+			this.editionAccessor = new EditionAccessor (this);
 
 			//	Recalcule tout.
 			foreach (var obj in this.mandat.GetData (BaseType.Objects))
@@ -41,6 +40,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			get
 			{
 				return this.mandat.EndDate;
+			}
+		}
+
+		public EditionAccessor EditionAccessor
+		{
+			get
+			{
+				return this.editionAccessor;
 			}
 		}
 
@@ -187,165 +194,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
-		#region Edition manager
-		public void StartObjectEdition(BaseType baseType, Guid objectGuid, Timestamp? timestamp)
-		{
-			//	Marque le début de l'édition de l'événement d'un objet.
-			this.editionBaseType = baseType;
-
-			if (objectGuid.IsEmpty || !timestamp.HasValue)
-			{
-				return;
-			}
-
-			if (!this.editionObjectGuid.IsEmpty)  // déjà une édition en cours ?
-			{
-				if (objectGuid != this.editionObjectGuid ||
-					timestamp  != this.editionTimestamp)  // sur un autre objet/événement ?
-				{
-					this.SaveObjectEdition ();
-				}
-			}
-
-			this.editionObjectGuid = objectGuid;
-			this.editionTimestamp  = timestamp;
-		}
-
-		public void SetObjectField(ObjectField field, string value)
-		{
-			var e = this.EditionEvent;
-			if (e != null)
-			{
-				if (value == null)
-				{
-					e.RemoveProperty (field);
-				}
-				else
-				{
-					var newProperty = new DataStringProperty (field, value);
-					e.AddProperty (newProperty);
-				}
-			}
-		}
-
-		public void SetObjectField(ObjectField field, decimal? value)
-		{
-			var e = this.EditionEvent;
-			if (e != null)
-			{
-				if (value.HasValue)
-				{
-					var newProperty = new DataDecimalProperty (field, value.Value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
-			}
-		}
-
-		public void SetObjectField(ObjectField field, ComputedAmount? value)
-		{
-			var e = this.EditionEvent;
-			if (e != null)
-			{
-				if (value.HasValue)
-				{
-					var newProperty = new DataComputedAmountProperty (field, value.Value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
-
-				var obj = this.GetObject (BaseType.Objects, this.editionObjectGuid);
-				ObjectCalculator.UpdateComputedAmounts (obj);
-			}
-		}
-
-		public void SetObjectField(ObjectField field, int? value)
-		{
-			var e = this.EditionEvent;
-			if (e != null)
-			{
-				if (value.HasValue)
-				{
-					var newProperty = new DataIntProperty (field, value.Value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
-			}
-		}
-
-		public void SetObjectField(ObjectField field, Guid value)
-		{
-			var e = this.EditionEvent;
-			if (e != null)
-			{
-				if (!value.IsEmpty)
-				{
-					var newProperty = new DataGuidProperty (field, value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
-			}
-		}
-
-		public void SetObjectField(ObjectField field, System.DateTime? value)
-		{
-			var e = this.EditionEvent;
-			if (e != null)
-			{
-				if (value.HasValue)
-				{
-					var newProperty = new DataDateProperty (field, value.Value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
-			}
-		}
-
-		public void SaveObjectEdition()
-		{
-			//	Marque la fin de l'édition de l'événement d'un objet.
-			this.CancelObjectEdition ();
-		}
-
-		private DataEvent EditionEvent
-		{
-			get
-			{
-				var obj = this.mandat.GetData (this.editionBaseType)[this.editionObjectGuid];
-
-				if (obj != null && this.editionTimestamp.HasValue)
-				{
-					return obj.GetEvent (this.editionTimestamp.Value);
-				}
-
-				return null;
-			}
-		}
-
-		public void CancelObjectEdition()
-		{
-			//	Marque la fin de l'édition de l'événement d'un objet.
-			this.editionObjectGuid = Guid.Empty;
-			this.editionTimestamp = null;
-		}
-		#endregion
-
-
 		public static bool IsOneShotField(ObjectField objectField)
 		{
 			switch (objectField)
@@ -402,9 +250,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 
 		private readonly DataMandat				mandat;
-
-		private BaseType						editionBaseType;
-		private Guid							editionObjectGuid;
-		private Timestamp?						editionTimestamp;
+		private readonly EditionAccessor		editionAccessor;
 	}
 }

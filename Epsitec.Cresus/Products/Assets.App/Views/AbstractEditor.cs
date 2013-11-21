@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -38,12 +39,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void StartEdition(Guid objectGuid, Timestamp? timestamp)
 		{
-			this.accessor.StartObjectEdition (this.baseType, objectGuid, timestamp);
+			bool changed = this.accessor.EditionAccessor.SaveObjectEdition ();
+
+			this.accessor.EditionAccessor.StartObjectEdition (this.baseType, objectGuid, timestamp);
 
 			if (this.editionDirty)
 			{
 				this.editionDirty = false;
 				this.OnValueChanged (ObjectField.Unknown);
+			}
+
+			if (changed)
+			{
+				this.OnUpdateData ();
 			}
 		}
 
@@ -64,6 +72,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler<ObjectField> ValueChanged;
+
+
+		private void OnUpdateData()
+		{
+			this.UpdateData.Raise (this);
+		}
+
+		public event EventHandler UpdateData;
 		#endregion
 
 

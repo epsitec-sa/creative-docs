@@ -15,6 +15,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.Value = value;
 		}
 
+		public DataComputedAmountProperty(DataComputedAmountProperty model)
+			: base (model)
+		{
+			this.Value = model.Value;
+		}
+
 		public readonly ComputedAmount Value;
 	}
 }

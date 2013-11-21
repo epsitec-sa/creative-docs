@@ -15,6 +15,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.Value = value;
 		}
 
+		public DataGuidProperty(DataGuidProperty model)
+			: base (model)
+		{
+			this.Value = model.Value;
+		}
+
 		public readonly Guid Value;
 	}
 }

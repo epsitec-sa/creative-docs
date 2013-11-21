@@ -95,6 +95,7 @@
     <Compile Include="BusinessLogic\TimelineMode.cs" />
     <Compile Include="NodesGetter\TreeNodesGetter.cs" />
     <Compile Include="NodesGetter\LevelNodesGetter.cs" />
+    <Compile Include="SimpleEngine\EditionAccessor.cs" />
     <Compile Include="SimpleEngine\DataGuidProperty.cs" />
     <Compile Include="NodesGetter\ParentPositionNode.cs" />
     <Compile Include="NodesGetter\ParentPositionNodesGetter.cs" />

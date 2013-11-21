@@ -14,8 +14,51 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.Field = field;
 		}
 
-		public readonly ObjectField Field;
+		public AbstractDataProperty(AbstractDataProperty model)
+		{
+			this.Field = model.Field;
+			this.State = model.State;
+		}
 
-		public PropertyState State;
+
+		public static AbstractDataProperty Copy(AbstractDataProperty p)
+		{
+			if (p is DataComputedAmountProperty)
+			{
+				return new DataComputedAmountProperty (p as DataComputedAmountProperty);
+			}
+			else if (p is DataDateProperty)
+			{
+				return new DataDateProperty (p as DataDateProperty);
+			}
+			else if (p is DataDecimalProperty)
+			{
+				return new DataDecimalProperty (p as DataDecimalProperty);
+			}
+			else if (p is DataGuidProperty)
+			{
+				return new DataGuidProperty (p as DataGuidProperty);
+			}
+			else if (p is DataIntProperty)
+			{
+				return new DataIntProperty (p as DataIntProperty);
+			}
+			else if (p is DataLinkProperty)
+			{
+				return new DataLinkProperty (p as DataLinkProperty);
+			}
+			else if (p is DataStringProperty)
+			{
+				return new DataStringProperty (p as DataStringProperty);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
+		public readonly ObjectField Field;
+		public PropertyState State;  // TODO: beurk !
 	}
 }

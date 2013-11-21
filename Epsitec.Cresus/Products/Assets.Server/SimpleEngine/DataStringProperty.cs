@@ -15,6 +15,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.Value = value;
 		}
 
+		public DataStringProperty(DataStringProperty model)
+			: base (model)
+		{
+			this.Value = model.Value;
+		}
+
 		public readonly string Value;
 	}
 }

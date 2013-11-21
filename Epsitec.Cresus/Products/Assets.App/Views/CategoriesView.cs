@@ -88,6 +88,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.UpdateToolbars ();
 				};
+
+				this.objectEditor.UpdateData += delegate
+				{
+					this.UpdateData ();
+				};
 			}
 		}
 
@@ -119,19 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnListDoubleClicked()
 		{
-			if (this.viewMode == ViewMode.Single)
-			{
-				this.OnStartEdit ();
-			}
-			else if (this.viewMode == ViewMode.Event)
-			{
-				this.isShowEvents = !this.isShowEvents;
-				this.isEditing = false;
-				this.Update ();
-			}
-			else if (this.viewMode == ViewMode.Multiple)
-			{
-			}
+			this.OnStartEdit ();
 		}
 
 		private void OnStartStopEdit()
@@ -216,7 +209,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnEditCancel()
 		{
-			this.accessor.CancelObjectEdition ();
+			this.accessor.EditionAccessor.CancelObjectEdition ();
 			this.isEditing = false;
 			this.Update ();
 		}
@@ -226,7 +219,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (!this.isEditing)
 			{
-				this.accessor.SaveObjectEdition ();
+				if (this.accessor.EditionAccessor.SaveObjectEdition ())
+				{
+					this.UpdateData ();
+				}
 			}
 
 			this.editFrameBox.Visibility = this.isEditing;
@@ -249,6 +245,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Update ();
 		}
 
+
+		private void UpdateData()
+		{
+			this.listController.UpdateData ();
+			this.listController.SelectedGuid = this.selectedGuid;
+		}
 
 		private void UpdateEditor()
 		{
@@ -299,7 +301,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox									listFrameBox;
 		private FrameBox									editFrameBox;
 
-		private ViewMode									viewMode;
 		private bool										isShowEvents;
 		private bool										isEditing;
 		private Guid										selectedGuid;

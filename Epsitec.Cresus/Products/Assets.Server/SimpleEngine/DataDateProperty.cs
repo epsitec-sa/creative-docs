@@ -15,6 +15,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.Value = value;
 		}
 
+		public DataDateProperty(DataDateProperty model)
+			: base (model)
+		{
+			this.Value = model.Value;
+		}
+
 		public readonly System.DateTime Value;
 	}
 }

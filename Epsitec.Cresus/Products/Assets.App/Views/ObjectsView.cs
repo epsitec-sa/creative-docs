@@ -206,6 +206,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.UpdateToolbars ();
 				};
+
+				this.objectEditor.UpdateData += delegate
+				{
+					this.UpdateData ();
+				};
 			}
 
 			this.closeButton.Clicked += delegate
@@ -254,54 +259,58 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnChangeViewMode(ViewMode viewMode)
 		{
-			this.viewMode = viewMode;
-			this.UpdateViewModeGeometry ();
+			if (this.viewMode != viewMode)
+			{
+				this.viewMode = viewMode;
+				this.UpdateViewModeGeometry ();
 
-			this.editFrameBox.Window.ForceLayout ();
+				this.editFrameBox.Window.ForceLayout ();
+			}
 
 			using (this.ignoreChanges.Enter ())
 			{
-				if (this.viewMode == ViewMode.Single)
+				switch (this.viewMode)
 				{
-					this.listController.UpdateData ();
-					this.listController.SelectedGuid = this.selectedGuid;
-					this.listController.Timestamp = this.selectedTimestamp;
+					case ViewMode.Single:
+						this.listController.UpdateData ();
+						this.listController.SelectedGuid = this.selectedGuid;
+						this.listController.Timestamp = this.selectedTimestamp;
 
-					this.timelineController.ObjectGuid = this.selectedGuid;
-					this.timelineController.SelectedTimestamp = this.selectedTimestamp;
-				}
-				else if (this.viewMode == ViewMode.Event)
-				{
-					this.listController.UpdateData ();
-					this.listController.SelectedGuid = this.selectedGuid;
-					this.listController.Timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+						this.timelineController.ObjectGuid = this.selectedGuid;
+						this.timelineController.SelectedTimestamp = this.selectedTimestamp;
+						break;
 
-					this.eventsController.ObjectGuid = this.selectedGuid;
-					this.eventsController.SelectedTimestamp = this.selectedTimestamp;
-				}
-				else if (this.viewMode == ViewMode.Multiple)
-				{
-					this.timelinesArrayController.UpdateData ();
-					this.timelinesArrayController.SelectedGuid = this.selectedGuid;
-					this.timelinesArrayController.SelectedTimestamp = this.selectedTimestamp;
+					case ViewMode.Event:
+						this.listController.UpdateData ();
+						this.listController.SelectedGuid = this.selectedGuid;
+						this.listController.Timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+
+						this.eventsController.ObjectGuid = this.selectedGuid;
+						this.eventsController.SelectedTimestamp = this.selectedTimestamp;
+						break;
+
+					case ViewMode.Multiple:
+						this.timelinesArrayController.UpdateData ();
+						this.timelinesArrayController.SelectedGuid = this.selectedGuid;
+						this.timelinesArrayController.SelectedTimestamp = this.selectedTimestamp;
+						break;
 				}
 			}
 		}
 
 		private void OnListDoubleClicked()
 		{
-			if (this.viewMode == ViewMode.Single)
+			switch (this.viewMode)
 			{
-				this.OnStartEdit ();
-			}
-			else if (this.viewMode == ViewMode.Event)
-			{
-				this.isShowEvents = !this.isShowEvents;
-				this.isEditing = false;
-				this.Update ();
-			}
-			else if (this.viewMode == ViewMode.Multiple)
-			{
+				case ViewMode.Single:
+					this.OnStartEdit ();
+					break;
+
+				case ViewMode.Event:
+					this.isShowEvents = !this.isShowEvents;
+					this.isEditing = false;
+					this.Update ();
+					break;
 			}
 		}
 
@@ -340,17 +349,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (timestamp.HasValue)
 			{
-				if (this.viewMode == ViewMode.Single)
+				switch (this.viewMode)
 				{
-					this.timelineController.SelectedTimestamp = timestamp.Value;
-				}
-				else if (this.viewMode == ViewMode.Event)
-				{
-					this.eventsController.SelectedTimestamp = timestamp.Value;
-				}
-				else if (this.viewMode == ViewMode.Multiple)
-				{
-					this.timelinesArrayController.SelectedTimestamp = timestamp.Value;
+					case ViewMode.Single:
+						this.timelineController.SelectedTimestamp = timestamp.Value;
+						break;
+
+					case ViewMode.Event:
+						this.eventsController.SelectedTimestamp = timestamp.Value;
+						break;
+
+					case ViewMode.Multiple:
+						this.timelinesArrayController.SelectedTimestamp = timestamp.Value;
+						break;
 				}
 			}
 
@@ -424,7 +435,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnEditCancel()
 		{
-			this.accessor.CancelObjectEdition ();
+			this.accessor.EditionAccessor.CancelObjectEdition ();
 			this.isEditing = false;
 			this.Update ();
 		}
@@ -434,7 +445,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (!this.isEditing)
 			{
-				this.accessor.SaveObjectEdition ();
+				if (this.accessor.EditionAccessor.SaveObjectEdition ())
+				{
+					this.UpdateData ();
+				}
 			}
 
 			this.UpdateViewModeGeometry ();
@@ -515,6 +529,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void UpdateData()
+		{
+			switch (this.viewMode)
+			{
+				case ViewMode.Single:
+				case ViewMode.Event:
+					this.listController.UpdateData ();
+					this.listController.SelectedGuid = this.selectedGuid;
+					break;
+
+				case ViewMode.Multiple:
+					this.timelinesArrayController.UpdateData ();
+					this.timelinesArrayController.SelectedGuid = this.selectedGuid;
+					break;
+			}
+		}
+
 		private void UpdateEditor()
 		{
 			this.objectEditor.SetObject (this.selectedGuid, this.selectedTimestamp);
@@ -523,17 +554,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewModeGeometry()
 		{
-			if (this.viewMode == ViewMode.Single)
+			switch (this.viewMode)
 			{
-				this.UpdateSingleGeometry ();
-			}
-			else if (this.viewMode == ViewMode.Event)
-			{
-				this.UpdateEventGeometry ();
-			}
-			else if (this.viewMode == ViewMode.Multiple)
-			{
-				this.UpdateMultipleGeometry ();
+				case ViewMode.Single:
+					this.UpdateSingleGeometry ();
+					break;
+
+				case ViewMode.Event:
+					this.UpdateEventGeometry ();
+					break;
+
+				case ViewMode.Multiple:
+					this.UpdateMultipleGeometry ();
+					break;
 			}
 		}
 
@@ -652,22 +685,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.viewMode == ViewMode.Single)
+				switch (this.viewMode)
 				{
-					return this.listController.SelectedRow != -1;
-				}
-				else if (this.viewMode == ViewMode.Event)
-				{
-					return this.listController.SelectedRow != -1
-						&& this.isShowEvents;
-				}
-				else if (this.viewMode == ViewMode.Multiple)
-				{
-					return !this.timelinesArrayController.SelectedGuid.IsEmpty
-						&& this.timelinesArrayController.SelectedTimestamp != null;
-				}
+					case ViewMode.Single:
+						return this.listController.SelectedRow != -1;
 
-				return false;
+					case ViewMode.Event:
+						return this.listController.SelectedRow != -1
+							&& this.isShowEvents;
+
+					case ViewMode.Multiple:
+						return !this.timelinesArrayController.SelectedGuid.IsEmpty
+							&& this.timelinesArrayController.SelectedTimestamp != null;
+
+					default:
+						return false;
+				}
 			}
 		}
 

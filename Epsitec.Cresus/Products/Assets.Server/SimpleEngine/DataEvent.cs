@@ -18,6 +18,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.properties = new List<AbstractDataProperty> ();
 		}
 
+		public DataEvent(DataEvent model)
+		{
+			//	Copie un événement avec toutes ses propriétés.
+			this.guid      = model.guid;
+			this.Timestamp = model.Timestamp;
+			this.Type      = model.Type;
+
+			this.properties = new List<AbstractDataProperty> ();
+			this.SetProperties (model);
+		}
+
 		#region IGuid Members
 		public Guid								Guid
 		{
@@ -37,6 +48,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			get
 			{
 				return this.properties.Count;
+			}
+		}
+
+		public void SetProperties(DataEvent model)
+		{
+			this.properties.Clear ();
+
+			foreach (var property in model.properties)
+			{
+				var copy = AbstractDataProperty.Copy (property);
+				System.Diagnostics.Debug.Assert (copy != null);
+				this.properties.Add (copy);
 			}
 		}
 
