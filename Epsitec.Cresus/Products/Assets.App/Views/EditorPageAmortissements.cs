@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var s = ObjectCalculator.GetObjectPropertyString (catObj, null, fieldSrc);
 			if (!string.IsNullOrEmpty (s))
 			{
-				this.accessor.EditionAccessor.SetObjectField (fieldDst, s);
+				this.accessor.EditionAccessor.SetField (fieldDst, s);
 			}
 		}
 
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var d = ObjectCalculator.GetObjectPropertyDecimal (catObj, null, fieldSrc);
 			if (d.HasValue)
 			{
-				this.accessor.EditionAccessor.SetObjectField (fieldDst, d);
+				this.accessor.EditionAccessor.SetField (fieldDst, d);
 			}
 		}
 	}

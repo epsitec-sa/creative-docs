@@ -43,10 +43,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				return new DataIntProperty (p as DataIntProperty);
 			}
-			else if (p is DataLinkProperty)
-			{
-				return new DataLinkProperty (p as DataLinkProperty);
-			}
 			else if (p is DataStringProperty)
 			{
 				return new DataStringProperty (p as DataStringProperty);

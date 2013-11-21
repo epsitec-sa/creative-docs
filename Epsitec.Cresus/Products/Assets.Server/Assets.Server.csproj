@@ -119,7 +119,6 @@
     <Compile Include="SimpleEngine\DataDecimalProperty.cs" />
     <Compile Include="SimpleEngine\DataEvent.cs" />
     <Compile Include="SimpleEngine\DataIntProperty.cs" />
-    <Compile Include="SimpleEngine\DataLinkProperty.cs" />
     <Compile Include="SimpleEngine\DataMandat.cs" />
     <Compile Include="SimpleEngine\DataObject.cs" />
     <Compile Include="SimpleEngine\DataStringProperty.cs" />

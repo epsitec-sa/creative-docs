@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as StringFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyString (field);
+					c.Value         = this.accessor.EditionAccessor.GetFieldString (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is DecimalFieldController)
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as DecimalFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyDecimal (field);
+					c.Value         = this.accessor.EditionAccessor.GetFieldDecimal (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is ComputedAmountFieldController)
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as ComputedAmountFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyComputedAmount (field);
+					c.Value         = this.accessor.EditionAccessor.GetFieldComputedAmount (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is IntFieldController)
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as IntFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyInt (field);
+					c.Value         = this.accessor.EditionAccessor.GetFieldInt (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is DateFieldController)
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as DateFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyDate (field);
+					c.Value         = this.accessor.EditionAccessor.GetFieldDate (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 				else if (controller is GuidFieldController)
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as GuidFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = this.accessor.EditionAccessor.GetEditionPropertyGuid (field);
+					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
 			}
@@ -139,9 +139,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (field, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyGuid (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -169,9 +169,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (field, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyString (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldString (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -198,9 +198,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (field, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyDecimal (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldDecimal (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -226,9 +226,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (field, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyComputedAmount (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldComputedAmount (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -254,9 +254,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (field, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyInt (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldInt (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);
@@ -282,9 +282,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.ValueEdited += delegate
 			{
-				this.accessor.EditionAccessor.SetObjectField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (field, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetEditionPropertyDate (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldDate (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);

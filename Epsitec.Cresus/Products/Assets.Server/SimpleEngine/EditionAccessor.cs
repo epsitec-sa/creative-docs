@@ -27,15 +27,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return;
 			}
 
-			//-if (!this.editionObjectGuid.IsEmpty)  // déjà une édition en cours ?
-			//-{
-			//-	if (objectGuid != this.editionObjectGuid ||
-			//-		timestamp  != this.editionTimestamp)  // sur un autre objet/événement ?
-			//-	{
-			//-		this.SaveObjectEdition ();
-			//-	}
-			//-}
-
 			this.dirty               = false;
 			this.computedAmountDirty = false;
 			this.objectGuid          = objectGuid;
@@ -53,123 +44,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				this.dataEvent = new DataEvent (e);  // conserve une copie
 			}
 		}
-
-
-		public void SetObjectField(ObjectField field, string value)
-		{
-			var e = this.dataEvent;
-			if (e != null)
-			{
-				if (value == null)
-				{
-					e.RemoveProperty (field);
-				}
-				else
-				{
-					var newProperty = new DataStringProperty (field, value);
-					e.AddProperty (newProperty);
-				}
-
-				this.dirty = true;
-			}
-		}
-
-		public void SetObjectField(ObjectField field, decimal? value)
-		{
-			var e = this.dataEvent;
-			if (e != null)
-			{
-				if (value.HasValue)
-				{
-					var newProperty = new DataDecimalProperty (field, value.Value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
-
-				this.dirty = true;
-			}
-		}
-
-		public void SetObjectField(ObjectField field, ComputedAmount? value)
-		{
-			var e = this.dataEvent;
-			if (e != null)
-			{
-				if (value.HasValue)
-				{
-					var newProperty = new DataComputedAmountProperty (field, value.Value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
-
-				this.dirty = true;
-				this.computedAmountDirty = true;
-			}
-		}
-
-		public void SetObjectField(ObjectField field, int? value)
-		{
-			var e = this.dataEvent;
-			if (e != null)
-			{
-				if (value.HasValue)
-				{
-					var newProperty = new DataIntProperty (field, value.Value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
-
-				this.dirty = true;
-			}
-		}
-
-		public void SetObjectField(ObjectField field, Guid value)
-		{
-			var e = this.dataEvent;
-			if (e != null)
-			{
-				if (!value.IsEmpty)
-				{
-					var newProperty = new DataGuidProperty (field, value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
-
-				this.dirty = true;
-			}
-		}
-
-		public void SetObjectField(ObjectField field, System.DateTime? value)
-		{
-			var e = this.dataEvent;
-			if (e != null)
-			{
-				if (value.HasValue)
-				{
-					var newProperty = new DataDateProperty (field, value.Value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
-
-				this.dirty = true;
-			}
-		}
-
 
 		public bool SaveObjectEdition()
 		{
@@ -194,19 +68,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		private DataEvent EditionEvent
-		{
-			get
-			{
-				if (this.obj != null && this.timestamp.HasValue)
-				{
-					return this.obj.GetEvent (this.timestamp.Value);
-				}
-
-				return null;
-			}
-		}
-
 		public void CancelObjectEdition()
 		{
 			//	Marque la fin de l'édition de l'événement d'un objet.
@@ -217,9 +78,24 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public int? GetEditionPropertyInt(ObjectField field)
+		public PropertyState GetEditionPropertyState(ObjectField field)
 		{
-			var p = this.GetEditionProperty (field) as DataIntProperty;
+			if (this.dataEvent != null)
+			{
+				var property = this.dataEvent.GetProperty (field);
+				if (property != null)
+				{
+					return PropertyState.Single;
+				}
+			}
+
+			return PropertyState.Synthetic;
+		}
+
+
+		public ComputedAmount? GetFieldComputedAmount(ObjectField field)
+		{
+			var p = this.GetProperty (field) as DataComputedAmountProperty;
 
 			if (p == null)
 			{
@@ -231,9 +107,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal? GetEditionPropertyDecimal(ObjectField field)
+		public System.DateTime? GetFieldDate(ObjectField field)
 		{
-			var p = this.GetEditionProperty (field) as DataDecimalProperty;
+			var p = this.GetProperty (field) as DataDateProperty;
 
 			if (p == null)
 			{
@@ -245,9 +121,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public ComputedAmount? GetEditionPropertyComputedAmount(ObjectField field)
+		public decimal? GetFieldDecimal(ObjectField field)
 		{
-			var p = this.GetEditionProperty (field) as DataComputedAmountProperty;
+			var p = this.GetProperty (field) as DataDecimalProperty;
 
 			if (p == null)
 			{
@@ -259,23 +135,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public System.DateTime? GetEditionPropertyDate(ObjectField field)
+		public Guid GetFieldGuid(ObjectField field)
 		{
-			var p = this.GetEditionProperty (field) as DataDateProperty;
-
-			if (p == null)
-			{
-				return null;
-			}
-			else
-			{
-				return p.Value;
-			}
-		}
-
-		public Guid GetEditionPropertyGuid(ObjectField field)
-		{
-			var p = this.GetEditionProperty (field) as DataGuidProperty;
+			var p = this.GetProperty (field) as DataGuidProperty;
 
 			if (p == null)
 			{
@@ -287,9 +149,23 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public string GetEditionPropertyString(ObjectField field)
+		public int? GetFieldInt(ObjectField field)
 		{
-			var p = this.GetEditionProperty (field) as DataStringProperty;
+			var p = this.GetProperty (field) as DataIntProperty;
+
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
+		public string GetFieldString(ObjectField field)
+		{
+			var p = this.GetProperty (field) as DataStringProperty;
 
 			if (p == null)
 			{
@@ -302,7 +178,123 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private AbstractDataProperty GetEditionProperty(ObjectField field)
+		public void SetField(ObjectField field, ComputedAmount? value)
+		{
+			var e = this.dataEvent;
+			if (e != null)
+			{
+				if (value.HasValue)
+				{
+					var newProperty = new DataComputedAmountProperty (field, value.Value);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty (field);
+				}
+
+				this.dirty = true;
+				this.computedAmountDirty = true;
+			}
+		}
+
+		public void SetField(ObjectField field, System.DateTime? value)
+		{
+			var e = this.dataEvent;
+			if (e != null)
+			{
+				if (value.HasValue)
+				{
+					var newProperty = new DataDateProperty (field, value.Value);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty (field);
+				}
+
+				this.dirty = true;
+			}
+		}
+
+		public void SetField(ObjectField field, decimal? value)
+		{
+			var e = this.dataEvent;
+			if (e != null)
+			{
+				if (value.HasValue)
+				{
+					var newProperty = new DataDecimalProperty (field, value.Value);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty (field);
+				}
+
+				this.dirty = true;
+			}
+		}
+
+		public void SetField(ObjectField field, Guid value)
+		{
+			var e = this.dataEvent;
+			if (e != null)
+			{
+				if (!value.IsEmpty)
+				{
+					var newProperty = new DataGuidProperty (field, value);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty (field);
+				}
+
+				this.dirty = true;
+			}
+		}
+
+		public void SetField(ObjectField field, int? value)
+		{
+			var e = this.dataEvent;
+			if (e != null)
+			{
+				if (value.HasValue)
+				{
+					var newProperty = new DataIntProperty (field, value.Value);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty (field);
+				}
+
+				this.dirty = true;
+			}
+		}
+
+		public void SetField(ObjectField field, string value)
+		{
+			var e = this.dataEvent;
+			if (e != null)
+			{
+				if (value == null)
+				{
+					e.RemoveProperty (field);
+				}
+				else
+				{
+					var newProperty = new DataStringProperty (field, value);
+					e.AddProperty (newProperty);
+				}
+
+				this.dirty = true;
+			}
+		}
+
+
+		private AbstractDataProperty GetProperty(ObjectField field)
 		{
 			//	Retourne une propriété en édition. L'événement en cours d'édition
 			//	a la priorité.
@@ -327,19 +319,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return null;
 		}
 
-
-		public PropertyState GetEditionPropertyState(ObjectField field)
+		private DataEvent EditionEvent
 		{
-			if (this.dataEvent != null)
+			get
 			{
-				var property = this.dataEvent.GetProperty (field);
-				if (property != null)
+				if (this.obj != null && this.timestamp.HasValue)
 				{
-					return PropertyState.Single;
+					return this.obj.GetEvent (this.timestamp.Value);
 				}
-			}
 
-			return PropertyState.Synthetic;
+				return null;
+			}
 		}
 
 
