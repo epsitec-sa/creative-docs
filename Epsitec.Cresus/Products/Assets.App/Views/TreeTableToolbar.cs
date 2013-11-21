@@ -83,23 +83,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.buttonFilter     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Filter,     "TreeTable.Filter",     "Filtre");
 
-			this.separator1       = this.CreateSeparator     (this.toolbar, 0);
-
 			this.buttonFirst      = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First, "TreeTable.First", "Retour sur la première ligne");
 			this.buttonPrev       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,       "TreeTable.Prev",       "Recule sur la ligne précédente");
 			this.buttonNext       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Next,       "TreeTable.Next",       "Avance sur la ligne suivante");
 			this.buttonLast       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Last,       "TreeTable.Last",       "Avance sur la dernière ligne");
 
-			this.separator2       = this.CreateSeparator     (this.toolbar, 0);
+			this.separator1       = this.CreateSeparator     (this.toolbar, 0);
 			
 			this.buttonCompactAll = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacte tout");
 			this.buttonExpandAll  = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etend tout");
 			
-			this.separator3       = this.CreateSeparator     (this.toolbar, 0);
+			this.separator2       = this.CreateSeparator     (this.toolbar, 0);
 			
 			this.buttonNew        = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.New,        "TreeTable.New",        "Nouvel ligne");
 			this.buttonDelete     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
 			this.buttonDeselect   = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Deselect,   "TreeTable.Deselect",   "Désélectionne la ligne");
+
+			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
 
 			this.toolbar.SizeChanged += delegate
 			{
@@ -154,7 +154,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool compactExpand = width > size*(f+9) + AbstractCommandToolbar.SeparatorWidth*3 && this.hasTreeOperations;
 
 			yield return new ButtonState (this.buttonFilter, this.hasFilter);
-
 			yield return new ButtonState (this.separator1, this.hasFilter);
 
 			yield return new ButtonState (this.buttonFirst, firstLast);
@@ -162,12 +161,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			yield return new ButtonState (this.buttonNext,  prevNext);
 			yield return new ButtonState (this.buttonLast,  firstLast);
 
-			yield return new ButtonState (this.separator2, firstLast || prevNext);
+			yield return new ButtonState (this.separator1, firstLast || prevNext);
 
 			yield return new ButtonState (this.buttonCompactAll, compactExpand);
 			yield return new ButtonState (this.buttonExpandAll,  compactExpand);
 
-			yield return new ButtonState (this.separator3, compactExpand);
+			yield return new ButtonState (this.separator2, compactExpand);
 
 			yield return new ButtonState (this.buttonNew);
 			yield return new ButtonState (this.buttonDelete);
@@ -191,19 +190,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IconButton						buttonFilter;
 
-		private FrameBox						separator1;
-
 		private IconButton						buttonFirst;
 		private IconButton						buttonPrev;
 		private IconButton						buttonNext;
 		private IconButton						buttonLast;
 
-		private FrameBox						separator2;
+		private FrameBox						separator1;
 		
 		private IconButton						buttonCompactAll;
 		private IconButton						buttonExpandAll;
 
-		private FrameBox						separator3;
+		private FrameBox						separator2;
 
 		private IconButton						buttonNew;
 		private IconButton						buttonDelete;

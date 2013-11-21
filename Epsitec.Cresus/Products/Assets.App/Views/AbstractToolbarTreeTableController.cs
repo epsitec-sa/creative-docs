@@ -260,8 +260,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			int row = this.VisibleSelectedRow;
 
-			this.toolbar.UpdateCommand (ToolbarCommand.Filter, true);
-
 			this.UpdateCommand (ToolbarCommand.First, row, this.FirstRowIndex);
 			this.UpdateCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);
 			this.UpdateCommand (ToolbarCommand.Next,  row, this.NextRowIndex);

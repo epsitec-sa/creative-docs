@@ -70,15 +70,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateTitle (this.mainFrameBox);
 			this.CreateCloseButton ();
 
+			this.CreateController ();
 			this.CreateButton ();
-
-			this.controller.CreateUI (this.mainFrameBox, headerHeight: 0, footerHeight: 0);
-			this.controller.AllowsMovement = false;
-
-			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
-			this.UpdateController ();
-
-			this.InitialCompact ();
 		}
 
 		private void CreateTitle(Widget parent)
@@ -102,16 +95,42 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
+		private void CreateController()
+		{
+			var frame = new FrameBox
+			{
+				Parent = this.mainFrameBox,
+				Dock   = DockStyle.Fill,
+			};
+
+			this.controller.CreateUI (frame, headerHeight: 0, footerHeight: 0);
+			this.controller.AllowsMovement = false;
+
+			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
+			this.UpdateController ();
+
+			this.InitialCompact ();
+		}
+
 		private void CreateButton()
 		{
 			if (this.hasFilter)
 			{
+				var frame = new FrameBox
+				{
+					Parent          = this.mainFrameBox,
+					PreferredHeight = 10+24+10,
+					Dock            = DockStyle.Bottom,
+					Padding         = new Margins (10),
+					BackColor       = ColorManager.WindowBackgroundColor,
+				};
+
 				var button = new Button
 				{
-					Parent      = this.mainFrameBox,
+					Parent      = frame,
 					Text        = "Annuler le filtre",
 					ButtonStyle = ButtonStyle.Icon,
-					Dock        = DockStyle.Top,
+					Dock        = DockStyle.Fill,
 				};
 
 				button.Clicked += delegate
