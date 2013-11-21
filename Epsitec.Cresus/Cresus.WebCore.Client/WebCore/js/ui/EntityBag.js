@@ -38,7 +38,7 @@ function() {
         headerPosition: 'left',
         title: 'Arche',
         cls: 'entitybag-window',
-        iconCls: 'epsitec-aider-images-general-bag-icon16',
+        iconCls: 'epsitec-aider-images-general-ark-icon16',
         autoHeight: true,
         draggable: true,
         resizable: true,

@@ -1,14 +1,17 @@
-﻿using Epsitec.Common.Drawing;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core;
 
-using System;
-
 using System.Globalization;
-
+using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Linq;
 using System.IO;
+using System.Threading.Tasks;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core
@@ -29,17 +32,20 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		private IconManager(string rootfolder)
 		{
 			this.cssFileName = string.Concat (rootfolder, IconManager.baseCssFileName);
+			this.cssLines = new ConcurrentQueue<string> ();
 			this.imagesFileNamePattern = string.Concat (rootfolder, IconManager.baseImagesFileNamePattern);
 		}
 
 
 		public static void BuildIcons(string rootfolder)
 		{
-			new IconManager (rootfolder).BuildIcons ();
+			var manager = new IconManager (rootfolder);
+			
+			manager.BuildIcons ();
 		}
 
 
-		public static string GetCssClassName(string iconUri, IconSize size, Type entityType = null)
+		public static string GetCssClassName(string iconUri, IconSize size, System.Type entityType = null)
 		{
 			if (iconUri == null)
 			{
@@ -68,10 +74,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 			var iconUris = ImageProvider.Instance.GetImageNames ("manifest", null);
 
-			foreach (var iconUri in iconUris)
+			//	I'd love to Parallel.ForEach this piece of code, however the icon generation is
+			//	not thread safe:
+
+			foreach (var uri in iconUris)
 			{
-				this.CreateIcon (iconUri);
+				this.CreateIcon (uri);
 			}
+			
+			var cssLines = this.cssLines.ToArray ().OrderBy (x => x);
+			
+			File.AppendAllLines (this.cssFileName, cssLines);
 		}
 
 
@@ -131,7 +144,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			var imagePath = string.Concat ("../", path);
 			var css = string.Format (CultureInfo.InvariantCulture, IconManager.cssClassBodyPattern, cssClassname, imagePath);
 
-			File.AppendAllText (this.cssFileName, css);
+			this.cssLines.Enqueue (css);
 		}
 
 
@@ -164,6 +177,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		private readonly string cssFileName;
 		private readonly string imagesFileNamePattern;
+		private readonly ConcurrentQueue<string> cssLines;
 
 		private readonly static string baseCssFileName = "css/icons.css";
 		private readonly static string baseImagesFileNamePattern = "images/{0}{1:d}.png";

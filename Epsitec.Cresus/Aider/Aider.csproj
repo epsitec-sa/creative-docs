@@ -487,6 +487,7 @@
     <EmbeddedResource Include="Images\General.Bag.icon" />
     <EmbeddedResource Include="Images\General.Question.icon" />
     <EmbeddedResource Include="Images\General.Logout.icon" />
+    <EmbeddedResource Include="Images\General.Ark.icon" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

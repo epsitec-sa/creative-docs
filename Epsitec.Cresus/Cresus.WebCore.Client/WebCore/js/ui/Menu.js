@@ -192,7 +192,7 @@ function() {
         buttons.push(this.createButton({
           text: 'Arche',
           handler: this.entityBagHandler,
-          iconCls: 'epsitec-aider-images-general-bag-icon32'
+          iconCls: 'epsitec-aider-images-general-ark-icon32'
         }));
       }
       
