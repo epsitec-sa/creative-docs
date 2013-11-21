@@ -14,11 +14,11 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Choix d'un objet dans la base de données des groupes.
+	/// Choix d'un filtre dans la base de données des groupes.
 	/// </summary>
-	public class GroupsPopup : AbstractPopup
+	public class FilterPopup : AbstractPopup
 	{
-		public GroupsPopup(DataAccessor accessor, Guid selectedGuid)
+		public FilterPopup(DataAccessor accessor, Guid selectedGuid)
 		{
 			this.accessor = accessor;
 
@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.nodesGetter.UpdateData ();
 			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
+			this.hasFilter = (this.visibleSelectedRow != -1);
 
 			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodesGetter);
 
@@ -68,12 +69,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.CreateTitle (this.mainFrameBox);
 			this.CreateCloseButton ();
-			
+
+			this.CreateButton ();
+
 			this.controller.CreateUI (this.mainFrameBox, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
 			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
 			this.UpdateController ();
+
+			this.InitialCompact ();
 		}
 
 		private void CreateTitle(Widget parent)
@@ -81,10 +86,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			new StaticText
 			{
 				Parent           = parent,
-				Text             = "Choix du groupe",
+				Text             = "Filtre",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Top,
-				PreferredHeight  = GroupsPopup.TitleHeight - 4,
+				PreferredHeight  = FilterPopup.TitleHeight - 4,
 				BackColor        = ColorManager.SelectionColor,
 			};
 
@@ -97,6 +102,46 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
+		private void CreateButton()
+		{
+			if (this.hasFilter)
+			{
+				var button = new Button
+				{
+					Parent      = this.mainFrameBox,
+					Text        = "Annuler le filtre",
+					ButtonStyle = ButtonStyle.Icon,
+					Dock        = DockStyle.Top,
+				};
+
+				button.Clicked += delegate
+				{
+					this.OnNavigate (Guid.Empty);
+					this.ClosePopup ();
+				};
+			}
+		}
+
+
+		private void InitialCompact()
+		{
+			var guid = this.SelectedGuid;
+
+			int row = 0;
+			while (row < this.nodesGetter.Count)
+			{
+				var node = this.nodesGetter[row];
+
+				if (node.Level == 1)
+				{
+					this.nodesGetter.CompactOrExpand (row);
+				}
+
+				row++;
+			}
+
+			this.SelectedGuid = guid;
+		}
 
 		private void OnCompactOrExpand(int row)
 		{
@@ -137,26 +182,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private Size GetSize()
 		{
-			// TODO: faire autrement, car le mode est leftOrRight = false !
 			var parent = this.GetParent ();
 
-			//	On calcule une hauteur adaptée au contenu, mais qui ne dépasse
-			//	évidement pas la hauteur de la fenêtre principale.
 			double h = parent.ActualHeight
 					 - AbstractScroller.DefaultBreadth;
 
-			//	Utilise au maximum les 1/2 de la hauteur.
-			int max = (int) (h*0.5) / GroupsPopup.RowHeight;
-
-			int rows = System.Math.Min (this.nodesGetter.Count, max);
-			rows = System.Math.Max (rows, 3);
-
-			int dx = GroupsPopup.PopupWidth
+			int dx = FilterPopup.PopupWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
-			int dy = GroupsPopup.TitleHeight
-				   + rows * GroupsPopup.RowHeight
-				   + (int) AbstractScroller.DefaultBreadth;
+			int dy = (int) (h * 0.3);
 
 			return new Size (dx, dy);
 		}
@@ -205,13 +239,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private static readonly int TitleHeight      = 24;
-		private static readonly int RowHeight        = 18;
 		private static readonly int PopupWidth       = 200;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
 		private readonly TreeNodesGetter				nodesGetter;
 		private readonly SingleGroupsTreeTableFiller	dataFiller;
+		private readonly bool							hasFilter;
 
 		private int										visibleSelectedRow;
 	}
