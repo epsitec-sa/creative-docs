@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	/// <summary>
 	/// Gère l'accès en lecture "en arbre" à des objets en provenance de inputNodes.
 	/// On part des groupes, qui sont ensuite fusionnés avec les objets.
-	/// En fait, c'est la mise en série de 4 getters:
+	/// En fait, c'est la mise en série de plusieurs getters:
 	/// 
 	///     |
 	///     o  GuidNode (BaseType.Groups)

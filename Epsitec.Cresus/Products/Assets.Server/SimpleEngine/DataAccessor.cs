@@ -115,37 +115,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			if (!parent.IsEmpty)
 			{
-				int position = this.GetCreatePosition (baseType, parent);
-
 				e.AddProperty (new DataGuidProperty (ObjectField.Parent, parent));
-				e.AddProperty (new DataIntProperty (ObjectField.Position, position));
 			}
 
 			e.AddProperty (new DataStringProperty (ObjectField.Nom, name));
 		
 			return obj.Guid;
-		}
-
-		private int GetCreatePosition(BaseType baseType, Guid parent)
-		{
-			//	Retourne la position d'un objet créé, qui vient toujours en dernier,
-			//	après tous ses frères.
-			int position = 0;
-
-			foreach (var obj in mandat.GetData (baseType))
-			{
-				var guid = ObjectCalculator.GetObjectPropertyGuid (obj, null, ObjectField.Parent);
-				if (guid == parent)
-				{
-					int? p = ObjectCalculator.GetObjectPropertyInt (obj, null, ObjectField.Position);
-					if (p.HasValue)
-					{
-						position = System.Math.Max (position, p.Value+1);
-					}
-				}
-			}
-
-			return position;
 		}
 
 		public DataEvent CreateObjectEvent(DataObject obj, System.DateTime date, EventType type)
