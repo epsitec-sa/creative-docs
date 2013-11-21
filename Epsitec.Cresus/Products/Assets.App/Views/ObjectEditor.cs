@@ -179,15 +179,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
+				switch (baseType)
+				{
+					case BaseType.Categories:
+						return EditionObjectPageType.Category;
 
-				if (pages.Length >= 2)
-				{
-					return pages[2];
-				}
-				else
-				{
-					return EditionObjectPageType.OneShot;
+					case BaseType.Groups:
+						return EditionObjectPageType.Group;
+
+					default:
+						var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
+
+						if (pages.Length >= 2)
+						{
+							return pages[2];
+						}
+						else
+						{
+							return EditionObjectPageType.OneShot;
+						}
 				}
 			}
 		}
