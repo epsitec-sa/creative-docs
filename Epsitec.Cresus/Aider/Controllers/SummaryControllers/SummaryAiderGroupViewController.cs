@@ -68,7 +68,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				{
 					bricks = bricks
 						.EnableActionMenu<ActionAiderGroupViewController3ImportGroupMembers> ()
-						.EnableActionMenu<ActionAiderGroupViewController4ExportGroupMembers> ();
+						.EnableActionMenu<ActionAiderGroupViewController4ExportGroupMembers> ()
+						.EnableActionButton<ActionAiderGroupViewController7AddMembersFromBag> ();
 				}
 			}
 

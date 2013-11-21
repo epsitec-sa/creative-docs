@@ -510,6 +510,15 @@ namespace Epsitec.Aider.Entities
 			this.AddParticipations (businessContext, participations, startDate, comment);
 		}
 
+		public void ImportContactsMembers(BusinessContext businessContext, IEnumerable<AiderContactEntity> contactsToAdd, Date? startDate, FormattedText comment)
+		{
+			var participations = contactsToAdd
+				.Select (p => new ParticipationData (p))
+				.ToList ();
+
+			this.AddParticipations (businessContext, participations, startDate, comment);
+		}
+
 		public void AddParticipations(BusinessContext businessContext, IEnumerable<ParticipationData> participations, Date? startDate, FormattedText comment)
 		{
 			foreach (var participation in participations)

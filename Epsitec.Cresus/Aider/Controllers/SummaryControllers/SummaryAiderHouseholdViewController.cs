@@ -46,6 +46,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionMenu<ActionAiderHouseholdViewController2RemoveMemberFromHousehold> ()
 				.EnableActionMenu<ActionAiderHouseholdViewController3ChangeHeadOfHousehold> ()
 				.EnableActionMenu<ActionAiderHouseholdViewController5CleanHousehold> ()
+				.EnableActionMenu<ActionAiderHouseholdViewController7AddHouseholdMembersToBag> ()
 				.Template ()
 					.Icon ("Data.AiderPersons")
 					.Title ("Membres du ménage")

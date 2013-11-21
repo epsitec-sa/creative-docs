@@ -15,6 +15,8 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Override;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -63,6 +65,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				if (AiderPersonEntity.MergePersons (businessContext, officialPerson, otherPerson))
 				{
 					AiderContactEntity.Delete (businessContext, otherContact);
+
+					//Confirm by removing from bag
+					var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
+					var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (otherContact).Value.ToString ().Replace ('/', '-');
+					EntityBagManager.GetCurrentEntityBagManager ().RemoveFromBag (aiderUser.LoginName, id, When.Now);
 				}
 			}
 		}

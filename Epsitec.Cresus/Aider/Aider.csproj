@@ -146,6 +146,8 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController2AddHouseholdMembersToBag.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController11AddRecipientFromBag.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController50AddHouseholdMembersToBag.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController7AddHouseholdMembersToBag.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController7AddMembersFromBag.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />
