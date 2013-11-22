@@ -29,7 +29,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter les destinataires depuis l'arche");
+			return Resources.FormattedText ("Remplir avec l'arche");
 		}
 
 		public override ActionExecutor GetExecutor()

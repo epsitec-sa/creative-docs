@@ -35,6 +35,7 @@ namespace Epsitec.Aider.Entities
 			yield return TextFormatter.FormatText (this.Name);
 		}
 
+		
 		public IEnumerable<AiderContactEntity> GetAllContacts(DataContext dataContext)
 		{
 			var groups   = this.ExecuteSearch (dataContext);
@@ -46,7 +47,8 @@ namespace Epsitec.Aider.Entities
 			return contacts;
 		}
 
-		public IEnumerable<AiderGroupEntity> ExecuteSearch(DataContext dataContext)
+		
+		private IEnumerable<AiderGroupEntity> ExecuteSearch(DataContext dataContext)
 		{
 			if (this.Match == GroupExtractionMatch.SameFunction)
 			{
@@ -69,7 +71,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public string GetGroupSearchPathPattern()
+		private string GetGroupSearchPathPattern()
 		{
 			var path = this.SearchGroup.Path ?? "";
 			

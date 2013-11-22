@@ -6,17 +6,18 @@ using Epsitec.Common.Types;
 
 using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Controllers.EditionControllers;
+using Epsitec.Aider.Controllers.SetControllers;
+
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Override;
 
+using Epsitec.Cresus.Bricks;
 
-using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Library;
 
 using System.Linq;
-using Epsitec.Cresus.Bricks;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -24,20 +25,24 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderMailingEntity> wall)
 		{
-			var user = AiderUserManager.Current.AuthenticatedUser;
-
 			wall.AddBrick ()
-				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
-				.Title (x => TextFormatter.FormatText ("Publipostage"))
-				.Text (x => x.GetSummary ())
+//				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderMailingViewController1Recipients))
-				.EnableActionMenu<ActionAiderMailingViewController3UpdateRecipients> ()
+//				.EnableActionMenu<ActionAiderMailingViewController3UpdateRecipients> ()
 				.EnableActionMenu<ActionAiderMailingViewController2Duplicate> ()
 				.EnableActionMenu<ActionAiderMailingViewController10AddToBag> ()
-				.EnableActionButton<ActionAiderMailingViewController2Duplicate> ()
+//				.EnableActionButton<ActionAiderMailingViewController2Duplicate> ()
 				.EnableActionButton<ActionAiderMailingViewController11AddRecipientFromBag> ()
 				.EnableActionOnDrop<ActionAiderMailingViewController0AddRecipientOnDrop> ();
+
+			wall.AddBrick ()
+				.Icon ("Data.AiderGroup.People")
+				.Title (p => p.GetRecipientsTitleSummary ())
+				.Text (p => p.GetRecipientsSummary ())
+				.Attribute (BrickMode.DefaultToSetSubView)
+				.WithSpecialController (typeof (SetAiderMailingViewController0RecipientsContact))
+				.EnableActionButton<ActionAiderMailingViewController3UpdateRecipients> ();
 		}
 	}
 }

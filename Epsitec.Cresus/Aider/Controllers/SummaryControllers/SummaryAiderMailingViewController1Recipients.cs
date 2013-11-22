@@ -30,25 +30,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var user = AiderUserManager.Current.AuthenticatedUser;
 			
 			wall.AddBrick ()
-				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
-				.Title ("Modifier")
+				.Icon ("Data.AiderMailing")
+				.Title ("Détails")
 				.Text (x => x.GetRecipientsOverview ())
 				.WithSpecialController (typeof (EditionAiderMailingViewController1Mailing));
-
-			wall.AddBrick ()
-					.Icon ("Data.AiderGroup.People")
-					.Title (p => p.GetRecipientsTitleSummary ())
-					.Text (p => p.GetRecipientsSummary ())
-					.Attribute (BrickMode.DefaultToSetSubView)
-					.WithSpecialController (typeof (SetAiderMailingViewController0RecipientsContact))
-					.EnableActionMenu<ActionAiderMailingViewController3UpdateRecipients> ();
-
-			wall.AddBrick ()
-					.Icon ("Data.AiderGroup.People")
-					.Title (p => p.GetExclusionsTitleSummary ())
-					.Text (p => p.GetExclusionsSummary ())
-					.Attribute (BrickMode.DefaultToSetSubView)
-					.WithSpecialController (typeof (SetAiderMailingViewController1ExcludedContact));
 
 			wall.AddBrick (p => p.RecipientGroups)
 					.Attribute (BrickMode.DefaultToSummarySubView)
@@ -105,6 +90,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Title ("Contacts")
 						.Text (x => x.GetCompactSummary ())
 					.End ();
+			
+			wall.AddBrick ()
+					.Icon ("Data.AiderGroup.Exclusions")
+					.Title ("Exclusions")
+					.Text (p => p.GetExclusionsSummary ())
+					.Attribute (BrickMode.DefaultToSetSubView)
+					.WithSpecialController (typeof (SetAiderMailingViewController1ExcludedContact));
 		}
 	}
 }

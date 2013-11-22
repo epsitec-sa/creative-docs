@@ -499,6 +499,13 @@
     <EmbeddedResource Include="Images\General.Question.icon" />
     <EmbeddedResource Include="Images\General.Logout.icon" />
     <EmbeddedResource Include="Images\General.Ark.icon" />
+    <EmbeddedResource Include="Images\Data.AiderGroup.Exclusions.icon" />
+    <EmbeddedResource Include="Images\Data.AiderMailing.icon" />
+    <EmbeddedResource Include="Images\Base.AiderMailing.icon" />
+    <EmbeddedResource Include="Images\Base.AiderMailingCategory.icon" />
+    <EmbeddedResource Include="Images\Data.AiderMailingCategory.icon" />
+    <EmbeddedResource Include="Images\Data.AiderGroupExtraction.icon" />
+    <EmbeddedResource Include="Images\Base.AiderGroupExtraction.icon" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

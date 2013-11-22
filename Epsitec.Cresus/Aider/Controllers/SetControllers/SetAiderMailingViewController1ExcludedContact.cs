@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Controllers.SetControllers
 	{
 		public override string GetIcon()
 		{
-			return Res.Commands.Base.ShowAiderMailingExclusions.Icon;
+			return "Data.AiderGroup.Exclusions";
 		}
 
 		public override FormattedText GetTitle()
