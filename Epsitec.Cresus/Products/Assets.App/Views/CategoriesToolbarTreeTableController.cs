@@ -105,41 +105,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void UpdateSorting()
+		protected override void SetSortingInstructions(SortingInstructions instructions)
 		{
-			var primaryField   = ObjectField.Unknown;
-			var primaryType    = SortedType.None;
-			var secondaryField = ObjectField.Unknown;
-			var secondaryType  = SortedType.None;
+			this.secondaryGetter.SortingInstructions = instructions;
+			(this.nodesGetter as SortNodesGetter).SortingInstructions = instructions;
 
-			var sortedColumns = this.controller.SortedColumns.ToArray();
-			var fields = this.dataFiller.Fields.ToArray ();
-
-			if (sortedColumns.Length >= 1)
-			{
-				var sortedColumn = sortedColumns[0];
-
-				if (sortedColumn.Column < fields.Length)
-				{
-					primaryField = fields[sortedColumn.Column];
-				}
-				
-				primaryType = sortedColumn.Type;
-			}
-
-			if (sortedColumns.Length >= 2)
-			{
-				var sortedColumn = sortedColumns[1];
-
-				if (sortedColumn.Column < fields.Length)
-				{
-					secondaryField = fields[sortedColumn.Column];
-				}
-
-				secondaryType = sortedColumn.Type;
-			}
-
-			this.secondaryGetter.SortingInstructions = new SortingInstructions (primaryField, primaryType, secondaryField, secondaryType);
 			this.UpdateData ();
 		}
 

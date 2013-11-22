@@ -155,6 +155,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected override void SetSortingInstructions(SortingInstructions instructions)
+		{
+			(this.nodesGetter as TreeNodesGetter).SortingInstructions = instructions;
+
+			this.UpdateData ();
+		}
+
+	
 		private void ShowCreatePopup(Widget target)
 		{
 			var popup = new CreateGroupPopup (this.accessor, BaseType.Groups, this.SelectedGuid);

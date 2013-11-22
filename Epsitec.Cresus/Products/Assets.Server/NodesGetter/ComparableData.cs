@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
+	/// <summary>
+	/// Structure contenant une valeur quelconque pouvant être comparée et triée.
+	/// </summary>
 	public struct ComparableData : System.IEquatable<ComparableData>, System.IComparable<ComparableData>
 	{
 		public ComparableData(object value)
@@ -28,19 +31,19 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		#region IComparable<ComparableData> Members
 		public int CompareTo(ComparableData other)
 		{
-			if (other.Value is int)
+			if (this.Value is int && other.Value is int)
 			{
 				return ((int) this.Value).CompareTo ((int) other.Value);
 			}
-			else if (other.Value is decimal)
+			else if (this.Value is decimal && other.Value is decimal)
 			{
 				return ((decimal) this.Value).CompareTo ((decimal) other.Value);
 			}
-			else if (other.Value is System.DateTime)
+			else if (this.Value is System.DateTime && other.Value is System.DateTime)
 			{
 				return ((System.DateTime) this.Value).CompareTo ((System.DateTime) other.Value);
 			}
-			else if (other.Value is string)
+			else if (this.Value is string && other.Value is string)
 			{
 				return ((string) this.Value).CompareTo ((string) other.Value);
 			}

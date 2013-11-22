@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		public bool								ForceEmpty;
 		public Guid								RootGuid;
+		public SortingInstructions				SortingInstructions;
 
 
 		public override int Count
@@ -104,7 +105,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private void Insert(TreeNode tree)
 		{
 			//	Insertion récursive des noeuds dans l'arbre.
-			var childrens = this.inputNodes.Nodes.Where (x => x.Parent == tree.Node.Guid).OrderBy (x => x.PrimaryOrderedValue);
+			var childrens = this.Sort (this.inputNodes.Nodes.Where (x => x.Parent == tree.Node.Guid));
 
 			foreach (var children in childrens)
 			{
@@ -113,6 +114,17 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 				this.Insert (n);
 			}
+		}
+
+		private IEnumerable<ParentNode> Sort(IEnumerable<ParentNode> nodes)
+		{
+			return SortingMachine<ParentNode>.Sort
+			(
+				this.SortingInstructions,
+				nodes,
+				x => x.PrimaryOrderedValue,
+				x => x.SecondaryOrderedValue
+			);
 		}
 
 		private static int GetLevel(TreeNode treeNode)

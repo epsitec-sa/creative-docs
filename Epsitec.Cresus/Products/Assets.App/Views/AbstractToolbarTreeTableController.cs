@@ -228,9 +228,49 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		protected virtual void UpdateSorting()
+
+		private void UpdateSorting()
+		{
+			var primaryField   = ObjectField.Unknown;
+			var primaryType    = SortedType.None;
+			var secondaryField = ObjectField.Unknown;
+			var secondaryType  = SortedType.None;
+
+			var sortedColumns = this.controller.SortedColumns.ToArray ();
+			var fields = this.dataFiller.Fields.ToArray ();
+
+			if (sortedColumns.Length >= 1)
+			{
+				var sortedColumn = sortedColumns[0];
+
+				if (sortedColumn.Column < fields.Length)
+				{
+					primaryField = fields[sortedColumn.Column];
+				}
+
+				primaryType = sortedColumn.Type;
+			}
+
+			if (sortedColumns.Length >= 2)
+			{
+				var sortedColumn = sortedColumns[1];
+
+				if (sortedColumn.Column < fields.Length)
+				{
+					secondaryField = fields[sortedColumn.Column];
+				}
+
+				secondaryType = sortedColumn.Type;
+			}
+
+			var instructions = new SortingInstructions (primaryField, primaryType, secondaryField, secondaryType);
+			this.SetSortingInstructions (instructions);
+		}
+
+		protected virtual void SetSortingInstructions(SortingInstructions instructions)
 		{
 		}
+
 
 		protected void UpdateController(bool crop = true)
 		{

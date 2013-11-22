@@ -219,21 +219,33 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void PaintSorted(Graphics graphics, Rectangle rect, SortedType type, bool primary)
 		{
-			var path = AbstractTreeTableColumn.GetSortedPath (rect, type);
-			double alpha = primary ? 1.0 : 0.3;
+			if (primary)
+			{
+				rect = new Rectangle (rect.Right-rect.Height, rect.Bottom, rect.Height, rect.Height);
+				rect.Deflate ((int) (rect.Height*0.35));
 
-			graphics.AddFilledPath (path);
-			graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.TextColor));
+				var path = AbstractTreeTableColumn.GetSortedPath (rect, type);
+
+				graphics.AddFilledPath (path);
+				graphics.RenderSolid (ColorManager.TextColor);
+			}
+			else
+			{
+				rect = new Rectangle (rect.Right-rect.Height, rect.Bottom, rect.Height, rect.Height);
+				rect.Deflate ((int) (rect.Height*0.35) + 0.5);
+
+				var path = AbstractTreeTableColumn.GetSortedPath (rect, type);
+
+				graphics.AddPath (path);
+				graphics.RenderSolid (ColorManager.TextColor);
+			}
 		}
 
 		private static Path GetSortedPath(Rectangle rect, SortedType type)
 		{
 			var path = new Path ();
 
-			rect = new Rectangle (rect.Right-rect.Height, rect.Bottom, rect.Height, rect.Height);
-			rect.Deflate (rect.Height*0.3);
-
-			if (type == SortedType.Ascendant)
+			if (type == SortedType.Ascending)
 			{
 				path.MoveTo (rect.Center.X, rect.Bottom);
 				path.LineTo (rect.Left, rect.Top);
@@ -241,7 +253,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				path.Close ();
 			}
 
-			if (type == SortedType.Descendant)
+			if (type == SortedType.Descending)
 			{
 				path.MoveTo (rect.Center.X, rect.Top);
 				path.LineTo (rect.Left, rect.Bottom);

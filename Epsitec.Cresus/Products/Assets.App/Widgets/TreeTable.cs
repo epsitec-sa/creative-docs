@@ -171,24 +171,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (this.sortedColumns.Count == 0)
 			{
-				this.sortedColumns.Add (new SortedColumn (rank, SortedType.Ascendant));
+				this.sortedColumns.Add (new SortedColumn (rank, SortedType.Ascending));
 			}
 			else
 			{
 				if (rank == this.sortedColumns[0].Column)
 				{
-					if (this.sortedColumns[0].Type == SortedType.Ascendant)
+					if (this.sortedColumns[0].Type == SortedType.Ascending)
 					{
-						this.sortedColumns[0] = new SortedColumn (rank, SortedType.Descendant);
+						this.sortedColumns[0] = new SortedColumn (rank, SortedType.Descending);
 					}
 					else
 					{
-						this.sortedColumns[0] = new SortedColumn (rank, SortedType.Ascendant);
+						this.sortedColumns[0] = new SortedColumn (rank, SortedType.Ascending);
 					}
 				}
 				else
 				{
-					this.sortedColumns.Insert (0, new SortedColumn (rank, SortedType.Ascendant));
+					this.sortedColumns.Insert (0, new SortedColumn (rank, SortedType.Ascending));
 
 					//	Jamais plus de 2.
 					while (this.sortedColumns.Count > 2)

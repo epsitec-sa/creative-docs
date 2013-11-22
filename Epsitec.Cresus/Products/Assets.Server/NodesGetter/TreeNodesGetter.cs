@@ -39,6 +39,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
+		public SortingInstructions SortingInstructions;
+
+
 		public Timestamp? Timestamp
 		{
 			get
@@ -80,6 +83,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		public override void UpdateData()
 		{
+			this.levelNodesGetter.SortingInstructions = SortingInstructions;
 			this.ppNodesGetter.Timestamp = this.timestamp;
 
 			this.levelNodesGetter.UpdateData ();
@@ -137,7 +141,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 
 		private readonly AbstractNodesGetter<GuidNode>	inputNodes;
-		private readonly ParentNodesGetter		ppNodesGetter;
+		private readonly ParentNodesGetter				ppNodesGetter;
 		private readonly LevelNodesGetter				levelNodesGetter;
 		private readonly TreeObjectsNodesGetter			treeObjectsGetter;
 

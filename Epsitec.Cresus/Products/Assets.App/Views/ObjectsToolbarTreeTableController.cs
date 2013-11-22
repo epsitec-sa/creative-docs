@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var groupNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
+			var groupNodesGetter  = this.accessor.GetNodesGetter (BaseType.Groups);
 			var objectNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
 			this.nodesGetter = new ObjectsNodesGetter (this.accessor, groupNodesGetter, objectNodesGetter);
 
@@ -217,6 +217,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 			}
+		}
+
+
+		protected override void SetSortingInstructions(SortingInstructions instructions)
+		{
+			(this.nodesGetter as ObjectsNodesGetter).SortingInstructions = instructions;
+
+			this.UpdateData ();
 		}
 
 

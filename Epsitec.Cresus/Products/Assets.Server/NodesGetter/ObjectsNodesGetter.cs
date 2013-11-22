@@ -102,6 +102,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.objectNodesGetter1.Timestamp = this.timestamp;
 			this.objectNodesGetter1.SortingInstructions = this.SortingInstructions;
 
+			this.objectNodesGetter2.SortingInstructions = this.SortingInstructions;
+
 			this.groupNodesGetter1.Timestamp = this.timestamp;
 
 			this.groupNodesGetter2.ForceEmpty = rootGuid.IsEmpty;

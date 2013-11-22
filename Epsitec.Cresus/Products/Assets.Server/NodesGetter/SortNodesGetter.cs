@@ -18,6 +18,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
+		public SortingInstructions SortingInstructions;
+
+
 		public override int Count
 		{
 			get
@@ -43,8 +46,13 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		public override void UpdateData()
 		{
-			var sorted = this.inputNodes.Nodes.OrderBy (x => x.PrimaryOrderedValue);
-			this.outputNodes = sorted.ToArray ();
+			this.outputNodes = SortingMachine<OrderNode>.Sort
+			(
+				this.SortingInstructions,
+				this.inputNodes.Nodes,
+				x => x.PrimaryOrderedValue,
+				x => x.SecondaryOrderedValue
+			).ToArray ();
 		}
 
 		

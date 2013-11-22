@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var primary = this.accessor.GetNodesGetter (BaseType.Categories);
 			var secondary = new OrderNodesGetter (primary, this.accessor, BaseType.Categories);
 			this.nodesGetter = new SortNodesGetter (secondary);
+			this.nodesGetter.SortingInstructions = SortingInstructions.Default;
 
 			secondary.SortingInstructions = SortingInstructions.Empty;
 			this.nodesGetter.UpdateData ();
@@ -169,7 +170,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly AbstractNodesGetter<OrderNode>	nodesGetter;
+		private readonly SortNodesGetter				nodesGetter;
 		private readonly CategoriesTreeTableFiller		dataFiller;
 
 		private int										visibleSelectedRow;
