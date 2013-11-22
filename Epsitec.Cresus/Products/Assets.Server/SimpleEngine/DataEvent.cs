@@ -93,11 +93,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public AbstractDataProperty GetProperty(ObjectField field)
 		{
+			//	Les propriétés ObjectField.Event* ne sont pas de vraies propriétés.
+			//	On ne peut pas les modifier. Elles sont là uniquement pour le moteur
+			//	de tri.
 			switch (field)
 			{
 				case ObjectField.EventDate:
 					return new DataDateProperty (field, this.Timestamp.Date);
 
+				//	Si on trie selon la colonne du glyphe, on trie en fait selon le
+				//	nom du type de l'événement. Cela parait plausible.
 				case ObjectField.EventGlyph:
 				case ObjectField.EventType:
 					return new DataStringProperty (field, DataDescriptions.GetEventDescription (this.Type));

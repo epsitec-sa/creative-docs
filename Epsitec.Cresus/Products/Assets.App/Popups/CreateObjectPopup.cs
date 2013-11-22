@@ -13,11 +13,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class CreateObjectPopup : AbstractPopup
 	{
-		public CreateObjectPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid)
+		public CreateObjectPopup(DataAccessor accessor)
 		{
 			this.accessor = accessor;
-			this.baseType = baseType;
 
+			//	Met par défaut une date au premier janvier de l'année en cours.
 			this.ObjectDate = new Timestamp (new System.DateTime (System.DateTime.Now.Year, 1, 1), 0).Date;
 		}
 
@@ -196,7 +196,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int Margin      = 20;
 
 		private readonly DataAccessor					accessor;
-		private readonly BaseType						baseType;
 
 		private TextField								textField;
 		private Button									createButton;

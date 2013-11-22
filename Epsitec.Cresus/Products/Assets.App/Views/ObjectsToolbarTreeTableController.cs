@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateObjectPopup (this.accessor, BaseType.Objects, this.SelectedGuid);
+			var popup = new CreateObjectPopup (this.accessor);
 
 			popup.Create (target, leftOrRight: true);
 

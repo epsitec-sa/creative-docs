@@ -21,31 +21,31 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public static AbstractDataProperty Copy(AbstractDataProperty p)
+		public static AbstractDataProperty Copy(AbstractDataProperty model)
 		{
-			if (p is DataComputedAmountProperty)
+			if (model is DataComputedAmountProperty)
 			{
-				return new DataComputedAmountProperty (p as DataComputedAmountProperty);
+				return new DataComputedAmountProperty (model as DataComputedAmountProperty);
 			}
-			else if (p is DataDateProperty)
+			else if (model is DataDateProperty)
 			{
-				return new DataDateProperty (p as DataDateProperty);
+				return new DataDateProperty (model as DataDateProperty);
 			}
-			else if (p is DataDecimalProperty)
+			else if (model is DataDecimalProperty)
 			{
-				return new DataDecimalProperty (p as DataDecimalProperty);
+				return new DataDecimalProperty (model as DataDecimalProperty);
 			}
-			else if (p is DataGuidProperty)
+			else if (model is DataGuidProperty)
 			{
-				return new DataGuidProperty (p as DataGuidProperty);
+				return new DataGuidProperty (model as DataGuidProperty);
 			}
-			else if (p is DataIntProperty)
+			else if (model is DataIntProperty)
 			{
-				return new DataIntProperty (p as DataIntProperty);
+				return new DataIntProperty (model as DataIntProperty);
 			}
-			else if (p is DataStringProperty)
+			else if (model is DataStringProperty)
 			{
-				return new DataStringProperty (p as DataStringProperty);
+				return new DataStringProperty (model as DataStringProperty);
 			}
 			else
 			{

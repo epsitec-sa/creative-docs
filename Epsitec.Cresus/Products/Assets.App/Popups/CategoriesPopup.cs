@@ -32,22 +32,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.nodesGetter.UpdateData ();
 
 			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodesGetter);
-
-			//	Connexion des événements.
-			this.controller.ContentChanged += delegate (object sender, bool crop)
-			{
-				this.UpdateController (crop);
-			};
-
-			this.controller.RowClicked += delegate (object sender, int row)
-			{
-				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
-				this.UpdateController ();
-
-				var node = this.nodesGetter[this.visibleSelectedRow];
-				this.OnNavigate (node.Guid);
-				this.ClosePopup ();
-			};
 		}
 
 
@@ -69,6 +53,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			TreeTableFiller<SortableNode>.FillColumns (this.dataFiller, this.controller);
 			this.UpdateController ();
+
+			//	Connexion des événements.
+			this.controller.ContentChanged += delegate (object sender, bool crop)
+			{
+				this.UpdateController (crop);
+			};
+
+			this.controller.RowClicked += delegate (object sender, int row)
+			{
+				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
+				this.UpdateController ();
+
+				var node = this.nodesGetter[this.visibleSelectedRow];
+				this.OnNavigate (node.Guid);
+				this.ClosePopup ();
+			};
 		}
 
 		private void CreateTitle(Widget parent)

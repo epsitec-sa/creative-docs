@@ -166,6 +166,32 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 		}
+
+		public void CopyObject(DataObject obj, DataObject model, Timestamp? timestamp)
+		{
+			//	Copie dans 'obj' toutes les propriétés de 'model' que 'obj' n'a pas déjà.
+			if (!timestamp.HasValue)
+			{
+				timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+			}
+
+			var e = obj.GetEvent (obj.EventsCount-1);  // dernier événement
+
+			for (int i=0; i<(int) ObjectField.MaxField; i++)  // bof...
+			{
+				var field = (ObjectField) i;
+
+				var op = obj.GetSyntheticProperty (timestamp.Value, field);
+				if (op == null)  // propriété pas encore connue ?
+				{
+					var p = model.GetSyntheticProperty (timestamp.Value, field);
+					if (p != null)
+					{
+						e.AddProperty (p);
+					}
+				}
+			}
+		}
 		#endregion
 
 
@@ -198,6 +224,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				case ObjectField.TauxAmortissement:
 				case ObjectField.ValeurRésiduelle:
+				case ObjectField.GroupRate+0:
+				case ObjectField.GroupRate+1:
+				case ObjectField.GroupRate+2:
+				case ObjectField.GroupRate+3:
+				case ObjectField.GroupRate+4:
+				case ObjectField.GroupRate+5:
+				case ObjectField.GroupRate+6:
+				case ObjectField.GroupRate+7:
+				case ObjectField.GroupRate+8:
+				case ObjectField.GroupRate+9:
 					return FieldType.Decimal;
 
 				case ObjectField.OneShotDateOpération:

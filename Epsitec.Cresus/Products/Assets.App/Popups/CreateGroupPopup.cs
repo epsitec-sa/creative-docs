@@ -15,40 +15,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class CreateGroupPopup : AbstractPopup
 	{
-		public CreateGroupPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid)
+		public CreateGroupPopup(DataAccessor accessor, Guid selectedGuid)
 		{
 			this.accessor = accessor;
-			this.baseType = baseType;
 
 			this.controller = new NavigationTreeTableController();
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodesGetter = this.accessor.GetNodesGetter (this.baseType);
-			this.nodesGetter = new TreeNodesGetter (this.accessor, this.baseType, primaryNodesGetter);
+			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
+			this.nodesGetter = new TreeNodesGetter (this.accessor, BaseType.Groups, primaryNodesGetter);
 			this.nodesGetter.UpdateData ();
 
 			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 			this.UpdateSelectedRow ();
 
 			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodesGetter);
-
-			//	Connexion des événements.
-			this.controller.ContentChanged += delegate (object sender, bool crop)
-			{
-				this.UpdateController (crop);
-			};
-
-			this.controller.RowClicked += delegate (object sender, int row)
-			{
-				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
-				this.UpdateController ();
-				this.UpdateSelectedRow ();
-			};
-
-			this.controller.TreeButtonClicked += delegate (object sender, int row, NodeType type)
-			{
-				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
-			};
 		}
 
 
@@ -159,11 +140,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
 			this.UpdateController ();
 
+			//	Connexion des événements.
 			this.controller.RowClicked += delegate (object sender, int row)
 			{
-				var node = this.nodesGetter[row];
+				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
+
+				var node = this.nodesGetter[this.visibleSelectedRow];
 				this.ObjectParent = node.Guid;
+
+				this.UpdateController ();
+				this.UpdateSelectedRow ();
 				this.UpdateButtons ();
+			};
+
+			this.controller.ContentChanged += delegate (object sender, bool crop)
+			{
+				this.UpdateController (crop);
+			};
+
+			this.controller.TreeButtonClicked += delegate (object sender, int row, NodeType type)
+			{
+				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
 			};
 		}
 
@@ -299,7 +296,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int Margin      = 20;
 
 		private readonly DataAccessor					accessor;
-		private readonly BaseType						baseType;
 		private readonly NavigationTreeTableController	controller;
 		private readonly TreeNodesGetter				nodesGetter;
 		private readonly SingleGroupsTreeTableFiller	dataFiller;

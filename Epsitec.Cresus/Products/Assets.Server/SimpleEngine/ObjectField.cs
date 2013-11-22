@@ -55,5 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		GroupGuid = 10000,
 		GroupRate = 10100,
+
+		MaxField = 10200,
 	}
 }

@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var popup = new GroupsPopup (this.Accessor, this.Value);
 
-			popup.Create (this.button, leftOrRight: false);
+			popup.Create (this.button, leftOrRight: true);
 
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
