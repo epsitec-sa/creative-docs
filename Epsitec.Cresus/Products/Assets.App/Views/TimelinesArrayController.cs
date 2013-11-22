@@ -26,9 +26,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.selectedColumn = -1;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var groupNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
+			var groupNodesGetter  = this.accessor.GetNodesGetter (BaseType.Groups);
 			var objectNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
-			this.nodesGetter = new ObjectsNodesGetter (this.accessor, groupNodesGetter, objectNodesGetter);
+			this.nodesGetter      = new ObjectsNodesGetter (this.accessor, groupNodesGetter, objectNodesGetter);
 
 			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.nodesGetter);
 
@@ -43,6 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateData()
 		{
+			this.nodesGetter.SortingInstructions = SortingInstructions.Default;
 			this.nodesGetter.UpdateData ();
 
 			this.UpdateDataArray ();
