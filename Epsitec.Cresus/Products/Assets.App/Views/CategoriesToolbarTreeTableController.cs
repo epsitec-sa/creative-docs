@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodesGetter);
 			TreeTableFiller<OrderNode>.FillColumns (this.dataFiller, this.controller);
 
-			this.UpdateData ();
+			this.controller.AddSortedColumn (0);
 		}
 
 

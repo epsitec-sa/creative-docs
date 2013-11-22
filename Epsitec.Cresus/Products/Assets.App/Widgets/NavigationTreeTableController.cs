@@ -143,6 +143,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public void ClearSortedColumns()
+		{
+			this.treeTable.ClearSortedColumns ();
+		}
+
+		public void AddSortedColumn(int rank)
+		{
+			this.treeTable.AddSortedColumn (rank);
+		}
+
 		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
 		{
 			this.treeTable.SetColumns (descriptions, dockToLeftCount);

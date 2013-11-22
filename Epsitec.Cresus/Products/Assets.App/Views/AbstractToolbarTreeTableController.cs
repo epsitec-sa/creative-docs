@@ -239,6 +239,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateSorting()
 		{
+			//	Met à jour les instruction de tri des getters en fonction des choix
+			//	effectués dans le TreeTable.
 			var primaryField   = ObjectField.Unknown;
 			var primaryType    = SortedType.None;
 			var secondaryField = ObjectField.Unknown;
