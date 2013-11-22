@@ -27,7 +27,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderGroupEntity> (this.Execute);
+			return ActionExecutor.Create<AiderGroupExtractionEntity> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderMailingEntity, SimpleBrick<AiderMailingEntity>> form)
