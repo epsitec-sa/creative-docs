@@ -33,8 +33,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		public TreeNodesGetter(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<GuidNode> inputNodes)
 		{
 			this.inputNodes        = inputNodes;
-			this.ppNodesGetter     = new ParentNodesGetter (inputNodes, accessor, baseType);
-			this.levelNodesGetter  = new LevelNodesGetter (this.ppNodesGetter, accessor, baseType);
+			this.parentNodesGetter = new ParentNodesGetter (inputNodes, accessor, baseType);
+			this.levelNodesGetter  = new LevelNodesGetter (this.parentNodesGetter, accessor, baseType);
 			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.levelNodesGetter);
 		}
 
@@ -83,9 +83,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		public override void UpdateData()
 		{
-			this.ppNodesGetter.Timestamp = this.timestamp;
-			this.ppNodesGetter.SortingInstructions = SortingInstructions;
-			this.levelNodesGetter.SortingInstructions = SortingInstructions;
+			this.parentNodesGetter.Timestamp = this.timestamp;
+			this.parentNodesGetter.SortingInstructions = this.SortingInstructions;
+
+			this.levelNodesGetter.SortingInstructions = this.SortingInstructions;
 
 			this.levelNodesGetter.UpdateData ();
 			this.treeObjectsGetter.UpdateData ();
@@ -142,7 +143,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 
 		private readonly AbstractNodesGetter<GuidNode>	inputNodes;
-		private readonly ParentNodesGetter				ppNodesGetter;
+		private readonly ParentNodesGetter				parentNodesGetter;
 		private readonly LevelNodesGetter				levelNodesGetter;
 		private readonly TreeObjectsNodesGetter			treeObjectsGetter;
 

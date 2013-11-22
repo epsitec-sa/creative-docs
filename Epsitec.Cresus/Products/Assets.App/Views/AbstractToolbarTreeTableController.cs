@@ -86,6 +86,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public virtual Guid						SelectedGuid
+		{
+			get;
+			set;
+		}
+
 		public int								SelectedRow
 		{
 			get
@@ -213,7 +219,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller.SortingChanged += delegate
 			{
+				var guid = this.SelectedGuid;
 				this.UpdateSorting ();
+				this.SelectedGuid = guid;
 			};
 
 			this.controller.RowClicked += delegate (object sender, int row)

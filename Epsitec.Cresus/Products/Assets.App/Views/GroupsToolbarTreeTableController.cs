@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public Guid								SelectedGuid
+		public override Guid					SelectedGuid
 		{
 			//	Retourne le Guid de l'objet actuellement sélectionné.
 			get

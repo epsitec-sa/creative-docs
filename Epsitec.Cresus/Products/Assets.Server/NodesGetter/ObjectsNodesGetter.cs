@@ -94,11 +94,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		public override void UpdateData()
 		{
-			this.UpdateData (this.RootGuid);
-		}
-
-		private void UpdateData(Guid rootGuid)
-		{
 			this.objectNodesGetter1.Timestamp = this.timestamp;
 			this.objectNodesGetter1.SortingInstructions = this.SortingInstructions;
 
@@ -106,8 +101,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 			this.groupNodesGetter1.Timestamp = this.timestamp;
 
-			this.groupNodesGetter2.ForceEmpty = rootGuid.IsEmpty;
-			this.groupNodesGetter2.RootGuid = rootGuid;
+			this.groupNodesGetter2.ForceEmpty = this.RootGuid.IsEmpty;
+			this.groupNodesGetter2.RootGuid = this.RootGuid;
 
 			this.objectNodesGetter2.UpdateData ();
 			this.groupNodesGetter2.UpdateData ();
