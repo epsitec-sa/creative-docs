@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		#region IEquatable<EqoGuid> Members
+		#region IEquatable<Guid> Members
 		public bool Equals(Guid other)
 		{
 			return this.guid == other.guid;

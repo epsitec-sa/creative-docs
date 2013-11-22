@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
@@ -47,7 +46,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return new Timestamp (new System.DateTime (year, month, day), position);
 		}
 
-		#region IComparable<EqoTimestamp> Members
+		#region IComparable<Timestamp> Members
 		public int CompareTo(Timestamp other)
 		{
 			int result = this.date.CompareTo (other.date);
@@ -61,11 +60,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 		#endregion
 
-		#region IEquatable<EqoTimestamp> Members
+		#region IEquatable<Timestamp> Members
 		public bool Equals(Timestamp other)
 		{
-			return this.date == other.date
-						&& this.position == other.position;
+			return this.date     == other.date
+				&& this.position == other.position;
 		}
 		#endregion
 

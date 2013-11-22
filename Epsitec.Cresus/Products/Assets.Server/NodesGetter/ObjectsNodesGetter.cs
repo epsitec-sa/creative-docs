@@ -45,12 +45,12 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.mergeNodesGetter  = new MergeNodesGetter (accessor, this.groupNodesGetter2, this.objectNodesGetter2);
 			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.mergeNodesGetter);
 
-			this.OrderField = ObjectField.Nom;
+			this.SortingInstructions = SortingInstructions.Empty;
 		}
 
 
 		public Guid								RootGuid;
-		public ObjectField						OrderField;
+		public SortingInstructions				SortingInstructions;
 
 
 		public Timestamp? Timestamp
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private void UpdateData(Guid rootGuid)
 		{
 			this.objectNodesGetter1.Timestamp = this.timestamp;
-			this.objectNodesGetter1.OrderField = this.OrderField;
+			this.objectNodesGetter1.SortingInstructions = this.SortingInstructions;
 
 			this.groupNodesGetter1.Timestamp = this.timestamp;
 

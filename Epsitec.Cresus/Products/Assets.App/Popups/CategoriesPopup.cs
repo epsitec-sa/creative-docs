@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var secondary = new OrderNodesGetter (primary, this.accessor, BaseType.Categories);
 			this.nodesGetter = new SortNodesGetter (secondary);
 
-			secondary.OrderField = ObjectField.Nom;
+			secondary.SortingInstructions = SortingInstructions.Empty;
 			this.nodesGetter.UpdateData ();
 
 			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodesGetter);

@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -163,6 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.sortedColumns.Clear ();
 			this.UpdateSortedColumns ();
+			this.OnSortingChanged ();
 		}
 
 		public void AddSortedColumn(int rank)
@@ -197,6 +199,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			this.UpdateSortedColumns ();
+			this.OnSortingChanged ();
 		}
 
 		private void UpdateSortedColumns()
@@ -704,16 +707,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public event EventHandler<int> RowDoubleClicked;
-		
-		
+
+
 		private void OnContentChanged(bool crop)
 		{
 			this.ContentChanged.Raise (this, crop);
 		}
-		
+
 		public event EventHandler<bool> ContentChanged;
-		
-		
+
+
+		private void OnSortingChanged()
+		{
+			this.SortingChanged.Raise (this);
+		}
+
+		public event EventHandler SortingChanged;
+
+
 		private void OnTreeButtonClicked(int row, NodeType type)
 		{
 			this.TreeButtonClicked.Raise (this, row, type);

@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.NodesGetter;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
@@ -324,6 +325,39 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+
+		public static ComparableData GetComparableData(DataObject obj, Timestamp? timestamp, ObjectField field)
+		{
+			if (obj != null)
+			{
+				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, timestamp, field);
+				if (p != null)
+				{
+					if (p is DataIntProperty)
+					{
+						return new ComparableData ((p as DataIntProperty).Value);
+					}
+					else if (p is DataDecimalProperty)
+					{
+						return new ComparableData ((p as DataDecimalProperty).Value);
+					}
+					else if (p is DataComputedAmountProperty)
+					{
+						return new ComparableData ((p as DataComputedAmountProperty).Value.FinalAmount.GetValueOrDefault ());
+					}
+					else if (p is DataDateProperty)
+					{
+						return new ComparableData ((p as DataDateProperty).Value);
+					}
+					else if (p is DataStringProperty)
+					{
+						return new ComparableData ((p as DataStringProperty).Value);
+					}
+				}
+			}
+
+			return ComparableData.Empty;
+		}
 
 		public static AbstractDataProperty GetObjectProperty(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic)
 		{

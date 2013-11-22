@@ -20,12 +20,12 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.accessor   = accessor;
 			this.baseType   = baseType;
 
-			this.OrderField = ObjectField.Nom;
+			this.SortingInstructions = SortingInstructions.Empty;
 		}
 
 
 		public Timestamp?						Timestamp;
-		public ObjectField						OrderField;
+		public SortingInstructions				SortingInstructions;
 
 
 		public override int Count
@@ -40,27 +40,13 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		{
 			get
 			{
-				var node       = this.inputNodes[index];
-				var obj        = this.accessor.GetObject (this.baseType, node.Guid);
-				var orderValue = this.GetOrderValue (obj);
+				var node      = this.inputNodes[index];
+				var obj       = this.accessor.GetObject (this.baseType, node.Guid);
+				var primary   = ObjectCalculator.GetComparableData (obj, this.Timestamp, this.SortingInstructions.PrimaryField);
+				var secondary = ObjectCalculator.GetComparableData (obj, this.Timestamp, this.SortingInstructions.SecondaryField);
 
-				return new OrderNode (node.Guid, orderValue);
+				return new OrderNode (node.Guid, primary, secondary);
 			}
-		}
-
-
-		private string GetOrderValue(DataObject obj)
-		{
-			if (obj != null)
-			{
-				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.Timestamp, this.OrderField) as DataStringProperty;
-				if (p != null)
-				{
-					return p.Value;
-				}
-			}
-
-			return null;
 		}
 
 

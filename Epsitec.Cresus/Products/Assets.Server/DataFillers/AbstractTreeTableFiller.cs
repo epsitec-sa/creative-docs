@@ -21,6 +21,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public Timestamp?						Timestamp;
 		public DataObject						DataObject;
 
+		public abstract IEnumerable<ObjectField> Fields
+		{
+			get;
+		}
+
 		public abstract TreeTableColumnDescription[] Columns
 		{
 			get;

@@ -9,10 +9,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	public struct OrderNode
 	{
-		public OrderNode(Guid guid, string orderValue)
+		public OrderNode(Guid guid, ComparableData primaryOrderedValue, ComparableData secondaryOrderedValue)
 		{
-			this.Guid       = guid;
-			this.OrderValue = orderValue;
+			this.Guid                  = guid;
+			this.PrimaryOrderedValue   = primaryOrderedValue;
+			this.SecondaryOrderedValue = secondaryOrderedValue;
 		}
 
 		public bool IsEmpty
@@ -23,9 +24,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public static OrderNode Empty = new OrderNode (Guid.Empty, null);
+		public static OrderNode Empty = new OrderNode (Guid.Empty, ComparableData.Empty, ComparableData.Empty);
 
 		public readonly Guid				Guid;
-		public readonly string				OrderValue;
+		public readonly ComparableData		PrimaryOrderedValue;
+		public readonly ComparableData		SecondaryOrderedValue;
 	}
 }

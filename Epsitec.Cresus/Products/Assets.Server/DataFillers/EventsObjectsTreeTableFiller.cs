@@ -18,6 +18,24 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
+		public override IEnumerable<ObjectField> Fields
+		{
+			get
+			{
+				yield return ObjectField.Unknown;
+				yield return ObjectField.Unknown;
+				yield return ObjectField.Unknown;
+				yield return ObjectField.Valeur1;
+				yield return ObjectField.Valeur2;
+				yield return ObjectField.Valeur3;
+				yield return ObjectField.Nom;
+				yield return ObjectField.Numéro;
+				yield return ObjectField.Responsable;
+				yield return ObjectField.Couleur;
+				yield return ObjectField.NuméroSérie;
+			}
+		}
+
 		public override TreeTableColumnDescription[] Columns
 		{
 			get

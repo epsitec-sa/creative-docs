@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
@@ -212,6 +211,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateController (crop);
 			};
 
+			this.controller.SortingChanged += delegate
+			{
+				this.UpdateSorting ();
+			};
+
 			this.controller.RowClicked += delegate (object sender, int row)
 			{
 				this.VisibleSelectedRow = this.controller.TopVisibleRow + row;
@@ -222,6 +226,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.VisibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.OnRowDoubleClicked (this.VisibleSelectedRow);
 			};
+		}
+
+		protected virtual void UpdateSorting()
+		{
 		}
 
 		protected void UpdateController(bool crop = true)

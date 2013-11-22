@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -54,6 +55,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.treeTable.ContentChanged += delegate (object sender, bool crop)
 			{
 				this.OnContentChanged (crop);
+			};
+
+			this.treeTable.SortingChanged += delegate (object sender)
+			{
+				this.OnSortingChanged ();
 			};
 
 			this.treeTable.TreeButtonClicked += delegate (object sender, int row, NodeType type)
@@ -129,6 +135,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public IEnumerable<SortedColumn>		SortedColumns
+		{
+			get
+			{
+				return this.treeTable.SortedColumns;
+			}
+		}
+
 		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
 		{
 			this.treeTable.SetColumns (descriptions, dockToLeftCount);
@@ -201,6 +215,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public event EventHandler<bool> ContentChanged;
+
+
+		private void OnSortingChanged()
+		{
+			this.SortingChanged.Raise (this);
+		}
+
+		public event EventHandler SortingChanged;
 
 
 		private void OnTreeButtonClicked(int row, NodeType type)

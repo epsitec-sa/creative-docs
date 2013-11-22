@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 			else
 			{
-				root = new ParentNode (rootGuid, Guid.Empty, null);
+				root = new ParentNode (rootGuid, Guid.Empty, ComparableData.Empty, ComparableData.Empty);
 			}
 
 
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private void Insert(TreeNode tree)
 		{
 			//	Insertion récursive des noeuds dans l'arbre.
-			var childrens = this.inputNodes.Nodes.Where (x => x.Parent == tree.Node.Guid).OrderBy (x => x.OrderValue);
+			var childrens = this.inputNodes.Nodes.Where (x => x.Parent == tree.Node.Guid).OrderBy (x => x.PrimaryOrderedValue);
 
 			foreach (var children in childrens)
 			{

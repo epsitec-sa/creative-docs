@@ -17,6 +17,19 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
+		public override IEnumerable<ObjectField> Fields
+		{
+			get
+			{
+				yield return ObjectField.Nom;
+				yield return ObjectField.Numéro;
+				yield return ObjectField.TauxAmortissement;
+				yield return ObjectField.TypeAmortissement;
+				yield return ObjectField.Périodicité;
+				yield return ObjectField.ValeurRésiduelle;
+			}
+		}
+
 		public override TreeTableColumnDescription[] Columns
 		{
 			get
@@ -54,12 +67,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid  = node.Guid;
 				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
 
-				var nom          = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Nom);
-				var numéro       = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Numéro);
-				var taux         = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.TauxAmortissement);
-				var typeAm       = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.TypeAmortissement);
-				var period       = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Périodicité);
-				var residu       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ValeurRésiduelle);
+				var nom    = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Nom);
+				var numéro = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Numéro);
+				var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.TauxAmortissement);
+				var typeAm = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.TypeAmortissement);
+				var period = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Périodicité);
+				var residu = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ValeurRésiduelle);
 
 				if (this.Timestamp.HasValue &&
 					!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))

@@ -3,8 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
@@ -45,7 +43,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		public override void UpdateData()
 		{
-			var sorted = this.inputNodes.Nodes.OrderBy (x => x.OrderValue);
+			var sorted = this.inputNodes.Nodes.OrderBy (x => x.PrimaryOrderedValue);
 			this.outputNodes = sorted.ToArray ();
 		}
 

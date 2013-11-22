@@ -18,6 +18,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
+		public override IEnumerable<ObjectField> Fields
+		{
+			get
+			{
+				yield return ObjectField.Unknown;
+			}
+		}
+
 		public override TreeTableColumnDescription[] Columns
 		{
 			//	Retourne les 3 colonnes d'un historique, à savoir:
