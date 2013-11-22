@@ -17,8 +17,8 @@ using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (11)]
-	public sealed class ActionAiderMailingViewController11AddGroupExtraction : ActionViewController<AiderMailingEntity>
+	[ControllerSubType (12)]
+	public sealed class ActionAiderMailingViewController12AddGroupExtraction : ActionViewController<AiderMailingEntity>
 	{
 		public override FormattedText GetTitle()
 		{

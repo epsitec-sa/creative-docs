@@ -14,8 +14,8 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (12)]
-	public sealed class ActionAiderMailingViewController12RemoveGroupExtraction : TemplateActionViewController<AiderMailingEntity, AiderGroupExtractionEntity>
+	[ControllerSubType (13)]
+	public sealed class ActionAiderMailingViewController13RemoveGroupExtraction : TemplateActionViewController<AiderMailingEntity, AiderGroupExtractionEntity>
 	{
 		public override FormattedText GetTitle()
 		{
