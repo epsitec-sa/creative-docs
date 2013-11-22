@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.viewType = value;
 					this.UpdateViewTypeButtons ();
+					this.UpdateViewModeButtons ();
 				}
 			}
 		}
@@ -77,6 +78,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateCommandButtons()
 		{
+			this.UpdateCommandButton (this.buttonSingle,        ToolbarCommand.ViewModeSingle);
+			this.UpdateCommandButton (this.buttonEvent,         ToolbarCommand.ViewModeEvent);
+			this.UpdateCommandButton (this.buttonMultiple,      ToolbarCommand.ViewModeMultiple);
+
 			this.UpdateCommandButton (this.buttonEdit,          ToolbarCommand.Edit);
 			this.UpdateCommandButton (this.buttonAmortissement, ToolbarCommand.Amortissement);
 			this.UpdateCommandButton (this.buttonSimulation,    ToolbarCommand.Simulation);
@@ -189,9 +194,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewModeButtons()
 		{
-			this.SetActiveState (this.buttonSingle,   this.viewMode == ViewMode.Single);
-			this.SetActiveState (this.buttonEvent,    this.viewMode == ViewMode.Event);
-			this.SetActiveState (this.buttonMultiple, this.viewMode == ViewMode.Multiple);
+			if (this.viewType == ViewType.Objects)
+			{
+				this.SetCommandState (ToolbarCommand.ViewModeSingle,   this.viewMode == ViewMode.Single   ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+				this.SetCommandState (ToolbarCommand.ViewModeEvent,    this.viewMode == ViewMode.Event    ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+				this.SetCommandState (ToolbarCommand.ViewModeMultiple, this.viewMode == ViewMode.Multiple ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			}
+			else
+			{
+				this.SetCommandState (ToolbarCommand.ViewModeSingle,   ToolbarCommandState.Hide);
+				this.SetCommandState (ToolbarCommand.ViewModeEvent,    ToolbarCommandState.Hide);
+				this.SetCommandState (ToolbarCommand.ViewModeMultiple, ToolbarCommandState.Hide);
+			}
 		}
 
 		private void UpdateSimulation()
