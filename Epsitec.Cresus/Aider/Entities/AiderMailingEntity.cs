@@ -94,26 +94,28 @@ namespace Epsitec.Aider.Entities
 		/// Sync groups changes that affect participants dataset
 		/// </summary>
 		/// <param name="businessContext"></param>
-		public void SyncParticipants(BusinessContext businessContext)
+		public void UpdateMailingParticipants(BusinessContext businessContext)
 		{
+			var dataContext = businessContext.DataContext;
+
 			this.UpdateLastUpdateDate ();
 
-			var participants = AiderMailingParticipantEntity.GetAllParticipants (businessContext, this).Select( p => p.Contact);
-			var recipientsDict = this.GetRecipients().ToDictionary(k => k);
-			//Remove missing
+			var participants = new HashSet<AiderContactEntity> (AiderMailingParticipantEntity.GetAllParticipants (dataContext, this).Select (p => p.Contact));
+			var contacts     = new HashSet<AiderContactEntity> (this.GetRecipients (dataContext));
+			
+			//	Remove participants which no longer belong to the current contacts:
 			foreach (var contact in participants)
 			{
-				if (!recipientsDict.ContainsKey (contact))
+				if (!contacts.Contains (contact))
 				{
 					AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact);
 				}
 			}
 
-			var participantsDict = AiderMailingParticipantEntity.GetAllParticipants (businessContext, this).ToDictionary(k => k.Contact);
-			//Add missing
-			foreach (var contact in this.GetRecipients ())
+			//	Add participants which are not yet defined for the current contacts:
+			foreach (var contact in contacts)
 			{
-				if (!participantsDict.ContainsKey (contact))
+				if (!participants.Contains (contact))
 				{
 					AiderMailingParticipantEntity.CreateForGroup (businessContext, this, contact);
 				}
@@ -198,7 +200,7 @@ namespace Epsitec.Aider.Entities
 			this.UpdateLastUpdateDate ();
 			this.RecipientGroupExtractions.Remove (groupExtractionToRemove);
 
-			foreach (var contact in groupExtractionToRemove.GetAllContacts (businessContext).Distinct ())
+			foreach (var contact in groupExtractionToRemove.GetAllContacts (businessContext.DataContext).Distinct ())
 			{
 				this.Exclusions.RemoveAll (r => r == contact);
 				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact);
@@ -254,7 +256,7 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetRecipientsTitleSummary()
 		{
-			return FormattedText.FromSimpleText ("Destinataires (",this.GetRecipients ().Count ().ToString (),")");
+			return FormattedText.FromSimpleText ("Destinataires (", this.GetRecipients ().Count ().ToString (), ")");
 		}
 
 		public FormattedText GetRecipientsSummary()
@@ -294,14 +296,20 @@ namespace Epsitec.Aider.Entities
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), recipients);
 		}
 
-		public IList<AiderContactEntity> GetRecipients()
+		public IList<AiderContactEntity> GetRecipients(DataContext context = null)
 		{
 			if (this.recipientsCache == null)
 			{
+				if (context == null)
+				{
+					context = DataContextPool.GetDataContext (this);
+				}
+
 				var contacts = new HashSet<AiderContactEntity> ();
 
 				contacts.UnionWith (this.RecipientContacts);
 				contacts.UnionWith (this.RecipientGroups.SelectMany (x => x.GetAllGroupAndSubGroupParticipants ()));
+				contacts.UnionWith (this.RecipientGroupExtractions.SelectMany (x => x.GetAllContacts (context)));
 				contacts.UnionWith (this.RecipientHouseholds.Select (x => x.Contacts.First ()));
 				
 				contacts.ExceptWith (this.Exclusions);

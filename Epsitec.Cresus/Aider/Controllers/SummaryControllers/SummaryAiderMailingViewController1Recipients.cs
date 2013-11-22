@@ -41,7 +41,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (p => p.GetRecipientsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.WithSpecialController (typeof (SetAiderMailingViewController0RecipientsContact))
-					.EnableActionMenu<ActionAiderMailingViewController3UpdateRecepients> ();
+					.EnableActionMenu<ActionAiderMailingViewController3UpdateRecipients> ();
 
 			wall.AddBrick ()
 					.Icon ("Data.AiderGroup.People")

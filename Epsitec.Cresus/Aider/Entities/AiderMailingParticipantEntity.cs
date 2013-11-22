@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -33,15 +34,15 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Contact.DisplayName, "\n", this.Contact.DisplayZipCode, this.Contact.DisplayAddress);
 		}
 
-		public static IEnumerable<AiderMailingParticipantEntity> GetAllParticipants(BusinessContext context, AiderMailingEntity mailing)
+		public static IEnumerable<AiderMailingParticipantEntity> GetAllParticipants(DataContext context, AiderMailingEntity mailing)
 		{
 			var participantExample = new AiderMailingParticipantEntity ()
 			{
-				Mailing = mailing,
+				Mailing    = mailing,
+				IsExcluded = false,
 			};
 
-			return context.DataContext.GetByExample<AiderMailingParticipantEntity> (participantExample)
-				.Where (p => !p.IsExcluded);
+			return context.GetByExample<AiderMailingParticipantEntity> (participantExample);
 		}
 
 		public static AiderMailingParticipantEntity Create(BusinessContext context, AiderMailingEntity mailing, AiderContactEntity contact)
@@ -94,7 +95,7 @@ namespace Epsitec.Aider.Entities
 
 		public static void Create(BusinessContext context, AiderMailingEntity mailing, AiderGroupExtractionEntity group)
 		{
-			foreach (var contact in group.GetAllContacts (context).Distinct ())
+			foreach (var contact in group.GetAllContacts (context.DataContext).Distinct ())
 			{
 				var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
 

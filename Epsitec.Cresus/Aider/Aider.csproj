@@ -91,8 +91,8 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController3ImportGroupMembers.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController4ExportGroupMembers.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController5MergeGroup.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController11AddGroupExtraction.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController12RemoveGroupExtraction.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController12AddGroupExtraction.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController13RemoveGroupExtraction.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController6RemoveAlternateAddress.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController3RemoveFromGroup.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController2AddToGroup.cs" />
@@ -130,7 +130,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController5CleanHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController13AssignHouseholdFromECh.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController0AddRecipientOnDrop.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController3KeepUpdated.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController3UpdateRecipients.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController5AddGroup.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController6RemoveGroup.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController7AddHousehold.cs" />

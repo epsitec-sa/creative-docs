@@ -9,6 +9,7 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Expressions;
 
@@ -34,9 +35,9 @@ namespace Epsitec.Aider.Entities
 			yield return TextFormatter.FormatText (this.Name);
 		}
 
-		public IEnumerable<AiderContactEntity> GetAllContacts(BusinessContext context)
+		public IEnumerable<AiderContactEntity> GetAllContacts(DataContext dataContext)
 		{
-			var groups   = this.ExecuteSearch (context);
+			var groups   = this.ExecuteSearch (dataContext);
 			var contacts = groups.SelectMany (g => g.GetAllGroupAndSubGroupParticipants ());
 
 			System.Diagnostics.Debug.WriteLine ("Groups found: {0}", groups.Count ());
@@ -45,10 +46,8 @@ namespace Epsitec.Aider.Entities
 			return contacts;
 		}
 
-		public IEnumerable<AiderGroupEntity> ExecuteSearch(BusinessContext context)
+		public IEnumerable<AiderGroupEntity> ExecuteSearch(DataContext dataContext)
 		{
-			var dataContext = context.DataContext;
-
 			if (this.Match == GroupExtractionMatch.SameFunction)
 			{
 				var example = new AiderGroupEntity ();
