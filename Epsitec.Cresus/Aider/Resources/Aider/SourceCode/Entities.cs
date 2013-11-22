@@ -8185,6 +8185,18 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>RecipientGroupExtractions</c> field.
+		///	designer:fld/LVOA03/LVAFI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAFI]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupExtractionEntity> RecipientGroupExtractions
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderGroupExtractionEntity> ("[LVAFI]");
+			}
+		}
+		///	<summary>
 		///	The <c>RecipientContacts</c> field.
 		///	designer:fld/LVOA03/LVOF03
 		///	</summary>

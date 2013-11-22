@@ -14,9 +14,10 @@ namespace Epsitec.Aider.Enumerations
 		[Hidden]
 		None = 0,
 
-		Contact   = 1,
-		Household = 2,
-		Group     = 3,
+		Contact         = 1,
+		Household       = 2,
+		Group           = 3,
+		GroupExtraction = 4,
 	}
 }
 

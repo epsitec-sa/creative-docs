@@ -91,6 +91,8 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController3ImportGroupMembers.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController4ExportGroupMembers.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController5MergeGroup.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController11AddGroupExtraction.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController12RemoveGroupExtraction.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController6RemoveAlternateAddress.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController3RemoveFromGroup.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController2AddToGroup.cs" />

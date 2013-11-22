@@ -41,14 +41,16 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetRecipientsOverview()
 		{
-			int contactCount   = this.RecipientContacts.Count;
-			int groupCount     = this.RecipientGroups.Count;
-			int householdCount = this.RecipientHouseholds.Count;
+			int contactCount         = this.RecipientContacts.Count;
+			int groupCount           = this.RecipientGroups.Count;
+			int groupExtractionCount = this.RecipientGroupExtractions.Count;
+			int householdCount       = this.RecipientHouseholds.Count;
 
 			return TextFormatter.FormatText (contactCount, contactCount > 1 ? "contacts individuels" : "contact individuel", "\n",
 				/**/						 groupCount, groupCount > 1 ? "groupes" : "groupe", "\n",
+				/**/						 groupExtractionCount, groupExtractionCount > 1 ? " groupes transversaux" : "groupe transversal", "\n",
 				/**/						 householdCount, householdCount > 1 ? "ménages" : "ménage", "\n",
-				/**/						 "Mis à jour le", this.LastUpdate.Value.ToString ());
+				/**/						 this.LastUpdate.Value.ToString ());
 		}
 
 		public string GetReadyText()
@@ -70,6 +72,11 @@ namespace Epsitec.Aider.Entities
 			foreach (var group in this.RecipientGroups)
 			{
 				AiderMailingParticipantEntity.Create (businessContext, this, group);
+			}
+
+			foreach (var groupExtraction in this.RecipientGroupExtractions)
+			{
+				AiderMailingParticipantEntity.Create (businessContext, this, groupExtraction);
 			}
 
 			foreach (var household in this.RecipientHouseholds)
@@ -135,6 +142,16 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public void AddGroupExtraction(BusinessContext businessContext, AiderGroupExtractionEntity groupExtractionToAdd)
+		{
+			if (!this.RecipientGroupExtractions.Contains (groupExtractionToAdd))
+			{
+				this.UpdateLastUpdateDate ();
+				this.RecipientGroupExtractions.Add (groupExtractionToAdd);
+				AiderMailingParticipantEntity.Create (businessContext, this, groupExtractionToAdd);
+			}
+		}
+
 		public void AddContact(BusinessContext businessContext, AiderContactEntity contactToAdd)
 		{
 			if(!this.RecipientContacts.Contains(contactToAdd))
@@ -176,7 +193,19 @@ namespace Epsitec.Aider.Entities
 			}			
 		}
 
-		public void RemoveHousehold(BusinessContext businessContext, AiderContactEntity contactToRemove,AiderHouseholdEntity householdToRemove)
+		public void RemoveGroupExtraction(BusinessContext businessContext, AiderGroupExtractionEntity groupExtractionToRemove)
+		{
+			this.UpdateLastUpdateDate ();
+			this.RecipientGroupExtractions.Remove (groupExtractionToRemove);
+
+			foreach (var contact in groupExtractionToRemove.GetAllContacts (businessContext).Distinct ())
+			{
+				this.Exclusions.RemoveAll (r => r == contact);
+				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact);
+			}
+		}
+
+		public void RemoveHousehold(BusinessContext businessContext, AiderContactEntity contactToRemove, AiderHouseholdEntity householdToRemove)
 		{
 			this.UpdateLastUpdateDate ();
 			this.RecipientHouseholds.Remove (householdToRemove);

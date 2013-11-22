@@ -64,6 +64,20 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Text (x => x.GetCompactSummary ())
 					.End ();
 
+			wall.AddBrick (p => p.RecipientGroupExtractions)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.EnableActionMenu<ActionAiderMailingViewController11AddGroupExtraction> ()
+					.EnableActionMenu<ActionAiderMailingViewController12RemoveGroupExtraction> ()
+					.EnableActionButton<ActionAiderMailingViewController11AddGroupExtraction> ()
+					.EnableActionButton<ActionAiderMailingViewController12RemoveGroupExtraction> ()
+					.Template ()
+						.Title ("Groupes transversaux")
+						.Text (x => x.GetCompactSummary ())
+					.End ();
+
 			wall.AddBrick (p => p.RecipientHouseholds)
 					.Attribute (BrickMode.DefaultToSummarySubView)
 					.Attribute (BrickMode.AutoGroup)

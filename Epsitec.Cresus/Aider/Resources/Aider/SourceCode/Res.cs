@@ -757,6 +757,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 570));
 						}
 					}
+					//	designer:cap/LVAGI
+					public static global::Epsitec.Common.Types.Caption GroupExtraction
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 592));
+						}
+					}
 					//	designer:cap/LVAPH
 					public static global::Epsitec.Common.Types.Caption Household
 					{
@@ -1915,6 +1923,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 17);
 				//	designer:cap/LVOF03
 				public static readonly global::Epsitec.Common.Support.Druid RecipientContacts = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 15);
+				//	designer:cap/LVAFI
+				public static readonly global::Epsitec.Common.Support.Druid RecipientGroupExtractions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 591);
 				//	designer:cap/LVOE03
 				public static readonly global::Epsitec.Common.Support.Druid RecipientGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 14);
 				//	designer:cap/LVOR03

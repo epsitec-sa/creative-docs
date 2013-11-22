@@ -92,6 +92,19 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public static void Create(BusinessContext context, AiderMailingEntity mailing, AiderGroupExtractionEntity group)
+		{
+			foreach (var contact in group.GetAllContacts (context).Distinct ())
+			{
+				var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
+
+				participant.Mailing = mailing;
+				participant.Contact = contact;
+
+				participant.ParticipantType = MailingParticipantType.GroupExtraction;
+			}
+		}
+
 		public static void FindAndRemove(BusinessContext businessContext, AiderMailingEntity mailing, AiderContactEntity contact)
 		{
 			var participantExample = new AiderMailingParticipantEntity ();
