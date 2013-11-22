@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Name,"\n",
 											 this.Description,"\n",
 											 this.GetReadyText (),"\n",
-											 this.LastUpdate.Value.ToString ());
+											 this.LastUpdate.Value.ToLocalTime ().ToString ());
 		}
 
 
@@ -50,7 +50,7 @@ namespace Epsitec.Aider.Entities
 				/**/						 groupCount, groupCount > 1 ? "groupes" : "groupe", "\n",
 				/**/						 groupExtractionCount, groupExtractionCount > 1 ? " groupes transversaux" : "groupe transversal", "\n",
 				/**/						 householdCount, householdCount > 1 ? "ménages" : "ménage", "\n",
-				/**/						 this.LastUpdate.Value.ToString ());
+				/**/						 this.LastUpdate.Value.ToLocalTime ().ToString ());
 		}
 
 		public string GetReadyText()
@@ -221,11 +221,11 @@ namespace Epsitec.Aider.Entities
 			AiderMailingParticipantEntity.FindAndRemove (businessContext, this, householdToRemove);
 		}
 
-		public void ExludeContact(BusinessContext businessContext, AiderContactEntity contactToExclude)
+		public void ExcludeContact(BusinessContext businessContext, AiderContactEntity contactToExclude)
 		{
 			if (!this.Exclusions.Contains (contactToExclude))
 			{
-				this.LastUpdate = System.DateTime.Today;
+				this.UpdateLastUpdateDate ();
 				this.Exclusions.Add (contactToExclude);
 				AiderMailingParticipantEntity.ExcludeContact (businessContext, this, contactToExclude);
 			}
@@ -346,7 +346,7 @@ namespace Epsitec.Aider.Entities
 
 		private void UpdateLastUpdateDate()
 		{
-			this.LastUpdate = System.DateTime.Now;
+			this.LastUpdate = System.DateTime.UtcNow;
 		}
 
 		//	These properties are only meant as an in memory cache of the members of the household.

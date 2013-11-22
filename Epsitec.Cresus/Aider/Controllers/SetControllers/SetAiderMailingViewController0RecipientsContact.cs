@@ -91,7 +91,7 @@ namespace Epsitec.Aider.Controllers.SetControllers
 				{
 					case MailingParticipantType.Group:
 					case MailingParticipantType.GroupExtraction:
-						this.Entity.ExludeContact (this.BusinessContext, participant.Contact);
+						this.Entity.ExcludeContact (this.BusinessContext, participant.Contact);
 						break;
 
 					case MailingParticipantType.Contact:
