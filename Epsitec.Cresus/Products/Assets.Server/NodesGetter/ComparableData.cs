@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
-	/// Structure contenant une valeur quelconque pouvant être comparée et triée.
+	/// Structure contenant une valeur quelconque pouvant être comparée en vue du tri.
 	/// </summary>
 	public struct ComparableData : System.IComparable<ComparableData>
 	{
