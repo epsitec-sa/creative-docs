@@ -17,16 +17,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.textLayout = new TextLayout ();
 
 			this.hilitedHoverRow = -1;
+			this.sortedType = SortedType.None;
 		}
 
 
 		public bool								DockToLeft
-		{
-			get;
-			set;
-		}
-
-		public SortedType						SortedColumn
 		{
 			get;
 			set;
@@ -109,6 +104,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		public void SetSortedColumn(SortedType type, bool primary)
+		{
+			this.sortedType    = type;
+			this.sortedPrimary = primary;
+		}
+
+
 		public virtual void SetCells(TreeTableColumnItem columnItem)
 		{
 		}
@@ -132,13 +134,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				if (!string.IsNullOrEmpty (this.HeaderDescription))
 				{
-					rect = this.GetContentDeflateRectangle (rect);
+					rect = this.GetContentDeflateRectangle (rect, considerSorting: true);
 					this.PaintText (graphics, rect, this.HeaderDescription);
 				}
 
-				if (this.SortedColumn != SortedType.None)
+				if (this.sortedType != SortedType.None)
 				{
-					this.PaintSorted (graphics, this.HeaderRect, this.SortedColumn);
+					this.PaintSorted (graphics, this.HeaderRect, this.sortedType, this.sortedPrimary);
 				}
 
 				//	Si l'en-tête est haute, on dessine un trait de séparation en dessous.
@@ -214,12 +216,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private void PaintSorted(Graphics graphics, Rectangle rect, SortedType type)
+		private void PaintSorted(Graphics graphics, Rectangle rect, SortedType type, bool primary)
 		{
 			var path = AbstractTreeTableColumn.GetSortedPath (rect, type);
+			double alpha = primary ? 1.0 : 0.3;
 
 			graphics.AddFilledPath (path);
-			graphics.RenderSolid (ColorManager.TextColor);
+			graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.TextColor));
 		}
 
 		private static Path GetSortedPath(Rectangle rect, SortedType type)
@@ -227,7 +230,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var path = new Path ();
 
 			rect = new Rectangle (rect.Right-rect.Height, rect.Bottom, rect.Height, rect.Height);
-			rect.Deflate (rect.Height*0.2);
+			rect.Deflate (rect.Height*0.3);
 
 			if (type == SortedType.Ascendant)
 			{
@@ -267,9 +270,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.textLayout.Paint (rect.BottomLeft, graphics, rect, color, GlyphPaintStyle.Normal);
 		}
 
-		protected Rectangle GetContentDeflateRectangle(Rectangle rect)
+		protected Rectangle GetContentDeflateRectangle(Rectangle rect, bool considerSorting = false)
 		{
-			var m = (this.SortedColumn == SortedType.None) ? 0 : rect.Height;
+			var m = (!considerSorting || this.sortedType == SortedType.None) ? 0.0 : rect.Height*0.5;
 
 			if (this.RowContentAlignment == ContentAlignment.TopLeft    ||
 				this.RowContentAlignment == ContentAlignment.MiddleLeft ||
@@ -388,5 +391,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected TreeTableHoverMode			hoverMode;
 		protected int							hilitedHoverRow;
+		private SortedType						sortedType;
+		private bool							sortedPrimary;
 	}
 }

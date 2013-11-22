@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (this.detectedColumnRank != -1)
 			{
 				this.isDragging = true;
+				this.isMoving = false;
 
 				this.dragInitialMouse = pos.X;
 				this.dragInitialRect = this.GetColumnRect (this.detectedColumnRank);
@@ -43,19 +44,27 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (this.isDragging)
 			{
-				var delta = pos.X - this.dragInitialMouse;
-				delta += this.dragInitialMouse - this.dragInitialRect.Center.X;
-				var rect = Rectangle.Offset (this.dragInitialRect, delta, 0);
-
-				this.dragDstRank = this.DetectColumnDst (pos);
-
-				bool dockToLeft = this.detectedColumnRank < this.DockToLeftCount;
-				if (!this.dragDstRank.IsValidDrag (this.detectedColumnRank, dockToLeft))
+				if (pos.X != this.dragInitialMouse)
 				{
-					this.dragDstRank = TreeTableColumnSeparator.Invalid;
+					this.isMoving = true;
 				}
 
-				this.UpdateForeground (this.dragInitialRect, rect, this.dragDstRank, this.dragInitialRect.Width);
+				if (this.isMoving)
+				{
+					var delta = pos.X - this.dragInitialMouse;
+					delta += this.dragInitialMouse - this.dragInitialRect.Center.X;
+					var rect = Rectangle.Offset (this.dragInitialRect, delta, 0);
+
+					this.dragDstRank = this.DetectColumnDst (pos);
+
+					bool dockToLeft = this.detectedColumnRank < this.DockToLeftCount;
+					if (!this.dragDstRank.IsValidDrag (this.detectedColumnRank, dockToLeft))
+					{
+						this.dragDstRank = TreeTableColumnSeparator.Invalid;
+					}
+
+					this.UpdateForeground (this.dragInitialRect, rect, this.dragDstRank, this.dragInitialRect.Width);
+				}
 			}
 			else
 			{
@@ -73,9 +82,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.isDragging = false;
 				this.ClearForeground ();
 
-				if (this.dragDstRank.IsValid)
+				if (this.isMoving)
 				{
-					this.ChangeColumnOrder (this.detectedColumnRank, this.dragDstRank);
+					if (this.dragDstRank.IsValid)
+					{
+						this.ChangeColumnOrder (this.detectedColumnRank, this.dragDstRank);
+					}
+				}
+				else
+				{
+					int rank = this.DetectColumnSrc (pos);
+					this.AddSortedColumn (rank);
 				}
 
 				this.SetHoverMode (TreeTableHoverMode.VerticalGradient);
@@ -429,6 +446,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private bool							isMoving;
 		private int								detectedColumnRank;
 		private double							dragInitialMouse;
 		private Rectangle						dragInitialRect;

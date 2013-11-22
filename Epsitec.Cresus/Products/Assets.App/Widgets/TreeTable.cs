@@ -31,8 +31,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.hoverMode = TreeTableHoverMode.VerticalGradient;
 
-			this.columnsMapper = new List<int> ();
+			this.columnsMapper    = new List<int> ();
 			this.treeTableColumns = new List<AbstractTreeTableColumn> ();
+			this.sortedColumns    = new List<SortedColumn> ();
 
 			//	Crée le conteneur de gauche, qui contiendra toutes les colonnes
 			//	en mode DockToLeft (habituellement la seule TreeTableColumnTree).
@@ -148,6 +149,74 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return this.treeTableColumns;
 			}
 		}
+
+
+		public IEnumerable<SortedColumn>		SortedColumns
+		{
+			get
+			{
+				return this.sortedColumns;
+			}
+		}
+
+		public void ClearSortedColumns()
+		{
+			this.sortedColumns.Clear ();
+			this.UpdateSortedColumns ();
+		}
+
+		public void AddSortedColumn(int rank)
+		{
+			if (this.sortedColumns.Count == 0)
+			{
+				this.sortedColumns.Add (new SortedColumn (rank, SortedType.Ascendant));
+			}
+			else
+			{
+				if (rank == this.sortedColumns[0].Column)
+				{
+					if (this.sortedColumns[0].Type == SortedType.Ascendant)
+					{
+						this.sortedColumns[0] = new SortedColumn (rank, SortedType.Descendant);
+					}
+					else
+					{
+						this.sortedColumns[0] = new SortedColumn (rank, SortedType.Ascendant);
+					}
+				}
+				else
+				{
+					this.sortedColumns.Insert (0, new SortedColumn (rank, SortedType.Ascendant));
+
+					//	Jamais plus de 2.
+					while (this.sortedColumns.Count > 2)
+					{
+						this.sortedColumns.RemoveAt (2);
+					}
+				}
+			}
+
+			this.UpdateSortedColumns ();
+		}
+
+		private void UpdateSortedColumns()
+		{
+			for (int i=0; i<this.treeTableColumns.Count; i++)
+			{
+				var column = this.treeTableColumns[i];
+				int j = this.sortedColumns.FindIndex (x => x.Column == i);
+
+				if (j == -1)
+				{
+					column.SetSortedColumn (SortedType.None, false);
+				}
+				else
+				{
+					column.SetSortedColumn (this.sortedColumns[j].Type, j == 0);
+				}
+			}
+		}
+
 
 		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
 		{
@@ -659,6 +728,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private readonly FrameBox						leftContainer;
 		private readonly Scrollable						columnsContainer;
 		private readonly List<AbstractInteractiveLayer>	interactiveLayers;
+		private readonly List<SortedColumn>				sortedColumns;
 
 		private TreeTableColumnDescription[]			columnDescriptions;
 		private ColumnWidth[]							columnWidths;

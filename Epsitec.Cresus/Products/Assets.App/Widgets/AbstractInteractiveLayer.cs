@@ -222,6 +222,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return this.treeTable.TreeTableColumns[rank];
 		}
 
+		protected void AddSortedColumn(int rank)
+		{
+			this.treeTable.AddSortedColumn (rank);
+		}
+
 
 		private readonly TreeTable				treeTable;
 
