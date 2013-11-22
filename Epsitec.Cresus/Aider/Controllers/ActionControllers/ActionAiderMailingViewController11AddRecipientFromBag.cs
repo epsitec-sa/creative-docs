@@ -75,6 +75,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					this.ConfirmByRemoveFromBag (entity, aiderUser.LoginName);
 				}
 
+				if (entity is AiderGroupExtractionEntity)
+				{
+					EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
+
+					this.Entity.AddGroupExtraction (this.BusinessContext, (AiderGroupExtractionEntity) entity);
+					//Remove entity from the bag
+					this.ConfirmByRemoveFromBag (entity, aiderUser.LoginName);
+				}
+
 				if (entity is AiderHouseholdEntity)
 				{
 					EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);

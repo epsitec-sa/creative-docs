@@ -150,6 +150,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController50AddHouseholdMembersToBag.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController7AddHouseholdMembersToBag.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController7AddMembersFromBag.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderGroupExtractionViewController0AddToBag.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderGroupExtractionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />

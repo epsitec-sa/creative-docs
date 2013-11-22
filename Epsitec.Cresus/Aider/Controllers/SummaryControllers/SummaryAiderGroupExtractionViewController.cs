@@ -7,6 +7,7 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Bricks;
+using Epsitec.Aider.Controllers.ActionControllers;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -14,7 +15,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderGroupExtractionEntity> wall)
 		{
-			wall.AddBrick ();
+			wall.AddBrick ()
+				.EnableActionMenu<ActionAiderGroupExtractionViewController0AddToBag> ();
+
 			wall.AddBrick (x => x.Comment);
 		}
 	}
