@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Cresus.Bricks;
@@ -35,22 +38,22 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		{
 			if (string.IsNullOrEmpty (name))
 			{
-				throw new BusinessRuleException ("Le nom est obligatoire");
+				Logic.BusinessRuleException ("Le nom est obligatoire.");
 			}
 
 			if (string.IsNullOrEmpty (isoCode))
 			{
-				throw new BusinessRuleException ("Le code ISO est obligatoire");
+				Logic.BusinessRuleException ("Le code ISO est obligatoire.");
 			}
 
 			if (!AiderCountryEntity.IsValidIsoCode (isoCode))
 			{
-				throw new BusinessRuleException ("Le code ISO est invalide");
+				Logic.BusinessRuleException ("Le code ISO est invalide.");
 			}
 
 			if (AiderCountryEntity.Find (this.BusinessContext, isoCode).IsNotNull ())
 			{
-				throw new BusinessRuleException ("Un pays avec le même code ISO existe déjà.");
+				Logic.BusinessRuleException ("Un pays avec le même code ISO existe déjà.");
 			}
 
 			return AiderCountryEntity.Create (this.BusinessContext, isoCode, name, Mutability.Customizable, false);

@@ -214,7 +214,16 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		
+		public static void BusinessRuleException(string message)
+		{
+			Logic.BusinessRuleException<AbstractEntity> (null, message);
+		}
+
+		public static void BusinessRuleException(FormattedText message)
+		{
+			Logic.BusinessRuleException<AbstractEntity> (null, message);
+		}
+
 		public static void BusinessRuleException<T>(T entity, string message)
 			where T : AbstractEntity
 		{
@@ -223,7 +232,7 @@ namespace Epsitec.Cresus.Core.Business
 			{
 				System.Diagnostics.Trace.WriteLine (
 					string.Format ("BusinessRuleException on entity #{0} / {1}.\n{2}",
-					entity.GetEntitySerialId (),
+					entity == null ? "<null>" : entity.GetEntitySerialId ().ToString (),
 					typeof (T).FullName,
 					message));
 			}
@@ -240,7 +249,7 @@ namespace Epsitec.Cresus.Core.Business
 				(Logic.current.disableBusinessRuleExceptions))
 			{
 				System.Diagnostics.Trace.WriteLine (string.Format ("BusinessRuleException on entity #{0} / {1}.\n{2}",
-					entity.GetEntitySerialId (),
+					entity == null ? "<null>" : entity.GetEntitySerialId ().ToString (),
 					typeof (T).FullName,
 					message.ToSimpleText ()));
 			}

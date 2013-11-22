@@ -1,5 +1,5 @@
 //	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Controllers.SetControllers;
@@ -15,67 +15,47 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderGroupEntity> wall)
 		{
-			if (this.Entity.CanBeEdited ())
-			{
-				var bricks = wall.AddBrick ()
-					.EnableActionMenu<ActionAiderGroupViewController6AddToBag> ()
-					.EnableActionMenu<ActionAiderGroupViewController2MoveGroup> ();
+			var group = this.Entity;
 
-				if (this.Entity.Subgroups.Count == 0)
-				{
-					bricks = bricks
-						.EnableActionMenu<ActionAiderGroupViewController5MergeGroup> ();
-				}
-			}
-			else
-			{
-				wall.AddBrick ()
-					.EnableActionMenu<ActionAiderGroupViewController6AddToBag> ();
-			}
+			bool canSubgroupsBeEdited              = group.CanSubgroupsBeEdited ();
+			bool canGroupBeEditedByCurrentUser     = group.CanBeEditedByCurrentUser ();
+			bool canSubgroupsBeEditedByCurrentUser = canSubgroupsBeEdited && canGroupBeEditedByCurrentUser;
 
-			if (this.Entity.CanHaveSubgroups ())
-			{
-				var bricks = wall.AddBrick (x => x.Subgroups)
-					.Attribute (BrickMode.DefaultToSummarySubView)
-					.Attribute (BrickMode.AutoGroup)
-					.Attribute (BrickMode.HideAddButton)
-					.Attribute (BrickMode.HideRemoveButton);
+			wall.AddBrick ()
+				.EnableActionMenu<ActionAiderGroupViewController6AddToBag> ()
+				.EnableActionMenu<ActionAiderGroupViewController2MoveGroup> ().IfTrue (canGroupBeEditedByCurrentUser)
+				.EnableActionMenu<ActionAiderGroupViewController5MergeGroup> ().IfTrue (canGroupBeEditedByCurrentUser && group.Subgroups.Count == 0);
 
-				if (this.Entity.CanSubgroupsBeEdited () && this.Entity.CanBeEditedByCurrentUser ())
-				{
-					bricks = bricks
-						.EnableActionMenu<ActionAiderGroupViewController0CreateSubGroup> ()
-						.EnableActionMenu<ActionAiderGroupViewController1DeleteSubGroup> ();
-				}
+			wall.AddBrick (x => x.Subgroups)
+				.IfTrue (group.CanHaveSubgroups ())
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.Attribute (BrickMode.AutoGroup)
+				.Attribute (BrickMode.HideAddButton)
+				.Attribute (BrickMode.HideRemoveButton)
+				.EnableActionMenu<ActionAiderGroupViewController0CreateSubGroup> ().IfTrue (canSubgroupsBeEditedByCurrentUser)
+				.EnableActionMenu<ActionAiderGroupViewController1DeleteSubGroup> ().IfTrue (canSubgroupsBeEditedByCurrentUser)
+				.Template ()
+					.Text (x => x.GetCompactSummary ())
+				.End ();
 
-				bricks = bricks
-					.Template ()
-						.Title ("Sous groupes")
-						.Text (x => x.GetCompactSummary ())
-					.End ();
-			}
+			wall.AddBrick ()
+				.IfTrue (group.CanHaveMembers ())
+				.Icon ("Data.AiderGroup.People")
+				.Title (p => p.GetParticipantsTitle ())
+				.Text (p => p.GetParticipantsSummary ())
+				.Attribute (BrickMode.DefaultToSetSubView)
+				.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant))
+				.EnableActionMenu<ActionAiderGroupViewController3ImportGroupMembers> ().IfTrue (canGroupBeEditedByCurrentUser)
+				.EnableActionMenu<ActionAiderGroupViewController4ExportGroupMembers> ().IfTrue (canGroupBeEditedByCurrentUser)
+				.EnableActionButton<ActionAiderGroupViewController7AddMembersFromBag> ().IfTrue (canGroupBeEditedByCurrentUser);
 
-			if (this.Entity.CanHaveMembers ())
-			{
-				var bricks = wall.AddBrick ()
-					.Icon ("Data.AiderGroup.People")
-					.Title (p => p.GetParticipantsTitle ())
-					.Text (p => p.GetParticipantsSummary ())
-					.Attribute (BrickMode.DefaultToSetSubView)
-					.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+			wall.AddBrick (x => x.GroupDef)
+				.IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator));
 
-				if (this.Entity.CanBeEditedByCurrentUser ())
-				{
-					bricks = bricks
-						.EnableActionMenu<ActionAiderGroupViewController3ImportGroupMembers> ()
-						.EnableActionMenu<ActionAiderGroupViewController4ExportGroupMembers> ()
-						.EnableActionButton<ActionAiderGroupViewController7AddMembersFromBag> ();
-				}
-			}
-
-			if (this.Entity.GroupDef.Function.IsNotNull ())
+			if (group.GroupDef.Function.IsNotNull ())
 			{
 				wall.AddBrick ()
+					.IfTrue (group.GroupDef.Function.IsNotNull ())
 					.Icon ("Data.AiderGroup.People")
 					.Title (p => p.GetGroupAndSubGroupParticipantTitle ())
 					.Text (p => p.GetGroupAndSubGroupParticipantSummary ())
@@ -85,7 +65,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);
-					
 		}
 	}
 }

@@ -41,6 +41,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVOA03]", typeof (Epsitec.Aider.Entities.AiderMailingEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVOL03]", typeof (Epsitec.Aider.Entities.AiderMailingParticipantEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVO013]", typeof (Epsitec.Aider.Entities.AiderMailingCategoryEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVA4I]", typeof (Epsitec.Aider.Entities.AiderGroupExtractionEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -8525,6 +8526,155 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderMailingCategoryEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderGroupExtraction Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderGroupExtraction</c> entity.
+	///	designer:cap/LVA4I
+	///	</summary>
+	public partial class AiderGroupExtractionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IComment
+	{
+		#region IComment Members
+		///	<summary>
+		///	The <c>Comment</c> field.
+		///	designer:fld/LVA4I/LVAA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAA8]")]
+		public global::Epsitec.Aider.Entities.AiderCommentEntity Comment
+		{
+			get
+			{
+				return global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.GetComment (this);
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.SetComment (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/LVA4I/LVA5I
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA5I]")]
+		public string Name
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA5I]");
+			}
+			set
+			{
+				string oldValue = this.Name;
+				if (oldValue != value || !this.IsFieldDefined("[LVA5I]"))
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<string> ("[LVA5I]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>SearchGroup</c> field.
+		///	designer:fld/LVA4I/LVA6I
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA6I]")]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity SearchGroup
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVA6I]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.SearchGroup;
+				if (oldValue != value || !this.IsFieldDefined("[LVA6I]"))
+				{
+					this.OnSearchGroupChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVA6I]", oldValue, value);
+					this.OnSearchGroupChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>SearchPath</c> field.
+		///	designer:fld/LVA4I/LVA7I
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA7I]")]
+		public string SearchPath
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA7I]");
+			}
+			set
+			{
+				string oldValue = this.SearchPath;
+				if (oldValue != value || !this.IsFieldDefined("[LVA7I]"))
+				{
+					this.OnSearchPathChanging (oldValue, value);
+					this.SetField<string> ("[LVA7I]", oldValue, value);
+					this.OnSearchPathChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Match</c> field.
+		///	designer:fld/LVA4I/LVADI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVADI]")]
+		public global::Epsitec.Aider.Enumerations.GroupExtractionMatch Match
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.GroupExtractionMatch> ("[LVADI]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.GroupExtractionMatch oldValue = this.Match;
+				if (oldValue != value || !this.IsFieldDefined("[LVADI]"))
+				{
+					this.OnMatchChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.GroupExtractionMatch> ("[LVADI]", oldValue, value);
+					this.OnMatchChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnNameChanging(string oldValue, string newValue);
+		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnSearchGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnSearchGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnSearchPathChanging(string oldValue, string newValue);
+		partial void OnSearchPathChanged(string oldValue, string newValue);
+		partial void OnMatchChanging(global::Epsitec.Aider.Enumerations.GroupExtractionMatch oldValue, global::Epsitec.Aider.Enumerations.GroupExtractionMatch newValue);
+		partial void OnMatchChanged(global::Epsitec.Aider.Enumerations.GroupExtractionMatch oldValue, global::Epsitec.Aider.Enumerations.GroupExtractionMatch newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderGroupExtractionEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderGroupExtractionEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 580);	// [LVA4I]
+		public static readonly string EntityStructuredTypeKey = "[LVA4I]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderGroupExtractionEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

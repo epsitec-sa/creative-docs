@@ -1,5 +1,5 @@
 //	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
 
@@ -14,16 +14,20 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderGroupEntity> wall)
 		{
-			if (this.Entity.GroupDef.IsNotNull ())
-			{
-				this.AddBrickWithDefinition (wall);
-			}
-			else
+			var group = this.Entity;
+			var groupDef = group.GroupDef;
+
+			if (groupDef.IsNull ())
 			{
 				this.AddBrickWithoutDefinition (wall);
 			}
+			else
+			{
+				this.AddBrickWithDefinition (wall);
+			}
 		}
 
+		
 		private void AddBrickWithDefinition(BrickWall<AiderGroupEntity> wall)
 		{
 			wall.AddBrick ()
@@ -32,6 +36,9 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 					.Field (x => x.Name)
 						.ReadOnly (this.Entity.CanBeRenamedByCurrentUser () == false)
+					.Field (x => x.Path)
+						.IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
+						.ReadOnly ()
 				.End ();
 		}
 
@@ -40,8 +47,9 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.Name)
+					.Field (x => x.Path)
+						.IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
 				.End ();
 		}
-
 	}
 }

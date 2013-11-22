@@ -29,6 +29,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupAndSubGroupMembersDisplay = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 82));
 				//	designer:cap/LVA2D
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupDef = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 418));
+				//	designer:cap/LVAEI
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupExtraction = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 590));
 				//	designer:cap/LVO603
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupMemberByFunction = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 6));
 				//	designer:cap/LVG422
@@ -82,6 +84,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderGroupAndSubGroupMembersDisplay = 0x3F500050000052L;
 				//	designer:cap/LVA2D
 				public const long ShowAiderGroupDef = 0x3F50000A0001A2L;
+				//	designer:cap/LVAEI
+				public const long ShowAiderGroupExtraction = 0x3F50000A00024EL;
 				//	designer:cap/LVO603
 				public const long ShowAiderGroupMemberByFunction = 0x3F500078000006L;
 				//	designer:cap/LVG422
@@ -196,6 +200,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType EventType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 125));
 				//	designer:cap/LVATB
 				public static readonly Epsitec.Common.Types.EnumType GroupClassification = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 381));
+				//	designer:cap/LVA8I
+				public static readonly Epsitec.Common.Types.EnumType GroupExtractionMatch = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 584));
 				//	designer:cap/LVA1E
 				public static readonly Epsitec.Common.Types.EnumType HouseholdRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 449));
 				//	designer:cap/LVA09
@@ -275,6 +281,8 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderGroupDef = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 322));
 			//	designer:cap/LVA48
 			public static readonly Epsitec.Common.Types.StructuredType AiderGroupEvent = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 260));
+			//	designer:cap/LVA4I
+			public static readonly Epsitec.Common.Types.StructuredType AiderGroupExtraction = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 580));
 			//	designer:cap/LVA73
 			public static readonly Epsitec.Common.Types.StructuredType AiderGroupParticipant = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 103));
 			//	designer:cap/LVAF5
@@ -539,6 +547,42 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 383));
+						}
+					}
+				}
+				
+				public static class GroupExtractionMatch
+				{
+					//	designer:cap/LVAAI
+					public static global::Epsitec.Common.Types.Caption AnyRegionAnyParish
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 586));
+						}
+					}
+					//	designer:cap/LVABI
+					public static global::Epsitec.Common.Types.Caption OneRegionAnyParish
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 587));
+						}
+					}
+					//	designer:cap/LVA9I
+					public static global::Epsitec.Common.Types.Caption Path
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 585));
+						}
+					}
+					//	designer:cap/LVACI
+					public static global::Epsitec.Common.Types.Caption SameFunction
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 588));
 						}
 					}
 				}
@@ -1723,6 +1767,23 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Group = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 271);
 			}
 			
+			public static class AiderGroupExtraction
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderGroupExtraction.Match, null);
+				}
+				
+				//	designer:cap/LVADI
+				public static readonly global::Epsitec.Common.Support.Druid Match = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 589);
+				//	designer:cap/LVA5I
+				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 581);
+				//	designer:cap/LVA6I
+				public static readonly global::Epsitec.Common.Support.Druid SearchGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 582);
+				//	designer:cap/LVA7I
+				public static readonly global::Epsitec.Common.Support.Druid SearchPath = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 583);
+			}
+			
 			public static class AiderGroupParticipant
 			{
 				internal static void _Initialize()
@@ -2721,6 +2782,7 @@ namespace Epsitec.Aider
 			Fields.AiderGroup._Initialize ();
 			Fields.AiderGroupDef._Initialize ();
 			Fields.AiderGroupEvent._Initialize ();
+			Fields.AiderGroupExtraction._Initialize ();
 			Fields.AiderGroupParticipant._Initialize ();
 			Fields.AiderGroupPlace._Initialize ();
 			Fields.AiderHousehold._Initialize ();
