@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	public enum SortedType
 	{
 		None,
-		Ascending,
-		Descending,
+		Ascending,		// A..Z
+		Descending,		// Z..A
 	};
 }

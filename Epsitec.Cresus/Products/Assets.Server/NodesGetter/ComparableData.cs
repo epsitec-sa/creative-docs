@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	/// <summary>
 	/// Structure contenant une valeur quelconque pouvant être comparée et triée.
 	/// </summary>
-	public struct ComparableData : System.IEquatable<ComparableData>, System.IComparable<ComparableData>
+	public struct ComparableData : System.IComparable<ComparableData>
 	{
 		public ComparableData(object value)
 		{
@@ -29,53 +29,39 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		public static readonly ComparableData Empty = new ComparableData ();
 
 		#region IComparable<ComparableData> Members
-		public int CompareTo(ComparableData other)
+		public int CompareTo(ComparableData that)
 		{
-			if (this.Value is int && other.Value is int)
+			if (this.Value is int || that.Value is int)
 			{
-				return ((int) this.Value).CompareTo ((int) other.Value);
+				var v1 = (this.Value is int) ? (int) this.Value : int.MinValue;
+				var v2 = (that.Value is int) ? (int) that.Value : int.MinValue;
+
+				return v1.CompareTo (v2);
 			}
-			else if (this.Value is decimal && other.Value is decimal)
+			else if (this.Value is decimal || that.Value is decimal)
 			{
-				return ((decimal) this.Value).CompareTo ((decimal) other.Value);
+				var v1 = (this.Value is decimal) ? (decimal) this.Value : decimal.MinValue;
+				var v2 = (that.Value is decimal) ? (decimal) that.Value : decimal.MinValue;
+
+				return v1.CompareTo (v2);
 			}
-			else if (this.Value is System.DateTime && other.Value is System.DateTime)
+			else if (this.Value is System.DateTime || that.Value is System.DateTime)
 			{
-				return ((System.DateTime) this.Value).CompareTo ((System.DateTime) other.Value);
+				var v1 = (this.Value is System.DateTime) ? (System.DateTime) this.Value : System.DateTime.MinValue;
+				var v2 = (that.Value is System.DateTime) ? (System.DateTime) that.Value : System.DateTime.MinValue;
+
+				return v1.CompareTo (v2);
 			}
-			else if (this.Value is string && other.Value is string)
+			else if (this.Value is string || that.Value is string)
 			{
-				return ((string) this.Value).CompareTo ((string) other.Value);
+				var v1 = (this.Value is string) ? (string) this.Value : null;
+				var v2 = (that.Value is string) ? (string) that.Value : null;
+
+				return v1.CompareTo (v2);
 			}
 			else
 			{
 				return 0;
-			}
-		}
-		#endregion
-
-		#region IEquatable<ComparableData> Members
-		public bool Equals(ComparableData other)
-		{
-			if (other.Value is int)
-			{
-				return (int) this.Value == (int) other.Value;
-			}
-			else if (other.Value is decimal)
-			{
-				return (decimal) this.Value == (decimal) other.Value;
-			}
-			else if (other.Value is System.DateTime)
-			{
-				return (System.DateTime) this.Value == (System.DateTime) other.Value;
-			}
-			else if (other.Value is string)
-			{
-				return (string) this.Value == (string) other.Value;
-			}
-			else
-			{
-				return false;
 			}
 		}
 		#endregion

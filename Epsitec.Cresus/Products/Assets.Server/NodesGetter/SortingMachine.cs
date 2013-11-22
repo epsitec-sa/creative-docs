@@ -6,10 +6,17 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
+	/// <summary>
+	/// Trie une énumération générique selon des instructions contenant un tri
+	/// primaire et éventuellement un tri secondaire.
+	/// </summary>
 	public static class SortingMachine<T>
+		where T : struct
 	{
 		public static IEnumerable<T> Sort
 		(
+			//	Retourne une énumération de noeuds triée.
+			//	T est une structure ParentNode ou OrderNode.
 			SortingInstructions				instructions,
 			IEnumerable<T>					nodes,
 			System.Func<T, ComparableData>	getPrimaryData,
@@ -19,11 +26,13 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			if (instructions.PrimaryField   != SimpleEngine.ObjectField.Unknown &&
 				instructions.SecondaryField == SimpleEngine.ObjectField.Unknown)
 			{
+				//	Seulement un critère de tri principal.
+
 				if (instructions.PrimaryType == SortedType.Ascending)
 				{
 					return nodes.OrderBy (x => getPrimaryData (x));
 				}
-				else
+				else if (instructions.PrimaryType == SortedType.Descending)
 				{
 					return nodes.OrderByDescending (x => getPrimaryData (x));
 				}
@@ -31,38 +40,36 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			else if (instructions.PrimaryField   != SimpleEngine.ObjectField.Unknown &&
 					 instructions.SecondaryField != SimpleEngine.ObjectField.Unknown)
 			{
+				//	Un critère de tri principal et un secondaire.
+
 				if (instructions.PrimaryType   == SortedType.Ascending &&
-					instructions.SecondaryType == SortedType.Descending)
+					instructions.SecondaryType == SortedType.Ascending)
 				{
-					return nodes
-						.OrderByDescending (x => getSecondaryData (x))
-						.OrderBy           (x => getPrimaryData (x));
+					return nodes.OrderBy (x => getSecondaryData (x))
+								.OrderBy (x => getPrimaryData   (x));
+				}
+				else if (instructions.PrimaryType   == SortedType.Ascending &&
+						 instructions.SecondaryType == SortedType.Descending)
+				{
+					return nodes.OrderByDescending (x => getSecondaryData (x))
+								.OrderBy           (x => getPrimaryData   (x));
 				}
 				else if (instructions.PrimaryType   == SortedType.Descending &&
 						 instructions.SecondaryType == SortedType.Ascending)
 				{
-					return nodes
-						.OrderBy           (x => getSecondaryData (x))
-						.OrderByDescending (x => getPrimaryData (x));
+					return nodes.OrderBy           (x => getSecondaryData (x))
+								.OrderByDescending (x => getPrimaryData   (x));
 				}
 				else if (instructions.PrimaryType   == SortedType.Descending &&
 						 instructions.SecondaryType == SortedType.Descending)
 				{
-					return nodes
-						.OrderByDescending (x => getSecondaryData (x))
-						.OrderByDescending (x => getPrimaryData (x));
-				}
-				else
-				{
-					return nodes
-						.OrderBy (x => getSecondaryData (x))
-						.OrderBy (x => getPrimaryData (x));
+					return nodes.OrderByDescending (x => getSecondaryData (x))
+								.OrderByDescending (x => getPrimaryData   (x));
 				}
 			}
-			else
-			{
-				return nodes;
-			}
+
+			//	Si les instructions sont incohérentes, on retourne l'énumération non triée.
+			return nodes;
 		}
 	}
 }
