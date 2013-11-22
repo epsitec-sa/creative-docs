@@ -124,10 +124,10 @@ function() {
       alert(entity.id);
     },
 
-    addEntityToBag: function(title,entityId) {
+    addEntityToBag: function(title,summary,entityId) {
       var hub = Epsitec.Cresus.Core.app.hubs.getHubByName('entitybag');
 
-      hub.AddToMyBag(title,entityId);
+      hub.AddToMyBag(title,summary,entityId);
     },
 
     addEntityToClientBag: function(entity) {

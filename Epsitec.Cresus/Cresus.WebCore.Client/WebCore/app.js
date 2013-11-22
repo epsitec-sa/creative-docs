@@ -373,9 +373,9 @@ $.getScript('signalr/hubs', function() {
           return "type inconnu";
       },
 
-      addEntityToBag: function(entityId) {
+      addEntityToBag: function(summary,entityId) {
         var title = this.getCurrentDatabaseEntityType();
-        this.entityBag.addEntityToBag(title,entityId);      
+        this.entityBag.addEntityToBag(title,summary,entityId);      
       },
 
       addEntityToClientBag: function(entity) {

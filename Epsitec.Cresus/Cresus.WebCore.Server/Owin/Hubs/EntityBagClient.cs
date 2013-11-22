@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 				this.hub.On ("SetUserConnectionId", (string u, string c) => this.SetUserConnectionId (u, c));
 				this.hub.On ("FlushConnectionId", c => RemoveUserConnectionIdWithLock (c));
 				this.hub.On ("RemoveFromMyBag", (string u, string id) => RemoveFromMyBag (u,id));
-				this.hub.On ("AddToMyBag", (string u, string t, string id) => AddToMyBag (u,t,id));
+				this.hub.On ("AddToMyBag", (string u, string t,string s, string id) => AddToMyBag (u,t,s,id));
 
 				this.hubConnection.Start ().Wait ();
 
@@ -196,19 +196,31 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			context.Clients.Group (userName).RemoveFromBag (entityId);
 		}
 
-		private void AddToMyBag(string userName, string title, string entityId)
+		private void AddToMyBag(string userName, string title,string clientSummary, string entityId)
 		{
 			var entity = this.server.CoreWorkerPool.Execute (userName, null, (b) => EntityIO.ResolveEntity (b, entityId));
 			if (entity.IsNotNull ())
 			{
 				var context = GlobalHost.ConnectionManager.GetHubContext<EntityBagHub> ();
-				context.Clients.Group (userName).AddToBag (title, entity.GetSummary (), entityId);
 
-
-				using (this.cacheLock.LockWrite ())
+				try //with GetSummary() on from AbstractEntity
 				{
-					this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, entity.GetSummary (), entityId));
+					var summary = entity.GetSummary ();
+
+					context.Clients.Group (userName).AddToBag (title, summary, entityId);
+					using (this.cacheLock.LockWrite ())
+					{
+						this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, summary, entityId));
+					}
 				}
+				catch //use client summary instead
+				{
+					context.Clients.Group (userName).AddToBag (title, clientSummary, entityId);
+					using (this.cacheLock.LockWrite ())
+					{
+						this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, clientSummary, entityId));
+					}
+				}			
 			}
 		}
 

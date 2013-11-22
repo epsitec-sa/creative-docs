@@ -51,10 +51,10 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			Clients.Client (backendClient.GetConnectionId ()).RemoveFromMyBag (Clients.Caller.userName, entityId);
 		}
 
-		public void AddToMyBag(string title, string entityId)
+		public void AddToMyBag(string title, string customSummary,string entityId)
 		{
 			var backendClient = EntityBagClient.Instance;
-			Clients.Client (backendClient.GetConnectionId ()).AddToMyBag (Clients.Caller.userName, title, entityId);
+			Clients.Client (backendClient.GetConnectionId ()).AddToMyBag (Clients.Caller.userName, title, customSummary, entityId);
 		}
 	}
 }

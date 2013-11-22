@@ -781,7 +781,7 @@ function() {
       for (j=01; j<=this.store.data.length; j++) {
         var data = this.store.data.map[j].value;
         for (i=0; i<data.length; i++) {
-           Epsitec.Cresus.Core.app.addEntityToBag(data[i].internalId);
+           Epsitec.Cresus.Core.app.addEntityToBag(data[i].data.summary,data[i].internalId);
         }
       } 
     },

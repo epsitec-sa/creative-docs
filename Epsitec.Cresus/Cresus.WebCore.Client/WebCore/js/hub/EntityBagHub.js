@@ -18,8 +18,8 @@ function EntityBagHub() {
 
   };
 
-  this.AddToMyBag = function(title,entityId) {
-    this.hub.server.addToMyBag(title,entityId);
+  this.AddToMyBag = function(title,summary,entityId) {
+    this.hub.server.addToMyBag(title,summary,entityId);
   };
 
   //Entry points for hub call
