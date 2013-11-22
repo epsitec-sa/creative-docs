@@ -21,7 +21,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.controller = new NavigationTreeTableController ();
 
-			this.nodesGetter = this.accessor.GetNodesGetter (BaseType.Categories);
+			var primary      = this.accessor.GetNodesGetter (BaseType.Categories);
+			var secondary    = new SortableNodesGetter (primary, this.accessor, BaseType.Categories);
+			this.nodesGetter = new SorterNodesGetter (secondary);
+
+			secondary       .SortingInstructions = SortingInstructions.Default;
+			this.nodesGetter.SortingInstructions = SortingInstructions.Default;
+			this.nodesGetter.UpdateData ();
 
 			this.visibleSelectedRow = -1;
 			this.UpdateSelectedRow ();
@@ -134,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.CreateUI (frame, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			TreeTableFiller<GuidNode>.FillColumns (this.dataFiller, this.controller);
+			TreeTableFiller<SortableNode>.FillColumns (this.dataFiller, this.controller);
 			this.UpdateController ();
 
 			//	Connexion des événements.
@@ -231,7 +237,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				selection -= this.controller.TopVisibleRow;
 			}
 
-			TreeTableFiller<GuidNode>.FillContent (this.dataFiller, this.controller, firstRow, count, selection);
+			TreeTableFiller<SortableNode>.FillContent (this.dataFiller, this.controller, firstRow, count, selection);
 		}
 
 		private void UpdateSelectedRow()
@@ -258,7 +264,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor						accessor;
 		private readonly NavigationTreeTableController		controller;
-		private readonly AbstractNodesGetter<GuidNode>		nodesGetter;
+		private readonly SorterNodesGetter					nodesGetter;
 		private readonly SingleCategoriesTreeTableFiller	dataFiller;
 
 		private TextField									textField;
