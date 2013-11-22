@@ -19,7 +19,7 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (3)]
-	public sealed class ActionAiderMailingViewController3KeepUpdated : TemplateActionViewController<AiderMailingEntity, AiderGroupEntity>
+	public sealed class ActionAiderMailingViewController3UpdateRecepients : TemplateActionViewController<AiderMailingEntity, AiderGroupEntity>
 	{
 		public override FormattedText GetTitle()
 		{
