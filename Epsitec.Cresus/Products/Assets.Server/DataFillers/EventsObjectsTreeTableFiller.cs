@@ -10,9 +10,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public class EventsObjectsTreeTableFiller : AbstractTreeTableFiller<GuidNode>
+	public class EventsObjectsTreeTableFiller : AbstractTreeTableFiller<SortableNode>
 	{
-		public EventsObjectsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<GuidNode> nodesGetter)
+		public EventsObjectsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<SortableNode> nodesGetter)
 			: base (accessor, nodesGetter)
 		{
 		}
@@ -22,9 +22,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				yield return ObjectField.Unknown;
-				yield return ObjectField.Unknown;
-				yield return ObjectField.Unknown;
+				yield return ObjectField.EventDate;
+				yield return ObjectField.EventGlyph;
+				yield return ObjectField.EventType;
 				yield return ObjectField.Valeur1;
 				yield return ObjectField.Valeur2;
 				yield return ObjectField.Valeur3;

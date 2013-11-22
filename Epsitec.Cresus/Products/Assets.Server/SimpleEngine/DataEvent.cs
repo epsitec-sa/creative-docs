@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
@@ -92,6 +93,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public AbstractDataProperty GetProperty(ObjectField field)
 		{
+			switch (field)
+			{
+				case ObjectField.EventDate:
+					return new DataDateProperty (field, this.Timestamp.Date);
+
+				case ObjectField.EventGlyph:
+				case ObjectField.EventType:
+					return new DataStringProperty (field, DataDescriptions.GetEventDescription (this.Type));
+			}
+
 			return this.properties.Where (x => x.Field == field).FirstOrDefault ();
 		}
 

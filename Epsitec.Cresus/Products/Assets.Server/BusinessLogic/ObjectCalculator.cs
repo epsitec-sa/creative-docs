@@ -331,33 +331,41 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (obj != null)
 			{
 				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, timestamp, field);
-				if (p != null)
+				return ObjectCalculator.GetComparableData (p);
+			}
+
+			return ComparableData.Empty;
+		}
+
+		public static ComparableData GetComparableData(AbstractDataProperty property)
+		{
+			if (property != null)
+			{
+				if (property is DataIntProperty)
 				{
-					if (p is DataIntProperty)
-					{
-						return new ComparableData ((p as DataIntProperty).Value);
-					}
-					else if (p is DataDecimalProperty)
-					{
-						return new ComparableData ((p as DataDecimalProperty).Value);
-					}
-					else if (p is DataComputedAmountProperty)
-					{
-						return new ComparableData ((p as DataComputedAmountProperty).Value.FinalAmount.GetValueOrDefault ());
-					}
-					else if (p is DataDateProperty)
-					{
-						return new ComparableData ((p as DataDateProperty).Value);
-					}
-					else if (p is DataStringProperty)
-					{
-						return new ComparableData ((p as DataStringProperty).Value);
-					}
+					return new ComparableData ((property as DataIntProperty).Value);
+				}
+				else if (property is DataDecimalProperty)
+				{
+					return new ComparableData ((property as DataDecimalProperty).Value);
+				}
+				else if (property is DataComputedAmountProperty)
+				{
+					return new ComparableData ((property as DataComputedAmountProperty).Value.FinalAmount.GetValueOrDefault ());
+				}
+				else if (property is DataDateProperty)
+				{
+					return new ComparableData ((property as DataDateProperty).Value);
+				}
+				else if (property is DataStringProperty)
+				{
+					return new ComparableData ((property as DataStringProperty).Value);
 				}
 			}
 
 			return ComparableData.Empty;
 		}
+
 
 		public static AbstractDataProperty GetObjectProperty(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic)
 		{

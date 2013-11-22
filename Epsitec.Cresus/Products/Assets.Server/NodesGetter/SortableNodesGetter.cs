@@ -9,12 +9,13 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
-	/// Accès en lecture à des données quelconques, enrichies de la OrderValue (string).
+	/// Accès en lecture à des données quelconques, enrichies d'un contenu
+	/// triable (ComparableData).
 	/// GuidNode -> OrderNode
 	/// </summary>
-	public class OrderNodesGetter : AbstractNodesGetter<OrderNode>  // outputNodes
+	public class SortableNodesGetter : AbstractNodesGetter<SortableNode>  // outputNodes
 	{
-		public OrderNodesGetter(AbstractNodesGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public SortableNodesGetter(AbstractNodesGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
@@ -36,7 +37,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public override OrderNode this[int index]
+		public override SortableNode this[int index]
 		{
 			get
 			{
@@ -45,7 +46,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				var primary   = ObjectCalculator.GetComparableData (obj, this.Timestamp, this.SortingInstructions.PrimaryField);
 				var secondary = ObjectCalculator.GetComparableData (obj, this.Timestamp, this.SortingInstructions.SecondaryField);
 
-				return new OrderNode (node.Guid, primary, secondary);
+				return new SortableNode (node.Guid, primary, secondary);
 			}
 		}
 

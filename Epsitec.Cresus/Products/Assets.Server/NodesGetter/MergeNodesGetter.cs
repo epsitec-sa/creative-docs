@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	/// </summary>
 	public class MergeNodesGetter : AbstractNodesGetter<LevelNode>  // outputNodes
 	{
-		public MergeNodesGetter(DataAccessor accessor, AbstractNodesGetter<LevelNode> groupNodes, AbstractNodesGetter<OrderNode> objectNodes)
+		public MergeNodesGetter(DataAccessor accessor, AbstractNodesGetter<LevelNode> groupNodes, AbstractNodesGetter<SortableNode> objectNodes)
 		{
 			this.accessor    = accessor;
 			this.groupNodes  = groupNodes;
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		private readonly DataAccessor						accessor;
 		private readonly AbstractNodesGetter<LevelNode>		groupNodes;
-		private readonly AbstractNodesGetter<OrderNode>		objectNodes;
+		private readonly AbstractNodesGetter<SortableNode>		objectNodes;
 		private readonly List<LevelNode>					outputNodes;
 	}
 }

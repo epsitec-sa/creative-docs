@@ -7,12 +7,13 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
-	/// Accès en lecture à des données quelconques, triées selon OrderValue.
+	/// Accès en lecture à des données quelconques, triées selon PrimaryOrderedValue
+	/// et SecondaryOrderedValue (ComparableData).
 	/// OrderNode -> OrderNode
 	/// </summary>
-	public class SortNodesGetter : AbstractNodesGetter<OrderNode>  // outputNodes
+	public class SorterNodesGetter : AbstractNodesGetter<SortableNode>  // outputNodes
 	{
-		public SortNodesGetter(AbstractNodesGetter<OrderNode> inputNodes)
+		public SorterNodesGetter(AbstractNodesGetter<SortableNode> inputNodes)
 		{
 			this.inputNodes = inputNodes;
 		}
@@ -29,7 +30,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public override OrderNode this[int index]
+		public override SortableNode this[int index]
 		{
 			get
 			{
@@ -39,24 +40,24 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				}
 				else
 				{
-					return OrderNode.Empty;
+					return SortableNode.Empty;
 				}
 			}
 		}
 
 		public override void UpdateData()
 		{
-			this.outputNodes = SortingMachine<OrderNode>.Sort
+			this.outputNodes = SortingMachine<SortableNode>.Sorts
 			(
 				this.SortingInstructions,
 				this.inputNodes.Nodes,
-				x => x.PrimaryOrderedValue,
-				x => x.SecondaryOrderedValue
+				x => x.PrimarySortValue,
+				x => x.SecondarySortValue
 			).ToArray ();
 		}
 
 		
-		private readonly AbstractNodesGetter<OrderNode>	inputNodes;
-		private OrderNode[]								outputNodes;
+		private readonly AbstractNodesGetter<SortableNode>	inputNodes;
+		private SortableNode[]								outputNodes;
 	}
 }

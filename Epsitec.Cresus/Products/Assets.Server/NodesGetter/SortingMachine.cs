@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	public static class SortingMachine<T>
 		where T : struct
 	{
-		public static IEnumerable<T> Sort
+		public static IEnumerable<T> Sorts
 		(
 			//	Retourne une énumération de noeuds triée.
 			//	T est une structure ParentNode ou OrderNode.

@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class CategoriesToolbarTreeTableController : AbstractToolbarTreeTableController<OrderNode>
+	public class CategoriesToolbarTreeTableController : AbstractToolbarTreeTableController<SortableNode>
 	{
 		public CategoriesToolbarTreeTableController(DataAccessor accessor)
 			: base (accessor)
@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 
 			var primary = this.accessor.GetNodesGetter (BaseType.Categories);
-			this.secondaryGetter = new OrderNodesGetter (primary, this.accessor, BaseType.Categories);
-			this.nodesGetter = new SortNodesGetter (this.secondaryGetter);
+			this.secondaryGetter = new SortableNodesGetter (primary, this.accessor, BaseType.Categories);
+			this.nodesGetter = new SorterNodesGetter (this.secondaryGetter);
 
 			this.title = "Catégories d'immobilisation";
 		}
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodesGetter);
-			TreeTableFiller<OrderNode>.FillColumns (this.dataFiller, this.controller);
+			TreeTableFiller<SortableNode>.FillColumns (this.dataFiller, this.controller);
 
 			this.controller.AddSortedColumn (0);
 		}
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void SetSortingInstructions(SortingInstructions instructions)
 		{
 			this.secondaryGetter.SortingInstructions = instructions;
-			(this.nodesGetter as SortNodesGetter).SortingInstructions = instructions;
+			(this.nodesGetter as SorterNodesGetter).SortingInstructions = instructions;
 
 			this.UpdateData ();
 		}
@@ -143,6 +143,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private OrderNodesGetter secondaryGetter;
+		private SortableNodesGetter secondaryGetter;
 	}
 }

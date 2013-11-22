@@ -84,9 +84,9 @@
     <Compile Include="NodesGetter\SortedType.cs" />
     <Compile Include="NodesGetter\SortingInstructions.cs" />
     <Compile Include="NodesGetter\SortingMachine.cs" />
-    <Compile Include="NodesGetter\SortNodesGetter.cs" />
-    <Compile Include="NodesGetter\OrderNodesGetter.cs" />
-    <Compile Include="NodesGetter\OrderNode.cs" />
+    <Compile Include="NodesGetter\SorterNodesGetter.cs" />
+    <Compile Include="NodesGetter\SortableNodesGetter.cs" />
+    <Compile Include="NodesGetter\SortableNode.cs" />
     <Compile Include="NodesGetter\ObjectsNodesGetter.cs" />
     <Compile Include="NodesGetter\MergeNodesGetter.cs" />
     <Compile Include="NodesGetter\HistoryNodesGetter.cs" />

@@ -7,13 +7,13 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
-	public struct OrderNode
+	public struct SortableNode
 	{
-		public OrderNode(Guid guid, ComparableData primaryOrderedValue, ComparableData secondaryOrderedValue)
+		public SortableNode(Guid guid, ComparableData primarySortValue, ComparableData secondarySortValue)
 		{
 			this.Guid                  = guid;
-			this.PrimaryOrderedValue   = primaryOrderedValue;
-			this.SecondaryOrderedValue = secondaryOrderedValue;
+			this.PrimarySortValue   = primarySortValue;
+			this.SecondarySortValue = secondarySortValue;
 		}
 
 		public bool IsEmpty
@@ -24,10 +24,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public static OrderNode Empty = new OrderNode (Guid.Empty, ComparableData.Empty, ComparableData.Empty);
+		public static SortableNode Empty = new SortableNode (Guid.Empty, ComparableData.Empty, ComparableData.Empty);
 
 		public readonly Guid				Guid;
-		public readonly ComparableData		PrimaryOrderedValue;
-		public readonly ComparableData		SecondaryOrderedValue;
+		public readonly ComparableData		PrimarySortValue;
+		public readonly ComparableData		SecondarySortValue;
 	}
 }

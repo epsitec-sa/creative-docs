@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class EventsToolbarTreeTableController : AbstractToolbarTreeTableController<GuidNode>
+	public class EventsToolbarTreeTableController : AbstractToolbarTreeTableController<SortableNode>
 	{
 		public EventsToolbarTreeTableController(DataAccessor accessor)
 			: base(accessor)
@@ -20,9 +20,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
 
-			this.nodesGetter = new ObjectEventsNodesGetter ();
+			this.eventsNodesGetter = new ObjectEventsNodesGetter ();
+			this.nodesGetter = new SorterNodesGetter (this.eventsNodesGetter);
 
 			this.title = "Evénements";
+		}
+
+
+		public void UpdateData()
+		{
+			this.nodesGetter.UpdateData ();
+
+			this.UpdateController ();
+			this.UpdateToolbar ();
 		}
 
 
@@ -42,11 +52,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.objectGuid = value;
 					this.obj = this.accessor.GetObject (BaseType.Objects, this.objectGuid);
 
-					this.NodesGetter.DataObject = this.obj;
+					this.eventsNodesGetter.DataObject = this.obj;
 					this.dataFiller.DataObject = this.obj;
 
-					this.UpdateController ();
-					this.UpdateToolbar ();
+					this.UpdateData ();
 				}
 			}
 		}
@@ -67,10 +76,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new EventsObjectsTreeTableFiller (this.accessor, this.nodesGetter);
-			TreeTableFiller<GuidNode>.FillColumns (this.dataFiller, this.controller);
+			TreeTableFiller<SortableNode>.FillColumns (this.dataFiller, this.controller);
 
-			this.UpdateController ();
-			this.UpdateToolbar ();
+			this.controller.AddSortedColumn (0);
 		}
 
 
@@ -153,6 +161,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected override void SetSortingInstructions(SortingInstructions instructions)
+		{
+			this.eventsNodesGetter.SortingInstructions = instructions;
+			this.NodesGetter.SortingInstructions = instructions;
+
+			this.UpdateData ();
+		}
+
+
 		public void Update()
 		{
 			this.UpdateController ();
@@ -232,16 +249,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private ObjectEventsNodesGetter NodesGetter
+		private SorterNodesGetter NodesGetter
 		{
 			get
 			{
-				return this.nodesGetter as ObjectEventsNodesGetter;
+				return this.nodesGetter as SorterNodesGetter;
 			}
 		}
 
 
-		private Guid							objectGuid;
-		private DataObject						obj;
+		private readonly ObjectEventsNodesGetter	eventsNodesGetter;
+
+		private Guid								objectGuid;
+		private DataObject							obj;
 	}
 }

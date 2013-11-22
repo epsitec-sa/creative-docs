@@ -49,6 +49,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Compte7,
 		Compte8,
 
+		EventDate,
+		EventGlyph,
+		EventType,
+
 		GroupGuid = 10000,
 		GroupRate = 10100,
 	}

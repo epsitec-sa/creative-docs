@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		private IEnumerable<ParentNode> Sort(IEnumerable<ParentNode> nodes)
 		{
-			return SortingMachine<ParentNode>.Sort
+			return SortingMachine<ParentNode>.Sorts
 			(
 				this.SortingInstructions,
 				nodes,
