@@ -12,7 +12,7 @@ using System.Linq;
 namespace Epsitec.Aider.Rules
 {
 	[BusinessRule]
-	internal class AiderGroupDefEntityBusinessRules : GenericBusinessRule<AiderGroupDefEntity>
+	internal class AiderGroupDefBusinessRules : GenericBusinessRule<AiderGroupDefEntity>
 	{
 		public override void ApplyValidateRule(AiderGroupDefEntity groupDef)
 		{
@@ -51,4 +51,3 @@ namespace Epsitec.Aider.Rules
 		}
 	}
 }
-

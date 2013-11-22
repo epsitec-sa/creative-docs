@@ -15,6 +15,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderGroupExtractionEntity> wall)
 		{
 			wall.AddBrick ();
+			wall.AddBrick (x => x.Comment);
 		}
 	}
 }

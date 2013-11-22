@@ -6,7 +6,7 @@ using Epsitec.Aider.Enumerations;
 using Epsitec.Common.Support.Extensions;
 
 using System;
-
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Epsitec.Aider.Data.Common
@@ -97,6 +97,21 @@ namespace Epsitec.Aider.Data.Common
 			return false;
 		}
 
+
+		public static string ReplaceSubgroupWithWildcard(string path, int index)
+		{
+			var tokens = path.Split ('.');
+
+			if ((index < 0) ||
+				(index >= tokens.Length - 1))
+			{
+				throw new System.ArgumentOutOfRangeException ("index");
+			}
+
+			tokens[index] = new string (tokens[index].Select (x => char.IsDigit (x) ? '_' : x).ToArray ());
+
+			return string.Join (".", tokens);
+		}
 
 
 		public static bool IsWithinRegion(string path)

@@ -164,6 +164,7 @@
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderMailingController0.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderGroupExtractionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderMailingCategoryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderMailingViewController1Mailing.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderPersonViewController0DeceaseDateController.cs" />
@@ -311,8 +312,9 @@
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
-    <Compile Include="Rules\AiderGroupDefEntityBusinessRules.cs" />
-    <Compile Include="Rules\AiderGroupParticipantEntityBusinessRules.cs" />
+    <Compile Include="Rules\AiderGroupDefBusinessRules.cs" />
+    <Compile Include="Rules\AiderGroupExtractionBusinessRules.cs" />
+    <Compile Include="Rules\AiderGroupParticipantBusinessRules.cs" />
     <Compile Include="Rules\AiderLegalPersonBusinessRules.cs" />
     <Compile Include="Rules\AiderMailingCategoryBusinessRules.cs" />
     <Compile Include="Rules\AiderSubscriptionBusinessRules.cs" />

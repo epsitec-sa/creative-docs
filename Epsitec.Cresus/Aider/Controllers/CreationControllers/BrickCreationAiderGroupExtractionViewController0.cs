@@ -1,6 +1,9 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Controllers.CreationControllers;
+using Epsitec.Aider.Controllers.SpecialFieldControllers;
+
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -26,6 +29,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.End ()
 				.Field<AiderGroupEntity> ()
 					.Title ("Groupe de référence")
+					.WithSpecialField<AiderGroupSpecialField<AiderGroupExtractionEntity>> ()
 				.End ()
 				.Field<GroupExtractionMatch> ()
 					.Title ("Filtre pour l'extraction")

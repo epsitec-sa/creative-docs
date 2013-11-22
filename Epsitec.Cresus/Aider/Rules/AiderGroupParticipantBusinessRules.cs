@@ -9,7 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 namespace Epsitec.Aider.Rules
 {
 	[BusinessRule]
-	internal class AiderGroupParticipantEntityBusinessRules : GenericBusinessRule<AiderGroupParticipantEntity>
+	internal class AiderGroupParticipantBusinessRules : GenericBusinessRule<AiderGroupParticipantEntity>
 	{
 		public override void ApplyBindRule(AiderGroupParticipantEntity entity)
 		{

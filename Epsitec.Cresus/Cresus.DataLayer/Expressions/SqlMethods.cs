@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	/// </summary>
 	public static class SqlMethods
 	{
+		public static readonly string			TextWildcard = "%";
+		public static readonly string			CharWildcard = "_";
 
 
 		public static MethodInfo CompareToMethodInfo

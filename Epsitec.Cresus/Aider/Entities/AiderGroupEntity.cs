@@ -800,7 +800,7 @@ namespace Epsitec.Aider.Entities
 			var request = Request.Create (example);
 
 			request.AddCondition (dataContext, example, x => x.GroupLevel > this.GroupLevel);
-			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, this.Path + "%"));
+			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, this.Path + SqlMethods.TextWildcard));
 
 			return dataContext.GetByRequest (request);
 		}

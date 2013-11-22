@@ -264,7 +264,7 @@ namespace Epsitec.Aider.Entities
 			(
 				dataContext,
 				participation,
-				x => SqlMethods.Like (x.Group.Path, group.Path + "%")
+				x => SqlMethods.Like (x.Group.Path, group.Path + SqlMethods.TextWildcard)
 			);
 		}
 
