@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				if (!string.IsNullOrEmpty (this.HeaderDescription))
 				{
-					rect = this.GetContentDeflateRectangle (rect, considerSorting: true);
+					rect = this.GetContentDeflateRectangle (rect);
 					this.PaintText (graphics, rect, this.HeaderDescription);
 				}
 
@@ -221,8 +221,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (primary)
 			{
-				rect = new Rectangle (rect.Right-rect.Height, rect.Bottom, rect.Height, rect.Height);
-				rect.Deflate ((int) (rect.Height*0.35));
+				double d = (int) (rect.Height * 0.2);
+				rect = new Rectangle (rect.Center.X-d, rect.Top-d, d*2, d);
 
 				var path = AbstractTreeTableColumn.GetSortedPath (rect, type);
 
@@ -231,8 +231,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else
 			{
-				rect = new Rectangle (rect.Right-rect.Height, rect.Bottom, rect.Height, rect.Height);
-				rect.Deflate ((int) (rect.Height*0.35) + 0.5);
+				double d = (int) (rect.Height * 0.2) - 0.5;
+				rect = new Rectangle (rect.Center.X-d, rect.Top-d, d*2, d);
 
 				var path = AbstractTreeTableColumn.GetSortedPath (rect, type);
 
@@ -283,19 +283,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.textLayout.Paint (rect.BottomLeft, graphics, rect, color, GlyphPaintStyle.Normal);
 		}
 
-		protected Rectangle GetContentDeflateRectangle(Rectangle rect, bool considerSorting = false)
+		protected Rectangle GetContentDeflateRectangle(Rectangle rect)
 		{
-			var m = (!considerSorting || this.sortedType == SortedType.None) ? 0.0 : rect.Height*0.5;
-
 			if (this.RowContentAlignment == ContentAlignment.TopLeft    ||
 				this.RowContentAlignment == ContentAlignment.MiddleLeft ||
 				this.RowContentAlignment == ContentAlignment.BottomLeft )
 			{
-				rect.Deflate (this.DescriptionMargin, m, 0, 0);
+				rect.Deflate (this.DescriptionMargin, 0, 0, 0);
 			}
 			else
 			{
-				rect.Deflate (0, this.DescriptionMargin+m, 0, 0);
+				rect.Deflate (0, this.DescriptionMargin, 0, 0);
 			}
 
 			return rect;
