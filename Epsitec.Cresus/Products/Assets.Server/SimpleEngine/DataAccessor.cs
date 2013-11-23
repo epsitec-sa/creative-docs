@@ -177,10 +177,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			var e = obj.GetEvent (obj.EventsCount-1);  // dernier événement
 
-			for (int i=0; i<(int) ObjectField.MaxField; i++)  // bof...
+			foreach (ObjectField field in System.Enum.GetValues (typeof (ObjectField)))
 			{
-				var field = (ObjectField) i;
-
 				var op = obj.GetSyntheticProperty (timestamp.Value, field);
 				if (op == null)  // propriété pas encore connue ?
 				{
