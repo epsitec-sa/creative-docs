@@ -71,7 +71,6 @@
     <Compile Include="DataFillers\TreeTableCellDate.cs" />
     <Compile Include="DataFillers\TreeTableCellDecimal.cs" />
     <Compile Include="DataFillers\TreeTableCellGlyph.cs" />
-    <Compile Include="DataFillers\TreeTableCellGuid.cs" />
     <Compile Include="DataFillers\TreeTableCellInt.cs" />
     <Compile Include="DataFillers\TreeTableCellString.cs" />
     <Compile Include="DataFillers\TreeTableCellTree.cs" />
