@@ -9,6 +9,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class GroupsLogic
 	{
+		public static string GetShortName(DataAccessor accessor, Guid guid)
+		{
+			//	Retourne le nom court d'un groupe, du genre:
+			//	"Etrangères"
+			var obj = accessor.GetObject (BaseType.Groups, guid);
+			if (obj == null)
+			{
+				return null;
+			}
+			else
+			{
+				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
+			}
+		}
+
 		public static string GetFullName(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le nom complet d'un groupe, du genre:

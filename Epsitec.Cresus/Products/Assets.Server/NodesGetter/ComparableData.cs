@@ -54,8 +54,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 			else if (this.Value is string || that.Value is string)
 			{
-				var v1 = (this.Value is string) ? (string) this.Value : null;
-				var v2 = (that.Value is string) ? (string) that.Value : null;
+				var v1 = (this.Value is string) ? (string) this.Value : "";
+				var v2 = (that.Value is string) ? (string) that.Value : "";
 
 				return v1.CompareTo (v2);
 			}
