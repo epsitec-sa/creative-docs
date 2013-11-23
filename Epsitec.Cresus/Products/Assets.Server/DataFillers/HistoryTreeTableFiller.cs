@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						break;
 
 					case FieldType.Guid:
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Guid, this.ValueColumnWidth, "Valeur"));
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
 						break;
 
 					default:
@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private void PutGuid(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem<TreeTableCellGuid> ();
+			var columnItem = new TreeTableColumnItem<TreeTableCellString> ();
 
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
@@ -269,7 +269,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					value = property.Value;
 				}
 
-				var cell = new TreeTableCellGuid (true, value, isSelected: (i++ == selection));
+				var text = GroupsLogic.GetFullName (this.accessor, value);
+				var cell = new TreeTableCellString (true, text, isSelected: (i++ == selection));
 				columnItem.AddRow (cell);
 			}
 
@@ -315,6 +316,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case FieldType.ComputedAmount:
 					return 170;
+
+				case FieldType.Guid:
+					return 300;
 
 				case FieldType.String:
 					return 150;
