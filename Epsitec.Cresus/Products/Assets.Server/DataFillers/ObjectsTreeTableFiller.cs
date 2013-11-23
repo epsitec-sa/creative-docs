@@ -109,7 +109,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var obj = this.accessor.GetObject (baseType, guid);
 
-				var nom          = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Nom);
+				bool notBorn = (this.Timestamp.HasValue &&
+								!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value));
+
+				var timestamp = notBorn ? null : this.Timestamp;
+
+				var nom          = ObjectCalculator.GetObjectPropertyString         (obj, timestamp, ObjectField.Nom);
 				var numéro       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Numéro);
 				var valeur1      = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur1);
 				var valeur2      = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur2);
@@ -138,10 +143,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var group4 = GroupsLogic.GetShortName (this.accessor, guid4);
 				var group5 = GroupsLogic.GetShortName (this.accessor, guid5);
 
-				if (this.Timestamp.HasValue &&
-					!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
+				//-if (this.Timestamp.HasValue &&
+				//-	!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
+				//-{
+				//-	nom = DataDescriptions.OutOfDateName;
+				//-}
+
+				if (notBorn)
 				{
-					nom = DataDescriptions.OutOfDateName;
+					nom = string.Concat ("<i>", nom, "</i>");
 				}
 
 				var grouping = (type != NodeType.Final);
