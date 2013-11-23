@@ -109,32 +109,27 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var obj = this.accessor.GetObject (baseType, guid);
 
-				bool notBorn = (this.Timestamp.HasValue &&
-								!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value));
+				var nom         = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Nom, inputValue: true);
+				var numéro      = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Numéro);
+				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur1);
+				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur2);
+				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur3);
+				var responsable = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Responsable);
+				var couleur     = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Couleur);
+				var série       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.NuméroSérie);
 
-				var timestamp = notBorn ? null : this.Timestamp;
-
-				var nom          = ObjectCalculator.GetObjectPropertyString         (obj, timestamp, ObjectField.Nom);
-				var numéro       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Numéro);
-				var valeur1      = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur1);
-				var valeur2      = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur2);
-				var valeur3      = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur3);
-				var responsable  = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Responsable);
-				var couleur      = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Couleur);
-				var série        = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.NuméroSérie);
-
-				var guid0        = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+0);
-				var rate0        = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+0);
-				var guid1        = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+1);
-				var rate1        = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+1);
-				var guid2        = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+2);
-				var rate2        = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+2);
-				var guid3        = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+3);
-				var rate3        = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+3);
-				var guid4        = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+4);
-				var rate4        = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+4);
-				var guid5        = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+5);
-				var rate5        = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+5);
+				var guid0       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+0);
+				var rate0       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+0);
+				var guid1       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+1);
+				var rate1       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+1);
+				var guid2       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+2);
+				var rate2       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+2);
+				var guid3       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+3);
+				var rate3       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+3);
+				var guid4       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+4);
+				var rate4       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+4);
+				var guid5       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+5);
+				var rate5       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+5);
 
 				var group0 = GroupsLogic.GetShortName (this.accessor, guid0);
 				var group1 = GroupsLogic.GetShortName (this.accessor, guid1);
@@ -148,11 +143,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				//-{
 				//-	nom = DataDescriptions.OutOfDateName;
 				//-}
-
-				if (notBorn)
-				{
-					nom = string.Concat ("<i>", nom, "</i>");
-				}
 
 				var grouping = (type != NodeType.Final);
 

@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	/// <summary>
 	/// Accès en lecture à des données quelconques, triées selon PrimaryOrderedValue
 	/// et SecondaryOrderedValue (ComparableData).
-	/// OrderNode -> OrderNode
+	/// SortableNode -> SortableNode
 	/// </summary>
 	public class SorterNodesGetter : AbstractNodesGetter<SortableNode>  // outputNodes
 	{

@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	/// <summary>
 	/// Accès en lecture à des données quelconques, enrichies d'un contenu
 	/// triable (ComparableData).
-	/// GuidNode -> OrderNode
+	/// GuidNode -> SortableNode
 	/// </summary>
 	public class SortableNodesGetter : AbstractNodesGetter<SortableNode>  // outputNodes
 	{

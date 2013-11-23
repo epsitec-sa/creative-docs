@@ -297,12 +297,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static Guid GetObjectPropertyGuid(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
+		public static Guid GetObjectPropertyGuid(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true, bool inputValue = false)
 		{
 			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataGuidProperty;
 
 			if (p == null)
 			{
+				if (inputValue)
+				{
+					p = ObjectCalculator.GetObjectInputProperty (obj, field) as DataGuidProperty;
+					if (p != null)
+					{
+						return p.Value;
+					}
+				}
+
 				return Guid.Empty;
 			}
 			else
@@ -311,12 +320,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static string GetObjectPropertyString(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
+		public static string GetObjectPropertyString(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true, bool inputValue = false)
 		{
 			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataStringProperty;
 
 			if (p == null)
 			{
+				if (inputValue)
+				{
+					p = ObjectCalculator.GetObjectInputProperty (obj, field) as DataStringProperty;
+					if (p != null && !string.IsNullOrEmpty (p.Value))
+					{
+						return string.Concat ("<i>", p.Value, "</i>");
+					}
+				}
+
 				return null;
 			}
 			else
@@ -331,6 +349,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (obj != null)
 			{
 				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, timestamp, field);
+
+				if (p == null)
+				{
+					//	Pour le tri, si on n'a pas trouvé de propriété, on prend
+					//	celle définie lors de l'événement d'entrée.
+					p = ObjectCalculator.GetObjectInputProperty (obj, field);
+				}
+
 				return ObjectCalculator.GetComparableData (p);
 			}
 
@@ -389,6 +415,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			else
 			{
 				return obj.GetSingleProperty (timestamp, field);
+			}
+		}
+
+		public static AbstractDataProperty GetObjectInputProperty(DataObject obj, ObjectField field)
+		{
+			//	Retourne l'état d'une propriété d'un objet lors de l'événement d'entrée.
+			if (obj == null)
+			{
+				return null;
+			}
+			else
+			{
+				return obj.GetInputProperty (field);
 			}
 		}
 

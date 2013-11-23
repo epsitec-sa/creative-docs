@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Undefined,
 		Single,			// propriété définie directement dans l'événement
 		Synthetic,		// propriété définie dans un événement précédent
+		InputValue,		// propriété pas encore définie, mais dont on donne la valeur lors de l'événement d'entrée
 		Inherited,		// pas utilisé
 		OneShot,		// propriété sans influence sur les événements futurs
 		Timeless,		// propriété intemporelle

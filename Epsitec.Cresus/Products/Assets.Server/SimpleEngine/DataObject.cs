@@ -85,9 +85,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		//	Retourne la propriété définie à la date exacte.
 		public AbstractDataProperty GetSingleProperty(Timestamp timestamp, ObjectField field)
 		{
+			//	Retourne la propriété définie à la date exacte.
 			var e = this.GetEvent (timestamp);
 
 			if (e != null)
@@ -103,9 +103,26 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return null;
 		}
 
-		//	Retourne la propriété définie à la date exacte ou antérieurement.
+		public AbstractDataProperty GetInputProperty(ObjectField field)
+		{
+			//	Retourne la propriété définie lors de l'événement d'entrée.
+			var e = this.events.FirstOrDefault ();  // événement d'entrée
+			if (e != null)
+			{
+				var p = e.GetProperty (field);
+				if (p != null)
+				{
+					p.State = PropertyState.InputValue;
+					return p;
+				}
+			}
+
+			return null;
+		}
+
 		public AbstractDataProperty GetSyntheticProperty(Timestamp timestamp, ObjectField field)
 		{
+			//	Retourne la propriété définie à la date exacte ou antérieurement.
 			var p = this.GetSingleProperty (timestamp, field);
 
 			if (p != null)

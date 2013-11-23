@@ -39,18 +39,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.stateAtController.DateChanged += delegate
 			{
-				if (this.stateAtController.Date.HasValue)
-				{
-					this.NodesGetter.Timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
-				}
-				else
-				{
-					this.NodesGetter.Timestamp = null;
-				}
-
-				this.UpdateController ();
-				this.UpdateToolbar ();
+				this.SetTimestamp (this.stateAtController.Date);
+				//-if (this.stateAtController.Date.HasValue)
+				//-{
+				//-	this.NodesGetter.Timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
+				//-}
+				//-else
+				//-{
+				//-	this.NodesGetter.Timestamp = null;
+				//-}
+				//-
+				//-this.UpdateController ();
+				//-this.UpdateToolbar ();
 			};
+		}
+
+		private void SetTimestamp(System.DateTime? date)
+		{
+			Timestamp? timestamp = null;
+
+			if (date.HasValue)
+			{
+				timestamp = new Timestamp (date.Value, 0);
+			}
+
+			var guid = this.SelectedGuid;
+			this.NodesGetter.Timestamp = timestamp;
+			this.NodesGetter.UpdateData ();
+			this.dataFiller.Timestamp = timestamp;
+			this.SelectedGuid = guid;
+
+			this.UpdateController ();
+			this.UpdateToolbar ();
 		}
 
 
@@ -89,10 +109,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.timestamp = value;
 
-					this.dataFiller.Timestamp = this.timestamp;
-
-					this.UpdateController ();
-					this.UpdateToolbar ();
+					//-this.NodesGetter.Timestamp = this.timestamp;
+					//-this.NodesGetter.UpdateData ();
+					//-this.dataFiller.Timestamp = this.timestamp;
+					//-
+					//-this.UpdateController ();
+					//-this.UpdateToolbar ();
 				}
 			}
 		}

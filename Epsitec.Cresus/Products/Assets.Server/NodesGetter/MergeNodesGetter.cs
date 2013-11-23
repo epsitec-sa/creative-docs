@@ -23,6 +23,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
+		public Timestamp? Timestamp;
+
+
 		public override int Count
 		{
 			get
@@ -80,7 +83,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 					for (int i=0; i<10; i++)
 					{
-						var groupGuid = ObjectCalculator.GetObjectPropertyGuid (obj, null, ObjectField.GroupGuid+i);
+						var groupGuid = ObjectCalculator.GetObjectPropertyGuid (obj, this.Timestamp, ObjectField.GroupGuid+i, inputValue: true);
 						if (groupGuid == inputNode.Guid)
 						{
 							this.outputNodes.Add (new LevelNode (objectNode.Guid, BaseType.Objects, inputNode.Level+1));

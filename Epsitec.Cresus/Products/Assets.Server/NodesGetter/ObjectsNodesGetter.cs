@@ -104,6 +104,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.groupNodesGetter2.ForceEmpty = this.RootGuid.IsEmpty;
 			this.groupNodesGetter2.RootGuid = this.RootGuid;
 
+			this.mergeNodesGetter.Timestamp = this.timestamp;
+
 			this.objectNodesGetter2.UpdateData ();
 			this.groupNodesGetter2.UpdateData ();
 			this.mergeNodesGetter.UpdateData ();
