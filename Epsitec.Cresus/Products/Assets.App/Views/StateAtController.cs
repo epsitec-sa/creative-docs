@@ -51,7 +51,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.mainButton = new ColoredButton
 			{
 				Parent        = parent,
-				NormalColor   = Color.Empty,
 				HoverColor    = ColorManager.HoverColor,
 				AutoFocus     = false,
 				Anchor        = AnchorStyles.BottomLeft,
@@ -85,6 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateButton()
 		{
 			this.mainButton.Text = this.Description;
+			this.mainButton.NormalColor = this.date.HasValue ? ColorManager.SelectionColor : Color.Empty;
 		}
 
 		private string Description
