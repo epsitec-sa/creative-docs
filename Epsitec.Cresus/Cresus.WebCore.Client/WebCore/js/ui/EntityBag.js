@@ -28,11 +28,17 @@ function() {
 
       this.initStores();
       this.dropZones = [];
-      this.removeFromBagDropZone = Ext.create('Epsitec.DropZone', 'removezoneid','Retirer de l\'arche', this.removeEntityFromBag, this);
-      this.registerDropZone(this.removeFromBagDropZone);
 
-      this.showEntityDropZone = Ext.create('Epsitec.DropZone', 'showentityid','Voir dans la base', this.showEntity, this);
-      this.registerDropZone(this.showEntityDropZone);
+      var button = {};
+          button.xtype = 'button';
+          button.text = 'Vider le panier';
+          button.width = 400;
+          button.width = 200;
+          button.cls = 'tile-button';
+          button.overCls = 'tile-button-over';
+          button.textAlign = 'left';
+          button.handler = this.purgeEntityBag;
+          button.scope = this;
 
       config = {
         headerPosition: 'left',
@@ -50,9 +56,9 @@ function() {
         dockedItems: [{
           xtype: 'toolbar',
           dock: 'top',
-          items: this.removeFromBagDropZone
+          items: button
         }],
-        items: [this.createEntityView()],
+        items: [],
         listeners: {
           beforerender: this.setSizeAndPosition,
           score: this
@@ -135,6 +141,11 @@ function() {
       if(index===-1)
       {
         this.bagStore.add(entity);
+        var tile = this.createEntityTile(entity);
+        var entityBag = this;
+        //tile.on('close',function () { entityBag.removeEntityFromBag(entity);});
+        this.items.add(tile);
+        this.doLayout();
       }
       else
       {
@@ -149,6 +160,13 @@ function() {
       this.setSizeAndPosition();
     },
 
+    purgeEntityBag: function () {
+      var entityBag = this;
+      this.bagStore.each(function(record,id){
+          entityBag.removeEntityFromBag(record);
+      });
+    },
+
     removeEntityFromBag: function(entity) {
       var record = this.bagStore.getById(entity.id);
       var hub = Epsitec.Cresus.Core.app.hubs.getHubByName('entitybag');
@@ -160,6 +178,9 @@ function() {
       var record = this.bagStore.getById(entity.id);
       
       this.bagStore.remove(record);
+  
+      this.items.remove(entity.id);
+      this.doLayout();
 
       if(this.bagStore.count()==0)
       {
@@ -199,6 +220,41 @@ function() {
     });      
     },
 
+    createEntityTile: function(entity) {
+      return Ext.create('Ext.panel.Panel', {
+          id: entity.id,
+          entityData : entity,
+          entityBag: this,
+          title: entity.entityType,
+          entityId: entity.id,
+          minHeight: 50,
+          minWidth: 200,
+          maxWidth: 400,
+          border: false,
+          tools: [{
+                type: 'close',
+                handler: function(e, t, o) { this.removeEntityFromBag(o.up().entityData); },
+                scope: this
+          }],
+          style: {
+            borderRight: '1px solid #99BCE8',
+            borderBottom: '1px solid #99BCE8',
+            borderLeft: '1px solid #99BCE8'
+          },
+          height: 'auto',
+          bodyCls: 'tile',
+          itemSelector: 'div.entitybag-source',
+          overItemCls: 'entitybag-over',
+          selectedItemClass: 'entitybag-selected',
+          html: '<div class="entitybag-source">' + entity.summary + '</div>',
+          listeners: {
+            render: this.initializeEntityDragZone,
+            destroy: this.unregEntityDragZone,
+            scope: this
+          }
+        });
+    },
+
     unregEntityDragZone: function (v) {
       if(v.dragZone)
       {
@@ -223,7 +279,7 @@ function() {
                       sourceEl: sourceEl,
                       repairXY: Ext.fly(sourceEl).getXY(),
                       ddel: d,
-                      entityData: v.getRecord(sourceEl).data
+                      entityData: v.entityData
                   });
               }
           },
