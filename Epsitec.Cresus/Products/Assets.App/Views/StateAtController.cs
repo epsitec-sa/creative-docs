@@ -33,6 +33,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public bool Visibility
+		{
+			get
+			{
+				return this.mainButton.Visibility;
+			}
+			set
+			{
+				this.mainButton.Visibility = value;
+			}
+		}
+
+
 		public void CreateUI(Widget parent)
 		{
 			this.mainButton = new ColoredButton

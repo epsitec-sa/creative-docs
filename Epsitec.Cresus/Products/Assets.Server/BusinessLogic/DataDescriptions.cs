@@ -166,8 +166,5 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return null;
 			}
 		}
-
-
-		public readonly static string OutOfDateName = "<i>Inconnu à cette date</i>";
 	}
 }

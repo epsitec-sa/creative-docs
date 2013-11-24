@@ -50,6 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateScroller ();
 			this.UpdateController ();
 			this.UpdateToolbar ();
+			this.UpdateStateAt ();
 		}
 
 
@@ -201,53 +202,59 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateScroller ();
 			this.UpdateController ();
 			this.UpdateToolbar ();
-			
+
 			//	Connexion des événements.
-			this.treeColumn.RowClicked += delegate (object sender, int row)
 			{
-				this.SetSelection (this.TopVisibleRow + row, this.selectedColumn);
-			};
-
-			this.treeColumn.TreeButtonClicked += delegate (object sender, int row, NodeType type)
-			{
-				this.OnCompactOrExpand (this.TopVisibleRow + row);
-			};
-
-			this.controller.ContentChanged += delegate (object sender, bool crop)
-			{
-				this.UpdateController (crop);
-				this.UpdateToolbar ();
-			};
-			
-			this.controller.CellClicked += delegate (object sender, int row, int rank)
-			{
-				int sel = this.LineToRow (row);
-				if (sel != -1)
+				this.treeColumn.RowClicked += delegate (object sender, int row)
 				{
-					this.SetSelection (sel, this.controller.LeftVisibleCell + rank);
-				}
-			};
-			
-			this.controller.CellDoubleClicked += delegate (object sender, int row, int rank)
-			{
-				int sel = this.LineToRow (row);
-				if (sel != -1)
+					this.SetSelection (this.TopVisibleRow + row, this.selectedColumn);
+				};
+
+				this.treeColumn.TreeButtonClicked += delegate (object sender, int row, NodeType type)
 				{
-					this.OnCellDoubleClicked ();
-				}
-			};
+					this.OnCompactOrExpand (this.TopVisibleRow + row);
+				};
+			}
 
-			this.scroller.SizeChanged += delegate
 			{
-				this.UpdateScroller ();
-				this.UpdateController ();
-			};
+				this.controller.ContentChanged += delegate (object sender, bool crop)
+				{
+					this.UpdateController (crop);
+					this.UpdateToolbar ();
+				};
 
-			this.scroller.ValueChanged += delegate
+				this.controller.CellClicked += delegate (object sender, int row, int rank)
+				{
+					int sel = this.LineToRow (row);
+					if (sel != -1)
+					{
+						this.SetSelection (sel, this.controller.LeftVisibleCell + rank);
+					}
+				};
+
+				this.controller.CellDoubleClicked += delegate (object sender, int row, int rank)
+				{
+					int sel = this.LineToRow (row);
+					if (sel != -1)
+					{
+						this.OnCellDoubleClicked ();
+					}
+				};
+			}
+
 			{
-				this.UpdateController (crop: false);
-				this.UpdateToolbar ();
-			};
+				this.scroller.SizeChanged += delegate
+				{
+					this.UpdateScroller ();
+					this.UpdateController ();
+				};
+
+				this.scroller.ValueChanged += delegate
+				{
+					this.UpdateController (crop: false);
+					this.UpdateToolbar ();
+				};
+			}
 
 			this.objectsToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
 			{
@@ -342,19 +349,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.stateAtController.DateChanged += delegate
 			{
-				if (this.stateAtController.Date.HasValue)
-				{
-					this.nodesGetter.Timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
-				}
-				else
-				{
-					this.nodesGetter.Timestamp = null;
-				}
-
-				this.UpdateDataArray ();
-				this.UpdateScroller ();
-				this.UpdateController ();
-				this.UpdateToolbar ();
+				this.UpdateTreeColumn ();
 			};
 		}
 
@@ -389,11 +384,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
-				this.nodesGetter.RootGuid = guid;
-
-				var selectedGuid = this.SelectedGuid;
-				this.UpdateData ();
-				this.SelectedGuid = selectedGuid;
+				this.rootGuid = guid;
+				this.UpdateTreeColumn ();
 			};
 		}
 
@@ -868,6 +860,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void UpdateTreeColumn()
+		{
+			var selectedGuid = this.SelectedGuid;
+			{
+				Timestamp? timestamp = null;
+				if (this.stateAtController.Date.HasValue && !this.rootGuid.IsEmpty)
+				{
+					timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
+				}
+
+				this.nodesGetter.Timestamp = timestamp;
+				this.nodesGetter.RootGuid = this.rootGuid;
+				this.nodesGetter.UpdateData ();
+				this.dataFiller.Timestamp = timestamp;
+			}
+			this.SelectedGuid = selectedGuid;
+
+			this.UpdateDataArray ();
+			this.UpdateScroller ();
+			this.UpdateController ();
+			this.UpdateToolbar ();
+			this.UpdateStateAt ();
+		}
+
+		private void UpdateStateAt()
+		{
+			this.stateAtController.Visibility = !this.nodesGetter.RootGuid.IsEmpty;
+		}
+
+
 		private void UpdateScroller()
 		{
 			if (this.scroller == null)
@@ -992,8 +1014,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateToolbar()
 		{
-			this.objectsToolbar.SetCommandState (ToolbarCommand.Filter,
-				this.nodesGetter.RootGuid.IsEmpty ? ToolbarCommandState.Enable : ToolbarCommandState.Activate);
+			this.objectsToolbar.SetCommandState (ToolbarCommand.Filter, this.nodesGetter.RootGuid.IsEmpty
+				? ToolbarCommandState.Enable
+				: ToolbarCommandState.Activate);
 
 			this.UpdateObjectCommand (ToolbarCommand.First, this.selectedRow, this.FirstRowIndex);
 			this.UpdateObjectCommand (ToolbarCommand.Prev,  this.selectedRow, this.PrevRowIndex);
@@ -1306,5 +1329,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private StateAtController							stateAtController;
 		private int											selectedRow;
 		private int											selectedColumn;
+		private Guid										rootGuid;
 	}
 }

@@ -67,18 +67,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid  = node.Guid;
 				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
 
-				var nom    = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Nom);
+				var nom    = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Nom, inputValue: true);
 				var numéro = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Numéro);
 				var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.TauxAmortissement);
 				var typeAm = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.TypeAmortissement);
 				var period = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Périodicité);
 				var residu = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ValeurRésiduelle);
-
-				if (this.Timestamp.HasValue &&
-					!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
-				{
-					nom = DataDescriptions.OutOfDateName;
-				}
 
 				var s0 = new TreeTableCellString  (true, nom,    isSelected: (i == selection));
 				var s1 = new TreeTableCellString  (true, numéro, isSelected: (i == selection));

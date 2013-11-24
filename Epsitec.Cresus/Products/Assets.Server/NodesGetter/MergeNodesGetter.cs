@@ -75,18 +75,27 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		{
 			foreach (var inputNode in this.groupNodes.Nodes)
 			{
-				this.outputNodes.Add (new LevelNode (inputNode.Guid, BaseType.Groups, inputNode.Level));
+				var node = new LevelNode (inputNode.Guid, BaseType.Groups, inputNode.Level);
+				this.outputNodes.Add (node);
 
 				foreach (var objectNode in this.objectNodes.Nodes)
 				{
 					var obj = this.accessor.GetObject (BaseType.Objects, objectNode.Guid);
 
-					for (int i=0; i<10; i++)
+					for (int i=0; i<10; i++)  // ObjectField.GroupGuid0..9
 					{
-						var groupGuid = ObjectCalculator.GetObjectPropertyGuid (obj, this.Timestamp, ObjectField.GroupGuid+i, inputValue: true);
+						var groupGuid = ObjectCalculator.GetObjectPropertyGuid
+						(
+							obj,
+							this.Timestamp,
+							ObjectField.GroupGuid+i,
+							inputValue: true
+						);
+
 						if (groupGuid == inputNode.Guid)
 						{
-							this.outputNodes.Add (new LevelNode (objectNode.Guid, BaseType.Objects, inputNode.Level+1));
+							node = new LevelNode (objectNode.Guid, BaseType.Objects, inputNode.Level+1);
+							this.outputNodes.Add (node);
 						}
 					}
 				}

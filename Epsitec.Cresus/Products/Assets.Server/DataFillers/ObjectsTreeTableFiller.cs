@@ -138,12 +138,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var group4 = GroupsLogic.GetShortName (this.accessor, guid4);
 				var group5 = GroupsLogic.GetShortName (this.accessor, guid5);
 
-				//-if (this.Timestamp.HasValue &&
-				//-	!ObjectCalculator.IsExistingObject (obj, this.Timestamp.Value))
-				//-{
-				//-	nom = DataDescriptions.OutOfDateName;
-				//-}
-
 				var grouping = (type != NodeType.Final);
 
 				var sf = new TreeTableCellTree           (true, level, type, nom, isSelected: (i == selection));
