@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.GroupRate+7:
 				case ObjectField.GroupRate+8:
 				case ObjectField.GroupRate+9:
-					return "Au taux de";
+					return "Proportion";
 
 				default:
 					return null;

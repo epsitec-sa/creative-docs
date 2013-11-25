@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
@@ -86,6 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				(
 					item => Helpers.Text.GetTextWidth (SimplePopup.GetTextWithGaps (item))
 				)
+				+ ColoredButton.HorizontalMargins * 2
 				+ 3;  // visuellement, il est bon d'avoir un chouia d'espace en plus à droite
 			}
 		}

@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			//	Dessine le texte.
-			rect.Deflate (3, 0);  // en cas d'alignement à gauche, comme un TextField !
+			rect.Deflate (ColoredButton.HorizontalMargins, 0);  // en cas d'alignement à gauche, comme un TextField !
 
 			this.textLayout.Text            = this.Text;
 			this.textLayout.DefaultFont     = Font.DefaultFont;
@@ -149,6 +149,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+
+		public static readonly int HorizontalMargins = 3;
 
 		private readonly TextLayout				textLayout;
 
