@@ -421,11 +421,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				else
 				{
 					rect.Inflate (0.5);
-					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: true, onlyRect: false));
+					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: true, onlyRect: false, onlyLink: false));
 					graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.PopupBorderColor));
 
-					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: false, onlyRect: true));
+					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: false, onlyRect: true, onlyLink: false));
 					graphics.RenderSolid (ColorManager.PopupBorderColor);
+
+					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: false, onlyRect: false, onlyLink: true));
+					graphics.RenderSolid (Color.FromAlphaColor (1.0-alpha, ColorManager.PopupBorderColor));
 				}
 			}
 			else  // pas de queue ?
