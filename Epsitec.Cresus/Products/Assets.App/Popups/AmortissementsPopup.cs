@@ -17,12 +17,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.accessor = accessor;
 
-			this.isCreate = true;
-			this.isAll = true;
+			this.IsCreate = true;
+			this.IsAll    = true;
 		}
 
 
 		public bool								OneSelectionAllowed;
+		public bool								IsCreate;
+		public bool								IsAll;
 		public System.DateTime?					DateFrom;
 		public System.DateTime?					DateTo;
 
@@ -54,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateAll     (line6);
 			this.CreateButtons ();
 
-			this.isAll = !this.OneSelectionAllowed;
+			this.IsAll = !this.OneSelectionAllowed;
 
 			this.UpdateButtons ();
 		}
@@ -71,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.radioCreate.Clicked += delegate
 			{
-				this.isCreate = true;
+				this.IsCreate = true;
 				this.UpdateButtons ();
 			};
 		}
@@ -88,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.radioRemove.Clicked += delegate
 			{
-				this.isCreate = false;
+				this.IsCreate = false;
 				this.UpdateButtons ();
 			};
 		}
@@ -177,7 +179,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.radioOne.Clicked += delegate
 			{
-				this.isAll = false;
+				this.IsAll = false;
 				this.UpdateButtons ();
 			};
 		}
@@ -194,7 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.radioAll.Clicked += delegate
 			{
-				this.isAll = true;
+				this.IsAll = true;
 				this.UpdateButtons ();
 			};
 		}
@@ -212,18 +214,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.radioOne.Enable = this.OneSelectionAllowed;
 
-			this.radioCreate.ActiveState =  this.isCreate ? ActiveState.Yes : ActiveState.No;
-			this.radioRemove.ActiveState = !this.isCreate ? ActiveState.Yes : ActiveState.No;
-			this.radioOne   .ActiveState = !this.isAll    ? ActiveState.Yes : ActiveState.No;
-			this.radioAll   .ActiveState =  this.isAll    ? ActiveState.Yes : ActiveState.No;
+			this.radioCreate.ActiveState =  this.IsCreate ? ActiveState.Yes : ActiveState.No;
+			this.radioRemove.ActiveState = !this.IsCreate ? ActiveState.Yes : ActiveState.No;
+			this.radioOne   .ActiveState = !this.IsAll    ? ActiveState.Yes : ActiveState.No;
+			this.radioAll   .ActiveState =  this.IsAll    ? ActiveState.Yes : ActiveState.No;
 
-			if (this.isCreate)
+			if (this.IsCreate)
 			{
-				this.okButton.Text = this.isAll ? "Tout générer" : "Générer un";
+				this.okButton.Text = this.IsAll ? "Tout générer" : "Générer un";
 			}
 			else
 			{
-				this.okButton.Text = this.isAll ? "Tout supprimer" : "Supprimer un";
+				this.okButton.Text = this.IsAll ? "Tout supprimer" : "Supprimer un";
 			}
 
 			this.okButton.Enable = this.DateFrom.HasValue
@@ -232,7 +234,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private static readonly int TitleHeight = 24;
 		private static readonly int LineHeight  = 2+17+2;
 		private static readonly int PopupWidth  = 300;
 		private static readonly int PopupHeight = 230;
@@ -246,8 +247,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private RadioButton									radioAll;
 		private DateFieldController							dateFromController;
 		private DateFieldController							dateToController;
-		private bool										isCreate;
-		private bool										isAll;
 		private Button										okButton;
 		private Button										cancelButton;
 	}

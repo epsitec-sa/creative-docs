@@ -125,7 +125,6 @@
     <Compile Include="Views\ObjectsToolbarTreeTableController.cs" />
     <Compile Include="Views\ObjectsView.cs" />
     <Compile Include="Views\SummaryController.cs" />
-    <Compile Include="Views\EditorPageCompta.cs" />
     <Compile Include="Views\SummaryControllerTile.cs" />
     <Compile Include="Widgets\ColoredButton.cs" />
     <Compile Include="Views\EditorPageValues.cs" />

@@ -457,22 +457,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		#endregion
 
 
-		public static void RemoveAmortissementsAuto(DataObject obj)
-		{
-			//	Supprime tous les événements d'amortissement automatique d'un objet.
-			if (obj != null)
-			{
-				var guids = obj.Events.Where (x => x.Type == EventType.AmortissementAuto).Select (x => x.Guid);
-
-				foreach (var guid in guids)
-				{
-					var e = obj.GetEvent (guid);
-					obj.RemoveEvent (e);
-				}
-			}
-		}
-
-
 		#region Update computed amount
 		public static void UpdateComputedAmounts(DataObject obj)
 		{

@@ -187,11 +187,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ObjectField.NomCatégorie2;
 				yield return ObjectField.NomCatégorie3;
 
-				yield return ObjectField.DateAmortissement1;
-				yield return ObjectField.DateAmortissement2;
 				yield return ObjectField.TauxAmortissement;
 				yield return ObjectField.TypeAmortissement;
-				yield return ObjectField.FréquenceAmortissement;
+				yield return ObjectField.Périodicité;
 				yield return ObjectField.ValeurRésiduelle;
 
 				yield return ObjectField.Compte1;

@@ -54,6 +54,8 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="BusinessLogic\Amortissements.cs" />
+    <Compile Include="BusinessLogic\TypeAmortissement.cs" />
+    <Compile Include="BusinessLogic\DataAmortissement.cs" />
     <Compile Include="BusinessLogic\GroupsLogic.cs" />
     <Compile Include="BusinessLogic\LogicDescriptions.cs" />
     <Compile Include="BusinessLogic\TimelinesArrayLogic.cs" />

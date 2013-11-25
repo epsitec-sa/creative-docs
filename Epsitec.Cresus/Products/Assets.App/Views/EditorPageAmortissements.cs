@@ -69,6 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins       = new Common.Drawing.Margins (0, 0, 0, 0),
 			};
 
+#if false
 			var radio1 = new RadioButton
 			{
 				Parent        = line,
@@ -90,6 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins       = new Common.Drawing.Margins (0, 0, 0, 0),
 				ActiveState   = ActiveState.No,
 			};
+#endif
 
 			button.Clicked += delegate
 			{

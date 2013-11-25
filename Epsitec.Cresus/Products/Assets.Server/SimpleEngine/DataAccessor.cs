@@ -222,9 +222,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			switch (objectField)
 			{
-				case ObjectField.FréquenceAmortissement:
-					return FieldType.Int;
-
 				case ObjectField.Valeur1:
 				case ObjectField.Valeur2:
 				case ObjectField.Valeur3:
@@ -245,8 +242,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					return FieldType.Decimal;
 
 				case ObjectField.OneShotDateOpération:
-				case ObjectField.DateAmortissement1:
-				case ObjectField.DateAmortissement2:
 					return FieldType.Date;
 
 				case ObjectField.Parent:

@@ -60,20 +60,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.NuméroSérie:
 					return "Numéro de série";
 
-				case ObjectField.DateAmortissement1:
-					return "Date 1er amort.";
-
-				case ObjectField.DateAmortissement2:
-					return "Date 2ème amort.";
-
 				case ObjectField.TauxAmortissement:
 					return "Taux";
 
 				case ObjectField.TypeAmortissement:
 					return "Type";
-
-				case ObjectField.FréquenceAmortissement:
-					return "Fréquence";
 
 				case ObjectField.Périodicité:
 					return "Périodicité";

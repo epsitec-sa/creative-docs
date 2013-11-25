@@ -15,194 +15,179 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void GeneratesAmortissementsAuto()
+		public void GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
 		{
 			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
 			{
-				this.GeneratesAmortissementsAuto (node.Guid);
+				this.GeneratesAmortissementsAuto (dateFrom, dateTo, node.Guid);
 			}
 		}
 
-		public void GeneratesAmortissementsAuto(Guid objectGuid)
+		public void GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
 		{
-			//	Première ébauche totalement naïve et fausse !
-			//	TODO: ...
 			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
 
-			ObjectCalculator.RemoveAmortissementsAuto (obj);
-
-			System.DateTime? date1, date2;
-			decimal? taux, rest;
-			string type;
-			int? freq;
-			if (!this.GetAmortissement (obj, out date1, out date2, out taux, out type, out freq, out rest))
+			//	S'il y a déjà un ou plusieurs amortissements, on ne fait rien.
+			if (Amortissements.HasAmortissements (obj, dateFrom, dateTo))
 			{
 				return;
 			}
 
-			for (int j=0; j<100; j++)
+			var end = dateTo.AddDays (1).AddTicks (-1);
+			var amortissement = this.GetAmortissement (obj, new Timestamp (end, int.MaxValue));
+			if (!amortissement.IsValid)
 			{
-				System.DateTime date;
-
-				if (j == 0)
-				{
-					if (!date1.HasValue)
-					{
-						continue;
-					}
-					date = date1.Value;
-				}
-				else
-				{
-					var d = date2.Value.Day;
-					var m = date2.Value.Month;
-					var y = date2.Value.Year;
-
-					m += (j-1)*freq.Value;
-
-					while (m > 12)
-					{
-						m -=12;
-						y++;
-					}
-
-					date = new System.DateTime (y, m, d);
-				}
-
-				var currentValues = this.GetValeur (obj, date);
-				var newValues = new List<decimal?> ();
-
-				for (int i=0; i<3; i++)
-				{
-					var v = currentValues[i].GetValueOrDefault (0);
-
-					v -= v*taux.Value;
-
-					if (v < rest.Value)
-					{
-						newValues.Add (null);
-					}
-					else
-					{
-						newValues.Add (v);
-					}
-				}
-
-				this.CreateAmortissementAuto (obj, date, currentValues, newValues);
+				return;
 			}
+
+			var start = new Timestamp (dateFrom, 0);
+			var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, start, ObjectField.Valeur1);
+			if (!ca.HasValue || !ca.Value.FinalAmount.HasValue)
+			{
+				return;
+			}
+
+			var currentValue = ca.Value.FinalAmount.Value;
+			var newValue = currentValue - (currentValue * amortissement.Rate);
+
+			this.CreateAmortissementAuto (obj, dateTo, currentValue, newValue);
 		}
 
-		private bool GetAmortissement(DataObject obj,
-			out System.DateTime? date1, out System.DateTime? date2,
-			out decimal? taux, out string type, out int? freq, out decimal? rest)
+
+		public void RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
 		{
-			date1 = ObjectCalculator.GetObjectPropertyDate    (obj, null, ObjectField.DateAmortissement1);
-			date2 = ObjectCalculator.GetObjectPropertyDate    (obj, null, ObjectField.DateAmortissement2);
-			taux  = ObjectCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.TauxAmortissement);
-			type  = ObjectCalculator.GetObjectPropertyString  (obj, null, ObjectField.TypeAmortissement);
-			freq  = ObjectCalculator.GetObjectPropertyInt     (obj, null, ObjectField.FréquenceAmortissement);
-			rest  = ObjectCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.ValeurRésiduelle);
+			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
 
-			if (!date2.HasValue && date1.HasValue)
+			foreach (var node in getter.Nodes)
 			{
-				date2 = date1;
-				date1 = null;
+				this.RemovesAmortissementsAuto (dateFrom, dateTo, node.Guid);
 			}
-
-			if (string.IsNullOrEmpty (type))
-			{
-				type = "Linéaire";
-			}
-
-			if (!rest.HasValue)
-			{
-				rest = 1.0m;
-			}
-
-			if (!freq.HasValue)
-			{
-				freq = 1;
-			}
-
-			return (date2.HasValue && taux.HasValue);
 		}
 
-		private List<decimal?> GetValeur(DataObject obj, System.DateTime date)
+		public void RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
 		{
-			var list = new List<decimal?> ();
-			var timestamp = new Timestamp(date, 0);
+			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
+			System.Diagnostics.Debug.Assert (obj != null);
 
-			for (int i=0; i<3; i++)  // Valeur1..3
+			Amortissements.RemovesAmortissementsAuto (obj, dateFrom, dateTo);
+		}
+
+
+		private DataAmortissement GetAmortissement(DataObject obj, Timestamp timestamp)
+		{
+			var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.TauxAmortissement);
+			var type   = ObjectCalculator.GetObjectPropertyString  (obj, timestamp, ObjectField.TypeAmortissement);
+			var period = ObjectCalculator.GetObjectPropertyString  (obj, timestamp, ObjectField.Périodicité);
+			var rest   = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ValeurRésiduelle);
+
+			var t = Amortissements.ParseTypeAmortissement (type);
+			var p = Amortissements.ParsePeriod (period);
+
+			return new DataAmortissement (taux.GetValueOrDefault (0.0m), t, p, rest.GetValueOrDefault (0.0m));
+
+		}
+
+		private static TypeAmortissement ParseTypeAmortissement(string text)
+		{
+			if (!string.IsNullOrEmpty (text))
 			{
-				ComputedAmount? m = null;
-				switch (i)
+				text = text.ToLower ();
+
+				if (text.StartsWith ("lin"))  // linéaire ?
 				{
-					case 0:
-						m = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, ObjectField.Valeur1);
-						break;
-
-					case 1:
-						m = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, ObjectField.Valeur2);
-						break;
-
-					case 2:
-						m = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, ObjectField.Valeur3);
-						break;
+					return TypeAmortissement.Linear;
 				}
-
-				if (m.HasValue)
+				else if (text.StartsWith ("dég") || text.StartsWith ("deg"))  // dégressif ?
 				{
-					list.Add (m.Value.FinalAmount);
-				}
-				else
-				{
-					list.Add (null);
+					return TypeAmortissement.Linear;
 				}
 			}
 
-			return list;
+			return TypeAmortissement.Unknown;
 		}
 
-		private void CreateAmortissementAuto(DataObject obj, System.DateTime date, List<decimal?> currentValues, List<decimal?> newValues)
+		private static int ParsePeriod(string text)
+		{
+			if (!string.IsNullOrEmpty (text))
+			{
+				text = text.ToLower ();
+
+				if (text.StartsWith ("an"))  // annuel ?
+				{
+					return 12;
+				}
+				else if (text.StartsWith ("sem"))  // semestriel ?
+				{
+					return 6;
+				}
+				else if (text.StartsWith ("tri"))  // trimestriel ?
+				{
+					return 3;
+				}
+				else if (text.StartsWith ("men"))  // mensuel ?
+				{
+					return 1;
+				}
+			}
+
+			return 0;
+		}
+
+
+		private void CreateAmortissementAuto(DataObject obj, System.DateTime date, decimal currentValue, decimal newValue)
 		{
 			var e = this.accessor.CreateObjectEvent (obj, date, EventType.AmortissementAuto);
 
 			if (e != null)
 			{
-				for (int i=0; i<3; i++)  // Valeur1..3
+				var v = new ComputedAmount (currentValue, newValue, true);
+				var p = new DataComputedAmountProperty (ObjectField.Valeur1, v);
+				e.AddProperty (p);
+			}
+		}
+
+
+		private static bool HasAmortissements(DataObject obj, System.DateTime dateFrom, System.DateTime dateTo)
+		{
+			//	Indique s'il existe un ou plusieurs amortissements (automatique ou manuel)
+			//	dans un intervale de dates.
+			if (obj != null)
+			{
+				return obj.Events
+					.Where (x => (x.Type == EventType.AmortissementAuto || x.Type == EventType.AmortissementExtra)
+						&& x.Timestamp.Date >= dateFrom
+						&& x.Timestamp.Date <= dateTo)
+					.Any ();
+
+			}
+
+			return false;
+		}
+
+		private static void RemovesAmortissementsAuto(DataObject obj, System.DateTime dateFrom, System.DateTime dateTo)
+		{
+			//	Supprime tous les événements d'amortissement automatique d'un objet
+			//	compris dans un intervale de dates.
+			if (obj != null)
+			{
+				var guids = obj.Events
+					.Where (x => x.Type == EventType.AmortissementAuto
+						&& x.Timestamp.Date >= dateFrom
+						&& x.Timestamp.Date <= dateTo)
+					.Select (x => x.Guid)
+					.ToArray ();
+
+				foreach (var guid in guids)
 				{
-					if (newValues[i].HasValue)
-					{
-						var v = new ComputedAmount (currentValues[i].GetValueOrDefault (0), newValues[i].GetValueOrDefault (0), true);
-						DataComputedAmountProperty p = null;
-
-						switch (i)
-						{
-							case 0:
-								p = new DataComputedAmountProperty (ObjectField.Valeur1, v);
-								break;
-
-							case 1:
-								p = new DataComputedAmountProperty (ObjectField.Valeur2, v);
-								break;
-
-							case 2:
-								p = new DataComputedAmountProperty (ObjectField.Valeur3, v);
-								break;
-						}
-
-						if (p != null)
-						{
-							e.AddProperty (p);
-						}
-					}
+					var e = obj.GetEvent (guid);
+					obj.RemoveEvent (e);
 				}
 			}
 		}
 
 
-		private readonly DataAccessor accessor;
+		private readonly DataAccessor			accessor;
 	}
 }

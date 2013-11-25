@@ -72,6 +72,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "ok")
 				{
+					System.Diagnostics.Debug.Assert (popup.DateFrom.HasValue);
+					System.Diagnostics.Debug.Assert (popup.DateTo.HasValue);
+					this.Amortissements (popup.IsCreate, popup.IsAll, popup.DateFrom.Value, popup.DateTo.Value);
 				}
 			};
 		}
@@ -102,6 +105,37 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 			}
+		}
+
+
+		private void Amortissements(bool isCreate, bool isAll, System.DateTime dateFrom, System.DateTime dateTo)
+		{
+			if (isCreate)
+			{
+				if (isAll)
+				{
+					this.amortissements.GeneratesAmortissementsAuto (dateFrom, dateTo);
+				}
+				else
+				{
+					System.Diagnostics.Debug.Assert (!this.SelectedObjectGuid.IsEmpty);
+					this.amortissements.GeneratesAmortissementsAuto (dateFrom, dateTo, this.SelectedObjectGuid);
+				}
+			}
+			else
+			{
+				if (isAll)
+				{
+					this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo);
+				}
+				else
+				{
+					System.Diagnostics.Debug.Assert (!this.SelectedObjectGuid.IsEmpty);
+					this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo, this.SelectedObjectGuid);
+				}
+			}
+
+			this.Update ();
 		}
 
 
