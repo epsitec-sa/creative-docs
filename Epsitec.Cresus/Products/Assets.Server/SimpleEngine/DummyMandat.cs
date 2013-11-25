@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					o112.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataGuidProperty           (ObjectField.GroupGuid+0,   DummyMandat.GetGroup (mandat, "Immeubles")));
-					e.AddProperty (new DataGuidProperty           (ObjectField.GroupGuid+1,   DummyMandat.GetGroup (mandat, "Ouest")));
+					e.AddProperty (new DataGuidProperty           (ObjectField.GroupGuid+1,   DummyMandat.GetGroup (mandat, "Sud")));
 					e.AddProperty (new DataGuidProperty           (ObjectField.GroupGuid+2,   DummyMandat.GetGroup (mandat, "Bureaux")));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1120"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre logistique"));
@@ -949,6 +949,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Transports"));
 			}
 
+
 			///////////////
 
 			var o5 = new DataObject ();
@@ -958,7 +959,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o5.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Placements"));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Responsables"));
 			}
 
 			var o51 = new DataObject ();
@@ -968,7 +969,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o51.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions suisses"));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Simone"));
 			}
 
 			var o52 = new DataObject ();
@@ -978,7 +979,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o52.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions européennes"));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Georges-André"));
 			}
 
 			var o53 = new DataObject ();
@@ -988,7 +989,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o53.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions nord-américaines"));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Béatrice"));
 			}
 
 			var o54 = new DataObject ();
@@ -998,7 +999,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o54.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions sub-américaines"));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Dominique"));
 			}
 
 			var o55 = new DataObject ();
@@ -1008,6 +1009,97 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o55.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Joël"));
+			}
+
+			var o56 = new DataObject ();
+			categories.Add (o56);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o56.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Paul-Henry"));
+			}
+
+			var o57 = new DataObject ();
+			categories.Add (o57);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o57.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Jean-Daniel"));
+			}
+
+			var o58 = new DataObject ();
+			categories.Add (o58);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o58.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty (ObjectField.Parent, o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Sandra"));
+			}
+			///////////////
+
+			var o6 = new DataObject ();
+			categories.Add (o6);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o6.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Placements"));
+			}
+
+			var o61 = new DataObject ();
+			categories.Add (o61);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o61.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o6.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions suisses"));
+			}
+
+			var o62 = new DataObject ();
+			categories.Add (o62);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o62.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o6.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions européennes"));
+			}
+
+			var o63 = new DataObject ();
+			categories.Add (o63);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o63.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o6.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions nord-américaines"));
+			}
+
+			var o64 = new DataObject ();
+			categories.Add (o64);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o64.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o6.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions sub-américaines"));
+			}
+
+			var o65 = new DataObject ();
+			categories.Add (o65);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o65.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o6.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Portefeuille d’actions asiatiques"));
 			}
 		}

@@ -103,9 +103,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.objectNodesGetter2.SortingInstructions = this.SortingInstructions;
 
 			this.groupNodesGetter1.Timestamp = this.timestamp;
+			this.groupNodesGetter1.SortingInstructions = this.SortingInstructions;
 
 			this.groupNodesGetter2.ForceEmpty = this.RootGuid.IsEmpty;
 			this.groupNodesGetter2.RootGuid = this.RootGuid;
+			this.groupNodesGetter2.SortingInstructions = this.SortingInstructions;
 
 			this.mergeNodesGetter.Timestamp = this.timestamp;
 
@@ -165,10 +167,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		#endregion
 
 
-		private readonly SortableNodesGetter			objectNodesGetter1;
+		private readonly SortableNodesGetter		objectNodesGetter1;
 		private readonly SorterNodesGetter			objectNodesGetter2;
-		private readonly GroupParentNodesGetter			groupNodesGetter1;
-		private readonly GroupLevelNodesGetter			groupNodesGetter2;
+		private readonly GroupParentNodesGetter		groupNodesGetter1;
+		private readonly GroupLevelNodesGetter		groupNodesGetter2;
 		private readonly MergeNodesGetter			mergeNodesGetter;
 		private readonly TreeObjectsNodesGetter		treeObjectsGetter;
 

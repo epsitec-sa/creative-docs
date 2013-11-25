@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	///     |
 	///     o  ParentNode
 	///     V
-	/// LevelNodesGetter
+	/// GroupLevelNodesGetter
 	///     |
 	///     o  LevelNode
 	///     V
@@ -143,8 +143,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 
 		private readonly AbstractNodesGetter<GuidNode>	inputNodes;
-		private readonly GroupParentNodesGetter				parentNodesGetter;
-		private readonly GroupLevelNodesGetter				levelNodesGetter;
+		private readonly GroupParentNodesGetter			parentNodesGetter;
+		private readonly GroupLevelNodesGetter			levelNodesGetter;
 		private readonly TreeObjectsNodesGetter			treeObjectsGetter;
 
 		private Timestamp?								timestamp;

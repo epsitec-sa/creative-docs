@@ -368,6 +368,98 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o4.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Transports"));
 			}
+
+			///////////////
+
+			var o5 = new DataObject ();
+			categories.Add (o5);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o5.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Responsables"));
+			}
+
+			var o51 = new DataObject ();
+			categories.Add (o51);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o51.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Simone"));
+			}
+
+			var o52 = new DataObject ();
+			categories.Add (o52);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o52.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Georges-André"));
+			}
+
+			var o53 = new DataObject ();
+			categories.Add (o53);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o53.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Béatrice"));
+			}
+
+			var o54 = new DataObject ();
+			categories.Add (o54);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o54.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Dominique"));
+			}
+
+			var o55 = new DataObject ();
+			categories.Add (o55);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o55.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Joël"));
+			}
+
+			var o56 = new DataObject ();
+			categories.Add (o56);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o56.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Paul-Henry"));
+			}
+
+			var o57 = new DataObject ();
+			categories.Add (o57);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o57.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Jean-Daniel"));
+			}
+
+			var o58 = new DataObject ();
+			categories.Add (o58);
+			{
+				var e = new DataEvent (start, EventType.Entrée);
+				o58.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty (ObjectField.Parent, o5.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Sandra"));
+			}
 		}
 
 		private static void AddAmortissement1(DataEvent e)
