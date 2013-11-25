@@ -43,7 +43,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.groupNodesGetter1 = new ParentNodesGetter (groupNodes, accessor, BaseType.Groups);
 			this.groupNodesGetter2 = new LevelNodesGetter (this.groupNodesGetter1, accessor, BaseType.Groups);
 			this.mergeNodesGetter  = new MergeNodesGetter (accessor, this.groupNodesGetter2, this.objectNodesGetter2);
-			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.mergeNodesGetter);
+			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.mergeNodesGetter)
+			{
+				InputIsMerge = true,
+			};
 
 			this.SortingInstructions = SortingInstructions.Empty;
 		}

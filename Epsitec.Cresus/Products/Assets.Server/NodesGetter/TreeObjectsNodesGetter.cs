@@ -9,7 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
 	/// Gère l'accès en lecture "en arbre" à des données quelconques en provenance
-	/// de inputNodes.
+	/// de inputNodes. Plusieurs procédures permettent de choisir comment l'arbre
+	/// est visible, en compactant/étendant des noeuds.
 	/// LevelNode -> TreeNode
 	/// </summary>
 	public class TreeObjectsNodesGetter : AbstractNodesGetter<TreeNode>  // outputNodes
@@ -21,6 +22,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.nodes       = new List<TreeNode> ();
 			this.nodeIndexes = new List<int> ();
 		}
+
+
+		public bool InputIsMerge;
 
 
 		public override int Count
@@ -172,7 +176,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 				//	Par défaut, on considére que la ligne ne peut être ni étendue
 				//	ni compactée.
-				var type = NodeType.Final;
+				var type = (this.InputIsMerge && currentNode.BaseType == BaseType.Groups)
+					? NodeType.Compacted
+					: NodeType.Final;
 
 				if (i < count-1)
 				{
