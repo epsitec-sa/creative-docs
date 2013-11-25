@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataGuidProperty           (ObjectField.GroupGuid+1,   DummyMandat.GetGroup (mandat, "Est")));
 					e.AddProperty (new DataGuidProperty           (ObjectField.GroupGuid+2,   DummyMandat.GetGroup (mandat, "Bureaux")));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1110"));
-					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Centre administratif"));
+					e.AddProperty (new DataStringProperty         (ObjectField.Nom,         "Siège social"));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (3000000.0m)));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (2500000.0m)));
 					e.AddProperty (new DataStringProperty         (ObjectField.Responsable, "Paul"));

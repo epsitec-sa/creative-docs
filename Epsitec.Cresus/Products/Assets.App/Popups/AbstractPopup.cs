@@ -58,12 +58,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				if (this.targetRect.Center.X > this.Parent.ActualWidth/2)  // popup à gauche ?
 				{
-					var x = this.targetRect.Left - AbstractPopup.FrameThickness - this.DialogSize.Width;
+					var x = this.targetRect.Left - AbstractPopup.Spacing - this.DialogSize.Width;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 				else  // popup à droite ?
 				{
-					var x = this.targetRect.Right + AbstractPopup.FrameThickness;
+					var x = this.targetRect.Right + AbstractPopup.Spacing;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 			}
@@ -77,12 +77,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				if (this.targetRect.Center.Y > this.Parent.ActualHeight/2)  // popup en dessous ?
 				{
-					var y = this.targetRect.Bottom - AbstractPopup.FrameThickness - this.DialogSize.Height;
+					var y = this.targetRect.Bottom - AbstractPopup.Spacing - this.DialogSize.Height;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 				else  // popup en dessus ?
 				{
-					var y = this.targetRect.Top + AbstractPopup.FrameThickness;
+					var y = this.targetRect.Top + AbstractPopup.Spacing;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 			}
@@ -399,9 +399,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				//	Intérieur blanc avec la queue.
 				var rect = this.dialogRect;
-				var tr = this.targetRect;
-				tr.Inflate (5);
-				graphics.AddFilledPath (BalloonPath.GetPath (rect, tr, this.QueueThickness));
+				graphics.AddFilledPath (BalloonPath.GetPath (rect, this.targetRect, this.QueueThickness));
 				graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.GetBackgroundColor ()));
 
 				//	Intérieur blanc rectangulaire.
@@ -415,22 +413,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				if (alpha == 1.0)
 				{
 					rect.Inflate (0.5);
-					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness));
+					graphics.AddPath (BalloonPath.GetPath (rect, this.targetRect, this.QueueThickness));
 					graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.PopupBorderColor));
 				}
 				else
 				{
 					//	Dessine la queue.
 					rect.Inflate (0.5);
-					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: true, onlyRect: false, onlyBase: false));
+					graphics.AddPath (BalloonPath.GetPath (rect, this.targetRect, this.QueueThickness, onlyQueue: true, onlyRect: false, onlyBase: false));
 					graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.PopupBorderColor));
 
 					//	Dessine le rectangle, sans la base de la queue.
-					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: false, onlyRect: true, onlyBase: false));
+					graphics.AddPath (BalloonPath.GetPath (rect, this.targetRect, this.QueueThickness, onlyQueue: false, onlyRect: true, onlyBase: false));
 					graphics.RenderSolid (ColorManager.PopupBorderColor);
 
 					//	Dessine la base de la queue.
-					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: false, onlyRect: false, onlyBase: true));
+					graphics.AddPath (BalloonPath.GetPath (rect, this.targetRect, this.QueueThickness, onlyQueue: false, onlyRect: false, onlyBase: true));
 					graphics.RenderSolid (Color.FromAlphaColor (1.0-alpha, ColorManager.PopupBorderColor));
 				}
 			}
@@ -463,7 +461,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var delta = this.Distance - this.initialDistance + AbstractPopup.FrameThickness;
+				var delta = this.Distance - this.initialDistance + AbstractPopup.Spacing;
 				return System.Math.Min (delta / 2.0, 10.0);
 			}
 		}
@@ -558,7 +556,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public  static readonly int				TitleHeight    = 24 + 1;
 		private static readonly int				FooterHeight   = 30;
-		private static readonly double			FrameThickness = 20;
+		private static readonly double			FrameThickness = 8;
+		private static readonly double			Spacing        = 20;
 
 		private Widget							target;
 		private Rectangle						dialogRect;
