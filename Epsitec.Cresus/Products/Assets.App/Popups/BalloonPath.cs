@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	public static class BalloonPath
 	{
 		public static Path GetPath(Rectangle mainRect, Rectangle targetRect, double queueThickness,
-			bool onlyQueue = false, bool onlyRect = false, bool onlyLink = false)
+			bool onlyQueue = false, bool onlyRect = false, bool onlyBase = false)
 		{
 			//	Retourne le chemin d'un rectangle correspondant à mainRect, avec une
 			//	petite queue en direction de targetRect.
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					path.LineTo (target);
 					path.LineTo (h1);
 				}
-				else if (onlyLink)
+				else if (onlyBase)
 				{
 					path.MoveTo (h2);
 					path.LineTo (h1);
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					path.LineTo (target);
 					path.LineTo (h1);
 				}
-				else if (onlyLink)
+				else if (onlyBase)
 				{
 					path.MoveTo (h2);
 					path.LineTo (h1);
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					path.LineTo (target);
 					path.LineTo (h1);
 				}
-				else if (onlyLink)
+				else if (onlyBase)
 				{
 					path.MoveTo (h2);
 					path.LineTo (h1);
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					path.LineTo (target);
 					path.LineTo (h1);
 				}
-				else if (onlyLink)
+				else if (onlyBase)
 				{
 					path.MoveTo (h2);
 					path.LineTo (h1);
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					path.LineTo (target);
 					path.LineTo (h1);
 				}
-				else if (onlyLink)
+				else if (onlyBase)
 				{
 					path.MoveTo (h2);
 					path.LineTo (bounds.BottomLeft);
@@ -306,7 +306,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					path.LineTo (target);
 					path.LineTo (h1);
 				}
-				else if (onlyLink)
+				else if (onlyBase)
 				{
 					path.MoveTo (h2);
 					path.LineTo (bounds.BottomRight);
@@ -345,7 +345,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					path.LineTo (target);
 					path.LineTo (h1);
 				}
-				else if (onlyLink)
+				else if (onlyBase)
 				{
 					path.MoveTo (h2);
 					path.LineTo (bounds.TopLeft);
@@ -384,7 +384,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					path.LineTo (target);
 					path.LineTo (h1);
 				}
-				else if (onlyLink)
+				else if (onlyBase)
 				{
 					path.MoveTo (h2);
 					path.LineTo (bounds.TopRight);

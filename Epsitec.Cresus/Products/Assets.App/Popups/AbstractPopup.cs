@@ -420,14 +420,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 				else
 				{
+					//	Dessine la queue.
 					rect.Inflate (0.5);
-					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: true, onlyRect: false, onlyLink: false));
+					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: true, onlyRect: false, onlyBase: false));
 					graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.PopupBorderColor));
 
-					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: false, onlyRect: true, onlyLink: false));
+					//	Dessine le rectangle, sans la base de la queue.
+					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: false, onlyRect: true, onlyBase: false));
 					graphics.RenderSolid (ColorManager.PopupBorderColor);
 
-					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: false, onlyRect: false, onlyLink: true));
+					//	Dessine la base de la queue.
+					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: false, onlyRect: false, onlyBase: true));
 					graphics.RenderSolid (Color.FromAlphaColor (1.0-alpha, ColorManager.PopupBorderColor));
 				}
 			}
