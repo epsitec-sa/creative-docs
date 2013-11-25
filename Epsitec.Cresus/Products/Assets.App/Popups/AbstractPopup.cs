@@ -162,12 +162,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				};
 			}
 
+			//	Trait horizontal sous le titre.
 			new FrameBox
 			{
 				Parent           = this.mainFrameBox,
 				Dock             = DockStyle.Top,
 				PreferredHeight  = 1,
-				BackColor        = ColorManager.WindowBackgroundColor,
+				BackColor        = ColorManager.PopupBorderColor,
 			};
 
 			return frame;
@@ -390,24 +391,59 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Dessine le cadre jaune du popup, avec la queue.
 			var alpha = this.Alpha;
 
-			if (alpha > 0.0)
+			if (alpha > 0.0)  // y a-t-il une queue ?
 			{
+				//	Gros bord orange.
 				graphics.AddFilledRectangle (this.ExternalRect);
 				graphics.RenderSolid (ColorManager.SelectionColor);
 
-				var rect = this.targetRect;
-				rect.Inflate (5);
-				graphics.AddFilledPath (BalloonPath.GetPath (this.dialogRect, rect, this.QueueThickness));
+				//	Intérieur blanc avec la queue.
+				var rect = this.dialogRect;
+				var tr = this.targetRect;
+				tr.Inflate (5);
+				graphics.AddFilledPath (BalloonPath.GetPath (rect, tr, this.QueueThickness));
 				graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.GetBackgroundColor ()));
+
+				//	Intérieur blanc rectangulaire.
+				if (alpha < 1.0)
+				{
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+				}
+
+				//	Petit filet sombre.
+				if (alpha == 1.0)
+				{
+					rect.Inflate (0.5);
+					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness));
+					graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.PopupBorderColor));
+				}
+				else
+				{
+					rect.Inflate (0.5);
+					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: true, onlyRect: false));
+					graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.PopupBorderColor));
+
+					graphics.AddPath (BalloonPath.GetPath (rect, tr, this.QueueThickness, onlyQueue: false, onlyRect: true));
+					graphics.RenderSolid (ColorManager.PopupBorderColor);
+				}
 			}
-			else
+			else  // pas de queue ?
 			{
+				//	Gros bord orange.
 				graphics.AddFilledRectangle (this.ExternalRect);
 				graphics.RenderSolid (ColorManager.SelectionColor);
-			}
 
-			graphics.AddFilledRectangle (this.dialogRect);
-			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+				//	Intérieur blanc rectangulaire.
+				var rect = this.dialogRect;
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+				//	Petit filet sombre.
+				rect.Inflate (0.5);
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (ColorManager.PopupBorderColor);
+			}
 		}
 
 		private void PaintTarget(Graphics graphics)

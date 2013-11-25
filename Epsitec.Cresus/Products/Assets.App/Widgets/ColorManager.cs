@@ -212,6 +212,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color PopupBorderColor
+		{
+			get
+			{
+				return Color.FromBrightness (0.7);
+			}
+		}
+
 
 		private static readonly Color selectionColor = Color.FromHexa ("ffd200");  // jaune
 		private static readonly Color hoverColor     = Color.FromHexa ("ebe8d6");  // gris-jaune

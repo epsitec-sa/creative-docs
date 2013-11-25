@@ -15,7 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public static class BalloonPath
 	{
-		public static Path GetPath(Rectangle mainRect, Rectangle targetRect, double queueThickness)
+		public static Path GetPath(Rectangle mainRect, Rectangle targetRect, double queueThickness,
+			bool onlyQueue = false, bool onlyRect = false)
 		{
 			//	Retourne le chemin d'un rectangle correspondant à mainRect, avec une
 			//	petite queue en direction de targetRect.
@@ -64,14 +65,32 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					h2.Y = bounds.Top;
 				}
 
-				path.MoveTo (target);
-				path.LineTo (h1);
-				path.LineTo (bounds.BottomLeft);
-				path.LineTo (bounds.BottomRight);
-				path.LineTo (bounds.TopRight);
-				path.LineTo (bounds.TopLeft);
-				path.LineTo (h2);
-				path.Close ();
+				if (onlyQueue)
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+				}
+				else if (onlyRect)
+				{
+					path.MoveTo (h1);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (h2);
+				}
+				else
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (bounds.TopLeft);
+					path.Close ();
+				}
 			}
 			else if (mode == AttachMode.Right)
 			{
@@ -93,14 +112,32 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					h2.Y = bounds.Top;
 				}
 
-				path.MoveTo (target);
-				path.LineTo (h1);
-				path.LineTo (bounds.BottomRight);
-				path.LineTo (bounds.BottomLeft);
-				path.LineTo (bounds.TopLeft);
-				path.LineTo (bounds.TopRight);
-				path.LineTo (h2);
-				path.Close ();
+				if (onlyQueue)
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+				}
+				else if (onlyRect)
+				{
+					path.MoveTo (h1);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (h2);
+				}
+				else
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (bounds.TopRight);
+					path.Close ();
+				}
 			}
 			else if (mode == AttachMode.Bottom)
 			{
@@ -122,14 +159,32 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					h2.X = bounds.Right;
 				}
 
-				path.MoveTo (target);
-				path.LineTo (h1);
-				path.LineTo (bounds.BottomLeft);
-				path.LineTo (bounds.TopLeft);
-				path.LineTo (bounds.TopRight);
-				path.LineTo (bounds.BottomRight);
-				path.LineTo (h2);
-				path.Close ();
+				if (onlyQueue)
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+				}
+				else if (onlyRect)
+				{
+					path.MoveTo (h1);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (h2);
+				}
+				else
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (bounds.BottomRight);
+					path.Close ();
+				}
 			}
 			else if (mode == AttachMode.Top)
 			{
@@ -151,14 +206,32 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					h2.X = bounds.Right;
 				}
 
-				path.MoveTo (target);
-				path.LineTo (h1);
-				path.LineTo (bounds.TopLeft);
-				path.LineTo (bounds.BottomLeft);
-				path.LineTo (bounds.BottomRight);
-				path.LineTo (bounds.TopRight);
-				path.LineTo (h2);
-				path.Close ();
+				if (onlyQueue)
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+				}
+				else if (onlyRect)
+				{
+					path.MoveTo (h1);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (h2);
+				}
+				else
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (bounds.TopRight);
+					path.Close ();
+				}
 			}
 			else if (mode == AttachMode.BottomLeft)
 			{
@@ -168,13 +241,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				h1.Y += queueThickness*System.Math.Sqrt (2);
 				h2.X += queueThickness*System.Math.Sqrt (2);
 
-				path.MoveTo (target);
-				path.LineTo (h1);
-				path.LineTo (bounds.TopLeft);
-				path.LineTo (bounds.TopRight);
-				path.LineTo (bounds.BottomRight);
-				path.LineTo (h2);
-				path.Close ();
+				if (onlyQueue)
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+				}
+				else if (onlyRect)
+				{
+					path.MoveTo (h1);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (h2);
+				}
+				else
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (bounds.BottomRight);
+					path.Close ();
+				}
 			}
 			else if (mode == AttachMode.BottomRight)
 			{
@@ -184,13 +274,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				h1.Y += queueThickness*System.Math.Sqrt (2);
 				h2.X -= queueThickness*System.Math.Sqrt (2);
 
-				path.MoveTo (target);
-				path.LineTo (h1);
-				path.LineTo (bounds.TopRight);
-				path.LineTo (bounds.TopLeft);
-				path.LineTo (bounds.BottomLeft);
-				path.LineTo (h2);
-				path.Close ();
+				if (onlyQueue)
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+				}
+				else if (onlyRect)
+				{
+					path.MoveTo (h1);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (h2);
+				}
+				else
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (bounds.BottomLeft);
+					path.Close ();
+				}
 			}
 			else if (mode == AttachMode.TopLeft)
 			{
@@ -200,13 +307,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				h1.Y -= queueThickness*System.Math.Sqrt (2);
 				h2.X += queueThickness*System.Math.Sqrt (2);
 
-				path.MoveTo (target);
-				path.LineTo (h1);
-				path.LineTo (bounds.BottomLeft);
-				path.LineTo (bounds.BottomRight);
-				path.LineTo (bounds.TopRight);
-				path.LineTo (h2);
-				path.Close ();
+				if (onlyQueue)
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+				}
+				else if (onlyRect)
+				{
+					path.MoveTo (h1);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (h2);
+				}
+				else
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (bounds.TopRight);
+					path.Close ();
+				}
 			}
 			else if (mode == AttachMode.TopRight)
 			{
@@ -216,13 +340,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				h1.Y -= queueThickness*System.Math.Sqrt (2);
 				h2.X -= queueThickness*System.Math.Sqrt (2);
 
-				path.MoveTo (target);
-				path.LineTo (h1);
-				path.LineTo (bounds.BottomRight);
-				path.LineTo (bounds.BottomLeft);
-				path.LineTo (bounds.TopLeft);
-				path.LineTo (h2);
-				path.Close ();
+				if (onlyQueue)
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+				}
+				else if (onlyRect)
+				{
+					path.MoveTo (h1);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (h2);
+				}
+				else
+				{
+					path.MoveTo (h2);
+					path.LineTo (target);
+					path.LineTo (h1);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.TopLeft);
+					path.Close ();
+				}
 			}
 
 			return path;

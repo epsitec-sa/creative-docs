@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Text             = this.Question,
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Top,
-				PreferredHeight  = 40,
+				PreferredHeight  = 60,
 			};
 
 			{
@@ -114,9 +114,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int margins      = 20;
 		private static readonly int titleHeight  = 30;
 		private static readonly int dialogWidth  = 260;
-		private static readonly int dialogHeight = 80;
+		private static readonly int dialogHeight = 100;
 		private static readonly int radioHeight  = 20;
-		private static readonly int buttonGap    = 10;
 
 		private readonly List<Radio> radios;
 		private string radioSelected;
