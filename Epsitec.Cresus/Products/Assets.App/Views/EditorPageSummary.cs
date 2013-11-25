@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					new ObjectSummaryControllerTile (ObjectField.Numéro),
 					new ObjectSummaryControllerTile (ObjectField.Nom),
 					new ObjectSummaryControllerTile (ObjectField.Description),
-					new ObjectSummaryControllerTile (ObjectField.Responsable),
+					new ObjectSummaryControllerTile (ObjectField.Maintenance),
 					new ObjectSummaryControllerTile (ObjectField.Couleur),
 					new ObjectSummaryControllerTile (ObjectField.NuméroSérie),
 				};

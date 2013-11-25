@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.Valeur3;
 				yield return ObjectField.Nom;
 				yield return ObjectField.Numéro;
-				yield return ObjectField.Responsable;
+				yield return ObjectField.Maintenance;
 				yield return ObjectField.Couleur;
 				yield return ObjectField.NuméroSérie;
 			}
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur comptable"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur assurance"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur imposable"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         120, "Responsable"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         120, "Maintenance"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          60, "Couleur"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         200, "Numéro de série"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         180, "Objet"));
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Valeur3,     synthetic: false);
 				var nom         = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Nom,         synthetic: false);
 				var numéro      = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Numéro,      synthetic: false);
-				var responsable = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Responsable, synthetic: false);
+				var maintenance = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Maintenance, synthetic: false);
 				var couleur     = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Couleur,     synthetic: false);
 				var série       = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.NuméroSérie, synthetic: false);
 
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var s4 = new TreeTableCellComputedAmount (true, valeur1,     isSelected: (i == selection));
 				var s5 = new TreeTableCellComputedAmount (true, valeur2,     isSelected: (i == selection));
 				var s6 = new TreeTableCellComputedAmount (true, valeur3,     isSelected: (i == selection));
-				var s7 = new TreeTableCellString         (true, responsable, isSelected: (i == selection));
+				var s7 = new TreeTableCellString         (true, maintenance, isSelected: (i == selection));
 				var s8 = new TreeTableCellString         (true, couleur,     isSelected: (i == selection));
 				var s9 = new TreeTableCellString         (true, série,       isSelected: (i == selection));
 				var s10 = new TreeTableCellString        (true, nom,         isSelected: (i == selection));

@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStringController (parent, ObjectField.Numéro, editWidth: 90);
 			this.CreateStringController (parent, ObjectField.Nom);
 			this.CreateStringController (parent, ObjectField.Description, lineCount: 5);
-			this.CreateStringController (parent, ObjectField.Responsable);
+			this.CreateStringController (parent, ObjectField.Maintenance);
 			this.CreateStringController (parent, ObjectField.Couleur, editWidth: 90);
 			this.CreateStringController (parent, ObjectField.NuméroSérie);
 		}

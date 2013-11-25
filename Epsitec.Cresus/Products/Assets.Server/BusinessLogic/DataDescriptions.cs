@@ -51,8 +51,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.NomCatégorie3:
 					return "Catégorie d'immob.";
 
-				case ObjectField.Responsable:
-					return "Responsable";
+				case ObjectField.Maintenance:
+					return "Maintenance";
 
 				case ObjectField.Couleur:
 					return "Couleur";

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.Valeur1;
 				yield return ObjectField.Valeur2;
 				yield return ObjectField.Valeur3;
-				yield return ObjectField.Responsable;
+				yield return ObjectField.Maintenance;
 				yield return ObjectField.Couleur;
 				yield return ObjectField.NuméroSérie;
 
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur comptable"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur assurance"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur imposable"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         120, "Responsable"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         120, "Maintenance"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          60, "Couleur"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         200, "Numéro de série"));
 
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur1);
 				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur2);
 				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur3);
-				var responsable = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Responsable);
+				var maintenance = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Maintenance);
 				var couleur     = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Couleur);
 				var série       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.NuméroSérie);
 
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var s2 = new TreeTableCellComputedAmount (true, valeur1,          isSelected: (i == selection), isUnavailable: grouping);
 				var s3 = new TreeTableCellComputedAmount (true, valeur2,          isSelected: (i == selection), isUnavailable: grouping);
 				var s4 = new TreeTableCellComputedAmount (true, valeur3,          isSelected: (i == selection), isUnavailable: grouping);
-				var s5 = new TreeTableCellString         (true, responsable,      isSelected: (i == selection), isUnavailable: grouping);
+				var s5 = new TreeTableCellString         (true, maintenance,      isSelected: (i == selection), isUnavailable: grouping);
 				var s6 = new TreeTableCellString         (true, couleur,          isSelected: (i == selection), isUnavailable: grouping);
 				var s7 = new TreeTableCellString         (true, série,            isSelected: (i == selection), isUnavailable: grouping);
 

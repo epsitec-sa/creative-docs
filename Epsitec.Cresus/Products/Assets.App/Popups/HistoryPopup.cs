@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Amortissements");
+			this.CreateTitle ("Historique");
 			this.CreateCloseButton ();
 
 			var frame = new FrameBox
