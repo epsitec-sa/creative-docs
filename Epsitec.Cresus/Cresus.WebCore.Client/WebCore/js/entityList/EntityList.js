@@ -570,6 +570,14 @@ function() {
         }
       });
 
+      items.push({
+        text: 'Exporter la séléction dans l\'arche',
+        listeners: {
+          click: function() { this.onExportSelectionToBagHandler(); },
+          scope: this
+        }
+      });
+
       if (!Ext.isEmpty(options.labelExportDefinitions)) {
         items.push({
           text: Epsitec.Texts.getExportLabelLabel(),
@@ -749,6 +757,26 @@ function() {
       }
     },
 
+    onExportSelectionToBagHandler: function() {
+      var count = this.getSelectionModel().getCount();
+
+      if (count === 0) {
+        Epsitec.ErrorHandler.showError(
+            Epsitec.Texts.getExportImpossibleTitle(),
+            Epsitec.Texts.getExportImpossibleEmpty()
+        );
+      }
+      else if (count > 100) {
+        Epsitec.ErrorHandler.showError(
+            Epsitec.Texts.getExportImpossibleTitle(),
+            Epsitec.Texts.getExportImpossibleTooManyForBag()
+        );
+      }
+      else {
+        this.doExportSelectionToBag();
+      }
+    },
+
     doExport: function(type) {
       var exportUrl, exportWindow;
 
@@ -798,6 +826,29 @@ function() {
            
         }
       } 
+    },
+
+    doExportSelectionToBag: function() {
+      //Iterate over the buffered store
+      var useMenuItemId = Ext.isDefined(this.menuItems[0]);
+      var menuItemId = null;
+      if(useMenuItemId)
+      {
+        menuItemId = this.menuItems[0].columnName;
+      }
+      
+        var data = this.getSelectionModel().getSelection();
+        for (i=0; i<data.length; i++) {
+           if(menuItemId != null)
+           {
+              Epsitec.Cresus.Core.app.addCustomEntityToBag('Contact',data[i].data.summary,data[i].raw[menuItemId]);
+           }
+           else
+           {
+              Epsitec.Cresus.Core.app.addEntityToBag(data[i].data.summary,data[i].internalId);
+           }
+           
+        }
     },
 
     onRefreshHandler: function() {

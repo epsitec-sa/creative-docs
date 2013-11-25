@@ -187,7 +187,6 @@ function() {
       Ext.Array.each(this.items.items[0].items.items, function(item) {
           if(item.entityId == entity.id)
           {
-            entityBag.unregEntityDragZone(item);
             item.close();
           }
       });
