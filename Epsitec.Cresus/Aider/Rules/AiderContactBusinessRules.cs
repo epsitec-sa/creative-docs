@@ -9,6 +9,9 @@ using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
+using Nest;
+using Epsitec.Common.Support;
+using Epsitec.Cresus.Core.NoSQL;
 
 namespace Epsitec.Aider.Rules
 {
@@ -52,9 +55,46 @@ namespace Epsitec.Aider.Rules
 			if (contact.Person.IsNotNull ())
 			{
 				//	TODO#PA
+
+				//	TODO#SLO ElasticSearch Update
+				/*var client = ElasticClient;
+				var id = this.GetBusinessContext().DataContext.GetNormalizedEntityKey (contact).Value.ToString ();
+				var druid = (Druid) Res.CommandIds.Base.ShowAiderContact;
+				var name = contact.GetDisplayName ();
+				var text = contact.Address.GetDisplayAddress ().ToSimpleText ();
+
+				var document = new ElasticSearchDocument ()
+				{
+					DocumentId  = id,
+					DatasetId = druid.ToCompactString (),
+					EntityId  = id.Replace ('/', '-'),
+					Name = name,
+					Text = text
+				};
+				*/
+				//client.Index (document, "aider", "contacts", document.DocumentId);
 			}
 
 			contact.RefreshCache ();
+		}
+
+		private static ElasticClient ElasticClient
+		{
+			get
+			{
+				try
+				{
+					var uriString = "http://localhost:9200";
+					var uri = new System.Uri (uriString);
+					var settings = new ConnectionSettings (uri);
+					settings.SetDefaultIndex ("contacts");
+					return new ElasticClient (settings);
+				}
+				catch (System.Exception)
+				{
+					throw;
+				}
+			}
 		}
 	}
 }
