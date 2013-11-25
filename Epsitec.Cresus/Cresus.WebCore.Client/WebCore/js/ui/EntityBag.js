@@ -45,7 +45,6 @@ function() {
         title: 'Arche',
         cls: 'entitybag-window',
         iconCls: 'epsitec-aider-images-general-ark-icon16',
-        autoHeight: true,
         draggable: true,
         resizable: true,
         closable: false,
@@ -108,11 +107,7 @@ function() {
       if(Ext.isDefined(viewport))
       {
         this.width = 270;
-        if(this.height <= (viewport.height - 250))
-        {
-          this.height = (viewport.height - 250);
-        }
-
+        this.height = 500;
         this.x = viewport.width - this.width;
         this.y = menu.el.lastBox.height;
         if(this.isVisible())
@@ -171,11 +166,14 @@ function() {
 
     purgeEntityBag: function () {
       var entityBag = this;
-      Epsitec.Cresus.Core.app.viewport.setLoading();
-      this.setLoading();
-      this.bagStore.each(function(record,id){
-          entityBag.removeEntityFromBag(record.data);
-      });
+      if(this.bagStore.count()>0)
+      {
+        Epsitec.Cresus.Core.app.viewport.setLoading();
+        this.setLoading();
+        this.bagStore.each(function(record,id){
+            entityBag.removeEntityFromBag(record.data);
+        });
+      }
     },
 
     removeEntityFromBag: function(entity) {
