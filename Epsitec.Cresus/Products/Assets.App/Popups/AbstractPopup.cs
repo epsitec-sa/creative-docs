@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		protected void CreateTitle(string text)
+		protected FrameBox CreateTitle(string text)
 		{
 			var frame = new FrameBox
 			{
@@ -150,14 +150,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				PreferredHeight  = AbstractPopup.TitleHeight - 1,
 			};
 
-			new StaticText
+			if (!string.IsNullOrEmpty (text))
 			{
-				Parent           = frame,
-				Text             = text,
-				ContentAlignment = ContentAlignment.MiddleLeft,
-				Dock             = DockStyle.Fill,
-				Margins          = new Margins (10, 0, 0, 0),
-			};
+				new StaticText
+				{
+					Parent           = frame,
+					Text             = text,
+					ContentAlignment = ContentAlignment.MiddleLeft,
+					Dock             = DockStyle.Fill,
+					Margins          = new Margins (10, 0, 0, 0),
+				};
+			}
 
 			new FrameBox
 			{
@@ -166,6 +169,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				PreferredHeight  = 1,
 				BackColor        = ColorManager.WindowBackgroundColor,
 			};
+
+			return frame;
 		}
 
 		protected FrameBox CreateFooter()

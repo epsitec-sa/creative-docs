@@ -44,14 +44,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateDateUI()
 		{
-			var frame = new FrameBox
-			{
-				Parent          = this.mainFrameBox,
-				Dock            = DockStyle.Top,
-				PreferredHeight = AbstractPopup.TitleHeight,
-				BackColor       = ColorManager.TreeTableBackgroundColor,
-				Padding         = new Margins (0, 0, 1, 0),
-			};
+			var frame = this.CreateTitle (null);
+
+			frame.Padding = new Margins (0, 0, 1, 0);
+			frame.BackColor = ColorManager.TreeTableBackgroundColor;
 
 			this.dateController = new DateFieldController
 			{
