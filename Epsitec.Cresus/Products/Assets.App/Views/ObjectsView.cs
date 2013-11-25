@@ -374,6 +374,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null)
 			{
+#if false
 				var popup = new YesNoPopup
 				{
 					Question = "Voulez-vous générer les amortissements ?",
@@ -410,6 +411,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.eventsController.Update ();
 					}
 				};
+#else
+				var now = System.DateTime.Now;
+
+				var popup = new AmortissementsPopup (this.accessor)
+				{
+					DateFrom = new System.DateTime (now.Year, 1, 1),
+					DateTo   = new System.DateTime (now.Year, 12, 31),
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "ok")
+					{
+					}
+				};
+#endif
 			}
 		}
 

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -38,9 +39,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
 			{
-				if (this.view != null)
+				if (command == ToolbarCommand.Open)
 				{
-					this.view.OnCommand (command);
+					this.OnOpen ();
+				}
+				else
+				{
+					if (this.view != null)
+					{
+						this.view.OnCommand (command);
+					}
 				}
 			};
 
@@ -64,6 +72,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.view.CreateUI (this.viewBox);
 			}
+		}
+
+		private void OnOpen()
+		{
+			this.ShowPopup ();
+		}
+
+		private void ShowPopup()
+		{
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Open);
+
+			var popup = new SimplePopup ()
+			{
+				SelectedItem = AssetsApplication.SelectedMandat,
+			};
+
+			for (int i=0; i<AssetsApplication.MandatCount; i++)
+			{
+				var mandat = AssetsApplication.GetMandat (i);
+				popup.Items.Add ("Ouvrir le mandat \"" + mandat.Name + "\"");
+			}
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ItemClicked += delegate (object sender, int rank)
+			{
+				this.OpenMandat (rank);
+			};
+		}
+
+		private void OpenMandat(int rank)
+		{
+			AssetsApplication.SelectedMandat = rank;
+			this.accessor.Mandat = AssetsApplication.GetMandat (rank);
+
+			this.UpdateView ();
 		}
 
 

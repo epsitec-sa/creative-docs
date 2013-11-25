@@ -82,6 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommandButton (this.buttonEvent,         ToolbarCommand.ViewModeEvent);
 			this.UpdateCommandButton (this.buttonMultiple,      ToolbarCommand.ViewModeMultiple);
 
+			this.UpdateCommandButton (this.buttonOpen,          ToolbarCommand.Open);
 			this.UpdateCommandButton (this.buttonEdit,          ToolbarCommand.Edit);
 			this.UpdateCommandButton (this.buttonAmortissement, ToolbarCommand.Amortissement);
 			this.UpdateCommandButton (this.buttonSimulation,    ToolbarCommand.Simulation);
@@ -101,6 +102,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
+			this.buttonOpen = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Open, "Main.Open", "Ouvrir");
+
 			this.buttonObjects    = this.CreateViewTypeButton (toolbar, ViewType.Objects,    "View.Objects",    "Objets d'immobilisation");
 			this.buttonCategories = this.CreateViewTypeButton (toolbar, ViewType.Categories, "View.Categories", "Catégories d'immobilisations");
 			this.buttonGroups     = this.CreateViewTypeButton (toolbar, ViewType.Groups,     "View.Groups",     "Groupes d'immobilisations");
@@ -119,6 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonCancel = this.CreateCommandButton (toolbar, DockStyle.Right, ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
 			this.buttonAccept = this.CreateCommandButton (toolbar, DockStyle.Right, ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
 
+			this.buttonOpen    .Margins = new Margins (0, 10, 0, 0);
 			this.buttonSettings.Margins = new Margins (0, 10, 0, 0);
 			this.buttonMultiple.Margins = new Margins (0, 40, 0, 0);
 
@@ -188,6 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetActiveState (this.buttonReports,    this.viewType == ViewType.Reports);
 			this.SetActiveState (this.buttonSettings,   this.viewType == ViewType.Settings);
 
+			this.SetCommandState (ToolbarCommand.Open,          ToolbarCommandState.Enable);
 			this.SetCommandState (ToolbarCommand.Amortissement, ToolbarCommandState.Enable);
 			this.SetCommandState (ToolbarCommand.Simulation,    ToolbarCommandState.Enable);
 		}
@@ -230,6 +235,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<ViewType> ViewChanged;
 		#endregion
 
+
+		private IconButton buttonOpen;
 
 		private IconButton buttonObjects;
 		private IconButton buttonCategories;

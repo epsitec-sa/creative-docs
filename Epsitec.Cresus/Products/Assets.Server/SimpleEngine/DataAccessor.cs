@@ -10,16 +10,22 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public class DataAccessor
 	{
-		public DataAccessor(DataMandat mandat)
+		public DataAccessor()
 		{
-			this.mandat = mandat;
-
 			this.editionAccessor = new EditionAccessor (this);
+		}
 
-			//	Recalcule tout.
-			foreach (var obj in this.mandat.GetData (BaseType.Objects))
+		public DataMandat Mandat
+		{
+			set
 			{
-				ObjectCalculator.UpdateComputedAmounts (obj);
+				this.mandat = value;
+
+				//	Recalcule tout.
+				foreach (var obj in this.mandat.GetData (BaseType.Objects))
+				{
+					ObjectCalculator.UpdateComputedAmounts (obj);
+				}
 			}
 		}
 
@@ -258,7 +264,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private readonly DataMandat				mandat;
 		private readonly EditionAccessor		editionAccessor;
+		private DataMandat						mandat;
 	}
 }

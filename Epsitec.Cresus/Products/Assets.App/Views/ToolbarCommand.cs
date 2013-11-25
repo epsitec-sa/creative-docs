@@ -30,5 +30,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		ViewModeEvent,
 		ViewModeMultiple,
 		Filter,
+		Open,
 	}
 }

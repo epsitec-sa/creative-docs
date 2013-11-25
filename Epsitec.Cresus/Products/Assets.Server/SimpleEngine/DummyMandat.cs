@@ -3,16 +3,15 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public static class DummyMandat
 	{
-		public static DataMandat GetDummyMandat()
+		public static DataMandat GetMandat()
 		{
-			var mandat = new DataMandat (new System.DateTime (2000, 1, 1), new System.DateTime (2050, 12, 31));
+			var mandat = new DataMandat ("Exemple", new System.DateTime (2000, 1, 1), new System.DateTime (2050, 12, 31));
 
 			DummyMandat.AddCategories (mandat);
 			DummyMandat.AddGroups (mandat);

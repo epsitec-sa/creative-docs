@@ -193,8 +193,12 @@ namespace Epsitec.Cresus.Assets.App
 				Name      = "PopupParentFrame",
 			};
 
-			var mandat = DummyMandat.GetDummyMandat ();
-			var accessor = new DataAccessor (mandat);
+			AssetsApplication.SelectedMandat = 2;
+
+			var accessor = new DataAccessor
+			{
+				Mandat = AssetsApplication.GetMandat (AssetsApplication.SelectedMandat),
+			};
 
 			var ui = new AssetsUI (accessor);
 			ui.CreateUI (frame);
@@ -235,6 +239,31 @@ namespace Epsitec.Cresus.Assets.App
 		}
 
 
+		public static int SelectedMandat;
+
+		public static int MandatCount
+		{
+			get
+			{
+				return AssetsApplication.mandats.Count;
+			}
+		}
+
+		public static DataMandat GetMandat(int rank)
+		{
+			return AssetsApplication.mandats[rank];
+		}
+
+		static AssetsApplication()
+		{
+			AssetsApplication.mandats.Add (EmptyMandat.GetMandat ());
+			AssetsApplication.mandats.Add (SkeletonMandat.GetMandat ());
+			AssetsApplication.mandats.Add (DummyMandat.GetMandat ());
+		}
+
+
 		private BusinessContext					businessContext;
+
+		public static List<DataMandat> mandats = new List<DataMandat>();
 	}
 }
