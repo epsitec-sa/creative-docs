@@ -31,7 +31,7 @@ function() {
 
       var button = {};
           button.xtype = 'button';
-          button.text = 'Vider le panier';
+          button.text = 'Vider l\'arche';
           button.width = 400;
           button.width = 200;
           button.cls = 'tile-button';
@@ -63,6 +63,7 @@ function() {
           region: 'center',
           border: false,
           layout: 'vbox',
+          autoHeight: true,
           autoScroll: true
         }],
         listeners: {
@@ -106,12 +107,12 @@ function() {
           menu = Epsitec.Cresus.Core.app.menu;
       if(Ext.isDefined(viewport))
       {
-        var newHeight = ((this.bagStore.count() * 250) + 150 );
         this.width = 270;
-        if(newHeight < (viewport.height - 250))
+        if(this.height <= (viewport.height - 250))
         {
-          this.height = newHeight;
+          this.height = (viewport.height - 250);
         }
+
         this.x = viewport.width - this.width;
         this.y = menu.el.lastBox.height;
         if(this.isVisible())
@@ -138,7 +139,8 @@ function() {
 
     addEntityToBag: function(title,summary,entityId) {
       var hub = Epsitec.Cresus.Core.app.hubs.getHubByName('entitybag');
-
+      Epsitec.Cresus.Core.app.viewport.setLoading();
+      this.setLoading();
       hub.AddToMyBag(title,summary,entityId);
     },
 
@@ -163,10 +165,14 @@ function() {
       }
 
       this.setSizeAndPosition();
+      Epsitec.Cresus.Core.app.viewport.setLoading(false);
+      this.setLoading(false);
     },
 
     purgeEntityBag: function () {
       var entityBag = this;
+      Epsitec.Cresus.Core.app.viewport.setLoading();
+      this.setLoading();
       this.bagStore.each(function(record,id){
           entityBag.removeEntityFromBag(record.data);
       });
@@ -185,19 +191,25 @@ function() {
       this.bagStore.remove(record);
 
       Ext.Array.each(this.items.items[0].items.items, function(item) {
-          if(item.entityId == entity.id)
+          if(Ext.isDefined(item))
           {
-            item.close();
-          }
+            if(item.entityId == entity.id)
+            {
+              item.close();
+              
+            }
+          }         
       });
 
+      this.setSizeAndPosition();
 
       if(this.bagStore.count()==0)
       {
         this.hide();
       }
+      Epsitec.Cresus.Core.app.viewport.setLoading(false);
+      this.setLoading(false);
 
-      this.setSizeAndPosition();
     },
 
     createToolbar: function() {

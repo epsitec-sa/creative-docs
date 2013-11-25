@@ -116,6 +116,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Title (personTitle)
 							.Icon (contact.Person.GetIconName ("Data"))
 							.Text (contactSummary)
+							.EnableActionMenu<ActionAiderPersonViewController10AddToBag> ()
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					if (contact.Address.IsNotNull ())

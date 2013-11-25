@@ -1185,15 +1185,6 @@ AiderMailingParticipant = [LVOL03]
       <R><r>@user</r></R>
     </d>
 
-    <d cid="[LVO603]" teid="@AiderGroupParticipant" tn="fonctional" df="true" d="true" ec="false" ed="false" dg="@submenuDefs">
-      <R><r>@user</r></R>
-       <!-- Filter -->
-      <f id="@AiderGroupParticipant">
-        <!-- Column id=Classification (Valeur) (Comparaison) c=(1=equals) v="(e)num GroupClassification/valeur 10" -->
-        <C><c id="[LVA84].[LVADA].[LVA1C]"><v><comp c="1" v="e[LVATB]/10" /></v></c></C>
-      </f>
-    </d>
-
     <d cid="[LVG422]" teid="@AiderGroupParticipant" tn="default" df="false" d="false" ec="true" ed="true" dg="">
       <R><r>@user</r></R>
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderGroupParticipant:[LVAIG]" /></M>
