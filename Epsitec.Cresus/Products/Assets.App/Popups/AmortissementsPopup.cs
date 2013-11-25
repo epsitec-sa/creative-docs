@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public bool								OneSelectionAllowed;
 		public System.DateTime?					DateFrom;
 		public System.DateTime?					DateTo;
 
@@ -52,6 +53,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateOne     (line5);
 			this.CreateAll     (line6);
 			this.CreateButtons ();
+
+			this.isAll = !this.OneSelectionAllowed;
 
 			this.UpdateButtons ();
 		}
@@ -207,6 +210,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateButtons()
 		{
+			this.radioOne.Enable = this.OneSelectionAllowed;
+
 			this.radioCreate.ActiveState =  this.isCreate ? ActiveState.Yes : ActiveState.No;
 			this.radioRemove.ActiveState = !this.isCreate ? ActiveState.Yes : ActiveState.No;
 			this.radioOne   .ActiveState = !this.isAll    ? ActiveState.Yes : ActiveState.No;

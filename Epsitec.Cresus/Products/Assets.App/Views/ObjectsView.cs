@@ -220,6 +220,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected override Guid SelectedObjectGuid
+		{
+			get
+			{
+				return this.selectedGuid;
+			}
+		}
+
+
 		public override void OnCommand(ToolbarCommand command)
 		{
 			base.OnCommand (command);

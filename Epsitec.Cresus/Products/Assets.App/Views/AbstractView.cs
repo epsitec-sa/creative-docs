@@ -30,6 +30,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
+		protected virtual Guid SelectedObjectGuid
+		{
+			get
+			{
+				return Guid.Empty;
+			}
+		}
+
 		public virtual void OnCommand(ToolbarCommand command)
 		{
 			switch (command)
@@ -53,8 +61,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var popup = new AmortissementsPopup (this.accessor)
 			{
-				DateFrom = new System.DateTime (now.Year, 1, 1),
-				DateTo   = new System.DateTime (now.Year, 12, 31),
+				OneSelectionAllowed = !this.SelectedObjectGuid.IsEmpty,
+				DateFrom            = new System.DateTime (now.Year, 1, 1),
+				DateTo              = new System.DateTime (now.Year, 12, 31),
 			};
 
 			popup.Create (target);
