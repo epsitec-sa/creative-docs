@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateObject(string name, Guid parent)
 		{
-			var date = Timestamp.Now.Date;
+			var date = this.accessor.Mandat.StartDate;
 			var guid = this.accessor.CreateObject (BaseType.Groups, date, name, parent);
 			var obj = this.accessor.GetObject (BaseType.Groups, guid);
 			System.Diagnostics.Debug.Assert (obj != null);

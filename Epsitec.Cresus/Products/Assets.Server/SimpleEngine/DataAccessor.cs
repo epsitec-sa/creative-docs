@@ -17,6 +17,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public DataMandat Mandat
 		{
+			get
+			{
+				return this.mandat;
+			}
 			set
 			{
 				this.mandat = value;

@@ -41,6 +41,22 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public static Timestamp MinValue
+		{
+			get
+			{
+				return new Timestamp (System.DateTime.MinValue, int.MinValue);
+			}
+		}
+
+		public static Timestamp MaxValue
+		{
+			get
+			{
+				return new Timestamp (System.DateTime.MaxValue, int.MaxValue);
+			}
+		}
+
 		public static Timestamp FromDate(int year, int month, int day, int position = 0)
 		{
 			return new Timestamp (new System.DateTime (year, month, day), position);

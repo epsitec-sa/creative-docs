@@ -176,20 +176,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static TerminalEvent GetPrevEvent(DataObject obj, Timestamp timestamp)
 		{
-			int i = obj.Events.Where (x => x.Timestamp <= timestamp).Count () - 1;
-
-			if (i >= 0 && i < obj.EventsCount)
+			if (obj != null)
 			{
-				switch (obj.GetEvent (i).Type)
+				int i = obj.Events.Where (x => x.Timestamp <= timestamp).Count () - 1;
+
+				if (i >= 0 && i < obj.EventsCount)
 				{
-					case EventType.Entrée:
-						return TerminalEvent.In;
+					switch (obj.GetEvent (i).Type)
+					{
+						case EventType.Entrée:
+							return TerminalEvent.In;
 
-					case EventType.Sortie:
-						return TerminalEvent.Out;
+						case EventType.Sortie:
+							return TerminalEvent.Out;
 
-					default:
-						return TerminalEvent.Other;
+						default:
+							return TerminalEvent.Other;
+					}
 				}
 			}
 
@@ -198,20 +201,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static TerminalEvent GetNextEvent(DataObject obj, Timestamp timestamp)
 		{
-			int i = obj.Events.Where (x => x.Timestamp <= timestamp).Count ();
-
-			if (i >= 0 && i < obj.EventsCount)
+			if (obj != null)
 			{
-				switch (obj.GetEvent (i).Type)
+				int i = obj.Events.Where (x => x.Timestamp <= timestamp).Count ();
+
+				if (i >= 0 && i < obj.EventsCount)
 				{
-					case EventType.Entrée:
-						return TerminalEvent.In;
+					switch (obj.GetEvent (i).Type)
+					{
+						case EventType.Entrée:
+							return TerminalEvent.In;
 
-					case EventType.Sortie:
-						return TerminalEvent.Out;
+						case EventType.Sortie:
+							return TerminalEvent.Out;
 
-					default:
-						return TerminalEvent.Other;
+						default:
+							return TerminalEvent.Other;
+					}
 				}
 			}
 
