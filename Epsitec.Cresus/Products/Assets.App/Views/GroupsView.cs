@@ -164,40 +164,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null)
 			{
-				var popup = new YesNoPopup
-				{
-					Question = "Voulez-vous générer les amortissements ?",
-				};
-
-				if (this.listController.SelectedRow == -1)
-				{
-					popup.Radios.Add (new YesNoPopup.Radio ("all", "Pour tous les objets", activate: true));
-				}
-				else
-				{
-					popup.Radios.Add (new YesNoPopup.Radio ("one", "Pour l'objet sélectionné", activate: true));
-					popup.Radios.Add (new YesNoPopup.Radio ("all", "Pour tous les objets"));
-				}
-
-				popup.Create (target);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "yes")
-					{
-						if (popup.RadioSelected == "one")
-						{
-							var guid = this.listController.SelectedGuid;
-							this.amortissements.GeneratesAmortissementsAuto (guid);
-						}
-						else
-						{
-							this.amortissements.GeneratesAmortissementsAuto ();
-						}
-
-						this.Update ();
-					}
-				};
+				//-var popup = new YesNoPopup
+				//-{
+				//-	Question = "Voulez-vous générer les amortissements ?",
+				//-};
+				//-
+				//-if (this.listController.SelectedRow == -1)
+				//-{
+				//-	popup.Radios.Add (new YesNoPopup.Radio ("all", "Pour tous les objets", activate: true));
+				//-}
+				//-else
+				//-{
+				//-	popup.Radios.Add (new YesNoPopup.Radio ("one", "Pour l'objet sélectionné", activate: true));
+				//-	popup.Radios.Add (new YesNoPopup.Radio ("all", "Pour tous les objets"));
+				//-}
+				//-
+				//-popup.Create (target);
+				//-
+				//-popup.ButtonClicked += delegate (object sender, string name)
+				//-{
+				//-	if (name == "yes")
+				//-	{
+				//-		if (popup.RadioSelected == "one")
+				//-		{
+				//-			var guid = this.listController.SelectedGuid;
+				//-			this.amortissements.GeneratesAmortissementsAuto (guid);
+				//-		}
+				//-		else
+				//-		{
+				//-			this.amortissements.GeneratesAmortissementsAuto ();
+				//-		}
+				//-
+				//-		this.Update ();
+				//-	}
+				//-};
 			}
 		}
 

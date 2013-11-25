@@ -36,16 +36,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle (this.mainFrameBox);
-			this.CreateCloseButton ();
+			this.CreateTitle ("Création d'un nouvel objet");
 
-			var line1 = this.CreateFrame (CreateObjectPopup.Margin, 87, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
-			var line2 = this.CreateFrame (CreateObjectPopup.Margin, 60, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
-			var line3 = this.CreateFrame (CreateObjectPopup.Margin, 20, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, 24);
+			var line1 = this.CreateFrame (CreateObjectPopup.Margin, 77, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
+			var line2 = this.CreateFrame (CreateObjectPopup.Margin, 50, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
+			var line3 = this.CreateFrame (0, 0, CreateObjectPopup.PopupWidth, 30);
 
-			this.CreateDate      (line1);
-			this.CreateName      (line2);
-			this.CreateButtons   (line3);
+			this.CreateDate    (line1);
+			this.CreateName    (line2);
+			this.CreateButtons (line3);
 
 			this.UpdateButtons ();
 			this.textField.Focus ();
@@ -56,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			new StaticText
 			{
 				Parent           = parent,
-				Text             = "Création d'un nouveal objet",
+				Text             = "Création d'un nouvel objet",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Top,
 				PreferredHeight  = CreateObjectPopup.TitleHeight - 4,
@@ -152,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - 5, parent.PreferredHeight),
 				Margins       = new Margins (0, 5, 0, 0),
 			};
 
@@ -164,7 +163,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - CreateObjectPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateObjectPopup.PopupWidth/2 - 5, parent.PreferredHeight),
 				Margins       = new Margins (5, 0, 0, 0),
 			};
 
@@ -192,7 +191,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int LineHeight  = 2+17+2;
 		private static readonly int Indent      = 80;
 		private static readonly int PopupWidth  = 300;
-		private static readonly int PopupHeight = 150;
+		private static readonly int PopupHeight = 140;
 		private static readonly int Margin      = 20;
 
 		private readonly DataAccessor					accessor;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
@@ -47,7 +48,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle (YesNoPopup.titleHeight, this.Question);
+			new StaticText
+			{
+				Parent           = this.mainFrameBox,
+				Text             = this.Question,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				Dock             = DockStyle.Top,
+				PreferredHeight  = 40,
+			};
 
 			{
 				int y = (int) this.DialogSize.Height - YesNoPopup.titleHeight - YesNoPopup.radioHeight - 12;
@@ -81,12 +89,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 
 			{
-				int y = (int) YesNoPopup.margins;
-				int dx = (YesNoPopup.dialogWidth - YesNoPopup.margins*2 - YesNoPopup.buttonGap) /2;
-				int dy = 24;
+				int y = 0;
+				int dx = (YesNoPopup.dialogWidth - YesNoPopup.buttonGap) /2;
+				int dy = 30;
 
-				this.CreateButton (YesNoPopup.margins,                         y, dx, dy, "yes", "Oui");
-				this.CreateButton (YesNoPopup.margins+dx+YesNoPopup.buttonGap, y, dx, dy, "no",  "Non");
+				this.CreateButton (0,                       y, dx, dy, "yes", "Oui");
+				this.CreateButton (dx+YesNoPopup.buttonGap, y, dx, dy, "no",  "Non");
 			}
 		}
 
@@ -111,7 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int margins      = 20;
 		private static readonly int titleHeight  = 30;
 		private static readonly int dialogWidth  = 260;
-		private static readonly int dialogHeight = 100;
+		private static readonly int dialogHeight = 80;
 		private static readonly int radioHeight  = 20;
 		private static readonly int buttonGap    = 10;
 

@@ -111,9 +111,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int				margins		= 1;
+		private static readonly int				margins		= 10;
 		private static readonly int				itemHeight	= 20;
-		private static readonly string			textGap		= "    ";
+		private static readonly string			textGap		= "  ";
 
 		private readonly List<string>			items;
 	}

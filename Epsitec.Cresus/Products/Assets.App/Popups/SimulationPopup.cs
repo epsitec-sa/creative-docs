@@ -32,32 +32,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle (this.mainFrameBox, "Simulation");
+			this.CreateTitle ("Simulation");
 
 			this.CreateLine (this.mainFrameBox, 2);
 			this.CreateLine (this.mainFrameBox, 1);
 			this.CreateLine (this.mainFrameBox, 0);
-		}
-
-		private void CreateTitle(FrameBox parent, string text)
-		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = text,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = SimulationPopup.titleHeight,
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			new FrameBox
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
 		}
 
 		private void CreateLine(FrameBox parent, int rank)

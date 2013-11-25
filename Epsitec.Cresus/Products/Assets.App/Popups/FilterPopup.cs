@@ -68,40 +68,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle (this.mainFrameBox);
+			this.CreateTitle ("Filtre");
 			this.CreateCloseButton ();
 
 			this.CreateController ();
 			this.CreateButton ();
 		}
 
-		private void CreateTitle(Widget parent)
-		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = "Filtre",
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = FilterPopup.TitleHeight - 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			new StaticText
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-		}
-
 		private void CreateController()
 		{
 			var frame = new FrameBox
 			{
-				Parent = this.mainFrameBox,
-				Dock   = DockStyle.Fill,
+				Parent  = this.mainFrameBox,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 5, 0),
 			};
 
 			this.controller.CreateUI (frame, headerHeight: 0, footerHeight: 0);
@@ -117,21 +97,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (this.hasFilter)
 			{
-				var frame = new FrameBox
-				{
-					Parent          = this.mainFrameBox,
-					PreferredHeight = 10+24+10,
-					Dock            = DockStyle.Bottom,
-					Padding         = new Margins (10),
-					BackColor       = ColorManager.WindowBackgroundColor,
-				};
-
 				var button = new Button
 				{
-					Parent      = frame,
-					Text        = "Annuler le filtre",
-					ButtonStyle = ButtonStyle.Icon,
-					Dock        = DockStyle.Fill,
+					Parent          = this.mainFrameBox,
+					Text            = "Annuler le filtre",
+					ButtonStyle     = ButtonStyle.Icon,
+					PreferredHeight = 30,
+					Dock            = DockStyle.Bottom,
 				};
 
 				button.Clicked += delegate

@@ -45,10 +45,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle (this.mainFrameBox);
+			this.CreateTitle ("Choix de la catégorie d'immobilisation à importer");
 			this.CreateCloseButton ();
-			
-			this.controller.CreateUI (this.mainFrameBox, headerHeight: CategoriesPopup.HeaderHeight, footerHeight: 0);
+
+			var frame = new FrameBox
+			{
+				Parent  = this.mainFrameBox,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 5, 0),
+			};
+
+			this.controller.CreateUI (frame, headerHeight: CategoriesPopup.HeaderHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
 			TreeTableFiller<SortableNode>.FillColumns (this.dataFiller, this.controller);
@@ -68,27 +75,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var node = this.nodesGetter[this.visibleSelectedRow];
 				this.OnNavigate (node.Guid);
 				this.ClosePopup ();
-			};
-		}
-
-		private void CreateTitle(Widget parent)
-		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = "Choix de la catégorie d'immobilisation à importer",
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = CategoriesPopup.TitleHeight - 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			new StaticText
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = 4,
-				BackColor        = ColorManager.SelectionColor,
 			};
 		}
 
@@ -163,7 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int TitleHeight      = 24;
+		private static readonly int TitleHeight      = AbstractPopup.TitleHeight + 5;
 		private static readonly int HeaderHeight     = 22;
 		private static readonly int RowHeight        = 18;
 		private static readonly int PopupWidth       = 390;

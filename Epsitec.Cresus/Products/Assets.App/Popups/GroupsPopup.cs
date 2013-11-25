@@ -67,35 +67,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle (this.mainFrameBox);
+			this.CreateTitle ("Choix du groupe");
 			this.CreateCloseButton ();
+
+			var frame = new FrameBox
+			{
+				Parent  = this.mainFrameBox,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 5, 0),
+			};
 			
-			this.controller.CreateUI (this.mainFrameBox, headerHeight: 0, footerHeight: 0);
+			this.controller.CreateUI (frame, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
 			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
 			this.UpdateController ();
-		}
-
-		private void CreateTitle(Widget parent)
-		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = "Choix du groupe",
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = GroupsPopup.TitleHeight - 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			new StaticText
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
 		}
 
 
@@ -205,7 +191,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int TitleHeight      = 24;
+		private static readonly int TitleHeight      = AbstractPopup.TitleHeight + 5;
 		private static readonly int RowHeight        = 18;
 		private static readonly int PopupWidth       = 200;
 

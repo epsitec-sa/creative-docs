@@ -274,6 +274,7 @@
     <EmbeddedResource Include="Images\Timeline.Single.icon" />
     <EmbeddedResource Include="Images\TreeTable.Filter.icon" />
     <EmbeddedResource Include="Images\Main.Open.icon" />
+    <EmbeddedResource Include="Images\Popup.Close.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

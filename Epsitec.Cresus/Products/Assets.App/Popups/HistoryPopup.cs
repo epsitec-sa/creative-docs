@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -28,8 +29,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.controller.CreateUI (this.mainFrameBox);
+			this.CreateTitle ("Amortissements");
 			this.CreateCloseButton ();
+
+			var frame = new FrameBox
+			{
+				Parent  = this.mainFrameBox,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 5, 0),
+			};
+
+			this.controller.CreateUI (frame);
 
 			this.controller.Navigate += delegate (object sender, Timestamp timestamp)
 			{

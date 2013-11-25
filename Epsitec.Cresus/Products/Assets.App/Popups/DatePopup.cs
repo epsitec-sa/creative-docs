@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle (DatePopup.titleHeight, "Choix d'une date");
+			this.CreateTitle ("Choix d'une date");
 
 			var r1 = this.CreateRadio (DatePopup.margins, 70, DatePopup.dialogWidth-DatePopup.margins*2, 20, "final", "Etat final");
 			var r2 = this.CreateRadio (DatePopup.margins, 50, DatePopup.dialogWidth-DatePopup.margins*2, 20, "date", "Etat en date du :");

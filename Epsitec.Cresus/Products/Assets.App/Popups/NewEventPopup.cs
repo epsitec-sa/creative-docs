@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -43,7 +44,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateDateUI()
 		{
-			var frame = this.CreateTitleFrame (NewEventPopup.titleHeight);
+			var frame = new FrameBox
+			{
+				Parent          = this.mainFrameBox,
+				Dock            = DockStyle.Top,
+				PreferredHeight = NewEventPopup.titleHeight,
+				BackColor       = ColorManager.TreeTableBackgroundColor,
+				Padding         = new Margins (0, 0, 1, 0),
+			};
 
 			this.dateController = new DateFieldController
 			{
@@ -249,7 +257,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static readonly int horizontalMargins = 40;
 		private static readonly int verticalMargins   = 20;
-		private static readonly int titleHeight       = 24;
+		private static readonly int titleHeight       = AbstractPopup.TitleHeight;
 		private static readonly int buttonWidth       = 180;
 		private static readonly int buttonHeight      = 24;
 		private static readonly int buttonGap         = 1;

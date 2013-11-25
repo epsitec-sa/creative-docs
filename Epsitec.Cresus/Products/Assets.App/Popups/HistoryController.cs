@@ -47,8 +47,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public void CreateUI(Widget parent)
 		{
-			this.CreateTitle (parent);
-
 			if (this.accessor.RowsCount == 0)
 			{
 				new StaticText
@@ -83,27 +81,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private void CreateTitle(Widget parent)
-		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = "Historique",
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = HistoryController.TitleHeight - 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			new StaticText
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-		}
-
 
 		#region Events handler
 		private void OnNavigate(Timestamp timestamp)
@@ -115,7 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int TitleHeight      = 24;
+		private static readonly int TitleHeight      = AbstractPopup.TitleHeight + 5;
 		private static readonly int HeaderHeight     = 22;
 		private static readonly int RowHeight        = 18;
 

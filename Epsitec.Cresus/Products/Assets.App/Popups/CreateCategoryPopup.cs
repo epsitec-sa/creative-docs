@@ -50,12 +50,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle (this.mainFrameBox);
-			this.CreateCloseButton ();
+			this.CreateTitle ("Création d'une nouvelle catégorie");
 
-			var line1 = this.CreateFrame (CreateCategoryPopup.Margin, 337, CreateCategoryPopup.PopupWidth-CreateCategoryPopup.Margin*2, CreateCategoryPopup.LineHeight);
-			var line2 = this.CreateFrame (CreateCategoryPopup.Margin,  60, CreateCategoryPopup.PopupWidth-CreateCategoryPopup.Margin*2, 260);
-			var line3 = this.CreateFrame (CreateCategoryPopup.Margin,  20, CreateCategoryPopup.PopupWidth-CreateCategoryPopup.Margin*2, 24);
+			var line1 = this.CreateFrame (CreateCategoryPopup.Margin, 327, CreateCategoryPopup.PopupWidth-CreateCategoryPopup.Margin*2, CreateCategoryPopup.LineHeight);
+			var line2 = this.CreateFrame (CreateCategoryPopup.Margin,  50, CreateCategoryPopup.PopupWidth-CreateCategoryPopup.Margin*2, 260);
+			var line3 = this.CreateFrame (0, 0, CreateCategoryPopup.PopupWidth, 30);
 
 			this.CreateName      (line1);
 			this.CreateTreeTable (line2);
@@ -179,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateCategoryPopup.PopupWidth/2 - CreateCategoryPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateCategoryPopup.PopupWidth/2 - 5, parent.PreferredHeight),
 				Margins       = new Margins (0, 5, 0, 0),
 			};
 
@@ -191,7 +190,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateCategoryPopup.PopupWidth/2 - CreateCategoryPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateCategoryPopup.PopupWidth/2 - 5, parent.PreferredHeight),
 				Margins       = new Margins (5, 0, 0, 0),
 			};
 
@@ -259,7 +258,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int LineHeight  = 2+17+2;
 		private static readonly int Indent      = 40;
 		private static readonly int PopupWidth  = 310;
-		private static readonly int PopupHeight = 400;
+		private static readonly int PopupHeight = 390;
 		private static readonly int Margin      = 20;
 
 		private readonly DataAccessor						accessor;

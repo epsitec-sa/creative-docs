@@ -49,12 +49,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle (this.mainFrameBox);
-			this.CreateCloseButton ();
+			this.CreateTitle ("Création d'un nouveau groupe");
 
-			var line1 = this.CreateFrame (CreateGroupPopup.Margin, 337, CreateGroupPopup.PopupWidth-CreateGroupPopup.Margin*2, CreateGroupPopup.LineHeight);
-			var line2 = this.CreateFrame (CreateGroupPopup.Margin,  60, CreateGroupPopup.PopupWidth-CreateGroupPopup.Margin*2, 260);
-			var line3 = this.CreateFrame (CreateGroupPopup.Margin,  20, CreateGroupPopup.PopupWidth-CreateGroupPopup.Margin*2, 24);
+			var line1 = this.CreateFrame (CreateGroupPopup.Margin, 327, CreateGroupPopup.PopupWidth-CreateGroupPopup.Margin*2, CreateGroupPopup.LineHeight);
+			var line2 = this.CreateFrame (CreateGroupPopup.Margin,  50, CreateGroupPopup.PopupWidth-CreateGroupPopup.Margin*2, 260);
+			var line3 = this.CreateFrame (0, 0, CreateGroupPopup.PopupWidth, 30);
 
 			this.CreateName      (line1);
 			this.CreateTreeTable (line2);
@@ -176,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateGroupPopup.PopupWidth/2 - CreateGroupPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateGroupPopup.PopupWidth/2 - 5, parent.PreferredHeight),
 				Margins       = new Margins (0, 5, 0, 0),
 			};
 
@@ -188,7 +187,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateGroupPopup.PopupWidth/2 - CreateGroupPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (CreateGroupPopup.PopupWidth/2 - 5, parent.PreferredHeight),
 				Margins       = new Margins (5, 0, 0, 0),
 			};
 
@@ -294,7 +293,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int LineHeight  = 2+17+2;
 		private static readonly int Indent      = 40;
 		private static readonly int PopupWidth  = 310;
-		private static readonly int PopupHeight = 400;
+		private static readonly int PopupHeight = 390;
 		private static readonly int Margin      = 20;
 
 		private readonly DataAccessor					accessor;

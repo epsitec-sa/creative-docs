@@ -8,6 +8,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Views;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
@@ -37,7 +38,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var y = r2.Bottom - r1.Bottom;
 
 			this.targetRect = new Rectangle (x, y, target.ActualWidth, target.ActualHeight);
-			this.targetRect.Inflate (1);
 
 			this.InitializeDialogRect (leftOrRight);
 			this.CreateUI ();
@@ -48,24 +48,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Calcule la position du popup.
 			//	leftOrRight = false  ->  en haut ou en bas
 			//	leftOrRight = true   ->  à gauche ou à droite
-			const int margin = 10;
-
 			if (leftOrRight)  // à gauche ou à droite ?
 			{
 				var y = this.targetRect.Center.Y - this.DialogSize.Height/2;
 
-				y = System.Math.Max (y, AbstractPopup.dialogThickness + margin);
-				y = System.Math.Min (y, this.Parent.ActualHeight - this.DialogSize.Height - AbstractPopup.dialogThickness - margin);
+				y = System.Math.Max (y, AbstractPopup.FrameThickness);
+				y = System.Math.Min (y, this.Parent.ActualHeight - this.DialogSize.Height - AbstractPopup.FrameThickness);
 				y = System.Math.Floor (y);
 
 				if (this.targetRect.Center.X > this.Parent.ActualWidth/2)  // popup à gauche ?
 				{
-					var x = this.targetRect.Left - AbstractPopup.queueLength - this.DialogSize.Width;
+					var x = this.targetRect.Left - AbstractPopup.FrameThickness - this.DialogSize.Width;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 				else  // popup à droite ?
 				{
-					var x = this.targetRect.Right + AbstractPopup.queueLength;
+					var x = this.targetRect.Right + AbstractPopup.FrameThickness;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 			}
@@ -73,18 +71,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var x = this.targetRect.Center.X - this.DialogSize.Width/2;
 
-				x = System.Math.Max (x, AbstractPopup.dialogThickness + margin);
-				x = System.Math.Min (x, this.Parent.ActualWidth - this.DialogSize.Width - AbstractPopup.dialogThickness - margin);
+				x = System.Math.Max (x, AbstractPopup.FrameThickness);
+				x = System.Math.Min (x, this.Parent.ActualWidth - this.DialogSize.Width - AbstractPopup.FrameThickness);
 				x = System.Math.Floor (x);
 
 				if (this.targetRect.Center.Y > this.Parent.ActualHeight/2)  // popup en dessous ?
 				{
-					var y = this.targetRect.Bottom - AbstractPopup.queueLength - this.DialogSize.Height;
+					var y = this.targetRect.Bottom - AbstractPopup.FrameThickness - this.DialogSize.Height;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 				else  // popup en dessus ?
 				{
-					var y = this.targetRect.Top + AbstractPopup.queueLength;
+					var y = this.targetRect.Top + AbstractPopup.FrameThickness;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 			}
@@ -123,13 +121,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected void CreateCloseButton()
 		{
 			//	Crée le bouton de fermeture en haut à droite.
-			const int size = 20;
+			const int size = 24;
 
-			var button = new GlyphButton
+			var button = new IconButton
 			{
 				Parent        = this.mainFrameBox,
-				GlyphShape    = GlyphShape.Close,
-				ButtonStyle   = ButtonStyle.ToolItem,
+				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Popup.Close"),
 				Anchor        = AnchorStyles.TopRight,
 				PreferredSize = new Size (size, size),
 				Margins       = new Margins (0, 0, 0, 0),
@@ -143,52 +140,24 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		protected StaticText CreateTitle(int dy, string text)
-		{
-			var label = new StaticText
-			{
-				Parent           = this.mainFrameBox,
-				Text             = text,
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Anchor           = AnchorStyles.TopLeft,
-				PreferredSize    = new Size (this.dialogRect.Width, dy-4),
-				Margins          = new Margins (0, 0, 0, 0),
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			new FrameBox
-			{
-				Parent           = this.mainFrameBox,
-				Anchor           = AnchorStyles.TopLeft,
-				PreferredSize    = new Size (this.dialogRect.Width, 4),
-				Margins          = new Margins (0, 0, dy-4, 0),
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			return label;
-		}
-
-		protected FrameBox CreateTitleFrame(int dy)
+		protected void CreateTitle(string text)
 		{
 			var frame = new FrameBox
 			{
 				Parent           = this.mainFrameBox,
-				Anchor           = AnchorStyles.TopLeft,
-				PreferredSize    = new Size (this.dialogRect.Width, dy-4),
-				Margins          = new Margins (0, 0, 0, 0),
-				BackColor        = ColorManager.SelectionColor,
+				Dock             = DockStyle.Top,
+				PreferredHeight  = AbstractPopup.TitleHeight,
+				BackColor        = ColorManager.TreeTableBackgroundColor,
 			};
 
-			new FrameBox
+			new StaticText
 			{
-				Parent           = this.mainFrameBox,
-				Anchor           = AnchorStyles.TopLeft,
-				PreferredSize    = new Size (this.dialogRect.Width, 4),
-				Margins          = new Margins (0, 0, dy-4, 0),
-				BackColor        = ColorManager.SelectionColor,
+				Parent           = frame,
+				Text             = text,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				Dock             = DockStyle.Fill,
+				Margins          = new Margins (20, 0, 0, 0),
 			};
-
-			return frame;
 		}
 
 		protected Button CreateButton(int x, int y, int dx, int dy, string name, string text, string tooltip = null)
@@ -323,7 +292,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.dialogRect.Offset (delta);
 
 				var master = this.ActualBounds;
-				master.Deflate (AbstractPopup.dialogThickness);
+				master.Deflate (AbstractPopup.FrameThickness);
 				this.dialogRect = AbstractPopup.ForceInside (this.dialogRect, master);
 
 				delta = this.dialogRect.BottomLeft - p;  // recalcule le delta réel
@@ -389,28 +358,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 
 			//	Met en évidence le bouton target à l'origine du popup.
-			var rect = this.targetRect;
-			rect.Deflate (0.5);
-			graphics.AddRectangle (rect);
-			rect.Deflate (1.0);
-			graphics.AddRectangle (rect);
-			graphics.RenderSolid (ColorManager.SelectionColor);
+			this.PaintTarget (graphics);
 
 			//	Dessine le cadre jaune du popup, avec la queue.
 			var alpha = this.Alpha;
 
-			if (alpha == 1.0)
+			if (alpha > 0.0)
 			{
-				graphics.AddFilledPath (BalloonPath.GetPath (this.ExternalRect, this.targetRect, this.QueueThickness));
-				graphics.RenderSolid (ColorManager.SelectionColor);
-			}
-			else if (alpha > 0.0)
-			{
-				graphics.AddFilledPath (BalloonPath.GetPath (this.ExternalRect, this.targetRect, this.QueueThickness));
-				graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.SelectionColor));
-
 				graphics.AddFilledRectangle (this.ExternalRect);
 				graphics.RenderSolid (ColorManager.SelectionColor);
+
+				var rect = this.targetRect;
+				rect.Inflate (5);
+				graphics.AddFilledPath (BalloonPath.GetPath (this.dialogRect, rect, this.QueueThickness));
+				graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.GetBackgroundColor ()));
 			}
 			else
 			{
@@ -418,9 +379,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				graphics.RenderSolid (ColorManager.SelectionColor);
 			}
 
-			//	Dessine le fond blanc du popup.
 			graphics.AddFilledRectangle (this.dialogRect);
 			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+		}
+
+		private void PaintTarget(Graphics graphics)
+		{
+			graphics.AddFilledRectangle (this.targetRect);
+			graphics.RenderSolid (Color.FromAlphaColor (0.4, ColorManager.SelectionColor));
 		}
 
 
@@ -428,7 +394,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var delta = this.Distance - this.initialDistance + AbstractPopup.queueLength;
+				var delta = this.Distance - this.initialDistance + AbstractPopup.FrameThickness;
 				return System.Math.Min (delta / 2.0, 10.0);
 			}
 		}
@@ -461,7 +427,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			get
 			{
 				var rect = this.dialogRect;
-				rect.Inflate (AbstractPopup.dialogThickness);
+				rect.Inflate (AbstractPopup.FrameThickness);
 				return rect;
 			}
 		}
@@ -521,8 +487,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly double queueLength     = 20;
-		private static readonly double dialogThickness = 5;
+		public  static readonly int				TitleHeight    = 24;
+		private static readonly double			FrameThickness = 20;
 
 		private Widget							target;
 		private Rectangle						dialogRect;

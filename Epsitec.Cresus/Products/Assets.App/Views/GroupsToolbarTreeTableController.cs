@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					Question = "Voulez-vous supprimer le groupe sélectionné ?",
 				};
 
-				popup.Create (target);
+				popup.Create (target, leftOrRight: true);
 
 				popup.ButtonClicked += delegate (object sender, string name)
 				{

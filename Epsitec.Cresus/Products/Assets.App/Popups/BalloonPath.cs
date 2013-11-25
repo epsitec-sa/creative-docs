@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			if (mode != AttachMode.None)
 			{
 				var bounds = BalloonPath.mainRect;
-				bounds.Inflate (0.5);
+				//?bounds.Inflate (0.5);
 
 				if (mode == AttachMode.BottomLeft)
 				{

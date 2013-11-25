@@ -39,16 +39,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle (this.mainFrameBox);
-			this.CreateCloseButton ();
+			this.CreateTitle ("Amortissements");
 
-			var line1 = this.CreateFrame (AmortissementsPopup.Margin, 181, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line2 = this.CreateFrame (AmortissementsPopup.Margin, 160, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line3 = this.CreateFrame (AmortissementsPopup.Margin, 131, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line4 = this.CreateFrame (AmortissementsPopup.Margin, 110, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line5 = this.CreateFrame (AmortissementsPopup.Margin,  81, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line6 = this.CreateFrame (AmortissementsPopup.Margin,  60, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line7 = this.CreateFrame (AmortissementsPopup.Margin,  20, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, 24);
+			var line1 = this.CreateFrame (AmortissementsPopup.Margin, 171, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
+			var line2 = this.CreateFrame (AmortissementsPopup.Margin, 150, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
+			var line3 = this.CreateFrame (AmortissementsPopup.Margin, 121, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
+			var line4 = this.CreateFrame (AmortissementsPopup.Margin, 100, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
+			var line5 = this.CreateFrame (AmortissementsPopup.Margin,  71, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
+			var line6 = this.CreateFrame (AmortissementsPopup.Margin,  50, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
+			var line7 = this.CreateFrame (0,  0, AmortissementsPopup.PopupWidth, 30);
 
 			this.CreateCreate  (line1);
 			this.CreateRemove  (line2);
@@ -59,27 +58,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateButtons (line7);
 
 			this.UpdateButtons ();
-		}
-
-		private void CreateTitle(Widget parent)
-		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = "Amortissements",
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = AmortissementsPopup.TitleHeight - 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			new StaticText
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
 		}
 
 		private void CreateCreate(Widget parent)
@@ -231,7 +209,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (AmortissementsPopup.PopupWidth/2 - AmortissementsPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (AmortissementsPopup.PopupWidth/2 - 5, parent.PreferredHeight),
 				Margins       = new Margins (0, 5, 0, 0),
 			};
 
@@ -243,7 +221,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (AmortissementsPopup.PopupWidth/2 - AmortissementsPopup.Margin - 5, parent.PreferredHeight),
+				PreferredSize = new Size (AmortissementsPopup.PopupWidth/2 - 5, parent.PreferredHeight),
 				Margins       = new Margins (5, 0, 0, 0),
 			};
 
@@ -285,7 +263,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int TitleHeight = 24;
 		private static readonly int LineHeight  = 2+17+2;
 		private static readonly int PopupWidth  = 300;
-		private static readonly int PopupHeight = 240;
+		private static readonly int PopupHeight = 230;
 		private static readonly int Margin      = 20;
 
 		private readonly DataAccessor						accessor;
