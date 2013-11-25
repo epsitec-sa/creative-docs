@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected void CreateCloseButton()
 		{
 			//	Crée le bouton de fermeture en haut à droite.
-			const int size = 24;
+			int size = AbstractPopup.TitleHeight - 1;
 
 			var button = new IconButton
 			{
@@ -147,8 +147,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent           = this.mainFrameBox,
 				Dock             = DockStyle.Top,
-				PreferredHeight  = AbstractPopup.TitleHeight,
-				BackColor        = ColorManager.TreeTableBackgroundColor,
+				PreferredHeight  = AbstractPopup.TitleHeight - 1,
 			};
 
 			new StaticText
@@ -158,6 +157,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Fill,
 				Margins          = new Margins (10, 0, 0, 0),
+			};
+
+			new FrameBox
+			{
+				Parent           = this.mainFrameBox,
+				Dock             = DockStyle.Top,
+				PreferredHeight  = 1,
+				BackColor        = ColorManager.WindowBackgroundColor,
 			};
 		}
 
@@ -502,7 +509,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		public  static readonly int				TitleHeight    = 24;
+		public  static readonly int				TitleHeight    = 24 + 1;
 		private static readonly int				FooterHeight   = 30;
 		private static readonly double			FrameThickness = 20;
 

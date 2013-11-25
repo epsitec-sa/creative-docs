@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			int dx = GroupsPopup.PopupWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
-			int dy = GroupsPopup.TitleHeight
+			int dy = AbstractPopup.TitleHeight
 				   + rows * GroupsPopup.RowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
 
@@ -190,7 +190,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int TitleHeight      = AbstractPopup.TitleHeight;
 		private static readonly int RowHeight        = 18;
 		private static readonly int PopupWidth       = 200;
 

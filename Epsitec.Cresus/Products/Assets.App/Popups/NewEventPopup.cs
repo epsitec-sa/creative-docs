@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent          = this.mainFrameBox,
 				Dock            = DockStyle.Top,
-				PreferredHeight = NewEventPopup.titleHeight,
+				PreferredHeight = AbstractPopup.TitleHeight,
 				BackColor       = ColorManager.TreeTableBackgroundColor,
 				Padding         = new Margins (0, 0, 1, 0),
 			};
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private Size GetDialogSize(int buttonCount)
 		{
 			int dx = NewEventPopup.horizontalMargins*2 + NewEventPopup.buttonWidth;
-			int dy = NewEventPopup.verticalMargins*2 + NewEventPopup.titleHeight + NewEventPopup.buttonHeight*buttonCount + NewEventPopup.buttonGap*(buttonCount-1);
+			int dy = NewEventPopup.verticalMargins*2 + AbstractPopup.TitleHeight + NewEventPopup.buttonHeight*buttonCount + NewEventPopup.buttonGap*(buttonCount-1);
 
 			return new Size (dx, dy);
 		}
@@ -257,7 +257,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static readonly int horizontalMargins = 40;
 		private static readonly int verticalMargins   = 20;
-		private static readonly int titleHeight       = AbstractPopup.TitleHeight;
 		private static readonly int buttonWidth       = 180;
 		private static readonly int buttonHeight      = 24;
 		private static readonly int buttonGap         = 1;

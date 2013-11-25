@@ -34,9 +34,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var frame = new FrameBox
 			{
-				Parent  = this.mainFrameBox,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (0, 0, 5, 0),
+				Parent = this.mainFrameBox,
+				Dock   = DockStyle.Fill,
 			};
 
 			this.controller.CreateUI (frame);

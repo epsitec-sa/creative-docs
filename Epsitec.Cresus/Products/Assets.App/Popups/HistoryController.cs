@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			int dx = this.accessor.ColumnsWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
-			int dy = HistoryController.TitleHeight
+			int dy = AbstractPopup.TitleHeight
 				   + HistoryController.HeaderHeight
 				   + rows * HistoryController.RowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
@@ -92,7 +92,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int TitleHeight      = AbstractPopup.TitleHeight + 5;
 		private static readonly int HeaderHeight     = 22;
 		private static readonly int RowHeight        = 18;
 
