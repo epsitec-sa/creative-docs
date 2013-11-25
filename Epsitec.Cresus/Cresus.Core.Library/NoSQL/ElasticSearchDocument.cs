@@ -5,10 +5,10 @@ using System.Text;
 using Nest;
 using Newtonsoft.Json;
 
-namespace Epsitec.Cresus.WebCore.Server.ElasticSearch
+namespace Epsitec.Cresus.Core.NoSQL
 {
 	[ElasticType (IdProperty = "DocumentId")]
-	class Document
+	public class ElasticSearchDocument
 	{
 		//DocumentId will be used as id, no need to index it as a property
 		[JsonIgnore]

@@ -12,6 +12,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.NoSQL;
 using Epsitec.Cresus.Database;
 using Nest;
 using Newtonsoft.Json;
@@ -68,7 +69,7 @@ namespace Epsitec.Aider.Data.Job
 					var druid = (Druid) Res.CommandIds.Base.ShowAiderContact;
 					var name = contact.GetDisplayName ();
 					var text = contact.Address.GetDisplayAddress ().ToSimpleText ();
-					var document = new Document ()
+					var document = new ElasticSearchDocument ()
 					{
 						DocumentId  = id,
 						DatasetId = druid.ToCompactString (),
@@ -146,44 +147,5 @@ namespace Epsitec.Aider.Data.Job
 		private string							jobName;
 		private string							jobDescription;
 		private Date							startDate;
-
-
-
-		[ElasticType (IdProperty = "DocumentId")]
-		internal class Document
-		{
-			//DocumentId will be used as id, no need to index it as a property
-			[JsonIgnore]
-			public string DocumentId
-			{
-				get;
-				set;
-			}
-
-			public string Name
-			{
-				get;
-				set;
-			}
-
-			public string Text
-			{
-				get;
-				set;
-			}
-
-
-			public string DatasetId
-			{
-				get;
-				set;
-			}
-
-			public string EntityId
-			{
-				get;
-				set;
-			}			
-		}
 	}
 }

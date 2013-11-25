@@ -5,7 +5,7 @@ using Microsoft.AspNet.SignalR;
 
 using System.Threading.Tasks;
 using Nest;
-using Epsitec.Cresus.WebCore.Server.ElasticSearch;
+using Epsitec.Cresus.Core.NoSQL;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 {
@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		public void Query(string query)
 		{
-			var result = ElasticClient.Search<Document> (s => s
+			var result = ElasticClient.Search<ElasticSearchDocument> (s => s
 				.Index ("aider")
 				.Type ("contacts")
 				.Query (q => q

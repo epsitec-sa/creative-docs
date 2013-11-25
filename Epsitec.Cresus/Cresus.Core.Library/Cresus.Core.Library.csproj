@@ -56,6 +56,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Nest">
+      <HintPath>..\External\Nest\Nest.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\External\Json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -450,6 +456,7 @@
     <Compile Include="Metadata\LambdaFilter.cs" />
     <Compile Include="Metadata\RequestExtensions.cs" />
     <Compile Include="Metadata\LabelExport.cs" />
+    <Compile Include="NoSQL\ElasticSearchDocument.cs" />
     <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
     <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
     <Compile Include="Orchestrators\INavigationPathElementProvider.cs" />
