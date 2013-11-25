@@ -8,13 +8,13 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
-	/// Gère l'accès en lecture "en arbre" à des données quelconques en provenance de inputNodes.
+	/// Gère l'accès en lecture "en arbre" à des groupes en provenance de inputNodes.
 	/// En fait, c'est la mise en série de 3 getters:
 	/// 
 	///     |
 	///     o  GuidNode (BaseType.Groups)
 	///     V
-	/// ParentNodesGetter
+	/// GroupParentNodesGetter
 	///     |
 	///     o  ParentNode
 	///     V
@@ -28,13 +28,13 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	///     V
 	/// 
 	/// </summary>
-	public class TreeNodesGetter : AbstractNodesGetter<TreeNode>  // outputNodes
+	public class GroupTreeNodesGetter : AbstractNodesGetter<TreeNode>  // outputNodes
 	{
-		public TreeNodesGetter(DataAccessor accessor, BaseType baseType, AbstractNodesGetter<GuidNode> inputNodes)
+		public GroupTreeNodesGetter(DataAccessor accessor, AbstractNodesGetter<GuidNode> inputNodes)
 		{
 			this.inputNodes        = inputNodes;
-			this.parentNodesGetter = new ParentNodesGetter (inputNodes, accessor, baseType);
-			this.levelNodesGetter  = new LevelNodesGetter (this.parentNodesGetter, accessor, baseType);
+			this.parentNodesGetter = new GroupParentNodesGetter (inputNodes, accessor);
+			this.levelNodesGetter  = new GroupLevelNodesGetter (this.parentNodesGetter, accessor);
 			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.levelNodesGetter);
 		}
 
@@ -143,8 +143,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 
 		private readonly AbstractNodesGetter<GuidNode>	inputNodes;
-		private readonly ParentNodesGetter				parentNodesGetter;
-		private readonly LevelNodesGetter				levelNodesGetter;
+		private readonly GroupParentNodesGetter				parentNodesGetter;
+		private readonly GroupLevelNodesGetter				levelNodesGetter;
 		private readonly TreeObjectsNodesGetter			treeObjectsGetter;
 
 		private Timestamp?								timestamp;

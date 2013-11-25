@@ -100,14 +100,14 @@
     <Compile Include="BusinessLogic\TimelineData.cs" />
     <Compile Include="BusinessLogic\TimelineGlyph.cs" />
     <Compile Include="BusinessLogic\TimelineMode.cs" />
-    <Compile Include="NodesGetter\TreeNodesGetter.cs" />
-    <Compile Include="NodesGetter\LevelNodesGetter.cs" />
+    <Compile Include="NodesGetter\GroupTreeNodesGetter.cs" />
+    <Compile Include="NodesGetter\GroupLevelNodesGetter.cs" />
     <Compile Include="SimpleEngine\SkeletonMandat.cs" />
     <Compile Include="SimpleEngine\EmptyMandat.cs" />
     <Compile Include="SimpleEngine\EditionAccessor.cs" />
     <Compile Include="SimpleEngine\DataGuidProperty.cs" />
     <Compile Include="NodesGetter\ParentNode.cs" />
-    <Compile Include="NodesGetter\ParentNodesGetter.cs" />
+    <Compile Include="NodesGetter\GroupParentNodesGetter.cs" />
     <Compile Include="NodesGetter\TreeNode.cs" />
     <Compile Include="NodesGetter\LevelNode.cs" />
     <Compile Include="NodesGetter\ObjectEventsNodesGetter.cs" />

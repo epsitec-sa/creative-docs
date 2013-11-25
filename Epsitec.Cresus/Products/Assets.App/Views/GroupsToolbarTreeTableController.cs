@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
-			this.nodesGetter = new TreeNodesGetter (this.accessor, BaseType.Groups, primaryNodesGetter);
+			this.nodesGetter = new GroupTreeNodesGetter (this.accessor, primaryNodesGetter);
 
 			this.title = "Groupes d'immobilisation";
 		}
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void SetSortingInstructions(SortingInstructions instructions)
 		{
-			(this.nodesGetter as TreeNodesGetter).SortingInstructions = instructions;
+			(this.nodesGetter as GroupTreeNodesGetter).SortingInstructions = instructions;
 
 			this.UpdateData ();
 		}
@@ -212,11 +212,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private TreeNodesGetter NodesGetter
+		private GroupTreeNodesGetter NodesGetter
 		{
 			get
 			{
-				return this.nodesGetter as TreeNodesGetter;
+				return this.nodesGetter as GroupTreeNodesGetter;
 			}
 		}
 	}

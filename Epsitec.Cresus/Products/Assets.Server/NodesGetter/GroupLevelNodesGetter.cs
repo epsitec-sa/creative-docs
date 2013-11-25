@@ -8,18 +8,17 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
-	/// Accès en lecture à des données. En entrée, on reçoit des données parent/orderValue
+	/// Accès en lecture à des groupes. En entrée, on reçoit des données parent/orderValue
 	/// désordonnées qui servent à reconstruire un arbre. En sortie, on fourni des données
 	/// ordonnées avec une indication du level.
 	/// ParentNode -> LevelNode
 	/// </summary>
-	public class LevelNodesGetter : AbstractNodesGetter<LevelNode>  // outputNodes
+	public class GroupLevelNodesGetter : AbstractNodesGetter<LevelNode>  // outputNodes
 	{
-		public LevelNodesGetter(AbstractNodesGetter<ParentNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public GroupLevelNodesGetter(AbstractNodesGetter<ParentNode> inputNodes, DataAccessor accessor)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
-			this.baseType   = baseType;
 
 			this.levelNodes = new List<LevelNode> ();
 		}
@@ -96,8 +95,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			//	Construit la liste finale consultable en sortie.
 			foreach (var treeNode in list)
 			{
-				int level = LevelNodesGetter.GetLevel (treeNode);
-				var n = new LevelNode (treeNode.Node.Guid, this.baseType, level);
+				int level = GroupLevelNodesGetter.GetLevel (treeNode);
+				var n = new LevelNode (treeNode.Node.Guid, BaseType.Groups, level);
 				this.levelNodes.Add (n);
 			}
 		}
@@ -187,14 +186,13 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 
 			private readonly TreeNode				parent;
-			private readonly ParentNode		node;
+			private readonly ParentNode				node;
 			private readonly List<TreeNode>			childrens;
 		}
 
 
 		private readonly AbstractNodesGetter<ParentNode> inputNodes;
 		private readonly DataAccessor					accessor;
-		private readonly BaseType						baseType;
 		private readonly List<LevelNode>				levelNodes;
 	}
 }

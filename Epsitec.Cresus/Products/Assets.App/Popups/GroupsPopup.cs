@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
-			this.nodesGetter = new TreeNodesGetter (this.accessor, BaseType.Groups, primaryNodesGetter);
+			this.nodesGetter = new GroupTreeNodesGetter (this.accessor, primaryNodesGetter);
 
 			this.nodesGetter.SortingInstructions = SortingInstructions.Default;
 			this.nodesGetter.UpdateData ();
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly TreeNodesGetter				nodesGetter;
+		private readonly GroupTreeNodesGetter				nodesGetter;
 		private readonly SingleGroupsTreeTableFiller	dataFiller;
 
 		private int										visibleSelectedRow;

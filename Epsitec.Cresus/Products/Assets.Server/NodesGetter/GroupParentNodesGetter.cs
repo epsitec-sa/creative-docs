@@ -9,17 +9,16 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
-	/// Accès en lecture à des données quelconques, enrichies du parent (Guid)
+	/// Accès en lecture à des groupes, enrichis du parent (Guid)
 	/// et de la OrderValue (string).
 	/// GuidNode -> ParentNode
 	/// </summary>
-	public class ParentNodesGetter : AbstractNodesGetter<ParentNode>  // outputNodes
+	public class GroupParentNodesGetter : AbstractNodesGetter<ParentNode>  // outputNodes
 	{
-		public ParentNodesGetter(AbstractNodesGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public GroupParentNodesGetter(AbstractNodesGetter<GuidNode> inputNodes, DataAccessor accessor)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
-			this.baseType   = baseType;
 
 			this.SortingInstructions = SortingInstructions.Empty;
 		}
@@ -42,7 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			get
 			{
 				var node      = this.inputNodes[index];
-				var obj       = this.accessor.GetObject (this.baseType, node.Guid);
+				var obj       = this.accessor.GetObject (BaseType.Groups, node.Guid);
 				var parent    = this.GetParent (obj);
 				var primary   = ObjectCalculator.GetComparableData (obj, this.Timestamp, this.SortingInstructions.PrimaryField);
 				var secondary = ObjectCalculator.GetComparableData (obj, this.Timestamp, this.SortingInstructions.SecondaryField);
@@ -69,6 +68,5 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 		private readonly AbstractNodesGetter<GuidNode>	inputNodes;
 		private readonly DataAccessor					accessor;
-		private readonly BaseType						baseType;
 	}
 }
