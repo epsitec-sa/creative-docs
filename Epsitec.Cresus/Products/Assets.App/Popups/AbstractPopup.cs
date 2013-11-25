@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Text             = text,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Fill,
-				Margins          = new Margins (20, 0, 0, 0),
+				Margins          = new Margins (10, 0, 0, 0),
 			};
 		}
 

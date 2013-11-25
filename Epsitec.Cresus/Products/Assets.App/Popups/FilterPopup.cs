@@ -79,15 +79,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var frame = new FrameBox
 			{
-				Parent  = this.mainFrameBox,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (0, 0, 5, 0),
+				Parent = this.mainFrameBox,
+				Dock   = DockStyle.Fill,
 			};
 
 			this.controller.CreateUI (frame, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
+			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller, 0);
 			this.UpdateController ();
 
 			this.InitialCompact ();
@@ -230,8 +229,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int TitleHeight      = 24;
-		private static readonly int PopupWidth       = 200;
+		private static readonly int PopupWidth = 200;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;

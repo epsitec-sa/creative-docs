@@ -11,9 +11,9 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 	public static class TreeTableFiller<T>
 		where T : struct
 	{
-		public static void FillColumns(AbstractTreeTableFiller<T> filler, NavigationTreeTableController controller)
+		public static void FillColumns(AbstractTreeTableFiller<T> filler, NavigationTreeTableController controller, int dockToLeftCount = 1)
 		{
-			controller.SetColumns (filler.Columns, 1);
+			controller.SetColumns (filler.Columns, dockToLeftCount);
 		}
 
 		public static void FillContent(AbstractTreeTableFiller<T> filler, NavigationTreeTableController controller, int firstRow, int count, int selection)

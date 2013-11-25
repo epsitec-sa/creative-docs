@@ -50,15 +50,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var frame = new FrameBox
 			{
-				Parent  = this.mainFrameBox,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (0, 0, 5, 0),
+				Parent = this.mainFrameBox,
+				Dock   = DockStyle.Fill,
 			};
 
 			this.controller.CreateUI (frame, headerHeight: CategoriesPopup.HeaderHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			TreeTableFiller<SortableNode>.FillColumns (this.dataFiller, this.controller);
+			TreeTableFiller<SortableNode>.FillColumns (this.dataFiller, this.controller, 0);
 			this.UpdateController ();
 
 			//	Connexion des événements.
@@ -149,7 +148,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int TitleHeight      = AbstractPopup.TitleHeight + 5;
+		private static readonly int TitleHeight      = AbstractPopup.TitleHeight;
 		private static readonly int HeaderHeight     = 22;
 		private static readonly int RowHeight        = 18;
 		private static readonly int PopupWidth       = 390;
