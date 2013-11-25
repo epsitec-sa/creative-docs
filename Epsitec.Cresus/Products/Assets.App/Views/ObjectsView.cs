@@ -230,10 +230,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.OnStartStopEdit ();
 					break;
 
-				case ToolbarCommand.Amortissement:
-					this.OnMainAmortissement ();
-					break;
-
 				case ToolbarCommand.Accept:
 					this.OnEditAccept ();
 					break;
@@ -366,70 +362,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.objectEditor.OpenMainPage (eventType);
-		}
-
-		private void OnMainAmortissement()
-		{
-			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Amortissement);
-
-			if (target != null)
-			{
-#if false
-				var popup = new YesNoPopup
-				{
-					Question = "Voulez-vous générer les amortissements ?",
-				};
-
-				if (this.listController.SelectedRow == -1)
-				{
-					popup.Radios.Add (new YesNoPopup.Radio ("all", "Pour tous les objets", activate: true));
-				}
-				else
-				{
-					popup.Radios.Add (new YesNoPopup.Radio ("one", "Pour l'objet sélectionné", activate: true));
-					popup.Radios.Add (new YesNoPopup.Radio ("all", "Pour tous les objets"));
-				}
-
-				popup.Create (target);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "yes")
-					{
-						if (popup.RadioSelected == "one")
-						{
-							var guid = this.listController.SelectedGuid;
-							this.amortissements.GeneratesAmortissementsAuto (guid);
-						}
-						else
-						{
-							this.amortissements.GeneratesAmortissementsAuto ();
-						}
-
-						this.Update ();
-						this.timelineController.Update ();
-						this.eventsController.Update ();
-					}
-				};
-#else
-				var now = System.DateTime.Now;
-
-				var popup = new AmortissementsPopup (this.accessor)
-				{
-					DateFrom = new System.DateTime (now.Year, 1, 1),
-					DateTo   = new System.DateTime (now.Year, 12, 31),
-				};
-
-				popup.Create (target);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "ok")
-					{
-					}
-				};
-#endif
-			}
 		}
 
 		private void OnCloseColumn()

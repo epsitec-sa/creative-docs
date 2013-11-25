@@ -5,11 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Server.DataFillers;
-using Epsitec.Cresus.Assets.Server.NodesGetter;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -47,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var line4 = this.CreateFrame (AmortissementsPopup.Margin, 100, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
 			var line5 = this.CreateFrame (AmortissementsPopup.Margin,  71, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
 			var line6 = this.CreateFrame (AmortissementsPopup.Margin,  50, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line7 = this.CreateFrame (0,  0, AmortissementsPopup.PopupWidth, 30);
+			var line7 = this.CreateFrame (0, 0, AmortissementsPopup.PopupWidth, 30);
 
 			this.CreateCreate  (line1);
 			this.CreateRemove  (line2);

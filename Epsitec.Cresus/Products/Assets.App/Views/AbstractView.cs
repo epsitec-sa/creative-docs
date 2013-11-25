@@ -34,12 +34,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (command)
 			{
+				case ToolbarCommand.Amortissement:
+					this.OnMainAmortissement ();
+					break;
+
 				case ToolbarCommand.Simulation:
 					this.OnMainSimulation ();
 					break;
 			}
 		}
 
+
+		private void OnMainAmortissement()
+		{
+			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Amortissement);
+
+			var now = System.DateTime.Now;
+
+			var popup = new AmortissementsPopup (this.accessor)
+			{
+				DateFrom = new System.DateTime (now.Year, 1, 1),
+				DateTo   = new System.DateTime (now.Year, 12, 31),
+			};
+
+			popup.Create (target);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+				}
+			};
+		}
 
 		private void OnMainSimulation()
 		{
