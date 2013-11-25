@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class LogicDescriptions
 	{
-		public static string GetTooltip(DataObject obj, Timestamp timestamp, EventType eventType, int maxLines = int.MaxValue)
+		public static string GetTooltip(DataAccessor accessor, DataObject obj, Timestamp timestamp, EventType eventType, int maxLines = int.MaxValue)
 		{
 			var list = new List<string> ();
 
@@ -72,9 +72,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					case FieldType.Guid:
 						var g = ObjectCalculator.GetObjectPropertyGuid (obj, timestamp, field, false);
-						if (!g.IsEmpty)
+						var t = GroupsLogic.GetFullName (accessor, g);
+						if (!string.IsNullOrEmpty (t))
 						{
-							line = g.ToString ();  // TODO
+							line = t;
 						}
 						break;
 				}

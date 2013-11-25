@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private DataCell EventToCell(DataObject obj, DataEvent e)
 		{
 			var glyph      = TimelineData.TypeToGlyph (e.Type);
-			string tooltip = LogicDescriptions.GetTooltip (obj, e.Timestamp, e.Type, 8);
+			string tooltip = LogicDescriptions.GetTooltip (this.accessor, obj, e.Timestamp, e.Type, 8);
 
 			return new DataCell (glyph, false, false, tooltip);
 		}
