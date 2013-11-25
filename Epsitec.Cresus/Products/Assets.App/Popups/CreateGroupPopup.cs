@@ -53,11 +53,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var line1 = this.CreateFrame (CreateGroupPopup.Margin, 327, CreateGroupPopup.PopupWidth-CreateGroupPopup.Margin*2, CreateGroupPopup.LineHeight);
 			var line2 = this.CreateFrame (CreateGroupPopup.Margin,  50, CreateGroupPopup.PopupWidth-CreateGroupPopup.Margin*2, 260);
-			var line3 = this.CreateFrame (0, 0, CreateGroupPopup.PopupWidth, 30);
 
 			this.CreateName      (line1);
 			this.CreateTreeTable (line2);
-			this.CreateButtons   (line3);
+			this.CreateButtons   ();
 
 			this.UpdateButtons ();
 			this.textField.Focus ();
@@ -165,42 +164,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		private void CreateButtons(Widget parent)
+		private void CreateButtons()
 		{
-			this.createButton = new Button
-			{
-				Parent        = parent,
-				Name          = "create",
-				Text          = "Créer",
-				ButtonStyle   = ButtonStyle.Icon,
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateGroupPopup.PopupWidth/2 - 5, parent.PreferredHeight),
-				Margins       = new Margins (0, 5, 0, 0),
-			};
+			var footer = this.CreateFooter ();
 
-			this.cancelButton = new Button
-			{
-				Parent        = parent,
-				Name          = "cancel",
-				Text          = "Annuler",
-				ButtonStyle   = ButtonStyle.Icon,
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateGroupPopup.PopupWidth/2 - 5, parent.PreferredHeight),
-				Margins       = new Margins (5, 0, 0, 0),
-			};
-
-			this.createButton.Clicked += this.HandleButtonClicked;
-			this.cancelButton.Clicked += this.HandleButtonClicked;
-		}
-
-		private void HandleButtonClicked(object sender, MessageEventArgs e)
-		{
-			var button = sender as Button;
-
-			this.ClosePopup ();
-			this.OnButtonClicked (button.Name);
+			this.createButton = this.CreateFooterButton (footer, DockStyle.Left,  "create", "Créer");
+			this.cancelButton = this.CreateFooterButton (footer, DockStyle.Right, "cancel", "Annuler");
 		}
 
 

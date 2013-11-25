@@ -88,14 +88,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 			}
 
-			{
-				int y = 0;
-				int dx = (YesNoPopup.dialogWidth - YesNoPopup.buttonGap) /2;
-				int dy = 30;
-
-				this.CreateButton (0,                       y, dx, dy, "yes", "Oui");
-				this.CreateButton (dx+YesNoPopup.buttonGap, y, dx, dy, "no",  "Non");
-			}
+			var footer = this.CreateFooter ();
+			this.CreateFooterButton (footer, DockStyle.Left,  "yes", "Oui");
+			this.CreateFooterButton (footer, DockStyle.Right, "no",  "Non");
 		}
 
 

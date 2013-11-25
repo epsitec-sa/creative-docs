@@ -127,6 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent        = this.mainFrameBox,
 				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Popup.Close"),
+				AutoFocus     = false,
 				Anchor        = AnchorStyles.TopRight,
 				PreferredSize = new Size (size, size),
 				Margins       = new Margins (0, 0, 0, 0),
@@ -160,17 +161,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		protected Button CreateButton(int x, int y, int dx, int dy, string name, string text, string tooltip = null)
+		protected FrameBox CreateFooter()
 		{
+			return new FrameBox
+			{
+				Parent              = this.mainFrameBox,
+				Dock                = DockStyle.Bottom,
+				PreferredHeight     = AbstractPopup.FooterHeight,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+			};
+		}
+
+		protected Button CreateFooterButton(FrameBox parent, DockStyle style, string name, string text, string tooltip = null)
+		{
+			int lm = (style == DockStyle.Left ) ? 0 : 5;
+			int rm = (style == DockStyle.Right) ? 0 : 5;
+
 			var button = new Button
 			{
-				Parent        = this.mainFrameBox,
-				Name          = name,
-				Text          = text,
-				ButtonStyle   = ButtonStyle.Icon,
-				Anchor        = AnchorStyles.BottomLeft,
-				PreferredSize = new Size (dx, dy),
-				Margins       = new Margins (x, 0, 0, y),
+				Parent      = parent,
+				Name        = name,
+				Text        = text,
+				ButtonStyle = ButtonStyle.Icon,
+				AutoFocus   = false,
+				Dock        = DockStyle.Fill,
+				Margins     = new Margins (lm, rm, 0, 0),
 			};
 
 			if (!string.IsNullOrEmpty (tooltip))
@@ -488,6 +503,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		public  static readonly int				TitleHeight    = 24;
+		private static readonly int				FooterHeight   = 30;
 		private static readonly double			FrameThickness = 20;
 
 		private Widget							target;

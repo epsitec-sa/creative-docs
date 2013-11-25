@@ -44,7 +44,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var line4 = this.CreateFrame (AmortissementsPopup.Margin, 100, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
 			var line5 = this.CreateFrame (AmortissementsPopup.Margin,  71, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
 			var line6 = this.CreateFrame (AmortissementsPopup.Margin,  50, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line7 = this.CreateFrame (0, 0, AmortissementsPopup.PopupWidth, 30);
 
 			this.CreateCreate  (line1);
 			this.CreateRemove  (line2);
@@ -52,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateTo      (line4);
 			this.CreateOne     (line5);
 			this.CreateAll     (line6);
-			this.CreateButtons (line7);
+			this.CreateButtons ();
 
 			this.UpdateButtons ();
 		}
@@ -197,41 +196,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		private void CreateButtons(Widget parent)
+		private void CreateButtons()
 		{
-			this.okButton = new Button
-			{
-				Parent        = parent,
-				Name          = "ok",
-				ButtonStyle   = ButtonStyle.Icon,
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (AmortissementsPopup.PopupWidth/2 - 5, parent.PreferredHeight),
-				Margins       = new Margins (0, 5, 0, 0),
-			};
+			var footer = this.CreateFooter ();
 
-			this.cancelButton = new Button
-			{
-				Parent        = parent,
-				Name          = "cancel",
-				Text          = "Annuler",
-				ButtonStyle   = ButtonStyle.Icon,
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (AmortissementsPopup.PopupWidth/2 - 5, parent.PreferredHeight),
-				Margins       = new Margins (5, 0, 0, 0),
-			};
-
-			this.okButton.Clicked += this.HandleButtonClicked;
-			this.cancelButton.Clicked += this.HandleButtonClicked;
-		}
-
-		private void HandleButtonClicked(object sender, MessageEventArgs e)
-		{
-			var button = sender as Button;
-
-			this.ClosePopup ();
-			this.OnButtonClicked (button.Name);
+			this.okButton     = this.CreateFooterButton (footer, DockStyle.Left, "ok", null);
+			this.cancelButton = this.CreateFooterButton (footer, DockStyle.Right, "cancel", "Annuler");
 		}
 
 

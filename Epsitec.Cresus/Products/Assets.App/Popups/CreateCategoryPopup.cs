@@ -54,11 +54,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var line1 = this.CreateFrame (CreateCategoryPopup.Margin, 327, CreateCategoryPopup.PopupWidth-CreateCategoryPopup.Margin*2, CreateCategoryPopup.LineHeight);
 			var line2 = this.CreateFrame (CreateCategoryPopup.Margin,  50, CreateCategoryPopup.PopupWidth-CreateCategoryPopup.Margin*2, 260);
-			var line3 = this.CreateFrame (0, 0, CreateCategoryPopup.PopupWidth, 30);
 
 			this.CreateName      (line1);
 			this.CreateTreeTable (line2);
-			this.CreateButtons   (line3);
+			this.CreateButtons   ();
 
 			this.UpdateButtons ();
 			this.textField.Focus ();
@@ -168,42 +167,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		private void CreateButtons(Widget parent)
+		private void CreateButtons()
 		{
-			this.createButton = new Button
-			{
-				Parent        = parent,
-				Name          = "create",
-				Text          = "Créer",
-				ButtonStyle   = ButtonStyle.Icon,
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateCategoryPopup.PopupWidth/2 - 5, parent.PreferredHeight),
-				Margins       = new Margins (0, 5, 0, 0),
-			};
+			var footer = this.CreateFooter ();
 
-			this.cancelButton = new Button
-			{
-				Parent        = parent,
-				Name          = "cancel",
-				Text          = "Annuler",
-				ButtonStyle   = ButtonStyle.Icon,
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (CreateCategoryPopup.PopupWidth/2 - 5, parent.PreferredHeight),
-				Margins       = new Margins (5, 0, 0, 0),
-			};
-
-			this.createButton.Clicked += this.HandleButtonClicked;
-			this.cancelButton.Clicked += this.HandleButtonClicked;
-		}
-
-		private void HandleButtonClicked(object sender, MessageEventArgs e)
-		{
-			var button = sender as Button;
-
-			this.ClosePopup ();
-			this.OnButtonClicked (button.Name);
+			this.createButton = this.CreateFooterButton (footer, DockStyle.Left,  "create", "Créer");
+			this.cancelButton = this.CreateFooterButton (footer, DockStyle.Right, "cancel", "Annuler");
 		}
 
 
