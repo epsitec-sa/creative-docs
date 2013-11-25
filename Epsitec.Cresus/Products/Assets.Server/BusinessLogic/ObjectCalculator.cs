@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (obj != null)
 			{
-				var start = new Timestamp (System.DateTime.MinValue, 0);
+				var start = Timestamp.MinValue;
 				bool isLocked = true;  // bloqué jusqu'au premier événement d'entrée
 
 				int eventCount = obj.EventsCount;
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					var li = new LockedInterval
 					{
 						Start = start,
-						End   = new Timestamp (System.DateTime.MaxValue, 0),
+						End   = Timestamp.MaxValue,
 					};
 
 					intervals.Add (li);
@@ -448,7 +448,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				if (!timestamp.HasValue)
 				{
-					timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+					timestamp = Timestamp.MaxValue;
 				}
 
 				return obj.GetSyntheticProperty (timestamp.Value, field);

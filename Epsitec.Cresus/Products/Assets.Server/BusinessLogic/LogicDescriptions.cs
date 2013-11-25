@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var list = new List<string> ();
 
 			//	Met la date de l'événement, si elle est connue.
-			if (timestamp.Date == System.DateTime.MaxValue)
+			if (timestamp == Timestamp.MaxValue)
 			{
 				list.Add ("Etat final");
 			}

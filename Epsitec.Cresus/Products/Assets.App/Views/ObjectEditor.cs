@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (!timestamp.HasValue)
 			{
-				timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+				timestamp = Timestamp.MaxValue;
 			}
 
 			this.objectGuid = objectGuid;

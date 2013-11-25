@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private static bool IsDefined(Timestamp? timestamp)
 		{
-			return timestamp != null && timestamp.Value.Date != System.DateTime.MaxValue;
+			return timestamp != null && timestamp.Value != Timestamp.MaxValue;
 		}
 
 

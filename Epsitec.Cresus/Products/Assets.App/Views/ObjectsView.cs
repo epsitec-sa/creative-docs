@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case ViewMode.Event:
 						this.listController.UpdateData ();
 						this.listController.SelectedGuid = this.selectedGuid;
-						this.listController.Timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+						this.listController.Timestamp = Timestamp.MaxValue;
 
 						this.eventsController.ObjectGuid = this.selectedGuid;
 						this.eventsController.SelectedTimestamp = this.selectedTimestamp;

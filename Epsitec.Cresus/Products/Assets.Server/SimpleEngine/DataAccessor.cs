@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	Copie dans 'obj' toutes les propriétés de 'model' que 'obj' n'a pas déjà.
 			if (!timestamp.HasValue)
 			{
-				timestamp = new Timestamp (System.DateTime.MaxValue, 0);
+				timestamp = Timestamp.MaxValue;
 			}
 
 			var e = obj.GetEvent (obj.EventsCount-1);  // dernier événement
