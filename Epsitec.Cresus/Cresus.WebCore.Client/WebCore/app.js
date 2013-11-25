@@ -378,6 +378,10 @@ $.getScript('signalr/hubs', function() {
         this.entityBag.addEntityToBag(title,summary,entityId);      
       },
 
+      addCustomEntityToBag: function(title,summary,entityId) {
+        this.entityBag.addEntityToBag(title,summary,entityId);      
+      },
+
       addEntityToClientBag: function(entity) {
         this.entityBag.addEntityToClientBag(entity);      
       },

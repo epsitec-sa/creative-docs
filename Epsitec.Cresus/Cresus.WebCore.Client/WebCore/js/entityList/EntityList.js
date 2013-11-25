@@ -778,10 +778,24 @@ function() {
 
     doExportToBag: function() {
       //Iterate over the buffered store
+      var useMenuItemId = Ext.isDefined(this.menuItems[0]);
+      var menuItemId = null;
+      if(useMenuItemId)
+      {
+        menuItemId = this.menuItems[0].columnName;
+      }
       for (j=01; j<=this.store.data.length; j++) {
         var data = this.store.data.map[j].value;
         for (i=0; i<data.length; i++) {
-           Epsitec.Cresus.Core.app.addEntityToBag(data[i].data.summary,data[i].internalId);
+           if(menuItemId != null)
+           {
+              Epsitec.Cresus.Core.app.addCustomEntityToBag('Contact',data[i].data.summary,data[i].raw[menuItemId]);
+           }
+           else
+           {
+              Epsitec.Cresus.Core.app.addEntityToBag(data[i].data.summary,data[i].internalId);
+           }
+           
         }
       } 
     },

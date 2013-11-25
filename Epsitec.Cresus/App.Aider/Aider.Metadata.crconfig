@@ -1239,6 +1239,7 @@ AiderMailingParticipant = [LVOL03]
 #[Feature:Mailing]	     <l t="Adresse normale" f="0"/>
 #[Feature:Mailing]   	     <l t="Adresse aux parents de..." f="1"/>
 #[Feature:Mailing]   	  </L>
+#[Feature:Mailing]	 <M><m t="Voir le contact" d="[LVAFE]" p="@AiderMailingParticipant:[LVON03]" /></M>
 #[Feature:Mailing]	 <!-- Filter -->
 #[Feature:Mailing]	 <f id="@AiderMailingParticipant">
 #[Feature:Mailing]	    <!-- Column id=IsExcluded (Valeur) (Comparaison) c=(1=equals) v="false" -->

@@ -510,6 +510,12 @@ namespace Epsitec.Aider.Entities
 			this.AddParticipations (businessContext, participations, startDate, comment);
 		}
 
+		public void PurgeMembers(BusinessContext businessContext)
+		{
+			var participations = this.FindParticipations (businessContext);
+			this.RemoveParticipations (businessContext, participations);
+		}
+
 		public void ImportContactsMembers(BusinessContext businessContext, IEnumerable<AiderContactEntity> contactsToAdd, Date? startDate, FormattedText comment)
 		{
 			var participations = contactsToAdd
@@ -527,6 +533,14 @@ namespace Epsitec.Aider.Entities
 				{
 					AiderGroupParticipantEntity.StartParticipation (businessContext, this, participation, startDate, comment);
 				}
+			}
+		}
+
+		public void RemoveParticipations(BusinessContext businessContext, IEnumerable<AiderGroupParticipantEntity> participations)
+		{
+			foreach (var participation in participations)
+			{				
+				AiderGroupParticipantEntity.StopParticipation (participation, Date.Today);	
 			}
 		}
 

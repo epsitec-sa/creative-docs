@@ -47,6 +47,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant))
 				.EnableActionMenu<ActionAiderGroupViewController3ImportGroupMembers> ().IfTrue (canGroupBeEditedByCurrentUser)
 				.EnableActionMenu<ActionAiderGroupViewController4ExportGroupMembers> ().IfTrue (canGroupBeEditedByCurrentUser)
+				.EnableActionMenu<ActionAiderGroupViewController8PurgeGroupMembers> ().IfTrue (canGroupBeEditedByCurrentUser)
 				.EnableActionButton<ActionAiderGroupViewController7AddMembersFromBag> ().IfTrue (canGroupBeEditedByCurrentUser);
 
 			wall.AddBrick (x => x.GroupDef)

@@ -58,7 +58,13 @@ function() {
           dock: 'top',
           items: button
         }],
-        items: [],
+        items: [{
+          xtype: 'panel',
+          region: 'center',
+          border: false,
+          layout: 'vbox',
+          autoScroll: true
+        }],
         listeners: {
           beforerender: this.setSizeAndPosition,
           score: this
@@ -100,8 +106,8 @@ function() {
           menu = Epsitec.Cresus.Core.app.menu;
       if(Ext.isDefined(viewport))
       {
-        var newHeight = ((this.bagStore.count() * 250));
-        this.width = 280;
+        var newHeight = ((this.bagStore.count() * 250) + 150 );
+        this.width = 270;
         if(newHeight < (viewport.height - 250))
         {
           this.height = newHeight;
@@ -143,9 +149,7 @@ function() {
         this.bagStore.add(entity);
         var tile = this.createEntityTile(entity);
         var entityBag = this;
-        //tile.on('close',function () { entityBag.removeEntityFromBag(entity);});
-        this.items.add(tile);
-        this.doLayout();
+        this.items.items[0].add(tile);
       }
       else
       {
@@ -157,13 +161,14 @@ function() {
       {
         this.show();
       }
+
       this.setSizeAndPosition();
     },
 
     purgeEntityBag: function () {
       var entityBag = this;
       this.bagStore.each(function(record,id){
-          entityBag.removeEntityFromBag(record);
+          entityBag.removeEntityFromBag(record.data);
       });
     },
 
@@ -176,11 +181,17 @@ function() {
 
     removeEntityFromClientBag: function(entity) {
       var record = this.bagStore.getById(entity.id);
-      
+      var entityBag = this;
       this.bagStore.remove(record);
-  
-      this.items.remove(entity.id);
-      this.doLayout();
+
+      Ext.Array.each(this.items.items[0].items.items, function(item) {
+          if(item.entityId == entity.id)
+          {
+            entityBag.unregEntityDragZone(item);
+            item.close();
+          }
+      });
+
 
       if(this.bagStore.count()==0)
       {
@@ -197,32 +208,8 @@ function() {
       });
     },
 
-    createEntityView: function() {
-      return Ext.create('Ext.view.View', {
-        flex : 100,
-        cls: 'entitybag-view',
-        tpl: '<tpl for=".">' +
-                '<div class="entitybag-source">' +
-                    '<div class="entitybag-label">{entityType}</div>{summary}' +
-                '</div><br/>' +
-             '</tpl>',
-        itemSelector: 'div.entitybag-source',
-        overItemCls: 'entitybag-over',
-        selectedItemClass: 'entitybag-selected',
-        singleSelect: true,
-        entityBag: this,
-        store: this.bagStore,
-        listeners: {
-            render: this.initializeEntityDragZone,
-            destroy: this.unregEntityDragZone,
-            scope: this
-        }
-    });      
-    },
-
     createEntityTile: function(entity) {
       return Ext.create('Ext.panel.Panel', {
-          id: entity.id,
           entityData : entity,
           entityBag: this,
           title: entity.entityType,
@@ -263,45 +250,48 @@ function() {
     },
 
     initializeEntityDragZone: function (v) {
-        v.dragZone = Ext.create('Ext.dd.DragZone', v.getEl(), {
+        if(!Ext.isDefined(v.dragZone))
+        {
+          v.dragZone = Ext.create('Ext.dd.DragZone', v.getEl(), {
 
-//      On receipt of a mousedown event, see if it is within a draggable element.
-//      Return a drag data object if so. The data object can contain arbitrary application
-//      data, but it should also contain a DOM element in the ddel property to provide
-//      a proxy to drag.
-          getDragData: function(e) {
-              var sourceEl = e.getTarget(v.itemSelector, 10), d;
+  //      On receipt of a mousedown event, see if it is within a draggable element.
+  //      Return a drag data object if so. The data object can contain arbitrary application
+  //      data, but it should also contain a DOM element in the ddel property to provide
+  //      a proxy to drag.
+            getDragData: function(e) {
+                var sourceEl = e.getTarget(v.itemSelector, 10), d;
 
-              if (sourceEl) {
-                  d = sourceEl.cloneNode(true);
-                  d.id = Ext.id();
-                  return (v.dragData = {
-                      sourceEl: sourceEl,
-                      repairXY: Ext.fly(sourceEl).getXY(),
-                      ddel: d,
-                      entityData: v.entityData
-                  });
-              }
-          },
+                if (sourceEl) {
+                    d = sourceEl.cloneNode(true);
+                    d.id = Ext.id();
+                    return (v.dragData = {
+                        sourceEl: sourceEl,
+                        repairXY: Ext.fly(sourceEl).getXY(),
+                        ddel: d,
+                        entityData: v.entityData
+                    });
+                }
+            },
 
-//      Provide coordinates for the proxy to slide back to on failed drag.
-//      This is the original XY coordinates of the draggable element.
-          getRepairXY: function() {
-              return this.dragData.repairXY;
-          },
+  //      Provide coordinates for the proxy to slide back to on failed drag.
+  //      This is the original XY coordinates of the draggable element.
+            getRepairXY: function() {
+                return this.dragData.repairXY;
+            },
 
-          onBeforeDrag: function () {
-            v.entityBag.showRegistredDropZone();
-          },
+            onBeforeDrag: function () {
+              v.entityBag.showRegistredDropZone();
+            },
 
-          afterInvalidDrop: function () {
-            v.entityBag.hideRegistredDropZone();
-          },
+            afterInvalidDrop: function () {
+              v.entityBag.hideRegistredDropZone();
+            },
 
-          afterDragDrop: function () {
-            v.entityBag.hideRegistredDropZone();
-          }
-      });
+            afterDragDrop: function () {
+              v.entityBag.hideRegistredDropZone();
+            }
+        });
+      }
     },
 
     statics: {

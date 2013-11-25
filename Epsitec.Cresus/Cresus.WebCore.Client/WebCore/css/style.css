@@ -63,6 +63,7 @@ div.tile-selected #tile-text:hover {
 .x-tile-button-over {
   background-color: rgb(228, 243, 255);
   background-image: -webkit-linear-gradient(top, rgb(228, 243, 255), rgb(217, 237, 255) 48%, rgb(194, 216, 242) 52%, rgb(198, 220, 246));
+  background-image: -ms-linear-gradient(top, rgb(228, 243, 255), rgb(217, 237, 255) 48%, rgb(194, 216, 242) 52%, rgb(198, 220, 246));
 }
 
 .tile {
