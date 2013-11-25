@@ -30,6 +30,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public Timestamp JustBefore
+		{
+			//	Retourne un timestamp un chouia avant.
+			get
+			{
+				var before = this.date.AddTicks (-1);
+				return new Timestamp (before, int.MaxValue);
+			}
+		}
+
 		public static Timestamp Now
 		{
 			get

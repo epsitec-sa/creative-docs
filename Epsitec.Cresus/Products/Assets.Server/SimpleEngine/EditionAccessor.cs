@@ -312,11 +312,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				if (this.obj != null && this.timestamp.HasValue)
 				{
-					//	Fabrique un timestamp un chouia avant.
-					var before = this.timestamp.Value.Date.AddTicks (-1);
-					var prev = new Timestamp (before, int.MaxValue);
-
-					return ObjectCalculator.GetObjectProperty (this.obj, prev, field, true);
+					var before = this.timestamp.Value.JustBefore;
+					return ObjectCalculator.GetObjectProperty (this.obj, before, field, true);
 				}
 			}
 
