@@ -58,38 +58,6 @@ namespace Epsitec.Aider.Entities
 			return this.IsReady ? "Prêt pour l'envoi" : "En préparation";
 		}
 
-		public void RecreateFromScratch(BusinessContext businessContext)
-		{
-			this.UpdateLastUpdateDate ();
-
-			AiderMailingParticipantEntity.DeleteByMailing (businessContext, this);
-
-			foreach (var contact in this.RecipientContacts)
-			{
-				AiderMailingParticipantEntity.Create (businessContext, this, contact);
-			}
-
-			foreach (var group in this.RecipientGroups)
-			{
-				AiderMailingParticipantEntity.Create (businessContext, this, group);
-			}
-
-			foreach (var groupExtraction in this.RecipientGroupExtractions)
-			{
-				AiderMailingParticipantEntity.Create (businessContext, this, groupExtraction);
-			}
-
-			foreach (var household in this.RecipientHouseholds)
-			{
-				AiderMailingParticipantEntity.Create (businessContext, this, household);
-			}
-
-			foreach (var excluded in this.Exclusions)
-			{
-				AiderMailingParticipantEntity.ExcludeContact (businessContext, this, excluded);
-			}
-		}
-
 		/// <summary>
 		/// Sync groups changes that affect participants dataset
 		/// </summary>
@@ -100,7 +68,7 @@ namespace Epsitec.Aider.Entities
 
 			this.UpdateLastUpdateDate ();
 
-			var participants = new HashSet<AiderContactEntity> (AiderMailingParticipantEntity.GetAllParticipants (dataContext, this).Select (p => p.Contact));
+			var participants = new HashSet<AiderContactEntity> (AiderMailingParticipantEntity.GetAllUnExcludedParticipants (dataContext, this).Select (p => p.Contact));
 			var contacts     = new HashSet<AiderContactEntity> (this.GetRecipients (dataContext));
 			
 			//	Remove participants which no longer belong to the current contacts:
@@ -118,6 +86,37 @@ namespace Epsitec.Aider.Entities
 				if (!participants.Contains (contact))
 				{
 					AiderMailingParticipantEntity.CreateForGroup (businessContext, this, contact);
+				}
+			}
+
+			businessContext.SaveChanges (LockingPolicy.KeepLock);
+		}
+
+		public void UpdateMailingExclusions(BusinessContext businessContext)
+		{
+			var dataContext = businessContext.DataContext;
+
+			this.UpdateLastUpdateDate ();
+
+			var participants = new HashSet<AiderContactEntity> (AiderMailingParticipantEntity.GetAllParticipants (dataContext, this).Select (p => p.Contact));
+			var excludedParticipants = new HashSet<AiderContactEntity> (AiderMailingParticipantEntity.GetAllExcludedParticipants (dataContext, this).Select (p => p.Contact));
+			var excludedContacts     = new HashSet<AiderContactEntity> (this.GetExcludedRecipients (dataContext));
+
+			//	Remove exclusions which no longer belong to the current exclusions:
+			foreach (var contact in excludedParticipants)
+			{
+				if (!excludedContacts.Contains (contact))
+				{
+					AiderMailingParticipantEntity.UnExcludeContact (businessContext, this, contact);
+				}
+			}
+
+			//	Add exclusions which are not yet defined for the current exclusions:
+			foreach (var contact in excludedContacts)
+			{
+				if (participants.Contains (contact))
+				{
+					AiderMailingParticipantEntity.ExcludeContact (businessContext, this, contact);
 				}
 			}
 
@@ -231,6 +230,20 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public void ExcludeGroup(BusinessContext businessContext, AiderGroupEntity groupToExclude)
+		{
+			if (!this.GroupExclusions.Contains (groupToExclude))
+			{
+				this.UpdateLastUpdateDate ();
+				this.GroupExclusions.Add (groupToExclude);
+
+				foreach (var contactToExclude in groupToExclude.GetAllGroupAndSubGroupParticipants ())
+				{
+					AiderMailingParticipantEntity.ExcludeContact (businessContext, this, contactToExclude);
+				}
+			}
+		}
+
 		public void ExludeContacts(BusinessContext businessContext, IEnumerable<AiderContactEntity> contactsToExclude)
 		{		
 			foreach (var contact in contactsToExclude)
@@ -244,11 +257,22 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+
 		public void UnExludeContacts(BusinessContext businessContext, IEnumerable<AiderContactEntity> contactsToUnExclude)
 		{
 			this.UpdateLastUpdateDate ();
 			this.Exclusions.RemoveAll(r => contactsToUnExclude.Contains(r));
 			foreach (var contact in contactsToUnExclude)
+			{
+				AiderMailingParticipantEntity.UnExcludeContact (businessContext, this, contact);
+			}
+		}
+
+		public void UnExludeGroup(BusinessContext businessContext, AiderGroupEntity groupToUnExclude)
+		{
+			this.UpdateLastUpdateDate ();
+			this.GroupExclusions.RemoveAll (r => r == groupToUnExclude);
+			foreach (var contact in groupToUnExclude.GetAllGroupAndSubGroupParticipants())
 			{
 				AiderMailingParticipantEntity.UnExcludeContact (businessContext, this, contact);
 			}
@@ -270,14 +294,14 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetExclusionsTitleSummary()
 		{
-			return FormattedText.FromSimpleText ("Exclusions (", this.Exclusions.Count ().ToString (), ")");
+			return FormattedText.FromSimpleText ("Exclusions (C:", this.Exclusions.Count ().ToString (), ",G:",this.GroupExclusions.Count ().ToString (),")");
 		}
 
 		public FormattedText GetExclusionsSummary()
 		{
-			var recipients = this.Exclusions
+			var recipients = this.GetExcludedRecipients ()
 				.Select (r => r.GetCompactSummary ())
-				.CreateSummarySequence (10, "...");
+				.CreateSummarySequence (20, "...");
 
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), recipients);
 		}
@@ -313,11 +337,27 @@ namespace Epsitec.Aider.Entities
 				contacts.UnionWith (this.RecipientHouseholds.Select (x => x.Contacts.First ()));
 				
 				contacts.ExceptWith (this.Exclusions);
+				contacts.ExceptWith (this.GroupExclusions.SelectMany (x => x.GetAllGroupAndSubGroupParticipants ()));
 
 				this.recipientsCache = contacts.OrderBy (x => x.DisplayName).ToList ();
 			}
 
 			return this.recipientsCache;
+		}
+
+		public IList<AiderContactEntity> GetExcludedRecipients(DataContext context = null)
+		{
+			if (context == null)
+			{
+				context = DataContextPool.GetDataContext (this);
+			}
+
+			var exclusions = new HashSet<AiderContactEntity> ();
+
+			exclusions.UnionWith (this.Exclusions);
+			exclusions.UnionWith (this.GroupExclusions.SelectMany (x => x.GetAllGroupAndSubGroupParticipants ()));
+
+			return exclusions.OrderBy (x => x.DisplayName).ToList ();		
 		}
 
 		public static AiderMailingEntity Create(BusinessContext context, AiderUserEntity aiderUser, string name, string desc, AiderMailingCategoryEntity cat, bool isReady)

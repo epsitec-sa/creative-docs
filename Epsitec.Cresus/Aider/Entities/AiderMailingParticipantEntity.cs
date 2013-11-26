@@ -39,7 +39,28 @@ namespace Epsitec.Aider.Entities
 			var participantExample = new AiderMailingParticipantEntity ()
 			{
 				Mailing    = mailing,
+			};
+
+			return context.GetByExample<AiderMailingParticipantEntity> (participantExample);
+		}
+
+		public static IEnumerable<AiderMailingParticipantEntity> GetAllUnExcludedParticipants(DataContext context, AiderMailingEntity mailing)
+		{
+			var participantExample = new AiderMailingParticipantEntity ()
+			{
+				Mailing    = mailing,
 				IsExcluded = false,
+			};
+
+			return context.GetByExample<AiderMailingParticipantEntity> (participantExample);
+		}
+
+		public static IEnumerable<AiderMailingParticipantEntity> GetAllExcludedParticipants(DataContext context, AiderMailingEntity mailing)
+		{
+			var participantExample = new AiderMailingParticipantEntity ()
+			{
+				Mailing    = mailing,
+				IsExcluded = true,
 			};
 
 			return context.GetByExample<AiderMailingParticipantEntity> (participantExample);

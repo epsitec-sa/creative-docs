@@ -91,12 +91,19 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Text (x => x.GetCompactSummary ())
 					.End ();
 			
-			wall.AddBrick ()
-					.Icon ("Data.AiderGroup.Exclusions")
-					.Title ("Exclusions")
-					.Text (p => p.GetExclusionsSummary ())
-					.Attribute (BrickMode.DefaultToSetSubView)
-					.WithSpecialController (typeof (SetAiderMailingViewController1ExcludedContact));
+			wall.AddBrick (p => p.GroupExclusions)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.EnableActionMenu<ActionAiderMailingViewController14AddGroupExclusion> ()
+					.EnableActionMenu<ActionAiderMailingViewController15RemoveGroupExclusion> ()
+					.EnableActionButton<ActionAiderMailingViewController14AddGroupExclusion> ()
+					.EnableActionButton<ActionAiderMailingViewController15RemoveGroupExclusion> ()
+					.Template ()
+						.Title ("Groupes exclus")
+						.Text (x => x.GetCompactSummary ())
+					.End ();
 		}
 	}
 }

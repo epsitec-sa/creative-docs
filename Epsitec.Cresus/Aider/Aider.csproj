@@ -152,6 +152,9 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController7AddMembersFromBag.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupExtractionViewController0AddToBag.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController8PurgeGroupMembers.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController14AddGroupExclusion.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController15RemoveGroupExclusion.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderMailingViewController16UpdateExclusions.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderGroupExtractionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />

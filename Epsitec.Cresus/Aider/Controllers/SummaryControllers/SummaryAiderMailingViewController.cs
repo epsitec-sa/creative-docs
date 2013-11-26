@@ -43,6 +43,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSetSubView)
 				.WithSpecialController (typeof (SetAiderMailingViewController0RecipientsContact))
 				.EnableActionButton<ActionAiderMailingViewController3UpdateRecipients> ();
+
+			wall.AddBrick ()
+				.Icon ("Data.AiderGroup.Exclusions")
+				.Title (p => p.GetExclusionsTitleSummary ())
+				.Text (p => p.GetExclusionsSummary ())
+				.Attribute (BrickMode.DefaultToSetSubView)
+				.WithSpecialController (typeof (SetAiderMailingViewController1ExcludedContact))
+				.EnableActionButton<ActionAiderMailingViewController16UpdateExclusions> ();
 		}
 	}
 }

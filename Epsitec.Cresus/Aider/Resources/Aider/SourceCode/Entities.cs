@@ -8173,6 +8173,18 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>GroupExclusions</c> field.
+		///	designer:fld/LVOA03/LVO513
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO513]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity> GroupExclusions
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVO513]");
+			}
+		}
+		///	<summary>
 		///	The <c>RecipientGroups</c> field.
 		///	designer:fld/LVOA03/LVOE03
 		///	</summary>
