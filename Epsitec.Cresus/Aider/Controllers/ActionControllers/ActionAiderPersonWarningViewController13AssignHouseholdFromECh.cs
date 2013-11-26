@@ -95,6 +95,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 				AiderContactEntity.Create (this.BusinessContext, person, aiderHousehold, isHead);
 			}
+
+			//Assign to parish
+			ParishAssigner.AssignToParish (ParishAddressRepository.Current, this.BusinessContext, person);
 		}
 
 		private eCH_ReportedPersonEntity GetEchReportedPersonEntity(BusinessContext businessContext, eCH_PersonEntity eChPerson)
