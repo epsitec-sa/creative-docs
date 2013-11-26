@@ -155,7 +155,7 @@ function() {
       }
     },
 
-    //AJOUTER A L'ARCHE
+    //AJOUTER AU PANIER
     onEntityBagAddHandler: function(widget, event) {
       var rec,entity,app;
       app = Epsitec.Cresus.Core.getApplication();
@@ -563,7 +563,7 @@ function() {
       });
 
       items.push({
-        text: 'Exporter dans l\'arche',
+        text: 'Exporter dans le panier',
         listeners: {
           click: function() { this.onExportToBagHandler(); },
           scope: this
@@ -571,7 +571,7 @@ function() {
       });
 
       items.push({
-        text: 'Exporter la séléction dans l\'arche',
+        text: 'Exporter la séléction dans le panier',
         listeners: {
           click: function() { this.onExportSelectionToBagHandler(); },
           scope: this

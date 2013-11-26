@@ -190,7 +190,7 @@ function() {
 
       if(epsitecConfig.featureEntityBag) {
         buttons.push(this.createButton({
-          text: 'Arche',
+          text: 'Panier',
           handler: this.entityBagHandler,
           iconCls: 'epsitec-aider-images-general-ark-icon32'
         }));

@@ -31,7 +31,7 @@ function() {
 
       var button = {};
           button.xtype = 'button';
-          button.text = 'Vider l\'arche';
+          button.text = 'Vider le panier';
           button.width = 400;
           button.width = 200;
           button.cls = 'tile-button';
@@ -42,7 +42,7 @@ function() {
 
       config = {
         headerPosition: 'left',
-        title: 'Arche',
+        title: 'Panier',
         cls: 'entitybag-window',
         iconCls: 'epsitec-aider-images-general-ark-icon16',
         draggable: true,
