@@ -79,7 +79,8 @@ function() {
     },
 
     createEntityWithViewCallback: function(entityId) {
-        //this.selectEntity(entityId, true);
+        this.getSelectionModel().deselectAll();
+        this.selectEntity(entityId, false);
         Epsitec.Cresus.Core.app.reloadCurrentDatabase(false);
     },
 
