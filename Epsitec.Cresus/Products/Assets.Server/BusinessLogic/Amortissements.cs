@@ -15,9 +15,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public List<AmortissementError> GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
+		public List<Error> GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
 		{
-			var errors = new List<AmortissementError> ();
+			var errors = new List<Error> ();
 			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
@@ -28,16 +28,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return errors;
 		}
 
-		public List<AmortissementError> GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
+		public List<Error> GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
 		{
-			var errors = new List<AmortissementError> ();
+			var errors = new List<Error> ();
 			int count = 0;
 			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
 
 			//	S'il y a déjà un ou plusieurs amortissements, on ne fait rien.
 			if (Amortissements.HasAmortissements (obj, dateFrom, dateTo))
 			{
-				var error = new AmortissementError (AmortissementErrorType.AlreadyAmorti, objectGuid);
+				var error = new Error (ErrorType.AmortissementAlreadyDone, objectGuid);
 				errors.Add (error);
 				return errors;
 			}
@@ -45,9 +45,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var end = dateTo.AddDays (1).AddTicks (-1);  // 31.12 -> 1er janvier moins un chouia
 			var amortissement = this.GetAmortissement (obj, new Timestamp (end, int.MaxValue));
 			var ae = amortissement.Error;
-			if (ae != AmortissementErrorType.Ok)
+			if (ae != ErrorType.Ok)
 			{
-				var error = new AmortissementError (ae, objectGuid);
+				var error = new Error (ae, objectGuid);
 				errors.Add (error);
 				return errors;
 			}
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, start, ObjectField.Valeur1);
 			if (!ca.HasValue || !ca.Value.FinalAmount.HasValue)
 			{
-				var error = new AmortissementError (AmortissementErrorType.EmptyAmount, objectGuid);
+				var error = new Error (ErrorType.AmortissementEmptyAmount, objectGuid);
 				errors.Add (error);
 				return errors;
 			}
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var et = ObjectCalculator.GetPlausibleEventTypes (BaseType.Objects, obj, new Timestamp (dateTo, 0));
 			if (!et.Contains (EventType.AmortissementExtra))
 			{
-				var error = new AmortissementError (AmortissementErrorType.OutObject, objectGuid);
+				var error = new Error (ErrorType.AmortissementOutObject, objectGuid);
 				errors.Add (error);
 				return errors;
 			}
@@ -75,15 +75,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.CreateAmortissementAuto (obj, dateTo, currentValue, newValue);
 			count++;
 
-			var generate = new AmortissementError (AmortissementErrorType.Generate, objectGuid, count);
+			var generate = new Error (ErrorType.AmortissementGenerate, objectGuid, count);
 			errors.Add (generate);
 			return errors;
 		}
 
 
-		public List<AmortissementError> RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
+		public List<Error> RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
 		{
-			var errors = new List<AmortissementError> ();
+			var errors = new List<Error> ();
 			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
@@ -94,9 +94,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return errors;
 		}
 
-		public List<AmortissementError> RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
+		public List<Error> RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
 		{
-			var errors = new List<AmortissementError> ();
+			var errors = new List<Error> ();
 
 			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (count > 0)
 			{
-				var error = new AmortissementError (AmortissementErrorType.Remove, objectGuid, count);
+				var error = new Error (ErrorType.AmortissementRemove, objectGuid, count);
 				errors.Add (error);
 			}
 

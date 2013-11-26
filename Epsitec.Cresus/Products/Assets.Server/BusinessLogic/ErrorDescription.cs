@@ -3,14 +3,28 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public static class AmortissementErrorDescription
+	public static class ErrorDescription
 	{
-		public static string GetErrorDescription(AmortissementError error)
+		public static string GetErrorObject(DataAccessor accessor, Error error)
 		{
-			if (error.ErrorType == AmortissementErrorType.Generate)
+			var obj = accessor.GetObject (BaseType.Objects, error.ObjectGuid);
+			if (obj == null)
+			{
+				return null;
+			}
+			else
+			{
+				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
+			}
+		}
+
+		public static string GetErrorDescription(Error error)
+		{
+			if (error.Type == ErrorType.AmortissementGenerate)
 			{
 				if (error.Counter == 0)
 				{
@@ -25,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return string.Format ("{0} amortissements ont été générés", error.Counter);
 				}
 			}
-			else if (error.ErrorType == AmortissementErrorType.Remove)
+			else if (error.Type == ErrorType.AmortissementRemove)
 			{
 				if (error.Counter == 0)
 				{
@@ -42,33 +56,33 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				return AmortissementErrorDescription.GetErrorDescription (error.ErrorType);
+				return ErrorDescription.GetErrorDescription (error.Type);
 			}
 		}
 
-		public static string GetErrorDescription(AmortissementErrorType errorType)
+		public static string GetErrorDescription(ErrorType errorType)
 		{
 			switch (errorType)
 			{
-				case AmortissementErrorType.Unknown:
+				case ErrorType.Unknown:
 					return "Erreur inconnue";
 
-				case AmortissementErrorType.AlreadyAmorti:
+				case ErrorType.AmortissementAlreadyDone:
 					return "L'objet a déja été amorti durant cette période";
 
-				case AmortissementErrorType.InvalidRate:
+				case ErrorType.AmortissementInvalidRate:
 					return "Le taux d'amortissement est incorrect";
 
-				case AmortissementErrorType.InvalidType:
+				case ErrorType.AmortissementInvalidType:
 					return "Le type d'amortissement est incorrect";
 
-				case AmortissementErrorType.InvalidPeriod:
+				case ErrorType.AmortissementInvalidPeriod:
 					return "La périodicité de l'amortissement est incorrecte";
 
-				case AmortissementErrorType.EmptyAmount:
+				case ErrorType.AmortissementEmptyAmount:
 					return "L'objet n'a pas de valeur comptable";
 
-				case AmortissementErrorType.OutObject:
+				case ErrorType.AmortissementOutObject:
 					return "L'objet est sorti";
 
 				default:

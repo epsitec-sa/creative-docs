@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Update (dataChanged: true);
 		}
 
-		private void ShowErrorPopup(Widget target, List<AmortissementError> errors)
+		private void ShowErrorPopup(Widget target, List<Error> errors)
 		{
 			var popup = new ErrorsPopup (this.accessor, errors);
 			popup.Create (target);

@@ -7,11 +7,11 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public struct AmortissementError
+	public struct Error
 	{
-		public AmortissementError(AmortissementErrorType errorType, Guid objectGuid, int counter = 0)
+		public Error(ErrorType type, Guid objectGuid, int counter = 0)
 		{
-			this.ErrorType  = errorType;
+			this.Type       = type;
 			this.ObjectGuid = objectGuid;
 			this.Counter    = counter;
 		}
@@ -20,14 +20,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.ErrorType == AmortissementErrorType.Ok
+				return this.Type == ErrorType.Ok
 					&& this.ObjectGuid.IsEmpty;
 			}
 		}
 
-		public static readonly AmortissementError Empty = new AmortissementError (AmortissementErrorType.Ok, Guid.Empty);
+		public static readonly Error Empty = new Error (ErrorType.Ok, Guid.Empty);
 
-		public readonly AmortissementErrorType	ErrorType;
+		public readonly ErrorType				Type;
 		public readonly Guid					ObjectGuid;
 		public readonly int						Counter;
 	}

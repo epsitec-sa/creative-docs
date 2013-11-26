@@ -9,9 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public class ErrorsTreeTableFiller : AbstractTreeTableFiller<AmortissementError>
+	public class ErrorsTreeTableFiller : AbstractTreeTableFiller<Error>
 	{
-		public ErrorsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<AmortissementError> nodesGetter)
+		public ErrorsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<Error> nodesGetter)
 			: base (accessor, nodesGetter)
 		{
 		}
@@ -51,16 +51,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					break;
 				}
 
-				var node  = this.nodesGetter[firstRow+i];
+				var error = this.nodesGetter[firstRow+i];
 
-				var nom = "";
-				var obj = this.accessor.GetObject (BaseType.Objects, node.ObjectGuid);
-				if (obj != null)
-				{
-					nom = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
-				}
-
-				var message = AmortissementErrorDescription.GetErrorDescription (node);
+				var nom     = ErrorDescription.GetErrorObject (this.accessor, error);
+				var message = ErrorDescription.GetErrorDescription (error);
 
 				var s1 = new TreeTableCellString (true, nom,     isSelected: (i == selection));
 				var s2 = new TreeTableCellString (true, message, isSelected: (i == selection));

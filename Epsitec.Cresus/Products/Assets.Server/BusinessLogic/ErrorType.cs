@@ -6,17 +6,19 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public enum AmortissementErrorType
+	public enum ErrorType
 	{
 		Ok,
-		Generate,
-		Remove,
 		Unknown,
-		AlreadyAmorti,
-		InvalidRate,
-		InvalidType,
-		InvalidPeriod,
-		EmptyAmount,
-		OutObject,
+
+		AmortissementGenerate,
+		AmortissementRemove,
+
+		AmortissementAlreadyDone,
+		AmortissementInvalidRate,
+		AmortissementInvalidType,
+		AmortissementInvalidPeriod,
+		AmortissementEmptyAmount,
+		AmortissementOutObject,
 	}
 }

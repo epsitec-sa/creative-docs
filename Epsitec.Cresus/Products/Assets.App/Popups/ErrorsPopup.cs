@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class ErrorsPopup : AbstractPopup
 	{
-		public ErrorsPopup(DataAccessor accessor, List<AmortissementError> errors)
+		public ErrorsPopup(DataAccessor accessor, List<Error> errors)
 		{
 			this.accessor = accessor;
 			this.errors   = errors;
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.CreateUI (frame, rowHeight: ErrorsPopup.LineHeight, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			TreeTableFiller<AmortissementError>.FillColumns (this.dataFiller, this.controller);
+			TreeTableFiller<Error>.FillColumns (this.dataFiller, this.controller);
 			this.UpdateController ();
 
 			//	Connexion des événements.
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				selection -= this.controller.TopVisibleRow;
 			}
 
-			TreeTableFiller<AmortissementError>.FillContent (this.dataFiller, this.controller, firstRow, count, selection);
+			TreeTableFiller<Error>.FillContent (this.dataFiller, this.controller, firstRow, count, selection);
 		}
 
 
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int PopupHeight = 230;
 
 		private readonly DataAccessor						accessor;
-		private readonly List<AmortissementError>			errors;
+		private readonly List<Error>			errors;
 		private readonly NavigationTreeTableController		controller;
 		private readonly ErrorNodesGetter					nodesGetter;
 		private readonly ErrorsTreeTableFiller				dataFiller;

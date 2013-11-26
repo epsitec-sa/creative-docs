@@ -7,9 +7,9 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
-	public class ErrorNodesGetter : AbstractNodesGetter<AmortissementError>  // outputNodes
+	public class ErrorNodesGetter : AbstractNodesGetter<Error>  // outputNodes
 	{
-		public ErrorNodesGetter(List<AmortissementError> errors)
+		public ErrorNodesGetter(List<Error> errors)
 		{
 			this.errors = errors;
 		}
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public override AmortissementError this[int index]
+		public override Error this[int index]
 		{
 			get
 			{
@@ -33,12 +33,12 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				}
 				else
 				{
-					return AmortissementError.Empty;
+					return Error.Empty;
 				}
 			}
 		}
 
 
-		private readonly List<AmortissementError> errors;
+		private readonly List<Error> errors;
 	}
 }
