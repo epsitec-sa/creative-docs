@@ -323,6 +323,27 @@ $.getScript('signalr/hubs', function() {
         
       },
 
+      reloadCurrentList: function(entityList,samePage) {
+        var key = this.tabManager.currentTab;
+        var columnManager = this.tabManager.entityTabs[key];
+        var currentSelection, selectionIndex;
+        
+        if(Ext.isDefined(columnManager))
+        {   
+            currentSelection = entityList.getSelectionModel().getSelection();
+            if(currentSelection.length>0)
+            {
+              selectionIndex = currentSelection[0].index;
+              entityList.getSelectionModel().deselectAll();
+              entityList.reloadAndScrollToEntity(currentSelection[0].internalId,selectionIndex,samePage);
+            }
+            else
+            {
+              entityList.reload(columnManager);
+            }             
+        }     
+      },
+
       reloadCurrentTile: function(callback) {
         var key = this.tabManager.currentTab;
         var columnManager = this.tabManager.entityTabs[key];

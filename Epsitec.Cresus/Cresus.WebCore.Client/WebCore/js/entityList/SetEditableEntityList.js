@@ -79,6 +79,31 @@ function() {
       }
     },
 
+    reloadAndScrollToEntity: function(entityId,entityIndex,samePage) {
+      var result, scroll;
+
+      this.resetStore(false);
+      this.setLoading(false,true);
+      
+      scroll = entityIndex;
+
+      this.store.reload({
+        callback: function() {
+          this.view.bufferedRenderer.scrollTo(
+              scroll,
+              false,
+              function() {
+                this.setLoading(false);
+                this.getSelectionModel().select(entityIndex);           
+              },
+              this
+          );
+        },
+        scope: this
+      });
+      
+    },
+
     processEntities: function(entityItems, urlSuffix) {
       this.setLoading();
       Ext.Ajax.request({

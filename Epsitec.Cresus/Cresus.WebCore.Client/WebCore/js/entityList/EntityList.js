@@ -852,8 +852,16 @@ function() {
     },
 
     onRefreshHandler: function() {
-      this.resetStore(true);
-      this.getSelectionModel().deselectAll();
+      
+      if(Ext.isDefined(this.entityListTypeName))
+      {
+        Epsitec.Cresus.Core.app.reloadCurrentList(this,false);
+      }
+      else
+      {
+        Epsitec.Cresus.Core.app.reloadCurrentDatabase(false);
+      }
+      
     },
 
     resetStore: function(autoLoad) {
