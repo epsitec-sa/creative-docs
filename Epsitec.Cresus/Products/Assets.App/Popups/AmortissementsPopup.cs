@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var line1 = this.CreateFrame (AmortissementsPopup.Margin, 171, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
 			var line2 = this.CreateFrame (AmortissementsPopup.Margin, 150, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line3 = this.CreateFrame (AmortissementsPopup.Margin, 121, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line4 = this.CreateFrame (AmortissementsPopup.Margin, 100, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
+			var line3 = this.CreateFrame (AmortissementsPopup.Margin, 121, 160, AmortissementsPopup.LineHeight);
+			var line4 = this.CreateFrame (AmortissementsPopup.Margin, 100, 160, AmortissementsPopup.LineHeight);
 			var line5 = this.CreateFrame (AmortissementsPopup.Margin,  71, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
 			var line6 = this.CreateFrame (AmortissementsPopup.Margin,  50, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
 

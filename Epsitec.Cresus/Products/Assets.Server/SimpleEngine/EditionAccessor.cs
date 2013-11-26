@@ -96,16 +96,40 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#region Getters
 		public ComputedAmount? GetFieldComputedAmount(ObjectField field)
 		{
-			var p = this.GetProperty (field) as DataComputedAmountProperty;
+			if (this.dataEvent != null)
+			{
+				var property = this.dataEvent.GetProperty (field) as DataComputedAmountProperty;
+				if (property != null)
+				{
+					return property.Value;
+				}
 
-			if (p == null)
-			{
-				return null;
+				if (this.obj != null && this.timestamp.HasValue)
+				{
+					var before = this.timestamp.Value.JustBefore;
+					property = ObjectCalculator.GetObjectProperty (this.obj, before, field, true) as DataComputedAmountProperty;
+
+					if (property != null)
+					{
+						//	Cette situation est tordue. On demande le montant calculé à un
+						//	instant pour lequel il n'existe pas. On cherche donc le précédent,
+						//	mais on ne peut pas le retourner tel quel. On doit retourner un
+						//	montant qui à une valeur initiale égale à la valeur finale du
+						//	précédent trouvé.
+						return new ComputedAmount
+						(
+							property.Value.FinalAmount,
+							null,
+							property.Value.FinalAmount,
+							property.Value.Substract,
+							property.Value.Rate,
+							false
+						);
+					}
+				}
 			}
-			else
-			{
-				return p.Value;
-			}
+
+			return null;
 		}
 
 		public System.DateTime? GetFieldDate(ObjectField field)

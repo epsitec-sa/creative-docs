@@ -421,6 +421,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (dataChanged)
 			{
 				this.timelineController.Update ();
+				this.eventsController.Update ();
 			}
 
 			this.UpdateViewModeGeometry ();

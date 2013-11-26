@@ -172,8 +172,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void Update()
 		{
-			this.UpdateController ();
-			this.UpdateToolbar ();
+			this.UpdateData ();
+			//-this.UpdateController ();
+			//-this.UpdateToolbar ();
 		}
 
 

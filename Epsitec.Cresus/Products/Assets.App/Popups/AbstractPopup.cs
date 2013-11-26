@@ -37,7 +37,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var x = r2.Left - r1.Left;
 			var y = r2.Bottom - r1.Bottom;
 
-			this.targetRect = new Rectangle (x, y, target.ActualWidth, target.ActualHeight);
+			this.targetReal = new Rectangle (x, y, target.ActualWidth, target.ActualHeight);
+
+			this.targetRect = this.targetReal;
+			this.targetRect.Deflate ((int) (System.Math.Min (this.targetRect.Width, this.targetRect.Height) * 0.2));
 
 			this.InitializeDialogRect (leftOrRight);
 			this.CreateUI ();
@@ -452,7 +455,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void PaintTarget(Graphics graphics)
 		{
-			graphics.AddFilledRectangle (this.targetRect);
+			graphics.AddFilledRectangle (this.targetReal);
 			graphics.RenderSolid (Color.FromAlphaColor (0.4, ColorManager.SelectionColor));
 		}
 
@@ -561,6 +564,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private Widget							target;
 		private Rectangle						dialogRect;
+		private Rectangle						targetReal;
 		private Rectangle						targetRect;
 		protected FrameBox						mainFrameBox;
 
