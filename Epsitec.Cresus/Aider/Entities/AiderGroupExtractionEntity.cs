@@ -22,12 +22,12 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return TextFormatter.FormatText (this.Name, " ", this.SearchGroup.Parent.Name);
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return TextFormatter.FormatText (this.Name, " ",this.SearchGroup.Parent.Name);
 		}
 
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
