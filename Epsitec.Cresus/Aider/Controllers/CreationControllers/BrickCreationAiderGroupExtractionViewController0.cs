@@ -25,7 +25,11 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			action
 				.Title ("Créer une nouvelle extraction par groupe")
 				.Field<string> ()
-					.Title ("Nom")
+					.Title ("Nom (laisser vide pour une création automatique)")
+				.End ()
+				.Field<bool> ()
+					.Title ("Ajouter le nom du groupe parent")
+					.InitialValue(true)
 				.End ()
 				.Field<AiderGroupEntity> ()
 					.Title ("Groupe de référence")
@@ -38,23 +42,33 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<string, AiderGroupEntity, GroupExtractionMatch, AiderGroupExtractionEntity> (this.Execute);
+			return FunctionExecutor.Create<string,bool, AiderGroupEntity, GroupExtractionMatch, AiderGroupExtractionEntity> (this.Execute);
 		}
 
-		private AiderGroupExtractionEntity Execute(string name, AiderGroupEntity group, GroupExtractionMatch match)
+		private AiderGroupExtractionEntity Execute(string name,bool suffixWithParentGroupName, AiderGroupEntity group, GroupExtractionMatch match)
 		{
-			if (string.IsNullOrEmpty (name))
-			{
-				Logic.BusinessRuleException ("Le nom est obligatoire.");
-			}
 			if (group.IsNull () && match != GroupExtractionMatch.Path)
 			{
 				Logic.BusinessRuleException ("Le groupe de référence est obligatoire.");
 			}
 
 			var extraction = this.BusinessContext.CreateAndRegisterEntity<AiderGroupExtractionEntity> ();
+			var buildName = "";
+			if (string.IsNullOrEmpty (name))
+			{
+				buildName = group.Name;
+			}
+			else
+			{
+				buildName = name;
+			}
 
-			extraction.Name        = name;
+			if (suffixWithParentGroupName)
+			{
+				buildName +=  ", " + group.Parent.Name;
+			}
+
+			extraction.Name		   = buildName;
 			extraction.SearchGroup = group;
 			extraction.SearchPath  = group.IsNull () ? "" : group.Path;
 			extraction.Match       = match;
