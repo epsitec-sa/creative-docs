@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return "L'objet est sorti";
 
 				default:
-					return null;
+					return "?";
 			}
 		}
 	}

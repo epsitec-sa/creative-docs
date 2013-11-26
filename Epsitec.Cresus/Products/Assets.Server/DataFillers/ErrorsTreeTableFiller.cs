@@ -52,12 +52,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var error = this.nodesGetter[firstRow+i];
+				bool isError = !error.IsMessage;
 
 				var nom     = ErrorDescription.GetErrorObject (this.accessor, error);
 				var message = ErrorDescription.GetErrorDescription (error);
 
-				var s1 = new TreeTableCellString (true, nom,     isSelected: (i == selection));
-				var s2 = new TreeTableCellString (true, message, isSelected: (i == selection));
+				var s1 = new TreeTableCellString (true, nom,     isSelected: (i == selection), isError: isError);
+				var s2 = new TreeTableCellString (true, message, isSelected: (i == selection), isError: isError);
 
 				c1.AddRow (s1);
 				c2.AddRow (s2);

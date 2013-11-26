@@ -156,6 +156,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color ErrorColor
+		{
+			get
+			{
+				return Color.FromHexa ("fff096");  // jaune
+			}
+		}
+
 		public static Color HoverColor
 		{
 			get

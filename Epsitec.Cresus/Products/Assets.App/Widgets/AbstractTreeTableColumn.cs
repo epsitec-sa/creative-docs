@@ -366,11 +366,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected Color GetCellColor(bool isHover, bool isSelected)
+		protected Color GetCellColor(bool isHover, bool isSelected, bool isError = false)
 		{
 			if (isSelected)
 			{
 				return ColorManager.SelectionColor;
+			}
+			else if (isError)
+			{
+				return ColorManager.ErrorColor;
 			}
 			else
 			{

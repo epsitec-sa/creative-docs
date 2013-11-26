@@ -25,6 +25,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public bool IsMessage
+		{
+			get
+			{
+				return this.Type == ErrorType.Ok
+					|| this.Type == ErrorType.AmortissementGenerate
+					|| this.Type == ErrorType.AmortissementRemove;
+			}
+		}
+
 		public static readonly Error Empty = new Error (ErrorType.Ok, Guid.Empty);
 
 		public readonly ErrorType				Type;
