@@ -29,6 +29,7 @@ function() {
 
     handleSave: function(json) {
       this.callback.execute([]);
+      Epsitec.Cresus.Core.app.reloadCurrentTile();
     },
 
     /* Static methods */
