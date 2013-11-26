@@ -74,7 +74,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					System.Diagnostics.Debug.Assert (popup.DateFrom.HasValue);
 					System.Diagnostics.Debug.Assert (popup.DateTo.HasValue);
-					this.Amortissements (target, popup.IsCreate, popup.IsAll, popup.DateFrom.Value, popup.DateTo.Value);
+					var range = new DateRange (popup.DateFrom.Value, popup.DateTo.Value);
+
+					this.Amortissements (target, popup.IsCreate, popup.IsAll, range);
 				}
 			};
 		}
@@ -108,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void Amortissements(Widget target, bool isCreate, bool isAll, System.DateTime dateFrom, System.DateTime dateTo)
+		private void Amortissements(Widget target, bool isCreate, bool isAll, DateRange range)
 		{
 			//	Effectue les opérations d'amortissement selon AmortissementsPopup,
 			//	et affiche les résultats avec ErrorsPopup.
@@ -117,13 +119,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (isAll)
 				{
-					var errors = this.amortissements.GeneratesAmortissementsAuto (dateFrom, dateTo);
+					var errors = this.amortissements.GeneratesAmortissementsAuto (range);
 					this.ShowErrorPopup (target, errors);
 				}
 				else
 				{
 					System.Diagnostics.Debug.Assert (!this.SelectedObjectGuid.IsEmpty);
-					var errors = this.amortissements.GeneratesAmortissementsAuto (dateFrom, dateTo, this.SelectedObjectGuid);
+					var errors = this.amortissements.GeneratesAmortissementsAuto (range, this.SelectedObjectGuid);
 					this.ShowErrorPopup (target, errors);
 				}
 			}
@@ -131,13 +133,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (isAll)
 				{
-					var errors = this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo);
+					var errors = this.amortissements.RemovesAmortissementsAuto (range);
 					this.ShowErrorPopup (target, errors);
 				}
 				else
 				{
 					System.Diagnostics.Debug.Assert (!this.SelectedObjectGuid.IsEmpty);
-					var errors = this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo, this.SelectedObjectGuid);
+					var errors = this.amortissements.RemovesAmortissementsAuto (range, this.SelectedObjectGuid);
 					this.ShowErrorPopup (target, errors);
 				}
 			}

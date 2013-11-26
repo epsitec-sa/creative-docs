@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+
 		public static string GetErrorDescription(Error error)
 		{
 			if (error.Type == ErrorType.AmortissementGenerate)
@@ -60,7 +61,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static string GetErrorDescription(ErrorType errorType)
+		private static string GetErrorDescription(ErrorType errorType)
 		{
 			switch (errorType)
 			{
@@ -69,6 +70,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				case ErrorType.AmortissementAlreadyDone:
 					return "L'objet a déja été amorti durant cette période";
+
+				case ErrorType.AmortissementUndefined:
+					return "L'amortissement n'est pas défini";
 
 				case ErrorType.AmortissementInvalidRate:
 					return "Le taux d'amortissement est incorrect";

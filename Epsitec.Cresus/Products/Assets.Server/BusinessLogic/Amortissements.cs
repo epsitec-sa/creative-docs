@@ -15,65 +15,80 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public List<Error> GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
+		public List<Error> GeneratesAmortissementsAuto(DateRange processRange)
 		{
+			//	Génère les amortissements pour tous les objets.
 			var errors = new List<Error> ();
 			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
 			{
-				errors.AddRange (this.GeneratesAmortissementsAuto (dateFrom, dateTo, node.Guid));
+				errors.AddRange (this.GeneratesAmortissementsAuto (processRange, node.Guid));
 			}
 
 			return errors;
 		}
 
-		public List<Error> GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
+		public List<Error> GeneratesAmortissementsAuto(DateRange processRange, Guid objectGuid)
 		{
+			//	Génère les amortissements pour un objet à choix.
 			var errors = new List<Error> ();
-			int count = 0;
+
 			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
+			int count = 0;
 
-			//	S'il y a déjà un ou plusieurs amortissements, on ne fait rien.
-			if (Amortissements.HasAmortissements (obj, dateFrom, dateTo))
+			//	TODO: Le changement de DataAmortissement pendant l'intervalle n'est pas géré !
+			var da = this.GetDataAmortissement (obj, processRange.FromTimestamp);
+			if (da.IsEmpty)
 			{
-				var error = new Error (ErrorType.AmortissementAlreadyDone, objectGuid);
+				var error = new Error (ErrorType.AmortissementUndefined, objectGuid);
+				errors.Add (error);
+				return errors;
+			}
+			if (da.Error != ErrorType.Ok)
+			{
+				var error = new Error (da.Error, objectGuid);
 				errors.Add (error);
 				return errors;
 			}
 
-			var end = dateTo.AddDays (1).AddTicks (-1);  // 31.12 -> 1er janvier moins un chouia
-			var amortissement = this.GetAmortissement (obj, new Timestamp (end, int.MaxValue));
-			var ae = amortissement.Error;
-			if (ae != ErrorType.Ok)
+			var ranges = LogicRange.GetRanges (processRange, da.Period);
+			foreach (var range in ranges)
 			{
-				var error = new Error (ae, objectGuid);
-				errors.Add (error);
-				return errors;
+				if (Amortissements.HasAmortissements (obj, range))
+				{
+					var error = new Error (ErrorType.AmortissementAlreadyDone, objectGuid);
+					errors.Add (error);
+				}
+				else
+				{
+					var et = ObjectCalculator.GetPlausibleEventTypes (BaseType.Objects, obj, range.ToTimestamp);
+					if (!et.Contains (EventType.AmortissementExtra))
+					{
+						var error = new Error (ErrorType.AmortissementOutObject, objectGuid);
+						errors.Add (error);
+					}
+					else
+					{
+						var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, range.ToTimestamp, ObjectField.Valeur1);
+						if (!ca.HasValue || !ca.Value.FinalAmount.HasValue)
+						{
+							var error = new Error (ErrorType.AmortissementEmptyAmount, objectGuid);
+							errors.Add (error);
+						}
+						else
+						{
+							//	Calcule un amortissement dégressif.
+							//	TODO: Implémenter le mode linéaire.
+							var currentValue = ca.Value.FinalAmount.Value;
+							var newValue = currentValue - (currentValue * da.EffectiveRate);
+
+							this.CreateAmortissementAuto (obj, range.IncludeTo, currentValue, newValue);
+							count++;
+						}
+					}
+				}
 			}
-
-			var start = new Timestamp (dateFrom, 0);
-			var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, start, ObjectField.Valeur1);
-			if (!ca.HasValue || !ca.Value.FinalAmount.HasValue)
-			{
-				var error = new Error (ErrorType.AmortissementEmptyAmount, objectGuid);
-				errors.Add (error);
-				return errors;
-			}
-
-			var et = ObjectCalculator.GetPlausibleEventTypes (BaseType.Objects, obj, new Timestamp (dateTo, 0));
-			if (!et.Contains (EventType.AmortissementExtra))
-			{
-				var error = new Error (ErrorType.AmortissementOutObject, objectGuid);
-				errors.Add (error);
-				return errors;
-			}
-
-			var currentValue = ca.Value.FinalAmount.Value;
-			var newValue = currentValue - (currentValue * amortissement.Rate);
-
-			this.CreateAmortissementAuto (obj, dateTo, currentValue, newValue);
-			count++;
 
 			var generate = new Error (ErrorType.AmortissementGenerate, objectGuid, count);
 			errors.Add (generate);
@@ -81,27 +96,34 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public List<Error> RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
+		public List<Error> RemovesAmortissementsAuto(DateRange processRange)
 		{
+			//	Supprime les amortissements pour tous les objets.
 			var errors = new List<Error> ();
 			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
 			{
-				errors.AddRange (this.RemovesAmortissementsAuto (dateFrom, dateTo, node.Guid));
+				errors.AddRange (this.RemovesAmortissementsAuto (processRange, node.Guid));
+			}
+
+			if (errors.Count == 0)
+			{
+				errors.Add (new Error (ErrorType.AmortissementRemove, Guid.Empty, 0));
 			}
 
 			return errors;
 		}
 
-		public List<Error> RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
+		public List<Error> RemovesAmortissementsAuto(DateRange processRange, Guid objectGuid)
 		{
+			//	Supprime les amortissements pour un objet à choix.
 			var errors = new List<Error> ();
 
 			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			int count = Amortissements.RemovesAmortissementsAuto (obj, dateFrom, dateTo);
+			int count = Amortissements.RemovesAmortissementsAuto (obj, processRange);
 
 			if (count > 0)
 			{
@@ -109,11 +131,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				errors.Add (error);
 			}
 
+			if (errors.Count == 0)
+			{
+				errors.Add (new Error (ErrorType.AmortissementRemove, objectGuid, 0));
+			}
+
 			return errors;
 		}
 
 
-		private DataAmortissement GetAmortissement(DataObject obj, Timestamp timestamp)
+		private DataAmortissement GetDataAmortissement(DataObject obj, Timestamp timestamp)
 		{
 			var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.TauxAmortissement);
 			var type   = ObjectCalculator.GetObjectPropertyString  (obj, timestamp, ObjectField.TypeAmortissement);
@@ -187,16 +214,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private static bool HasAmortissements(DataObject obj, System.DateTime dateFrom, System.DateTime dateTo)
+		private static bool HasAmortissements(DataObject obj, DateRange range)
 		{
 			//	Indique s'il existe un ou plusieurs amortissements (automatique ou manuel)
-			//	dans un intervale de dates.
+			//	dans un intervalle de dates.
 			if (obj != null)
 			{
 				return obj.Events
-					.Where (x => (x.Type == EventType.AmortissementAuto || x.Type == EventType.AmortissementExtra)
-						&& x.Timestamp.Date >= dateFrom
-						&& x.Timestamp.Date <= dateTo)
+					.Where (x =>
+						(x.Type == EventType.AmortissementAuto || x.Type == EventType.AmortissementExtra)
+						&& range.IsInside (x.Timestamp.Date))
 					.Any ();
 
 			}
@@ -204,18 +231,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return false;
 		}
 
-		private static int RemovesAmortissementsAuto(DataObject obj, System.DateTime dateFrom, System.DateTime dateTo)
+		private static int RemovesAmortissementsAuto(DataObject obj, DateRange range)
 		{
 			//	Supprime tous les événements d'amortissement automatique d'un objet
-			//	compris dans un intervale de dates.
+			//	compris dans un intervalle de dates.
 			int count = 0;
 
 			if (obj != null)
 			{
 				var guids = obj.Events
-					.Where (x => x.Type == EventType.AmortissementAuto
-						&& x.Timestamp.Date >= dateFrom
-						&& x.Timestamp.Date <= dateTo)
+					.Where (x => x.Type == EventType.AmortissementAuto && range.IsInside (x.Timestamp.Date))
 					.Select (x => x.Guid)
 					.ToArray ();
 

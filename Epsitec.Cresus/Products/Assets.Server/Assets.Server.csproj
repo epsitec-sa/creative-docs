@@ -54,6 +54,8 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="BusinessLogic\Amortissements.cs" />
+    <Compile Include="BusinessLogic\LogicRange.cs" />
+    <Compile Include="BusinessLogic\DateRange.cs" />
     <Compile Include="BusinessLogic\ErrorType.cs" />
     <Compile Include="BusinessLogic\Error.cs" />
     <Compile Include="BusinessLogic\ErrorDescription.cs" />

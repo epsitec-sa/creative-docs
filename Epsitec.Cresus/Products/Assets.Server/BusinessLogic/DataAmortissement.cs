@@ -16,6 +16,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.Rest   = rest;
 		}
 
+		public decimal EffectiveRate
+		{
+			get
+			{
+				return this.Rate * this.Period / 12.0m;
+			}
+		}
+
 		public bool IsEmpty
 		{
 			get

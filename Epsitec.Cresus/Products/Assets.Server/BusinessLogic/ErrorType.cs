@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		AmortissementRemove,
 
 		AmortissementAlreadyDone,
+		AmortissementUndefined,
 		AmortissementInvalidRate,
 		AmortissementInvalidType,
 		AmortissementInvalidPeriod,
