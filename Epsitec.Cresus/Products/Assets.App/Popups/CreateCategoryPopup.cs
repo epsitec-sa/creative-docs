@@ -63,27 +63,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.textField.Focus ();
 		}
 
-		private void CreateTitle(Widget parent)
-		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = "Création d'une nouvelle catégorie",
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = CreateCategoryPopup.TitleHeight - 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			new StaticText
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-		}
-
 		private void CreateName(Widget parent)
 		{
 			new StaticText
@@ -157,13 +136,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.ContentChanged += delegate (object sender, bool crop)
 			{
 				this.UpdateController (crop);
-			};
-
-			this.controller.RowClicked += delegate (object sender, int row)
-			{
-				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
-				this.UpdateController ();
-				this.UpdateSelectedRow ();
 			};
 		}
 

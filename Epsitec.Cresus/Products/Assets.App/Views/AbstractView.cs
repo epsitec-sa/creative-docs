@@ -144,6 +144,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowErrorPopup(Widget target, List<AmortissementError> errors)
 		{
+			var popup = new ErrorsPopup (this.accessor, errors);
+			popup.Create (target);
 		}
 
 
