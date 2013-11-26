@@ -183,9 +183,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ObjectField.GroupGuid+5;
 				yield return ObjectField.GroupRate+5;
 
-				yield return ObjectField.NomCatégorie1;
-				yield return ObjectField.NomCatégorie2;
-				yield return ObjectField.NomCatégorie3;
+				yield return ObjectField.NomCatégorie;
 
 				yield return ObjectField.TauxAmortissement;
 				yield return ObjectField.TypeAmortissement;

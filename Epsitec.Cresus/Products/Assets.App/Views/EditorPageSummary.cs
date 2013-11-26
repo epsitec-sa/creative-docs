@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Valeur3:
 					return EditionObjectPageType.Values;
 
-				case ObjectField.NomCatégorie1:
+				case ObjectField.NomCatégorie:
 				case ObjectField.TauxAmortissement:
 				case ObjectField.TypeAmortissement:
 				case ObjectField.Périodicité:
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ObjectSummaryControllerTile.Empty,
 
 					new ObjectSummaryControllerTile ("Amortissements"),
-					new ObjectSummaryControllerTile (ObjectField.NomCatégorie1),
+					new ObjectSummaryControllerTile (ObjectField.NomCatégorie),
 					new ObjectSummaryControllerTile (ObjectField.TauxAmortissement),
 					new ObjectSummaryControllerTile (ObjectField.TypeAmortissement),
 					new ObjectSummaryControllerTile (ObjectField.Périodicité),

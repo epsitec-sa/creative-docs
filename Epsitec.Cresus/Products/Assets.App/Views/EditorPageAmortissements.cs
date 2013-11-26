@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateStringController  (parent, ObjectField.NomCatégorie1);
+			this.CreateStringController  (parent, ObjectField.NomCatégorie);
 			this.CreateDecimalController (parent, ObjectField.TauxAmortissement, DecimalFormat.Rate);
 			this.CreateStringController  (parent, ObjectField.TypeAmortissement, editWidth: 90);
 			this.CreateStringController  (parent, ObjectField.Périodicité, editWidth: 90);
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var catObj = this.accessor.GetObject (BaseType.Categories, guid);
 
 			//	Copie les champs nécessaires.
-			this.ImportField (catObj, ObjectField.Nom,               ObjectField.NomCatégorie1);
+			this.ImportField (catObj, ObjectField.Nom,               ObjectField.NomCatégorie);
 			this.ImportField (catObj, ObjectField.TauxAmortissement, ObjectField.TauxAmortissement);
 			this.ImportField (catObj, ObjectField.TypeAmortissement, ObjectField.TypeAmortissement);
 			this.ImportField (catObj, ObjectField.Périodicité,       ObjectField.Périodicité);

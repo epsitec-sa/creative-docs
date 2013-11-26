@@ -46,9 +46,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.Valeur3:
 					return "Valeur imposable";
 
-				case ObjectField.NomCatégorie1:
-				case ObjectField.NomCatégorie2:
-				case ObjectField.NomCatégorie3:
+				case ObjectField.NomCatégorie:
 					return "Catégorie d'immob.";
 
 				case ObjectField.Maintenance:

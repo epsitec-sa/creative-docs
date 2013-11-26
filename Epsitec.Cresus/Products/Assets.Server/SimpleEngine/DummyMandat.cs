@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (3000000.0m)));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (2500000.0m)));
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Paul"));
-					DummyMandat.AddAmortissement1 (e);
+					DummyMandat.AddAmortissement (mandat, "Bureaux", e);
 				}
 
 				for (int i=1; i<13; i++)
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (4550000.0m)));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (6000000.0m)));
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Paul"));
-					DummyMandat.AddAmortissement1 (e);
+					DummyMandat.AddAmortissement (mandat, "Bureaux", e);
 				}
 
 				for (int i=1; i<10; i++)
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (2100000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (3000000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Sandra"));
-				DummyMandat.AddAmortissement1 (e);
+				DummyMandat.AddAmortissement (mandat, "Bureaux", e);
 			}
 
 			var o121 = new DataObject ();
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (10400000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (13000000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Ernest"));
-				DummyMandat.AddAmortissement1 (e);
+				DummyMandat.AddAmortissement (mandat, "Usines", e);
 			}
 
 			var o122 = new DataObject ();
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (8000000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (9500000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "René"));
-				DummyMandat.AddAmortissement1 (e);
+				DummyMandat.AddAmortissement (mandat, "Usines", e);
 			}
 
 			var o131 = new DataObject ();
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (2100000.0m)));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (3500000.0m)));
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Anne-Sophie"));
-					DummyMandat.AddAmortissement1 (e);
+					DummyMandat.AddAmortissement (mandat, "Usines", e);
 				}
 
 				{
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (5320000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (5000000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Paul"));
-				DummyMandat.AddAmortissement1 (e);
+				DummyMandat.AddAmortissement (mandat, "Usines", e);
 			}
 
 			var o133 = new DataObject ();
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (1200000.0m)));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (1500000.0m)));
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Victoria"));
-					DummyMandat.AddAmortissement1 (e);
+					DummyMandat.AddAmortissement (mandat, "Usines", e);
 				}
 
 				{
@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Jean-François"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Blanc"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "25004-800-65210-45R"));
-				DummyMandat.AddAmortissement2 (e);
+				DummyMandat.AddAmortissement (mandat, "Camions", e);
 			}
 
 			var o212 = new DataObject ();
@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Serge"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Rouge"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "25004-800-20087-20X"));
-				DummyMandat.AddAmortissement2 (e);
+				DummyMandat.AddAmortissement (mandat, "Camions", e);
 			}
 
 			var o213 = new DataObject ();
@@ -282,7 +282,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (75000.0m)));
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Jean-Pierre"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Blanc"));
-					DummyMandat.AddAmortissement2 (e);
+					DummyMandat.AddAmortissement (mandat, "Camions", e);
 				}
 
 				{
@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Olivier"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Jaune/Noir"));
 					e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "T40-56-200-65E4"));
-					DummyMandat.AddAmortissement2 (e);
+					DummyMandat.AddAmortissement (mandat, "Camions", e);
 				}
 
 				{
@@ -332,7 +332,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Igor"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Bleu/Noir"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "T40-72-300-PW3B"));
-				DummyMandat.AddAmortissement2 (e);
+				DummyMandat.AddAmortissement (mandat, "Camions", e);
 			}
 
 			var o221 = new DataObject ();
@@ -350,7 +350,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Francine"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Blanc"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "456-321-132-898908"));
-				DummyMandat.AddAmortissement2 (e);
+				DummyMandat.AddAmortissement (mandat, "Camionnettes", e);
 			}
 
 			var o222 = new DataObject ();
@@ -367,7 +367,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (32000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Jean-Bernard"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Blanc"));
-				DummyMandat.AddAmortissement2 (e);
+				DummyMandat.AddAmortissement (mandat, "Camionnettes", e);
 			}
 
 			var o231 = new DataObject ();
@@ -385,7 +385,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Simon"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Noir"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "D456-0003232-0005"));
-				DummyMandat.AddAmortissement2 (e);
+				DummyMandat.AddAmortissement (mandat, "Voitures", e);
 			}
 
 			var o232 = new DataObject ();
@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Frédérique"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Bleu"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "45-3292302-544545-8"));
-				DummyMandat.AddAmortissement2 (e);
+				DummyMandat.AddAmortissement (mandat, "Voitures", e);
 			}
 
 			var o233 = new DataObject ();
@@ -419,7 +419,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (8000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur2,     new ComputedAmount (5000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Dominique"));
-				DummyMandat.AddAmortissement2 (e);
+				DummyMandat.AddAmortissement (mandat, "Voitures", e);
 			}
 
 			var o234 = new DataObject ();
@@ -436,7 +436,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Denise"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Rouge"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "456000433434002"));
-				DummyMandat.AddAmortissement2 (e);
+				DummyMandat.AddAmortissement (mandat, "Voitures", e);
 			}
 
 			var o235 = new DataObject ();
@@ -454,7 +454,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Marie"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Gris métalisé"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "780004563233232"));
-				DummyMandat.AddAmortissement2 (e);
+				DummyMandat.AddAmortissement (mandat, "Voitures", e);
 			}
 
 			var o236 = new DataObject ();
@@ -472,7 +472,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Christiane"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Gris"));
 					e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "F40T-500023-40232-30987-M"));
-					DummyMandat.AddAmortissement2 (e);
+					DummyMandat.AddAmortissement (mandat, "Voitures", e);
 				}
 
 				{
@@ -535,7 +535,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Georges"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Noire"));
 					e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "F30T-340407-52118-40720-R"));
-					DummyMandat.AddAmortissement2 (e);
+					DummyMandat.AddAmortissement (mandat, "Voitures", e);
 				}
 
 				{
@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o12.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "12"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Usine"));
+				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Usines"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.12m));
 				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Linéaire"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Annuelle"));
@@ -643,7 +643,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o21.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "21"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Poid lourd"));
+				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Camions"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.15m));
 				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Dégressif"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Trimestrielle"));
@@ -666,7 +666,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o22.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "22"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Camionnette"));
+				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Camionnettes"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.21m));
 				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Dégressif"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Semestrielle"));
@@ -689,7 +689,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				o23.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "23"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Voiture"));
+				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Voitures"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.25m));
 				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Dégressif"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Semestrielle"));
@@ -1104,14 +1104,56 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		private static void AddAmortissement1(DataEvent e)
+		private static void AddAmortissement(DataMandat mandat, string nom, DataEvent e)
 		{
-			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie1, "Bureaux"));
+			var cat = DummyMandat.GetCategory (mandat, nom);
+
+			if (cat != null)
+			{
+				var taux   = ObjectCalculator.GetObjectPropertyDecimal (cat, null, ObjectField.TauxAmortissement);
+				var type   = ObjectCalculator.GetObjectPropertyString  (cat, null, ObjectField.TypeAmortissement);
+				var period = ObjectCalculator.GetObjectPropertyString  (cat, null, ObjectField.Périodicité);
+				var rest   = ObjectCalculator.GetObjectPropertyDecimal (cat, null, ObjectField.ValeurRésiduelle);
+				var c1     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte1);
+				var c2     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte2);
+				var c3     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte3);
+				var c4     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte4);
+				var c5     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte5);
+				var c6     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte6);
+				var c7     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte7);
+				var c8     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte8);
+
+				e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie,      nom));
+				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, taux.GetValueOrDefault ()));
+				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, type));
+				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       period));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  rest.GetValueOrDefault ()));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte1,           c1));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte2,           c2));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte3,           c3));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte4,           c4));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte5,           c5));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte6,           c6));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte7,           c7));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte8,           c8));
+			}
 		}
 
-		private static void AddAmortissement2(DataEvent e)
+		private static DataObject GetCategory(DataMandat mandat, string text)
 		{
-			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie1, "Voiture"));
+			var list = mandat.GetData (BaseType.Categories);
+
+			foreach (var group in list)
+			{
+				var nom = ObjectCalculator.GetObjectPropertyString (group, null, ObjectField.Nom);
+				if (nom == text)
+				{
+					return group;
+				}
+			}
+
+			System.Diagnostics.Debug.Fail (string.Format ("La catégorie {0} n'existe pas !", text));
+			return null;
 		}
 
 		private static Guid GetGroup(DataMandat mandat, string text)

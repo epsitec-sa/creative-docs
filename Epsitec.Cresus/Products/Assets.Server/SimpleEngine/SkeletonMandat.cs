@@ -464,12 +464,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static void AddAmortissement1(DataEvent e)
 		{
-			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie1, "Bureaux"));
+			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie, "Bureaux"));
 		}
 
 		private static void AddAmortissement2(DataEvent e)
 		{
-			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie1, "Voiture"));
+			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie, "Voiture"));
 		}
 
 		private static Guid GetGroup(DataMandat mandat, string text)

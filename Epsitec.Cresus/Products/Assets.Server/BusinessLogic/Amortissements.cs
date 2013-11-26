@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return;
 			}
 
-			var end = dateTo.AddDays (1).AddTicks (-1);
+			var end = dateTo.AddDays (1).AddTicks (-1);  // 31.12 -> 1er janvier moins un chouia
 			var amortissement = this.GetAmortissement (obj, new Timestamp (end, int.MaxValue));
 			if (!amortissement.IsValid)
 			{

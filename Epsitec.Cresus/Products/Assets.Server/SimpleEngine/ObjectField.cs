@@ -28,10 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Valeur2,
 		Valeur3,
 
-		NomCatégorie1,
-		NomCatégorie2,
-		NomCatégorie3,
-
+		NomCatégorie,
 		TauxAmortissement,
 		TypeAmortissement,
 		Périodicité,
