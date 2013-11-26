@@ -33,6 +33,5 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return DecimalFormat.Unknown;
 			}
 		}
-
 	}
 }

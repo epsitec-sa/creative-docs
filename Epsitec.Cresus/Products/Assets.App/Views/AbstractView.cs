@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					System.Diagnostics.Debug.Assert (popup.DateFrom.HasValue);
 					System.Diagnostics.Debug.Assert (popup.DateTo.HasValue);
-					this.Amortissements (popup.IsCreate, popup.IsAll, popup.DateFrom.Value, popup.DateTo.Value);
+					this.Amortissements (target, popup.IsCreate, popup.IsAll, popup.DateFrom.Value, popup.DateTo.Value);
 				}
 			};
 		}
@@ -108,38 +108,68 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void Amortissements(bool isCreate, bool isAll, System.DateTime dateFrom, System.DateTime dateTo)
+		private void Amortissements(Widget target, bool isCreate, bool isAll, System.DateTime dateFrom, System.DateTime dateTo)
 		{
-			if (isCreate)
+			if (isCreate)  // génère les amortissements ?
 			{
 				if (isAll)
 				{
-					this.amortissements.GeneratesAmortissementsAuto (dateFrom, dateTo);
+					var errors = this.amortissements.GeneratesAmortissementsAuto (dateFrom, dateTo);
+					this.ShowErrorPopup (target, errors);
 				}
 				else
 				{
 					System.Diagnostics.Debug.Assert (!this.SelectedObjectGuid.IsEmpty);
-					this.amortissements.GeneratesAmortissementsAuto (dateFrom, dateTo, this.SelectedObjectGuid);
+					var errors = this.amortissements.GeneratesAmortissementsAuto (dateFrom, dateTo, this.SelectedObjectGuid);
+					this.ShowErrorPopup (target, errors);
 				}
+			}
+			else  // supprime les amortissements ?
+			{
+				int count;
+
+				if (isAll)
+				{
+					count = this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo);
+				}
+				else
+				{
+					System.Diagnostics.Debug.Assert (!this.SelectedObjectGuid.IsEmpty);
+					count = this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo, this.SelectedObjectGuid);
+				}
+
+				this.ShowMessagePopup (target, AbstractView.GetRemoveMessage (count));
+			}
+
+			this.Update (dataChanged: true);
+		}
+
+		private static string GetRemoveMessage(int count)
+		{
+			if (count == 0)
+			{
+				return "Aucun amortissement n'a été supprimé";
+			}
+			else if (count == 1)
+			{
+				return "Un amortissement a été supprimé";
 			}
 			else
 			{
-				if (isAll)
-				{
-					this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo);
-				}
-				else
-				{
-					System.Diagnostics.Debug.Assert (!this.SelectedObjectGuid.IsEmpty);
-					this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo, this.SelectedObjectGuid);
-				}
+				return string.Format ("{0} amortissements ont été supprimés", count);
 			}
+		}
 
-			this.Update ();
+		private void ShowErrorPopup(Widget target, List<AmortissementError> errors)
+		{
+		}
+
+		private void ShowMessagePopup(Widget target, string message)
+		{
 		}
 
 
-		protected virtual void Update()
+		protected virtual void Update(bool dataChanged = false)
 		{
 		}
 

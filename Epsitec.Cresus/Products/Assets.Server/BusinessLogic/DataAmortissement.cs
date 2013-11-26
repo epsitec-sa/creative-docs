@@ -31,9 +31,30 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.Rate   != 0.0m
-					&& this.Type   != TypeAmortissement.Unknown
-					&& this.Period != 0;
+				return this.Error == AmortissementErrorType.Ok;
+			}
+		}
+
+		public AmortissementErrorType Error
+		{
+			get
+			{
+				if (this.Rate <= 0.0m || this.Rate > 1.0m)
+				{
+					return AmortissementErrorType.InvalidRate;
+				}
+
+				if (this.Type == TypeAmortissement.Unknown)
+				{
+					return AmortissementErrorType.InvalidType;
+				}
+
+				if (this.Period <= 0 || this.Period > 120)
+				{
+					return AmortissementErrorType.InvalidPeriod;
+				}
+
+				return AmortissementErrorType.Ok;
 			}
 		}
 

@@ -15,63 +15,91 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
+		public List<AmortissementError> GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
 		{
+			var errors = new List<AmortissementError> ();
 			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
 			{
-				this.GeneratesAmortissementsAuto (dateFrom, dateTo, node.Guid);
+				errors.AddRange (this.GeneratesAmortissementsAuto (dateFrom, dateTo, node.Guid));
 			}
+
+			return errors;
 		}
 
-		public void GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
+		public List<AmortissementError> GeneratesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
 		{
+			var errors = new List<AmortissementError> ();
+			int count = 0;
 			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
 
 			//	S'il y a déjà un ou plusieurs amortissements, on ne fait rien.
 			if (Amortissements.HasAmortissements (obj, dateFrom, dateTo))
 			{
-				return;
+				var error = new AmortissementError (AmortissementErrorType.AlreadyAmorti, objectGuid);
+				errors.Add (error);
+				return errors;
 			}
 
 			var end = dateTo.AddDays (1).AddTicks (-1);  // 31.12 -> 1er janvier moins un chouia
 			var amortissement = this.GetAmortissement (obj, new Timestamp (end, int.MaxValue));
-			if (!amortissement.IsValid)
+			var ae = amortissement.Error;
+			if (ae != AmortissementErrorType.Ok)
 			{
-				return;
+				var error = new AmortissementError (ae, objectGuid);
+				errors.Add (error);
+				return errors;
 			}
 
 			var start = new Timestamp (dateFrom, 0);
 			var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, start, ObjectField.Valeur1);
 			if (!ca.HasValue || !ca.Value.FinalAmount.HasValue)
 			{
-				return;
+				var error = new AmortissementError (AmortissementErrorType.EmptyAmount, objectGuid);
+				errors.Add (error);
+				return errors;
+			}
+
+			var et = ObjectCalculator.GetPlausibleEventTypes (BaseType.Objects, obj, new Timestamp (dateTo, 0));
+			if (!et.Contains (EventType.AmortissementExtra))
+			{
+				var error = new AmortissementError (AmortissementErrorType.OutObject, objectGuid);
+				errors.Add (error);
+				return errors;
 			}
 
 			var currentValue = ca.Value.FinalAmount.Value;
 			var newValue = currentValue - (currentValue * amortissement.Rate);
 
 			this.CreateAmortissementAuto (obj, dateTo, currentValue, newValue);
+			count++;
+
+			var generate = new AmortissementError (AmortissementErrorType.Generate, objectGuid, count);
+			errors.Add (generate);
+			return errors;
 		}
 
 
-		public void RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
+		public int RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
 		{
+			int count = 0;
 			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
 			{
-				this.RemovesAmortissementsAuto (dateFrom, dateTo, node.Guid);
+				count += this.RemovesAmortissementsAuto (dateFrom, dateTo, node.Guid);
 			}
+
+			return count;
 		}
 
-		public void RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
+		public int RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
 		{
 			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			Amortissements.RemovesAmortissementsAuto (obj, dateFrom, dateTo);
+			return Amortissements.RemovesAmortissementsAuto (obj, dateFrom, dateTo);
 		}
 
 
@@ -166,10 +194,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return false;
 		}
 
-		private static void RemovesAmortissementsAuto(DataObject obj, System.DateTime dateFrom, System.DateTime dateTo)
+		private static int RemovesAmortissementsAuto(DataObject obj, System.DateTime dateFrom, System.DateTime dateTo)
 		{
 			//	Supprime tous les événements d'amortissement automatique d'un objet
 			//	compris dans un intervale de dates.
+			int count = 0;
+
 			if (obj != null)
 			{
 				var guids = obj.Events
@@ -183,8 +213,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var e = obj.GetEvent (guid);
 					obj.RemoveEvent (e);
+					count++;
 				}
 			}
+
+			return count;
 		}
 
 

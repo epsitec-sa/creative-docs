@@ -401,14 +401,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void Update()
+		protected override void Update(bool dataChanged = false)
 		{
+			bool updateData = dataChanged;
+
 			if (!this.isEditing)
 			{
 				if (this.accessor.EditionAccessor.SaveObjectEdition ())
 				{
-					this.UpdateData ();
+					updateData = true;
 				}
+			}
+
+			if (updateData)
+			{
+				this.UpdateData ();
+			}
+
+			if (dataChanged)
+			{
+				this.timelineController.Update ();
 			}
 
 			this.UpdateViewModeGeometry ();

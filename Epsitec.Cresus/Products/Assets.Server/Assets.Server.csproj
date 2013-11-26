@@ -54,6 +54,9 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="BusinessLogic\Amortissements.cs" />
+    <Compile Include="BusinessLogic\AmortissementErrorType.cs" />
+    <Compile Include="BusinessLogic\AmortissementError.cs" />
+    <Compile Include="BusinessLogic\AmortissementErrorDescription.cs" />
     <Compile Include="BusinessLogic\TypeAmortissement.cs" />
     <Compile Include="BusinessLogic\DataAmortissement.cs" />
     <Compile Include="BusinessLogic\GroupsLogic.cs" />
