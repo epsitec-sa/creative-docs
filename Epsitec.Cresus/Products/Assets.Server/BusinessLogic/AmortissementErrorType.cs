@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		Ok,
 		Generate,
+		Remove,
 		Unknown,
 		AlreadyAmorti,
 		InvalidRate,

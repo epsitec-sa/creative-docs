@@ -126,45 +126,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else  // supprime les amortissements ?
 			{
-				int count;
-
 				if (isAll)
 				{
-					count = this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo);
+					var errors = this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo);
+					this.ShowErrorPopup (target, errors);
 				}
 				else
 				{
 					System.Diagnostics.Debug.Assert (!this.SelectedObjectGuid.IsEmpty);
-					count = this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo, this.SelectedObjectGuid);
+					var errors = this.amortissements.RemovesAmortissementsAuto (dateFrom, dateTo, this.SelectedObjectGuid);
+					this.ShowErrorPopup (target, errors);
 				}
-
-				this.ShowMessagePopup (target, AbstractView.GetRemoveMessage (count));
 			}
 
 			this.Update (dataChanged: true);
 		}
 
-		private static string GetRemoveMessage(int count)
-		{
-			if (count == 0)
-			{
-				return "Aucun amortissement n'a été supprimé";
-			}
-			else if (count == 1)
-			{
-				return "Un amortissement a été supprimé";
-			}
-			else
-			{
-				return string.Format ("{0} amortissements ont été supprimés", count);
-			}
-		}
-
 		private void ShowErrorPopup(Widget target, List<AmortissementError> errors)
-		{
-		}
-
-		private void ShowMessagePopup(Widget target, string message)
 		{
 		}
 

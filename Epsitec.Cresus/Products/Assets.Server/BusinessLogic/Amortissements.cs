@@ -81,25 +81,35 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public int RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
+		public List<AmortissementError> RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo)
 		{
-			int count = 0;
+			var errors = new List<AmortissementError> ();
 			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
 			{
-				count += this.RemovesAmortissementsAuto (dateFrom, dateTo, node.Guid);
+				errors.AddRange (this.RemovesAmortissementsAuto (dateFrom, dateTo, node.Guid));
 			}
 
-			return count;
+			return errors;
 		}
 
-		public int RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
+		public List<AmortissementError> RemovesAmortissementsAuto(System.DateTime dateFrom, System.DateTime dateTo, Guid objectGuid)
 		{
+			var errors = new List<AmortissementError> ();
+
 			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			return Amortissements.RemovesAmortissementsAuto (obj, dateFrom, dateTo);
+			int count = Amortissements.RemovesAmortissementsAuto (obj, dateFrom, dateTo);
+
+			if (count > 0)
+			{
+				var error = new AmortissementError (AmortissementErrorType.Remove, objectGuid, count);
+				errors.Add (error);
+			}
+
+			return errors;
 		}
 
 

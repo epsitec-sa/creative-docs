@@ -25,6 +25,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return string.Format ("{0} amortissements ont été générés", error.Counter);
 				}
 			}
+			else if (error.ErrorType == AmortissementErrorType.Remove)
+			{
+				if (error.Counter == 0)
+				{
+					return "Aucun amortissement n'a été supprimé";
+				}
+				else if (error.Counter == 1)
+				{
+					return "Un amortissement a été supprimé";
+				}
+				else
+				{
+					return string.Format ("{0} amortissements ont été supprimés", error.Counter);
+				}
+			}
 			else
 			{
 				return AmortissementErrorDescription.GetErrorDescription (error.ErrorType);
