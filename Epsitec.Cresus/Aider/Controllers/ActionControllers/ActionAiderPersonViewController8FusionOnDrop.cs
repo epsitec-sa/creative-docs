@@ -41,10 +41,58 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var p1 = this.Entity;
 			var p2 = this.AdditionalEntity.Person;
 
-			return TextFormatter.FormatText ("Cette action fusionne les données des deux personnes.\n \n",
-				"Le contact", p2.eCH_Person.PersonFirstNames, p2.eCH_Person.PersonOfficialName, "(~", p2.Age, "~)",
-				"que vous venez de glisser sur", p1.eCH_Person.PersonFirstNames, p1.eCH_Person.PersonOfficialName, "(~", p1.Age, "~)",
-				"sera supprimé.");
+			var p1Summary = TextFormatter.FormatText (p1.eCH_Person.PersonFirstNames, p1.eCH_Person.PersonOfficialName, "(~", p1.Age, "~), ", p1.MainContact.Address.GetDisplayAddress ());
+			var p2Summary = TextFormatter.FormatText (p2.eCH_Person.PersonFirstNames, p2.eCH_Person.PersonOfficialName, "(~", p2.Age, "~), ", p2.MainContact.Address.GetDisplayAddress ());
+			//classic case
+			if (p1.IsGovernmentDefined && !p2.IsGovernmentDefined)
+			{
+				return TextFormatter.FormatText ("Fusion des données non-officelles de:\n",
+				p2Summary,
+				"\navec les données officielles de:\n",
+				p1Summary,
+				"\nRappel:\n",
+				"Ce contact sera supprimé:\n",
+				p2Summary,
+				"\nCe contact sera conservé:\n",
+				p1Summary
+				);
+			}
+			else if (!p1.IsGovernmentDefined && p2.IsGovernmentDefined)
+			{
+				return TextFormatter.FormatText ("Fusion des données non-officelles de:\n",
+				p1Summary,
+				"\navec les données officielles de:\n",
+				p2Summary,
+				"\nRappel:\n",
+				"Ce contact sera supprimé:\n",
+				p1Summary,
+				"\nCe contact sera conservé:\n",
+				p2Summary
+				);
+			}
+			else if (!p1.IsGovernmentDefined && !p2.IsGovernmentDefined)
+			{
+				return TextFormatter.FormatText ("Aucun des contacts n'appartient au registre ECh!\n",
+												 "Fusion des données non-officelles de:\n",
+				p1Summary,
+				"\navec les données non-officielles de:\n",
+				p2Summary,
+				"\nRappel:\n",
+				"Aucun des contacts n'appartient au registre ECh!\n",
+				"Ce contact sera supprimé:\n",
+				p2Summary,
+				"\nCe contact sera conservé:\n",
+				p1Summary
+				);
+			}
+			else
+			{
+				return TextFormatter.FormatText ("Les deux contacts ont des données officielles.\n",
+												 "Il s'agit probablement d'une erreur sur la personne.\n",
+												 "La Fusion va echouer.");
+			}
+
+			
 		}
 
 		public override ActionExecutor GetExecutor()
