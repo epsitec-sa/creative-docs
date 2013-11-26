@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public List<Error> GeneratesAmortissementsAuto(DateRange processRange)
 		{
-			//	Génère les amortissements pour tous les objets.
+			//	Génère les amortissements automatiques pour tous les objets.
 			var errors = new List<Error> ();
 			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
 
@@ -31,14 +31,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public List<Error> GeneratesAmortissementsAuto(DateRange processRange, Guid objectGuid)
 		{
-			//	Génère les amortissements pour un objet à choix.
+			//	Génère les amortissements automatiques pour un objet donné.
+			//	TODO: Le changement de DataAmortissement pendant l'intervalle n'est pas géré !
+			//	TODO: Calculer les amortissements partiels au prorata de la durée.
+			//	TODO: Implémenter le mode linéaire.
 			var errors = new List<Error> ();
 
 			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
-			int count = 0;
+			int counterDone = 0;
 
-			//	TODO: Le changement de DataAmortissement pendant l'intervalle n'est pas géré !
 			var da = this.GetDataAmortissement (obj, processRange.FromTimestamp);
+			if (da.IsEmpty)
+			{
+				da = this.GetDataAmortissement (obj, processRange.ToTimestamp);
+			}
 			if (da.IsEmpty)
 			{
 				var error = new Error (ErrorType.AmortissementUndefined, objectGuid);
@@ -79,18 +85,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						else
 						{
 							//	Calcule un amortissement dégressif.
-							//	TODO: Implémenter le mode linéaire.
 							var currentValue = ca.Value.FinalAmount.Value;
 							var newValue = currentValue - (currentValue * da.EffectiveRate);
 
 							this.CreateAmortissementAuto (obj, range.IncludeTo, currentValue, newValue);
-							count++;
+							counterDone++;
 						}
 					}
 				}
 			}
 
-			var generate = new Error (ErrorType.AmortissementGenerate, objectGuid, count);
+			var generate = new Error (ErrorType.AmortissementGenerate, objectGuid, counterDone);
 			errors.Add (generate);
 			return errors;
 		}
@@ -98,7 +103,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public List<Error> RemovesAmortissementsAuto(DateRange processRange)
 		{
-			//	Supprime les amortissements pour tous les objets.
+			//	Supprime les amortissements automatiques pour tous les objets.
 			var errors = new List<Error> ();
 			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
 
@@ -117,17 +122,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public List<Error> RemovesAmortissementsAuto(DateRange processRange, Guid objectGuid)
 		{
-			//	Supprime les amortissements pour un objet à choix.
+			//	Supprime les amortissements automatiques pour un objet donné.
 			var errors = new List<Error> ();
 
 			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			int count = Amortissements.RemovesAmortissementsAuto (obj, processRange);
+			int counterDone = Amortissements.RemovesAmortissementsAuto (obj, processRange);
 
-			if (count > 0)
+			if (counterDone > 0)
 			{
-				var error = new Error (ErrorType.AmortissementRemove, objectGuid, count);
+				var error = new Error (ErrorType.AmortissementRemove, objectGuid, counterDone);
 				errors.Add (error);
 			}
 
@@ -156,6 +161,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static TypeAmortissement ParseTypeAmortissement(string text)
 		{
+			//	TODO: provisoire
 			if (!string.IsNullOrEmpty (text))
 			{
 				text = text.ToLower ();
@@ -175,6 +181,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static int ParsePeriod(string text)
 		{
+			//	TODO: provisoire
 			if (!string.IsNullOrEmpty (text))
 			{
 				text = text.ToLower ();

@@ -114,8 +114,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						//	Cette situation est tordue. On demande le montant calculé à un
 						//	instant pour lequel il n'existe pas. On cherche donc le précédent,
 						//	mais on ne peut pas le retourner tel quel. On doit retourner un
-						//	montant qui à une valeur initiale égale à la valeur finale du
-						//	précédent trouvé.
+						//	montant qui a une valeur initiale égale à la valeur finale du
+						//	montant précédent trouvé.
 						return new ComputedAmount
 						(
 							property.Value.FinalAmount,
