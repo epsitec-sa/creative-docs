@@ -6,7 +6,6 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -15,6 +14,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Affiche une liste d'erreurs ou de messages, appelée "résultats".
+	/// </summary>
 	public class ErrorsPopup : AbstractPopup
 	{
 		public ErrorsPopup(DataAccessor accessor, List<Error> errors)
@@ -111,7 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int PopupHeight = 230;
 
 		private readonly DataAccessor						accessor;
-		private readonly List<Error>			errors;
+		private readonly List<Error>						errors;
 		private readonly NavigationTreeTableController		controller;
 		private readonly ErrorNodesGetter					nodesGetter;
 		private readonly ErrorsTreeTableFiller				dataFiller;

@@ -110,6 +110,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void Amortissements(Widget target, bool isCreate, bool isAll, System.DateTime dateFrom, System.DateTime dateTo)
 		{
+			//	Effectue les opérations d'amortissement selon AmortissementsPopup,
+			//	et affiche les résultats avec ErrorsPopup.
+
 			if (isCreate)  // génère les amortissements ?
 			{
 				if (isAll)

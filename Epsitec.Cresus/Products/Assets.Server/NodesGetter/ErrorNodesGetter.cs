@@ -7,6 +7,10 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
+	/// <summary>
+	/// Donne un accès en lecture à une liste d'erreurs ou de messages,
+	/// sans tri ni filtre
+	/// </summary>
 	public class ErrorNodesGetter : AbstractNodesGetter<Error>  // outputNodes
 	{
 		public ErrorNodesGetter(List<Error> errors)

@@ -9,6 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
+	/// <summary>
+	/// Permet de remplir un TreeTable avec une liste d'erreurs ou de messages.
+	/// </summary>
 	public class ErrorsTreeTableFiller : AbstractTreeTableFiller<Error>
 	{
 		public ErrorsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<Error> nodesGetter)
