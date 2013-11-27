@@ -106,23 +106,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					 nextEvent != TerminalEvent.In);
 		}
 
-		public static IEnumerable<EventType> GetPlausibleEventTypes(BaseType baseType, DataObject obj, Timestamp timestamp)
+		public static IEnumerable<EventType> EventTypes
 		{
-			switch (baseType)
+			get
 			{
-				case BaseType.Objects:
-					return ObjectCalculator.GetPlausibleObjectEventTypes (obj, timestamp);
-
-				case BaseType.Categories:
-				case BaseType.Groups:
-					return ObjectCalculator.GetPlausibleCategoryEventTypes (obj, timestamp);
-
-				default:
-					return null;
+				yield return EventType.Entrée;
+				yield return EventType.Modification;
+				yield return EventType.Réorganisation;
+				yield return EventType.Augmentation;
+				yield return EventType.Diminution;
+				yield return EventType.AmortissementExtra;
+				yield return EventType.Sortie;
 			}
 		}
 
-		private static IEnumerable<EventType> GetPlausibleObjectEventTypes(DataObject obj, Timestamp timestamp)
+		public static IEnumerable<EventType> GetPlausibleEventTypes(DataObject obj, Timestamp timestamp)
 		{
 			var prevEvent = ObjectCalculator.GetPrevEvent (obj, timestamp);
 			var nextEvent = ObjectCalculator.GetNextEvent (obj, timestamp);
@@ -141,30 +139,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return EventType.Augmentation;
 				yield return EventType.Diminution;
 				yield return EventType.AmortissementExtra;
-			}
-
-			if ((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
-				nextEvent == TerminalEvent.None)
-			{
-				yield return EventType.Sortie;
-			}
-		}
-
-		private static IEnumerable<EventType> GetPlausibleCategoryEventTypes(DataObject obj, Timestamp timestamp)
-		{
-			var prevEvent = ObjectCalculator.GetPrevEvent (obj, timestamp);
-			var nextEvent = ObjectCalculator.GetNextEvent (obj, timestamp);
-
-			if ((prevEvent == TerminalEvent.None || prevEvent == TerminalEvent.Out) &&
-				nextEvent == TerminalEvent.None)
-			{
-				yield return EventType.Entrée;
-			}
-
-			if ((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
-				nextEvent != TerminalEvent.In)
-			{
-				yield return EventType.Modification;
 			}
 
 			if ((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&

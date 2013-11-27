@@ -88,12 +88,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			foreach (var desc in this.ButtonDescriptions.Reverse ())
 			{
-				this.CreateButton (x, y, dx, dy, desc.Type, desc.Text, desc.Tooltip);
+				this.CreateButton (x, y, dx, dy, desc.Type, desc.Text, desc.Tooltip, desc.Enable);
 				y += dy + NewEventPopup.buttonGap;
 			}
 		}
 
-		private Button CreateButton(int x, int y, int dx, int dy, EventType type, string text, string tooltip = null)
+		private Button CreateButton(int x, int y, int dx, int dy, EventType type, string text, string tooltip, bool enable)
 		{
 			string name = type.ToString();
 
@@ -103,6 +103,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Name          = name,
 				Text          = text,
 				ButtonStyle   = ButtonStyle.Icon,
+				AutoFocus     = false,
+				Enable        = enable,
 				Dock          = DockStyle.Bottom,
 				PreferredSize = new Size (dx, dy),
 				Margins       = new Margins (0, 0, NewEventPopup.buttonGap, 0),
@@ -136,111 +138,61 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				foreach (var type in ObjectCalculator.GetPlausibleEventTypes (this.BaseType, this.DataObject, this.Timestamp))
+				foreach (var type in ObjectCalculator.EventTypes)
 				{
 					yield return this.GetButtonDescription (type);
 				}
 			}
 		}
 
-
 		private ButtonDescription GetButtonDescription(EventType type)
 		{
-			switch (this.BaseType)
-			{
-				case BaseType.Objects:
-					return this.GetObjectButtonDescription (type);
+			var types = ObjectCalculator.GetPlausibleEventTypes (this.DataObject, this.Timestamp);
+			bool enable = types.ToArray ().Contains (type);
 
-				case BaseType.Categories:
-					return this.GetCategoryButtonDescription (type);
-
-				case BaseType.Groups:
-					return this.GetGroupButtonDescription (type);
-
-				default:
-					return new ButtonDescription (EventType.Unknown, null, null);
-			}
-		}
-
-		private ButtonDescription GetObjectButtonDescription(EventType type)
-		{
 			switch (type)
 			{
 				case EventType.Entrée:
-					return new ButtonDescription (EventType.Entrée, "Entrée", "Entrée dans l'inventaire, acquisition");
+					return new ButtonDescription (EventType.Entrée, "Entrée", "Entrée dans l'inventaire, acquisition", enable);
 
 				case EventType.Modification:
-					return new ButtonDescription (EventType.Modification, "Modification", "Modification de diverses informations");
+					return new ButtonDescription (EventType.Modification, "Modification", "Modification de diverses informations", enable);
 
 				case EventType.Réorganisation:
-					return new ButtonDescription (EventType.Réorganisation, "Réorganisation", "Modification pour MCH2");
+					return new ButtonDescription (EventType.Réorganisation, "Réorganisation", "Modification pour MCH2", enable);
 				
 				case EventType.Augmentation:
-					return new ButtonDescription (EventType.Augmentation, "Augmentation", "Revalorisation à la hausse de la valeur");
+					return new ButtonDescription (EventType.Augmentation, "Augmentation", "Revalorisation à la hausse de la valeur", enable);
 				
 				case EventType.Diminution:
-					return new ButtonDescription (EventType.Diminution, "Diminution", "Réévaluation à la baisse de la valeur");
+					return new ButtonDescription (EventType.Diminution, "Diminution", "Réévaluation à la baisse de la valeur", enable);
 				
 				case EventType.AmortissementExtra:
-					return new ButtonDescription (EventType.AmortissementExtra, "Amortissement extraordinaire", "Amortissement manuel");
+					return new ButtonDescription (EventType.AmortissementExtra, "Amortissement extraordinaire", "Amortissement manuel", enable);
 				
 				case EventType.Sortie:
-					return new ButtonDescription (EventType.Sortie, "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.");
+					return new ButtonDescription (EventType.Sortie, "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.", enable);
 				
 				default:
-					return new ButtonDescription (EventType.Unknown, null, null);
-			}
-		}
-
-		private ButtonDescription GetCategoryButtonDescription(EventType type)
-		{
-			switch (type)
-			{
-				case EventType.Entrée:
-					return new ButtonDescription (EventType.Entrée, "Création", "Création de la catégorie d'immobilisation");
-				
-				case EventType.Modification:
-					return new ButtonDescription (EventType.Modification, "Modification", "Modification de la catégorie d'immobilisation");
-				
-				case EventType.Sortie:
-					return new ButtonDescription (EventType.Sortie, "Suppression", "Suppression de la catégorie d'immobilisation");
-				
-				default:
-					return new ButtonDescription (EventType.Unknown, null, null);
-			}
-		}
-
-		private ButtonDescription GetGroupButtonDescription(EventType type)
-		{
-			switch (type)
-			{
-				case EventType.Entrée:
-					return new ButtonDescription (EventType.Entrée, "Création", "Création du goupe");
-
-				case EventType.Modification:
-					return new ButtonDescription (EventType.Modification, "Modification", "Modification du groupe");
-
-				case EventType.Sortie:
-					return new ButtonDescription (EventType.Sortie, "Suppression", "Suppression du groupe");
-
-				default:
-					return new ButtonDescription (EventType.Unknown, null, null);
+					return new ButtonDescription (EventType.Unknown, null, null, false);
 			}
 		}
 
 
 		private struct ButtonDescription
 		{
-			public ButtonDescription(EventType type, string text, string tooltip)
+			public ButtonDescription(EventType type, string text, string tooltip, bool enable)
 			{
 				this.Type    = type;
 				this.Text    = text;
 				this.Tooltip = tooltip;
+				this.Enable  = enable;
 			}
 
 			public readonly EventType	Type;
 			public readonly string		Text;
 			public readonly string		Tooltip;
+			public readonly bool		Enable;
 		};
 
 

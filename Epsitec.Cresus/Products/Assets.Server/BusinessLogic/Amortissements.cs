@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 				else
 				{
-					var et = ObjectCalculator.GetPlausibleEventTypes (BaseType.Objects, obj, range.ToTimestamp);
+					var et = ObjectCalculator.GetPlausibleEventTypes (obj, range.ToTimestamp);
 					if (!et.Contains (EventType.AmortissementExtra))
 					{
 						var error = new Error (ErrorType.AmortissementOutObject, objectGuid);
