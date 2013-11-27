@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Solution Items\AssemblyInfo.Solution.cs = Solution Items\AssemblyInfo.Solution.cs
 		Solution Items\Epsitec.Cresus.snk = Solution Items\Epsitec.Cresus.snk
 		Epsitec.Cresus1.vsmdi = Epsitec.Cresus1.vsmdi
+		grunt-all.bat = grunt-all.bat
 		Local.testsettings = Local.testsettings
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection

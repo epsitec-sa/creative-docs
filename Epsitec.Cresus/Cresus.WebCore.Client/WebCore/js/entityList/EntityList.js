@@ -563,7 +563,7 @@ function() {
       });
 
       items.push({
-        text: 'Exporter dans le panier',
+        text: 'Ajouter au panier',
         listeners: {
           click: function() { this.onExportToBagHandler(); },
           scope: this

@@ -24,7 +24,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         searchLabel: 'Rechercher',
         refreshLabel: 'Rafra\u00EEchir',
         refreshTip: 'Rafra\u00EEchir',
-        pinToBag: 'Ajouter dans le panier',
+        pinToBag: 'Ajouter au panier',
         addLabel: 'Ajouter',
         addTip: 'Ajoute un nouvel \u00E9l\u00E9ment',
         removeLabel: 'Enlever',
@@ -77,8 +77,8 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         exportImpossibleEmpty: 'Vous ne pouvez pas exporter une liste vide.',
         exportImpossibleTooMany: 'Vous ne pouvez pas exporter une liste avec ' +
             'plus de 10000 elements.',
-        exportImpossibleTooManyForBag: 'Vous ne pouvez pas exporter une liste avec ' +
-            'plus de 100 elements dans le panier.',
+        exportImpossibleTooManyForBag: 'Vous ne pouvez pas ajouter une liste avec ' +
+            'plus de 100 elements au panier.',
         timeFilterBefore: 'Avant',
         timeFilterOn: 'A',
         timeFilterAfter: 'Apr\u00E8s'

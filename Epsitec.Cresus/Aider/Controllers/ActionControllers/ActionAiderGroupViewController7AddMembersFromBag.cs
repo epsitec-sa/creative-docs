@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return "Ajouter des membres depuis l'arche";
+			return "Reprendre des membres depuis l'arche";
 		}
 
 		public override ActionExecutor GetExecutor()

@@ -144,7 +144,7 @@ function() {
     addDefaultEntityActionButtons: function () {
       var button = {};
           button.xtype = 'button';
-          button.text = 'Charger le contenu de l\'arche';
+          button.text = 'Remplir avec le panier';
           button.width = 400;
           button.width = 200;
           button.cls = 'tile-button';

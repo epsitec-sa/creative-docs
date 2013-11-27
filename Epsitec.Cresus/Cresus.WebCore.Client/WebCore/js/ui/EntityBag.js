@@ -44,7 +44,7 @@ function() {
         headerPosition: 'left',
         title: 'Panier',
         cls: 'entitybag-window',
-        iconCls: 'epsitec-aider-images-general-ark-icon16',
+        iconCls: 'epsitec-aider-images-general-bag-icon16',
         draggable: true,
         resizable: true,
         closable: false,

@@ -29,7 +29,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Remplir avec l'arche");
+			return Resources.FormattedText ("Remplir avec le panier");
 		}
 
 		public override ActionExecutor GetExecutor()
