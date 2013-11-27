@@ -86,3 +86,16 @@ Mise à jour des fichiers MAT[CH]sort et MAT[CH]street Schweiz Light
 
 -exportsubscriptions -output:export-2013-11-28.txt -error:error-2013-11-28.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2013-11-28.txt -publicationdate:2013-11-28 -response:tamedia-2013-11-28.log
+
+
+Lancé le 27.11.2013
+-------------------
+
+SVN Update > r22401
+
+-echupdate -newechfile:S:\eerv\eerv-2013-11-21.xml -oldechfile:S:\eerv\eerv-2013-11-14.xml -output:S:\eerv\ech-diff-2013-11-21.md
+
+Fichiers mis en production:
+
+- http://www.opac.ch/files/aider/2013-11-16-aider.zip
+- http://www.opac.ch/files/aider/eerv-2013-11-21.zip
