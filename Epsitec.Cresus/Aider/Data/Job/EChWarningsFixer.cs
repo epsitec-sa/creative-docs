@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Data.Job
 			
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-
+				/*
 				EChWarningsFixer.LogToConsole ("Fix Reported Person Linkage For arrivals");
 
 				EChWarningsFixer.FixReportedPersonLinkageForArrivals (businessContext);
@@ -90,6 +90,12 @@ namespace Epsitec.Aider.Data.Job
 
 				EChWarningsFixer.DetectBirthAndMigrate (businessContext);
 				
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);*/
+
+				EChWarningsFixer.LogToConsole ("Detect, clean & merge duplicate childs in family for PersonBirth");
+
+				EChWarningsFixer.DetectDuplicatedChildForBirths (businessContext);
+
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
 		}
@@ -451,6 +457,72 @@ namespace Epsitec.Aider.Data.Job
 						
 					}
 
+				}
+
+				System.Console.SetCursorPosition (0, 2);
+				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
+				current++;
+			}
+			System.Console.Clear ();
+		}
+
+		private static void DetectDuplicatedChildForBirths(BusinessContext businessContext)
+		{
+			var example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.PersonBirth
+			};
+
+			var warningsToCheck = businessContext.DataContext.GetByExample<AiderPersonWarningEntity> (example);
+
+			var total = warningsToCheck.Count ();
+			EChWarningsFixer.LogToConsole ("{0} warnings to check", total);
+
+			var current = 1;
+			foreach (var warn in warningsToCheck)
+			{
+				var members = warn.Person.MainContact.Household.Members;
+				var potentialDuplicateChecker = new Dictionary<string, AiderPersonEntity> ();
+				foreach (var person in members)
+				{
+					if (person.eCH_Person.PersonFirstNames.IsNullOrWhiteSpace () || person.Age > 0)
+					{
+						continue;
+					}
+
+					var checkKey =	person.BirthdayDay.ToString ()
+							 +		person.BirthdayMonth.ToString ()
+							 +		person.BirthdayYear.ToString ()
+							 +		person.eCH_Person.PersonFirstNames.Split (",").First ();
+
+					if (!potentialDuplicateChecker.ContainsKey (checkKey))
+					{
+						potentialDuplicateChecker.Add (checkKey, person);
+					}
+					else
+					{
+						var p1 = potentialDuplicateChecker[checkKey];
+						var p2 = person;
+
+						System.Console.Clear ();
+						EChWarningsFixer.LogToConsole ("Family Members:\n");
+						foreach (var p in members)
+						{
+							EChWarningsFixer.LogToConsole ("{0} {1} (Ech:{2})\n", p.GetSummary (), person.Age, p.IsGovernmentDefined);
+						}
+
+						EChWarningsFixer.LogToConsole ("Found! {0} {1} (Ech:{2})", person.GetSummary (),person.Age, person.IsGovernmentDefined);
+						
+						//System.Console.WriteLine ("press ENTER to continue");
+						//System.Console.ReadLine ();
+
+						//try to merge persons data
+						if (!AiderPersonEntity.MergePersons (businessContext, p1, p2))
+						{
+							//Ech duplicated contact -> Remove the duplicated contact
+							AiderContactEntity.Delete (businessContext, p2.MainContact);
+						}
+					}
 				}
 
 				System.Console.SetCursorPosition (0, 2);

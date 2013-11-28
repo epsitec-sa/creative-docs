@@ -331,7 +331,16 @@ namespace Epsitec.Aider.Entities
 
 			AiderCommentEntity.CombineComments (officialPerson, otherPerson.Comment.Text.ToSimpleText ());
 			AiderCommentEntity.CombineSystemComments (officialPerson, otherPerson.Comment.SystemText);
-			AiderCommentEntity.CombineSystemComments (officialPerson, "Fusion par " + Epsitec.Cresus.Core.Business.UserManagement.UserManager.Current.AuthenticatedUser.DisplayName + " le " + System.DateTime.Now.ToShortDateString ());
+			
+			//Check if the comment must be affected to the current user or to an dataquality job
+			if (Epsitec.Cresus.Core.Business.UserManagement.UserManager.Current.AuthenticatedUser.IsNotNull ())
+			{
+				AiderCommentEntity.CombineSystemComments (officialPerson, "Fusion par " + Epsitec.Cresus.Core.Business.UserManagement.UserManager.Current.AuthenticatedUser.DisplayName + " le " + System.DateTime.Now.ToShortDateString ());
+			}
+			else
+			{
+				AiderCommentEntity.CombineSystemComments (officialPerson, "Fusionné automatiquement par le système le " + System.DateTime.Now.ToShortDateString ());
+			}
 
 			AiderContactEntity.DeleteDuplicateContacts (businessContext, officialPerson.Contacts.ToList ());
 			AiderPersonEntity.Delete (businessContext, otherPerson);
