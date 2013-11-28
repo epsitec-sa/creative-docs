@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Data.Job
 			
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				/*
+				
 				EChWarningsFixer.LogToConsole ("Fix Reported Person Linkage For arrivals");
 
 				EChWarningsFixer.FixReportedPersonLinkageForArrivals (businessContext);
@@ -90,7 +90,7 @@ namespace Epsitec.Aider.Data.Job
 
 				EChWarningsFixer.DetectBirthAndMigrate (businessContext);
 				
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);*/
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 
 				EChWarningsFixer.LogToConsole ("Detect, clean & merge duplicate childs in family for PersonBirth");
 
