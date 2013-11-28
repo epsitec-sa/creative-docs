@@ -106,17 +106,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				var businessContext = this.BusinessContext;
 
-				var officialPerson = this.Entity;
-				var otherContact   = this.AdditionalEntity;
-				var otherPerson    = otherContact.Person;
+				var p1	= this.Entity;
+				var p2  = this.AdditionalEntity.Person;
 
-				if (AiderPersonEntity.MergePersons (businessContext, officialPerson, otherPerson))
+				if (AiderPersonEntity.MergePersons (businessContext, p1, p2))
 				{
-					AiderContactEntity.Delete (businessContext, otherContact);
-
 					//Confirm by removing from bag
 					var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-					var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (otherContact).Value.ToString ().Replace ('/', '-');
+					var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (p2.MainContact).Value.ToString ().Replace ('/', '-');
 					EntityBagManager.GetCurrentEntityBagManager ().RemoveFromBag (aiderUser.LoginName, id, When.Now);
 				}
 			}
