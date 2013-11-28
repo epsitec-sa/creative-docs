@@ -344,8 +344,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateStateAt(Widget parent)
 		{
-			this.stateAtController = new StateAtController ();
+			this.stateAtController = new StateAtController (this.accessor);
 			this.stateAtController.CreateUI (parent);
+			this.stateAtController.Date = Timestamp.Now.Date;
 
 			this.stateAtController.DateChanged += delegate
 			{
@@ -864,11 +865,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var selectedGuid = this.SelectedGuid;
 			{
-				Timestamp? timestamp = null;
-				if (this.stateAtController.Date.HasValue && !this.rootGuid.IsEmpty)
+				var timestamp = Timestamp.Now;
+
+				//?if (this.stateAtController.Date.HasValue && !this.rootGuid.IsEmpty)
+				if (this.stateAtController.Date.HasValue)
 				{
 					timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
 				}
+
+				this.stateAtController.Date = timestamp.Date;
 
 				this.nodesGetter.Timestamp = timestamp;
 				this.nodesGetter.RootGuid = this.rootGuid;
@@ -886,7 +891,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateStateAt()
 		{
-			this.stateAtController.Visibility = !this.nodesGetter.RootGuid.IsEmpty;
+			//?this.stateAtController.Visibility = !this.nodesGetter.RootGuid.IsEmpty;
 		}
 
 

@@ -61,6 +61,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnNow ();
 						break;
 
+					case ToolbarCommand.Date:
+						this.OnDate ();
+						break;
+
 					case ToolbarCommand.New:
 						this.OnNew ();
 						break;
@@ -85,7 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			using (new SaveCurrentDate (this))
 			{
-				this.UpdateData ();
+				this.UpdateData (this.CurrentDate);
 				this.UpdateController ();
 				this.UpdateToolbar ();
 			}
@@ -107,7 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					using (new SaveCurrentDate (this))
 					{
 						this.UpdateRows ();
-						this.UpdateData ();
+						this.UpdateData (this.CurrentDate);
 						this.UpdateController ();
 						this.UpdateToolbar ();
 					}
@@ -179,7 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					using (new SaveCurrentDate (this))
 					{
-						this.UpdateData ();
+						this.UpdateData (this.CurrentDate);
 						this.UpdateController ();
 						this.UpdateToolbar ();
 					}
@@ -261,6 +265,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.SelectedCell = index.Value;
 			}
+		}
+
+		private void OnDate()
+		{
+			var popup = new DatePopup (this.accessor)
+			{
+				Date = this.selectedTimestamp.HasValue ? this.selectedTimestamp.Value.Date : Timestamp.Now.Date,
+			};
+
+			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Date);
+			popup.Create (target, leftOrRight: false);
+
+			popup.DateChanged += delegate
+			{
+				if (popup.Date.HasValue)
+				{
+					this.UpdateData (popup.Date);
+					this.SelectedTimestamp = new Timestamp (popup.Date.Value, 0);
+				}
+			};
 		}
 
 		private void OnNew()
@@ -386,7 +410,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			parent.Window.ForceLayout ();
 
 			this.UpdateRows ();
-			this.UpdateData ();
+			this.UpdateData (this.CurrentDate);
 			this.UpdateController ();
 			this.UpdateToolbar ();
 
@@ -501,12 +525,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateData()
+		private void UpdateData(System.DateTime? forcedDate)
 		{
 			var start = this.accessor.StartDate;
 			var end   = this.accessor.EndDate;
 
-			this.timelineData.Compute (this.objectGuid, this.timelineMode, start, end, this.CurrentDate);
+			this.timelineData.Compute (this.objectGuid, this.timelineMode, start, end, forcedDate);
 
 			this.controller.CellsCount = this.timelineData.CellsCount;
 		}
@@ -622,6 +646,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommand (ToolbarCommand.Next,  sel, this.NextEventIndex);
 			this.UpdateCommand (ToolbarCommand.Last,  sel, this.LastEventIndex);
 			this.UpdateCommand (ToolbarCommand.Now,   sel, this.NowEventIndex);
+			this.toolbar.UpdateCommand (ToolbarCommand.Date, true);
 
 			this.toolbar.UpdateCommand (ToolbarCommand.New, !this.objectGuid.IsEmpty && this.SelectedTimestamp.HasValue);
 			this.toolbar.UpdateCommand (ToolbarCommand.Delete, this.HasSelectedEvent);

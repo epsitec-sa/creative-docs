@@ -34,13 +34,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
-			this.stateAtController = new StateAtController ();
+			this.stateAtController = new StateAtController (this.accessor);
 			this.stateAtController.CreateUI (parent);
 
 			this.stateAtController.DateChanged += delegate
 			{
 				this.SetDate (this.stateAtController.Date);
 			};
+
+			this.SetDate (Timestamp.Now.Date);
 		}
 
 
@@ -67,15 +69,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public Timestamp?						Timestamp
+		public Timestamp?						SelectedTimestamp
 		{
 			get
 			{
-				return this.timestamp;
+				return this.selectedTimestamp;
 			}
 			set
 			{
-				this.timestamp = value;
+				this.selectedTimestamp = value;
 			}
 		}
 
@@ -113,6 +115,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				timestamp = new Timestamp (date.Value, 0);
 			}
+
+			this.stateAtController.Date = date;
 
 			var guid = this.SelectedGuid;
 			{
@@ -257,9 +261,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateData ();
 
 			this.SelectedGuid = guid;
-			this.Timestamp = ObjectCalculator.GetLastTimestamp (obj);
+			this.SelectedTimestamp = ObjectCalculator.GetLastTimestamp (obj);
 			
-			this.OnStartEditing (EventType.Entrée, this.timestamp.GetValueOrDefault ());
+			this.OnStartEditing (EventType.Entrée, this.selectedTimestamp.GetValueOrDefault ());
 		}
 
 	
@@ -296,6 +300,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private StateAtController					stateAtController;
-		private Timestamp?							timestamp;
+		private Timestamp?							selectedTimestamp;
 	}
 }

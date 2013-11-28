@@ -47,6 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommandButton (this.buttonNext,     ToolbarCommand.Next);
 			this.UpdateCommandButton (this.buttonLast,     ToolbarCommand.Last);
 			this.UpdateCommandButton (this.buttonNow,      ToolbarCommand.Now);
+			this.UpdateCommandButton (this.buttonDate,     ToolbarCommand.Date);
 			this.UpdateCommandButton (this.buttonNew,      ToolbarCommand.New);
 			this.UpdateCommandButton (this.buttonDelete,   ToolbarCommand.Delete);
 			this.UpdateCommandButton (this.buttonDeselect, ToolbarCommand.Deselect);
@@ -77,6 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonNext        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Next,     "Timeline.Next",     "Avance sur l'événement suivant");
 			this.buttonLast        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur le dernier événement");
 			this.buttonNow         = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Now,      "Timeline.Now",      "Va à la date du jour");
+			this.buttonDate        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Date,     "Timeline.Date",     "Va à une date à choix");
 
 			this.CreateSeparator (toolbar, DockStyle.Left);
 			
@@ -171,6 +173,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton buttonNext;
 		private IconButton buttonLast;
 		private IconButton buttonNow;
+		private IconButton buttonDate;
 		private IconButton buttonNew;
 		private IconButton buttonDelete;
 		private IconButton buttonDeselect;

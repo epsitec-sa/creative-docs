@@ -108,6 +108,7 @@
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\CategoriesToolbarTreeTableController.cs" />
     <Compile Include="Views\CategoriesView.cs" />
+    <Compile Include="Views\DateController.cs" />
     <Compile Include="Views\GroupsToolbarTreeTableController.cs" />
     <Compile Include="Views\GroupsView.cs" />
     <Compile Include="Views\EditorPageGroups.cs" />
@@ -275,6 +276,7 @@
     <EmbeddedResource Include="Images\TreeTable.Filter.icon" />
     <EmbeddedResource Include="Images\Main.Open.icon" />
     <EmbeddedResource Include="Images\Popup.Close.icon" />
+    <EmbeddedResource Include="Images\Timeline.Date.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

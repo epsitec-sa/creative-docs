@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case ViewMode.Single:
 						this.listController.UpdateData ();
 						this.listController.SelectedGuid = this.selectedGuid;
-						this.listController.Timestamp = this.selectedTimestamp;
+						this.listController.SelectedTimestamp = this.selectedTimestamp;
 
 						this.timelineController.ObjectGuid = this.selectedGuid;
 						this.timelineController.SelectedTimestamp = this.selectedTimestamp;
@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case ViewMode.Event:
 						this.listController.UpdateData ();
 						this.listController.SelectedGuid = this.selectedGuid;
-						this.listController.Timestamp = Timestamp.MaxValue;
+						this.listController.SelectedTimestamp = Timestamp.MaxValue;
 
 						this.eventsController.ObjectGuid = this.selectedGuid;
 						this.eventsController.SelectedTimestamp = this.selectedTimestamp;
@@ -474,7 +474,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.selectedTimestamp = this.timelineController.SelectedTimestamp;
 
-			this.listController.Timestamp = this.selectedTimestamp;
+			this.listController.SelectedTimestamp = this.selectedTimestamp;
 
 			this.UpdateToolbars ();
 			this.UpdateEditor ();

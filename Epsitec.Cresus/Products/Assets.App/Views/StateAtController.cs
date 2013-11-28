@@ -9,11 +9,18 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.Helpers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class StateAtController 
 	{
+		public StateAtController(DataAccessor accessor)
+		{
+			this.accessor = accessor;
+		}
+
+	
 		public System.DateTime? Date
 		{
 			get
@@ -68,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowPopup()
 		{
-			var popup = new DatePopup
+			var popup = new DatePopup (this.accessor)
 			{
 				Date = this.date,
 			};
@@ -84,7 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateButton()
 		{
 			this.mainButton.Text = this.Description;
-			this.mainButton.NormalColor = this.date.HasValue ? ColorManager.SelectionColor : Color.Empty;
+			//?this.mainButton.NormalColor = this.date.HasValue ? ColorManager.SelectionColor : Color.Empty;
 		}
 
 		private string Description
@@ -113,6 +120,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler DateChanged;
 		#endregion
 
+
+		private readonly DataAccessor			accessor;
 
 		private System.DateTime?				date;
 		private ColoredButton					mainButton;

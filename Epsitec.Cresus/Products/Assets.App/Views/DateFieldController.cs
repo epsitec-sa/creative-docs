@@ -39,6 +39,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public TextField TextField
+		{
+			get
+			{
+				return this.textField;
+			}
+		}
+
 		private void UpdateValue()
 		{
 			using (this.ignoreChanges.Enter ())
@@ -123,12 +131,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			minus.Clicked += delegate
 			{
-				this.AddYears (-1);
+				this.AddValue (-1);
 			};
 
 			plus.Clicked += delegate
 			{
-				this.AddYears (1);
+				this.AddValue (1);
 			};
 		}
 
@@ -139,11 +147,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void AddValue(int value)
+		{
+			int part = this.SelectedPart;
+
+			switch (part)
+			{
+				case 0:
+					this.AddDays (value);
+					break;
+
+				case 1:
+					this.AddMonths (value);
+					break;
+
+				default:
+					this.AddYears (value);
+					break;
+			}
+
+			this.SelectPart (part);
+		}
+
 		private void AddYears(int years)
 		{
 			if (this.value.HasValue)
 			{
 				this.Value = this.value.Value.AddYears (years);
+				this.OnValueEdited ();
+			}
+		}
+
+		private void AddMonths(int days)
+		{
+			if (this.value.HasValue)
+			{
+				this.Value = this.value.Value.AddMonths (days);
 				this.OnValueEdited ();
 			}
 		}
@@ -154,6 +193,68 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.Value = this.value.Value.AddDays (days);
 				this.OnValueEdited ();
+			}
+		}
+
+		private int SelectedPart
+		{
+			//	Détermine la partie de la date actuellement en édition.
+			//	0 = jour, 1 = mois, 2 = année
+			get
+			{
+				var text = this.textField.Text;
+
+				if (!string.IsNullOrEmpty (text))
+				{
+					text = text.Replace (' ', '.');
+					text = text.Replace ('/', '.');
+					text = text.Replace (',', '.');
+					text = text.Replace ('-', '.');
+
+					var words = text.Split ('.');
+
+					int part = 0;
+					int i = 0;
+					foreach (var word in words)
+					{
+						i += word.Length+1;
+
+						if (this.textField.Cursor < i)
+						{
+							return part;
+						}
+
+						part++;
+					}
+				}
+
+				return -1;
+			}
+		}
+
+		private void SelectPart(int part)
+		{
+			//	Sélectionne une partie du texte en édition.
+			//	0 = jour, 1 = mois, 2 = année
+			if (this.textField.Text.Length == 10)  // jj.mm.aaaa ?
+			{
+				switch (part)
+				{
+					case 0:  // jour ?
+						this.textField.CursorFrom = 0;
+						this.textField.CursorTo   = 2;  // [31].03.2015
+						break;
+
+					case 1:  // mois ?
+						this.textField.CursorFrom = 3;
+						this.textField.CursorTo   = 3+2;  // 31.[03].2015
+						break;
+
+					case 2:  // annnée ?
+						this.textField.CursorFrom = 6;
+						this.textField.CursorTo   = 6+4;  // 31.03.[2015]
+						break;
+				}
 			}
 		}
 
