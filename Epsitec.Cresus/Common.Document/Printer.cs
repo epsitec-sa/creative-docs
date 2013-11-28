@@ -1368,6 +1368,11 @@ namespace Epsitec.Common.Document
 				int pageSize;
 				int pageNumber = this.GetBestPageNumber (pageNumbers, hopeSize, hopeSize, out pageSize);
 
+				if (pageNumber == -1 || pageSize == 0)
+				{
+					continue;
+				}
+
 				int dpi = 254 * hopeSize / pageSize;
 
 				byte[] data;
