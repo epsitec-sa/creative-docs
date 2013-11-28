@@ -88,7 +88,7 @@ function() {
       // Here we make a new callback so as to call callback with the proper
       // arguments: the instance of EntityColumn instead of its configuration.
       var callbackQueue = Epsitec.CallbackQueue.empty();
-      if (callback !== null) {
+      if (Ext.isDefined(callback)&&callback!==null) {
         callbackQueue = callbackQueue.enqueueCallback(
             function() {
               var lastColumn = this.columns[this.columns.length - 1];

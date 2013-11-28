@@ -360,18 +360,7 @@ $.getScript('signalr/hubs', function() {
             {
               this.reloadCurrentDatabase(true);
             }
-
-            //second level action refresh
-            if(columnManager.columns.length == 2)
-            {
-              if(Ext.isDefined(columnManager.columns[1].viewId))
-              {
-                path.entityId = currentSelection[0].internalId;
-                path.databaseName = key;
-                this.showEditableEntity(path,callback);
-              }           
-            }
-
+            
             //if more do nothing...
           }              
         }
