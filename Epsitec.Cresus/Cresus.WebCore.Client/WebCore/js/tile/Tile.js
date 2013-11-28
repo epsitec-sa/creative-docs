@@ -90,7 +90,7 @@ function() {
           
           button.requiresAdditionalEntity = a.requiresAdditionalEntity;
           button.handler = function() { 
-            this.handleAction(a.viewId); 
+            this.handleDirectAction(a.viewId); 
           };
           button.scope = tile;
 
@@ -175,6 +175,11 @@ function() {
       this.showAction(viewId, callback);
     },
 
+    handleDirectAction: function(viewId) {
+      var callback = Epsitec.Callback.create(this.handleDirectActionCallback, this);
+      this.showAction(viewId, callback);
+    },
+
     handleTemplateAction: function(viewId, aEntityId) {
       var callback = Epsitec.Callback.create(this.handleActionCallback, this);
       this.showTemplateAction(viewId, aEntityId, callback);
@@ -194,6 +199,11 @@ function() {
 
     handleActionCallback: function() {
       this.column.refreshAll();
+    },
+
+    handleDirectActionCallback: function() {
+      this.column.refreshAll();
+      Epsitec.Cresus.Core.app.reloadCurrentTile();
     },
 
     // Some actions in the menu requires an additional entity to be enabled. We
