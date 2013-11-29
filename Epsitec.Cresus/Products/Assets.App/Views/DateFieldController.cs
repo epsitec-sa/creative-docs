@@ -149,15 +149,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void AddValue(int value)
 		{
-			int part = this.SelectedPart;
+			var part = this.SelectedPart;
 
 			switch (part)
 			{
-				case 0:
+				case Part.Day:
 					this.AddDays (value);
 					break;
 
-				case 1:
+				case Part.Month:
 					this.AddMonths (value);
 					break;
 
@@ -196,10 +196,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private int SelectedPart
+		private Part SelectedPart
 		{
 			//	Détermine la partie de la date actuellement en édition.
-			//	0 = jour, 1 = mois, 2 = année
 			get
 			{
 				var text = this.textField.Text;
@@ -221,18 +220,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 						if (this.textField.Cursor < i)
 						{
-							return part;
+							switch (part)
+							{
+								case 0:
+									return Part.Day;
+
+								case 1:
+									return Part.Month;
+
+								case 2:
+									return Part.Year;
+							}
 						}
 
 						part++;
 					}
 				}
 
-				return -1;
+				return Part.Unknown;
 			}
 		}
 
-		private void SelectPart(int part)
+		private void SelectPart(Part part)
 		{
 			//	Sélectionne une partie du texte en édition.
 			//	0 = jour, 1 = mois, 2 = année
@@ -240,22 +249,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				switch (part)
 				{
-					case 0:  // jour ?
+					case Part.Day:
 						this.textField.CursorFrom = 0;
 						this.textField.CursorTo   = 2;  // [31].03.2015
 						break;
 
-					case 1:  // mois ?
+					case Part.Month:
 						this.textField.CursorFrom = 3;
 						this.textField.CursorTo   = 3+2;  // 31.[03].2015
 						break;
 
-					case 2:  // annnée ?
+					case Part.Year:
 						this.textField.CursorFrom = 6;
 						this.textField.CursorTo   = 6+4;  // 31.03.[2015]
 						break;
 				}
 			}
+		}
+
+		private enum Part
+		{
+			Unknown,
+			Day,
+			Month,
+			Year,
 		}
 
 
