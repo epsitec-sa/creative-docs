@@ -103,6 +103,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
 
+			ToolTip.Default.SetToolTip (minus, "Jour, mois ou année précédent");
+			ToolTip.Default.SetToolTip (plus,  "Jour, mois ou année suivant");
+
 			this.textField.TextChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)

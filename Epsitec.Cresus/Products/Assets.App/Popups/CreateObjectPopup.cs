@@ -54,7 +54,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var dateController = new DateController (this.accessor)
 			{
-				Date = this.ObjectDate,
+				DateDescription = "Date d'entrée",
+				Date            = this.ObjectDate,
 			};
 
 			dateController.CreateUI (parent);

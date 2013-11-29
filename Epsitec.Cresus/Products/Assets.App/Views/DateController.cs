@@ -24,10 +24,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.radios = new Dictionary<DateType, RadioButton> ();
+
+			this.DateDescription = "Date";
 		}
 
 
-		public System.DateTime? Date
+		public string							DateDescription;
+
+		public System.DateTime?					Date
 		{
 			get
 			{
@@ -174,6 +178,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins         = new Margins (0, 1, 0, 0),
 			};
 
+			ToolTip.Default.SetToolTip (  dayButton, "Sélectionne le jour");
+			ToolTip.Default.SetToolTip (monthButton, "Sélectionne le mois");
+			ToolTip.Default.SetToolTip ( yearButton, "Sélectionne l'année");
+
 			dayButton.Clicked += delegate
 			{
 				this.Select (0, 2);  // sélectionne [31].03.2013
@@ -202,7 +210,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			new StaticText
 			{
 				Parent           = footer,
-				Text             = "Date",
+				Text             = this.DateDescription,
 				ContentAlignment = ContentAlignment.MiddleRight,
 				PreferredWidth   = DateController.ColumnWidth1,
 				Dock             = DockStyle.Left,
