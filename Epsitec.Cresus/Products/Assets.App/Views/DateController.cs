@@ -23,13 +23,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				LabelWidth = 0,
 			};
 
-			this.radios = new Dictionary<DateType, RadioButton> ();
-
 			this.DateDescription = "Date";
+			this.DateLabelWidth  = DateController.Indent;
 		}
 
 
 		public string							DateDescription;
+		public int								DateLabelWidth;
 		public int								TabIndex;
 
 		public System.DateTime?					Date
@@ -43,7 +43,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.date != value)
 				{
 					this.date = value;
-					this.Update ();
+					this.UpdateDate ();
+					this.UpdateButtons ();
 				}
 			}
 		}
@@ -51,151 +52,108 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
-			this.CreateLine (parent, "Mandat",           DateType.BeginMandat,       DateType.EndMandat);
-			this.CreateLine (parent, "Année précédente", DateType.BeginPreviousYear, DateType.EndPreviousYear);
-			this.CreateLine (parent, "Année courante",   DateType.BeginCurrentYear,  DateType.EndCurrentYear);
-			this.CreateLine (parent, "Année suivante",   DateType.BeginNextYear,     DateType.EndNextYear);
-			this.CreateLine (parent, "",                 DateType.Now,               DateType.Unknown);
-
-			this.CreatePrefix (parent);
+			this.CreateToolbar (parent);
 			this.CreateController (parent);
-			this.Update ();
-		}
-
-		public void Update()
-		{
-			if (this.radios.Count != 0)
-			{
-				foreach (DateType type in System.Enum.GetValues (typeof (DateType)))
-				{
-					if (type != DateType.Unknown)
-					{
-						bool selected = this.date == this.GetPredefinedDate (type);
-						this.radios[type].ActiveState = selected ? ActiveState.Yes : ActiveState.No;
-					}
-				}
-
-				this.dateFieldController.Value = this.date;
-			}
+			this.UpdateButtons ();
 		}
 
 
-		private void CreateLine(Widget parent, string label, DateType i1, DateType i2)
-		{
-			var line = new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-				PreferredHeight = DateController.radioHeight,
-			};
-
-			new StaticText
-			{
-				Parent           = line,
-				Text             = label,
-				ContentAlignment = ContentAlignment.MiddleRight,
-				PreferredWidth   = DateController.ColumnWidth1,
-				PreferredHeight  = DateController.radioHeight,
-				Dock             = DockStyle.Left,
-				Margins          = new Margins (0, 10, 0, 0),
-			};
-
-			this.CreateRadio (line, i1, (i2 == DateType.Unknown) ? DateController.ColumnWidth2+DateController.ColumnWidth3 : DateController.ColumnWidth2);
-			this.CreateRadio (line, i2, DateController.ColumnWidth3);
-		}
-
-		private void CreateRadio(Widget parent, DateType type, int width)
-		{
-			if (type == DateType.Unknown)
-			{
-				return;
-			}
-
-			var radio = new RadioButton
-			{
-				Parent          = parent,
-				Text            = this.GetPredefinedDescription (type),
-				Dock            = DockStyle.Left,
-				PreferredWidth  = width,
-				PreferredHeight = DateController.radioHeight,
-			};
-
-			radio.Clicked += delegate
-			{
-				this.Date = this.GetPredefinedDate (type);
-				this.dateFieldController.SetFocus ();
-				this.OnDateChanged (this.date);
-			};
-
-			this.radios[type] = radio;
-		}
-
-		private void CreatePrefix(Widget parent)
+		private void CreateToolbar(Widget parent)
 		{
 			//	Crée la ligne des boutons [J] [M] [A] permettant de sélectionner
 			//	la partie correspondante dans le textede la date.
 			//	Les boutons sont positionnés horizontalement de façon à s'aligner
 			//	au mieux sur le texte de la date dans le TextField.
-			const int h = 17;
-
 			var line = new FrameBox
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = h,
-				Margins         = new Margins (DateController.ColumnWidth1+15, 0, 10, 0),
+				PreferredHeight = DateController.LineHeight,
+				Margins         = new Margins (this.DateLabelWidth+(this.DateLabelWidth == 0 ? 0 : 10), 0, 0, 0),
+				BackColor       = ColorManager.WindowBackgroundColor,
 			};
 
-			var dayButton = new Button
-			{
-				Parent          = line,
-				Text            = "J",
-				ButtonStyle     = ButtonStyle.ToolItem,
-				Dock            = DockStyle.Left,
-				PreferredWidth  = 13,
-				PreferredHeight = h,
-				Margins         = new Margins (0, 1, 0, 0),
-			};
+			this.dayButton   = this.CreatePartButton (line, "Date.SelectDay",    5, 13);
+			this.monthButton = this.CreatePartButton (line, "Date.SelectMonth", 19, 13);
+			this.yearButton  = this.CreatePartButton (line, "Date.SelectYear",  33, 23);
 
-			var monthButton = new Button
-			{
-				Parent          = line,
-				Text            = "M",
-				ButtonStyle     = ButtonStyle.ToolItem,
-				Dock            = DockStyle.Left,
-				PreferredWidth  = 13,
-				PreferredHeight = h,
-				Margins         = new Margins (0, 1, 0, 0),
-			};
+			this.beginButton = this.CreateIconButton (line, "Date.CurrentYearBegin", DateController.LineHeight*2);
+			this.nowButton   = this.CreateIconButton (line, "Date.Now",              DateController.LineHeight*1);
+			this.endButton   = this.CreateIconButton (line, "Date.CurrentYearEnd",   DateController.LineHeight*0);
 
-			var yearButton = new Button
-			{
-				Parent          = line,
-				Text            = "A",
-				ButtonStyle     = ButtonStyle.ToolItem,
-				Dock            = DockStyle.Left,
-				PreferredWidth  = 23,
-				PreferredHeight = h,
-				Margins         = new Margins (0, 1, 0, 0),
-			};
+			ToolTip.Default.SetToolTip (this.dayButton,   "Sélectionne le jour");
+			ToolTip.Default.SetToolTip (this.monthButton, "Sélectionne le mois");
+			ToolTip.Default.SetToolTip (this.yearButton,  "Sélectionne l'année");
 
-			ToolTip.Default.SetToolTip (  dayButton, "Sélectionne le jour");
-			ToolTip.Default.SetToolTip (monthButton, "Sélectionne le mois");
-			ToolTip.Default.SetToolTip ( yearButton, "Sélectionne l'année");
+			ToolTip.Default.SetToolTip (this.beginButton, "Début de l'année en cours");
+			ToolTip.Default.SetToolTip (this.nowButton,   "Aujourd'hui");
+			ToolTip.Default.SetToolTip (this.endButton,   "Fin de l'année en cours");
 
-			dayButton.Clicked += delegate
+			this.dayButton.Clicked += delegate
 			{
 				this.Select (0, 2);  // sélectionne [31].03.2013
 			};
 
-			monthButton.Clicked += delegate
+			this.monthButton.Clicked += delegate
 			{
 				this.Select (3, 2);  // sélectionne 31.[03].2013
 			};
 
-			yearButton.Clicked += delegate
+			this.yearButton.Clicked += delegate
 			{
 				this.Select (6, 4);  // sélectionne 31.03.[2013]
+			};
+
+			this.beginButton.Clicked += delegate
+			{
+				this.Date = this.GetPredefinedDate (DateType.BeginCurrentYear);
+				this.UpdateButtons ();
+				this.dateFieldController.SetFocus ();
+				this.OnDateChanged (this.date);
+			};
+
+			this.nowButton.Clicked += delegate
+			{
+				this.Date = this.GetPredefinedDate (DateType.Now);
+				this.UpdateButtons ();
+				this.dateFieldController.SetFocus ();
+				this.OnDateChanged (this.date);
+			};
+
+			this.endButton.Clicked += delegate
+			{
+				this.Date = this.GetPredefinedDate (DateType.EndCurrentYear);
+				this.UpdateButtons ();
+				this.dateFieldController.SetFocus ();
+				this.OnDateChanged (this.date);
+			};
+		}
+
+		private IconButton CreatePartButton(Widget parent, string icon, int x, int dx)
+		{
+			return new IconButton
+			{
+				Parent          = parent,
+				IconUri         = AbstractCommandToolbar.GetResourceIconUri (icon),
+				AutoFocus       = false,
+				PreferredWidth  = dx,
+				PreferredHeight = DateController.LineHeight-2,
+				Anchor          = AnchorStyles.BottomLeft,
+				Margins         = new Margins (x, 0, 0, 0),
+			};
+		}
+
+		private IconButton CreateIconButton(Widget parent, string icon, int x)
+		{
+			return new IconButton
+			{
+				Parent          = parent,
+				IconUri         = AbstractCommandToolbar.GetResourceIconUri (icon),
+				AutoFocus       = false,
+				PreferredWidth  = DateController.LineHeight,
+				PreferredHeight = DateController.LineHeight,
+				Anchor          = AnchorStyles.BottomRight,
+				Margins         = new Margins (0, x, 0, 0),
 			};
 		}
 
@@ -205,24 +163,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = DateController.dateHeight,
+				PreferredHeight = DateController.LineHeight,
 			};
 
-			new StaticText
+			if (this.DateLabelWidth > 0)
 			{
-				Parent           = footer,
-				Text             = this.DateDescription,
-				ContentAlignment = ContentAlignment.MiddleRight,
-				PreferredWidth   = DateController.ColumnWidth1,
-				Dock             = DockStyle.Left,
-				Margins          = new Margins (0, 10, 0, 0),
-			};
+				new StaticText
+				{
+					Parent           = footer,
+					Text             = this.DateDescription,
+					ContentAlignment = ContentAlignment.MiddleRight,
+					PreferredWidth   = this.DateLabelWidth,
+					Dock             = DockStyle.Left,
+					Margins          = new Margins (0, 10, 0, 0),
+				};
+			}
 
 			var dateFrame = new FrameBox
 			{
 				Parent         = footer,
-				PreferredWidth = 100,
-				Dock           = DockStyle.Left,
+				PreferredWidth = DateController.WidgetWidth,
+				Dock           = DockStyle.Fill,
 				BackColor      = ColorManager.WindowBackgroundColor,
 			};
 
@@ -231,11 +192,69 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dateFieldController.CreateUI (dateFrame);
 			this.dateFieldController.SetFocus ();
 
+			this.deleteButton = this.CreateIconButton (dateFrame, "Field.Clear", DateController.LineHeight*0);
+			ToolTip.Default.SetToolTip (this.deleteButton, "Efface la date");
+
 			this.dateFieldController.ValueEdited += delegate
 			{
 				this.Date = this.dateFieldController.Value;
 				this.OnDateChanged (this.date);
 			};
+
+			this.dateFieldController.CursorChanged += delegate
+			{
+				this.UpdateButtons ();
+			};
+
+			this.deleteButton.Clicked += delegate
+			{
+				this.Date = null;
+				this.UpdateButtons ();
+				this.dateFieldController.SetFocus ();
+				this.OnDateChanged (this.date);
+			};
+		}
+
+
+		private void UpdateDate()
+		{
+			this.dateFieldController.Value = this.date;
+		}
+
+		private void UpdateButtons()
+		{
+			if (this.beginButton != null)
+			{
+				var part = this.dateFieldController.SelectedPart;
+
+				this.dayButton.Enable   = this.Date != null;
+				this.monthButton.Enable = this.Date != null;
+				this.yearButton.Enable  = this.Date != null;
+
+				this.UpdateButtonState (this.dayButton,   part == DateFieldController.Part.Day);
+				this.UpdateButtonState (this.monthButton, part == DateFieldController.Part.Month);
+				this.UpdateButtonState (this.yearButton,  part == DateFieldController.Part.Year);
+
+				this.UpdateButtonState (this.beginButton, this.Date == this.GetPredefinedDate (DateType.BeginCurrentYear));
+				this.UpdateButtonState (this.nowButton,   this.Date == this.GetPredefinedDate (DateType.Now));
+				this.UpdateButtonState (this.endButton,   this.Date == this.GetPredefinedDate (DateType.EndCurrentYear));
+
+				this.deleteButton.Enable = this.Date != null;
+			}
+		}
+
+		private void UpdateButtonState(IconButton button, bool activate)
+		{
+			if (activate)
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+				button.ActiveState = ActiveState.Yes;
+			}
+			else
+			{
+				button.ButtonStyle = ButtonStyle.ToolItem;
+				button.ActiveState = ActiveState.No;
+			}
 		}
 
 
@@ -246,30 +265,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dateFieldController.TextField.CursorTo   = start + count;
 		}
 
-
-		private string GetPredefinedDescription(DateType type)
-		{
-			switch (type)
-			{
-				case DateType.BeginMandat:
-				case DateType.BeginPreviousYear:
-				case DateType.BeginCurrentYear:
-				case DateType.BeginNextYear:
-					return "Début";
-
-				case DateType.EndMandat:
-				case DateType.EndPreviousYear:
-				case DateType.EndCurrentYear:
-				case DateType.EndNextYear:
-					return "Fin";
-
-				case DateType.Now:
-					return "Aujourd'hui";
-
-				default:
-					return null;
-			}
-		}
 
 		private System.DateTime GetPredefinedDate(DateType type)
 		{
@@ -339,20 +334,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		public const int ColumnWidth1     = 90;
-		public const int ColumnWidth2     = 60;
-		public const int ColumnWidth3     = 60;
-		public const int ControllerWidth  = DateController.ColumnWidth1 + DateController.ColumnWidth2 + DateController.ColumnWidth3;
-		public const int ControllerHeight = DateController.radioHeight*5 + 10 + 17 + DateController.dateHeight;
+		public const int ControllerWidth  = DateController.WidgetWidth;
+		public const int ControllerHeight = DateController.LineHeight * 2;
 
-		private const int radioHeight = 17;
-		private const int dateHeight  = 2+17+2;
+		private const int Indent          = 30;
+		private const int WidgetWidth     = 142;
+		private const int LineHeight      = 2+17+2;
 
 
 		private readonly DataAccessor						accessor;
-		private readonly Dictionary<DateType, RadioButton>	radios;
 		private readonly DateFieldController				dateFieldController;
 
+		private IconButton									dayButton;
+		private IconButton									monthButton;
+		private IconButton									yearButton;
+		private IconButton									beginButton;
+		private IconButton									nowButton;
+		private IconButton									endButton;
+		private IconButton									deleteButton;
 		private System.DateTime?							date;
 	}
 }

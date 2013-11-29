@@ -43,7 +43,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.dateController = new DateController (this.accessor)
 			{
-				Date = this.Date,
+				Date            = this.Date,
+				DateLabelWidth  = 0,
+				DateDescription = null,
 			};
 
 			this.dateController.CreateUI (this.dateFrame);
@@ -66,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int margins      = 20;
+		private static readonly int margins      = 10;
 		private static readonly int dialogWidth  = DateController.ControllerWidth  + DatePopup.margins*2;
 		private static readonly int dialogHeight = AbstractPopup.TitleHeight + DateController.ControllerHeight + DatePopup.margins*2;
 

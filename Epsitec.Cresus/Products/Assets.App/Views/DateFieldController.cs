@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.Helpers;
@@ -59,6 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ClearValue()
 		{
 			this.Value = null;
+			this.UpdateButtons ();
 			this.OnValueEdited ();
 		}
 
@@ -85,26 +87,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Text            = DateFieldController.ConvDateToString (this.value),
 			};
 
-			var minus = new GlyphButton
+			this.minusButton = new GlyphButton
 			{
 				Parent        = this.frameBox,
-				GlyphShape    = GlyphShape.TriangleLeft,
+				GlyphShape    = GlyphShape.Minus,
 				ButtonStyle   = ButtonStyle.ToolItem,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
 
-			var plus = new GlyphButton
+			this.plusButton = new GlyphButton
 			{
 				Parent        = this.frameBox,
-				GlyphShape    = GlyphShape.TriangleRight,
+				GlyphShape    = GlyphShape.Plus,
 				ButtonStyle   = ButtonStyle.ToolItem,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
-
-			ToolTip.Default.SetToolTip (minus, "Jour, mois ou année précédent");
-			ToolTip.Default.SetToolTip (plus,  "Jour, mois ou année suivant");
 
 			this.textField.TextChanged += delegate
 			{
@@ -113,9 +112,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = DateFieldController.ConvStringToDate (this.textField.Text);
+						this.UpdateButtons ();
 						this.OnValueEdited ();
 					}
 				}
+			};
+
+			this.textField.CursorChanged += delegate
+			{
+				this.UpdateButtons ();
+				this.OnCursorChanged ();
+			};
+
+			this.textField.SelectionChanged += delegate
+			{
+				this.UpdateButtons ();
+				this.OnCursorChanged ();
 			};
 
 			this.textField.KeyboardFocusChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
@@ -132,12 +144,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			};
 
-			minus.Clicked += delegate
+			this.minusButton.Clicked += delegate
 			{
 				this.AddValue (-1);
 			};
 
-			plus.Clicked += delegate
+			this.plusButton.Clicked += delegate
 			{
 				this.AddValue (1);
 			};
@@ -147,6 +159,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.textField.SelectAll ();
 			this.textField.Focus ();
+		}
+
+
+		private void UpdateButtons()
+		{
+			var part = this.SelectedPart;
+
+			this.minusButton.Enable = part != Part.Unknown;
+			this.plusButton.Enable  = part != Part.Unknown;
+
+			switch (part)
+			{
+				case Part.Day:
+					ToolTip.Default.SetToolTip (this.minusButton, "Jour précédent");
+					ToolTip.Default.SetToolTip (this.plusButton,  "Jour suivant");
+					break;
+
+				case Part.Month:
+					ToolTip.Default.SetToolTip (this.minusButton, "Mois précédent");
+					ToolTip.Default.SetToolTip (this.plusButton,  "Mois suivant");
+					break;
+
+				case Part.Year:
+					ToolTip.Default.SetToolTip (this.minusButton, "Année précédente");
+					ToolTip.Default.SetToolTip (this.plusButton,  "Année suivante");
+					break;
+			}
 		}
 
 
@@ -170,6 +209,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.SelectPart (part);
+			this.UpdateButtons ();
 		}
 
 		private void AddYears(int years)
@@ -202,7 +242,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private Part SelectedPart
+		public Part SelectedPart
 		{
 			//	Détermine la partie de la date actuellement en édition.
 			get
@@ -211,6 +251,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (!string.IsNullOrEmpty (text))
 				{
+					int f = System.Math.Min (this.textField.CursorFrom, this.textField.CursorTo);
+					int t = System.Math.Max (this.textField.CursorFrom, this.textField.CursorTo);
+
+					if (f == 0 && t == this.textField.Text.Length)
+					{
+						return Part.All;
+					}
+
 					text = text.Replace (' ', '.');
 					text = text.Replace ('/', '.');
 					text = text.Replace (',', '.');
@@ -265,6 +313,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						break;
 
 					case Part.Year:
+					case Part.All:
 						this.textField.CursorFrom = 6;
 						this.textField.CursorTo   = 6+4;  // 31.03.[2015]
 						break;
@@ -272,12 +321,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private enum Part
+		public enum Part
 		{
 			Unknown,
 			Day,
 			Month,
 			Year,
+			All,
 		}
 
 
@@ -292,7 +342,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		#region Events handler
+		protected void OnCursorChanged()
+		{
+			this.CursorChanged.Raise (this);
+		}
+
+		public event EventHandler CursorChanged;
+		#endregion
+
+
 		private TextField						textField;
+		private GlyphButton						minusButton;
+		private GlyphButton						plusButton;
 		private System.DateTime?				value;
 	}
 }

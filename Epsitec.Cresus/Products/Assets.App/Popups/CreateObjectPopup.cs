@@ -38,8 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.CreateTitle ("Création d'un nouvel objet");
 
-			var line1 = this.CreateFrame (CreateObjectPopup.Margin, 110, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, DateController.ControllerHeight);
-						this.CreateSeparator (0, 90, CreateObjectPopup.PopupWidth);
+			var line1 = this.CreateFrame (CreateObjectPopup.Margin, 77, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, DateController.ControllerHeight);
 			var line2 = this.CreateFrame (CreateObjectPopup.Margin, 50, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
 
 			this.CreateDate    (line1);
@@ -55,6 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var dateController = new DateController (this.accessor)
 			{
 				DateDescription = "Date d'entrée",
+				DateLabelWidth  = CreateObjectPopup.Indent,
 				TabIndex        = 1,
 				Date            = this.ObjectDate,
 			};
@@ -119,9 +119,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private static readonly int LineHeight  = 2+17+2;
-		private static readonly int Indent      = DateController.ColumnWidth1;
-		private static readonly int PopupWidth  = 320;
-		private static readonly int PopupHeight = 153+DateController.ControllerHeight;
+		private static readonly int Indent      = 70;
+		private static readonly int PopupWidth  = 300;
+		private static readonly int PopupHeight = 120+DateController.ControllerHeight;
 		private static readonly int Margin      = 20;
 
 		private readonly DataAccessor					accessor;

@@ -277,6 +277,12 @@
     <EmbeddedResource Include="Images\Main.Open.icon" />
     <EmbeddedResource Include="Images\Popup.Close.icon" />
     <EmbeddedResource Include="Images\Timeline.Date.icon" />
+    <EmbeddedResource Include="Images\Date.Now.icon" />
+    <EmbeddedResource Include="Images\Date.CurrentYearBegin.icon" />
+    <EmbeddedResource Include="Images\Date.CurrentYearEnd.icon" />
+    <EmbeddedResource Include="Images\Date.SelectDay.icon" />
+    <EmbeddedResource Include="Images\Date.SelectYear.icon" />
+    <EmbeddedResource Include="Images\Date.SelectMonth.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
