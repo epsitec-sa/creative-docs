@@ -122,6 +122,11 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-exportcontacts"))					//	-exportcontacts -output-rch:xxx -output-custom:xxx
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.RunContactExportation (args));
+				}
+				
 				if (args.Contains ("-exportsubscriptions"))				//	-exportsubscriptions -output:Q:\output.txt -error:Q:\error.log
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.RunSubscriptionExportation (args));
@@ -455,6 +460,19 @@ namespace Epsitec.Aider
 				var excludeDistrictError = AiderProgram.GetBool (args, "-exclude-district-error:", false, false);
 
 				var writer = new SubscriptionFileWriter (coreData, outputFile, errorFile, excludeDistrictError);
+
+				writer.Write ();
+			});
+		}
+
+		private static void RunContactExportation(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				var outputRchFile = AiderProgram.GetFile (args, "-output-rch:", true);
+				var outputCustomFile = AiderProgram.GetFile (args, "-output-custom:", true);
+
+				var writer = new ContactFileWriter (coreData, outputRchFile, outputCustomFile);
 
 				writer.Write ();
 			});

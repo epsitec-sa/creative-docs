@@ -571,7 +571,7 @@ function() {
       });
 
       items.push({
-        text: 'Exporter la séléction dans le panier',
+        text: 'Ajouter la séléction au panier',
         listeners: {
           click: function() { this.onExportSelectionToBagHandler(); },
           scope: this
