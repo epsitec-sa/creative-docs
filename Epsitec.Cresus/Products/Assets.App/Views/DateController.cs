@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		public string							DateDescription;
+		public int								TabIndex;
 
 		public System.DateTime?					Date
 		{
@@ -226,6 +227,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.dateFieldController.HideAdditionalButtons = true;
+			this.dateFieldController.TabIndex = this.TabIndex;
 			this.dateFieldController.CreateUI (dateFrame);
 			this.dateFieldController.SetFocus ();
 

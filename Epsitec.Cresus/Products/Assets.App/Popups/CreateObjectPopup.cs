@@ -55,6 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var dateController = new DateController (this.accessor)
 			{
 				DateDescription = "Date d'entrée",
+				TabIndex        = 1,
 				Date            = this.ObjectDate,
 			};
 
@@ -91,6 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent           = frame,
 				Dock             = DockStyle.Fill,
+				TabIndex         = 2,
 			};
 
 			this.textField.TextChanged += delegate

@@ -177,6 +177,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.value.HasValue)
 			{
 				this.Value = this.value.Value.AddYears (years);
+				this.textField.Focus ();
 				this.OnValueEdited ();
 			}
 		}
@@ -186,6 +187,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.value.HasValue)
 			{
 				this.Value = this.value.Value.AddMonths (days);
+				this.textField.Focus ();
 				this.OnValueEdited ();
 			}
 		}
@@ -195,6 +197,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.value.HasValue)
 			{
 				this.Value = this.value.Value.AddDays (days);
+				this.textField.Focus ();
 				this.OnValueEdited ();
 			}
 		}
