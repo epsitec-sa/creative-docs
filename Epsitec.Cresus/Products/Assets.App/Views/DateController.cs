@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				LabelWidth = 0,
 			};
 
-			this.radios = new RadioButton[DateController.maxRadios];
+			this.radios = new Dictionary<DateType, RadioButton> ();
 		}
 
 
@@ -46,11 +46,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
-			this.CreateLine (parent, "Exercice",         0, 8);
-			this.CreateLine (parent, "Année précédente", 1, 2);
-			this.CreateLine (parent, "Année courante",   3, 5);
-			this.CreateLine (parent, "Année suivante",   6, 7);
-			this.CreateLine (parent, "",                 4, -1);
+			this.CreateLine (parent, "Mandat",           DateType.BeginMandat,       DateType.EndMandat);
+			this.CreateLine (parent, "Année précédente", DateType.BeginPreviousYear, DateType.EndPreviousYear);
+			this.CreateLine (parent, "Année courante",   DateType.BeginCurrentYear,  DateType.EndCurrentYear);
+			this.CreateLine (parent, "Année suivante",   DateType.BeginNextYear,     DateType.EndNextYear);
+			this.CreateLine (parent, "",                 DateType.Now,               DateType.Unknown);
 
 			this.CreatePrefix (parent);
 			this.CreateController (parent);
@@ -59,12 +59,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void Update()
 		{
-			if (this.radios[0] != null)
+			if (this.radios.Count != 0)
 			{
-				for (int i=0; i<DateController.maxRadios; i++)
+				foreach (DateType type in System.Enum.GetValues (typeof (DateType)))
 				{
-					bool selected = this.date == this.GetPredefinedDate (i);
-					this.radios[i].ActiveState = selected ? ActiveState.Yes : ActiveState.No;
+					if (type != DateType.Unknown)
+					{
+						bool selected = this.date == this.GetPredefinedDate (type);
+						this.radios[type].ActiveState = selected ? ActiveState.Yes : ActiveState.No;
+					}
 				}
 
 				this.dateFieldController.Value = this.date;
@@ -72,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void CreateLine(Widget parent, string label, int i1, int i2)
+		private void CreateLine(Widget parent, string label, DateType i1, DateType i2)
 		{
 			var line = new FrameBox
 			{
@@ -92,13 +95,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
-			this.CreateRadio (line, i1, (i2 == -1) ? DateController.ColumnWidth2+DateController.ColumnWidth3 : DateController.ColumnWidth2);
+			this.CreateRadio (line, i1, (i2 == DateType.Unknown) ? DateController.ColumnWidth2+DateController.ColumnWidth3 : DateController.ColumnWidth2);
 			this.CreateRadio (line, i2, DateController.ColumnWidth3);
 		}
 
-		private void CreateRadio(Widget parent, int index, int width)
+		private void CreateRadio(Widget parent, DateType type, int width)
 		{
-			if (index == -1)
+			if (type == DateType.Unknown)
 			{
 				return;
 			}
@@ -106,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var radio = new RadioButton
 			{
 				Parent          = parent,
-				Text            = this.GetPredefinedDescription (index),
+				Text            = this.GetPredefinedDescription (type),
 				Dock            = DockStyle.Left,
 				PreferredWidth  = width,
 				PreferredHeight = DateController.radioHeight,
@@ -114,16 +117,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			radio.Clicked += delegate
 			{
-				this.Date = this.GetPredefinedDate (index);
+				this.Date = this.GetPredefinedDate (type);
 				this.dateFieldController.SetFocus ();
 				this.OnDateChanged (this.date);
 			};
 
-			this.radios[index] = radio;
+			this.radios[type] = radio;
 		}
 
 		private void CreatePrefix(Widget parent)
 		{
+			//	Crée la ligne des boutons [J] [M] [A] permettant de sélectionner
+			//	la partie correspondante dans le textede la date.
+			//	Les boutons sont positionnés horizontalement de façon à s'aligner
+			//	au mieux sur le texte de la date dans le TextField.
 			const int h = 17;
 
 			var line = new FrameBox
@@ -169,17 +176,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			dayButton.Clicked += delegate
 			{
-				this.Select (0, 2);
+				this.Select (0, 2);  // sélectionne [31].03.2013
 			};
 
 			monthButton.Clicked += delegate
 			{
-				this.Select (3, 2);
+				this.Select (3, 2);  // sélectionne 31.[03].2013
 			};
 
 			yearButton.Clicked += delegate
 			{
-				this.Select (6, 4);
+				this.Select (6, 4);  // sélectionne 31.03.[2013]
 			};
 		}
 
@@ -230,79 +237,87 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private string GetPredefinedDescription(int index)
+		private string GetPredefinedDescription(DateType type)
 		{
-			switch (index)
+			switch (type)
 			{
-				case 0:
+				case DateType.BeginMandat:
+				case DateType.BeginPreviousYear:
+				case DateType.BeginCurrentYear:
+				case DateType.BeginNextYear:
 					return "Début";
 
-				case 1:
-					return "Début";
-
-				case 2:
+				case DateType.EndMandat:
+				case DateType.EndPreviousYear:
+				case DateType.EndCurrentYear:
+				case DateType.EndNextYear:
 					return "Fin";
 
-				case 3:
-					return "Début";
-
-				case 4:
+				case DateType.Now:
 					return "Aujourd'hui";
-
-				case 5:
-					return "Fin";
-
-				case 6:
-					return "Début";
-
-				case 7:
-					return "Fin";
-
-				case 8:
-					return "Fin";
 
 				default:
 					return null;
 			}
 		}
 
-		private System.DateTime GetPredefinedDate(int index)
+		private System.DateTime GetPredefinedDate(DateType type)
 		{
 			var now = Timestamp.Now.Date;
 
-			switch (index)
+			switch (type)
 			{
-				case 0:
+				case DateType.BeginMandat:
 					return this.accessor.Mandat.StartDate;
 
-				case 1:
+				case DateType.EndMandat:
+					return this.accessor.Mandat.EndDate;
+
+				case DateType.BeginPreviousYear:
 					return new System.DateTime (now.Year-1, 1, 1);
 
-				case 2:
+				case DateType.EndPreviousYear:
 					return new System.DateTime (now.Year-1, 12, 31);
 
-				case 3:
+				case DateType.BeginCurrentYear:
 					return new System.DateTime (now.Year, 1, 1);
 
-				case 4:
-					return now;
-
-				case 5:
+				case DateType.EndCurrentYear:
 					return new System.DateTime (now.Year, 12, 31);
 
-				case 6:
+				case DateType.BeginNextYear:
 					return new System.DateTime (now.Year+1, 1, 1);
 
-				case 7:
+				case DateType.EndNextYear:
 					return new System.DateTime (now.Year+1, 12, 31);
 
-				case 8:
-					return this.accessor.Mandat.EndDate;
+				case DateType.Now:
+					return now;
 
 				default:
 					return System.DateTime.MaxValue;
 			}
 		}
+
+		private enum DateType
+		{
+			Unknown,
+
+			BeginMandat,
+			EndMandat,
+
+			BeginPreviousYear,
+			EndPreviousYear,
+
+			BeginCurrentYear,
+			EndCurrentYear,
+
+			BeginNextYear,
+			EndNextYear,
+
+			Now,
+		}
+
 
 		#region Events handler
 		private void OnDateChanged(System.DateTime? dateTime)
@@ -320,15 +335,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public const int ControllerWidth  = DateController.ColumnWidth1 + DateController.ColumnWidth2 + DateController.ColumnWidth3;
 		public const int ControllerHeight = DateController.radioHeight*5 + 10 + 17 + DateController.dateHeight;
 
-		private const int maxRadios   = 9;
 		private const int radioHeight = 17;
 		private const int dateHeight  = 2+17+2;
 
 
-		private readonly DataAccessor			accessor;
-		private readonly RadioButton[]			radios;
-		private readonly DateFieldController	dateFieldController;
+		private readonly DataAccessor						accessor;
+		private readonly Dictionary<DateType, RadioButton>	radios;
+		private readonly DateFieldController				dateFieldController;
 
-		private System.DateTime?				date;
+		private System.DateTime?							date;
 	}
 }

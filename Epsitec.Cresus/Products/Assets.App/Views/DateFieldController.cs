@@ -244,7 +244,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void SelectPart(Part part)
 		{
 			//	Sélectionne une partie du texte en édition.
-			//	0 = jour, 1 = mois, 2 = année
 			if (this.textField.Text.Length == 10)  // jj.mm.aaaa ?
 			{
 				switch (part)
