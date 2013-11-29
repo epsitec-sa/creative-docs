@@ -38,7 +38,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.CreateTitle ("Création d'un nouvel objet");
 
-			var line1 = this.CreateFrame (CreateObjectPopup.Margin, 77, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
+			var line1 = this.CreateFrame (CreateObjectPopup.Margin, 110, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, DateController.ControllerHeight);
+						this.CreateSeparator (0, 90, CreateObjectPopup.PopupWidth);
 			var line2 = this.CreateFrame (CreateObjectPopup.Margin, 50, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
 
 			this.CreateDate    (line1);
@@ -49,60 +50,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.textField.Focus ();
 		}
 
-		private void CreateTitle(Widget parent)
-		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = "Création d'un nouvel objet",
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = CreateObjectPopup.TitleHeight - 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			new StaticText
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-		}
-
 		private void CreateDate(Widget parent)
 		{
-			new StaticText
+			var dateController = new DateController (this.accessor)
 			{
-				Parent           = parent,
-				Text             = "Date d'entrée",
-				ContentAlignment = ContentAlignment.MiddleRight,
-				Dock             = DockStyle.Left,
-				PreferredWidth   = CreateObjectPopup.Indent,
-				Margins          = new Margins (0, 10, 0, 0),
+				Date = this.ObjectDate,
 			};
 
-			var frame = new FrameBox
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Fill,
-				BackColor        = ColorManager.WindowBackgroundColor,
-			};
+			dateController.CreateUI (parent);
 
-			var dateController = new DateFieldController
+			dateController.DateChanged += delegate
 			{
-				Label      = null,
-				LabelWidth = 0,
-				Value      = this.ObjectDate,
-			};
-
-			dateController.HideAdditionalButtons = true;
-			dateController.CreateUI (frame);
-			dateController.SetFocus ();
-
-			dateController.ValueEdited += delegate
-			{
-				this.ObjectDate = dateController.Value;
+				this.ObjectDate = dateController.Date;
 				this.UpdateButtons ();
 			};
 		}
@@ -156,11 +115,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private static readonly int TitleHeight = 24;
 		private static readonly int LineHeight  = 2+17+2;
-		private static readonly int Indent      = 80;
-		private static readonly int PopupWidth  = 300;
-		private static readonly int PopupHeight = 140;
+		private static readonly int Indent      = DateController.ColumnWidth1;
+		private static readonly int PopupWidth  = 320;
+		private static readonly int PopupHeight = 153+DateController.ControllerHeight;
 		private static readonly int Margin      = 20;
 
 		private readonly DataAccessor					accessor;

@@ -231,6 +231,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return frame;
 		}
 
+		protected void CreateSeparator(int x, int y, int dx)
+		{
+			new FrameBox
+			{
+				Parent        = this.mainFrameBox,
+				Anchor        = AnchorStyles.BottomLeft,
+				PreferredSize = new Size (dx, 1),
+				Margins       = new Margins (x, 0, 0, y),
+				BackColor     = ColorManager.PopupBorderColor,
+			};
+		}
+
 		protected RadioButton CreateRadio(int x, int y, int dx, int dy, string name, string text, string tooltip = null, bool activate = false)
 		{
 			var button = new RadioButton
