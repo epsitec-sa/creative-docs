@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Enumerations;
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,12 +12,12 @@ namespace Epsitec.Aider.Data.Subscription
 {
 	internal sealed class ContactFileLine
 	{
-		public ContactFileLine(string id, string title, string lastname, string firstname, string corporateName,
+		public ContactFileLine(string id, PersonMrMrs? mrMrs, string lastname, string firstname, string corporateName,
 							   string postBox, string addressComplement, string street, string houseNumber, string zipCode, string town,
 							   ContactFileLineSource source)
 		{
 			this.Id                 = id ?? "";
-			this.Title              = title ?? "";
+			this.Title              = mrMrs == null ? "" : ContactFileLine.GetTitle (mrMrs.Value);
 			this.LastName           = lastname ?? "";
 			this.FirstName          = firstname ?? "";
 			this.CorporateName      = corporateName ?? "";
@@ -28,36 +30,51 @@ namespace Epsitec.Aider.Data.Subscription
 			this.Source             = source;
 		}
 
+		private static string GetTitle(PersonMrMrs personMrMrs)
+		{
+			switch (personMrMrs)
+			{
+				case PersonMrMrs.Madame:
+					return "Madame";
+				case PersonMrMrs.Mademoiselle:
+					return "Mademoiselle";
+				case PersonMrMrs.Monsieur:
+					return "Monsieur";
+				default:
+					return "";
+			}
+		}
+
 
 		public static string GetHeader()
 		{
-			return "Id" + "\t"
-				 + "Title" + "\t"
-				 + "LastName" + "\t"
-				 + "FirstName" + "\t"
-				 + "CorporateName" + "\t"
-				 + "PostBox" + "\t"
-				 + "AddressComplement" + "\t"
-				 + "Street" + "\t"
-				 + "HouseNumber" + "\t"
-				 + "ZipCode" + "\t"
-				 + "Town" + "\t"
+			return "Id" + ContactFileLine.Separator
+				 + "Title" + ContactFileLine.Separator
+				 + "LastName" + ContactFileLine.Separator
+				 + "FirstName" + ContactFileLine.Separator
+				 + "CorporateName" + ContactFileLine.Separator
+				 + "PostBox" + ContactFileLine.Separator
+				 + "AddressComplement" + ContactFileLine.Separator
+				 + "Street" + ContactFileLine.Separator
+				 + "HouseNumber" + ContactFileLine.Separator
+				 + "ZipCode" + ContactFileLine.Separator
+				 + "Town" + ContactFileLine.Separator
 				 + ContactFileLine.LineEnding;
 		}
 
 		public string GetText()
 		{
-			return this.Id + "\t"
-				 + this.Title + "\t"
-				 + this.LastName + "\t"
-				 + this.FirstName + "\t"
-				 + this.CorporateName + "\t"
-				 + this.PostBox + "\t"
-				 + this.AddressComplement + "\t"
-				 + this.Street + "\t"
-				 + this.HouseNumber + "\t"
-				 + this.ZipCode + "\t"
-				 + this.Town + "\t"
+			return this.Id + ContactFileLine.Separator
+				 + this.Title + ContactFileLine.Separator
+				 + this.LastName + ContactFileLine.Separator
+				 + this.FirstName + ContactFileLine.Separator
+				 + this.CorporateName + ContactFileLine.Separator
+				 + this.PostBox + ContactFileLine.Separator
+				 + this.AddressComplement + ContactFileLine.Separator
+				 + this.Street + ContactFileLine.Separator
+				 + this.HouseNumber + ContactFileLine.Separator
+				 + this.ZipCode + ContactFileLine.Separator
+				 + this.Town + ContactFileLine.Separator
 				 + ContactFileLine.LineEnding;
 		}
 
@@ -101,12 +118,7 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly string					Town;
 		public readonly ContactFileLineSource	Source;
 		
-		private static readonly string			LineEnding				   = "\r\n";
-	}
-
-	public enum ContactFileLineSource
-	{
-		Rch,
-		Custom,
+		private static readonly string			LineEnding		= "\r\n";
+		private static readonly string			Separator		= ";";
 	}
 }

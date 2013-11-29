@@ -26,6 +26,7 @@ namespace Epsitec.Aider.Data.Subscription
 			this.outputRchFile    = outputRchFile;
 			this.outputCustomFile = outputCustomFile;
 			this.startTime        = System.DateTime.UtcNow;
+			this.errors           = new List<string> ();
 		}
 
 
@@ -35,6 +36,13 @@ namespace Epsitec.Aider.Data.Subscription
 
 			ContactFileLine.Write (lines.Where (x => x.Source == ContactFileLineSource.Rch), this.outputRchFile);
 			ContactFileLine.Write (lines.Where (x => x.Source == ContactFileLineSource.Custom), this.outputCustomFile);
+
+			foreach (var error in this.errors)
+			{
+				System.Console.WriteLine ("{0}", error);
+			}
+
+			System.Console.ReadLine ();
 		}
 
 		private IEnumerable<ContactFileLine> GetLines()
@@ -58,7 +66,7 @@ namespace Epsitec.Aider.Data.Subscription
 				(contact.Address.Town.IsNull ()) ||
 				(string.IsNullOrEmpty (contact.Address.Town.SwissCantonCode)))
 			{
-				System.Diagnostics.Debug.WriteLine ("Contact has no address: " + context.GetNormalizedEntityKey (contact).ToString ());
+				this.errors.Add ("Contact has no address: " + context.GetNormalizedEntityKey (contact).ToString ());
 				
 				return null;
 			}
@@ -75,7 +83,7 @@ namespace Epsitec.Aider.Data.Subscription
 					return this.GetLegalPersonLine (context, contact);
 
 				default:
-					System.Diagnostics.Debug.WriteLine ("ContactType not handled: " + context.GetNormalizedEntityKey (contact).ToString ());
+					this.errors.Add ("ContactType not handled: " + context.GetNormalizedEntityKey (contact).ToString ());
 					return null;
 			}
 		}
@@ -94,7 +102,7 @@ namespace Epsitec.Aider.Data.Subscription
 			var source  = person.eCH_Person.DataSource == Enumerations.DataSource.Government ? ContactFileLineSource.Rch : ContactFileLineSource.Custom;
 			var address = contact.Address;
 
-			return new ContactFileLine (id, person.Title, person.eCH_Person.PersonOfficialName, person.GetCallName (), null, address.PostBox, address.AddressLine1, address.Street, address.HouseNumberAndComplement, address.Town.SwissZipCode.ToString (), address.Town.Name, source);
+			return new ContactFileLine (id, person.MrMrs, person.eCH_Person.PersonOfficialName, person.GetCallName (), null, address.PostBox, address.AddressLine1, address.Street, address.HouseNumberAndComplement, address.Town.SwissZipCode.ToString (), address.Town.Name, source);
 		}
 
 		private ContactFileLine GetLegalPersonLine(DataContext context, AiderContactEntity contact)
@@ -112,6 +120,8 @@ namespace Epsitec.Aider.Data.Subscription
 		private readonly CoreData				coreData;
 		private readonly FileInfo				outputRchFile;
 		private readonly FileInfo				outputCustomFile;
+
+		private readonly List<string>			errors;
 		
 		private readonly System.DateTime		startTime;
 	}

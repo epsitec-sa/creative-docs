@@ -234,6 +234,7 @@
     <Compile Include="Data\Job\ParticipationFixer.cs" />
     <Compile Include="Data\Job\EChDataUpdater.cs" />
     <Compile Include="Data\Job\WarningParishGroupPathFixer.cs" />
+    <Compile Include="Data\Subscription\ContactFileLineSource.cs" />
     <Compile Include="Data\Subscription\ContactFileWriter.cs" />
     <Compile Include="Data\Subscription\ContactFileLine.cs" />
     <Compile Include="Data\Subscription\DistributionMode.cs" />
