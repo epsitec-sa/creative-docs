@@ -280,9 +280,6 @@
     <EmbeddedResource Include="Images\Date.Now.icon" />
     <EmbeddedResource Include="Images\Date.CurrentYearBegin.icon" />
     <EmbeddedResource Include="Images\Date.CurrentYearEnd.icon" />
-    <EmbeddedResource Include="Images\Date.SelectDay.icon" />
-    <EmbeddedResource Include="Images\Date.SelectYear.icon" />
-    <EmbeddedResource Include="Images\Date.SelectMonth.icon" />
     <EmbeddedResource Include="Images\Date.SelectedPart.icon" />
     <EmbeddedResource Include="Images\Date.UnselectedPart.icon" />
     <None Include="packages.config" />
