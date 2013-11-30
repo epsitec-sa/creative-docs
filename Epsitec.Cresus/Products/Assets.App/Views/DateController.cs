@@ -73,9 +73,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.WindowBackgroundColor,
 			};
 
-			this.dayButton   = this.CreatePartButton (line, "Date.SelectDay",    5, 13);
-			this.monthButton = this.CreatePartButton (line, "Date.SelectMonth", 19, 13);
-			this.yearButton  = this.CreatePartButton (line, "Date.SelectYear",  33, 23);
+			this.dayButton   = this.CreatePartButton (line,  5, 13);
+			this.monthButton = this.CreatePartButton (line, 19, 13);
+			this.yearButton  = this.CreatePartButton (line, 33, 23);
 
 			this.beginButton = this.CreateIconButton (line, "Date.CurrentYearBegin", DateController.LineHeight*2);
 			this.nowButton   = this.CreateIconButton (line, "Date.Now",              DateController.LineHeight*1);
@@ -129,12 +129,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private IconButton CreatePartButton(Widget parent, string icon, int x, int dx)
+		private IconButton CreatePartButton(Widget parent, int x, int dx)
 		{
 			return new IconButton
 			{
 				Parent          = parent,
-				IconUri         = AbstractCommandToolbar.GetResourceIconUri (icon),
 				AutoFocus       = false,
 				PreferredWidth  = dx,
 				PreferredHeight = DateController.LineHeight-2,
@@ -231,15 +230,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.monthButton.Enable = this.Date != null;
 				this.yearButton.Enable  = this.Date != null;
 
-				this.UpdateButtonState (this.dayButton,   part == DateFieldController.Part.Day);
-				this.UpdateButtonState (this.monthButton, part == DateFieldController.Part.Month);
-				this.UpdateButtonState (this.yearButton,  part == DateFieldController.Part.Year);
+				this.UpdateButtonPart (this.dayButton,   part == DateFieldController.Part.Day);
+				this.UpdateButtonPart (this.monthButton, part == DateFieldController.Part.Month);
+				this.UpdateButtonPart (this.yearButton,  part == DateFieldController.Part.Year);
 
 				this.UpdateButtonState (this.beginButton, this.Date == this.GetPredefinedDate (DateType.BeginCurrentYear));
 				this.UpdateButtonState (this.nowButton,   this.Date == this.GetPredefinedDate (DateType.Now));
 				this.UpdateButtonState (this.endButton,   this.Date == this.GetPredefinedDate (DateType.EndCurrentYear));
 
 				this.deleteButton.Enable = this.Date != null;
+			}
+		}
+
+		private void UpdateButtonPart(IconButton button, bool activate)
+		{
+			if (activate)
+			{
+				button.IconUri = AbstractCommandToolbar.GetResourceIconUri ("Date.SelectedPart");
+			}
+			else
+			{
+				button.IconUri = AbstractCommandToolbar.GetResourceIconUri ("Date.UnselectedPart");
 			}
 		}
 
