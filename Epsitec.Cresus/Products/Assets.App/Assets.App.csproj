@@ -282,6 +282,7 @@
     <EmbeddedResource Include="Images\Date.CurrentYearEnd.icon" />
     <EmbeddedResource Include="Images\Date.SelectedPart.icon" />
     <EmbeddedResource Include="Images\Date.UnselectedPart.icon" />
+    <EmbeddedResource Include="Images\Date.Popup.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

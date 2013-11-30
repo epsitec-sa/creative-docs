@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			get
 			{
 				int dx = SimplePopup.margins*2 + this.RequiredWidth;
-				int dy = SimplePopup.margins*2 + SimplePopup.itemHeight*this.items.Count;
+				int dy = SimplePopup.margins*2 + this.RequiredHeight;
 
 				return new Size (dx, dy);
 			}
@@ -48,19 +48,43 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public override void CreateUI()
 		{
 			int w = this.RequiredWidth;
+			int y = SimplePopup.margins + this.RequiredHeight;
 
 			for (int i=0; i<this.items.Count; i++)
 			{
-				this.CreateItem (i, w);
+				var item = this.items[i];
+
+				if (string.IsNullOrEmpty (item))
+				{
+					y -= SimplePopup.sepHeight;
+					this.CreateSeparator (y, w);
+				}
+				else
+				{
+					y -= SimplePopup.itemHeight;
+					this.CreateItem (i, y, w);
+				}
 			}
 		}
 
-		private void CreateItem(int rank, int width)
+		private void CreateSeparator(int y, int width)
 		{
-			int i = this.items.Count - rank - 1;
+			y += SimplePopup.sepHeight/2;
+			int dx = width + SimplePopup.margins*2;
 
+			new FrameBox
+			{
+				Parent        = this.mainFrameBox,
+				Anchor        = AnchorStyles.BottomLeft,
+				PreferredSize = new Size (dx, 1),
+				Margins       = new Margins (0, 0, 0, y),
+				BackColor     = ColorManager.PopupBorderColor,
+			};
+		}
+
+		private void CreateItem(int rank, int y, int width)
+		{
 			int x = SimplePopup.margins;
-			int y = SimplePopup.margins + SimplePopup.itemHeight*i;
 			int dx = width;
 			int dy = SimplePopup.itemHeight;
 
@@ -103,6 +127,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private int RequiredHeight
+		{
+			get
+			{
+				int sepCount  = this.items.Where (x => string.IsNullOrEmpty (x)).Count ();
+				int itemCount = this.items.Count - sepCount;
+
+				return itemCount*SimplePopup.itemHeight + sepCount*SimplePopup.sepHeight;
+			}
+		}
+
+
 		#region Events handler
 		private void OnItemClicked(int rank)
 		{
@@ -115,6 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static readonly int				margins		= 5;
 		private static readonly int				itemHeight	= 20;
+		private static readonly int				sepHeight	= 8;
 		private static readonly string			textGap		= "  ";
 
 		private readonly List<string>			items;

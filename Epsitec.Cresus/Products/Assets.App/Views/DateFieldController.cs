@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (f == 0 && t == this.textField.Text.Length)
 					{
-						return Part.All;
+						return Part.Year;
 					}
 
 					text = text.Replace (' ', '.');
@@ -313,7 +313,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 						break;
 
 					case Part.Year:
-					case Part.All:
 						this.textField.CursorFrom = 6;
 						this.textField.CursorTo   = 6+4;  // 31.03.[2015]
 						break;
@@ -327,7 +326,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			Day,
 			Month,
 			Year,
-			All,
 		}
 
 
