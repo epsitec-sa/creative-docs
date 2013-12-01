@@ -13,12 +13,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public class Calendar : Widget
 	{
-		public Calendar()
-		{
-			this.hoverRank = -1;
-		}
-
-
 		public System.DateTime Date
 		{
 			get
@@ -61,12 +55,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void OnPressed(MessageEventArgs e)
 		{
-			if (this.hoverRank != -1)
+			if (this.hoverDate.HasValue)
 			{
-				var firstDate = new System.DateTime (this.date.Year, this.date.Month, 1);
-				int firstRank = Calendar.GetFirstRank (firstDate);
-				var date = firstDate.AddDays (this.hoverRank - firstRank);
-				this.OnDateChanged (date);
+				this.OnDateChanged (this.hoverDate.Value);
 			}
 
 			base.OnPressed (e);
@@ -74,42 +65,42 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void OnMouseMove(MessageEventArgs e)
 		{
-			this.HoverRank = this.Detect (e.Point);
+			this.HoverDate = this.Detect (e.Point);
 			base.OnMouseMove (e);
 		}
 
 		protected override void OnExited(MessageEventArgs e)
 		{
-			this.HoverRank = -1;
+			this.HoverDate = null;
 			base.OnExited (e);
 		}
 
 
-		private int Detect(Point pos)
+		private System.DateTime? Detect(Point pos)
 		{
 			for (int rank=0; rank<7*6; rank++)
 			{
 				var rect = Calendar.GetCellRect (rank);
 				if (rect.Contains (pos))
 				{
-					return rank;
+					return this.GetDate (rank);
 				}
 			}
 
-			return -1;
+			return null;
 		}
 
-		private int HoverRank
+		private System.DateTime? HoverDate
 		{
 			get
 			{
-				return this.hoverRank;
+				return this.hoverDate;
 			}
 			set
 			{
-				if (this.hoverRank != value)
+				if (this.hoverDate != value)
 				{
-					this.hoverRank = value;
+					this.hoverDate = value;
 					this.Invalidate ();
 				}
 			}
@@ -132,9 +123,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void PaintDows(Graphics graphics)
 		{
-			var firstDate = new System.DateTime (this.date.Year, this.date.Month, 1);
-			int firstRank = Calendar.GetFirstRank (firstDate);
-
 			for (int rank=0; rank<7; rank++)
 			{
 				var rect = Calendar.GetDowRect (rank);
@@ -142,7 +130,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (ColorManager.GetBackgroundColor (false));
 
-				var date = firstDate.AddDays (rank - firstRank);
+				var date = this.GetDate (rank+7).Value;
 				var text = date.ToString ("ddd", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 				if (text.Length > 2)
 				{
@@ -156,33 +144,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void PaintCells(Graphics graphics)
 		{
-			var firstDate = new System.DateTime (this.date.Year, this.date.Month, 1);
-			int firstRank = Calendar.GetFirstRank (firstDate);
-
 			for (int rank=0; rank<7*6; rank++)
 			{
-				var date        = firstDate.AddDays (rank - firstRank);
-				bool otherMonth = false;
-				bool selected   = date == this.selectedDate;
-				bool isHover    = rank == this.hoverRank;
-
-				if (rank < firstRank)  // mois précédent ?
+				var date = this.GetDate (rank);
+				if (date.HasValue)
 				{
-					otherMonth = true;
-				}
-				else
-				{
-					if (date.Month > this.date.Month)  // mois suivant ?
-					{
-						otherMonth = true;
-					}
-				}
+					bool selected = date == this.selectedDate;
+					bool isHover  = date == this.hoverDate;
 
-				this.PaintCell (graphics, rank, date, otherMonth, selected, isHover);
+					Calendar.PaintCell (graphics, rank, date.Value, selected, isHover);
+				}
 			}
 		}
 
-		private void PaintCell(Graphics graphics, int rank, System.DateTime date, bool otherMonth, bool selected, bool isHover)
+		private static void PaintCell(Graphics graphics, int rank, System.DateTime date, bool selected, bool isHover)
 		{
 			var rect = Calendar.GetCellRect (rank);
 
@@ -194,7 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				color = ColorManager.GetHolidayColor (isHover);
 			}
 
-			if (selected && !otherMonth && !isHover)
+			if (selected && !isHover)
 			{
 				color = ColorManager.SelectionColor;
 			}
@@ -204,9 +179,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			string text = date.Day.ToString ();
 			graphics.AddText (rect.Left, rect.Bottom, rect.Width, rect.Height, text, Font.DefaultFont, Calendar.FontSize, ContentAlignment.MiddleCenter);
-			graphics.RenderSolid (Color.FromAlphaColor (otherMonth ? 0.3 : 1.0, ColorManager.TextColor));
+			graphics.RenderSolid (ColorManager.TextColor);
 
-			if (!otherMonth && date == Timestamp.Now.Date)
+			if (date == Timestamp.Now.Date)
 			{
 				rect.Deflate (0.5);
 				graphics.AddRectangle (rect);
@@ -214,6 +189,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+
+		private System.DateTime? GetDate(int rank)
+		{
+			var firstDate = new System.DateTime (this.date.Year, this.date.Month, 1);
+			int firstRank = Calendar.GetFirstRank (firstDate);
+
+			var date = firstDate.AddDays (rank - firstRank);
+
+			if (date.Month == this.date.Month)
+			{
+				return date;
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 		private static int GetFirstRank(System.DateTime date)
 		{
@@ -293,6 +285,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private System.DateTime					date;
 		private System.DateTime?				selectedDate;
-		private int								hoverRank;
+		private System.DateTime?				hoverDate;
 	}
 }
