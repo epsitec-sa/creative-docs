@@ -78,19 +78,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.monthButton = this.CreatePartButton (line, 19, 13);
 			this.yearButton  = this.CreatePartButton (line, 33, 23);
 
-			this.beginButton = this.CreateIconButton (line, "Date.CurrentYearBegin", DateController.LineHeight*3);
-			this.nowButton   = this.CreateIconButton (line, "Date.Now",              DateController.LineHeight*2);
-			this.endButton   = this.CreateIconButton (line, "Date.CurrentYearEnd",   DateController.LineHeight*1);
-			this.popupButton = this.CreateIconButton (line, "Date.Popup",            DateController.LineHeight*0);
+			this.beginButton      = this.CreateIconButton (line, "Date.CurrentYearBegin", DateController.LineHeight*4);
+			this.nowButton        = this.CreateIconButton (line, "Date.Now",              DateController.LineHeight*3);
+			this.endButton        = this.CreateIconButton (line, "Date.CurrentYearEnd",   DateController.LineHeight*2);
+			this.predefinedButton = this.CreateIconButton (line, "Date.Predefined",       DateController.LineHeight*1);
+			this.calendarButton   = this.CreateIconButton (line, "Date.Calendar",         DateController.LineHeight*0);
 
 			ToolTip.Default.SetToolTip (this.dayButton,   "Sélectionne le jour");
 			ToolTip.Default.SetToolTip (this.monthButton, "Sélectionne le mois");
 			ToolTip.Default.SetToolTip (this.yearButton,  "Sélectionne l'année");
 
-			ToolTip.Default.SetToolTip (this.beginButton, "Début de l'année en cours");
-			ToolTip.Default.SetToolTip (this.nowButton,   "Aujourd'hui");
-			ToolTip.Default.SetToolTip (this.endButton,   "Fin de l'année en cours");
-			ToolTip.Default.SetToolTip (this.popupButton, "Autre date à choix...");
+			ToolTip.Default.SetToolTip (this.beginButton,      "Début de l'année en cours");
+			ToolTip.Default.SetToolTip (this.nowButton,        "Aujourd'hui");
+			ToolTip.Default.SetToolTip (this.endButton,        "Fin de l'année en cours");
+			ToolTip.Default.SetToolTip (this.predefinedButton, "Autre date à choix...");
+			ToolTip.Default.SetToolTip (this.calendarButton,   "Calendrier...");
 
 			this.dayButton.Clicked += delegate
 			{
@@ -131,9 +133,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnDateChanged (this.date);
 			};
 
-			this.popupButton.Clicked += delegate
+			this.predefinedButton.Clicked += delegate
 			{
-				this.ShowPopup ();
+				this.ShowPredefinedPopup ();
+			};
+
+			this.calendarButton.Clicked += delegate
+			{
+				this.ShowCalendarPopup ();
 			};
 		}
 
@@ -284,7 +291,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dateFieldController.TextField.CursorTo   = start + count;
 		}
 
-		private void ShowPopup()
+		private void ShowPredefinedPopup()
 		{
 			var popup = new SimplePopup ()
 			{
@@ -296,11 +303,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 				popup.Items.Add (this.GetPredefinedDescription (type));
 			}
 
-			popup.Create (this.popupButton, leftOrRight: true);
+			popup.Create (this.predefinedButton, leftOrRight: true);
 
 			popup.ItemClicked += delegate (object sender, int rank)
 			{
 				this.Date = this.GetPredefinedDate (rank);
+				this.UpdateButtons ();
+				this.dateFieldController.SetFocus ();
+				this.OnDateChanged (this.date);
+			};
+		}
+
+		private void ShowCalendarPopup()
+		{
+			var popup = new CalendarPopup ()
+			{
+				Date         = this.date.HasValue ? this.date.Value : Timestamp.Now.Date,
+				SelectedDate = this.date,
+			};
+
+			popup.Create (this.calendarButton, leftOrRight: false);
+
+			popup.DateChanged += delegate (object sender, System.DateTime date)
+			{
+				this.Date = date;
 				this.UpdateButtons ();
 				this.dateFieldController.SetFocus ();
 				this.OnDateChanged (this.date);
@@ -547,7 +573,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton									beginButton;
 		private IconButton									nowButton;
 		private IconButton									endButton;
-		private IconButton									popupButton;
+		private IconButton									predefinedButton;
+		private IconButton									calendarButton;
 		private IconButton									deleteButton;
 		private System.DateTime?							date;
 	}

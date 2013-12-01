@@ -82,6 +82,7 @@
     <Compile Include="Popups\BalloonPath.cs" />
     <Compile Include="Popups\CategoriesPopup.cs" />
     <Compile Include="Popups\AmortissementsPopup.cs" />
+    <Compile Include="Popups\CalendarPopup.cs" />
     <Compile Include="Popups\ErrorsPopup.cs" />
     <Compile Include="Popups\CreateCategoryPopup.cs" />
     <Compile Include="Popups\CreateGroupPopup.cs" />
@@ -149,6 +150,8 @@
     <Compile Include="Views\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
     <Compile Include="Helpers\EventExtensions.cs" />
+    <Compile Include="Widgets\Calendar.cs" />
+    <Compile Include="Widgets\CalendarController.cs" />
     <Compile Include="Widgets\SortedColumn.cs" />
     <Compile Include="Widgets\TreeTableColumnHelper.cs" />
     <Compile Include="Widgets\HatchFrameBox.cs" />
@@ -282,7 +285,8 @@
     <EmbeddedResource Include="Images\Date.CurrentYearEnd.icon" />
     <EmbeddedResource Include="Images\Date.SelectedPart.icon" />
     <EmbeddedResource Include="Images\Date.UnselectedPart.icon" />
-    <EmbeddedResource Include="Images\Date.Popup.icon" />
+    <EmbeddedResource Include="Images\Date.Predefined.icon" />
+    <EmbeddedResource Include="Images\Date.Calendar.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
