@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent          = parent,
 				AutoFocus       = false,
 				PreferredWidth  = dx,
-				PreferredHeight = DateController.LineHeight-2,
+				PreferredHeight = DateController.LineHeight,
 				Anchor          = AnchorStyles.BottomLeft,
 				Margins         = new Margins (x, 0, 0, 0),
 			};
@@ -560,7 +560,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public const int ControllerHeight = DateController.LineHeight * 2;
 
 		private const int Indent          = 30;
-		private const int WidgetWidth     = 163;
+		private const int WidgetWidth     = 177;
 		private const int LineHeight      = 2+17+2;
 
 

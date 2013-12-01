@@ -130,11 +130,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (ColorManager.GetBackgroundColor (false));
 
-				var date = this.GetDate (rank+7).Value;
+				var date = this.GetDate (rank+7).Value;  // 2ème ligne toujours pleine
 				var text = date.ToString ("ddd", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 				if (text.Length > 2)
 				{
-					text = text.Substring (0, 2);
+					text = text.Substring (0, 2);  // lu, ma, me, etc.
 				}
 
 				graphics.AddText (rect.Left, rect.Bottom, rect.Width, rect.Height, text, Font.DefaultFont, Calendar.FontSize, ContentAlignment.MiddleCenter);
