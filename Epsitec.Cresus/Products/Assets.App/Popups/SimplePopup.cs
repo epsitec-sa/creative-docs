@@ -47,29 +47,29 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
+			int h = SimplePopup.margins + this.RequiredHeight;
 			int w = this.RequiredWidth;
-			int y = SimplePopup.margins + this.RequiredHeight;
+			int i = 0;
 
-			for (int i=0; i<this.items.Count; i++)
+			foreach (int y in this.PosY)
 			{
 				var item = this.items[i];
 
 				if (string.IsNullOrEmpty (item))
 				{
-					y -= SimplePopup.sepHeight;
-					this.CreateSeparator (y, w);
+					this.CreateSeparator (h+y, w);
 				}
 				else
 				{
-					y -= SimplePopup.itemHeight;
-					this.CreateItem (i, y, w);
+					this.CreateItem (i, h+y, w);
 				}
+
+				i++;
 			}
 		}
 
 		private void CreateSeparator(int y, int width)
 		{
-			y += SimplePopup.sepHeight/2;
 			int dx = width + SimplePopup.margins*2;
 
 			new FrameBox
@@ -131,10 +131,45 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				int sepCount  = this.items.Where (x => string.IsNullOrEmpty (x)).Count ();
-				int itemCount = this.items.Count - sepCount;
+				return -this.PosY.Last ();
+			}
+		}
 
-				return itemCount*SimplePopup.itemHeight + sepCount*SimplePopup.sepHeight;
+		private IEnumerable<int> PosY
+		{
+			get
+			{
+				int y = 0;
+				bool separator = false;
+
+				for (int i=0; i<this.items.Count; i++)
+				{
+					var item = this.items[i];
+
+					if (string.IsNullOrEmpty (item))
+					{
+						if (separator)  // compact ?
+						{
+							y += SimplePopup.sepHeight/2 - 2;
+							yield return y;
+							y -= SimplePopup.sepHeight/2;
+						}
+						else
+						{
+							y -= SimplePopup.sepHeight/2;
+							yield return y;
+							y -= SimplePopup.sepHeight/2;
+						}
+
+						separator = true;
+					}
+					else
+					{
+						y -= SimplePopup.itemHeight;
+						yield return y;
+						separator = false;
+					}
+				}
 			}
 		}
 

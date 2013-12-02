@@ -231,9 +231,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int horizontalMargins = 40;
+		private static readonly int horizontalMargins = 20;
 		private static readonly int verticalMargins   = 20;
-		private static readonly int buttonWidth       = 180;
+		private static readonly int buttonWidth       = DateController.ControllerWidth;
 		private static readonly int buttonHeight      = 24;
 		private static readonly int buttonGap         = 1;
 

@@ -122,11 +122,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private static readonly int LineHeight  = 2+17+2;
-		private static readonly int Indent      = 70;
-		private static readonly int PopupWidth  = 300;
-		private static readonly int PopupHeight = 120+DateController.ControllerHeight;
 		private static readonly int Margin      = 20;
+		private static readonly int LineHeight  = 2 + 17 + 2;
+		private static readonly int Indent      = 70;
+		private static readonly int PopupWidth  = CreateObjectPopup.Margin*2 + CreateObjectPopup.Indent + 10 + DateController.ControllerWidth;
+		private static readonly int PopupHeight = 120 + DateController.ControllerHeight;
 
 		private readonly DataAccessor					accessor;
 
