@@ -61,6 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateToolbar (parent);
 			this.CreateController (parent);
+
 			this.UpdateButtons ();
 		}
 
@@ -77,7 +78,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock            = DockStyle.Top,
 				PreferredHeight = DateController.LineHeight,
 				Margins         = new Margins (this.DateLabelWidth+(this.DateLabelWidth == 0 ? 0 : 10), 0, 0, 0),
-				//??BackColor       = ColorManager.WindowBackgroundColor,
 			};
 
 			this.dayButton   = this.CreatePartButton (line,  5, 13);
@@ -87,6 +87,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			ToolTip.Default.SetToolTip (this.dayButton,   "Sélectionne le jour");
 			ToolTip.Default.SetToolTip (this.monthButton, "Sélectionne le mois");
 			ToolTip.Default.SetToolTip (this.yearButton,  "Sélectionne l'année");
+
+			this.info = new StaticText
+			{
+				Parent           = line,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Enable           = false,  // pour afficher en gris
+				Dock             = DockStyle.Fill,
+				Margins          = new Margins (72, 0, 0, 0),
+			};
 
 			this.dayButton.Clicked += delegate
 			{
@@ -258,6 +268,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateButtonState (this.endButton,   this.Date == this.GetPredefinedDate (DateType.EndCurrentYear));
 
 				this.deleteButton.Enable = this.Date != null;
+
+				this.info.Text = DateController.GetDateInfo (this.date);
 			}
 		}
 
@@ -284,6 +296,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				button.ButtonStyle = ButtonStyle.ToolItem;
 				button.ActiveState = ActiveState.No;
+			}
+		}
+
+		private static string GetDateInfo(System.DateTime? date)
+		{
+			//	Retourne le jour sous la forme "lundi 2 décembre 2013".
+			//	Voir http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
+			if (date.HasValue)
+			{
+				return date.Value.ToString ("dddd d MMMM yyyy");
+			}
+			else
+			{
+				return null;
 			}
 		}
 
@@ -582,6 +608,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton									predefinedButton;
 		private IconButton									calendarButton;
 		private IconButton									deleteButton;
+		private StaticText									info;
+
 		private System.DateTime?							date;
 	}
 }
