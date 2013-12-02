@@ -13,6 +13,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Popup permettant la saisir des informations nécessaires à la création d'un
+	/// nouveau groupe, à savoir le nom du groupe et son parent.
+	/// </summary>
 	public class CreateGroupPopup : AbstractPopup
 	{
 		public CreateGroupPopup(DataAccessor accessor, Guid selectedGuid)

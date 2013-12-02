@@ -11,6 +11,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Popup permettant de choisir une date, à l'aide du composant complet DateController.
+	/// </summary>
 	public class DatePopup : AbstractPopup
 	{
 		public DatePopup(DataAccessor accessor)
@@ -68,7 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int margins      = 10;
+		private static readonly int margins      = 20;
 		private static readonly int dialogWidth  = DateController.ControllerWidth  + DatePopup.margins*2;
 		private static readonly int dialogHeight = AbstractPopup.TitleHeight + DateController.ControllerHeight + DatePopup.margins*2;
 

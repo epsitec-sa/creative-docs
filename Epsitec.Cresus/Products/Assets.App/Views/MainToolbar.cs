@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.buttonObjects    = this.CreateViewTypeButton (toolbar, ViewType.Objects,    "View.Objects",    "Objets d'immobilisation");
 			this.buttonCategories = this.CreateViewTypeButton (toolbar, ViewType.Categories, "View.Categories", "Catégories d'immobilisations");
-			this.buttonGroups     = this.CreateViewTypeButton (toolbar, ViewType.Groups,     "View.Groups",     "Groupes d'immobilisations");
+			this.buttonGroups     = this.CreateViewTypeButton (toolbar, ViewType.Groups,     "View.Groups",     "Groupes");
 			this.buttonEvents     = this.CreateViewTypeButton (toolbar, ViewType.Events,     "View.Events",     "Evénements");
 			this.buttonReports    = this.CreateViewTypeButton (toolbar, ViewType.Reports,    "View.Reports",    "Rapports et statistiques");
 			this.buttonSettings   = this.CreateViewTypeButton (toolbar, ViewType.Settings,   "View.Settings",   "Réglages");

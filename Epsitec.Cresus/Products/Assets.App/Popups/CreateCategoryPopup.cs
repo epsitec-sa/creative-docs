@@ -13,6 +13,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Popup permettant la saisir des informations nécessaires à la création d'une
+	/// nouvelle catégorie, à savoir le nom de la catégorie et son éventuel modèle.
+	/// </summary>
 	public class CreateCategoryPopup : AbstractPopup
 	{
 		public CreateCategoryPopup(DataAccessor accessor)

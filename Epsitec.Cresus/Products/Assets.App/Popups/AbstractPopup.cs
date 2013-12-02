@@ -14,12 +14,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
 	/// Un popup permet de réaliser des dialogues modaux, sans qu'il soit dit.
-	/// Dès que la souris quitte la surface, le popup est fermé.
+	/// Dès que la souris clique hors de la surface, le popup est fermé.
 	/// A la création, un popup s'attache à la fenêtre parent nommée "PopupParentFrame",
-	/// qui doit remplir toute la fenêtre. Le popup lui-même occupe toute la surfce.
+	/// qui doit remplir toute la fenêtre. Le popup lui-même occupe toute la surface.
 	/// </summary>
 	public abstract class AbstractPopup : Widget
 	{
+		public Color							BackColor = ColorManager.GetBackgroundColor ();
+
+
 		public void Create(Widget target, bool leftOrRight = false)
 		{
 			//	Crée le popup, dont la queue pointera vers le widget target.
@@ -415,13 +418,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				//	Intérieur blanc avec la queue.
 				var rect = this.dialogRect;
 				graphics.AddFilledPath (BalloonPath.GetPath (rect, this.targetRect, this.QueueThickness));
-				graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.GetBackgroundColor ()));
+				graphics.RenderSolid (Color.FromAlphaColor (alpha, this.BackColor));
 
 				//	Intérieur blanc rectangulaire.
 				if (alpha < 1.0)
 				{
 					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+					graphics.RenderSolid (this.BackColor);
 				}
 
 				//	Petit filet sombre.
@@ -456,7 +459,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				//	Intérieur blanc rectangulaire.
 				var rect = this.dialogRect;
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+				graphics.RenderSolid (this.BackColor);
 
 				//	Petit filet sombre.
 				rect.Inflate (0.5);

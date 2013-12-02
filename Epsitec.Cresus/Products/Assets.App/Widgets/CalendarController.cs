@@ -9,6 +9,11 @@ using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Contrôleur permettant de choisir une date dans un calendrier. Trois mois sont
+	/// affichés (mois précédent, courant et suivant), et des boutons permettent de
+	/// reculer ou d'avancer dans le temps.
+	/// </summary>
 	public class CalendarController
 	{
 		public System.DateTime Date

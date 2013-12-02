@@ -287,6 +287,8 @@
     <EmbeddedResource Include="Images\Date.UnselectedPart.icon" />
     <EmbeddedResource Include="Images\Date.Predefined.icon" />
     <EmbeddedResource Include="Images\Date.Calendar.icon" />
+    <EmbeddedResource Include="Images\Date.Minus.icon" />
+    <EmbeddedResource Include="Images\Date.Plus.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

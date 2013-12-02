@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				System.DateTime? createDate = timestamp.Value.Date;
 
-				var popup = new NewEventPopup
+				var popup = new NewEventPopup (this.accessor)
 				{
 					BaseType   = BaseType.Objects,
 					DataObject = this.obj,

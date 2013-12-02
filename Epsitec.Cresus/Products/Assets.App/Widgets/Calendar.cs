@@ -11,9 +11,14 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Widget affichant une grille de 8x7 cases représentant l'intégralité d'un mois,
+	/// défini par la propriété Date. La première ligne affiche le mois et l'année
+	/// (par exemple "mars 2014"). La deuxième ligne affiche les jours de la semaine.
+	/// </summary>
 	public class Calendar : Widget
 	{
-		public System.DateTime Date
+		public System.DateTime					Date
 		{
 			get
 			{
@@ -29,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public System.DateTime? SelectedDate
+		public System.DateTime?					SelectedDate
 		{
 			get
 			{

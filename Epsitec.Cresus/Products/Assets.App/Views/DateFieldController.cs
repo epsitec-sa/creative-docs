@@ -87,20 +87,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Text            = DateFieldController.ConvDateToString (this.value),
 			};
 
-			this.minusButton = new GlyphButton
+			this.minusButton = new IconButton
 			{
 				Parent        = this.frameBox,
-				GlyphShape    = GlyphShape.Minus,
-				ButtonStyle   = ButtonStyle.ToolItem,
+				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Date.Minus"),
+				AutoFocus     = false,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
 
-			this.plusButton = new GlyphButton
+			this.plusButton = new IconButton
 			{
 				Parent        = this.frameBox,
-				GlyphShape    = GlyphShape.Plus,
-				ButtonStyle   = ButtonStyle.ToolItem,
+				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Date.Plus"),
+				AutoFocus     = false,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
@@ -351,8 +351,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private TextField						textField;
-		private GlyphButton						minusButton;
-		private GlyphButton						plusButton;
+		private IconButton						minusButton;
+		private IconButton						plusButton;
 		private System.DateTime?				value;
 	}
 }

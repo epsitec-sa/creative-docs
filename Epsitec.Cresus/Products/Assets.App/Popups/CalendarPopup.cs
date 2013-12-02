@@ -10,6 +10,9 @@ using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Popup permettant de choisir une date dans un calendrier affichant trois mois.
+	/// </summary>
 	public class CalendarPopup : AbstractPopup
 	{
 		public System.DateTime					Date;

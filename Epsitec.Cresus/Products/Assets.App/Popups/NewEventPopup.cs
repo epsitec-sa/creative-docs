@@ -15,6 +15,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class NewEventPopup : AbstractPopup
 	{
+		public NewEventPopup(DataAccessor accessor)
+		{
+			this.accessor = accessor;
+		}
+
+
 		public BaseType							BaseType;
 		public DataObject						DataObject;
 		public Timestamp						Timestamp;
@@ -23,53 +29,56 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return this.GetDialogSize (this.ButtonDescriptions.Count ());
+				return this.RequiredSize;
 			}
 		}
 
 		public override void CreateUI()
 		{
-			this.CreateDateUI ();
+			this.CreateTitle ("Création d'un nouvel événement");
 
-			this.buttonsFrame = new FrameBox
-			{
-				Parent  = this.mainFrameBox,
-				Anchor  = AnchorStyles.All,
-				Margins = new Margins (NewEventPopup.horizontalMargins, NewEventPopup.horizontalMargins, 0, NewEventPopup.verticalMargins),
-			};
+			var bh = this.ButtonsHeight;
 
+			var dateFrame = this.CreateFrame
+			(
+				NewEventPopup.horizontalMargins,
+				NewEventPopup.verticalMargins*2 + bh,
+				NewEventPopup.buttonWidth,
+				DateController.ControllerHeight
+			);
+
+			this.buttonsFrame = this.CreateFrame
+			(
+				NewEventPopup.horizontalMargins,
+				NewEventPopup.verticalMargins,
+				NewEventPopup.buttonWidth,
+				NewEventPopup.buttonGap + bh
+			);
+
+			this.CreateDate (dateFrame);
 			this.CreateButtons ();
 			this.CreateCloseButton ();
 		}
 
-		private void CreateDateUI()
+		private void CreateDate(Widget parent)
 		{
-			var frame = this.CreateTitle (null);
-
-			frame.Padding = new Margins (0, 0, 1, 0);
-			frame.BackColor = ColorManager.TreeTableBackgroundColor;
-
-			this.dateController = new DateFieldController
+			var dateController = new DateController (this.accessor)
 			{
-				Label      = "Crée un événement le",
-				LabelWidth = 110,
-				Value      = this.Timestamp.Date,
+				DateLabelWidth  = 0,
+				DateDescription = null,
+				TabIndex        = 1,
+				Date            = this.Timestamp.Date,
 			};
 
-			this.dateController.HideAdditionalButtons = true;
-			this.dateController.CreateUI (frame);
-			this.dateController.SetFocus ();
+			dateController.CreateUI (parent);
 
-			this.dateController.ValueEdited += delegate
+			dateController.DateChanged += delegate
 			{
-				if (this.dateController.Value.HasValue)
-				{
-					this.Timestamp = new Timestamp (this.dateController.Value.Value, 0);
-					this.OnDateChanged (this.dateController.Value);
-					this.UpdateButtons ();
-				}
+				this.Timestamp = new Timestamp (dateController.Date.Value, 0);
+				this.UpdateButtons ();
 			};
 		}
+
 
 		private void UpdateButtons()
 		{
@@ -83,17 +92,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			int dx = NewEventPopup.buttonWidth;
 			int dy = NewEventPopup.buttonHeight;
-			int x = 0;
 			int y = 0;
 
 			foreach (var desc in this.ButtonDescriptions.Reverse ())
 			{
-				this.CreateButton (x, y, dx, dy, desc.Type, desc.Text, desc.Tooltip, desc.Enable);
+				this.CreateButton (dx, dy, desc.Type, desc.Text, desc.Tooltip, desc.Enable);
 				y += dy + NewEventPopup.buttonGap;
 			}
 		}
 
-		private Button CreateButton(int x, int y, int dx, int dy, EventType type, string text, string tooltip, bool enable)
+		private Button CreateButton(int dx, int dy, EventType type, string text, string tooltip, bool enable)
 		{
 			string name = type.ToString();
 
@@ -125,12 +133,29 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private Size GetDialogSize(int buttonCount)
+		private Size RequiredSize
 		{
-			int dx = NewEventPopup.horizontalMargins*2 + NewEventPopup.buttonWidth;
-			int dy = NewEventPopup.verticalMargins*2 + AbstractPopup.TitleHeight + NewEventPopup.buttonHeight*buttonCount + NewEventPopup.buttonGap*(buttonCount-1);
+			get
+			{
+				int dx = NewEventPopup.horizontalMargins*2 + NewEventPopup.buttonWidth;
+				int dy = NewEventPopup.verticalMargins*3
+					   + AbstractPopup.TitleHeight
+					   + DateController.ControllerHeight
+					   + this.ButtonsHeight;
 
-			return new Size (dx, dy);
+				return new Size (dx, dy);
+			}
+		}
+
+		private int ButtonsHeight
+		{
+			get
+			{
+				int buttonCount = this.ButtonDescriptions.Count ();
+
+				return NewEventPopup.buttonHeight * buttonCount
+					 + NewEventPopup.buttonGap * (buttonCount-1);
+			}
 		}
 
 
@@ -212,7 +237,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static readonly int buttonHeight      = 24;
 		private static readonly int buttonGap         = 1;
 
-		private DateFieldController dateController;
-		private FrameBox buttonsFrame;
+		private readonly DataAccessor					accessor;
+
+		private FrameBox								buttonsFrame;
 	}
 }

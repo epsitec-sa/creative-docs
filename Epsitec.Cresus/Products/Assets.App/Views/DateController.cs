@@ -12,6 +12,12 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
+	/// <summary>
+	/// Contrôleur permettant de saisir une date avec plusieurs boutons pour faciliter
+	/// la saisie, y compris un accès aux dates prédéfinies (début ou fin de l'année en
+	/// cours par exemple) et au calendrier. Pour cela, on utilise les composants
+	/// SimplePopup et CalendarPopup, affichés en tant que sous-popups.
+	/// </summary>
 	public class DateController
 	{
 		public DateController(DataAccessor accessor)
@@ -69,7 +75,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = DateController.LineHeight,
+				PreferredHeight = DateController.LineHeight+2,
+				Padding         = new Margins (0, 0, 2, 0),
 				Margins         = new Margins (this.DateLabelWidth+(this.DateLabelWidth == 0 ? 0 : 10), 0, 0, 0),
 				BackColor       = ColorManager.WindowBackgroundColor,
 			};
@@ -78,11 +85,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.monthButton = this.CreatePartButton (line, 19, 13);
 			this.yearButton  = this.CreatePartButton (line, 33, 23);
 
-			this.beginButton      = this.CreateIconButton (line, "Date.CurrentYearBegin", DateController.LineHeight*4);
-			this.nowButton        = this.CreateIconButton (line, "Date.Now",              DateController.LineHeight*3);
-			this.endButton        = this.CreateIconButton (line, "Date.CurrentYearEnd",   DateController.LineHeight*2);
-			this.predefinedButton = this.CreateIconButton (line, "Date.Predefined",       DateController.LineHeight*1);
-			this.calendarButton   = this.CreateIconButton (line, "Date.Calendar",         DateController.LineHeight*0);
+			this.beginButton      = this.CreateIconButton (line, "Date.CurrentYearBegin", 72+DateController.LineHeight*0);
+			this.nowButton        = this.CreateIconButton (line, "Date.Now",              72+DateController.LineHeight*1);
+			this.endButton        = this.CreateIconButton (line, "Date.CurrentYearEnd",   72+DateController.LineHeight*2);
+			this.predefinedButton = this.CreateIconButton (line, "Date.Predefined",       72+DateController.LineHeight*3);
 
 			ToolTip.Default.SetToolTip (this.dayButton,   "Sélectionne le jour");
 			ToolTip.Default.SetToolTip (this.monthButton, "Sélectionne le mois");
@@ -92,7 +98,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			ToolTip.Default.SetToolTip (this.nowButton,        "Aujourd'hui");
 			ToolTip.Default.SetToolTip (this.endButton,        "Fin de l'année en cours");
 			ToolTip.Default.SetToolTip (this.predefinedButton, "Autre date à choix...");
-			ToolTip.Default.SetToolTip (this.calendarButton,   "Calendrier...");
 
 			this.dayButton.Clicked += delegate
 			{
@@ -137,11 +142,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.ShowPredefinedPopup ();
 			};
-
-			this.calendarButton.Clicked += delegate
-			{
-				this.ShowCalendarPopup ();
-			};
 		}
 
 		private IconButton CreatePartButton(Widget parent, int x, int dx)
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private IconButton CreateIconButton(Widget parent, string icon, int x)
+		private IconButton CreateIconButton(Widget parent, string icon, int x, int bottom = 0)
 		{
 			return new IconButton
 			{
@@ -166,8 +166,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AutoFocus       = false,
 				PreferredWidth  = DateController.LineHeight,
 				PreferredHeight = DateController.LineHeight,
-				Anchor          = AnchorStyles.BottomRight,
-				Margins         = new Margins (0, x, 0, 0),
+				Anchor          = AnchorStyles.BottomLeft,
+				Margins         = new Margins (x, 0, 0, bottom),
 			};
 		}
 
@@ -195,10 +195,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var dateFrame = new FrameBox
 			{
-				Parent         = footer,
-				PreferredWidth = DateController.WidgetWidth,
-				Dock           = DockStyle.Fill,
-				BackColor      = ColorManager.WindowBackgroundColor,
+				Parent    = footer,
+				Dock      = DockStyle.Fill,
+				BackColor = ColorManager.WindowBackgroundColor,
 			};
 
 			this.dateFieldController.HideAdditionalButtons = true;
@@ -206,8 +205,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dateFieldController.CreateUI (dateFrame);
 			this.dateFieldController.SetFocus ();
 
-			this.deleteButton = this.CreateIconButton (dateFrame, "Field.Clear", DateController.LineHeight*0);
-			ToolTip.Default.SetToolTip (this.deleteButton, "Efface la date");
+			this.deleteButton   = this.CreateIconButton (dateFrame, "Field.Clear",   72+DateController.LineHeight*2, 2);
+			this.calendarButton = this.CreateIconButton (dateFrame, "Date.Calendar", 72+DateController.LineHeight*3, 2);
+
+			ToolTip.Default.SetToolTip (this.deleteButton,   "Efface la date");
+			ToolTip.Default.SetToolTip (this.calendarButton, "Calendrier...");
 
 			this.dateFieldController.ValueEdited += delegate
 			{
@@ -226,6 +228,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateButtons ();
 				this.dateFieldController.SetFocus ();
 				this.OnDateChanged (this.date);
+			};
+
+			this.calendarButton.Clicked += delegate
+			{
+				this.ShowCalendarPopup ();
 			};
 		}
 
@@ -557,11 +564,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		public const int ControllerWidth  = DateController.WidgetWidth;
-		public const int ControllerHeight = DateController.LineHeight * 2;
+		public const int ControllerHeight = DateController.LineHeight*2 + 6;
 
 		private const int Indent          = 30;
-		private const int WidgetWidth     = 177;
-		private const int LineHeight      = 2+17+2;
+		private const int WidgetWidth     = 142;
+		private const int LineHeight      = 17;
 
 
 		private readonly DataAccessor						accessor;

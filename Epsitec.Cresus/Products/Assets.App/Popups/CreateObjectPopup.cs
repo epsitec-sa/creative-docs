@@ -11,6 +11,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Popup permettant la saisir des informations nécessaires à la création d'un
+	/// nouvel objet, à savoir la date d'entrée et le nom de l'objet.
+	/// </summary>
 	public class CreateObjectPopup : AbstractPopup
 	{
 		public CreateObjectPopup(DataAccessor accessor)
