@@ -99,3 +99,18 @@ Fichiers mis en production:
 
 - http://www.opac.ch/files/aider/2013-11-16-aider.zip
 - http://www.opac.ch/files/aider/eerv-2013-11-21.zip
+
+
+
+Lancé le 30.11.2013
+-------------------
+
+SVN Update > r22418
+
+-echupdate -newechfile:S:\eerv\eerv-2013-11-28.xml -oldechfile:S:\eerv\eerv-2013-11-21.xml -output:S:\eerv\ech-diff-2013-11-28.md
+-exportcontacts -output-rch:contacts-rch.csv -output-custom:contacts-custom.csv
+
+Fichiers mis en production:
+
+- http://www.opac.ch/files/aider/2013-11-30-aider.zip
+- http://www.opac.ch/files/aider/eerv-2013-11-28.zip
