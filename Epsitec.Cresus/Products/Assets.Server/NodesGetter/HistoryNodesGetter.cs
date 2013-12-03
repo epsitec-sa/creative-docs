@@ -21,9 +21,14 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		public DataObject						DataObject;
-		public ObjectField						Field;
-		public Timestamp?						ForcedTimestamp;
+		public void SetParams(DataObject dataObject, ObjectField field, Timestamp? forcedTimestamp)
+		{
+			this.dataObject      = dataObject;
+			this.field           = field;
+			this.forcedTimestamp = forcedTimestamp;
+
+			this.UpdateData ();
+		}
 
 
 		public override int Count
@@ -49,17 +54,18 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public override void UpdateData()
+
+		private void UpdateData()
 		{
 			this.nodes.Clear ();
 
-			if (this.DataObject != null)
+			if (this.dataObject != null)
 			{
-				foreach (var e in this.DataObject.Events)
+				foreach (var e in this.dataObject.Events)
 				{
-					if (e.Timestamp != this.ForcedTimestamp)
+					if (e.Timestamp != this.forcedTimestamp)
 					{
-						var p = e.GetProperty (this.Field);
+						var p = e.GetProperty (this.field);
 						if (p == null)
 						{
 							continue;
@@ -72,6 +78,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		private readonly List<GuidNode> nodes;
+		private readonly List<GuidNode>			nodes;
+
+		private DataObject						dataObject;
+		private ObjectField						field;
+		private Timestamp?						forcedTimestamp;
 	}
 }

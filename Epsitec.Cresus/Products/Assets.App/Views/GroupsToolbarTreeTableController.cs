@@ -28,9 +28,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void UpdateData()
+		public override void UpdateData()
 		{
-			this.NodesGetter.UpdateData ();
+			this.NodesGetter.SetParams (null, this.sortingInstructions);
 
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -155,14 +155,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void SetSortingInstructions(SortingInstructions instructions)
-		{
-			(this.nodesGetter as GroupTreeNodesGetter).SortingInstructions = instructions;
-
-			this.UpdateData ();
-		}
-
-	
 		private void ShowCreatePopup(Widget target)
 		{
 			var popup = new CreateGroupPopup (this.accessor, this.SelectedGuid);

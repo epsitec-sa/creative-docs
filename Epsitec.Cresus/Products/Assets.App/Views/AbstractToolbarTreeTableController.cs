@@ -86,6 +86,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public virtual void UpdateData()
+		{
+		}
+
+
 		public virtual Guid						SelectedGuid
 		{
 			get;
@@ -273,12 +278,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				secondaryType = sortedColumn.Type;
 			}
 
-			var instructions = new SortingInstructions (primaryField, primaryType, secondaryField, secondaryType);
-			this.SetSortingInstructions (instructions);
-		}
-
-		protected virtual void SetSortingInstructions(SortingInstructions instructions)
-		{
+			this.sortingInstructions = new SortingInstructions (primaryField, primaryType, secondaryField, secondaryType);
+			this.UpdateData ();
 		}
 
 
@@ -425,5 +426,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected NavigationTreeTableController	controller;
 		protected int							selectedRow;
 		protected TreeTableToolbar				toolbar;
+		protected SortingInstructions			sortingInstructions;
 	}
 }

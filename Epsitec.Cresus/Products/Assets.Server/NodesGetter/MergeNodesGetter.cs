@@ -40,7 +40,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		public Timestamp? Timestamp;
+		public void SetParams(Timestamp? timestamp)
+		{
+			this.timestamp = timestamp;
+			this.UpdateData ();
+		}
 
 
 		public override int Count
@@ -66,7 +70,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public override void UpdateData()
+		private void UpdateData()
 		{
 			this.outputNodes.Clear ();
 
@@ -104,7 +108,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 						var groupGuid = ObjectCalculator.GetObjectPropertyGuid
 						(
 							obj,
-							this.Timestamp,
+							this.timestamp,
 							ObjectField.GroupGuid+i,
 							inputValue: true
 						);
@@ -124,5 +128,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private readonly AbstractNodesGetter<LevelNode>		groupNodes;
 		private readonly AbstractNodesGetter<SortableNode>	objectNodes;
 		private readonly List<LevelNode>					outputNodes;
+
+		private Timestamp?									timestamp;
 	}
 }

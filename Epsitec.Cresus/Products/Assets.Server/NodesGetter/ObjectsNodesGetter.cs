@@ -42,35 +42,23 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 			this.groupNodesGetter1 = new GroupParentNodesGetter (groupNodes, accessor);
 			this.groupNodesGetter2 = new GroupLevelNodesGetter (this.groupNodesGetter1, accessor);
+
 			this.mergeNodesGetter  = new MergeNodesGetter (accessor, this.groupNodesGetter2, this.objectNodesGetter2);
-			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.mergeNodesGetter)
-			{
-				InputIsMerge = true,
-			};
+			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.mergeNodesGetter);
 
-			this.SortingInstructions = SortingInstructions.Empty;
+			this.sortingInstructions = SortingInstructions.Empty;
 		}
 
 
-		public Guid								RootGuid;
-		public SortingInstructions				SortingInstructions;
-
-
-		public Timestamp? Timestamp
+		public void SetParams(Timestamp? timestamp, Guid rootGuid, SortingInstructions instructions)
 		{
-			get
-			{
-				return this.timestamp;
-			}
-			set
-			{
-				if (this.timestamp != value)
-				{
-					this.timestamp = value;
-					this.UpdateData ();
-				}
-			}
+			this.timestamp           = timestamp;
+			this.rootGuid            = rootGuid;
+			this.sortingInstructions = instructions;
+
+			this.UpdateData ();
 		}
+
 
 		public override int Count
 		{
@@ -95,26 +83,16 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public override void UpdateData()
+		private void UpdateData()
 		{
-			this.objectNodesGetter1.Timestamp = this.timestamp;
-			this.objectNodesGetter1.SortingInstructions = this.SortingInstructions;
+			this.objectNodesGetter1.SetParams (this.timestamp, this.sortingInstructions);
+			this.objectNodesGetter2.SetParams (this.sortingInstructions);
 
-			this.objectNodesGetter2.SortingInstructions = this.SortingInstructions;
+			this.groupNodesGetter1.SetParams (this.timestamp, this.sortingInstructions);
+			this.groupNodesGetter2.SetParams (this.rootGuid, this.sortingInstructions, this.rootGuid.IsEmpty);
 
-			this.groupNodesGetter1.Timestamp = this.timestamp;
-			this.groupNodesGetter1.SortingInstructions = this.SortingInstructions;
-
-			this.groupNodesGetter2.ForceEmpty = this.RootGuid.IsEmpty;
-			this.groupNodesGetter2.RootGuid = this.RootGuid;
-			this.groupNodesGetter2.SortingInstructions = this.SortingInstructions;
-
-			this.mergeNodesGetter.Timestamp = this.timestamp;
-
-			this.objectNodesGetter2.UpdateData ();
-			this.groupNodesGetter2.UpdateData ();
-			this.mergeNodesGetter.UpdateData ();
-			this.treeObjectsGetter.UpdateData ();
+			this.mergeNodesGetter.SetParams (this.timestamp);
+			this.treeObjectsGetter.SetParams (inputIsMerge: true);
 		}
 
 
@@ -175,5 +153,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private readonly TreeObjectsNodesGetter		treeObjectsGetter;
 
 		private Timestamp?							timestamp;
+		private Guid								rootGuid;
+		private SortingInstructions					sortingInstructions;
 	}
 }

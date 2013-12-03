@@ -28,9 +28,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void UpdateData()
+		public override void UpdateData()
 		{
-			this.nodesGetter.UpdateData ();
+			this.secondaryGetter.SetParams (null, this.sortingInstructions);
+			(this.nodesGetter as SorterNodesGetter).SetParams (this.sortingInstructions);
 
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -102,15 +103,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 			}
-		}
-
-
-		protected override void SetSortingInstructions(SortingInstructions instructions)
-		{
-			this.secondaryGetter.SortingInstructions = instructions;
-			(this.nodesGetter as SorterNodesGetter).SortingInstructions = instructions;
-
-			this.UpdateData ();
 		}
 
 

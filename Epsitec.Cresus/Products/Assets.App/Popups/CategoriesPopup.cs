@@ -27,9 +27,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var secondary    = new SortableNodesGetter (primary, this.accessor, BaseType.Categories);
 			this.nodesGetter = new SorterNodesGetter (secondary);
 
-			secondary       .SortingInstructions = SortingInstructions.Default;
-			this.nodesGetter.SortingInstructions = SortingInstructions.Default;
-			this.nodesGetter.UpdateData ();
+			secondary.SetParams (null, SortingInstructions.Default);
+			this.nodesGetter.SetParams (SortingInstructions.Default);
 
 			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodesGetter);
 		}

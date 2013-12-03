@@ -19,7 +19,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		public SortingInstructions SortingInstructions;
+		public void SetParams(SortingInstructions instructions)
+		{
+			this.sortingInstructions = instructions;
+			this.UpdateData ();
+		}
 
 
 		public override int Count
@@ -45,11 +49,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public override void UpdateData()
+		private void UpdateData()
 		{
 			this.outputNodes = SortingMachine<SortableNode>.Sorts
 			(
-				this.SortingInstructions,
+				this.sortingInstructions,
 				this.inputNodes.Nodes,
 				x => x.PrimarySortValue,
 				x => x.SecondarySortValue
@@ -59,5 +63,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		
 		private readonly AbstractNodesGetter<SortableNode>	inputNodes;
 		private SortableNode[]								outputNodes;
+		private SortingInstructions							sortingInstructions;
 	}
 }

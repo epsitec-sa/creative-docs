@@ -48,9 +48,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public bool								DataFreezed;
 
-		public void UpdateData()
+		public override void UpdateData()
 		{
-			this.NodesGetter.UpdateData ();
+			this.NodesGetter.SetParams (this.timestamp, this.rootGuid, this.sortingInstructions);
+			this.dataFiller.Timestamp = this.timestamp;
 
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -109,25 +110,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void SetDate(System.DateTime? date)
 		{
 			//	Choix du timestamp visible dans tout le TreeTable.
-			Timestamp? timestamp = null;
+			this.timestamp = null;
 
 			if (date.HasValue)
 			{
-				timestamp = new Timestamp (date.Value, 0);
+				this.timestamp = new Timestamp (date.Value, 0);
 			}
 
 			this.stateAtController.Date = date;
 
 			var guid = this.SelectedGuid;
 			{
-				this.NodesGetter.Timestamp = timestamp;
-				this.NodesGetter.UpdateData ();
-				this.dataFiller.Timestamp = timestamp;
+				this.UpdateData ();
 			}
 			this.SelectedGuid = guid;
-
-			this.UpdateController ();
-			this.UpdateToolbar ();
 		}
 
 
@@ -143,13 +139,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void OnFilter()
 		{
 			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Filter);
-			var popup = new FilterPopup (this.accessor, this.NodesGetter.RootGuid);
+			var popup = new FilterPopup (this.accessor, this.rootGuid);
 
 			popup.Create (target, leftOrRight: true);
 
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
-				this.NodesGetter.RootGuid = guid;
+				this.rootGuid = guid;
 
 				var selectedGuid = this.SelectedGuid;
 				this.UpdateData ();
@@ -229,14 +225,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void SetSortingInstructions(SortingInstructions instructions)
-		{
-			(this.nodesGetter as ObjectsNodesGetter).SortingInstructions = instructions;
-
-			this.UpdateData ();
-		}
-
-
 		private void ShowCreatePopup(Widget target)
 		{
 			var popup = new CreateObjectPopup (this.accessor);
@@ -283,7 +271,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			base.UpdateToolbar ();
 
 			this.toolbar.SetCommandState (ToolbarCommand.Filter,
-				this.NodesGetter.RootGuid.IsEmpty ? ToolbarCommandState.Enable : ToolbarCommandState.Activate);
+				this.rootGuid.IsEmpty ? ToolbarCommandState.Enable : ToolbarCommandState.Activate);
 
 			this.toolbar.UpdateCommand (ToolbarCommand.CompactAll, !this.NodesGetter.IsAllCompacted);
 			this.toolbar.UpdateCommand (ToolbarCommand.ExpandAll,  !this.NodesGetter.IsAllExpanded);
@@ -301,5 +289,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private StateAtController					stateAtController;
 		private Timestamp?							selectedTimestamp;
+		private Timestamp?							timestamp;
+		private Guid								rootGuid;
 	}
 }

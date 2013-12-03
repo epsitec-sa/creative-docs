@@ -43,14 +43,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void UpdateData()
 		{
-			this.nodesGetter.SortingInstructions = SortingInstructions.Default;
-			this.nodesGetter.UpdateData ();
+			var timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
+			this.nodesGetter.SetParams (timestamp, this.rootGuid, SortingInstructions.Default);
+			this.dataFiller.Timestamp = timestamp;
 
 			this.UpdateDataArray ();
 			this.UpdateScroller ();
 			this.UpdateController ();
 			this.UpdateToolbar ();
-			this.UpdateStateAt ();
 		}
 
 
@@ -379,7 +379,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnObjectFilter()
 		{
 			var target = this.objectsToolbar.GetCommandWidget (ToolbarCommand.Filter);
-			var popup = new FilterPopup (this.accessor, this.nodesGetter.RootGuid);
+			var popup = new FilterPopup (this.accessor, this.rootGuid);
 
 			popup.Create (target, leftOrRight: true);
 
@@ -865,33 +865,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var selectedGuid = this.SelectedGuid;
 			{
-				var timestamp = Timestamp.Now;
-
-				//?if (this.stateAtController.Date.HasValue && !this.rootGuid.IsEmpty)
-				if (this.stateAtController.Date.HasValue)
-				{
-					timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
-				}
-
-				this.stateAtController.Date = timestamp.Date;
-
-				this.nodesGetter.Timestamp = timestamp;
-				this.nodesGetter.RootGuid = this.rootGuid;
-				this.nodesGetter.UpdateData ();
-				this.dataFiller.Timestamp = timestamp;
+				this.UpdateData ();
 			}
 			this.SelectedGuid = selectedGuid;
-
-			this.UpdateDataArray ();
-			this.UpdateScroller ();
-			this.UpdateController ();
-			this.UpdateToolbar ();
-			this.UpdateStateAt ();
-		}
-
-		private void UpdateStateAt()
-		{
-			//?this.stateAtController.Visibility = !this.nodesGetter.RootGuid.IsEmpty;
 		}
 
 
@@ -1019,7 +995,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateToolbar()
 		{
-			this.objectsToolbar.SetCommandState (ToolbarCommand.Filter, this.nodesGetter.RootGuid.IsEmpty
+			this.objectsToolbar.SetCommandState (ToolbarCommand.Filter, this.rootGuid.IsEmpty
 				? ToolbarCommandState.Enable
 				: ToolbarCommandState.Activate);
 

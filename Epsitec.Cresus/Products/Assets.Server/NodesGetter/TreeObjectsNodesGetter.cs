@@ -24,7 +24,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		public bool InputIsMerge;
+		public void SetParams(bool inputIsMerge)
+		{
+			this.inputIsMerge = inputIsMerge;
+			this.UpdateData ();
+		}
 
 
 		public override int Count
@@ -159,7 +163,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 		
-		public override void UpdateData()
+		private void UpdateData()
 		{
 			//	Met à jour toutes les données en conservant le mode compacté/étendu.
 			var compactedGuids = this.nodes
@@ -176,7 +180,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 				//	Par défaut, on considére que la ligne ne peut être ni étendue
 				//	ni compactée.
-				var type = (this.InputIsMerge && currentNode.BaseType == BaseType.Groups)
+				var type = (this.inputIsMerge && currentNode.BaseType == BaseType.Groups)
 					? NodeType.Compacted
 					: NodeType.Final;
 
@@ -242,5 +246,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private readonly AbstractNodesGetter<LevelNode>	inputNodes;
 		private readonly List<TreeNode>					nodes;
 		private readonly List<int>						nodeIndexes;
+
+		public bool										inputIsMerge;
 	}
 }

@@ -39,24 +39,14 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		public SortingInstructions SortingInstructions;
-
-
-		public Timestamp? Timestamp
+		public void SetParams(Timestamp? timestamp, SortingInstructions instructions)
 		{
-			get
-			{
-				return this.timestamp;
-			}
-			set
-			{
-				if (this.timestamp != value)
-				{
-					this.timestamp = value;
-					this.UpdateData ();
-				}
-			}
+			this.timestamp           = timestamp;
+			this.sortingInstructions = instructions;
+
+			this.UpdateData ();
 		}
+
 
 		public override int Count
 		{
@@ -81,15 +71,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public override void UpdateData()
+		private void UpdateData()
 		{
-			this.parentNodesGetter.Timestamp = this.timestamp;
-			this.parentNodesGetter.SortingInstructions = this.SortingInstructions;
-
-			this.levelNodesGetter.SortingInstructions = this.SortingInstructions;
-
-			this.levelNodesGetter.UpdateData ();
-			this.treeObjectsGetter.UpdateData ();
+			this.parentNodesGetter.SetParams (this.timestamp, this.sortingInstructions);
+			this.levelNodesGetter.SetParams(Guid.Empty, this.sortingInstructions, false);
+			this.treeObjectsGetter.SetParams (inputIsMerge: false);
 		}
 
 
@@ -148,5 +134,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private readonly TreeObjectsNodesGetter			treeObjectsGetter;
 
 		private Timestamp?								timestamp;
+		private SortingInstructions						sortingInstructions;
 	}
 }

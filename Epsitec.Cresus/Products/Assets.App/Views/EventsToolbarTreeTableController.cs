@@ -27,9 +27,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void UpdateData()
+		public override void UpdateData()
 		{
-			this.nodesGetter.UpdateData ();
+			this.eventsNodesGetter.SetParams (this.obj, this.sortingInstructions);
+			this.NodesGetter.SetParams (this.sortingInstructions);
 
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -52,7 +53,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.objectGuid = value;
 					this.obj = this.accessor.GetObject (BaseType.Objects, this.objectGuid);
 
-					this.eventsNodesGetter.DataObject = this.obj;
 					this.dataFiller.DataObject = this.obj;
 
 					this.UpdateData ();
@@ -158,15 +158,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 			}
-		}
-
-
-		protected override void SetSortingInstructions(SortingInstructions instructions)
-		{
-			this.eventsNodesGetter.SortingInstructions = instructions;
-			this.NodesGetter.SortingInstructions = instructions;
-
-			this.UpdateData ();
 		}
 
 

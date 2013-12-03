@@ -24,9 +24,14 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		public bool								ForceEmpty;
-		public Guid								RootGuid;
-		public SortingInstructions				SortingInstructions;
+		public void SetParams(Guid rootGuid, SortingInstructions instructions, bool forceEmpty)
+		{
+			this.rootGuid            = rootGuid;
+			this.sortingInstructions = instructions;
+			this.forceEmpty          = forceEmpty;
+
+			this.UpdateData ();
+		}
 
 
 		public override int Count
@@ -52,16 +57,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public override void UpdateData()
-		{
-			this.UpdateData (this.ForceEmpty, this.RootGuid);
-		}
-
-		private void UpdateData(bool forceEmpty, Guid rootGuid)
+		private void UpdateData()
 		{
 			this.levelNodes.Clear ();
 
-			if (forceEmpty)
+			if (this.forceEmpty)
 			{
 				return;
 			}
@@ -69,15 +69,14 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			//	Crée un véritable arbre de tous les noeuds.
 			ParentNode root;
 
-			if (rootGuid.IsEmpty)
+			if (this.rootGuid.IsEmpty)
 			{
 				root = this.inputNodes.Nodes.Where (x => x.Parent.IsEmpty).FirstOrDefault ();
 			}
 			else
 			{
-				root = new ParentNode (rootGuid, Guid.Empty, ComparableData.Empty, ComparableData.Empty);
+				root = new ParentNode (this.rootGuid, Guid.Empty, ComparableData.Empty, ComparableData.Empty);
 			}
-
 
 			if (root.IsEmpty)
 			{
@@ -119,7 +118,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		{
 			return SortingMachine<ParentNode>.Sorts
 			(
-				this.SortingInstructions,
+				this.sortingInstructions,
 				nodes,
 				x => x.PrimaryOrderedValue,
 				x => x.SecondaryOrderedValue
@@ -194,5 +193,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private readonly AbstractNodesGetter<ParentNode> inputNodes;
 		private readonly DataAccessor					accessor;
 		private readonly List<LevelNode>				levelNodes;
+
+		private Guid									rootGuid;
+		private SortingInstructions						sortingInstructions;
+		private bool									forceEmpty;
 	}
 }

@@ -21,12 +21,15 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.accessor   = accessor;
 			this.baseType   = baseType;
 
-			this.SortingInstructions = SortingInstructions.Empty;
+			this.sortingInstructions = SortingInstructions.Empty;
 		}
 
 
-		public Timestamp?						Timestamp;
-		public SortingInstructions				SortingInstructions;
+		public void SetParams(Timestamp? timestamp, SortingInstructions	instructions)
+		{
+			this.timestamp           = timestamp;
+			this.sortingInstructions = instructions;
+		}
 
 
 		public override int Count
@@ -43,8 +46,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			{
 				var node      = this.inputNodes[index];
 				var obj       = this.accessor.GetObject (this.baseType, node.Guid);
-				var primary   = ObjectCalculator.GetComparableData (obj, this.Timestamp, this.SortingInstructions.PrimaryField);
-				var secondary = ObjectCalculator.GetComparableData (obj, this.Timestamp, this.SortingInstructions.SecondaryField);
+				var primary   = ObjectCalculator.GetComparableData (obj, this.timestamp, this.sortingInstructions.PrimaryField);
+				var secondary = ObjectCalculator.GetComparableData (obj, this.timestamp, this.sortingInstructions.SecondaryField);
 
 				return new SortableNode (node.Guid, primary, secondary);
 			}
@@ -54,5 +57,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private readonly AbstractNodesGetter<GuidNode>	inputNodes;
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
+
+		private Timestamp?								timestamp;
+		private SortingInstructions						sortingInstructions;
 	}
 }

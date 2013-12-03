@@ -14,21 +14,24 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	/// </summary>
 	public class ObjectEventsNodesGetter : AbstractNodesGetter<SortableNode>  // outputNodes
 	{
-		public DataObject						DataObject;
-		public SortingInstructions				SortingInstructions;
+		public void SetParams(DataObject dataObject, SortingInstructions sortingInstructions)
+		{
+			this.dataObject          = dataObject;
+			this.sortingInstructions = sortingInstructions;
+		}
 
 
 		public override int Count
 		{
 			get
 			{
-				if (this.DataObject == null)
+				if (this.dataObject == null)
 				{
 					return 0;
 				}
 				else
 				{
-					return this.DataObject.EventsCount;
+					return this.dataObject.EventsCount;
 				}
 			}
 		}
@@ -37,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		{
 			get
 			{
-				var e = this.DataObject.GetEvent (index);
+				var e = this.dataObject.GetEvent (index);
 
 				if (e == null)
 				{
@@ -45,8 +48,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				}
 				else
 				{
-					var pp = e.GetProperty (this.SortingInstructions.PrimaryField);
-					var sp = e.GetProperty (this.SortingInstructions.SecondaryField);
+					var pp = e.GetProperty (this.sortingInstructions.PrimaryField);
+					var sp = e.GetProperty (this.sortingInstructions.SecondaryField);
 
 					var primary   = ObjectCalculator.GetComparableData (pp);
 					var secondary = ObjectCalculator.GetComparableData (sp);
@@ -55,5 +58,9 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				}
 			}
 		}
+
+
+		private DataObject						dataObject;
+		private SortingInstructions				sortingInstructions;
 	}
 }
