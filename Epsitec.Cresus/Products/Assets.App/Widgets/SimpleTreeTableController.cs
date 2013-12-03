@@ -15,30 +15,29 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class SimpleTreeTableController
 	{
-		public SimpleTreeTableController(AbstractTreeTableFiller<GuidNode> dataFiller, int rowsCount)
+		public SimpleTreeTableController(AbstractTreeTableFiller<GuidNode> dataFiller)
 		{
 			this.dataFiller = dataFiller;
 
-			this.treeTable = new NavigationTreeTableController ();
-			this.treeTable.RowsCount = rowsCount;
+			this.controller = new NavigationTreeTableController ();
 
-			this.selectedRow = -1;
+			this.visibleSelectedRow = -1;
 		}
 
 
 		public void CreateUI(Widget parent, int rowHeight = 18, int headerHeight = 24, int footerHeight = 24)
 		{
-			this.treeTable.CreateUI (parent, rowHeight, headerHeight, footerHeight);
-			TreeTableFiller<GuidNode>.FillColumns (dataFiller, this.treeTable);
+			this.controller.CreateUI (parent, rowHeight, headerHeight, footerHeight);
+			TreeTableFiller<GuidNode>.FillColumns (dataFiller, this.controller);
 
-			this.treeTable.RowClicked += delegate (object sender, int row)
+			this.controller.RowClicked += delegate (object sender, int row)
 			{
-				this.selectedRow = this.treeTable.TopVisibleRow + row;
+				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.UpdateTreeTableController ();
-				this.OnRowClicked (this.selectedRow);
+				this.OnRowClicked (this.visibleSelectedRow);
 			};
 
-			this.treeTable.ContentChanged += delegate (object sender, bool crop)
+			this.controller.ContentChanged += delegate (object sender, bool crop)
 			{
 				this.UpdateTreeTableController (crop);
 			};
@@ -49,11 +48,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.treeTable.AllowsMovement;
+				return this.controller.AllowsMovement;
 			}
 			set
 			{
-				this.treeTable.AllowsMovement = value;
+				this.controller.AllowsMovement = value;
 			}
 		}
 
@@ -61,13 +60,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.selectedRow;
+				return this.visibleSelectedRow;
 			}
 			set
 			{
-				if (this.selectedRow != value)
+				if (this.visibleSelectedRow != value)
 				{
-					this.selectedRow = value;
+					this.visibleSelectedRow = value;
 					this.UpdateTreeTableController ();
 				}
 			}
@@ -75,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void UpdateTreeTableController(bool crop = true)
 		{
-			TreeTableFiller<GuidNode>.UpdateController (this.dataFiller, this.treeTable, this.selectedRow, crop);
+			TreeTableFiller<GuidNode>.FillContent (this.dataFiller, this.controller, this.visibleSelectedRow, crop);
 		}
 
 
@@ -90,8 +89,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		private readonly AbstractTreeTableFiller<GuidNode>	dataFiller;
-		private readonly NavigationTreeTableController		treeTable;
+		private readonly NavigationTreeTableController		controller;
 
-		private int											selectedRow;
+		private int											visibleSelectedRow;
 	}
 }

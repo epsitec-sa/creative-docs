@@ -14,12 +14,17 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 		public static void FillColumns(AbstractTreeTableFiller<T> filler,
 			NavigationTreeTableController controller, int dockToLeftCount = 1)
 		{
+			//	Met à jour les colonnes du contrôleur.
 			controller.SetColumns (filler.Columns, dockToLeftCount);
 		}
 
-		public static void UpdateController(AbstractTreeTableFiller<T> filler,
+		public static void FillContent(AbstractTreeTableFiller<T> filler,
 			NavigationTreeTableController controller, int selection, bool crop)
 		{
+			//	Met à jour le contenu du contrôleur. Si crop = true, on s'arrange
+			//	pour rendre visible la sélection.
+			controller.RowsCount = filler.Count;
+
 			int visibleCount = controller.VisibleRowsCount;
 			int rowsCount    = controller.RowsCount;
 			int count        = System.Math.Min (visibleCount, rowsCount);

@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateSorting()
 		{
-			//	Met à jour les instruction de tri des getters en fonction des choix
+			//	Met à jour les instructions de tri des getters en fonction des choix
 			//	effectués dans le TreeTable.
 			var primaryField   = ObjectField.Unknown;
 			var primaryType    = SortedType.None;
@@ -285,8 +285,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateController(bool crop = true)
 		{
-			this.controller.RowsCount = this.nodesGetter.Count;
-			TreeTableFiller<T>.UpdateController (this.dataFiller, this.controller, this.VisibleSelectedRow, crop);
+			TreeTableFiller<T>.FillContent (this.dataFiller, this.controller, this.VisibleSelectedRow, crop);
 		}
 
 		protected virtual void UpdateToolbar()

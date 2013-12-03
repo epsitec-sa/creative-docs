@@ -31,6 +31,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			get;
 		}
 
+		public int Count
+		{
+			get
+			{
+				return this.nodesGetter.Count;
+			}
+		}
+
 		public abstract TreeTableContentItem GetContent(int firstRow, int count, int selection);
 
 

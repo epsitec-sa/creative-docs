@@ -154,8 +154,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateController(bool crop = true)
 		{
-			this.controller.RowsCount = this.nodesGetter.Count;
-			TreeTableFiller<SortableNode>.UpdateController (this.dataFiller, this.controller, this.visibleSelectedRow, crop);
+			TreeTableFiller<SortableNode>.FillContent (this.dataFiller, this.controller, this.visibleSelectedRow, crop);
 		}
 
 		private void UpdateSelectedRow()

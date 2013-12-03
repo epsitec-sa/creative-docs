@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else
 			{
-				var treeTable = new SimpleTreeTableController (this.accessor.Filler, this.accessor.RowsCount);
+				var treeTable = new SimpleTreeTableController (this.accessor.Filler);
 
 				treeTable.CreateUI (parent, rowHeight: HistoryController.rowHeight, headerHeight: HistoryController.headerHeight, footerHeight: 0);
 				treeTable.AllowsMovement = false;
