@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.deleteButton.Enable = this.Date != null;
 
-				this.info.Text = DateController.GetDateInfo (this.date);
+				this.info.Text = this.date.ToFull ();
 			}
 		}
 
@@ -296,20 +296,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				button.ButtonStyle = ButtonStyle.ToolItem;
 				button.ActiveState = ActiveState.No;
-			}
-		}
-
-		private static string GetDateInfo(System.DateTime? date)
-		{
-			//	Retourne le jour sous la forme "lundi 2 décembre 2013".
-			//	Voir http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
-			if (date.HasValue)
-			{
-				return date.Value.ToString ("dddd d MMMM yyyy");
-			}
-			else
-			{
-				return null;
 			}
 		}
 

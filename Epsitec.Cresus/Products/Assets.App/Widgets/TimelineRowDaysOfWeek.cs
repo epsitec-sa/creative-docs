@@ -3,9 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -110,17 +109,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private static string GetCellText(TimelineCellDate cell)
 		{
-			//	Retourne le jour sous la forme "Lu" ou "Ma".
+			//	Retourne le jour sous la forme "lu" ou "ma".
 			if (cell.IsValid)
 			{
-				var text = cell.Date.ToString ("ddd", System.Globalization.DateTimeFormatInfo.CurrentInfo);
-
-				if (text.Length > 2)
-				{
-					text = text.Substring (0, 2);
-				}
-
-				return text;
+				return cell.Date.ToDayOfWeek ();
 			}
 			else
 			{

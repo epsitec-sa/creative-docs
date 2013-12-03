@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Types;
+using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -75,8 +75,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public static bool IsSameWeeksOfYear(TimelineCellDate c1, TimelineCellDate c2)
 		{
-			int w1 = (c1.IsValid) ? TimelineCellDate.GetWeekOfYear (c1.Date) : -1;
-			int w2 = (c2.IsValid) ? TimelineCellDate.GetWeekOfYear (c2.Date) : -1;
+			int w1 = (c1.IsValid) ? c1.Date.GetWeekOfYear () : -1;
+			int w2 = (c2.IsValid) ? c2.Date.GetWeekOfYear () : -1;
 
 			return w1 == w2;
 		}
@@ -104,13 +104,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			int y2 = (c2.IsValid) ? c2.Date.Year : -1;
 
 			return d1 == d2 && m1 == m2 && y1 == y2;
-		}
-
-
-		private static int GetWeekOfYear(System.DateTime date)
-		{
-			var d = new Date (date);
-			return d.WeekOfYear;
 		}
 
 

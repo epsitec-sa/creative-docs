@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.RenderSolid (ColorManager.GetBackgroundColor (false));
 
 			var date = new System.DateTime (this.date.Year, this.date.Month, 1);
-			var text = date.ToString ("MMMM yyyy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
+			var text = date.ToMonthYear ();
 
 			graphics.AddText (rect.Left, rect.Bottom, rect.Width, rect.Height, text, Font.DefaultFont, Calendar.FontSize, ContentAlignment.MiddleCenter);
 			graphics.RenderSolid (ColorManager.TextColor);
@@ -136,11 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.RenderSolid (ColorManager.GetBackgroundColor (false));
 
 				var date = this.GetDate (rank+7).Value;  // 2ème ligne toujours pleine
-				var text = date.ToString ("ddd", System.Globalization.DateTimeFormatInfo.CurrentInfo);
-				if (text.Length > 2)
-				{
-					text = text.Substring (0, 2);  // lu, ma, me, etc.
-				}
+				var text = date.ToDayOfWeek ();  // "lu", "ma", etc.
 
 				graphics.AddText (rect.Left, rect.Bottom, rect.Width, rect.Height, text, Font.DefaultFont, Calendar.FontSize, ContentAlignment.MiddleCenter);
 				graphics.RenderSolid (ColorManager.TextColor);
@@ -182,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
-			string text = date.Day.ToString ();
+			var text = date.ToDay ();
 			graphics.AddText (rect.Left, rect.Bottom, rect.Width, rect.Height, text, Font.DefaultFont, Calendar.FontSize, ContentAlignment.MiddleCenter);
 			graphics.RenderSolid (ColorManager.TextColor);
 

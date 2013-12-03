@@ -3,10 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Types;
+using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -105,8 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Retourne le numéro de semaine sous la forme "1" ou "52".
 			if (cell.IsValid)
 			{
-				var d = new Date (cell.Date);
-				return d.WeekOfYear.ToString ();
+				return cell.Date.ToWeekOfYear ();
 			}
 			else
 			{

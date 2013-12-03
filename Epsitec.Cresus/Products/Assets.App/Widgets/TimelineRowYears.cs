@@ -3,9 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -106,23 +105,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private string GetCellText(Rectangle rect, TimelineCellDate cell)
 		{
-			//	Retourne le jour sous la forme "1" ou "31".
-			//	Voir http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
+			//	Retourne l'année sous la forme "2014" ou "14".
 			if (cell.IsValid)
 			{
 				var font = Font.DefaultFont;
 
 				for (int detailLevel = 1; detailLevel >= 0; detailLevel--)
 				{
-					string text;
-
-					if (detailLevel == 1)
+					var text = cell.Date.ToYear (detailLevel);
+					if (string.IsNullOrEmpty (text))
 					{
-						text = cell.Date.ToString ("yyyy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
-					}
-					else
-					{
-						text = cell.Date.ToString ("yy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
+						break;
 					}
 
 					var width = Helpers.Text.GetTextWidth (text, font, this.FontSize);

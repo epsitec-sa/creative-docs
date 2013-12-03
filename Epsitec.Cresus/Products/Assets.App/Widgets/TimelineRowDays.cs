@@ -6,6 +6,7 @@ using System.Linq;
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -116,7 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Retourne le jour sous la forme "1" ou "31".
 			if (cell.IsValid)
 			{
-				return cell.Date.Day.ToString (System.Globalization.DateTimeFormatInfo.CurrentInfo);
+				return cell.Date.ToDay ();
 			}
 			else
 			{

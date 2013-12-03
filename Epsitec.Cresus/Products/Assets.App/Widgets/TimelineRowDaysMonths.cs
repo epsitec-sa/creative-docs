@@ -6,6 +6,7 @@ using System.Linq;
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -104,11 +105,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private static string GetCellText(TimelineCellDate cell)
 		{
-			//	Retourne le jour sous la forme "1" ou "31".
-			//	Voir http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
 			if (cell.IsValid)
 			{
-				return cell.Date.ToString ("dd.MM", System.Globalization.DateTimeFormatInfo.CurrentInfo);
+				return cell.Date.ToDayMonth ();
 			}
 			else
 			{
