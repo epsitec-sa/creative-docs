@@ -402,7 +402,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private readonly TextLayout				textLayout;
 
-		protected TreeTableHoverMode			hoverMode;
+		private TreeTableHoverMode				hoverMode;
 		protected int							hilitedHoverRow;
 		private SortedType						sortedType;
 		private bool							sortedPrimary;

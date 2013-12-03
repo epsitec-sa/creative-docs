@@ -75,32 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void UpdateTreeTableController(bool crop = true)
 		{
-			int visibleCount = this.treeTable.VisibleRowsCount;
-			int rowsCount    = this.treeTable.RowsCount;
-			int count        = System.Math.Min (visibleCount, rowsCount);
-			int firstRow     = this.treeTable.TopVisibleRow;
-			int selection    = this.selectedRow;
-
-			if (selection != -1)
-			{
-				//	La sélection ne peut pas dépasser le nombre maximal de lignes.
-				selection = System.Math.Min (selection, rowsCount-1);
-
-				//	Si la sélection est hors de la zone visible, on choisit un autre cadrage.
-				if (crop && (selection < firstRow || selection >= firstRow+count))
-				{
-					firstRow = this.treeTable.GetTopVisibleRow (selection);
-				}
-
-				if (this.treeTable.TopVisibleRow != firstRow)
-				{
-					this.treeTable.TopVisibleRow = firstRow;
-				}
-
-				selection -= this.treeTable.TopVisibleRow;
-			}
-
-			TreeTableFiller<GuidNode>.FillContent (this.dataFiller, this.treeTable, firstRow, count, selection);
+			TreeTableFiller<GuidNode>.UpdateController (this.dataFiller, this.treeTable, this.selectedRow, crop);
 		}
 
 

@@ -286,33 +286,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected void UpdateController(bool crop = true)
 		{
 			this.controller.RowsCount = this.nodesGetter.Count;
-
-			int visibleCount = this.controller.VisibleRowsCount;
-			int rowsCount    = this.controller.RowsCount;
-			int count        = System.Math.Min (visibleCount, rowsCount);
-			int firstRow     = this.controller.TopVisibleRow;
-			int selection    = this.VisibleSelectedRow;
-
-			if (selection != -1)
-			{
-				//	La sélection ne peut pas dépasser le nombre maximal de lignes.
-				selection = System.Math.Min (selection, rowsCount-1);
-
-				//	Si la sélection est hors de la zone visible, on choisit un autre cadrage.
-				if (crop && (selection < firstRow || selection >= firstRow+count))
-				{
-					firstRow = this.controller.GetTopVisibleRow (selection);
-				}
-
-				if (this.controller.TopVisibleRow != firstRow)
-				{
-					this.controller.TopVisibleRow = firstRow;
-				}
-
-				selection -= this.controller.TopVisibleRow;
-			}
-
-			TreeTableFiller<T>.FillContent (this.dataFiller, this.controller, firstRow, count, selection);
+			TreeTableFiller<T>.UpdateController (this.dataFiller, this.controller, this.VisibleSelectedRow, crop);
 		}
 
 		protected virtual void UpdateToolbar()

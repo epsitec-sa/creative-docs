@@ -11,12 +11,44 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 	public static class TreeTableFiller<T>
 		where T : struct
 	{
-		public static void FillColumns(AbstractTreeTableFiller<T> filler, NavigationTreeTableController controller, int dockToLeftCount = 1)
+		public static void FillColumns(AbstractTreeTableFiller<T> filler,
+			NavigationTreeTableController controller, int dockToLeftCount = 1)
 		{
 			controller.SetColumns (filler.Columns, dockToLeftCount);
 		}
 
-		public static void FillContent(AbstractTreeTableFiller<T> filler, NavigationTreeTableController controller, int firstRow, int count, int selection)
+		public static void UpdateController(AbstractTreeTableFiller<T> filler,
+			NavigationTreeTableController controller, int selection, bool crop)
+		{
+			int visibleCount = controller.VisibleRowsCount;
+			int rowsCount    = controller.RowsCount;
+			int count        = System.Math.Min (visibleCount, rowsCount);
+			int firstRow     = controller.TopVisibleRow;
+
+			if (selection != -1)
+			{
+				//	La sélection ne peut pas dépasser le nombre maximal de lignes.
+				selection = System.Math.Min (selection, rowsCount-1);
+
+				//	Si la sélection est hors de la zone visible, on choisit un autre cadrage.
+				if (crop && (selection < firstRow || selection >= firstRow+count))
+				{
+					firstRow = controller.GetTopVisibleRow (selection);
+				}
+
+				if (controller.TopVisibleRow != firstRow)
+				{
+					controller.TopVisibleRow = firstRow;
+				}
+
+				selection -= controller.TopVisibleRow;
+			}
+
+			TreeTableFiller<T>.FillContent (filler, controller, firstRow, count, selection);
+		}
+
+		private static void FillContent(AbstractTreeTableFiller<T> filler,
+			NavigationTreeTableController controller, int firstRow, int count, int selection)
 		{
 			var contentItem = filler.GetContent (firstRow, count, selection);
 
