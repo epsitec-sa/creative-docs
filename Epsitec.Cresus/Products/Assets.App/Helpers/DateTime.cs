@@ -3,22 +3,21 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Assets.App.Helpers
 {
 	/// <summary>
-	/// Divers méthodes d'extension autour de System.DateTime.
+	/// Diverses méthodes d'extension autour de System.DateTime.
 	/// Voir http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
 	/// </summary>
 	public static class DateTime
 	{
-		public static string ToFull(this System.DateTime? date)
+		public static string ToFull(this System.DateTime? date, bool weekOfYear = false)
 		{
 			//	Retourne une description complète sous la forme "lundi 2 décembre 2013".
 			if (date.HasValue)
 			{
-				return date.Value.ToFull ();
+				return date.Value.ToFull (weekOfYear);
 			}
 			else
 			{
@@ -26,10 +25,18 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			}
 		}
 
-		public static string ToFull(this System.DateTime date)
+		public static string ToFull(this System.DateTime date, bool weekOfYear = false)
 		{
-			//	Retourne une description complète sous la forme "lundi 2 décembre 2013".
-			return date.ToString ("dddd d MMMM yyyy");
+			//	Retourne une description complète sous la forme "lundi 2 décembre 2013"
+			//	ou "lundi 2 décembre 2013 (sem. 49)"
+			var text = date.ToString ("dddd d MMMM yyyy");
+
+			if (weekOfYear)
+			{
+				text += string.Format (" (sem. {0})", date.ToWeekOfYear ());
+			}
+
+			return text;
 		}
 
 		public static string ToYear(this System.DateTime date, int detailLevel = 1)
@@ -87,10 +94,12 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 
 			if (text.Length > 2)
 			{
-				text = text.Substring (0, 2);
+				return text.Substring (0, 2);  // seulement les 2 premières lettres
 			}
-
-			return text;
+			else
+			{
+				return text;
+			}
 		}
 
 		public static string ToDay(this System.DateTime date)
@@ -115,8 +124,8 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 
 		public static int GetWeekOfYear(this System.DateTime date)
 		{
-			var d = new Date (date);
-			return d.WeekOfYear;
+			var ci = new System.Globalization.CultureInfo ("fr-CH");  // French (Switzerland)
+			return ci.Calendar.GetWeekOfYear (date, System.Globalization.CalendarWeekRule.FirstFourDayWeek, System.DayOfWeek.Monday);
 		}
 	}
 }

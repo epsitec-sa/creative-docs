@@ -16,8 +16,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// défini par la propriété Date. La première ligne affiche le mois et l'année
 	/// (par exemple "mars 2014"). La deuxième ligne affiche les jours de la semaine.
 	/// </summary>
-	public class Calendar : Widget
+	public class Calendar : Widget, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
+		public Calendar()
+		{
+			ToolTip.Default.RegisterDynamicToolTipHost (this);  // pour voir les tooltips dynamiques
+		}
+
+
 		public System.DateTime					Date
 		{
 			get
@@ -51,10 +57,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		#region IToolTipHost Members
+		public object GetToolTipCaption(Point pos)
+		{
+			if (this.hoverDate.HasValue)
+			{
+				return this.hoverDate.Value.ToFull (weekOfYear: true);
+			}
+
+			return null;
+		}
+		#endregion
+
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			this.PaintTitle (graphics);
-			this.PaintDows (graphics);
+			this.PaintDows  (graphics);
 			this.PaintCells (graphics);
 		}
 
