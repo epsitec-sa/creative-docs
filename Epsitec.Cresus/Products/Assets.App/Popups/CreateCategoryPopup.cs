@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.CreateUI (frame, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			TreeTableFiller<SortableNode>.FillColumns (this.dataFiller, this.controller);
+			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller);
 			this.UpdateController ();
 
 			//	Connexion des événements.
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateController(bool crop = true)
 		{
-			TreeTableFiller<SortableNode>.FillContent (this.dataFiller, this.controller, this.visibleSelectedRow, crop);
+			TreeTableFiller<SortableNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
 		private void UpdateSelectedRow()

@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public void CreateUI(Widget parent, int rowHeight = 18, int headerHeight = 24, int footerHeight = 24)
 		{
 			this.controller.CreateUI (parent, rowHeight, headerHeight, footerHeight);
-			TreeTableFiller<GuidNode>.FillColumns (dataFiller, this.controller);
+			TreeTableFiller<GuidNode>.FillColumns (this.controller, dataFiller);
 
 			this.controller.RowClicked += delegate (object sender, int row)
 			{
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void UpdateTreeTableController(bool crop = true)
 		{
-			TreeTableFiller<GuidNode>.FillContent (this.dataFiller, this.controller, this.visibleSelectedRow, crop);
+			TreeTableFiller<GuidNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
 

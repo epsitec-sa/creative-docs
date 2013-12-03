@@ -11,15 +11,15 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 	public static class TreeTableFiller<T>
 		where T : struct
 	{
-		public static void FillColumns(AbstractTreeTableFiller<T> filler,
-			NavigationTreeTableController controller, int dockToLeftCount = 1)
+		public static void FillColumns(NavigationTreeTableController controller, 
+			AbstractTreeTableFiller<T> filler, int dockToLeftCount = 1)
 		{
 			//	Met à jour les colonnes du contrôleur.
 			controller.SetColumns (filler.Columns, dockToLeftCount);
 		}
 
-		public static void FillContent(AbstractTreeTableFiller<T> filler,
-			NavigationTreeTableController controller, int selection, bool crop)
+		public static void FillContent(NavigationTreeTableController controller,
+			AbstractTreeTableFiller<T> filler, int selection, bool crop)
 		{
 			//	Met à jour le contenu du contrôleur. Si crop = true, on s'arrange
 			//	pour rendre visible la sélection.
@@ -49,11 +49,11 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 				selection -= controller.TopVisibleRow;
 			}
 
-			TreeTableFiller<T>.FillContent (filler, controller, firstRow, count, selection);
+			TreeTableFiller<T>.FillContent (controller, filler, firstRow, count, selection);
 		}
 
-		private static void FillContent(AbstractTreeTableFiller<T> filler,
-			NavigationTreeTableController controller, int firstRow, int count, int selection)
+		private static void FillContent(NavigationTreeTableController controller,
+			AbstractTreeTableFiller<T> filler, int firstRow, int count, int selection)
 		{
 			var contentItem = filler.GetContent (firstRow, count, selection);
 

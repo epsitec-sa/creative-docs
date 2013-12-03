@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateController(bool crop = true)
 		{
-			TreeTableFiller<T>.FillContent (this.dataFiller, this.controller, this.VisibleSelectedRow, crop);
+			TreeTableFiller<T>.FillContent (this.controller, this.dataFiller, this.VisibleSelectedRow, crop);
 		}
 
 		protected virtual void UpdateToolbar()

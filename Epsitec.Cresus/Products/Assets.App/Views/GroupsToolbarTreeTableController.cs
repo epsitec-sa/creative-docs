@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.nodesGetter);
-			TreeTableFiller<TreeNode>.FillColumns (this.dataFiller, this.controller);
+			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller);
 
 			this.controller.AddSortedColumn (0);
 		}
