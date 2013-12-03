@@ -1290,8 +1290,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private static readonly int lineHeight      = 18;
-		private static readonly int leftColumnWidth = 180;
+		private const int lineHeight      = 18;
+		private const int leftColumnWidth = 180;
 
 		private readonly DataAccessor						accessor;
 		private readonly ObjectsNodesGetter					nodesGetter;

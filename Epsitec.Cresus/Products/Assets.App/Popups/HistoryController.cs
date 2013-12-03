@@ -24,11 +24,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	On calcule une hauteur adaptée au contenu, mais qui ne dépasse
 			//	évidement pas la hauteur de la fenêtre principale.
 			double h = parent.ActualHeight
-					 - HistoryController.HeaderHeight
+					 - HistoryController.headerHeight
 					 - AbstractScroller.DefaultBreadth;
 
 			//	Utilise au maximum les 3/4 de la hauteur.
-			int max = (int) (h*0.75) / HistoryController.RowHeight;
+			int max = (int) (h*0.75) / HistoryController.rowHeight;
 
 			int rows = System.Math.Min (this.accessor.RowsCount, max);
 			rows = System.Math.Max (rows, 3);
@@ -36,9 +36,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			int dx = this.accessor.ColumnsWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
-			int dy = AbstractPopup.TitleHeight
-				   + HistoryController.HeaderHeight
-				   + rows * HistoryController.RowHeight
+			int dy = AbstractPopup.titleHeight
+				   + HistoryController.headerHeight
+				   + rows * HistoryController.rowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			return new Size (dx, dy);
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var treeTable = new SimpleTreeTableController (this.accessor.Filler, this.accessor.RowsCount);
 
-				treeTable.CreateUI (parent, rowHeight: HistoryController.RowHeight, headerHeight: HistoryController.HeaderHeight, footerHeight: 0);
+				treeTable.CreateUI (parent, rowHeight: HistoryController.rowHeight, headerHeight: HistoryController.headerHeight, footerHeight: 0);
 				treeTable.AllowsMovement = false;
 
 				//	Il faut forcer le calcul du layout pour pouvoir calculer la
@@ -92,8 +92,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int HeaderHeight     = 22;
-		private static readonly int RowHeight        = 18;
+		private const int headerHeight     = 22;
+		private const int rowHeight        = 18;
 
 		private readonly HistoryAccessor accessor;
 	}

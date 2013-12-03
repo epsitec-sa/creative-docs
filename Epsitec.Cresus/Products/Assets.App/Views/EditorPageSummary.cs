@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateCommentaries(Widget parent)
 		{
-			const int size = 17;
+			const int size = AbstractFieldController.lineHeight;
 
 			this.commentaries = new FrameBox
 			{

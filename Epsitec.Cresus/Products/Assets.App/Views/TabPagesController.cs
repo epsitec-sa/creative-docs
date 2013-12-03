@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private static readonly int height = 26;
+		private const int height = AbstractCommandToolbar.secondaryToolbarHeight;
 
 		private readonly List<string>			items;
 		private FrameBox						frameBox;

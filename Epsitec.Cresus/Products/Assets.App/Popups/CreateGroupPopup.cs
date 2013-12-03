@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
@@ -45,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new Size (CreateGroupPopup.PopupWidth, CreateGroupPopup.PopupHeight);
+				return new Size (CreateGroupPopup.popupWidth, CreateGroupPopup.popupHeight);
 			}
 		}
 
@@ -53,8 +54,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.CreateTitle ("Création d'un nouveau groupe");
 
-			var line1 = this.CreateFrame (CreateGroupPopup.Margin, 327, CreateGroupPopup.PopupWidth-CreateGroupPopup.Margin*2, CreateGroupPopup.LineHeight);
-			var line2 = this.CreateFrame (CreateGroupPopup.Margin,  50, CreateGroupPopup.PopupWidth-CreateGroupPopup.Margin*2, 260);
+			var line1 = this.CreateFrame (CreateGroupPopup.margin, 327, CreateGroupPopup.popupWidth-CreateGroupPopup.margin*2, CreateGroupPopup.lineHeight);
+			var line2 = this.CreateFrame (CreateGroupPopup.margin,  50, CreateGroupPopup.popupWidth-CreateGroupPopup.margin*2, 260);
 
 			this.CreateName      (line1);
 			this.CreateTreeTable (line2);
@@ -62,27 +63,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.UpdateButtons ();
 			this.textField.Focus ();
-		}
-
-		private void CreateTitle(Widget parent)
-		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = "Création d'un nouveau groupe",
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = CreateGroupPopup.TitleHeight - 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
-
-			new StaticText
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = 4,
-				BackColor        = ColorManager.SelectionColor,
-			};
 		}
 
 		private void CreateName(Widget parent)
@@ -93,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Text             = "Nom",
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = CreateGroupPopup.Indent,
+				PreferredWidth   = CreateGroupPopup.indent,
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
@@ -126,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Text             = "Dans",
 				ContentAlignment = ContentAlignment.TopRight,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = CreateGroupPopup.Indent,
+				PreferredWidth   = CreateGroupPopup.indent,
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
@@ -260,16 +240,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private static readonly int TitleHeight = 24;
-		private static readonly int LineHeight  = 2+17+2;
-		private static readonly int Indent      = 40;
-		private static readonly int PopupWidth  = 310;
-		private static readonly int PopupHeight = 390;
-		private static readonly int Margin      = 20;
+		private const int lineHeight  = 2+AbstractFieldController.lineHeight+2;
+		private const int indent      = 40;
+		private const int popupWidth  = 310;
+		private const int popupHeight = 390;
+		private const int margin      = 20;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly GroupTreeNodesGetter				nodesGetter;
+		private readonly GroupTreeNodesGetter			nodesGetter;
 		private readonly SingleGroupsTreeTableFiller	dataFiller;
 
 		private TextField								textField;

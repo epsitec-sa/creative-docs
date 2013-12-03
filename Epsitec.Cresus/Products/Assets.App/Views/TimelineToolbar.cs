@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public override FrameBox CreateUI(Widget parent)
 		{
-			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.SecondaryToolbarHeight);
+			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.secondaryToolbarHeight);
 			this.UpdateCommandButtons ();
 
 			return toolbar;

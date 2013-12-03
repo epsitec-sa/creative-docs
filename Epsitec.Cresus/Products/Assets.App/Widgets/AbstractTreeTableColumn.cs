@@ -400,10 +400,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		public const int HeaderRank = 1000000;
-		public const int FooterRank = 1000001;
-
-
 		private readonly TextLayout				textLayout;
 
 		protected TreeTableHoverMode			hoverMode;

@@ -124,14 +124,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (ComputedAmountController.lineHeight, ComputedAmountController.lineHeight),
+				PreferredSize = new Size (ComputedAmountController.LineHeight, ComputedAmountController.LineHeight),
 			};
 
 			this.argumentTextField = new TextField
 			{
 				Parent        = parent,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (ComputedAmountController.editWidth, ComputedAmountController.lineHeight),
+				PreferredSize = new Size (ComputedAmountController.EditWidth, ComputedAmountController.LineHeight),
 				TabIndex      = 1,
 			};
 
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (30, ComputedAmountController.lineHeight),
+				PreferredSize = new Size (30, ComputedAmountController.LineHeight),
 			};
 
 			this.equalText = new StaticText
@@ -149,14 +149,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent           = parent,
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Dock             = DockStyle.Left,
-				PreferredSize    = new Size (20, ComputedAmountController.lineHeight),
+				PreferredSize    = new Size (20, ComputedAmountController.LineHeight),
 			};
 
 			this.finalTextField = new TextField
 			{
 				Parent        = parent,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (ComputedAmountController.editWidth, ComputedAmountController.lineHeight),
+				PreferredSize = new Size (ComputedAmountController.EditWidth, ComputedAmountController.LineHeight),
 				TabIndex      = 2,
 			};
 
@@ -517,8 +517,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		protected static readonly int lineHeight = 17;
-		protected static readonly int editWidth  = 90;
+		protected const int LineHeight = AbstractFieldController.lineHeight;
+		protected const int EditWidth  = 90;
 
 
 		private readonly SafeCounter			ignoreChanges;

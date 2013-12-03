@@ -62,33 +62,33 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				Parent          = frame,
 				GlyphShape      = GlyphShape.TriangleLeft,
 				ButtonStyle     = ButtonStyle.ToolItem,
-				PreferredWidth  = CalendarController.ButtonWidth,
-				PreferredHeight = Calendar.RequiredHeight,
+				PreferredWidth  = CalendarController.buttonWidth,
+				PreferredHeight = Calendar.requiredHeight,
 				Dock            = DockStyle.Left,
 			};
 
 			this.prevCalendar = new Calendar
 			{
 				Parent          = frame,
-				PreferredWidth  = Calendar.RequiredWidth,
-				PreferredHeight = Calendar.RequiredHeight,
+				PreferredWidth  = Calendar.requiredWidth,
+				PreferredHeight = Calendar.requiredHeight,
 				Dock            = DockStyle.Left,
 			};
 
 			this.currCalendar = new Calendar
 			{
 				Parent          = frame,
-				PreferredWidth  = Calendar.RequiredWidth,
-				PreferredHeight = Calendar.RequiredHeight,
+				PreferredWidth  = Calendar.requiredWidth,
+				PreferredHeight = Calendar.requiredHeight,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (CalendarController.CalendarMargins, CalendarController.CalendarMargins, 0, 0),
+				Margins         = new Margins (CalendarController.calendarMargins, CalendarController.calendarMargins, 0, 0),
 			};
 
 			this.nextCalendar = new Calendar
 			{
 				Parent          = frame,
-				PreferredWidth  = Calendar.RequiredWidth,
-				PreferredHeight = Calendar.RequiredHeight,
+				PreferredWidth  = Calendar.requiredWidth,
+				PreferredHeight = Calendar.requiredHeight,
 				Dock            = DockStyle.Left,
 			};
 
@@ -97,8 +97,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				Parent          = frame,
 				GlyphShape      = GlyphShape.TriangleRight,
 				ButtonStyle     = ButtonStyle.ToolItem,
-				PreferredWidth  = CalendarController.ButtonWidth,
-				PreferredHeight = Calendar.RequiredHeight,
+				PreferredWidth  = CalendarController.buttonWidth,
+				PreferredHeight = Calendar.requiredHeight,
 				Dock            = DockStyle.Left,
 			};
 
@@ -159,10 +159,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		public static readonly int RequiredWidth  = Calendar.RequiredWidth*3 + CalendarController.CalendarMargins*2 + CalendarController.ButtonWidth*2;
-		public static readonly int RequiredHeight = Calendar.RequiredHeight;
-		private const int ButtonWidth             = 20;
-		private const int CalendarMargins         = 20;
+		public  const int requiredWidth   = Calendar.requiredWidth*3 + CalendarController.calendarMargins*2 + CalendarController.buttonWidth*2;
+		public  const int requiredHeight  = Calendar.requiredHeight;
+		private const int buttonWidth     = 20;
+		private const int calendarMargins = 20;
 
 		private GlyphButton						prevButton;
 		private GlyphButton						nextButton;

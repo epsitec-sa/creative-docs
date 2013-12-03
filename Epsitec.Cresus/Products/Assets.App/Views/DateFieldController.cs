@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.textField = new TextField
 			{
 				Parent          = this.frameBox,
-				PreferredWidth  = 70,
+				PreferredWidth  = DateFieldController.fieldWidth,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Dock            = DockStyle.Left,
 				TabIndex        = this.TabIndex,
@@ -348,6 +348,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public event EventHandler CursorChanged;
 		#endregion
+
+
+		private const int fieldWidth      = 70;
+		public  const int controllerWidth = DateFieldController.fieldWidth + AbstractFieldController.lineHeight*2;
 
 
 		private TextField						textField;

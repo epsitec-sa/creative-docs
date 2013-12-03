@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.DateDescription = "Date";
-			this.DateLabelWidth  = DateController.Indent;
+			this.DateLabelWidth  = DateController.indent;
 		}
 
 
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = DateController.LineHeight,
+				PreferredHeight = DateController.lineHeight,
 				Margins         = new Margins (this.DateLabelWidth+(this.DateLabelWidth == 0 ? 0 : 10), 0, 0, 0),
 			};
 
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent          = parent,
 				AutoFocus       = false,
 				PreferredWidth  = dx,
-				PreferredHeight = DateController.LineHeight,
+				PreferredHeight = DateController.lineHeight,
 				Anchor          = AnchorStyles.BottomLeft,
 				Margins         = new Margins (x, 0, 0, 0),
 			};
@@ -134,8 +134,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent          = parent,
 				IconUri         = AbstractCommandToolbar.GetResourceIconUri (icon),
 				AutoFocus       = false,
-				PreferredWidth  = DateController.LineHeight,
-				PreferredHeight = DateController.LineHeight,
+				PreferredWidth  = DateController.lineHeight,
+				PreferredHeight = DateController.lineHeight,
 				Anchor          = AnchorStyles.BottomLeft,
 				Margins         = new Margins (x, 0, 0, 2),
 			};
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = DateController.LineHeight,
+				PreferredHeight = DateController.lineHeight,
 			};
 
 			if (this.DateLabelWidth > 0)
@@ -175,12 +175,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dateFieldController.CreateUI (dateFrame);
 			this.dateFieldController.SetFocus ();
 
-			this.beginButton      = this.CreateIconButton (dateFrame, "Date.CurrentYearBegin", 72+DateController.LineHeight*2);
-			this.nowButton        = this.CreateIconButton (dateFrame, "Date.Now",              72+DateController.LineHeight*3);
-			this.endButton        = this.CreateIconButton (dateFrame, "Date.CurrentYearEnd",   72+DateController.LineHeight*4);
-			this.predefinedButton = this.CreateIconButton (dateFrame, "Date.Predefined",       72+DateController.LineHeight*5);
-			this.calendarButton   = this.CreateIconButton (dateFrame, "Date.Calendar",         72+DateController.LineHeight*6);
-			this.deleteButton     = this.CreateIconButton (dateFrame, "Field.Clear",           72+DateController.LineHeight*7);
+			this.beginButton      = this.CreateIconButton (dateFrame, "Date.CurrentYearBegin", 72+DateController.lineHeight*2);
+			this.nowButton        = this.CreateIconButton (dateFrame, "Date.Now",              72+DateController.lineHeight*3);
+			this.endButton        = this.CreateIconButton (dateFrame, "Date.CurrentYearEnd",   72+DateController.lineHeight*4);
+			this.predefinedButton = this.CreateIconButton (dateFrame, "Date.Predefined",       72+DateController.lineHeight*5);
+			this.calendarButton   = this.CreateIconButton (dateFrame, "Date.Calendar",         72+DateController.lineHeight*6);
+			this.deleteButton     = this.CreateIconButton (dateFrame, "Field.Clear",           72+DateController.lineHeight*7);
 
 			ToolTip.Default.SetToolTip (this.beginButton,      "Début de l'année en cours");
 			ToolTip.Default.SetToolTip (this.nowButton,        "Aujourd'hui");
@@ -574,12 +574,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		public const int ControllerWidth  = DateController.WidgetWidth;
-		public const int ControllerHeight = DateController.LineHeight*2 + 4;
+		public const int controllerWidth  = DateController.widgetWidth;
+		public const int controllerHeight = DateController.lineHeight*2 + 4;
 
-		private const int Indent          = 30;
-		private const int WidgetWidth     = 210;
-		private const int LineHeight      = 17;
+		private const int indent          = 30;
+		private const int widgetWidth     = 210;
+		private const int lineHeight      = AbstractFieldController.lineHeight;
 
 
 		private readonly DataAccessor						accessor;

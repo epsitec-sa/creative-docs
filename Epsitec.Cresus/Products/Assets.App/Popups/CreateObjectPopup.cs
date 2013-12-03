@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new Size (CreateObjectPopup.PopupWidth, CreateObjectPopup.PopupHeight);
+				return new Size (CreateObjectPopup.popupWidth, CreateObjectPopup.popupHeight);
 			}
 		}
 
@@ -42,8 +42,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.CreateTitle ("Création d'un nouvel objet");
 
-			var line1 = this.CreateFrame (CreateObjectPopup.Margin, 77, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, DateController.ControllerHeight);
-			var line2 = this.CreateFrame (CreateObjectPopup.Margin, 50, CreateObjectPopup.PopupWidth-CreateObjectPopup.Margin*2, CreateObjectPopup.LineHeight);
+			var line1 = this.CreateFrame (CreateObjectPopup.margin, 77, CreateObjectPopup.popupWidth-CreateObjectPopup.margin*2, DateController.controllerHeight);
+			var line2 = this.CreateFrame (CreateObjectPopup.margin, 50, CreateObjectPopup.popupWidth-CreateObjectPopup.margin*2, CreateObjectPopup.lineHeight);
 
 			this.CreateDate    (line1);
 			this.CreateName    (line2);
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var dateController = new DateController (this.accessor)
 			{
 				DateDescription = "Date d'entrée",
-				DateLabelWidth  = CreateObjectPopup.Indent,
+				DateLabelWidth  = CreateObjectPopup.indent,
 				TabIndex        = 1,
 				Date            = this.ObjectDate,
 			};
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Text             = "Nom",
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = CreateObjectPopup.Indent,
+				PreferredWidth   = CreateObjectPopup.indent,
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
@@ -122,16 +122,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private static readonly int Margin      = 20;
-		private static readonly int LineHeight  = 2 + 17 + 2;
-		private static readonly int Indent      = 70;
-		private static readonly int PopupWidth  = CreateObjectPopup.Margin*2 + CreateObjectPopup.Indent + 10 + DateController.ControllerWidth;
-		private static readonly int PopupHeight = 120 + DateController.ControllerHeight;
+		private const int margin      = 20;
+		private const int lineHeight  = 2 + AbstractFieldController.lineHeight + 2;
+		private const int indent      = 70;
+		private const int popupWidth  = CreateObjectPopup.margin*2 + CreateObjectPopup.indent + 10 + DateController.controllerWidth;
+		private const int popupHeight = 120 + DateController.controllerHeight;
 
-		private readonly DataAccessor					accessor;
+		private readonly DataAccessor			accessor;
 
-		private TextField								textField;
-		private Button									createButton;
-		private Button									cancelButton;
+		private TextField						textField;
+		private Button							createButton;
+		private Button							cancelButton;
 	}
 }

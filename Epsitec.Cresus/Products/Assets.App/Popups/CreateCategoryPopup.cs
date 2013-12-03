@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
@@ -47,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new Size (CreateCategoryPopup.PopupWidth, CreateCategoryPopup.PopupHeight);
+				return new Size (CreateCategoryPopup.popupWidth, CreateCategoryPopup.popupHeight);
 			}
 		}
 
@@ -55,8 +56,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.CreateTitle ("Création d'une nouvelle catégorie");
 
-			var line1 = this.CreateFrame (CreateCategoryPopup.Margin, 327, CreateCategoryPopup.PopupWidth-CreateCategoryPopup.Margin*2, CreateCategoryPopup.LineHeight);
-			var line2 = this.CreateFrame (CreateCategoryPopup.Margin,  50, CreateCategoryPopup.PopupWidth-CreateCategoryPopup.Margin*2, 260);
+			var line1 = this.CreateFrame (CreateCategoryPopup.margin, 327, CreateCategoryPopup.popupWidth-CreateCategoryPopup.margin*2, CreateCategoryPopup.lineHeight);
+			var line2 = this.CreateFrame (CreateCategoryPopup.margin,  50, CreateCategoryPopup.popupWidth-CreateCategoryPopup.margin*2, 260);
 
 			this.CreateName      (line1);
 			this.CreateTreeTable (line2);
@@ -74,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Text             = "Nom",
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = CreateCategoryPopup.Indent,
+				PreferredWidth   = CreateCategoryPopup.indent,
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
@@ -107,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Text             = "Modèle",
 				ContentAlignment = ContentAlignment.TopRight,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = CreateCategoryPopup.Indent,
+				PreferredWidth   = CreateCategoryPopup.indent,
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
@@ -198,12 +199,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private static readonly int TitleHeight = 24;
-		private static readonly int LineHeight  = 2+17+2;
-		private static readonly int Indent      = 40;
-		private static readonly int PopupWidth  = 310;
-		private static readonly int PopupHeight = 390;
-		private static readonly int Margin      = 20;
+		private const int lineHeight  = 2+AbstractFieldController.lineHeight+2;
+		private const int indent      = 40;
+		private const int popupWidth  = 310;
+		private const int popupHeight = 390;
+		private const int margin      = 20;
 
 		private readonly DataAccessor						accessor;
 		private readonly NavigationTreeTableController		controller;

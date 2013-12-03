@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent        = toolbar,
 				Dock          = dock,
 				PreferredSize = new Size (1, size),
-				Margins       = new Margins (AbstractCommandToolbar.SeparatorWidth/2, AbstractCommandToolbar.SeparatorWidth/2, 0, 0),
+				Margins       = new Margins (AbstractCommandToolbar.separatorWidth/2, AbstractCommandToolbar.separatorWidth/2, 0, 0),
 				BackColor     = ColorManager.SeparatorColor,
 			};
 
@@ -225,9 +225,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		public static readonly int PrimaryToolbarHeight   = 32 + 10;
-		public static readonly int SecondaryToolbarHeight = 24 + 2;
-		public static readonly int SeparatorWidth         = 11;
+		public const int primaryToolbarHeight   = 32 + 10;
+		public const int secondaryToolbarHeight = 24 + 2;
+		public const int separatorWidth         = 11;
 
 
 		private readonly Dictionary<ToolbarCommand, ToolbarCommandState> commandStates;

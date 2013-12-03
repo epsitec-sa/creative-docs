@@ -94,10 +94,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private static readonly int margins      = 10;
-		private static readonly int titleHeight  = 20;
-		private static readonly int dialogWidth  = 135;
-		private static readonly int dialogHeight = 114;
-		private static readonly int lineHeight   = 30;
+		private const int margins      = 10;
+		private const int dialogWidth  = 135;
+		private const int dialogHeight = 114;
+		private const int lineHeight   = 30;
 	}
 }

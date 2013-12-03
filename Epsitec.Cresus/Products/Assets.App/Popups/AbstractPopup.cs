@@ -58,18 +58,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var y = this.targetRect.Center.Y - this.DialogSize.Height/2;
 
-				y = System.Math.Max (y, AbstractPopup.FrameThickness);
-				y = System.Math.Min (y, this.Parent.ActualHeight - this.DialogSize.Height - AbstractPopup.FrameThickness);
+				y = System.Math.Max (y, AbstractPopup.frameThickness);
+				y = System.Math.Min (y, this.Parent.ActualHeight - this.DialogSize.Height - AbstractPopup.frameThickness);
 				y = System.Math.Floor (y);
 
 				if (this.targetRect.Center.X > this.Parent.ActualWidth/2)  // popup à gauche ?
 				{
-					var x = this.targetRect.Left - AbstractPopup.Spacing - this.DialogSize.Width;
+					var x = this.targetRect.Left - AbstractPopup.spacing - this.DialogSize.Width;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 				else  // popup à droite ?
 				{
-					var x = this.targetRect.Right + AbstractPopup.Spacing;
+					var x = this.targetRect.Right + AbstractPopup.spacing;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 			}
@@ -77,18 +77,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var x = this.targetRect.Center.X - this.DialogSize.Width/2;
 
-				x = System.Math.Max (x, AbstractPopup.FrameThickness);
-				x = System.Math.Min (x, this.Parent.ActualWidth - this.DialogSize.Width - AbstractPopup.FrameThickness);
+				x = System.Math.Max (x, AbstractPopup.frameThickness);
+				x = System.Math.Min (x, this.Parent.ActualWidth - this.DialogSize.Width - AbstractPopup.frameThickness);
 				x = System.Math.Floor (x);
 
 				if (this.targetRect.Center.Y > this.Parent.ActualHeight/2)  // popup en dessous ?
 				{
-					var y = this.targetRect.Bottom - AbstractPopup.Spacing - this.DialogSize.Height;
+					var y = this.targetRect.Bottom - AbstractPopup.spacing - this.DialogSize.Height;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 				else  // popup en dessus ?
 				{
-					var y = this.targetRect.Top + AbstractPopup.Spacing;
+					var y = this.targetRect.Top + AbstractPopup.spacing;
 					this.dialogRect = new Rectangle (x, y, this.DialogSize.Width, this.DialogSize.Height);
 				}
 			}
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected void CreateCloseButton()
 		{
 			//	Crée le bouton de fermeture en haut à droite.
-			int size = AbstractPopup.TitleHeight - 1;
+			int size = AbstractPopup.titleHeight - 1;
 
 			var button = new IconButton
 			{
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent           = this.mainFrameBox,
 				Dock             = DockStyle.Top,
-				PreferredHeight  = AbstractPopup.TitleHeight - 1,
+				PreferredHeight  = AbstractPopup.titleHeight - 1,
 			};
 
 			if (!string.IsNullOrEmpty (text))
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent              = this.mainFrameBox,
 				Dock                = DockStyle.Bottom,
-				PreferredHeight     = AbstractPopup.FooterHeight,
+				PreferredHeight     = AbstractPopup.footerHeight,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 		}
@@ -338,7 +338,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.dialogRect.Offset (delta);
 
 				var master = this.ActualBounds;
-				master.Deflate (AbstractPopup.FrameThickness);
+				master.Deflate (AbstractPopup.frameThickness);
 				this.dialogRect = AbstractPopup.ForceInside (this.dialogRect, master);
 
 				delta = this.dialogRect.BottomLeft - p;  // recalcule le delta réel
@@ -479,7 +479,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var delta = this.Distance - this.initialDistance + AbstractPopup.Spacing;
+				var delta = this.Distance - this.initialDistance + AbstractPopup.spacing;
 				return System.Math.Min (delta / 2.0, 10.0);
 			}
 		}
@@ -512,7 +512,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			get
 			{
 				var rect = this.dialogRect;
-				rect.Inflate (AbstractPopup.FrameThickness);
+				rect.Inflate (AbstractPopup.frameThickness);
 				return rect;
 			}
 		}
@@ -572,10 +572,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		public  static readonly int				TitleHeight    = 24 + 1;
-		private static readonly int				FooterHeight   = 30;
-		private static readonly double			FrameThickness = 8;
-		private static readonly double			Spacing        = 20;
+		public  const int						titleHeight    = 24 + 1;
+		private const int						footerHeight   = 30;
+		private const double					frameThickness = 8;
+		private const double					spacing        = 20;
 
 		private Widget							target;
 		private Rectangle						dialogRect;

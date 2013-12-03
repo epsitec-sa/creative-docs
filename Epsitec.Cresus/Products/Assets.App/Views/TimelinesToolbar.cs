@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public override FrameBox CreateUI(Widget parent)
 		{
-			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.SecondaryToolbarHeight);
+			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.secondaryToolbarHeight);
 			this.UpdateCommandButtons ();
 
 			return toolbar;
@@ -162,9 +162,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 					else if (bs.Widget is FrameBox)
 					{
-						x += AbstractCommandToolbar.SeparatorWidth/2;
+						x += AbstractCommandToolbar.separatorWidth/2;
 						bs.Widget.SetManualBounds (new Rectangle (x, 0, 1, size));
-						x += AbstractCommandToolbar.SeparatorWidth/2;
+						x += AbstractCommandToolbar.separatorWidth/2;
 					}
 				}
 			}
@@ -172,8 +172,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IEnumerable<ButtonState> GetButtons(double width, double size)
 		{
-			bool prevNext  = width > size*7 + AbstractCommandToolbar.SeparatorWidth*2;
-			bool firstLast = width > size*9 + AbstractCommandToolbar.SeparatorWidth;
+			bool prevNext  = width > size*7 + AbstractCommandToolbar.separatorWidth*2;
+			bool firstLast = width > size*9 + AbstractCommandToolbar.separatorWidth;
 
 			yield return new ButtonState (this.buttonCompacted);
 			yield return new ButtonState (this.buttonExpended);

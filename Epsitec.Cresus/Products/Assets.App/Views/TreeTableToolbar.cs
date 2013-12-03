@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public override FrameBox CreateUI(Widget parent)
 		{
-			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.SecondaryToolbarHeight);
+			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.secondaryToolbarHeight);
 			this.UpdateCommandButtons ();
 
 			return toolbar;
@@ -137,9 +137,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 					else if (bs.Widget is FrameBox)
 					{
-						x += AbstractCommandToolbar.SeparatorWidth/2;
+						x += AbstractCommandToolbar.separatorWidth/2;
 						bs.Widget.SetManualBounds (new Rectangle (x, 0, 1, size));
-						x += AbstractCommandToolbar.SeparatorWidth/2;
+						x += AbstractCommandToolbar.separatorWidth/2;
 					}
 				}
 			}
@@ -149,9 +149,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			int f = this.hasFilter ? 1:0;
 
-			bool prevNext      = width > size*(f+5) + AbstractCommandToolbar.SeparatorWidth*1;
-			bool firstLast     = width > size*(f+7) + AbstractCommandToolbar.SeparatorWidth*2;
-			bool compactExpand = width > size*(f+9) + AbstractCommandToolbar.SeparatorWidth*3 && this.hasTreeOperations;
+			bool prevNext      = width > size*(f+5) + AbstractCommandToolbar.separatorWidth*1;
+			bool firstLast     = width > size*(f+7) + AbstractCommandToolbar.separatorWidth*2;
+			bool compactExpand = width > size*(f+9) + AbstractCommandToolbar.separatorWidth*3 && this.hasTreeOperations;
 
 			yield return new ButtonState (this.buttonFilter, this.hasFilter);
 			yield return new ButtonState (this.separator1, this.hasFilter);

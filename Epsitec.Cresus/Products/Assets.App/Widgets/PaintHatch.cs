@@ -66,6 +66,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return path;
 		}
 
-		private static readonly int distance = 7;
+		private const int distance = 7;
 	}
 }

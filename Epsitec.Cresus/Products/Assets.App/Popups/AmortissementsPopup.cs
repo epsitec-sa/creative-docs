@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new Size (AmortissementsPopup.PopupWidth, AmortissementsPopup.PopupHeight);
+				return new Size (AmortissementsPopup.popupWidth, AmortissementsPopup.popupHeight);
 			}
 		}
 
@@ -41,12 +41,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.CreateTitle ("Amortissements");
 
-			var line1 = this.CreateFrame (AmortissementsPopup.Margin, 171, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line2 = this.CreateFrame (AmortissementsPopup.Margin, 150, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line3 = this.CreateFrame (AmortissementsPopup.Margin, 121, 160, AmortissementsPopup.LineHeight);
-			var line4 = this.CreateFrame (AmortissementsPopup.Margin, 100, 160, AmortissementsPopup.LineHeight);
-			var line5 = this.CreateFrame (AmortissementsPopup.Margin,  71, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
-			var line6 = this.CreateFrame (AmortissementsPopup.Margin,  50, AmortissementsPopup.PopupWidth-AmortissementsPopup.Margin*2, AmortissementsPopup.LineHeight);
+			var line1 = this.CreateFrame (AmortissementsPopup.margin, 171, AmortissementsPopup.popupWidth-AmortissementsPopup.margin*2, AmortissementsPopup.lineHeight);
+			var line2 = this.CreateFrame (AmortissementsPopup.margin, 150, AmortissementsPopup.popupWidth-AmortissementsPopup.margin*2, AmortissementsPopup.lineHeight);
+			var line3 = this.CreateFrame (AmortissementsPopup.margin, 121, 40+10+DateFieldController.controllerWidth, AmortissementsPopup.lineHeight);
+			var line4 = this.CreateFrame (AmortissementsPopup.margin, 100, 40+10+DateFieldController.controllerWidth, AmortissementsPopup.lineHeight);
+			var line5 = this.CreateFrame (AmortissementsPopup.margin,  71, AmortissementsPopup.popupWidth-AmortissementsPopup.margin*2, AmortissementsPopup.lineHeight);
+			var line6 = this.CreateFrame (AmortissementsPopup.margin,  50, AmortissementsPopup.popupWidth-AmortissementsPopup.margin*2, AmortissementsPopup.lineHeight);
 
 			this.CreateCreate  (line1);
 			this.CreateRemove  (line2);
@@ -234,20 +234,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private static readonly int LineHeight  = 2+17+2;
-		private static readonly int PopupWidth  = 300;
-		private static readonly int PopupHeight = 230;
-		private static readonly int Margin      = 20;
+		private const int lineHeight  = 2+AbstractFieldController.lineHeight+2;
+		private const int popupWidth  = 300;
+		private const int popupHeight = 230;
+		private const int margin      = 20;
 
-		private readonly DataAccessor						accessor;
+		private readonly DataAccessor			accessor;
 
-		private RadioButton									radioCreate;
-		private RadioButton									radioRemove;
-		private RadioButton									radioOne;
-		private RadioButton									radioAll;
-		private DateFieldController							dateFromController;
-		private DateFieldController							dateToController;
-		private Button										okButton;
-		private Button										cancelButton;
+		private RadioButton						radioCreate;
+		private RadioButton						radioRemove;
+		private RadioButton						radioOne;
+		private RadioButton						radioAll;
+		private DateFieldController				dateFromController;
+		private DateFieldController				dateToController;
+		private Button							okButton;
+		private Button							cancelButton;
 	}
 }

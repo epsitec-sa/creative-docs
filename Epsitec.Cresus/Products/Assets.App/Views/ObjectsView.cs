@@ -91,8 +91,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				GlyphShape    = GlyphShape.Close,
 				ButtonStyle   = ButtonStyle.ToolItem,
 				Anchor        = AnchorStyles.TopRight,
-				PreferredSize = new Size (AbstractCommandToolbar.SecondaryToolbarHeight, AbstractCommandToolbar.SecondaryToolbarHeight),
-				Margins       = new Margins (0, 0, TopTitle.Height, 0),
+				PreferredSize = new Size (AbstractCommandToolbar.secondaryToolbarHeight, AbstractCommandToolbar.secondaryToolbarHeight),
+				Margins       = new Margins (0, 0, TopTitle.height, 0),
 			};
 
 			this.Update ();

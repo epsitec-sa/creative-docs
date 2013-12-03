@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock   = DockStyle.Fill,
 			};
 
-			this.controller.CreateUI (frame, headerHeight: CategoriesPopup.HeaderHeight, footerHeight: 0);
+			this.controller.CreateUI (frame, headerHeight: CategoriesPopup.headerHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
 			TreeTableFiller<SortableNode>.FillColumns (this.dataFiller, this.controller, 0);
@@ -84,21 +84,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	On calcule une hauteur adaptée au contenu, mais qui ne dépasse
 			//	évidement pas la hauteur de la fenêtre principale.
 			double h = parent.ActualHeight
-					 - CategoriesPopup.HeaderHeight
+					 - CategoriesPopup.headerHeight
 					 - AbstractScroller.DefaultBreadth;
 
 			//	Utilise au maximum les 3/4 de la hauteur.
-			int max = (int) (h*0.75) / CategoriesPopup.RowHeight;
+			int max = (int) (h*0.75) / CategoriesPopup.rowHeight;
 
 			int rows = System.Math.Min (this.nodesGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
 
-			int dx = CategoriesPopup.PopupWidth
+			int dx = CategoriesPopup.popupWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
-			int dy = AbstractPopup.TitleHeight
-				   + CategoriesPopup.HeaderHeight
-				   + rows * CategoriesPopup.RowHeight
+			int dy = AbstractPopup.titleHeight
+				   + CategoriesPopup.headerHeight
+				   + rows * CategoriesPopup.rowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			return new Size (dx, dy);
@@ -147,9 +147,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int HeaderHeight     = 22;
-		private static readonly int RowHeight        = 18;
-		private static readonly int PopupWidth       = 390;
+		private const int headerHeight     = 22;
+		private const int rowHeight        = 18;
+		private const int popupWidth       = 390;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;

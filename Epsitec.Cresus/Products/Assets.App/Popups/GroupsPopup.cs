@@ -131,16 +131,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					 - AbstractScroller.DefaultBreadth;
 
 			//	Utilise au maximum les 1/2 de la hauteur.
-			int max = (int) (h*0.5) / GroupsPopup.RowHeight;
+			int max = (int) (h*0.5) / GroupsPopup.rowHeight;
 
 			int rows = System.Math.Min (this.nodesGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
 
-			int dx = GroupsPopup.PopupWidth
+			int dx = GroupsPopup.popupWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
-			int dy = AbstractPopup.TitleHeight
-				   + rows * GroupsPopup.RowHeight
+			int dy = AbstractPopup.titleHeight
+				   + rows * GroupsPopup.rowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			return new Size (dx, dy);
@@ -189,12 +189,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int RowHeight        = 18;
-		private static readonly int PopupWidth       = 200;
+		private const int rowHeight        = 18;
+		private const int popupWidth       = 200;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly GroupTreeNodesGetter				nodesGetter;
+		private readonly GroupTreeNodesGetter			nodesGetter;
 		private readonly SingleGroupsTreeTableFiller	dataFiller;
 
 		private int										visibleSelectedRow;

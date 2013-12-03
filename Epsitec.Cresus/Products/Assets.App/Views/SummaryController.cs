@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public SummaryController()
 		{
-			this.TileSize = new Size (100, 17);
+			this.TileSize = new Size (100, AbstractFieldController.lineHeight);
 		}
 
 

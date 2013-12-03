@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -37,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new Size (ErrorsPopup.PopupWidth, ErrorsPopup.PopupHeight);
+				return new Size (ErrorsPopup.popupWidth, ErrorsPopup.popupHeight);
 			}
 		}
 
@@ -56,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock   = DockStyle.Fill,
 			};
 
-			this.controller.CreateUI (frame, rowHeight: ErrorsPopup.LineHeight, headerHeight: 0, footerHeight: 0);
+			this.controller.CreateUI (frame, rowHeight: ErrorsPopup.lineHeight, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
 			TreeTableFiller<Error>.FillColumns (this.dataFiller, this.controller);
@@ -108,9 +109,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private static readonly int LineHeight  = 17;
-		private static readonly int PopupWidth  = 400;
-		private static readonly int PopupHeight = 230;
+		private const int lineHeight  = AbstractFieldController.lineHeight;
+		private const int popupWidth  = 400;
+		private const int popupHeight = 230;
 
 		private readonly DataAccessor						accessor;
 		private readonly List<Error>						errors;

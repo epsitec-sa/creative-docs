@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.viewMode = ViewMode.Single;
 			this.simulation = 0;
 
-			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.PrimaryToolbarHeight);
+			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.primaryToolbarHeight);
 			this.UpdateCommandButtons ();
 
 			return toolbar;

@@ -262,26 +262,26 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return new Rectangle (0, (Calendar.CellCountY-1)*Calendar.CellHeight, Calendar.RequiredWidth, Calendar.CellHeight);
+				return new Rectangle (0, (Calendar.cellCountY-1)*Calendar.cellHeight, Calendar.requiredWidth, Calendar.cellHeight);
 			}
 		}
 
 		private static Rectangle GetDowRect(int rank)
 		{
-			int x = rank % Calendar.CellCountX;
-			int y = Calendar.CellCountY-2;
+			int x = rank % Calendar.cellCountX;
+			int y = Calendar.cellCountY-2;
 
-			return new Rectangle (x*Calendar.CellWidth, y*Calendar.CellHeight, Calendar.CellWidth, Calendar.CellHeight);
+			return new Rectangle (x*Calendar.cellWidth, y*Calendar.cellHeight, Calendar.cellWidth, Calendar.cellHeight);
 		}
 
 		private static Rectangle GetCellRect(int rank)
 		{
-			int x = rank % Calendar.CellCountX;
-			int y = rank / Calendar.CellCountX;
+			int x = rank % Calendar.cellCountX;
+			int y = rank / Calendar.cellCountX;
 
-			y = Calendar.CellCountY - 3 - y;
+			y = Calendar.cellCountY - 3 - y;
 
-			return new Rectangle (x*Calendar.CellWidth, y*Calendar.CellHeight, Calendar.CellWidth, Calendar.CellHeight);
+			return new Rectangle (x*Calendar.cellWidth, y*Calendar.cellHeight, Calendar.cellWidth, Calendar.cellHeight);
 		}
 
 
@@ -295,13 +295,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		public const int RequiredWidth  = Calendar.CellWidth  * Calendar.CellCountX;
-		public const int RequiredHeight = Calendar.CellHeight * Calendar.CellCountY;
-		private const int CellWidth     = 18;
-		private const int CellHeight    = 18;
-		private const int CellCountX    = 7;
-		private const int CellCountY    = 8;
-		private const double FontSize   = 11.0;
+		public  const int requiredWidth  = Calendar.cellWidth  * Calendar.cellCountX;
+		public  const int requiredHeight = Calendar.cellHeight * Calendar.cellCountY;
+		private const int cellWidth      = 18;
+		private const int cellHeight     = 18;
+		private const int cellCountX     = 7;
+		private const int cellCountY     = 8;
+		private const double FontSize    = 11.0;
 
 		private System.DateTime					date;
 		private System.DateTime?				selectedDate;

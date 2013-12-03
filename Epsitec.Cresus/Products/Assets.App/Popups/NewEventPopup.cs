@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				NewEventPopup.horizontalMargins,
 				NewEventPopup.verticalMargins*2 + bh,
 				NewEventPopup.buttonWidth,
-				DateController.ControllerHeight
+				DateController.controllerHeight
 			);
 
 			this.buttonsFrame = this.CreateFrame
@@ -139,8 +139,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				int dx = NewEventPopup.horizontalMargins*2 + NewEventPopup.buttonWidth;
 				int dy = NewEventPopup.verticalMargins*3
-					   + AbstractPopup.TitleHeight
-					   + DateController.ControllerHeight
+					   + AbstractPopup.titleHeight
+					   + DateController.controllerHeight
 					   + this.ButtonsHeight;
 
 				return new Size (dx, dy);
@@ -231,11 +231,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int horizontalMargins = 20;
-		private static readonly int verticalMargins   = 20;
-		private static readonly int buttonWidth       = DateController.ControllerWidth;
-		private static readonly int buttonHeight      = 24;
-		private static readonly int buttonGap         = 1;
+		private const int horizontalMargins = 20;
+		private const int verticalMargins   = 20;
+		private const int buttonWidth       = DateController.controllerWidth;
+		private const int buttonHeight      = 24;
+		private const int buttonGap         = 1;
 
 		private readonly DataAccessor					accessor;
 

@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		protected static readonly int lineHeight = 17;
+		public const int lineHeight = 17;
 
 		protected readonly SafeCounter			ignoreChanges;
 

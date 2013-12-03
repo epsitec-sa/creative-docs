@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateCalendarUI()
 		{
-			this.calendarFrame = this.CreateFrame (CalendarPopup.margins, CalendarPopup.margins, CalendarController.RequiredWidth, CalendarController.RequiredHeight);
+			this.calendarFrame = this.CreateFrame (CalendarPopup.margins, CalendarPopup.margins, CalendarController.requiredWidth, CalendarController.requiredHeight);
 
 			this.calendarController = new CalendarController ()
 			{
@@ -65,9 +65,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int margins      = 10;
-		private static readonly int dialogWidth  = CalendarController.RequiredWidth  + CalendarPopup.margins*2;
-		private static readonly int dialogHeight = AbstractPopup.TitleHeight + CalendarController.RequiredHeight + CalendarPopup.margins*2;
+		private const int margins      = 10;
+		private const int dialogWidth  = CalendarController.requiredWidth  + CalendarPopup.margins*2;
+		private const int dialogHeight = AbstractPopup.titleHeight + CalendarController.requiredHeight + CalendarPopup.margins*2;
 
 		private FrameBox						calendarFrame;
 		private CalendarController				calendarController;

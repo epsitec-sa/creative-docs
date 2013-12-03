@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			double h = parent.ActualHeight
 					 - AbstractScroller.DefaultBreadth;
 
-			int dx = FilterPopup.PopupWidth
+			int dx = FilterPopup.popupWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			int dy = (int) (h * 0.5);
@@ -228,11 +228,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private static readonly int PopupWidth = 200;
+		private const int popupWidth = 200;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly GroupTreeNodesGetter				nodesGetter;
+		private readonly GroupTreeNodesGetter			nodesGetter;
 		private readonly SingleGroupsTreeTableFiller	dataFiller;
 		private readonly bool							hasFilter;
 
