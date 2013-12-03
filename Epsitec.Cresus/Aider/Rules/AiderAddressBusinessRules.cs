@@ -29,7 +29,6 @@ namespace Epsitec.Aider.Rules
 		{
 			AiderAddressBusinessRules.UpdateAddressLine1 (address);
 			AiderAddressBusinessRules.UpdatePostBox (address);
-			AiderAddressBusinessRules.UpdateHouserNumber (address);
 			AiderAddressBusinessRules.UpdateWeb (address);
 		}
 
@@ -140,27 +139,6 @@ namespace Epsitec.Aider.Rules
 			}
 			
 			return prefix;
-		}
-
-		private static void UpdateHouserNumber(AiderAddressEntity address)
-		{
-			var complement = address.HouseNumberComplement;
-
-			if (string.IsNullOrEmpty (complement))
-			{
-				return;
-			}
-
-			if (complement.Length == 1)
-			{
-				complement = complement.ToUpperInvariant ();
-			}
-			else
-			{
-				complement = complement.ToLowerInvariant ();
-			}
-
-			address.HouseNumberComplement = complement;
 		}
 
 		private static void ValidateSwissPostAddress(AiderAddressEntity address)

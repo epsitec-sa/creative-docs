@@ -242,6 +242,14 @@ namespace Epsitec.Aider.Entities
 			var houseNumber = houseNumberValue.HasValue ? InvariantConverter.ToString (houseNumberValue) : "";
 			var complement  = houseNumberComplement ?? "";
 
+			if (houseNumber.Length == 0)
+			{
+				//	Degenerate case of a house number + complement might be "B2" where there is no house number
+				//	per se (the complement encodes the full "B2").
+				
+				return complement;
+			}
+
 			switch (complement.Length)
 			{
 				case 0:  return houseNumber;
@@ -293,7 +301,7 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				int pos = value.IndexOfAny (AiderAddressEntity.digits);
+				int pos = value.LastIndexOfAny (AiderAddressEntity.digits);
 
 				if (pos < 0)
 				{
@@ -302,6 +310,21 @@ namespace Epsitec.Aider.Entities
 				}
 				else
 				{
+					//	We found a digit somewhere in the address. Now, rewind until we reach a
+					//	space...
+
+					int numberStart = pos;
+
+					while (--numberStart > 0)
+					{
+						if (value[numberStart] == ' ')
+						{
+							break;
+						}
+					}
+
+					pos = numberStart+1;
+
 					this.StreetUserFriendly       = value.Substring (0, pos).Trim ();
 					this.HouseNumberAndComplement = value.Substring (pos).Trim ();
 				}
@@ -328,12 +351,15 @@ namespace Epsitec.Aider.Entities
 				return null;
 			}
 
-			//	"c1" will become "C" (suffix numbers are not allowed)
+			//	"a" will become "A" (as in "1A", but "1" is encoded as the house number)
+			//	"c1" will become "C1" (the full "C1" is the complement of a possibly missing house number)
 			//	"Bis" will become "bis" (multiple characters = "bis"/"ter"/...)
-			
-			value = new string (value.Where (c => char.IsLetter (c)).ToArray ());
 
-			if (value.Length == 1)
+			value = value.Trim ();
+
+			int letterCount = value.Count (c => char.IsLetter (c));
+
+			if (letterCount == 1)
 			{
 				return value.ToUpperInvariant ();
 			}
