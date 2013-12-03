@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var cell = this.GetCell (this.detectedHoverRank);
 				if (cell.IsValid)
 				{
-					return TypeConverters.DateToFullString (cell.Date);
+					return cell.Date.ToFull (weekOfYear: true);
 				}
 			}
 

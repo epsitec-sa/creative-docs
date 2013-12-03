@@ -110,9 +110,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var font = Font.DefaultFont;
 
-				for (int detailLevel = 1; detailLevel >= 0; detailLevel--)
+				int detailLevel = 0;
+				while (true)
 				{
-					var text = cell.Date.ToYear (detailLevel);
+					var text = cell.Date.ToYear (detailLevel--);
 					if (string.IsNullOrEmpty (text))
 					{
 						break;

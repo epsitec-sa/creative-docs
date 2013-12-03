@@ -474,20 +474,6 @@ namespace Epsitec.Cresus.Assets.Server.Helpers
 			return ok;
 		}
 
-		public static string DateToFullString(System.DateTime? date)
-		{
-			if (date.HasValue)
-			{
-				//	Voir http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
-				//	Par exemple "lundi 1 janvier 2013".
-				return date.Value.ToString ("dddd d MMMM yyyy");
-			}
-			else
-			{
-				return null;
-			}
-		}
-
 		public static string DateToString(System.DateTime? date)
 		{
 			if (date.HasValue)

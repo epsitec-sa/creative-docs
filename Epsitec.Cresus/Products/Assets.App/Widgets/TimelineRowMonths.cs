@@ -97,15 +97,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				//	on évite d'essayer de caser des textes abrégés. Ceci est nécessaire
 				//	pour uniformiser les textes et éviter des mélanges de chiffres et
 				//	de lettres tels que "1 fév. 3 4...".
-				return TimelineRowMonths.GetMonthText (cell, 0);
+				return TimelineRowMonths.GetMonthText (cell, -4);
 			}
 			else
 			{
 				var font = Font.DefaultFont;
 
-				for (int detailLevel = 4; detailLevel >= 0; detailLevel--)
+				int detailLevel = 0;
+				while (true)
 				{
-					var text = TimelineRowMonths.GetMonthText (cell, detailLevel);
+					var text = TimelineRowMonths.GetMonthText (cell, detailLevel--);
 					if (string.IsNullOrEmpty (text))
 					{
 						break;
@@ -125,11 +126,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private static string GetMonthText(TimelineCellDate cell, int detailLevel)
 		{
 			//	Retourne le mois sous une forme plus ou moins détaillée.
-			//	detailLevel = 4 retourne "Septembre 2013"
-			//	detailLevel = 3 retourne "Sept. 2013"
-			//	detailLevel = 2 retourne "Septembre"
-			//	detailLevel = 1 retourne "Sept."
-			//	detailLevel = 0 retourne "9"
 			if (cell.IsValid)
 			{
 				return cell.Date.ToMonthYear (detailLevel);

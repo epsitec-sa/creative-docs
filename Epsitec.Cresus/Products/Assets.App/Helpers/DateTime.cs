@@ -39,17 +39,17 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			return text;
 		}
 
-		public static string ToYear(this System.DateTime date, int detailLevel = 1)
+		public static string ToYear(this System.DateTime date, int detailLevel = 0)
 		{
 			//	Retourne l'année sous une forme plus ou moins détaillée.
-			//	detailLevel = 1 retourne "2014"
-			//	detailLevel = 0 retourne "14"
+			//	detailLevel =  0 retourne "2014"
+			//	detailLevel = -1 retourne "14"
 			switch (detailLevel)
 			{
-				case 1:
+				case 0:
 					return date.ToString ("yyyy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 
-				case 0:
+				case -1:
 					return date.ToString ("yy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 
 				default:
@@ -57,29 +57,29 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			}
 		}
 
-		public static string ToMonthYear(this System.DateTime date, int detailLevel = 4)
+		public static string ToMonthYear(this System.DateTime date, int detailLevel = 0)
 		{
 			//	Retourne le mois sous une forme plus ou moins détaillée.
-			//	detailLevel = 4 retourne "Septembre 2013"
-			//	detailLevel = 3 retourne "Sept. 2013"
-			//	detailLevel = 2 retourne "Septembre"
-			//	detailLevel = 1 retourne "Sept."
-			//	detailLevel = 0 retourne "9"
+			//	detailLevel =  0 retourne "Septembre 2013"
+			//	detailLevel = -1 retourne "Sept. 2013"
+			//	detailLevel = -2 retourne "Septembre"
+			//	detailLevel = -3 retourne "Sept."
+			//	detailLevel = -4 retourne "9"
 			switch (detailLevel)
 			{
-				case 4:
+				case 0:
 					return date.ToString ("MMMM yyyy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 
-				case 3:
+				case -1:
 					return date.ToString ("MMM yyyy", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 
-				case 2:
+				case -2:
 					return date.ToString ("MMMM", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 
-				case 1:
+				case -3:
 					return date.ToString ("MMM", System.Globalization.DateTimeFormatInfo.CurrentInfo);
 
-				case 0:
+				case -4:
 					return date.Month.ToString (System.Globalization.DateTimeFormatInfo.CurrentInfo);
 
 				default:
