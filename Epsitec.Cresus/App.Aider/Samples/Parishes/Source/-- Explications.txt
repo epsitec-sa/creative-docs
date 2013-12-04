@@ -1,0 +1,26 @@
+Fichiers présents dans ce dossier, utiles pour le projet :
+
+- Source/street list.txt
+
+  Fichier de référence contenant les NPA/rues/numéros associés aux paroisses. Ce
+  fichier est consommé par l'utilitaire de conversion et produit à partir d'un
+  copier/coller du fichier EXCEL des correspondances (sans l'en-tête, les colonnes
+  A à F).
+
+
+- Source/parish names.txt
+
+  Fichier de référence avec les noms de paroisses, par régions.
+
+
+
+- parishes.txt
+
+  Fichier produit par l'utilitaire de conversion: mapping NPA/rue/numéro -> paroisse
+  Utilisé pour assigner les adresses aux paroisses.
+  Utilisé pour initialiser les groupes "paroisses".
+
+  > copié dans S:\Epsitec.Cresus\Aider\DataFiles\ParishAddresses.zip
+
+
+

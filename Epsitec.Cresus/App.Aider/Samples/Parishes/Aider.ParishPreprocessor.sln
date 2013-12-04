@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aider.ParishPreprocessor", "Aider.ParishPreprocessor\Aider.ParishPreprocessor.csproj", "{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4B1E57DE-68A9-4BFA-87F5-824181ED4D6C}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{68658DA2-A678-4D52-BEEB-F5F972CBA8E7}"
+	ProjectSection(SolutionItems) = preProject
+		Source\-- Explications.txt = Source\-- Explications.txt
+		Source\Correspondances adresses et paroisses.xlsx = Source\Correspondances adresses et paroisses.xlsx
+		Source\parish names.txt = Source\parish names.txt
+		Source\street list.txt = Source\street list.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}.Debug|x86.ActiveCfg = Debug|x86
+		{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}.Debug|x86.Build.0 = Debug|x86
+		{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}.Release|Any CPU.ActiveCfg = Release|x86
+		{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}.Release|Mixed Platforms.Build.0 = Release|x86
+		{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}.Release|x86.ActiveCfg = Release|x86
+		{34D8C5CA-0BE9-408B-A7D8-6F7AA9442CBE}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
