@@ -208,12 +208,12 @@ namespace Epsitec.Aider.Rules
 
 		private static void ReassignParish(BusinessContext context, AiderPersonEntity person)
 		{
-			var oldParishName      = ParishAssigner.FindParishName (ParishAddressRepository.Current, person.Address);
+			var oldParishName      = person.ParishGroup.Name;
 			var oldParishGroupPath = person.ParishGroupPathCache;
 
 			AiderPersonBusinessRules.AssignParish (context, person);
 
-			var newParishName      = ParishAssigner.FindParishName (ParishAddressRepository.Current, person.Address);
+			var newParishName      = person.ParishGroup.Name;
 			var newParishGroupPath = person.ParishGroupPathCache;
 
 			if (oldParishGroupPath == newParishGroupPath)
@@ -221,12 +221,15 @@ namespace Epsitec.Aider.Rules
 				return;
 			}
 
-			var title       = Resources.Text ("Assignation de paroisse modifiée");
-			var description = TextFormatter.FormatText ("La paroisse ne correspondait pas à l'adresse\nprincipale du ménage.\n\nLa correction suivante a été appliquée:", "\n", oldParishName, "->", newParishName);
-			var warningType = WarningType.ParishMismatch;
+			var title = Resources.Text ("Nouvelle paroisse de domicile");
+			
+			var description = TextFormatter.FormatText ("La paroisse ne correspondait pas à l'adresse\n",
+														"principale du ménage. La correction suivante\n",
+														"a été appliquée:\n \n",
+														oldParishName, "\n->\n", newParishName);
 
-			AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, warningType, title, description);
-			AiderPersonWarningEntity.Create (context, person, newParishGroupPath, warningType, title, description);
+			AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, WarningType.ParishDeparture, title, description);
+			AiderPersonWarningEntity.Create (context, person, newParishGroupPath, WarningType.ParishArrival, title, description);
 		}
 
 		private static void AssignParish(BusinessContext context, AiderPersonEntity person)
