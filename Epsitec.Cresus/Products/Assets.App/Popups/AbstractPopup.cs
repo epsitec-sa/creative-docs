@@ -8,7 +8,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Views;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
@@ -132,7 +131,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var button = new IconButton
 			{
 				Parent        = this.mainFrameBox,
-				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Popup.Close"),
+				IconUri       = Misc.GetResourceIconUri ("Popup.Close"),
 				AutoFocus     = false,
 				Anchor        = AnchorStyles.TopRight,
 				PreferredSize = new Size (size, size),
@@ -257,7 +256,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Anchor        = AnchorStyles.BottomLeft,
 				PreferredSize = new Size (dx, dy),
 				Margins       = new Margins (x, 0, 0, y),
-				ActiveState   = activate ? ActiveState.Yes : ActiveState.No,
+				ActiveState   = Misc.GetActiveState (activate),
 			};
 
 			if (!string.IsNullOrEmpty (tooltip))

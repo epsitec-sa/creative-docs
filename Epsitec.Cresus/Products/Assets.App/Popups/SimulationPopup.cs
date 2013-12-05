@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Parent        = line,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (size, size),
-				IconUri       = AbstractCommandToolbar.GetResourceIconUri (rank == this.Simulation ? "Radio.Yes" : "Radio.No2"),
+				IconUri       = Misc.GetResourceIconUri (rank == this.Simulation ? "Radio.Yes" : "Radio.No2"),
 			};
 
 			useButton.Clicked += delegate

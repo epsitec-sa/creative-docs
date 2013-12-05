@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.historyButton = new IconButton
 			{
 				Parent        = this.frameBox,
-				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Field.History"),
+				IconUri       = Misc.GetResourceIconUri ("Field.History"),
 				AutoFocus     = false,
 				Anchor        = AnchorStyles.TopRight,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.clearButton = new IconButton
 			{
 				Parent        = this.frameBox,
-				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Field.Clear"),
+				IconUri       = Misc.GetResourceIconUri ("Field.Clear"),
 				AutoFocus     = false,
 				Anchor        = AnchorStyles.TopRight,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),

@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -90,7 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.minusButton = new IconButton
 			{
 				Parent        = this.frameBox,
-				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Date.Minus"),
+				IconUri       = Misc.GetResourceIconUri ("Date.Minus"),
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
@@ -99,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.plusButton = new IconButton
 			{
 				Parent        = this.frameBox,
-				IconUri       = AbstractCommandToolbar.GetResourceIconUri ("Date.Plus"),
+				IconUri       = Misc.GetResourceIconUri ("Date.Plus"),
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),

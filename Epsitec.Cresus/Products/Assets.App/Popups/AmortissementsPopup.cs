@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -214,10 +215,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.radioOne.Enable = this.OneSelectionAllowed;
 
-			this.radioCreate.ActiveState =  this.IsCreate ? ActiveState.Yes : ActiveState.No;
-			this.radioRemove.ActiveState = !this.IsCreate ? ActiveState.Yes : ActiveState.No;
-			this.radioOne   .ActiveState = !this.IsAll    ? ActiveState.Yes : ActiveState.No;
-			this.radioAll   .ActiveState =  this.IsAll    ? ActiveState.Yes : ActiveState.No;
+			this.radioCreate.ActiveState = Misc.GetActiveState ( this.IsCreate);
+			this.radioRemove.ActiveState = Misc.GetActiveState (!this.IsCreate);
+			this.radioOne   .ActiveState = Misc.GetActiveState (!this.IsAll   );
+			this.radioAll   .ActiveState = Misc.GetActiveState ( this.IsAll   );
 
 			if (this.IsCreate)
 			{

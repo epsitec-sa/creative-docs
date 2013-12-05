@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -102,7 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private ActiveState GetCommandActivateState(ToolbarCommand command)
 		{
 			var state = this.GetCommandState (command);
-			return (state == ToolbarCommandState.Activate) ? ActiveState.Yes : ActiveState.No;
+			return Misc.GetActiveState (state == ToolbarCommandState.Activate);
 		}
 
 
@@ -120,7 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent        = toolbar,
 				AutoFocus     = false,
 				Dock          = dock,
-				IconUri       = AbstractCommandToolbar.GetResourceIconUri (icon),
+				IconUri       = Misc.GetResourceIconUri (icon),
 				PreferredSize = new Size (size, size),
 			};
 
@@ -144,7 +143,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent        = toolbar,
 				AutoFocus     = false,
-				IconUri       = AbstractCommandToolbar.GetResourceIconUri (icon),
+				IconUri       = Misc.GetResourceIconUri (icon),
 			};
 
 			button.SetManualBounds (new Rectangle (x, 0, size, size));
@@ -190,23 +189,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			sep.SetManualBounds (new Rectangle (x, 0, 1, size));
 
 			return sep;
-		}
-
-
-		public static string GetResourceIconUri(string icon)
-		{
-			if (string.IsNullOrEmpty (icon))
-			{
-				return null;
-			}
-			else if (icon.Contains (':'))
-			{
-				return FormattedText.Escape (icon);
-			}
-			else
-			{
-				return string.Format ("manifest:Epsitec.Cresus.Assets.App.Images.{0}.icon", FormattedText.Escape (icon));
-			}
 		}
 
 

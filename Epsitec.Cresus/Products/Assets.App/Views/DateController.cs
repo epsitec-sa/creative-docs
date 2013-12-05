@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return new IconButton
 			{
 				Parent          = parent,
-				IconUri         = AbstractCommandToolbar.GetResourceIconUri (icon),
+				IconUri         = Misc.GetResourceIconUri (icon),
 				AutoFocus       = false,
 				PreferredWidth  = DateController.lineHeight,
 				PreferredHeight = DateController.lineHeight,
@@ -277,11 +277,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (activate)
 			{
-				button.IconUri = AbstractCommandToolbar.GetResourceIconUri ("Date.SelectedPart");
+				button.IconUri = Misc.GetResourceIconUri ("Date.SelectedPart");
 			}
 			else
 			{
-				button.IconUri = AbstractCommandToolbar.GetResourceIconUri ("Date.UnselectedPart");
+				button.IconUri = Misc.GetResourceIconUri ("Date.UnselectedPart");
 			}
 		}
 

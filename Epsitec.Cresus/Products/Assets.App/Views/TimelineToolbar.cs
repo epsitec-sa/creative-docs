@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ButtonStyle   = ButtonStyle.ActivableIcon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				IconUri       = MainToolbar.GetResourceIconUri (icon),
+				IconUri       = Misc.GetResourceIconUri (icon),
 				PreferredSize = new Size (size, size),
 			};
 

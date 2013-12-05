@@ -75,6 +75,7 @@
     <Compile Include="Controllers\TimelineCellController.cs" />
     <Compile Include="Converters\TimelineCellConverter.cs" />
     <Compile Include="AssetsUI.cs" />
+    <Compile Include="Helpers\Misc.cs" />
     <Compile Include="Helpers\DateTime.cs" />
     <Compile Include="Helpers\TreeTableFiller.cs" />
     <Compile Include="EventHandler.cs" />

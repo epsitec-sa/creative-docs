@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent        = toolbar,
 				ButtonStyle   = ButtonStyle.ActivableIcon,
 				AutoFocus     = false,
-				IconUri       = MainToolbar.GetResourceIconUri (icon),
+				IconUri       = Misc.GetResourceIconUri (icon),
 			};
 
 			ToolTip.Default.SetToolTip (button, tooltip);

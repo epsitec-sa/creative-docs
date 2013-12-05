@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateItems(int rank)
 		{
-			int width = Helpers.Text.GetTextWidth (this.items[rank]) + 20;
+			int width = Text.GetTextWidth (this.items[rank]) + 20;
 
 			var button = new ColoredButton
 			{
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AutoFocus        = false,
 				Dock             = DockStyle.Left,
 				PreferredSize    = new Size (width, TabPagesController.height),
-				ActiveState      = rank == this.Selection ? ActiveState.Yes : ActiveState.No,
+				ActiveState      = Misc.GetActiveState (rank == this.Selection),
 				NormalColor      = Color.Empty,
 				SelectedColor    = ColorManager.EditBackgroundColor,
 				HoverColor       = ColorManager.HoverColor,

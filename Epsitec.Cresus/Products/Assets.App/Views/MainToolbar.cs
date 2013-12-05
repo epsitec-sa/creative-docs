@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ButtonStyle   = ButtonStyle.ActivableIcon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				IconUri       = MainToolbar.GetResourceIconUri (icon),
+				IconUri       = Misc.GetResourceIconUri (icon),
 				PreferredSize = new Size (size, size),
 			};
 
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ButtonStyle   = ButtonStyle.ActivableIcon,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				IconUri       = MainToolbar.GetResourceIconUri (icon),
+				IconUri       = Misc.GetResourceIconUri (icon),
 				PreferredSize = new Size (size, size),
 			};
 
@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				icon += this.simulation.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			}
 
-			this.buttonSimulation.IconUri = AbstractCommandToolbar.GetResourceIconUri (icon);
+			this.buttonSimulation.IconUri = Misc.GetResourceIconUri (icon);
 		}
 
 
