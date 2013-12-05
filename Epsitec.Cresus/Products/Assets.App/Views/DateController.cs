@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private void CreateController(Widget parent)
+		public void CreateController(Widget parent)
 		{
 			var footer = new FrameBox
 			{
@@ -175,12 +175,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dateFieldController.CreateUI (dateFrame);
 			this.dateFieldController.SetFocus ();
 
-			this.beginButton      = this.CreateIconButton (dateFrame, "Date.CurrentYearBegin", 72+DateController.lineHeight*2);
-			this.nowButton        = this.CreateIconButton (dateFrame, "Date.Now",              72+DateController.lineHeight*3);
-			this.endButton        = this.CreateIconButton (dateFrame, "Date.CurrentYearEnd",   72+DateController.lineHeight*4);
-			this.predefinedButton = this.CreateIconButton (dateFrame, "Date.Predefined",       72+DateController.lineHeight*5);
-			this.calendarButton   = this.CreateIconButton (dateFrame, "Date.Calendar",         72+DateController.lineHeight*6);
-			this.deleteButton     = this.CreateIconButton (dateFrame, "Field.Clear",           72+DateController.lineHeight*7);
+			this.beginButton      = this.CreateIconButton (dateFrame, "Date.CurrentYearBegin", (int) (72+DateController.lineHeight*2.5));
+			this.nowButton        = this.CreateIconButton (dateFrame, "Date.Now",              (int) (72+DateController.lineHeight*3.5));
+			this.endButton        = this.CreateIconButton (dateFrame, "Date.CurrentYearEnd",   (int) (72+DateController.lineHeight*4.5));
+			this.predefinedButton = this.CreateIconButton (dateFrame, "Date.Predefined",       (int) (72+DateController.lineHeight*6.0));
+			this.calendarButton   = this.CreateIconButton (dateFrame, "Date.Calendar",         (int) (72+DateController.lineHeight*7.0));
+			this.deleteButton     = this.CreateIconButton (dateFrame, "Field.Clear",           (int) (72+DateController.lineHeight*8.5));
 
 			ToolTip.Default.SetToolTip (this.beginButton,      "Début de l'année en cours");
 			ToolTip.Default.SetToolTip (this.nowButton,        "Aujourd'hui");
@@ -578,7 +578,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public const int controllerHeight = DateController.lineHeight*2 + 4;
 
 		private const int indent          = 30;
-		private const int widgetWidth     = 210;
+		private const int widgetWidth     = DateFieldController.controllerWidth + (int) (AbstractFieldController.lineHeight*7.5) + 4;
 		private const int lineHeight      = AbstractFieldController.lineHeight;
 
 
