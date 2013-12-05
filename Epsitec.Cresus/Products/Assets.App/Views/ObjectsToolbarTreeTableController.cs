@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.stateAtController.Date = date;
 
-			using (new SaveCurrentGuid (this))
+			using (new SaveSelectedGuid (this))
 			{
 				this.UpdateData ();
 			}
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.rootGuid = guid;
 
-				using (new SaveCurrentGuid (this))
+				using (new SaveSelectedGuid (this))
 				{
 					this.UpdateData ();
 				}

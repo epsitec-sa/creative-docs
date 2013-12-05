@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		protected void OnFirst()
+		private void OnFirst()
 		{
 			var index = this.FirstRowIndex;
 
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnPrev()
+		private void OnPrev()
 		{
 			var index = this.PrevRowIndex;
 
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnNext()
+		private void OnNext()
 		{
 			var index = this.NextRowIndex;
 
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void OnLast()
+		private void OnLast()
 		{
 			var index = this.LastRowIndex;
 
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnCompactOrExpand(int row)
 		{
 			//	Etend ou compacte une ligne (inverse son mode actuel).
-			using (new SaveCurrentGuid (this))
+			using (new SaveSelectedGuid (this))
 			{
 				this.TreeNodesGetter.CompactOrExpand (row);
 				this.UpdateController ();
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnCompactAll()
 		{
 			//	Compacte toutes les lignes.
-			using (new SaveCurrentGuid (this))
+			using (new SaveSelectedGuid (this))
 			{
 				this.TreeNodesGetter.CompactAll ();
 				this.UpdateController ();
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnExpandAll()
 		{
 			//	Etend toutes les lignes.
-			using (new SaveCurrentGuid (this))
+			using (new SaveSelectedGuid (this))
 			{
 				this.TreeNodesGetter.ExpandAll ();
 				this.UpdateController ();
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller.SortingChanged += delegate
 			{
-				using (new SaveCurrentGuid (this))
+				using (new SaveSelectedGuid (this))
 				{
 					this.UpdateSorting ();
 				}
@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected int? FirstRowIndex
+		private int? FirstRowIndex
 		{
 			get
 			{
@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected int? PrevRowIndex
+		private int? PrevRowIndex
 		{
 			get
 			{
@@ -334,7 +334,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected int? NextRowIndex
+		private int? NextRowIndex
 		{
 			get
 			{
@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected int? LastRowIndex
+		private int? LastRowIndex
 		{
 			get
 			{
@@ -361,9 +361,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected class SaveCurrentGuid : System.IDisposable
+		protected class SaveSelectedGuid : System.IDisposable
 		{
-			public SaveCurrentGuid(AbstractToolbarTreeTableController<T> controller)
+			public SaveSelectedGuid(AbstractToolbarTreeTableController<T> controller)
 			{
 				this.controller = controller;
 				this.currentGuid = this.controller.SelectedGuid;
