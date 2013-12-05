@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	///     V
 	/// 
 	/// </summary>
-	public class GroupTreeNodesGetter : AbstractNodesGetter<TreeNode>, ITreeFonctions  // outputNodes
+	public class GroupTreeNodesGetter : AbstractNodesGetter<TreeNode>, ITreeFunctions  // outputNodes
 	{
 		public GroupTreeNodesGetter(DataAccessor accessor, AbstractNodesGetter<GuidNode> inputNodes)
 		{

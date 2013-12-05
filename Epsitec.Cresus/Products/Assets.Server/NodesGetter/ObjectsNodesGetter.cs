@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	///     V
 	/// 
 	/// </summary>
-	public class ObjectsNodesGetter : AbstractNodesGetter<TreeNode>, ITreeFonctions  // outputNodes
+	public class ObjectsNodesGetter : AbstractNodesGetter<TreeNode>, ITreeFunctions  // outputNodes
 	{
 		public ObjectsNodesGetter(DataAccessor accessor, AbstractNodesGetter<GuidNode> groupNodes, AbstractNodesGetter<GuidNode> objectNodes)
 		{

@@ -379,11 +379,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private ITreeFonctions TreeNodesGetter
+		private ITreeFunctions TreeNodesGetter
 		{
 			get
 			{
-				return this.nodesGetter as ITreeFonctions;
+				return this.nodesGetter as ITreeFunctions;
 			}
 		}
 

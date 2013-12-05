@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
-	public interface ITreeFonctions
+	public interface ITreeFunctions
 	{
 		bool IsAllCompacted
 		{
