@@ -174,12 +174,37 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected virtual void OnCompactAll()
+		private void OnCompactOrExpand(int row)
 		{
+			//	Etend ou compacte une ligne (inverse son mode actuel).
+			using (new SaveCurrentGuid (this))
+			{
+				this.TreeNodesGetter.CompactOrExpand (row);
+				this.UpdateController ();
+				this.UpdateToolbar ();
+			}
 		}
 
-		protected virtual void OnExpandAll()
+		private void OnCompactAll()
 		{
+			//	Compacte toutes les lignes.
+			using (new SaveCurrentGuid (this))
+			{
+				this.TreeNodesGetter.CompactAll ();
+				this.UpdateController ();
+				this.UpdateToolbar ();
+			}
+		}
+
+		private void OnExpandAll()
+		{
+			//	Etend toutes les lignes.
+			using (new SaveCurrentGuid (this))
+			{
+				this.TreeNodesGetter.ExpandAll ();
+				this.UpdateController ();
+				this.UpdateToolbar ();
+			}
 		}
 
 		protected virtual void OnDeselect()
@@ -199,7 +224,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		protected virtual void CreateTreeTable(Widget parent)
+		private void CreateTreeTable(Widget parent)
 		{
 			this.selectedRow = -1;
 
@@ -224,9 +249,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller.SortingChanged += delegate
 			{
-				var guid = this.SelectedGuid;
-				this.UpdateSorting ();
-				this.SelectedGuid = guid;
+				using (new SaveCurrentGuid (this))
+				{
+					this.UpdateSorting ();
+				}
 			};
 
 			this.controller.RowClicked += delegate (object sender, int row)
@@ -238,6 +264,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.VisibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.OnRowDoubleClicked (this.VisibleSelectedRow);
+			};
+
+			this.controller.TreeButtonClicked += delegate (object sender, int row, NodeType type)
+			{
+				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
 			};
 		}
 
@@ -326,6 +357,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return this.nodesGetter.Count - 1;
+			}
+		}
+
+
+		protected class SaveCurrentGuid : System.IDisposable
+		{
+			public SaveCurrentGuid(AbstractToolbarTreeTableController<T> controller)
+			{
+				this.controller = controller;
+				this.currentGuid = this.controller.SelectedGuid;
+			}
+
+			public void Dispose()
+			{
+				this.controller.SelectedGuid = this.currentGuid;
+			}
+
+			private readonly AbstractToolbarTreeTableController<T>	controller;
+			private readonly Guid									currentGuid;
+		}
+
+
+		private ITreeFonctions TreeNodesGetter
+		{
+			get
+			{
+				return this.nodesGetter as ITreeFonctions;
 			}
 		}
 

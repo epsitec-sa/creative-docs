@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	/// est visible, en compactant/étendant des noeuds.
 	/// LevelNode -> TreeNode
 	/// </summary>
-	public class TreeObjectsNodesGetter : AbstractNodesGetter<TreeNode>  // outputNodes
+	public class TreeObjectsNodesGetter : AbstractNodesGetter<TreeNode>, ITreeFonctions  // outputNodes
 	{
 		public TreeObjectsNodesGetter(AbstractNodesGetter<LevelNode> inputNodes)
 		{
@@ -57,6 +57,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
+		#region ITreeFonctions
 		public bool IsAllCompacted
 		{
 			get
@@ -71,44 +72,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			{
 				return !this.nodes.Where (x => x.Type == NodeType.Compacted).Any ();
 			}
-		}
-
-
-		public int SearchBestIndex(Guid value)
-		{
-			//	Retourne l'index ayant un Guid donné. Si la ligne correspondante
-			//	est cachée, on est assez malin pour retourner la prochaine ligne
-			//	visible, vers le haut.
-			int index = -1;
-
-			if (!value.IsEmpty)
-			{
-				var i = this.nodes.FindIndex (x => x.Guid == value);
-				if (i != -1)
-				{
-					index = this.nodeIndexes.Where (x => x <= i).Count () - 1;
-				}
-			}
-
-			return index;
-		}
-
-
-		public int VisibleToAll(int index)
-		{
-			if (index >= 0 && index < this.nodeIndexes.Count)
-			{
-				return this.nodeIndexes[index];
-			}
-			else
-			{
-				return -1;
-			}
-		}
-
-		public int AllToVisible(int index)
-		{
-			return this.nodeIndexes.IndexOf (index);
 		}
 
 
@@ -162,7 +125,46 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.UpdateNodeIndexes ();
 		}
 
-		
+	
+		public int SearchBestIndex(Guid value)
+		{
+			//	Retourne l'index ayant un Guid donné. Si la ligne correspondante
+			//	est cachée, on est assez malin pour retourner la prochaine ligne
+			//	visible, vers le haut.
+			int index = -1;
+
+			if (!value.IsEmpty)
+			{
+				var i = this.nodes.FindIndex (x => x.Guid == value);
+				if (i != -1)
+				{
+					index = this.nodeIndexes.Where (x => x <= i).Count () - 1;
+				}
+			}
+
+			return index;
+		}
+
+
+		public int VisibleToAll(int index)
+		{
+			if (index >= 0 && index < this.nodeIndexes.Count)
+			{
+				return this.nodeIndexes[index];
+			}
+			else
+			{
+				return -1;
+			}
+		}
+
+		public int AllToVisible(int index)
+		{
+			return this.nodeIndexes.IndexOf (index);
+		}
+		#endregion
+
+
 		private void UpdateData()
 		{
 			//	Met à jour toutes les données en conservant le mode compacté/étendu.

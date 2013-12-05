@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	///     V
 	/// 
 	/// </summary>
-	public class GroupTreeNodesGetter : AbstractNodesGetter<TreeNode>  // outputNodes
+	public class GroupTreeNodesGetter : AbstractNodesGetter<TreeNode>, ITreeFonctions  // outputNodes
 	{
 		public GroupTreeNodesGetter(DataAccessor accessor, AbstractNodesGetter<GuidNode> inputNodes)
 		{
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		#region TreeObjectsNodesGetter Facade
+		#region ITreeFonctions
 		public bool IsAllCompacted
 		{
 			get

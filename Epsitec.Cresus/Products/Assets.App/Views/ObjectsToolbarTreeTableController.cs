@@ -119,11 +119,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.stateAtController.Date = date;
 
-			var guid = this.SelectedGuid;
+			using (new SaveCurrentGuid (this))
 			{
 				this.UpdateData ();
 			}
-			this.SelectedGuid = guid;
 		}
 
 
@@ -147,46 +146,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.rootGuid = guid;
 
-				var selectedGuid = this.SelectedGuid;
-				this.UpdateData ();
-				this.SelectedGuid = selectedGuid;
+				using (new SaveCurrentGuid (this))
+				{
+					this.UpdateData ();
+				}
 			};
-		}
-
-		private void OnCompactOrExpand(int row)
-		{
-			//	Etend ou compacte une ligne (inverse son mode actuel).
-			var guid = this.SelectedGuid;
-
-			this.NodesGetter.CompactOrExpand (row);
-			this.UpdateController ();
-			this.UpdateToolbar ();
-
-			this.SelectedGuid = guid;
-		}
-
-		protected override void OnCompactAll()
-		{
-			//	Compacte toutes les lignes.
-			var guid = this.SelectedGuid;
-
-			this.NodesGetter.CompactAll ();
-			this.UpdateController ();
-			this.UpdateToolbar ();
-
-			this.SelectedGuid = guid;
-		}
-
-		protected override void OnExpandAll()
-		{
-			//	Etend toutes les lignes.
-			var guid = this.SelectedGuid;
-
-			this.NodesGetter.ExpandAll ();
-			this.UpdateController ();
-			this.UpdateToolbar ();
-
-			this.SelectedGuid = guid;
 		}
 
 		protected override void OnDeselect()
@@ -255,17 +219,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 	
-		protected override void CreateTreeTable(Widget parent)
-		{
-			base.CreateTreeTable (parent);
-
-			this.controller.TreeButtonClicked += delegate (object sender, int row, NodeType type)
-			{
-				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
-			};
-		}
-
-
 		protected override void UpdateToolbar()
 		{
 			base.UpdateToolbar ();

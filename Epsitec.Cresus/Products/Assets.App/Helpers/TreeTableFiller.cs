@@ -10,13 +10,16 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Helpers
 {
+	/// <summary>
+	/// Glu entre NavigationTreeTableController et AbstractTreeTableFiller.
+	/// </summary>
 	public static class TreeTableFiller<T>
 		where T : struct
 	{
 		public static SortingInstructions GetSortingInstructions(NavigationTreeTableController controller,
 			AbstractTreeTableFiller<T> filler)
 		{
-			//	Retourne les instructions de tri choisie dans le contrôleur TreeTable.
+			//	Retourne les instructions de tri choisies dans le contrôleur TreeTable.
 			var primaryField   = ObjectField.Unknown;
 			var primaryType    = SortedType.None;
 			var secondaryField = ObjectField.Unknown;
@@ -52,12 +55,14 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			return new SortingInstructions (primaryField, primaryType, secondaryField, secondaryType);
 		}
 
+
 		public static void FillColumns(NavigationTreeTableController controller, 
 			AbstractTreeTableFiller<T> filler, int dockToLeftCount = 1)
 		{
 			//	Met à jour les colonnes du contrôleur TreeTable.
 			controller.SetColumns (filler.Columns, dockToLeftCount);
 		}
+
 
 		public static void FillContent(NavigationTreeTableController controller,
 			AbstractTreeTableFiller<T> filler, int selection, bool crop)
