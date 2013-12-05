@@ -42,6 +42,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateCommandButtons()
 		{
+			this.UpdateCommandButton (this.buttonCompacted,  ToolbarCommand.CompactAll);
+			this.UpdateCommandButton (this.buttonExpended,   ToolbarCommand.ExpandAll);
+
 			this.UpdateCommandButton (this.buttonFirst,      ToolbarCommand.First);
 			this.UpdateCommandButton (this.buttonPrev,       ToolbarCommand.Prev);
 			this.UpdateCommandButton (this.buttonNext,       ToolbarCommand.Next);
@@ -129,8 +132,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateModeButtons()
 		{
-			this.SetActiveState (this.buttonCompacted, (this.timelineMode & TimelineMode.Compacted) != 0);
-			this.SetActiveState (this.buttonExpended,  (this.timelineMode & TimelineMode.Expanded ) != 0);
+			this.SetCommandState (ToolbarCommand.CompactAll, (this.timelineMode & TimelineMode.Compacted) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.ExpandAll,  (this.timelineMode & TimelineMode.Expanded ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
 		}
 
 

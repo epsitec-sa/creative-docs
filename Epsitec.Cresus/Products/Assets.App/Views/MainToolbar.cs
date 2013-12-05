@@ -78,6 +78,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateCommandButtons()
 		{
+			this.UpdateCommandButton (this.buttonObjects,       ToolbarCommand.ViewTypeObjects);
+			this.UpdateCommandButton (this.buttonCategories,    ToolbarCommand.ViewTypeCategories);
+			this.UpdateCommandButton (this.buttonGroups,        ToolbarCommand.ViewTypeGroups);
+			this.UpdateCommandButton (this.buttonEvents,        ToolbarCommand.ViewTypeEvents);
+			this.UpdateCommandButton (this.buttonReports,       ToolbarCommand.ViewTypeReports);
+			this.UpdateCommandButton (this.buttonSettings,      ToolbarCommand.ViewTypeSettings);
+
 			this.UpdateCommandButton (this.buttonSingle,        ToolbarCommand.ViewModeSingle);
 			this.UpdateCommandButton (this.buttonEvent,         ToolbarCommand.ViewModeEvent);
 			this.UpdateCommandButton (this.buttonMultiple,      ToolbarCommand.ViewModeMultiple);
@@ -185,12 +192,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewTypeButtons()
 		{
-			this.SetActiveState (this.buttonObjects,    this.viewType == ViewType.Objects);
-			this.SetActiveState (this.buttonCategories, this.viewType == ViewType.Categories);
-			this.SetActiveState (this.buttonGroups,     this.viewType == ViewType.Groups);
-			this.SetActiveState (this.buttonEvents,     this.viewType == ViewType.Events);
-			this.SetActiveState (this.buttonReports,    this.viewType == ViewType.Reports);
-			this.SetActiveState (this.buttonSettings,   this.viewType == ViewType.Settings);
+			this.SetCommandState (ToolbarCommand.ViewTypeObjects,    this.viewType == ViewType.Objects    ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.ViewTypeCategories, this.viewType == ViewType.Categories ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.ViewTypeGroups,     this.viewType == ViewType.Groups     ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.ViewTypeEvents,     this.viewType == ViewType.Events     ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.ViewTypeReports,    this.viewType == ViewType.Reports    ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.ViewTypeSettings,   this.viewType == ViewType.Settings   ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
 
 			this.SetCommandState (ToolbarCommand.Open,          ToolbarCommandState.Enable);
 			this.SetCommandState (ToolbarCommand.Amortissement, ToolbarCommandState.Enable);

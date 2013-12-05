@@ -8,6 +8,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public enum ToolbarCommand
 	{
+		Open,
 		New,
 		Delete,
 		Deselect,
@@ -23,14 +24,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		WeeksOfYear,
 		DaysOfWeek,
 		Graph,
+		Labels,
 		Amortissement,
 		Simulation,
 		Accept,
 		Cancel,
+		Filter,
+
+		ViewTypeObjects,
+		ViewTypeCategories,
+		ViewTypeGroups,
+		ViewTypeEvents,
+		ViewTypeReports,
+		ViewTypeSettings,
+
 		ViewModeSingle,
 		ViewModeEvent,
 		ViewModeMultiple,
-		Filter,
-		Open,
 	}
 }

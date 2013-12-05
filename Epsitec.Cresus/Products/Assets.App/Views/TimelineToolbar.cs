@@ -42,15 +42,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateCommandButtons()
 		{
-			this.UpdateCommandButton (this.buttonFirst,    ToolbarCommand.First);
-			this.UpdateCommandButton (this.buttonPrev,     ToolbarCommand.Prev);
-			this.UpdateCommandButton (this.buttonNext,     ToolbarCommand.Next);
-			this.UpdateCommandButton (this.buttonLast,     ToolbarCommand.Last);
-			this.UpdateCommandButton (this.buttonNow,      ToolbarCommand.Now);
-			this.UpdateCommandButton (this.buttonDate,     ToolbarCommand.Date);
-			this.UpdateCommandButton (this.buttonNew,      ToolbarCommand.New);
-			this.UpdateCommandButton (this.buttonDelete,   ToolbarCommand.Delete);
-			this.UpdateCommandButton (this.buttonDeselect, ToolbarCommand.Deselect);
+			this.UpdateCommandButton (this.buttonLabels,      ToolbarCommand.Labels);
+			this.UpdateCommandButton (this.buttonCompacted,   ToolbarCommand.CompactAll);
+			this.UpdateCommandButton (this.buttonExpanded,    ToolbarCommand.ExpandAll);
+			this.UpdateCommandButton (this.buttonWeeksOfYear, ToolbarCommand.WeeksOfYear);
+			this.UpdateCommandButton (this.buttonDaysOfWeek,  ToolbarCommand.DaysOfWeek);
+			this.UpdateCommandButton (this.buttonGraph,       ToolbarCommand.Graph);
+
+			this.UpdateCommandButton (this.buttonFirst,       ToolbarCommand.First);
+			this.UpdateCommandButton (this.buttonPrev,        ToolbarCommand.Prev);
+			this.UpdateCommandButton (this.buttonNext,        ToolbarCommand.Next);
+			this.UpdateCommandButton (this.buttonLast,        ToolbarCommand.Last);
+			this.UpdateCommandButton (this.buttonNow,         ToolbarCommand.Now);
+			this.UpdateCommandButton (this.buttonDate,        ToolbarCommand.Date);
+			this.UpdateCommandButton (this.buttonNew,         ToolbarCommand.New);
+			this.UpdateCommandButton (this.buttonDelete,      ToolbarCommand.Delete);
+			this.UpdateCommandButton (this.buttonDeselect,    ToolbarCommand.Deselect);
 		}
 
 
@@ -67,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonLabels      = this.CreateModeButton (toolbar, TimelineMode.Labels,      "Timeline.Labels",      "Affiche les noms des lignes");
 								   															   
 			this.buttonCompacted   = this.CreateModeButton (toolbar, TimelineMode.Compacted,   "Timeline.Compacted",   "Affichage compact");
-			this.buttonExpended    = this.CreateModeButton (toolbar, TimelineMode.Expanded,    "Timeline.Expanded",    "Affichage étendu");
+			this.buttonExpanded    = this.CreateModeButton (toolbar, TimelineMode.Expanded,    "Timeline.Expanded",    "Affichage étendu");
 
 			this.buttonWeeksOfYear = this.CreateModeButton (toolbar, TimelineMode.WeeksOfYear, "Timeline.WeeksOfYear", "Affiche les numéros des semaines");
 			this.buttonDaysOfWeek  = this.CreateModeButton (toolbar, TimelineMode.DaysOfWeek,  "Timeline.DaysOfWeek",  "Affiche les jours de la semaine");
@@ -142,12 +149,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateModeButtons()
 		{
-			this.SetActiveState (this.buttonLabels,      (this.timelineMode & TimelineMode.Labels     ) != 0);
-			this.SetActiveState (this.buttonCompacted,   (this.timelineMode & TimelineMode.Compacted  ) != 0);
-			this.SetActiveState (this.buttonExpended,    (this.timelineMode & TimelineMode.Expanded   ) != 0);
-			this.SetActiveState (this.buttonWeeksOfYear, (this.timelineMode & TimelineMode.WeeksOfYear) != 0);
-			this.SetActiveState (this.buttonDaysOfWeek,  (this.timelineMode & TimelineMode.DaysOfWeek ) != 0);
-			this.SetActiveState (this.buttonGraph,       (this.timelineMode & TimelineMode.Graph      ) != 0);
+			this.SetCommandState (ToolbarCommand.Labels,      (this.timelineMode & TimelineMode.Labels     ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.CompactAll,  (this.timelineMode & TimelineMode.Compacted  ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.ExpandAll,   (this.timelineMode & TimelineMode.Expanded   ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.WeeksOfYear, (this.timelineMode & TimelineMode.WeeksOfYear) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.DaysOfWeek,  (this.timelineMode & TimelineMode.DaysOfWeek ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandState (ToolbarCommand.Graph,       (this.timelineMode & TimelineMode.Graph      ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
 		}
 
 
@@ -163,7 +170,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IconButton buttonLabels;
 		private IconButton buttonCompacted;
-		private IconButton buttonExpended;
+		private IconButton buttonExpanded;
 		private IconButton buttonWeeksOfYear;
 		private IconButton buttonDaysOfWeek;
 		private IconButton buttonGraph;

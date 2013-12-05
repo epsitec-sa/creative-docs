@@ -111,11 +111,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return null;
 		}
 
-		protected void SetActiveState(IconButton button, bool state)
-		{
-			button.ActiveState = state ? ActiveState.Yes : ActiveState.No;
-		}
-
 		protected IconButton CreateCommandButton(FrameBox toolbar, DockStyle dock, ToolbarCommand command, string icon, string tooltip)
 		{
 			var size = toolbar.PreferredHeight;
