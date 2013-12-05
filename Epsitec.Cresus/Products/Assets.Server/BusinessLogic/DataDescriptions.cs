@@ -106,16 +106,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.GroupGuid+9:
 					return "Dans le groupe";
 
-				case ObjectField.GroupRate+0:
-				case ObjectField.GroupRate+1:
-				case ObjectField.GroupRate+2:
-				case ObjectField.GroupRate+3:
-				case ObjectField.GroupRate+4:
-				case ObjectField.GroupRate+5:
-				case ObjectField.GroupRate+6:
-				case ObjectField.GroupRate+7:
-				case ObjectField.GroupRate+8:
-				case ObjectField.GroupRate+9:
+				case ObjectField.GroupRatio+0:
+				case ObjectField.GroupRatio+1:
+				case ObjectField.GroupRatio+2:
+				case ObjectField.GroupRatio+3:
+				case ObjectField.GroupRatio+4:
+				case ObjectField.GroupRatio+5:
+				case ObjectField.GroupRatio+6:
+				case ObjectField.GroupRatio+7:
+				case ObjectField.GroupRatio+8:
+				case ObjectField.GroupRatio+9:
 					return "Proportion";
 
 				default:

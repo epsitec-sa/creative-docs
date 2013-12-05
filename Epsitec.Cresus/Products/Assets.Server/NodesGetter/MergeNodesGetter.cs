@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 						if (groupGuid == inputNode.Guid)  // objet faisant partie de ce groupe ?
 						{
-							var ratio = ObjectCalculator.GetObjectPropertyDecimal (obj, this.timestamp, ObjectField.GroupRate+i);
+							var ratio = ObjectCalculator.GetObjectPropertyDecimal (obj, this.timestamp, ObjectField.GroupRatio+i);
 
 							node = new LevelNode (objectNode.Guid, BaseType.Objects, inputNode.Level+1, ratio);
 							this.outputNodes.Add (node);

@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			for (int i=0; i<6; i++)
 			{
 				this.CreateGuidController    (parent, ObjectField.GroupGuid+i);
-				this.CreateDecimalController (parent, ObjectField.GroupRate+i, DecimalFormat.Rate);
+				this.CreateDecimalController (parent, ObjectField.GroupRatio+i, DecimalFormat.Rate);
 
 				new FrameBox
 				{

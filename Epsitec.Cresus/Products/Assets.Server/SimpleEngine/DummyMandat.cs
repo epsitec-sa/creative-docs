@@ -204,9 +204,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					o133.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataGuidProperty           (ObjectField.GroupGuid+0,   DummyMandat.GetGroup (mandat, "Entrepôts")));
-					e.AddProperty (new DataDecimalProperty        (ObjectField.GroupRate+0,   0.6m));
+					e.AddProperty (new DataDecimalProperty        (ObjectField.GroupRatio+0,   0.6m));
 					e.AddProperty (new DataGuidProperty           (ObjectField.GroupGuid+1,   DummyMandat.GetGroup (mandat, "Suisses")));
-					e.AddProperty (new DataDecimalProperty        (ObjectField.GroupRate+1,   0.4m));
+					e.AddProperty (new DataDecimalProperty        (ObjectField.GroupRatio+1,   0.4m));
 					e.AddProperty (new DataGuidProperty           (ObjectField.GroupGuid+2,   DummyMandat.GetGroup (mandat, "Sud")));
 					e.AddProperty (new DataGuidProperty           (ObjectField.GroupGuid+3,   DummyMandat.GetGroup (mandat, "Atelier")));
 					e.AddProperty (new DataStringProperty         (ObjectField.Numéro,      "1330"));
@@ -226,8 +226,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (date2013, EventType.Modification);
 					o133.AddEvent (e);
-					e.AddProperty (new DataDecimalProperty        (ObjectField.GroupRate+0,   0.65m));
-					e.AddProperty (new DataDecimalProperty        (ObjectField.GroupRate+1,   0.35m));
+					e.AddProperty (new DataDecimalProperty        (ObjectField.GroupRatio+0,   0.65m));
+					e.AddProperty (new DataDecimalProperty        (ObjectField.GroupRatio+1,   0.35m));
 				}
 			}
 

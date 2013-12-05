@@ -47,8 +47,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		EventGlyph,
 		EventType,
 
-		GroupGuid = 10000,
-		GroupRate = 10100,
+		GroupGuid  = 10000,
+		GroupRatio = 10100,
 
 		MaxField = 10200,
 	}

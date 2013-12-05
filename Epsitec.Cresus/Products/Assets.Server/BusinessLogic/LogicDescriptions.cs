@@ -171,17 +171,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ObjectField.NuméroSérie;
 
 				yield return ObjectField.GroupGuid+0;
-				yield return ObjectField.GroupRate+0;
+				yield return ObjectField.GroupRatio+0;
 				yield return ObjectField.GroupGuid+1;
-				yield return ObjectField.GroupRate+1;
+				yield return ObjectField.GroupRatio+1;
 				yield return ObjectField.GroupGuid+2;
-				yield return ObjectField.GroupRate+2;
+				yield return ObjectField.GroupRatio+2;
 				yield return ObjectField.GroupGuid+3;
-				yield return ObjectField.GroupRate+3;
+				yield return ObjectField.GroupRatio+3;
 				yield return ObjectField.GroupGuid+4;
-				yield return ObjectField.GroupRate+4;
+				yield return ObjectField.GroupRatio+4;
 				yield return ObjectField.GroupGuid+5;
-				yield return ObjectField.GroupRate+5;
+				yield return ObjectField.GroupRatio+5;
 
 				yield return ObjectField.NomCatégorie;
 

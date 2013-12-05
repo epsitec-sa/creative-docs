@@ -31,17 +31,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.NuméroSérie;
 
 				yield return ObjectField.GroupGuid+0;
-				yield return ObjectField.GroupRate+0;
+				yield return ObjectField.GroupRatio+0;
 				yield return ObjectField.GroupGuid+1;
-				yield return ObjectField.GroupRate+1;
+				yield return ObjectField.GroupRatio+1;
 				yield return ObjectField.GroupGuid+2;
-				yield return ObjectField.GroupRate+2;
+				yield return ObjectField.GroupRatio+2;
 				yield return ObjectField.GroupGuid+3;
-				yield return ObjectField.GroupRate+3;
+				yield return ObjectField.GroupRatio+3;
 				yield return ObjectField.GroupGuid+4;
-				yield return ObjectField.GroupRate+4;
+				yield return ObjectField.GroupRatio+4;
 				yield return ObjectField.GroupGuid+5;
-				yield return ObjectField.GroupRate+5;
+				yield return ObjectField.GroupRatio+5;
 			}
 		}
 
@@ -119,17 +119,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var série       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.NuméroSérie);
 
 				var guid0       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+0);
-				var rate0       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+0);
+				var rate0       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+0);
 				var guid1       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+1);
-				var rate1       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+1);
+				var rate1       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+1);
 				var guid2       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+2);
-				var rate2       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+2);
+				var rate2       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+2);
 				var guid3       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+3);
-				var rate3       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+3);
+				var rate3       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+3);
 				var guid4       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+4);
-				var rate4       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+4);
+				var rate4       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+4);
 				var guid5       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+5);
-				var rate5       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+5);
+				var rate5       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+5);
 
 				valeur1 = TreeObjectsNodesGetter.GetValueAccordingToRatio (node, valeur1);
 				valeur2 = TreeObjectsNodesGetter.GetValueAccordingToRatio (node, valeur2);
