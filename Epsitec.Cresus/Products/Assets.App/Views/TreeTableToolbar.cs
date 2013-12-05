@@ -57,23 +57,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonFilter     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Filter,     "TreeTable.Filter",     "Filtre");
+			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Filter,     "TreeTable.Filter",     "Filtre");
 
-			this.buttonFirst      = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First,      "TreeTable.First",      "Retour sur la première ligne");
-			this.buttonPrev       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,       "TreeTable.Prev",       "Recule sur la ligne précédente");
-			this.buttonNext       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Next,       "TreeTable.Next",       "Avance sur la ligne suivante");
-			this.buttonLast       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Last,       "TreeTable.Last",       "Avance sur la dernière ligne");
+			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First,      "TreeTable.First",      "Retour sur la première ligne");
+			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Prev,       "TreeTable.Prev",       "Recule sur la ligne précédente");
+			this.buttonNext       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Next,       "TreeTable.Next",       "Avance sur la ligne suivante");
+			this.buttonLast       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Last,       "TreeTable.Last",       "Avance sur la dernière ligne");
 
-			this.separator1       = this.CreateSeparator     (this.toolbar, 0);
+			this.separator1       = this.CreateSeparator     (DockStyle.None);
 			
-			this.buttonCompactAll = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacte tout");
-			this.buttonExpandAll  = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etend tout");
+			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacte tout");
+			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etend tout");
 			
-			this.separator2       = this.CreateSeparator     (this.toolbar, 0);
+			this.separator2       = this.CreateSeparator     (DockStyle.None);
 			
-			this.buttonNew        = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.New,        "TreeTable.New",        "Nouvel ligne");
-			this.buttonDelete     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
-			this.buttonDeselect   = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Deselect,   "TreeTable.Deselect",   "Désélectionne la ligne");
+			this.buttonNew        = this.CreateCommandButton (DockStyle.None, ToolbarCommand.New,        "TreeTable.New",        "Nouvel ligne");
+			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
+			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect,   "TreeTable.Deselect",   "Désélectionne la ligne");
 
 			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
 
@@ -162,8 +162,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			public readonly bool		Visibility;
 		}
 
-
-		private FrameBox						toolbar;
 
 		private IconButton						buttonFilter;
 

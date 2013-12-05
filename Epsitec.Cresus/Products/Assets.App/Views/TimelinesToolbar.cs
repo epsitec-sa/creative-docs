@@ -43,19 +43,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonCompacted = this.CreateModeButton   (this.toolbar, TimelineMode.Compacted, ToolbarCommand.CompactAll, "Timeline.Single", "Affichage étroit");
-			this.buttonExpended  = this.CreateModeButton   (this.toolbar, TimelineMode.Expanded,  ToolbarCommand.ExpandAll,  "Timeline.Double", "Affichage large");
+			this.buttonCompacted = this.CreateModeButton   (TimelineMode.Compacted, ToolbarCommand.CompactAll, "Timeline.Single", "Affichage étroit");
+			this.buttonExpended  = this.CreateModeButton   (TimelineMode.Expanded,  ToolbarCommand.ExpandAll,  "Timeline.Double", "Affichage large");
 
-			this.buttonFirst    = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First,    "Timeline.First",    "Retour sur le premier événement");
-			this.buttonPrev     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur l'événement précédent");
-			this.buttonNext     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Next,     "Timeline.Next",     "Avance sur l'événement suivant");
-			this.buttonLast     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur le dernier événement");
+			this.buttonFirst    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First,    "Timeline.First",    "Retour sur le premier événement");
+			this.buttonPrev     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur l'événement précédent");
+			this.buttonNext     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Next,     "Timeline.Next",     "Avance sur l'événement suivant");
+			this.buttonLast     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur le dernier événement");
 
-			this.separator1     = this.CreateSeparator     (this.toolbar, 0);
+			this.separator1     = this.CreateSeparator     (DockStyle.None);
 			
-			this.buttonNew      = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.New,      "Timeline.New",      "Nouvel événement");
-			this.buttonDelete   = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Delete,   "Timeline.Delete",   "Supprimer l'événement");
-			this.buttonDeselect = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne l'événement");
+			this.buttonNew      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.New,      "Timeline.New",      "Nouvel événement");
+			this.buttonDelete   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,   "Timeline.Delete",   "Supprimer l'événement");
+			this.buttonDeselect = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne l'événement");
 
 			this.toolbar.SizeChanged += delegate
 			{
@@ -66,10 +66,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private IconButton CreateModeButton(FrameBox toolbar, TimelineMode mode, ToolbarCommand command, string icon, string tooltip)
+		private IconButton CreateModeButton(TimelineMode mode, ToolbarCommand command, string icon, string tooltip)
 		{
 			//	Utilise DockStyle.None, car le bouton est positionnée avec SetManualBounds.
-			var button = this.CreateCommandButton (toolbar, DockStyle.None, command, icon, tooltip);
+			var button = this.CreateCommandButton (DockStyle.None, command, icon, tooltip);
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
 
 			button.Clicked += delegate
@@ -188,8 +188,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<TimelineMode> ModeChanged;
 		#endregion
 
-
-		private FrameBox						toolbar;
 
 		private IconButton						buttonCompacted;
 		private IconButton						buttonExpended;

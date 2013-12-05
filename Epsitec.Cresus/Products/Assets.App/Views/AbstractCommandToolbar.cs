@@ -58,9 +58,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne le widget à l'origine d'une commande. On n'utilise jamais
 			//	ceci pour modifier le widget, mais uniquement pour connaître sa
 			//	position, en vue de l'affichage de la queue des popups.
-			if (this.commandStates.ContainsKey (command))
+			Widget widget;
+			if (this.commandWidgets.TryGetValue (command, out widget))
 			{
-				return this.commandWidgets[command];
+				return widget;
 			}
 			else
 			{
@@ -69,13 +70,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected IconButton CreateCommandButton(FrameBox toolbar, DockStyle dock, ToolbarCommand command, string icon, string tooltip)
+		protected IconButton CreateCommandButton(DockStyle dock, ToolbarCommand command, string icon, string tooltip)
 		{
-			var size = toolbar.PreferredHeight;
+			var size = this.toolbar.PreferredHeight;
 
 			var button = new IconButton
 			{
-				Parent        = toolbar,
+				Parent        = this.toolbar,
 				AutoFocus     = false,
 				Dock          = dock,
 				IconUri       = Misc.GetResourceIconUri (icon),
@@ -95,58 +96,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return button;
 		}
 
-		protected IconButton CreateCommandButton(FrameBox toolbar, int x, ToolbarCommand command, string icon, string tooltip)
+		protected FrameBox CreateSeparator(DockStyle dock)
 		{
-			var size = toolbar.PreferredHeight;
-
-			var button = new IconButton
-			{
-				Parent        = toolbar,
-				AutoFocus     = false,
-				IconUri       = Misc.GetResourceIconUri (icon),
-			};
-
-			button.SetManualBounds (new Rectangle (x, 0, size, size));
-
-			ToolTip.Default.SetToolTip (button, tooltip);
-
-			button.Clicked += delegate
-			{
-				this.OnCommandClicked (command);
-			};
-
-			this.commandWidgets.Add (command, button);
-
-			return button;
-		}
-
-		protected FrameBox CreateSeparator(FrameBox toolbar, DockStyle dock)
-		{
-			var size = toolbar.PreferredHeight;
+			var size = this.toolbar.PreferredHeight;
 
 			var sep = new FrameBox
 			{
-				Parent        = toolbar,
+				Parent        = this.toolbar,
 				Dock          = dock,
 				PreferredSize = new Size (1, size),
 				Margins       = new Margins (AbstractCommandToolbar.separatorWidth/2, AbstractCommandToolbar.separatorWidth/2, 0, 0),
 				BackColor     = ColorManager.SeparatorColor,
 			};
-
-			return sep;
-		}
-
-		protected FrameBox CreateSeparator(FrameBox toolbar, int x)
-		{
-			var size = toolbar.PreferredHeight;
-
-			var sep = new FrameBox
-			{
-				Parent    = toolbar,
-				BackColor = ColorManager.SeparatorColor,
-			};
-
-			sep.SetManualBounds (new Rectangle (x, 0, 1, size));
 
 			return sep;
 		}
@@ -215,5 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly Dictionary<ToolbarCommand, ToolbarCommandState>	commandStates;
 		private readonly Dictionary<ToolbarCommand, Widget>					commandWidgets;
+
+		protected FrameBox						toolbar;
 	}
 }

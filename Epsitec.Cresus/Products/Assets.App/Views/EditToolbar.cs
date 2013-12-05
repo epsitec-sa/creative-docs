@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public override FrameBox CreateUI(Widget parent)
 		{
-			var toolbar = new FrameBox
+			this.toolbar = new FrameBox
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonAccept = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
-			this.buttonCancel = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
+			this.buttonAccept = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
+			this.buttonCancel = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
 
 			return toolbar;
 		}
