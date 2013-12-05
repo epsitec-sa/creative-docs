@@ -296,15 +296,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
 			this.UpdateCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
 
-			this.toolbar.UpdateCommand (ToolbarCommand.New,      true);
-			this.toolbar.UpdateCommand (ToolbarCommand.Delete,   row != -1);
-			this.toolbar.UpdateCommand (ToolbarCommand.Deselect, row != -1);
+			this.toolbar.SetCommandEnable (ToolbarCommand.New,      true);
+			this.toolbar.SetCommandEnable (ToolbarCommand.Delete,   row != -1);
+			this.toolbar.SetCommandEnable (ToolbarCommand.Deselect, row != -1);
 		}
 
 		protected void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
-			this.toolbar.UpdateCommand (command, enable);
+			this.toolbar.SetCommandEnable (command, enable);
 		}
 
 

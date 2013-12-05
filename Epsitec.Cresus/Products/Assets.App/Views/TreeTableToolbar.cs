@@ -12,16 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TreeTableToolbar : AbstractCommandToolbar
 	{
-		public override FrameBox CreateUI(Widget parent)
-		{
-			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.secondaryToolbarHeight);
-			this.UpdateCommandButtons ();
-
-			return toolbar;
-		}
-
-
-		public bool HasFilter
+		public bool								HasFilter
 		{
 			get
 			{
@@ -37,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public bool HasTreeOperations
+		public bool								HasTreeOperations
 		{
 			get
 			{
@@ -54,22 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void UpdateCommandButtons()
-		{
-			this.UpdateCommandButton (this.buttonFilter,     ToolbarCommand.Filter);
-			this.UpdateCommandButton (this.buttonFirst,      ToolbarCommand.First);
-			this.UpdateCommandButton (this.buttonPrev,       ToolbarCommand.Prev);
-			this.UpdateCommandButton (this.buttonNext,       ToolbarCommand.Next);
-			this.UpdateCommandButton (this.buttonLast,       ToolbarCommand.Last);
-			this.UpdateCommandButton (this.buttonCompactAll, ToolbarCommand.CompactAll);
-			this.UpdateCommandButton (this.buttonExpandAll,  ToolbarCommand.ExpandAll);
-			this.UpdateCommandButton (this.buttonNew,        ToolbarCommand.New);
-			this.UpdateCommandButton (this.buttonDelete,     ToolbarCommand.Delete);
-			this.UpdateCommandButton (this.buttonDeselect,   ToolbarCommand.Deselect);
-		}
-
-
-		protected override FrameBox CreateToolbar(Widget parent, int size)
+		public override FrameBox CreateUI(Widget parent)
 		{
 			//	La toolbar s'adapte en fonction de la largeur disponible. Certains
 			//	boutons non indispensables disparaissent s'il manque de la place.
@@ -77,13 +53,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = size,
+				PreferredHeight = AbstractCommandToolbar.secondaryToolbarHeight,
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
 			this.buttonFilter     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Filter,     "TreeTable.Filter",     "Filtre");
 
-			this.buttonFirst      = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First, "TreeTable.First", "Retour sur la première ligne");
+			this.buttonFirst      = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First,      "TreeTable.First",      "Retour sur la première ligne");
 			this.buttonPrev       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,       "TreeTable.Prev",       "Recule sur la ligne précédente");
 			this.buttonNext       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Next,       "TreeTable.Next",       "Avance sur la ligne suivante");
 			this.buttonLast       = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Last,       "TreeTable.Last",       "Avance sur la dernière ligne");
@@ -108,6 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			return this.toolbar;
 		}
+
 
 		private void Adjust()
 		{

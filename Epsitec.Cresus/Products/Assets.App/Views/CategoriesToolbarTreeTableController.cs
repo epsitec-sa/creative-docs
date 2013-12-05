@@ -77,13 +77,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnNew()
 		{
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
+			var target = this.toolbar.GetTarget (ToolbarCommand.New);
 			this.ShowCreatePopup (target);
 		}
 
 		protected override void OnDelete()
 		{
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Delete);
+			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
 			if (target != null)
 			{

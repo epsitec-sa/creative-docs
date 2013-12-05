@@ -378,7 +378,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region Objects commands
 		private void OnObjectFilter()
 		{
-			var target = this.objectsToolbar.GetCommandWidget (ToolbarCommand.Filter);
+			var target = this.objectsToolbar.GetTarget (ToolbarCommand.Filter);
 			var popup = new FilterPopup (this.accessor, this.rootGuid);
 
 			popup.Create (target, leftOrRight: true);
@@ -432,13 +432,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnObjectNew()
 		{
-			var target = this.objectsToolbar.GetCommandWidget (ToolbarCommand.New);
+			var target = this.objectsToolbar.GetTarget (ToolbarCommand.New);
 			this.ShowCreatePopup (target);
 		}
 
 		private void OnObjectDelete()
 		{
-			var target = this.objectsToolbar.GetCommandWidget (ToolbarCommand.Delete);
+			var target = this.objectsToolbar.GetTarget (ToolbarCommand.Delete);
 
 			if (target != null)
 			{
@@ -588,7 +588,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnTimelineNew()
 		{
-			var target = this.timelinesToolbar.GetCommandWidget (ToolbarCommand.New);
+			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.New);
 			var timestamp = this.SelectedTimestamp;
 
 			if (target != null && timestamp.HasValue)
@@ -627,7 +627,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnTimelineDelete()
 		{
-			var target = this.timelinesToolbar.GetCommandWidget (ToolbarCommand.Delete);
+			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.Delete);
 
 			if (target != null)
 			{
@@ -1004,33 +1004,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateObjectCommand (ToolbarCommand.Next,  this.selectedRow, this.NextRowIndex);
 			this.UpdateObjectCommand (ToolbarCommand.Last,  this.selectedRow, this.LastRowIndex);
 
-			this.objectsToolbar.UpdateCommand (ToolbarCommand.CompactAll, !this.nodesGetter.IsAllCompacted);
-			this.objectsToolbar.UpdateCommand (ToolbarCommand.ExpandAll,  !this.nodesGetter.IsAllExpanded);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.nodesGetter.IsAllCompacted);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.nodesGetter.IsAllExpanded);
 
-			this.objectsToolbar.UpdateCommand (ToolbarCommand.New,      true);
-			this.objectsToolbar.UpdateCommand (ToolbarCommand.Delete,   this.SelectedObject != null);
-			this.objectsToolbar.UpdateCommand (ToolbarCommand.Deselect, this.selectedRow != -1);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.New,      true);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.Delete,   this.SelectedObject != null);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.Deselect, this.selectedRow != -1);
 
 			this.UpdateTimelineCommand (ToolbarCommand.First, this.selectedColumn, this.FirstColumnIndex);
 			this.UpdateTimelineCommand (ToolbarCommand.Prev,  this.selectedColumn, this.PrevColumnIndex);
 			this.UpdateTimelineCommand (ToolbarCommand.Next,  this.selectedColumn, this.NextColumnIndex);
 			this.UpdateTimelineCommand (ToolbarCommand.Last,  this.selectedColumn, this.LastColumnIndex);
 
-			this.timelinesToolbar.UpdateCommand (ToolbarCommand.New,      this.selectedColumn != -1 && this.HasSelectedTimeline);
-			this.timelinesToolbar.UpdateCommand (ToolbarCommand.Delete,   this.HasSelectedEvent);
-			this.timelinesToolbar.UpdateCommand (ToolbarCommand.Deselect, this.selectedColumn != -1);
+			this.timelinesToolbar.SetCommandEnable (ToolbarCommand.New,      this.selectedColumn != -1 && this.HasSelectedTimeline);
+			this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Delete,   this.HasSelectedEvent);
+			this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Deselect, this.selectedColumn != -1);
 		}
 
 		private void UpdateObjectCommand(ToolbarCommand command, int currentSelection, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
-			this.objectsToolbar.UpdateCommand (command, enable);
+			this.objectsToolbar.SetCommandEnable (command, enable);
 		}
 
 		private void UpdateTimelineCommand(ToolbarCommand command, int currentSelection, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
-			this.timelinesToolbar.UpdateCommand (command, enable);
+			this.timelinesToolbar.SetCommandEnable (command, enable);
 		}
 
 

@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowPopup()
 		{
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Open);
+			var target = this.toolbar.GetTarget (ToolbarCommand.Open);
 
 			var popup = new SimplePopup ()
 			{

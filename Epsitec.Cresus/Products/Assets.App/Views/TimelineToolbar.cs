@@ -16,14 +16,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public override FrameBox CreateUI(Widget parent)
 		{
-			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.secondaryToolbarHeight);
-			this.UpdateCommandButtons ();
+			var toolbar = new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Top,
+				PreferredHeight = AbstractCommandToolbar.secondaryToolbarHeight,
+				BackColor       = ColorManager.ToolbarBackgroundColor,
+			};
+
+			this.buttonLabels      = this.CreateModeButton    (toolbar, TimelineMode.Labels,      ToolbarCommand.Labels,      "Timeline.Labels",      "Affiche les noms des lignes");
+								   							   								   
+			this.buttonCompacted   = this.CreateModeButton    (toolbar, TimelineMode.Compacted,   ToolbarCommand.CompactAll,  "Timeline.Compacted",   "Affichage compact");
+			this.buttonExpanded    = this.CreateModeButton    (toolbar, TimelineMode.Expanded,    ToolbarCommand.ExpandAll,   "Timeline.Expanded",    "Affichage étendu");
+														      
+			this.buttonWeeksOfYear = this.CreateModeButton    (toolbar, TimelineMode.WeeksOfYear, ToolbarCommand.WeeksOfYear, "Timeline.WeeksOfYear", "Affiche les numéros des semaines");
+			this.buttonDaysOfWeek  = this.CreateModeButton    (toolbar, TimelineMode.DaysOfWeek,  ToolbarCommand.DaysOfWeek,  "Timeline.DaysOfWeek",  "Affiche les jours de la semaine");
+			this.buttonGraph       = this.CreateModeButton    (toolbar, TimelineMode.Graph,       ToolbarCommand.Graph,       "Timeline.Graph",       "Affiche les graphique des valeurs");
+
+			this.buttonFirst       = this.CreateCommandButton (toolbar, DockStyle.Left,           ToolbarCommand.First,       "Timeline.First",       "Retour sur le premier événement");
+			this.buttonPrev        = this.CreateCommandButton (toolbar, DockStyle.Left,           ToolbarCommand.Prev,        "Timeline.Prev",        "Recule sur l'événement précédent");
+			this.buttonNext        = this.CreateCommandButton (toolbar, DockStyle.Left,           ToolbarCommand.Next,        "Timeline.Next",        "Avance sur l'événement suivant");
+			this.buttonLast        = this.CreateCommandButton (toolbar, DockStyle.Left,           ToolbarCommand.Last,        "Timeline.Last",        "Avance sur le dernier événement");
+			this.buttonNow         = this.CreateCommandButton (toolbar, DockStyle.Left,           ToolbarCommand.Now,         "Timeline.Now",         "Va à la date du jour");
+			this.buttonDate        = this.CreateCommandButton (toolbar, DockStyle.Left,           ToolbarCommand.Date,        "Timeline.Date",        "Va à une date à choix");
+																						          
+			this.CreateSeparator (toolbar, DockStyle.Left);
+																						          
+			this.buttonNew         = this.CreateCommandButton (toolbar, DockStyle.Left,           ToolbarCommand.New,         "Timeline.New",         "Nouvel événement");
+			this.buttonDelete      = this.CreateCommandButton (toolbar, DockStyle.Left,           ToolbarCommand.Delete ,     "Timeline.Delete",      "Supprimer l'événement");
+			this.buttonDeselect    = this.CreateCommandButton (toolbar, DockStyle.Left,           ToolbarCommand.Deselect,    "Timeline.Deselect",    "Désélectionne l'événement");
+
+			this.buttonCompacted.Margins   = new Margins (5, 0, 0, 0);
+			this.buttonWeeksOfYear.Margins = new Margins (5, 0, 0, 0);
+			this.buttonFirst.Margins       = new Margins (10, 0, 0, 0);
+
+			this.UpdateModeButtons ();
 
 			return toolbar;
 		}
 
 
-		public TimelineMode TimelineMode
+		public TimelineMode						TimelineMode
 		{
 			get
 			{
@@ -40,83 +73,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void UpdateCommandButtons()
+		private IconButton CreateModeButton(FrameBox toolbar, TimelineMode mode, ToolbarCommand command, string icon, string tooltip)
 		{
-			this.UpdateCommandButton (this.buttonLabels,      ToolbarCommand.Labels);
-			this.UpdateCommandButton (this.buttonCompacted,   ToolbarCommand.CompactAll);
-			this.UpdateCommandButton (this.buttonExpanded,    ToolbarCommand.ExpandAll);
-			this.UpdateCommandButton (this.buttonWeeksOfYear, ToolbarCommand.WeeksOfYear);
-			this.UpdateCommandButton (this.buttonDaysOfWeek,  ToolbarCommand.DaysOfWeek);
-			this.UpdateCommandButton (this.buttonGraph,       ToolbarCommand.Graph);
-
-			this.UpdateCommandButton (this.buttonFirst,       ToolbarCommand.First);
-			this.UpdateCommandButton (this.buttonPrev,        ToolbarCommand.Prev);
-			this.UpdateCommandButton (this.buttonNext,        ToolbarCommand.Next);
-			this.UpdateCommandButton (this.buttonLast,        ToolbarCommand.Last);
-			this.UpdateCommandButton (this.buttonNow,         ToolbarCommand.Now);
-			this.UpdateCommandButton (this.buttonDate,        ToolbarCommand.Date);
-			this.UpdateCommandButton (this.buttonNew,         ToolbarCommand.New);
-			this.UpdateCommandButton (this.buttonDelete,      ToolbarCommand.Delete);
-			this.UpdateCommandButton (this.buttonDeselect,    ToolbarCommand.Deselect);
-		}
-
-
-		protected override FrameBox CreateToolbar(Widget parent, int size)
-		{
-			var toolbar = new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-				PreferredHeight = size,
-				BackColor       = ColorManager.ToolbarBackgroundColor,
-			};
-
-			this.buttonLabels      = this.CreateModeButton (toolbar, TimelineMode.Labels,      "Timeline.Labels",      "Affiche les noms des lignes");
-								   															   
-			this.buttonCompacted   = this.CreateModeButton (toolbar, TimelineMode.Compacted,   "Timeline.Compacted",   "Affichage compact");
-			this.buttonExpanded    = this.CreateModeButton (toolbar, TimelineMode.Expanded,    "Timeline.Expanded",    "Affichage étendu");
-
-			this.buttonWeeksOfYear = this.CreateModeButton (toolbar, TimelineMode.WeeksOfYear, "Timeline.WeeksOfYear", "Affiche les numéros des semaines");
-			this.buttonDaysOfWeek  = this.CreateModeButton (toolbar, TimelineMode.DaysOfWeek,  "Timeline.DaysOfWeek",  "Affiche les jours de la semaine");
-			this.buttonGraph       = this.CreateModeButton (toolbar, TimelineMode.Graph,       "Timeline.Graph",       "Affiche les graphique des valeurs");
-
-			this.buttonFirst       = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.First,    "Timeline.First",    "Retour sur le premier événement");
-			this.buttonPrev        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur l'événement précédent");
-			this.buttonNext        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Next,     "Timeline.Next",     "Avance sur l'événement suivant");
-			this.buttonLast        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur le dernier événement");
-			this.buttonNow         = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Now,      "Timeline.Now",      "Va à la date du jour");
-			this.buttonDate        = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Date,     "Timeline.Date",     "Va à une date à choix");
-
-			this.CreateSeparator (toolbar, DockStyle.Left);
-			
-			this.buttonNew         = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.New,      "Timeline.New",      "Nouvel événement");
-			this.buttonDelete      = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Delete ,  "Timeline.Delete",   "Supprimer l'événement");
-			this.buttonDeselect    = this.CreateCommandButton (toolbar, DockStyle.Left, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne l'événement");
-
-			this.buttonCompacted.Margins   = new Margins (5, 0, 0, 0);
-			this.buttonWeeksOfYear.Margins = new Margins (5, 0, 0, 0);
-			this.buttonFirst.Margins       = new Margins (10, 0, 0, 0);
-
-			this.UpdateModeButtons ();
-
-			return toolbar;
-		}
-
-		private IconButton CreateModeButton(FrameBox toolbar, TimelineMode mode, string icon, string tooltip)
-		{
-			var size = toolbar.PreferredHeight;
-
-			var button = new IconButton
-			{
-				Parent        = toolbar,
-				ButtonStyle   = ButtonStyle.ActivableIcon,
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				IconUri       = Misc.GetResourceIconUri (icon),
-				PreferredSize = new Size (size, size),
-			};
-
-			ToolTip.Default.SetToolTip (button, tooltip);
+			var button = this.CreateCommandButton (toolbar, DockStyle.Left, command, icon, tooltip);
+			button.ButtonStyle = ButtonStyle.ActivableIcon;
 
 			button.Clicked += delegate
 			{

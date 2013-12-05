@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnFilter()
 		{
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Filter);
+			var target = this.toolbar.GetTarget (ToolbarCommand.Filter);
 			var popup = new FilterPopup (this.accessor, this.rootGuid);
 
 			popup.Create (target, leftOrRight: true);
@@ -160,13 +160,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnNew()
 		{
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
+			var target = this.toolbar.GetTarget (ToolbarCommand.New);
 			this.ShowCreatePopup (target);
 		}
 
 		protected override void OnDelete()
 		{
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Delete);
+			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
 			if (target != null)
 			{
@@ -226,8 +226,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandState (ToolbarCommand.Filter,
 				this.rootGuid.IsEmpty ? ToolbarCommandState.Enable : ToolbarCommandState.Activate);
 
-			this.toolbar.UpdateCommand (ToolbarCommand.CompactAll, !this.NodesGetter.IsAllCompacted);
-			this.toolbar.UpdateCommand (ToolbarCommand.ExpandAll,  !this.NodesGetter.IsAllExpanded);
+			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.NodesGetter.IsAllCompacted);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.NodesGetter.IsAllExpanded);
 		}
 
 

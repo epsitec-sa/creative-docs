@@ -640,12 +640,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
 
-				this.mainToolbar.UpdateCommand (ToolbarCommand.Accept, this.objectEditor.EditionDirty);
+				this.mainToolbar.SetCommandEnable (ToolbarCommand.Accept, this.objectEditor.EditionDirty);
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
 			}
 			else
 			{
-				this.mainToolbar.UpdateCommand (ToolbarCommand.Edit, this.IsEditingPossible);
+				this.mainToolbar.SetCommandEnable (ToolbarCommand.Edit, this.IsEditingPossible);
 
 				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);

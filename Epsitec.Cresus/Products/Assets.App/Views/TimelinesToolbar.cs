@@ -14,16 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TimelinesToolbar : AbstractCommandToolbar
 	{
-		public override FrameBox CreateUI(Widget parent)
-		{
-			var toolbar = this.CreateToolbar (parent, AbstractCommandToolbar.secondaryToolbarHeight);
-			this.UpdateCommandButtons ();
-
-			return toolbar;
-		}
-
-
-		public TimelineMode TimelineMode
+		public TimelineMode						TimelineMode
 		{
 			get
 			{
@@ -40,22 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void UpdateCommandButtons()
-		{
-			this.UpdateCommandButton (this.buttonCompacted,  ToolbarCommand.CompactAll);
-			this.UpdateCommandButton (this.buttonExpended,   ToolbarCommand.ExpandAll);
-
-			this.UpdateCommandButton (this.buttonFirst,      ToolbarCommand.First);
-			this.UpdateCommandButton (this.buttonPrev,       ToolbarCommand.Prev);
-			this.UpdateCommandButton (this.buttonNext,       ToolbarCommand.Next);
-			this.UpdateCommandButton (this.buttonLast,       ToolbarCommand.Last);
-			this.UpdateCommandButton (this.buttonNew,        ToolbarCommand.New);
-			this.UpdateCommandButton (this.buttonDelete,     ToolbarCommand.Delete);
-			this.UpdateCommandButton (this.buttonDeselect,   ToolbarCommand.Deselect);
-		}
-
-
-		protected override FrameBox CreateToolbar(Widget parent, int size)
+		public override FrameBox CreateUI(Widget parent)
 		{
 			//	La toolbar s'adapte en fonction de la largeur disponible. Certains
 			//	boutons non indispensables disparaissent s'il manque de la place.
@@ -63,12 +39,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = size,
+				PreferredHeight = AbstractCommandToolbar.secondaryToolbarHeight,
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonCompacted = this.CreateModeButton (toolbar, TimelineMode.Compacted, "Timeline.Single", "Affichage étroit");
-			this.buttonExpended  = this.CreateModeButton (toolbar, TimelineMode.Expanded,  "Timeline.Double", "Affichage large");
+			this.buttonCompacted = this.CreateModeButton   (this.toolbar, TimelineMode.Compacted, ToolbarCommand.CompactAll, "Timeline.Single", "Affichage étroit");
+			this.buttonExpended  = this.CreateModeButton   (this.toolbar, TimelineMode.Expanded,  ToolbarCommand.ExpandAll,  "Timeline.Double", "Affichage large");
 
 			this.buttonFirst    = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.First,    "Timeline.First",    "Retour sur le premier événement");
 			this.buttonPrev     = this.CreateCommandButton (this.toolbar, 0, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur l'événement précédent");
@@ -89,17 +65,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return this.toolbar;
 		}
 
-		private IconButton CreateModeButton(FrameBox toolbar, TimelineMode mode, string icon, string tooltip)
-		{
-			var button = new IconButton
-			{
-				Parent        = toolbar,
-				ButtonStyle   = ButtonStyle.ActivableIcon,
-				AutoFocus     = false,
-				IconUri       = Misc.GetResourceIconUri (icon),
-			};
 
-			ToolTip.Default.SetToolTip (button, tooltip);
+		private IconButton CreateModeButton(FrameBox toolbar, TimelineMode mode, ToolbarCommand command, string icon, string tooltip)
+		{
+			//	Utilise DockStyle.None, car le bouton est positionnée avec SetManualBounds.
+			var button = this.CreateCommandButton (toolbar, DockStyle.None, command, icon, tooltip);
+			button.ButtonStyle = ButtonStyle.ActivableIcon;
 
 			button.Clicked += delegate
 			{

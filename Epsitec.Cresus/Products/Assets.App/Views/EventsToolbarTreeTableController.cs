@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnNew()
 		{
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.New);
+			var target = this.toolbar.GetTarget (ToolbarCommand.New);
 			var timestamp = this.SelectedTimestamp;
 
 			if (!timestamp.HasValue)
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnDelete()
 		{
-			var target = this.toolbar.GetCommandWidget (ToolbarCommand.Delete);
+			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
 			if (target != null)
 			{

@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnMainAmortissement()
 		{
-			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Amortissement);
+			var target = this.mainToolbar.GetTarget (ToolbarCommand.Amortissement);
 
 			var now = System.DateTime.Now;
 
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnMainSimulation()
 		{
-			var target = this.mainToolbar.GetCommandWidget (ToolbarCommand.Simulation);
+			var target = this.mainToolbar.GetTarget (ToolbarCommand.Simulation);
 
 			if (target != null)
 			{

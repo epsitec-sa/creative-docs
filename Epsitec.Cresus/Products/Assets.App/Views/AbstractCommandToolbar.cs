@@ -15,17 +15,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public AbstractCommandToolbar()
 		{
-			this.commandStates = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
+			this.commandStates  = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
 			this.commandWidgets = new Dictionary<ToolbarCommand, Widget> ();
 		}
 
-		public virtual FrameBox CreateUI(Widget parent)
-		{
-			return null;
-		}
+		public abstract FrameBox CreateUI(Widget parent);
 
 
-		public void UpdateCommand(ToolbarCommand command, bool enable)
+		public void SetCommandEnable(ToolbarCommand command, bool enable)
 		{
 			if (enable)
 			{
@@ -40,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public void SetCommandState(ToolbarCommand command, ToolbarCommandState state)
 		{
 			this.commandStates[command] = state;
-			this.UpdateCommandButtons ();
+			this.UpdateWidget (command);
 		}
 
 		public ToolbarCommandState GetCommandState(ToolbarCommand command)
@@ -56,8 +53,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public Widget GetCommandWidget(ToolbarCommand command)
+		public Widget GetTarget(ToolbarCommand command)
 		{
+			//	Retourne le widget à l'origine d'une commande. On n'utilise jamais
+			//	ceci pour modifier le widget, mais uniquement pour connaître sa
+			//	position, en vue de l'affichage de la queue des popups.
 			if (this.commandStates.ContainsKey (command))
 			{
 				return this.commandWidgets[command];
@@ -68,47 +68,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-
-		protected virtual void UpdateCommandButtons()
-		{
-		}
-
-		protected void UpdateCommandButton(IconButton button, ToolbarCommand command)
-		{
-			//	Un bouton placé avec SetManualBounds gère différemment la visibilité.
-			if (button.Dock != DockStyle.None)
-			{
-				button.Visibility = this.GetCommandVisibility (command);
-			}
-
-			button.Enable      = this.GetCommandEnable        (command);
-			button.ActiveState = this.GetCommandActivateState (command);
-		}
-
-		private bool GetCommandVisibility(ToolbarCommand command)
-		{
-			var state = this.GetCommandState (command);
-			return state != ToolbarCommandState.Hide;
-		}
-
-		private bool GetCommandEnable(ToolbarCommand command)
-		{
-			var state = this.GetCommandState (command);
-			return state == ToolbarCommandState.Enable ||
-				   state == ToolbarCommandState.Activate;
-		}
-
-		private ActiveState GetCommandActivateState(ToolbarCommand command)
-		{
-			var state = this.GetCommandState (command);
-			return Misc.GetActiveState (state == ToolbarCommandState.Activate);
-		}
-
-
-		protected virtual FrameBox CreateToolbar(Widget parent, int size)
-		{
-			return null;
-		}
 
 		protected IconButton CreateCommandButton(FrameBox toolbar, DockStyle dock, ToolbarCommand command, string icon, string tooltip)
 		{
@@ -131,6 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.commandWidgets.Add (command, button);
+			this.UpdateWidget (command);
 
 			return button;
 		}
@@ -192,6 +152,52 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void UpdateWidget(ToolbarCommand command)
+		{
+			Widget widget;
+			if (this.commandWidgets.TryGetValue (command, out widget))
+			{
+				if (widget is IconButton)
+				{
+					this.UpdateButton (widget as IconButton, command);
+				}
+
+				//	Il pourrait y avoir des widgets autres que des IconButton dans le futur !
+			}
+		}
+
+		private void UpdateButton(IconButton button, ToolbarCommand command)
+		{
+			//	Un bouton placé avec SetManualBounds gère différemment la visibilité.
+			if (button.Dock != DockStyle.None)
+			{
+				button.Visibility = this.GetCommandVisibility (command);
+			}
+
+			button.Enable      = this.GetCommandEnable (command);
+			button.ActiveState = this.GetCommandActivateState (command);
+		}
+
+		private bool GetCommandVisibility(ToolbarCommand command)
+		{
+			var state = this.GetCommandState (command);
+			return state != ToolbarCommandState.Hide;
+		}
+
+		private bool GetCommandEnable(ToolbarCommand command)
+		{
+			var state = this.GetCommandState (command);
+			return state == ToolbarCommandState.Enable ||
+				   state == ToolbarCommandState.Activate;
+		}
+
+		private ActiveState GetCommandActivateState(ToolbarCommand command)
+		{
+			var state = this.GetCommandState (command);
+			return Misc.GetActiveState (state == ToolbarCommandState.Activate);
+		}
+
+
 		#region Events handler
 		protected void OnCommandClicked(ToolbarCommand command)
 		{
@@ -207,7 +213,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public const int separatorWidth         = 11;
 
 
-		private readonly Dictionary<ToolbarCommand, ToolbarCommandState> commandStates;
-		private readonly Dictionary<ToolbarCommand, Widget> commandWidgets;
+		private readonly Dictionary<ToolbarCommand, ToolbarCommandState>	commandStates;
+		private readonly Dictionary<ToolbarCommand, Widget>					commandWidgets;
 	}
 }
