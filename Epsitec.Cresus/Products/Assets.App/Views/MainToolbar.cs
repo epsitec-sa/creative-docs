@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateViewModeCommands ();
 			this.UpdateSimulation ();
 
-			return toolbar;
+			return this.toolbar;
 		}
 
 		private IconButton CreateViewTypeButton(ViewType view, ToolbarCommand command, string icon, string tooltip)

@@ -14,6 +14,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TimelineToolbar : AbstractCommandToolbar
 	{
+		public TimelineMode						TimelineMode
+		{
+			get
+			{
+				return this.timelineMode;
+			}
+			set
+			{
+				if (this.timelineMode != value)
+				{
+					this.timelineMode = value;
+					this.UpdateModeButtons ();
+				}
+			}
+		}
+
+
 		public override FrameBox CreateUI(Widget parent)
 		{
 			this.toolbar = new FrameBox
@@ -52,24 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateModeButtons ();
 
-			return toolbar;
-		}
-
-
-		public TimelineMode						TimelineMode
-		{
-			get
-			{
-				return this.timelineMode;
-			}
-			set
-			{
-				if (this.timelineMode != value)
-				{
-					this.timelineMode = value;
-					this.UpdateModeButtons ();
-				}
-			}
+			return this.toolbar;
 		}
 
 
