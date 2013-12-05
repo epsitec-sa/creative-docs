@@ -246,39 +246,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Met à jour les instructions de tri des getters en fonction des choix
 			//	effectués dans le TreeTable.
-			var primaryField   = ObjectField.Unknown;
-			var primaryType    = SortedType.None;
-			var secondaryField = ObjectField.Unknown;
-			var secondaryType  = SortedType.None;
-
-			var sortedColumns = this.controller.SortedColumns.ToArray ();
-			var fields = this.dataFiller.Fields.ToArray ();
-
-			if (sortedColumns.Length >= 1)
-			{
-				var sortedColumn = sortedColumns[0];
-
-				if (sortedColumn.Column < fields.Length)
-				{
-					primaryField = fields[sortedColumn.Column];
-				}
-
-				primaryType = sortedColumn.Type;
-			}
-
-			if (sortedColumns.Length >= 2)
-			{
-				var sortedColumn = sortedColumns[1];
-
-				if (sortedColumn.Column < fields.Length)
-				{
-					secondaryField = fields[sortedColumn.Column];
-				}
-
-				secondaryType = sortedColumn.Type;
-			}
-
-			this.sortingInstructions = new SortingInstructions (primaryField, primaryType, secondaryField, secondaryType);
+			this.sortingInstructions = TreeTableFiller<T>.GetSortingInstructions (this.controller, this.dataFiller);
 			this.UpdateData ();
 		}
 

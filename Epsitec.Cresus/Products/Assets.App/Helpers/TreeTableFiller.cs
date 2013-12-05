@@ -5,23 +5,64 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.DataFillers;
+using Epsitec.Cresus.Assets.Server.NodesGetter;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Helpers
 {
 	public static class TreeTableFiller<T>
 		where T : struct
 	{
+		public static SortingInstructions GetSortingInstructions(NavigationTreeTableController controller,
+			AbstractTreeTableFiller<T> filler)
+		{
+			//	Retourne les instructions de tri choisie dans le contrôleur TreeTable.
+			var primaryField   = ObjectField.Unknown;
+			var primaryType    = SortedType.None;
+			var secondaryField = ObjectField.Unknown;
+			var secondaryType  = SortedType.None;
+
+			var sortedColumns = controller.SortedColumns.ToArray ();
+			var fields = filler.Fields.ToArray ();
+
+			if (sortedColumns.Length >= 1)
+			{
+				var sortedColumn = sortedColumns[0];
+
+				if (sortedColumn.Column < fields.Length)
+				{
+					primaryField = fields[sortedColumn.Column];
+				}
+
+				primaryType = sortedColumn.Type;
+			}
+
+			if (sortedColumns.Length >= 2)
+			{
+				var sortedColumn = sortedColumns[1];
+
+				if (sortedColumn.Column < fields.Length)
+				{
+					secondaryField = fields[sortedColumn.Column];
+				}
+
+				secondaryType = sortedColumn.Type;
+			}
+
+			return new SortingInstructions (primaryField, primaryType, secondaryField, secondaryType);
+		}
+
 		public static void FillColumns(NavigationTreeTableController controller, 
 			AbstractTreeTableFiller<T> filler, int dockToLeftCount = 1)
 		{
-			//	Met à jour les colonnes du contrôleur.
+			//	Met à jour les colonnes du contrôleur TreeTable.
 			controller.SetColumns (filler.Columns, dockToLeftCount);
 		}
 
 		public static void FillContent(NavigationTreeTableController controller,
 			AbstractTreeTableFiller<T> filler, int selection, bool crop)
 		{
-			//	Met à jour le contenu du contrôleur. Si crop = true, on s'arrange
+			//	Met à jour le contenu du contrôleur TreeTable. Si crop = true, on s'arrange
 			//	pour rendre visible la sélection.
 			controller.RowsCount = filler.Count;
 

@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				HoverMode         = TreeTableHoverMode.VerticalGradient,
 				HeaderHeight      = TimelinesArrayController.lineHeight*2,
 				FooterHeight      = 0,
-				HeaderDescription = "Object",
+				HeaderDescription = "Objet",
 				RowHeight         = TimelinesArrayController.lineHeight,
 				Margins           = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
 				VerticalAdjust    = -1,
