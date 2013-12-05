@@ -82,6 +82,41 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public ComputedAmount(ComputedAmount model, decimal ratio)
+		{
+			if (model.InitialAmount.HasValue)
+			{
+				this.InitialAmount = model.InitialAmount * ratio;
+			}
+			else
+			{
+				this.InitialAmount = model.InitialAmount;
+			}
+
+			if (model.ArgumentAmount.HasValue && !model.Rate)
+			{
+				this.ArgumentAmount = model.ArgumentAmount * ratio;
+			}
+			else
+			{
+				this.ArgumentAmount = model.ArgumentAmount;
+			}
+
+			if (model.FinalAmount.HasValue)
+			{
+				this.FinalAmount = model.FinalAmount * ratio;
+			}
+			else
+			{
+				this.FinalAmount = model.FinalAmount;
+			}
+
+			this.Computed        = model.Computed;
+			this.Substract       = model.Substract;
+			this.Rate            = model.Rate;
+			this.ArgumentDefined = model.ArgumentDefined;
+		}
+
 
 		public decimal? ComputeFinal(decimal? argument)
 		{

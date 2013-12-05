@@ -57,6 +57,17 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
+		public static ComputedAmount? GetValueAccordingToRatio(TreeNode node, ComputedAmount? value)
+		{
+			if (value.HasValue && node.Ratio.HasValue)
+			{
+				return new ComputedAmount(value.Value, node.Ratio.Value);
+			}
+
+			return value;
+		}
+
+
 		#region ITreeFonctions
 		public bool IsAllCompacted
 		{
@@ -83,11 +94,11 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 			if (node.Type == NodeType.Compacted)
 			{
-				this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, NodeType.Expanded);
+				this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, node.Ratio, NodeType.Expanded);
 			}
 			else if (node.Type == NodeType.Expanded)
 			{
-				this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, NodeType.Compacted);
+				this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, node.Ratio, NodeType.Compacted);
 			}
 
 			this.UpdateNodeIndexes ();
@@ -102,7 +113,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 				if (node.Type == NodeType.Expanded)
 				{
-					this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, NodeType.Compacted);
+					this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, node.Ratio, NodeType.Compacted);
 				}
 			}
 
@@ -118,7 +129,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 				if (node.Type == NodeType.Compacted)
 				{
-					this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, NodeType.Expanded);
+					this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, node.Ratio, NodeType.Expanded);
 				}
 			}
 
@@ -201,7 +212,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 					}
 				}
 
-				var node = new TreeNode (currentNode.Guid, currentNode.BaseType, currentNode.Level, type);
+				var node = new TreeNode (currentNode.Guid, currentNode.BaseType, currentNode.Level, currentNode.Ratio, type);
 				this.nodes.Add (node);
 			}
 

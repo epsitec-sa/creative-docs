@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
 	/// Accès en lecture à des groupes, enrichis du parent (Guid)
-	/// et de la OrderValue (string).
+	/// et des valeurs pour le tri (ComparableData).
 	/// GuidNode -> ParentNode
 	/// </summary>
 	public class GroupParentNodesGetter : AbstractNodesGetter<ParentNode>  // outputNodes

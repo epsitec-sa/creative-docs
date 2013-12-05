@@ -131,6 +131,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid5       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+5);
 				var rate5       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRate+5);
 
+				valeur1 = TreeObjectsNodesGetter.GetValueAccordingToRatio (node, valeur1);
+				valeur2 = TreeObjectsNodesGetter.GetValueAccordingToRatio (node, valeur2);
+				valeur3 = TreeObjectsNodesGetter.GetValueAccordingToRatio (node, valeur3);
+
 				var group0 = GroupsLogic.GetShortName (this.accessor, guid0);
 				var group1 = GroupsLogic.GetShortName (this.accessor, guid1);
 				var group2 = GroupsLogic.GetShortName (this.accessor, guid2);
