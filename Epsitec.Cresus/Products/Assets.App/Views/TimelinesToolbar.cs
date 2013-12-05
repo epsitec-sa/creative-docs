@@ -103,8 +103,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateModeButtons()
 		{
-			this.SetCommandState (ToolbarCommand.CompactAll, (this.timelineMode & TimelineMode.Compacted) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.ExpandAll,  (this.timelineMode & TimelineMode.Expanded ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandActivate (ToolbarCommand.CompactAll, (this.timelineMode & TimelineMode.Compacted) != 0);
+			this.SetCommandActivate (ToolbarCommand.ExpandAll,  (this.timelineMode & TimelineMode.Expanded ) != 0);
 		}
 
 

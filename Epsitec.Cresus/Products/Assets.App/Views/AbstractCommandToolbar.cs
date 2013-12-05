@@ -34,6 +34,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public void SetCommandActivate(ToolbarCommand command, bool activate)
+		{
+			if (activate)
+			{
+				this.SetCommandState (command, ToolbarCommandState.Activate);
+			}
+			else
+			{
+				this.SetCommandState (command, ToolbarCommandState.Enable);
+			}
+		}
+
 		public void SetCommandState(ToolbarCommand command, ToolbarCommandState state)
 		{
 			this.commandStates[command] = state;

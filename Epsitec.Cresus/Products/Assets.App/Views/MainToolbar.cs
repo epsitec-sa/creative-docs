@@ -140,12 +140,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewTypeCommands()
 		{
-			this.SetCommandState (ToolbarCommand.ViewTypeObjects,    this.viewType == ViewType.Objects    ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.ViewTypeCategories, this.viewType == ViewType.Categories ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.ViewTypeGroups,     this.viewType == ViewType.Groups     ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.ViewTypeEvents,     this.viewType == ViewType.Events     ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.ViewTypeReports,    this.viewType == ViewType.Reports    ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.ViewTypeSettings,   this.viewType == ViewType.Settings   ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandActivate (ToolbarCommand.ViewTypeObjects,    this.viewType == ViewType.Objects   );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeCategories, this.viewType == ViewType.Categories);
+			this.SetCommandActivate (ToolbarCommand.ViewTypeGroups,     this.viewType == ViewType.Groups    );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeEvents,     this.viewType == ViewType.Events    );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeReports,    this.viewType == ViewType.Reports   );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeSettings,   this.viewType == ViewType.Settings  );
 
 			this.SetCommandState (ToolbarCommand.Open,          ToolbarCommandState.Enable);
 			this.SetCommandState (ToolbarCommand.Amortissement, ToolbarCommandState.Enable);
@@ -156,9 +156,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.viewType == ViewType.Objects)
 			{
-				this.SetCommandState (ToolbarCommand.ViewModeSingle,   this.viewMode == ViewMode.Single   ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-				this.SetCommandState (ToolbarCommand.ViewModeEvent,    this.viewMode == ViewMode.Event    ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-				this.SetCommandState (ToolbarCommand.ViewModeMultiple, this.viewMode == ViewMode.Multiple ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+				this.SetCommandActivate (ToolbarCommand.ViewModeSingle,   this.viewMode == ViewMode.Single  );
+				this.SetCommandActivate (ToolbarCommand.ViewModeEvent,    this.viewMode == ViewMode.Event   );
+				this.SetCommandActivate (ToolbarCommand.ViewModeMultiple, this.viewMode == ViewMode.Multiple);
 			}
 			else
 			{
@@ -191,28 +191,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private IconButton buttonOpen;
+		private IconButton						buttonOpen;
 
-		private IconButton buttonObjects;
-		private IconButton buttonCategories;
-		private IconButton buttonGroups;
-		private IconButton buttonEvents;
-		private IconButton buttonReports;
-		private IconButton buttonSettings;
+		private IconButton						buttonObjects;
+		private IconButton						buttonCategories;
+		private IconButton						buttonGroups;
+		private IconButton						buttonEvents;
+		private IconButton						buttonReports;
+		private IconButton						buttonSettings;
 
-		private IconButton buttonSingle;
-		private IconButton buttonEvent;
-		private IconButton buttonMultiple;
+		private IconButton						buttonSingle;
+		private IconButton						buttonEvent;
+		private IconButton						buttonMultiple;
 
-		private IconButton buttonEdit;
-		private IconButton buttonAmortissement;
-		private IconButton buttonSimulation;
+		private IconButton						buttonEdit;
+		private IconButton						buttonAmortissement;
+		private IconButton						buttonSimulation;
 
-		private IconButton buttonAccept;
-		private IconButton buttonCancel;
+		private IconButton						buttonAccept;
+		private IconButton						buttonCancel;
 
-		private ViewType viewType;
-		private ViewMode viewMode;
-		private int simulation;
+		private ViewType						viewType;
+		private ViewMode						viewMode;
+		private int								simulation;
 	}
 }

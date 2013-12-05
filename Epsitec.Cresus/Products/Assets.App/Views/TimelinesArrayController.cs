@@ -995,9 +995,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateToolbar()
 		{
-			this.objectsToolbar.SetCommandState (ToolbarCommand.Filter, this.rootGuid.IsEmpty
-				? ToolbarCommandState.Enable
-				: ToolbarCommandState.Activate);
+			this.objectsToolbar.SetCommandActivate (ToolbarCommand.Filter, !this.rootGuid.IsEmpty);
 
 			this.UpdateObjectCommand (ToolbarCommand.First, this.selectedRow, this.FirstRowIndex);
 			this.UpdateObjectCommand (ToolbarCommand.Prev,  this.selectedRow, this.PrevRowIndex);

@@ -109,12 +109,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateModeButtons()
 		{
-			this.SetCommandState (ToolbarCommand.Labels,      (this.timelineMode & TimelineMode.Labels     ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.CompactAll,  (this.timelineMode & TimelineMode.Compacted  ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.ExpandAll,   (this.timelineMode & TimelineMode.Expanded   ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.WeeksOfYear, (this.timelineMode & TimelineMode.WeeksOfYear) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.DaysOfWeek,  (this.timelineMode & TimelineMode.DaysOfWeek ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.Graph,       (this.timelineMode & TimelineMode.Graph      ) != 0 ? ToolbarCommandState.Activate : ToolbarCommandState.Enable);
+			this.SetCommandActivate (ToolbarCommand.Labels,      (this.timelineMode & TimelineMode.Labels     ) != 0);
+			this.SetCommandActivate (ToolbarCommand.CompactAll,  (this.timelineMode & TimelineMode.Compacted  ) != 0);
+			this.SetCommandActivate (ToolbarCommand.ExpandAll,   (this.timelineMode & TimelineMode.Expanded   ) != 0);
+			this.SetCommandActivate (ToolbarCommand.WeeksOfYear, (this.timelineMode & TimelineMode.WeeksOfYear) != 0);
+			this.SetCommandActivate (ToolbarCommand.DaysOfWeek,  (this.timelineMode & TimelineMode.DaysOfWeek ) != 0);
+			this.SetCommandActivate (ToolbarCommand.Graph,       (this.timelineMode & TimelineMode.Graph      ) != 0);
 		}
 
 
@@ -128,23 +128,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private IconButton buttonLabels;
-		private IconButton buttonCompacted;
-		private IconButton buttonExpanded;
-		private IconButton buttonWeeksOfYear;
-		private IconButton buttonDaysOfWeek;
-		private IconButton buttonGraph;
+		private IconButton						buttonLabels;
+		private IconButton						buttonCompacted;
+		private IconButton						buttonExpanded;
+		private IconButton						buttonWeeksOfYear;
+		private IconButton						buttonDaysOfWeek;
+		private IconButton						buttonGraph;
 
-		private IconButton buttonFirst;
-		private IconButton buttonPrev;
-		private IconButton buttonNext;
-		private IconButton buttonLast;
-		private IconButton buttonNow;
-		private IconButton buttonDate;
-		private IconButton buttonNew;
-		private IconButton buttonDelete;
-		private IconButton buttonDeselect;
+		private IconButton						buttonFirst;
+		private IconButton						buttonPrev;
+		private IconButton						buttonNext;
+		private IconButton						buttonLast;
+		private IconButton						buttonNow;
+		private IconButton						buttonDate;
+		private IconButton						buttonNew;
+		private IconButton						buttonDelete;
+		private IconButton						buttonDeselect;
 
-		private TimelineMode timelineMode;
+		private TimelineMode					timelineMode;
 	}
 }
