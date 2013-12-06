@@ -9,9 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public class ObjectsTreeTableFiller : AbstractTreeTableFiller<TreeNode>
+	public class ObjectsTreeTableFiller : AbstractTreeTableFiller<CumulNode>
 	{
-		public ObjectsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<TreeNode> nodesGetter)
+		public ObjectsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<CumulNode> nodesGetter)
 			: base (accessor, nodesGetter)
 		{
 		}
@@ -109,31 +109,28 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var obj = this.accessor.GetObject (baseType, guid);
 
-				var nom         = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Nom, inputValue: true);
-				var numéro      = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Numéro);
-				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur1);
-				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur2);
-				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (obj, this.Timestamp, ObjectField.Valeur3);
-				var maintenance = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Maintenance);
-				var couleur     = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.Couleur);
-				var série       = ObjectCalculator.GetObjectPropertyString         (obj, this.Timestamp, ObjectField.NuméroSérie);
+				var valeur1     = this.NodesGetter.GetValue (obj, node, 0);
+				var valeur2     = this.NodesGetter.GetValue (obj, node, 1);
+				var valeur3     = this.NodesGetter.GetValue (obj, node, 2);
 
-				var guid0       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+0);
-				var rate0       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+0);
-				var guid1       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+1);
-				var rate1       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+1);
-				var guid2       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+2);
-				var rate2       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+2);
-				var guid3       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+3);
-				var rate3       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+3);
-				var guid4       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+4);
-				var rate4       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+4);
-				var guid5       = ObjectCalculator.GetObjectPropertyGuid           (obj, this.Timestamp, ObjectField.GroupGuid+5);
-				var rate5       = ObjectCalculator.GetObjectPropertyDecimal        (obj, this.Timestamp, ObjectField.GroupRatio+5);
+				var nom         = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Nom, inputValue: true);
+				var numéro      = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Numéro);
+				var maintenance = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Maintenance);
+				var couleur     = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Couleur);
+				var série       = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.NuméroSérie);
 
-				valeur1 = TreeObjectsNodesGetter.GetValueAccordingToRatio (node, valeur1);
-				valeur2 = TreeObjectsNodesGetter.GetValueAccordingToRatio (node, valeur2);
-				valeur3 = TreeObjectsNodesGetter.GetValueAccordingToRatio (node, valeur3);
+				var guid0       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+0);
+				var rate0       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+0);
+				var guid1       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+1);
+				var rate1       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+1);
+				var guid2       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+2);
+				var rate2       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+2);
+				var guid3       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+3);
+				var rate3       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+3);
+				var guid4       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+4);
+				var rate4       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+4);
+				var guid5       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+5);
+				var rate5       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+5);
 
 				var group0 = GroupsLogic.GetShortName (this.accessor, guid0);
 				var group1 = GroupsLogic.GetShortName (this.accessor, guid1);
@@ -214,6 +211,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			content.Columns.Add (cr5);
 
 			return content;
+		}
+
+
+		private ObjectsNodesGetter NodesGetter
+		{
+			get
+			{
+				return this.nodesGetter as ObjectsNodesGetter;
+			}
 		}
 	}
 }

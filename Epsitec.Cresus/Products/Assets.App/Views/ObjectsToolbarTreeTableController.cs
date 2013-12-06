@@ -13,7 +13,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectsToolbarTreeTableController : AbstractToolbarTreeTableController<TreeNode>
+	public class ObjectsToolbarTreeTableController : AbstractToolbarTreeTableController<CumulNode>
 	{
 		public ObjectsToolbarTreeTableController(DataAccessor accessor)
 			: base (accessor)
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasFilter         = true;
 			this.hasTreeOperations = true;
 
-			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
+			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
 			var groupNodesGetter  = this.accessor.GetNodesGetter (BaseType.Groups);
 			var objectNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
 			this.nodesGetter = new ObjectsNodesGetter (this.accessor, groupNodesGetter, objectNodesGetter);
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.nodesGetter);
-			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller);
+			TreeTableFiller<CumulNode>.FillColumns (this.controller, this.dataFiller);
 
 			this.controller.AddSortedColumn (0);
 		}

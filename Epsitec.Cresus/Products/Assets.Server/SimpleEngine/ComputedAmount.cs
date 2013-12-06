@@ -117,6 +117,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.ArgumentDefined = model.ArgumentDefined;
 		}
 
+		public ComputedAmount(ComputedAmount a, ComputedAmount b)
+		{
+			this.InitialAmount   = null;
+			this.ArgumentAmount  = null;
+			this.FinalAmount     = a.FinalAmount + b.FinalAmount;
+			this.Computed        = false;
+			this.Substract       = true;
+			this.Rate            = true;
+			this.ArgumentDefined = false;
+		}
+
 
 		public decimal? ComputeFinal(decimal? argument)
 		{

@@ -31,9 +31,13 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	///     |
 	///     o  TreeNode
 	///     V
+	/// CumulNodesGetter
+	///     |
+	///     o  CumulNode
+	///     V
 	/// 
 	/// </summary>
-	public class ObjectsNodesGetter : AbstractNodesGetter<TreeNode>, ITreeFunctions  // outputNodes
+	public class ObjectsNodesGetter : AbstractNodesGetter<CumulNode>, ITreeFunctions  // outputNodes
 	{
 		public ObjectsNodesGetter(DataAccessor accessor, AbstractNodesGetter<GuidNode> groupNodes, AbstractNodesGetter<GuidNode> objectNodes)
 		{
@@ -45,6 +49,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 			this.mergeNodesGetter  = new MergeNodesGetter (accessor, this.groupNodesGetter2, this.objectNodesGetter2);
 			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.mergeNodesGetter);
+			this.cumulNodesGetter  = new CumulNodesGetter (accessor, this.treeObjectsGetter);
 
 			this.sortingInstructions = SortingInstructions.Empty;
 		}
@@ -64,24 +69,32 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		{
 			get
 			{
-				return this.treeObjectsGetter.Count;
+				return this.cumulNodesGetter.Count;
 			}
 		}
 
-		public override TreeNode this[int index]
+		public override CumulNode this[int index]
 		{
 			get
 			{
-				if (index >= 0 && index < this.treeObjectsGetter.Count)
+				if (index >= 0 && index < this.cumulNodesGetter.Count)
 				{
-					return this.treeObjectsGetter[index];
+					return this.cumulNodesGetter[index];
 				}
 				else
 				{
-					return TreeNode.Empty;
+					return CumulNode.Empty;
 				}
 			}
 		}
+
+
+		public ComputedAmount? GetValue(DataObject obj, CumulNode node, int n)
+		{
+			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
+			return this.cumulNodesGetter.GetValue (obj, node, n);
+		}
+
 
 		private void UpdateData()
 		{
@@ -93,6 +106,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 			this.mergeNodesGetter.SetParams (this.timestamp);
 			this.treeObjectsGetter.SetParams (inputIsMerge: true);
+			this.cumulNodesGetter.SetParams (this.timestamp);
 		}
 
 
@@ -116,16 +130,19 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		public void CompactOrExpand(int index)
 		{
 			this.treeObjectsGetter.CompactOrExpand (index);
+			this.cumulNodesGetter.SetParams (this.timestamp);
 		}
 
 		public void CompactAll()
 		{
 			this.treeObjectsGetter.CompactAll ();
+			this.cumulNodesGetter.SetParams (this.timestamp);
 		}
 
 		public void ExpandAll()
 		{
 			this.treeObjectsGetter.ExpandAll ();
+			this.cumulNodesGetter.SetParams (this.timestamp);
 		}
 
 		public int SearchBestIndex(Guid value)
@@ -151,6 +168,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private readonly GroupLevelNodesGetter		groupNodesGetter2;
 		private readonly MergeNodesGetter			mergeNodesGetter;
 		private readonly TreeObjectsNodesGetter		treeObjectsGetter;
+		private readonly CumulNodesGetter			cumulNodesGetter;
 
 		private Timestamp?							timestamp;
 		private Guid								rootGuid;

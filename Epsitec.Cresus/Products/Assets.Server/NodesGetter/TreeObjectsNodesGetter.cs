@@ -57,14 +57,28 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		public static ComputedAmount? GetValueAccordingToRatio(TreeNode node, ComputedAmount? value)
+		public IEnumerable<TreeNode> GetHideNodes(int index)
 		{
-			if (value.HasValue && node.Ratio.HasValue)
-			{
-				return new ComputedAmount(value.Value, node.Ratio.Value);
-			}
+			//	Retourne les noeuds cachés, ce qui permet de calculer les cumuls.
+			int startIndex = this.GetHideIndex (index);
+			int endIndex   = this.GetHideIndex (index+1);
 
-			return value;
+			for (int i=startIndex; i<endIndex; i++)
+			{
+				yield return this.nodes[i];
+			}
+		}
+
+		private int GetHideIndex(int index)
+		{
+			if (index < this.nodeIndexes.Count)
+			{
+				return this.nodeIndexes[index];
+			}
+			else
+			{
+				return this.nodes.Count;
+			}
 		}
 
 
@@ -218,7 +232,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 			this.UpdateNodeIndexes ();
 		}
-
 
 		private void UpdateNodeIndexes()
 		{

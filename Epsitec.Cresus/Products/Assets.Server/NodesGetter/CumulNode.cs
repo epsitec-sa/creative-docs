@@ -8,21 +8,28 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.Server.NodesGetter
 {
 	/// <summary>
-	///	Noeud correspondant à une ligne d'un TreeTable.
-	///	Si Type == NodeType.Final, il s'agit d'une ligne ne pouvant
-	///	être ni compactée ni étendue (feuille de l'arbre).
-	///	Si Type == NodeType.Compacted ou NodeType.Expanded,
-	///	il s'agit d'une ligne avec un petit bouton triangulaire.
+	///	Noeud correspondant à une ligne d'un TreeTable. S'il s'agit d'un groupe
+	///	compacté, on stocke les valeurs des totaux des objets sous-jacents.
 	/// </summary>
-	public struct TreeNode
+	public struct CumulNode
 	{
-		public TreeNode(Guid guid, BaseType baseType, int level, decimal? ratio, NodeType type)
+		public CumulNode(Guid guid, BaseType baseType, int level, decimal? ratio, NodeType type)
 		{
 			this.Guid     = guid;
 			this.BaseType = baseType;
 			this.Level    = level;
 			this.Ratio    = ratio;
 			this.Type     = type;
+
+			this.cumuls = new Dictionary<int, ComputedAmount> ();
+		}
+
+		public Dictionary<int, ComputedAmount> Cumuls
+		{
+			get
+			{
+				return this.cumuls;
+			}
 		}
 
 		public bool IsEmpty
@@ -35,12 +42,14 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public static TreeNode Empty = new TreeNode (Guid.Empty, BaseType.Objects, -1, null, NodeType.None);
+		public static CumulNode Empty = new CumulNode (Guid.Empty, BaseType.Objects, -1, null, NodeType.None);
 
 		public readonly Guid				Guid;
 		public readonly BaseType			BaseType;
 		public readonly int					Level;
 		public readonly decimal?			Ratio;
 		public readonly NodeType			Type;
+
+		private readonly Dictionary<int, ComputedAmount> cumuls;
 	}
 }
