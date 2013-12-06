@@ -12,6 +12,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		public static string GetShortName(DataAccessor accessor, GuidRatio guidRatio)
 		{
+			//	Retourne le nom court d'un groupe-ratio, du genre:
+			//	"Etrangères (75%)"
 			var text = GroupsLogic.GetShortName (accessor, guidRatio.Guid);
 
 			if (guidRatio.Ratio.HasValue)
@@ -42,6 +44,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static string GetFullName(DataAccessor accessor, GuidRatio guidRatio)
 		{
+			//	Retourne le nom complet d'un groupe-ratio, du genre:
+			//	"Immobilisations > Bâtiments > Usines > Etrangères (75%)"
 			var text = GroupsLogic.GetFullName (accessor, guidRatio.Guid);
 
 			if (guidRatio.Ratio.HasValue)

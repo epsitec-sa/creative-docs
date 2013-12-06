@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					case FieldType.Guid:
 						var g = ObjectCalculator.GetObjectPropertyGuid (obj, timestamp, field, false);
-						var t = GroupsLogic.GetFullName (accessor, g);
+						var t = GroupsLogic.GetShortName (accessor, g);
 						if (!string.IsNullOrEmpty (t))
 						{
 							line = t;
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					case FieldType.GuidRatio:
 						var gr = ObjectCalculator.GetObjectPropertyGuidRatio (obj, timestamp, field, false);
-						var tr = GroupsLogic.GetFullName (accessor, gr);
+						var tr = GroupsLogic.GetShortName (accessor, gr);
 						if (!string.IsNullOrEmpty (tr))
 						{
 							line = tr;
