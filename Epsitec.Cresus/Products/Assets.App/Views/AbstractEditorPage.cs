@@ -111,6 +111,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.Value         = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
+				else if (controller is GuidRatioFieldsController)
+				{
+					var c = controller as GuidRatioFieldsController;
+					c.Update ();
+				}
 			}
 		}
 
@@ -137,6 +142,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new GuidFieldController
 			{
 				Accessor  = this.accessor,
+				Field     = field,
 				Label     = DataDescriptions.GetObjectFieldDescription (field),
 				EditWidth = 380,
 				TabIndex  = ++this.tabIndex,
@@ -144,22 +150,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.CreateUI (parent);
 
-			controller.ValueEdited += delegate
+			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
-				this.accessor.EditionAccessor.SetField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
-				controller.PropertyState = this.GetPropertyState (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (of);
+				controller.PropertyState = this.GetPropertyState (of);
 
-				this.OnValueEdited (field);
+				this.OnValueEdited (of);
 			};
 
-			controller.ShowHistory += delegate (object sender, Widget target)
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
-				this.ShowHistoryPopup (target, field);
+				this.ShowHistoryPopup (target, of);
 			};
 
 			this.fieldControllers.Add (field, controller);
+		}
+
+		protected void CreateGuidRatiosController(Widget parent)
+		{
+			var controller = new GuidRatioFieldsController (this.accessor);
+
+			controller.CreateUI (parent);
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.OnValueEdited (of);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.ShowHistoryPopup (target, of);
+			};
+
+			this.fieldControllers.Add (ObjectField.GroupGuidRatio, controller);
 		}
 
 		protected void CreateGuidRatioController(Widget parent, ObjectField field)
@@ -167,6 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new GuidRatioFieldController
 			{
 				Accessor  = this.accessor,
+				Field     = field,
 				Label     = DataDescriptions.GetObjectFieldDescription (field),
 				EditWidth = 380,
 				TabIndex  = ++this.tabIndex,
@@ -174,19 +200,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.CreateUI (parent);
 
-			controller.ValueEdited += delegate
+			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
-				this.accessor.EditionAccessor.SetField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
-				controller.PropertyState = this.GetPropertyState (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldGuidRatio (of);
+				controller.PropertyState = this.GetPropertyState (of);
 
-				this.OnValueEdited (field);
+				this.OnValueEdited (of);
 			};
 
-			controller.ShowHistory += delegate (object sender, Widget target)
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
-				this.ShowHistoryPopup (target, field);
+				this.ShowHistoryPopup (target, of);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -196,6 +222,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new StringFieldController
 			{
+				Field     = field,
 				Label     = DataDescriptions.GetObjectFieldDescription (field),
 				EditWidth = editWidth,
 				LineCount = lineCount,
@@ -204,19 +231,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.CreateUI (parent);
 
-			controller.ValueEdited += delegate
+			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
-				this.accessor.EditionAccessor.SetField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetFieldString (field);
-				controller.PropertyState = this.GetPropertyState (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldString (of);
+				controller.PropertyState = this.GetPropertyState (of);
 
-				this.OnValueEdited (field);
+				this.OnValueEdited (of);
 			};
 
-			controller.ShowHistory += delegate (object sender, Widget target)
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
-				this.ShowHistoryPopup (target, field);
+				this.ShowHistoryPopup (target, of);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -226,6 +253,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new DecimalFieldController
 			{
+				Field         = field,
 				Label         = DataDescriptions.GetObjectFieldDescription (field),
 				DecimalFormat = format,
 				TabIndex      = ++this.tabIndex,
@@ -233,19 +261,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			controller.CreateUI (parent);
 
-			controller.ValueEdited += delegate
+			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
-				this.accessor.EditionAccessor.SetField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetFieldDecimal (field);
-				controller.PropertyState = this.GetPropertyState (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldDecimal (of);
+				controller.PropertyState = this.GetPropertyState (of);
 
-				this.OnValueEdited (field);
+				this.OnValueEdited (of);
 			};
 
-			controller.ShowHistory += delegate (object sender, Widget target)
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
-				this.ShowHistoryPopup (target, field);
+				this.ShowHistoryPopup (target, of);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -255,25 +283,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new ComputedAmountFieldController
 			{
+				Field     = field,
 				Label     = DataDescriptions.GetObjectFieldDescription (field),
 				TabIndex  = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
 
-			controller.ValueEdited += delegate
+			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
-				this.accessor.EditionAccessor.SetField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetFieldComputedAmount (field);
-				controller.PropertyState = this.GetPropertyState (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldComputedAmount (of);
+				controller.PropertyState = this.GetPropertyState (of);
 
-				this.OnValueEdited (field);
+				this.OnValueEdited (of);
 			};
 
-			controller.ShowHistory += delegate (object sender, Widget target)
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
-				this.ShowHistoryPopup (target, field);
+				this.ShowHistoryPopup (target, of);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -283,25 +312,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new IntFieldController
 			{
+				Field     = field,
 				Label     = DataDescriptions.GetObjectFieldDescription (field),
 				TabIndex  = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
 
-			controller.ValueEdited += delegate
+			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
-				this.accessor.EditionAccessor.SetField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetFieldInt (field);
-				controller.PropertyState = this.GetPropertyState (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldInt (of);
+				controller.PropertyState = this.GetPropertyState (of);
 
-				this.OnValueEdited (field);
+				this.OnValueEdited (of);
 			};
 
-			controller.ShowHistory += delegate (object sender, Widget target)
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
-				this.ShowHistoryPopup (target, field);
+				this.ShowHistoryPopup (target, of);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -311,25 +341,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new DateFieldController
 			{
+				Field     = field,
 				Label     = DataDescriptions.GetObjectFieldDescription (field),
 				TabIndex  = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
 
-			controller.ValueEdited += delegate
+			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
-				this.accessor.EditionAccessor.SetField (field, controller.Value);
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetFieldDate (field);
-				controller.PropertyState = this.GetPropertyState (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldDate (of);
+				controller.PropertyState = this.GetPropertyState (of);
 
-				this.OnValueEdited (field);
+				this.OnValueEdited (of);
 			};
 
-			controller.ShowHistory += delegate (object sender, Widget target)
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
-				this.ShowHistoryPopup (target, field);
+				this.ShowHistoryPopup (target, of);
 			};
 
 			this.fieldControllers.Add (field, controller);

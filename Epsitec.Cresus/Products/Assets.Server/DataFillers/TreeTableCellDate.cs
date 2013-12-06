@@ -8,11 +8,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public struct TreeTableCellDate : ITreeTableCell
 	{
-		public TreeTableCellDate(bool isValid, System.DateTime? value, bool isSelected = false, bool isError = false, bool isUnavailable = false)
+		public TreeTableCellDate(bool isValid, System.DateTime? value, bool isSelected = false, bool isEvent = false, bool isError = false, bool isUnavailable = false)
 		{
 			this.IsValid       = isValid;
 			this.Value         = value;
 			this.IsSelected    = isSelected;
+			this.IsEvent       = isEvent;
 			this.IsError       = isError;
 			this.IsUnavailable = isUnavailable;
 		}
@@ -21,6 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public readonly bool					IsValid;
 		public readonly System.DateTime?		Value;
 		public readonly bool					IsSelected;
+		public readonly bool					IsEvent;
 		public readonly bool					IsError;
 		public readonly bool					IsUnavailable;
 

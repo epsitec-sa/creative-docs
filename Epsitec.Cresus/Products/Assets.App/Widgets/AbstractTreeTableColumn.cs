@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodesGetter;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -366,11 +367,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected Color GetCellColor(bool isHover, bool isSelected, bool isError = false)
+		protected Color GetCellColor(bool isHover, bool isSelected, bool isEvent, bool isError = false)
 		{
 			if (isSelected)
 			{
 				return ColorManager.SelectionColor;
+			}
+			else if (isEvent)
+			{
+				return ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
 			}
 			else if (isError)
 			{

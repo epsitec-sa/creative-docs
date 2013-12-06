@@ -18,10 +18,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+#if false
 			for (int i=0; i<6; i++)
 			{
 				this.CreateGuidRatioController (parent, ObjectField.GroupGuidRatio+i);
 			}
+#else
+			this.CreateGuidRatiosController (parent);
+#endif
 		}
 	}
 }

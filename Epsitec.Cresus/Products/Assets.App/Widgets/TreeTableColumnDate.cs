@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					var rect = this.GetCellsRect (y);
 
 					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (this.GetCellColor(y == this.hilitedHoverRow, cell.IsSelected));
+					graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
 
 					if (cell.IsUnavailable)
 					{

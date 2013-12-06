@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ClearValue()
 		{
 			this.Value = Guid.Empty;
-			this.OnValueEdited ();
+			this.OnValueEdited (this.Field);
 		}
 
 		protected override void UpdatePropertyState()
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
 				this.Value = guid;
-				this.OnValueEdited ();
+				this.OnValueEdited (this.Field);
 			};
 		}
 

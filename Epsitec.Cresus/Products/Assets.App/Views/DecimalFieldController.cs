@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ClearValue()
 		{
 			this.Value = null;
-			this.OnValueEdited ();
+			this.OnValueEdited (this.Field);
 		}
 
 		protected override void UpdatePropertyState()
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = this.ConvStringToDecimal (this.textField.Text);
-						this.OnValueEdited ();
+						this.OnValueEdited (this.Field);
 					}
 				}
 			};

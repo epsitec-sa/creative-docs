@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public int								EditWidth = 380;
 		public bool								HideAdditionalButtons;
 		public EventType						EventType;
+		public ObjectField						Field;
 
 		public PropertyState					PropertyState
 		{
@@ -115,7 +116,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.historyButton.Clicked += delegate
 			{
-				this.OnShowHistory (this.historyButton);
+				this.OnShowHistory (this.historyButton, this.Field);
 			};
 		}
 
@@ -208,20 +209,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
-		protected void OnValueEdited()
+		protected void OnValueEdited(ObjectField field)
 		{
-			this.ValueEdited.Raise (this);
+			this.ValueEdited.Raise (this, field);
 		}
 
-		public event EventHandler ValueEdited;
+		public event EventHandler<ObjectField> ValueEdited;
 
 
-		protected void OnShowHistory(Widget target)
+		protected void OnShowHistory(Widget target, ObjectField field)
 		{
-			this.ShowHistory.Raise (this, target);
+			this.ShowHistory.Raise (this, target, field);
 		}
 
-		public event EventHandler<Widget> ShowHistory;
+		public event EventHandler<Widget, ObjectField> ShowHistory;
 		#endregion
 
 

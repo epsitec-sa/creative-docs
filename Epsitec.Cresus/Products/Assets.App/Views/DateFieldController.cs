@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.Value = null;
 			this.UpdateButtons ();
-			this.OnValueEdited ();
+			this.OnValueEdited (this.Field);
 		}
 
 		protected override void UpdatePropertyState()
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						this.Value = DateFieldController.ConvStringToDate (this.textField.Text);
 						this.UpdateButtons ();
-						this.OnValueEdited ();
+						this.OnValueEdited (this.Field);
 					}
 				}
 			};
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.Value = this.value.Value.AddYears (years);
 				this.textField.Focus ();
-				this.OnValueEdited ();
+				this.OnValueEdited (this.Field);
 			}
 		}
 
@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.Value = this.value.Value.AddMonths (days);
 				this.textField.Focus ();
-				this.OnValueEdited ();
+				this.OnValueEdited (this.Field);
 			}
 		}
 
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.Value = this.value.Value.AddDays (days);
 				this.textField.Focus ();
-				this.OnValueEdited ();
+				this.OnValueEdited (this.Field);
 			}
 		}
 

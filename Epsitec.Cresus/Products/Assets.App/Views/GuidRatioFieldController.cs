@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ClearValue()
 		{
 			this.Value = GuidRatio.Empty;
-			this.OnValueEdited ();
+			this.OnValueEdited (this.Field);
 		}
 
 		protected override void UpdatePropertyState()
@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						var ratio = this.ConvStringToDecimal (this.textField.Text);
 						this.Value = new GuidRatio (this.value.Guid, ratio);
-						this.OnValueEdited ();
+						this.OnValueEdited (this.Field);
 					}
 				}
 			};
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
 				this.Value = new GuidRatio (guid, this.value.Ratio);
-				this.OnValueEdited ();
+				this.OnValueEdited (this.Field);
 			};
 		}
 

@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ClearValue()
 		{
 			this.Value = null;
-			this.OnValueEdited ();
+			this.OnValueEdited (this.Field);
 		}
 
 		protected override void UpdatePropertyState()
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = IntFieldController.ConvStringToInt (this.textField.Text);
-						this.OnValueEdited ();
+						this.OnValueEdited (this.Field);
 					}
 				}
 			};
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.value.HasValue)
 			{
 				this.Value = this.value.Value + delta;
-				this.OnValueEdited ();
+				this.OnValueEdited (this.Field);
 			}
 		}
 

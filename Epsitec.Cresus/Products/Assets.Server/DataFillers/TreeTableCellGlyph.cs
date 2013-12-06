@@ -9,11 +9,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public struct TreeTableCellGlyph : ITreeTableCell
 	{
-		public TreeTableCellGlyph(bool isValid, TimelineGlyph? value, bool isSelected = false, bool isError = false, bool isUnavailable = false)
+		public TreeTableCellGlyph(bool isValid, TimelineGlyph? value, bool isSelected = false, bool isEvent = false, bool isError = false, bool isUnavailable = false)
 		{
 			this.IsValid       = isValid;
 			this.Value         = value;
 			this.IsSelected    = isSelected;
+			this.IsEvent       = isEvent;
 			this.IsError       = isError;
 			this.IsUnavailable = isUnavailable;
 		}
@@ -22,6 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public readonly bool					IsValid;
 		public readonly TimelineGlyph?			Value;
 		public readonly bool					IsSelected;
+		public readonly bool					IsEvent;
 		public readonly bool					IsError;
 		public readonly bool					IsUnavailable;
 
