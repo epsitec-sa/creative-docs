@@ -119,9 +119,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.OneShotDocuments:
 					return EditionObjectPageType.OneShot;
 
+				case ObjectField.ValeurComptable:
 				case ObjectField.Valeur1:
 				case ObjectField.Valeur2:
 				case ObjectField.Valeur3:
+				case ObjectField.Valeur4:
+				case ObjectField.Valeur5:
+				case ObjectField.Valeur6:
+				case ObjectField.Valeur7:
+				case ObjectField.Valeur8:
+				case ObjectField.Valeur9:
+				case ObjectField.Valeur10:
 					return EditionObjectPageType.Values;
 
 				case ObjectField.NomCatégorie:
@@ -232,9 +240,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var c3 = new List<ObjectSummaryControllerTile> ()
 				{
 					new ObjectSummaryControllerTile ("Valeurs"),
+					new ObjectSummaryControllerTile (ObjectField.ValeurComptable),
 					new ObjectSummaryControllerTile (ObjectField.Valeur1),
 					new ObjectSummaryControllerTile (ObjectField.Valeur2),
-					new ObjectSummaryControllerTile (ObjectField.Valeur3),
 
 					ObjectSummaryControllerTile.Empty,
 

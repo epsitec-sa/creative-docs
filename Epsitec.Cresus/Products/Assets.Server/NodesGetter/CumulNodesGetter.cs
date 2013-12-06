@@ -48,19 +48,19 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		}
 
 
-		public ComputedAmount? GetValue(DataObject obj, CumulNode node, int n)
+		public ComputedAmount? GetValue(DataObject obj, CumulNode node, ObjectField field)
 		{
 			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
 			if (node.BaseType == BaseType.Objects)
 			{
 				//	S'il s'agit d'un objet, on retourne le montant en tenant compte du ratio.
-				return CumulNodesGetter.GetValueAccordingToRatio (obj, this.timestamp, node.Ratio, n);
+				return CumulNodesGetter.GetValueAccordingToRatio (obj, this.timestamp, node.Ratio, field);
 			}
 			else
 			{
 				//	S'il s'agit d'un groupe et qu'il est compacté, on retourne le total cumulé.
 				ComputedAmount ca;
-				if (node.Cumuls.TryGetValue (n, out ca))
+				if (node.Cumuls.TryGetValue (field, out ca))
 				{
 					return ca;
 				}
@@ -75,7 +75,8 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		private void Compute()
 		{
 			//	Lorsque des groupes sont compactés, ils peuvent cacher des objets.
-			//	On calcule ici les totaux de toutes les valeurs des objets cachés.
+			//	On calcule ici les totaux de toutes les valeurs des objets cachés,
+			//	en tenant compte des éventuels ratios.
 			this.outputNodes.Clear ();
 
 			int count = this.inputNodes.Count;
@@ -94,7 +95,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		private void ComputeCumuls(Dictionary<int, ComputedAmount> cumuls, TreeNode[] hiddenTreeNodes)
+		private void ComputeCumuls(Dictionary<ObjectField, ComputedAmount> cumuls, TreeNode[] hiddenTreeNodes)
 		{
 			foreach (var hiddenTreeNode in hiddenTreeNodes)
 			{
@@ -102,18 +103,18 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				{
 					var obj = this.accessor.GetObject (hiddenTreeNode.BaseType, hiddenTreeNode.Guid);
 
-					for (int n=0; n<10; n++)  // TODO: On suppose ObjectField.Valeur1..10 !
+					foreach (var field in DataAccessor.ValueFields)
 					{
-						var ca = CumulNodesGetter.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, n);
+						var ca = CumulNodesGetter.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, field);
 						if (ca.HasValue)
 						{
-							if (cumuls.ContainsKey (n))
+							if (cumuls.ContainsKey (field))
 							{
-								cumuls[n] = new ComputedAmount (cumuls[n], ca.Value);
+								cumuls[field] = new ComputedAmount (cumuls[field], ca.Value);
 							}
 							else
 							{
-								cumuls.Add (n, ca.Value);
+								cumuls.Add (field, ca.Value);
 							}
 						}
 					}
@@ -121,7 +122,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		private static ComputedAmount? GetValueAccordingToRatio(DataObject obj, Timestamp? timestamp, decimal? ratio, int n)
+		private static ComputedAmount? GetValueAccordingToRatio(DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
 		{
 			if (obj == null)
 			{
@@ -129,7 +130,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 			else
 			{
-				var value = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, ObjectField.Valeur1+n);
+				var value = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, field);
 
 				if (value.HasValue && ratio.HasValue)
 				{

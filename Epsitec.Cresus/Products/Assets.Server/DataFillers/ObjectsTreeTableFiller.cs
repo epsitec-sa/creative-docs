@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				yield return ObjectField.Nom;
 				yield return ObjectField.Numéro;
+				yield return ObjectField.ValeurComptable;
 				yield return ObjectField.Valeur1;
 				yield return ObjectField.Valeur2;
-				yield return ObjectField.Valeur3;
 				yield return ObjectField.Maintenance;
 				yield return ObjectField.Couleur;
 				yield return ObjectField.NuméroSérie;
@@ -109,9 +109,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var obj = this.accessor.GetObject (baseType, guid);
 
-				var valeur1     = this.NodesGetter.GetValue (obj, node, 0);
-				var valeur2     = this.NodesGetter.GetValue (obj, node, 1);
-				var valeur3     = this.NodesGetter.GetValue (obj, node, 2);
+				var valeur1     = this.NodesGetter.GetValue (obj, node, ObjectField.ValeurComptable);
+				var valeur2     = this.NodesGetter.GetValue (obj, node, ObjectField.Valeur1);
+				var valeur3     = this.NodesGetter.GetValue (obj, node, ObjectField.Valeur2);
 
 				var nom         = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Nom, inputValue: true);
 				var numéro      = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Numéro);

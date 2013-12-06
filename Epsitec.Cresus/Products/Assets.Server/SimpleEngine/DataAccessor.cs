@@ -218,13 +218,39 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public static IEnumerable<ObjectField> ValueFields
+		{
+			get
+			{
+				yield return ObjectField.ValeurComptable;
+				yield return ObjectField.Valeur1;
+				yield return ObjectField.Valeur2;
+				yield return ObjectField.Valeur3;
+				yield return ObjectField.Valeur4;
+				yield return ObjectField.Valeur5;
+				yield return ObjectField.Valeur6;
+				yield return ObjectField.Valeur7;
+				yield return ObjectField.Valeur8;
+				yield return ObjectField.Valeur9;
+				yield return ObjectField.Valeur10;
+			}
+		}
+
 		public static FieldType GetFieldType(ObjectField objectField)
 		{
 			switch (objectField)
 			{
+				case ObjectField.ValeurComptable:
 				case ObjectField.Valeur1:
 				case ObjectField.Valeur2:
 				case ObjectField.Valeur3:
+				case ObjectField.Valeur4:
+				case ObjectField.Valeur5:
+				case ObjectField.Valeur6:
+				case ObjectField.Valeur7:
+				case ObjectField.Valeur8:
+				case ObjectField.Valeur9:
+				case ObjectField.Valeur10:
 					return FieldType.ComputedAmount;
 
 				case ObjectField.TauxAmortissement:

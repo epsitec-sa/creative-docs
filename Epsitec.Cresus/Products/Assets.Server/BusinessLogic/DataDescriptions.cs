@@ -37,14 +37,24 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.Description:
 					return "Description";
 
-				case ObjectField.Valeur1:
+				case ObjectField.ValeurComptable:
 					return "Valeur comptable";
 
-				case ObjectField.Valeur2:
+				case ObjectField.Valeur1:
 					return "Valeur d'assurance";
 
-				case ObjectField.Valeur3:
+				case ObjectField.Valeur2:
 					return "Valeur imposable";
+
+				case ObjectField.Valeur3:
+				case ObjectField.Valeur4:
+				case ObjectField.Valeur5:
+				case ObjectField.Valeur6:
+				case ObjectField.Valeur7:
+				case ObjectField.Valeur8:
+				case ObjectField.Valeur9:
+				case ObjectField.Valeur10:
+					return "Valeur libre";
 
 				case ObjectField.NomCatégorie:
 					return "Catégorie d'immob.";

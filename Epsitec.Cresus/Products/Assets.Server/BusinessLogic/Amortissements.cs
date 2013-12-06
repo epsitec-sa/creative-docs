@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					}
 					else
 					{
-						var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, range.ToTimestamp, ObjectField.Valeur1);
+						var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, range.ToTimestamp, ObjectField.ValeurComptable);
 						if (!ca.HasValue || !ca.Value.FinalAmount.HasValue)
 						{
 							var error = new Error (ErrorType.AmortissementEmptyAmount, objectGuid);
@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (e != null)
 			{
 				var v = new ComputedAmount (currentValue, newValue, true);
-				var p = new DataComputedAmountProperty (ObjectField.Valeur1, v);
+				var p = new DataComputedAmountProperty (ObjectField.ValeurComptable, v);
 				e.AddProperty (p);
 			}
 		}

@@ -24,10 +24,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Couleur,
 		NuméroSérie,
 
-		Valeur1,
-		Valeur2,
-		Valeur3,
-
 		NomCatégorie,
 		TauxAmortissement,
 		TypeAmortissement,
@@ -47,9 +43,21 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		EventGlyph,
 		EventType,
 
-		GroupGuid  = 10000,
-		GroupRatio = 10100,
+		ValeurComptable = 10000,
+		Valeur1,
+		Valeur2,
+		Valeur3,
+		Valeur4,
+		Valeur5,
+		Valeur6,
+		Valeur7,
+		Valeur8,
+		Valeur9,
+		Valeur10,
 
-		MaxField = 10200,
+		GroupGuid  = 10100,
+		GroupRatio = 10200,
+
+		MaxField = 10300,
 	}
 }

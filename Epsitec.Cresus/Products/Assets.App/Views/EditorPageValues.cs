@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			this.CreateComputedAmountController (parent, ObjectField.ValeurComptable);
 			this.CreateComputedAmountController (parent, ObjectField.Valeur1);
 			this.CreateComputedAmountController (parent, ObjectField.Valeur2);
-			this.CreateComputedAmountController (parent, ObjectField.Valeur3);
 
 #if false
 			//	Code bidon pour tester la navigation à 3 niveaux.

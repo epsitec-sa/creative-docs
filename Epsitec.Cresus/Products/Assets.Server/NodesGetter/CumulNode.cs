@@ -21,10 +21,10 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			this.Ratio    = ratio;
 			this.Type     = type;
 
-			this.cumuls = new Dictionary<int, ComputedAmount> ();
+			this.cumuls = new Dictionary<ObjectField, ComputedAmount> ();
 		}
 
-		public Dictionary<int, ComputedAmount> Cumuls
+		public Dictionary<ObjectField, ComputedAmount> Cumuls
 		{
 			get
 			{
@@ -50,6 +50,6 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		public readonly decimal?			Ratio;
 		public readonly NodeType			Type;
 
-		private readonly Dictionary<int, ComputedAmount> cumuls;
+		private readonly Dictionary<ObjectField, ComputedAmount> cumuls;
 	}
 }

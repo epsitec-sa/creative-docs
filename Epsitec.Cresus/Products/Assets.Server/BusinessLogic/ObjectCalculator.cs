@@ -436,13 +436,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			if (obj != null)
 			{
-				for (int i=0; i<3; i++)  // Valeur1..3
+				foreach (var field in DataAccessor.ValueFields)
 				{
 					decimal? last = null;
 
 					foreach (var e in obj.Events)
 					{
-						var current = ObjectCalculator.GetComputedAmount (e, i);
+						var current = ObjectCalculator.GetComputedAmount (e, field);
 
 						if (current.HasValue)
 						{
@@ -450,13 +450,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 							{
 								last = current.Value.FinalAmount;
 								current = new ComputedAmount (last);
-								ObjectCalculator.SetComputedAmount (e, i, current);
+								ObjectCalculator.SetComputedAmount (e, field, current);
 							}
 							else
 							{
 								current = new ComputedAmount (last.Value, current.Value);
 								last = current.Value.FinalAmount;
-								ObjectCalculator.SetComputedAmount (e, i, current);
+								ObjectCalculator.SetComputedAmount (e, field, current);
 							}
 						}
 					}
@@ -464,53 +464,29 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private static ComputedAmount? GetComputedAmount(DataEvent e, int rank)
+		private static ComputedAmount? GetComputedAmount(DataEvent e, ObjectField field)
 		{
-			var field = ObjectCalculator.RankToField (rank);
-			if (field != ObjectField.Unknown)
+			var p = e.GetProperty (field) as DataComputedAmountProperty;
+			if (p == null)
 			{
-				var p = e.GetProperty (field) as DataComputedAmountProperty;
-				if (p != null)
-				{
-					return p.Value;
-				}
+				return null;
 			}
-
-			return null;
-		}
-
-		private static void SetComputedAmount(DataEvent e, int rank, ComputedAmount? value)
-		{
-			var field = ObjectCalculator.RankToField (rank);
-			if (field != ObjectField.Unknown)
+			else
 			{
-				if (value.HasValue)
-				{
-					var newProperty = new DataComputedAmountProperty (field, value.Value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
+				return p.Value;
 			}
 		}
 
-		private static ObjectField RankToField(int rank)
+		private static void SetComputedAmount(DataEvent e, ObjectField field, ComputedAmount? value)
 		{
-			switch (rank)
+			if (value.HasValue)
 			{
-				case 0:
-					return ObjectField.Valeur1;
-
-				case 1:
-					return ObjectField.Valeur2;
-
-				case 2:
-					return ObjectField.Valeur3;
-
-				default:
-					return ObjectField.Unknown;
+				var newProperty = new DataComputedAmountProperty (field, value.Value);
+				e.AddProperty (newProperty);
+			}
+			else
+			{
+				e.RemoveProperty (field);
 			}
 		}
 		#endregion

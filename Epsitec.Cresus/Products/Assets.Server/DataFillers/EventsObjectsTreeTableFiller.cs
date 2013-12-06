@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.EventDate;
 				yield return ObjectField.EventGlyph;
 				yield return ObjectField.EventType;
+				yield return ObjectField.ValeurComptable;
 				yield return ObjectField.Valeur1;
 				yield return ObjectField.Valeur2;
-				yield return ObjectField.Valeur3;
 				yield return ObjectField.Nom;
 				yield return ObjectField.Numéro;
 				yield return ObjectField.Maintenance;
@@ -88,9 +88,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var date        = TypeConverters.DateToString (timestamp.Date);
 				var glyph       = TimelineData.TypeToGlyph (eventType);
 				var type        = DataDescriptions.GetEventDescription (eventType);
-				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Valeur1,     synthetic: false);
-				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Valeur2,     synthetic: false);
-				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Valeur3,     synthetic: false);
+				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.ValeurComptable,     synthetic: false);
+				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Valeur1,     synthetic: false);
+				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Valeur2,     synthetic: false);
 				var nom         = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Nom,         synthetic: false);
 				var numéro      = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Numéro,      synthetic: false);
 				var maintenance = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Maintenance, synthetic: false);

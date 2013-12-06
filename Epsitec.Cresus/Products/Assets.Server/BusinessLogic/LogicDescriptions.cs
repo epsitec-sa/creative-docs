@@ -163,9 +163,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ObjectField.Numéro;
 				yield return ObjectField.Nom;
 				yield return ObjectField.Description;
+				yield return ObjectField.ValeurComptable;
 				yield return ObjectField.Valeur1;
 				yield return ObjectField.Valeur2;
 				yield return ObjectField.Valeur3;
+				yield return ObjectField.Valeur4;
+				yield return ObjectField.Valeur5;
+				yield return ObjectField.Valeur6;
+				yield return ObjectField.Valeur7;
+				yield return ObjectField.Valeur8;
+				yield return ObjectField.Valeur9;
+				yield return ObjectField.Valeur10;
 				yield return ObjectField.Maintenance;
 				yield return ObjectField.Couleur;
 				yield return ObjectField.NuméroSérie;
