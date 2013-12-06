@@ -105,19 +105,17 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 
 					for (int i=0; i<10; i++)  // ObjectField.GroupGuid0..9
 					{
-						var groupGuid = ObjectCalculator.GetObjectPropertyGuid
+						var gr = ObjectCalculator.GetObjectPropertyGuidRatio
 						(
 							obj,
 							this.timestamp,
-							ObjectField.GroupGuid+i,
+							ObjectField.GroupGuidRatio+i,
 							inputValue: true
 						);
 
-						if (groupGuid == inputNode.Guid)  // objet faisant partie de ce groupe ?
+						if (gr.Guid == inputNode.Guid)  // objet faisant partie de ce groupe ?
 						{
-							var ratio = ObjectCalculator.GetObjectPropertyDecimal (obj, this.timestamp, ObjectField.GroupRatio+i);
-
-							node = new LevelNode (objectNode.Guid, BaseType.Objects, inputNode.Level+1, ratio);
+							node = new LevelNode (objectNode.Guid, BaseType.Objects, inputNode.Level+1, gr.Ratio);
 							this.outputNodes.Add (node);
 						}
 					}

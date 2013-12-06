@@ -39,6 +39,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				return new DataGuidProperty (model as DataGuidProperty);
 			}
+			else if (model is DataGuidRatioProperty)
+			{
+				return new DataGuidRatioProperty (model as DataGuidRatioProperty);
+			}
 			else if (model is DataIntProperty)
 			{
 				return new DataIntProperty (model as DataIntProperty);

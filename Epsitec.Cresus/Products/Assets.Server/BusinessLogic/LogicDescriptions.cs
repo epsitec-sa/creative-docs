@@ -78,6 +78,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 							line = t;
 						}
 						break;
+
+					case FieldType.GuidRatio:
+						var gr = ObjectCalculator.GetObjectPropertyGuidRatio (obj, timestamp, field, false);
+						var tr = GroupsLogic.GetFullName (accessor, gr);
+						if (!string.IsNullOrEmpty (tr))
+						{
+							line = tr;
+						}
+						break;
 				}
 
 				if (!string.IsNullOrEmpty (line))
@@ -178,18 +187,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ObjectField.Couleur;
 				yield return ObjectField.NuméroSérie;
 
-				yield return ObjectField.GroupGuid+0;
-				yield return ObjectField.GroupRatio+0;
-				yield return ObjectField.GroupGuid+1;
-				yield return ObjectField.GroupRatio+1;
-				yield return ObjectField.GroupGuid+2;
-				yield return ObjectField.GroupRatio+2;
-				yield return ObjectField.GroupGuid+3;
-				yield return ObjectField.GroupRatio+3;
-				yield return ObjectField.GroupGuid+4;
-				yield return ObjectField.GroupRatio+4;
-				yield return ObjectField.GroupGuid+5;
-				yield return ObjectField.GroupRatio+5;
+				yield return ObjectField.GroupGuidRatio+0;
+				yield return ObjectField.GroupGuidRatio+1;
+				yield return ObjectField.GroupGuidRatio+2;
+				yield return ObjectField.GroupGuidRatio+3;
+				yield return ObjectField.GroupGuidRatio+4;
+				yield return ObjectField.GroupGuidRatio+5;
 
 				yield return ObjectField.NomCatégorie;
 

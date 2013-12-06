@@ -147,26 +147,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Compte8:
 					return EditionObjectPageType.Amortissements;
 
-				case ObjectField.GroupGuid+0:
-				case ObjectField.GroupGuid+1:
-				case ObjectField.GroupGuid+2:
-				case ObjectField.GroupGuid+3:
-				case ObjectField.GroupGuid+4:
-				case ObjectField.GroupGuid+5:
-				case ObjectField.GroupGuid+6:
-				case ObjectField.GroupGuid+7:
-				case ObjectField.GroupGuid+8:
-				case ObjectField.GroupGuid+9:
-				case ObjectField.GroupRatio+0:
-				case ObjectField.GroupRatio+1:
-				case ObjectField.GroupRatio+2:
-				case ObjectField.GroupRatio+3:
-				case ObjectField.GroupRatio+4:
-				case ObjectField.GroupRatio+5:
-				case ObjectField.GroupRatio+6:
-				case ObjectField.GroupRatio+7:
-				case ObjectField.GroupRatio+8:
-				case ObjectField.GroupRatio+9:
+				case ObjectField.GroupGuidRatio+0:
+				case ObjectField.GroupGuidRatio+1:
+				case ObjectField.GroupGuidRatio+2:
+				case ObjectField.GroupGuidRatio+3:
+				case ObjectField.GroupGuidRatio+4:
+				case ObjectField.GroupGuidRatio+5:
+				case ObjectField.GroupGuidRatio+6:
+				case ObjectField.GroupGuidRatio+7:
+				case ObjectField.GroupGuidRatio+8:
+				case ObjectField.GroupGuidRatio+9:
 					return EditionObjectPageType.Groups;
 
 				default:
@@ -222,18 +212,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var c2 = new List<ObjectSummaryControllerTile> ()
 				{
 					new ObjectSummaryControllerTile ("Regroupements"),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuid+0),
-					new ObjectSummaryControllerTile (ObjectField.GroupRatio+0),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuid+1),
-					new ObjectSummaryControllerTile (ObjectField.GroupRatio+1),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuid+2),
-					new ObjectSummaryControllerTile (ObjectField.GroupRatio+2),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuid+3),
-					new ObjectSummaryControllerTile (ObjectField.GroupRatio+3),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuid+4),
-					new ObjectSummaryControllerTile (ObjectField.GroupRatio+4),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuid+5),
-					new ObjectSummaryControllerTile (ObjectField.GroupRatio+5),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+0),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+1),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+2),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+3),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+4),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+5),
 				};
 				list.Add (c2);
 

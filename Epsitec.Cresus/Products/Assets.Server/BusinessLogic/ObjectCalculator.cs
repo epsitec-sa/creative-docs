@@ -300,6 +300,29 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public static GuidRatio GetObjectPropertyGuidRatio(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true, bool inputValue = false)
+		{
+			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataGuidRatioProperty;
+
+			if (p == null)
+			{
+				if (inputValue)
+				{
+					p = ObjectCalculator.GetObjectInputProperty (obj, field) as DataGuidRatioProperty;
+					if (p != null)
+					{
+						return p.Value;
+					}
+				}
+
+				return GuidRatio.Empty;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
 		public static string GetObjectPropertyString(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true, bool inputValue = false)
 		{
 			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataStringProperty;

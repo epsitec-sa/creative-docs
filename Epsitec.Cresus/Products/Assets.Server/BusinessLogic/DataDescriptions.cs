@@ -104,29 +104,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.Compte8:
 					return "Amortissement extra. ou rééval.";
 
-				case ObjectField.GroupGuid+0:
-				case ObjectField.GroupGuid+1:
-				case ObjectField.GroupGuid+2:
-				case ObjectField.GroupGuid+3:
-				case ObjectField.GroupGuid+4:
-				case ObjectField.GroupGuid+5:
-				case ObjectField.GroupGuid+6:
-				case ObjectField.GroupGuid+7:
-				case ObjectField.GroupGuid+8:
-				case ObjectField.GroupGuid+9:
+				case ObjectField.GroupGuidRatio+0:
+				case ObjectField.GroupGuidRatio+1:
+				case ObjectField.GroupGuidRatio+2:
+				case ObjectField.GroupGuidRatio+3:
+				case ObjectField.GroupGuidRatio+4:
+				case ObjectField.GroupGuidRatio+5:
+				case ObjectField.GroupGuidRatio+6:
+				case ObjectField.GroupGuidRatio+7:
+				case ObjectField.GroupGuidRatio+8:
+				case ObjectField.GroupGuidRatio+9:
 					return "Dans le groupe";
-
-				case ObjectField.GroupRatio+0:
-				case ObjectField.GroupRatio+1:
-				case ObjectField.GroupRatio+2:
-				case ObjectField.GroupRatio+3:
-				case ObjectField.GroupRatio+4:
-				case ObjectField.GroupRatio+5:
-				case ObjectField.GroupRatio+6:
-				case ObjectField.GroupRatio+7:
-				case ObjectField.GroupRatio+8:
-				case ObjectField.GroupRatio+9:
-					return "Proportion";
 
 				default:
 					return null;

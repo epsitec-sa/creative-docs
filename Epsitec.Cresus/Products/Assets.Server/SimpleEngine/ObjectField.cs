@@ -55,9 +55,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Valeur9,
 		Valeur10,
 
-		GroupGuid  = 10100,
-		GroupRatio = 10200,
+		GroupGuidRatio = 10100,
 
-		MaxField = 10300,
+		MaxField = 10200,
 	}
 }

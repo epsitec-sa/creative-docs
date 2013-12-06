@@ -30,18 +30,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.Couleur;
 				yield return ObjectField.NuméroSérie;
 
-				yield return ObjectField.GroupGuid+0;
-				yield return ObjectField.GroupRatio+0;
-				yield return ObjectField.GroupGuid+1;
-				yield return ObjectField.GroupRatio+1;
-				yield return ObjectField.GroupGuid+2;
-				yield return ObjectField.GroupRatio+2;
-				yield return ObjectField.GroupGuid+3;
-				yield return ObjectField.GroupRatio+3;
-				yield return ObjectField.GroupGuid+4;
-				yield return ObjectField.GroupRatio+4;
-				yield return ObjectField.GroupGuid+5;
-				yield return ObjectField.GroupRatio+5;
+				yield return ObjectField.GroupGuidRatio+0;
+				yield return ObjectField.GroupGuidRatio+1;
+				yield return ObjectField.GroupGuidRatio+2;
+				yield return ObjectField.GroupGuidRatio+3;
+				yield return ObjectField.GroupGuidRatio+4;
+				yield return ObjectField.GroupGuidRatio+5;
 			}
 		}
 
@@ -63,7 +57,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				for (int i=0; i<6; i++)
 				{
 					list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 120, "Groupe"));
-					list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate,    50, "Taux"));
 				}
 
 				return list.ToArray ();
@@ -82,17 +75,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			var c7 = new TreeTableColumnItem<TreeTableCellString> ();
 
 			var cg0 = new TreeTableColumnItem<TreeTableCellString> ();
-			var cr0 = new TreeTableColumnItem<TreeTableCellDecimal> ();
 			var cg1 = new TreeTableColumnItem<TreeTableCellString> ();
-			var cr1 = new TreeTableColumnItem<TreeTableCellDecimal> ();
 			var cg2 = new TreeTableColumnItem<TreeTableCellString> ();
-			var cr2 = new TreeTableColumnItem<TreeTableCellDecimal> ();
 			var cg3 = new TreeTableColumnItem<TreeTableCellString> ();
-			var cr3 = new TreeTableColumnItem<TreeTableCellDecimal> ();
 			var cg4 = new TreeTableColumnItem<TreeTableCellString> ();
-			var cr4 = new TreeTableColumnItem<TreeTableCellDecimal> ();
 			var cg5 = new TreeTableColumnItem<TreeTableCellString> ();
-			var cr5 = new TreeTableColumnItem<TreeTableCellDecimal> ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -119,18 +106,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var couleur     = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Couleur);
 				var série       = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.NuméroSérie);
 
-				var guid0       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+0);
-				var rate0       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+0);
-				var guid1       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+1);
-				var rate1       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+1);
-				var guid2       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+2);
-				var rate2       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+2);
-				var guid3       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+3);
-				var rate3       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+3);
-				var guid4       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+4);
-				var rate4       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+4);
-				var guid5       = ObjectCalculator.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.GroupGuid+5);
-				var rate5       = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.GroupRatio+5);
+				var guid0       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+0);
+				var guid1       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+1);
+				var guid2       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+2);
+				var guid3       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+3);
+				var guid4       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+4);
+				var guid5       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+5);
 
 				var group0 = GroupsLogic.GetShortName (this.accessor, guid0);
 				var group1 = GroupsLogic.GetShortName (this.accessor, guid1);
@@ -151,17 +132,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var s7 = new TreeTableCellString         (true, série,            isSelected: (i == selection), isUnavailable: grouping);
 
 				var sg0 = new TreeTableCellString        (true, group0,           isSelected: (i == selection), isUnavailable: grouping);
-				var sr0 = new TreeTableCellDecimal       (true, rate0,            isSelected: (i == selection), isUnavailable: grouping);
 				var sg1 = new TreeTableCellString        (true, group1,           isSelected: (i == selection), isUnavailable: grouping);
-				var sr1 = new TreeTableCellDecimal       (true, rate1,            isSelected: (i == selection), isUnavailable: grouping);
 				var sg2 = new TreeTableCellString        (true, group2,           isSelected: (i == selection), isUnavailable: grouping);
-				var sr2 = new TreeTableCellDecimal       (true, rate2,            isSelected: (i == selection), isUnavailable: grouping);
 				var sg3 = new TreeTableCellString        (true, group3,           isSelected: (i == selection), isUnavailable: grouping);
-				var sr3 = new TreeTableCellDecimal       (true, rate3,            isSelected: (i == selection), isUnavailable: grouping);
 				var sg4 = new TreeTableCellString        (true, group4,           isSelected: (i == selection), isUnavailable: grouping);
-				var sr4 = new TreeTableCellDecimal       (true, rate4,            isSelected: (i == selection), isUnavailable: grouping);
 				var sg5 = new TreeTableCellString        (true, group5,           isSelected: (i == selection), isUnavailable: grouping);
-				var sr5 = new TreeTableCellDecimal       (true, rate5,            isSelected: (i == selection), isUnavailable: grouping);
 
 				cf.AddRow (sf);
 				c1.AddRow (s1);
@@ -173,17 +148,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				c7.AddRow (s7);
 
 				cg0.AddRow (sg0);
-				cr0.AddRow (sr0);
 				cg1.AddRow (sg1);
-				cr1.AddRow (sr1);
 				cg2.AddRow (sg2);
-				cr2.AddRow (sr2);
 				cg3.AddRow (sg3);
-				cr3.AddRow (sr3);
 				cg4.AddRow (sg4);
-				cr4.AddRow (sr4);
 				cg5.AddRow (sg5);
-				cr5.AddRow (sr5);
 			}
 
 			var content = new TreeTableContentItem ();
@@ -198,17 +167,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			content.Columns.Add (c7);
 
 			content.Columns.Add (cg0);
-			content.Columns.Add (cr0);
 			content.Columns.Add (cg1);
-			content.Columns.Add (cr1);
 			content.Columns.Add (cg2);
-			content.Columns.Add (cr2);
 			content.Columns.Add (cg3);
-			content.Columns.Add (cr3);
 			content.Columns.Add (cg4);
-			content.Columns.Add (cr4);
 			content.Columns.Add (cg5);
-			content.Columns.Add (cr5);
 
 			return content;
 		}

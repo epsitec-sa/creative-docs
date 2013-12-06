@@ -114,6 +114,8 @@
     <Compile Include="BusinessLogic\TimelineMode.cs" />
     <Compile Include="NodesGetter\GroupTreeNodesGetter.cs" />
     <Compile Include="NodesGetter\GroupLevelNodesGetter.cs" />
+    <Compile Include="SimpleEngine\DataGuidRatioProperty.cs" />
+    <Compile Include="SimpleEngine\GuidRatio.cs" />
     <Compile Include="SimpleEngine\SkeletonMandat.cs" />
     <Compile Include="SimpleEngine\EmptyMandat.cs" />
     <Compile Include="SimpleEngine\EditionAccessor.cs" />

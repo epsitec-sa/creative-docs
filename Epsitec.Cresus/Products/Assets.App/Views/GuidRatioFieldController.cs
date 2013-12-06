@@ -4,19 +4,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class GuidFieldController : AbstractFieldController
+	public class GuidRatioFieldController : AbstractFieldController
 	{
 		public DataAccessor						Accessor;
 
-		public Guid								Value
+		public GuidRatio						Value
 		{
 			get
 			{
@@ -30,15 +32,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (this.button != null)
 					{
-						this.button.Text = this.GuidToString (this.value);
+						this.button.Text = this.GuidToString (this.value.Guid);
+					}
+
+					if (this.textField != null)
+					{
+						if (this.ignoreChanges.IsZero)
+						{
+							using (this.ignoreChanges.Enter ())
+							{
+								this.textField.Text = this.ConvDecimalToString (this.value.Ratio);
+								this.textField.SelectAll ();
+							}
+						}
 					}
 				}
 			}
 		}
 
+		private void UpdateValue()
+		{
+			using (this.ignoreChanges.Enter ())
+			{
+				this.textField.Text = this.ConvDecimalToString (this.value.Ratio);
+				this.textField.SelectAll ();
+			}
+		}
+
 		protected override void ClearValue()
 		{
-			this.Value = Guid.Empty;
+			this.Value = GuidRatio.Empty;
 			this.OnValueEdited ();
 		}
 
@@ -64,6 +87,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				}
 			}
+
+			AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
+			this.UpdateTextField (this.textField);
 		}
 
 
@@ -77,11 +103,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				HoverColor       = ColorManager.HoverColor,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = this.EditWidth,
+				PreferredWidth   = this.EditWidth - 50,
 				PreferredHeight  = AbstractFieldController.lineHeight,
-				Margins          = new Margins (0, 10, 0, 0),
+				Margins          = new Margins (0, 4, 0, 0),
 				TabIndex         = this.TabIndex,
-				Text             = this.GuidToString (this.value),
+				Text             = this.GuidToString (this.value.Guid),
 			};
 
 			//	Petit triangle "v" par-dessus la droite du bouton principal, sans fond
@@ -96,6 +122,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight  = AbstractFieldController.lineHeight,
 			};
 
+			this.textField = new TextField
+			{
+				Parent          = this.frameBox,
+				Dock            = DockStyle.Left,
+				PreferredWidth  = 50,
+				PreferredHeight = AbstractFieldController.lineHeight,
+				Margins         = new Margins (0, 10, 0, 0),
+				TabIndex        = this.TabIndex,
+				Text            = this.ConvDecimalToString (this.value.Ratio),
+			};
+
+			//	Connexion des événements.
 			this.button.Clicked += delegate
 			{
 				this.ShowPopup ();
@@ -105,18 +143,51 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.ShowPopup ();
 			};
+
+			this.textField.TextChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					using (this.ignoreChanges.Enter ())
+					{
+						var ratio = this.ConvStringToDecimal (this.textField.Text);
+						this.Value = new GuidRatio (this.value.Guid, ratio);
+						this.OnValueEdited ();
+					}
+				}
+			};
+
+			this.textField.KeyboardFocusChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
+			{
+				bool focused = (bool) e.NewValue;
+
+				if (focused)  // pris le focus ?
+				{
+					this.SetFocus ();
+				}
+				else  // perdu le focus ?
+				{
+					this.UpdateValue ();
+				}
+			};
+		}
+
+		public override void SetFocus()
+		{
+			this.textField.SelectAll ();
+			this.textField.Focus ();
 		}
 
 
 		private void ShowPopup()
 		{
-			var popup = new GroupsPopup (this.Accessor, this.Value);
+			var popup = new GroupsPopup (this.Accessor, this.Value.Guid);
 
 			popup.Create (this.button, leftOrRight: true);
 
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
-				this.Value = guid;
+				this.Value = new GuidRatio (guid, this.value.Ratio);
 				this.OnValueEdited ();
 			};
 		}
@@ -127,7 +198,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private string ConvDecimalToString(decimal? value)
+		{
+			return TypeConverters.RateToString (value);
+		}
+
+		private decimal? ConvStringToDecimal(string text)
+		{
+			return TypeConverters.ParseRate (text);
+		}
+
+
 		private ColoredButton					button;
-		private Guid							value;
+		private TextField						textField;
+
+		private GuidRatio						value;
 	}
 }

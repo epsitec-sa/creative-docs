@@ -3,12 +3,27 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class GroupsLogic
 	{
+		public static string GetShortName(DataAccessor accessor, GuidRatio guidRatio)
+		{
+			var text = GroupsLogic.GetShortName (accessor, guidRatio.Guid);
+
+			if (guidRatio.Ratio.HasValue)
+			{
+				text += " (";
+				text += TypeConverters.RateToString (guidRatio.Ratio);
+				text += ")";
+			}
+
+			return text;
+		}
+
 		public static string GetShortName(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le nom court d'un groupe, du genre:
@@ -22,6 +37,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
 			}
+		}
+
+
+		public static string GetFullName(DataAccessor accessor, GuidRatio guidRatio)
+		{
+			var text = GroupsLogic.GetFullName (accessor, guidRatio.Guid);
+
+			if (guidRatio.Ratio.HasValue)
+			{
+				text += " (";
+				text += TypeConverters.RateToString (guidRatio.Ratio);
+				text += ")";
+			}
+
+			return text;
 		}
 
 		public static string GetFullName(DataAccessor accessor, Guid guid)

@@ -6,20 +6,20 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public class DataComputedAmountProperty : AbstractDataProperty
+	public class DataGuidRatioProperty : AbstractDataProperty
 	{
-		public DataComputedAmountProperty(ObjectField field, ComputedAmount value)
+		public DataGuidRatioProperty(ObjectField field, GuidRatio value)
 			: base (field)
 		{
 			this.Value = value;
 		}
 
-		public DataComputedAmountProperty(DataComputedAmountProperty model)
+		public DataGuidRatioProperty(DataGuidRatioProperty model)
 			: base (model)
 		{
 			this.Value = model.Value;
 		}
 
-		public readonly ComputedAmount Value;
+		public readonly GuidRatio Value;
 	}
 }

@@ -251,16 +251,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var g = ObjectCalculator.GetObjectPropertyGuid (this.obj, this.timestamp, tile.Field);
 					if (!g.IsEmpty)
 					{
-						//?var obj = this.accessor.GetObject (this.baseType, g);
-						var obj = this.accessor.GetObject (BaseType.Groups, g);
-						if (obj == null)
-						{
-							text = "?";
-						}
-						else
-						{
-							text = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
-						}
+						text = GroupsLogic.GetShortName (this.accessor, g);
+						alignment = ContentAlignment.MiddleLeft;
+					}
+					break;
+
+				case FieldType.GuidRatio:
+					var gr = ObjectCalculator.GetObjectPropertyGuidRatio (this.obj, this.timestamp, tile.Field);
+					if (!gr.IsEmpty)
+					{
+						text = GroupsLogic.GetShortName (this.accessor, gr);
 						alignment = ContentAlignment.MiddleLeft;
 					}
 					break;

@@ -174,6 +174,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public GuidRatio GetFieldGuidRatio(ObjectField field)
+		{
+			var p = this.GetProperty (field) as DataGuidRatioProperty;
+
+			if (p == null)
+			{
+				return GuidRatio.Empty;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
 		public int? GetFieldInt(ObjectField field)
 		{
 			var p = this.GetProperty (field) as DataIntProperty;
@@ -271,6 +285,25 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				if (!value.IsEmpty)
 				{
 					var newProperty = new DataGuidProperty (field, value);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty (field);
+				}
+
+				this.dirty = true;
+			}
+		}
+
+		public void SetField(ObjectField field, GuidRatio value)
+		{
+			var e = this.dataEvent;
+			if (e != null)
+			{
+				if (!value.IsEmpty)
+				{
+					var newProperty = new DataGuidRatioProperty (field, value);
 					e.AddProperty (newProperty);
 				}
 				else

@@ -111,6 +111,7 @@
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\CategoriesToolbarTreeTableController.cs" />
     <Compile Include="Views\CategoriesView.cs" />
+    <Compile Include="Views\GuidRatioFieldController.cs" />
     <Compile Include="Views\DateController.cs" />
     <Compile Include="Views\GroupsToolbarTreeTableController.cs" />
     <Compile Include="Views\GroupsView.cs" />

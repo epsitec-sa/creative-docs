@@ -14,5 +14,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Int,
 		Date,
 		Guid,
+		GuidRatio,
 	}
 }

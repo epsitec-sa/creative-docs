@@ -14,16 +14,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			switch (objectField)
 			{
 				case ObjectField.TauxAmortissement:
-				case ObjectField.GroupRatio+0:
-				case ObjectField.GroupRatio+1:
-				case ObjectField.GroupRatio+2:
-				case ObjectField.GroupRatio+3:
-				case ObjectField.GroupRatio+4:
-				case ObjectField.GroupRatio+5:
-				case ObjectField.GroupRatio+6:
-				case ObjectField.GroupRatio+7:
-				case ObjectField.GroupRatio+8:
-				case ObjectField.GroupRatio+9:
 					return DecimalFormat.Rate;
 
 				case ObjectField.ValeurRésiduelle:

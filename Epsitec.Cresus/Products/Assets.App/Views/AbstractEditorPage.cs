@@ -103,6 +103,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
+				else if (controller is GuidRatioFieldController)
+				{
+					var c = controller as GuidRatioFieldController;
+
+					c.EventType     = this.eventType;
+					c.Value         = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
+					c.PropertyState = this.GetPropertyState (field);
+				}
 			}
 		}
 
@@ -129,7 +137,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new GuidFieldController
 			{
 				Accessor  = this.accessor,
-				BaseType  = BaseType.Groups,
 				Label     = DataDescriptions.GetObjectFieldDescription (field),
 				EditWidth = 380,
 				TabIndex  = ++this.tabIndex,
@@ -142,6 +149,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.accessor.EditionAccessor.SetField (field, controller.Value);
 
 				controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
+				controller.PropertyState = this.GetPropertyState (field);
+
+				this.OnValueEdited (field);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target)
+			{
+				this.ShowHistoryPopup (target, field);
+			};
+
+			this.fieldControllers.Add (field, controller);
+		}
+
+		protected void CreateGuidRatioController(Widget parent, ObjectField field)
+		{
+			var controller = new GuidRatioFieldController
+			{
+				Accessor  = this.accessor,
+				Label     = DataDescriptions.GetObjectFieldDescription (field),
+				EditWidth = 380,
+				TabIndex  = ++this.tabIndex,
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueEdited += delegate
+			{
+				this.accessor.EditionAccessor.SetField (field, controller.Value);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
 				controller.PropertyState = this.GetPropertyState (field);
 
 				this.OnValueEdited (field);

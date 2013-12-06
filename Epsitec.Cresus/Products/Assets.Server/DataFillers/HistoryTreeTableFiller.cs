@@ -74,6 +74,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
 						break;
 
+					case FieldType.GuidRatio:
+						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
+						break;
+
 					default:
 						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
 						break;
@@ -140,6 +144,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case FieldType.Guid:
 					this.PutGuid (content, firstRow, count, selection);
+					break;
+
+				case FieldType.GuidRatio:
+					this.PutGuidRatio (content, firstRow, count, selection);
 					break;
 			}
 		}
@@ -277,6 +285,29 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			content.Columns.Add (columnItem);
 		}
 
+		private void PutGuidRatio(TreeTableContentItem content, int firstRow, int count, int selection)
+		{
+			var columnItem = new TreeTableColumnItem<TreeTableCellString> ();
+
+			int i = 0;
+			foreach (var e in this.GetEvents (firstRow, count))
+			{
+				var value = GuidRatio.Empty;
+
+				var property = e.GetProperty (this.field) as DataGuidRatioProperty;
+				if (property != null)
+				{
+					value = property.Value;
+				}
+
+				var text = GroupsLogic.GetFullName (this.accessor, value);
+				var cell = new TreeTableCellString (true, text, isSelected: (i++ == selection));
+				columnItem.AddRow (cell);
+			}
+
+			content.Columns.Add (columnItem);
+		}
+
 		private IEnumerable<DataEvent> GetEvents(int firstRow, int count)
 		{
 			for (int i=0; i<count; i++)
@@ -319,6 +350,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case FieldType.Guid:
 					return 300;
+
+				case FieldType.GuidRatio:
+					return 350;
 
 				case FieldType.String:
 					return 150;
