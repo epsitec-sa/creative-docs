@@ -35,26 +35,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			var topBox = new FrameBox
+			this.treeTableFrame = new FrameBox
 			{
 				Parent    = parent,
-				Dock      = DockStyle.Fill,
+				Dock      = DockStyle.Top,
 				Padding   = new Margins (2),
 				BackColor = ColorManager.WindowBackgroundColor,
+			};
+
+			this.editorHelper = new StaticText
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Top,
+				PreferredHeight = GuidRatioFieldsController.headerHeight,
+				Margins         = new Margins (22, 0, 0, 0),
 			};
 
 			var bottomBox = new FrameBox
 			{
 				Parent    = parent,
-				Dock      = DockStyle.Bottom,
-				Margins   = new Margins (0, 0, 2, 0),
+				Dock      = DockStyle.Top,
 				BackColor = ColorManager.WindowBackgroundColor,
 			};
 
-			this.treeTable.CreateUI (topBox, footerHeight: 0);
+			this.treeTable.CreateUI (this.treeTableFrame, headerHeight: GuidRatioFieldsController.headerHeight, rowHeight: GuidRatioFieldsController.rowHeight, footerHeight: 0);
 			this.treeTable.AllowsMovement = false;
 
-			TreeTableFiller<ObjectField>.FillColumns (this.treeTable, this.dataFiller, dockToLeftCount: 0);
+			TreeTableFiller<ObjectField>.FillColumns (this.treeTable, this.dataFiller, dockToLeftCount: 1);
 			this.UpdateTreeTable ();
 
 			this.editor.CreateUI (bottomBox);
@@ -103,6 +110,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateTreeTable(bool crop = true)
 		{
 			this.nodesGetter.SetParams ();
+
+			this.treeTableFrame.PreferredHeight = this.TreeTableRequiredHeight;
+
 			TreeTableFiller<ObjectField>.FillContent (this.treeTable, this.dataFiller, this.SelectedRow, crop);
 		}
 
@@ -113,6 +123,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.editor.Field         = this.selectedField;
 				this.editor.Value         = this.accessor.EditionAccessor.GetFieldGuidRatio (this.selectedField);
 				this.editor.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (this.selectedField);
+
+				this.editorHelper.Text = this.editor.Value.Guid.IsEmpty ?
+					"Nouveau regroupement :" : "Modification du regroupement sélectionné :";
+			}
+		}
+
+
+		private int TreeTableRequiredHeight
+		{
+			get
+			{
+				return GuidRatioFieldsController.headerHeight
+					 + GuidRatioFieldsController.rowHeight * this.nodesGetter.Count
+					 + (int) AbstractScroller.DefaultBreadth
+					 + 2 * 2;
 			}
 		}
 
@@ -144,6 +169,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private const int headerHeight = 22;
+		private const int rowHeight    = 18;
+
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	treeTable;
 		private readonly GuidRatioFieldController		editor;
@@ -151,6 +179,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly GuidRatioEditedTreeTableFiller	dataFiller;
 
 
+		private FrameBox								treeTableFrame;
+		private StaticText								editorHelper;
 		private ObjectField								selectedField;
 	}
 }

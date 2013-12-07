@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var state = this.accessor.EditionAccessor.GetEditionPropertyState (field);
 				var isSel = (i == selection);
 
-				var glyph = isSel ? TimelineGlyph.OutlinedDown : TimelineGlyph.Empty;
+				var glyph = isSel ? TimelineGlyph.FilledCircle : TimelineGlyph.Empty;
 				var group = GroupsLogic.GetFullName (this.accessor, node.Guid);
 				var ratio = TypeConverters.RateToString (node.Ratio);
 
@@ -74,9 +74,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				bool isEvent = state == PropertyState.Single;  // true -> fond bleu
 
-				var s0 = new TreeTableCellGlyph  (true, glyph, isEvent: isEvent, isSelected: isSel);
-				var s1 = new TreeTableCellString (true, group, isEvent: isEvent);
-				var s2 = new TreeTableCellString (true, ratio, isEvent: isEvent);
+				var s0 = new TreeTableCellGlyph  (true, glyph, isEvent: isEvent);
+				var s1 = new TreeTableCellString (true, group, isEvent: isEvent, isSelected: isSel);
+				var s2 = new TreeTableCellString (true, ratio, isEvent: isEvent, isSelected: isSel);
 
 				c0.AddRow (s0);
 				c1.AddRow (s1);
