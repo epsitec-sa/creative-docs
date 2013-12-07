@@ -66,7 +66,6 @@
     <Compile Include="BusinessLogic\TimelinesArrayLogic.cs" />
     <Compile Include="DataFillers\AbstractTreeTableFiller.cs" />
     <Compile Include="DataFillers\CategoriesTreeTableFiller.cs" />
-    <Compile Include="DataFillers\GuidRatioEditedTreeTableFiller.cs" />
     <Compile Include="DataFillers\ErrorsTreeTableFiller.cs" />
     <Compile Include="DataFillers\SingleCategoriesTreeTableFiller.cs" />
     <Compile Include="DataFillers\SingleGroupsTreeTableFiller.cs" />
@@ -90,7 +89,6 @@
     <Compile Include="DataFillers\TreeTableContentItem.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="NodesGetter\ComparableData.cs" />
-    <Compile Include="NodesGetter\GuidRatioEditedNodesGetter.cs" />
     <Compile Include="NodesGetter\CumulNodesGetter.cs" />
     <Compile Include="NodesGetter\CumulNode.cs" />
     <Compile Include="NodesGetter\ITreeFunctions.cs" />
