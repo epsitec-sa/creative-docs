@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,   20, ""));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 400, "Groupe"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  99, "Ratio"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  60, "Ratio"));
 
 				return list.ToArray ();
 			}

@@ -218,6 +218,23 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public static IEnumerable<ObjectField> GroupGuidRatioFields
+		{
+			get
+			{
+				yield return ObjectField.GroupGuidRatio+0;
+				yield return ObjectField.GroupGuidRatio+1;
+				yield return ObjectField.GroupGuidRatio+2;
+				yield return ObjectField.GroupGuidRatio+3;
+				yield return ObjectField.GroupGuidRatio+4;
+				yield return ObjectField.GroupGuidRatio+5;
+				yield return ObjectField.GroupGuidRatio+6;
+				yield return ObjectField.GroupGuidRatio+7;
+				yield return ObjectField.GroupGuidRatio+8;
+				yield return ObjectField.GroupGuidRatio+9;
+			}
+		}
+
 		public static IEnumerable<ObjectField> ValueFields
 		{
 			get
