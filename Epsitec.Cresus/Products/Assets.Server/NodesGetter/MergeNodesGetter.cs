@@ -103,13 +103,13 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 				{
 					var obj = this.accessor.GetObject (BaseType.Objects, objectNode.Guid);
 
-					for (int i=0; i<10; i++)  // ObjectField.GroupGuid0..9
+					foreach (var field in DataAccessor.GroupGuidRatioFields)
 					{
 						var gr = ObjectCalculator.GetObjectPropertyGuidRatio
 						(
 							obj,
 							this.timestamp,
-							ObjectField.GroupGuidRatio+i,
+							field,
 							inputValue: true
 						);
 

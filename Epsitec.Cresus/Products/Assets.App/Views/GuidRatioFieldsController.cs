@@ -11,6 +11,11 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
+	/// <summary>
+	/// Contrôleur permettant de choisir l'ensemble des groupes-ratio de
+	/// l'objet en édition.
+	/// On peut en créer de nouveaux, en supprimer et en modifier.
+	/// </summary>
 	public class GuidRatioFieldsController : AbstractFieldController
 	{
 		public GuidRatioFieldsController(DataAccessor accessor)
@@ -25,18 +30,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateTitle (parent);
 
-			this.controllersFrame = new FrameBox
+			var controllersFrame = new FrameBox
 			{
 				Parent = parent,
 				Dock   = DockStyle.Fill,
 			};
 
-			this.CreateControllers (this.controllersFrame);
+			this.CreateControllers (controllersFrame);
 		}
 
 
 		public void Update()
 		{
+			//	Met à jour les contrôleurs, en fonction de l'objet en édition.
 			this.UpdateControllers ();
 		}
 
@@ -70,6 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateControllers(Widget parent)
 		{
+			//	On crée un contrôleur par ObjectField.GroupGuidRatio, toujours.
 			this.lines.Clear ();
 
 			foreach (var field in DataAccessor.GroupGuidRatioFields)
@@ -138,6 +145,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateControllers()
 		{
+			//	Montre les contrôleurs utilisés par l'objet en édition, dans l'ordre
+			//	alphabétique des noms, et cache les autres. Ainsi, il est possible qu'un
+			//	contrôleur en édition soit déplacé, sans que cela n'interfère en rien
+			//	sur l'édition en cours.
+
 			//	Cache toutes les lignes.
 			foreach (var field in DataAccessor.GroupGuidRatioFields)
 			{
@@ -149,14 +161,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			int y = 0;
 			foreach (var field in this.SortedFields)
 			{
-				var label = (y == 0) ? "Regroupements" : "";
+				var label = (y == 0) ? "Regroupements" : "";  // légende uniquement pour le premier
 				this.UpdateController (field, y, label);
-				y += AbstractFieldController.lineHeight + 4;
+				y += AbstractFieldController.lineHeight + 4;  // en dessous
 			}
 
 			//	Montre une dernière ligne "nouveau".
 			var ff = this.FreeField;
-			if (ff != ObjectField.Unknown)
+			if (ff != ObjectField.Unknown)  // limite pas encore attenite ?
 			{
 				this.UpdateController (ff, y, "Nouveau");
 			}
@@ -164,6 +176,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateController(ObjectField field, int y, string label)
 		{
+			//	Met à jour un contrôleur. On le rend visible et on met à jour les
+			//	données qu'il représente.
 			var line = this.lines[field];
 
 			line.Frame.Visibility = true;
@@ -180,6 +194,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IEnumerable<ObjectField> SortedFields
 		{
+			//	Retourne la liste des champs, triés par ordre alphabétique des noms
+			//	complets des groupes.
 			get
 			{
 				return this.UsedFields.OrderBy (x => this.GetName (x));
@@ -188,18 +204,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string GetName(ObjectField field)
 		{
+			//	Retourne le nom complet d'un groupe, en vue du tri.
 			var gr = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
 			return GroupsLogic.GetFullName (this.accessor, gr.Guid);
 		}
 
 		private IEnumerable<ObjectField> UsedFields
 		{
+			//	Retourne la liste des champs utilisé par l'objet en édition, non triée.
 			get
 			{
-				for (int i=0; i<10; i++)
+				foreach (var field in DataAccessor.GroupGuidRatioFields)
 				{
-					var field = ObjectField.GroupGuidRatio+i;
-
 					var gr = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
 					if (!gr.IsEmpty)
 					{
@@ -211,12 +227,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private ObjectField FreeField
 		{
+			//	Retourne le premier champ libre, qui sera créé s'il est rempli par l'utilisateur.
 			get
 			{
-				for (int i=0; i<10; i++)
+				foreach (var field in DataAccessor.GroupGuidRatioFields)
 				{
-					var field = ObjectField.GroupGuidRatio+i;
-
 					var gr = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
 					if (gr.IsEmpty)
 					{
@@ -247,7 +262,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor					accessor;
 		private readonly Dictionary<ObjectField, Line>	lines;
 
-		private FrameBox								controllersFrame;
 		private ObjectField								selectedField;
 	}
 }

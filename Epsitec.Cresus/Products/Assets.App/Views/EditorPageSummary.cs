@@ -218,6 +218,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+3),
 					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+4),
 					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+5),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+6),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+7),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+8),
+					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+9),
 				};
 				list.Add (c2);
 
