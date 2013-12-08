@@ -1361,6 +1361,16 @@ AiderMailingParticipant = [LVOL03]
       </f>
     </d>
 
+    <d cid="[LVAII]" teid="@AiderSubscription" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuBonneNouvelle">
+      <R><r>@user</r></R>
+      <L/>
+      <!-- Filter -->
+      <f id="@AiderSubscription">
+        <!-- Column id=SubscriptionFlag (Valeur) (Comparaison) c=Equals(1) v="(e)num SubscriptionFlag/n°2" -->
+        <C><c id="[LVABH]"><v><comp c="1" v="e[LVA8H]/2" /></v></c></C>
+      </f>
+    </d>
+
     <d cid="[LVGJ32]" teid="@AiderSubscriptionRefusal" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuBonneNouvelle">
       <R><r>@user</r></R>
       <L>

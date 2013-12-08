@@ -180,6 +180,7 @@ namespace Epsitec.Aider.Data.Subscription
 			foreach (var subscription in subscriptions)
 			{
 				if ((subscription.SusbscriptionFlag == SubscriptionFlag.VerificationRequired) ||
+					(subscription.SusbscriptionFlag == SubscriptionFlag.Suspended) ||
 					(subscription.Count < 1))
 				{
 					continue;

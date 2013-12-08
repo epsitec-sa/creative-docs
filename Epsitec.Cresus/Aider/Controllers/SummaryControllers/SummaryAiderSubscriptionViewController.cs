@@ -19,7 +19,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderSubscriptionEntity> wall)
 		{
 			wall.AddBrick ()
-				.EnableActionButton<ActionAiderSubscriptionViewController0FlagVerificationRequired> ();
+				.EnableActionButton<ActionAiderSubscriptionViewController0FlagVerificationRequired> ()
+				.EnableActionButton<ActionAiderSubscriptionViewController1FlagSuspended> ();
 			
 			switch (this.Entity.SubscriptionType)
 			{

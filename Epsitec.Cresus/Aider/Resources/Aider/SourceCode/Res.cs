@@ -57,6 +57,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscription = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 98));
 				//	designer:cap/LVGJ32
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscriptionRefusal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 115));
+				//	designer:cap/LVAII
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscriptionSuspended = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 594));
 				//	designer:cap/LVADH
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscriptionVerificationRequested = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 557));
 				//	designer:cap/LVG302
@@ -112,6 +114,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderSubscription = 0x3F500050000062L;
 				//	designer:cap/LVGJ32
 				public const long ShowAiderSubscriptionRefusal = 0x3F500050000073L;
+				//	designer:cap/LVAII
+				public const long ShowAiderSubscriptionSuspended = 0x3F50000A000252L;
 				//	designer:cap/LVADH
 				public const long ShowAiderSubscriptionVerificationRequested = 0x3F50000A00022DL;
 				//	designer:cap/LVG302
@@ -1243,6 +1247,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 553));
+						}
+					}
+					//	designer:cap/LVAHI
+					public static global::Epsitec.Common.Types.Caption Suspended
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 593));
 						}
 					}
 					//	designer:cap/LVAAH

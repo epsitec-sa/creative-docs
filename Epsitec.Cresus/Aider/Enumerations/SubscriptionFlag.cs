@@ -11,6 +11,7 @@ namespace Epsitec.Aider.Enumerations
 		None = 0,
 
 		VerificationRequired = 1,
+		Suspended = 2,
 	}
 }
 

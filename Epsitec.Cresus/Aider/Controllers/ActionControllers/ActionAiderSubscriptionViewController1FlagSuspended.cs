@@ -15,17 +15,17 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (0)]
-	public sealed class ActionAiderSubscriptionViewController0FlagVerificationRequired : ActionViewController<AiderSubscriptionEntity>
+	[ControllerSubType (1)]
+	public sealed class ActionAiderSubscriptionViewController1FlagSuspended : ActionViewController<AiderSubscriptionEntity>
 	{
 		public override FormattedText GetTitle()
 		{
 			switch (this.Entity.SusbscriptionFlag)
 			{
-				case Enumerations.SubscriptionFlag.Suspended:
-				case Enumerations.SubscriptionFlag.None:
-					return Resources.Text ("Marquer pour vérification");
 				case Enumerations.SubscriptionFlag.VerificationRequired:
+				case Enumerations.SubscriptionFlag.None:
+					return Resources.Text ("Marquer comme suspendu");
+				case Enumerations.SubscriptionFlag.Suspended:
 					return Resources.Text ("Marquer comme valide");
 				default:
 					throw new System.NotImplementedException ();
@@ -49,11 +49,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			switch (this.Entity.SusbscriptionFlag)
 			{
-				case Enumerations.SubscriptionFlag.Suspended:
-				case Enumerations.SubscriptionFlag.None:
-					this.Entity.SusbscriptionFlag = Enumerations.SubscriptionFlag.VerificationRequired;
-					break;
 				case Enumerations.SubscriptionFlag.VerificationRequired:
+				case Enumerations.SubscriptionFlag.None:
+					this.Entity.SusbscriptionFlag = Enumerations.SubscriptionFlag.Suspended;
+					break;
+				case Enumerations.SubscriptionFlag.Suspended:
 					this.Entity.SusbscriptionFlag = Enumerations.SubscriptionFlag.None;
 					break;
 				default:
