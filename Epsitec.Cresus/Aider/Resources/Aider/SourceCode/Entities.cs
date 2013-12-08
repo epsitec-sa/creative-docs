@@ -6166,6 +6166,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Contact</c> field.
+		///	designer:fld/LVAHC/LVAJI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAJI]")]
+		public global::Epsitec.Aider.Entities.AiderContactEntity Contact
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVAJI]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderContactEntity oldValue = this.Contact;
+				if (oldValue != value || !this.IsFieldDefined("[LVAJI]"))
+				{
+					this.OnContactChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVAJI]", oldValue, value);
+					this.OnContactChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>PreferredScope</c> field.
 		///	designer:fld/LVAHC/LVAGD
 		///	</summary>
@@ -6410,6 +6432,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnRoleChanging(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
+		partial void OnContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnPreferredScopeChanging(global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue, global::Epsitec.Aider.Entities.AiderUserScopeEntity newValue);
 		partial void OnPreferredScopeChanged(global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue, global::Epsitec.Aider.Entities.AiderUserScopeEntity newValue);
 		partial void OnParishChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);

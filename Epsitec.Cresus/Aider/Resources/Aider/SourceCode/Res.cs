@@ -2236,9 +2236,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderUser.Email, null);
+					global::System.Object.Equals (AiderUser.Contact, null);
 				}
 				
+				//	designer:cap/LVAJI
+				public static readonly global::Epsitec.Common.Support.Druid Contact = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 595);
 				//	designer:cap/LVGF22
 				public static readonly global::Epsitec.Common.Support.Druid Email = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 79);
 				//	designer:cap/LVGJ22
