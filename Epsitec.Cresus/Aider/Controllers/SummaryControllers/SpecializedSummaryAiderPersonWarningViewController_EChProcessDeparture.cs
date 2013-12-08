@@ -39,7 +39,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionButton<ActionAiderPersonWarningViewController61ProcessDepartureDeceased> ()
 				.EnableActionButton<ActionAiderPersonWarningViewController62ProcessDeparture> ().IfTrue (alive)
 				.EnableActionButton<ActionAiderPersonWarningViewController63ProcessDeparture> ().IfTrue (alive)
-				.EnableActionButton<ActionAiderPersonWarningViewController64ProcessDeparture> ().IfTrue (alive);
+				.EnableActionButton<ActionAiderPersonWarningViewController64ProcessDeparture> ().IfTrue (alive)
+				.EnableActionButton<ActionAiderPersonWarningViewController65ProcessDepartureAndHide> ().IfTrue (alive);
 		}
 	}
 }
