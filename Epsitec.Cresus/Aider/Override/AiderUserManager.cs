@@ -57,6 +57,8 @@ namespace Epsitec.Aider.Override
 
 			this.NotifyUserLogin (user as AiderUserEntity, notif);
 			this.NotifyMissingEMail (user as AiderUserEntity, notif);
+			this.NotifyMissingContact (user as AiderUserEntity, notif);
+
 			base.NotifySusccessfulLogin (user);
 		}
 
@@ -148,6 +150,27 @@ namespace Epsitec.Aider.Override
 					
 					ErrorField        = LambdaUtils.Convert ((AiderUserEntity e) => e.Email),
 					ErrorFieldMessage = "votre adresse e-mail"
+				};
+
+				notif.WarnUser (user.LoginName, message, When.OnConnect);
+			}
+		}
+
+		private void NotifyMissingContact(AiderUserEntity user, NotificationManager notif)
+		{
+			if (user.Contact.IsNull ())
+			{
+				var message = new NotificationMessage ()
+				{
+					Title     = "Attention AIDER",
+					Body      = "Merci d'associer votre contact à votre profil. Cliquez sur ce message pour accéder à votre profil...",
+					Dataset   = Res.CommandIds.Base.ShowAiderUser,
+					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
+
+					HeaderErrorMessage = "Contact non défini",
+
+					ErrorField        = LambdaUtils.Convert ((AiderUserEntity e) => e.Contact),
+					ErrorFieldMessage = "votre contact"
 				};
 
 				notif.WarnUser (user.LoginName, message, When.OnConnect);
