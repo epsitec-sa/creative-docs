@@ -1,8 +1,9 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
 using Epsitec.Aider.Entities;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 
@@ -22,7 +23,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.Title ("Supprimer l'abonnement")
 				.Text (new FormattedText ("Êtes-vous sûr de vouloir supprimer cet abonnement ?<br/>Ceci créera un refus pour cet abonnement."))
 				.Field<bool> ()
-					.Title ("Créer un refus correspondant")
+					.Title ("Je confirme l'opération")
 					.InitialValue (true)
 				.End ()
 			.End ();
@@ -33,13 +34,9 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			return ActionExecutor.Create<bool> (this.Execute);
 		}
 
-		private void Execute(bool createRefusal)
+		private void Execute(bool dummy)
 		{
-			if (createRefusal)
-			{
-				AiderSubscriptionRefusalEntity.Create (this.BusinessContext, this.Entity);
-			}
-
+			AiderSubscriptionRefusalEntity.Create (this.BusinessContext, this.Entity);
 			AiderSubscriptionEntity.Delete (this.BusinessContext, this.Entity);
 		}
 	}

@@ -32,12 +32,10 @@ namespace Epsitec.Aider.Entities
 			);
 		}
 
-
 		public override FormattedText GetCompactSummary()
 		{
 			return this.GetSummary ();
 		}
-
 
 		public FormattedText GetAddressLabelText()
 		{
@@ -84,6 +82,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		
 		private string GetDisplayName()
 		{
 			switch (this.SubscriptionType)
@@ -99,19 +98,17 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-
 		private string GetDisplayZipCode()
 		{
 			return this.GetAddress ().GetDisplayZipCode ().ToSimpleText ();
 		}
-
 
 		private string GetDisplayAddress()
 		{
 			return this.GetAddress ().GetDisplayAddress ().ToSimpleText ();
 		}
 
-
+		
 		public string GetEditionId()
 		{
 			// Editions ids should be N1 to NB, which by chance is the hexadecimal representation of
@@ -121,7 +118,6 @@ namespace Epsitec.Aider.Entities
 
 			return "N" + regionId.ToString ("X1");
 		}
-
 
 		public AiderAddressEntity GetAddress()
 		{
@@ -146,24 +142,38 @@ namespace Epsitec.Aider.Entities
 			value = value.Replace ("\n", ", ");
 		}
 
-
 		partial void SetFullAddressTextSingleLine(string value)
 		{
 			throw new NotImplementedException ("Do not use this method");
 		}
-
 
 		partial void GetFullAddressTextMultiLine(ref string value)
 		{
 			value = this.GetAddressLabelText ().ToSimpleText ();
 		}
 
-
 		partial void SetFullAddressTextMultiLine(string value)
 		{
 			throw new NotImplementedException ("Do not use this method");
 		}
 
+
+		public static AiderSubscriptionEntity Create(BusinessContext businessContext, AiderSubscriptionRefusalEntity refusal)
+		{
+			switch (refusal.RefusalType)
+			{
+				case SubscriptionType.Household:
+					var household = refusal.Household;
+					return AiderSubscriptionEntity.Create (businessContext, household);
+
+				case SubscriptionType.LegalPerson:
+					var contact = refusal.LegalPersonContact;
+					return AiderSubscriptionEntity.Create (businessContext, contact);
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
 
 		public static AiderSubscriptionEntity Create(BusinessContext context, AiderHouseholdEntity household)
 		{
@@ -175,85 +185,45 @@ namespace Epsitec.Aider.Entities
 			var edition = AiderSubscriptionEntity.GetEdition (context, household.Address);
 			return AiderSubscriptionEntity.Create (context, household, edition, 1);
 		}
-		
-		public static AiderGroupEntity GetEdition(BusinessContext context, AiderAddressEntity address)
+
+		public static AiderSubscriptionEntity Create(BusinessContext context, AiderContactEntity legalPersonContact)
 		{
-			var parishRepository = Epsitec.Aider.Data.Common.ParishAddressRepository.Current;
-			var parishName = Epsitec.Aider.Data.Common.ParishAssigner.FindParishName (parishRepository, address);
+			if (legalPersonContact.IsNull ())
+			{
+				return null;
+			}
 
-			// If we can't find the region code, we default to the region 4, which is the one of
-			// Lausanne.
-
-			var regionCode = parishName != null
-				? parishRepository.GetDetails (parishName).RegionCode
-				: 4;
-
-			return Epsitec.Aider.Data.Common.ParishAssigner.FindRegionGroup (context, regionCode);
+			var edition = AiderSubscriptionEntity.GetEdition (context, legalPersonContact.Address);
+			return AiderSubscriptionEntity.Create (context, legalPersonContact, edition, 1);
 		}
 
-
-		public static AiderSubscriptionEntity Create
-		(
-			BusinessContext businessContext,
-			AiderHouseholdEntity household,
-			AiderGroupEntity regionalEdition,
-			int count
-		)
+		public static AiderSubscriptionEntity Create(BusinessContext businessContext, AiderHouseholdEntity household, AiderGroupEntity regionalEdition, int count)
 		{
-			var subscription = AiderSubscriptionEntity.Create
-			(
-				businessContext, regionalEdition, count
-			);
+			var subscription = AiderSubscriptionEntity.Create (businessContext, regionalEdition, count);
 
-			subscription.SubscriptionType = SubscriptionType.Household;
-			subscription.Household = household;
+			subscription.SubscriptionType     = SubscriptionType.Household;
+			subscription.Household            = household;
 			subscription.ParishGroupPathCache = household.ParishGroupPathCache;
+			
 			return subscription;
 		}
 
-
-		public static AiderSubscriptionEntity Create
-		(
-			BusinessContext businessContext,
-			AiderContactEntity legalPersonContact,
-			AiderGroupEntity regionalEdition,
-			int count
-		)
+		public static AiderSubscriptionEntity Create(BusinessContext businessContext, AiderContactEntity legalPersonContact, AiderGroupEntity regionalEdition, int count)
 		{
-			var subscription = AiderSubscriptionEntity.Create
-			(
-				businessContext, regionalEdition, count
-			);
+			var subscription = AiderSubscriptionEntity.Create (businessContext, regionalEdition, count);
 
-			subscription.SubscriptionType = SubscriptionType.LegalPerson;
-			subscription.LegalPersonContact = legalPersonContact;
+			subscription.SubscriptionType     = SubscriptionType.LegalPerson;
+			subscription.LegalPersonContact   = legalPersonContact;
 			subscription.ParishGroupPathCache = legalPersonContact.ParishGroupPathCache;
 
 			return subscription;
 		}
 
-
-		private static AiderSubscriptionEntity Create
-		(
-			BusinessContext businessContext,
-			AiderGroupEntity regionalEdition,
-			int count
-		)
-		{
-			var subscription = businessContext.CreateAndRegisterEntity<AiderSubscriptionEntity> ();
-
-			subscription.Count = count;
-			subscription.RegionalEdition = regionalEdition;
-			subscription.ParishGroupPathCache = regionalEdition.Path;
-			return subscription;
-		}
-
-
+		
 		public static void Delete(BusinessContext businessContext, AiderSubscriptionEntity subscription)
 		{
 			businessContext.DeleteEntity (subscription);
 		}
-
 
 		public static bool DeleteSubscription(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
@@ -282,11 +252,7 @@ namespace Epsitec.Aider.Entities
 			return AiderSubscriptionEntity.FindSubscription (businessContext, example, household);
 		}
 
-		public static AiderSubscriptionEntity FindSubscription
-		(
-			BusinessContext businessContext,
-			AiderContactEntity legalPersonContact
-		)
+		public static AiderSubscriptionEntity FindSubscription(BusinessContext businessContext, AiderContactEntity legalPersonContact)
 		{
 			var example = new AiderSubscriptionEntity ()
 			{
@@ -301,12 +267,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private static AiderSubscriptionEntity FindSubscription
-		(
-			BusinessContext businessContext,
-			AiderSubscriptionEntity example,
-			AbstractEntity entity
-		)
+		private static AiderSubscriptionEntity FindSubscription(BusinessContext businessContext, AiderSubscriptionEntity example, AbstractEntity entity)
 		{
 			var dataContext = businessContext.DataContext;
 
@@ -362,27 +323,43 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static void CheckSubscriptionDoesNotExist
-		(
-			BusinessContext businessContext,
-			AiderHouseholdEntity receiver
-		)
+		public static void CheckSubscriptionDoesNotExist(BusinessContext businessContext, AiderHouseholdEntity receiver)
 		{
 			var result = AiderSubscriptionEntity.FindSubscription (businessContext, receiver);
 
 			AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (result);
 		}
 
-
-		public static void CheckSubscriptionDoesNotExist
-		(
-			BusinessContext businessContext,
-			AiderContactEntity receiver
-		)
+		public static void CheckSubscriptionDoesNotExist(BusinessContext businessContext, AiderContactEntity receiver)
 		{
 			var result = AiderSubscriptionEntity.FindSubscription (businessContext, receiver);
 
 			AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (result);
+		}
+
+		
+		private static AiderSubscriptionEntity Create(BusinessContext businessContext, AiderGroupEntity regionalEdition, int count)
+		{
+			var subscription = businessContext.CreateAndRegisterEntity<AiderSubscriptionEntity> ();
+
+			subscription.Count                = count;
+			subscription.RegionalEdition      = regionalEdition;
+			subscription.ParishGroupPathCache = regionalEdition.Path;
+
+			return subscription;
+		}
+
+		private static AiderGroupEntity GetEdition(BusinessContext context, AiderAddressEntity address)
+		{
+			var parishRepository = Epsitec.Aider.Data.Common.ParishAddressRepository.Current;
+			var parishName = Epsitec.Aider.Data.Common.ParishAssigner.FindParishName (parishRepository, address);
+
+			// If we can't find the region code, we default to the region 4, which is the one of
+			// Lausanne.
+
+			var regionCode = parishName == null ? 4 : parishRepository.GetDetails (parishName).RegionCode;
+
+			return Epsitec.Aider.Data.Common.ParishAssigner.FindRegionGroup (context, regionCode);
 		}
 
 

@@ -1,4 +1,9 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Entities;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 
@@ -16,17 +21,22 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		{
 			action
 				.Title ("Supprimer le refus")
-				.Text ("Êtes vous sûr de vouloir supprimer ce refus à un abonnement?")
+				.Text (new FormattedText ("Êtes-vous sûr de vouloir supprimer ce refus ?<br/>Ceci créera un nouvel abonnement."))
+				.Field<bool> ()
+					.Title ("Je confirme l'opération")
+					.InitialValue (true)
+				.End ()
 			.End ();
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create (this.Execute);
+			return ActionExecutor.Create<bool> (this.Execute);
 		}
 
-		private void Execute()
+		private void Execute(bool dummy)
 		{
+			AiderSubscriptionEntity.Create (this.BusinessContext, this.Entity);
 			AiderSubscriptionRefusalEntity.Delete (this.BusinessContext, this.Entity);
 		}
 	}
