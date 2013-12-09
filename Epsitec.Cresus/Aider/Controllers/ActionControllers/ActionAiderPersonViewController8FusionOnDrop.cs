@@ -109,12 +109,16 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				var p1	= this.Entity;
 				var p2  = this.AdditionalEntity.Person;
 
+				var contactKey = businessContext.DataContext.GetNormalizedEntityKey (p2.MainContact);
+
 				if (AiderPersonEntity.MergePersons (businessContext, p1, p2))
 				{
-					//Confirm by removing from bag
-					var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-					var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (p2.MainContact).Value.ToString ().Replace ('/', '-');
-					EntityBagManager.GetCurrentEntityBagManager ().RemoveFromBag (aiderUser.LoginName, id, When.Now);
+					//	Confirm by removing from bag
+					
+					var contactKeyId = contactKey.Value.ToString ().Replace ('/', '-');
+					var loginName    = AiderUserManager.Current.AuthenticatedUser.LoginName;
+
+					EntityBagManager.GetCurrentEntityBagManager ().RemoveFromBag (loginName, contactKeyId, When.Now);
 				}
 			}
 		}
