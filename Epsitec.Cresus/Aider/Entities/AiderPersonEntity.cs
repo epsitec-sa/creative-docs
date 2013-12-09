@@ -264,6 +264,79 @@ namespace Epsitec.Aider.Entities
 			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, households);
 		}
 
+		private static void Swap(ref AiderPersonEntity a, ref AiderPersonEntity b)
+		{
+			var swap = b;
+
+			b = a;
+			a = swap;
+		}
+
+		private static void AddMergeSystemComment(AiderPersonEntity officialPerson)
+		{
+			var user = Epsitec.Cresus.Core.Business.UserManagement.UserManager.Current.AuthenticatedUser;
+			var name = user.IsNull () ? "le système" : user.DisplayName;
+			
+			AiderCommentEntity.CombineSystemComments (officialPerson, string.Format ("Fusion par {0} le {1}", name, System.DateTime.Now.ToShortDateString ()));
+		}
+
+		private static void MergeContacts(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
+		{
+			//	Migrate contacts...
+
+			var household     = officialPerson.Households.FirstOrDefault ();
+			var otherContacts = otherPerson.Contacts.ToList ();
+
+			foreach (var contact in otherContacts)
+			{
+				if (contact.Household.IsNull ())
+				{
+					officialPerson.AddContactInternal (contact);
+					otherPerson.RemoveContactInternal (contact);
+					contact.Person = officialPerson;
+				}
+				else
+				{
+					//	Group participations have been taken care of, but the changes have not yet
+					//	been persisted; AiderContactEntity.Delete may not delete the participations
+					//	or else, the reassigned participations would be deleted...
+					
+					AiderContactEntity.Delete (businessContext, contact, deleteParticipations: false);
+				}
+			}
+		}
+		
+		private static void MergeGroupParticipations(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
+		{
+			var officialContact = officialPerson.MainContact;
+			var officialGroups  = new HashSet<AiderGroupEntity> (officialPerson.Groups.Select (x => x.Group));
+
+			var participationsToReassign = otherPerson.Groups.Where (g => !officialGroups.Contains (g.Group)).ToList ();
+			var duplicateParticipations  = otherPerson.Groups.Where (g => officialGroups.Contains (g.Group)).ToList ();
+
+			//	Migrate groups to the 'official' person by re-affecting the participations from the
+			//	other person:
+
+			foreach (var group in participationsToReassign)
+			{
+				officialPerson.AddParticipationInternal (group);
+				otherPerson.RemoveParticipationInternal (group);
+
+				group.Contact = officialContact;
+				group.Person  = officialPerson;
+
+//				var participationData = new ParticipationData (officialPerson);
+//				AiderGroupParticipantEntity.StartParticipation (businessContext, group.Group, participationData, group.StartDate, FormattedText.FromSimpleText ("Fusion"));
+			}
+
+			foreach (var group in duplicateParticipations)
+			{
+				otherPerson.RemoveParticipationInternal (group);
+				
+				businessContext.DeleteEntity (group);
+			}
+		}
+
 		/// <summary>
 		/// Merges two persons. The official person will be the one which will be kept;
 		/// the other person will get deleted. Move as much information from the 'other'
@@ -291,61 +364,30 @@ namespace Epsitec.Aider.Entities
 
 			if (otherPerson.eCH_Person.DataSource == Enumerations.DataSource.Government)
 			{
-				var swap = otherPerson;
-				
-				otherPerson    = officialPerson;
-				officialPerson = swap;
+				AiderPersonEntity.Swap (ref officialPerson, ref otherPerson);
 			}
 
-			//	Now, we can start...
-
-			var officialContact = officialPerson.MainContact;
-			var officialGroups  = new HashSet<AiderGroupEntity> (officialPerson.Groups.Select (x => x.Group));
-
-			var otherGroupsAdd = otherPerson.Groups.Where (g => officialGroups.Contains (g.Group) == false).ToList ();
-			var otherContacts  = otherPerson.Contacts.ToList ();
-
-			//	Migrate groups to the 'official' person by re-affecting the participations...
-
-			foreach (var group in otherGroupsAdd)
-			{
-				officialPerson.AddParticipationInternal (group);
-				otherPerson.RemoveParticipationInternal (group);
-
-				group.Contact = officialContact;
-				group.Person  = officialPerson;
-
-				var participationData = new ParticipationData (officialPerson);
-				AiderGroupParticipantEntity.StartParticipation (businessContext, group.Group, participationData, group.StartDate, FormattedText.FromSimpleText ("Fusion"));				
-			}
-
-			//	Migrate contacts...
-
-			foreach (var contact in otherContacts)
-			{
-				officialPerson.AddContactInternal (contact);
-				otherPerson.RemoveContactInternal (contact);
-
-				contact.Person = officialPerson;
-			}
-
+			AiderPersonEntity.MergeSubscriptions (businessContext, officialPerson, otherPerson);
+			AiderPersonEntity.MergeGroupParticipations (businessContext, officialPerson, otherPerson);
+			AiderPersonEntity.MergeContacts (businessContext, officialPerson, otherPerson);
 			AiderCommentEntity.CombineComments (officialPerson, otherPerson.Comment.Text.ToSimpleText ());
 			AiderCommentEntity.CombineSystemComments (officialPerson, otherPerson.Comment.SystemText);
-			
-			//Check if the comment must be affected to the current user or to an dataquality job
-			if (Epsitec.Cresus.Core.Business.UserManagement.UserManager.Current.AuthenticatedUser.IsNotNull ())
-			{
-				AiderCommentEntity.CombineSystemComments (officialPerson, "Fusion par " + Epsitec.Cresus.Core.Business.UserManagement.UserManager.Current.AuthenticatedUser.DisplayName + " le " + System.DateTime.Now.ToShortDateString ());
-			}
-			else
-			{
-				AiderCommentEntity.CombineSystemComments (officialPerson, "Fusionné automatiquement par le système le " + System.DateTime.Now.ToShortDateString ());
-			}
-
+			AiderPersonEntity.AddMergeSystemComment (officialPerson);
 			AiderContactEntity.DeleteDuplicateContacts (businessContext, officialPerson.Contacts.ToList ());
 			AiderPersonEntity.Delete (businessContext, otherPerson);
 
 			return true;
+		}
+
+		private static void MergeSubscriptions(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
+		{
+			var official = AiderSubscriptionEntity.FindSubscriptions (businessContext, officialPerson).ToList ();
+			var other    = AiderSubscriptionEntity.FindSubscriptions (businessContext, otherPerson).ToList ();
+
+			foreach (var subscription in other)
+			{
+				AiderSubscriptionEntity.Delete (businessContext, subscription);
+			}
 		}
 		
 		public static void Delete(BusinessContext businessContext, AiderPersonEntity person)

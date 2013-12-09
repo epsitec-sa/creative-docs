@@ -315,7 +315,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public static void Delete(BusinessContext businessContext, AiderContactEntity contact)
+		public static void Delete(BusinessContext businessContext, AiderContactEntity contact, bool deleteParticipations = true)
 		{
 			if (contact.ContactType == ContactType.PersonAddress)
 			{
@@ -340,7 +340,10 @@ namespace Epsitec.Aider.Entities
 				legalPerson.RemoveContactInternal (contact);
 			}
 
-			AiderContactEntity.DeleteParticipations (businessContext, contact);
+			if (deleteParticipations)
+			{
+				AiderContactEntity.DeleteParticipations (businessContext, contact);
+			}
 			
 			businessContext.DeleteEntity (contact);
 		}
