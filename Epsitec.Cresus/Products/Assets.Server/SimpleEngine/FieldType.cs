@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		ComputedAmount,
 		Int,
 		Date,
-		GuidGroup,
-		GuidPerson,
-		GuidRatio,
+		GuidGroup,		// Guid d'un groupe
+		GuidPerson,		// Guid d'une personne
+		GuidRatio,		// couple Guid + Ratio (decimal)
 	}
 }

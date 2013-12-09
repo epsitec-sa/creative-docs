@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				oImmob.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o0.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Immobilisations"));
 			}
 
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o1.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, oImmob.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, oImmob.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Bâtiments"));
 			}
 
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o11.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o1.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o1.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Immeubles"));
 			}
 
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o12.AddEvent (e);
 				e.AddProperty (new DataStringProperty  (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty    (ObjectField.Parent,      o1.Guid));
+				e.AddProperty (new DataGuidProperty    (ObjectField.GroupParent,      o1.Guid));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Usines"));
 			}
 
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o13.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,      o1.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,      o1.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,         "Entrepôts"));
 			}
 
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o2.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,      oImmob.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,      oImmob.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,         "Véhicules"));
 			}
 
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o21.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,      o2.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,      o2.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,         "Camions"));
 			}
 
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o22.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,      o2.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,      o2.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,         "Camionnettes"));
 			}
 
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o23.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,      o2.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,      o2.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,         "Voitures"));
 			}
 
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o3.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o0.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Secteurs"));
 			}
 
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o31.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o3.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o3.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Nord"));
 			}
 
@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o32.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o3.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o3.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Sud"));
 			}
 
@@ -293,7 +293,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o33.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o3.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o3.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Est"));
 			}
 
@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o34.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o3.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o3.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Ouest"));
 			}
 
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o4.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o0.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Centres de frais"));
 			}
 
@@ -325,7 +325,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o41.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o4.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o4.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Atelier"));
 			}
 
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o42.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o4.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o4.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Bureaux"));
 			}
 
@@ -345,7 +345,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o43.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o4.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o4.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Distribution"));
 			}
 
@@ -355,7 +355,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o44.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o4.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o4.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Stockage"));
 			}
 
@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o45.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o4.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o4.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Transports"));
 			}
 
@@ -377,7 +377,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o5.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o0.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Responsables"));
 			}
 
@@ -387,7 +387,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o51.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Simone"));
 			}
 
@@ -397,7 +397,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o52.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Georges-André"));
 			}
 
@@ -407,7 +407,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o53.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Béatrice"));
 			}
 
@@ -417,7 +417,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o54.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Dominique"));
 			}
 
@@ -427,7 +427,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o55.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Joël"));
 			}
 
@@ -437,7 +437,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o56.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Paul-Henry"));
 			}
 
@@ -447,7 +447,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o57.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent,  o5.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Jean-Daniel"));
 			}
 
@@ -457,7 +457,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				o58.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty (ObjectField.Parent, o5.Guid));
+				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o5.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Sandra"));
 			}
 		}

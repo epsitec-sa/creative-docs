@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			if (!parent.IsEmpty)
 			{
-				e.AddProperty (new DataGuidProperty (ObjectField.Parent, parent));
+				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, parent));
 			}
 
 			e.AddProperty (new DataStringProperty (ObjectField.Nom, name));
@@ -277,7 +277,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.OneShotDateOpération:
 					return FieldType.Date;
 
-				case ObjectField.Parent:
+				case ObjectField.GroupParent:
 					return FieldType.GuidGroup;
 
 				case ObjectField.Personne1:

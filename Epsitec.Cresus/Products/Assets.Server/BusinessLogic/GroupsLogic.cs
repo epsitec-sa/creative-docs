@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 
 				list.Insert (0, ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom));
-				guid = ObjectCalculator.GetObjectPropertyGuid (obj, null, ObjectField.Parent);
+				guid = ObjectCalculator.GetObjectPropertyGuid (obj, null, ObjectField.GroupParent);
 			}
 
 			if (list.Count > 1)

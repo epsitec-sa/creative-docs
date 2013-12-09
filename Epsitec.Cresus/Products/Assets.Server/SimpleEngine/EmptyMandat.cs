@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (start, EventType.Entrée);
 				oImmob.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (EmptyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataGuidProperty   (ObjectField.Parent, o0.Guid));
+				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o0.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Immobilisations"));
 			}
 

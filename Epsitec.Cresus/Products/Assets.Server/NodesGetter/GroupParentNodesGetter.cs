@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 		{
 			if (obj != null)
 			{
-				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.timestamp, ObjectField.Parent) as DataGuidProperty;
+				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.timestamp, ObjectField.GroupParent) as DataGuidProperty;
 				if (p != null)
 				{
 					return p.Value;

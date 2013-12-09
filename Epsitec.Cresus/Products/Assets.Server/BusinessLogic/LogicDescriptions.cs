@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ObjectField.OneShotCommentaire;
 				yield return ObjectField.OneShotDocuments;
 
-				yield return ObjectField.Parent;
+				yield return ObjectField.GroupParent;
 				yield return ObjectField.Numéro;
 				yield return ObjectField.Nom;
 				yield return ObjectField.Description;

@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.OneShotDocuments:
 					return "Documents associés";
 
-				case ObjectField.Parent:
+				case ObjectField.GroupParent:
 					return "Dans le groupe";
 
 				case ObjectField.Numéro:
