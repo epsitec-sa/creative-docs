@@ -66,6 +66,7 @@
     <Compile Include="BusinessLogic\TimelinesArrayLogic.cs" />
     <Compile Include="DataFillers\AbstractTreeTableFiller.cs" />
     <Compile Include="DataFillers\CategoriesTreeTableFiller.cs" />
+    <Compile Include="DataFillers\PersonsTreeTableFiller.cs" />
     <Compile Include="DataFillers\ErrorsTreeTableFiller.cs" />
     <Compile Include="DataFillers\SingleCategoriesTreeTableFiller.cs" />
     <Compile Include="DataFillers\SingleGroupsTreeTableFiller.cs" />

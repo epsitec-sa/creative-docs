@@ -82,6 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonObjects       = this.CreateViewTypeButton (ViewType.Objects,    ToolbarCommand.ViewTypeObjects,    "View.Objects",          "Objets d'immobilisation");
 			this.buttonCategories    = this.CreateViewTypeButton (ViewType.Categories, ToolbarCommand.ViewTypeCategories, "View.Categories",       "Catégories d'immobilisations");
 			this.buttonGroups        = this.CreateViewTypeButton (ViewType.Groups,     ToolbarCommand.ViewTypeGroups,     "View.Groups",           "Groupes");
+			this.buttonPersons       = this.CreateViewTypeButton (ViewType.Persons,    ToolbarCommand.ViewTypePersons,    "View.Persons",          "Personnes");
 			this.buttonEvents        = this.CreateViewTypeButton (ViewType.Events,     ToolbarCommand.ViewTypeEvents,     "View.Events",           "Evénements");
 			this.buttonReports       = this.CreateViewTypeButton (ViewType.Reports,    ToolbarCommand.ViewTypeReports,    "View.Reports",          "Rapports et statistiques");
 			this.buttonSettings      = this.CreateViewTypeButton (ViewType.Settings,   ToolbarCommand.ViewTypeSettings,   "View.Settings",         "Réglages");
@@ -143,6 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetCommandActivate (ToolbarCommand.ViewTypeObjects,    this.viewType == ViewType.Objects   );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeCategories, this.viewType == ViewType.Categories);
 			this.SetCommandActivate (ToolbarCommand.ViewTypeGroups,     this.viewType == ViewType.Groups    );
+			this.SetCommandActivate (ToolbarCommand.ViewTypePersons,    this.viewType == ViewType.Persons   );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeEvents,     this.viewType == ViewType.Events    );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeReports,    this.viewType == ViewType.Reports   );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeSettings,   this.viewType == ViewType.Settings  );
@@ -196,6 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonObjects;
 		private IconButton						buttonCategories;
 		private IconButton						buttonGroups;
+		private IconButton						buttonPersons;
 		private IconButton						buttonEvents;
 		private IconButton						buttonReports;
 		private IconButton						buttonSettings;

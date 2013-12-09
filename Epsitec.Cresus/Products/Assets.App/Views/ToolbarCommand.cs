@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		ViewTypeObjects,
 		ViewTypeCategories,
 		ViewTypeGroups,
+		ViewTypePersons,
 		ViewTypeEvents,
 		ViewTypeReports,
 		ViewTypeSettings,

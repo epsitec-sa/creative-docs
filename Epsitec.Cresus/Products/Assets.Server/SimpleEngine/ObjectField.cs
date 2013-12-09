@@ -30,6 +30,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Périodicité,
 		ValeurRésiduelle,
 
+		Titre,
+		Prénom,
+		Entreprise,
+		Adresse,
+		Npa,
+		Ville,
+		Pays,
+		Téléphone1,
+		Téléphone2,
+		Téléphone3,
+		Mail,
+
 		Compte1,
 		Compte2,
 		Compte3,

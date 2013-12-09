@@ -187,6 +187,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case BaseType.Groups:
 						return EditionObjectPageType.Group;
 
+					case BaseType.Persons:
+						return EditionObjectPageType.Person;
+
 					default:
 						var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
 
@@ -222,6 +225,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case BaseType.Groups:
 					return ObjectEditor.GetGroupAvailablePages (hasEvent, type);
+
+				case BaseType.Persons:
+					return ObjectEditor.GetPersonAvailablePages (hasEvent, type);
 
 				default:
 					return null;
@@ -275,6 +281,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
 			yield return EditionObjectPageType.Group;
+		}
+
+		private static IEnumerable<EditionObjectPageType> GetPersonAvailablePages(bool hasEvent, EventType type)
+		{
+			//	Retourne les pages autorisées pour un type d'événement donné.
+			yield return EditionObjectPageType.Person;
 		}
 
 

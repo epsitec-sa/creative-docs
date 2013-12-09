@@ -10,14 +10,14 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class GroupsView : AbstractView
+	public class PersonsView : AbstractView
 	{
-		public GroupsView(DataAccessor accessor, MainToolbar toolbar)
+		public PersonsView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
-			this.baseType = BaseType.Groups;
+			this.baseType = BaseType.Persons;
 
-			this.listController = new GroupsToolbarTreeTableController (this.accessor);
+			this.listController = new PersonsToolbarTreeTableController (this.accessor);
 			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, isTimeless: true);
 
 			this.ignoreChanges = new SafeCounter ();
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly GroupsToolbarTreeTableController	listController;
+		private readonly PersonsToolbarTreeTableController	listController;
 		private readonly ObjectEditor						objectEditor;
 		private readonly SafeCounter						ignoreChanges;
 

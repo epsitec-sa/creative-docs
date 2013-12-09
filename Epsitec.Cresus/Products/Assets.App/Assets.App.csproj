@@ -85,6 +85,7 @@
     <Compile Include="Popups\CategoriesPopup.cs" />
     <Compile Include="Popups\AmortissementsPopup.cs" />
     <Compile Include="Popups\CalendarPopup.cs" />
+    <Compile Include="Popups\CreatePersonPopup.cs" />
     <Compile Include="Popups\ErrorsPopup.cs" />
     <Compile Include="Popups\CreateCategoryPopup.cs" />
     <Compile Include="Popups\CreateGroupPopup.cs" />
@@ -111,6 +112,9 @@
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\CategoriesToolbarTreeTableController.cs" />
     <Compile Include="Views\CategoriesView.cs" />
+    <Compile Include="Views\PersonsToolbarTreeTableController.cs" />
+    <Compile Include="Views\EditorPagePerson.cs" />
+    <Compile Include="Views\PersonsView.cs" />
     <Compile Include="Views\GuidRatioFieldsController.cs" />
     <Compile Include="Views\GuidRatioFieldController.cs" />
     <Compile Include="Views\DateController.cs" />
@@ -293,6 +297,7 @@
     <EmbeddedResource Include="Images\Date.Calendar.icon" />
     <EmbeddedResource Include="Images\Date.Minus.icon" />
     <EmbeddedResource Include="Images\Date.Plus.icon" />
+    <EmbeddedResource Include="Images\View.Persons.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

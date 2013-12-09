@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Objects,
 		Categories,
 		Groups,
+		Persons,
 		Events,
 		Reports,
 		Settings,

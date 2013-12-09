@@ -116,6 +116,39 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.GroupGuidRatio+9:
 					return "Dans le groupe";
 
+				case ObjectField.Titre:
+					return "Titre";
+
+				case ObjectField.Entreprise:
+					return "Entreprise";
+
+				case ObjectField.Prénom:
+					return "Prénom";
+
+				case ObjectField.Adresse:
+					return "Adresse";
+
+				case ObjectField.Npa:
+					return "NPA";
+
+				case ObjectField.Ville:
+					return "Ville";
+
+				case ObjectField.Pays:
+					return "Pays";
+
+				case ObjectField.Téléphone1:
+					return "Téléphone prof.";
+
+				case ObjectField.Téléphone2:
+					return "Téléphone privé";
+
+				case ObjectField.Téléphone3:
+					return "Téléphone portable";
+
+				case ObjectField.Mail:
+					return "Adresse e-mail";
+
 				default:
 					return null;
 			}

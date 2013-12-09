@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			var mandat = new DataMandat ("Exemple", new System.DateTime (2000, 1, 1), new System.DateTime (2050, 12, 31));
 
+			DummyMandat.AddPersons (mandat);
 			DummyMandat.AddCategories (mandat);
 			DummyMandat.AddGroups (mandat);
 			DummyMandat.AddObjects (mandat);
@@ -578,6 +579,235 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.ValeurComptable, new ComputedAmount (4600.0m, 2100.0m, true)));
+				}
+			}
+		}
+
+		private static void AddPersons(DataMandat mandat)
+		{
+			var categories = mandat.GetData (BaseType.Persons);
+
+			var start  = new Timestamp (new System.DateTime (2013, 1, 1), 0);
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Monsieur"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Daniel"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Roux"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Epsitec SA"));
+					e.AddProperty (new DataStringProperty (ObjectField.Adresse, "Crésentine 33"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "1023"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Crissier"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Téléphone1, "021 671 05 92"));
+					e.AddProperty (new DataStringProperty (ObjectField.Téléphone2, "021 671 05 91"));
+					e.AddProperty (new DataStringProperty (ObjectField.Téléphone3, "078 671 95 87"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "roux@epsitec.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Monsieur"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Pierre"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Arnaud"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Epsitec SA"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "1400"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Yverdon-les-Bains"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "arnaud@epsitec.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Madame"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Yédah"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Adjao"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Epsitec SA"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "1400"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Yverdon-les-Bains"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "adjao@epsitec.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Monsieur"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "David"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Besuchet"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Epsitec SA"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "besuchet@epsitec.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Madame"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Sandra"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Nicolet"));
+					e.AddProperty (new DataStringProperty (ObjectField.Adresse, "Ch. du Levant 12"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "1002"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Lausanne"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "snicolet@bluewin.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Monsieur"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Jean-Paul"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "André"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Mecano SA"));
+					e.AddProperty (new DataStringProperty (ObjectField.Adresse, "ZI. en Budron E<br/>Case postale 18"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "1025"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Le Mont-sur-Lausanne"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Téléphone3, "079 520 44 12"));
+					e.AddProperty (new DataStringProperty (ObjectField.Description, "Réparateur officiel des stores Flexilux depuis 2008"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Madame"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Josianne"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Schmidt"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Mathematika sàrl"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "josianne.schmidt@mathematika.com"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Madame"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Christine"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Mercier"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Mathematika sàrl"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Téléphone3, "078 840 12 13"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "mercier.schmidt@mathematika.com"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Monsieur"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Frédérique"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Bonnard"));
+					e.AddProperty (new DataStringProperty (ObjectField.Adresse, "Ch. des Lys 45"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "1009"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Prilly"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Monsieur"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Dubosson"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Fixnet AG"));
+					e.AddProperty (new DataStringProperty (ObjectField.Adresse, "Market Platz 143"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "8003"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Zürich"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "dubosson@fixnet.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Monsieur"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Hans"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Klein"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Fixnet AG"));
+					e.AddProperty (new DataStringProperty (ObjectField.Adresse, "Market Platz 143"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "8003"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Zürich"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "klein@fixnet.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Madame"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Pauline"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Gardaz"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Fixnet AG"));
+					e.AddProperty (new DataStringProperty (ObjectField.Adresse, "Market Platz 143"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "8003"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Zürich"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "gardaz@fixnet.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Madame"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Marie-José"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Frutiger"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "1092"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Belmont"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Téléphone2, "021 682 40 61"));
 				}
 			}
 		}

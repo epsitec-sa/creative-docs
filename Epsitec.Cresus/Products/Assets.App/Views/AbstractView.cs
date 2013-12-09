@@ -184,6 +184,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.Groups:
 					return new GroupsView (accessor, toolbar);
 
+				case ViewType.Persons:
+					return new PersonsView (accessor, toolbar);
+
 				case ViewType.Events:
 					//return new EventsView (accessor, toolbar);
 

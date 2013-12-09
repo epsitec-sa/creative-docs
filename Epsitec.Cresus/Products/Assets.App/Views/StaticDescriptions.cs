@@ -36,6 +36,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case EditionObjectPageType.Group:
 					return "Définitions du groupe";
 
+				case EditionObjectPageType.Person:
+					return "Définitions de la personne";
+
 				default:
 					return null;
 			}
