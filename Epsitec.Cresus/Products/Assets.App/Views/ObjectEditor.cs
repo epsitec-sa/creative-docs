@@ -263,6 +263,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					default:  // accès à toutes les pages
 						yield return EditionObjectPageType.Object;
+						yield return EditionObjectPageType.Persons;
 						yield return EditionObjectPageType.Groups;
 						yield return EditionObjectPageType.Values;
 						yield return EditionObjectPageType.Amortissements;

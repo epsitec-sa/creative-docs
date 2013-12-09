@@ -85,6 +85,7 @@
     <Compile Include="Popups\CategoriesPopup.cs" />
     <Compile Include="Popups\AmortissementsPopup.cs" />
     <Compile Include="Popups\CalendarPopup.cs" />
+    <Compile Include="Popups\PersonsPopup.cs" />
     <Compile Include="Popups\CreatePersonPopup.cs" />
     <Compile Include="Popups\ErrorsPopup.cs" />
     <Compile Include="Popups\CreateCategoryPopup.cs" />
@@ -112,6 +113,8 @@
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\CategoriesToolbarTreeTableController.cs" />
     <Compile Include="Views\CategoriesView.cs" />
+    <Compile Include="Views\PersonGuidFieldController.cs" />
+    <Compile Include="Views\EditorPagePersons.cs" />
     <Compile Include="Views\PersonsToolbarTreeTableController.cs" />
     <Compile Include="Views\EditorPagePerson.cs" />
     <Compile Include="Views\PersonsView.cs" />
@@ -122,7 +125,7 @@
     <Compile Include="Views\GroupsView.cs" />
     <Compile Include="Views\EditorPageGroups.cs" />
     <Compile Include="Views\StateAtController.cs" />
-    <Compile Include="Views\GuidFieldController.cs" />
+    <Compile Include="Views\GroupGuidFieldController.cs" />
     <Compile Include="Views\TimelinesArrayController.cs" />
     <Compile Include="Views\TimelinesToolbar.cs" />
     <Compile Include="Views\ViewMode.cs" />

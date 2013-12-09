@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateGuidController   (parent, ObjectField.Parent);
-			this.CreateStringController (parent, ObjectField.Nom);
-			this.CreateStringController (parent, ObjectField.Description, lineCount: 5);
+			this.CreateGroupGuidController (parent, ObjectField.Parent);
+			this.CreateStringController    (parent, ObjectField.Nom);
+			this.CreateStringController    (parent, ObjectField.Description, lineCount: 5);
 		}
 	}
 }

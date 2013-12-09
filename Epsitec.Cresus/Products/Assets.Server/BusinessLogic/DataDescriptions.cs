@@ -68,6 +68,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.NuméroSérie:
 					return "Numéro de série";
 
+				case ObjectField.Personne1:
+					return "Responsable";
+
+				case ObjectField.Personne2:
+					return "Fournisseur";
+
+				case ObjectField.Personne3:
+					return "Maintenance";
+
+				case ObjectField.Personne4:
+					return "Concierge";
+
+				case ObjectField.Personne5:
+					return "Conseiller";
+
 				case ObjectField.TauxAmortissement:
 					return "Taux";
 

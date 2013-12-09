@@ -186,6 +186,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ObjectField.Maintenance;
 				yield return ObjectField.Couleur;
 				yield return ObjectField.NuméroSérie;
+				yield return ObjectField.Personne1;
+				yield return ObjectField.Personne2;
+				yield return ObjectField.Personne3;
+				yield return ObjectField.Personne4;
+				yield return ObjectField.Personne5;
 
 				yield return ObjectField.GroupGuidRatio+0;
 				yield return ObjectField.GroupGuidRatio+1;

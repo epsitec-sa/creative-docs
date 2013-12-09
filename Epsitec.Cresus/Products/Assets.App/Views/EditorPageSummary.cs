@@ -147,6 +147,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Compte8:
 					return EditionObjectPageType.Amortissements;
 
+				case ObjectField.Personne1:
+				case ObjectField.Personne2:
+				case ObjectField.Personne3:
+				case ObjectField.Personne4:
+				case ObjectField.Personne5:
+					return EditionObjectPageType.Persons;
+
 				case ObjectField.GroupGuidRatio+0:
 				case ObjectField.GroupGuidRatio+1:
 				case ObjectField.GroupGuidRatio+2:
@@ -206,6 +213,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					new ObjectSummaryControllerTile (ObjectField.Maintenance),
 					new ObjectSummaryControllerTile (ObjectField.Couleur),
 					new ObjectSummaryControllerTile (ObjectField.NuméroSérie),
+
+					ObjectSummaryControllerTile.Empty,
+
+					new ObjectSummaryControllerTile ("Personnes"),
+					new ObjectSummaryControllerTile (ObjectField.Personne1),
+					new ObjectSummaryControllerTile (ObjectField.Personne2),
+					new ObjectSummaryControllerTile (ObjectField.Personne3),
+					new ObjectSummaryControllerTile (ObjectField.Personne4),
+					new ObjectSummaryControllerTile (ObjectField.Personne5),
 				};
 				list.Add (c1);
 

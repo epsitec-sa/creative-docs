@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class GuidFieldController : AbstractFieldController
+	public class GroupGuidFieldController : AbstractFieldController
 	{
 		public DataAccessor						Accessor;
 

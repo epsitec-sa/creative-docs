@@ -24,6 +24,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Couleur,
 		NuméroSérie,
 
+		Personne1,
+		Personne2,
+		Personne3,
+		Personne4,
+		Personne5,
+
 		NomCatégorie,
 		TauxAmortissement,
 		TypeAmortissement,

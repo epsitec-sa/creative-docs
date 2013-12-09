@@ -21,6 +21,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case EditionObjectPageType.Object:
 					return "Général";
 
+				case EditionObjectPageType.Persons:
+					return "Personnes";
+
 				case EditionObjectPageType.Values:
 					return "Valeurs";
 

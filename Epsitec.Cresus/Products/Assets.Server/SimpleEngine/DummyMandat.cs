@@ -49,6 +49,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.ValeurComptable,     new ComputedAmount (3000000.0m)));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (2500000.0m)));
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Paul"));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Personne1, DummyMandat.GetPerson (mandat, "Arnaud")));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Personne2, DummyMandat.GetPerson (mandat, "Schmidt")));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Personne4, DummyMandat.GetPerson (mandat, "Bonnard")));
 					DummyMandat.AddAmortissement (mandat, "Bureaux", e);
 				}
 
@@ -81,6 +84,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.ValeurComptable,     new ComputedAmount (4550000.0m)));
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (6000000.0m)));
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Paul"));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Personne1, DummyMandat.GetPerson (mandat, "Arnaud")));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Personne3, DummyMandat.GetPerson (mandat, "Mercier")));
 					DummyMandat.AddAmortissement (mandat, "Bureaux", e);
 				}
 
@@ -112,6 +117,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.ValeurComptable,     new ComputedAmount (2100000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (3000000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Sandra"));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne1, DummyMandat.GetPerson (mandat, "Frutiger")));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne5, DummyMandat.GetPerson (mandat, "Klein")));
 				DummyMandat.AddAmortissement (mandat, "Bureaux", e);
 			}
 
@@ -146,6 +153,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.ValeurComptable,     new ComputedAmount (8000000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (9500000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "René"));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne1, DummyMandat.GetPerson (mandat, "Arnaud")));
 				DummyMandat.AddAmortissement (mandat, "Usines", e);
 			}
 
@@ -194,6 +202,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.ValeurComptable,     new ComputedAmount (5320000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (5000000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Paul"));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne1, DummyMandat.GetPerson (mandat, "Gardaz")));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne4, DummyMandat.GetPerson (mandat, "André")));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne5, DummyMandat.GetPerson (mandat, "André")));
 				DummyMandat.AddAmortissement (mandat, "Usines", e);
 			}
 
@@ -722,7 +733,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Mathematika sàrl"));
 					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
 					e.AddProperty (new DataStringProperty (ObjectField.Téléphone3, "078 840 12 13"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "mercier.schmidt@mathematika.com"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "christine.mercier@mathematika.com"));
 				}
 			}
 
@@ -1365,6 +1376,23 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty  (ObjectField.Compte7,           c7));
 				e.AddProperty (new DataStringProperty  (ObjectField.Compte8,           c8));
 			}
+		}
+
+		private static Guid GetPerson(DataMandat mandat, string text)
+		{
+			var list = mandat.GetData (BaseType.Persons);
+
+			foreach (var person in list)
+			{
+				var nom = ObjectCalculator.GetObjectPropertyString (person, null, ObjectField.Nom);
+				if (nom == text)
+				{
+					return person.Guid;
+				}
+			}
+
+			System.Diagnostics.Debug.Fail (string.Format ("La personne {0} n'existe pas !", text));
+			return Guid.Empty;
 		}
 
 		private static DataObject GetCategory(DataMandat mandat, string text)

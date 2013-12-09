@@ -95,9 +95,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.Value         = this.accessor.EditionAccessor.GetFieldDate (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
-				else if (controller is GuidFieldController)
+				else if (controller is GroupGuidFieldController)
 				{
-					var c = controller as GuidFieldController;
+					var c = controller as GroupGuidFieldController;
 
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
@@ -137,9 +137,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected void CreateGuidController(Widget parent, ObjectField field)
+		protected void CreateGroupGuidController(Widget parent, ObjectField field)
 		{
-			var controller = new GuidFieldController
+			var controller = new GroupGuidFieldController
+			{
+				Accessor  = this.accessor,
+				Field     = field,
+				Label     = DataDescriptions.GetObjectFieldDescription (field),
+				EditWidth = 380,
+				TabIndex  = ++this.tabIndex,
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (of);
+				controller.PropertyState = this.GetPropertyState (of);
+
+				this.OnValueEdited (of);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.ShowHistoryPopup (target, of);
+			};
+
+			this.fieldControllers.Add (field, controller);
+		}
+
+		protected void CreatePersonGuidController(Widget parent, ObjectField field)
+		{
+			var controller = new PersonGuidFieldController
 			{
 				Accessor  = this.accessor,
 				Field     = field,
@@ -185,37 +216,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (ObjectField.GroupGuidRatio, controller);
-		}
-
-		protected void CreateGuidRatioController(Widget parent, ObjectField field)
-		{
-			var controller = new GuidRatioFieldController
-			{
-				Accessor  = this.accessor,
-				Field     = field,
-				Label     = DataDescriptions.GetObjectFieldDescription (field),
-				EditWidth = 380,
-				TabIndex  = ++this.tabIndex,
-			};
-
-			controller.CreateUI (parent);
-
-			controller.ValueEdited += delegate (object sender, ObjectField of)
-			{
-				this.accessor.EditionAccessor.SetField (of, controller.Value);
-
-				controller.Value         = this.accessor.EditionAccessor.GetFieldGuidRatio (of);
-				controller.PropertyState = this.GetPropertyState (of);
-
-				this.OnValueEdited (of);
-			};
-
-			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
-			{
-				this.ShowHistoryPopup (target, of);
-			};
-
-			this.fieldControllers.Add (field, controller);
 		}
 
 		protected void CreateStringController(Widget parent, ObjectField field, int editWidth = 380, int lineCount = 1)
@@ -412,6 +412,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case EditionObjectPageType.Object:
 					return new EditorPageObject (accessor, baseType, isTimeless: false);
+
+				case EditionObjectPageType.Persons:
+					return new EditorPagePersons (accessor, baseType, isTimeless: true);
 
 				case EditionObjectPageType.Values:
 					return new EditorPageValues (accessor, baseType, isTimeless: false);
