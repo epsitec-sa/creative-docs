@@ -103,6 +103,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
+				else if (controller is PersonGuidFieldController)
+				{
+					var c = controller as PersonGuidFieldController;
+
+					c.EventType     = this.eventType;
+					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
+					c.PropertyState = this.GetPropertyState (field);
+				}
 				else if (controller is GuidRatioFieldController)
 				{
 					var c = controller as GuidRatioFieldController;
@@ -414,7 +422,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return new EditorPageObject (accessor, baseType, isTimeless: false);
 
 				case EditionObjectPageType.Persons:
-					return new EditorPagePersons (accessor, baseType, isTimeless: true);
+					return new EditorPagePersons (accessor, baseType, isTimeless: false);
 
 				case EditionObjectPageType.Values:
 					return new EditorPageValues (accessor, baseType, isTimeless: false);

@@ -70,7 +70,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						list.Add (new TreeTableColumnDescription (TreeTableColumnType.DetailedComputedAmount, this.ValueColumnWidth, "Valeur"));
 						break;
 
-					case FieldType.Guid:
+					case FieldType.GuidGroup:
+					case FieldType.GuidPerson:
 						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
 						break;
 
@@ -142,8 +143,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					this.PutComputedAmount (content, firstRow, count, selection);
 					break;
 
-				case FieldType.Guid:
-					this.PutGuid (content, firstRow, count, selection);
+				case FieldType.GuidGroup:
+					this.PutGuidGroup (content, firstRow, count, selection);
+					break;
+
+				case FieldType.GuidPerson:
+					this.PutGuidPerson (content, firstRow, count, selection);
 					break;
 
 				case FieldType.GuidRatio:
@@ -262,7 +267,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			content.Columns.Add (columnItem);
 		}
 
-		private void PutGuid(TreeTableContentItem content, int firstRow, int count, int selection)
+		private void PutGuidGroup(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
 			var columnItem = new TreeTableColumnItem<TreeTableCellString> ();
 
@@ -278,6 +283,29 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var text = GroupsLogic.GetFullName (this.accessor, value);
+				var cell = new TreeTableCellString (true, text, isSelected: (i++ == selection));
+				columnItem.AddRow (cell);
+			}
+
+			content.Columns.Add (columnItem);
+		}
+
+		private void PutGuidPerson(TreeTableContentItem content, int firstRow, int count, int selection)
+		{
+			var columnItem = new TreeTableColumnItem<TreeTableCellString> ();
+
+			int i = 0;
+			foreach (var e in this.GetEvents (firstRow, count))
+			{
+				var value = Guid.Empty;
+
+				var property = e.GetProperty (this.field) as DataGuidProperty;
+				if (property != null)
+				{
+					value = property.Value;
+				}
+
+				var text = PersonsLogic.GetFullName (this.accessor, value);
 				var cell = new TreeTableCellString (true, text, isSelected: (i++ == selection));
 				columnItem.AddRow (cell);
 			}
@@ -348,7 +376,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case FieldType.ComputedAmount:
 					return 170;
 
-				case FieldType.Guid:
+				case FieldType.GuidGroup:
+				case FieldType.GuidPerson:
 					return 300;
 
 				case FieldType.GuidRatio:

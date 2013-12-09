@@ -278,12 +278,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					return FieldType.Date;
 
 				case ObjectField.Parent:
+					return FieldType.GuidGroup;
+
 				case ObjectField.Personne1:
 				case ObjectField.Personne2:
 				case ObjectField.Personne3:
 				case ObjectField.Personne4:
 				case ObjectField.Personne5:
-					return FieldType.Guid;
+					return FieldType.GuidPerson;
 
 				case ObjectField.GroupGuidRatio+0:
 				case ObjectField.GroupGuidRatio+1:

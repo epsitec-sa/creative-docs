@@ -70,12 +70,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						}
 						break;
 
-					case FieldType.Guid:
-						var g = ObjectCalculator.GetObjectPropertyGuid (obj, timestamp, field, false);
-						var t = GroupsLogic.GetShortName (accessor, g);
-						if (!string.IsNullOrEmpty (t))
+					case FieldType.GuidGroup:
+						var gg = ObjectCalculator.GetObjectPropertyGuid (obj, timestamp, field, false);
+						var tg = GroupsLogic.GetShortName (accessor, gg);
+						if (!string.IsNullOrEmpty (tg))
 						{
-							line = t;
+							line = tg;
+						}
+						break;
+
+					case FieldType.GuidPerson:
+						var gp = ObjectCalculator.GetObjectPropertyGuid (obj, timestamp, field, false);
+						var tp = PersonsLogic.GetShortName (accessor, gp);
+						if (!string.IsNullOrEmpty (tp))
+						{
+							line = tp;
 						}
 						break;
 

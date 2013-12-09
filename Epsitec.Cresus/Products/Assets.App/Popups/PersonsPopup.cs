@@ -19,8 +19,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.accessor = accessor;
 
-			this.visibleSelectedRow = -1;
-
 			this.controller = new NavigationTreeTableController ();
 
 			var primary      = this.accessor.GetNodesGetter (BaseType.Persons);
@@ -89,8 +87,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					 - PersonsPopup.headerHeight
 					 - AbstractScroller.DefaultBreadth;
 
-			//	Utilise au maximum les 1/2 de la hauteur.
-			int max = (int) (h*0.5) / PersonsPopup.rowHeight;
+			//	Utilise au maximum les 4/10 de la hauteur.
+			int max = (int) (h*0.4) / PersonsPopup.rowHeight;
 
 			int rows = System.Math.Min (this.nodesGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
@@ -124,7 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private const int headerHeight     = 22;
 		private const int rowHeight        = 18;
-		private const int popupWidth       = 500;
+		private const int popupWidth       = 600;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;

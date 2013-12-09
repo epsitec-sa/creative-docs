@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Tél. prof."));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Tél. privé"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Tél. portable"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "E-mail"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 200, "E-mail"));
 
 				return list.ToArray ();
 			}

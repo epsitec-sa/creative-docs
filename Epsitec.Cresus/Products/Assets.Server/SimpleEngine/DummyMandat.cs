@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.ValeurComptable,     new ComputedAmount (2100000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (3000000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Sandra"));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Personne1, DummyMandat.GetPerson (mandat, "Frutiger")));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne1, DummyMandat.GetPerson (mandat, "André")));
 				e.AddProperty (new DataGuidProperty           (ObjectField.Personne5, DummyMandat.GetPerson (mandat, "Klein")));
 				DummyMandat.AddAmortissement (mandat, "Bureaux", e);
 			}
@@ -203,8 +203,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (5000000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Paul"));
 				e.AddProperty (new DataGuidProperty           (ObjectField.Personne1, DummyMandat.GetPerson (mandat, "Gardaz")));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne3, DummyMandat.GetPerson (mandat, "André")));
 				e.AddProperty (new DataGuidProperty           (ObjectField.Personne4, DummyMandat.GetPerson (mandat, "André")));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Personne5, DummyMandat.GetPerson (mandat, "André")));
 				DummyMandat.AddAmortissement (mandat, "Usines", e);
 			}
 
@@ -256,6 +256,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Jean-François"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Blanc"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "25004-800-65210-45R"));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne3, DummyMandat.GetPerson (mandat, "Frutiger")));
 				DummyMandat.AddAmortissement (mandat, "Camions", e);
 			}
 
@@ -274,6 +275,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Serge"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Rouge"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "25004-800-20087-20X"));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne3, DummyMandat.GetPerson (mandat, "Frutiger")));
 				DummyMandat.AddAmortissement (mandat, "Camions", e);
 			}
 
@@ -292,6 +294,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (75000.0m)));
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Jean-Pierre"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Blanc"));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Personne3, DummyMandat.GetPerson (mandat, "Frutiger")));
 					DummyMandat.AddAmortissement (mandat, "Camions", e);
 				}
 
@@ -318,6 +321,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Olivier"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Jaune/Noir"));
 					e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "T40-56-200-65E4"));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Personne3, DummyMandat.GetPerson (mandat, "Frutiger")));
 					DummyMandat.AddAmortissement (mandat, "Camions", e);
 				}
 
@@ -395,6 +399,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Simon"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Noir"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "D456-0003232-0005"));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne3, DummyMandat.GetPerson (mandat, "Frutiger")));
 				DummyMandat.AddAmortissement (mandat, "Voitures", e);
 			}
 
@@ -429,6 +434,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.ValeurComptable,     new ComputedAmount (8000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.Valeur1,     new ComputedAmount (5000.0m)));
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Dominique"));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne3, DummyMandat.GetPerson (mandat, "Frutiger")));
 				DummyMandat.AddAmortissement (mandat, "Voitures", e);
 			}
 
@@ -446,6 +452,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Denise"));
 				e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Rouge"));
 				e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "456000433434002"));
+				e.AddProperty (new DataGuidProperty           (ObjectField.Personne3, DummyMandat.GetPerson (mandat, "Frutiger")));
 				DummyMandat.AddAmortissement (mandat, "Voitures", e);
 			}
 
@@ -482,6 +489,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Christiane"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Gris"));
 					e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "F40T-500023-40232-30987-M"));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Personne3, DummyMandat.GetPerson (mandat, "Frutiger")));
 					DummyMandat.AddAmortissement (mandat, "Voitures", e);
 				}
 
@@ -545,6 +553,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty         (ObjectField.Maintenance, "Georges"));
 					e.AddProperty (new DataStringProperty         (ObjectField.Couleur,     "Noire"));
 					e.AddProperty (new DataStringProperty         (ObjectField.NuméroSérie, "F30T-340407-52118-40720-R"));
+					e.AddProperty (new DataGuidProperty           (ObjectField.Personne3, DummyMandat.GetPerson (mandat, "Frutiger")));
 					DummyMandat.AddAmortissement (mandat, "Voitures", e);
 				}
 
@@ -812,13 +821,108 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Entrée);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Madame"));
-					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Marie-José"));
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Monsieur"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Marc-Antoine"));
 					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Frutiger"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Garage du Soleil"));
 					e.AddProperty (new DataStringProperty (ObjectField.Npa, "1092"));
 					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Belmont"));
 					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Téléphone2, "021 682 40 61"));
+					e.AddProperty (new DataStringProperty (ObjectField.Téléphone1, "021 682 40 61"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Monsieur"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "François"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Borlandi"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Maxi Store SA"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "1004"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Lausanne"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Téléphone3, "079 905 33 41"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Monsieur"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Ernesto"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Di Magnolia"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "Merlin Transport SA"));
+					e.AddProperty (new DataStringProperty (ObjectField.Adresse, "Place du Tunnel 2"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "1800"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Vevey"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "support@merlin.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Madame"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Françoise"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Diserens"));
+					e.AddProperty (new DataStringProperty (ObjectField.Entreprise, "CHUV"));
+					e.AddProperty (new DataStringProperty (ObjectField.Npa, "1000"));
+					e.AddProperty (new DataStringProperty (ObjectField.Ville, "Lausanne"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "francoise.diserens@chuv.vd.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Madame"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Emilie"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Franco"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "emilie.franco@bluewin.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Madame"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Paulette"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Sigmund"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "paulette.simoulino@bluewin.ch"));
+				}
+			}
+
+			{
+				var o = new DataObject ();
+				categories.Add (o);
+				{
+					var e = new DataEvent (start, EventType.Entrée);
+					o.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.Titre, "Madame"));
+					e.AddProperty (new DataStringProperty (ObjectField.Prénom, "Géraldine"));
+					e.AddProperty (new DataStringProperty (ObjectField.Nom, "Traxel"));
+					e.AddProperty (new DataStringProperty (ObjectField.Pays, "Suisse"));
+					e.AddProperty (new DataStringProperty (ObjectField.Mail, "geraldine.traxel@bluewin.ch"));
 				}
 			}
 		}
