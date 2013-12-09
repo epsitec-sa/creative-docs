@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public enum EditionObjectPageType
+	public enum PageType
 	{
 		Unknown,
 		OneShot,

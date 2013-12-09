@@ -23,5 +23,13 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 				handler (sender, val1, val2);
 			}
 		}
+
+		public static void Raise<T1, T2, T3>(this EventHandler<T1, T2, T3> handler, object sender, T1 val1, T2 val2, T3 val3)
+		{
+			if (handler != null)
+			{
+				handler (sender, val1, val2, val3);
+			}
+		}
 	}
 }

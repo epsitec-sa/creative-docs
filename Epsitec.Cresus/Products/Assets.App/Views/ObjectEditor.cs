@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OpenPage (type);
 		}
 
-		private void OpenPage(EditionObjectPageType type, ObjectField focusedField = ObjectField.Unknown)
+		private void OpenPage(PageType type, ObjectField focusedField = ObjectField.Unknown)
 		{
 			//	Ajoute une nouvelle page à la fin de la liste actuelle.
 			if (this.currentPage != null)
@@ -97,9 +97,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnNavigate (timestamp);
 			};
 
-			this.currentPage.PageOpen += delegate (object sender, EditionObjectPageType openType, ObjectField field)
+			this.currentPage.PageOpen += delegate (object sender, PageType openType, ObjectField field)
 			{
 				this.OpenPage (openType, field);
+			};
+
+			this.currentPage.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			{
+				this.OnGoto (baseType, guid, this.currentPageType);
 			};
 
 			this.UpdateSelectedTabPages (type);
@@ -155,7 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateSelectedTabPages(EditionObjectPageType selectedPage)
+		private void UpdateSelectedTabPages(PageType selectedPage)
 		{
 			int sel = this.AvailablePages.ToList ().IndexOf (selectedPage);
 			this.tabPagesController.Selection = sel;
@@ -175,20 +180,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private EditionObjectPageType MainPage
+		private PageType MainPage
 		{
 			get
 			{
 				switch (baseType)
 				{
 					case BaseType.Categories:
-						return EditionObjectPageType.Category;
+						return PageType.Category;
 
 					case BaseType.Groups:
-						return EditionObjectPageType.Group;
+						return PageType.Group;
 
 					case BaseType.Persons:
-						return EditionObjectPageType.Person;
+						return PageType.Person;
 
 					default:
 						var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
@@ -199,13 +204,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 						}
 						else
 						{
-							return EditionObjectPageType.OneShot;
+							return PageType.OneShot;
 						}
 				}
 			}
 		}
 
-		public IEnumerable<EditionObjectPageType> AvailablePages
+		public IEnumerable<PageType> AvailablePages
 		{
 			get
 			{
@@ -213,7 +218,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public static IEnumerable<EditionObjectPageType> GetAvailablePages(BaseType baseType, bool hasEvent, EventType type)
+		public static IEnumerable<PageType> GetAvailablePages(BaseType baseType, bool hasEvent, EventType type)
 		{
 			switch (baseType)
 			{
@@ -234,14 +239,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private static IEnumerable<EditionObjectPageType> GetObjectAvailablePages(bool hasEvent, EventType type)
+		private static IEnumerable<PageType> GetObjectAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
-			yield return EditionObjectPageType.Summary;
+			yield return PageType.Summary;
 
 			if (hasEvent)
 			{
-				yield return EditionObjectPageType.OneShot;
+				yield return PageType.OneShot;
 
 				switch (type)
 				{
@@ -251,43 +256,43 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case EventType.AmortissementExtra:
 					case EventType.Augmentation:
 					case EventType.Diminution:
-						yield return EditionObjectPageType.Values;
-						yield return EditionObjectPageType.Amortissements;
+						yield return PageType.Values;
+						yield return PageType.Amortissements;
 						break;
 
 					case EventType.Modification:
 					case EventType.Réorganisation:
-						yield return EditionObjectPageType.Object;
-						yield return EditionObjectPageType.Groups;
+						yield return PageType.Object;
+						yield return PageType.Groups;
 						break;
 
 					default:  // accès à toutes les pages
-						yield return EditionObjectPageType.Object;
-						yield return EditionObjectPageType.Persons;
-						yield return EditionObjectPageType.Groups;
-						yield return EditionObjectPageType.Values;
-						yield return EditionObjectPageType.Amortissements;
+						yield return PageType.Object;
+						yield return PageType.Persons;
+						yield return PageType.Groups;
+						yield return PageType.Values;
+						yield return PageType.Amortissements;
 						break;
 				}
 			}
 		}
 
-		private static IEnumerable<EditionObjectPageType> GetCategoryAvailablePages(bool hasEvent, EventType type)
+		private static IEnumerable<PageType> GetCategoryAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
-			yield return EditionObjectPageType.Category;
+			yield return PageType.Category;
 		}
 
-		private static IEnumerable<EditionObjectPageType> GetGroupAvailablePages(bool hasEvent, EventType type)
+		private static IEnumerable<PageType> GetGroupAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
-			yield return EditionObjectPageType.Group;
+			yield return PageType.Group;
 		}
 
-		private static IEnumerable<EditionObjectPageType> GetPersonAvailablePages(bool hasEvent, EventType type)
+		private static IEnumerable<PageType> GetPersonAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
-			yield return EditionObjectPageType.Person;
+			yield return PageType.Person;
 		}
 
 
@@ -317,6 +322,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler<Timestamp> Navigate;
+
+
+		private void OnGoto(BaseType baseType, Guid guid, PageType pageType)
+		{
+			this.Goto.Raise (this, baseType, guid, pageType);
+		}
+
+		public event EventHandler<BaseType, Guid, PageType> Goto;
 		#endregion
 
 
@@ -324,7 +337,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TabPagesController					tabPagesController;
 		private FrameBox							editFrameBox;
 		private AbstractEditorPage					currentPage;
-		private EditionObjectPageType				currentPageType;
+		private PageType							currentPageType;
 
 		private Guid								objectGuid;
 		private DataObject							obj;

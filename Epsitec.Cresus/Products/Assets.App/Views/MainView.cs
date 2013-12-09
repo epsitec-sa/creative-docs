@@ -62,6 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.view != null)
 			{
+				this.view.Goto -= this.HandleViewGoto;
 				this.view.Dispose ();
 				this.view = null;
 			}
@@ -71,7 +72,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.view != null)
 			{
 				this.view.CreateUI (this.viewBox);
+				this.view.Goto += this.HandleViewGoto;
 			}
+		}
+
+		private void HandleViewGoto(object sender, BaseType baseType, Guid guid, PageType pageType)
+		{
+			this.toolbar.ViewType = MainView.GetViewType (baseType);
+			this.UpdateView ();
 		}
 
 		private void OnOpen()
@@ -108,6 +116,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor.Mandat = AssetsApplication.GetMandat (rank);
 
 			this.UpdateView ();
+		}
+
+
+		private static ViewType GetViewType(BaseType baseType)
+		{
+			switch (baseType)
+			{
+				case BaseType.Objects:
+					return ViewType.Objects;
+
+				case BaseType.Categories:
+					return ViewType.Categories;
+
+				case BaseType.Groups:
+					return ViewType.Groups;
+
+				case BaseType.Persons:
+					return ViewType.Persons;
+
+				default:
+					return ViewType.Objects;
+			}
 		}
 
 

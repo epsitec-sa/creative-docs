@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -200,6 +201,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return null;
 			}
 		}
+
+
+		#region Events handler
+		protected void OnGoto(BaseType baseType, Guid guid, PageType pageType)
+		{
+			this.Goto.Raise (this, baseType, guid, pageType);
+		}
+
+		public event EventHandler<BaseType, Guid, PageType> Goto;
+		#endregion
 
 
 		protected readonly DataAccessor			accessor;

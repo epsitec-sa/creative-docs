@@ -173,6 +173,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
+			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			{
+				this.OnGoto (baseType, guid);
+			};
+
 			this.fieldControllers.Add (field, controller);
 		}
 
@@ -204,6 +209,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
+			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			{
+				this.OnGoto (baseType, guid);
+			};
+
 			this.fieldControllers.Add (field, controller);
 		}
 
@@ -221,6 +231,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
 				this.ShowHistoryPopup (target, of);
+			};
+
+			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			{
+				this.OnGoto (baseType, guid);
 			};
 
 			this.fieldControllers.Add (ObjectField.GroupGuidRatio, controller);
@@ -254,6 +269,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
+			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			{
+				this.OnGoto (baseType, guid);
+			};
+
 			this.fieldControllers.Add (field, controller);
 		}
 
@@ -282,6 +302,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
 				this.ShowHistoryPopup (target, of);
+			};
+
+			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			{
+				this.OnGoto (baseType, guid);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -313,6 +338,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
+			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			{
+				this.OnGoto (baseType, guid);
+			};
+
 			this.fieldControllers.Add (field, controller);
 		}
 
@@ -340,6 +370,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
 				this.ShowHistoryPopup (target, of);
+			};
+
+			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			{
+				this.OnGoto (baseType, guid);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -371,6 +406,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
+			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			{
+				this.OnGoto (baseType, guid);
+			};
+
 			this.fieldControllers.Add (field, controller);
 		}
 
@@ -382,7 +422,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock            = DockStyle.Top,
 				PreferredHeight = 10,
 			};
-
 		}
 
 
@@ -397,6 +436,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnNavigate (timestamp);
 			};
 		}
+
 
 		protected PropertyState GetPropertyState(ObjectField field)
 		{
@@ -419,38 +459,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractEditorPage CreatePage(DataAccessor accessor, BaseType baseType, EditionObjectPageType page)
+		public static AbstractEditorPage CreatePage(DataAccessor accessor, BaseType baseType, PageType page)
 		{
 			switch (page)
 			{
-				case EditionObjectPageType.OneShot:
+				case PageType.OneShot:
 					return new EditorPageOneShot (accessor, baseType, isTimeless: false);
 
-				case EditionObjectPageType.Summary:
+				case PageType.Summary:
 					return new EditorPageSummary (accessor, baseType, isTimeless: false);
 
-				case EditionObjectPageType.Object:
+				case PageType.Object:
 					return new EditorPageObject (accessor, baseType, isTimeless: false);
 
-				case EditionObjectPageType.Persons:
+				case PageType.Persons:
 					return new EditorPagePersons (accessor, baseType, isTimeless: false);
 
-				case EditionObjectPageType.Values:
+				case PageType.Values:
 					return new EditorPageValues (accessor, baseType, isTimeless: false);
 
-				case EditionObjectPageType.Amortissements:
+				case PageType.Amortissements:
 					return new EditorPageAmortissements (accessor, baseType, isTimeless: false);
 
-				case EditionObjectPageType.Groups:
+				case PageType.Groups:
 					return new EditorPageGroups (accessor, baseType, isTimeless: false);
 
-				case EditionObjectPageType.Category:
+				case PageType.Category:
 					return new EditorPageCategory (accessor, baseType, isTimeless: true);
 
-				case EditionObjectPageType.Group:
+				case PageType.Group:
 					return new EditorPageGroup (accessor, baseType, isTimeless: true);
 
-				case EditionObjectPageType.Person:
+				case PageType.Person:
 					return new EditorPagePerson (accessor, baseType, isTimeless: true);
 
 				default:
@@ -469,14 +509,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<Timestamp> Navigate;
 
 
-		protected void OnPageOpen(EditionObjectPageType type, ObjectField field)
+		protected void OnPageOpen(PageType type, ObjectField field)
 		{
 			this.PageOpen.Raise (this, type, field);
 		}
 
-		public event EventHandler<EditionObjectPageType, ObjectField> PageOpen;
+		public event EventHandler<PageType, ObjectField> PageOpen;
 
 
+		protected void OnGoto(BaseType baseType, Guid guid)
+		{
+			this.Goto.Raise (this, baseType, guid);
+		}
+
+		public event EventHandler<BaseType, Guid> Goto;
+
+	
 		protected void OnValueEdited(ObjectField field)
 		{
 			this.ValueEdited.Raise (this, field);

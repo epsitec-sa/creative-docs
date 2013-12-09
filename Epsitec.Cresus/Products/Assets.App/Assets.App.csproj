@@ -144,7 +144,7 @@
     <Compile Include="Views\EditorPageValues.cs" />
     <Compile Include="Views\EditorPageAmortissements.cs" />
     <Compile Include="Views\EditorPageObject.cs" />
-    <Compile Include="Views\EditionObjectPageType.cs" />
+    <Compile Include="Views\PageType.cs" />
     <Compile Include="Views\EditorPageSummary.cs" />
     <Compile Include="Views\NavigatorController.cs" />
     <Compile Include="Views\DateFieldController.cs" />

@@ -32,6 +32,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						this.button.Text = this.GuidToString (this.value);
 					}
+
+					if (this.summary != null)
+					{
+						this.summary.Text = this.GuidToSummary (this.value);
+					}
 				}
 			}
 		}
@@ -71,9 +76,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
+			var line1 = new FrameBox
+			{
+				Parent          = this.frameBox,
+				Dock            = DockStyle.Top,
+				PreferredHeight = AbstractFieldController.lineHeight,
+				Margins         = new Margins (0, 0, 0, 0),
+			};
+
+			var line2 = new ColoredButton
+			{
+				Parent          = this.frameBox,
+				Dock            = DockStyle.Top,
+				PreferredHeight = 54,
+				Margins         = new Margins (0, 46, 0, 0),
+				Padding         = new Margins (5),
+				NormalColor     = ColorManager.ReadonlyFieldColor,
+				HoverColor      = ColorManager.HoverColor,
+			};
+
 			this.button = new ColoredButton
 			{
-				Parent           = this.frameBox,
+				Parent           = line1,
 				HoverColor       = ColorManager.HoverColor,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Left,
@@ -96,6 +120,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight  = AbstractFieldController.lineHeight,
 			};
 
+			this.summary = new StaticText
+			{
+				Parent           = line2,
+				ContentAlignment = ContentAlignment.TopLeft,
+				Dock             = DockStyle.Fill,
+			};
+
+			//	Connexion des événements.
 			this.button.Clicked += delegate
 			{
 				this.ShowPopup ();
@@ -104,6 +136,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			arrowButton.Clicked += delegate
 			{
 				this.ShowPopup ();
+			};
+
+			line2.Clicked += delegate
+			{
+				if (!this.value.IsEmpty)
+				{
+					this.OnGoto (BaseType.Persons, this.value);
+				}
 			};
 		}
 
@@ -126,8 +166,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return PersonsLogic.GetFullName (this.Accessor, guid);
 		}
 
+		private string GuidToSummary(Guid guid)
+		{
+			return PersonsLogic.GetSummary (this.Accessor, guid);
+		}
+
 
 		private ColoredButton					button;
+		private StaticText						summary;
 		private Guid							value;
 	}
 }

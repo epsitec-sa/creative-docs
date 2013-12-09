@@ -223,6 +223,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler<Widget, ObjectField> ShowHistory;
+
+
+		protected void OnGoto(BaseType baseType, Guid guid)
+		{
+			this.Goto.Raise (this, baseType, guid);
+		}
+
+		public event EventHandler<BaseType, Guid> Goto;
 		#endregion
 
 

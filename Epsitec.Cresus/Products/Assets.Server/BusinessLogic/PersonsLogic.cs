@@ -43,5 +43,51 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return string.Join (" ", t1, t2, t3);
 			}
 		}
+
+
+		public static string GetSummary(DataAccessor accessor, Guid guid)
+		{
+			//	Retourne le résumé multi-lignes d'une personne, du genre:
+			//	Monsieur Jean Dupond Epsitec SA
+			//	Rue de Neuchâtel 32
+			//	1400 Yverdon-les-Bains
+			var obj = accessor.GetObject (BaseType.Persons, guid);
+			if (obj == null)
+			{
+				return null;
+			}
+			else
+			{
+				var lines = new List<string> ();
+
+				var titre      = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Titre);
+				var prénom     = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Prénom);
+				var nom        = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
+				var entreprise = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Entreprise);
+				PersonsLogic.PutLine (lines, titre, prénom, nom, entreprise);
+
+				var adresse = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Adresse);
+				PersonsLogic.PutLine (lines, adresse);
+
+				var npa   = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Npa);
+				var ville = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Ville);
+				var pays  = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Pays);
+				PersonsLogic.PutLine (lines, npa, ville, pays);
+
+				return string.Join ("<br/>", lines);
+			}
+		}
+
+		private static void PutLine(List<string> lines, params string[] words)
+		{
+			var line = string.Join (" ", words
+				.Where (x => !string.IsNullOrEmpty (x))
+				.Select (x => x.Replace ("<br/>", ", ")));
+
+			if (!string.IsNullOrEmpty (line))
+			{
+				lines.Add (line);
+			}
+		}
 	}
 }

@@ -6,7 +6,6 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -200,6 +199,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.timelineController.SelectedTimestamp = timestamp;
 					this.eventsController.SelectedTimestamp = timestamp;
+				};
+
+				this.objectEditor.Goto += delegate (object sender, BaseType baseType, Guid guid, PageType pageType)
+				{
+					this.OnGoto (baseType, guid, pageType);
 				};
 
 				this.objectEditor.ValueChanged += delegate (object sender, ObjectField field)

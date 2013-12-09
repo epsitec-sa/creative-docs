@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static EditionObjectPageType GetPageType(ObjectField field)
+		public static PageType GetPageType(ObjectField field)
 		{
 			//	Retourne la page permettant d'éditer un champ donné.
 			switch (field)
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.OneShotDateOpération:
 				case ObjectField.OneShotCommentaire:
 				case ObjectField.OneShotDocuments:
-					return EditionObjectPageType.OneShot;
+					return PageType.OneShot;
 
 				case ObjectField.ValeurComptable:
 				case ObjectField.Valeur1:
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Valeur8:
 				case ObjectField.Valeur9:
 				case ObjectField.Valeur10:
-					return EditionObjectPageType.Values;
+					return PageType.Values;
 
 				case ObjectField.NomCatégorie:
 				case ObjectField.TauxAmortissement:
@@ -145,14 +145,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Compte6:
 				case ObjectField.Compte7:
 				case ObjectField.Compte8:
-					return EditionObjectPageType.Amortissements;
+					return PageType.Amortissements;
 
 				case ObjectField.Personne1:
 				case ObjectField.Personne2:
 				case ObjectField.Personne3:
 				case ObjectField.Personne4:
 				case ObjectField.Personne5:
-					return EditionObjectPageType.Persons;
+					return PageType.Persons;
 
 				case ObjectField.GroupGuidRatio+0:
 				case ObjectField.GroupGuidRatio+1:
@@ -164,10 +164,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.GroupGuidRatio+7:
 				case ObjectField.GroupGuidRatio+8:
 				case ObjectField.GroupGuidRatio+9:
-					return EditionObjectPageType.Groups;
+					return PageType.Groups;
 
 				default:
-					return EditionObjectPageType.Object;
+					return PageType.Object;
 			}
 		}
 

@@ -8,38 +8,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public static class StaticDescriptions
 	{
-		public static string GetObjectPageDescription(EditionObjectPageType type)
+		public static string GetObjectPageDescription(PageType type)
 		{
 			switch (type)
 			{
-				case EditionObjectPageType.OneShot:
+				case PageType.OneShot:
 					return "Evénement";
 
-				case EditionObjectPageType.Summary:
+				case PageType.Summary:
 					return "Résumé";
 
-				case EditionObjectPageType.Object:
+				case PageType.Object:
 					return "Général";
 
-				case EditionObjectPageType.Persons:
+				case PageType.Persons:
 					return "Personnes";
 
-				case EditionObjectPageType.Values:
+				case PageType.Values:
 					return "Valeurs";
 
-				case EditionObjectPageType.Amortissements:
+				case PageType.Amortissements:
 					return "Amortissements";
 
-				case EditionObjectPageType.Groups:
+				case PageType.Groups:
 					return "Regroupements";
 
-				case EditionObjectPageType.Category:
+				case PageType.Category:
 					return "Définitions de la catégorie";
 
-				case EditionObjectPageType.Group:
+				case PageType.Group:
 					return "Définitions du groupe";
 
-				case EditionObjectPageType.Person:
+				case PageType.Person:
 					return "Définitions de la personne";
 
 				default:
