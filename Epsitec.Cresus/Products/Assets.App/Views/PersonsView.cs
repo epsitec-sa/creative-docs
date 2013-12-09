@@ -96,6 +96,45 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public override Guid SelectedGuid
+		{
+			get
+			{
+				return this.selectedGuid;
+			}
+			set
+			{
+				this.selectedGuid = value;
+				this.listController.SelectedGuid = this.selectedGuid;
+			}
+		}
+
+		public override ViewState ViewState
+		{
+			get
+			{
+				var pageType = this.isEditing ? PageType.Person : PageType.Unknown;
+				return new ViewState (ViewType.Persons, ViewMode.Unknown, pageType, null, this.selectedGuid);
+			}
+			set
+			{
+				this.selectedGuid = value.Guid;
+				this.listController.SelectedGuid = this.selectedGuid;
+
+				if (value.PageType == PageType.Person)
+				{
+					this.isEditing = true;
+				}
+				else
+				{
+					this.isEditing = false;
+				}
+
+				this.Update ();
+			}
+		}
+
+
 		public override void OnCommand(ToolbarCommand command)
 		{
 			base.OnCommand (command);

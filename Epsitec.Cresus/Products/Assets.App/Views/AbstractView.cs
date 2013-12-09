@@ -31,11 +31,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		protected virtual Guid SelectedObjectGuid
+		public virtual Guid SelectedGuid
 		{
 			get
 			{
 				return Guid.Empty;
+			}
+			set
+			{
+			}
+		}
+
+		public virtual ViewState ViewState
+		{
+			get
+			{
+				return ViewState.Empty;
+			}
+			set
+			{
 			}
 		}
 
@@ -62,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var popup = new AmortissementsPopup (this.accessor)
 			{
-				OneSelectionAllowed = !this.SelectedObjectGuid.IsEmpty,
+				OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
 				DateFrom            = new System.DateTime (now.Year, 1, 1),
 				DateTo              = new System.DateTime (now.Year, 12, 31),
 			};
@@ -125,8 +139,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					System.Diagnostics.Debug.Assert (!this.SelectedObjectGuid.IsEmpty);
-					var errors = this.amortissements.GeneratesAmortissementsAuto (range, this.SelectedObjectGuid);
+					System.Diagnostics.Debug.Assert (!this.SelectedGuid.IsEmpty);
+					var errors = this.amortissements.GeneratesAmortissementsAuto (range, this.SelectedGuid);
 					this.ShowErrorPopup (target, errors);
 				}
 			}
@@ -139,8 +153,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					System.Diagnostics.Debug.Assert (!this.SelectedObjectGuid.IsEmpty);
-					var errors = this.amortissements.RemovesAmortissementsAuto (range, this.SelectedObjectGuid);
+					System.Diagnostics.Debug.Assert (!this.SelectedGuid.IsEmpty);
+					var errors = this.amortissements.RemovesAmortissementsAuto (range, this.SelectedGuid);
 					this.ShowErrorPopup (target, errors);
 				}
 			}
@@ -204,12 +218,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
-		protected void OnGoto(BaseType baseType, Guid guid, PageType pageType)
+		protected void OnGoto(ViewState viewState)
 		{
-			this.Goto.Raise (this, baseType, guid, pageType);
+			this.Goto.Raise (this, viewState);
 		}
 
-		public event EventHandler<BaseType, Guid, PageType> Goto;
+		public event EventHandler<ViewState> Goto;
 		#endregion
 
 

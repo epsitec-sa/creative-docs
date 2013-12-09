@@ -8,6 +8,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public enum ViewType
 	{
+		Unknown,
 		Objects,
 		Categories,
 		Groups,

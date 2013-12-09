@@ -9,6 +9,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public enum PageType
 	{
 		Unknown,
+
 		OneShot,
 		Summary,
 		Object,

@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (!this.value.IsEmpty)
 				{
-					this.OnGoto (BaseType.Persons, this.value);
+					this.OnGoto (new ViewState (ViewType.Persons, ViewMode.Unknown, PageType.Person, null, this.value));
 				}
 			};
 		}

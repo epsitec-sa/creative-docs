@@ -76,10 +76,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void HandleViewGoto(object sender, BaseType baseType, Guid guid, PageType pageType)
+		private void HandleViewGoto(object sender, ViewState viewState)
 		{
-			this.toolbar.ViewType = MainView.GetViewType (baseType);
+			this.toolbar.ViewType = viewState.ViewType;
 			this.UpdateView ();
+
+			this.view.ViewState = viewState;
 		}
 
 		private void OnOpen()
@@ -116,28 +118,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor.Mandat = AssetsApplication.GetMandat (rank);
 
 			this.UpdateView ();
-		}
-
-
-		private static ViewType GetViewType(BaseType baseType)
-		{
-			switch (baseType)
-			{
-				case BaseType.Objects:
-					return ViewType.Objects;
-
-				case BaseType.Categories:
-					return ViewType.Categories;
-
-				case BaseType.Groups:
-					return ViewType.Groups;
-
-				case BaseType.Persons:
-					return ViewType.Persons;
-
-				default:
-					return ViewType.Objects;
-			}
 		}
 
 

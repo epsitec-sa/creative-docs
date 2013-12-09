@@ -225,12 +225,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<Widget, ObjectField> ShowHistory;
 
 
-		protected void OnGoto(BaseType baseType, Guid guid)
+		protected void OnGoto(ViewState viewState)
 		{
-			this.Goto.Raise (this, baseType, guid);
+			this.Goto.Raise (this, viewState);
 		}
 
-		public event EventHandler<BaseType, Guid> Goto;
+		public event EventHandler<ViewState> Goto;
 		#endregion
 
 

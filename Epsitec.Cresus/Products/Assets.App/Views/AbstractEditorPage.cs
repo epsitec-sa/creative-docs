@@ -173,9 +173,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
-			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			controller.Goto += delegate (object sender, ViewState viewState)
 			{
-				this.OnGoto (baseType, guid);
+				this.OnGoto (viewState);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -209,9 +209,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
-			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			controller.Goto += delegate (object sender, ViewState viewState)
 			{
-				this.OnGoto (baseType, guid);
+				this.OnGoto (viewState);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -233,9 +233,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
-			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			controller.Goto += delegate (object sender, ViewState viewState)
 			{
-				this.OnGoto (baseType, guid);
+				this.OnGoto (viewState);
 			};
 
 			this.fieldControllers.Add (ObjectField.GroupGuidRatio, controller);
@@ -269,9 +269,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
-			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			controller.Goto += delegate (object sender, ViewState viewState)
 			{
-				this.OnGoto (baseType, guid);
+				this.OnGoto (viewState);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -304,9 +304,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
-			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			controller.Goto += delegate (object sender, ViewState viewState)
 			{
-				this.OnGoto (baseType, guid);
+				this.OnGoto (viewState);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -338,9 +338,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
-			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			controller.Goto += delegate (object sender, ViewState viewState)
 			{
-				this.OnGoto (baseType, guid);
+				this.OnGoto (viewState);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -372,9 +372,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
-			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			controller.Goto += delegate (object sender, ViewState viewState)
 			{
-				this.OnGoto (baseType, guid);
+				this.OnGoto (viewState);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -406,9 +406,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ShowHistoryPopup (target, of);
 			};
 
-			controller.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			controller.Goto += delegate (object sender, ViewState viewState)
 			{
-				this.OnGoto (baseType, guid);
+				this.OnGoto (viewState);
 			};
 
 			this.fieldControllers.Add (field, controller);
@@ -517,12 +517,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<PageType, ObjectField> PageOpen;
 
 
-		protected void OnGoto(BaseType baseType, Guid guid)
+		protected void OnGoto(ViewState viewState)
 		{
-			this.Goto.Raise (this, baseType, guid);
+			this.Goto.Raise (this, viewState);
 		}
 
-		public event EventHandler<BaseType, Guid> Goto;
+		public event EventHandler<ViewState> Goto;
 
 	
 		protected void OnValueEdited(ObjectField field)

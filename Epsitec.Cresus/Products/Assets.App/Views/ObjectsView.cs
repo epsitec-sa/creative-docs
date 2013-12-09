@@ -201,9 +201,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.eventsController.SelectedTimestamp = timestamp;
 				};
 
-				this.objectEditor.Goto += delegate (object sender, BaseType baseType, Guid guid, PageType pageType)
+				this.objectEditor.Goto += delegate (object sender, ViewState viewState)
 				{
-					this.OnGoto (baseType, guid, pageType);
+					this.OnGoto (viewState);
 				};
 
 				this.objectEditor.ValueChanged += delegate (object sender, ObjectField field)
@@ -224,11 +224,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override Guid SelectedObjectGuid
+		public override Guid SelectedGuid
 		{
 			get
 			{
 				return this.selectedGuid;
+			}
+			set
+			{
+				this.selectedGuid = value;
+				this.OnChangeViewMode (this.mainToolbar.ViewMode);
+			}
+		}
+
+		public override ViewState ViewState
+		{
+			get
+			{
+				var pageType = this.isEditing ? this.objectEditor.PageType: PageType.Unknown;
+				return new ViewState (ViewType.Persons, this.viewMode, pageType, this.selectedTimestamp, this.selectedGuid);
+			}
+			set
+			{
+				this.selectedGuid = value.Guid;
+				this.OnChangeViewMode (value.ViewMode);
+
+				if (value.PageType == PageType.Person)
+				{
+					this.isEditing = true;
+				}
+				else
+				{
+					this.isEditing = false;
+				}
+
+				this.Update ();
 			}
 		}
 

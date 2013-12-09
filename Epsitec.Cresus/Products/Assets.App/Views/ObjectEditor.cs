@@ -20,6 +20,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public override PageType PageType
+		{
+			get
+			{
+				return this.currentPageType;
+			}
+			set
+			{
+				this.OpenPage (value);
+			}
+		}
+
+
 		public override void CreateUI(Widget parent)
 		{
 			this.topTitle = new TopTitle
@@ -102,9 +115,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OpenPage (openType, field);
 			};
 
-			this.currentPage.Goto += delegate (object sender, BaseType baseType, Guid guid)
+			this.currentPage.Goto += delegate (object sender, ViewState viewState)
 			{
-				this.OnGoto (baseType, guid, this.currentPageType);
+				this.OnGoto (viewState);
 			};
 
 			this.UpdateSelectedTabPages (type);
@@ -324,12 +337,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<Timestamp> Navigate;
 
 
-		private void OnGoto(BaseType baseType, Guid guid, PageType pageType)
+		private void OnGoto(ViewState viewState)
 		{
-			this.Goto.Raise (this, baseType, guid, pageType);
+			this.Goto.Raise (this, viewState);
 		}
 
-		public event EventHandler<BaseType, Guid, PageType> Goto;
+		public event EventHandler<ViewState> Goto;
 		#endregion
 
 
