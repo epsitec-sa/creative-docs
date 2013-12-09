@@ -224,25 +224,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override Guid SelectedGuid
-		{
-			get
-			{
-				return this.selectedGuid;
-			}
-			set
-			{
-				this.selectedGuid = value;
-				this.OnChangeViewMode (this.mainToolbar.ViewMode);
-			}
-		}
-
 		public override ViewState ViewState
 		{
 			get
 			{
 				var pageType = this.isEditing ? this.objectEditor.PageType: PageType.Unknown;
-				return new ViewState (ViewType.Persons, this.viewMode, pageType, this.selectedTimestamp, this.selectedGuid);
+				return new ViewState (ViewType.Objects, this.viewMode, pageType, this.selectedTimestamp, this.selectedGuid);
 			}
 			set
 			{
@@ -259,6 +246,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				this.Update ();
+			}
+		}
+
+		protected override Guid SelectedGuid
+		{
+			get
+			{
+				return this.selectedGuid;
 			}
 		}
 
@@ -466,6 +461,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateAfterListChanged()
 		{
+			this.OnSaveViewState (this.ViewState);
 			this.selectedGuid = this.listController.SelectedGuid;
 
 			if (this.selectedGuid.IsEmpty)

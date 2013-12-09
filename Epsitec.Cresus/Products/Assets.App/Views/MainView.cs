@@ -15,6 +15,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public MainView(DataAccessor accessor)
 		{
 			this.accessor = accessor;
+
+			this.historyViewStates = new List<ViewState> ();
+			this.historyPosition = 0;
 		}
 
 		public void CreateUI(Widget parent)
@@ -39,20 +42,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
 			{
-				if (command == ToolbarCommand.Open)
+				switch (command)
 				{
-					this.OnOpen ();
-				}
-				else
-				{
-					if (this.view != null)
-					{
-						this.view.OnCommand (command);
-					}
+					case ToolbarCommand.Open:
+						this.OnOpen ();
+						break;
+
+					case ToolbarCommand.NavigateBack:
+						this.OnNavigateBack ();
+						break;
+
+					case ToolbarCommand.NavigateForward:
+						this.OnNavigateForward ();
+						break;
+
+					default:
+						if (this.view != null)
+						{
+							this.view.OnCommand (command);
+						}
+						break;
 				}
 			};
 
 			this.UpdateView ();
+			this.UpdateToolbar ();
 		}
 
 
@@ -63,6 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.view != null)
 			{
 				this.view.Goto -= this.HandleViewGoto;
+				this.view.SaveViewState -= HandleViewSave;
 				this.view.Dispose ();
 				this.view = null;
 			}
@@ -73,21 +88,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.view.CreateUI (this.viewBox);
 				this.view.Goto += this.HandleViewGoto;
+				this.view.SaveViewState += HandleViewSave;
 			}
 		}
 
 		private void HandleViewGoto(object sender, ViewState viewState)
 		{
-			this.toolbar.ViewType = viewState.ViewType;
-			this.UpdateView ();
-
-			this.view.ViewState = viewState;
+			this.RestoreViewState (viewState);
 		}
+
+		private void HandleViewSave(object sender, ViewState viewState)
+		{
+			this.SaveViewState (viewState);
+		}
+
 
 		private void OnOpen()
 		{
 			this.ShowPopup ();
 		}
+
+		private void OnNavigateBack()
+		{
+			this.GoHistoryBack ();
+		}
+
+		private void OnNavigateForward()
+		{
+			this.GoHistoryForward ();
+		}
+
 
 		private void ShowPopup()
 		{
@@ -121,11 +151,76 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void UpdateToolbar()
+		{
+			this.toolbar.SetCommandState (ToolbarCommand.Open,             ToolbarCommandState.Enable);
+
+			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateBack,    this.NavigateBackEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateForward, this.NavigateForwardEnable);
+
+			this.toolbar.SetCommandState (ToolbarCommand.Amortissement,    ToolbarCommandState.Enable);
+			this.toolbar.SetCommandState (ToolbarCommand.Simulation,       ToolbarCommandState.Enable);
+		}
+
+
+		private void SaveViewState(ViewState viewState)
+		{
+			while (this.historyPosition < this.historyViewStates.Count)
+			{
+				this.historyViewStates.RemoveAt (this.historyViewStates.Count - 1);
+			}
+
+			this.historyViewStates.Add (viewState);
+			this.historyPosition++;
+
+			this.UpdateToolbar ();
+		}
+
+		private void GoHistoryBack()
+		{
+			this.historyPosition--;
+			this.RestoreViewState (this.historyViewStates[this.historyPosition]);
+		}
+
+		private void GoHistoryForward()
+		{
+			this.historyPosition++;
+			this.RestoreViewState (this.historyViewStates[this.historyPosition]);
+		}
+
+		private void RestoreViewState(ViewState viewState)
+		{
+			this.toolbar.ViewType = viewState.ViewType;
+			this.UpdateView ();
+
+			this.view.ViewState = viewState;
+			this.UpdateToolbar ();
+		}
+
+		private bool NavigateBackEnable
+		{
+			get
+			{
+				return this.historyPosition > 0;
+			}
+		}
+
+		private bool NavigateForwardEnable
+		{
+			get
+			{
+				return this.historyPosition < this.historyViewStates.Count;
+			}
+		}
+
+
 		private readonly DataAccessor			accessor;
+		private readonly List<ViewState>		historyViewStates;
 
 		private Widget							parent;
 		private MainToolbar						toolbar;
 		private FrameBox						viewBox;
 		private AbstractView					view;
+		private int								historyPosition;
 	}
 }

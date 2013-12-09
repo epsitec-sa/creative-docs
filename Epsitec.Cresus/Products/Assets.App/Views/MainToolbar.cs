@@ -77,26 +77,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonOpen          = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Open,               "Main.Open",             "Ouvrir");
+			this.buttonOpen            = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Open,               "Main.Open",             "Ouvrir");
+			this.buttonNavigateBack    = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateBack,       "Navigate.Back",         "Retourner");
+			this.buttonNavigateForward = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateForward,    "Navigate.Forward",      "Avancer");
 								     
-			this.buttonObjects       = this.CreateViewTypeButton (ViewType.Objects,    ToolbarCommand.ViewTypeObjects,    "View.Objects",          "Objets d'immobilisation");
-			this.buttonCategories    = this.CreateViewTypeButton (ViewType.Categories, ToolbarCommand.ViewTypeCategories, "View.Categories",       "Catégories d'immobilisations");
-			this.buttonGroups        = this.CreateViewTypeButton (ViewType.Groups,     ToolbarCommand.ViewTypeGroups,     "View.Groups",           "Groupes");
-			this.buttonPersons       = this.CreateViewTypeButton (ViewType.Persons,    ToolbarCommand.ViewTypePersons,    "View.Persons",          "Personnes");
-			this.buttonEvents        = this.CreateViewTypeButton (ViewType.Events,     ToolbarCommand.ViewTypeEvents,     "View.Events",           "Evénements");
-			this.buttonReports       = this.CreateViewTypeButton (ViewType.Reports,    ToolbarCommand.ViewTypeReports,    "View.Reports",          "Rapports et statistiques");
-			this.buttonSettings      = this.CreateViewTypeButton (ViewType.Settings,   ToolbarCommand.ViewTypeSettings,   "View.Settings",         "Réglages");
-								     
-			this.buttonSingle        = this.CreateViewModeButton (ViewMode.Single,     ToolbarCommand.ViewModeSingle,     "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
-			this.buttonEvent         = this.CreateViewModeButton (ViewMode.Event,      ToolbarCommand.ViewModeEvent,      "Show.TimelineEvent",    "Tableau des événements");
-			this.buttonMultiple      = this.CreateViewModeButton (ViewMode.Multiple,   ToolbarCommand.ViewModeMultiple,   "Show.TimelineMultiple", "Axe du temps pour tous les objets");
-
-			this.buttonEdit          = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Edit,               "Main.Edit",             "Edition");
-			this.buttonAmortissement = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Amortissement,      "Main.Amortissement",    "Amortissements");
-			this.buttonSimulation    = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Simulation,         "Main.Simulation",       "Simulation");
-																 
-			this.buttonCancel        = this.CreateCommandButton  (DockStyle.Right,     ToolbarCommand.Cancel,             "Edit.Cancel",           "Annuler les modifications");
-			this.buttonAccept        = this.CreateCommandButton  (DockStyle.Right,     ToolbarCommand.Accept,             "Edit.Accept",           "Accepter les modifications");
+			this.buttonObjects         = this.CreateViewTypeButton (ViewType.Objects,    ToolbarCommand.ViewTypeObjects,    "View.Objects",          "Objets d'immobilisation");
+			this.buttonCategories      = this.CreateViewTypeButton (ViewType.Categories, ToolbarCommand.ViewTypeCategories, "View.Categories",       "Catégories d'immobilisations");
+			this.buttonGroups          = this.CreateViewTypeButton (ViewType.Groups,     ToolbarCommand.ViewTypeGroups,     "View.Groups",           "Groupes");
+			this.buttonPersons         = this.CreateViewTypeButton (ViewType.Persons,    ToolbarCommand.ViewTypePersons,    "View.Persons",          "Personnes");
+			this.buttonEvents          = this.CreateViewTypeButton (ViewType.Events,     ToolbarCommand.ViewTypeEvents,     "View.Events",           "Evénements");
+			this.buttonReports         = this.CreateViewTypeButton (ViewType.Reports,    ToolbarCommand.ViewTypeReports,    "View.Reports",          "Rapports et statistiques");
+			this.buttonSettings        = this.CreateViewTypeButton (ViewType.Settings,   ToolbarCommand.ViewTypeSettings,   "View.Settings",         "Réglages");
+								       
+			this.buttonSingle          = this.CreateViewModeButton (ViewMode.Single,     ToolbarCommand.ViewModeSingle,     "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
+			this.buttonEvent           = this.CreateViewModeButton (ViewMode.Event,      ToolbarCommand.ViewModeEvent,      "Show.TimelineEvent",    "Tableau des événements");
+			this.buttonMultiple        = this.CreateViewModeButton (ViewMode.Multiple,   ToolbarCommand.ViewModeMultiple,   "Show.TimelineMultiple", "Axe du temps pour tous les objets");
+									   
+			this.buttonEdit            = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Edit,               "Main.Edit",             "Edition");
+			this.buttonAmortissement   = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Amortissement,      "Main.Amortissement",    "Amortissements");
+			this.buttonSimulation      = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Simulation,         "Main.Simulation",       "Simulation");
+									  							 
+			this.buttonCancel          = this.CreateCommandButton  (DockStyle.Right,     ToolbarCommand.Cancel,             "Edit.Cancel",           "Annuler les modifications");
+			this.buttonAccept          = this.CreateCommandButton  (DockStyle.Right,     ToolbarCommand.Accept,             "Edit.Accept",           "Accepter les modifications");
 
 			this.buttonOpen    .Margins = new Margins (0, 10, 0, 0);
 			this.buttonSettings.Margins = new Margins (0, 10, 0, 0);
@@ -148,10 +150,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetCommandActivate (ToolbarCommand.ViewTypeEvents,     this.viewType == ViewType.Events    );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeReports,    this.viewType == ViewType.Reports   );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeSettings,   this.viewType == ViewType.Settings  );
-
-			this.SetCommandState (ToolbarCommand.Open,          ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.Amortissement, ToolbarCommandState.Enable);
-			this.SetCommandState (ToolbarCommand.Simulation,    ToolbarCommandState.Enable);
 		}
 
 		private void UpdateViewModeCommands()
@@ -194,6 +192,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private IconButton						buttonOpen;
+
+		private IconButton						buttonNavigateBack;
+		private IconButton						buttonNavigateForward;
 
 		private IconButton						buttonObjects;
 		private IconButton						buttonCategories;

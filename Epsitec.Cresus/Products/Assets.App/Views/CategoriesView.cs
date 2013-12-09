@@ -95,6 +95,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public override ViewState ViewState
+		{
+			get
+			{
+				var pageType = this.isEditing ? PageType.Category : PageType.Unknown;
+				return new ViewState (ViewType.Categories, ViewMode.Unknown, pageType, null, this.selectedGuid);
+			}
+			set
+			{
+				this.selectedGuid = value.Guid;
+				this.listController.SelectedGuid = this.selectedGuid;
+
+				if (value.PageType == PageType.Person)
+				{
+					this.isEditing = true;
+				}
+				else
+				{
+					this.isEditing = false;
+				}
+
+				this.Update ();
+			}
+		}
+
 
 		public override void OnCommand(ToolbarCommand command)
 		{
@@ -193,6 +218,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateAfterListChanged()
 		{
+			this.OnSaveViewState (this.ViewState);
 			this.selectedGuid = this.listController.SelectedGuid;
 
 			if (this.selectedGuid.IsEmpty)

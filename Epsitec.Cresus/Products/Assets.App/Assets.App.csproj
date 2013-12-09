@@ -302,6 +302,8 @@
     <EmbeddedResource Include="Images\Date.Minus.icon" />
     <EmbeddedResource Include="Images\Date.Plus.icon" />
     <EmbeddedResource Include="Images\View.Persons.icon" />
+    <EmbeddedResource Include="Images\Navigate.Back.icon" />
+    <EmbeddedResource Include="Images\Navigate.Forward.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

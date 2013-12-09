@@ -31,6 +31,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Cancel,
 		Filter,
 
+		NavigateBack,
+		NavigateForward,
+
 		ViewTypeObjects,
 		ViewTypeCategories,
 		ViewTypeGroups,

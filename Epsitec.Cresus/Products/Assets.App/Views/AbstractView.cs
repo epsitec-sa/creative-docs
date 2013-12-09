@@ -31,17 +31,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		public virtual Guid SelectedGuid
-		{
-			get
-			{
-				return Guid.Empty;
-			}
-			set
-			{
-			}
-		}
-
 		public virtual ViewState ViewState
 		{
 			get
@@ -50,6 +39,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
+			}
+		}
+
+		protected virtual Guid SelectedGuid
+		{
+			get
+			{
+				return Guid.Empty;
 			}
 		}
 
@@ -224,6 +221,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler<ViewState> Goto;
+
+
+		protected void OnSaveViewState(ViewState viewState)
+		{
+			this.SaveViewState.Raise (this, viewState);
+		}
+
+		public event EventHandler<ViewState> SaveViewState;
 		#endregion
 
 

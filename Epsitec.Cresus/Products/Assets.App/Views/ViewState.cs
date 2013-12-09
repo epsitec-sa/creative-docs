@@ -30,6 +30,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		public static bool operator ==(ViewState a, ViewState b)
+		{
+			return (a.ViewType  == b.ViewType)
+				&& (a.ViewMode  == b.ViewMode)
+				&& (a.PageType  == b.PageType)
+				&& (a.Timestamp == b.Timestamp)
+				&& (a.Guid      == b.Guid);
+		}
+
+		public static bool operator !=(ViewState a, ViewState b)
+		{
+			return (a.ViewType  != b.ViewType)
+				|| (a.ViewMode  != b.ViewMode)
+				|| (a.PageType  != b.PageType)
+				|| (a.Timestamp != b.Timestamp)
+				|| (a.Guid      != b.Guid);
+		}
+
+
 		public static ViewState Empty = new ViewState (ViewType.Unknown, ViewMode.Unknown, PageType.Unknown, null, Guid.Empty);
 
 		public readonly ViewType	ViewType;
