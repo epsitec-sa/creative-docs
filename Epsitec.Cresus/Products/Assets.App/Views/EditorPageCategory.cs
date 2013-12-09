@@ -27,12 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStringController  (parent, ObjectField.Périodicité, editWidth: 90);
 			this.CreateDecimalController (parent, ObjectField.ValeurRésiduelle, DecimalFormat.Amount);
 
-			new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-				PreferredHeight = 10,
-			};
+			this.CreateSepartor (parent);
 
 			this.CreateStringController (parent, ObjectField.Compte1);
 			this.CreateStringController (parent, ObjectField.Compte2);

@@ -374,6 +374,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.fieldControllers.Add (field, controller);
 		}
 
+		protected void CreateSepartor(Widget parent)
+		{
+			new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Top,
+				PreferredHeight = 10,
+			};
+
+		}
+
 
 		protected void ShowHistoryPopup(Widget target, ObjectField field)
 		{

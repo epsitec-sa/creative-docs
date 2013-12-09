@@ -38,16 +38,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.CreateStringController (parent, ObjectField.Description, lineCount: 5);
 		}
-
-		private void CreateSepartor(Widget parent)
-		{
-			new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-				PreferredHeight = 10,
-			};
-
-		}
 	}
 }
