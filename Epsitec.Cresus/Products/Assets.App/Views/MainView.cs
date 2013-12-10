@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor = accessor;
 
 			this.historyViewStates = new List<ViewState> ();
-			this.historyPosition = 0;
+			this.historyPosition = -1;
 		}
 
 		public void CreateUI(Widget parent)
@@ -165,27 +165,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void SaveViewState(ViewState viewState)
 		{
-			while (this.historyPosition < this.historyViewStates.Count)
+			if (this.NavigateBackEnable && viewState == this.historyViewStates[this.historyPosition])
 			{
-				this.historyViewStates.RemoveAt (this.historyViewStates.Count - 1);
+				return;
+			}
+
+			while (this.historyPosition < this.historyViewStates.Count-1)
+			{
+				this.historyViewStates.RemoveAt (this.historyViewStates.Count-1);
 			}
 
 			this.historyViewStates.Add (viewState);
-			this.historyPosition++;
+			this.historyPosition = this.historyViewStates.Count-1;
 
 			this.UpdateToolbar ();
 		}
 
 		private void GoHistoryBack()
 		{
-			this.historyPosition--;
-			this.RestoreViewState (this.historyViewStates[this.historyPosition]);
+			if (this.NavigateBackEnable)
+			{
+				this.RestoreViewState (this.historyViewStates[--this.historyPosition]);
+			}
 		}
 
 		private void GoHistoryForward()
 		{
-			this.historyPosition++;
-			this.RestoreViewState (this.historyViewStates[this.historyPosition]);
+			if (this.NavigateForwardEnable)
+			{
+				this.RestoreViewState (this.historyViewStates[++this.historyPosition]);
+			}
 		}
 
 		private void RestoreViewState(ViewState viewState)
@@ -201,7 +210,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.historyPosition > 0;
+				return this.historyPosition >= 0;
 			}
 		}
 
@@ -209,7 +218,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.historyPosition < this.historyViewStates.Count;
+				return this.historyPosition < this.historyViewStates.Count-1;
 			}
 		}
 

@@ -304,6 +304,7 @@
     <EmbeddedResource Include="Images\View.Persons.icon" />
     <EmbeddedResource Include="Images\Navigate.Back.icon" />
     <EmbeddedResource Include="Images\Navigate.Forward.icon" />
+    <EmbeddedResource Include="Images\Field.Goto.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

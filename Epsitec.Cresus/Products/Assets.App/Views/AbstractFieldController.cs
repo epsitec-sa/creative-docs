@@ -100,6 +100,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		protected IconButton CreateGotoButton()
+		{
+			return new IconButton
+			{
+				Parent        = this.frameBox,
+				IconUri       = Misc.GetResourceIconUri ("Field.Goto"),
+				AutoFocus     = false,
+				Anchor        = AnchorStyles.TopRight,
+				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
+				Margins       = new Margins (0, AbstractFieldController.lineHeight*2, 0, 0),
+			};
+		}
+
 		private void CreateHistoryButton()
 		{
 			this.historyButton = new IconButton

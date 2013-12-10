@@ -48,9 +48,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static string GetSummary(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le résumé multi-lignes d'une personne, du genre:
-			//	Monsieur Jean Dupond Epsitec SA
+			//	Monsieur
+			//	Jean Dupond
+			//	Epsitec SA
 			//	Rue de Neuchâtel 32
 			//	1400 Yverdon-les-Bains
+			//	Suisse
 			var obj = accessor.GetObject (BaseType.Persons, guid);
 			if (obj == null)
 			{
@@ -60,19 +63,37 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var lines = new List<string> ();
 
-				var titre      = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Titre);
-				var prénom     = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Prénom);
-				var nom        = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
+				var titre = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Titre);
+				PersonsLogic.PutLine (lines, titre);
+
+				var prénom = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Prénom);
+				var nom    = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
+				PersonsLogic.PutLine (lines, prénom, nom);
+
 				var entreprise = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Entreprise);
-				PersonsLogic.PutLine (lines, titre, prénom, nom, entreprise);
+				PersonsLogic.PutLine (lines, entreprise);
 
 				var adresse = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Adresse);
 				PersonsLogic.PutLine (lines, adresse);
 
 				var npa   = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Npa);
 				var ville = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Ville);
-				var pays  = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Pays);
-				PersonsLogic.PutLine (lines, npa, ville, pays);
+				PersonsLogic.PutLine (lines, npa, ville);
+
+				var pays = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Pays);
+				PersonsLogic.PutLine (lines, pays);
+
+				var tel1 = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Téléphone1);
+				PersonsLogic.PutLine (lines, tel1);
+
+				var tel2 = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Téléphone2);
+				PersonsLogic.PutLine (lines, tel2);
+
+				var tel3 = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Téléphone3);
+				PersonsLogic.PutLine (lines, tel3);
+
+				var mail = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Mail);
+				PersonsLogic.PutLine (lines, mail);
 
 				return string.Join ("<br/>", lines);
 			}

@@ -33,10 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.button.Text = this.GuidToString (this.value);
 					}
 
-					if (this.summary != null)
-					{
-						this.summary.Text = this.GuidToSummary (this.value);
-					}
+					this.UpdateButtons ();
 				}
 			}
 		}
@@ -68,6 +65,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.button.NormalColor = ColorManager.NormalFieldColor;
 					}
 				}
+
+				this.UpdateButtons ();
 			}
 		}
 
@@ -76,32 +75,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
-			var line1 = new FrameBox
-			{
-				Parent          = this.frameBox,
-				Dock            = DockStyle.Top,
-				PreferredHeight = AbstractFieldController.lineHeight,
-				Margins         = new Margins (0, 0, 0, 0),
-			};
-
-			var line2 = new ColoredButton
-			{
-				Parent          = this.frameBox,
-				Dock            = DockStyle.Top,
-				PreferredHeight = 54,
-				Margins         = new Margins (0, 46, 0, 0),
-				Padding         = new Margins (5),
-				NormalColor     = ColorManager.ReadonlyFieldColor,
-				HoverColor      = ColorManager.HoverColor,
-			};
-
 			this.button = new ColoredButton
 			{
-				Parent           = line1,
+				Parent           = this.frameBox,
 				HoverColor       = ColorManager.HoverColor,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = this.EditWidth,
+				PreferredWidth   = this.EditWidth-AbstractFieldController.lineHeight,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
 				TabIndex         = this.TabIndex,
@@ -120,12 +100,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight  = AbstractFieldController.lineHeight,
 			};
 
-			this.summary = new StaticText
-			{
-				Parent           = line2,
-				ContentAlignment = ContentAlignment.TopLeft,
-				Dock             = DockStyle.Fill,
-			};
+			this.CreateGotoPersonButton ();
 
 			//	Connexion des événements.
 			this.button.Clicked += delegate
@@ -137,14 +112,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.ShowPopup ();
 			};
+		}
 
-			line2.Clicked += delegate
+		private void CreateGotoPersonButton()
+		{
+			this.gotoButton = this.CreateGotoButton ();
+
+			ToolTip.Default.SetToolTip (this.gotoButton, "Montre les détails de la personne");
+
+			this.gotoButton.Clicked += delegate
 			{
 				if (!this.value.IsEmpty)
 				{
 					this.OnGoto (new ViewState (ViewType.Persons, ViewMode.Unknown, PageType.Person, null, this.value));
 				}
 			};
+		}
+
+		private void UpdateButtons()
+		{
+			if (this.button != null)
+			{
+				var text = PersonsLogic.GetSummary (this.Accessor, this.value);
+				ToolTip.Default.SetToolTip (this.button, text);
+			}
+
+			if (this.gotoButton != null)
+			{
+				this.gotoButton.Visibility = !this.value.IsEmpty;
+			}
 		}
 
 
@@ -166,14 +162,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return PersonsLogic.GetFullName (this.Accessor, guid);
 		}
 
-		private string GuidToSummary(Guid guid)
-		{
-			return PersonsLogic.GetSummary (this.Accessor, guid);
-		}
-
 
 		private ColoredButton					button;
-		private StaticText						summary;
+		private IconButton						gotoButton;
 		private Guid							value;
 	}
 }
