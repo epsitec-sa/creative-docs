@@ -114,3 +114,18 @@ Fichiers mis en production:
 
 - http://www.opac.ch/files/aider/2013-11-30-aider.zip
 - http://www.opac.ch/files/aider/eerv-2013-11-28.zip
+
+
+Lancé le 08.12.2013
+-------------------
+
+SVN Update > r22469
+
+-echupdate -newechfile:S:\eerv\eerv-2013-12-05.xml -oldechfile:S:\eerv\eerv-2013-11-28.xml -output:S:\eerv\ech-diff-2013-12-05.md
+
+Lancé le 16.12.2013
+-------------------
+
+SVN Update > r22485
+
+-echupdate -newechfile:S:\eerv\eerv-2013-12-13.xml -oldechfile:S:\eerv\eerv-2013-12-05.xml -output:S:\eerv\ech-diff-2013-12-13.md
