@@ -48,6 +48,58 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableActionMenu<ActionAiderContactViewController0CreatePerson> ();
 			}
 
+			if (user.LoginName == "epsitec")
+			{
+				//	Process the degenerated cases when we click on them: no name for the
+				//	contact (usually this means that there is no person or fully undefined
+				//	persons attached to the contact). This should never happen, but as of
+				//	dec. 17 2013, the database contained about 150 of these broken contacts.
+
+				if (contact.DisplayName == AiderContactEntity.AddressContactSuffix)
+				{
+					var example = new AiderContactEntity
+					{
+						DisplayName = AiderContactEntity.AddressContactSuffix
+					};
+
+					var emptyContacts = this.BusinessContext.GetByExample (example).ToList ();
+
+					foreach (var item in emptyContacts)
+					{
+						AiderPersonEntity.Delete (this.BusinessContext, item.Person);
+					}
+
+					this.BusinessContext.SaveChanges (Cresus.Core.Business.LockingPolicy.KeepLock);
+
+					return;
+				}
+
+				if (string.IsNullOrEmpty (contact.DisplayName))
+				{
+					var example = new AiderContactEntity
+					{
+						DisplayName = ""
+					};
+
+					var emptyContacts = this.BusinessContext.GetByExample (example).ToList ();
+
+					foreach (var item in emptyContacts)
+					{
+						if (item.Person.IsNull ())
+						{
+							AiderContactEntity.Delete (this.BusinessContext, item);
+						}
+						else
+						{
+							AiderPersonEntity.Delete (this.BusinessContext, item.Person);
+						}
+					}
+
+					this.BusinessContext.SaveChanges (Cresus.Core.Business.LockingPolicy.KeepLock);
+
+					return;
+				}
+			}
 
 			var contactSummary = SummaryAiderContactViewController.GetPersonContactSummary (contact);
 

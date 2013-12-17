@@ -23,7 +23,45 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
 		{
-			var address = this.Entity.Address;
+			var user = AiderUserManager.Current.AuthenticatedUser;
+			var household = this.Entity;
+			
+			if (user.LoginName == "epsitec")
+			{
+				//	Process the degenerated cases when we click on them: no name for the
+				//	household (usually this means that there is no member). This should
+				//	never happen, but as of dec. 17 2013, the database contained 219
+				//	of these broken households.
+
+				if (string.IsNullOrEmpty (household.DisplayName))
+				{
+					var example1 = new AiderHouseholdEntity
+					{
+						DisplayName = ""
+					};
+
+					var example2 = new AiderHouseholdEntity
+					{
+						DisplayName = ","
+					};
+
+					var emptyItems1 = this.BusinessContext.GetByExample (example1);
+					var emptyItems2 = this.BusinessContext.GetByExample (example2);
+
+					var emptyItems = emptyItems1.Concat (emptyItems2).ToList ();
+
+					foreach (var item in emptyItems)
+					{
+						AiderHouseholdEntity.Delete (this.BusinessContext, item);
+					}
+
+					this.BusinessContext.SaveChanges (Cresus.Core.Business.LockingPolicy.KeepLock);
+
+					return;
+				}
+			}
+
+			var address = household.Address;
 			var html = address.GetHtmlForLocationWebServices ();
 
 			wall.AddBrick()
@@ -50,15 +88,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Template ()
 					.Icon ("Data.AiderPersons")
 					.Title ("Membres du ménage")
-					.Text (p => p.GetCompactSummary (this.Entity))
+					.Text (p => p.GetCompactSummary (household))
 				.End ();
 
-			var household = this.Entity;
 			var person    = household.Members.FirstOrDefault ();
 
 			if (this.HasUserPowerLevel (UserPowerLevel.Administrator))
 			{
-				var head = this.Entity.Contacts.FirstOrDefault (c => (c.HouseholdRole == HouseholdRole.Head) && (c.Person.IsGovernmentDefined));
+				var head = household.Contacts.FirstOrDefault (c => (c.HouseholdRole == HouseholdRole.Head) && (c.Person.IsGovernmentDefined));
 
 				if (head != null)
 				{

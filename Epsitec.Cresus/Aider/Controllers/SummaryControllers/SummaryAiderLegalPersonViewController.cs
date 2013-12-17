@@ -11,6 +11,7 @@ using Epsitec.Common.Support;
 
 using System.Linq;
 using Epsitec.Aider.Controllers.ActionControllers;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -18,6 +19,43 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(Cresus.Bricks.BrickWall<AiderLegalPersonEntity> wall)
 		{
+			var user = AiderUserManager.Current.AuthenticatedUser;
+			var legal = this.Entity;
+
+			if (user.LoginName == "epsitec")
+			{
+				//	Process the degenerated cases when we click on them: no name for the
+				//	legal person. This should never happen, but as of dec. 17 2013, the
+				//	database contained 6 of these broken legal persons.
+
+				if (string.IsNullOrEmpty (legal.Name))
+				{
+					var example1 = new AiderLegalPersonEntity
+					{
+						Name = ""
+					};
+
+					var example2 = new AiderLegalPersonEntity
+					{
+						Name = @"''"
+					};
+
+					var emptyItems1 = this.BusinessContext.GetByExample (example1);
+					var emptyItems2 = this.BusinessContext.GetByExample (example2);
+
+					var emptyItems = emptyItems1.Concat (emptyItems2).ToList ();
+
+					foreach (var item in emptyItems)
+					{
+						AiderLegalPersonEntity.Delete (this.BusinessContext, item);
+					}
+
+					this.BusinessContext.SaveChanges (Cresus.Core.Business.LockingPolicy.KeepLock);
+
+					return;
+				}
+			}
+			
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderLegalPersonViewController0AddToBag> ();
 

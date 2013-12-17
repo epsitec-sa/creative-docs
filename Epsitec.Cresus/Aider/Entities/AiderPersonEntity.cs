@@ -151,7 +151,7 @@ namespace Epsitec.Aider.Entities
 
 			if (this.eCH_Person.IsDeceased)
 			{
-				name += " †";
+				name += AiderPersonEntity.DeceasedSuffix;
 			}
 
 			return name;
@@ -392,6 +392,11 @@ namespace Epsitec.Aider.Entities
 		
 		public static void Delete(BusinessContext businessContext, AiderPersonEntity person)
 		{
+			if (person.IsNull ())
+			{
+				return;
+			}
+
 			var contacts = person.Contacts.ToList ();
 			var groups   = person.Groups.ToList ();
 
@@ -842,6 +847,8 @@ namespace Epsitec.Aider.Entities
 
 		#endregion
 
+
+		public static readonly string			DeceasedSuffix = " †";
 
 		private static readonly AiderWarningExampleFactory warningExampleFactory = new AiderWarningExampleFactory<AiderPersonEntity, AiderPersonWarningEntity> ((example, source) => example.Person = source);
 

@@ -462,7 +462,7 @@ namespace Epsitec.Aider.Entities
 
 		private string GetPersonAddressDisplayName()
 		{
-			return this.Person.GetDisplayName () + " (°)";
+			return this.Person.GetDisplayName () + AiderContactEntity.AddressContactSuffix;
 		}
 
 		private string GetPersonDeceasedDisplayName()
@@ -555,5 +555,8 @@ namespace Epsitec.Aider.Entities
 
 		
 		private IList<AiderGroupParticipantEntity>	participations;
+
+
+		public static readonly string			AddressContactSuffix	= " (°)";
 	}
 }
