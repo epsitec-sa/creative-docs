@@ -9,9 +9,7 @@ using Epsitec.Cresus.Core.Labels;
 using Epsitec.Cresus.Core.Metadata;
 
 using System.Collections.Generic;
-
 using System.IO;
-
 using System.Linq;
 
 
@@ -37,11 +35,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			return "pdf";
 		}
 
-
 		protected override void WriteStream(Stream stream)
 		{
 			var labelTexts = this.GetLabelTexts ().ToList ();
 			var labels     = this.GetLabels ();
+
+			if (this.RemoveDuplicates)
+			{
+				labelTexts = labelTexts.Distinct ().ToList ();
+			}
 
 			labels.GeneratePdf (stream, labelTexts.Count, i => labelTexts[i]);
 		}
@@ -52,7 +54,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			return this.Accessor.GetAllItems ()
 				.Select (e => this.textFactory.GetLabelText (e));
 		}
-
 
 		private LabelGenerator GetLabels()
 		{

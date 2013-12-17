@@ -141,9 +141,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		internal static Response Export(Caches caches, EntityExtractor extractor, dynamic query)
 		{
-			if (extractor.Accessor.GetItemCount () > 10000)
+			var itemCount = extractor.Accessor.GetItemCount ();
+
+			if (itemCount > 10000)
 			{
-				throw new InvalidOperationException ("Too much data in extractor");
+				throw new System.InvalidOperationException ("Too many items in extractor: " + itemCount.ToString ());
 			}
 
 			EntityWriter writer = DatabaseModule.GetEntityWriter (caches, extractor, query);
@@ -325,25 +327,31 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var accessor = extractor.Accessor;
 
 			var properties = caches.PropertyAccessorCache;
-			var format = new CsvArrayFormat ();
-			var columns = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns);
+			var format     = new CsvArrayFormat ();
+			var columns    = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns);
 
-			return new ArrayWriter (properties, metaData, columns, accessor, format);
+			return new ArrayWriter (properties, metaData, columns, accessor, format)
+			{
+				RemoveDuplicates = true
+			};
 		}
 
 		private static EntityWriter GetLabelWriter(EntityExtractor extractor, dynamic query)
 		{
-			string rawLayout = query.layout;
-			int rawTextFactoryId = query.text;
+			string rawLayout        = query.layout;
+			int    rawTextFactoryId = query.text;
 
 			var metaData = extractor.Metadata;
 			var accessor = extractor.Accessor;
 
-			var layout = (LabelLayout) Enum.Parse (typeof (LabelLayout), rawLayout);
-			var entitytype = metaData.EntityTableMetadata.EntityType;
+			var layout      = (LabelLayout) Enum.Parse (typeof (LabelLayout), rawLayout);
+			var entitytype  = metaData.EntityTableMetadata.EntityType;
 			var textFactory = LabelTextFactoryResolver.Resolve (entitytype, rawTextFactoryId);
 
-			return new LabelWriter (metaData, accessor, textFactory, layout);
+			return new LabelWriter (metaData, accessor, textFactory, layout)
+			{
+				RemoveDuplicates = true
+			};
 		}
 	}
 }

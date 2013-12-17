@@ -665,7 +665,7 @@ AiderMailingParticipant = [LVOL03]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAOE]" title="Moi de naissance" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAOE]" title="Mois de naissance" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -978,7 +978,7 @@ AiderMailingParticipant = [LVOL03]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVAOE]" title="Moi de naissance" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVAOE]" title="Mois de naissance" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>

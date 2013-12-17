@@ -8,16 +8,12 @@ using System.IO;
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
-
-
 	/// <summary>
 	/// This class is the base class of all writers that are used to serialize a sequence of
 	/// entities to a stream, like a PDF or a CSV file.
 	/// </summary>
 	internal abstract class EntityWriter
 	{
-
-
 		public EntityWriter(DataSetMetadata metadata, DataSetAccessor accessor)
 		{
 			this.metadata = metadata;
@@ -25,7 +21,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		}
 
 
-		protected DataSetMetadata Metadata
+		public bool								RemoveDuplicates
+		{
+			get;
+			set;
+		}
+
+
+		protected DataSetMetadata				Metadata
 		{
 			get
 			{
@@ -33,8 +36,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			}
 		}
 
-
-		protected DataSetAccessor Accessor
+		protected DataSetAccessor				Accessor
 		{
 			get
 			{
@@ -78,13 +80,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		protected abstract void WriteStream(Stream stream);
 
 
-		private readonly DataSetMetadata metadata;
-
-
-		private readonly DataSetAccessor accessor;
-
-
+		private readonly DataSetMetadata		metadata;
+		private readonly DataSetAccessor		accessor;
 	}
-
-
 }
