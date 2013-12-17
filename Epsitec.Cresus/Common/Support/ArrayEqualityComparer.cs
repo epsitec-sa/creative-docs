@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Support
 {
@@ -93,9 +96,5 @@ namespace Epsitec.Common.Support
 		/// An instance of the <c>ArrayEqualityComparer{T}</c> class ready to be used.
 		/// </summary>
 		private static readonly ArrayEqualityComparer<T> instance;
-
-
 	}
-
-
 }

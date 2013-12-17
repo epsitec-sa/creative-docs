@@ -376,6 +376,8 @@
     <Compile Include="IO\CsvWriter.cs" />
     <Compile Include="IO\Web.cs" />
     <Compile Include="Support\Extensions\HashSetExtensions.cs" />
+    <Compile Include="Support\ListEqualityComparer.cs" />
+    <Compile Include="Support\ListEqualityComparer`2.cs" />
     <Compile Include="Support\TaskExtensions.cs" />
     <Compile Include="Support\ExpressionNormalizer.cs" />
     <Compile Include="Support\Extensions\ConcurrentDictionaryExtensions.cs" />
