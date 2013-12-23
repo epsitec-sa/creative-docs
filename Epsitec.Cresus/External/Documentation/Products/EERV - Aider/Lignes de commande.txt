@@ -129,3 +129,12 @@ Lancé le 16.12.2013
 SVN Update > r22485
 
 -echupdate -newechfile:S:\eerv\eerv-2013-12-13.xml -oldechfile:S:\eerv\eerv-2013-12-05.xml -output:S:\eerv\ech-diff-2013-12-13.md
+
+
+Lancé le 23.12.2013
+-------------------
+
+SVN update > r22490
+
+
+-echupdate -newechfile:S:\eerv\eerv-2013-12-19.xml -oldechfile:S:\eerv\eerv-2013-12-13.xml -output:S:\eerv\ech-diff-2013-12-20.md
