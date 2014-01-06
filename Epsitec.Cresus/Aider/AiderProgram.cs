@@ -255,6 +255,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.LoadElasticSearch (args));
 					return;
 				}
+
+				if (args.Contains ("-fixaddresses")) //-fixaddresses -rchfile:s:\DATA\rchmatched.csv -nonrchfile:s:\DATA\nonrchmatched.csv
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixAddresses (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -645,6 +651,21 @@ namespace Epsitec.Aider
 
 			Tests.EChFileAnalyzer.Analyze (input);
 		}
+
+		private static void FixAddresses(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				var correctedAddressesRchFile = AiderProgram.GetFile (args, "-rchfile:", true);
+				var correctedAddressesNonRchFile = AiderProgram.GetFile (args, "-nonrchfile:", true);
+
+				AddressesFixer.FixPstat3To6 (coreData,correctedAddressesRchFile,correctedAddressesNonRchFile);
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
+
+
 
 		private static void RunWithCoreData(Action<CoreData> action)
 		{
