@@ -1,11 +1,10 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
-using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Controllers;
@@ -39,7 +38,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Text (TextFormatter.FormatText ("La personne", person.DisplayName, "(", person.Age, ")",
 					"est actuellement associée", householdSummary, "."))
 				.Field<bool> ()
-					.Title ("Déplacer la personne dans le nouveau ménage")
+					.Title ("Déplacer la personne dans son propre ménage")
 					.InitialValue (true)
 				.End ()
 			.End ();
@@ -68,23 +67,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			var context = this.BusinessContext;
 			var person  = this.Entity;
-
-			if (move)
-			{
-				var example = new AiderContactEntity ()
-				{
-					Person = person,
-					ContactType = Enumerations.ContactType.PersonHousehold,
-				};
-
-				var results = context.DataContext.GetByExample (example);
-
-				results.ForEach (x => AiderContactEntity.Delete (context, x));
-			}
-
-			var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-
-			AiderContactEntity.Create (this.BusinessContext, person, newHousehold, true);
+			
+			person.AssignNewHousehold (context, move);
 		}
 	}
 }
