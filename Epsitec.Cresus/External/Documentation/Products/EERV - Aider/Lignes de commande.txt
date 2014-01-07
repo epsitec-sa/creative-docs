@@ -123,6 +123,7 @@ SVN Update > r22469
 
 -echupdate -newechfile:S:\eerv\eerv-2013-12-05.xml -oldechfile:S:\eerv\eerv-2013-11-28.xml -output:S:\eerv\ech-diff-2013-12-05.md
 
+
 Lancé le 16.12.2013
 -------------------
 
@@ -136,5 +137,16 @@ Lancé le 23.12.2013
 
 SVN update > r22490
 
-
 -echupdate -newechfile:S:\eerv\eerv-2013-12-19.xml -oldechfile:S:\eerv\eerv-2013-12-13.xml -output:S:\eerv\ech-diff-2013-12-20.md
+
+
+Lancé le 07.01.2014
+-------------------
+
+SVN update > r22494
+
+-fixaddresses -file:S:\eerv\match-rch.csv
+-fixaddresses -file:S:\eerv\match-nonrch.csv
+
+-echupdate -newechfile:S:\eerv\eerv-2013-12-26.xml -oldechfile:S:\eerv\eerv-2013-12-19.xml -output:S:\eerv\ech-diff-2013-12-26.md
+-echupdate -newechfile:S:\eerv\eerv-2014-01-06.xml -oldechfile:S:\eerv\eerv-2013-12-26.xml -output:S:\eerv\ech-diff-2014-01-06.md
