@@ -1,4 +1,4 @@
-//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -7,7 +7,6 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
-
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
@@ -16,8 +15,8 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (2)]
-	public sealed class ActionAiderHouseholdViewController2RemoveMemberFromHousehold : TemplateActionViewController<AiderHouseholdEntity, AiderPersonEntity>
+	[ControllerSubType (4)]
+	public sealed class ActionAiderContactViewController4RemoveMemberFromHousehold : TemplateActionViewController<AiderContactEntity, AiderPersonEntity>
 	{
 		public override FormattedText GetTitle()
 		{
@@ -29,8 +28,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create (this.Execute);
 		}
 
-		
-		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
+
+		protected override void GetForm(ActionBrick<AiderContactEntity, SimpleBrick<AiderContactEntity>> form)
 		{
 			var person = this.AdditionalEntity;
 			var households = person.Households;
@@ -53,21 +52,22 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					"\n \n",
 					"La personne fera encore partie", variable);
 			}
-			
+
 			form
 				.Title ("Retirer le membre du ménage ?")
 				.Text (message)
 				.End ();
 		}
 
-		
+
 		private void Execute()
 		{
 			var context   = this.BusinessContext;
 			var person    = this.AdditionalEntity;
-			var household = this.Entity;
+			var household = this.Entity.Household;
 
 			person.RemoveFromHousehold (context, household);
 		}
 	}
 }
+

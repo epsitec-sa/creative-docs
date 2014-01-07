@@ -253,6 +253,34 @@ namespace Epsitec.Aider.Entities
 			AiderContactEntity.Create (context, this, newHousehold, isHead: true);
 		}
 
+		public void RemoveFromHousehold(BusinessContext context, AiderHouseholdEntity household)
+		{
+			if (household.IsNull ())
+			{
+				return;
+			}
+
+			var contacts = this.Contacts;
+			var contact  = contacts.FirstOrDefault (x => x.Household == household);
+
+			if (this.Households.Count == 1)
+			{
+				//	The person is attached to a single household. We have to create a new household
+				//	and move it there; this will remove the person from its previous household.
+
+				this.AssignNewHousehold (context, move: true);
+			}
+			else
+			{
+				//	The person is attached to several households. Simply delete the contact; this
+				//	will remove the association between the person and the selected household.
+
+				context.Register (household);
+
+				AiderContactEntity.Delete (context, contact);
+			}
+		}
+		
 		public void RemoveFromHouseholds(BusinessContext context)
 		{
 			var example = new AiderContactEntity ()
