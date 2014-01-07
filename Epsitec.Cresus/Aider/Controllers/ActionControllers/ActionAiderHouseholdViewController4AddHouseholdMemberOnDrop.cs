@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -28,10 +28,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create <bool>(this.Execute);
+			return ActionExecutor.Create <bool, bool>(this.Execute);
 		}
 
-		private void Execute(bool isPersonHead)
+		private void Execute(bool isPersonHead, bool move)
 		{
 			var household = this.Entity;
 			var person    = this.AdditionalEntity.Person;
@@ -40,9 +40,29 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			ActionAiderHouseholdViewController1AddHouseholdMember.ValidateHouseholdComposition (household, person);
 			ActionAiderHouseholdViewController1AddHouseholdMember.ValidatePersonAge (household, person, isPersonHead);
 
-			AiderContactEntity.Create (this.BusinessContext, person, household, isPersonHead);
+			//	If the person was the only one in the original household, then move the person
+			//	to the new household and do not keep the original one; there is no need to keep
+			//	it. However, if the person was already member of another household (a child with
+			//	his father, for instance), then don't automatically move the person (the child
+			//	might be in two households: with his father and with his mother)...
 
-			household.RefreshCache ();
+			if ((person.HouseholdContact.IsNotNull ()) &&
+				(person.HouseholdContact.Household.IsNotNull ()))
+			{
+				if (person.HouseholdContact.Household.Members.Count == 1)
+				{
+					move = true;
+				}
+			}
+
+			var context = this.BusinessContext;
+
+			if (move)
+			{
+				person.RemoveFromHouseholds (context);
+			}
+
+			AiderContactEntity.Create (context, person, household, isPersonHead);
 		}
 
 		internal static void ValidatePerson(AiderHouseholdEntity household, AiderPersonEntity person)
@@ -51,10 +71,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				Logic.BusinessRuleException (household, Resources.Text ("Aucune personne n'a été sélectionnée, ou le contact choisi ne correspond pas à une personne physique."));
 			}
+			
 			if (person.IsDeceased)
 			{
 				Logic.BusinessRuleException (household, Resources.Text ("Il n'est pas possible d'associer une personne décédée à un ménage."));
 			}
+			
 			var sex = person.eCH_Person.PersonSex;
 
 			if ((sex != Enumerations.PersonSex.Female) &&
@@ -93,8 +115,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			form
 				.Title (TextFormatter.FormatText ("Ajouter", this.AdditionalEntity.DisplayName, "au ménage ?"))
 				.Field<bool> ()
-					.Title ("chef du ménage")
+					.Title ("Définir en tant que chef du ménage")
 					.InitialValue (false)
+				.End ()
+				.Field<bool> ()
+					.Title ("Déplacer vers ce ménage")
+					.InitialValue (true)
 				.End ()
 			.End ();
 		}
