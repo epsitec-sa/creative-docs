@@ -656,10 +656,10 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				var correctedAddressesRchFile = AiderProgram.GetFile (args, "-rchfile:", true);
-				var correctedAddressesNonRchFile = AiderProgram.GetFile (args, "-nonrchfile:", true);
+				var correctedAddressesFile = AiderProgram.GetFile (args, "-file:", true);
 
-				AddressesFixer.FixPstat3To6 (coreData,correctedAddressesRchFile,correctedAddressesNonRchFile);
+				SwissPostAddressFixer.ApplyFixes (coreData, correctedAddressesFile);
+				
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});

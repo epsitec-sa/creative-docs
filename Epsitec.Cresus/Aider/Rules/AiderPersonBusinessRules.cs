@@ -121,6 +121,11 @@ namespace Epsitec.Aider.Rules
 			{
 				return;
 			}
+			
+			if (eCH.DataSource == Enumerations.DataSource.Government)
+			{
+				AiderPersonBusinessRules.FixMrMrsBasedOnSex (person, eCH);
+			}
 
 			switch (person.MrMrs)
 			{
@@ -163,6 +168,28 @@ namespace Epsitec.Aider.Rules
 			Logic.BusinessRuleException (person, Resources.Text ("Vérifiez l'appellation: elle ne correspond pas au sexe de la personne."));
 		}
 
+
+		private static void FixMrMrsBasedOnSex(AiderPersonEntity person, eCH_PersonEntity eCH)
+		{
+			if (eCH.PersonSex == PersonSex.Male)
+			{
+				person.MrMrs = PersonMrMrs.Monsieur;
+			}
+			else
+			{
+				if (person.MrMrs == PersonMrMrs.Mademoiselle)
+				{
+					if ((eCH.AdultMaritalStatus == PersonMaritalStatus.Single) ||
+						(eCH.AdultMaritalStatus == PersonMaritalStatus.Unmarried) ||
+						(eCH.AdultMaritalStatus == PersonMaritalStatus.None))
+					{
+						return;
+					}
+				}
+				
+				person.MrMrs = PersonMrMrs.Madame;
+			}
+		}
 		
 		private static void VerifyParish(BusinessContext context, AiderPersonEntity person)
 		{

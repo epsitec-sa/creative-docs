@@ -705,6 +705,11 @@ namespace Epsitec.Cresus.Core.Business
 			return true;
 		}
 
+		public void ClearRegisteredEntities()
+		{
+			this.entityRecords.Clear ();
+		}
+
 
 		public void ApplyRulesToRegisteredEntities(RuleType ruleType, EntitySaveMode entitySaveMode = EntitySaveMode.None)
 		{

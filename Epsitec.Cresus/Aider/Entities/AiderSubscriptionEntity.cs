@@ -243,6 +243,11 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderSubscriptionEntity FindSubscription(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
+			if (household.IsNull ())
+			{
+				return null;
+			}
+
 			var example = new AiderSubscriptionEntity ()
 			{
 				SubscriptionType = SubscriptionType.Household,
@@ -254,6 +259,11 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderSubscriptionEntity FindSubscription(BusinessContext businessContext, AiderContactEntity legalPersonContact)
 		{
+			if (legalPersonContact.ContactType != ContactType.Legal)
+			{
+				return null;
+			}
+
 			var example = new AiderSubscriptionEntity ()
 			{
 				SubscriptionType = SubscriptionType.LegalPerson,

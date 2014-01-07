@@ -223,7 +223,8 @@
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\ContactNameFixer.cs" />
-    <Compile Include="Data\Job\AddressesFixer.cs" />
+    <Compile Include="Data\Job\MatchResponse.cs" />
+    <Compile Include="Data\Job\SwissPostAddressFixer.cs" />
     <Compile Include="Data\Job\PotentialDuplicatedPersonFinder.cs" />
     <Compile Include="Data\Job\EChWarningsFixer.cs" />
     <Compile Include="Data\Job\EChPersonFixer.cs" />
