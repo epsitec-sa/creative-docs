@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -49,7 +49,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var warning = this.Entity;
 			var person  = warning.Person;
 
-			AiderPersonEntity.KillPerson (this.BusinessContext, person, date, uncertain);
+			person.KillPerson (this.BusinessContext, date, uncertain);
 
 		//	No need to clear the warning -- killing the person removes all warnings...
 		//	this.ClearWarningAndRefreshCaches ();

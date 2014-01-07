@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -332,6 +332,8 @@ namespace Epsitec.Aider.Entities
 			if (household.IsNotNull ())
 			{
 				household.RemoveContactInternal (contact);
+
+				AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, household);
 			}
 
 			var legalPerson = contact.LegalPerson;

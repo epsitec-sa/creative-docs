@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var warning = this.Entity;
 			var person  = warning.Person;
 
-			AiderPersonEntity.HidePerson (this.BusinessContext, person);
+			person.HidePerson (this.BusinessContext);
 
 			this.ClearWarningAndRefreshCaches ();
 			this.ClearWarningAndRefreshCachesForAll (warning.WarningType);

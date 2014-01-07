@@ -1,5 +1,5 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers;
 using Epsitec.Aider.Enumerations;
@@ -180,6 +180,31 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+
+		public void ToggleHouseholdRole(AiderHouseholdEntity household)
+		{
+			if (household.IsNull ())
+			{
+				return;
+			}
+
+			var contact = this.Contacts.FirstOrDefault (x => x.Household == household);
+
+			if (contact.IsNotNull ())
+			{
+				if (contact.HouseholdRole == Enumerations.HouseholdRole.Head)
+				{
+					contact.HouseholdRole = Enumerations.HouseholdRole.None;
+				}
+				else
+				{
+					contact.HouseholdRole = Enumerations.HouseholdRole.Head;
+				}
+			}
+		}
+
+		
+		
 		public static string GetIconName(string prefix, PersonMrMrs? personMrMrs, Language? language = null)
 		{
 			string suffix;
@@ -206,13 +231,51 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-
-		public static void HidePerson(BusinessContext businessContext, AiderPersonEntity person)
+		public void AssignNewHousehold(BusinessContext context, bool move)
 		{
-			var household = person.MainContact.Household;
+			var newHousehold = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
 
-			person.Visibility = PersonVisibilityStatus.Hidden;
-			person.eCH_Person.RemovalReason = RemovalReason.Unknown;
+			if ((this.MainContact.IsNotNull ()) &&
+				(this.MainContact.Address.IsNotNull ()))
+			{
+				var oldAddress = this.MainContact.Address;
+				var newAddress = newHousehold.Address;
+
+				newAddress.Town = oldAddress.Town;
+				newAddress.StreetHouseNumberAndComplement = oldAddress.StreetHouseNumberAndComplement;
+			}
+
+			if (move)
+			{
+				this.RemoveFromHouseholds (context);
+			}
+
+			AiderContactEntity.Create (context, this, newHousehold, isHead: true);
+		}
+
+		public void RemoveFromHouseholds(BusinessContext context)
+		{
+			var example = new AiderContactEntity ()
+			{
+				Person      = this,
+				ContactType = Enumerations.ContactType.PersonHousehold,
+			};
+
+			var results = context.GetByExample (example);
+			var households = results.Select (x => x.Household).Where (x => x.IsNotNull ()).Distinct ().ToList ();
+
+			results.ForEach (x => AiderContactEntity.Delete (context, x));
+
+			AiderHouseholdEntity.DeleteEmptyHouseholds (context, households, keepChildrenOnly: true);
+		}
+
+		
+		public void HidePerson(BusinessContext businessContext)
+		{
+			var household = this.MainContact.Household;
+
+			this.Visibility = PersonVisibilityStatus.Hidden;
+			this.eCH_Person.RemovalReason = RemovalReason.Unknown;
 
 			if (household.Members.All (x => x.Visibility != PersonVisibilityStatus.Default))
 			{
@@ -225,22 +288,21 @@ namespace Epsitec.Aider.Entities
 		/// associated households; groups will be remapped to the deceased contact.
 		/// </summary>
 		/// <param name="businessContext">The business context.</param>
-		/// <param name="person">The dead person.</param>
 		/// <param name="date">The date of the death.</param>
 		/// <param name="uncertain">If set to <c>true</c>, the date is uncertain.</param>
-		public static void KillPerson(BusinessContext businessContext, AiderPersonEntity person, Date date, bool uncertain)
+		public void KillPerson(BusinessContext businessContext, Date date, bool uncertain)
 		{
-			var contacts       = person.Contacts.ToList ();
-			var households     = person.Households.ToList ();
-			var participations = person.Groups.ToList ();
-			var warnings       = person.Warnings.ToList ();
+			var contacts       = this.Contacts.ToList ();
+			var households     = this.Households.ToList ();
+			var participations = this.Groups.ToList ();
+			var warnings       = this.Warnings.ToList ();
 
-			person.Visibility = PersonVisibilityStatus.Deceased;
-			person.eCH_Person.PersonDateOfDeath = date;
-			person.eCH_Person.PersonDateOfDeathIsUncertain = uncertain;
-			person.eCH_Person.RemovalReason = RemovalReason.Deceased;
+			this.Visibility = PersonVisibilityStatus.Deceased;
+			this.eCH_Person.PersonDateOfDeath = date;
+			this.eCH_Person.PersonDateOfDeathIsUncertain = uncertain;
+			this.eCH_Person.RemovalReason = RemovalReason.Deceased;
 
-			var deadContact = AiderContactEntity.CreateDeceased (businessContext, person);
+			var deadContact = AiderContactEntity.CreateDeceased (businessContext, this);
 
 			//	Update all group participations and replace the contact with the deceased one,
 			//	so that we can keep an history:

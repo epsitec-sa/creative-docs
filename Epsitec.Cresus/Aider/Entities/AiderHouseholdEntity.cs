@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Enumerations;
@@ -296,7 +296,12 @@ namespace Epsitec.Aider.Entities
 			businessContext.DeleteEntity (household);
 		}
 
-		public static void DeleteEmptyHouseholds(BusinessContext businessContext, IEnumerable<AiderHouseholdEntity> households)
+		public static void DeleteEmptyHouseholds(BusinessContext businessContext, params AiderHouseholdEntity[] households)
+		{
+			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, households, keepChildrenOnly: true);
+		}
+
+		public static void DeleteEmptyHouseholds(BusinessContext businessContext, IEnumerable<AiderHouseholdEntity> households, bool keepChildrenOnly = false)
 		{
 			foreach (var household in households)
 			{
@@ -306,14 +311,20 @@ namespace Epsitec.Aider.Entities
 				}
 				else
 				{
-					var adults = household.Members.Where (m => m.Age >= 18);
-					var childrens = household.Members.Where (m => m.Age < 18);
+					var adults   = household.Members.Where (m => m.Age >= 18);
+					var children = household.Members.Where (m => m.Age < 18);
 
-					//Check for child-only household case
-					if (adults.Count () == 0 && childrens.Count () > 0)
+					//	Check for children-only household case
+
+					if (!adults.Any () && children.Any ()) 
 					{
-						//Warn childs
-						foreach (var child in childrens)
+						if (keepChildrenOnly)
+						{
+							continue;
+						}
+
+						//	Warn children
+						foreach (var child in children)
 						{
 							AiderPersonWarningEntity.Create (businessContext, child, child.ParishGroupPathCache, WarningType.EChHouseholdMissing, new FormattedText ("Cet enfant n'est plus assigné à un ménage"));
 						}

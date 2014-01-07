@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -33,7 +33,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			var person = this.Entity;
 
-			AiderPersonEntity.KillPerson (this.BusinessContext, person, date, uncertain);
+			person.KillPerson (this.BusinessContext, date, uncertain);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)

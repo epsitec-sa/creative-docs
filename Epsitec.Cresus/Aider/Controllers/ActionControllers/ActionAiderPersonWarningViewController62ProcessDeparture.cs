@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Enumerations;
@@ -53,7 +53,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (hidePerson)
 			{
-				AiderPersonEntity.HidePerson (this.BusinessContext, person);
+				person.HidePerson (this.BusinessContext);
 			}
 			else
 			{

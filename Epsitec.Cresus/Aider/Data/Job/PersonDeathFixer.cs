@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -41,7 +41,7 @@ namespace Epsitec.Aider.Data.Job
 
 				foreach (var personToFix in personsToFix)
 				{
-					AiderPersonEntity.KillPerson (businessContext, personToFix, personToFix.eCH_Person.PersonDateOfDeath.Value, personToFix.eCH_Person.PersonDateOfDeathIsUncertain);
+					personToFix.KillPerson (businessContext, personToFix.eCH_Person.PersonDateOfDeath.Value, personToFix.eCH_Person.PersonDateOfDeathIsUncertain);
 				}
 
 				businessContext.SaveChanges
