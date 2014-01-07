@@ -153,6 +153,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 								.Attribute (BrickMode.HideRemoveButton)
 								.Attribute (BrickMode.AutoGroup)
 								.EnableActionMenu<ActionAiderContactViewController2AddHouseholdMembersToBag> ()
+								.EnableActionMenu<ActionAiderContactViewController4RemoveMemberFromHousehold> ()
+								.EnableActionMenu<ActionAiderContactViewController5ChangeHeadOfHousehold> ()
 								.Template ()
 									.Text (x => x.GetCompactSummary (household))
 								.End ()
