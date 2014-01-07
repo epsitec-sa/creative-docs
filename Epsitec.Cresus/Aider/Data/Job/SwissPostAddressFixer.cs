@@ -44,13 +44,13 @@ namespace Epsitec.Aider.Data.Job
 			var invalidRchAddressesData   = addressData.Where (x => x.Pstat == "6");
 
 			System.Console.WriteLine ("Fixing modified addresses...");
-			SwissPostAddressFixer.ApplyFix (coreData, modifiedRchAddressesData, SwissPostAddressFixer.ProcessModified);
+			SwissPostAddressFixer.ApplyFix (coreData, modifiedRchAddressesData, SwissPostAddressFixer.ApplyModification);
 			
 			System.Console.WriteLine ("Fixing completed addresses...");
-			SwissPostAddressFixer.ApplyFix (coreData, completedRchAddressesData, SwissPostAddressFixer.ProcessCompleted);
+			SwissPostAddressFixer.ApplyFix (coreData, completedRchAddressesData, SwissPostAddressFixer.ApplyModification);
 			
 			System.Console.WriteLine ("Fixing archived addresses...");
-			SwissPostAddressFixer.ApplyFix (coreData, archivedRchAddressesData, SwissPostAddressFixer.ProcessModified);
+			SwissPostAddressFixer.ApplyFix (coreData, archivedRchAddressesData, SwissPostAddressFixer.ApplyModification);
 
 			System.Console.WriteLine ("Fixing subscriptions of invalid addresses...");
 
@@ -136,7 +136,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private static void ProcessModified(AiderTownRepository townRepo, MatchResponse modif, AiderAddressEntity address)
+		private static void ApplyModification(AiderTownRepository townRepo, MatchResponse modif, AiderAddressEntity address)
 		{
 			//	First update the town, then the street, otherwise the mapping algorithm based
 			//	on the user friendly name might not select the correct street name:
@@ -154,12 +154,6 @@ namespace Epsitec.Aider.Data.Job
 				address.StreetUserFriendly       = modif.Street;
 				address.HouseNumberAndComplement = modif.Number;
 			}
-		}
-
-		private static void ProcessCompleted(AiderTownRepository townRepo, MatchResponse modif, AiderAddressEntity address)
-		{
-			address.StreetUserFriendly       = modif.Street;
-			address.HouseNumberAndComplement = modif.Number;
 		}
 	}
 }
