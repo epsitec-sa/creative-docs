@@ -1,5 +1,5 @@
-//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Marc BETTEX
+//	Copyright © 2007-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.uniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
 			this.DataInfrastructure = infrastructure;
-			this.EntityContext = new EntityContext ();
+			this.EntityContext = new EntityContext (this);
 			this.DataLoader = new DataLoader (this);
 			this.DataSaver = new DataSaver (this);
 			this.SerializationManager = new EntitySerializationManager (this);
@@ -1921,6 +1921,23 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.IsReadOnly
 				? TimedReaderWriterLock.LockWrite (this.dataContextLock, this.lockTimeOut)
 				: null;
+		}
+
+		public static DataContext GetDataContext(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				return null;
+			}
+
+			var context = entity.GetEntityContext ();
+
+			if (context == null)
+			{
+				return null;
+			}
+
+			return context.Owner as DataContext;
 		}
 
 		public static bool IsUnchanged(AbstractEntity entity)

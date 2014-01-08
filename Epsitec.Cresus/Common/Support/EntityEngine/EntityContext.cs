@@ -1,4 +1,4 @@
-//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -44,9 +44,10 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </remarks>
 	public class EntityContext : IEntityPersistenceManager
 	{
-
-		public EntityContext() : this (SafeResourceResolver.Instance)
+		public EntityContext(object owner = null)
+			: this (SafeResourceResolver.Instance)
 		{
+			this.owner = owner;
 		}
 
 		/// <summary>
@@ -77,6 +78,14 @@ namespace Epsitec.Common.Support.EntityEngine
 		static EntityContext()
 		{
 			EntityClassFactory.Setup ();
+		}
+
+		public object							Owner
+		{
+			get
+			{
+				return this.owner;
+			}
 		}
 
 		/// <summary>
@@ -843,5 +852,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly SafeResourceResolver resourceResolver;
 		private readonly Dictionary<string, PropertyGetter> propertyGetters;
 		private readonly Dictionary<string, PropertySetter> propertySetters;
+		private readonly object owner;
 	}
 }
