@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public void SetLoading(string userName,bool state)
+		public void SetLoading(string userName, bool state)
 		{
 			if (EntityBagManager.hub != null)
 			{
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Library
 
 		#endregion
 
+	
 		private static IEntityBagHub			hub;
 	}
 }
-

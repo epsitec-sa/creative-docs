@@ -377,6 +377,7 @@
     <Compile Include="Features\FeatureManager.cs" />
     <Compile Include="Helpers\EntityPreviewHelper.cs" />
     <Compile Include="IChartProvider.cs" />
+    <Compile Include="Library\EntityBag.cs" />
     <Compile Include="Library\IMailHub.cs" />
     <Compile Include="Library\EmailManager.cs" />
     <Compile Include="Library\EntityBagManager.cs" />
