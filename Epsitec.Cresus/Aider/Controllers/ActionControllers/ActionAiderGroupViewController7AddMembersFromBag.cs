@@ -40,38 +40,23 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				var message = "Vous n'avez pas le droit d'éditer ce groupe";
 
-				throw new BusinessRuleException (message);
+				Logic.BusinessRuleException (message);
+				
+				return;
 			}
 
 			var contacts = new List<AiderContactEntity> ();
-			
-			var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
+			var bagEntities = EntityBag.GetEntities (this.BusinessContext.DataContext);
 
-			var entitiesId = EntityBagManager.GetCurrentEntityBagManager ().GetUserBagEntitiesId (aiderUser.LoginName).ToList ();
-
-			foreach (var entityId in entitiesId)
+			foreach (var entity in bagEntities)
 			{
-				var entity = this.BusinessContext.DataContext.GetPersistedEntity (entityId);
-
-				if (entity is AiderContactEntity)
-				{
-					contacts.Add ((AiderContactEntity) entity);
-					//Remove entity from the bag
-					this.ConfirmByRemoveFromBag (entity, aiderUser.LoginName);
-				}
+				EntityBag.Process (entity as AiderContactEntity, x => contacts.Add (x));
 			}
 
 			if (contacts.Count > 0)
 			{
 				this.Entity.ImportContactsMembers (this.BusinessContext, contacts, startDate, comment);
 			}
-		}
-
-		private void ConfirmByRemoveFromBag(AbstractEntity entity, string aiderUser)
-		{
-			var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (entity).Value.ToString ().Replace ('/', '-');
-			EntityBagManager.GetCurrentEntityBagManager ().RemoveFromBag (aiderUser, id, When.Now);
-			EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser, false);
 		}
 
 		protected override void GetForm(ActionBrick<AiderGroupEntity, SimpleBrick<AiderGroupEntity>> form)

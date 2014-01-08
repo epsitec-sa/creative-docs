@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -36,71 +36,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-
-			if (this.AdditionalEntity is AiderPersonEntity)
-			{
-				var aiderPerson = (AiderPersonEntity) this.AdditionalEntity;
-				EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
-
-				this.Entity.AddContact (this.BusinessContext, aiderPerson.MainContact);
-				//Remove entity from the bag
-				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
-			}
-
-			if (this.AdditionalEntity is AiderContactEntity)
-			{
-				EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
-
-				this.Entity.AddContact (this.BusinessContext, (AiderContactEntity) this.AdditionalEntity);
-				//Remove entity from the bag
-				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
-			}
-
-			if (this.AdditionalEntity is AiderGroupEntity)
-			{
-				EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
-
-				this.Entity.AddGroup (this.BusinessContext, (AiderGroupEntity) this.AdditionalEntity);
-				//Remove entity from the bag
-				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
-			}
-
-			if (this.AdditionalEntity is AiderGroupExtractionEntity)
-			{
-				EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
-
-				this.Entity.AddGroupExtraction (this.BusinessContext, (AiderGroupExtractionEntity) this.AdditionalEntity);
-				//Remove entity from the bag
-				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
-			}
-
-			if (this.AdditionalEntity is AiderHouseholdEntity)
-			{
-				EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
-
-				this.Entity.AddHousehold (this.BusinessContext, (AiderHouseholdEntity) this.AdditionalEntity);
-				//Remove entity from the bag
-				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
-			}
-
-			if (this.AdditionalEntity is AiderLegalPersonEntity)
-			{
-				var legalPerson = (AiderLegalPersonEntity) this.AdditionalEntity;
-				EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser.LoginName, true);
-
-				this.Entity.AddContact (this.BusinessContext, legalPerson.GetMainContact ());
-				//Remove entity from the bag
-				this.ConfirmByRemoveFromBag (aiderUser.LoginName);
-			}	
-		}
-
-		private void ConfirmByRemoveFromBag(string aiderUser)
-		{
-			
-			var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (this.AdditionalEntity).Value.ToString ().Replace ('/', '-');
-			EntityBagManager.GetCurrentEntityBagManager ().RemoveFromBag (aiderUser, id, When.Now);
-			EntityBagManager.GetCurrentEntityBagManager ().SetLoading (aiderUser, false);
+			EntityBag.Process (this.AdditionalEntity as AiderPersonEntity, x => this.Entity.AddContact (this.BusinessContext, x.MainContact));
+			EntityBag.Process (this.AdditionalEntity as AiderContactEntity, x => this.Entity.AddContact (this.BusinessContext, x));
+			EntityBag.Process (this.AdditionalEntity as AiderGroupEntity, x => this.Entity.AddGroup (this.BusinessContext, x));
+			EntityBag.Process (this.AdditionalEntity as AiderGroupExtractionEntity, x => this.Entity.AddGroupExtraction (this.BusinessContext, x));
+			EntityBag.Process (this.AdditionalEntity as AiderHouseholdEntity, x => this.Entity.AddHousehold (this.BusinessContext, x));
+			EntityBag.Process (this.AdditionalEntity as AiderLegalPersonEntity, x => this.Entity.AddContact (this.BusinessContext, x.GetMainContact ()));
 		}
 	}
 }

@@ -33,16 +33,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-			var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (this.Entity).Value.ToString ().Replace ('/', '-');
-
-			EntityBagManager.GetCurrentEntityBagManager ().AddToBag (
-				aiderUser.LoginName,
-				"Publipostage",
-				this.Entity.GetSummary (),
-				id,
-				When.Now
-			);
+			var mailing = this.Entity;
+			EntityBag.Add (mailing, "Publipostage");
 		}
 	}
 }

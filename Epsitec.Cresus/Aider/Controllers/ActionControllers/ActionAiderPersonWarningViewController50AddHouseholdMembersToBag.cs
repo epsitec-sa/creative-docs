@@ -33,19 +33,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-
 			foreach (var person in this.Entity.Person.MainContact.Household.Members)
 			{
-				var id = this.BusinessContext.DataContext.GetNormalizedEntityKey (person.MainContact).Value.ToString ().Replace ('/', '-');
+				var contact = person.MainContact;
 
-				EntityBagManager.GetCurrentEntityBagManager ().AddToBag (
-					aiderUser.LoginName,
-					"Contact",
-					person.MainContact.GetSummary (),
-					id,
-					When.Now
-				);
+				EntityBag.Add (contact, "Contact", contact.GetSummary ());
 			}
 			
 		}
