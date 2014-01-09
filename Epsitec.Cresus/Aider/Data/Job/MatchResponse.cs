@@ -12,6 +12,12 @@ namespace Epsitec.Aider.Data.Job
 {
 	internal class MatchResponse
 	{
+		public string Ustat
+		{
+			get;
+			set;
+		}
+
 		public string Pstat
 		{
 			get;
@@ -24,31 +30,67 @@ namespace Epsitec.Aider.Data.Job
 			set;
 		}
 
-		public string Zip
+		public string CorrectedZip
 		{
 			get;
 			set;
 		}
 
-		public string ZipAddOn
+		public string CorrectedZipAddOn
 		{
 			get;
 			set;
 		}
 
-		public string Town
+		public string CorrectedTown
 		{
 			get;
 			set;
 		}
 
-		public string Street
+		public string CorrectedStreet
 		{
 			get;
 			set;
 		}
 
-		public string Number
+		public string CorrectedNumber
+		{
+			get;
+			set;
+		}
+
+		public string NewZip
+		{
+			get;
+			set;
+		}
+
+		public string NewZipAddOn
+		{
+			get;
+			set;
+		}
+
+		public string NewTown
+		{
+			get;
+			set;
+		}
+
+		public string NewStreet
+		{
+			get;
+			set;
+		}
+
+		public string NewNumber
+		{
+			get;
+			set;
+		}
+
+		public string NewPostBox
 		{
 			get;
 			set;
@@ -57,6 +99,14 @@ namespace Epsitec.Aider.Data.Job
 		public AiderContactEntity GetContact(BusinessContext businessContext)
 		{
 			return businessContext.DataContext.GetPersistedEntity (this.ContactId) as AiderContactEntity;
+		}
+
+		public bool IsSameNewAddress(MatchResponse toCompare)
+		{
+			if (this.NewStreet == toCompare.NewStreet && this.NewTown == toCompare.NewTown && this.NewZip == toCompare.NewZip && this.NewNumber == toCompare.NewNumber)
+				return true;
+			else
+				return false;
 		}
 	}
 }

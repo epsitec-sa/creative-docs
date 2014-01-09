@@ -256,7 +256,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-fixaddresses")) //-fixaddresses -rchfile:s:\DATA\rchmatched.csv -nonrchfile:s:\DATA\nonrchmatched.csv
+				if (args.Contains ("-fixaddresses")) //-fixaddresses -file:s:\DATA\rchmatched.csv
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixAddresses (args));
 					return;
