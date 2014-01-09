@@ -54,7 +54,7 @@ namespace Epsitec.Aider.Data.Job
 			var officialMoveAddressesData		= addressData.Where (x => x.Ustat == "1" || x.Ustat == "2" || x.Ustat == "3");
 			var deceadedAddressesData			= addressData.Where (x => x.Ustat == "4");
 			var officialChangeAddressesData		= addressData.Where (x => x.Ustat == "5");
-			/*
+			
 			System.Console.WriteLine ("Fixing modified addresses...");
 			SwissPostAddressFixer.ApplyFix (coreData, modifiedRchAddressesData, SwissPostAddressFixer.ApplyCorrection);
 			
@@ -113,7 +113,7 @@ namespace Epsitec.Aider.Data.Job
 						}
 					}
 				});
-			*/
+			
 			System.Console.WriteLine ("Fixing official move addresses...");
 			SwissPostAddressFixer.ExecuteWithBusinessContext (coreData,
 				businessContext =>
