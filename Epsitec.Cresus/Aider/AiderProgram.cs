@@ -264,7 +264,7 @@ namespace Epsitec.Aider
 
 				if (args.Contains ("-moveaddresses")) //-moveaddresses -file:s:\DATA\rchmatched.csv
 				{
-					ConsoleCreator.RunWithConsole (() => AiderProgram.FixAddresses (args));
+					ConsoleCreator.RunWithConsole (() => AiderProgram.MoveAddresses (args));
 					return;
 				}
 			}
