@@ -199,8 +199,8 @@ namespace Epsitec.Aider.Data.Job
 
 					action (townRepo, modif, address, contact);
 
-					businessContext.ApplyRulesToRegisteredEntities (RuleType.Validate);
-					businessContext.ApplyRulesToRegisteredEntities (RuleType.Update);
+					businessContext.ApplyRulesToRegisteredEntities (RuleType.Validate, EntitySaveMode.IgnoreValidationErrors);
+					businessContext.ApplyRulesToRegisteredEntities (RuleType.Update, EntitySaveMode.IgnoreValidationErrors);
 
 					businessContext.ClearRegisteredEntities ();
 					
