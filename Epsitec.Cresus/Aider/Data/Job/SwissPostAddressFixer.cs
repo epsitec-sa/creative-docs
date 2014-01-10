@@ -59,11 +59,15 @@ namespace Epsitec.Aider.Data.Job
 
 		private static void FixAddresses(CoreData coreData, List<MatchResponseFix> addressData)
 		{
+			var normalizedRchAddressesData		= addressData.Where (x => x.Pstat == "2");
 			var modifiedRchAddressesData		= addressData.Where (x => x.Pstat == "3");
 			var completedRchAddressesData		= addressData.Where (x => x.Pstat == "4");
 			var archivedRchAddressesData		= addressData.Where (x => x.Pstat == "5");
 			var invalidRchAddressesData			= addressData.Where (x => x.Pstat == "6");
-			
+
+			System.Console.WriteLine ("Fixing normalized addresses...");
+			SwissPostAddressFixer.ApplyFix (coreData, normalizedRchAddressesData, SwissPostAddressFixer.ApplyCorrection);
+
 			System.Console.WriteLine ("Fixing modified addresses...");
 			SwissPostAddressFixer.ApplyFix (coreData, modifiedRchAddressesData, SwissPostAddressFixer.ApplyCorrection);
 			
