@@ -112,189 +112,51 @@ namespace Epsitec.Aider.Data.Job
 			SwissPostAddressFixer.ApplyFix (coreData, officialChangeAddressesData, SwissPostAddressFixer.ApplyOfficialChange);
 
 			System.Console.WriteLine ("Fixing deceased contact addresses...");
-			SwissPostAddressFixer.ExecuteWithBusinessContext (coreData,
-				businessContext =>
-				{
-					foreach (var deceased in deceasedAddressesData)
-					{
-						var contact = deceased.GetContact (businessContext);
-
-						if (contact.IsNotNull ())
-						{
-							contact.Person.KillPerson (businessContext, new Date (2013, 12, 20), uncertain: true);
-						}
-						else
-						{
-							System.Console.WriteLine ("Contact not found: {0}", deceased.ContactId);
-						}
-					}
-				});
+			SwissPostAddressFixer.ExecuteWithBusinessContext (coreData,	context => SwissPostAddressFixer.ApplyPersonDecesead (context, deceasedAddressesData));
 			
 			System.Console.WriteLine ("Fixing official move addresses...");
-			SwissPostAddressFixer.ExecuteWithBusinessContext (coreData,
-				businessContext =>
-				{
-					var townRepo					= new AiderTownRepository (businessContext);
-
-					var approvedMoves				= new List<MatchResponseMove> ();
-					var alreadyProcessedContactsIds	= new HashSet<string> ();
-					var officialyMovedContactsIds	= officialMoveAddressesData.Where(m => m.Ustat == "1").ToDictionary (k => k.ContactId, v => v);
-					var unknowMovedContactsIds		= officialMoveAddressesData.Where (m => m.Ustat == "2" || m.Ustat == "3").ToDictionary (k => k.ContactId, v => v);
-
-					foreach (var move in officialMoveAddressesData)
-					{
-						//check that the move is not already made by other household member
-						if (!alreadyProcessedContactsIds.Contains (move.ContactId))
-						{
-							var contact = move.GetContact (businessContext);
-
-							if (contact.IsNotNull ())
-							{
-								//We check household members before applying moves
-								if (contact.Household.IsNotNull ())
-								{
-									if (contact.Household.Members.Count == 1)
-									{
-										if (move.Ustat == "1")
-										{
-											approvedMoves.Add (move);
-											alreadyProcessedContactsIds.Add (move.ContactId);
-										}
-										else
-										{
-											SwissPostAddressFixer.AddMatchUnknowComment (move, contact.Person);
-
-											var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, contact)
-											?? AiderSubscriptionEntity.FindSubscription (businessContext, contact.Household);
-
-											if (subscription.IsNotNull ())
-											{
-												System.Diagnostics.Debug.WriteLine (subscription.DisplayAddress);
-
-												subscription.SusbscriptionFlag = Enumerations.SubscriptionFlag.VerificationRequired;
-											}
-										}
-										
-									}
-									else if (contact.Household.Members.Count > 1)
-									{
-										//We find other head members for checking move approval
-										foreach (var headMember in contact.Household.Members.Where (c => contact.Household.IsHead (c) && c != contact.Person))
-										{
-											var otherContactId = businessContext.DataContext.GetPersistedId (headMember.HouseholdContact);
-											MatchResponseMove otherMove = null;
-
-											if (move.Ustat == "1")
-											{
-												//is in official move list?
-												if (officialyMovedContactsIds.TryGetValue (otherContactId, out otherMove))
-												{
-													if (otherMove.HasSameNewAddress (move))//moved at same place, approved
-													{
-														approvedMoves.Add (move);
-														alreadyProcessedContactsIds.Add (move.ContactId);
-														alreadyProcessedContactsIds.Add (otherMove.ContactId);
-														break;
-													}
-													else //moved but not at same place, comment only
-													{
-														SwissPostAddressFixer.AddMatchMoveComment (move, contact.Person);
-													}
-												}
-												else //not in list, comment only
-												{
-													SwissPostAddressFixer.AddMatchMoveComment (move, contact.Person);
-												}
-											}
-											else
-											{
-												//is in unknow move list?
-												if (unknowMovedContactsIds.TryGetValue (otherContactId, out otherMove))
-												{
-													SwissPostAddressFixer.AddMatchUnknowComment (move, contact.Person);
-													SwissPostAddressFixer.AddMatchUnknowComment (move, headMember);
-
-													alreadyProcessedContactsIds.Add (move.ContactId);
-													alreadyProcessedContactsIds.Add (otherMove.ContactId);
-
-													var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, contact)
-													?? AiderSubscriptionEntity.FindSubscription (businessContext, contact.Household);
-
-													if (subscription.IsNotNull ())
-													{
-														System.Diagnostics.Debug.WriteLine (subscription.DisplayAddress);
-
-														subscription.SusbscriptionFlag = Enumerations.SubscriptionFlag.VerificationRequired;
-													}
-													break;
-												}
-												else //not in list, comment only
-												{
-													SwissPostAddressFixer.AddMatchUnknowComment (move, contact.Person);
-												}
-											}
-										}
-									}
-								}
-								else //no household, approved
-								{
-									if (move.Ustat == "1")
-									{
-										approvedMoves.Add (move);
-										alreadyProcessedContactsIds.Add (move.ContactId);
-									}
-									else
-									{
-										SwissPostAddressFixer.AddMatchUnknowComment (move, contact.Person);
-									}
-								}
-							}
-							else
-							{
-								System.Console.WriteLine ("Contact not found: {0}", move.ContactId);
-							}
-						}
-					}
-
-					//apply fix with approved moves only
-					SwissPostAddressFixer.FixModifiedAddresses (approvedMoves, businessContext, townRepo, SwissPostAddressFixer.ApplyOfficialChange);
-				});
-
-
-
+			SwissPostAddressFixer.ExecuteWithBusinessContext (coreData, context => SwissPostAddressFixer.ApplyOfficialMoves (context, officialMoveAddressesData));
 		}
 
-		private static void AddMatchMoveComment(MatchResponseMove move,AiderPersonEntity person)
+		private static string GetMatchMoveDate()
 		{
-			string comment =	"MATCH " + 
-								System.DateTime.Now.ToString ("y") +
-								"/ CODE " + move.Ustat +"\nNouvelle adresse:\n" +
-								move.NewStreet + " " + move.NewNumber +"\n" +
-								move.NewPostBox +
-								move.NewZip + " " + move.NewZipAddOn + " " + move.NewTown;
-
-			AiderCommentEntity.CombineSystemComments (person, comment);
+			return string.Format ("{0:00}.{1:00}.{2.0000}", SwissPostAddressFixer.MatchMoveDate.Day, SwissPostAddressFixer.MatchMoveDate.Month, SwissPostAddressFixer.MatchMoveDate.Year);
 		}
 
-		private static void AddMatchUnknowComment(MatchResponseMove move, AiderPersonEntity person)
+		private static void AddSystemComment(MatchResponseMove move, AiderPersonEntity person)
 		{
-			if (move.Ustat == "2")
-			{
-				string comment =	"MATCH " + 
-								System.DateTime.Now.ToString ("y") +
-								"/ CODE 2\ndéménagé à un lieu inconnu\n";
+			string comment;
 
-				AiderCommentEntity.CombineSystemComments (person, comment);
-			}
-			if (move.Ustat == "3")
+			switch (move.Ustat)
 			{
-				string comment =	"MATCH " + 
+				case "1":
+					comment =
+						"MAT[CH] " + SwissPostAddressFixer.GetMatchMoveDate () + " / Statut " + move.Ustat +"\n" +
+						"Nouvelle adresse:\n" +
+						move.NewStreet + " " + move.NewNumber + "\n" +
+						move.NewPostBox + "\n" +
+						move.NewZip + " " + move.NewZipAddOn + " " + move.NewTown;
+					break;
+				
+				case "2":
+					comment =
+						"MAT[CH] " + SwissPostAddressFixer.GetMatchMoveDate () + " / Statut " + move.Ustat +"\n" +
+						"Nouvelle adresse inconnue";
+					break;
+
+				case "3":
+					comment =	"MATCH " + 
 								System.DateTime.Now.ToString ("y") +
 								"/ CODE 3\nParti à l'étranger\n";
+					break;
 
-				AiderCommentEntity.CombineSystemComments (person, comment);
+				default:
+					return;
 			}
 			
+			comment = comment.Replace ("\n\n", "\n");
+
+			AiderCommentEntity.CombineSystemComments (person, comment);
 		}
 
 		private static void ApplyFix<T>(CoreData coreData, IEnumerable<T> addresses, System.Action<AiderTownRepository, T, AiderAddressEntity> fix)
@@ -386,5 +248,155 @@ namespace Epsitec.Aider.Data.Job
 			address.PostBox					 = modif.NewPostBox;
 			
 		}
+
+		private static void ApplyPersonDecesead(BusinessContext businessContext, IEnumerable<MatchResponseMove> deceasedAddressesData)
+		{
+			{
+				foreach (var deceased in deceasedAddressesData)
+				{
+					var contact = deceased.GetContact (businessContext);
+
+					if (contact.IsNotNull ())
+					{
+						contact.Person.KillPerson (businessContext, SwissPostAddressFixer.MatchMoveDate, uncertain: true);
+					}
+					else
+					{
+						System.Console.WriteLine ("Contact not found: {0}", deceased.ContactId);
+					}
+				}
+			}
+		}
+
+		private static void ApplyOfficialMoves(BusinessContext businessContext, IEnumerable<MatchResponseMove> officialMoveAddressesData)
+		{
+			var townRepo					= new AiderTownRepository (businessContext);
+
+			var approvedMoves				= new List<MatchResponseMove> ();
+			var alreadyProcessedContactsIds	= new HashSet<string> ();
+			var officialyMovedContactsIds	= officialMoveAddressesData.Where (m => m.Ustat == "1").ToDictionary (k => k.ContactId, v => v);
+			var unknowMovedContactsIds		= officialMoveAddressesData.Where (m => m.Ustat == "2" || m.Ustat == "3").ToDictionary (k => k.ContactId, v => v);
+
+			foreach (var move in officialMoveAddressesData)
+			{
+				//check that the move is not already made by other household member
+				if (!alreadyProcessedContactsIds.Contains (move.ContactId))
+				{
+					var contact = move.GetContact (businessContext);
+
+					if (contact.IsNotNull ())
+					{
+						//We check household members before applying moves
+						if (contact.Household.IsNotNull ())
+						{
+							if (contact.Household.Members.Count == 1)
+							{
+								if (move.Ustat == "1")
+								{
+									approvedMoves.Add (move);
+									alreadyProcessedContactsIds.Add (move.ContactId);
+								}
+								else
+								{
+									SwissPostAddressFixer.AddSystemComment (move, contact.Person);
+
+									var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, contact)
+									?? AiderSubscriptionEntity.FindSubscription (businessContext, contact.Household);
+
+									if (subscription.IsNotNull ())
+									{
+										System.Diagnostics.Debug.WriteLine (subscription.DisplayAddress);
+
+										subscription.SusbscriptionFlag = Enumerations.SubscriptionFlag.VerificationRequired;
+									}
+								}
+
+							}
+							else if (contact.Household.Members.Count > 1)
+							{
+								//We find other head members for checking move approval
+								foreach (var headMember in contact.Household.Members.Where (c => contact.Household.IsHead (c) && c != contact.Person))
+								{
+									var otherContactId = businessContext.DataContext.GetPersistedId (headMember.HouseholdContact);
+									MatchResponseMove otherMove = null;
+
+									if (move.Ustat == "1")
+									{
+										//is in official move list?
+										if (officialyMovedContactsIds.TryGetValue (otherContactId, out otherMove))
+										{
+											if (otherMove.HasSameNewAddress (move))//moved at same place, approved
+											{
+												approvedMoves.Add (move);
+												alreadyProcessedContactsIds.Add (move.ContactId);
+												alreadyProcessedContactsIds.Add (otherMove.ContactId);
+												break;
+											}
+											else //moved but not at same place, comment only
+											{
+												SwissPostAddressFixer.AddSystemComment (move, contact.Person);
+											}
+										}
+										else //not in list, comment only
+										{
+											SwissPostAddressFixer.AddSystemComment (move, contact.Person);
+										}
+									}
+									else
+									{
+										//is in unknow move list?
+										if (unknowMovedContactsIds.TryGetValue (otherContactId, out otherMove))
+										{
+											SwissPostAddressFixer.AddSystemComment (move, contact.Person);
+											SwissPostAddressFixer.AddSystemComment (move, headMember);
+
+											alreadyProcessedContactsIds.Add (move.ContactId);
+											alreadyProcessedContactsIds.Add (otherMove.ContactId);
+
+											var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, contact)
+											?? AiderSubscriptionEntity.FindSubscription (businessContext, contact.Household);
+
+											if (subscription.IsNotNull ())
+											{
+												System.Diagnostics.Debug.WriteLine (subscription.DisplayAddress);
+
+												subscription.SusbscriptionFlag = Enumerations.SubscriptionFlag.VerificationRequired;
+											}
+											break;
+										}
+										else //not in list, comment only
+										{
+											SwissPostAddressFixer.AddSystemComment (move, contact.Person);
+										}
+									}
+								}
+							}
+						}
+						else //no household, approved
+						{
+							if (move.Ustat == "1")
+							{
+								approvedMoves.Add (move);
+								alreadyProcessedContactsIds.Add (move.ContactId);
+							}
+							else
+							{
+								SwissPostAddressFixer.AddSystemComment (move, contact.Person);
+							}
+						}
+					}
+					else
+					{
+						System.Console.WriteLine ("Contact not found: {0}", move.ContactId);
+					}
+				}
+			}
+
+			//apply fix with approved moves only
+			SwissPostAddressFixer.FixModifiedAddresses (approvedMoves, businessContext, townRepo, SwissPostAddressFixer.ApplyOfficialChange);
+		}
+
+
+		public static Date MatchMoveDate = new Date (2013, 12, 20);
 	}
 }
