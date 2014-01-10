@@ -261,6 +261,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixAddresses (args));
 					return;
 				}
+
+				if (args.Contains ("-moveaddresses")) //-moveaddresses -file:s:\DATA\rchmatched.csv
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixAddresses (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -659,7 +665,20 @@ namespace Epsitec.Aider
 				var correctedAddressesFile = AiderProgram.GetFile (args, "-file:", true);
 
 				SwissPostAddressFixer.ApplyFixes (coreData, correctedAddressesFile);
-				
+
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
+
+		private static void MoveAddresses(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				var correctedAddressesFile = AiderProgram.GetFile (args, "-file:", true);
+
+				SwissPostAddressFixer.ApplyMoves (coreData, correctedAddressesFile);
+
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});

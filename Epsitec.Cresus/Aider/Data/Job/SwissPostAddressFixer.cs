@@ -23,16 +23,29 @@ namespace Epsitec.Aider.Data.Job
 			var adresses = File.ReadAllLines (file.FullName, System.Text.Encoding.Default)
 				.Skip (1)
 				.Select (x => x.Split (';'))
-				.Select (x => new MatchResponse
+				.Select (x => new MatchResponseFix
 				{
 					Pstat = x[11],
-					Ustat = x[18],
 					ContactId = "db:" + x[0].Substring (x[0].Length - 18).Replace ("/", ":"),
 					CorrectedZip =  x[14],
 					CorrectedZipAddOn = x[15],
 					CorrectedTown = x[16],
 					CorrectedStreet = x[12],
 					CorrectedNumber = x[13],
+				});
+
+			SwissPostAddressFixer.FixAddresses (coreData, adresses.ToList ());
+		}
+		
+		public static void ApplyMoves(CoreData coreData, FileInfo file)
+		{
+			var adresses = File.ReadAllLines (file.FullName, System.Text.Encoding.Default)
+				.Skip (1)
+				.Select (x => x.Split (';'))
+				.Select (x => new MatchResponseMove
+				{
+					Ustat = x[18],
+					ContactId = "db:" + x[0].Substring (x[0].Length - 18).Replace ("/", ":"),
 					NewZip = x[35],
 					NewZipAddOn = x[36],
 					NewTown = x[37],
@@ -41,19 +54,15 @@ namespace Epsitec.Aider.Data.Job
 					NewPostBox = x[34]
 				});
 
-			SwissPostAddressFixer.FixAddresses (coreData, adresses.ToList ());
+			SwissPostAddressFixer.MoveAddresses (coreData, adresses.ToList ());
 		}
 
-		private static void FixAddresses(CoreData coreData, List<MatchResponse> addressData)
+		private static void FixAddresses(CoreData coreData, List<MatchResponseFix> addressData)
 		{
 			var modifiedRchAddressesData		= addressData.Where (x => x.Pstat == "3");
 			var completedRchAddressesData		= addressData.Where (x => x.Pstat == "4");
 			var archivedRchAddressesData		= addressData.Where (x => x.Pstat == "5");
 			var invalidRchAddressesData			= addressData.Where (x => x.Pstat == "6");
-			
-			var officialMoveAddressesData		= addressData.Where (x => x.Ustat == "1" || x.Ustat == "2" || x.Ustat == "3");
-			var deceadedAddressesData			= addressData.Where (x => x.Ustat == "4");
-			var officialChangeAddressesData		= addressData.Where (x => x.Ustat == "5");
 			
 			System.Console.WriteLine ("Fixing modified addresses...");
 			SwissPostAddressFixer.ApplyFix (coreData, modifiedRchAddressesData, SwissPostAddressFixer.ApplyCorrection);
@@ -91,25 +100,32 @@ namespace Epsitec.Aider.Data.Job
 						}
 					}
 				});
-			
+		}
+
+		private static void MoveAddresses(CoreData coreData, List<MatchResponseMove> addressData)
+		{
+			var officialMoveAddressesData	= addressData.Where (x => x.Ustat == "1" || x.Ustat == "2" || x.Ustat == "3");
+			var deceasedAddressesData		= addressData.Where (x => x.Ustat == "4");
+			var officialChangeAddressesData	= addressData.Where (x => x.Ustat == "5");
+
 			System.Console.WriteLine ("Fixing official addresses changes...");
 			SwissPostAddressFixer.ApplyFix (coreData, officialChangeAddressesData, SwissPostAddressFixer.ApplyOfficialChange);
 
-			System.Console.WriteLine ("Fixing deceaded contact addresses...");
+			System.Console.WriteLine ("Fixing deceased contact addresses...");
 			SwissPostAddressFixer.ExecuteWithBusinessContext (coreData,
 				businessContext =>
 				{
-					foreach (var decease in deceadedAddressesData)
+					foreach (var deceased in deceasedAddressesData)
 					{
-						var contact = decease.GetContact (businessContext);
+						var contact = deceased.GetContact (businessContext);
 
 						if (contact.IsNotNull ())
 						{
-							contact.Person.KillPerson (businessContext, new Date(2013,12,20), true);
+							contact.Person.KillPerson (businessContext, new Date (2013, 12, 20), uncertain: true);
 						}
 						else
 						{
-							System.Console.WriteLine ("Contact not found: {0}", decease.ContactId);
+							System.Console.WriteLine ("Contact not found: {0}", deceased.ContactId);
 						}
 					}
 				});
@@ -120,7 +136,7 @@ namespace Epsitec.Aider.Data.Job
 				{
 					var townRepo					= new AiderTownRepository (businessContext);
 
-					var approvedMoves				= new List<MatchResponse> ();
+					var approvedMoves				= new List<MatchResponseMove> ();
 					var alreadyProcessedContactsIds	= new HashSet<string> ();
 					var officialyMovedContactsIds	= officialMoveAddressesData.Where(m => m.Ustat == "1").ToDictionary (k => k.ContactId, v => v);
 					var unknowMovedContactsIds		= officialMoveAddressesData.Where (m => m.Ustat == "2" || m.Ustat == "3").ToDictionary (k => k.ContactId, v => v);
@@ -166,14 +182,14 @@ namespace Epsitec.Aider.Data.Job
 										foreach (var headMember in contact.Household.Members.Where (c => contact.Household.IsHead (c) && c != contact.Person))
 										{
 											var otherContactId = businessContext.DataContext.GetPersistedId (headMember.HouseholdContact);
-											MatchResponse otherMove = null;
+											MatchResponseMove otherMove = null;
 
 											if (move.Ustat == "1")
 											{
 												//is in official move list?
 												if (officialyMovedContactsIds.TryGetValue (otherContactId, out otherMove))
 												{
-													if (otherMove.IsSameNewAddress (move))//moved at same place, approved
+													if (otherMove.HasSameNewAddress (move))//moved at same place, approved
 													{
 														approvedMoves.Add (move);
 														alreadyProcessedContactsIds.Add (move.ContactId);
@@ -248,7 +264,7 @@ namespace Epsitec.Aider.Data.Job
 
 		}
 
-		private static void AddMatchMoveComment(MatchResponse move,AiderPersonEntity person)
+		private static void AddMatchMoveComment(MatchResponseMove move,AiderPersonEntity person)
 		{
 			string comment =	"MATCH " + 
 								System.DateTime.Now.ToString ("y") +
@@ -260,7 +276,7 @@ namespace Epsitec.Aider.Data.Job
 			AiderCommentEntity.CombineSystemComments (person, comment);
 		}
 
-		private static void AddMatchUnknowComment(MatchResponse move, AiderPersonEntity person)
+		private static void AddMatchUnknowComment(MatchResponseMove move, AiderPersonEntity person)
 		{
 			if (move.Ustat == "2")
 			{
@@ -281,7 +297,8 @@ namespace Epsitec.Aider.Data.Job
 			
 		}
 
-		private static void ApplyFix(CoreData coreData, IEnumerable<MatchResponse> addresses, System.Action<AiderTownRepository, MatchResponse, AiderAddressEntity> fix)
+		private static void ApplyFix<T>(CoreData coreData, IEnumerable<T> addresses, System.Action<AiderTownRepository, T, AiderAddressEntity> fix)
+			where T : MatchResponse
 		{
 			SwissPostAddressFixer.ExecuteWithBusinessContext (coreData,
 				businessContext =>
@@ -301,8 +318,9 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private static void FixModifiedAddresses(IEnumerable<MatchResponse> addresses, BusinessContext businessContext, AiderTownRepository townRepo,
-			System.Action<AiderTownRepository, MatchResponse, AiderAddressEntity> action)
+		private static void FixModifiedAddresses<T>(IEnumerable<T> addresses, BusinessContext businessContext, AiderTownRepository townRepo,
+			System.Action<AiderTownRepository, T, AiderAddressEntity> action)
+			where T : MatchResponse
 		{
 			foreach (var modif in addresses)
 			{
@@ -336,7 +354,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private static void ApplyCorrection(AiderTownRepository townRepo, MatchResponse modif, AiderAddressEntity address)
+		private static void ApplyCorrection(AiderTownRepository townRepo, MatchResponseFix modif, AiderAddressEntity address)
 		{
 			//	First update the town, then the street, otherwise the mapping algorithm based
 			//	on the user friendly name might not select the correct street name:
@@ -356,7 +374,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private static void ApplyOfficialChange(AiderTownRepository townRepo, MatchResponse modif, AiderAddressEntity address)
+		private static void ApplyOfficialChange(AiderTownRepository townRepo, MatchResponseMove modif, AiderAddressEntity address)
 		{
 			//	First update the town, then the street, otherwise the mapping algorithm based
 			//	on the user friendly name might not select the correct street name:

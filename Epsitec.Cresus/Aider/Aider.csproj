@@ -226,6 +226,8 @@
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\ContactNameFixer.cs" />
     <Compile Include="Data\Job\MatchResponse.cs" />
+    <Compile Include="Data\Job\MatchResponseFix.cs" />
+    <Compile Include="Data\Job\MatchResponseMove.cs" />
     <Compile Include="Data\Job\SwissPostAddressFixer.cs" />
     <Compile Include="Data\Job\PotentialDuplicatedPersonFinder.cs" />
     <Compile Include="Data\Job\EChWarningsFixer.cs" />
