@@ -150,3 +150,17 @@ SVN update > r22494
 
 -echupdate -newechfile:S:\eerv\eerv-2013-12-26.xml -oldechfile:S:\eerv\eerv-2013-12-19.xml -output:S:\eerv\ech-diff-2013-12-26.md
 -echupdate -newechfile:S:\eerv\eerv-2014-01-06.xml -oldechfile:S:\eerv\eerv-2013-12-26.xml -output:S:\eerv\ech-diff-2014-01-06.md
+
+
+Lancé le 09.01.2014
+-------------------
+
+SVN update > r22515
+
+-moveaddresses -file:S:\eerv\match-rch.csv
+-moveaddresses -file:S:\eerv\match-nonrch.csv
+
+-echupdate -newechfile:S:\eerv\eerv-2014-01-09.xml -oldechfile:S:\eerv\eerv-2014-01-06.xml -output:S:\eerv\ech-diff-2014-01-09.md
+
+-exportsubscriptions -output:export-2014-01-16.txt -error:error-2014-01-16.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2014-01-16.txt -publicationdate:2014-01-16 -response:tamedia-2014-01-16.log
