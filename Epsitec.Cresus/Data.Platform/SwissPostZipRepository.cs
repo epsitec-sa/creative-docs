@@ -100,7 +100,14 @@ namespace Epsitec.Data.Platform
 			
 			if (this.nameByZip.TryGetValue (zipCode, out list))
 			{
-				return list.Where (x => x.MatchName (name));
+				if (string.IsNullOrEmpty (name))
+				{
+					return list;
+				}
+				else
+				{
+					return list.Where (x => x.MatchName (name));
+				}
 			}
 			else
 			{

@@ -58,6 +58,11 @@ namespace Epsitec.Aider.Data.Common
 					town = this.GetOrCreateForeignTown (zipCode, name, countryCode);
 				}
 
+				if (town == null)
+				{
+					return null;
+				}
+
 				this.aiderTowns[key] = town;
 			}
 

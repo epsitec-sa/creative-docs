@@ -178,7 +178,7 @@ namespace Epsitec.Aider.Data.Job
 			{
 				action (businessContext);
 
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 			}
 		}
 
@@ -238,7 +238,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private static void ApplyMove(AiderTownRepository townRepo, MatchResponseMove move, AiderAddressEntity address)
+		private static void ApplyMove(AiderTownRepository townRepo, MatchResponseMove move, AiderAddressEntity address, AiderContactEntity contact)
 		{
 			//	First update the town, then the street, otherwise the mapping algorithm based
 			//	on the user friendly name might not select the correct street name:
@@ -297,7 +297,7 @@ namespace Epsitec.Aider.Data.Job
 
 			private void ApplyOfficialChange(AiderTownRepository townRepo, MatchResponseMove move, AiderAddressEntity address, AiderContactEntity contact)
 			{
-				SwissPostAddressFixer.ApplyMove (townRepo, move, address);
+				SwissPostAddressFixer.ApplyMove (townRepo, move, address, contact);
 
 				if (address.Town.SwissCantonCode != "VD")
 				{

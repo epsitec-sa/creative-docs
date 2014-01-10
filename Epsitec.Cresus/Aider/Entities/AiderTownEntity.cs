@@ -64,6 +64,11 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderTownEntity FindOrCreate(BusinessContext businessContext, AiderCountryEntity country, string zipCode, string name, Mutability mutability)
 		{
+			if (country.IsNull ())
+			{
+				return null;
+			}
+
 			return country.IsSwitzerland ()
 				? AiderTownEntity.FindOrCreateSwissTown (businessContext, country, zipCode, name, mutability)
 				: AiderTownEntity.FindOrCreateForeignTown (businessContext, country, zipCode, name, mutability);
@@ -79,7 +84,12 @@ namespace Epsitec.Aider.Entities
 
 			if (zipMatch == null)
 			{
-				throw new ArgumentException ();
+				zipMatch = SwissPostZipRepository.Current.FindZips (swissZipCode, null).FirstOrDefault ();
+				
+				if (zipMatch == null)
+				{
+					throw new ArgumentException ();
+				}
 			}
 
 			zipCode = InvariantConverter.ToString (zipMatch.ZipCode);
