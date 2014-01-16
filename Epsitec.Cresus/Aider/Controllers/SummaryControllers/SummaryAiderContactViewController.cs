@@ -173,6 +173,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.EnableActionMenu<ActionAiderPersonViewController10AddToBag> ()
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
+					if (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
+					{
+						wall.AddBrick ()
+							.EnableActionButton<ActionAiderContactViewController6DeleteContact> ();
+					}
 					if (contact.Address.IsNotNull ())
 					{
 						if (contact.AddressType == AddressType.Confidential)

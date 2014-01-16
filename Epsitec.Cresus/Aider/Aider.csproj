@@ -88,6 +88,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController0CreatePerson.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController4RemoveMemberFromHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController5ChangeHeadOfHousehold.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController6DeleteContact.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController0CreateSubGroup.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController2MoveGroup.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController3ImportGroupMembers.cs" />

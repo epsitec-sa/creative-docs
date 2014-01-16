@@ -7,7 +7,6 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
-
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
@@ -16,12 +15,12 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (5)]
-	public sealed class ActionAiderContactViewController5ChangeHeadOfHousehold : TemplateActionViewController<AiderContactEntity, AiderPersonEntity>
+	[ControllerSubType (6)]
+	public sealed class ActionAiderContactViewController6DeleteContact : ActionViewController<AiderContactEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Modifier le statut de chef du ménage");
+			return Resources.FormattedText ("Supprimer définitivement ce contact");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -31,10 +30,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			var person    = this.AdditionalEntity;
-			var household = this.Entity.Household;
+			var contact = this.Entity;
 
-			person.ToggleHouseholdRole (household);
+			AiderContactEntity.Delete (this.BusinessContext, contact, deleteParticipations: true);
 		}
 	}
 }
+

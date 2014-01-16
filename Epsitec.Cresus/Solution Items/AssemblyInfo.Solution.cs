@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture ("")]
 [assembly: AssemblyConfiguration ("")]
 
-[assembly: AssemblyVersion ("3.5.1.1322")]		//	Daniel : tu ne dois pas changer ceci !
-[assembly: AssemblyFileVersion ("3.5.1.1322")]	//	Daniel : tu ne dois pas changer ceci !
+[assembly: AssemblyVersion ("3.5.2.1403")]		//	Daniel : tu ne dois pas changer ceci !
+[assembly: AssemblyFileVersion ("3.5.2.1403")]	//	Daniel : tu ne dois pas changer ceci !
 
 [assembly: ComVisibleAttribute (false)]
