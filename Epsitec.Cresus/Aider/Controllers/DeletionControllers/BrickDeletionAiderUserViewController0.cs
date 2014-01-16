@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -44,7 +44,7 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 
 		private void Execute(string _1, string _2)
 		{
-			if (this.HasUserPowerLevel (UserPowerLevel.Administrator))
+			if (this.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
 			{
 				var message = "Seul un administrateur a le droit de détruire des utilisateurs.";
 
