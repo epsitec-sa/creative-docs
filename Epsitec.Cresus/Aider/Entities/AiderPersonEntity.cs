@@ -300,14 +300,20 @@ namespace Epsitec.Aider.Entities
 		
 		public void HidePerson(BusinessContext businessContext)
 		{
-			var household = this.MainContact.Household;
-
 			this.Visibility = PersonVisibilityStatus.Hidden;
 			this.eCH_Person.RemovalReason = RemovalReason.Unknown;
 
-			if (household.Members.All (x => x.Visibility != PersonVisibilityStatus.Default))
+			if (this.MainContact.IsNotNull ())
 			{
-				AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
+				var household = this.MainContact.Household;
+
+				if (household.IsNotNull ())
+				{
+					if (household.Members.All (x => x.Visibility != PersonVisibilityStatus.Default))
+					{
+						AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
+					}
+				}
 			}
 		}
 		
