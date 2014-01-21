@@ -89,6 +89,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.view.CreateUI (this.viewBox);
 				this.view.Goto += this.HandleViewGoto;
 				this.view.SaveViewState += HandleViewSave;
+
+				this.PushViewState (this.view.ViewState);
 			}
 		}
 
@@ -99,7 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void HandleViewSave(object sender, ViewState viewState)
 		{
-			this.SaveViewState (viewState);
+			this.PushViewState (viewState);
 		}
 
 
@@ -163,9 +165,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void SaveViewState(ViewState viewState)
+		private void PushViewState(ViewState viewState)
 		{
-			if (this.NavigateBackEnable && viewState == this.historyViewStates[this.historyPosition])
+			if (this.historyPosition >= 0 && viewState == this.historyViewStates[this.historyPosition])
 			{
 				return;
 			}
@@ -210,7 +212,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.historyPosition >= 0;
+				return this.historyPosition > 0;
 			}
 		}
 

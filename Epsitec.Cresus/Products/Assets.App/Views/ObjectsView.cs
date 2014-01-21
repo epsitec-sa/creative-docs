@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				var pageType = this.isEditing ? this.objectEditor.PageType: PageType.Unknown;
+				var pageType = this.isEditing ? this.objectEditor.PageType : PageType.Unknown;
 				return new ViewState (ViewType.Objects, this.viewMode, pageType, this.selectedTimestamp, this.selectedGuid);
 			}
 			set
