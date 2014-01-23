@@ -9,13 +9,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public struct ViewState
 	{
-		public ViewState(ViewType viewType, ViewMode viewMode, PageType pageType, Timestamp? timestamp, Guid guid)
+		public ViewState(ViewType viewType, string data)
 		{
-			this.ViewType  = viewType;
-			this.ViewMode  = viewMode;
-			this.PageType  = pageType;
-			this.Timestamp = timestamp;
-			this.Guid      = guid;
+			this.ViewType = viewType;
+			this.Data     = data;
 		}
 
 		public bool IsEmpty
@@ -23,39 +20,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return this.ViewType == ViewType.Unknown
-					&& this.ViewMode == ViewMode.Unknown
-					&& this.PageType == PageType.Unknown
-					&& this.Timestamp == null
-					&& this.Guid.IsEmpty;
+					&& string.IsNullOrEmpty (this.Data);
 			}
 		}
 
 
 		public static bool operator ==(ViewState a, ViewState b)
 		{
-			return (a.ViewType  == b.ViewType)
-				&& (a.ViewMode  == b.ViewMode)
-				&& (a.PageType  == b.PageType)
-				&& (a.Timestamp == b.Timestamp)
-				&& (a.Guid      == b.Guid);
+			return (a.ViewType == b.ViewType)
+				&& (a.Data     == b.Data);
 		}
 
 		public static bool operator !=(ViewState a, ViewState b)
 		{
 			return (a.ViewType  != b.ViewType)
-				|| (a.ViewMode  != b.ViewMode)
-				|| (a.PageType  != b.PageType)
-				|| (a.Timestamp != b.Timestamp)
-				|| (a.Guid      != b.Guid);
+				|| (a.Data      != b.Data);
 		}
 
 
-		public static ViewState Empty = new ViewState (ViewType.Unknown, ViewMode.Unknown, PageType.Unknown, null, Guid.Empty);
+		public static ViewState Empty = new ViewState (ViewType.Unknown, null);
 
 		public readonly ViewType	ViewType;
-		public readonly ViewMode	ViewMode;
-		public readonly PageType	PageType;
-		public readonly Timestamp?	Timestamp;
-		public readonly Guid		Guid;
+		public readonly string		Data;
 	}
 }

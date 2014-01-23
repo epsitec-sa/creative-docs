@@ -229,21 +229,46 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				var pageType = this.isEditing ? this.objectEditor.PageType : PageType.Unknown;
-				return new ViewState (ViewType.Objects, this.viewMode, pageType, this.selectedTimestamp, this.selectedGuid);
+
+				var serial = new Serializer ();
+
+				serial.SetInt       ("ViewMode",    (int) this.viewMode);
+				serial.SetInt       ("PageType",    (int) pageType);
+				serial.SetTimestamp ("SelectedTimestamp", this.selectedTimestamp);
+				serial.SetGuid      ("SelectedGuid",      this.selectedGuid);
+
+				return new ViewState (ViewType.Objects, serial.Data);
 			}
 			set
 			{
-				this.selectedGuid = value.Guid;
-				this.OnChangeViewMode (value.ViewMode);
+				var serial = new Serializer (value.Data);
 
-				if (value.PageType == PageType.Person)
-				{
-					this.isEditing = true;
-				}
-				else
+				this.viewMode = (ViewMode) serial.GetInt ("ViewMode");
+				var pageType  = (PageType) serial.GetInt ("PageType");
+				this.selectedTimestamp   = serial.GetTimestamp ("SelectedTimestamp");
+				this.selectedGuid        = serial.GetGuid ("SelectedGuid");
+
+				if (pageType == PageType.Unknown)
 				{
 					this.isEditing = false;
 				}
+				else
+				{
+					this.isEditing = true;
+					this.objectEditor.PageType = pageType;
+				}
+
+				//?this.selectedGuid = value.Guid;
+				//?this.OnChangeViewMode (value.ViewMode);
+				//?
+				//?if (value.PageType == PageType.Person)
+				//?{
+				//?	this.isEditing = true;
+				//?}
+				//?else
+				//?{
+				//?	this.isEditing = false;
+				//?}
 
 				this.Update ();
 			}
@@ -296,6 +321,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.viewMode != viewMode)
 			{
 				this.viewMode = viewMode;
+				this.OnSaveViewState (this.ViewState);
 				this.UpdateViewModeGeometry ();
 
 				this.editFrameBox.Window.ForceLayout ();

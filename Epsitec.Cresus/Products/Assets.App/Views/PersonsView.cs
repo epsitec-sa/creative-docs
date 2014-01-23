@@ -96,26 +96,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public static ViewState GetViewState(Guid personGuid)
+		{
+			//	Retourne un ViewState permettant de voir une personne.
+			var serial = new Serializer ();
+
+			serial.SetGuid ("SelectedGuid", personGuid);
+
+			return new ViewState (ViewType.Persons, serial.Data);
+		}
+
+
 		public override ViewState ViewState
 		{
 			get
 			{
-				var pageType = this.isEditing ? PageType.Person : PageType.Unknown;
-				return new ViewState (ViewType.Persons, ViewMode.Unknown, pageType, null, this.selectedGuid);
+				//?var pageType = this.isEditing ? PageType.Person : PageType.Unknown;
+				//?return new ViewState (ViewType.Persons, ViewMode.Unknown, pageType, null, this.selectedGuid);
+				return new ViewState (ViewType.Persons, null);
 			}
 			set
 			{
-				this.selectedGuid = value.Guid;
-				this.listController.SelectedGuid = this.selectedGuid;
-
-				if (value.PageType == PageType.Person)
-				{
-					this.isEditing = true;
-				}
-				else
-				{
-					this.isEditing = false;
-				}
+				//?this.selectedGuid = value.Guid;
+				//?this.listController.SelectedGuid = this.selectedGuid;
+				//?
+				//?if (value.PageType == PageType.Person)
+				//?{
+				//?	this.isEditing = true;
+				//?}
+				//?else
+				//?{
+				//?	this.isEditing = false;
+				//?}
 
 				this.Update ();
 			}

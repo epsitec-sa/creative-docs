@@ -201,7 +201,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void RestoreViewState(ViewState viewState)
 		{
-			this.toolbar.ViewType = viewState.ViewType;
+			//?this.toolbar.ViewType = viewState.ViewType;
+			//?this.toolbar.ViewMode = viewState.ViewMode;
+
 			this.UpdateView ();
 
 			this.view.ViewState = viewState;

@@ -99,22 +99,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				var pageType = this.isEditing ? PageType.Group : PageType.Unknown;
-				return new ViewState (ViewType.Groups, ViewMode.Unknown, pageType, null, this.selectedGuid);
+				//?var pageType = this.isEditing ? PageType.Group : PageType.Unknown;
+				//?return new ViewState (ViewType.Groups, ViewMode.Unknown, pageType, null, this.selectedGuid);
+				return new ViewState (ViewType.Groups, null);
 			}
 			set
 			{
-				this.selectedGuid = value.Guid;
-				this.listController.SelectedGuid = this.selectedGuid;
-
-				if (value.PageType == PageType.Person)
-				{
-					this.isEditing = true;
-				}
-				else
-				{
-					this.isEditing = false;
-				}
+				//?this.selectedGuid = value.Guid;
+				//?this.listController.SelectedGuid = this.selectedGuid;
+				//?
+				//?if (value.PageType == PageType.Person)
+				//?{
+				//?	this.isEditing = true;
+				//?}
+				//?else
+				//?{
+				//?	this.isEditing = false;
+				//?}
 
 				this.Update ();
 			}
