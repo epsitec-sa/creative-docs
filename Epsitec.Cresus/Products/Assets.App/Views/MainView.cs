@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.accessor = accessor;
 
-			this.historyViewStates = new List<ViewState> ();
+			this.historyViewStates = new List<AbstractViewState> ();
 			this.historyPosition = -1;
 		}
 
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.toolbar.ViewChanged += delegate (object sender, ViewType viewType)
 			{
-				this.UpdateView ();
+				this.CreateView (viewType);
 			};
 
 			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
@@ -65,41 +65,46 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			};
 
-			this.UpdateView ();
+			this.CreateView (ViewType.Objects);
 			this.UpdateToolbar ();
 		}
 
 
-		private void UpdateView()
+		private void CreateView(ViewType viewType, bool pushViewState = true)
 		{
 			this.viewBox.Children.Clear ();
 
 			if (this.view != null)
 			{
 				this.view.Goto -= this.HandleViewGoto;
-				this.view.SaveViewState -= HandleViewSave;
+				this.view.ViewStateChanged -= this.HandleViewStateChanged;
 				this.view.Dispose ();
 				this.view = null;
 			}
 
-			this.view = AbstractView.CreateView (this.toolbar.ViewType, this.accessor, this.toolbar);
+			this.view = AbstractView.CreateView (viewType, this.accessor, this.toolbar);
 
 			if (this.view != null)
 			{
 				this.view.CreateUI (this.viewBox);
 				this.view.Goto += this.HandleViewGoto;
-				this.view.SaveViewState += HandleViewSave;
+				this.view.ViewStateChanged += this.HandleViewStateChanged;
 
-				this.PushViewState (this.view.ViewState);
+				if (pushViewState)
+				{
+					this.PushViewState (this.view.ViewState);
+				}
 			}
+
+			this.toolbar.ViewType = viewType;
 		}
 
-		private void HandleViewGoto(object sender, ViewState viewState)
+		private void HandleViewGoto(object sender, AbstractViewState viewState)
 		{
 			this.RestoreViewState (viewState);
 		}
 
-		private void HandleViewSave(object sender, ViewState viewState)
+		private void HandleViewStateChanged(object sender, AbstractViewState viewState)
 		{
 			this.PushViewState (viewState);
 		}
@@ -149,7 +154,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			AssetsApplication.SelectedMandat = rank;
 			this.accessor.Mandat = AssetsApplication.GetMandat (rank);
 
-			this.UpdateView ();
+			this.CreateView (ViewType.Objects);
 		}
 
 
@@ -165,9 +170,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void PushViewState(ViewState viewState)
+		private void PushViewState(AbstractViewState viewState)
 		{
-			if (this.historyPosition >= 0 && viewState == this.historyViewStates[this.historyPosition])
+			if (this.historyPosition >= 0 &&
+				viewState.Equals (this.historyViewStates[this.historyPosition]))
 			{
 				return;
 			}
@@ -199,14 +205,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void RestoreViewState(ViewState viewState)
+		private void RestoreViewState(AbstractViewState viewState)
 		{
-			//?this.toolbar.ViewType = viewState.ViewType;
-			//?this.toolbar.ViewMode = viewState.ViewMode;
-
-			this.UpdateView ();
-
+			this.CreateView (viewState.ViewType, pushViewState: false);
 			this.view.ViewState = viewState;
+
 			this.UpdateToolbar ();
 		}
 
@@ -228,7 +231,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly DataAccessor			accessor;
-		private readonly List<ViewState>		historyViewStates;
+		private readonly List<AbstractViewState> historyViewStates;
 
 		private Widget							parent;
 		private MainToolbar						toolbar;

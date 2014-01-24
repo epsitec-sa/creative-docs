@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OpenPage (openType, field);
 			};
 
-			this.currentPage.Goto += delegate (object sender, ViewState viewState)
+			this.currentPage.Goto += delegate (object sender, AbstractViewState viewState)
 			{
 				this.OnGoto (viewState);
 			};
@@ -337,12 +337,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<Timestamp> Navigate;
 
 
-		private void OnGoto(ViewState viewState)
+		private void OnGoto(AbstractViewState viewState)
 		{
 			this.Goto.Raise (this, viewState);
 		}
 
-		public event EventHandler<ViewState> Goto;
+		public event EventHandler<AbstractViewState> Goto;
 		#endregion
 
 

@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.objectEditor             = new ObjectEditor (this.accessor, this.baseType, isTimeless: false);
 
 			this.ignoreChanges = new SafeCounter ();
+
+			this.viewMode = ViewMode.Single;
 		}
 
 
@@ -95,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.Update ();
-			this.OnChangeViewMode (this.mainToolbar.ViewMode);
+			this.OnChangeViewMode (this.viewMode);
 
 			//	Connexion des événements de la liste des objets à gauche.
 			{
@@ -201,7 +203,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.eventsController.SelectedTimestamp = timestamp;
 				};
 
-				this.objectEditor.Goto += delegate (object sender, ViewState viewState)
+				this.objectEditor.Goto += delegate (object sender, AbstractViewState viewState)
 				{
 					this.OnGoto (viewState);
 				};
@@ -224,38 +226,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override ViewState ViewState
+		public override AbstractViewState ViewState
 		{
 			get
 			{
-				var pageType = this.isEditing ? this.objectEditor.PageType : PageType.Unknown;
-
-				var serial = new Serializer ();
-
-				serial.SetInt       ("ViewMode",    (int) this.viewMode);
-				serial.SetInt       ("PageType",    (int) pageType);
-				serial.SetTimestamp ("SelectedTimestamp", this.selectedTimestamp);
-				serial.SetGuid      ("SelectedGuid",      this.selectedGuid);
-
-				return new ViewState (ViewType.Objects, serial.Data);
+				return new ObjectsViewState
+				{
+					ViewType          = ViewType.Objects,
+					ViewMode          = this.viewMode,
+					PageType          = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
+					SelectedTimestamp = this.selectedTimestamp,
+					SelectedGuid      = this.selectedGuid,
+				};
 			}
 			set
 			{
-				var serial = new Serializer (value.Data);
+				var viewState = value as ObjectsViewState;
+				System.Diagnostics.Debug.Assert (viewState != null);
 
-				this.viewMode = (ViewMode) serial.GetInt ("ViewMode");
-				var pageType  = (PageType) serial.GetInt ("PageType");
-				this.selectedTimestamp   = serial.GetTimestamp ("SelectedTimestamp");
-				this.selectedGuid        = serial.GetGuid ("SelectedGuid");
+				this.viewMode          = viewState.ViewMode;
+				this.selectedTimestamp = viewState.SelectedTimestamp;
+				this.selectedGuid      = viewState.SelectedGuid;
 
-				if (pageType == PageType.Unknown)
+				this.mainToolbar.ViewMode = this.viewMode;
+
+				if (viewState.PageType == PageType.Unknown)
 				{
 					this.isEditing = false;
 				}
 				else
 				{
 					this.isEditing = true;
-					this.objectEditor.PageType = pageType;
+					this.objectEditor.PageType = viewState.PageType;
 				}
 
 				//?this.selectedGuid = value.Guid;
@@ -321,7 +323,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.viewMode != viewMode)
 			{
 				this.viewMode = viewMode;
-				this.OnSaveViewState (this.ViewState);
+				this.OnViewStateChanged (this.ViewState);
 				this.UpdateViewModeGeometry ();
 
 				this.editFrameBox.Window.ForceLayout ();
@@ -487,7 +489,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateAfterListChanged()
 		{
-			this.OnSaveViewState (this.ViewState);
+			this.OnViewStateChanged (this.ViewState);
 			this.selectedGuid = this.listController.SelectedGuid;
 
 			if (this.selectedGuid.IsEmpty)

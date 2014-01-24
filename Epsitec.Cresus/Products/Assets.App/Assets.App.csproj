@@ -113,8 +113,12 @@
     <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
     <Compile Include="Views\CategoriesToolbarTreeTableController.cs" />
     <Compile Include="Views\CategoriesView.cs" />
-    <Compile Include="Views\Serializer.cs" />
-    <Compile Include="Views\ViewState.cs" />
+    <Compile Include="Views\AbstractViewState.cs" />
+    <Compile Include="Views\CategoriesViewState.cs" />
+    <Compile Include="Views\GroupsViewState.cs" />
+    <Compile Include="Views\PersonsViewState.cs" />
+    <Compile Include="Views\ObjectsViewState.cs" />
+    <Compile Include="Views\NameValueListSerializer.cs" />
     <Compile Include="Views\PersonGuidFieldController.cs" />
     <Compile Include="Views\EditorPagePersons.cs" />
     <Compile Include="Views\PersonsToolbarTreeTableController.cs" />

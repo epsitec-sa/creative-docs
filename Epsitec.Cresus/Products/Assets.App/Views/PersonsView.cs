@@ -96,27 +96,45 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static ViewState GetViewState(Guid personGuid)
+		public static AbstractViewState GetViewState(Guid personGuid)
 		{
-			//	Retourne un ViewState permettant de voir une personne.
-			var serial = new Serializer ();
-
-			serial.SetGuid ("SelectedGuid", personGuid);
-
-			return new ViewState (ViewType.Persons, serial.Data);
+			//	Retourne un ViewState permettant de voir une personne donnée.
+			return new PersonsViewState
+			{
+				ViewType     = ViewType.Persons,
+				SelectedGuid = personGuid,
+			};
 		}
 
 
-		public override ViewState ViewState
+		public override AbstractViewState ViewState
 		{
 			get
 			{
-				//?var pageType = this.isEditing ? PageType.Person : PageType.Unknown;
-				//?return new ViewState (ViewType.Persons, ViewMode.Unknown, pageType, null, this.selectedGuid);
-				return new ViewState (ViewType.Persons, null);
+				return new PersonsViewState
+				{
+					ViewType          = ViewType.Persons,
+					PageType          = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
+					SelectedGuid      = this.selectedGuid,
+				};
 			}
 			set
 			{
+				var viewState = value as PersonsViewState;
+				System.Diagnostics.Debug.Assert (viewState != null);
+
+				this.selectedGuid = viewState.SelectedGuid;
+
+				if (viewState.PageType == PageType.Unknown)
+				{
+					this.isEditing = false;
+				}
+				else
+				{
+					this.isEditing = true;
+					this.objectEditor.PageType = viewState.PageType;
+				}
+
 				//?this.selectedGuid = value.Guid;
 				//?this.listController.SelectedGuid = this.selectedGuid;
 				//?
@@ -239,7 +257,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateAfterListChanged()
 		{
-			this.OnSaveViewState (this.ViewState);
+			this.OnViewStateChanged (this.ViewState);
 			this.selectedGuid = this.listController.SelectedGuid;
 
 			if (this.selectedGuid.IsEmpty)

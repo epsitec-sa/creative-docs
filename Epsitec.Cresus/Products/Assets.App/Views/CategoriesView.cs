@@ -95,16 +95,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public override ViewState ViewState
+		public override AbstractViewState ViewState
 		{
 			get
 			{
-				//?var pageType = this.isEditing ? PageType.Category : PageType.Unknown;
-				//?return new ViewState (ViewType.Categories, ViewMode.Unknown, pageType, null, this.selectedGuid);
-				return new ViewState (ViewType.Categories, null);
+				return new CategoriesViewState
+				{
+					ViewType          = ViewType.Categories,
+					PageType          = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
+					SelectedGuid      = this.selectedGuid,
+				};
 			}
 			set
 			{
+				var viewState = value as CategoriesViewState;
+				System.Diagnostics.Debug.Assert (viewState != null);
+
+				this.selectedGuid = viewState.SelectedGuid;
+
+				if (viewState.PageType == PageType.Unknown)
+				{
+					this.isEditing = false;
+				}
+				else
+				{
+					this.isEditing = true;
+					this.objectEditor.PageType = viewState.PageType;
+				}
+
 				//?this.selectedGuid = value.Guid;
 				//?this.listController.SelectedGuid = this.selectedGuid;
 				//?
@@ -219,7 +237,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateAfterListChanged()
 		{
-			this.OnSaveViewState (this.ViewState);
+			this.OnViewStateChanged (this.ViewState);
 			this.selectedGuid = this.listController.SelectedGuid;
 
 			if (this.selectedGuid.IsEmpty)

@@ -31,11 +31,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		public virtual ViewState ViewState
+		public virtual AbstractViewState ViewState
 		{
 			get
 			{
-				return ViewState.Empty;
+				return null;
 			}
 			set
 			{
@@ -215,20 +215,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
-		protected void OnGoto(ViewState viewState)
+		protected void OnGoto(AbstractViewState viewState)
 		{
 			this.Goto.Raise (this, viewState);
 		}
 
-		public event EventHandler<ViewState> Goto;
+		public event EventHandler<AbstractViewState> Goto;
 
 
-		protected void OnSaveViewState(ViewState viewState)
+		protected void OnViewStateChanged(AbstractViewState viewState)
 		{
-			this.SaveViewState.Raise (this, viewState);
+			this.ViewStateChanged.Raise (this, viewState);
 		}
 
-		public event EventHandler<ViewState> SaveViewState;
+		public event EventHandler<AbstractViewState> ViewStateChanged;
 		#endregion
 
 
