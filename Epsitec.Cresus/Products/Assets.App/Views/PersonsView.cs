@@ -102,6 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return new PersonsViewState
 			{
 				ViewType     = ViewType.Persons,
+				PageType     = PageType.Person,  // pour éditer directement la personne
 				SelectedGuid = personGuid,
 			};
 		}
@@ -114,7 +115,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return new PersonsViewState
 				{
 					ViewType          = ViewType.Persons,
-					PageType          = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
 					SelectedGuid      = this.selectedGuid,
 				};
 			}
@@ -135,19 +135,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.objectEditor.PageType = viewState.PageType;
 				}
 
-				//?this.selectedGuid = value.Guid;
-				//?this.listController.SelectedGuid = this.selectedGuid;
-				//?
-				//?if (value.PageType == PageType.Person)
-				//?{
-				//?	this.isEditing = true;
-				//?}
-				//?else
-				//?{
-				//?	this.isEditing = false;
-				//?}
-
 				this.Update ();
+				this.listController.SelectedGuid = this.selectedGuid;
 			}
 		}
 
@@ -195,6 +184,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.isEditing = !this.isEditing;
 			this.Update ();
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 		private void OnStartEdit()
@@ -257,7 +247,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateAfterListChanged()
 		{
-			this.OnViewStateChanged (this.ViewState);
 			this.selectedGuid = this.listController.SelectedGuid;
 
 			if (this.selectedGuid.IsEmpty)
@@ -267,6 +256,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.Update ();
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 

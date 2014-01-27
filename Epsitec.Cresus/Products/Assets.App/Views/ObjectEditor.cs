@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				this.OpenPage (value);
+				this.OpenPage (value, notifyChange: false);
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor      = ColorManager.EditBackgroundColor,
 			};
 
-			this.OpenPage (this.AvailablePages.First ());
+			this.OpenPage (this.AvailablePages.First (), notifyChange: false);
 
 			this.tabPagesController.ItemClicked += delegate (object sender, int rank)
 			{
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OpenPage (type);
 		}
 
-		private void OpenPage(PageType type, ObjectField focusedField = ObjectField.Unknown)
+		private void OpenPage(PageType type, ObjectField focusedField = ObjectField.Unknown, bool notifyChange = true)
 		{
 			//	Ajoute une nouvelle page à la fin de la liste actuelle.
 			if (this.currentPage != null)
@@ -121,6 +121,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.UpdateSelectedTabPages (type);
+
+			if (notifyChange)
+			{
+				this.OnPageTypeChanged (this.currentPageType);
+			}
 		}
 
 
@@ -343,6 +348,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler<AbstractViewState> Goto;
+
+
+		private void OnPageTypeChanged(PageType pageType)
+		{
+			this.PageTypeChanged.Raise (this, pageType);
+		}
+
+		public event EventHandler<PageType> PageTypeChanged;
 		#endregion
 
 

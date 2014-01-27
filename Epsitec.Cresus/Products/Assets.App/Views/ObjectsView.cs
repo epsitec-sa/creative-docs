@@ -208,6 +208,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.OnGoto (viewState);
 				};
 
+				this.objectEditor.PageTypeChanged += delegate (object sender, PageType pageType)
+				{
+					this.OnViewStateChanged (this.ViewState);
+				};
+
 				this.objectEditor.ValueChanged += delegate (object sender, ObjectField field)
 				{
 					this.UpdateToolbars ();
@@ -248,8 +253,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.selectedTimestamp = viewState.SelectedTimestamp;
 				this.selectedGuid      = viewState.SelectedGuid;
 
-				this.mainToolbar.ViewMode = this.viewMode;
-
 				if (viewState.PageType == PageType.Unknown)
 				{
 					this.isEditing = false;
@@ -260,19 +263,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.objectEditor.PageType = viewState.PageType;
 				}
 
-				//?this.selectedGuid = value.Guid;
-				//?this.OnChangeViewMode (value.ViewMode);
-				//?
-				//?if (value.PageType == PageType.Person)
-				//?{
-				//?	this.isEditing = true;
-				//?}
-				//?else
-				//?{
-				//?	this.isEditing = false;
-				//?}
-
 				this.Update ();
+				this.OnChangeViewMode (this.viewMode);
 			}
 		}
 
@@ -390,6 +382,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.isEditing = !this.isEditing;
 			this.Update ();
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 		private void OnStartEdit()
@@ -489,7 +482,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateAfterListChanged()
 		{
-			this.OnViewStateChanged (this.ViewState);
 			this.selectedGuid = this.listController.SelectedGuid;
 
 			if (this.selectedGuid.IsEmpty)
@@ -526,6 +518,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.Update ();
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 		private void UpdateAfterTimelineChanged()
@@ -536,6 +529,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
+
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 		private void UpdateAfterEventsChanged()
@@ -544,6 +539,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
+
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 		private void UpdateAfterMultipleChanged()
@@ -557,6 +554,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.Update ();
+
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 
@@ -710,6 +709,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.mainToolbar.SetCommandState (ToolbarCommand.Amortissement, ToolbarCommandState.Enable);
+
+			this.mainToolbar.ViewMode = this.viewMode;
 		}
 
 		private bool IsEditingPossible
