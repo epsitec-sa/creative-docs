@@ -240,6 +240,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ViewType          = ViewType.Objects,
 					ViewMode          = this.viewMode,
 					PageType          = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
+					IsShowEvents      = this.isShowEvents,
 					SelectedTimestamp = this.selectedTimestamp,
 					SelectedGuid      = this.selectedGuid,
 				};
@@ -250,6 +251,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				System.Diagnostics.Debug.Assert (viewState != null);
 
 				this.viewMode          = viewState.ViewMode;
+				this.isShowEvents      = viewState.IsShowEvents;
 				this.selectedTimestamp = viewState.SelectedTimestamp;
 				this.selectedGuid      = viewState.SelectedGuid;
 
@@ -364,6 +366,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.isShowEvents = !this.isShowEvents;
 					this.isEditing = false;
 					this.Update ();
+					this.OnViewStateChanged (this.ViewState);
 					break;
 			}
 		}
@@ -394,6 +397,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.isEditing = true;
 			this.Update ();
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 		private void OnStartEdit(EventType eventType, Timestamp? timestamp = null)

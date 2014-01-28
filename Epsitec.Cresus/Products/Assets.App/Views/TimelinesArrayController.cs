@@ -728,8 +728,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private int GetTopVisibleRow(int sel)
 		{
-			System.Diagnostics.Debug.Assert (this.VisibleRows > 0);
-			int count = System.Math.Min (this.VisibleRows, this.dataArray.RowsCount);
+			//	Il faut forcer le calcul du layout pour pouvoir calculer le nombre
+			//	de lignes visibles. Ceci met à jour la hauteur (ActualHeight).
+			this.topTitle.Window.ForceLayout ();
+
+			int visibleRows = this.VisibleRows;
+			System.Diagnostics.Debug.Assert (visibleRows > 0);
+			int count = System.Math.Min (visibleRows, this.dataArray.RowsCount);
 
 			sel = System.Math.Min (sel + count/2, this.dataArray.RowsCount-1);
 			sel = System.Math.Max (sel - count+1, 0);

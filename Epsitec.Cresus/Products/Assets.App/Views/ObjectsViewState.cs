@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public ViewMode							ViewMode;
 		public PageType							PageType;
+		public bool								IsShowEvents;
 		public Timestamp?						SelectedTimestamp;
 		public Guid								SelectedGuid;
 
@@ -33,6 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return this.ViewType          == o.ViewType
 				&& this.ViewMode          == o.ViewMode
 				&& this.PageType          == o.PageType
+				&& this.IsShowEvents      == o.IsShowEvents
 				&& this.SelectedTimestamp == o.SelectedTimestamp
 				&& this.SelectedGuid      == o.SelectedGuid;
 		}
