@@ -13,7 +13,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectsToolbarTreeTableController : AbstractToolbarTreeTableController<CumulNode>
+	public class ObjectsToolbarTreeTableController : AbstractToolbarTreeTableController<CumulNode>, IDirty
 	{
 		public ObjectsToolbarTreeTableController(DataAccessor accessor)
 			: base (accessor)
@@ -30,6 +30,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		#region IDirty Members
+		public bool DirtyData
+		{
+			get;
+			set;
+		}
+		#endregion
+
+	
 		public override void CreateUI(Widget parent)
 		{
 			base.CreateUI (parent);

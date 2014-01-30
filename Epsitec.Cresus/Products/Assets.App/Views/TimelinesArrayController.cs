@@ -16,7 +16,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class TimelinesArrayController
+	public class TimelinesArrayController : IDirty
 	{
 		public TimelinesArrayController(DataAccessor accessor)
 		{
@@ -39,7 +39,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public bool								DataFreezed;
+		#region IDirty Members
+		public bool DirtyData
+		{
+			get;
+			set;
+		}
+		#endregion
+
+	
+	public bool								DataFreezed;
 
 		public void UpdateData()
 		{

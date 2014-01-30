@@ -352,6 +352,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						break;
 				}
 			}
+
+			this.UpdateToolbars ();
 		}
 
 		private void OnListDoubleClicked()
@@ -425,6 +427,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.objectEditor.OpenMainPage (eventType);
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 		private void OnCloseColumn()
@@ -445,6 +448,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.isEditing = false;
 			this.Update ();
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 		private void OnEditCancel()
@@ -452,6 +456,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor.EditionAccessor.CancelObjectEdition ();
 			this.isEditing = false;
 			this.Update ();
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 

@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectEditor : AbstractEditor
+	public class ObjectEditor : AbstractEditor, IDirty
 	{
 		public ObjectEditor(DataAccessor accessor, BaseType baseType, bool isTimeless)
 			: base (accessor, baseType, isTimeless)
@@ -20,6 +20,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		#region IDirty Members
+		public bool DirtyData
+		{
+			get;
+			set;
+		}
+		#endregion
+
+	
 		public override PageType PageType
 		{
 			get

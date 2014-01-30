@@ -24,6 +24,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void SetCommandEnable(ToolbarCommand command, bool enable)
 		{
+			if (command == ToolbarCommand.Edit)
+			{
+			}
+			//?
+
 			if (enable)
 			{
 				this.SetCommandState (command, ToolbarCommandState.Enable);

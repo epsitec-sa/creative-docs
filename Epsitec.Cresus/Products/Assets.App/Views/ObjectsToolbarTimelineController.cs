@@ -13,7 +13,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectsToolbarTimelineController
+	public class ObjectsToolbarTimelineController : IDirty
 	{
 		public ObjectsToolbarTimelineController(DataAccessor accessor, BaseType baseType)
 		{
@@ -28,7 +28,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public bool								DataFreezed;
 
 
-		public void CreateUI(Widget parent)
+		#region IDirty Members
+		public bool DirtyData
+		{
+			get;
+			set;
+		}
+		#endregion
+
+	
+	public void CreateUI(Widget parent)
 		{
 			this.toolbar = new TimelineToolbar ();
 			this.toolbar.CreateUI (parent);

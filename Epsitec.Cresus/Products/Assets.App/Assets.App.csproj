@@ -115,6 +115,7 @@
     <Compile Include="Views\CategoriesView.cs" />
     <Compile Include="Views\AbstractViewState.cs" />
     <Compile Include="Views\CategoriesViewState.cs" />
+    <Compile Include="Views\IDirty.cs" />
     <Compile Include="Views\GroupsViewState.cs" />
     <Compile Include="Views\PersonsViewState.cs" />
     <Compile Include="Views\ObjectsViewState.cs" />

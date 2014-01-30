@@ -101,9 +101,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return new CategoriesViewState
 				{
-					ViewType          = ViewType.Categories,
-					PageType          = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
-					SelectedGuid      = this.selectedGuid,
+					ViewType     = ViewType.Categories,
+					PageType     = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
+					SelectedGuid = this.selectedGuid,
 				};
 			}
 			set
@@ -176,6 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.isEditing = true;
 			this.Update ();
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 		private void OnStartEdit(EventType eventType)
@@ -185,12 +186,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Update ();
 
 			this.objectEditor.OpenMainPage (eventType);
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 		private void OnEditAccept()
 		{
 			this.isEditing = false;
 			this.Update ();
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 		private void OnEditCancel()
@@ -198,6 +201,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor.EditionAccessor.CancelObjectEdition ();
 			this.isEditing = false;
 			this.Update ();
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 

@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class EventsToolbarTreeTableController : AbstractToolbarTreeTableController<SortableNode>
+	public class EventsToolbarTreeTableController : AbstractToolbarTreeTableController<SortableNode>, IDirty
 	{
 		public EventsToolbarTreeTableController(DataAccessor accessor)
 			: base(accessor)
@@ -27,6 +27,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		#region IDirty Members
+		public bool DirtyData
+		{
+			get;
+			set;
+		}
+		#endregion
+
+	
 		public override void UpdateData()
 		{
 			this.eventsNodesGetter.SetParams (this.obj, this.sortingInstructions);
