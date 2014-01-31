@@ -8,6 +8,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public interface IDirty
 	{
+		bool InUse
+		{
+			get;
+			set;
+		}
+
 		bool DirtyData
 		{
 			get;

@@ -21,6 +21,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region IDirty Members
+		public bool InUse
+		{
+			get;
+			set;
+		}
+
 		public bool DirtyData
 		{
 			get;

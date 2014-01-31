@@ -72,10 +72,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			dateController.CreateUI (parent);
 
-			dateController.DateChanged += delegate
+			dateController.DateChanged += delegate (object sender, System.DateTime? date)
 			{
 				this.Timestamp = new Timestamp (dateController.Date.Value, 0);
 				this.UpdateButtons ();
+				this.OnDateChanged (date);
 			};
 		}
 

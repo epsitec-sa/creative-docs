@@ -40,6 +40,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region IDirty Members
+		public bool InUse
+		{
+			get;
+			set;
+		}
+
 		public bool DirtyData
 		{
 			get;
@@ -48,8 +54,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 	
-	public bool								DataFreezed;
-
 		public void UpdateData()
 		{
 			var timestamp = new Timestamp (this.stateAtController.Date.Value, 0);

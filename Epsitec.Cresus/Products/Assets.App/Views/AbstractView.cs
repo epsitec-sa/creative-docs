@@ -31,6 +31,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
+		public virtual void UpdateUI()
+		{
+		}
+
 		public virtual AbstractViewState ViewState
 		{
 			get

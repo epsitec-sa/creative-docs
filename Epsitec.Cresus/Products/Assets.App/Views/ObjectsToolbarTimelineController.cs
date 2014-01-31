@@ -25,10 +25,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public bool								DataFreezed;
-
-
 		#region IDirty Members
+		public bool InUse
+		{
+			get;
+			set;
+		}
+
 		public bool DirtyData
 		{
 			get;
@@ -94,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		public void Update()
+		public void UpdateData()
 		{
 			using (new SaveCurrentDate (this))
 			{
@@ -359,7 +362,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					if (name == "yes")
 					{
 						this.accessor.RemoveObjectEvent (this.obj, this.SelectedTimestamp);
-						this.Update ();
+						this.UpdateData ();
 						this.OnUpdateAll ();
 					}
 				};
@@ -383,7 +386,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (e != null)
 				{
-					this.Update ();
+					this.UpdateData ();
 					this.SelectedTimestamp = e.Timestamp;
 					this.OnStartEditing (type);
 					this.OnUpdateAll ();

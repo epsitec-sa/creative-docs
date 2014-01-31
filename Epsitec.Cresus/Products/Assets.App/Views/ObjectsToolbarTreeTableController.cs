@@ -31,6 +31,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region IDirty Members
+		public bool InUse
+		{
+			get;
+			set;
+		}
+
 		public bool DirtyData
 		{
 			get;
@@ -54,8 +60,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetDate (Timestamp.Now.Date);
 		}
 
-
-		public bool								DataFreezed;
 
 		public override void UpdateData()
 		{

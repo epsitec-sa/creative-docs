@@ -28,6 +28,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region IDirty Members
+		public bool InUse
+		{
+			get;
+			set;
+		}
+
 		public bool DirtyData
 		{
 			get;
@@ -44,9 +50,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateController ();
 			this.UpdateToolbar ();
 		}
-
-
-		public bool								DataFreezed;
 
 
 		public Guid								ObjectGuid
@@ -227,16 +230,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private Timestamp? RowToTimestamp(int row)
 		{
-			var e = this.obj.GetEvent (row);
+			if (this.obj != null)
+			{
+				var e = this.obj.GetEvent (row);
 
-			if (e == null)
-			{
-				return null;
+				if (e != null)
+				{
+					return e.Timestamp;
+				}
 			}
-			else
-			{
-				return e.Timestamp;
-			}
+
+			return null;
 		}
 
 
