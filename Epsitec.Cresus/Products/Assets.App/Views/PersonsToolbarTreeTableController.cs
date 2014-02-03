@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class PersonsToolbarTreeTableController : AbstractToolbarTreeTableController<SortableNode>
+	public class PersonsToolbarTreeTableController : AbstractToolbarTreeTableController<SortableNode>, IDirty
 	{
 		public PersonsToolbarTreeTableController(DataAccessor accessor)
 			: base (accessor)
@@ -26,6 +26,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.title = "Personnes";
 		}
+
+
+		#region IDirty Members
+		public bool InUse
+		{
+			get;
+			set;
+		}
+
+		public bool DirtyData
+		{
+			get;
+			set;
+		}
+		#endregion
 
 
 		public override void UpdateData()

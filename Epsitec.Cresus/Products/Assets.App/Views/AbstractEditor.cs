@@ -34,11 +34,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			set;
 		}
 
-		public virtual void CreateUI(Widget parent)
+		public abstract PageType MainPageType
 		{
+			get;
 		}
 
-		public virtual void OpenMainPage(EventType eventType)
+		public virtual void CreateUI(Widget parent)
 		{
 		}
 

@@ -47,6 +47,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public override PageType MainPageType
+		{
+			get
+			{
+				switch (baseType)
+				{
+					case BaseType.Categories:
+						return PageType.Category;
+
+					case BaseType.Groups:
+						return PageType.Group;
+
+					case BaseType.Persons:
+						return PageType.Person;
+
+					default:
+						var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
+
+						if (pages.Length >= 2)
+						{
+							return pages[2];
+						}
+						else
+						{
+							return PageType.OneShot;
+						}
+				}
+			}
+		}
+
 
 		public override void CreateUI(Widget parent)
 		{
@@ -80,14 +110,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.TabPageClicked (rank);
 			};
-		}
-
-		public override void OpenMainPage(EventType eventType)
-		{
-			//	Après la création d'un événement, on cherche à ouvrir la page la
-			//	plus pertinente.
-			this.eventType = eventType;
-			this.OpenPage (this.MainPage);
 		}
 
 
@@ -212,36 +234,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.tabPagesController.UpdateUI ();
 		}
 
-
-		private PageType MainPage
-		{
-			get
-			{
-				switch (baseType)
-				{
-					case BaseType.Categories:
-						return PageType.Category;
-
-					case BaseType.Groups:
-						return PageType.Group;
-
-					case BaseType.Persons:
-						return PageType.Person;
-
-					default:
-						var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
-
-						if (pages.Length >= 2)
-						{
-							return pages[2];
-						}
-						else
-						{
-							return PageType.OneShot;
-						}
-				}
-			}
-		}
 
 		public IEnumerable<PageType> AvailablePages
 		{

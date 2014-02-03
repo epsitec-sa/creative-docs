@@ -19,8 +19,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.listController = new CategoriesToolbarTreeTableController (this.accessor);
 			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, isTimeless: true);
-
-			this.ignoreChanges = new SafeCounter ();
 		}
 
 
@@ -58,7 +56,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listController.CreateUI (this.listFrameBox);
 			this.objectEditor.CreateUI (this.editFrameBox);
 
-			this.Update ();
+			this.listController.DirtyData = true;
+			this.UpdateUI ();
 
 			//	Connexion des événements de la liste des objets à gauche.
 			{
@@ -90,11 +89,50 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.objectEditor.UpdateData += delegate
 				{
-					this.UpdateData ();
+					this.UpdateUI ();
 				};
 			}
 		}
 
+		public override void UpdateUI()
+		{
+			if (!this.isEditing)
+			{
+				if (this.accessor.EditionAccessor.SaveObjectEdition ())
+				{
+					this.listController.DirtyData = true;
+				}
+			}
+
+			this.listController.InUse = true;
+			this.editFrameBox.Visibility = this.isEditing;
+
+			//	Met à jour les données des différents contrôleurs.
+			using (this.ignoreChanges.Enter ())
+			{
+				if (this.listController.InUse)
+				{
+					if (this.listController.DirtyData)
+					{
+						this.listController.UpdateData ();
+						this.listController.SelectedGuid = this.selectedGuid;
+
+						this.listController.DirtyData = false;
+					}
+					else if (this.listController.SelectedGuid != this.selectedGuid)
+					{
+						this.listController.SelectedGuid = this.selectedGuid;
+					}
+				}
+			}
+
+			this.UpdateToolbars ();
+			this.UpdateEditor ();
+
+			this.OnViewStateChanged (this.ViewState);
+		}
+
+	
 		public override AbstractViewState ViewState
 		{
 			get
@@ -123,8 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.objectEditor.PageType = viewState.PageType;
 				}
 
-				this.Update ();
-				this.listController.SelectedGuid = this.selectedGuid;
+				this.UpdateUI ();
 			}
 		}
 
@@ -163,8 +200,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.isEditing = !this.isEditing;
-			this.Update ();
-			this.OnViewStateChanged (this.ViewState);
+			this.UpdateUI ();
 		}
 
 		private void OnStartEdit()
@@ -175,57 +211,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.isEditing = true;
-			this.Update ();
-			this.OnViewStateChanged (this.ViewState);
+			this.UpdateUI ();
 		}
 
 		private void OnStartEdit(EventType eventType)
 		{
 			//	Démarre une édition après avoir créé un événement.
 			this.isEditing = true;
-			this.Update ();
+			this.objectEditor.PageType = this.objectEditor.MainPageType;
 
-			this.objectEditor.OpenMainPage (eventType);
-			this.OnViewStateChanged (this.ViewState);
+			this.UpdateUI ();
 		}
 
 		private void OnEditAccept()
 		{
 			this.isEditing = false;
-			this.Update ();
-			this.OnViewStateChanged (this.ViewState);
+			this.UpdateUI ();
 		}
 
 		private void OnEditCancel()
 		{
 			this.accessor.EditionAccessor.CancelObjectEdition ();
 			this.isEditing = false;
-			this.Update ();
-			this.OnViewStateChanged (this.ViewState);
-		}
-
-
-		protected override void Update(bool dataChanged = false)
-		{
-			bool updateData = dataChanged;
-
-			if (!this.isEditing)
-			{
-				if (this.accessor.EditionAccessor.SaveObjectEdition ())
-				{
-					updateData = true;
-				}
-			}
-
-			if (updateData)
-			{
-				this.UpdateData ();
-			}
-
-			this.editFrameBox.Visibility = this.isEditing;
-
-			this.UpdateToolbars ();
-			this.UpdateEditor ();
+			this.UpdateUI ();
 		}
 
 
@@ -239,16 +247,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.isEditing    = false;
 			}
 
-			this.Update ();
-			this.OnViewStateChanged (this.ViewState);
+			this.UpdateUI ();
 		}
 
-
-		private void UpdateData()
-		{
-			this.listController.UpdateData ();
-			this.listController.SelectedGuid = this.selectedGuid;
-		}
 
 		private void UpdateEditor()
 		{
@@ -294,7 +295,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly CategoriesToolbarTreeTableController listController;
 		private readonly ObjectEditor						objectEditor;
-		private readonly SafeCounter						ignoreChanges;
 
 		private FrameBox									listFrameBox;
 		private FrameBox									editFrameBox;

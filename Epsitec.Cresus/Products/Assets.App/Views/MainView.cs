@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -19,6 +20,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.lastViewStates = new List<AbstractViewState> ();
 			this.historyViewStates = new List<AbstractViewState> ();
 			this.historyPosition = -1;
+
+			this.ignoreChanges = new SafeCounter ();
 		}
 
 		public void CreateUI(Widget parent)
@@ -193,28 +196,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var last = this.lastViewStates.Where (x => x.ViewType == this.view.ViewState.ViewType).FirstOrDefault ();
 			if (last != null)
 			{
-				this.view.ViewState = last;
+				using (this.ignoreChanges.Enter ())
+				{
+					this.view.ViewState = last;
+				}
 			}
 		}
 
 
 		private void PushViewState(AbstractViewState viewState)
 		{
-			if (this.historyPosition >= 0 &&
-				viewState.Equals (this.historyViewStates[this.historyPosition]))
+			if (this.ignoreChanges.IsZero)
 			{
-				return;
+				if (this.historyPosition >= 0 &&
+					viewState.Equals (this.historyViewStates[this.historyPosition]))
+				{
+					return;
+				}
+
+				while (this.historyPosition < this.historyViewStates.Count-1)
+				{
+					this.historyViewStates.RemoveAt (this.historyViewStates.Count-1);
+				}
+
+				this.historyViewStates.Add (viewState);
+				this.historyPosition = this.historyViewStates.Count-1;
+
+				this.UpdateToolbar ();
 			}
-
-			while (this.historyPosition < this.historyViewStates.Count-1)
-			{
-				this.historyViewStates.RemoveAt (this.historyViewStates.Count-1);
-			}
-
-			this.historyViewStates.Add (viewState);
-			this.historyPosition = this.historyViewStates.Count-1;
-
-			this.UpdateToolbar ();
 		}
 
 		private void GoHistoryBack()
@@ -261,6 +270,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor			accessor;
 		private readonly List<AbstractViewState> lastViewStates;
 		private readonly List<AbstractViewState> historyViewStates;
+		private readonly SafeCounter			ignoreChanges;
 
 		private Widget							parent;
 		private MainToolbar						toolbar;

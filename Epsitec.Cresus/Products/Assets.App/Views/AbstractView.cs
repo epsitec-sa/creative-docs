@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
@@ -19,6 +20,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.mainToolbar = toolbar;
 
 			this.amortissements = new Amortissements (this.accessor);
+
+			this.ignoreChanges = new SafeCounter ();
 		}
 
 
@@ -160,18 +163,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			this.Update (dataChanged: true);
+			this.UpdateUI ();
 		}
 
 		private void ShowErrorPopup(Widget target, List<Error> errors)
 		{
 			var popup = new ErrorsPopup (this.accessor, errors);
 			popup.Create (target);
-		}
-
-
-		protected virtual void Update(bool dataChanged = false)
-		{
 		}
 
 
@@ -239,6 +237,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected readonly DataAccessor			accessor;
 		protected readonly MainToolbar			mainToolbar;
 		protected readonly Amortissements		amortissements;
+		protected readonly SafeCounter			ignoreChanges;
 
 		protected BaseType						baseType;
 	}

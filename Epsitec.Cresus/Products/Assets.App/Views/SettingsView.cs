@@ -22,8 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void CreateUI(Widget parent)
 		{
 			base.CreateUI (parent);
-
-			this.Update ();
 		}
 	}
 }

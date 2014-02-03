@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 	
-	public void CreateUI(Widget parent)
+		public void CreateUI(Widget parent)
 		{
 			this.toolbar = new TimelineToolbar ();
 			this.toolbar.CreateUI (parent);
