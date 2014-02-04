@@ -177,10 +177,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				bool isReadOnly = (this.propertyState == PropertyState.Readonly);
 
-				if (textField.IsReadOnly != isReadOnly)
+				if (textField is TextFieldCombo)
 				{
-					textField.IsReadOnly = isReadOnly;
-					textField.Invalidate ();  // TODO: pour corriger un bug de Widget !
+					if (textField.Enable != !isReadOnly)
+					{
+						textField.Enable = !isReadOnly;
+						textField.Invalidate ();  // TODO: pour corriger un bug de Widget !
+					}
+				}
+				else
+				{
+					if (textField.IsReadOnly != isReadOnly)
+					{
+						textField.IsReadOnly = isReadOnly;
+						textField.Invalidate ();  // TODO: pour corriger un bug de Widget !
+					}
 				}
 			}
 		}

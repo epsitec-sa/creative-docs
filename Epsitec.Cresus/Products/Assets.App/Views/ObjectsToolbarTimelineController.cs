@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						this.accessor.RemoveObjectEvent (this.obj, this.SelectedTimestamp);
 						this.UpdateData ();
-						this.OnUpdateAll ();
+						this.OnDeepUpdate ();
 					}
 				};
 			}
@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.UpdateData ();
 					this.SelectedTimestamp = e.Timestamp;
 					this.OnStartEditing (type);
-					this.OnUpdateAll ();
+					this.OnDeepUpdate ();
 				}
 			}
 		}
@@ -908,12 +908,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<EventType> StartEditing;
 
 
-		private void OnUpdateAll()
+		private void OnDeepUpdate()
 		{
-			this.UpdateAll.Raise (this);
+			this.DeepUpdate.Raise (this);
 		}
 
-		public event EventHandler UpdateAll;
+		public event EventHandler DeepUpdate;
 		#endregion
 
 

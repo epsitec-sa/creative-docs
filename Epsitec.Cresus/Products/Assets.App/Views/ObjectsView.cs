@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -94,19 +93,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins       = new Margins (0, 0, TopTitle.height, 0),
 			};
 
-			this.listController.DirtyData = true;
-			this.timelineController.DirtyData = true;
-			this.eventsController.DirtyData = true;
-			this.timelinesArrayController.DirtyData = true;
-			this.UpdateUI ();
+			this.DeepUpdateUI ();
 
 			//	Connexion des événements de la liste des objets à gauche.
 			{
-				this.listController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
-				{
-					this.OnStartEdit (eventType, timestamp);
-				};
-
 				this.listController.SelectedRowChanged += delegate
 				{
 					if (this.ignoreChanges.IsZero)
@@ -119,6 +109,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.OnListDoubleClicked ();
 				};
+
+				this.listController.UpdateAfterCreate += delegate (object sender, Guid guid, EventType eventType, Timestamp timestamp)
+				{
+					this.OnUpdateAfterObjectCreate (guid);
+				};
+
+				this.listController.UpdateAfterDelete += delegate
+				{
+					this.OnUpdateAfterObjectDelete ();
+				};
 			}
 
 			//	Connexion des événements de la timeline en bas.
@@ -128,13 +128,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.OnStartEdit (eventType);
 				};
 
-				this.timelineController.UpdateAll += delegate
+				this.timelineController.DeepUpdate += delegate
 				{
-					this.listController.DirtyData = true;
-					this.timelineController.DirtyData = true;
-					this.eventsController.DirtyData = true;
-					this.timelinesArrayController.DirtyData = true;
-					this.UpdateUI ();
+					this.DeepUpdateUI ();
 				};
 
 				this.timelineController.SelectedCellChanged += delegate
@@ -153,20 +149,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			//	Connexion des événements de la liste des événements.
 			{
-				this.eventsController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
-				{
-					this.OnStartEdit (eventType, timestamp);
-				};
-
-				this.eventsController.UpdateAll += delegate
-				{
-					this.listController.DirtyData = true;
-					this.timelineController.DirtyData = true;
-					this.eventsController.DirtyData = true;
-					this.timelinesArrayController.DirtyData = true;
-					this.UpdateUI ();
-				};
-
 				this.eventsController.SelectedRowChanged += delegate
 				{
 					if (this.ignoreChanges.IsZero)
@@ -178,6 +160,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.eventsController.RowDoubleClicked += delegate
 				{
 					this.OnEventDoubleClicked ();
+				};
+
+				this.eventsController.UpdateAfterCreate += delegate (object sender, Guid guid, EventType eventType, Timestamp timestamp)
+				{
+					this.OnUpdateAfterEventCreate (guid, timestamp);
+				};
+
+				this.eventsController.UpdateAfterDelete += delegate
+				{
+					this.OnUpdateAfterEventDelete ();
 				};
 			}
 
@@ -218,7 +210,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.objectEditor.PageTypeChanged += delegate (object sender, PageType pageType)
 				{
 					this.UpdateUI ();
-					//?this.OnViewStateChanged (this.ViewState);
 				};
 
 				this.objectEditor.ValueChanged += delegate (object sender, ObjectField field)
@@ -226,9 +217,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.UpdateToolbars ();
 				};
 
-				this.objectEditor.UpdateData += delegate
+				this.objectEditor.DataChanged += delegate
 				{
-					this.UpdateUI ();
+					this.DataChanged ();
 				};
 			}
 
@@ -239,17 +230,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public override void DataChanged()
+		{
+			this.listController.DirtyData = true;
+			this.timelineController.DirtyData = true;
+			this.eventsController.DirtyData = true;
+			this.timelinesArrayController.DirtyData = true;
+		}
+
+		public override void DeepUpdateUI()
+		{
+			this.DataChanged ();
+			this.UpdateUI ();
+		}
+
 		public override void UpdateUI()
 		{
-			if (!this.isEditing)
+			if (this.accessor.EditionAccessor.SaveObjectEdition ())
 			{
-				if (this.accessor.EditionAccessor.SaveObjectEdition ())
-				{
-					this.listController.DirtyData = true;
-					this.timelineController.DirtyData = true;
-					this.eventsController.DirtyData = true;
-					this.timelinesArrayController.DirtyData = true;
-				}
+				this.DataChanged ();
 			}
 
 			//	Met à jour la géométrie des différents contrôleurs.
@@ -482,12 +481,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnStartEdit(EventType eventType, Timestamp? timestamp = null)
 		{
-			//	Démarre une édition après avoir créé un événement.
 			this.isEditing = true;
 			this.selectedTimestamp = timestamp;
 			this.objectEditor.PageType = this.objectEditor.MainPageType;
 
 			this.UpdateUI ();
+		}
+
+		private void OnUpdateAfterObjectCreate(Guid guid)
+		{
+			this.isEditing = true;
+			this.selectedGuid = guid;
+			this.objectEditor.PageType = this.objectEditor.MainPageType;
+
+			this.DeepUpdateUI ();
+		}
+
+		private void OnUpdateAfterObjectDelete()
+		{
+			this.isEditing = false;
+			this.selectedGuid = Guid.Empty;
+
+			this.DeepUpdateUI ();
+		}
+
+		private void OnUpdateAfterEventCreate(Guid guid, Timestamp timestamp)
+		{
+			this.isShowEvents = true;
+			this.isEditing = true;
+			this.selectedTimestamp = timestamp;
+			this.objectEditor.PageType = this.objectEditor.MainPageType;
+
+			this.DeepUpdateUI ();
+		}
+
+		private void OnUpdateAfterEventDelete()
+		{
+			this.isShowEvents = true;
+			this.isEditing = false;
+			this.selectedTimestamp = null;
+
+			this.DeepUpdateUI ();
 		}
 
 		private void OnCloseColumn()

@@ -115,6 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						this.accessor.RemoveObject (BaseType.Persons, this.SelectedGuid);
 						this.UpdateData ();
+						this.OnUpdateAfterDelete ();
 					}
 				};
 			}
@@ -152,7 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateData ();
 
 			this.SelectedGuid = guid;
-			this.OnStartEditing (EventType.Entrée, Timestamp.Now);  // Timestamp quelconque !
+			this.OnUpdateAfterCreate (guid, EventType.Entrée, Timestamp.Now);  // Timestamp quelconque !
 		}
 
 

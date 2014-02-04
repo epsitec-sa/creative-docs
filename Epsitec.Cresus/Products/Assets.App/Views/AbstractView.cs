@@ -34,6 +34,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
+		public virtual void DataChanged()
+		{
+		}
+
+		public virtual void DeepUpdateUI()
+		{
+		}
+
 		public virtual void UpdateUI()
 		{
 		}
@@ -163,7 +171,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			this.UpdateUI ();
+			this.DeepUpdateUI ();
 		}
 
 		private void ShowErrorPopup(Widget target, List<Error> errors)

@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct DataAmortissement
 	{
-		public DataAmortissement(decimal rate, TypeAmortissement type, int period, decimal rest)
+		public DataAmortissement(decimal rate, TypeAmortissement type, Périodicité period, decimal rest)
 		{
 			this.Rate   = rate;
 			this.Type   = type;
@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.Rate * this.Period / 12.0m;
+				return this.Rate * this.PeriodMonthCount / 12.0m;
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return ErrorType.AmortissementInvalidType;
 				}
 
-				if (this.Period <= 0 || this.Period > 120)
+				if (this.PeriodMonthCount == -1)
 				{
 					return ErrorType.AmortissementInvalidPeriod;
 				}
@@ -66,11 +66,42 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+
+		private int PeriodMonthCount
+		{
+			get
+			{
+				return DataAmortissement.GetPeriodMonthCount (this.Period);
+			}
+		}
+
+		public static int GetPeriodMonthCount(Périodicité period)
+		{
+			switch (period)
+			{
+				case Périodicité.Annuel:
+					return 12;
+
+				case Périodicité.Semestriel:
+					return 6;
+
+				case Périodicité.Trimestriel:
+					return 3;
+
+				case Périodicité.Mensuel:
+					return 1;
+
+				default:
+					return -1;
+			}
+		}
+
+
 		public static DataAmortissement Empty = new DataAmortissement (0.0m, TypeAmortissement.Unknown, 0, 0.0m);
 
 		public readonly decimal				Rate;
 		public readonly TypeAmortissement	Type;
-		public readonly int					Period;
+		public readonly Périodicité			Period;
 		public readonly decimal				Rest;
 	}
 }

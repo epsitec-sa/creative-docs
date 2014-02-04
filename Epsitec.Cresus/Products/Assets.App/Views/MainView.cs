@@ -181,24 +181,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void SaveLastViewState()
 		{
 			//	Sauvegarde le ViewState actuellement utilisé.
-			var last = this.lastViewStates.Where (x => x.ViewType == this.view.ViewState.ViewType).FirstOrDefault ();
-			if (last != null)
+			if (this.view.ViewState != null)
 			{
-				this.lastViewStates.Remove (last);
-			}
+				var last = this.lastViewStates.Where (x => x.ViewType == this.view.ViewState.ViewType).FirstOrDefault ();
+				if (last != null)
+				{
+					this.lastViewStates.Remove (last);
+				}
 
-			this.lastViewStates.Add (this.view.ViewState);
+				this.lastViewStates.Add (this.view.ViewState);
+			}
 		}
 
 		private void RestoreLastViewState()
 		{
 			//	Restitue le dernier ViewState utilisé par la vue.
-			var last = this.lastViewStates.Where (x => x.ViewType == this.view.ViewState.ViewType).FirstOrDefault ();
-			if (last != null)
+			if (this.view.ViewState != null)
 			{
-				using (this.ignoreChanges.Enter ())
+				var last = this.lastViewStates.Where (x => x.ViewType == this.view.ViewState.ViewType).FirstOrDefault ();
+				if (last != null)
 				{
-					this.view.ViewState = last;
+					using (this.ignoreChanges.Enter ())
+					{
+						this.view.ViewState = last;
+					}
 				}
 			}
 		}

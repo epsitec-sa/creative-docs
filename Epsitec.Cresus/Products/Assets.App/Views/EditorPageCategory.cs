@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStringController  (parent, ObjectField.Nom);
 			this.CreateStringController  (parent, ObjectField.Description, lineCount: 5);
 			this.CreateDecimalController (parent, ObjectField.TauxAmortissement, DecimalFormat.Rate);
-			this.CreateStringController  (parent, ObjectField.TypeAmortissement, editWidth: 90);
-			this.CreateStringController  (parent, ObjectField.Périodicité, editWidth: 90);
+			this.CreateEnumController    (parent, ObjectField.TypeAmortissement, EnumDictionaries.DictTypesAmortissements, editWidth: 90);
+			this.CreateEnumController    (parent, ObjectField.Périodicité, EnumDictionaries.DictPériodicités, editWidth: 90);
 			this.CreateDecimalController (parent, ObjectField.ValeurRésiduelle, DecimalFormat.Amount);
 
 			this.CreateSepartor (parent);

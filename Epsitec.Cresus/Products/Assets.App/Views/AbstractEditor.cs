@@ -46,7 +46,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void StartEdition(Guid objectGuid, Timestamp? timestamp)
 		{
-			bool changed = this.accessor.EditionAccessor.SaveObjectEdition ();
+			if (this.accessor.EditionAccessor.SaveObjectEdition ())
+			{
+				this.OnDataChanged ();
+			}
 
 			this.accessor.EditionAccessor.StartObjectEdition (this.baseType, objectGuid, timestamp);
 
@@ -54,11 +57,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.editionDirty = false;
 				this.OnValueChanged (ObjectField.Unknown);
-			}
-
-			if (changed)
-			{
-				this.OnUpdateData ();
 			}
 		}
 
@@ -81,12 +79,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<ObjectField> ValueChanged;
 
 
-		private void OnUpdateData()
+		private void OnDataChanged()
 		{
-			this.UpdateData.Raise (this);
+			this.DataChanged.Raise (this);
 		}
 
-		public event EventHandler UpdateData;
+		public event EventHandler DataChanged;
 		#endregion
 
 

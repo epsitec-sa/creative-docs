@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -56,16 +55,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listController.CreateUI (this.listFrameBox);
 			this.objectEditor.CreateUI (this.editFrameBox);
 
-			this.listController.DirtyData = true;
-			this.UpdateUI ();
+			this.DeepUpdateUI ();
 
 			//	Connexion des événements de la liste des objets à gauche.
 			{
-				this.listController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
-				{
-					this.OnStartEdit (eventType);
-				};
-
 				this.listController.SelectedRowChanged += delegate
 				{
 					if (this.ignoreChanges.IsZero)
@@ -78,6 +71,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.OnListDoubleClicked ();
 				};
+
+				this.listController.UpdateAfterCreate += delegate (object sender, Guid guid, EventType eventType, Timestamp timestamp)
+				{
+					this.OnUpdateAfterCreate (guid);
+				};
+
+				this.listController.UpdateAfterDelete += delegate
+				{
+					this.OnUpdateAfterDelete ();
+				};
 			}
 
 			//	Connexion des événements de l'éditeur.
@@ -87,21 +90,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.UpdateToolbars ();
 				};
 
-				this.objectEditor.UpdateData += delegate
+				this.objectEditor.DataChanged += delegate
 				{
-					this.UpdateUI ();
+					this.DataChanged ();
 				};
 			}
 		}
 
+
+		public override void DataChanged()
+		{
+			this.listController.DirtyData = true;
+		}
+
+		public override void DeepUpdateUI()
+		{
+			this.DataChanged ();
+			this.UpdateUI ();
+		}
+
 		public override void UpdateUI()
 		{
-			if (!this.isEditing)
+			if (this.accessor.EditionAccessor.SaveObjectEdition ())
 			{
-				if (this.accessor.EditionAccessor.SaveObjectEdition ())
-				{
-					this.listController.DirtyData = true;
-				}
+				this.DataChanged ();
 			}
 
 			this.listController.InUse = true;
@@ -234,13 +246,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateUI ();
 		}
 
-		private void OnStartEdit(EventType eventType)
+		private void OnUpdateAfterCreate(Guid guid)
 		{
-			//	Démarre une édition après avoir créé un événement.
+			//	Démarre une édition après avoir créé une personne.
 			this.isEditing = true;
+			this.selectedGuid = guid;
 			this.objectEditor.PageType = this.objectEditor.MainPageType;
 
-			this.UpdateUI ();
+			this.DeepUpdateUI ();
+		}
+
+		private void OnUpdateAfterDelete()
+		{
+			this.isEditing = false;
+			this.selectedGuid = Guid.Empty;
+
+			this.DeepUpdateUI ();
 		}
 
 		private void OnEditAccept()
@@ -263,8 +284,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.selectedGuid.IsEmpty)
 			{
-				this.isShowEvents = false;
-				this.isEditing    = false;
+				this.isEditing = false;
 			}
 
 			this.UpdateUI ();
@@ -319,7 +339,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox									listFrameBox;
 		private FrameBox									editFrameBox;
 
-		private bool										isShowEvents;
 		private bool										isEditing;
 		private Guid										selectedGuid;
 	}

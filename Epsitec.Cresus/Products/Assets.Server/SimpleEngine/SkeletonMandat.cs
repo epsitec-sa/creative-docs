@@ -39,8 +39,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "11"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Bureaux"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.075m));
-				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Linéaire"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Annuelle"));
+				e.AddProperty (new DataIntProperty     (ObjectField.TypeAmortissement, (int) TypeAmortissement.Linear));
+				e.AddProperty (new DataIntProperty     (ObjectField.Périodicité,       (int) Périodicité.Annuel));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  1000.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
@@ -62,8 +62,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "12"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Usine"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.12m));
-				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Linéaire"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Annuelle"));
+				e.AddProperty (new DataIntProperty     (ObjectField.TypeAmortissement, (int) TypeAmortissement.Linear));
+				e.AddProperty (new DataIntProperty     (ObjectField.Périodicité,       (int) Périodicité.Annuel));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  10000.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
@@ -85,8 +85,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "21"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Poid lourd"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.15m));
-				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Dégressif"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Trimestrielle"));
+				e.AddProperty (new DataIntProperty     (ObjectField.TypeAmortissement, (int) TypeAmortissement.Degressive));
+				e.AddProperty (new DataIntProperty     (ObjectField.Périodicité,       (int) Périodicité.Trimestriel));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  100.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
@@ -108,8 +108,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "22"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Camionnette"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.21m));
-				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Dégressif"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Semestrielle"));
+				e.AddProperty (new DataIntProperty     (ObjectField.TypeAmortissement, (int) TypeAmortissement.Degressive));
+				e.AddProperty (new DataIntProperty     (ObjectField.Périodicité,       (int) Périodicité.Semestriel));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  100.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
@@ -131,8 +131,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "23"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Voiture"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.25m));
-				e.AddProperty (new DataStringProperty  (ObjectField.TypeAmortissement, "Dégressif"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Périodicité,       "Semestrielle"));
+				e.AddProperty (new DataIntProperty     (ObjectField.TypeAmortissement, (int) TypeAmortissement.Degressive));
+				e.AddProperty (new DataIntProperty     (ObjectField.Périodicité,       (int) Périodicité.Semestriel));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  100.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));

@@ -81,6 +81,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var node = this.nodesGetter[firstRow+i];
 				var e    = this.DataObject.GetEvent (node.Guid);
+				System.Diagnostics.Debug.Assert (e != null);
 
 				var timestamp  = e.Timestamp;
 				var eventType  = e.Type;

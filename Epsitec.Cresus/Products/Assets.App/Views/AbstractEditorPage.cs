@@ -63,6 +63,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.Value         = this.accessor.EditionAccessor.GetFieldString (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
+				else if (controller is EnumFieldController)
+				{
+					var c = controller as EnumFieldController;
+
+					c.EventType     = this.eventType;
+					c.Value         = this.accessor.EditionAccessor.GetFieldInt (field);
+					c.PropertyState = this.GetPropertyState (field);
+				}
 				else if (controller is DecimalFieldController)
 				{
 					var c = controller as DecimalFieldController;
@@ -259,6 +267,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
 				controller.Value         = this.accessor.EditionAccessor.GetFieldString (of);
+				controller.PropertyState = this.GetPropertyState (of);
+
+				this.OnValueEdited (of);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.ShowHistoryPopup (target, of);
+			};
+
+			controller.Goto += delegate (object sender, AbstractViewState viewState)
+			{
+				this.OnGoto (viewState);
+			};
+
+			this.fieldControllers.Add (field, controller);
+		}
+
+		protected void CreateEnumController(Widget parent, ObjectField field, Dictionary<int, string> enums, int editWidth = 380)
+		{
+			var controller = new EnumFieldController
+			{
+				Field     = field,
+				Label     = DataDescriptions.GetObjectFieldDescription (field),
+				EditWidth = editWidth,
+				Enums     = enums,
+				TabIndex  = ++this.tabIndex,
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldInt (of);
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);

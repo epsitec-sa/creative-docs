@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -405,12 +406,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<int> RowDoubleClicked;
 
 
-		protected void OnStartEditing(EventType eventType, Timestamp timestamp)
+		protected void OnUpdateAfterCreate(Guid guid, EventType eventType, Timestamp timestamp)
 		{
-			this.StartEditing.Raise (this, eventType, timestamp);
+			this.UpdateAfterCreate.Raise (this, guid, eventType, timestamp);
 		}
 
-		public event EventHandler<EventType, Timestamp> StartEditing;
+		public event EventHandler<Guid, EventType, Timestamp> UpdateAfterCreate;
+
+
+		protected void OnUpdateAfterDelete()
+		{
+			this.UpdateAfterDelete.Raise (this);
+		}
+
+		public event EventHandler UpdateAfterDelete;
 		#endregion
 
 

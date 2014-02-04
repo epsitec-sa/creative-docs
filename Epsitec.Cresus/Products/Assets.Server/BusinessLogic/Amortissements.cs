@@ -148,63 +148,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private DataAmortissement GetDataAmortissement(DataObject obj, Timestamp timestamp)
 		{
 			var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.TauxAmortissement);
-			var type   = ObjectCalculator.GetObjectPropertyString  (obj, timestamp, ObjectField.TypeAmortissement);
-			var period = ObjectCalculator.GetObjectPropertyString  (obj, timestamp, ObjectField.Périodicité);
+			var type   = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.TypeAmortissement);
+			var period = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.Périodicité);
 			var rest   = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ValeurRésiduelle);
 
-			var t = Amortissements.ParseTypeAmortissement (type);
-			var p = Amortissements.ParsePeriod (period);
+			var t = (TypeAmortissement) type;
+			var p = (Périodicité) period;
 
 			return new DataAmortissement (taux.GetValueOrDefault (0.0m), t, p, rest.GetValueOrDefault (0.0m));
 
-		}
-
-		private static TypeAmortissement ParseTypeAmortissement(string text)
-		{
-			//	TODO: provisoire
-			if (!string.IsNullOrEmpty (text))
-			{
-				text = text.ToLower ();
-
-				if (text.StartsWith ("lin"))  // linéaire ?
-				{
-					return TypeAmortissement.Linear;
-				}
-				else if (text.StartsWith ("dég") || text.StartsWith ("deg"))  // dégressif ?
-				{
-					return TypeAmortissement.Linear;
-				}
-			}
-
-			return TypeAmortissement.Unknown;
-		}
-
-		private static int ParsePeriod(string text)
-		{
-			//	TODO: provisoire
-			if (!string.IsNullOrEmpty (text))
-			{
-				text = text.ToLower ();
-
-				if (text.StartsWith ("an"))  // annuel ?
-				{
-					return 12;
-				}
-				else if (text.StartsWith ("sem"))  // semestriel ?
-				{
-					return 6;
-				}
-				else if (text.StartsWith ("tri"))  // trimestriel ?
-				{
-					return 3;
-				}
-				else if (text.StartsWith ("men"))  // mensuel ?
-				{
-					return 1;
-				}
-			}
-
-			return 0;
 		}
 
 

@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -164,20 +163,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					if (name == "yes")
 					{
 						this.accessor.RemoveObjectEvent (this.obj, this.SelectedTimestamp);
-						this.UpdateController ();
-						this.UpdateToolbar ();
-						this.OnUpdateAll ();
+						this.UpdateData ();
+						this.OnUpdateAfterDelete ();
 					}
 				};
 			}
-		}
-
-
-		public void Update()
-		{
-			this.UpdateData ();
-			//-this.UpdateController ();
-			//-this.UpdateToolbar ();
 		}
 
 
@@ -190,14 +180,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (e != null)
 				{
-					this.UpdateController ();
-					this.UpdateToolbar ();
-
+					this.UpdateData ();
 					this.SelectedRow = this.TimestampToRow (e.Timestamp);
+					this.OnUpdateAfterCreate (e.Guid, type, e.Timestamp);
 				}
-
-				this.OnStartEditing (type, e.Timestamp);
-				this.OnUpdateAll ();
 			}
 		}
 
@@ -242,16 +228,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			return null;
 		}
-
-
-		#region Events handler
-		private void OnUpdateAll()
-		{
-			this.UpdateAll.Raise (this);
-		}
-
-		public event EventHandler UpdateAll;
-		#endregion
 
 
 		private SorterNodesGetter NodesGetter
