@@ -13,10 +13,12 @@ namespace Epsitec.Cresus.Assets.App.NodesGetter
 	/// </summary>
 	public struct NavigationNode
 	{
-		public NavigationNode(Guid navigationGuid, ViewType viewType, string description)
+		public NavigationNode(Guid navigationGuid, ViewType viewType, PageType pageType, Timestamp? timestamp, string description)
 		{
 			this.NavigationGuid = navigationGuid;
 			this.ViewType       = viewType;
+			this.PageType       = pageType;
+			this.Timestamp      = timestamp;
 			this.Description    = description;
 		}
 
@@ -26,14 +28,17 @@ namespace Epsitec.Cresus.Assets.App.NodesGetter
 			{
 				return this.NavigationGuid.IsEmpty
 					&& this.ViewType    == ViewType.Unknown
+					&& this.PageType    == PageType.Unknown
 					&& this.Description == null;
 			}
 		}
 
-		public static NavigationNode Empty = new NavigationNode (Guid.Empty, ViewType.Unknown, null);
+		public static NavigationNode Empty = new NavigationNode (Guid.Empty, ViewType.Unknown, PageType.Unknown, null, null);
 
 		public readonly Guid				NavigationGuid;
 		public readonly ViewType			ViewType;
+		public readonly PageType			PageType;
+		public readonly Timestamp?			Timestamp;
 		public readonly string				Description;
 	}
 }

@@ -10,7 +10,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class CategoriesViewState : AbstractViewState, System.IEquatable<AbstractViewState>
 	{
-		public PageType							PageType;
 		public Guid								SelectedGuid;
 
 

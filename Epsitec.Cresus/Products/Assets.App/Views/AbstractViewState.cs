@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		public ViewType							ViewType;
+		public PageType							PageType;
 
 
 		#region IGuid Members
@@ -43,9 +44,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		public NavigationNode GetNavigationNode(DataAccessor accessor)
+		public virtual NavigationNode GetNavigationNode(DataAccessor accessor)
 		{
-			return new NavigationNode (this.guid, this.ViewType, this.GetDescription (accessor));
+			return new NavigationNode (this.guid, this.ViewType, this.PageType, null, this.GetDescription (accessor));
 		}
 
 		protected virtual string GetDescription(DataAccessor accessor)
@@ -54,6 +55,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly Guid					guid;
+		protected readonly Guid					guid;
 	}
 }

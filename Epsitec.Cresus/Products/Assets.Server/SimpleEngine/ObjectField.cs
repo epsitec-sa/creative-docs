@@ -48,6 +48,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Téléphone3,
 		Mail,
 
+		NavigationType,
+		NavigationPage,
+		NavigationDate,
+		NavigationDescription,
+
 		Compte1,
 		Compte2,
 		Compte3,

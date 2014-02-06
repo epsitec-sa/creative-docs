@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.NodesGetter;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -11,7 +12,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public class ObjectsViewState : AbstractViewState, System.IEquatable<AbstractViewState>
 	{
 		public ViewMode							ViewMode;
-		public PageType							PageType;
 		public bool								IsShowEvents;
 		public Timestamp?						SelectedTimestamp;
 		public Guid								SelectedGuid;
@@ -41,6 +41,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 		#endregion
 
+
+		public override NavigationNode GetNavigationNode(DataAccessor accessor)
+		{
+			return new NavigationNode (this.guid, this.ViewType, this.PageType, this.SelectedTimestamp, this.GetDescription (accessor));
+		}
 
 		protected override string GetDescription(DataAccessor accessor)
 		{
