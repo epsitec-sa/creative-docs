@@ -75,16 +75,20 @@
     <Compile Include="Controllers\TimelineCellController.cs" />
     <Compile Include="Converters\TimelineCellConverter.cs" />
     <Compile Include="AssetsUI.cs" />
+    <Compile Include="DataFillers\NavigationTreeTableFiller.cs" />
     <Compile Include="Helpers\Misc.cs" />
     <Compile Include="Helpers\DateTime.cs" />
     <Compile Include="Helpers\TreeTableFiller.cs" />
     <Compile Include="EventHandler.cs" />
     <Compile Include="Helpers\Text.cs" />
+    <Compile Include="NodesGetter\NavigationNode.cs" />
+    <Compile Include="NodesGetter\NavigationNodesGetter.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
     <Compile Include="Popups\CategoriesPopup.cs" />
     <Compile Include="Popups\AmortissementsPopup.cs" />
     <Compile Include="Popups\CalendarPopup.cs" />
+    <Compile Include="Popups\NavigationPopup.cs" />
     <Compile Include="Popups\PersonsPopup.cs" />
     <Compile Include="Popups\CreatePersonPopup.cs" />
     <Compile Include="Popups\ErrorsPopup.cs" />
@@ -115,7 +119,6 @@
     <Compile Include="Views\CategoriesView.cs" />
     <Compile Include="Views\AbstractViewState.cs" />
     <Compile Include="Views\CategoriesViewState.cs" />
-    <Compile Include="Views\EnumDictionaries.cs" />
     <Compile Include="Views\EnumFieldController.cs" />
     <Compile Include="Views\IDirty.cs" />
     <Compile Include="Views\GroupsViewState.cs" />
@@ -313,6 +316,7 @@
     <EmbeddedResource Include="Images\Navigate.Back.icon" />
     <EmbeddedResource Include="Images\Navigate.Forward.icon" />
     <EmbeddedResource Include="Images\Field.Goto.icon" />
+    <EmbeddedResource Include="Images\Navigate.Menu.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

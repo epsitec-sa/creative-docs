@@ -56,6 +56,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnNavigateBack ();
 						break;
 
+					case ToolbarCommand.NavigateMenu:
+						this.OnNavigateMenu ();
+						break;
+
 					case ToolbarCommand.NavigateForward:
 						this.OnNavigateForward ();
 						break;
@@ -133,6 +137,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.GoHistoryForward ();
 		}
 
+		private void OnNavigateMenu()
+		{
+			this.ShowHistoryMenu ();
+		}
+
 
 		private void ShowPopup()
 		{
@@ -171,6 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandState (ToolbarCommand.Open,             ToolbarCommandState.Enable);
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateBack,    this.NavigateBackEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateMenu,    this.NavigateMenuEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateForward, this.NavigateForwardEnable);
 
 			this.toolbar.SetCommandState (ToolbarCommand.Amortissement,    ToolbarCommandState.Enable);
@@ -212,6 +222,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void PushViewState(AbstractViewState viewState)
 		{
+			if (viewState == null)
+			{
+				return;
+			}
+
 			if (this.ignoreChanges.IsZero)
 			{
 				if (this.historyPosition >= 0 &&
@@ -248,6 +263,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private void ShowHistoryMenu()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.NavigateMenu);
+			var popup = new NavigationPopup (this.accessor, this.historyViewStates, this.historyPosition);
+
+			popup.Create (target);
+
+			popup.Navigate += delegate (object sender, int index)
+			{
+				if (index != -1)
+				{
+					this.historyPosition = index;
+					this.RestoreViewState (this.historyViewStates[index]);
+				}
+			};
+		}
+
 		private void RestoreViewState(AbstractViewState viewState)
 		{
 			this.CreateView (viewState.ViewType, pushViewState: false);
@@ -269,6 +301,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return this.historyPosition < this.historyViewStates.Count-1;
+			}
+		}
+
+		private bool NavigateMenuEnable
+		{
+			get
+			{
+				return this.historyViewStates.Count > 1;
 			}
 		}
 

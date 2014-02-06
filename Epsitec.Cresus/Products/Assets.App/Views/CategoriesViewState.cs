@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -33,5 +34,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				&& this.SelectedGuid == o.SelectedGuid;
 		}
 		#endregion
+
+
+		protected override string GetDescription(DataAccessor accessor)
+		{
+			if (!this.SelectedGuid.IsEmpty)
+			{
+				return CategoriesLogic.GetShortName (accessor, this.SelectedGuid);
+			}
+
+			return null;
+		}
 	}
 }

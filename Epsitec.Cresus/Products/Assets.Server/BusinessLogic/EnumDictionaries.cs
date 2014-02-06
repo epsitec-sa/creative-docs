@@ -3,12 +3,34 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class EnumDictionaries
 	{
+		public static string GetPériodicitéName(Périodicité type)
+		{
+			string s;
+			if (EnumDictionaries.DictPériodicités.TryGetValue ((int) type, out s))
+			{
+				return s;
+			}
+
+			return null;
+		}
+
+		public static string GetTypeAmortissementName(TypeAmortissement type)
+		{
+			string s;
+			if (EnumDictionaries.DictTypesAmortissements.TryGetValue ((int) type, out s))
+			{
+				return s;
+			}
+
+			return null;
+		}
+
+
 		//	Ici, il est préférable de ne pas avoir de mécanisme automatique pour
 		//	générer les dictionnaires à partir des enumérations C#. En effet, les
 		//	énumérations peuvent évoluer au cours du temps, de nouvelles valeurs

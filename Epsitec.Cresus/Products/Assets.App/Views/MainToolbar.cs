@@ -80,14 +80,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonOpen            = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Open,               "Main.Open",             "Ouvrir");
 			this.buttonNavigateBack    = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateBack,       "Navigate.Back",         "Retourner");
 			this.buttonNavigateForward = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateForward,    "Navigate.Forward",      "Avancer");
+			this.buttonNavigateMenu    = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateMenu,       "Navigate.Menu",         "Historique");
 								     
-			this.buttonObjects         = this.CreateViewTypeButton (ViewType.Objects,    ToolbarCommand.ViewTypeObjects,    "View.Objects",          "Objets d'immobilisation");
-			this.buttonCategories      = this.CreateViewTypeButton (ViewType.Categories, ToolbarCommand.ViewTypeCategories, "View.Categories",       "Catégories d'immobilisations");
-			this.buttonGroups          = this.CreateViewTypeButton (ViewType.Groups,     ToolbarCommand.ViewTypeGroups,     "View.Groups",           "Groupes");
-			this.buttonPersons         = this.CreateViewTypeButton (ViewType.Persons,    ToolbarCommand.ViewTypePersons,    "View.Persons",          "Personnes");
-			this.buttonEvents          = this.CreateViewTypeButton (ViewType.Events,     ToolbarCommand.ViewTypeEvents,     "View.Events",           "Evénements");
-			this.buttonReports         = this.CreateViewTypeButton (ViewType.Reports,    ToolbarCommand.ViewTypeReports,    "View.Reports",          "Rapports et statistiques");
-			this.buttonSettings        = this.CreateViewTypeButton (ViewType.Settings,   ToolbarCommand.ViewTypeSettings,   "View.Settings",         "Réglages");
+			this.buttonObjects         = this.CreateViewTypeButton (ViewType.Objects,    ToolbarCommand.ViewTypeObjects,    "View.Objects",          StaticDescriptions.GetViewTypeDescription (ViewType.Objects));
+			this.buttonCategories      = this.CreateViewTypeButton (ViewType.Categories, ToolbarCommand.ViewTypeCategories, "View.Categories",       StaticDescriptions.GetViewTypeDescription (ViewType.Categories));
+			this.buttonGroups          = this.CreateViewTypeButton (ViewType.Groups,     ToolbarCommand.ViewTypeGroups,     "View.Groups",           StaticDescriptions.GetViewTypeDescription (ViewType.Groups));
+			this.buttonPersons         = this.CreateViewTypeButton (ViewType.Persons,    ToolbarCommand.ViewTypePersons,    "View.Persons",          StaticDescriptions.GetViewTypeDescription (ViewType.Persons));
+			this.buttonEvents          = this.CreateViewTypeButton (ViewType.Events,     ToolbarCommand.ViewTypeEvents,     "View.Events",           StaticDescriptions.GetViewTypeDescription (ViewType.Events));
+			this.buttonReports         = this.CreateViewTypeButton (ViewType.Reports,    ToolbarCommand.ViewTypeReports,    "View.Reports",          StaticDescriptions.GetViewTypeDescription (ViewType.Reports));
+			this.buttonSettings        = this.CreateViewTypeButton (ViewType.Settings,   ToolbarCommand.ViewTypeSettings,   "View.Settings",         StaticDescriptions.GetViewTypeDescription (ViewType.Settings));
 								       
 			this.buttonSingle          = this.CreateViewModeButton (ViewMode.Single,     ToolbarCommand.ViewModeSingle,     "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
 			this.buttonEvent           = this.CreateViewModeButton (ViewMode.Event,      ToolbarCommand.ViewModeEvent,      "Show.TimelineEvent",    "Tableau des événements");
@@ -195,6 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IconButton						buttonNavigateBack;
 		private IconButton						buttonNavigateForward;
+		private IconButton						buttonNavigateMenu;
 
 		private IconButton						buttonObjects;
 		private IconButton						buttonCategories;

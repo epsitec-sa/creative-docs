@@ -8,6 +8,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public static class StaticDescriptions
 	{
+		public static string GetViewTypeDescription(ViewType viewType)
+		{
+			switch (viewType)
+			{
+				case ViewType.Objects:
+					return "Objets d'immobilisation";
+
+				case ViewType.Categories:
+					return "Catégories d'immobilisations";
+
+				case ViewType.Groups:
+					return "Groupes";
+
+				case ViewType.Persons:
+					return "Personnes";
+
+				case ViewType.Events:
+					return "Evénements";
+
+				case ViewType.Reports:
+					return "Rapports et statistiques";
+
+				case ViewType.Settings:
+					return "Réglages";
+
+				default:
+					return null;
+			}
+		}
+
 		public static string GetObjectPageDescription(PageType type)
 		{
 			switch (type)
