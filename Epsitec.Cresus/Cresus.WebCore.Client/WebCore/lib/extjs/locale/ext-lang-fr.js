@@ -178,9 +178,7 @@ Ext.define("Ext.locale.fr.form.field.Date", {
     disabledDatesText: "Désactivé",
     minText: "La date de ce champ ne peut être antérieure au {0}",
     maxText: "La date de ce champ ne peut être postérieure au {0}",
-    invalidText: "{0} n'est pas une date valide - elle doit être au format suivant: {1}",
-    format: "d/m/y",
-    altFormats: "d/m/Y|d-m-y|d-m-Y|d/m|d-m|dm|dmy|dmY|d|Y-m-d"
+    invalidText: "{0} n'est pas une date valide - elle doit être au format jj.mm.aaaa"
 });
 
 Ext.define("Ext.locale.fr.form.field.ComboBox", {

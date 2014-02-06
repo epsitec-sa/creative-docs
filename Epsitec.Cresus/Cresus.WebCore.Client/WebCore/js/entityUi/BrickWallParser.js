@@ -303,6 +303,7 @@ function() {
         var field = this.parseField(brick);
         field.xtype = 'datefield';
         field.format = 'd.m.Y';
+        field.altFormats = 'd.m.Y|j.n.Y|j.m.Y|d.n.Y|d/m/Y|j/n/Y|j/m/Y|d/n/Y';
         return field;
       },
 

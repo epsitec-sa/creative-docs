@@ -55,7 +55,8 @@ function() {
     createDateField: function(value, options) {
       var newOptions = {
         value: this.getDatePart(value),
-        format: 'd.m.Y',
+        format: "d.m.Y",
+        altFormats: "d.m.Y|j.n.Y|j.m.Y|d.n.Y|d/m/Y|j/n/Y|j/m/Y|d/n/Y",
         submitValue: false,
         flex: 1
       };
