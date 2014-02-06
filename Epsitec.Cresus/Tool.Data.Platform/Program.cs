@@ -27,7 +27,11 @@ namespace Epsitec.Tool.Data.Platform
 
 		private static void WriteAlpha2CodesCacheFile(string[] alpha2codes)
 		{
-			System.IO.File.WriteAllLines (System.IO.Path.Combine (Program.rootPath, "Data.Platform", "DataFiles", "alpha2codes.txt"), alpha2codes);
+			if ((alpha2codes != null) &&
+				(alpha2codes.Length > 0))
+			{
+				System.IO.File.WriteAllLines (System.IO.Path.Combine (Program.rootPath, "Data.Platform", "DataFiles", "alpha2codes.txt"), alpha2codes);
+			}
 		}
 		
 		private static void WriteCountryInformationCache(IEnumerable<string> allCodes)

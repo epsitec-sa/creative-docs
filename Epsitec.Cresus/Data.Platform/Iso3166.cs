@@ -78,13 +78,21 @@ namespace Epsitec.Data.Platform
 		
 		public static string[] MaintenanceDownloadAlpha2CodesTextFile()
 		{
-			return Iso3166.DownloadLines ("http://www.iso.org/iso/list-en1-semic-3.txt").ToArray ();
+			//	No longer freely available -- see http://www.iso.org/iso/home/standards/country_codes.htm
+//-			return Iso3166.DownloadLines ("http://www.iso.org/iso/list-en1-semic-3.txt").ToArray ();
+			return null;
 		}
 
 		public static GeoNamesCountryInformation MaintenanceDownloadCountryInformation(string code, string language)
 		{
 			var uri    = string.Format ("http://api.geonames.org/countryInfoCSV?lang={0}&country={1}&username=epsitec", language, code);
-			var values = Iso3166.DownloadLines (uri).Skip (1).First ().Split ('\t');
+			var lines  = Iso3166.DownloadLines (uri).ToArray ();
+			var values = lines.Skip (1).First ().Split ('\t');
+
+			if (values.Length < 11)
+			{
+				return null;
+			}
 
 			var info = new GeoNamesCountryInformation ()
 			{
@@ -98,6 +106,8 @@ namespace Epsitec.Data.Platform
 				Languages  = values[9],
 				Currency   = values[10]
 			};
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1}", info.IsoAlpha2, info.Name));
 
 			return info;
 		}
