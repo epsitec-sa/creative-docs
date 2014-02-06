@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller = new NavigationTreeTableController();
 
 			this.nodesGetter = new NavigationNodesGetter ();
-			this.nodesGetter.SetParams (this.ViewStatesToNavigationNodes (this.viewStates));
+			this.nodesGetter.SetParams (this.ViewStatesToNavigationNodes (this.viewStates, 100));
 			this.SelectedIndex = selection;
 
 			this.dataFiller = new NavigationTreeTableFiller (this.accessor, this.nodesGetter);
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock   = DockStyle.Fill,
 			};
 
-			this.controller.CreateUI (frame, rowHeight: NavigationPopup.rowHeight, headerHeight: 0, footerHeight: 0);
+			this.controller.CreateUI (frame, rowHeight: NavigationPopup.rowHeight, headerHeight: NavigationPopup.headerHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
 			TreeTableFiller<NavigationNode>.FillColumns (this.controller, this.dataFiller, 0);
@@ -103,18 +103,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var parent = this.GetParent ();
 
 			double h = parent.ActualHeight
+					 - NavigationPopup.headerHeight
 					 - AbstractScroller.DefaultBreadth;
 
 			//	Utilise au maximum les 3/4 de la hauteur.
 			int max = (int) (h*0.75) / NavigationPopup.rowHeight;
 
-			int rows = System.Math.Min (this.viewStates.Count, max);
+			int rows = System.Math.Min (this.nodesGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
 
 			int dx = NavigationTreeTableFiller.TotalWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			int dy = AbstractPopup.titleHeight
+				   + NavigationPopup.headerHeight
 				   + rows * NavigationPopup.rowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
 
@@ -140,12 +142,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return -1;
 		}
 
-		private List<NavigationNode> ViewStatesToNavigationNodes(List<AbstractViewState> viewStates)
+		private List<NavigationNode> ViewStatesToNavigationNodes(List<AbstractViewState> viewStates, int max)
 		{
 			var nodes = new List<NavigationNode> ();
 
-			foreach (var viewState in viewStates)
+			int count = viewStates.Count;
+			int first = System.Math.Max(count-max, 0);
+
+			for (int i=first; i<count; i++)
 			{
+				var viewState = viewStates[i];
+
 				var node = viewState.GetNavigationNode (this.accessor);
 				nodes.Add (node);
 			}
@@ -164,6 +171,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
+		private const int headerHeight     = 22;
 		private const int rowHeight        = 18;
 
 

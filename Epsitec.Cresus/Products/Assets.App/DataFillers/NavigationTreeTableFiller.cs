@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, NavigationTreeTableFiller.TypeColumnWidth, "Vue"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, NavigationTreeTableFiller.PageColumnWidth, "Page"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date,   NavigationTreeTableFiller.DateColumnWidth, "Date"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, NavigationTreeTableFiller.DescColumnWidth, "Objet"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, NavigationTreeTableFiller.DescColumnWidth, "Nom"));
 
 				return list.ToArray ();
 			}

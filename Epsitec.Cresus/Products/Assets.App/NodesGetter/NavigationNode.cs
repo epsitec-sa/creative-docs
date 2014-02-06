@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Assets.App.NodesGetter
 				return this.NavigationGuid.IsEmpty
 					&& this.ViewType    == ViewType.Unknown
 					&& this.PageType    == PageType.Unknown
+					&& !this.Timestamp.HasValue
 					&& this.Description == null;
 			}
 		}
