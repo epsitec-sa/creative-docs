@@ -11,9 +11,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
-	public class NavigationTreeTableFiller : AbstractTreeTableFiller<NavigationNode>
+	public class LastViewsTreeTableFiller : AbstractTreeTableFiller<LastViewNode>
 	{
-		public NavigationTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<NavigationNode> nodesGetter)
+		public LastViewsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<LastViewNode> nodesGetter)
 			: base (accessor, nodesGetter)
 		{
 		}
@@ -23,10 +23,10 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			get
 			{
-				yield return ObjectField.NavigationType;
-				yield return ObjectField.NavigationPage;
-				yield return ObjectField.NavigationDate;
-				yield return ObjectField.NavigationDescription;
+				yield return ObjectField.LastViewsType;
+				yield return ObjectField.LastViewsPage;
+				yield return ObjectField.LastViewsDate;
+				yield return ObjectField.LastViewsDescription;
 			}
 		}
 
@@ -36,10 +36,10 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, NavigationTreeTableFiller.TypeColumnWidth, "Vue"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, NavigationTreeTableFiller.PageColumnWidth, "Page"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date,   NavigationTreeTableFiller.DateColumnWidth, "Date"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, NavigationTreeTableFiller.DescColumnWidth, "Nom"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, LastViewsTreeTableFiller.TypeColumnWidth, "Vue"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, LastViewsTreeTableFiller.PageColumnWidth, "Page"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date,   LastViewsTreeTableFiller.DateColumnWidth, "Date"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, LastViewsTreeTableFiller.DescColumnWidth, "Nom"));
 
 				return list.ToArray ();
 			}
@@ -102,11 +102,11 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		private const int TypeColumnWidth = 100;
 		private const int PageColumnWidth = 100;
 		private const int DateColumnWidth =  70;
-		private const int DescColumnWidth = 300;
+		private const int DescColumnWidth = 250;
 
-		public const int TotalWidth = NavigationTreeTableFiller.TypeColumnWidth
-									+ NavigationTreeTableFiller.PageColumnWidth
-									+ NavigationTreeTableFiller.DateColumnWidth
-									+ NavigationTreeTableFiller.DescColumnWidth;
+		public const int TotalWidth = LastViewsTreeTableFiller.TypeColumnWidth
+									+ LastViewsTreeTableFiller.PageColumnWidth
+									+ LastViewsTreeTableFiller.DateColumnWidth
+									+ LastViewsTreeTableFiller.DescColumnWidth;
 	}
 }

@@ -42,9 +42,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		public override NavigationNode GetNavigationNode(DataAccessor accessor)
+		public override LastViewNode GetNavigationNode(DataAccessor accessor)
 		{
-			return new NavigationNode (this.guid, this.ViewType, this.PageType, this.SelectedTimestamp, this.GetDescription (accessor));
+			return new LastViewNode (this.guid, this.ViewType, this.PageType, this.SelectedTimestamp, this.GetDescription (accessor));
 		}
 
 		protected override string GetDescription(DataAccessor accessor)

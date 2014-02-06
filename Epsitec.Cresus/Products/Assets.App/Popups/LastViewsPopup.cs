@@ -15,22 +15,22 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Choix d'une vue dans l'historique de navigation.
+	/// Choix d'une vue dans la liste des anciennes vues.
 	/// </summary>
-	public class NavigationPopup : AbstractPopup
+	public class LastViewsPopup : AbstractPopup
 	{
-		public NavigationPopup(DataAccessor accessor, List<AbstractViewState> viewStates, int selection)
+		public LastViewsPopup(DataAccessor accessor, List<AbstractViewState> viewStates, Guid selection)
 		{
 			this.accessor   = accessor;
 			this.viewStates = viewStates;
 
 			this.controller = new NavigationTreeTableController();
 
-			this.nodesGetter = new NavigationNodesGetter ();
-			this.nodesGetter.SetParams (this.ViewStatesToNavigationNodes (this.viewStates, 100));
+			this.nodesGetter = new LastViewsNodesGetter ();
+			this.nodesGetter.SetParams (this.ViewStatesToNavigationNodes (this.viewStates));
 			this.SelectedIndex = selection;
 
-			this.dataFiller = new NavigationTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new LastViewsTreeTableFiller (this.accessor, this.nodesGetter);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -73,27 +73,24 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock   = DockStyle.Fill,
 			};
 
-			this.controller.CreateUI (frame, rowHeight: NavigationPopup.rowHeight, headerHeight: NavigationPopup.headerHeight, footerHeight: 0);
+			this.controller.CreateUI (frame, rowHeight: LastViewsPopup.rowHeight, headerHeight: LastViewsPopup.headerHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			TreeTableFiller<NavigationNode>.FillColumns (this.controller, this.dataFiller, 0);
+			TreeTableFiller<LastViewNode>.FillColumns (this.controller, this.dataFiller, 0);
 			this.UpdateController ();
 		}
 
 
-		private int SelectedIndex
+		private Guid SelectedIndex
 		{
 			get
 			{
 				var node = this.nodesGetter[this.visibleSelectedRow];
-				return this.SearchIndex (node.NavigationGuid);
+				return node.NavigationGuid;
 			}
 			set
 			{
-				if (value >= 0 && value < this.viewStates.Count)
-				{
-					this.visibleSelectedRow = this.nodesGetter.SearchIndex (this.viewStates[value].Guid);
-				}
+				this.visibleSelectedRow = this.nodesGetter.SearchIndex (value);
 			}
 		}
 
@@ -103,21 +100,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var parent = this.GetParent ();
 
 			double h = parent.ActualHeight
-					 - NavigationPopup.headerHeight
+					 - LastViewsPopup.headerHeight
 					 - AbstractScroller.DefaultBreadth;
 
 			//	Utilise au maximum les 3/4 de la hauteur.
-			int max = (int) (h*0.75) / NavigationPopup.rowHeight;
+			int max = (int) (h*0.75) / LastViewsPopup.rowHeight;
 
 			int rows = System.Math.Min (this.nodesGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
 
-			int dx = NavigationTreeTableFiller.TotalWidth
+			int dx = LastViewsTreeTableFiller.TotalWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			int dy = AbstractPopup.titleHeight
-				   + NavigationPopup.headerHeight
-				   + rows * NavigationPopup.rowHeight
+				   + LastViewsPopup.headerHeight
+				   + rows * LastViewsPopup.rowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			return new Size (dx, dy);
@@ -125,7 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateController(bool crop = true)
 		{
-			TreeTableFiller<NavigationNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
+			TreeTableFiller<LastViewNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
 
@@ -142,17 +139,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return -1;
 		}
 
-		private List<NavigationNode> ViewStatesToNavigationNodes(List<AbstractViewState> viewStates, int max)
+		private List<LastViewNode> ViewStatesToNavigationNodes(List<AbstractViewState> viewStates)
 		{
-			var nodes = new List<NavigationNode> ();
+			var nodes = new List<LastViewNode> ();
 
-			int count = viewStates.Count;
-			int first = System.Math.Max(count-max, 0);
-
-			for (int i=first; i<count; i++)
+			foreach (var viewState in viewStates)
 			{
-				var viewState = viewStates[i];
-
 				var node = viewState.GetNavigationNode (this.accessor);
 				nodes.Add (node);
 			}
@@ -162,12 +154,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Events handler
-		private void OnNavigate(int index)
+		private void OnNavigate(Guid navigationGuid)
 		{
-			this.Navigate.Raise (this, index);
+			this.Navigate.Raise (this, navigationGuid);
 		}
 
-		public event EventHandler<int> Navigate;
+		public event EventHandler<Guid> Navigate;
 		#endregion
 
 
@@ -178,8 +170,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly DataAccessor					accessor;
 		private readonly List<AbstractViewState>		viewStates;
 		private readonly NavigationTreeTableController	controller;
-		private readonly NavigationNodesGetter			nodesGetter;
-		private readonly NavigationTreeTableFiller		dataFiller;
+		private readonly LastViewsNodesGetter			nodesGetter;
+		private readonly LastViewsTreeTableFiller		dataFiller;
 
 		private int										visibleSelectedRow;
 	}

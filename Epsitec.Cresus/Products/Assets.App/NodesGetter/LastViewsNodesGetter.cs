@@ -8,9 +8,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.NodesGetter
 {
-	public class NavigationNodesGetter : AbstractNodesGetter<NavigationNode>  // outputNodes
+	public class LastViewsNodesGetter : AbstractNodesGetter<LastViewNode>  // outputNodes
 	{
-		public void SetParams(List<NavigationNode> viewStates)
+		public void SetParams(List<LastViewNode> viewStates)
 		{
 			this.viewStates = viewStates;
 		}
@@ -37,24 +37,22 @@ namespace Epsitec.Cresus.Assets.App.NodesGetter
 			return -1;
 		}
 
-		public override NavigationNode this[int index]
+		public override LastViewNode this[int index]
 		{
 			get
 			{
-				int count = this.viewStates.Count;
-
-				if (index >= 0 && index < count)
+				if (index >= 0 && index < this.viewStates.Count)
 				{
-					return this.viewStates[count-index-1];  // le dernier en premier
+					return this.viewStates[index];
 				}
 				else
 				{
-					return NavigationNode.Empty;
+					return LastViewNode.Empty;
 				}
 			}
 		}
 
 
-		private List<NavigationNode>			viewStates;
+		private List<LastViewNode>			viewStates;
 	}
 }

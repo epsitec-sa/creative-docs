@@ -78,9 +78,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.buttonOpen            = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Open,               "Main.Open",             "Ouvrir");
-			this.buttonNavigateBack    = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateBack,       "Navigate.Back",         "Retourner");
-			this.buttonNavigateForward = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateForward,    "Navigate.Forward",      "Avancer");
-			this.buttonNavigateMenu    = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateMenu,       "Navigate.Menu",         "Historique");
+			this.buttonNavigateBack    = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateBack,       "Navigate.Back",         "Retourner à la vue précédente");
+			this.buttonNavigateForward = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateForward,    "Navigate.Forward",      "Avancer à la vue suivante");
+			this.buttonNavigateMenu    = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateMenu,       "Navigate.Menu",         "Dernières vues");
 								     
 			this.buttonObjects         = this.CreateViewTypeButton (ViewType.Objects,    ToolbarCommand.ViewTypeObjects,    "View.Objects",          StaticDescriptions.GetViewTypeDescription (ViewType.Objects));
 			this.buttonCategories      = this.CreateViewTypeButton (ViewType.Categories, ToolbarCommand.ViewTypeCategories, "View.Categories",       StaticDescriptions.GetViewTypeDescription (ViewType.Categories));

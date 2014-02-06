@@ -17,8 +17,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.accessor = accessor;
 
-			this.lastViewStates = new List<AbstractViewState> ();
+			this.currentViewStates = new List<AbstractViewState> ();
 			this.historyViewStates = new List<AbstractViewState> ();
+			this.lastViewStates    = new List<AbstractViewState> ();
 			this.historyPosition = -1;
 
 			this.ignoreChanges = new SafeCounter ();
@@ -84,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.view != null)
 			{
-				this.SaveLastViewState ();
+				this.SaveCurrentViewState ();
 
 				this.view.Goto -= this.HandleViewGoto;
 				this.view.ViewStateChanged -= this.HandleViewStateChanged;
@@ -100,7 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.view.Goto += this.HandleViewGoto;
 				this.view.ViewStateChanged += this.HandleViewStateChanged;
 
-				this.RestoreLastViewState ();
+				this.RestoreCurrentViewState ();
 
 				if (pushViewState)
 				{
@@ -139,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnNavigateMenu()
 		{
-			this.ShowHistoryMenu ();
+			this.ShowLastViewsPopup ();
 		}
 
 
@@ -188,27 +189,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void SaveLastViewState()
+		private void SaveCurrentViewState()
 		{
 			//	Sauvegarde le ViewState actuellement utilisé.
 			if (this.view.ViewState != null)
 			{
-				var last = this.lastViewStates.Where (x => x.ViewType == this.view.ViewState.ViewType).FirstOrDefault ();
+				var last = this.currentViewStates.Where (x => x.ViewType == this.view.ViewState.ViewType).FirstOrDefault ();
 				if (last != null)
 				{
-					this.lastViewStates.Remove (last);
+					this.currentViewStates.Remove (last);
 				}
 
-				this.lastViewStates.Add (this.view.ViewState);
+				this.currentViewStates.Add (this.view.ViewState);
 			}
 		}
 
-		private void RestoreLastViewState()
+		private void RestoreCurrentViewState()
 		{
 			//	Restitue le dernier ViewState utilisé par la vue.
 			if (this.view.ViewState != null)
 			{
-				var last = this.lastViewStates.Where (x => x.ViewType == this.view.ViewState.ViewType).FirstOrDefault ();
+				var last = this.currentViewStates.Where (x => x.ViewType == this.view.ViewState.ViewType).FirstOrDefault ();
 				if (last != null)
 				{
 					using (this.ignoreChanges.Enter ())
@@ -216,6 +217,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.view.ViewState = last;
 					}
 				}
+			}
+		}
+
+
+		private void SaveLastViewState(AbstractViewState viewState)
+		{
+			//	Sauvegarde si nécessaire le ViewState utilisé par la vue dans
+			//	la liste des 100 derniers. Les derniers utilisés sont placés
+			//	en tête de liste.
+			if (viewState == null)
+			{
+				return;
+			}
+
+			int index = this.lastViewStates.FindIndex (x => x.Equals (viewState));
+			if (index != -1)
+			{
+				this.lastViewStates.RemoveAt (index);
+			}
+
+			this.lastViewStates.Insert (0, viewState);
+
+			while (this.lastViewStates.Count > 100)
+			{
+				this.lastViewStates.RemoveAt (this.lastViewStates.Count-1);
 			}
 		}
 
@@ -234,6 +260,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					return;
 				}
+
+				this.SaveLastViewState (viewState);
 
 				while (this.historyPosition < this.historyViewStates.Count-1)
 				{
@@ -263,19 +291,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void ShowHistoryMenu()
+		private void ShowLastViewsPopup()
 		{
+			var navigationGuid = this.lastViewStates
+				.Where (x => x.Equals (this.view.ViewState))
+				.Select (x => x.Guid)
+				.FirstOrDefault ();
+
 			var target = this.toolbar.GetTarget (ToolbarCommand.NavigateMenu);
-			var popup = new NavigationPopup (this.accessor, this.historyViewStates, this.historyPosition);
+			var popup = new LastViewsPopup (this.accessor, this.lastViewStates, navigationGuid);
 
 			popup.Create (target);
 
-			popup.Navigate += delegate (object sender, int index)
+			popup.Navigate += delegate (object sender, Guid guid)
 			{
-				if (index != -1)
+				if (!guid.IsEmpty)
 				{
-					this.historyPosition = index;
-					this.RestoreViewState (this.historyViewStates[index]);
+					var viewState = this.lastViewStates.Where (x => x.Guid == guid).FirstOrDefault ();
+					this.RestoreViewState (viewState);
 				}
 			};
 		}
@@ -308,14 +341,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.historyViewStates.Count > 1;
+				return this.lastViewStates.Count > 1;
 			}
 		}
 
 
 		private readonly DataAccessor			accessor;
-		private readonly List<AbstractViewState> lastViewStates;
+		private readonly List<AbstractViewState> currentViewStates;
 		private readonly List<AbstractViewState> historyViewStates;
+		private readonly List<AbstractViewState> lastViewStates;
 		private readonly SafeCounter			ignoreChanges;
 
 		private Widget							parent;

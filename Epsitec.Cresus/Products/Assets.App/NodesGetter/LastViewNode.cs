@@ -9,11 +9,11 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.NodesGetter
 {
 	/// <summary>
-	///	Noeud correspondant à une ligne de l'historique de navigation.
+	///	Noeud correspondant à une ligne de la liste des anciennes vues.
 	/// </summary>
-	public struct NavigationNode
+	public struct LastViewNode
 	{
-		public NavigationNode(Guid navigationGuid, ViewType viewType, PageType pageType, Timestamp? timestamp, string description)
+		public LastViewNode(Guid navigationGuid, ViewType viewType, PageType pageType, Timestamp? timestamp, string description)
 		{
 			this.NavigationGuid = navigationGuid;
 			this.ViewType       = viewType;
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.NodesGetter
 			}
 		}
 
-		public static NavigationNode Empty = new NavigationNode (Guid.Empty, ViewType.Unknown, PageType.Unknown, null, null);
+		public static LastViewNode Empty = new LastViewNode (Guid.Empty, ViewType.Unknown, PageType.Unknown, null, null);
 
 		public readonly Guid				NavigationGuid;
 		public readonly ViewType			ViewType;
