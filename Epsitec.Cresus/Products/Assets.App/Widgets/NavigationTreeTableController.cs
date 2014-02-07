@@ -42,9 +42,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.UpdateScroller ();
 			};
 
-			this.treeTable.RowClicked += delegate (object sender, int row)
+			this.treeTable.RowClicked += delegate (object sender, int row, int column)
 			{
-				this.OnRowClicked (row);
+				this.OnRowClicked (row, column);
 			};
 
 			this.treeTable.RowDoubleClicked += delegate (object sender, int row)
@@ -203,12 +203,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Events handler
-		private void OnRowClicked(int row)
+		private void OnRowClicked(int row, int column)
 		{
-			this.RowClicked.Raise (this, row);
+			this.RowClicked.Raise (this, row, column);
 		}
 
-		public event EventHandler<int> RowClicked;
+		public event EventHandler<int, int> RowClicked;
 
 
 		private void OnRowDoubleClicked(int row)

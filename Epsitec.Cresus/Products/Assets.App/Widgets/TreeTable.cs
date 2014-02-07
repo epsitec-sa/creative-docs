@@ -511,7 +511,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			int row = this.DetectRow (pos);
 			if (row != -1)
 			{
-				this.OnRowClicked (row);
+				this.OnRowClicked (row, this.DetectColumn (pos));
 			}
 		}
 
@@ -550,6 +550,21 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			return -1;
+		}
+
+		private int DetectColumn(Point pos)
+		{
+			var layer = this.interactiveLayers.Where (x => x is InteractiveLayerColumnOrder).FirstOrDefault () as InteractiveLayerColumnOrder;
+			int rank = layer.DetectColumn (pos);
+
+			if (rank == -1)
+			{
+				return -1;
+			}
+			else
+			{
+				return this.columnsMapper[rank];
+			}
 		}
 
 
@@ -693,12 +708,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Events handler
-		private void OnRowClicked(int row)
+		private void OnRowClicked(int row, int column)
 		{
-			this.RowClicked.Raise (this, row);
+			this.RowClicked.Raise (this, row, column);
 		}
 
-		public event EventHandler<int> RowClicked;
+		public event EventHandler<int, int> RowClicked;
 
 
 		private void OnRowDoubleClicked(int row)

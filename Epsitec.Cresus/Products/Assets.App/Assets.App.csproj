@@ -175,6 +175,7 @@
     <Compile Include="Helpers\EventExtensions.cs" />
     <Compile Include="Widgets\Calendar.cs" />
     <Compile Include="Widgets\CalendarController.cs" />
+    <Compile Include="Widgets\TreeTableColumnPin.cs" />
     <Compile Include="Widgets\TreeTableColumnIcon.cs" />
     <Compile Include="Widgets\SortedColumn.cs" />
     <Compile Include="Widgets\TreeTableColumnHelper.cs" />
@@ -318,6 +319,8 @@
     <EmbeddedResource Include="Images\Navigate.Forward.icon" />
     <EmbeddedResource Include="Images\Field.Goto.icon" />
     <EmbeddedResource Include="Images\Navigate.Menu.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Unpin.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Pin.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

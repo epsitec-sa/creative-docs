@@ -16,5 +16,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		Date,
 		Glyph,
 		Icon,
+		Pin,
 	};
 }

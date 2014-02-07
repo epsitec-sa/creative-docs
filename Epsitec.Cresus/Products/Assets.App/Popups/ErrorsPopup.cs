@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.UpdateController ();
 
 			//	Connexion des événements.
-			this.controller.RowClicked += delegate (object sender, int row)
+			this.controller.RowClicked += delegate (object sender, int row, int column)
 			{
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.UpdateController ();

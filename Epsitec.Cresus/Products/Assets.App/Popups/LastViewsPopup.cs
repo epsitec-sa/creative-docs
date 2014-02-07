@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.nodesGetter = new LastViewsNodesGetter ();
 			this.nodesGetter.SetParams (this.ViewStatesToNavigationNodes (this.viewStates));
-			this.SelectedIndex = selection;
+			this.SelectedGuid = selection;
 
 			this.dataFiller = new LastViewsTreeTableFiller (this.accessor, this.nodesGetter);
 
@@ -38,13 +38,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.UpdateController (crop);
 			};
 
-			this.controller.RowClicked += delegate (object sender, int row)
+			this.controller.RowClicked += delegate (object sender, int row, int column)
 			{
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
-				this.UpdateController ();
 
-				this.OnNavigate (this.SelectedIndex);
-				this.ClosePopup ();
+				if (column == 0)  // dans la colonne de la punaise ?
+				{
+					this.ActionPinUnpin ();
+				}
+				else
+				{
+					this.ActionSelect ();
+				}
 			};
 		}
 
@@ -81,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private Guid SelectedIndex
+		private Guid SelectedGuid
 		{
 			get
 			{
@@ -126,17 +131,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private int SearchIndex(Guid navigationGuid)
+		private void ActionPinUnpin()
 		{
-			for (int i=0; i<this.viewStates.Count; i++)
-			{
-				if (navigationGuid == this.viewStates[i].Guid)
-				{
-					return i;
-				}
-			}
+			var guid = this.SelectedGuid;
+			var viewState = this.viewStates.Where (x => x.Guid == guid).FirstOrDefault ();
 
-			return -1;
+			if (viewState != null)
+			{
+				viewState.Pin = !viewState.Pin;
+
+				this.nodesGetter.SetParams (this.ViewStatesToNavigationNodes (this.viewStates));
+				this.UpdateController ();
+			}
+		}
+
+		private void ActionSelect()
+		{
+			this.UpdateController ();
+
+			this.OnNavigate (this.SelectedGuid);
+			this.ClosePopup ();
 		}
 
 		private List<LastViewNode> ViewStatesToNavigationNodes(List<AbstractViewState> viewStates)

@@ -231,18 +231,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
+			//	Si le ViewState est déjà dans la liste, on le supprime.
 			int index = this.lastViewStates.FindIndex (x => x.Equals (viewState));
 			if (index != -1)
 			{
+				viewState.Pin |= this.lastViewStates[index].Pin;  // conserve toujours la punaise
 				this.lastViewStates.RemoveAt (index);
 			}
 
-			this.lastViewStates.Insert (0, viewState);
+			//	Insère le ViewState au début de la liste, dans le bon groupe "pin/unpin".
+			index = 0;
+			if (!viewState.Pin)
+			{
+				index = this.lastViewStates.FindIndex (x => !x.Pin);
+				if (index == -1)
+				{
+					index = 0;
+				}
+			}
 
-			while (this.lastViewStates.Count > 100)
+			this.lastViewStates.Insert (index, viewState);
+
+			//	Si la liste dépasse le maximum utile, on la tronque.
+			while (this.lastViewStates.Count > MainView.maxLastViewState)
 			{
 				this.lastViewStates.RemoveAt (this.lastViewStates.Count-1);
 			}
+		}
+
+		private void SortLastViewStates()
+		{
+			//	Met toutes les vues punaisées en tête de liste.
+			var orderedList = new List<AbstractViewState> ();
+
+			orderedList.AddRange (this.lastViewStates.Where (x => x.Pin));
+			orderedList.AddRange (this.lastViewStates.Where (x => !x.Pin));
+
+			this.lastViewStates.Clear ();
+			this.lastViewStates.AddRange (orderedList);
 		}
 
 
@@ -311,6 +337,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.RestoreViewState (viewState);
 				}
 			};
+
+			popup.Closed += delegate
+			{
+				this.SortLastViewStates ();
+			};
 		}
 
 		private void RestoreViewState(AbstractViewState viewState)
@@ -344,6 +375,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return this.lastViewStates.Count > 1;
 			}
 		}
+
+
+		private const int maxLastViewState = 100;
 
 
 		private readonly DataAccessor			accessor;

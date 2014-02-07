@@ -8,6 +8,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
@@ -379,6 +380,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var parent = this.GetParent ();
 			parent.Children.Remove (this);
+
+			this.OnClosed ();
 		}
 
 
@@ -568,6 +571,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 		public event EventHandler<string> ButtonClicked;
+
+
+		protected void OnClosed()
+		{
+			this.Closed.Raise (this);
+		}
+
+		public event EventHandler Closed;
 		#endregion
 
 

@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Téléphone3,
 		Mail,
 
+		LastViewsPin,
 		LastViewsType,
 		LastViewsPage,
 		LastViewsDate,

@@ -21,6 +21,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		public int DetectColumn(Point pos)
+		{
+			for (int i=0; i<this.ColumnCount; i++)
+			{
+				var rect = this.GetColumnRect (i);
+
+				if (pos.X >= rect.Left &&
+					pos.X <= rect.Right)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
+
 		public override void MouseDown(Point pos)
 		{
 			pos = this.foreground.MapParentToClient (pos);

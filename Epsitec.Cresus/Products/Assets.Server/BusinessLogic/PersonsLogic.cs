@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var t2 = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
 				var t3 = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Entreprise);
 
-				return string.Join (" ", t1, t2, t3);
+				return string.Join (" ", t1, t2, t3).Trim ();
 			}
 		}
 
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var line = string.Join (" ", words
 				.Where (x => !string.IsNullOrEmpty (x))
-				.Select (x => x.Replace ("<br/>", ", ")));
+				.Select (x => x.Replace ("<br/>", ", "))).Trim ();
 
 			if (!string.IsNullOrEmpty (line))
 			{

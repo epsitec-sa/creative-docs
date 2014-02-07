@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			};
 
-			this.controller.RowClicked += delegate (object sender, int row)
+			this.controller.RowClicked += delegate (object sender, int row, int column)
 			{
 				this.VisibleSelectedRow = this.controller.TopVisibleRow + row;
 			};

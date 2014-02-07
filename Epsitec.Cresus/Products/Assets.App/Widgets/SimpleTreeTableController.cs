@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.controller.CreateUI (parent, rowHeight, headerHeight, footerHeight);
 			TreeTableFiller<GuidNode>.FillColumns (this.controller, dataFiller);
 
-			this.controller.RowClicked += delegate (object sender, int row)
+			this.controller.RowClicked += delegate (object sender, int row, int column)
 			{
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.UpdateTreeTableController ();
