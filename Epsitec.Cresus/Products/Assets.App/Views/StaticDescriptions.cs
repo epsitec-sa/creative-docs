@@ -15,6 +15,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.Objects:
 					return "View.Objects";
 
+				case ViewType.Assets:
+					return "View.Assets";
+
 				case ViewType.Categories:
 					return "View.Categories";
 
@@ -44,6 +47,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				case ViewType.Objects:
 					return "Objets d'immobilisation";
+
+				case ViewType.Assets:
+					return "Amortissements";
 
 				case ViewType.Categories:
 					return "Catégories d'immobilisations";

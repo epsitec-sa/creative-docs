@@ -119,6 +119,8 @@
     <Compile Include="Views\CategoriesView.cs" />
     <Compile Include="Views\AbstractViewState.cs" />
     <Compile Include="Views\CategoriesViewState.cs" />
+    <Compile Include="Views\AssetsView.cs" />
+    <Compile Include="Views\AssetsViewState.cs" />
     <Compile Include="Views\EnumFieldController.cs" />
     <Compile Include="Views\IDirty.cs" />
     <Compile Include="Views\GroupsViewState.cs" />
@@ -321,6 +323,7 @@
     <EmbeddedResource Include="Images\Navigate.Menu.icon" />
     <EmbeddedResource Include="Images\TreeTable.Unpin.icon" />
     <EmbeddedResource Include="Images\TreeTable.Pin.icon" />
+    <EmbeddedResource Include="Images\View.Assets.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

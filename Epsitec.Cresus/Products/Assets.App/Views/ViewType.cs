@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		Unknown,
 		Objects,
+		Assets,
 		Categories,
 		Groups,
 		Persons,

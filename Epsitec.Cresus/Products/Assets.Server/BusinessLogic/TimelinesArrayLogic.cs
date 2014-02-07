@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void Update(DataArray dataArray, ObjectsNodesGetter nodesGetter)
+		public void Update(DataArray dataArray, ObjectsNodesGetter nodesGetter, System.Func<DataEvent, bool> filter = null)
 		{
 			//	Met à jour this.dataArray en fonction de l'ensemble des événements de
 			//	tous les objets. Cela nécessite d'accéder à l'ensemble des données, ce
@@ -37,8 +37,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					foreach (var e in obj.Events)
 					{
-						var column = dataArray.GetColumn (e.Timestamp);
-						column[row] = this.EventToCell (obj, e);
+						if (filter == null || filter (e))
+						{
+							var column = dataArray.GetColumn (e.Timestamp);
+							column[row] = this.EventToCell (obj, e);
+						}
 					}
 				}
 			}

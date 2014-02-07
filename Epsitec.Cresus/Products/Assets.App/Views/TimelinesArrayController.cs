@@ -53,6 +53,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 		#endregion
 
+
+		public System.Func<DataEvent, bool>		Filter;
+
 	
 		public void UpdateData()
 		{
@@ -816,7 +819,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			//	Ajoute les 2 lignes supérieures pour les dates.
-			var dates  = new List<TimelineCellDate> ();
+			var dates = new List<TimelineCellDate> ();
 
 			for (int i = 0; i < count; i++)
 			{
@@ -1007,7 +1010,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
-			this.arrayLogic.Update (this.dataArray, this.nodesGetter);
+			this.arrayLogic.Update (this.dataArray, this.nodesGetter, this.Filter);
 		}
 
 
