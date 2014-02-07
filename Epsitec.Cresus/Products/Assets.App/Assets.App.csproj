@@ -175,6 +175,7 @@
     <Compile Include="Helpers\EventExtensions.cs" />
     <Compile Include="Widgets\Calendar.cs" />
     <Compile Include="Widgets\CalendarController.cs" />
+    <Compile Include="Widgets\TreeTableColumnIcon.cs" />
     <Compile Include="Widgets\SortedColumn.cs" />
     <Compile Include="Widgets\TreeTableColumnHelper.cs" />
     <Compile Include="Widgets\HatchFrameBox.cs" />

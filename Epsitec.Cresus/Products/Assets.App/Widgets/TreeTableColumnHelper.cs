@@ -55,6 +55,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				case TreeTableColumnType.Glyph:
 					column = new TreeTableColumnGlyph ();
 					break;
+
+				case TreeTableColumnType.Icon:
+					column = new TreeTableColumnIcon ();
+					break;
 			}
 
 			System.Diagnostics.Debug.Assert (column != null);

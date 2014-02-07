@@ -82,13 +82,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonNavigateForward = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateForward,    "Navigate.Forward",      "Avancer à la vue suivante");
 			this.buttonNavigateMenu    = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.NavigateMenu,       "Navigate.Menu",         "Dernières vues");
 								     
-			this.buttonObjects         = this.CreateViewTypeButton (ViewType.Objects,    ToolbarCommand.ViewTypeObjects,    "View.Objects",          StaticDescriptions.GetViewTypeDescription (ViewType.Objects));
-			this.buttonCategories      = this.CreateViewTypeButton (ViewType.Categories, ToolbarCommand.ViewTypeCategories, "View.Categories",       StaticDescriptions.GetViewTypeDescription (ViewType.Categories));
-			this.buttonGroups          = this.CreateViewTypeButton (ViewType.Groups,     ToolbarCommand.ViewTypeGroups,     "View.Groups",           StaticDescriptions.GetViewTypeDescription (ViewType.Groups));
-			this.buttonPersons         = this.CreateViewTypeButton (ViewType.Persons,    ToolbarCommand.ViewTypePersons,    "View.Persons",          StaticDescriptions.GetViewTypeDescription (ViewType.Persons));
-			this.buttonEvents          = this.CreateViewTypeButton (ViewType.Events,     ToolbarCommand.ViewTypeEvents,     "View.Events",           StaticDescriptions.GetViewTypeDescription (ViewType.Events));
-			this.buttonReports         = this.CreateViewTypeButton (ViewType.Reports,    ToolbarCommand.ViewTypeReports,    "View.Reports",          StaticDescriptions.GetViewTypeDescription (ViewType.Reports));
-			this.buttonSettings        = this.CreateViewTypeButton (ViewType.Settings,   ToolbarCommand.ViewTypeSettings,   "View.Settings",         StaticDescriptions.GetViewTypeDescription (ViewType.Settings));
+			this.buttonObjects         = this.CreateViewTypeButton (ViewType.Objects,    ToolbarCommand.ViewTypeObjects,    StaticDescriptions.GetViewTypeIcon (ViewType.Objects),    StaticDescriptions.GetViewTypeDescription (ViewType.Objects));
+			this.buttonCategories      = this.CreateViewTypeButton (ViewType.Categories, ToolbarCommand.ViewTypeCategories, StaticDescriptions.GetViewTypeIcon (ViewType.Categories), StaticDescriptions.GetViewTypeDescription (ViewType.Categories));
+			this.buttonGroups          = this.CreateViewTypeButton (ViewType.Groups,     ToolbarCommand.ViewTypeGroups,     StaticDescriptions.GetViewTypeIcon (ViewType.Groups),     StaticDescriptions.GetViewTypeDescription (ViewType.Groups));
+			this.buttonPersons         = this.CreateViewTypeButton (ViewType.Persons,    ToolbarCommand.ViewTypePersons,    StaticDescriptions.GetViewTypeIcon (ViewType.Persons),    StaticDescriptions.GetViewTypeDescription (ViewType.Persons));
+			this.buttonEvents          = this.CreateViewTypeButton (ViewType.Events,     ToolbarCommand.ViewTypeEvents,     StaticDescriptions.GetViewTypeIcon (ViewType.Events),     StaticDescriptions.GetViewTypeDescription (ViewType.Events));
+			this.buttonReports         = this.CreateViewTypeButton (ViewType.Reports,    ToolbarCommand.ViewTypeReports,    StaticDescriptions.GetViewTypeIcon (ViewType.Reports),    StaticDescriptions.GetViewTypeDescription (ViewType.Reports));
+			this.buttonSettings        = this.CreateViewTypeButton (ViewType.Settings,   ToolbarCommand.ViewTypeSettings,   StaticDescriptions.GetViewTypeIcon (ViewType.Settings),   StaticDescriptions.GetViewTypeDescription (ViewType.Settings));
 								       
 			this.buttonSingle          = this.CreateViewModeButton (ViewMode.Single,     ToolbarCommand.ViewModeSingle,     "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
 			this.buttonEvent           = this.CreateViewModeButton (ViewMode.Event,      ToolbarCommand.ViewModeEvent,      "Show.TimelineEvent",    "Tableau des événements");

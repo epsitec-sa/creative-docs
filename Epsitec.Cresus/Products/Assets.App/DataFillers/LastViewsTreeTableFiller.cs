@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, LastViewsTreeTableFiller.TypeColumnWidth, "Vue"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Icon,   LastViewsTreeTableFiller.TypeColumnWidth, ""));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, LastViewsTreeTableFiller.PageColumnWidth, "Page"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date,   LastViewsTreeTableFiller.DateColumnWidth, "Date"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, LastViewsTreeTableFiller.DescColumnWidth, "Nom"));
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var node  = this.nodesGetter[firstRow+i];
 
-				string name = StaticDescriptions.GetViewTypeDescription (node.ViewType);
+				string icon = StaticDescriptions.GetViewTypeIcon (node.ViewType);
 				string type = StaticDescriptions.GetObjectPageDescription (node.PageType);
 				string desc = node.Description;
 
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				bool isSelected = (i == selection);
 
-				var s1 = new TreeTableCellString (true, name, isSelected: isSelected);
+				var s1 = new TreeTableCellString (true, icon, isSelected: isSelected);
 				var s2 = new TreeTableCellString (true, type, isSelected: isSelected);
 				var s3 = new TreeTableCellDate   (true, date, isSelected: isSelected);
 				var s4 = new TreeTableCellString (true, desc, isSelected: isSelected);
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		}
 
 
-		private const int TypeColumnWidth = 100;
+		private const int TypeColumnWidth =  29;
 		private const int PageColumnWidth = 100;
 		private const int DateColumnWidth =  70;
 		private const int DescColumnWidth = 250;

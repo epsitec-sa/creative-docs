@@ -3,7 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Helpers
@@ -15,20 +16,18 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			return state ? ActiveState.Yes : ActiveState.No;
 		}
 
-		public static string GetResourceIconUri(string icon)
+
+		public static string GetRichTextImg(string iconName, double verticalOffset, Size iconSize = default (Size))
 		{
-			if (string.IsNullOrEmpty (icon))
-			{
-				return null;
-			}
-			else if (icon.Contains (':'))
-			{
-				return FormattedText.Escape (icon);
-			}
-			else
-			{
-				return string.Format ("manifest:Epsitec.Cresus.Assets.App.Images.{0}.icon", FormattedText.Escape (icon));
-			}
+			return Misc.IconProvider.GetRichTextImg (iconName, verticalOffset, iconSize);
 		}
+
+		public static string GetResourceIconUri(string iconName)
+		{
+			return Misc.IconProvider.GetResourceIconUri (iconName);
+		}
+
+
+		private static readonly IconProvider IconProvider = new IconProvider ("Epsitec.Cresus.Assets.App");
 	}
 }

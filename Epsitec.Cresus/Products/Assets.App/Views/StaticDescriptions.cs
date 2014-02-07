@@ -8,6 +8,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public static class StaticDescriptions
 	{
+		public static string GetViewTypeIcon(ViewType viewType)
+		{
+			switch (viewType)
+			{
+				case ViewType.Objects:
+					return "View.Objects";
+
+				case ViewType.Categories:
+					return "View.Categories";
+
+				case ViewType.Groups:
+					return "View.Groups";
+
+				case ViewType.Persons:
+					return "View.Persons";
+
+				case ViewType.Events:
+					return "View.Events";
+
+				case ViewType.Reports:
+					return "View.Reports";
+
+				case ViewType.Settings:
+					return "View.Settings";
+
+				default:
+					return null;
+			}
+		}
+
 		public static string GetViewTypeDescription(ViewType viewType)
 		{
 			switch (viewType)
