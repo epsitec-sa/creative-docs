@@ -3,9 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -18,6 +16,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseType = BaseType.Objects;
 
 			this.timelinesArrayController = new TimelinesArrayController (this.accessor);
+
+			this.amortizationController = new AmortizationController (this.accessor)
+			{
+				Date = new System.DateTime (System.DateTime.Now.Year, 12, 31),
+			};
 		}
 
 
@@ -38,14 +41,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock    = DockStyle.Fill,
 			};
 
-			this.timelinesArrayFrameBox = new FrameBox
+			var timelinesArrayFrameBox = new FrameBox
 			{
 				Parent = topBox,
 				Dock   = DockStyle.Fill,
 			};
 
-			this.timelinesArrayController.CreateUI (this.timelinesArrayFrameBox);
+			var controllerFrameBox = new FrameBox
+			{
+				Parent = topBox,
+				Dock   = DockStyle.Bottom,
+			};
+
+			this.timelinesArrayController.CreateUI (timelinesArrayFrameBox);
 			this.timelinesArrayController.Filter = AmortizationsView.EventFilter;
+
+			this.amortizationController.CreateUI (controllerFrameBox);
 
 			this.DeepUpdateUI ();
 
@@ -186,9 +197,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private readonly AmortizationController				amortizationController;
 		private readonly TimelinesArrayController			timelinesArrayController;
-
-		private FrameBox									timelinesArrayFrameBox;
 
 		private Guid										selectedGuid;
 		private Timestamp?									selectedTimestamp;

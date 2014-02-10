@@ -121,6 +121,7 @@
     <Compile Include="Views\CategoriesViewState.cs" />
     <Compile Include="Views\AmortizationsView.cs" />
     <Compile Include="Views\AmortizationsViewState.cs" />
+    <Compile Include="Views\AmortizationController.cs" />
     <Compile Include="Views\EnumFieldController.cs" />
     <Compile Include="Views\IDirty.cs" />
     <Compile Include="Views\GroupsViewState.cs" />

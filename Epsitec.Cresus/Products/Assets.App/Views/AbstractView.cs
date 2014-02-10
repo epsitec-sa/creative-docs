@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor = accessor;
 			this.mainToolbar = toolbar;
 
-			this.amortissements = new Amortizations (this.accessor);
+			this.amortizations = new Amortizations (this.accessor);
 
 			this.ignoreChanges = new SafeCounter ();
 		}
@@ -146,13 +146,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (isAll)
 				{
-					var errors = this.amortissements.GeneratesAmortizationsAuto (range);
+					var errors = this.amortizations.GeneratesAmortizationsAuto (range);
 					this.ShowErrorPopup (target, errors);
 				}
 				else
 				{
 					System.Diagnostics.Debug.Assert (!this.SelectedGuid.IsEmpty);
-					var errors = this.amortissements.GeneratesAmortizationsAuto (range, this.SelectedGuid);
+					var errors = this.amortizations.GeneratesAmortizationsAuto (range, this.SelectedGuid);
 					this.ShowErrorPopup (target, errors);
 				}
 			}
@@ -160,13 +160,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (isAll)
 				{
-					var errors = this.amortissements.RemovesAmortizationsAuto (range);
+					var errors = this.amortizations.RemovesAmortizationsAuto (range);
 					this.ShowErrorPopup (target, errors);
 				}
 				else
 				{
 					System.Diagnostics.Debug.Assert (!this.SelectedGuid.IsEmpty);
-					var errors = this.amortissements.RemovesAmortizationsAuto (range, this.SelectedGuid);
+					var errors = this.amortizations.RemovesAmortizationsAuto (range, this.SelectedGuid);
 					this.ShowErrorPopup (target, errors);
 				}
 			}
@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected readonly DataAccessor			accessor;
 		protected readonly MainToolbar			mainToolbar;
-		protected readonly Amortizations		amortissements;
+		protected readonly Amortizations		amortizations;
 		protected readonly SafeCounter			ignoreChanges;
 
 		protected BaseType						baseType;
