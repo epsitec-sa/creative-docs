@@ -119,8 +119,8 @@
     <Compile Include="Views\CategoriesView.cs" />
     <Compile Include="Views\AbstractViewState.cs" />
     <Compile Include="Views\CategoriesViewState.cs" />
-    <Compile Include="Views\AssetsView.cs" />
-    <Compile Include="Views\AssetsViewState.cs" />
+    <Compile Include="Views\AmortizationsView.cs" />
+    <Compile Include="Views\AmortizationsViewState.cs" />
     <Compile Include="Views\EnumFieldController.cs" />
     <Compile Include="Views\IDirty.cs" />
     <Compile Include="Views\GroupsViewState.cs" />
@@ -277,7 +277,7 @@
     <EmbeddedResource Include="Images\Timeline.DaysOfWeek.icon" />
     <EmbeddedResource Include="Images\Timeline.WeeksOfYear.icon" />
     <EmbeddedResource Include="Images\Timeline.Labels.icon" />
-    <EmbeddedResource Include="Images\Main.Amortissement.icon" />
+    <EmbeddedResource Include="Images\Main.Amortizations.icon" />
     <EmbeddedResource Include="Images\Main.Edit.icon" />
     <EmbeddedResource Include="Images\Main.Simulation.icon" />
     <EmbeddedResource Include="Images\Timeline.Prev.icon" />
@@ -323,7 +323,7 @@
     <EmbeddedResource Include="Images\Navigate.Menu.icon" />
     <EmbeddedResource Include="Images\TreeTable.Unpin.icon" />
     <EmbeddedResource Include="Images\TreeTable.Pin.icon" />
-    <EmbeddedResource Include="Images\View.Assets.icon" />
+    <EmbeddedResource Include="Images\View.Amortizations.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

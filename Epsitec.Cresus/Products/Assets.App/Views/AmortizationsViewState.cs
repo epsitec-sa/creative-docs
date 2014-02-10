@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AssetsViewState : AbstractViewState, System.IEquatable<AbstractViewState>
+	public class AmortizationsViewState : AbstractViewState, System.IEquatable<AbstractViewState>
 	{
 		public Timestamp?						SelectedTimestamp;
 		public Guid								SelectedGuid;
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return false;
 			}
 
-			var o = other as AssetsViewState;
+			var o = other as AmortizationsViewState;
 
 			if (o == null)
 			{

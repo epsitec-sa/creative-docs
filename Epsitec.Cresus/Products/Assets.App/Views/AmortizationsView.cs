@@ -10,9 +10,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AssetsView : AbstractView
+	public class AmortizationsView : AbstractView
 	{
-		public AssetsView(DataAccessor accessor, MainToolbar toolbar)
+		public AmortizationsView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
 			this.baseType = BaseType.Objects;
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.timelinesArrayController.CreateUI (this.timelinesArrayFrameBox);
-			this.timelinesArrayController.Filter = AssetsView.EventFilter;
+			this.timelinesArrayController.Filter = AmortizationsView.EventFilter;
 
 			this.DeepUpdateUI ();
 
@@ -128,16 +128,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return new AssetsViewState
+				return new AmortizationsViewState
 				{
-					ViewType          = ViewType.Assets,
+					ViewType          = ViewType.Amortizations,
 					SelectedTimestamp = this.selectedTimestamp,
 					SelectedGuid      = this.selectedGuid,
 				};
 			}
 			set
 			{
-				var viewState = value as AssetsViewState;
+				var viewState = value as AmortizationsViewState;
 				System.Diagnostics.Debug.Assert (viewState != null);
 
 				this.selectedTimestamp = viewState.SelectedTimestamp;
