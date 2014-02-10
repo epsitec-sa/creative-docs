@@ -335,6 +335,7 @@
     <Compile Include="Rules\AiderGroupExtractionBusinessRules.cs" />
     <Compile Include="Rules\AiderGroupParticipantBusinessRules.cs" />
     <Compile Include="Rules\AiderLegalPersonBusinessRules.cs" />
+    <Compile Include="Rules\AiderMailingBusinessRules.cs" />
     <Compile Include="Rules\AiderMailingCategoryBusinessRules.cs" />
     <Compile Include="Rules\AiderSubscriptionBusinessRules.cs" />
     <Compile Include="Rules\AiderSubscriptionRefusalBusinessRules.cs" />

@@ -94,7 +94,7 @@ namespace Epsitec.Aider.Override
 			
 			if (user.EnableGroupEditionRegion)
 			{
-				path = path.Substring (0, 5);
+				path = path.Substring (0, 5) + SqlMethods.TextWildcard;
 				return new LambdaFilter<AiderMailingEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, path));
 			}
 			if (user.EnableGroupEditionParish)

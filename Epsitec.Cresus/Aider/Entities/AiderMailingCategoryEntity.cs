@@ -1,11 +1,10 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Text;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
@@ -21,6 +20,14 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderMailingCategoryEntity
 	{
+		public bool HasNakedName
+		{
+			get
+			{
+				return this.DisplayName.Contains (",") == false;
+			}
+		}
+
 		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.DisplayName);
@@ -28,7 +35,8 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.DisplayName);
+			return TextFormatter.FormatText (this.DisplayName,
+											 "\nCode interne~", this.GroupPathCache);
 		}
 
 	
@@ -107,24 +115,28 @@ namespace Epsitec.Aider.Entities
 
 			var categories = dataContext.GetByRequest (request).ToList ();
 
-			if ((categories.Count == 0) &&
-				(groupPath.Length > 1))
+			if ((groupPath.Length > 1) &&
+				(categories.Any (x => x.HasNakedName) == false))
 			{
-				using (var localContext = new BusinessContext (context.Data, false))
-				{
-					var group = AiderGroupEntity.FindGroups (localContext, groupPath).FirstOrDefault ();
-
-					if (group.IsNotNull ())
-					{
-						AiderMailingCategoryEntity.Create (localContext, name: "", group: group);
-						localContext.SaveChanges (LockingPolicy.ReleaseLock);
-					}
-				}
-
+				AiderMailingCategoryEntity.CreateDefaultNamedCategory (context, groupPath);
 				categories = dataContext.GetByRequest (request).ToList ();
 			}
 
 			return categories;
+		}
+
+		private static void CreateDefaultNamedCategory(BusinessContext context, string groupPath)
+		{
+			using (var localContext = new BusinessContext (context.Data, false))
+			{
+				var group = AiderGroupEntity.FindGroups (localContext, groupPath).FirstOrDefault ();
+
+				if (group.IsNotNull ())
+				{
+					AiderMailingCategoryEntity.Create (localContext, name: "", group: group);
+					localContext.SaveChanges (LockingPolicy.ReleaseLock);
+				}
+			}
 		}
 
 		private static string GetGroupName(AiderGroupEntity group)

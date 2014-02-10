@@ -1,5 +1,5 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
 
@@ -35,7 +35,8 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Name,"\n",
 											 this.Description,"\n",
 											 this.GetReadyText (),"\n",
-											 this.LastUpdate.Value.ToLocalTime ().ToString ());
+											 this.LastUpdate.Value.ToLocalTime ().ToString (),
+											 "\nCode interne~", this.ParishGroupPathCache);
 		}
 
 
@@ -370,7 +371,7 @@ namespace Epsitec.Aider.Entities
 			mailing.IsReady     = isReady;
 			mailing.CreatedBy   = aiderUser;
 			
-			mailing.ParishGroupPathCache = aiderUser.ParishGroupPathCache;
+			mailing.ParishGroupPathCache = cat.GroupPathCache;
 
 			mailing.UpdateLastUpdateDate ();
 
