@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				yield return ObjectField.Nom;
+				yield return ObjectField.Name;
 				yield return ObjectField.Description;
 			}
 		}

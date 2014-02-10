@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public struct DataAmortissement
+	public struct AmortizationData
 	{
-		public DataAmortissement(decimal rate, TypeAmortissement type, Périodicité period, decimal rest)
+		public AmortizationData(decimal rate, AmortizationType type, Periodicity period, decimal rest)
 		{
 			this.Rate   = rate;
 			this.Type   = type;
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			get
 			{
 				return this.Rate   == 0.0m
-					&& this.Type   == TypeAmortissement.Unknown
+					&& this.Type   == AmortizationType.Unknown
 					&& this.Period == 0
 					&& this.Rest   == 0.0m;
 			}
@@ -49,17 +49,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				if (this.Rate <= 0.0m || this.Rate > 1.0m)
 				{
-					return ErrorType.AmortissementInvalidRate;
+					return ErrorType.AmortizationInvalidRate;
 				}
 
-				if (this.Type == TypeAmortissement.Unknown)
+				if (this.Type == AmortizationType.Unknown)
 				{
-					return ErrorType.AmortissementInvalidType;
+					return ErrorType.AmortizationInvalidType;
 				}
 
 				if (this.PeriodMonthCount == -1)
 				{
-					return ErrorType.AmortissementInvalidPeriod;
+					return ErrorType.AmortizationInvalidPeriod;
 				}
 
 				return ErrorType.Ok;
@@ -71,24 +71,24 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return DataAmortissement.GetPeriodMonthCount (this.Period);
+				return AmortizationData.GetPeriodMonthCount (this.Period);
 			}
 		}
 
-		public static int GetPeriodMonthCount(Périodicité period)
+		public static int GetPeriodMonthCount(Periodicity period)
 		{
 			switch (period)
 			{
-				case Périodicité.Annuel:
+				case Periodicity.Annual:
 					return 12;
 
-				case Périodicité.Semestriel:
+				case Periodicity.Semestrial:
 					return 6;
 
-				case Périodicité.Trimestriel:
+				case Periodicity.Trimestrial:
 					return 3;
 
-				case Périodicité.Mensuel:
+				case Periodicity.Mensual:
 					return 1;
 
 				default:
@@ -97,11 +97,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static DataAmortissement Empty = new DataAmortissement (0.0m, TypeAmortissement.Unknown, 0, 0.0m);
+		public static AmortizationData Empty = new AmortizationData (0.0m, AmortizationType.Unknown, 0, 0.0m);
 
 		public readonly decimal				Rate;
-		public readonly TypeAmortissement	Type;
-		public readonly Périodicité			Period;
+		public readonly AmortizationType	Type;
+		public readonly Periodicity			Period;
 		public readonly decimal				Rest;
 	}
 }

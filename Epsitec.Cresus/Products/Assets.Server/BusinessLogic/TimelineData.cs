@@ -134,8 +134,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var type = e.Type;
 						var glyph = TimelineData.TypeToGlyph (type);
 
-						var value1 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.ValeurComptable);
-						var value2 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Valeur1);
+						var value1 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.MainValue);
+						var value2 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Value1);
 
 						decimal? v1 = value1 != null && value1.HasValue ? value1.Value.FinalAmount : null;
 						decimal? v2 = value2 != null && value2.HasValue ? value2.Value.FinalAmount : null;
@@ -225,28 +225,28 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EventType.Unknown:
 					return TimelineGlyph.Empty;
 
-				case EventType.Entrée:
+				case EventType.Input:
 					return TimelineGlyph.FilledSquare;
 
-				case EventType.Sortie:
+				case EventType.Output:
 					return TimelineGlyph.OutlinedSquare;
 
 				case EventType.Modification:
 					return TimelineGlyph.FilledCircle;
 
-				case EventType.Réorganisation:
+				case EventType.Reorganization:
 					return TimelineGlyph.OutlinedCircle;
 
-				case EventType.Augmentation:
+				case EventType.Increase:
 					return TimelineGlyph.FilledUp;
 
-				case EventType.Diminution:
+				case EventType.Decrease:
 					return TimelineGlyph.FilledDown;
 
-				case EventType.AmortissementAuto:
+				case EventType.AmortizationAuto:
 					return TimelineGlyph.FilledDiamond;
 
-				case EventType.AmortissementExtra:
+				case EventType.AmortizationExtra:
 					return TimelineGlyph.OutlinedDiamond;
 
 				default:

@@ -25,14 +25,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.EventDate;
 				yield return ObjectField.EventGlyph;
 				yield return ObjectField.EventType;
-				yield return ObjectField.ValeurComptable;
-				yield return ObjectField.Valeur1;
-				yield return ObjectField.Valeur2;
-				yield return ObjectField.Nom;
-				yield return ObjectField.Numéro;
+				yield return ObjectField.MainValue;
+				yield return ObjectField.Value1;
+				yield return ObjectField.Value2;
+				yield return ObjectField.Name;
+				yield return ObjectField.Number;
 				yield return ObjectField.Maintenance;
-				yield return ObjectField.Couleur;
-				yield return ObjectField.NuméroSérie;
+				yield return ObjectField.Color;
+				yield return ObjectField.SerialNumber;
 			}
 		}
 
@@ -89,14 +89,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var date        = TypeConverters.DateToString (timestamp.Date);
 				var glyph       = TimelineData.TypeToGlyph (eventType);
 				var type        = DataDescriptions.GetEventDescription (eventType);
-				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.ValeurComptable,     synthetic: false);
-				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Valeur1,     synthetic: false);
-				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Valeur2,     synthetic: false);
-				var nom         = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Nom,         synthetic: false);
-				var numéro      = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Numéro,      synthetic: false);
+				var valeur1     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue,     synthetic: false);
+				var valeur2     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Value1,     synthetic: false);
+				var valeur3     = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Value2,     synthetic: false);
+				var nom         = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,         synthetic: false);
+				var numéro      = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Number,      synthetic: false);
 				var maintenance = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Maintenance, synthetic: false);
-				var couleur     = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Couleur,     synthetic: false);
-				var série       = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.NuméroSérie, synthetic: false);
+				var couleur     = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Color,     synthetic: false);
+				var série       = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.SerialNumber, synthetic: false);
 
 				var s1 = new TreeTableCellString         (true, date,        isSelected: (i == selection));
 				var s2 = new TreeTableCellGlyph          (true, glyph,       isSelected: (i == selection));

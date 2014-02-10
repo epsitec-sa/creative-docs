@@ -30,8 +30,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			get
 			{
 				return this.Type == ErrorType.Ok
-					|| this.Type == ErrorType.AmortissementGenerate
-					|| this.Type == ErrorType.AmortissementRemove;
+					|| this.Type == ErrorType.AmortizationGenerate
+					|| this.Type == ErrorType.AmortizationRemove;
 			}
 		}
 

@@ -37,10 +37,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o0 = new DataObject ();
 			categories.Add (o0);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o0.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (EmptyMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Groupes"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, "Groupes"));
 			}
 
 			///////////////
@@ -48,23 +48,23 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var oImmob = new DataObject ();
 			categories.Add (oImmob);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				oImmob.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (EmptyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o0.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Immobilisations"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, "Immobilisations"));
 			}
 
 		}
 
 		private static void AddAmortissement1(DataEvent e)
 		{
-			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie, "Bureaux"));
+			e.AddProperty (new DataStringProperty  (ObjectField.CategoryName, "Bureaux"));
 		}
 
 		private static void AddAmortissement2(DataEvent e)
 		{
-			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie, "Voiture"));
+			e.AddProperty (new DataStringProperty  (ObjectField.CategoryName, "Voiture"));
 		}
 
 		private static Guid GetGroup(DataMandat mandat, string text)
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			foreach (var group in list)
 			{
-				var nom = ObjectCalculator.GetObjectPropertyString (group, null, ObjectField.Nom);
+				var nom = ObjectCalculator.GetObjectPropertyString (group, null, ObjectField.Name);
 				if (nom == text)
 				{
 					return group.Guid;

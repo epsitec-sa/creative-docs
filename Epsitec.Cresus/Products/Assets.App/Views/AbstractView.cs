@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor = accessor;
 			this.mainToolbar = toolbar;
 
-			this.amortissements = new Amortissements (this.accessor);
+			this.amortissements = new Amortizations (this.accessor);
 
 			this.ignoreChanges = new SafeCounter ();
 		}
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (command)
 			{
-				case ToolbarCommand.Amortissement:
+				case ToolbarCommand.Amortization:
 					this.OnMainAmortissement ();
 					break;
 
@@ -82,11 +82,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnMainAmortissement()
 		{
-			var target = this.mainToolbar.GetTarget (ToolbarCommand.Amortissement);
+			var target = this.mainToolbar.GetTarget (ToolbarCommand.Amortization);
 
 			var now = System.DateTime.Now;
 
-			var popup = new AmortissementsPopup (this.accessor)
+			var popup = new AmortizationsPopup (this.accessor)
 			{
 				OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
 				DateFrom            = new System.DateTime (now.Year, 1, 1),
@@ -146,13 +146,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (isAll)
 				{
-					var errors = this.amortissements.GeneratesAmortissementsAuto (range);
+					var errors = this.amortissements.GeneratesAmortizationsAuto (range);
 					this.ShowErrorPopup (target, errors);
 				}
 				else
 				{
 					System.Diagnostics.Debug.Assert (!this.SelectedGuid.IsEmpty);
-					var errors = this.amortissements.GeneratesAmortissementsAuto (range, this.SelectedGuid);
+					var errors = this.amortissements.GeneratesAmortizationsAuto (range, this.SelectedGuid);
 					this.ShowErrorPopup (target, errors);
 				}
 			}
@@ -160,13 +160,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (isAll)
 				{
-					var errors = this.amortissements.RemovesAmortissementsAuto (range);
+					var errors = this.amortissements.RemovesAmortizationsAuto (range);
 					this.ShowErrorPopup (target, errors);
 				}
 				else
 				{
 					System.Diagnostics.Debug.Assert (!this.SelectedGuid.IsEmpty);
-					var errors = this.amortissements.RemovesAmortissementsAuto (range, this.SelectedGuid);
+					var errors = this.amortissements.RemovesAmortizationsAuto (range, this.SelectedGuid);
 					this.ShowErrorPopup (target, errors);
 				}
 			}
@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected readonly DataAccessor			accessor;
 		protected readonly MainToolbar			mainToolbar;
-		protected readonly Amortissements		amortissements;
+		protected readonly Amortizations		amortissements;
 		protected readonly SafeCounter			ignoreChanges;
 
 		protected BaseType						baseType;

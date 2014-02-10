@@ -53,19 +53,19 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="BusinessLogic\Amortissements.cs" />
+    <Compile Include="BusinessLogic\Amortizations.cs" />
     <Compile Include="BusinessLogic\CategoriesLogic.cs" />
     <Compile Include="BusinessLogic\ObjectsLogic.cs" />
     <Compile Include="BusinessLogic\EnumDictionaries.cs" />
-    <Compile Include="BusinessLogic\Périodicité.cs" />
+    <Compile Include="BusinessLogic\Periodicity.cs" />
     <Compile Include="BusinessLogic\PersonsLogic.cs" />
     <Compile Include="BusinessLogic\LogicRange.cs" />
     <Compile Include="BusinessLogic\DateRange.cs" />
     <Compile Include="BusinessLogic\ErrorType.cs" />
     <Compile Include="BusinessLogic\Error.cs" />
     <Compile Include="BusinessLogic\ErrorDescription.cs" />
-    <Compile Include="BusinessLogic\TypeAmortissement.cs" />
-    <Compile Include="BusinessLogic\DataAmortissement.cs" />
+    <Compile Include="BusinessLogic\AmortizationType.cs" />
+    <Compile Include="BusinessLogic\AmortizationData.cs" />
     <Compile Include="BusinessLogic\GroupsLogic.cs" />
     <Compile Include="BusinessLogic\LogicDescriptions.cs" />
     <Compile Include="BusinessLogic\TimelinesArrayLogic.cs" />

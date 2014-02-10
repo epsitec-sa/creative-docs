@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateData ();
 
 			this.SelectedGuid = guid;
-			this.OnUpdateAfterCreate (guid, EventType.Entrée, Timestamp.Now);  // Timestamp quelconque !
+			this.OnUpdateAfterCreate (guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
 		}
 
 	

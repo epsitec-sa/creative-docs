@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var e = obj.GetEvent (i);
 
-					if (e.Type == EventType.Entrée)
+					if (e.Type == EventType.Input)
 					{
 						var li = new LockedInterval
 						{
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						isLocked = false;
 					}
 
-					if (e.Type == EventType.Sortie)
+					if (e.Type == EventType.Output)
 					{
 						start = e.Timestamp;
 						isLocked = true;
@@ -110,13 +110,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				yield return EventType.Entrée;
+				yield return EventType.Input;
 				yield return EventType.Modification;
-				yield return EventType.Réorganisation;
-				yield return EventType.Augmentation;
-				yield return EventType.Diminution;
-				yield return EventType.AmortissementExtra;
-				yield return EventType.Sortie;
+				yield return EventType.Reorganization;
+				yield return EventType.Increase;
+				yield return EventType.Decrease;
+				yield return EventType.AmortizationExtra;
+				yield return EventType.Output;
 			}
 		}
 
@@ -128,23 +128,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if ((prevEvent == TerminalEvent.None || prevEvent == TerminalEvent.Out) &&
 				nextEvent == TerminalEvent.None)
 			{
-				yield return EventType.Entrée;
+				yield return EventType.Input;
 			}
 
 			if ((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
 				nextEvent != TerminalEvent.In)
 			{
 				yield return EventType.Modification;
-				yield return EventType.Réorganisation;
-				yield return EventType.Augmentation;
-				yield return EventType.Diminution;
-				yield return EventType.AmortissementExtra;
+				yield return EventType.Reorganization;
+				yield return EventType.Increase;
+				yield return EventType.Decrease;
+				yield return EventType.AmortizationExtra;
 			}
 
 			if ((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
 				nextEvent == TerminalEvent.None)
 			{
-				yield return EventType.Sortie;
+				yield return EventType.Output;
 			}
 		}
 
@@ -158,10 +158,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					switch (obj.GetEvent (i).Type)
 					{
-						case EventType.Entrée:
+						case EventType.Input:
 							return TerminalEvent.In;
 
-						case EventType.Sortie:
+						case EventType.Output:
 							return TerminalEvent.Out;
 
 						default:
@@ -183,10 +183,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					switch (obj.GetEvent (i).Type)
 					{
-						case EventType.Entrée:
+						case EventType.Input:
 							return TerminalEvent.In;
 
-						case EventType.Sortie:
+						case EventType.Output:
 							return TerminalEvent.Out;
 
 						default:

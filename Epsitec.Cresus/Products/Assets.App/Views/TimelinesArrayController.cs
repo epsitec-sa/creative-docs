@@ -556,7 +556,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedGuid = guid;
 			this.SelectedTimestamp = ObjectCalculator.GetLastTimestamp (obj);
 
-			this.OnStartEditing (EventType.Entrée, this.SelectedTimestamp.GetValueOrDefault ());
+			this.OnStartEditing (EventType.Input, this.SelectedTimestamp.GetValueOrDefault ());
 		}
 		#endregion
 

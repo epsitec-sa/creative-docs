@@ -119,24 +119,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.OneShotDocuments:
 					return PageType.OneShot;
 
-				case ObjectField.ValeurComptable:
-				case ObjectField.Valeur1:
-				case ObjectField.Valeur2:
-				case ObjectField.Valeur3:
-				case ObjectField.Valeur4:
-				case ObjectField.Valeur5:
-				case ObjectField.Valeur6:
-				case ObjectField.Valeur7:
-				case ObjectField.Valeur8:
-				case ObjectField.Valeur9:
-				case ObjectField.Valeur10:
+				case ObjectField.MainValue:
+				case ObjectField.Value1:
+				case ObjectField.Value2:
+				case ObjectField.Value3:
+				case ObjectField.Value4:
+				case ObjectField.Value5:
+				case ObjectField.Value6:
+				case ObjectField.Value7:
+				case ObjectField.Value8:
+				case ObjectField.Value9:
+				case ObjectField.Value10:
 					return PageType.Values;
 
-				case ObjectField.NomCatégorie:
-				case ObjectField.TauxAmortissement:
-				case ObjectField.TypeAmortissement:
-				case ObjectField.Périodicité:
-				case ObjectField.ValeurRésiduelle:
+				case ObjectField.CategoryName:
+				case ObjectField.AmortizationRate:
+				case ObjectField.AmortizationType:
+				case ObjectField.Periodicity:
+				case ObjectField.ResidualValue:
 				case ObjectField.Compte1:
 				case ObjectField.Compte2:
 				case ObjectField.Compte3:
@@ -147,11 +147,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Compte8:
 					return PageType.Amortissements;
 
-				case ObjectField.Personne1:
-				case ObjectField.Personne2:
-				case ObjectField.Personne3:
-				case ObjectField.Personne4:
-				case ObjectField.Personne5:
+				case ObjectField.Person1:
+				case ObjectField.Person2:
+				case ObjectField.Person3:
+				case ObjectField.Person4:
+				case ObjectField.Person5:
 					return PageType.Persons;
 
 				case ObjectField.GroupGuidRatio+0:
@@ -207,21 +207,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ObjectSummaryControllerTile.Empty,
 
 					new ObjectSummaryControllerTile ("Général"),
-					new ObjectSummaryControllerTile (ObjectField.Numéro),
-					new ObjectSummaryControllerTile (ObjectField.Nom),
+					new ObjectSummaryControllerTile (ObjectField.Number),
+					new ObjectSummaryControllerTile (ObjectField.Name),
 					new ObjectSummaryControllerTile (ObjectField.Description),
 					new ObjectSummaryControllerTile (ObjectField.Maintenance),
-					new ObjectSummaryControllerTile (ObjectField.Couleur),
-					new ObjectSummaryControllerTile (ObjectField.NuméroSérie),
+					new ObjectSummaryControllerTile (ObjectField.Color),
+					new ObjectSummaryControllerTile (ObjectField.SerialNumber),
 
 					ObjectSummaryControllerTile.Empty,
 
 					new ObjectSummaryControllerTile ("Personnes"),
-					new ObjectSummaryControllerTile (ObjectField.Personne1),
-					new ObjectSummaryControllerTile (ObjectField.Personne2),
-					new ObjectSummaryControllerTile (ObjectField.Personne3),
-					new ObjectSummaryControllerTile (ObjectField.Personne4),
-					new ObjectSummaryControllerTile (ObjectField.Personne5),
+					new ObjectSummaryControllerTile (ObjectField.Person1),
+					new ObjectSummaryControllerTile (ObjectField.Person2),
+					new ObjectSummaryControllerTile (ObjectField.Person3),
+					new ObjectSummaryControllerTile (ObjectField.Person4),
+					new ObjectSummaryControllerTile (ObjectField.Person5),
 				};
 				list.Add (c1);
 
@@ -244,18 +244,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var c3 = new List<ObjectSummaryControllerTile> ()
 				{
 					new ObjectSummaryControllerTile ("Valeurs"),
-					new ObjectSummaryControllerTile (ObjectField.ValeurComptable),
-					new ObjectSummaryControllerTile (ObjectField.Valeur1),
-					new ObjectSummaryControllerTile (ObjectField.Valeur2),
+					new ObjectSummaryControllerTile (ObjectField.MainValue),
+					new ObjectSummaryControllerTile (ObjectField.Value1),
+					new ObjectSummaryControllerTile (ObjectField.Value2),
 
 					ObjectSummaryControllerTile.Empty,
 
 					new ObjectSummaryControllerTile ("Amortissements"),
-					new ObjectSummaryControllerTile (ObjectField.NomCatégorie),
-					new ObjectSummaryControllerTile (ObjectField.TauxAmortissement),
-					new ObjectSummaryControllerTile (ObjectField.TypeAmortissement),
-					new ObjectSummaryControllerTile (ObjectField.Périodicité),
-					new ObjectSummaryControllerTile (ObjectField.ValeurRésiduelle),
+					new ObjectSummaryControllerTile (ObjectField.CategoryName),
+					new ObjectSummaryControllerTile (ObjectField.AmortizationRate),
+					new ObjectSummaryControllerTile (ObjectField.AmortizationType),
+					new ObjectSummaryControllerTile (ObjectField.Periodicity),
+					new ObjectSummaryControllerTile (ObjectField.ResidualValue),
 					new ObjectSummaryControllerTile (ObjectField.Compte1),
 					new ObjectSummaryControllerTile (ObjectField.Compte2),
 					new ObjectSummaryControllerTile (ObjectField.Compte3),

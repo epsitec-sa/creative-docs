@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				switch (this.EventType)
 				{
-					case EventType.Augmentation:
+					case EventType.Increase:
 						substract = false;
 						break;
 				}

@@ -28,71 +28,71 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.GroupParent:
 					return "Dans le groupe";
 
-				case ObjectField.Numéro:
+				case ObjectField.Number:
 					return "Numéro";
 
-				case ObjectField.Nom:
+				case ObjectField.Name:
 					return "Nom";
 
 				case ObjectField.Description:
 					return "Description";
 
-				case ObjectField.ValeurComptable:
+				case ObjectField.MainValue:
 					return "Valeur comptable";
 
-				case ObjectField.Valeur1:
+				case ObjectField.Value1:
 					return "Valeur d'assurance";
 
-				case ObjectField.Valeur2:
+				case ObjectField.Value2:
 					return "Valeur imposable";
 
-				case ObjectField.Valeur3:
-				case ObjectField.Valeur4:
-				case ObjectField.Valeur5:
-				case ObjectField.Valeur6:
-				case ObjectField.Valeur7:
-				case ObjectField.Valeur8:
-				case ObjectField.Valeur9:
-				case ObjectField.Valeur10:
+				case ObjectField.Value3:
+				case ObjectField.Value4:
+				case ObjectField.Value5:
+				case ObjectField.Value6:
+				case ObjectField.Value7:
+				case ObjectField.Value8:
+				case ObjectField.Value9:
+				case ObjectField.Value10:
 					return "Valeur libre";
 
-				case ObjectField.NomCatégorie:
+				case ObjectField.CategoryName:
 					return "Catégorie d'immob.";
 
 				case ObjectField.Maintenance:
 					return "Maintenance";
 
-				case ObjectField.Couleur:
+				case ObjectField.Color:
 					return "Couleur";
 
-				case ObjectField.NuméroSérie:
+				case ObjectField.SerialNumber:
 					return "Numéro de série";
 
-				case ObjectField.Personne1:
+				case ObjectField.Person1:
 					return "Responsable";
 
-				case ObjectField.Personne2:
+				case ObjectField.Person2:
 					return "Fournisseur";
 
-				case ObjectField.Personne3:
+				case ObjectField.Person3:
 					return "Maintenance";
 
-				case ObjectField.Personne4:
+				case ObjectField.Person4:
 					return "Concierge";
 
-				case ObjectField.Personne5:
+				case ObjectField.Person5:
 					return "Conseiller";
 
-				case ObjectField.TauxAmortissement:
+				case ObjectField.AmortizationRate:
 					return "Taux";
 
-				case ObjectField.TypeAmortissement:
+				case ObjectField.AmortizationType:
 					return "Type";
 
-				case ObjectField.Périodicité:
+				case ObjectField.Periodicity:
 					return "Périodicité";
 
-				case ObjectField.ValeurRésiduelle:
+				case ObjectField.ResidualValue:
 					return "Valeur résiduelle";
 
 				case ObjectField.Compte1:
@@ -131,34 +131,34 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.GroupGuidRatio+9:
 					return "Dans le groupe";
 
-				case ObjectField.Titre:
+				case ObjectField.Title:
 					return "Titre";
 
-				case ObjectField.Entreprise:
+				case ObjectField.Company:
 					return "Entreprise";
 
-				case ObjectField.Prénom:
+				case ObjectField.FirstName:
 					return "Prénom";
 
-				case ObjectField.Adresse:
+				case ObjectField.Address:
 					return "Adresse";
 
-				case ObjectField.Npa:
+				case ObjectField.Zip:
 					return "NPA";
 
-				case ObjectField.Ville:
+				case ObjectField.City:
 					return "Ville";
 
-				case ObjectField.Pays:
+				case ObjectField.Country:
 					return "Pays";
 
-				case ObjectField.Téléphone1:
+				case ObjectField.Phone1:
 					return "Téléphone prof.";
 
-				case ObjectField.Téléphone2:
+				case ObjectField.Phone2:
 					return "Téléphone privé";
 
-				case ObjectField.Téléphone3:
+				case ObjectField.Phone3:
 					return "Téléphone portable";
 
 				case ObjectField.Mail:
@@ -173,28 +173,28 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			switch (type)
 			{
-				case EventType.Entrée:
+				case EventType.Input:
 					return "Entrée";
 
-				case EventType.AmortissementAuto:
+				case EventType.AmortizationAuto:
 					return "Amort. ordinaire";
 
-				case EventType.AmortissementExtra:
+				case EventType.AmortizationExtra:
 					return "Amort. extraordinaire";
 
 				case EventType.Modification:
 					return "Modification";
 
-				case EventType.Réorganisation:
+				case EventType.Reorganization:
 					return "Réorganisation";
 
-				case EventType.Augmentation:
+				case EventType.Increase:
 					return "Augmentation";
 
-				case EventType.Diminution:
+				case EventType.Decrease:
 					return "Diminution";
 
-				case EventType.Sortie:
+				case EventType.Output:
 					return "Sortie";
 
 				default:

@@ -18,20 +18,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateStringController (parent, ObjectField.Titre, editWidth: 120);
-			this.CreateStringController (parent, ObjectField.Prénom);
-			this.CreateStringController (parent, ObjectField.Nom);
-			this.CreateStringController (parent, ObjectField.Entreprise);
-			this.CreateStringController (parent, ObjectField.Adresse, lineCount: 2);
-			this.CreateStringController (parent, ObjectField.Npa, editWidth: 60);
-			this.CreateStringController (parent, ObjectField.Ville);
-			this.CreateStringController (parent, ObjectField.Pays);
+			this.CreateStringController (parent, ObjectField.Title, editWidth: 120);
+			this.CreateStringController (parent, ObjectField.FirstName);
+			this.CreateStringController (parent, ObjectField.Name);
+			this.CreateStringController (parent, ObjectField.Company);
+			this.CreateStringController (parent, ObjectField.Address, lineCount: 2);
+			this.CreateStringController (parent, ObjectField.Zip, editWidth: 60);
+			this.CreateStringController (parent, ObjectField.City);
+			this.CreateStringController (parent, ObjectField.Country);
 
 			this.CreateSepartor (parent);
 
-			this.CreateStringController (parent, ObjectField.Téléphone1, editWidth: 120);
-			this.CreateStringController (parent, ObjectField.Téléphone2, editWidth: 120);
-			this.CreateStringController (parent, ObjectField.Téléphone3, editWidth: 120);
+			this.CreateStringController (parent, ObjectField.Phone1, editWidth: 120);
+			this.CreateStringController (parent, ObjectField.Phone2, editWidth: 120);
+			this.CreateStringController (parent, ObjectField.Phone3, editWidth: 120);
 			this.CreateStringController (parent, ObjectField.Mail);
 
 			this.CreateSepartor (parent);

@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				yield return ObjectField.Nom;
+				yield return ObjectField.Name;
 			}
 		}
 
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (node.BaseType, node.Guid);
 
-				var nom = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom, inputValue: true);
+				var nom = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
 
 				var sf = new TreeTableCellTree (true, level, type, nom, isSelected: (i == selection));
 

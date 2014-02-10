@@ -19,13 +19,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateStringController  (parent, ObjectField.Numéro, editWidth: 90);
-			this.CreateStringController  (parent, ObjectField.Nom);
+			this.CreateStringController  (parent, ObjectField.Number, editWidth: 90);
+			this.CreateStringController  (parent, ObjectField.Name);
 			this.CreateStringController  (parent, ObjectField.Description, lineCount: 5);
-			this.CreateDecimalController (parent, ObjectField.TauxAmortissement, DecimalFormat.Rate);
-			this.CreateEnumController    (parent, ObjectField.TypeAmortissement, EnumDictionaries.DictTypesAmortissements, editWidth: 90);
-			this.CreateEnumController    (parent, ObjectField.Périodicité, EnumDictionaries.DictPériodicités, editWidth: 90);
-			this.CreateDecimalController (parent, ObjectField.ValeurRésiduelle, DecimalFormat.Amount);
+			this.CreateDecimalController (parent, ObjectField.AmortizationRate, DecimalFormat.Rate);
+			this.CreateEnumController    (parent, ObjectField.AmortizationType, EnumDictionaries.DictTypesAmortissements, editWidth: 90);
+			this.CreateEnumController    (parent, ObjectField.Periodicity, EnumDictionaries.DictPériodicités, editWidth: 90);
+			this.CreateDecimalController (parent, ObjectField.ResidualValue, DecimalFormat.Amount);
 
 			this.CreateSepartor (parent);
 

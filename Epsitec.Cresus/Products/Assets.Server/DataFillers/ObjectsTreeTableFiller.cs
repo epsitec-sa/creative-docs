@@ -21,14 +21,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				yield return ObjectField.Nom;
-				yield return ObjectField.Numéro;
-				yield return ObjectField.ValeurComptable;
-				yield return ObjectField.Valeur1;
-				yield return ObjectField.Valeur2;
+				yield return ObjectField.Name;
+				yield return ObjectField.Number;
+				yield return ObjectField.MainValue;
+				yield return ObjectField.Value1;
+				yield return ObjectField.Value2;
 				yield return ObjectField.Maintenance;
-				yield return ObjectField.Couleur;
-				yield return ObjectField.NuméroSérie;
+				yield return ObjectField.Color;
+				yield return ObjectField.SerialNumber;
 
 				yield return ObjectField.GroupGuidRatio+0;
 				yield return ObjectField.GroupGuidRatio+1;
@@ -96,15 +96,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var obj = this.accessor.GetObject (baseType, guid);
 
-				var valeur1     = this.NodesGetter.GetValue (obj, node, ObjectField.ValeurComptable);
-				var valeur2     = this.NodesGetter.GetValue (obj, node, ObjectField.Valeur1);
-				var valeur3     = this.NodesGetter.GetValue (obj, node, ObjectField.Valeur2);
+				var valeur1     = this.NodesGetter.GetValue (obj, node, ObjectField.MainValue);
+				var valeur2     = this.NodesGetter.GetValue (obj, node, ObjectField.Value1);
+				var valeur3     = this.NodesGetter.GetValue (obj, node, ObjectField.Value2);
 
-				var nom         = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Nom, inputValue: true);
-				var numéro      = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Numéro);
+				var nom         = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var numéro      = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
 				var maintenance = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Maintenance);
-				var couleur     = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Couleur);
-				var série       = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.NuméroSérie);
+				var couleur     = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Color);
+				var série       = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.SerialNumber);
 
 				var guid0       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+0);
 				var guid1       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+1);

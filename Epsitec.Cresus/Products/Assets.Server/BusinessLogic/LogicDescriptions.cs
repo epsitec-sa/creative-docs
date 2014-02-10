@@ -178,28 +178,28 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ObjectField.OneShotDocuments;
 
 				yield return ObjectField.GroupParent;
-				yield return ObjectField.Numéro;
-				yield return ObjectField.Nom;
+				yield return ObjectField.Number;
+				yield return ObjectField.Name;
 				yield return ObjectField.Description;
-				yield return ObjectField.ValeurComptable;
-				yield return ObjectField.Valeur1;
-				yield return ObjectField.Valeur2;
-				yield return ObjectField.Valeur3;
-				yield return ObjectField.Valeur4;
-				yield return ObjectField.Valeur5;
-				yield return ObjectField.Valeur6;
-				yield return ObjectField.Valeur7;
-				yield return ObjectField.Valeur8;
-				yield return ObjectField.Valeur9;
-				yield return ObjectField.Valeur10;
+				yield return ObjectField.MainValue;
+				yield return ObjectField.Value1;
+				yield return ObjectField.Value2;
+				yield return ObjectField.Value3;
+				yield return ObjectField.Value4;
+				yield return ObjectField.Value5;
+				yield return ObjectField.Value6;
+				yield return ObjectField.Value7;
+				yield return ObjectField.Value8;
+				yield return ObjectField.Value9;
+				yield return ObjectField.Value10;
 				yield return ObjectField.Maintenance;
-				yield return ObjectField.Couleur;
-				yield return ObjectField.NuméroSérie;
-				yield return ObjectField.Personne1;
-				yield return ObjectField.Personne2;
-				yield return ObjectField.Personne3;
-				yield return ObjectField.Personne4;
-				yield return ObjectField.Personne5;
+				yield return ObjectField.Color;
+				yield return ObjectField.SerialNumber;
+				yield return ObjectField.Person1;
+				yield return ObjectField.Person2;
+				yield return ObjectField.Person3;
+				yield return ObjectField.Person4;
+				yield return ObjectField.Person5;
 
 				yield return ObjectField.GroupGuidRatio+0;
 				yield return ObjectField.GroupGuidRatio+1;
@@ -212,12 +212,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ObjectField.GroupGuidRatio+8;
 				yield return ObjectField.GroupGuidRatio+9;
 
-				yield return ObjectField.NomCatégorie;
+				yield return ObjectField.CategoryName;
 
-				yield return ObjectField.TauxAmortissement;
-				yield return ObjectField.TypeAmortissement;
-				yield return ObjectField.Périodicité;
-				yield return ObjectField.ValeurRésiduelle;
+				yield return ObjectField.AmortizationRate;
+				yield return ObjectField.AmortizationType;
+				yield return ObjectField.Periodicity;
+				yield return ObjectField.ResidualValue;
 
 				yield return ObjectField.Compte1;
 				yield return ObjectField.Compte2;

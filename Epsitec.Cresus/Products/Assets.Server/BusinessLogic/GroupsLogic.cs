@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
+				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					break;
 				}
 
-				list.Insert (0, ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom));
+				list.Insert (0, ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name));
 				guid = ObjectCalculator.GetObjectPropertyGuid (obj, null, ObjectField.GroupParent);
 			}
 

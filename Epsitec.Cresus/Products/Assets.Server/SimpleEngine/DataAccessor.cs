@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			mandat.GetData (baseType).Add (obj);
 
 			var timestamp = new Timestamp (date, 0);
-			var e = new DataEvent (timestamp, EventType.Entrée);
+			var e = new DataEvent (timestamp, EventType.Input);
 			obj.AddEvent (e);
 
 			if (!parent.IsEmpty)
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, parent));
 			}
 
-			e.AddProperty (new DataStringProperty (ObjectField.Nom, name));
+			e.AddProperty (new DataStringProperty (ObjectField.Name, name));
 		
 			return obj.Guid;
 		}
@@ -239,17 +239,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			get
 			{
-				yield return ObjectField.ValeurComptable;
-				yield return ObjectField.Valeur1;
-				yield return ObjectField.Valeur2;
-				yield return ObjectField.Valeur3;
-				yield return ObjectField.Valeur4;
-				yield return ObjectField.Valeur5;
-				yield return ObjectField.Valeur6;
-				yield return ObjectField.Valeur7;
-				yield return ObjectField.Valeur8;
-				yield return ObjectField.Valeur9;
-				yield return ObjectField.Valeur10;
+				yield return ObjectField.MainValue;
+				yield return ObjectField.Value1;
+				yield return ObjectField.Value2;
+				yield return ObjectField.Value3;
+				yield return ObjectField.Value4;
+				yield return ObjectField.Value5;
+				yield return ObjectField.Value6;
+				yield return ObjectField.Value7;
+				yield return ObjectField.Value8;
+				yield return ObjectField.Value9;
+				yield return ObjectField.Value10;
 			}
 		}
 
@@ -257,21 +257,21 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			switch (objectField)
 			{
-				case ObjectField.ValeurComptable:
-				case ObjectField.Valeur1:
-				case ObjectField.Valeur2:
-				case ObjectField.Valeur3:
-				case ObjectField.Valeur4:
-				case ObjectField.Valeur5:
-				case ObjectField.Valeur6:
-				case ObjectField.Valeur7:
-				case ObjectField.Valeur8:
-				case ObjectField.Valeur9:
-				case ObjectField.Valeur10:
+				case ObjectField.MainValue:
+				case ObjectField.Value1:
+				case ObjectField.Value2:
+				case ObjectField.Value3:
+				case ObjectField.Value4:
+				case ObjectField.Value5:
+				case ObjectField.Value6:
+				case ObjectField.Value7:
+				case ObjectField.Value8:
+				case ObjectField.Value9:
+				case ObjectField.Value10:
 					return FieldType.ComputedAmount;
 
-				case ObjectField.TauxAmortissement:
-				case ObjectField.ValeurRésiduelle:
+				case ObjectField.AmortizationRate:
+				case ObjectField.ResidualValue:
 					return FieldType.Decimal;
 
 				case ObjectField.OneShotDateOpération:
@@ -280,11 +280,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.GroupParent:
 					return FieldType.GuidGroup;
 
-				case ObjectField.Personne1:
-				case ObjectField.Personne2:
-				case ObjectField.Personne3:
-				case ObjectField.Personne4:
-				case ObjectField.Personne5:
+				case ObjectField.Person1:
+				case ObjectField.Person2:
+				case ObjectField.Person3:
+				case ObjectField.Person4:
+				case ObjectField.Person5:
 					return FieldType.GuidPerson;
 
 				case ObjectField.GroupGuidRatio+0:

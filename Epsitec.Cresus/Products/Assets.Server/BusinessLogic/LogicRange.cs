@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class LogicRange
 	{
-		public static IEnumerable<DateRange> GetRanges(DateRange range, Périodicité period)
+		public static IEnumerable<DateRange> GetRanges(DateRange range, Periodicity period)
 		{
 			//	Retourne la liste des intervalles pour lesquels il faudra générer
 			//	des amortissements. Par exemple:
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//			01.01.2014 -> 31.03.2014
 			//			01.04.2014 -> 30.06.2014
 
-			int month = DataAmortissement.GetPeriodMonthCount (period);
+			int month = AmortizationData.GetPeriodMonthCount (period);
 			System.Diagnostics.Debug.Assert (month != -1);
 
 			var start = new System.DateTime (range.IncludeFrom.Date.Year, 1, 1);

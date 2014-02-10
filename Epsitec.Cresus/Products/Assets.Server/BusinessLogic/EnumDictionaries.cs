@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class EnumDictionaries
 	{
-		public static string GetPériodicitéName(Périodicité type)
+		public static string GetPériodicitéName(Periodicity type)
 		{
 			string s;
 			if (EnumDictionaries.DictPériodicités.TryGetValue ((int) type, out s))
@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
-		public static string GetTypeAmortissementName(TypeAmortissement type)
+		public static string GetTypeAmortissementName(AmortizationType type)
 		{
 			string s;
 			if (EnumDictionaries.DictTypesAmortissements.TryGetValue ((int) type, out s))
@@ -44,10 +44,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var dict = new Dictionary<int, string> ();
 
-				dict.Add ((int) Périodicité.Annuel,      "Annuel");
-				dict.Add ((int) Périodicité.Semestriel,  "Semestriel");
-				dict.Add ((int) Périodicité.Trimestriel, "Trimestriel");
-				dict.Add ((int) Périodicité.Mensuel,     "Mensuel");
+				dict.Add ((int) Periodicity.Annual,      "Annuel");
+				dict.Add ((int) Periodicity.Semestrial,  "Semestriel");
+				dict.Add ((int) Periodicity.Trimestrial, "Trimestriel");
+				dict.Add ((int) Periodicity.Mensual,     "Mensuel");
 
 				return dict;
 			}
@@ -59,8 +59,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var dict = new Dictionary<int, string> ();
 
-				dict.Add ((int) TypeAmortissement.Linear,     "Linéaire");
-				dict.Add ((int) TypeAmortissement.Degressive, "Dégressif");
+				dict.Add ((int) AmortizationType.Linear,     "Linéaire");
+				dict.Add ((int) AmortizationType.Degressive, "Dégressif");
 
 				return dict;
 			}

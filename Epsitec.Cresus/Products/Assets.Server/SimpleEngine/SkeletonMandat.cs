@@ -33,15 +33,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o11 = new DataObject ();
 			categories.Add (o11);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o11.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "11"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Bureaux"));
-				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.075m));
-				e.AddProperty (new DataIntProperty     (ObjectField.TypeAmortissement, (int) TypeAmortissement.Linear));
-				e.AddProperty (new DataIntProperty     (ObjectField.Périodicité,       (int) Périodicité.Annuel));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  1000.0m));
+				e.AddProperty (new DataStringProperty  (ObjectField.Number,            "11"));
+				e.AddProperty (new DataStringProperty  (ObjectField.Name,               "Bureaux"));
+				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.075m));
+				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Linear));
+				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Annual));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  1000.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
 				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
@@ -56,15 +56,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o12 = new DataObject ();
 			categories.Add (o12);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o12.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "12"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Usine"));
-				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.12m));
-				e.AddProperty (new DataIntProperty     (ObjectField.TypeAmortissement, (int) TypeAmortissement.Linear));
-				e.AddProperty (new DataIntProperty     (ObjectField.Périodicité,       (int) Périodicité.Annuel));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  10000.0m));
+				e.AddProperty (new DataStringProperty  (ObjectField.Number,            "12"));
+				e.AddProperty (new DataStringProperty  (ObjectField.Name,               "Usine"));
+				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.12m));
+				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Linear));
+				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Annual));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  10000.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
 				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
@@ -79,15 +79,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o21 = new DataObject ();
 			categories.Add (o21);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o21.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "21"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Poid lourd"));
-				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.15m));
-				e.AddProperty (new DataIntProperty     (ObjectField.TypeAmortissement, (int) TypeAmortissement.Degressive));
-				e.AddProperty (new DataIntProperty     (ObjectField.Périodicité,       (int) Périodicité.Trimestriel));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  100.0m));
+				e.AddProperty (new DataStringProperty  (ObjectField.Number,            "21"));
+				e.AddProperty (new DataStringProperty  (ObjectField.Name,               "Poid lourd"));
+				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.15m));
+				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Degressive));
+				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Trimestrial));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  100.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
 				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
@@ -102,15 +102,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o22 = new DataObject ();
 			categories.Add (o22);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o22.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "22"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Camionnette"));
-				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.21m));
-				e.AddProperty (new DataIntProperty     (ObjectField.TypeAmortissement, (int) TypeAmortissement.Degressive));
-				e.AddProperty (new DataIntProperty     (ObjectField.Périodicité,       (int) Périodicité.Semestriel));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  100.0m));
+				e.AddProperty (new DataStringProperty  (ObjectField.Number,            "22"));
+				e.AddProperty (new DataStringProperty  (ObjectField.Name,               "Camionnette"));
+				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.21m));
+				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Degressive));
+				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Semestrial));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  100.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
 				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
@@ -125,15 +125,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o23 = new DataObject ();
 			categories.Add (o23);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o23.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.CategoryNumber++).ToString ()));
-				e.AddProperty (new DataStringProperty  (ObjectField.Numéro,            "23"));
-				e.AddProperty (new DataStringProperty  (ObjectField.Nom,               "Voiture"));
-				e.AddProperty (new DataDecimalProperty (ObjectField.TauxAmortissement, 0.25m));
-				e.AddProperty (new DataIntProperty     (ObjectField.TypeAmortissement, (int) TypeAmortissement.Degressive));
-				e.AddProperty (new DataIntProperty     (ObjectField.Périodicité,       (int) Périodicité.Semestriel));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ValeurRésiduelle,  100.0m));
+				e.AddProperty (new DataStringProperty  (ObjectField.Number,            "23"));
+				e.AddProperty (new DataStringProperty  (ObjectField.Name,               "Voiture"));
+				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.25m));
+				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Degressive));
+				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Semestrial));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  100.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
 				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
@@ -155,10 +155,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o0 = new DataObject ();
 			categories.Add (o0);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o0.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Groupes"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, "Groupes"));
 			}
 
 			///////////////
@@ -166,51 +166,51 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var oImmob = new DataObject ();
 			categories.Add (oImmob);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				oImmob.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o0.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Immobilisations"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, "Immobilisations"));
 			}
 
 			var o1 = new DataObject ();
 			categories.Add (o1);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o1.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, oImmob.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Bâtiments"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,    "Bâtiments"));
 			}
 
 			var o11 = new DataObject ();
 			categories.Add (o11);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o11.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o1.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,    "Immeubles"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,    "Immeubles"));
 			}
 
 			var o12 = new DataObject ();
 			categories.Add (o12);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o12.AddEvent (e);
 				e.AddProperty (new DataStringProperty  (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty    (ObjectField.GroupParent,      o1.Guid));
-				e.AddProperty (new DataStringProperty  (ObjectField.Nom,         "Usines"));
+				e.AddProperty (new DataStringProperty  (ObjectField.Name,         "Usines"));
 			}
 
 			var o13 = new DataObject ();
 			categories.Add (o13);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o13.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,      o1.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,         "Entrepôts"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,         "Entrepôts"));
 			}
 
 			///////////////
@@ -218,41 +218,41 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o2 = new DataObject ();
 			categories.Add (o2);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o2.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,      oImmob.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,         "Véhicules"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,         "Véhicules"));
 			}
 
 			var o21 = new DataObject ();
 			categories.Add (o21);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o21.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,      o2.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,         "Camions"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,         "Camions"));
 			}
 
 			var o22 = new DataObject ();
 			categories.Add (o22);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o22.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,      o2.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,         "Camionnettes"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,         "Camionnettes"));
 			}
 
 			var o23 = new DataObject ();
 			categories.Add (o23);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o23.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,      o2.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,         "Voitures"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,         "Voitures"));
 			}
 
 			///////////////
@@ -260,51 +260,51 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o3 = new DataObject ();
 			categories.Add (o3);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o3.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o0.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Secteurs"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, "Secteurs"));
 			}
 
 			var o31 = new DataObject ();
 			categories.Add (o31);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o31.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o3.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Nord"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Nord"));
 			}
 
 			var o32 = new DataObject ();
 			categories.Add (o32);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o32.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o3.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Sud"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Sud"));
 			}
 
 			var o33 = new DataObject ();
 			categories.Add (o33);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o33.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o3.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Est"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Est"));
 			}
 
 			var o34 = new DataObject ();
 			categories.Add (o34);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o34.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o3.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Ouest"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Ouest"));
 			}
 
 			///////////////
@@ -312,61 +312,61 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o4 = new DataObject ();
 			categories.Add (o4);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o4.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o0.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Centres de frais"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, "Centres de frais"));
 			}
 
 			var o41 = new DataObject ();
 			categories.Add (o41);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o41.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o4.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Atelier"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Atelier"));
 			}
 
 			var o42 = new DataObject ();
 			categories.Add (o42);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o42.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o4.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Bureaux"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Bureaux"));
 			}
 
 			var o43 = new DataObject ();
 			categories.Add (o43);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o43.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o4.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Distribution"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Distribution"));
 			}
 
 			var o44 = new DataObject ();
 			categories.Add (o44);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o44.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o4.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Stockage"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Stockage"));
 			}
 
 			var o45 = new DataObject ();
 			categories.Add (o45);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o45.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o4.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Transports"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Transports"));
 			}
 
 			///////////////
@@ -374,102 +374,102 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o5 = new DataObject ();
 			categories.Add (o5);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o5.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o0.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Responsables"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, "Responsables"));
 			}
 
 			var o51 = new DataObject ();
 			categories.Add (o51);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o51.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Simone"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Simone"));
 			}
 
 			var o52 = new DataObject ();
 			categories.Add (o52);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o52.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Georges-André"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Georges-André"));
 			}
 
 			var o53 = new DataObject ();
 			categories.Add (o53);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o53.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Béatrice"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Béatrice"));
 			}
 
 			var o54 = new DataObject ();
 			categories.Add (o54);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o54.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Dominique"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Dominique"));
 			}
 
 			var o55 = new DataObject ();
 			categories.Add (o55);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o55.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Joël"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Joël"));
 			}
 
 			var o56 = new DataObject ();
 			categories.Add (o56);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o56.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Paul-Henry"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Paul-Henry"));
 			}
 
 			var o57 = new DataObject ();
 			categories.Add (o57);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o57.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent,  o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom,     "Jean-Daniel"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,     "Jean-Daniel"));
 			}
 
 			var o58 = new DataObject ();
 			categories.Add (o58);
 			{
-				var e = new DataEvent (start, EventType.Entrée);
+				var e = new DataEvent (start, EventType.Input);
 				o58.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (SkeletonMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o5.Guid));
-				e.AddProperty (new DataStringProperty (ObjectField.Nom, "Sandra"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, "Sandra"));
 			}
 		}
 
 		private static void AddAmortissement1(DataEvent e)
 		{
-			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie, "Bureaux"));
+			e.AddProperty (new DataStringProperty  (ObjectField.CategoryName, "Bureaux"));
 		}
 
 		private static void AddAmortissement2(DataEvent e)
 		{
-			e.AddProperty (new DataStringProperty  (ObjectField.NomCatégorie, "Voiture"));
+			e.AddProperty (new DataStringProperty  (ObjectField.CategoryName, "Voiture"));
 		}
 
 		private static Guid GetGroup(DataMandat mandat, string text)
@@ -478,7 +478,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			foreach (var group in list)
 			{
-				var nom = ObjectCalculator.GetObjectPropertyString (group, null, ObjectField.Nom);
+				var nom = ObjectCalculator.GetObjectPropertyString (group, null, ObjectField.Name);
 				if (nom == text)
 				{
 					return group.Guid;

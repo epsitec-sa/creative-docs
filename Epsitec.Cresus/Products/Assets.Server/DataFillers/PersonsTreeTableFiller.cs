@@ -21,17 +21,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				yield return ObjectField.Nom;
-				yield return ObjectField.Prénom;
-				yield return ObjectField.Titre;
-				yield return ObjectField.Entreprise;
-				yield return ObjectField.Adresse;
-				yield return ObjectField.Npa;
-				yield return ObjectField.Ville;
-				yield return ObjectField.Pays;
-				yield return ObjectField.Téléphone1;
-				yield return ObjectField.Téléphone2;
-				yield return ObjectField.Téléphone3;
+				yield return ObjectField.Name;
+				yield return ObjectField.FirstName;
+				yield return ObjectField.Title;
+				yield return ObjectField.Company;
+				yield return ObjectField.Address;
+				yield return ObjectField.Zip;
+				yield return ObjectField.City;
+				yield return ObjectField.Country;
+				yield return ObjectField.Phone1;
+				yield return ObjectField.Phone2;
+				yield return ObjectField.Phone3;
 				yield return ObjectField.Mail;
 			}
 		}
@@ -85,17 +85,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid  = node.Guid;
 				var obj   = this.accessor.GetObject (BaseType.Persons, guid);
 
-				var text0  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Nom, inputValue: true);
-				var text1  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Prénom);
-				var text2  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Titre);
-				var text3  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Entreprise);
-				var text4  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Adresse);
-				var text5  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Npa);
-				var text6  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Ville);
-				var text7  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Pays);
-				var text8  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Téléphone1);
-				var text9  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Téléphone2);
-				var text10 = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Téléphone3);
+				var text0  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var text1  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.FirstName);
+				var text2  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Title);
+				var text3  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Company);
+				var text4  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Address);
+				var text5  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Zip);
+				var text6  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.City);
+				var text7  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Country);
+				var text8  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Phone1);
+				var text9  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Phone2);
+				var text10 = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Phone3);
 				var text11 = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Mail);
 
 				var s0  = new TreeTableCellString (true, text0,  isSelected: (i == selection));

@@ -21,11 +21,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreatePersonGuidController (parent, ObjectField.Personne1);
-			this.CreatePersonGuidController (parent, ObjectField.Personne2);
-			this.CreatePersonGuidController (parent, ObjectField.Personne3);
-			this.CreatePersonGuidController (parent, ObjectField.Personne4);
-			this.CreatePersonGuidController (parent, ObjectField.Personne5);
+			this.CreatePersonGuidController (parent, ObjectField.Person1);
+			this.CreatePersonGuidController (parent, ObjectField.Person2);
+			this.CreatePersonGuidController (parent, ObjectField.Person3);
+			this.CreatePersonGuidController (parent, ObjectField.Person4);
+			this.CreatePersonGuidController (parent, ObjectField.Person5);
 		}
 	}
 }

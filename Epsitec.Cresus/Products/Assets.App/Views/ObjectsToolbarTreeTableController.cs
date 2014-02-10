@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedGuid = guid;
 			this.SelectedTimestamp = ObjectCalculator.GetLastTimestamp (obj);
 			
-			this.OnUpdateAfterCreate (guid, EventType.Entrée, this.selectedTimestamp.GetValueOrDefault ());
+			this.OnUpdateAfterCreate (guid, EventType.Input, this.selectedTimestamp.GetValueOrDefault ());
 		}
 
 	

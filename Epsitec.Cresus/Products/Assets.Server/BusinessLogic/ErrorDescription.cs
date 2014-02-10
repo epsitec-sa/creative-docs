@@ -18,14 +18,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
+				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
 			}
 		}
 
 
 		public static string GetErrorDescription(Error error)
 		{
-			if (error.Type == ErrorType.AmortissementGenerate)
+			if (error.Type == ErrorType.AmortizationGenerate)
 			{
 				if (error.Counter == 0)
 				{
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return string.Format ("{0} amortissements ont été générés", error.Counter);
 				}
 			}
-			else if (error.Type == ErrorType.AmortissementRemove)
+			else if (error.Type == ErrorType.AmortizationRemove)
 			{
 				if (error.Counter == 0)
 				{
@@ -68,25 +68,25 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ErrorType.Unknown:
 					return "Erreur inconnue";
 
-				case ErrorType.AmortissementAlreadyDone:
+				case ErrorType.AmortizationAlreadyDone:
 					return "L'objet a déja été amorti durant cette période";
 
-				case ErrorType.AmortissementUndefined:
+				case ErrorType.AmortizationUndefined:
 					return "L'amortissement n'est pas défini";
 
-				case ErrorType.AmortissementInvalidRate:
+				case ErrorType.AmortizationInvalidRate:
 					return "Le taux d'amortissement est incorrect";
 
-				case ErrorType.AmortissementInvalidType:
+				case ErrorType.AmortizationInvalidType:
 					return "Le type d'amortissement est incorrect";
 
-				case ErrorType.AmortissementInvalidPeriod:
+				case ErrorType.AmortizationInvalidPeriod:
 					return "La périodicité de l'amortissement est incorrecte";
 
-				case ErrorType.AmortissementEmptyAmount:
+				case ErrorType.AmortizationEmptyAmount:
 					return "L'objet n'a pas de valeur comptable";
 
-				case ErrorType.AmortissementOutObject:
+				case ErrorType.AmortizationOutObject:
 					return "L'objet est sorti";
 
 				default:

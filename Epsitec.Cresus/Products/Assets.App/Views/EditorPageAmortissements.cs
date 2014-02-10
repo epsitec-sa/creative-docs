@@ -20,11 +20,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateStringController  (parent, ObjectField.NomCatégorie);
-			this.CreateDecimalController (parent, ObjectField.TauxAmortissement, DecimalFormat.Rate);
-			this.CreateEnumController    (parent, ObjectField.TypeAmortissement, EnumDictionaries.DictTypesAmortissements, editWidth: 90);
-			this.CreateEnumController    (parent, ObjectField.Périodicité, EnumDictionaries.DictPériodicités, editWidth: 90);
-			this.CreateDecimalController (parent, ObjectField.ValeurRésiduelle, DecimalFormat.Amount);
+			this.CreateStringController  (parent, ObjectField.CategoryName);
+			this.CreateDecimalController (parent, ObjectField.AmortizationRate, DecimalFormat.Rate);
+			this.CreateEnumController    (parent, ObjectField.AmortizationType, EnumDictionaries.DictTypesAmortissements, editWidth: 90);
+			this.CreateEnumController    (parent, ObjectField.Periodicity, EnumDictionaries.DictPériodicités, editWidth: 90);
+			this.CreateDecimalController (parent, ObjectField.ResidualValue, DecimalFormat.Amount);
 
 			new FrameBox
 			{
@@ -117,11 +117,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var catObj = this.accessor.GetObject (BaseType.Categories, guid);
 
 			//	Copie les champs nécessaires.
-			this.ImportField (catObj, ObjectField.Nom,               ObjectField.NomCatégorie);
-			this.ImportField (catObj, ObjectField.TauxAmortissement, ObjectField.TauxAmortissement);
-			this.ImportField (catObj, ObjectField.TypeAmortissement, ObjectField.TypeAmortissement);
-			this.ImportField (catObj, ObjectField.Périodicité,       ObjectField.Périodicité);
-			this.ImportField (catObj, ObjectField.ValeurRésiduelle,  ObjectField.ValeurRésiduelle);
+			this.ImportField (catObj, ObjectField.Name,               ObjectField.CategoryName);
+			this.ImportField (catObj, ObjectField.AmortizationRate, ObjectField.AmortizationRate);
+			this.ImportField (catObj, ObjectField.AmortizationType, ObjectField.AmortizationType);
+			this.ImportField (catObj, ObjectField.Periodicity,       ObjectField.Periodicity);
+			this.ImportField (catObj, ObjectField.ResidualValue,  ObjectField.ResidualValue);
 			this.ImportField (catObj, ObjectField.Compte1,           ObjectField.Compte1);
 			this.ImportField (catObj, ObjectField.Compte2,           ObjectField.Compte2);
 			this.ImportField (catObj, ObjectField.Compte3,           ObjectField.Compte3);

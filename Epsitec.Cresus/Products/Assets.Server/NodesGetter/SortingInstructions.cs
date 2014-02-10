@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 			}
 		}
 
-		public static SortingInstructions Default = new SortingInstructions (ObjectField.Nom,     SortedType.Ascending, ObjectField.Unknown, SortedType.None);
+		public static SortingInstructions Default = new SortingInstructions (ObjectField.Name,     SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 		public static SortingInstructions Empty   = new SortingInstructions (ObjectField.Unknown, SortedType.None,      ObjectField.Unknown, SortedType.None);
 
 		public readonly ObjectField			PrimaryField;

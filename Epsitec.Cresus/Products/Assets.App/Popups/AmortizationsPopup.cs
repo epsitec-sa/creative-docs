@@ -12,9 +12,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class AmortissementsPopup : AbstractPopup
+	public class AmortizationsPopup : AbstractPopup
 	{
-		public AmortissementsPopup(DataAccessor accessor)
+		public AmortizationsPopup(DataAccessor accessor)
 		{
 			this.accessor = accessor;
 
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new Size (AmortissementsPopup.popupWidth, AmortissementsPopup.popupHeight);
+				return new Size (AmortizationsPopup.popupWidth, AmortizationsPopup.popupHeight);
 			}
 		}
 
@@ -42,12 +42,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.CreateTitle ("Amortissements");
 
-			var line1 = this.CreateFrame (AmortissementsPopup.margin, 171, AmortissementsPopup.popupWidth-AmortissementsPopup.margin*2, AmortissementsPopup.lineHeight);
-			var line2 = this.CreateFrame (AmortissementsPopup.margin, 150, AmortissementsPopup.popupWidth-AmortissementsPopup.margin*2, AmortissementsPopup.lineHeight);
-			var line3 = this.CreateFrame (AmortissementsPopup.margin, 121, 40+10+DateFieldController.controllerWidth, AmortissementsPopup.lineHeight);
-			var line4 = this.CreateFrame (AmortissementsPopup.margin, 100, 40+10+DateFieldController.controllerWidth, AmortissementsPopup.lineHeight);
-			var line5 = this.CreateFrame (AmortissementsPopup.margin,  71, AmortissementsPopup.popupWidth-AmortissementsPopup.margin*2, AmortissementsPopup.lineHeight);
-			var line6 = this.CreateFrame (AmortissementsPopup.margin,  50, AmortissementsPopup.popupWidth-AmortissementsPopup.margin*2, AmortissementsPopup.lineHeight);
+			var line1 = this.CreateFrame (AmortizationsPopup.margin, 171, AmortizationsPopup.popupWidth-AmortizationsPopup.margin*2, AmortizationsPopup.lineHeight);
+			var line2 = this.CreateFrame (AmortizationsPopup.margin, 150, AmortizationsPopup.popupWidth-AmortizationsPopup.margin*2, AmortizationsPopup.lineHeight);
+			var line3 = this.CreateFrame (AmortizationsPopup.margin, 121, 40+10+DateFieldController.controllerWidth, AmortizationsPopup.lineHeight);
+			var line4 = this.CreateFrame (AmortizationsPopup.margin, 100, 40+10+DateFieldController.controllerWidth, AmortizationsPopup.lineHeight);
+			var line5 = this.CreateFrame (AmortizationsPopup.margin,  71, AmortizationsPopup.popupWidth-AmortizationsPopup.margin*2, AmortizationsPopup.lineHeight);
+			var line6 = this.CreateFrame (AmortizationsPopup.margin,  50, AmortizationsPopup.popupWidth-AmortizationsPopup.margin*2, AmortizationsPopup.lineHeight);
 
 			this.CreateCreate  (line1);
 			this.CreateRemove  (line2);

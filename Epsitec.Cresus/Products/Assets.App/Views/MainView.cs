@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateMenu,    this.NavigateMenuEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateForward, this.NavigateForwardEnable);
 
-			this.toolbar.SetCommandState (ToolbarCommand.Amortissement,    ToolbarCommandState.Enable);
+			this.toolbar.SetCommandState (ToolbarCommand.Amortization,    ToolbarCommandState.Enable);
 			this.toolbar.SetCommandState (ToolbarCommand.Simulation,       ToolbarCommandState.Enable);
 		}
 

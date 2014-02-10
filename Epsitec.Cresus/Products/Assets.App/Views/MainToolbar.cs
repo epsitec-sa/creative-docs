@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonMultiple        = this.CreateViewModeButton (ViewMode.Multiple,   ToolbarCommand.ViewModeMultiple,   "Show.TimelineMultiple", "Axe du temps pour tous les objets");
 									   
 			this.buttonEdit            = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Edit,               "Main.Edit",             "Edition");
-			this.buttonAmortissement   = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Amortissement,      "Main.Amortissement",    "Amortissements");
+			this.buttonAmortissement   = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Amortization,      "Main.Amortissement",    "Amortissements");
 			this.buttonSimulation      = this.CreateCommandButton  (DockStyle.Left,      ToolbarCommand.Simulation,         "Main.Simulation",       "Simulation");
 									  							 
 			this.buttonCancel          = this.CreateCommandButton  (DockStyle.Right,     ToolbarCommand.Cancel,             "Edit.Cancel",           "Annuler les modifications");

@@ -10,12 +10,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	//	ainsi. Il s'agit simplement d'une aide pour le debug, lorsque le
 	//	contrôleur des énumérations EnumFieldController manipule des int.
 
-	public enum Périodicité
+	public enum Periodicity
 	{
 		Unknown     = 0,
-		Annuel      = 12,
-		Semestriel  = 6,
-		Trimestriel = 3,
-		Mensuel     = 1,
+
+		Annual      = 12,
+		Semestrial  = 6,
+		Trimestrial = 3,
+		Mensual     = 1,
 	}
 }

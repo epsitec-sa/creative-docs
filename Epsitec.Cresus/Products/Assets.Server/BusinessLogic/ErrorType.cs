@@ -11,15 +11,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		Ok,
 		Unknown,
 
-		AmortissementGenerate,
-		AmortissementRemove,
+		AmortizationGenerate,
+		AmortizationRemove,
 
-		AmortissementAlreadyDone,
-		AmortissementUndefined,
-		AmortissementInvalidRate,
-		AmortissementInvalidType,
-		AmortissementInvalidPeriod,
-		AmortissementEmptyAmount,
-		AmortissementOutObject,
+		AmortizationAlreadyDone,
+		AmortizationUndefined,
+		AmortizationInvalidRate,
+		AmortizationInvalidType,
+		AmortizationInvalidPeriod,
+		AmortizationEmptyAmount,
+		AmortizationOutObject,
 	}
 }

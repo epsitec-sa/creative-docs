@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return null;
 			}
 
-			return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Nom);
+			return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
 		}
 
 
@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return null;
 			}
 
-			var name   = ObjectCalculator.GetObjectPropertyString  (obj, null, ObjectField.Nom);
-			var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.TauxAmortissement);
-			var type   = ObjectCalculator.GetObjectPropertyInt     (obj, null, ObjectField.TypeAmortissement);
-			var period = ObjectCalculator.GetObjectPropertyInt     (obj, null, ObjectField.Périodicité);
+			var name   = ObjectCalculator.GetObjectPropertyString  (obj, null, ObjectField.Name);
+			var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.AmortizationRate);
+			var type   = ObjectCalculator.GetObjectPropertyInt     (obj, null, ObjectField.AmortizationType);
+			var period = ObjectCalculator.GetObjectPropertyInt     (obj, null, ObjectField.Periodicity);
 
 			var stringTaux   = TypeConverters.RateToString (taux);
 			var stringType   = CategoriesLogic.GetTypeAmortissement (type);
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			if (type.HasValue)
 			{
-				return EnumDictionaries.GetTypeAmortissementName ((TypeAmortissement) type.Value);
+				return EnumDictionaries.GetTypeAmortissementName ((AmortizationType) type.Value);
 			}
 
 			return null;
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			if (type.HasValue)
 			{
-				return EnumDictionaries.GetPériodicitéName ((Périodicité) type.Value);
+				return EnumDictionaries.GetPériodicitéName ((Periodicity) type.Value);
 			}
 
 			return null;

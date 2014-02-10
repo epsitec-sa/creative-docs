@@ -86,7 +86,7 @@
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
     <Compile Include="Popups\CategoriesPopup.cs" />
-    <Compile Include="Popups\AmortissementsPopup.cs" />
+    <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\CalendarPopup.cs" />
     <Compile Include="Popups\LastViewsPopup.cs" />
     <Compile Include="Popups\PersonsPopup.cs" />

@@ -275,18 +275,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				switch (type)
 				{
-					case EventType.AmortissementAuto:
+					case EventType.AmortizationAuto:
 						break;
 
-					case EventType.AmortissementExtra:
-					case EventType.Augmentation:
-					case EventType.Diminution:
+					case EventType.AmortizationExtra:
+					case EventType.Increase:
+					case EventType.Decrease:
 						yield return PageType.Values;
 						yield return PageType.Amortissements;
 						break;
 
 					case EventType.Modification:
-					case EventType.Réorganisation:
+					case EventType.Reorganization:
 						yield return PageType.Object;
 						yield return PageType.Groups;
 						break;
