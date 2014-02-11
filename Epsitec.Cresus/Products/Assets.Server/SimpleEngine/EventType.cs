@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Unknown,
 		Input,					// entrée dans l'inventaire, acquisition
 		AmortizationAuto,		// amortissement ordinaire
+		AmortizationPreview,	// aperçu d'un amortissement ordinaire
 		AmortizationExtra,		// amortissement extraordinaire
 		Modification,			// modification de diverses informations
 		Reorganization,			// spécificité MCH2

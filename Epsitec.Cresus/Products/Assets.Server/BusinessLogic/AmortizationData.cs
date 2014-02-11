@@ -8,12 +8,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct AmortizationData
 	{
-		public AmortizationData(decimal rate, AmortizationType type, Periodicity period, decimal rest)
+		public AmortizationData(decimal rate, AmortizationType type, Periodicity period, decimal residual)
 		{
-			this.Rate   = rate;
-			this.Type   = type;
-			this.Period = period;
-			this.Rest   = rest;
+			this.Rate     = rate;
+			this.Type     = type;
+			this.Period   = period;
+			this.Residual = residual;
 		}
 
 		public decimal EffectiveRate
@@ -28,10 +28,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.Rate   == 0.0m
-					&& this.Type   == AmortizationType.Unknown
-					&& this.Period == 0
-					&& this.Rest   == 0.0m;
+				return this.Rate     == 0.0m
+					&& this.Type     == AmortizationType.Unknown
+					&& this.Period   == 0
+					&& this.Residual == 0.0m;
 			}
 		}
 
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				if (this.Rate <= 0.0m || this.Rate > 1.0m)
+				if (this.Rate < 0.0m || this.Rate > 1.0m)
 				{
 					return ErrorType.AmortizationInvalidRate;
 				}
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private int PeriodMonthCount
+		public int PeriodMonthCount
 		{
 			get
 			{
@@ -102,6 +102,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public readonly decimal				Rate;
 		public readonly AmortizationType	Type;
 		public readonly Periodicity			Period;
-		public readonly decimal				Rest;
+		public readonly decimal				Residual;
 	}
 }

@@ -18,13 +18,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.accessor = accessor;
 
-			this.IsCreate = true;
-			this.IsAll    = true;
+			this.IsAll = true;
 		}
 
 
+		public string							Title;
+		public string							ActionOne;
+		public string							ActionAll;
+		public bool								DateFromAllowed;
+		public bool								DateToAllowed;
 		public bool								OneSelectionAllowed;
-		public bool								IsCreate;
 		public bool								IsAll;
 		public System.DateTime?					DateFrom;
 		public System.DateTime?					DateTo;
@@ -34,27 +37,67 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new Size (AmortizationsPopup.popupWidth, AmortizationsPopup.popupHeight);
+				int h = 130;
+
+				if (this.DateFromAllowed || this.DateToAllowed)
+				{
+					h += 8;  // gap
+				}
+
+				if (this.DateFromAllowed)
+				{
+					h += DateController.controllerHeight+10;
+				}
+
+				if (this.DateToAllowed)
+				{
+					h += DateController.controllerHeight+10;
+				}
+
+				return new Size (AmortizationsPopup.popupWidth, h);
 			}
 		}
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Amortissements");
+			this.CreateTitle (this.Title);
 
-			var line1 = this.CreateFrame (AmortizationsPopup.margin, 171, AmortizationsPopup.popupWidth-AmortizationsPopup.margin*2, AmortizationsPopup.lineHeight);
-			var line2 = this.CreateFrame (AmortizationsPopup.margin, 150, AmortizationsPopup.popupWidth-AmortizationsPopup.margin*2, AmortizationsPopup.lineHeight);
-			var line3 = this.CreateFrame (AmortizationsPopup.margin, 121, 40+10+DateFieldController.controllerWidth, AmortizationsPopup.lineHeight);
-			var line4 = this.CreateFrame (AmortizationsPopup.margin, 100, 40+10+DateFieldController.controllerWidth, AmortizationsPopup.lineHeight);
-			var line5 = this.CreateFrame (AmortizationsPopup.margin,  71, AmortizationsPopup.popupWidth-AmortizationsPopup.margin*2, AmortizationsPopup.lineHeight);
-			var line6 = this.CreateFrame (AmortizationsPopup.margin,  50, AmortizationsPopup.popupWidth-AmortizationsPopup.margin*2, AmortizationsPopup.lineHeight);
+			int y = 50;
 
-			this.CreateCreate  (line1);
-			this.CreateRemove  (line2);
-			this.CreateFrom    (line3);
-			this.CreateTo      (line4);
-			this.CreateOne     (line5);
-			this.CreateAll     (line6);
+			//	Crée les lignes de bas en haut.
+			{
+				var line = this.CreateFrame (AmortizationsPopup.margin, y, AmortizationsPopup.popupWidth-AmortizationsPopup.margin*2, AmortizationsPopup.lineHeight);
+				this.CreateAll (line);
+				y += 21;
+			}
+
+			{
+				var line = this.CreateFrame (AmortizationsPopup.margin, y, AmortizationsPopup.popupWidth-AmortizationsPopup.margin*2, AmortizationsPopup.lineHeight);
+				this.CreateOne (line);
+				y += 21;
+			}
+
+			if (this.DateFromAllowed || this.DateToAllowed)
+			{
+				y += 8;  // gap
+			}
+
+			if (this.DateToAllowed)
+			{
+				y += 10;
+				var line = this.CreateFrame (AmortizationsPopup.margin, y, 40+10+DateFieldController.controllerWidth, DateController.controllerHeight);
+				this.CreateTo (line);
+				y += DateController.controllerHeight;
+			}
+
+			if (this.DateFromAllowed)
+			{
+				y += 10;
+				var line = this.CreateFrame (AmortizationsPopup.margin, y, 40+10+DateFieldController.controllerWidth, DateController.controllerHeight);
+				this.CreateFrom (line);
+				y += DateController.controllerHeight;
+			}
+
 			this.CreateButtons ();
 
 			this.IsAll = !this.OneSelectionAllowed;
@@ -62,108 +105,40 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.UpdateButtons ();
 		}
 
-		private void CreateCreate(Widget parent)
-		{
-			this.radioCreate = new RadioButton
-			{
-				Parent     = parent,
-				Text       = "Générer les amortissements automatiques",
-				AutoToggle = false,
-				Dock       = DockStyle.Fill,
-			};
-
-			this.radioCreate.Clicked += delegate
-			{
-				this.IsCreate = true;
-				this.UpdateButtons ();
-			};
-		}
-
-		private void CreateRemove(Widget parent)
-		{
-			this.radioRemove = new RadioButton
-			{
-				Parent     = parent,
-				Text       = "Supprimer les amortissements automatiques",
-				AutoToggle = false,
-				Dock       = DockStyle.Fill,
-			};
-
-			this.radioRemove.Clicked += delegate
-			{
-				this.IsCreate = false;
-				this.UpdateButtons ();
-			};
-		}
-
 		private void CreateFrom(Widget parent)
 		{
-			new StaticText
+			this.dateFromController = new DateController (this.accessor)
 			{
-				Parent           = parent,
-				Text             = "Du",
-				ContentAlignment = ContentAlignment.MiddleRight,
-				PreferredWidth   = 40,
-				Margins          = new Margins (0, 10, 0, 0),
-				Dock             = DockStyle.Left,
+				Date            = this.DateFrom,
+				DateLabelWidth  = 40,
+				DateDescription = "Depuis",
+				TabIndex        = 1,
 			};
 
-			var frame = new FrameBox
-			{
-				Parent    = parent,
-				Dock      = DockStyle.Fill,
-				BackColor = ColorManager.WindowBackgroundColor,
-			};
+			this.dateFromController.CreateUI (parent);
 
-			this.dateFromController = new DateFieldController
+			this.dateFromController.DateChanged += delegate
 			{
-				Label      = null,
-				LabelWidth = 0,
-				Value      = this.DateFrom,
-			};
-
-			this.dateFromController.HideAdditionalButtons = true;
-			this.dateFromController.CreateUI (frame);
-
-			this.dateFromController.ValueEdited += delegate
-			{
-				this.DateFrom = this.dateFromController.Value;
+				this.DateFrom = this.dateFromController.Date;
 				this.UpdateButtons ();
 			};
 		}
 
 		private void CreateTo(Widget parent)
 		{
-			new StaticText
+			this.dateToController = new DateController (this.accessor)
 			{
-				Parent           = parent,
-				Text             = "Au",
-				ContentAlignment = ContentAlignment.MiddleRight,
-				PreferredWidth   = 40,
-				Margins          = new Margins (0, 10, 0, 0),
-				Dock             = DockStyle.Left,
+				Date            = this.DateTo,
+				DateLabelWidth  = 40,
+				DateDescription = "Jusqu'à",
+				TabIndex        = 2,
 			};
 
-			var frame = new FrameBox
-			{
-				Parent    = parent,
-				Dock      = DockStyle.Fill,
-				BackColor = ColorManager.WindowBackgroundColor,
-			};
+			this.dateToController.CreateUI (parent);
 
-			this.dateToController = new DateFieldController
+			this.dateToController.DateChanged += delegate
 			{
-				Label      = null,
-				LabelWidth = 0,
-				Value      = this.DateTo,
-			};
-
-			this.dateToController.HideAdditionalButtons = true;
-			this.dateToController.CreateUI (frame);
-
-			this.dateToController.ValueEdited += delegate
-			{
-				this.DateTo = this.dateToController.Value;
+				this.DateTo = this.dateToController.Date;
 				this.UpdateButtons ();
 			};
 		}
@@ -215,19 +190,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.radioOne.Enable = this.OneSelectionAllowed;
 
-			this.radioCreate.ActiveState = Misc.GetActiveState ( this.IsCreate);
-			this.radioRemove.ActiveState = Misc.GetActiveState (!this.IsCreate);
-			this.radioOne   .ActiveState = Misc.GetActiveState (!this.IsAll   );
-			this.radioAll   .ActiveState = Misc.GetActiveState ( this.IsAll   );
+			this.radioOne.ActiveState = Misc.GetActiveState (!this.IsAll);
+			this.radioAll.ActiveState = Misc.GetActiveState (this.IsAll);
 
-			if (this.IsCreate)
-			{
-				this.okButton.Text = this.IsAll ? "Tout générer" : "Générer un";
-			}
-			else
-			{
-				this.okButton.Text = this.IsAll ? "Tout supprimer" : "Supprimer un";
-			}
+			this.okButton.Text = this.IsAll ? this.ActionAll : this.ActionOne;
 
 			this.okButton.Enable = this.DateFrom.HasValue
 								&& this.DateTo.HasValue
@@ -235,19 +201,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private const int lineHeight  = 2+AbstractFieldController.lineHeight+2;
-		private const int popupWidth  = 300;
-		private const int popupHeight = 230;
-		private const int margin      = 20;
+		private const int lineHeight = 2+AbstractFieldController.lineHeight+2;
+		private const int popupWidth = 330;
+		private const int margin     = 20;
 
 		private readonly DataAccessor			accessor;
 
-		private RadioButton						radioCreate;
-		private RadioButton						radioRemove;
 		private RadioButton						radioOne;
 		private RadioButton						radioAll;
-		private DateFieldController				dateFromController;
-		private DateFieldController				dateToController;
+		private DateController					dateFromController;
+		private DateController					dateToController;
 		private Button							okButton;
 		private Button							cancelButton;
 	}

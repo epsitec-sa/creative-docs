@@ -122,6 +122,7 @@
     <Compile Include="Views\AmortizationsView.cs" />
     <Compile Include="Views\AmortizationsViewState.cs" />
     <Compile Include="Views\AmortizationController.cs" />
+    <Compile Include="Views\AmortizationsToolbar.cs" />
     <Compile Include="Views\EnumFieldController.cs" />
     <Compile Include="Views\IDirty.cs" />
     <Compile Include="Views\GroupsViewState.cs" />
@@ -325,6 +326,11 @@
     <EmbeddedResource Include="Images\TreeTable.Unpin.icon" />
     <EmbeddedResource Include="Images\TreeTable.Pin.icon" />
     <EmbeddedResource Include="Images\View.Amortizations.icon" />
+    <EmbeddedResource Include="Images\Amortizations.Preview.icon" />
+    <EmbeddedResource Include="Images\Amortizations.Delete.icon" />
+    <EmbeddedResource Include="Images\Amortizations.Fix.icon" />
+    <EmbeddedResource Include="Images\Amortizations.Unpreview.icon" />
+    <EmbeddedResource Include="Images\Amortizations.Info.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

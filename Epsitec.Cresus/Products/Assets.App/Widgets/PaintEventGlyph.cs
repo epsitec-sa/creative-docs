@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -53,6 +54,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.35);
 					path = PaintEventGlyph.GetDiamondPath (r);
 
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.TextColor);
+					break;
+
+				case TimelineGlyph.PinnedDiamond:
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.35);
+					r.Deflate (0.5);
+					path = PaintEventGlyph.GetDiamondPath (r);
+
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+					graphics.AddPath (path);
+					graphics.RenderSolid (ColorManager.TextColor);
+
+					path = PaintEventGlyph.GetPinnedPath (r);
 					graphics.AddFilledPath (path);
 					graphics.RenderSolid (ColorManager.TextColor);
 					break;
@@ -153,6 +170,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			path.LineTo (rect.Center.X, rect.Bottom);
 			path.LineTo (rect.Left, rect.Center.Y);
 			path.Close ();
+
+			return path;
+		}
+
+		private static Path GetPinnedPath(Rectangle rect)
+		{
+			var path = new Path ();
+
+			path.AppendCircle (rect.Center, rect.Width*0.15);
 
 			return path;
 		}

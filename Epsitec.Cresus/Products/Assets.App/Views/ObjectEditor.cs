@@ -276,6 +276,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				switch (type)
 				{
 					case EventType.AmortizationAuto:
+					case EventType.AmortizationPreview:
 						break;
 
 					case EventType.AmortizationExtra:

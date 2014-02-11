@@ -55,6 +55,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		public System.Func<DataEvent, bool>		Filter;
+		public bool								HasAmortizationsToolbar;
+
+		public AmortizationsToolbar				AmortizationsToolbar
+		{
+			get
+			{
+				return this.amortizationsToolbar;
+			}
+		}
 
 	
 		public void UpdateData()
@@ -188,9 +197,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStateAt (leftBox);
 
 			//	Partie droite.
-			this.timelinesToolbar = new TimelinesToolbar ();
-			this.timelinesToolbar.CreateUI (rightBox);
-			this.timelinesToolbar.TimelineMode = this.timelineMode;
+			if (this.HasAmortizationsToolbar)
+			{
+				var topRightBox = new FrameBox
+				{
+					Parent = rightBox,
+					Dock   = DockStyle.Top,
+				};
+
+				{
+					this.timelinesToolbar = new TimelinesToolbar ();
+					var toolbar = this.timelinesToolbar.CreateUI (topRightBox);
+					toolbar.PreferredWidth = 270;
+					toolbar.Dock = DockStyle.Left;
+
+					this.timelinesToolbar.TimelineMode = this.timelineMode;
+				}
+
+				if (this.HasAmortizationsToolbar)
+				{
+					this.amortizationsToolbar = new AmortizationsToolbar ();
+					var toolbar = this.amortizationsToolbar.CreateUI (topRightBox);
+					toolbar.PreferredWidth = 150;
+					toolbar.Dock = DockStyle.Left;
+				}
+			}
+			else
+			{
+				this.timelinesToolbar = new TimelinesToolbar ();
+				this.timelinesToolbar.CreateUI (rightBox);
+			}
 
 			var bottomRightBox = new FrameBox
 			{
@@ -455,25 +491,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnObjectDelete()
 		{
 			var target = this.objectsToolbar.GetTarget (ToolbarCommand.Delete);
+			this.ShowYesNoPopup (target, "Voulez-vous supprimer l'objet sélectionné ?", this.ObjectDeleteSelection);
+		}
 
-			if (target != null)
-			{
-				var popup = new YesNoPopup
-				{
-					Question = "Voulez-vous supprimer l'objet sélectionné ?",
-				};
-
-				popup.Create (target, leftOrRight: true);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "yes")
-					{
-						this.accessor.RemoveObject (BaseType.Objects, this.SelectedGuid);
-						this.UpdateData ();
-					}
-				};
-			}
+		private void ObjectDeleteSelection()
+		{
+			this.accessor.RemoveObject (BaseType.Objects, this.SelectedGuid);
+			this.UpdateData ();
 		}
 
 		private void OnObjectDeselect()
@@ -643,13 +667,57 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnTimelineDelete()
 		{
-			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.Delete);
+			if (this.SelectedEventType == EventType.AmortizationPreview)
+			{
+				//	Si on supprime un événement AmortizationPreview, on ne demande pas de confirmation.
+				this.TimelineDeleteSelection ();
+			}
+			else
+			{
+				var target = this.timelinesToolbar.GetTarget (ToolbarCommand.Delete);
+				this.ShowYesNoPopup (target, "Voulez-vous supprimer l'événement sélectionné ?", this.TimelineDeleteSelection);
+			}
+		}
 
+		private EventType SelectedEventType
+		{
+			//	Retourne le type de l'événement sélectionné.
+			get
+			{
+				var obj = this.accessor.GetObject (BaseType.Objects, this.SelectedGuid);
+				if (obj != null && this.SelectedTimestamp.HasValue)
+				{
+					var e = obj.GetEvent (this.SelectedTimestamp.Value);
+					if (e != null)
+					{
+						return e.Type;
+					}
+				}
+
+				return EventType.Unknown;
+			}
+		}
+
+		private void TimelineDeleteSelection()
+		{
+			this.accessor.RemoveObjectEvent (this.SelectedObject, this.SelectedTimestamp);
+			this.UpdateData ();
+		}
+
+		private void OnTimelineDeselect()
+		{
+			this.SetSelection (this.selectedRow, -1);
+		}
+		#endregion
+
+
+		private void ShowYesNoPopup(Widget target, string question, System.Action action)
+		{
 			if (target != null)
 			{
 				var popup = new YesNoPopup
 				{
-					Question = "Voulez-vous supprimer l'événement sélectionné ?",
+					Question = question,
 				};
 
 				popup.Create (target, leftOrRight: true);
@@ -658,18 +726,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "yes")
 					{
-						this.accessor.RemoveObjectEvent (this.SelectedObject, this.SelectedTimestamp);
-						this.UpdateData ();
+						action ();
 					}
 				};
 			}
 		}
-
-		private void OnTimelineDeselect()
-		{
-			this.SetSelection (this.selectedRow, -1);
-		}
-		#endregion
 
 
 		private void CreateEvent(System.DateTime date, string buttonName)
@@ -1323,6 +1384,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TreeTableToolbar							objectsToolbar;
 		private VSplitter									splitter;
 		private TimelinesToolbar							timelinesToolbar;
+		private AmortizationsToolbar						amortizationsToolbar;
 		private TreeTableColumnTree							treeColumn;
 		private NavigationTimelineController				controller;
 		private VScroller									scroller;

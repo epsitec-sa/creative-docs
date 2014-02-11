@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -15,21 +17,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.baseType = BaseType.Objects;
 
-			this.timelinesArrayController = new TimelinesArrayController (this.accessor);
-
-			this.amortizationController = new AmortizationController (this.accessor)
+			this.timelinesArrayController = new TimelinesArrayController (this.accessor)
 			{
-				Date = new System.DateTime (System.DateTime.Now.Year, 12, 31),
+				HasAmortizationsToolbar = true,
 			};
 		}
 
 
 		public override void Dispose()
 		{
-			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,          ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,         ToolbarCommandState.Hide);
 			this.mainToolbar.SetCommandState (ToolbarCommand.Amortization, ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Accept,        ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel,        ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Accept,       ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel,       ToolbarCommandState.Hide);
 		}
 
 
@@ -47,16 +47,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock   = DockStyle.Fill,
 			};
 
-			var controllerFrameBox = new FrameBox
-			{
-				Parent = topBox,
-				Dock   = DockStyle.Bottom,
-			};
-
 			this.timelinesArrayController.CreateUI (timelinesArrayFrameBox);
 			this.timelinesArrayController.Filter = AmortizationsView.EventFilter;
 
-			this.amortizationController.CreateUI (controllerFrameBox);
+			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsPreview,   true);
+			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsFix,       true);
+			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsUnpreview, true);
+			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsDelete,    true);
+			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsInfo,      true);
 
 			this.DeepUpdateUI ();
 
@@ -78,11 +76,43 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 				};
 			}
+
+			{
+				var toolbar = this.timelinesArrayController.AmortizationsToolbar;
+				toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+				{
+					var target = toolbar.GetTarget (command);
+
+					switch (command)
+					{
+						case ToolbarCommand.AmortizationsPreview:
+							this.ShowAmortizationsPopup (target, true, true, "Générer l'aperçu des amortissements", "Générer pour un", "Générer pour tous", this.PreviewAmortisations);
+							break;
+
+						case ToolbarCommand.AmortizationsFix:
+							this.ShowAmortizationsPopup (target, false, false, "Fixer l'aperçu des amortissements", "Fixer pour un", "Fixer pour tous", this.FixAmortisations);
+							break;
+
+						case ToolbarCommand.AmortizationsUnpreview:
+							this.ShowAmortizationsPopup (target, false, false, "Supprimer l'aperçu des amortissements", "Supprimer pour un", "Supprimer pour tous", this.UnpreviewAmortisations);
+							break;
+
+						case ToolbarCommand.AmortizationsDelete:
+							this.ShowAmortizationsPopup (target, true, false, "Supprimer des amortissements automatiques", "Supprimer pour un", "Supprimer pour tous", this.DeleteAmortisations);
+							break;
+
+						case ToolbarCommand.AmortizationsInfo:
+							this.ShowErrorPopup (target, this.errors);
+							break;
+					}
+				};
+			}
 		}
 
 		private static bool EventFilter(DataEvent e)
 		{
 			return e.Type == EventType.AmortizationAuto
+				|| e.Type == EventType.AmortizationPreview
 				|| e.Type == EventType.AmortizationExtra;
 		}
 
@@ -177,6 +207,107 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void PreviewAmortisations(DateRange processRange, bool allObjects)
+		{
+			if (allObjects)
+			{
+				this.errors = this.amortizations.Preview (processRange);
+			}
+			else
+			{
+				this.errors = this.amortizations.Create (processRange, this.SelectedGuid);
+			}
+
+			this.DeepUpdateUI ();
+		}
+
+		private void FixAmortisations(DateRange processRange, bool allObjects)
+		{
+			if (allObjects)
+			{
+				this.errors = this.amortizations.Fix ();
+			}
+			else
+			{
+				this.errors = this.amortizations.Fix (this.SelectedGuid);
+			}
+
+			this.DeepUpdateUI ();
+		}
+
+		private void UnpreviewAmortisations(DateRange processRange, bool allObjects)
+		{
+			if (allObjects)
+			{
+				this.errors = this.amortizations.Unpreview ();
+			}
+			else
+			{
+				this.errors = this.amortizations.Unpreview (this.SelectedGuid);
+			}
+
+			this.DeepUpdateUI ();
+		}
+
+		private void DeleteAmortisations(DateRange processRange, bool allObjects)
+		{
+			if (allObjects)
+			{
+				this.errors = this.amortizations.Delete (processRange.IncludeFrom);
+			}
+			else
+			{
+				this.errors = this.amortizations.Delete (processRange.IncludeFrom, this.SelectedGuid);
+			}
+
+			this.DeepUpdateUI ();
+		}
+
+
+		private void ShowAmortizationsPopup(Widget target, bool fromAllowed, bool toAllowed, string title, string one, string all, System.Action<DateRange, bool> action)
+		{
+			var now = System.DateTime.Now;
+
+			var popup = new AmortizationsPopup (this.accessor)
+			{
+				Title               = title,
+				ActionOne           = one,
+				ActionAll           = all,
+				DateFromAllowed     = fromAllowed,
+				DateToAllowed       = toAllowed,
+				OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
+				DateFrom            = AmortizationsView.lastDateFrom,
+				DateTo              = AmortizationsView.lastDateTo,
+			};
+
+			popup.Create (target);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					System.Diagnostics.Debug.Assert (popup.DateFrom.HasValue);
+					System.Diagnostics.Debug.Assert (popup.DateTo.HasValue);
+					var range = new DateRange (popup.DateFrom.Value, popup.DateTo.Value);
+
+					AmortizationsView.lastDateFrom = popup.DateFrom.Value;
+					AmortizationsView.lastDateTo   = popup.DateTo.Value;
+
+					action (range, popup.IsAll);
+				}
+			};
+		}
+
+		private void ShowErrorPopup(Widget target, List<Error> errors)
+		{
+			if (errors != null)
+			{
+				var popup = new ErrorsPopup (this.accessor, errors);
+				popup.Create (target);
+			}
+		}
+
+
 		private void UpdateAfterMultipleChanged()
 		{
 			this.selectedGuid      = this.timelinesArrayController.SelectedGuid;
@@ -197,10 +328,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly AmortizationController				amortizationController;
+		private static System.DateTime lastDateFrom = new System.DateTime (System.DateTime.Now.Year, 1, 1);
+		private static System.DateTime lastDateTo   = new System.DateTime (System.DateTime.Now.Year, 12, 31);
+
 		private readonly TimelinesArrayController			timelinesArrayController;
 
 		private Guid										selectedGuid;
 		private Timestamp?									selectedTimestamp;
+		private List<Error>									errors;
 	}
 }

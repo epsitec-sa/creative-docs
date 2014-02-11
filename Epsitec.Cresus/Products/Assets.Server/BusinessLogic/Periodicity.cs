@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		Unknown     = 0,
 
 		Annual      = 12,
-		Semestrial  = 6,
-		Trimestrial = 3,
-		Mensual     = 1,
+		Semestrial  = 6,	// ce n'est pas de l'anglais, mais je me comprends !
+		Trimestrial = 3,	//		"
+		Mensual     = 1,	//		"
 	}
 }

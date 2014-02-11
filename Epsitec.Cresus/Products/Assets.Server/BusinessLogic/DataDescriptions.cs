@@ -179,6 +179,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EventType.AmortizationAuto:
 					return "Amort. ordinaire";
 
+				case EventType.AmortizationPreview:
+					return "Amort. aperçu";
+
 				case EventType.AmortizationExtra:
 					return "Amort. extraordinaire";
 

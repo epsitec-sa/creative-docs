@@ -69,9 +69,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (command)
 			{
-				case ToolbarCommand.Amortization:
-					this.OnMainAmortissement ();
-					break;
+				//-case ToolbarCommand.Amortization:
+				//-	this.OnMainAmortissement ();
+				//-	break;
 
 				case ToolbarCommand.Simulation:
 					this.OnMainSimulation ();
@@ -80,33 +80,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void OnMainAmortissement()
-		{
-			var target = this.mainToolbar.GetTarget (ToolbarCommand.Amortization);
-
-			var now = System.DateTime.Now;
-
-			var popup = new AmortizationsPopup (this.accessor)
-			{
-				OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
-				DateFrom            = new System.DateTime (now.Year, 1, 1),
-				DateTo              = new System.DateTime (now.Year, 12, 31),
-			};
-
-			popup.Create (target);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					System.Diagnostics.Debug.Assert (popup.DateFrom.HasValue);
-					System.Diagnostics.Debug.Assert (popup.DateTo.HasValue);
-					var range = new DateRange (popup.DateFrom.Value, popup.DateTo.Value);
-
-					this.Amortissements (target, popup.IsCreate, popup.IsAll, range);
-				}
-			};
-		}
+		//-private void OnMainAmortissement()
+		//-{
+		//-	var target = this.mainToolbar.GetTarget (ToolbarCommand.Amortization);
+		//-
+		//-	var now = System.DateTime.Now;
+		//-
+		//-	var popup = new AmortizationsPopup (this.accessor)
+		//-	{
+		//-		OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
+		//-		DateFrom            = new System.DateTime (now.Year, 1, 1),
+		//-		DateTo              = new System.DateTime (now.Year, 12, 31),
+		//-	};
+		//-
+		//-	popup.Create (target);
+		//-
+		//-	popup.ButtonClicked += delegate (object sender, string name)
+		//-	{
+		//-		if (name == "ok")
+		//-		{
+		//-			System.Diagnostics.Debug.Assert (popup.DateFrom.HasValue);
+		//-			System.Diagnostics.Debug.Assert (popup.DateTo.HasValue);
+		//-			var range = new DateRange (popup.DateFrom.Value, popup.DateTo.Value);
+		//-
+		//-			this.Amortissements (target, popup.IsCreate, popup.IsAll, range);
+		//-		}
+		//-	};
+		//-}
 
 		private void OnMainSimulation()
 		{
@@ -137,48 +137,48 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void Amortissements(Widget target, bool isCreate, bool isAll, DateRange range)
-		{
-			//	Effectue les opérations d'amortissement selon AmortissementsPopup,
-			//	et affiche les résultats avec ErrorsPopup.
-
-			if (isCreate)  // génère les amortissements ?
-			{
-				if (isAll)
-				{
-					var errors = this.amortizations.GeneratesAmortizationsAuto (range);
-					this.ShowErrorPopup (target, errors);
-				}
-				else
-				{
-					System.Diagnostics.Debug.Assert (!this.SelectedGuid.IsEmpty);
-					var errors = this.amortizations.GeneratesAmortizationsAuto (range, this.SelectedGuid);
-					this.ShowErrorPopup (target, errors);
-				}
-			}
-			else  // supprime les amortissements ?
-			{
-				if (isAll)
-				{
-					var errors = this.amortizations.RemovesAmortizationsAuto (range);
-					this.ShowErrorPopup (target, errors);
-				}
-				else
-				{
-					System.Diagnostics.Debug.Assert (!this.SelectedGuid.IsEmpty);
-					var errors = this.amortizations.RemovesAmortizationsAuto (range, this.SelectedGuid);
-					this.ShowErrorPopup (target, errors);
-				}
-			}
-
-			this.DeepUpdateUI ();
-		}
-
-		private void ShowErrorPopup(Widget target, List<Error> errors)
-		{
-			var popup = new ErrorsPopup (this.accessor, errors);
-			popup.Create (target);
-		}
+		//-private void Amortissements(Widget target, bool isCreate, bool isAll, DateRange range)
+		//-{
+		//-	//	Effectue les opérations d'amortissement selon AmortissementsPopup,
+		//-	//	et affiche les résultats avec ErrorsPopup.
+		//-
+		//-	if (isCreate)  // génère les amortissements ?
+		//-	{
+		//-		if (isAll)
+		//-		{
+		//-			var errors = this.amortizations.GeneratesAmortizationsAuto (range);
+		//-			this.ShowErrorPopup (target, errors);
+		//-		}
+		//-		else
+		//-		{
+		//-			System.Diagnostics.Debug.Assert (!this.SelectedGuid.IsEmpty);
+		//-			var errors = this.amortizations.GeneratesAmortizationsAuto (range, this.SelectedGuid);
+		//-			this.ShowErrorPopup (target, errors);
+		//-		}
+		//-	}
+		//-	else  // supprime les amortissements ?
+		//-	{
+		//-		if (isAll)
+		//-		{
+		//-			var errors = this.amortizations.RemovesAmortizationsAuto (range);
+		//-			this.ShowErrorPopup (target, errors);
+		//-		}
+		//-		else
+		//-		{
+		//-			System.Diagnostics.Debug.Assert (!this.SelectedGuid.IsEmpty);
+		//-			var errors = this.amortizations.RemovesAmortizationsAuto (range, this.SelectedGuid);
+		//-			this.ShowErrorPopup (target, errors);
+		//-		}
+		//-	}
+		//-
+		//-	this.DeepUpdateUI ();
+		//-}
+		//-
+		//-private void ShowErrorPopup(Widget target, List<Error> errors)
+		//-{
+		//-	var popup = new ErrorsPopup (this.accessor, errors);
+		//-	popup.Create (target);
+		//-}
 
 
 		protected Timestamp? GetLastTimestamp(Guid guid)

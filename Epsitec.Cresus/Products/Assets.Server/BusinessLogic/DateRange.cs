@@ -56,6 +56,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 		public static DateRange Empty = new DateRange (System.DateTime.MaxValue, System.DateTime.MinValue);
+		public static DateRange Full  = new DateRange (System.DateTime.MinValue, System.DateTime.MaxValue);
 
 		public readonly System.DateTime			IncludeFrom;
 		public readonly System.DateTime			IncludeTo;

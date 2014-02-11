@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -36,9 +37,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var x = this.CreateFrame (200);
 			this.CreateDate (x);
 
-			this.CreateButton ("Preview", "Aperçu");
-			this.CreateButton ("Create", "Générer");
-			this.CreateButton ("Delete", "Supprimer");
+			this.CreateButton (this.OnPreviewAmortizations,   "Générer aperçu");
+			this.CreateButton (this.OnFixAmortizations,       "Fixer l'aperçu");
+			this.CreateButton (this.OnUnpreviewAmortizations, "Supprimer aperçu");
+			this.CreateButton (this.OnDeleteAmortizations,    "Supprimer ordinaires");
+			this.CreateButton (this.OnInfoAmortizations,      "i", width: 20);
 		}
 
 		private void CreateDate(Widget parent)
@@ -78,16 +81,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private Button CreateButton(string name, string text, string tooltip = null)
+		private Button CreateButton(System.Action<Widget> action, string text, string tooltip = null, int width = 120)
 		{
 			var button = new Button
 			{
 				Parent          = this.frameBox,
-				Name            = name,
 				Text            = text,
 				ButtonStyle     = ButtonStyle.Icon,
 				AutoFocus       = false,
-				PreferredWidth  = 100,
+				PreferredWidth  = width,
 				PreferredHeight = AmortizationController.height,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 10, 0, 0),
@@ -100,6 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			button.Clicked += delegate
 			{
+				action (button);
 			};
 
 			return button;
@@ -117,6 +120,48 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			return frame;
 		}
+
+
+		#region Events handler
+		private void OnPreviewAmortizations(Widget button)
+		{
+			this.PreviewAmortizations.Raise (this, button);
+		}
+
+		public event EventHandler<Widget> PreviewAmortizations;
+
+
+		private void OnFixAmortizations(Widget button)
+		{
+			this.FixAmortizations.Raise (this, button);
+		}
+
+		public event EventHandler<Widget> FixAmortizations;
+
+
+		private void OnUnpreviewAmortizations(Widget button)
+		{
+			this.UnpreviewAmortizations.Raise (this, button);
+		}
+
+		public event EventHandler<Widget> UnpreviewAmortizations;
+
+
+		private void OnDeleteAmortizations(Widget button)
+		{
+			this.DeleteAmortizations.Raise (this, button);
+		}
+
+		public event EventHandler<Widget> DeleteAmortizations;
+
+
+		private void OnInfoAmortizations(Widget button)
+		{
+			this.InfoAmortizations.Raise (this, button);
+		}
+
+		public event EventHandler<Widget> InfoAmortizations;
+		#endregion
 
 
 		private const int height = 17;

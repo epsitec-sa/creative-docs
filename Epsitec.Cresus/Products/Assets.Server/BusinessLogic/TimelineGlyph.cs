@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		FilledDiamond,
 		OutlinedDiamond,
+		PinnedDiamond,
 
 		FilledDown,
 		OutlinedDown,

@@ -244,10 +244,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return TimelineGlyph.FilledDown;
 
 				case EventType.AmortizationAuto:
-					return TimelineGlyph.FilledDiamond;
+					return TimelineGlyph.PinnedDiamond;
+
+				case EventType.AmortizationPreview:
+					return TimelineGlyph.OutlinedDiamond;
 
 				case EventType.AmortizationExtra:
-					return TimelineGlyph.OutlinedDiamond;
+					return TimelineGlyph.FilledDiamond;
 
 				default:
 					return TimelineGlyph.Undefined;

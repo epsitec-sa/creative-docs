@@ -47,5 +47,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		ViewModeSingle,
 		ViewModeEvent,
 		ViewModeMultiple,
+
+		AmortizationsPreview,
+		AmortizationsFix,
+		AmortizationsUnpreview,
+		AmortizationsDelete,
+		AmortizationsInfo,
 	}
 }
