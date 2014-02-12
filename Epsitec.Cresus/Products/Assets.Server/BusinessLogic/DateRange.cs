@@ -9,11 +9,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct DateRange
 	{
-		public DateRange(System.DateTime includeFrom, System.DateTime includeTo)
+		public DateRange(System.DateTime includeFrom, System.DateTime excludeTo)
 		{
-			//	Typiquement, includeFrom = 01.01.2013 et includeTo = 31.12.2013.
+			//	Typiquement, includeFrom = 01.01.2013 et excludeTo = 01.01.2014.
 			this.IncludeFrom = includeFrom;
-			this.IncludeTo   = includeTo;
+			this.ExcludeTo   = excludeTo;
 		}
 
 		public bool IsEmpty
@@ -21,17 +21,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			get
 			{
 				return this.IncludeFrom == System.DateTime.MaxValue
-					&& this.IncludeTo   == System.DateTime.MinValue;
+					&& this.ExcludeTo   == System.DateTime.MinValue;
 			}
 		}
 
-		public System.DateTime ExcludeTo
-		{
-			get
-			{
-				return this.IncludeTo.AddDays (1);
-			}
-		}
+		//-public System.DateTime IncludeTo
+		//-{
+		//-	get
+		//-	{
+		//-		return this.ExcludeTo.AddSeconds (-1);
+		//-	}
+		//-}
 
 		public Timestamp FromTimestamp
 		{
@@ -45,20 +45,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return new Timestamp (this.IncludeTo, 0);
+				return new Timestamp (this.ExcludeTo, 0);
 			}
 		}
 
 		public bool IsInside(System.DateTime date)
 		{
 			return date >= this.IncludeFrom.Date
-				&& date <= this.IncludeTo.Date;
+				&& date <  this.ExcludeTo.Date;
 		}
 
 		public static DateRange Empty = new DateRange (System.DateTime.MaxValue, System.DateTime.MinValue);
 		public static DateRange Full  = new DateRange (System.DateTime.MinValue, System.DateTime.MaxValue);
 
 		public readonly System.DateTime			IncludeFrom;
-		public readonly System.DateTime			IncludeTo;
+		public readonly System.DateTime			ExcludeTo;
 	}
 }

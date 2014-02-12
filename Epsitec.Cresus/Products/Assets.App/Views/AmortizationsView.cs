@@ -76,6 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				};
 			}
 
+			//	Connexion des événements de la toolbar des amortissements.
 			{
 				var toolbar = this.timelinesArrayController.AmortizationsToolbar;
 				toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
@@ -85,19 +86,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 					switch (command)
 					{
 						case ToolbarCommand.AmortizationsPreview:
-							this.ShowAmortizationsPopup (target, true, true, "Générer l'aperçu des amortissements ordinaires", "Générer pour un", "Générer pour tous", this.PreviewAmortisations);
+							this.ShowAmortizationsPopup (target, true, true,
+								"Générer l'aperçu des amortissements ordinaires",
+								"Générer pour un",
+								"Générer pour tous",
+								this.PreviewAmortisations);
 							break;
 
 						case ToolbarCommand.AmortizationsFix:
-							this.ShowAmortizationsPopup (target, false, false, "Fixer l'aperçu des amortissements ordinaires", "Fixer pour un", "Fixer pour tous", this.FixAmortisations);
+							this.ShowAmortizationsPopup (target, false, false,
+								"Fixer l'aperçu des amortissements ordinaires",
+								"Fixer pour un",
+								"Fixer pour tous",
+								this.FixAmortisations);
 							break;
 
 						case ToolbarCommand.AmortizationsUnpreview:
-							this.ShowAmortizationsPopup (target, false, false, "Supprimer l'aperçu des amortissements ordinaires", "Supprimer pour un", "Supprimer pour tous", this.UnpreviewAmortisations);
+							this.ShowAmortizationsPopup (target, false, false,
+								"Supprimer l'aperçu des amortissements ordinaires",
+								"Supprimer pour un",
+								"Supprimer pour tous",
+								this.UnpreviewAmortisations);
 							break;
 
 						case ToolbarCommand.AmortizationsDelete:
-							this.ShowAmortizationsPopup (target, true, false, "Supprimer des amortissements ordinaires", "Supprimer pour un", "Supprimer pour tous", this.DeleteAmortisations);
+							this.ShowAmortizationsPopup (target, true, false,
+								"Supprimer des amortissements ordinaires",
+								"Supprimer pour un",
+								"Supprimer pour tous",
+								this.DeleteAmortisations);
 							break;
 
 						case ToolbarCommand.AmortizationsInfo:
@@ -265,8 +282,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowAmortizationsPopup(Widget target, bool fromAllowed, bool toAllowed, string title, string one, string all, System.Action<DateRange, bool> action)
 		{
-			var now = System.DateTime.Now;
-
 			var popup = new AmortizationsPopup (this.accessor)
 			{
 				Title               = title,
@@ -287,7 +302,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					System.Diagnostics.Debug.Assert (popup.DateFrom.HasValue);
 					System.Diagnostics.Debug.Assert (popup.DateTo.HasValue);
-					var range = new DateRange (popup.DateFrom.Value, popup.DateTo.Value);
+					var range = new DateRange (popup.DateFrom.Value, popup.DateTo.Value.AddDays (1));
 
 					AmortizationsView.lastDateFrom = popup.DateFrom.Value;
 					AmortizationsView.lastDateTo   = popup.DateTo.Value;
