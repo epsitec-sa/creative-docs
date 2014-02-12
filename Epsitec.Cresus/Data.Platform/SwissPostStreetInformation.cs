@@ -46,9 +46,39 @@ namespace Epsitec.Data.Platform
 			//	root is "ROUTE" and it should be "CHEMIN". E-mail sent to match@post.ch on Feb. 14 2013 in the
 			//	hope that this will be fixed in the future.
 
+#if false
+			if ((this.StreetName.ToLowerInvariant ().Contains ("marjovet")) ||
+				(this.StreetName.ToLowerInvariant ().Contains ("chaussiaz")))
+			{
+				System.Diagnostics.Debug.WriteLine (line);
+			}
+#endif
+
+			if (this.StreetNameRoot.Length < 2)
+			{
+				//	Very short root names are often an indication that something is incorrect in the source data
+				//	file. "Marjovet B" has a root name "B" whereas it should be "MARJOVET", for instance...
+
+				var names = TextConverter.ConvertToUpperAndStripAccents (this.StreetNameShort).Split (' ', '-', '\'').Where (x => x.Length > 1).ToArray ();
+
+				if (names.Length > 0)
+				{
+					if ((names.Length > 1) &&
+						(names[0] == "CHALET"))
+					{
+						names = names.Skip (1).ToArray ();
+					}
+
+					var fix = names[0];
+
+					this.StreetNameRoot = fix;
+					System.Diagnostics.Debug.WriteLine (string.Format ("{0} = {1}", line, this.StreetNameRoot));
+				}
+			}
+
 			if (SwissPostStreet.HeuristicTokens.Contains (this.StreetNameRoot))
 			{
-				var names = TextConverter.ConvertToUpperAndStripAccents (this.StreetNameShort).Split (' ', '-', '\'').Where (x => x.Length > 1);
+				var names = TextConverter.ConvertToUpperAndStripAccents (this.StreetNameShort).Split (' ', '-', '\'').Where (x => x.Length > 1).ToArray ();
 
 				if (!names.Any (x => x.StartsWith (this.StreetNameRoot) || x.EndsWith (this.StreetNameRoot)))
 				{
@@ -291,7 +321,13 @@ namespace Epsitec.Data.Platform
 				}
 				if (string.CompareOrdinal (rootName, pos, this.StreetNameRoot, 0, System.Math.Min (10, len-pos)) == 0)
 				{
-					return true;
+					var name1 = rootName.Substring (pos, System.Math.Min (10, len-pos));
+					var name2 = this.StreetNameRoot.Substring (0, System.Math.Min (10, this.StreetNameRoot.Length));
+
+					if (name1 == name2)
+					{
+						return true;
+					}
 				}
 				if (pos < 12)
 				{

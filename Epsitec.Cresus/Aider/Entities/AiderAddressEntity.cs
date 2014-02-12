@@ -215,20 +215,25 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetStreetUserFriendly(string value)
 		{
+			this.Street = this.ResolveStreetFromUserFriendlyStreetName (value) ?? value;
+		}
+
+		private string ResolveStreetFromUserFriendlyStreetName(string value)
+		{
 			var town = this.Town;
 
 			if ((town.IsNull ()) ||
 				(town.SwissZipCode == null) ||
 				(town.SwissZipCodeAddOn == null))
 			{
-				this.Street = value;
+				return value;
 			}
 			else
 			{
 				int zipCode  = town.SwissZipCode.Value;
 				int zipAddOn = town.SwissZipCodeAddOn.Value;
 
-				this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (zipCode, zipAddOn, value) ?? value;
+				return SwissPostStreet.ConvertFromUserFriendlyStreetName (zipCode, zipAddOn, value);
 			}
 		}
 
@@ -254,7 +259,16 @@ namespace Epsitec.Aider.Entities
 			{
 				case 0:  return houseNumber;
 				case 1:  return houseNumber+complement;
-				default: return string.Concat (houseNumber, " ", complement);
+				
+				default:
+					if (complement.Any (c => char.IsDigit (c)))
+					{
+						return houseNumber+complement;
+					}
+					else
+					{
+						return string.Concat (houseNumber, " ", complement);
+					}
 			}
 		}
 
@@ -288,7 +302,8 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				value = string.Concat (street, " ", number).Trim ();
+				value = string.Concat (street, " ", number);
+				value = value.Trim ();
 			}
 		}
 
@@ -319,14 +334,46 @@ namespace Epsitec.Aider.Entities
 					{
 						if (value[numberStart] == ' ')
 						{
+							if ((numberStart > 2) &&
+								(value[numberStart-2] == ' '))
+							{
+								continue;
+							}
+
 							break;
 						}
 					}
 
 					pos = numberStart+1;
 
-					this.StreetUserFriendly       = value.Substring (0, pos).Trim ();
-					this.HouseNumberAndComplement = value.Substring (pos).Trim ();
+					var streetName  = value.Substring (0, pos).Trim ();
+					var houseNumber = new string (value.Substring (pos).Where (c => c != ' ').ToArray ());
+					var houseLetter = houseNumber[0];
+
+					if (char.IsLetter (houseLetter))
+					{
+						var streetNameSuffix = " " + houseLetter;
+						var streetNameWithLetter = streetName + streetNameSuffix;
+						
+						var attempt1 = this.ResolveStreetFromUserFriendlyStreetName (streetName);
+						var attempt2 = this.ResolveStreetFromUserFriendlyStreetName (streetNameWithLetter);
+
+						//	Handle special cases such as a street named "Marjovet C"
+
+						if ((attempt2 == null) ||
+							(attempt2.Split (',')[0].EndsWith (streetNameSuffix) == false))
+						{
+							//	OK
+						}
+						else
+						{
+							streetName  = streetNameWithLetter;
+							houseNumber = houseNumber.Substring (1);
+						}
+					}
+
+					this.StreetUserFriendly       = streetName;
+					this.HouseNumberAndComplement = houseNumber;
 				}
 			}
 		}
