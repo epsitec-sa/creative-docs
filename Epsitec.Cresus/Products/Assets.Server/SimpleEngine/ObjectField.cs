@@ -34,7 +34,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		AmortizationRate,
 		AmortizationType,
 		Periodicity,
+		Prorata,
 		ResidualValue,
+		Round,
 
 		Title,
 		FirstName,

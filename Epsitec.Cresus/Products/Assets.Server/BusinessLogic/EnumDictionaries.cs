@@ -8,10 +8,41 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class EnumDictionaries
 	{
-		public static string GetPériodicitéName(Periodicity type)
+		public static string GetPeriodicityName(int? type)
+		{
+			if (type.HasValue)
+			{
+				return EnumDictionaries.GetPeriodicityName ((Periodicity) type.Value);
+			}
+
+			return null;
+		}
+
+		public static string GetAmortizationTypeName(int? type)
+		{
+			if (type.HasValue)
+			{
+				return EnumDictionaries.GetAmortizationTypeName ((AmortizationType) type.Value);
+			}
+
+			return null;
+		}
+
+		public static string GetProrataTypeName(int? type)
+		{
+			if (type.HasValue)
+			{
+				return EnumDictionaries.GetProrataTypeName ((ProrataType) type.Value);
+			}
+
+			return null;
+		}
+
+
+		public static string GetPeriodicityName(Periodicity type)
 		{
 			string s;
-			if (EnumDictionaries.DictPériodicités.TryGetValue ((int) type, out s))
+			if (EnumDictionaries.DictPeriodicities.TryGetValue ((int) type, out s))
 			{
 				return s;
 			}
@@ -19,10 +50,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
-		public static string GetTypeAmortissementName(AmortizationType type)
+		public static string GetAmortizationTypeName(AmortizationType type)
 		{
 			string s;
-			if (EnumDictionaries.DictTypesAmortissements.TryGetValue ((int) type, out s))
+			if (EnumDictionaries.DictAmortizationTypes.TryGetValue ((int) type, out s))
+			{
+				return s;
+			}
+
+			return null;
+		}
+
+		public static string GetProrataTypeName(ProrataType type)
+		{
+			string s;
+			if (EnumDictionaries.DictProrataTypes.TryGetValue ((int) type, out s))
 			{
 				return s;
 			}
@@ -38,7 +80,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		//	pour l'utilisateur, qui n'est pas forcément le même que celui de
 		//	l'énumération C#.
 
-		public static Dictionary<int, string> DictPériodicités
+		public static Dictionary<int, string> DictPeriodicities
 		{
 			get
 			{
@@ -53,7 +95,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static Dictionary<int, string> DictTypesAmortissements
+		public static Dictionary<int, string> DictAmortizationTypes
 		{
 			get
 			{
@@ -61,6 +103,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				dict.Add ((int) AmortizationType.Linear,     "Linéaire");
 				dict.Add ((int) AmortizationType.Degressive, "Dégressif");
+
+				return dict;
+			}
+		}
+
+		public static Dictionary<int, string> DictProrataTypes
+		{
+			get
+			{
+				var dict = new Dictionary<int, string> ();
+
+				dict.Add ((int) ProrataType.None,       "Aucun");
+				dict.Add ((int) ProrataType.Prorata365, "Sur 365 jours");
+				dict.Add ((int) ProrataType.Prorata360, "Sur 360 jours");
+				dict.Add ((int) ProrataType.Prorata12,  "Sur 12 mois");
 
 				return dict;
 			}

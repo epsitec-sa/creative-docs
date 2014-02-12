@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//			01.01.2014 -> 31.03.2014
 			//			01.04.2014 -> 30.06.2014
 
-			int month = AmortizationData.GetPeriodMonthCount (period);
+			int month = AmortizationDefinition.GetPeriodMonthCount (period);
 			System.Diagnostics.Debug.Assert (month != -1);
 
 			var start = new System.DateTime (range.IncludeFrom.Date.Year, 1, 1);

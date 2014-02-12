@@ -277,6 +277,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					case EventType.AmortizationAuto:
 					case EventType.AmortizationPreview:
+#if false
+						//	Pour le debug, il est pratique de voir ces événements !
+						yield return PageType.Values;
+						yield return PageType.Amortissements;
+#endif
 						break;
 
 					case EventType.AmortizationExtra:

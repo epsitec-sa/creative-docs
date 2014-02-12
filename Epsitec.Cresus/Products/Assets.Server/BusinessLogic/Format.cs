@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.AmortizationRate:
 					return DecimalFormat.Rate;
 
+				case ObjectField.Round:
 				case ObjectField.ResidualValue:
 					return DecimalFormat.Amount;
 

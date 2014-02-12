@@ -92,6 +92,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.Periodicity:
 					return "Périodicité";
 
+				case ObjectField.Prorata:
+					return "Prorata";
+
+				case ObjectField.Round:
+					return "Arrondi";
+
 				case ObjectField.ResidualValue:
 					return "Valeur résiduelle";
 

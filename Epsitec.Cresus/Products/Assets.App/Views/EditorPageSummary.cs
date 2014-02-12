@@ -6,7 +6,6 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -136,6 +135,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.AmortizationRate:
 				case ObjectField.AmortizationType:
 				case ObjectField.Periodicity:
+				case ObjectField.Prorata:
+				case ObjectField.Round:
 				case ObjectField.ResidualValue:
 				case ObjectField.Compte1:
 				case ObjectField.Compte2:
@@ -255,6 +256,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					new ObjectSummaryControllerTile (ObjectField.AmortizationRate),
 					new ObjectSummaryControllerTile (ObjectField.AmortizationType),
 					new ObjectSummaryControllerTile (ObjectField.Periodicity),
+					new ObjectSummaryControllerTile (ObjectField.Prorata),
+					new ObjectSummaryControllerTile (ObjectField.Round),
 					new ObjectSummaryControllerTile (ObjectField.ResidualValue),
 					new ObjectSummaryControllerTile (ObjectField.Compte1),
 					new ObjectSummaryControllerTile (ObjectField.Compte2),

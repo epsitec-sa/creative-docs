@@ -6,14 +6,16 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public struct AmortizationData
+	public struct AmortizationDefinition
 	{
-		public AmortizationData(decimal rate, AmortizationType type, Periodicity period, decimal residual)
+		public AmortizationDefinition(decimal rate, AmortizationType type, Periodicity period, ProrataType prorataType, decimal round, decimal residual)
 		{
-			this.Rate     = rate;
-			this.Type     = type;
-			this.Period   = period;
-			this.Residual = residual;
+			this.Rate        = rate;
+			this.Type        = type;
+			this.Period      = period;
+			this.ProrataType = prorataType;
+			this.Round       = round;
+			this.Residual    = residual;
 		}
 
 		public decimal EffectiveRate
@@ -28,10 +30,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.Rate     == 0.0m
-					&& this.Type     == AmortizationType.Unknown
-					&& this.Period   == 0
-					&& this.Residual == 0.0m;
+				return this.Rate        == 0.0m
+					&& this.Type        == AmortizationType.Unknown
+					&& this.Period      == 0
+					&& this.ProrataType == 0
+					&& this.Round       == 0.0m
+					&& this.Residual    == 0.0m;
 			}
 		}
 
@@ -71,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return AmortizationData.GetPeriodMonthCount (this.Period);
+				return AmortizationDefinition.GetPeriodMonthCount (this.Period);
 			}
 		}
 
@@ -97,11 +101,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationData Empty = new AmortizationData (0.0m, AmortizationType.Unknown, 0, 0.0m);
+		public static AmortizationDefinition Empty = new AmortizationDefinition (0.0m, AmortizationType.Unknown, 0, 0.0m, 0.0m, 0.0m);
 
 		public readonly decimal				Rate;
 		public readonly AmortizationType	Type;
 		public readonly Periodicity			Period;
+		public readonly ProrataType			ProrataType;
+		public readonly decimal				Round;
 		public readonly decimal				Residual;
 	}
 }

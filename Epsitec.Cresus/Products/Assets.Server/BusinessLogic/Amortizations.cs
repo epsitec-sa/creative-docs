@@ -132,34 +132,44 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			while (beginDate <= processRange.IncludeTo)
 			{
-				var amortizationData = this.GetAmortizationData (obj, new Timestamp (beginDate, 0));
-				if (amortizationData.IsEmpty)
+				var amortizationDefinition = this.GetAmortizationDefinition (obj, new Timestamp (beginDate, 0));
+				if (amortizationDefinition.IsEmpty)
 				{
 					var error = new Error (ErrorType.AmortizationUndefined, objectGuid);
 					errors.Add (error);
-					return;
+
+					//	Si aucun amortissement n'est défini, on essaie de nouveaux amortissements
+					//	à partir de l'année prochaine.
+					beginDate = beginDate.AddMonths (12);
 				}
+				else
+				{
+					var endDate = beginDate.AddMonths (amortizationDefinition.PeriodMonthCount);
+					var range = new DateRange (beginDate, endDate.AddDays (-1));
 
-				var endDate = beginDate.AddMonths (amortizationData.PeriodMonthCount);
-				var range = new DateRange (beginDate, endDate.AddDays (-1));
+					bool ok = this.GeneratesAmortizationPreview (errors, obj, amortizationDefinition, range, ref counterDone);
+					if (!ok)
+					{
+						break;
+					}
 
-				this.GeneratesAmortizationPreview (errors, obj, amortizationData, range, ref counterDone);
-
-				beginDate = endDate;
+					beginDate = endDate;
+				}
 			}
 
 			var generate = new Error (ErrorType.AmortizationGenerate, objectGuid, counterDone);
 			errors.Add (generate);
 		}
 
-		private void GeneratesAmortizationPreview(List<Error> errors, DataObject obj, AmortizationData amortizationData, DateRange range, ref int counterDone)
+		private bool GeneratesAmortizationPreview(List<Error> errors, DataObject obj, AmortizationDefinition amortizationDefinition, DateRange range, ref int counterDone)
 		{
 			//	Génère l'aperçu d'amortissement d'un objet pour une période donnée.
+			//	Retourne false s'il faut stopper.
 			if (ObjectCalculator.IsEventLocked (obj, new Timestamp (range.IncludeTo, 0)))
 			{
 				var error = new Error (ErrorType.AmortizationOutObject, obj.Guid);
 				errors.Add (error);
-				return;
+				return true;  // continue
 			}
 
 			//	Supprime tous les événements d'amortissement ordinaire de la période.
@@ -171,11 +181,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var error = new Error (ErrorType.AmortizationAlreadyDone, obj.Guid);
 				errors.Add (error);
-				return;
+				return true;  // continue
 			}
 
 			//	Génère l'aperçu d'amortissement.
-			if (amortizationData.Type == AmortizationType.Degressive)
+			if (amortizationDefinition.Type == AmortizationType.Degressive)  // amortissement dégressif ?
 			{
 				var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, range.ToTimestamp, ObjectField.MainValue);
 				if (!ca.HasValue || !ca.Value.FinalAmount.HasValue)
@@ -187,51 +197,175 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					//	Calcule un amortissement dégressif.
 					var currentValue = ca.Value.FinalAmount.Value;
-					var newValue = currentValue - (currentValue * amortizationData.EffectiveRate);
+					var newValue = currentValue - (currentValue * amortizationDefinition.EffectiveRate);
+					newValue = Amortizations.Round (newValue, amortizationDefinition.Round);
 
-					this.CreateAmortizationPreview (obj, range.IncludeTo, currentValue, newValue);
-					counterDone++;
+					if (newValue < amortizationDefinition.Residual)
+					{
+						//	On génère un dernier amortissement à la valeur résiduelle.
+						this.CreateAmortizationPreview (obj, range.IncludeTo, currentValue, amortizationDefinition.Residual, false);
+						counterDone++;
+
+						var error = new Error (ErrorType.AmortizationResidualReached, obj.Guid);
+						errors.Add (error);
+						return false;  // stoppe
+					}
+					else
+					{
+						this.CreateAmortizationPreview (obj, range.IncludeTo, currentValue, newValue, true);
+						counterDone++;
+					}
 				}
 			}
-			else
+			else  // amortissement linéaire ?
 			{
+				Timestamp? timestamp;
+				decimal? initial;
+				Amortizations.GetInitialValue (obj, range.IncludeTo, out timestamp, out initial);
+
+				if (!initial.HasValue)
+				{
+					var error = new Error (ErrorType.AmortizationEmptyAmount, obj.Guid);
+					errors.Add (error);
+				}
+				else
+				{
+					var delta = initial.Value * amortizationDefinition.EffectiveRate;
+
+					decimal? amortization;
+					Amortizations.GetAmortizationValue (obj, range.IncludeTo, timestamp.Value, out amortization);
+
+					if (amortization.HasValue)
+					{
+						initial = amortization;
+					}
+
+					var newValue = initial.Value - delta;
+					newValue = Amortizations.Round (newValue, amortizationDefinition.Round);
+
+					if (newValue < amortizationDefinition.Residual)
+					{
+						//	On génère un dernier amortissement à la valeur résiduelle.
+						this.CreateAmortizationPreview (obj, range.IncludeTo, initial.Value, amortizationDefinition.Residual, false);
+						counterDone++;
+
+						var error = new Error (ErrorType.AmortizationResidualReached, obj.Guid);
+						errors.Add (error);
+						return false;  // stoppe
+					}
+					else
+					{
+						this.CreateAmortizationPreview (obj, range.IncludeTo, initial.Value, newValue, false);
+						counterDone++;
+					}
+				}
 			}
 
-			counterDone++;
+			return true;  // continue
 		}
 
 
-		private AmortizationData GetAmortizationData(DataObject obj, Timestamp timestamp)
+		private AmortizationDefinition GetAmortizationDefinition(DataObject obj, Timestamp timestamp)
 		{
 			var taux     = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.AmortizationRate);
 			var type     = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationType);
 			var period   = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.Periodicity);
+			var prorata  = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.Prorata);
+			var round    = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.Round);
 			var residual = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ResidualValue);
 
 			if (taux.HasValue && type.HasValue && period.HasValue)
 			{
 				var t = (AmortizationType) type;
 				var p = (Periodicity) period;
+				var r = (ProrataType) prorata;
 
-				return new AmortizationData (taux.GetValueOrDefault (0.0m), t, p, residual.GetValueOrDefault (0.0m));
+				return new AmortizationDefinition (taux.GetValueOrDefault (0.0m), t, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
 			}
 			else
 			{
-				return AmortizationData.Empty;
+				return AmortizationDefinition.Empty;
 			}
 		}
 
-
-		private void CreateAmortizationPreview(DataObject obj, System.DateTime date, decimal currentValue, decimal newValue)
+		private void CreateAmortizationPreview(DataObject obj, System.DateTime date, decimal currentValue, decimal newValue, bool rate)
 		{
 			var e = this.accessor.CreateObjectEvent (obj, date, EventType.AmortizationPreview);
 
 			if (e != null)
 			{
-				var v = new ComputedAmount (currentValue, newValue, true);
+				var v = new ComputedAmount (currentValue, newValue, rate);
 				var p = new DataComputedAmountProperty (ObjectField.MainValue, v);
 				e.AddProperty (p);
+
+				//	Pour mettre à jour les éventuels amortissements extraordinaires suivants.
+				//	Accésoireemnt, cela recalcule l'événement que l'on vient de créer, mais
+				//	cela devrait être sans conséquence.
+				ObjectCalculator.UpdateComputedAmounts (obj);
 			}
+		}
+
+
+		private static void GetInitialValue(DataObject obj, System.DateTime date, out Timestamp? timestamp, out decimal? value)
+		{
+			//	En remontant dans le temps, retourne la première définition de la valeur
+			//	d'un objet qui ne soit pas un amortissement.
+			for (int i=obj.EventsCount-1; i>=0; i--)
+			{
+				var e = obj.GetEvent (i);
+
+				if (!Amortizations.IsAmortization (e.Type))
+				{
+					var ca = e.GetProperty (ObjectField.MainValue) as DataComputedAmountProperty;
+
+					if (ca != null && e.Timestamp.Date < date)
+					{
+						timestamp = e.Timestamp;
+						value     = ca.Value.FinalAmount;
+						return;
+					}
+				}
+			}
+
+			timestamp = null;
+			value     = null;
+			return;
+		}
+
+		private static void GetAmortizationValue(DataObject obj, System.DateTime date, Timestamp limit, out decimal? value)
+		{
+			//	En remontant dans le temps (mais pas avant limit), retourne la première
+			//	définition de la valeur d'un objet qui soit un amortissement.
+			for (int i=obj.EventsCount-1; i>=0; i--)
+			{
+				var e = obj.GetEvent (i);
+
+				if (e.Timestamp < limit)
+				{
+					break;
+				}
+
+				if (Amortizations.IsAmortization (e.Type))
+				{
+					var property = e.GetProperty (ObjectField.MainValue) as DataComputedAmountProperty;
+
+					if (property != null && e.Timestamp.Date < date)
+					{
+						value = property.Value.FinalAmount;
+						return;
+					}
+				}
+			}
+
+			value = null;
+			return;
+		}
+
+		private static bool IsAmortization(EventType type)
+		{
+			return type == EventType.AmortizationAuto
+				|| type == EventType.AmortizationExtra
+				|| type == EventType.AmortizationPreview;
 		}
 
 		private static bool HasAmortizations(DataObject obj, EventType type, DateRange range)
@@ -293,6 +427,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			return count;
+		}
+
+		private static decimal Round(decimal value, decimal round)
+		{
+			if (round > 0.0m)
+			{
+				value += round/2;
+				return value - (value % round);
+			}
+			else
+			{
+				return value;
+			}
 		}
 
 

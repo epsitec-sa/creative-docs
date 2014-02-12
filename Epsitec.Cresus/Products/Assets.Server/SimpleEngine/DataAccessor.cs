@@ -272,7 +272,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				case ObjectField.AmortizationRate:
 				case ObjectField.ResidualValue:
+				case ObjectField.Round:
 					return FieldType.Decimal;
+
+				case ObjectField.AmortizationType:
+				case ObjectField.Periodicity:
+				case ObjectField.Prorata:
+					return FieldType.Int;
 
 				case ObjectField.OneShotDateOpération:
 					return FieldType.Date;

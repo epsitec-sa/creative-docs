@@ -224,8 +224,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var i = ObjectCalculator.GetObjectPropertyInt (this.obj, this.timestamp, tile.Field);
 					if (i.HasValue)
 					{
-						text = TypeConverters.IntToString (i);
-						alignment = ContentAlignment.MiddleRight;
+						if (tile.Field == ObjectField.AmortizationType)
+						{
+							text = EnumDictionaries.GetAmortizationTypeName (i);
+							alignment = ContentAlignment.MiddleLeft;
+						}
+						else if (tile.Field == ObjectField.Periodicity)
+						{
+							text = EnumDictionaries.GetPeriodicityName (i);
+							alignment = ContentAlignment.MiddleLeft;
+						}
+						else if (tile.Field == ObjectField.Prorata)
+						{
+							text = EnumDictionaries.GetProrataTypeName (i);
+							alignment = ContentAlignment.MiddleLeft;
+						}
+						else
+						{
+							text = TypeConverters.IntToString (i);
+							alignment = ContentAlignment.MiddleRight;
+						}
 					}
 					break;
 

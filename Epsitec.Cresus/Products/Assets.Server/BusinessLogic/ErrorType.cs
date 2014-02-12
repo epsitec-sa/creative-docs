@@ -21,5 +21,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		AmortizationInvalidPeriod,
 		AmortizationEmptyAmount,
 		AmortizationOutObject,
+		AmortizationResidualReached,
 	}
 }

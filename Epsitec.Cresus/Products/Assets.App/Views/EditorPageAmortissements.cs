@@ -22,8 +22,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateStringController  (parent, ObjectField.CategoryName);
 			this.CreateDecimalController (parent, ObjectField.AmortizationRate, DecimalFormat.Rate);
-			this.CreateEnumController    (parent, ObjectField.AmortizationType, EnumDictionaries.DictTypesAmortissements, editWidth: 90);
-			this.CreateEnumController    (parent, ObjectField.Periodicity, EnumDictionaries.DictPériodicités, editWidth: 90);
+			this.CreateEnumController    (parent, ObjectField.AmortizationType, EnumDictionaries.DictAmortizationTypes, editWidth: 90);
+			this.CreateEnumController    (parent, ObjectField.Periodicity, EnumDictionaries.DictPeriodicities, editWidth: 90);
+			this.CreateEnumController    (parent, ObjectField.Prorata, EnumDictionaries.DictProrataTypes, editWidth: 90);
+			this.CreateDecimalController (parent, ObjectField.Round, DecimalFormat.Amount);
 			this.CreateDecimalController (parent, ObjectField.ResidualValue, DecimalFormat.Amount);
 
 			new FrameBox
@@ -117,19 +119,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var catObj = this.accessor.GetObject (BaseType.Categories, guid);
 
 			//	Copie les champs nécessaires.
-			this.ImportField (catObj, ObjectField.Name,               ObjectField.CategoryName);
+			this.ImportField (catObj, ObjectField.Name,             ObjectField.CategoryName);
 			this.ImportField (catObj, ObjectField.AmortizationRate, ObjectField.AmortizationRate);
 			this.ImportField (catObj, ObjectField.AmortizationType, ObjectField.AmortizationType);
-			this.ImportField (catObj, ObjectField.Periodicity,       ObjectField.Periodicity);
-			this.ImportField (catObj, ObjectField.ResidualValue,  ObjectField.ResidualValue);
-			this.ImportField (catObj, ObjectField.Compte1,           ObjectField.Compte1);
-			this.ImportField (catObj, ObjectField.Compte2,           ObjectField.Compte2);
-			this.ImportField (catObj, ObjectField.Compte3,           ObjectField.Compte3);
-			this.ImportField (catObj, ObjectField.Compte4,           ObjectField.Compte4);
-			this.ImportField (catObj, ObjectField.Compte5,           ObjectField.Compte5);
-			this.ImportField (catObj, ObjectField.Compte6,           ObjectField.Compte6);
-			this.ImportField (catObj, ObjectField.Compte7,           ObjectField.Compte7);
-			this.ImportField (catObj, ObjectField.Compte8,           ObjectField.Compte8);
+			this.ImportField (catObj, ObjectField.Periodicity,      ObjectField.Periodicity);
+			this.ImportField (catObj, ObjectField.Prorata,          ObjectField.Prorata);
+			this.ImportField (catObj, ObjectField.Round,            ObjectField.Round);
+			this.ImportField (catObj, ObjectField.ResidualValue,    ObjectField.ResidualValue);
+			this.ImportField (catObj, ObjectField.Compte1,          ObjectField.Compte1);
+			this.ImportField (catObj, ObjectField.Compte2,          ObjectField.Compte2);
+			this.ImportField (catObj, ObjectField.Compte3,          ObjectField.Compte3);
+			this.ImportField (catObj, ObjectField.Compte4,          ObjectField.Compte4);
+			this.ImportField (catObj, ObjectField.Compte5,          ObjectField.Compte5);
+			this.ImportField (catObj, ObjectField.Compte6,          ObjectField.Compte6);
+			this.ImportField (catObj, ObjectField.Compte7,          ObjectField.Compte7);
+			this.ImportField (catObj, ObjectField.Compte8,          ObjectField.Compte8);
 
 			//	Met à jour les contrôleurs.
 			this.SetObject (this.objectGuid, this.timestamp);

@@ -944,7 +944,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.075m));
 				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Linear));
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Annual));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  1000.0m));
+				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,           (int) ProrataType.Prorata365));
+				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1000.0m));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 1000.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
 				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
@@ -967,7 +969,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.12m));
 				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Linear));
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Annual));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  10000.0m));
+				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,           (int) ProrataType.Prorata365));
+				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1000.0m));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 10000.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
 				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
@@ -990,7 +994,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.15m));
 				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Degressive));
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Trimestrial));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  100.0m));
+				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,           (int) ProrataType.Prorata365));
+				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1.0m));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 100.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
 				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
@@ -1013,7 +1019,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.21m));
 				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Degressive));
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Semestrial));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  100.0m));
+				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,           (int) ProrataType.Prorata365));
+				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1.0m));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 100.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
 				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
@@ -1036,7 +1044,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.25m));
 				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Degressive));
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Semestrial));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  100.0m));
+				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,           (int) ProrataType.Prorata365));
+				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1.0m));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 100.0m));
 
 				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
 				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
@@ -1456,6 +1466,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var taux   = ObjectCalculator.GetObjectPropertyDecimal (cat, null, ObjectField.AmortizationRate);
 				var type   = ObjectCalculator.GetObjectPropertyInt     (cat, null, ObjectField.AmortizationType);
 				var period = ObjectCalculator.GetObjectPropertyInt     (cat, null, ObjectField.Periodicity);
+				var prorat = ObjectCalculator.GetObjectPropertyInt     (cat, null, ObjectField.Prorata);
+				var round  = ObjectCalculator.GetObjectPropertyDecimal (cat, null, ObjectField.Round);
 				var rest   = ObjectCalculator.GetObjectPropertyDecimal (cat, null, ObjectField.ResidualValue);
 				var c1     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte1);
 				var c2     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte2);
@@ -1466,19 +1478,21 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var c7     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte7);
 				var c8     = ObjectCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte8);
 
-				e.AddProperty (new DataStringProperty  (ObjectField.CategoryName,      nom));
+				e.AddProperty (new DataStringProperty  (ObjectField.CategoryName,     nom));
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, taux.GetValueOrDefault ()));
 				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, type.GetValueOrDefault (1)));
-				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       period.GetValueOrDefault (12)));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  rest.GetValueOrDefault ()));
-				e.AddProperty (new DataStringProperty  (ObjectField.Compte1,           c1));
-				e.AddProperty (new DataStringProperty  (ObjectField.Compte2,           c2));
-				e.AddProperty (new DataStringProperty  (ObjectField.Compte3,           c3));
-				e.AddProperty (new DataStringProperty  (ObjectField.Compte4,           c4));
-				e.AddProperty (new DataStringProperty  (ObjectField.Compte5,           c5));
-				e.AddProperty (new DataStringProperty  (ObjectField.Compte6,           c6));
-				e.AddProperty (new DataStringProperty  (ObjectField.Compte7,           c7));
-				e.AddProperty (new DataStringProperty  (ObjectField.Compte8,           c8));
+				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,      period.GetValueOrDefault (12)));
+				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,          prorat.GetValueOrDefault ()));
+				e.AddProperty (new DataDecimalProperty (ObjectField.Round,            round.GetValueOrDefault ()));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,    rest.GetValueOrDefault ()));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte1,          c1));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte2,          c2));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte3,          c3));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte4,          c4));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte5,          c5));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte6,          c6));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte7,          c7));
+				e.AddProperty (new DataStringProperty  (ObjectField.Compte8,          c8));
 			}
 		}
 

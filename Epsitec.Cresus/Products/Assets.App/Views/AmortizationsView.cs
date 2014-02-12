@@ -85,19 +85,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 					switch (command)
 					{
 						case ToolbarCommand.AmortizationsPreview:
-							this.ShowAmortizationsPopup (target, true, true, "Générer l'aperçu des amortissements", "Générer pour un", "Générer pour tous", this.PreviewAmortisations);
+							this.ShowAmortizationsPopup (target, true, true, "Générer l'aperçu des amortissements ordinaires", "Générer pour un", "Générer pour tous", this.PreviewAmortisations);
 							break;
 
 						case ToolbarCommand.AmortizationsFix:
-							this.ShowAmortizationsPopup (target, false, false, "Fixer l'aperçu des amortissements", "Fixer pour un", "Fixer pour tous", this.FixAmortisations);
+							this.ShowAmortizationsPopup (target, false, false, "Fixer l'aperçu des amortissements ordinaires", "Fixer pour un", "Fixer pour tous", this.FixAmortisations);
 							break;
 
 						case ToolbarCommand.AmortizationsUnpreview:
-							this.ShowAmortizationsPopup (target, false, false, "Supprimer l'aperçu des amortissements", "Supprimer pour un", "Supprimer pour tous", this.UnpreviewAmortisations);
+							this.ShowAmortizationsPopup (target, false, false, "Supprimer l'aperçu des amortissements ordinaires", "Supprimer pour un", "Supprimer pour tous", this.UnpreviewAmortisations);
 							break;
 
 						case ToolbarCommand.AmortizationsDelete:
-							this.ShowAmortizationsPopup (target, true, false, "Supprimer des amortissements automatiques", "Supprimer pour un", "Supprimer pour tous", this.DeleteAmortisations);
+							this.ShowAmortizationsPopup (target, true, false, "Supprimer des amortissements ordinaires", "Supprimer pour un", "Supprimer pour tous", this.DeleteAmortisations);
 							break;
 
 						case ToolbarCommand.AmortizationsInfo:

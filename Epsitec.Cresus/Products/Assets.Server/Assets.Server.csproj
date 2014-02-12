@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="BusinessLogic\Amortizations.cs" />
     <Compile Include="BusinessLogic\CategoriesLogic.cs" />
+    <Compile Include="BusinessLogic\ProrataType.cs" />
     <Compile Include="BusinessLogic\ObjectsLogic.cs" />
     <Compile Include="BusinessLogic\EnumDictionaries.cs" />
     <Compile Include="BusinessLogic\Periodicity.cs" />
@@ -65,7 +66,7 @@
     <Compile Include="BusinessLogic\Error.cs" />
     <Compile Include="BusinessLogic\ErrorDescription.cs" />
     <Compile Include="BusinessLogic\AmortizationType.cs" />
-    <Compile Include="BusinessLogic\AmortizationData.cs" />
+    <Compile Include="BusinessLogic\AmortizationDefinition.cs" />
     <Compile Include="BusinessLogic\GroupsLogic.cs" />
     <Compile Include="BusinessLogic\LogicDescriptions.cs" />
     <Compile Include="BusinessLogic\TimelinesArrayLogic.cs" />

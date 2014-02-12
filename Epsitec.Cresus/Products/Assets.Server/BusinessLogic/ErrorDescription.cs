@@ -89,6 +89,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ErrorType.AmortizationOutObject:
 					return "L'objet est sorti";
 
+				case ErrorType.AmortizationResidualReached:
+					return "L'amortissement a atteint la valeur résiduelle";
+
 				default:
 					return "?";
 			}
