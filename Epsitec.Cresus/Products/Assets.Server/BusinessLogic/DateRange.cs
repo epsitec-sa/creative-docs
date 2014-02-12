@@ -25,14 +25,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		//-public System.DateTime IncludeTo
-		//-{
-		//-	get
-		//-	{
-		//-		return this.ExcludeTo.AddSeconds (-1);
-		//-	}
-		//-}
-
 		public Timestamp FromTimestamp
 		{
 			get
