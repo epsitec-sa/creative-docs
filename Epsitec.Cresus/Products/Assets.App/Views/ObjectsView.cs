@@ -29,10 +29,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void Dispose()
 		{
-			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,          ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Amortization, ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Accept,        ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel,        ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
 		}
 
 
@@ -745,8 +744,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
 			}
-
-			this.mainToolbar.SetCommandState (ToolbarCommand.Amortization, ToolbarCommandState.Enable);
 
 			this.mainToolbar.ViewMode = this.viewMode;
 		}

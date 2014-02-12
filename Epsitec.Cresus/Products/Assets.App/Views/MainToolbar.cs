@@ -77,30 +77,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonOpen               = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.Open,                  "Main.Open",             "Ouvrir");
-			this.buttonNavigateBack       = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.NavigateBack,          "Navigate.Back",         "Retourner à la vue précédente");
-			this.buttonNavigateForward    = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.NavigateForward,       "Navigate.Forward",      "Avancer à la vue suivante");
-			this.buttonNavigateMenu       = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.NavigateMenu,          "Navigate.Menu",         "Dernières vues");
-								          													   									     
-			this.buttonObjects            = this.CreateViewTypeButton (ViewType.Objects,       ToolbarCommand.ViewTypeObjects,       StaticDescriptions.GetViewTypeIcon (ViewType.Objects),       StaticDescriptions.GetViewTypeDescription (ViewType.Objects));
-			this.buttonAmortizations      = this.CreateViewTypeButton (ViewType.Amortizations, ToolbarCommand.ViewTypeAmortizations, StaticDescriptions.GetViewTypeIcon (ViewType.Amortizations), StaticDescriptions.GetViewTypeDescription (ViewType.Amortizations));
-			this.buttonCategories         = this.CreateViewTypeButton (ViewType.Categories,    ToolbarCommand.ViewTypeCategories,    StaticDescriptions.GetViewTypeIcon (ViewType.Categories),    StaticDescriptions.GetViewTypeDescription (ViewType.Categories));
-			this.buttonGroups             = this.CreateViewTypeButton (ViewType.Groups,        ToolbarCommand.ViewTypeGroups,        StaticDescriptions.GetViewTypeIcon (ViewType.Groups),        StaticDescriptions.GetViewTypeDescription (ViewType.Groups));
-			this.buttonPersons            = this.CreateViewTypeButton (ViewType.Persons,       ToolbarCommand.ViewTypePersons,       StaticDescriptions.GetViewTypeIcon (ViewType.Persons),       StaticDescriptions.GetViewTypeDescription (ViewType.Persons));
-			this.buttonEvents             = this.CreateViewTypeButton (ViewType.Events,        ToolbarCommand.ViewTypeEvents,        StaticDescriptions.GetViewTypeIcon (ViewType.Events),        StaticDescriptions.GetViewTypeDescription (ViewType.Events));
-			this.buttonReports            = this.CreateViewTypeButton (ViewType.Reports,       ToolbarCommand.ViewTypeReports,       StaticDescriptions.GetViewTypeIcon (ViewType.Reports),       StaticDescriptions.GetViewTypeDescription (ViewType.Reports));
-			this.buttonSettings           = this.CreateViewTypeButton (ViewType.Settings,      ToolbarCommand.ViewTypeSettings,      StaticDescriptions.GetViewTypeIcon (ViewType.Settings),      StaticDescriptions.GetViewTypeDescription (ViewType.Settings));
-								          													   									     
-			this.buttonSingle             = this.CreateViewModeButton (ViewMode.Single,        ToolbarCommand.ViewModeSingle,        "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
-			this.buttonEvent              = this.CreateViewModeButton (ViewMode.Event,         ToolbarCommand.ViewModeEvent,         "Show.TimelineEvent",    "Tableau des événements");
-			this.buttonMultiple           = this.CreateViewModeButton (ViewMode.Multiple,      ToolbarCommand.ViewModeMultiple,      "Show.TimelineMultiple", "Axe du temps pour tous les objets");
-									   														   									     
-			this.buttonEdit               = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.Edit,                  "Main.Edit",             "Edition");
-			this.buttonAmortizationsPopup = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.Amortization,          "Main.Amortizations",    "Amortissements");
-			this.buttonSimulation         = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.Simulation,            "Main.Simulation",       "Simulation");
-									  							 							   									     
-			this.buttonCancel             = this.CreateCommandButton  (DockStyle.Right,        ToolbarCommand.Cancel,                "Edit.Cancel",           "Annuler les modifications");
-			this.buttonAccept             = this.CreateCommandButton  (DockStyle.Right,        ToolbarCommand.Accept,                "Edit.Accept",           "Accepter les modifications");
+			this.buttonOpen            = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.Open,                  "Main.Open",             "Ouvrir");
+			this.buttonNavigateBack    = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.NavigateBack,          "Navigate.Back",         "Retourner à la vue précédente");
+			this.buttonNavigateForward = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.NavigateForward,       "Navigate.Forward",      "Avancer à la vue suivante");
+			this.buttonNavigateMenu    = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.NavigateMenu,          "Navigate.Menu",         "Dernières vues");
+								       													   									     
+			this.buttonObjects         = this.CreateViewTypeButton (ViewType.Objects,       ToolbarCommand.ViewTypeObjects,       StaticDescriptions.GetViewTypeIcon (ViewType.Objects),       StaticDescriptions.GetViewTypeDescription (ViewType.Objects));
+			this.buttonAmortizations   = this.CreateViewTypeButton (ViewType.Amortizations, ToolbarCommand.ViewTypeAmortizations, StaticDescriptions.GetViewTypeIcon (ViewType.Amortizations), StaticDescriptions.GetViewTypeDescription (ViewType.Amortizations));
+			this.buttonCategories      = this.CreateViewTypeButton (ViewType.Categories,    ToolbarCommand.ViewTypeCategories,    StaticDescriptions.GetViewTypeIcon (ViewType.Categories),    StaticDescriptions.GetViewTypeDescription (ViewType.Categories));
+			this.buttonGroups          = this.CreateViewTypeButton (ViewType.Groups,        ToolbarCommand.ViewTypeGroups,        StaticDescriptions.GetViewTypeIcon (ViewType.Groups),        StaticDescriptions.GetViewTypeDescription (ViewType.Groups));
+			this.buttonPersons         = this.CreateViewTypeButton (ViewType.Persons,       ToolbarCommand.ViewTypePersons,       StaticDescriptions.GetViewTypeIcon (ViewType.Persons),       StaticDescriptions.GetViewTypeDescription (ViewType.Persons));
+			this.buttonEvents          = this.CreateViewTypeButton (ViewType.Events,        ToolbarCommand.ViewTypeEvents,        StaticDescriptions.GetViewTypeIcon (ViewType.Events),        StaticDescriptions.GetViewTypeDescription (ViewType.Events));
+			this.buttonReports         = this.CreateViewTypeButton (ViewType.Reports,       ToolbarCommand.ViewTypeReports,       StaticDescriptions.GetViewTypeIcon (ViewType.Reports),       StaticDescriptions.GetViewTypeDescription (ViewType.Reports));
+			this.buttonSettings        = this.CreateViewTypeButton (ViewType.Settings,      ToolbarCommand.ViewTypeSettings,      StaticDescriptions.GetViewTypeIcon (ViewType.Settings),      StaticDescriptions.GetViewTypeDescription (ViewType.Settings));
+								       													   									     
+			this.buttonSingle          = this.CreateViewModeButton (ViewMode.Single,        ToolbarCommand.ViewModeSingle,        "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
+			this.buttonEvent           = this.CreateViewModeButton (ViewMode.Event,         ToolbarCommand.ViewModeEvent,         "Show.TimelineEvent",    "Tableau des événements");
+			this.buttonMultiple        = this.CreateViewModeButton (ViewMode.Multiple,      ToolbarCommand.ViewModeMultiple,      "Show.TimelineMultiple", "Axe du temps pour tous les objets");
+									   											   									     
+			this.buttonEdit            = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.Edit,                  "Main.Edit",             "Edition");
+			this.buttonSimulation      = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.Simulation,            "Main.Simulation",       "Simulation");
+									  				 							   									     
+			this.buttonCancel          = this.CreateCommandButton  (DockStyle.Right,        ToolbarCommand.Cancel,                "Edit.Cancel",           "Annuler les modifications");
+			this.buttonAccept          = this.CreateCommandButton  (DockStyle.Right,        ToolbarCommand.Accept,                "Edit.Accept",           "Accepter les modifications");
 
 			this.buttonOpen    .Margins = new Margins (0, 10, 0, 0);
 			this.buttonSettings.Margins = new Margins (0, 10, 0, 0);
@@ -214,7 +213,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonMultiple;
 
 		private IconButton						buttonEdit;
-		private IconButton						buttonAmortizationsPopup;
 		private IconButton						buttonSimulation;
 
 		private IconButton						buttonAccept;

@@ -223,21 +223,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 
-
-		public List<Error> GeneratesAmortizationsAuto(DateRange processRange)
-		{
-			//	Génère les amortissements automatiques pour tous les objets.
-			var errors = new List<Error> ();
-			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
-
-			foreach (var node in getter.Nodes)
-			{
-				errors.AddRange (this.GeneratesAmortizationsAuto (processRange, node.Guid));
-			}
-
-			return errors;
-		}
-
+#if false
 		public List<Error> GeneratesAmortizationsAuto(DateRange processRange, Guid objectGuid)
 		{
 			//	Génère les amortissements automatiques pour un objet donné.
@@ -308,50 +294,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			errors.Add (generate);
 			return errors;
 		}
-
-
-		public List<Error> RemovesAmortizationsAuto(DateRange processRange)
-		{
-			//	Supprime les amortissements automatiques pour tous les objets.
-			var errors = new List<Error> ();
-			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
-
-			foreach (var node in getter.Nodes)
-			{
-				errors.AddRange (this.RemovesAmortizationsAuto (processRange, node.Guid));
-			}
-
-			if (errors.Count == 0)
-			{
-				errors.Add (new Error (ErrorType.AmortizationRemove, Guid.Empty, 0));
-			}
-
-			return errors;
-		}
-
-		public List<Error> RemovesAmortizationsAuto(DateRange processRange, Guid objectGuid)
-		{
-			//	Supprime les amortissements automatiques pour un objet donné.
-			var errors = new List<Error> ();
-
-			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
-			System.Diagnostics.Debug.Assert (obj != null);
-
-			int counterDone = Amortizations.RemovesAmortizationsAuto (obj, processRange);
-
-			if (counterDone > 0)
-			{
-				var error = new Error (ErrorType.AmortizationRemove, objectGuid, counterDone);
-				errors.Add (error);
-			}
-
-			if (errors.Count == 0)
-			{
-				errors.Add (new Error (ErrorType.AmortizationRemove, objectGuid, 0));
-			}
-
-			return errors;
-		}
+#endif
 
 
 		private AmortizationData GetDataAmortization(DataObject obj, Timestamp timestamp)
@@ -375,18 +318,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private void CreateAmortizationAuto(DataObject obj, System.DateTime date, decimal currentValue, decimal newValue)
-		{
-			var e = this.accessor.CreateObjectEvent (obj, date, EventType.AmortizationAuto);
-
-			if (e != null)
-			{
-				var v = new ComputedAmount (currentValue, newValue, true);
-				var p = new DataComputedAmountProperty (ObjectField.MainValue, v);
-				e.AddProperty (p);
-			}
-		}
-
 		private void CreateAmortizationPreview(DataObject obj, System.DateTime date, decimal currentValue, decimal newValue)
 		{
 			var e = this.accessor.CreateObjectEvent (obj, date, EventType.AmortizationPreview);
@@ -399,7 +330,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-
+#if false
 		private static bool HasAmortizations(DataObject obj, DateRange range)
 		{
 			//	Indique s'il existe un ou plusieurs amortissements (automatique ou manuel)
@@ -416,30 +347,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			return false;
 		}
-
-		private static int RemovesAmortizationsAuto(DataObject obj, DateRange range)
-		{
-			//	Supprime tous les événements d'amortissement automatique d'un objet
-			//	compris dans un intervalle de dates.
-			int count = 0;
-
-			if (obj != null)
-			{
-				var guids = obj.Events
-					.Where (x => x.Type == EventType.AmortizationAuto && range.IsInside (x.Timestamp.Date))
-					.Select (x => x.Guid)
-					.ToArray ();
-
-				foreach (var guid in guids)
-				{
-					var e = obj.GetEvent (guid);
-					obj.RemoveEvent (e);
-					count++;
-				}
-			}
-
-			return count;
-		}
+#endif
 
 		private static int RemoveEvents(DataObject obj, EventType type, DateRange range)
 		{
