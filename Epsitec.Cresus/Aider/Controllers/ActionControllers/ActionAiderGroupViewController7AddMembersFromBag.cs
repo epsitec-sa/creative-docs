@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return "Reprendre des membres depuis l'arche";
+			return "Reprendre des membres depuis le panier";
 		}
 
 		public override ActionExecutor GetExecutor()
