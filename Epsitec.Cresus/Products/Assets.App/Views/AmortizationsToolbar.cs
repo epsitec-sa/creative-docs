@@ -21,20 +21,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonPreview   = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   "Générer l'aperçu des amortissements");
-			this.buttonFix       = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       "Fixer l'aperçu des amortissements");
-			this.buttonUnpreview = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer l'aperçu des amortissements");
-			this.buttonDelete    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements automatiques");
-			this.buttonInfo      = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsInfo,      "Amortizations.Info",      "Montre le résultat de la dernière opération d'amortissement");
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   "Générer l'aperçu des amortissements");
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       "Fixer l'aperçu des amortissements");
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer l'aperçu des amortissements");
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements automatiques");
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsInfo,      "Amortizations.Info",      "Montre le résultat de la dernière opération d'amortissement");
 
 			return this.toolbar;
 		}
-
-
-		private IconButton						buttonPreview;
-		private IconButton						buttonFix;
-		private IconButton						buttonUnpreview;
-		private IconButton						buttonDelete;
-		private IconButton						buttonInfo;
 	}
 }

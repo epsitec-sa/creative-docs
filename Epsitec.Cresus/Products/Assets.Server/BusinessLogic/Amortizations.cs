@@ -132,172 +132,76 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			while (beginDate <= processRange.IncludeTo)
 			{
-				var da = this.GetDataAmortization (obj, new Timestamp (beginDate, 0));
-				if (da.IsEmpty)
+				var amortizationData = this.GetAmortizationData (obj, new Timestamp (beginDate, 0));
+				if (amortizationData.IsEmpty)
 				{
 					var error = new Error (ErrorType.AmortizationUndefined, objectGuid);
 					errors.Add (error);
 					return;
 				}
 
-				var endDate = beginDate.AddMonths (da.PeriodMonthCount);
+				var endDate = beginDate.AddMonths (amortizationData.PeriodMonthCount);
 				var range = new DateRange (beginDate, endDate.AddDays (-1));
 
-				this.GeneratesAmortizationsPreview (errors, obj, range, ref counterDone);
+				this.GeneratesAmortizationPreview (errors, obj, amortizationData, range, ref counterDone);
 
 				beginDate = endDate;
 			}
-
-#if false
-			var firstEvent = obj.GetEvent (0);
-			if (firstEvent == null)
-			{
-				var error = new Error (ErrorType.AmortizationUndefined, objectGuid);
-				errors.Add (error);
-				return;
-			}
-
-			var da = this.GetDataAmortization (obj, firstEvent.Timestamp);
-			if (da.IsEmpty)
-			{
-				var error = new Error (ErrorType.AmortizationUndefined, objectGuid);
-				errors.Add (error);
-				return;
-			}
-
-			//	Supprime tous les aperçus d'amortissement.
-			Amortizations.RemoveEvents (obj, EventType.AmortizationPreview, DateRange.Full);
-
-			var beginDate = new System.DateTime (firstEvent.Timestamp.Date.Year, 1, 1);
-			var endDate   = beginDate.AddMonths (da.PeriodMonthCount);
-			var range = new DateRange (beginDate, endDate.AddDays (-1));
-
-			//?var lastDate = obj.Events.LastOrDefault ().Timestamp.Date;
-			int counterDone = 0;
-
-			while (range.IncludeFrom <= date)
-			{
-				this.GeneratesAmortizationsPreview (errors, obj, range, ref counterDone);
-
-				//	Cherche si la période contient une nouvelle définition d'amortissement.
-				var nda = this.GetDataAmortization (obj, new Timestamp (beginDate, 0));
-				if (!nda.IsEmpty)
-				{
-					da = nda;
-				}
-
-				beginDate = endDate;
-				endDate   = beginDate.AddMonths (da.PeriodMonthCount);
-				range = new DateRange (beginDate, endDate.AddDays (-1));
-			}
-#endif
 
 			var generate = new Error (ErrorType.AmortizationGenerate, objectGuid, counterDone);
 			errors.Add (generate);
 		}
 
-		private void GeneratesAmortizationsPreview(List<Error> errors, DataObject obj, DateRange range, ref int counterDone)
+		private void GeneratesAmortizationPreview(List<Error> errors, DataObject obj, AmortizationData amortizationData, DateRange range, ref int counterDone)
 		{
-			//	Génère les aperçus d'amortissement d'un objet pour une période donnée.
+			//	Génère l'aperçu d'amortissement d'un objet pour une période donnée.
+			if (ObjectCalculator.IsEventLocked (obj, new Timestamp (range.IncludeTo, 0)))
+			{
+				var error = new Error (ErrorType.AmortizationOutObject, obj.Guid);
+				errors.Add (error);
+				return;
+			}
 
 			//	Supprime tous les événements d'amortissement ordinaire de la période.
 			Amortizations.RemoveEvents (obj, EventType.AmortizationAuto, range);
 
-			var rangeEvents = obj.Events.Where (x => range.IsInside (x.Timestamp.Date));
-			//?if (!rangeEvents.Any ())
-			//?{
-			//?	return;
-			//?}
-
 			//	S'il y a déjà un (ou plusieurs) amortissement extraordinaire dans la période,
 			//	on ne génère pas d'amortissement ordinaire.
-			if (rangeEvents.Where (x => x.Type == EventType.AmortizationExtra).Any ())
+			if (Amortizations.HasAmortizations (obj, EventType.AmortizationExtra, range))
 			{
+				var error = new Error (ErrorType.AmortizationAlreadyDone, obj.Guid);
+				errors.Add (error);
 				return;
 			}
 
-			//	Génère l'amortissement ordinaire.
-			this.CreateAmortizationPreview (obj, range.IncludeTo, 900, 800);  // TODO ???
-			counterDone++;
-		}
-
-
-
-#if false
-		public List<Error> GeneratesAmortizationsAuto(DateRange processRange, Guid objectGuid)
-		{
-			//	Génère les amortissements automatiques pour un objet donné.
-			//	TODO: Le changement de AmortizationData pendant l'intervalle n'est pas géré !
-			//	TODO: Calculer les amortissements partiels au prorata de la durée.
-			//	TODO: Implémenter le mode linéaire.
-			var errors = new List<Error> ();
-
-			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
-			int counterDone = 0;
-
-			var da = this.GetDataAmortization (obj, processRange.FromTimestamp);
-			if (da.IsEmpty)
+			//	Génère l'aperçu d'amortissement.
+			if (amortizationData.Type == AmortizationType.Degressive)
 			{
-				da = this.GetDataAmortization (obj, processRange.ToTimestamp);
-			}
-			if (da.IsEmpty)
-			{
-				var error = new Error (ErrorType.AmortizationUndefined, objectGuid);
-				errors.Add (error);
-				return errors;
-			}
-			if (da.Error != ErrorType.Ok)
-			{
-				var error = new Error (da.Error, objectGuid);
-				errors.Add (error);
-				return errors;
-			}
-
-			var ranges = LogicRange.GetRanges (processRange, da.Period);
-			foreach (var range in ranges)
-			{
-				if (Amortizations.HasAmortizations (obj, range))
+				var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, range.ToTimestamp, ObjectField.MainValue);
+				if (!ca.HasValue || !ca.Value.FinalAmount.HasValue)
 				{
-					var error = new Error (ErrorType.AmortizationAlreadyDone, objectGuid);
+					var error = new Error (ErrorType.AmortizationEmptyAmount, obj.Guid);
 					errors.Add (error);
 				}
 				else
 				{
-					var et = ObjectCalculator.GetPlausibleEventTypes (obj, range.ToTimestamp);
-					if (!et.Contains (EventType.AmortizationExtra))
-					{
-						var error = new Error (ErrorType.AmortizationOutObject, objectGuid);
-						errors.Add (error);
-					}
-					else
-					{
-						var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, range.ToTimestamp, ObjectField.MainValue);
-						if (!ca.HasValue || !ca.Value.FinalAmount.HasValue)
-						{
-							var error = new Error (ErrorType.AmortizationEmptyAmount, objectGuid);
-							errors.Add (error);
-						}
-						else
-						{
-							//	Calcule un amortissement dégressif.
-							var currentValue = ca.Value.FinalAmount.Value;
-							var newValue = currentValue - (currentValue * da.EffectiveRate);
+					//	Calcule un amortissement dégressif.
+					var currentValue = ca.Value.FinalAmount.Value;
+					var newValue = currentValue - (currentValue * amortizationData.EffectiveRate);
 
-							this.CreateAmortizationAuto (obj, range.IncludeTo, currentValue, newValue);
-							counterDone++;
-						}
-					}
+					this.CreateAmortizationPreview (obj, range.IncludeTo, currentValue, newValue);
+					counterDone++;
 				}
 			}
+			else
+			{
+			}
 
-			var generate = new Error (ErrorType.AmortizationGenerate, objectGuid, counterDone);
-			errors.Add (generate);
-			return errors;
+			counterDone++;
 		}
-#endif
 
 
-		private AmortizationData GetDataAmortization(DataObject obj, Timestamp timestamp)
+		private AmortizationData GetAmortizationData(DataObject obj, Timestamp timestamp)
 		{
 			var taux     = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.AmortizationRate);
 			var type     = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationType);
@@ -330,24 +234,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-#if false
-		private static bool HasAmortizations(DataObject obj, DateRange range)
+		private static bool HasAmortizations(DataObject obj, EventType type, DateRange range)
 		{
-			//	Indique s'il existe un ou plusieurs amortissements (automatique ou manuel)
-			//	dans un intervalle de dates.
-			if (obj != null)
-			{
-				return obj.Events
-					.Where (x =>
-						(x.Type == EventType.AmortizationAuto || x.Type == EventType.AmortizationExtra)
-						&& range.IsInside (x.Timestamp.Date))
-					.Any ();
-
-			}
-
-			return false;
+			//	Indique s'il existe un ou plusieurs amortissements dans un intervalle de dates.
+			return obj.Events
+				.Where (x => x.Type == type && range.IsInside (x.Timestamp.Date))
+				.Any ();
 		}
-#endif
 
 		private static int RemoveEvents(DataObject obj, EventType type, DateRange range)
 		{

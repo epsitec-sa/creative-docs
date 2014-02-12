@@ -144,14 +144,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewTypeCommands()
 		{
-			this.SetCommandActivate (ToolbarCommand.ViewTypeObjects,    this.viewType == ViewType.Objects   );
-			this.SetCommandActivate (ToolbarCommand.ViewTypeAmortizations,     this.viewType == ViewType.Amortizations   );
-			this.SetCommandActivate (ToolbarCommand.ViewTypeCategories, this.viewType == ViewType.Categories);
-			this.SetCommandActivate (ToolbarCommand.ViewTypeGroups,     this.viewType == ViewType.Groups    );
-			this.SetCommandActivate (ToolbarCommand.ViewTypePersons,    this.viewType == ViewType.Persons   );
-			this.SetCommandActivate (ToolbarCommand.ViewTypeEvents,     this.viewType == ViewType.Events    );
-			this.SetCommandActivate (ToolbarCommand.ViewTypeReports,    this.viewType == ViewType.Reports   );
-			this.SetCommandActivate (ToolbarCommand.ViewTypeSettings,   this.viewType == ViewType.Settings  );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeObjects,       this.viewType == ViewType.Objects      );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeAmortizations, this.viewType == ViewType.Amortizations);
+			this.SetCommandActivate (ToolbarCommand.ViewTypeCategories,    this.viewType == ViewType.Categories   );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeGroups,        this.viewType == ViewType.Groups       );
+			this.SetCommandActivate (ToolbarCommand.ViewTypePersons,       this.viewType == ViewType.Persons      );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeEvents,        this.viewType == ViewType.Events       );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeReports,       this.viewType == ViewType.Reports      );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeSettings,      this.viewType == ViewType.Settings     );
 		}
 
 		private void UpdateViewModeCommands()
