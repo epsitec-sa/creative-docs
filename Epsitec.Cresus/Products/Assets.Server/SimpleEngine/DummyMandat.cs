@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o113 = new DataObject ();
 			objects.Add (o113);
 			{
-				var e = new DataEvent (date2013, EventType.Input);
+				var e = new DataEvent (new Timestamp (new System.DateTime (2013, 4, 10), 0), EventType.Input);
 				o113.AddEvent (e);
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 				e.AddProperty (new DataGuidRatioProperty      (ObjectField.GroupGuidRatio+0,   DummyMandat.GetGroup (mandat, "Immeubles")));
@@ -941,7 +941,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty  (ObjectField.Number,            "11"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Name,               "Bureaux"));
-				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.075m));
+				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.1m));
 				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Linear));
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Annual));
 				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,           (int) ProrataType.Prorata365));

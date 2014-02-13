@@ -489,28 +489,68 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return count;
 		}
 
-		private static decimal Prorata(System.DateTime dateValue, DateRange range, ProrataType prorata)
+
+		private static decimal Prorata(System.DateTime dateValue, DateRange range, ProrataType type)
 		{
 			//	Retourne le facteur pour le prorata, compris entre 0.0 et 1.0.
 			//	Pour une dateValue en début d'année, on retourne 1.0.
 			//	Pour une dateValue en milieu d'année, on retourne 0.5.
 			//	Pour une dateValue en fin d'année, on retourne 0.0.
+			decimal prorata = 1.0m;
+
 			if (dateValue >= range.IncludeFrom)
 			{
-				switch (prorata)
+				switch (type)
 				{
 					case ProrataType.None:
 						break;
 
+					case ProrataType.Prorata12:
+						{
+							int total  = Amortizations.GetMonthsCount (range.ExcludeTo) - Amortizations.GetMonthsCount (range.IncludeFrom);
+							int months = Amortizations.GetMonthsCount (dateValue)       - Amortizations.GetMonthsCount (range.IncludeFrom);
+							prorata = 1.0m - ((decimal) months / (decimal) total);
+						}
+						break;
+
+					case ProrataType.Prorata360:
+						{
+							int total = Amortizations.GetDaysCount (range.ExcludeTo) - Amortizations.GetDaysCount (range.IncludeFrom);
+							int days  = Amortizations.GetDaysCount (dateValue)       - Amortizations.GetDaysCount (range.IncludeFrom);
+							prorata = 1.0m - ((decimal) days / (decimal) total);
+						}
+						break;
+
 					default:
-						int total = range.ExcludeTo.Subtract (range.IncludeFrom).Days;
-						int days = System.Math.Min (dateValue.Subtract (range.IncludeFrom).Days, total);
-						return 1.0m - ((decimal) days / (decimal) total);
+						{
+							int total = range.ExcludeTo.Subtract (range.IncludeFrom).Days;
+							int days = System.Math.Min (dateValue.Subtract (range.IncludeFrom).Days, total);
+							prorata = 1.0m - ((decimal) days / (decimal) total);
+						}
+						break;
 				}
 			}
 
-			return 1.0m;
+			return prorata;
 		}
+
+		private static int GetMonthsCount(System.DateTime date)
+		{
+			//	Retourne le nombre de mois écoulés depuis le 01.01.0000.
+			//	L'origine est sans importance, car le résultat est utilisé pour
+			//	calculer une différence entre 2 dates !
+			return date.Year*12 + date.Month;
+		}
+
+		private static int GetDaysCount(System.DateTime date)
+		{
+			//	Retourne le nombre de jours écoulés depuis le 01.01.0000,
+			//	en se basant sur 12 mois à 30 jours par année.
+			//	L'origine est sans importance, car le résultat est utilisé pour
+			//	calculer une différence entre 2 dates !
+			return date.Year*12*30 + date.Month*30 + System.Math.Min (date.Day, 30);
+		}
+
 
 		private static decimal Round(decimal value, decimal round)
 		{
