@@ -15,12 +15,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public AmortizationDetails(AmortizationDefinition def, ProrataDetails prorata,
 								   decimal? initialValue, decimal? baseValue, decimal? forcedValue)
 		{
-			this.Def           = def;
-			this.Prorata       = prorata;
+			this.Def          = def;
+			this.Prorata      = prorata;
 							
-			this.InitialValue  = initialValue;
-			this.BaseValue     = baseValue;
-			this.ForcedValue   = forcedValue;
+			this.InitialValue = initialValue;
+			this.BaseValue    = baseValue;
+			this.ForcedValue  = forcedValue;
+			this.DeltaValue   = null;
+			this.FinalValue   = null;
+
+			this.UpdateValues (out this.DeltaValue, out this.FinalValue);
 		}
 
 		public bool								IsEmpty
@@ -31,55 +35,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public decimal?							FinalValue
-		{
-			//	Retourne la valeur finale amortie.
-			//	S'il existe une valeur forcée, elle a la priorité.
-			//	Sinon, la formule de base est:
-			//	FinalValue = InitialValue - (BaseValue * EffectiveRate * ProrataQuotient)
-			//	Avec encore un calcul de l'arrondi.
-			get
-			{
-				if (!this.IsEmpty)
-				{
-					if (this.ForcedValue.HasValue)  // y a-t-il une valeur forcée ?
-					{
-						return this.ForcedValue;
-					}
-					else if (this.InitialValue.HasValue &&
-							 this.BaseValue.HasValue &&
-							 !this.Def.IsEmpty)
-					{
-						//	Calcule la diminution de la valeur.
-						var delta = this.BaseValue.Value * this.Def.EffectiveRate;
-
-						if (this.Prorata.Quotient.HasValue)  // y a-t-il un prorata ?
-						{
-							delta *= this.Prorata.Quotient.Value;
-						}
-
-						//	Calcule la valeur finale.
-						var value = this.InitialValue.Value - delta;
-
-						//	Effectue encore un arrondi éventuel.
-						value = AmortizationDetails.Round (value, this.Def.Round);
-
-						return value;
-					}
-				}
-
-				return null;
-			}
-		}
-
 
 		public void AddAdditionnalFields(DataEvent e)
 		{
 			//	Ajoute le contenu de la structure dans un événement, sous forme de
 			//	champs additionnels.
-			this.Def.AddAdditionnalFields (e);
-			this.Prorata.AddAdditionnalFields (e);
-
 			if (this.InitialValue.HasValue)
 			{
 				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsInitialValue, this.InitialValue.Value);
@@ -92,10 +52,56 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				e.AddProperty (p);
 			}
 
+			if (this.DeltaValue.HasValue)
+			{
+				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsDeltaValue, this.DeltaValue.Value);
+				e.AddProperty (p);
+			}
+
 			if (this.ForcedValue.HasValue)
 			{
 				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsForcedValue, this.ForcedValue.Value);
 				e.AddProperty (p);
+			}
+
+			this.Prorata.AddAdditionnalFields (e);
+		}
+
+
+		private void UpdateValues(out decimal? deltaValue, out decimal? finalValue)
+		{
+			//	Retourne la valeur finale amortie.
+			//	S'il existe une valeur forcée, elle a la priorité.
+			//	Sinon, la formule de base est:
+			//	FinalValue = InitialValue - (BaseValue * EffectiveRate * ProrataQuotient)
+			//	Avec encore un calcul de l'arrondi.
+			deltaValue = null;
+			finalValue = null;
+
+			if (!this.IsEmpty)
+			{
+				if (this.ForcedValue.HasValue)  // y a-t-il une valeur forcée ?
+				{
+					finalValue = this.ForcedValue;
+				}
+				else if (this.InitialValue.HasValue &&
+						 this.BaseValue.HasValue &&
+						 !this.Def.IsEmpty)
+				{
+					//	Calcule la diminution de la valeur.
+					deltaValue = this.BaseValue.Value * this.Def.EffectiveRate;
+
+					if (this.Prorata.Quotient.HasValue)  // y a-t-il un prorata ?
+					{
+						deltaValue *= this.Prorata.Quotient.Value;
+					}
+
+					//	Calcule la valeur finale.
+					finalValue = this.InitialValue.Value - deltaValue;
+
+					//	Effectue encore un arrondi éventuel.
+					finalValue = AmortizationDetails.Round (finalValue.Value, this.Def.Round);
+				}
 			}
 		}
 
@@ -131,5 +137,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public readonly decimal?				InitialValue;
 		public readonly decimal?				BaseValue;
 		public readonly decimal?				ForcedValue;
+		public readonly decimal?				DeltaValue;
+		public readonly decimal?				FinalValue;
 	}
 }

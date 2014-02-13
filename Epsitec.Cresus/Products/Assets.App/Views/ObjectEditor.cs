@@ -267,43 +267,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private static IEnumerable<PageType> GetObjectAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
-			yield return PageType.Summary;
-
-			if (hasEvent)
+			if (type == EventType.AmortizationAuto   ||
+				type == EventType.AmortizationPreview)
 			{
-				yield return PageType.OneShot;
+				yield return PageType.AmortizationPreview;
+			}
+			else
+			{
+				yield return PageType.Summary;
 
-				switch (type)
+				if (hasEvent)
 				{
-					case EventType.AmortizationAuto:
-					case EventType.AmortizationPreview:
-#if false
-						//	Pour le debug, il est pratique de voir ces événements !
-						yield return PageType.Values;
-						yield return PageType.Amortissements;
-#endif
-						break;
+					yield return PageType.OneShot;
 
-					case EventType.AmortizationExtra:
-					case EventType.Increase:
-					case EventType.Decrease:
-						yield return PageType.Values;
-						yield return PageType.Amortissements;
-						break;
+					switch (type)
+					{
+						case EventType.AmortizationExtra:
+						case EventType.Increase:
+						case EventType.Decrease:
+							yield return PageType.Values;
+							yield return PageType.Amortization;
+							break;
 
-					case EventType.Modification:
-					case EventType.Reorganization:
-						yield return PageType.Object;
-						yield return PageType.Groups;
-						break;
+						case EventType.Modification:
+						case EventType.Reorganization:
+							yield return PageType.Object;
+							yield return PageType.Groups;
+							break;
 
-					default:  // accès à toutes les pages
-						yield return PageType.Object;
-						yield return PageType.Persons;
-						yield return PageType.Groups;
-						yield return PageType.Values;
-						yield return PageType.Amortissements;
-						break;
+						default:  // accès à toutes les pages
+							yield return PageType.Object;
+							yield return PageType.Persons;
+							yield return PageType.Groups;
+							yield return PageType.Values;
+							yield return PageType.Amortization;
+							break;
+					}
 				}
 			}
 		}

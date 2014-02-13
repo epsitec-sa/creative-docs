@@ -93,8 +93,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case PageType.Values:
 					return "Valeurs";
 
-				case PageType.Amortissements:
-					return "Amortissements";
+				case PageType.Amortization:
+					return "Amortissement";
+
+				case PageType.AmortizationPreview:
+					return "Détails de l'amortissement";
 
 				case PageType.Groups:
 					return "Regroupements";

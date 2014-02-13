@@ -170,6 +170,36 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.Mail:
 					return "Adresse e-mail";
 
+				case ObjectField.AmortizationDetailsInitialValue:
+					return "Valeur initiale";
+
+				case ObjectField.AmortizationDetailsBaseValue:
+					return "Valeur de base";
+
+				case ObjectField.AmortizationDetailsDeltaValue:
+					return "Diminution";
+
+				case ObjectField.AmortizationDetailsForcedValue:
+					return "Valeur forcée";
+
+				case ObjectField.AmortizationDetailsProrataBeginDate:
+					return "Début période";
+
+				case ObjectField.AmortizationDetailsProrataEndDate:
+					return "Fin période";
+
+				case ObjectField.AmortizationDetailsProrataValueDate:
+					return "Date valeur";
+
+				case ObjectField.AmortizationDetailsProrataNumerator:
+					return "Numérateur";
+
+				case ObjectField.AmortizationDetailsProrataDenominator:
+					return "Dénominateur";
+
+				case ObjectField.AmortizationDetailsProrataQuotient:
+					return "Prorata";
+
 				default:
 					return null;
 			}
@@ -182,11 +212,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EventType.Input:
 					return "Entrée";
 
+				case EventType.AmortizationPreview:
+					return "Aperçu amort.";
+
 				case EventType.AmortizationAuto:
 					return "Amort. ordinaire";
-
-				case EventType.AmortizationPreview:
-					return "Amort. aperçu";
 
 				case EventType.AmortizationExtra:
 					return "Amort. extraordinaire";

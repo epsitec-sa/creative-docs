@@ -10,9 +10,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class EditorPageAmortissements : AbstractEditorPage
+	public class EditorPageAmortization : AbstractEditorPage
 	{
-		public EditorPageAmortissements(DataAccessor accessor, BaseType baseType, bool isTimeless)
+		public EditorPageAmortization(DataAccessor accessor, BaseType baseType, bool isTimeless)
 			: base (accessor, baseType, isTimeless)
 		{
 		}
@@ -28,12 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateDecimalController (parent, ObjectField.Round, DecimalFormat.Amount);
 			this.CreateDecimalController (parent, ObjectField.ResidualValue, DecimalFormat.Amount);
 
-			new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-				PreferredHeight = 10,
-			};
+			this.CreateSepartor (parent);
 
 			this.CreateStringController (parent, ObjectField.Compte1);
 			this.CreateStringController (parent, ObjectField.Compte2);

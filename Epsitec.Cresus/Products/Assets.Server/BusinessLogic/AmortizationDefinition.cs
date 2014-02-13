@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
@@ -80,6 +81,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public System.DateTime GetBeginRangeDate(System.DateTime date)
+		{
+			//	Retourne la date de début d'une période d'amortissement.
+			//	Avec une périodicité Annual (12), c'est le 1er janvier.
+			//	Avec une périodicité Semestrial (6), c'est le 1er janvier ou le 1er juillet.
+			//	Etc.
+			int c = this.PeriodMonthCount;
+			if (c > 0)
+			{
+				int m = date.Year*12 + date.Month-1;
+
+				m = (m/c)*c;
+
+				return new System.DateTime (m/12, m%12+1, 1);
+			}
+			else
+			{
+				return date;
+			}
+		}
+
 		public static int GetPeriodMonthCount(Periodicity period)
 		{
 			switch (period)
@@ -102,6 +124,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		public string GetFullName()
+		{
+			var stringTaux     = TypeConverters.RateToString (this.Rate);
+			var stringType     = EnumDictionaries.GetAmortizationTypeName (this.Type);
+			var stringPeriod   = EnumDictionaries.GetPeriodicityName (this.Periodicity);
+			var stringRound    = TypeConverters.AmountToString (this.Round);
+			var stringResidual = TypeConverters.AmountToString (this.Residual);
+			var stringProrata  = EnumDictionaries.GetProrataTypeName (this.ProrataType);
+
+			return string.Format ("{0} {1} — Périodicité {2} — Arrondi {3} — Valeur résiduelle {4} — Au prorata {5}",
+				stringTaux, stringType, stringPeriod, stringRound, stringResidual, stringProrata);
+		}
+
+
+#if false
 		public void AddAdditionnalFields(DataEvent e)
 		{
 			//	Ajoute le contenu de la structure dans un événement, sous forme de
@@ -141,6 +178,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				e.AddProperty (p);
 			}
 		}
+#endif
 
 
 		public static AmortizationDefinition Empty = new AmortizationDefinition (0.0m, AmortizationType.Unknown, 0, 0.0m, 0.0m, 0.0m);

@@ -211,6 +211,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.OneShotDateOpération:
 				case ObjectField.OneShotCommentaire:
 				case ObjectField.OneShotDocuments:
+
+				case ObjectField.AmortizationDetailsInitialValue:
+				case ObjectField.AmortizationDetailsBaseValue:
+				case ObjectField.AmortizationDetailsDeltaValue:
+				case ObjectField.AmortizationDetailsForcedValue:
+				case ObjectField.AmortizationDetailsProrataBeginDate:
+				case ObjectField.AmortizationDetailsProrataEndDate:
+				case ObjectField.AmortizationDetailsProrataValueDate:
+				case ObjectField.AmortizationDetailsProrataNumerator:
+				case ObjectField.AmortizationDetailsProrataDenominator:
+				case ObjectField.AmortizationDetailsProrataQuotient:
 					return true;
 
 				default:

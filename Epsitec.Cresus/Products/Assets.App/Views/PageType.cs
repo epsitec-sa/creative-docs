@@ -15,7 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Object,
 		Persons,
 		Values,
-		Amortissements,
+		Amortization,
+		AmortizationPreview,
 		Groups,
 
 		Category,

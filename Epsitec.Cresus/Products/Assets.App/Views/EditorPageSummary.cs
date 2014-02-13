@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Compte6:
 				case ObjectField.Compte7:
 				case ObjectField.Compte8:
-					return PageType.Amortissements;
+					return PageType.Amortization;
 
 				case ObjectField.Person1:
 				case ObjectField.Person2:

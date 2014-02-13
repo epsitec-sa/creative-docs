@@ -122,6 +122,7 @@
     <Compile Include="Views\AmortizationsView.cs" />
     <Compile Include="Views\AmortizationsViewState.cs" />
     <Compile Include="Views\AmortizationsToolbar.cs" />
+    <Compile Include="Views\EditorPageAmortizationPreview.cs" />
     <Compile Include="Views\EnumFieldController.cs" />
     <Compile Include="Views\IDirty.cs" />
     <Compile Include="Views\GroupsViewState.cs" />
@@ -157,7 +158,7 @@
     <Compile Include="Views\SummaryControllerTile.cs" />
     <Compile Include="Widgets\ColoredButton.cs" />
     <Compile Include="Views\EditorPageValues.cs" />
-    <Compile Include="Views\EditorPageAmortissements.cs" />
+    <Compile Include="Views\EditorPageAmortization.cs" />
     <Compile Include="Views\EditorPageObject.cs" />
     <Compile Include="Views\PageType.cs" />
     <Compile Include="Views\EditorPageSummary.cs" />

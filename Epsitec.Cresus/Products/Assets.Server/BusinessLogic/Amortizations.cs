@@ -126,6 +126,182 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Supprime tous les aperçus d'amortissement.
 			Amortizations.RemoveEvents (obj, EventType.AmortizationPreview, DateRange.Full);
 
+			//	Passe en revue les périodes.
+			foreach (var period in this.GetPeriods (processRange, obj))
+			{
+				var ad = this.GetAmortizationDetails (obj, period.ExcludeTo.AddDays (-1));
+				if (!ad.IsEmpty)
+				{
+					this.CreateAmortizationPreview (obj, period.ExcludeTo.AddDays (-1), ad);
+				}
+			}
+
+			//	Supprime tous les événements d'amortissement ordinaire après la date de fin.
+			Amortizations.RemoveEvents (obj, EventType.AmortizationAuto, new DateRange (processRange.ExcludeTo, System.DateTime.MaxValue));
+		}
+
+		private IEnumerable<DateRange> GetPeriods(DateRange processRange, DataObject obj)
+		{
+			//	Retourne la liste des périodes pour lesquelles il faudra tenter des amortissements.
+			if (obj.EventsCount > 0)
+			{
+				//	Cherche la date d'entrée de l'objet.
+				var inputDate = obj.Events.FirstOrDefault ().Timestamp.Date;
+
+				if (inputDate <= processRange.ExcludeTo)
+				{
+					var beginDate = new System.DateTime (processRange.IncludeFrom.Year, 1, 1);
+
+					while (beginDate < processRange.ExcludeTo)
+					{
+						var def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (beginDate, 0));
+
+						if (def.IsEmpty)
+						{
+							//	Si l'objet n'est pas entré au début de l'année, mais qu'il l'est plus
+							//	tard dans la période choisie (processRange), on démarre un amortissement
+							//	au début de l'année d'entrée, au prorata de la durée.
+							def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (inputDate, 0));
+
+							if (def.IsEmpty)
+							{
+								beginDate = new System.DateTime (inputDate.Year, 1, 1);
+							}
+							else
+							{
+								beginDate = def.GetBeginRangeDate (beginDate);
+							}
+						}
+
+						if (def.IsEmpty)
+						{
+							//	Si aucun amortissement n'est défini, on essaie de nouveaux amortissements
+							//	à partir de l'année prochaine.
+							beginDate = beginDate.AddYears (1);
+						}
+						else
+						{
+							var endDate = beginDate.AddMonths (def.PeriodMonthCount);
+							yield return new DateRange (beginDate, endDate);
+
+							beginDate = endDate;
+						}
+					}
+				}
+			}
+		}
+
+		public AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date)
+		{
+			var def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (date, 0));
+			if (def.IsEmpty)
+			{
+				return AmortizationDetails.Empty;
+			}
+
+			var beginDate = def.GetBeginRangeDate (date);
+			var endDate = beginDate.AddMonths (def.PeriodMonthCount);
+			var range = new DateRange (beginDate, endDate);
+
+			if (ObjectCalculator.IsEventLocked (obj, new Timestamp (range.ExcludeTo.AddSeconds (-1), 0)))
+			{
+				return AmortizationDetails.Empty;
+			}
+
+			//	S'il y a déjà un (ou plusieurs) amortissement (extra)ordinaire dans la période,
+			//	on ne génère pas d'amortissement ordinaire.
+			if (Amortizations.HasAmortizations (obj, EventType.AmortizationExtra, range) ||
+				Amortizations.HasAmortizations (obj, EventType.AmortizationAuto, range))
+			{
+				return AmortizationDetails.Empty;
+			}
+
+			//	Génère l'aperçu d'amortissement.
+			if (def.Type == AmortizationType.Degressive)  // amortissement dégressif ?
+			{
+				Timestamp? initialTimestamp;
+				decimal? initialValue;
+				Amortizations.GetAnyValue (obj, range.ExcludeTo.AddDays (-1).AddSeconds (-1), out initialTimestamp, out initialValue);
+
+				if (initialValue.HasValue)
+				{
+					if (initialValue.Value > def.Residual)
+					{
+						//	Calcule un amortissement dégressif.
+						var pd = ProrataDetails.ComputeProrata (range, initialTimestamp.Value.Date, def.ProrataType);
+						var ad = new AmortizationDetails (def, pd, initialValue, initialValue, null);
+						var newValue = ad.FinalValue;
+
+						if (newValue < def.Residual)
+						{
+							//	On génère un dernier amortissement à la valeur résiduelle forcée.
+							return new AmortizationDetails (def, pd, initialValue, null, def.Residual);
+						}
+						else
+						{
+							return ad;
+						}
+					}
+				}
+
+				return AmortizationDetails.Empty;
+			}
+			else  // amortissement linéaire ?
+			{
+				Timestamp? baseTimestamp;
+				decimal? baseValue;
+				Amortizations.GetBaseValue (obj, range.ExcludeTo.AddSeconds (-1), out baseTimestamp, out baseValue);
+
+				if (baseValue.HasValue)
+				{
+					var pd = ProrataDetails.ComputeProrata (range, baseTimestamp.Value.Date, def.ProrataType);
+
+					//	Cherche la dernière valeur amortie.
+					decimal? amortizedValue;
+					Amortizations.GetAmortizedValue (obj, range.ExcludeTo.AddDays (-1).AddSeconds (-1), baseTimestamp.Value, out amortizedValue);
+
+					decimal initialValue;
+					if (amortizedValue.HasValue)
+					{
+						initialValue = amortizedValue.Value;
+					}
+					else
+					{
+						initialValue = baseValue.Value;
+					}
+
+					//	Calcule un amortissement linéaire.
+					if (initialValue > def.Residual)
+					{
+						var ad = new AmortizationDetails (def, pd, initialValue, baseValue, null);
+						var newValue = ad.FinalValue;
+
+						if (newValue < def.Residual)
+						{
+							//	On génère un dernier amortissement à la valeur résiduelle forcée.
+							return new AmortizationDetails (def, pd, initialValue, null, def.Residual);
+						}
+						else
+						{
+							return ad;
+						}
+					}
+				}
+
+				return AmortizationDetails.Empty;
+			}
+		}
+
+#if false
+		private void GeneratesAmortizationsPreview(List<Error> errors, DateRange processRange, Guid objectGuid)
+		{
+			//	Génère les aperçus d'amortissement pour un objet donné.
+			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
+			System.Diagnostics.Debug.Assert (obj != null);
+
+			//	Supprime tous les aperçus d'amortissement.
+			Amortizations.RemoveEvents (obj, EventType.AmortizationPreview, DateRange.Full);
+
 			//	Cherche la date d'entrée de l'objet.
 			if (obj.EventsCount == 0)
 			{
@@ -157,7 +333,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					//	tard dans la période choisie (processRange), on démarre un amortissement
 					//	au début de l'année d'entrée, au prorata de la durée.
 					def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (inputDate, 0));
-					beginDate = new System.DateTime (inputDate.Year, 1, 1);
+
+					if (def.IsEmpty)
+					{
+						beginDate = new System.DateTime (inputDate.Year, 1, 1);
+					}
+					else
+					{
+						beginDate = def.GetBeginRangeDate (beginDate);
+					}
 				}
 
 				if (def.IsEmpty)
@@ -236,7 +420,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					if (newValue < def.Residual)
 					{
 						//	On génère un dernier amortissement à la valeur résiduelle forcée.
-						ad = new AmortizationDetails (def, pd, null, null, def.Residual);
+						ad = new AmortizationDetails (def, pd, initialValue, null, def.Residual);
 						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), ad);
 						counterDone++;
 
@@ -287,7 +471,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					if (newValue < def.Residual)
 					{
 						//	On génère un dernier amortissement à la valeur résiduelle forcée.
-						ad = new AmortizationDetails (def, pd, null, null, def.Residual);
+						ad = new AmortizationDetails (def, pd, initialValue, null, def.Residual);
 						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), ad);
 						counterDone++;
 
@@ -305,6 +489,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			return true;  // continue
 		}
+#endif
 
 
 		private static AmortizationDefinition GetAmortizationDefinition(DataObject obj, Timestamp timestamp)
@@ -348,7 +533,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				details.AddAdditionnalFields (e);
 
 				//	Pour mettre à jour les éventuels amortissements extraordinaires suivants.
-				//	Accésoireemnt, cela recalcule l'événement que l'on vient de créer, mais
+				//	Accesoireemnt, cela recalcule l'événement que l'on vient de créer, mais
 				//	cela devrait être sans conséquence.
 				ObjectCalculator.UpdateComputedAmounts (obj);
 			}
@@ -357,8 +542,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static void GetAnyValue(DataObject obj, System.DateTime date, out Timestamp? timestamp, out decimal? value)
 		{
-			//	En remontant dans le temps, retourne la première définition de la valeur
-			//	d'un objet.
+			//	En remontant dans le temps, retourne la première définition quelconque
+			//	de la valeur d'un objet.
 			for (int i=obj.EventsCount-1; i>=0; i--)
 			{
 				var e = obj.GetEvent (i);

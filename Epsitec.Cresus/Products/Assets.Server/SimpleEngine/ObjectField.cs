@@ -40,15 +40,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Round,
 
 		//	Informations sur le calcul d'un amortissement ordinaire.
-		AmortizationDetailsDefRate,
-		AmortizationDetailsDefType,
-		AmortizationDetailsDefPeriodicity,
-		AmortizationDetailsDefProrataType,
-		AmortizationDetailsDefRound,
-		AmortizationDetailsDefResidual,
+		//-AmortizationDetailsDefRate,
+		//-AmortizationDetailsDefType,
+		//-AmortizationDetailsDefPeriodicity,
+		//-AmortizationDetailsDefProrataType,
+		//-AmortizationDetailsDefRound,
+		//-AmortizationDetailsDefResidual,
 
 		AmortizationDetailsInitialValue,
 		AmortizationDetailsBaseValue,
+		AmortizationDetailsDeltaValue,
 		AmortizationDetailsForcedValue,
 
 		AmortizationDetailsProrataBeginDate,
