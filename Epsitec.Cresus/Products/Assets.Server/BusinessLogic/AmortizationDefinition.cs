@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.Residual    = residual;
 		}
 
-		public decimal EffectiveRate
+		public decimal							EffectiveRate
 		{
 			get
 			{
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public bool IsValid
+		public bool								IsValid
 		{
 			get
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public ErrorType Error
+		public ErrorType						Error
 		{
 			get
 			{
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public int PeriodMonthCount
+		public int								PeriodMonthCount
 		{
 			get
 			{
@@ -104,6 +104,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public void AddAdditionnalFields(DataEvent e)
 		{
+			//	Ajoute le contenu de la structure dans un événement, sous forme de
+			//	champs additionnels.
 			if (this.IsEmpty)
 			{
 				return;
@@ -143,11 +145,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static AmortizationDefinition Empty = new AmortizationDefinition (0.0m, AmortizationType.Unknown, 0, 0.0m, 0.0m, 0.0m);
 
-		public readonly decimal				Rate;
-		public readonly AmortizationType	Type;
-		public readonly Periodicity			Periodicity;
-		public readonly ProrataType			ProrataType;
-		public readonly decimal				Round;
-		public readonly decimal				Residual;
+		public readonly decimal					Rate;
+		public readonly AmortizationType		Type;
+		public readonly Periodicity				Periodicity;
+		public readonly ProrataType				ProrataType;
+		public readonly decimal					Round;
+		public readonly decimal					Residual;
 	}
 }

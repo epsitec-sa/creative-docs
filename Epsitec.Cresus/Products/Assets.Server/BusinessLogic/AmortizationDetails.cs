@@ -50,15 +50,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 							 this.BaseValue.HasValue &&
 							 !this.Def.IsEmpty)
 					{
+						//	Calcule la diminution de la valeur.
 						var delta = this.BaseValue.Value * this.Def.EffectiveRate;
 
-						if (this.Prorata.Quotient.HasValue)
+						if (this.Prorata.Quotient.HasValue)  // y a-t-il un prorata ?
 						{
 							delta *= this.Prorata.Quotient.Value;
 						}
 
+						//	Calcule la valeur finale.
 						var value = this.InitialValue.Value - delta;
 
+						//	Effectue encore un arrondi éventuel.
 						value = AmortizationDetails.Round (value, this.Def.Round);
 
 						return value;
@@ -72,6 +75,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public void AddAdditionnalFields(DataEvent e)
 		{
+			//	Ajoute le contenu de la structure dans un événement, sous forme de
+			//	champs additionnels.
 			this.Def.AddAdditionnalFields (e);
 			this.Prorata.AddAdditionnalFields (e);
 
@@ -120,11 +125,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static AmortizationDetails Empty = new AmortizationDetails (AmortizationDefinition.Empty, ProrataDetails.Empty, null, null, null);
 
-		public readonly AmortizationDefinition Def;
-		public readonly ProrataDetails		Prorata;
+		public readonly AmortizationDefinition	Def;
+		public readonly ProrataDetails			Prorata;
 
-		public readonly decimal?			InitialValue;
-		public readonly decimal?			BaseValue;
-		public readonly decimal?			ForcedValue;
+		public readonly decimal?				InitialValue;
+		public readonly decimal?				BaseValue;
+		public readonly decimal?				ForcedValue;
 	}
 }

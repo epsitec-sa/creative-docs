@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.Quotient    = quotient;
 		}
 
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -84,6 +84,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public void AddAdditionnalFields(DataEvent e)
 		{
+			//	Ajoute le contenu de la structure dans un événement, sous forme de
+			//	champs additionnels.
 			if (this.IsEmpty)
 			{
 				return;
@@ -149,10 +151,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	
 		public static ProrataDetails Empty = new ProrataDetails (DateRange.Empty, null, null, null, null);
 
-		public readonly DateRange			Range;
-		public readonly System.DateTime?	ValueDate;
-		public readonly decimal?			Numerator;
-		public readonly decimal?			Denominator;
-		public readonly decimal?			Quotient;
+		public readonly DateRange				Range;
+		public readonly System.DateTime?		ValueDate;
+		public readonly decimal?				Numerator;
+		public readonly decimal?				Denominator;
+		public readonly decimal?				Quotient;
 	}
 }
