@@ -138,49 +138,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-#if false
-		public void AddAdditionnalFields(DataEvent e)
-		{
-			//	Ajoute le contenu de la structure dans un événement, sous forme de
-			//	champs additionnels.
-			if (this.IsEmpty)
-			{
-				return;
-			}
-
-			{
-				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsDefRate, this.Rate);
-				e.AddProperty (p);
-			}
-
-			{
-				var p = new DataIntProperty (ObjectField.AmortizationDetailsDefType, (int) this.Type);
-				e.AddProperty (p);
-			}
-
-			{
-				var p = new DataIntProperty (ObjectField.AmortizationDetailsDefPeriodicity, (int) this.Periodicity);
-				e.AddProperty (p);
-			}
-
-			{
-				var p = new DataIntProperty (ObjectField.AmortizationDetailsDefProrataType, (int) this.ProrataType);
-				e.AddProperty (p);
-			}
-
-			{
-				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsDefRound, this.Round);
-				e.AddProperty (p);
-			}
-
-			{
-				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsDefResidual, this.Residual);
-				e.AddProperty (p);
-			}
-		}
-#endif
-
-
 		public static AmortizationDefinition Empty = new AmortizationDefinition (0.0m, AmortizationType.Unknown, 0, 0.0m, 0.0m, 0.0m);
 
 		public readonly decimal					Rate;

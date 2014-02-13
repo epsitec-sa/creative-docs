@@ -36,38 +36,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void AddAdditionnalFields(DataEvent e)
-		{
-			//	Ajoute le contenu de la structure dans un événement, sous forme de
-			//	champs additionnels.
-			if (this.InitialValue.HasValue)
-			{
-				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsInitialValue, this.InitialValue.Value);
-				e.AddProperty (p);
-			}
-
-			if (this.BaseValue.HasValue)
-			{
-				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsBaseValue, this.BaseValue.Value);
-				e.AddProperty (p);
-			}
-
-			if (this.DeltaValue.HasValue)
-			{
-				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsDeltaValue, this.DeltaValue.Value);
-				e.AddProperty (p);
-			}
-
-			if (this.ForcedValue.HasValue)
-			{
-				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsForcedValue, this.ForcedValue.Value);
-				e.AddProperty (p);
-			}
-
-			this.Prorata.AddAdditionnalFields (e);
-		}
-
-
 		private void UpdateValues(out decimal? deltaValue, out decimal? finalValue)
 		{
 			//	Retourne la valeur finale amortie.

@@ -82,53 +82,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void AddAdditionnalFields(DataEvent e)
-		{
-			//	Ajoute le contenu de la structure dans un événement, sous forme de
-			//	champs additionnels.
-			if (this.IsEmpty)
-			{
-				return;
-			}
-
-			if (!this.Range.IsEmpty)
-			{
-				var p = new DataDateProperty (ObjectField.AmortizationDetailsProrataBeginDate, this.Range.FromTimestamp.Date);
-				e.AddProperty (p);
-			}
-
-			if (!this.Range.IsEmpty)
-			{
-				var p = new DataDateProperty (ObjectField.AmortizationDetailsProrataEndDate, this.Range.ToTimestamp.Date);
-				e.AddProperty (p);
-			}
-
-			if (this.ValueDate.HasValue)
-			{
-				var p = new DataDateProperty (ObjectField.AmortizationDetailsProrataValueDate, this.ValueDate.Value);
-				e.AddProperty (p);
-			}
-
-			if (this.Numerator.HasValue)
-			{
-				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsProrataNumerator, this.Numerator.Value);
-				e.AddProperty (p);
-			}
-
-			if (this.Denominator.HasValue)
-			{
-				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsProrataDenominator, this.Denominator.Value);
-				e.AddProperty (p);
-			}
-
-			if (this.Quotient.HasValue)
-			{
-				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsProrataQuotient, this.Quotient.Value);
-				e.AddProperty (p);
-			}
-		}
-
-
 		private static int GetMonthsCount(System.DateTime date)
 		{
 			//	Retourne le nombre de mois écoulés depuis le 01.01.0000.

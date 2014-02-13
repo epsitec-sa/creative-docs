@@ -528,10 +528,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var p = new DataComputedAmountProperty (ObjectField.MainValue, v);
 				e.AddProperty (p);
 
-				//	Ajoute beaucoup de champs, pour permettre de comprendre comment a
-				//	été calculé l'amortissement.
-				details.AddAdditionnalFields (e);
-
 				//	Pour mettre à jour les éventuels amortissements extraordinaires suivants.
 				//	Accesoireemnt, cela recalcule l'événement que l'on vient de créer, mais
 				//	cela devrait être sans conséquence.
