@@ -217,11 +217,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Génère l'aperçu d'amortissement.
 			if (def.Type == AmortizationType.Degressive)  // amortissement dégressif ?
 			{
-				Timestamp? timestamp;
-				decimal? initial;
-				Amortizations.GetAnyValue (obj, range.ExcludeTo.AddSeconds (-1), out timestamp, out initial);
+				Timestamp? initialTimestamp;
+				decimal? initialValue;
+				Amortizations.GetAnyValue (obj, range.ExcludeTo.AddSeconds (-1), out initialTimestamp, out initialValue);
 
-				if (!initial.HasValue)
+				if (!initialValue.HasValue)
 				{
 					var error = new Error (ErrorType.AmortizationEmptyAmount, obj.Guid);
 					errors.Add (error);
@@ -229,14 +229,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				else
 				{
 					//	Calcule un amortissement dégressif.
-					var prorata = Amortizations.Prorata (timestamp.Value.Date, range, def.ProrataType);
-					var newValue = initial.Value - (initial.Value * def.EffectiveRate * prorata);
-					newValue = Amortizations.Round (newValue, def.Round);
+					var pd = ProrataDetails.ComputeProrata (range, initialTimestamp.Value.Date, def.ProrataType);
+					var ad = new AmortizationDetails (def, pd, initialValue, initialValue, null);
+					var newValue = ad.FinalValue;
 
 					if (newValue < def.Residual)
 					{
-						//	On génère un dernier amortissement à la valeur résiduelle.
-						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), initial.Value, def.Residual, false);
+						//	On génère un dernier amortissement à la valeur résiduelle forcée.
+						ad = new AmortizationDetails (def, pd, null, null, def.Residual);
+						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), ad);
 						counterDone++;
 
 						var error = new Error (ErrorType.AmortizationResidualReached, obj.Guid);
@@ -245,42 +246,49 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					}
 					else
 					{
-						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), initial.Value, newValue, true);
+						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), ad);
 						counterDone++;
 					}
 				}
 			}
 			else  // amortissement linéaire ?
 			{
-				Timestamp? timestamp;
-				decimal? initial;
-				Amortizations.GetManualValue (obj, range.ExcludeTo.AddSeconds (-1), out timestamp, out initial);
+				Timestamp? baseTimestamp;
+				decimal? baseValue;
+				Amortizations.GetBaseValue (obj, range.ExcludeTo.AddSeconds (-1), out baseTimestamp, out baseValue);
 
-				if (!initial.HasValue)
+				if (!baseValue.HasValue)
 				{
 					var error = new Error (ErrorType.AmortizationEmptyAmount, obj.Guid);
 					errors.Add (error);
 				}
 				else
 				{
-					var prorata = Amortizations.Prorata (timestamp.Value.Date, range, def.ProrataType);
-					var delta = initial.Value * def.EffectiveRate * prorata;
+					var pd = ProrataDetails.ComputeProrata (range, baseTimestamp.Value.Date, def.ProrataType);
 
-					decimal? amortization;
-					Amortizations.GetAmortizationValue (obj, range.ExcludeTo.AddSeconds (-1), timestamp.Value, out amortization);
+					//	Cherche la dernière valeur amortie.
+					decimal? amortizedValue;
+					Amortizations.GetAmortizedValue (obj, range.ExcludeTo.AddSeconds (-1), baseTimestamp.Value, out amortizedValue);
 
-					if (amortization.HasValue)
+					decimal initialValue;
+					if (amortizedValue.HasValue)
 					{
-						initial = amortization;
+						initialValue = amortizedValue.Value;
+					}
+					else
+					{
+						initialValue = baseValue.Value;
 					}
 
-					var newValue = initial.Value - delta;
-					newValue = Amortizations.Round (newValue, def.Round);
+					//	Calcule un amortissement linéaire.
+					var ad = new AmortizationDetails (def, pd, initialValue, baseValue, null);
+					var newValue = ad.FinalValue;
 
 					if (newValue < def.Residual)
 					{
-						//	On génère un dernier amortissement à la valeur résiduelle.
-						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), initial.Value, def.Residual, false);
+						//	On génère un dernier amortissement à la valeur résiduelle forcée.
+						ad = new AmortizationDetails (def, pd, null, null, def.Residual);
+						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), ad);
 						counterDone++;
 
 						var error = new Error (ErrorType.AmortizationResidualReached, obj.Guid);
@@ -289,7 +297,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					}
 					else
 					{
-						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), initial.Value, newValue, false);
+						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), ad);
 						counterDone++;
 					}
 				}
@@ -324,16 +332,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private void CreateAmortizationPreview(DataObject obj, System.DateTime date, decimal currentValue, decimal newValue, bool rate)
+		private void CreateAmortizationPreview(DataObject obj, System.DateTime date, AmortizationDetails details)
 		{
 			//	Crée l'événement d'aperçu d'amortissement.
 			var e = this.accessor.CreateObjectEvent (obj, date, EventType.AmortizationPreview);
 
 			if (e != null)
 			{
-				var v = new ComputedAmount (currentValue, newValue, rate);
+				var v = new ComputedAmount (details.InitialValue.Value, details.FinalValue.Value, details.Def.Type == AmortizationType.Degressive);
 				var p = new DataComputedAmountProperty (ObjectField.MainValue, v);
 				e.AddProperty (p);
+
+				//	Ajoute beaucoup de champs, pour permettre de comprendre comment a
+				//	été calculé l'amortissement.
+				details.AddAdditionnalFields (e);
 
 				//	Pour mettre à jour les éventuels amortissements extraordinaires suivants.
 				//	Accésoireemnt, cela recalcule l'événement que l'on vient de créer, mais
@@ -366,7 +378,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return;
 		}
 
-		private static void GetManualValue(DataObject obj, System.DateTime date, out Timestamp? timestamp, out decimal? value)
+		private static void GetBaseValue(DataObject obj, System.DateTime date, out Timestamp? timestamp, out decimal? value)
 		{
 			//	En remontant dans le temps, retourne la première définition de la valeur
 			//	d'un objet qui ne soit pas un amortissement.
@@ -392,7 +404,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return;
 		}
 
-		private static void GetAmortizationValue(DataObject obj, System.DateTime date, Timestamp limit, out decimal? value)
+		private static void GetAmortizedValue(DataObject obj, System.DateTime date, Timestamp limit, out decimal? value)
 		{
 			//	En remontant dans le temps (mais pas avant limit), retourne la première
 			//	définition de la valeur d'un objet qui soit un amortissement.
@@ -487,90 +499,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			return count;
-		}
-
-
-		private static decimal Prorata(System.DateTime dateValue, DateRange range, ProrataType type)
-		{
-			//	Retourne le facteur pour le prorata, compris entre 0.0 et 1.0.
-			//	Pour une dateValue en début d'année, on retourne 1.0.
-			//	Pour une dateValue en milieu d'année, on retourne 0.5.
-			//	Pour une dateValue en fin d'année, on retourne 0.0.
-			decimal prorata = 1.0m;
-
-			if (dateValue >= range.IncludeFrom)
-			{
-				switch (type)
-				{
-					case ProrataType.None:
-						break;
-
-					case ProrataType.Prorata12:
-						{
-							int total  = Amortizations.GetMonthsCount (range.ExcludeTo) - Amortizations.GetMonthsCount (range.IncludeFrom);
-							int months = Amortizations.GetMonthsCount (dateValue)       - Amortizations.GetMonthsCount (range.IncludeFrom);
-							prorata = 1.0m - ((decimal) months / (decimal) total);
-						}
-						break;
-
-					case ProrataType.Prorata360:
-						{
-							int total = Amortizations.GetDaysCount (range.ExcludeTo) - Amortizations.GetDaysCount (range.IncludeFrom);
-							int days  = Amortizations.GetDaysCount (dateValue)       - Amortizations.GetDaysCount (range.IncludeFrom);
-							prorata = 1.0m - ((decimal) days / (decimal) total);
-						}
-						break;
-
-					default:
-						{
-							int total = range.ExcludeTo.Subtract (range.IncludeFrom).Days;
-							int days = System.Math.Min (dateValue.Subtract (range.IncludeFrom).Days, total);
-							prorata = 1.0m - ((decimal) days / (decimal) total);
-						}
-						break;
-				}
-			}
-
-			return prorata;
-		}
-
-		private static int GetMonthsCount(System.DateTime date)
-		{
-			//	Retourne le nombre de mois écoulés depuis le 01.01.0000.
-			//	L'origine est sans importance, car le résultat est utilisé pour
-			//	calculer une différence entre 2 dates !
-			return date.Year*12 + date.Month;
-		}
-
-		private static int GetDaysCount(System.DateTime date)
-		{
-			//	Retourne le nombre de jours écoulés depuis le 01.01.0000,
-			//	en se basant sur 12 mois à 30 jours par année.
-			//	L'origine est sans importance, car le résultat est utilisé pour
-			//	calculer une différence entre 2 dates !
-			return date.Year*12*30 + date.Month*30 + System.Math.Min (date.Day, 30);
-		}
-
-
-		private static decimal Round(decimal value, decimal round)
-		{
-			if (round > 0.0m)
-			{
-				if (value < 0)
-				{
-					value -= round/2;
-				}
-				else
-				{
-					value += round/2;
-				}
-
-				return value - (value % round);
-			}
-			else
-			{
-				return value;
-			}
 		}
 
 

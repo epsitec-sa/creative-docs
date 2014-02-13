@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Person4,
 		Person5,
 
+		//	Définitions d'une catégorie.
 		CategoryName,
 		AmortizationRate,
 		AmortizationType,
@@ -38,6 +39,27 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		ResidualValue,
 		Round,
 
+		//	Informations sur le calcul d'un amortissement ordinaire.
+		AmortizationDetailsDefRate,
+		AmortizationDetailsDefType,
+		AmortizationDetailsDefPeriodicity,
+		AmortizationDetailsDefProrataType,
+		AmortizationDetailsDefRound,
+		AmortizationDetailsDefResidual,
+
+		AmortizationDetailsInitialValue,
+		AmortizationDetailsBaseValue,
+		AmortizationDetailsForcedValue,
+
+		AmortizationDetailsProrataBeginDate,
+		AmortizationDetailsProrataEndDate,
+		AmortizationDetailsProrataValueDate,
+		AmortizationDetailsProrataNumerator,
+		AmortizationDetailsProrataDenominator,
+		AmortizationDetailsProrataQuotient,
+		//	Fin.
+
+		//	Personne.
 		Title,
 		FirstName,
 		Company,

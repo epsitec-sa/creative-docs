@@ -3,16 +3,17 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct AmortizationDefinition
 	{
-		public AmortizationDefinition(decimal rate, AmortizationType type, Periodicity period, ProrataType prorataType, decimal round, decimal residual)
+		public AmortizationDefinition(decimal rate, AmortizationType type, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual)
 		{
 			this.Rate        = rate;
 			this.Type        = type;
-			this.Period      = period;
+			this.Periodicity = periodicity;
 			this.ProrataType = prorataType;
 			this.Round       = round;
 			this.Residual    = residual;
@@ -32,7 +33,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				return this.Rate        == 0.0m
 					&& this.Type        == AmortizationType.Unknown
-					&& this.Period      == 0
+					&& this.Periodicity == 0
 					&& this.ProrataType == 0
 					&& this.Round       == 0.0m
 					&& this.Residual    == 0.0m;
@@ -75,7 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return AmortizationDefinition.GetPeriodMonthCount (this.Period);
+				return AmortizationDefinition.GetPeriodMonthCount (this.Periodicity);
 			}
 		}
 
@@ -101,11 +102,50 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		public void AddAdditionnalFields(DataEvent e)
+		{
+			if (this.IsEmpty)
+			{
+				return;
+			}
+
+			{
+				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsDefRate, this.Rate);
+				e.AddProperty (p);
+			}
+
+			{
+				var p = new DataIntProperty (ObjectField.AmortizationDetailsDefType, (int) this.Type);
+				e.AddProperty (p);
+			}
+
+			{
+				var p = new DataIntProperty (ObjectField.AmortizationDetailsDefPeriodicity, (int) this.Periodicity);
+				e.AddProperty (p);
+			}
+
+			{
+				var p = new DataIntProperty (ObjectField.AmortizationDetailsDefProrataType, (int) this.ProrataType);
+				e.AddProperty (p);
+			}
+
+			{
+				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsDefRound, this.Round);
+				e.AddProperty (p);
+			}
+
+			{
+				var p = new DataDecimalProperty (ObjectField.AmortizationDetailsDefResidual, this.Residual);
+				e.AddProperty (p);
+			}
+		}
+
+
 		public static AmortizationDefinition Empty = new AmortizationDefinition (0.0m, AmortizationType.Unknown, 0, 0.0m, 0.0m, 0.0m);
 
 		public readonly decimal				Rate;
 		public readonly AmortizationType	Type;
-		public readonly Periodicity			Period;
+		public readonly Periodicity			Periodicity;
 		public readonly ProrataType			ProrataType;
 		public readonly decimal				Round;
 		public readonly decimal				Residual;

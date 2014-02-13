@@ -55,6 +55,8 @@
     </Compile>
     <Compile Include="BusinessLogic\Amortizations.cs" />
     <Compile Include="BusinessLogic\CategoriesLogic.cs" />
+    <Compile Include="BusinessLogic\AmortizationDetails.cs" />
+    <Compile Include="BusinessLogic\ProrataDetails.cs" />
     <Compile Include="BusinessLogic\ProrataType.cs" />
     <Compile Include="BusinessLogic\ObjectsLogic.cs" />
     <Compile Include="BusinessLogic\EnumDictionaries.cs" />
