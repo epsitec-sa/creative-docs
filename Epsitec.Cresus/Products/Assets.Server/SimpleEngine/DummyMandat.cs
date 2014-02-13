@@ -541,7 +541,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			objects.Add (o237);
 			{
 				{
-					var e = new DataEvent (date2012, EventType.Input);
+					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 3, 10), 0), EventType.Input);
 					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataGuidRatioProperty      (ObjectField.GroupGuidRatio+0,   DummyMandat.GetGroup (mandat, "Voitures")));
