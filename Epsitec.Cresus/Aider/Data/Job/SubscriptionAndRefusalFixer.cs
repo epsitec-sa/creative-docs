@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
@@ -21,17 +24,14 @@ using Epsitec.Cresus.DataLayer.Expressions;
 
 namespace Epsitec.Aider.Data.Job
 {
-
-	
 	/// <summary>
 	/// This fixer removes the subscriptions and the subscription refusals that are empty, i.e.
 	/// that don't target either an household or a legal person contact. These have appeared
-	/// because for a while, the deletion of an household of of a legal person did not delete the
+	/// because for a while, the deletion of an household of a legal person did not delete the
 	/// subscriptions or subscription refusals.
 	/// </summary>
 	public static class SubscriptionAndRefusalFixer
 	{
-
 		public static void FixParishGroupPath(CoreData coreData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
@@ -44,26 +44,9 @@ namespace Epsitec.Aider.Data.Job
 				var current = 1;
 				foreach (var subscription in subscriptions)
 				{
-					SubscriptionAndRefusalFixer.LogToConsole (" AiderSubscriptionEntity {0}/{1}", true, current, total);
+					SubscriptionAndRefusalFixer.LogToConsole ("AiderSubscriptionEntity {0}/{1}", current, total);
 					current++;
-
-					if (subscription.ParishGroupPathCache.IsNullOrWhiteSpace ())
-					{
-						if (subscription.LegalPersonContact.IsNotNull () && subscription.Household.IsNull ())
-						{
-							subscription.ParishGroupPathCache = subscription.LegalPersonContact.ParishGroupPathCache;
-						}
-
-						if (subscription.Household.IsNotNull () && subscription.LegalPersonContact.IsNull ())
-						{
-							subscription.ParishGroupPathCache = subscription.Household.ParishGroupPathCache;
-						}
-
-						if (subscription.Household.IsNull () && subscription.LegalPersonContact.IsNull ())
-						{
-							subscription.ParishGroupPathCache = subscription.RegionalEdition.Path;
-						}
-					}
+					subscription.RefreshCache ();
 				}
 
 				var subscriptionsRefusal = businessContext.GetAllEntities<AiderSubscriptionRefusalEntity> ().ToList ();
@@ -73,20 +56,9 @@ namespace Epsitec.Aider.Data.Job
 				current = 1;
 				foreach (var subscription in subscriptionsRefusal)
 				{
-					SubscriptionAndRefusalFixer.LogToConsole ("AiderSubscriptionRefusalEntity {0}/{1}", true, current, total);
+					SubscriptionAndRefusalFixer.LogToConsole ("AiderSubscriptionRefusalEntity {0}/{1}", current, total);
 					current++;
-					if (subscription.ParishGroupPathCache.IsNullOrWhiteSpace ())
-					{
-						if (subscription.LegalPersonContact.IsNotNull () && subscription.Household.IsNull ())
-						{
-							subscription.ParishGroupPathCache = subscription.LegalPersonContact.ParishGroupPathCache;
-						}
-
-						if (subscription.Household.IsNotNull () && subscription.LegalPersonContact.IsNull ())
-						{
-							subscription.ParishGroupPathCache = subscription.Household.ParishGroupPathCache;
-						}
-					}
+					subscription.RefreshCache ();
 				}
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
@@ -339,28 +311,13 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 
-		private static System.Diagnostics.Stopwatch LogToConsole(string format, bool fixedTop, params object[] args)
+		private static void LogToConsole(string format, params object[] args)
 		{
 			var message = string.Format (format, args);
-
-			if (message.StartsWith ("Error"))
-			{
-				System.Console.ForegroundColor = System.ConsoleColor.Red;
-			}
-
-			if (fixedTop)
-			{
-				System.Console.SetCursorPosition (0, 0);
-			}
-			System.Console.WriteLine ("SubscriptionAndResusalFixer: {0}", message);
+			
+			System.Console.SetCursorPosition (0, 0);
+			System.Console.WriteLine ("SubscriptionAndResusalFixer: " + message);
 			System.Console.ResetColor ();
-
-			var time = new System.Diagnostics.Stopwatch ();
-
-			time.Start ();
-
-			return time;
 		}
-
 	}
 }

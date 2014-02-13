@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
@@ -18,6 +18,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderSubscriptionEntity> wall)
 		{
+			this.Entity.RefreshCache ();
+			
 			wall.AddBrick ()
 				.EnableActionButton<ActionAiderSubscriptionViewController0FlagVerificationRequired> ()
 				.EnableActionButton<ActionAiderSubscriptionViewController1FlagSuspended> ();

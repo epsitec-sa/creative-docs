@@ -74,7 +74,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-
 		partial void GetFullAddressTextSingleLine(ref string value)
 		{
 			this.GetFullAddressTextMultiLine (ref value);
@@ -129,11 +128,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderSubscriptionRefusalEntity Create
-		(
-			BusinessContext businessContext,
-			AiderHouseholdEntity household
-		)
+		public static AiderSubscriptionRefusalEntity Create(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
 			var refusal = businessContext.CreateAndRegisterEntity<AiderSubscriptionRefusalEntity> ();
 
@@ -145,11 +140,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderSubscriptionRefusalEntity Create
-		(
-			BusinessContext businessContext,
-			AiderContactEntity legalPersonContact
-		)
+		public static AiderSubscriptionRefusalEntity Create(BusinessContext businessContext, AiderContactEntity legalPersonContact)
 		{
 			var refusal = businessContext.CreateAndRegisterEntity<AiderSubscriptionRefusalEntity> ();
 
@@ -160,11 +151,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderSubscriptionRefusalEntity Create
-		(
-			BusinessContext businessContext,
-			AiderSubscriptionEntity subscription
-		)
+		public static AiderSubscriptionRefusalEntity Create(BusinessContext businessContext, AiderSubscriptionEntity subscription)
 		{
 			switch (subscription.SubscriptionType)
 			{
@@ -182,21 +169,13 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static void Delete
-		(
-			BusinessContext businessContext,
-			AiderSubscriptionRefusalEntity refusal
-		)
+		public static void Delete(BusinessContext businessContext, AiderSubscriptionRefusalEntity refusal)
 		{
 			businessContext.DeleteEntity (refusal);
 		}
 
 
-		public static AiderSubscriptionRefusalEntity FindRefusal
-		(
-			BusinessContext businessContext,
-			AiderHouseholdEntity household
-		)
+		public static AiderSubscriptionRefusalEntity FindRefusal(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
 			var example = new AiderSubscriptionRefusalEntity ()
 			{
@@ -208,11 +187,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderSubscriptionRefusalEntity FindRefusal
-		(
-			BusinessContext businessContext,
-			AiderContactEntity legalPersonContact
-		)
+		public static AiderSubscriptionRefusalEntity FindRefusal(BusinessContext businessContext, AiderContactEntity legalPersonContact)
 		{
 			var example = new AiderSubscriptionRefusalEntity ()
 			{
@@ -227,12 +202,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private static AiderSubscriptionRefusalEntity FindRefusal
-		(
-			BusinessContext businessContext,
-			AiderSubscriptionRefusalEntity example,
-			AbstractEntity entity
-		)
+		private static AiderSubscriptionRefusalEntity FindRefusal(BusinessContext businessContext, AiderSubscriptionRefusalEntity example, AbstractEntity entity)
 		{
 			var dataContext = businessContext.DataContext;
 
@@ -266,11 +236,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static IList<AiderSubscriptionRefusalEntity> FindRefusals
-		(
-			BusinessContext businessContext,
-			AiderLegalPersonEntity legalPerson
-		)
+		public static IList<AiderSubscriptionRefusalEntity> FindRefusals(BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
 		{
 			var dataContext = businessContext.DataContext;
 
@@ -293,11 +259,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static void CheckRefusalDoesNotExist
-		(
-			BusinessContext businessContext,
-			AiderHouseholdEntity receiver
-		)
+		public static void CheckRefusalDoesNotExist(BusinessContext businessContext, AiderHouseholdEntity receiver)
 		{
 			var result = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, receiver);
 
@@ -305,11 +267,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static void CheckRefusalDoesNotExist
-		(
-			BusinessContext businessContext,
-			AiderContactEntity receiver
-		)
+		public static void CheckRefusalDoesNotExist(BusinessContext businessContext, AiderContactEntity receiver)
 		{
 			var result = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, receiver);
 

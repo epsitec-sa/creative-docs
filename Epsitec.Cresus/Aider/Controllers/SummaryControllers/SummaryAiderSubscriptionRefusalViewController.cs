@@ -1,3 +1,6 @@
+//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -16,6 +19,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderSubscriptionRefusalEntity> wall)
 		{
+			this.Entity.RefreshCache ();
+
 			switch (this.Entity.RefusalType)
 			{
 				case SubscriptionType.Household:
