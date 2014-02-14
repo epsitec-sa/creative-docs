@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -21,6 +22,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				HasAmortizationsToolbar = true,
 			};
+
+			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, isTimeless: false);
 		}
 
 
@@ -40,13 +43,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock    = DockStyle.Fill,
 			};
 
-			var timelinesArrayFrameBox = new FrameBox
+			this.editFrameBox = new FrameBox
+			{
+				Parent         = topBox,
+				Dock           = DockStyle.Right,
+				PreferredWidth = 750,
+				BackColor      = ColorManager.GetBackgroundColor (),
+			};
+
+			this.timelinesArrayFrameBox = new FrameBox
 			{
 				Parent = topBox,
 				Dock   = DockStyle.Fill,
 			};
 
-			this.timelinesArrayController.CreateUI (timelinesArrayFrameBox);
+			this.timelinesArrayController.CreateUI (this.timelinesArrayFrameBox);
 			this.timelinesArrayController.Filter = AmortizationsView.EventFilter;
 
 			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsPreview,   true);
@@ -55,12 +66,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsDelete,    true);
 			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsInfo,      true);
 
+			this.objectEditor.CreateUI (this.editFrameBox);
+
+			this.lastIsEditing = true;  // pour forcer UpdateViewModeGeometry !
 			this.DeepUpdateUI ();
 
 			//	Connexion des événements du tableau des objets et timelines.
 			{
 				this.timelinesArrayController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
 				{
+					this.OnStartEdit (eventType, timestamp);
 				};
 
 				this.timelinesArrayController.SelectedCellChanged += delegate
@@ -73,6 +88,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.timelinesArrayController.CellDoubleClicked += delegate
 				{
+					this.OnStartEdit ();
 				};
 			}
 
@@ -123,6 +139,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 			}
+
+			//	Connexion des événements de l'éditeur.
+			{
+				this.objectEditor.Navigate += delegate (object sender, Timestamp timestamp)
+				{
+					this.selectedTimestamp = timestamp;
+					this.UpdateUI ();
+				};
+
+				this.objectEditor.Goto += delegate (object sender, AbstractViewState viewState)
+				{
+					this.OnGoto (viewState);
+				};
+
+				this.objectEditor.PageTypeChanged += delegate (object sender, PageType pageType)
+				{
+					this.UpdateUI ();
+				};
+
+				this.objectEditor.ValueChanged += delegate (object sender, ObjectField field)
+				{
+					this.UpdateToolbars ();
+				};
+
+				this.objectEditor.DataChanged += delegate
+				{
+					this.DataChanged ();
+				};
+			}
 		}
 
 		private static bool EventFilter(DataEvent e)
@@ -151,7 +196,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.DataChanged ();
 			}
 
-			this.timelinesArrayController.InUse = true;
+			//	Met à jour la géométrie des différents contrôleurs.
+			if (this.lastIsEditing != this.isEditing)
+			{
+				this.UpdateViewModeGeometry ();
+				this.editFrameBox.Window.ForceLayout ();
+
+				this.lastIsEditing = this.isEditing;
+			}
 
 			//	Met à jour les données des différents contrôleurs.
 			using (this.ignoreChanges.Enter ())
@@ -176,6 +228,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateToolbars ();
+			this.UpdateEditor ();
 
 			this.OnViewStateChanged (this.ViewState);
 		}
@@ -188,6 +241,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return new AmortizationsViewState
 				{
 					ViewType          = ViewType.Amortizations,
+					PageType          = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
 					SelectedTimestamp = this.selectedTimestamp,
 					SelectedGuid      = this.selectedGuid,
 				};
@@ -199,6 +253,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.selectedTimestamp = viewState.SelectedTimestamp;
 				this.selectedGuid      = viewState.SelectedGuid;
+
+				if (viewState.PageType == PageType.Unknown)
+				{
+					this.isEditing = false;
+				}
+				else
+				{
+					this.isEditing = true;
+					this.objectEditor.PageType = viewState.PageType;
+				}
 
 				this.UpdateUI ();
 			}
@@ -219,6 +283,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			switch (command)
 			{
+				case ToolbarCommand.Edit:
+					this.OnStartStopEdit ();
+					break;
+
+				case ToolbarCommand.Accept:
+					this.OnEditAccept ();
+					break;
+
+				case ToolbarCommand.Cancel:
+					this.OnEditCancel ();
+					break;
 			}
 		}
 
@@ -322,6 +397,50 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void OnStartStopEdit()
+		{
+			if (!this.isEditing && this.selectedGuid.IsEmpty)
+			{
+				return;
+			}
+
+			this.isEditing = !this.isEditing;
+			this.UpdateUI ();
+		}
+
+		private void OnStartEdit()
+		{
+			if (!this.isEditing && this.selectedGuid.IsEmpty)
+			{
+				return;
+			}
+
+			this.isEditing = true;
+			this.UpdateUI ();
+		}
+
+		private void OnStartEdit(EventType eventType, Timestamp? timestamp = null)
+		{
+			this.isEditing = true;
+			this.selectedTimestamp = timestamp;
+			this.objectEditor.PageType = this.objectEditor.MainPageType;
+
+			this.UpdateUI ();
+		}
+
+		private void OnEditAccept()
+		{
+			this.isEditing = false;
+			this.UpdateUI ();
+		}
+
+		private void OnEditCancel()
+		{
+			this.accessor.EditionAccessor.CancelObjectEdition ();
+			this.isEditing = false;
+			this.UpdateUI ();
+		}
+
 		private void UpdateAfterMultipleChanged()
 		{
 			this.selectedGuid      = this.timelinesArrayController.SelectedGuid;
@@ -330,13 +449,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateUI ();
 		}
 
+		private void UpdateEditor()
+		{
+			this.objectEditor.SetObject (this.selectedGuid, this.selectedTimestamp);
+		}
+
+		private void UpdateViewModeGeometry()
+		{
+			this.timelinesArrayController.InUse = true;
+
+			this.editFrameBox.Visibility = this.isEditing;
+			this.timelinesArrayFrameBox.Visibility = true;
+
+			this.editFrameBox.Dock = DockStyle.Right;
+		}
+
 
 		private void UpdateToolbars()
 		{
-			this.mainToolbar.SetCommandEnable (ToolbarCommand.Edit, false);
+			if (this.isEditing)
+			{
+				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
 
-			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandEnable (ToolbarCommand.Accept, this.objectEditor.EditionDirty);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+			}
+			else
+			{
+				this.mainToolbar.SetCommandEnable (ToolbarCommand.Edit, this.IsEditingPossible);
+
+				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			}
+		}
+
+		private bool IsEditingPossible
+		{
+			get
+			{
+				return !this.timelinesArrayController.SelectedGuid.IsEmpty
+					&& this.timelinesArrayController.SelectedTimestamp != null;
+			}
 		}
 
 
@@ -344,9 +497,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private static System.DateTime lastDateTo   = new System.DateTime (System.DateTime.Now.Year, 12, 31);
 
 		private readonly TimelinesArrayController			timelinesArrayController;
+		private readonly ObjectEditor						objectEditor;
 
+		private FrameBox									timelinesArrayFrameBox;
+		private FrameBox									editFrameBox;
+
+		private bool										isEditing;
 		private Guid										selectedGuid;
 		private Timestamp?									selectedTimestamp;
 		private List<Error>									errors;
+
+		private bool										lastIsEditing;
 	}
 }

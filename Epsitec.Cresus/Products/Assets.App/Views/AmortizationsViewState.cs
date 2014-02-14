@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			return this.ViewType          == o.ViewType
+				&& this.PageType          == o.PageType
 				&& this.SelectedTimestamp == o.SelectedTimestamp
 				&& this.SelectedGuid      == o.SelectedGuid;
 		}

@@ -795,6 +795,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private ViewMode									lastViewMode;
 		private bool										lastIsShowEvents;
 		private bool										lastIsEditing;
-
 	}
 }

@@ -11,6 +11,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
+	/// <summary>
+	/// Ce paneau n'est pas éditable, contrairement à ses frères. Il montre comment
+	/// a été calculé un amortissement ordinaire.
+	/// </summary>
 	public class EditorPageAmortizationPreview : AbstractEditorPage
 	{
 		public EditorPageAmortizationPreview(DataAccessor accessor, BaseType baseType, bool isTimeless)
