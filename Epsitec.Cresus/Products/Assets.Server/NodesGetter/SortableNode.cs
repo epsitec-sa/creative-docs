@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.NodesGetter
 	{
 		public SortableNode(Guid guid, ComparableData primarySortValue, ComparableData secondarySortValue)
 		{
-			this.Guid                  = guid;
+			this.Guid               = guid;
 			this.PrimarySortValue   = primarySortValue;
 			this.SecondarySortValue = secondarySortValue;
 		}
