@@ -129,9 +129,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Passe en revue les périodes.
 			foreach (var period in this.GetPeriods (processRange, obj))
 			{
-				var ad = this.GetAmortizationDetails (obj, period.ExcludeTo.AddDays (-1));
+				var ad = this.GetAmortizationDetails (obj, period.ExcludeTo.AddDays (-1), show: false);
 				if (!ad.IsEmpty)
 				{
+					//	On crée un aperçu de l'amortissement au 31.12.
 					this.CreateAmortizationPreview (obj, period.ExcludeTo.AddDays (-1), ad);
 				}
 			}
@@ -191,8 +192,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date)
+		public AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date, bool show = true)
 		{
+			//	Retourne tous les détails sur un amortissement ordinaire, soit pour le générer
+			//	(show = false), soit pour voir comment a été calculé un amortissement existant
+			//	(show = true).
 			var def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (date, 0));
 			if (def.IsEmpty)
 			{
@@ -210,15 +214,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			//	S'il y a déjà un (ou plusieurs) amortissement (extra)ordinaire dans la période,
 			//	on ne génère pas d'amortissement ordinaire.
-			if (Amortizations.HasAmortizations (obj, EventType.AmortizationExtra, range) ||
-				Amortizations.HasAmortizations (obj, EventType.AmortizationAuto, range))
+			if (!show)
 			{
-				return AmortizationDetails.Empty;
+				if (Amortizations.HasAmortizations (obj, EventType.AmortizationExtra, range) ||
+					Amortizations.HasAmortizations (obj, EventType.AmortizationAuto, range))
+				{
+					return AmortizationDetails.Empty;
+				}
 			}
 
 			//	Génère l'aperçu d'amortissement.
 			if (def.Type == AmortizationType.Degressive)  // amortissement dégressif ?
 			{
+				//	Si la période se termine le 01.01.2014 (exclu), on cherche une valeur
+				//	au 30.12.2013 23h59, pour ne pas trouver l'amortissement lui-même.
 				Timestamp? initialTimestamp;
 				decimal? initialValue;
 				Amortizations.GetAnyValue (obj, range.ExcludeTo.AddDays (-1).AddSeconds (-1), out initialTimestamp, out initialValue);
@@ -257,6 +266,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					var pd = ProrataDetails.ComputeProrata (range, baseTimestamp.Value.Date, def.ProrataType);
 
 					//	Cherche la dernière valeur amortie.
+					//	Si la période se termine le 01.01.2014 (exclu), on cherche une valeur
+					//	au 30.12.2013 23h59, pour ne pas trouver l'amortissement lui-même.
 					decimal? amortizedValue;
 					Amortizations.GetAmortizedValue (obj, range.ExcludeTo.AddDays (-1).AddSeconds (-1), baseTimestamp.Value, out amortizedValue);
 
@@ -291,205 +302,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return AmortizationDetails.Empty;
 			}
 		}
-
-#if false
-		private void GeneratesAmortizationsPreview(List<Error> errors, DateRange processRange, Guid objectGuid)
-		{
-			//	Génère les aperçus d'amortissement pour un objet donné.
-			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
-			System.Diagnostics.Debug.Assert (obj != null);
-
-			//	Supprime tous les aperçus d'amortissement.
-			Amortizations.RemoveEvents (obj, EventType.AmortizationPreview, DateRange.Full);
-
-			//	Cherche la date d'entrée de l'objet.
-			if (obj.EventsCount == 0)
-			{
-				var generate = new Error (ErrorType.AmortizationUndefined, objectGuid);
-				errors.Add (generate);
-				return;
-			}
-
-			var inputDate = obj.Events.FirstOrDefault ().Timestamp.Date;
-
-			if (inputDate > processRange.ExcludeTo)
-			{
-				var generate = new Error (ErrorType.AmortizationOutObject, objectGuid);
-				errors.Add (generate);
-				return;
-			}
-
-			//	Passe en revue les tranches de temps.
-			var beginDate = new System.DateTime (processRange.IncludeFrom.Year, 1, 1);
-			int counterDone = 0;
-
-			while (beginDate < processRange.ExcludeTo)
-			{
-				var def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (beginDate, 0));
-
-				if (def.IsEmpty)
-				{
-					//	Si l'objet n'est pas entré au début de l'année, mais qu'il l'est plus
-					//	tard dans la période choisie (processRange), on démarre un amortissement
-					//	au début de l'année d'entrée, au prorata de la durée.
-					def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (inputDate, 0));
-
-					if (def.IsEmpty)
-					{
-						beginDate = new System.DateTime (inputDate.Year, 1, 1);
-					}
-					else
-					{
-						beginDate = def.GetBeginRangeDate (beginDate);
-					}
-				}
-
-				if (def.IsEmpty)
-				{
-					var error = new Error (ErrorType.AmortizationUndefined, objectGuid);
-					errors.Add (error);
-
-					//	Si aucun amortissement n'est défini, on essaie de nouveaux amortissements
-					//	à partir de l'année prochaine.
-					beginDate = beginDate.AddYears (1);
-				}
-				else
-				{
-					var endDate = beginDate.AddMonths (def.PeriodMonthCount);
-					var range = new DateRange (beginDate, endDate);
-
-					bool ok = this.GeneratesAmortizationPreview (errors, obj, def, range, ref counterDone);
-					if (!ok)
-					{
-						break;
-					}
-
-					beginDate = endDate;
-				}
-			}
-
-			//	Supprime tous les événements d'amortissement ordinaire après la date de fin.
-			Amortizations.RemoveEvents (obj, EventType.AmortizationAuto, new DateRange (processRange.ExcludeTo, System.DateTime.MaxValue));
-
-			{
-				var generate = new Error (ErrorType.AmortizationGenerate, objectGuid, counterDone);
-				errors.Add (generate);
-			}
-		}
-
-		private bool GeneratesAmortizationPreview(List<Error> errors, DataObject obj, AmortizationDefinition def, DateRange range, ref int counterDone)
-		{
-			//	Génère l'aperçu d'amortissement d'un objet pour une période donnée.
-			//	Retourne false s'il faut stopper.
-			if (ObjectCalculator.IsEventLocked (obj, new Timestamp (range.ExcludeTo.AddSeconds (-1), 0)))
-			{
-				var error = new Error (ErrorType.AmortizationOutObject, obj.Guid);
-				errors.Add (error);
-				return true;  // continue
-			}
-
-			//	S'il y a déjà un (ou plusieurs) amortissement (extra)ordinaire dans la période,
-			//	on ne génère pas d'amortissement ordinaire.
-			if (Amortizations.HasAmortizations (obj, EventType.AmortizationExtra, range) ||
-				Amortizations.HasAmortizations (obj, EventType.AmortizationAuto,  range))
-			{
-				var error = new Error (ErrorType.AmortizationAlreadyDone, obj.Guid);
-				errors.Add (error);
-				return true;  // continue
-			}
-
-			//	Génère l'aperçu d'amortissement.
-			if (def.Type == AmortizationType.Degressive)  // amortissement dégressif ?
-			{
-				Timestamp? initialTimestamp;
-				decimal? initialValue;
-				Amortizations.GetAnyValue (obj, range.ExcludeTo.AddSeconds (-1), out initialTimestamp, out initialValue);
-
-				if (!initialValue.HasValue)
-				{
-					var error = new Error (ErrorType.AmortizationEmptyAmount, obj.Guid);
-					errors.Add (error);
-				}
-				else
-				{
-					//	Calcule un amortissement dégressif.
-					var pd = ProrataDetails.ComputeProrata (range, initialTimestamp.Value.Date, def.ProrataType);
-					var ad = new AmortizationDetails (def, pd, initialValue, initialValue, null);
-					var newValue = ad.FinalValue;
-
-					if (newValue < def.Residual)
-					{
-						//	On génère un dernier amortissement à la valeur résiduelle forcée.
-						ad = new AmortizationDetails (def, pd, initialValue, null, def.Residual);
-						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), ad);
-						counterDone++;
-
-						var error = new Error (ErrorType.AmortizationResidualReached, obj.Guid);
-						errors.Add (error);
-						return false;  // stoppe
-					}
-					else
-					{
-						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), ad);
-						counterDone++;
-					}
-				}
-			}
-			else  // amortissement linéaire ?
-			{
-				Timestamp? baseTimestamp;
-				decimal? baseValue;
-				Amortizations.GetBaseValue (obj, range.ExcludeTo.AddSeconds (-1), out baseTimestamp, out baseValue);
-
-				if (!baseValue.HasValue)
-				{
-					var error = new Error (ErrorType.AmortizationEmptyAmount, obj.Guid);
-					errors.Add (error);
-				}
-				else
-				{
-					var pd = ProrataDetails.ComputeProrata (range, baseTimestamp.Value.Date, def.ProrataType);
-
-					//	Cherche la dernière valeur amortie.
-					decimal? amortizedValue;
-					Amortizations.GetAmortizedValue (obj, range.ExcludeTo.AddSeconds (-1), baseTimestamp.Value, out amortizedValue);
-
-					decimal initialValue;
-					if (amortizedValue.HasValue)
-					{
-						initialValue = amortizedValue.Value;
-					}
-					else
-					{
-						initialValue = baseValue.Value;
-					}
-
-					//	Calcule un amortissement linéaire.
-					var ad = new AmortizationDetails (def, pd, initialValue, baseValue, null);
-					var newValue = ad.FinalValue;
-
-					if (newValue < def.Residual)
-					{
-						//	On génère un dernier amortissement à la valeur résiduelle forcée.
-						ad = new AmortizationDetails (def, pd, initialValue, null, def.Residual);
-						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), ad);
-						counterDone++;
-
-						var error = new Error (ErrorType.AmortizationResidualReached, obj.Guid);
-						errors.Add (error);
-						return false;  // stoppe
-					}
-					else
-					{
-						this.CreateAmortizationPreview (obj, range.ExcludeTo.AddDays (-1), ad);
-						counterDone++;
-					}
-				}
-			}
-
-			return true;  // continue
-		}
-#endif
 
 
 		private static AmortizationDefinition GetAmortizationDefinition(DataObject obj, Timestamp timestamp)

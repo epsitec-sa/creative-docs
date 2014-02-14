@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "Amortissement";
 
 				case PageType.AmortizationPreview:
-					return "Détails de l'amortissement";
+					return "Calcul de l'amortissement";
 
 				case PageType.Groups:
 					return "Regroupements";

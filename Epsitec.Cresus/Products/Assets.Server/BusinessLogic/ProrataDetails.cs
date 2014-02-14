@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
@@ -34,6 +33,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public bool								IsFullPeriod
+		{
+			get
+			{
+				return this.Numerator.GetValueOrDefault (0.0m) == 0.0m;
+			}
+		}
 
 		public static ProrataDetails ComputeProrata(DateRange range, System.DateTime valueDate, ProrataType type)
 		{
@@ -87,8 +93,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Retourne le nombre de mois écoulés depuis le 01.01.0000.
 			//	L'origine est sans importance, car le résultat est utilisé pour
 			//	calculer une différence entre 2 dates !
-			//	Le fait que Month commence à 1 (et non 0) n'a pas d'influence.
-			return date.Year*12 + date.Month;
+			return date.Year*12
+				+ (date.Month-1);
 		}
 
 		private static int GetDaysCount(System.DateTime date)
@@ -97,8 +103,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	en se basant sur 12 mois à 30 jours par année.
 			//	L'origine est sans importance, car le résultat est utilisé pour
 			//	calculer une différence entre 2 dates !
-			//	Le fait que Month et Day commencent à 1 (et non 0) n'a pas d'influence.
-			return date.Year*12*30 + date.Month*30 + System.Math.Min (date.Day, 30);
+			return date.Year*12*30
+				+ (date.Month-1)*30
+				+ System.Math.Min ((date.Day-1), 30-1);
 		}
 
 	

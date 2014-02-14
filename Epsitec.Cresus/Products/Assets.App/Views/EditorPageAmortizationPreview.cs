@@ -21,43 +21,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			new StaticText
-			{
-				Parent  = parent,
-				Text    = "Comment amortir:",
-				Dock    = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 20),
-			};
-
-			this.line1 = this.CreateFrame (parent);
-
-			new StaticText
-			{
-				Parent  = parent,
-				Text    = "Calcul effectué:",
-				Dock    = DockStyle.Top,
-				Margins = new Margins (0, 0, 30, 20),
-			};
-
-			this.line2 = this.CreateFrame (parent);
-
-			new StaticText
-			{
-				Parent  = parent,
-				Text    = "Prorata éventuel:",
-				Dock    = DockStyle.Top,
-				Margins = new Margins (0, 0, 30, 20),
-			};
-
-			this.line3 = this.CreateFrame (parent);
+			this.line1a = this.CreateFrame (parent, false);
+			this.line1b = this.CreateFrame (parent, false);
+			this.line2a = this.CreateFrame (parent, true);
+			this.line2b = this.CreateFrame (parent, false);
+			this.line3a = this.CreateFrame (parent, true);
+			this.line3b = this.CreateFrame (parent, false);
 		}
 
 
 		public override void SetObject(Guid objectGuid, Timestamp timestamp)
 		{
-			this.line1.Children.Clear ();
-			this.line2.Children.Clear ();
-			this.line3.Children.Clear ();
+			this.line1a.Children.Clear ();
+			this.line1b.Children.Clear ();
+			this.line2a.Children.Clear ();
+			this.line2b.Children.Clear ();
+			this.line3a.Children.Clear ();
+			this.line3b.Children.Clear ();
 
 			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
 			if (obj == null)
@@ -72,57 +52,58 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (!ad.Def.IsEmpty)
 				{
-					this.CreateText (this.line1, 600, ad.Def.GetFullName ());
+					this.CreateTitle (this.line1a, "Paramètres", "Paramètres de l'amortissement, définis dans l'objet");
+					this.CreateText  (this.line1b, 600, ad.Def.GetFullName ());
 				}
 
-				//-var v = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, ObjectField.MainValue, synthetic: false);
-				//-decimal? d = v.HasValue ? v.Value.FinalAmount : null;
-				//-this.CreateAmount (this.line2, d);
+				this.CreateTitle (this.line2a, "Calcul", "Calcul effectué pour obtenir la valeur finale amortie");
 
 				if (ad.ForcedValue.HasValue)
 				{
-					this.CreateAmount (this.line2, ad.FinalValue, "Valeur finale");
-					this.CreateLabel  (this.line2, 20, "=");
-					this.CreateAmount (this.line2, ad.ForcedValue, "Valeur résiduelle");
+					this.CreateAmount (this.line2b, ad.FinalValue, "Valeur finale amortie");
+					this.CreateOper   (this.line2b, 20, "=");
+					this.CreateAmount (this.line2b, ad.ForcedValue, "Valeur résiduelle");
 				}
 				else
 				{
 					var rnd = ad.FinalValue.GetValueOrDefault () - (ad.InitialValue.GetValueOrDefault () - (ad.BaseValue.GetValueOrDefault () * ad.Def.EffectiveRate * ad.Prorata.Quotient.GetValueOrDefault (1.0m)));
 
-					this.CreateAmount (this.line2, ad.FinalValue, "Valeur finale");
-					this.CreateLabel  (this.line2, 20, "=");
-					this.CreateAmount (this.line2, ad.InitialValue, "Valeur précédente");
-					this.CreateLabel  (this.line2, 30, "− (");
-					this.CreateAmount (this.line2, ad.BaseValue, "Valeur de base");
-					this.CreateLabel  (this.line2, 20, "×");
-					this.CreateRate   (this.line2, ad.Def.EffectiveRate, "Taux adapté à la périodicité");
-					this.CreateLabel  (this.line2, 20, "×");
-					this.CreateRate   (this.line2, ad.Prorata.Quotient, "Facteur correctif si \"au prorata\"");
-					this.CreateLabel  (this.line2, 30, rnd >= 0 ? ") +" : ") −");
-					this.CreateAmount (this.line2, System.Math.Abs (rnd), "Arrondi");
+					this.CreateAmount (this.line2b, ad.FinalValue, "Valeur finale amortie");
+					this.CreateOper   (this.line2b, 20, "=");
+					this.CreateAmount (this.line2b, ad.InitialValue, "Valeur précédente");
+					this.CreateOper   (this.line2b, 30, "− (");
+					this.CreateAmount (this.line2b, ad.BaseValue, "Valeur de base");
+					this.CreateOper   (this.line2b, 20, "×");
+					this.CreateRate   (this.line2b, ad.Def.EffectiveRate, "Taux adapté selon la périodicité");
+					this.CreateOper   (this.line2b, 20, "×");
+					this.CreateRate   (this.line2b, ad.Prorata.Quotient, "Facteur correctif si \"au prorata\"");
+					this.CreateOper   (this.line2b, 30, rnd >= 0 ? ") +" : ") −");
+					this.CreateAmount (this.line2b, System.Math.Abs (rnd), "Arrondi");
 				}
 
-				if (!ad.Prorata.IsEmpty)
+				if (!ad.Prorata.IsFullPeriod)
 				{
-					this.CreateLabel   (this.line3, 20, "a");
-					this.CreateDecimal (this.line3, ad.Prorata.Numerator, "Nombre effectif");
-					this.CreateLabel   (this.line3, 20, "b");
-					this.CreateDecimal (this.line3, ad.Prorata.Denominator, "Nombre total");
-					this.CreateLabel   (this.line3, 50, "1-(a/b)");
-					this.CreateRate    (this.line3, ad.Prorata.Quotient, "Facteur correctif");
+					this.CreateTitle   (this.line3a, "Prorata", "Réduction de l'amortissement si la date d'entrée est en cours de période");
+
+					this.CreateOper    (this.line3b, 20, "a");
+					this.CreateDecimal (this.line3b, ad.Prorata.Numerator, "Nombre effectif");
+					this.CreateOper    (this.line3b, 20, "b");
+					this.CreateDecimal (this.line3b, ad.Prorata.Denominator, "Nombre total");
+					this.CreateOper    (this.line3b, 60, "1-(a/b)");
+					this.CreateRate    (this.line3b, ad.Prorata.Quotient, "Facteur correctif");
 				}
 			}
 		}
 
 
-		private FrameBox CreateFrame(Widget parent)
+		private FrameBox CreateFrame(Widget parent, bool topGap)
 		{
 			return new FrameBox
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = 20,
-				Margins         = new Margins (0, 0, 0, 10),
+				PreferredHeight = 30,
+				Margins         = new Margins (0, 0, topGap ? 20 : 0, 10),
 			};
 		}
 
@@ -135,6 +116,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredWidth   = 90,
 				IsReadOnly       = true,
 				Text             = TypeConverters.AmountToString (value),
+				Margins          = new Margins (0, 0, 5, 5),
 			};
 
 			if (!string.IsNullOrEmpty (tooltip))
@@ -152,6 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredWidth   = 50,
 				IsReadOnly       = true,
 				Text             = TypeConverters.RateToString (value),
+				Margins          = new Margins (0, 0, 5, 5),
 			};
 
 			if (!string.IsNullOrEmpty (tooltip))
@@ -164,11 +147,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var field = new TextField
 			{
-				Parent          = parent,
-				Dock            = DockStyle.Left,
-				PreferredWidth  = 60,
-				IsReadOnly      = true,
-				Text            = TypeConverters.DecimalToString (value),
+				Parent           = parent,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = 60,
+				IsReadOnly       = true,
+				Text             = TypeConverters.DecimalToString (value),
+				Margins          = new Margins (0, 0, 5, 5),
 			};
 
 			if (!string.IsNullOrEmpty (tooltip))
@@ -177,33 +161,60 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private void CreateTitle(Widget parent, string text, string tooltip = null)
+		{
+			var label = new StaticText
+			{
+				Parent           = parent,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = 600,
+				Text             = text,
+				ContentAlignment = ContentAlignment.BottomLeft,
+				Margins          = new Margins (0, 0, 10, 0),
+			};
+
+			//?label.TextLayout.DefaultFontSize = 12.0;
+
+			if (!string.IsNullOrEmpty (tooltip))
+			{
+				ToolTip.Default.SetToolTip (label, tooltip);
+			}
+		}
+
 		private void CreateText(Widget parent, int width, string text)
 		{
 			new TextField
 			{
-				Parent          = parent,
-				Dock            = DockStyle.Left,
-				PreferredWidth  = width,
-				IsReadOnly      = true,
-				Text            = text,
+				Parent           = parent,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = width,
+				IsReadOnly       = true,
+				Text             = text,
+				Margins          = new Margins (0, 0, 5, 5),
 			};
 		}
 
-		private void CreateLabel(Widget parent, int width, string text)
+		private void CreateOper(Widget parent, int width, string text)
 		{
-			new StaticText
+			var label = new StaticText
 			{
-				Parent          = parent,
-				Dock            = DockStyle.Left,
-				PreferredWidth  = width,
-				Text            = text,
-				ContentAlignment = ContentAlignment.MiddleCenter,
+				Parent           = parent,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = width,
+				Text             = text,
+				ContentAlignment = ContentAlignment.TopCenter,
+				Margins          = new Margins (0, 0, 3, 0),
 			};
+
+			label.TextLayout.DefaultFontSize = 16.0;
 		}
 
 
-		private FrameBox line1;
-		private FrameBox line2;
-		private FrameBox line3;
+		private FrameBox line1a;
+		private FrameBox line1b;
+		private FrameBox line2a;
+		private FrameBox line2b;
+		private FrameBox line3a;
+		private FrameBox line3b;
 	}
 }
