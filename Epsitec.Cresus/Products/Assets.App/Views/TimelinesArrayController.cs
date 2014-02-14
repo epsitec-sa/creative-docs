@@ -1136,12 +1136,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				var obj = this.SelectedObject;
-				if (obj != null && obj.Events.Any ())
+				if (obj != null && this.GetFilteredEvents (obj).Any ())
 				{
 					var column = this.dataArray.GetColumn (this.selectedColumn);
 					if (column != null)
 					{
-						return obj.Events.Where (x => x.Timestamp == column.Timestamp).Any ();
+						return this.GetFilteredEvents (obj).Where (x => x.Timestamp == column.Timestamp).Any ();
 					}
 				}
 
@@ -1216,9 +1216,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (this.selectedColumn == -1)
 					{
-						if (obj != null && obj.Events.Any ())
+						if (obj != null && this.GetFilteredEvents (obj).Any ())
 						{
-							var timestamp = obj.Events.First ().Timestamp;
+							var timestamp = this.GetFilteredEvents (obj).First ().Timestamp;
 							return this.dataArray.FindColumnIndex (timestamp);
 						}
 					}
@@ -1226,9 +1226,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						if (this.PrevColumnIndex.HasValue)
 						{
-							if (obj != null && obj.Events.Any ())
+							if (obj != null && this.GetFilteredEvents (obj).Any ())
 							{
-								var timestamp = obj.Events.First ().Timestamp;
+								var timestamp = this.GetFilteredEvents (obj).First ().Timestamp;
 								return this.dataArray.FindColumnIndex (timestamp);
 							}
 						}
@@ -1246,15 +1246,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.HasSelectedTimeline)
 				{
 					var obj = this.SelectedObject;
-					if (obj != null && obj.Events.Any ())
+					if (obj != null && this.GetFilteredEvents (obj).Any ())
 					{
 						var column = this.dataArray.GetColumn (this.selectedColumn);
 						if (column != null)
 						{
-							int i = obj.Events.Where (x => x.Timestamp < column.Timestamp).Count () - 1;
-							if (i >= 0)
+							var e = this.GetFilteredEvents (obj).Where (x => x.Timestamp < column.Timestamp).LastOrDefault ();
+							if (e != null)
 							{
-								var e = obj.GetEvent (i);
 								return this.dataArray.FindColumnIndex (e.Timestamp);
 							}
 						}
@@ -1272,15 +1271,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.HasSelectedTimeline)
 				{
 					var obj = this.SelectedObject;
-					if (obj != null && obj.Events.Any ())
+					if (obj != null && this.GetFilteredEvents (obj).Any ())
 					{
 						var column = this.dataArray.GetColumn (this.selectedColumn);
 						if (column != null)
 						{
-							int i = obj.Events.Where (x => x.Timestamp <= column.Timestamp).Count ();
-							if (i < obj.EventsCount)
+							var e = this.GetFilteredEvents (obj).Where (x => x.Timestamp > column.Timestamp).FirstOrDefault ();
+							if (e != null)
 							{
-								var e = obj.GetEvent (i);
 								return this.dataArray.FindColumnIndex (e.Timestamp);
 							}
 						}
@@ -1301,9 +1299,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (this.selectedColumn == -1)
 					{
-						if (obj != null && obj.Events.Any ())
+						if (obj != null && this.GetFilteredEvents (obj).Any ())
 						{
-							var timestamp = obj.Events.Last ().Timestamp;
+							var timestamp = this.GetFilteredEvents (obj).Last ().Timestamp;
 							return this.dataArray.FindColumnIndex (timestamp);
 						}
 					}
@@ -1311,9 +1309,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						if (this.NextColumnIndex.HasValue)
 						{
-							if (obj != null && obj.Events.Any ())
+							if (obj != null && this.GetFilteredEvents (obj).Any ())
 							{
-								var timestamp = obj.Events.Last ().Timestamp;
+								var timestamp = this.GetFilteredEvents (obj).Last ().Timestamp;
 								return this.dataArray.FindColumnIndex (timestamp);
 							}
 						}
@@ -1324,6 +1322,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 		#endregion
+
+
+		private IEnumerable<DataEvent> GetFilteredEvents(DataObject obj)
+		{
+			if (this.Filter == null)
+			{
+				return obj.Events;
+			}
+			else
+			{
+				return obj.Events.Where (x => this.Filter (x));
+			}
+		}
 
 
 		private DataObject SelectedObject
