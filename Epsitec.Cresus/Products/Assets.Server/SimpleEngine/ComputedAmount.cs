@@ -31,14 +31,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.ArgumentDefined = true;
 		}
 
-		public ComputedAmount(decimal? initialAmount, decimal? argumentAmount, decimal? finalAmount, bool substract, bool rate, bool argumentDefined)
+		public ComputedAmount(decimal? initialAmount, decimal? argumentAmount, decimal? finalAmount, bool subtract, bool rate, bool argumentDefined)
 		{
 			//	Initialise un montant calculé.
 			this.InitialAmount   = initialAmount;
 			this.ArgumentAmount  = argumentAmount;
 			this.FinalAmount     = finalAmount;
 			this.Computed        = true;
-			this.Subtract       = substract;
+			this.Subtract       = subtract;
 			this.Rate            = rate;
 			this.ArgumentDefined = argumentDefined;
 		}
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public static decimal? ComputeFinal(decimal? initial, decimal? argument, bool substract, bool rate)
+		public static decimal? ComputeFinal(decimal? initial, decimal? argument, bool subtract, bool rate)
 		{
 			if (initial.HasValue)
 			{
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				if (rate)
 				{
-					if (substract)
+					if (subtract)
 					{
 						return i-i*a;
 					}
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 				else
 				{
-					if (substract)
+					if (subtract)
 					{
 						return i-a;
 					}
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public static decimal? ComputeArgument(decimal? initial, decimal? final, bool substract, bool rate)
+		public static decimal? ComputeArgument(decimal? initial, decimal? final, bool subtract, bool rate)
 		{
 			if (initial.HasValue)
 			{
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 					else
 					{
-						if (substract)
+						if (subtract)
 						{
 							return (i-f)/i;
 						}
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 				else
 				{
-					if (substract)
+					if (subtract)
 					{
 						return i-f;
 					}

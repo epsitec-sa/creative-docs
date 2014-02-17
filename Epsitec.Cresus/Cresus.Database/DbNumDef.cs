@@ -851,7 +851,7 @@ namespace Epsitec.Cresus.Database
 
 
 		/// <summary>
-		/// Gets the pack offset, i.e. the value to substract to a decimal value
+		/// Gets the pack offset, i.e. the value to subtract to a decimal value
 		/// in order to center into the available range. If the available range
 		/// does not require centering, the pack offset will be zero.
 		/// </summary>

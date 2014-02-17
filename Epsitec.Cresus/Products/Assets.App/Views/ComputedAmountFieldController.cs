@@ -49,12 +49,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (value.HasValue && !value.Value.ArgumentAmount.HasValue)
 			{
-				bool substract = true;
+				bool subtract = true;
 
 				switch (this.EventType)
 				{
 					case EventType.Increase:
-						substract = false;
+						subtract = false;
 						break;
 				}
 
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					value.Value.InitialAmount,
 					value.Value.ArgumentAmount,
 					value.Value.FinalAmount,
-					substract,
+					subtract,
 					value.Value.Rate,
 					value.Value.ArgumentDefined
 				);

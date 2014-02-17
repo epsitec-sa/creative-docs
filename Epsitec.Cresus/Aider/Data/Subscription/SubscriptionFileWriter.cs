@@ -436,11 +436,11 @@ namespace Epsitec.Aider.Data.Subscription
 					string fn;
 					string ln;
 
-					// We substract 5, so we are sure that we leave a place for the firstname and
+					// We subtract 5, so we are sure that we leave a place for the firstname and
 					// the lastname, because both of the must be smaller that the maximum length.
 					var maxNamePartLength = SubscriptionFileLine.FirstnameLength - 5;
 
-					// We substract 1, because later on we will join both names by a space.
+					// We subtract 1, because later on we will join both names by a space.
 					var maxFullNameLength = SubscriptionFileLine.FirstnameLength - 1;
 
 					SubscriptionFileWriter.GetFirstAndLastname

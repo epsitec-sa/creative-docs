@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 
 			// As our item is always included in the entities that are before it or at the same
-			// position, we have to substract one from the result to get the index.
+			// position, we have to subtract one from the result to get the index.
 			return count - 1;
 		}
 
@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			// entity whose index we want. Say that if we order persons by firstnames ascending, we
 			// count the number of persons where the firstname is smaller or equal to the one of
 			// the person whose index we want. When we have that number, assuming that the order
-			// is strict and total, we substract 1 from it and we have the index.
+			// is strict and total, we subtract 1 from it and we have the index.
 			//
 			// If we look at what compose this query, we have 2 parts:
 			// - The inner part:
