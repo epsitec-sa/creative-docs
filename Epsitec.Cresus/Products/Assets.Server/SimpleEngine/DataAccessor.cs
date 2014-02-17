@@ -63,13 +63,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		#region NodeGetter
 		
-		public GuidNodeGetter GetNodeGetter(BaseType baseType)
+		public AbstractNodeGetter<GuidNode> GetNodeGetter(BaseType baseType)
 		{
 			//	Retourne un moyen standardisé d'accès en lecture aux données d'une base.
 			return new GuidNodeGetter (this.mandat, baseType);
 		}
 
-		public class GuidNodeGetter : AbstractNodeGetter<GuidNode>
+		private class GuidNodeGetter : AbstractNodeGetter<GuidNode>
 		{
 			public GuidNodeGetter(DataMandat mandat, BaseType baseType)
 			{
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				this.baseType = baseType;
 			}
 
-			public override int Count
+			public override int					Count
 			{
 				get
 				{
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
-			public override GuidNode this[int index]
+			public override GuidNode			this[int index]
 			{
 				get
 				{
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
-			private GuidList<DataObject> Data
+			private GuidList<DataObject>		Data
 			{
 				get
 				{
