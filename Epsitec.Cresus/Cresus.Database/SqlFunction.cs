@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Database
 					//	Math :
 
 					case SqlFunctionCode.MathAdd:
-					case SqlFunctionCode.MathSubstract:
+					case SqlFunctionCode.MathSubtract:
 					case SqlFunctionCode.MathMultiply:
 					case SqlFunctionCode.MathDivide:
 						return 2;

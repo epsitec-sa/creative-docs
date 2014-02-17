@@ -833,7 +833,7 @@ namespace Epsitec.Common.Widgets
 				{
 					switch (message.KeyCode)
 					{
-						case KeyCode.NumericSubstract:
+						case KeyCode.NumericSubtract:
 							return Unicode.ToString (Unicode.Code.EmDash);
 					}
 				}
@@ -841,7 +841,7 @@ namespace Epsitec.Common.Widgets
 				{
 					switch (message.KeyCode)
 					{
-						case KeyCode.NumericSubstract:
+						case KeyCode.NumericSubtract:
 							return Unicode.ToString (Unicode.Code.EnDash);
 
 						case KeyCode.Dash:

@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.Server.Helpers
 			{
 				if (ca.Value.Computed)
 				{
-					string o = ca.Value.Substract ? "− " : "+ ";  // 2212: signe moins
+					string o = ca.Value.Subtract ? "− " : "+ ";  // 2212: signe moins
 
 					string a;
 					if (ca.Value.Rate)

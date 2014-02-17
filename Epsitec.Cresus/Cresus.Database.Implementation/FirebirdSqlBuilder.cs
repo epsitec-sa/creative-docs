@@ -1310,7 +1310,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			switch (sqlFunction.Code)
 			{
 				case SqlFunctionCode.MathAdd:					this.Append (" + ");		break;
-				case SqlFunctionCode.MathSubstract:				this.Append (" - ");		break;
+				case SqlFunctionCode.MathSubtract:				this.Append (" - ");		break;
 				case SqlFunctionCode.MathMultiply:				this.Append (" * ");		break;
 				case SqlFunctionCode.MathDivide:				this.Append (" / ");		break;
 				case SqlFunctionCode.CompareEqual:				this.Append (" = ");		break;

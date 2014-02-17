@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		private void DecrementLockCounter(IList<Lock> locks)
 		{
-			this.UpdateLockCounter (locks, SqlFunctionCode.MathSubstract);
+			this.UpdateLockCounter (locks, SqlFunctionCode.MathSubtract);
 		}
 
 

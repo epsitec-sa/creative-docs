@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				(
 					new SqlFunction
 					(
-						SqlFunctionCode.MathSubstract,
+						SqlFunctionCode.MathSubtract,
 						this.dbInfrastructure.DefaultSqlBuilder.GetSqlFieldForCurrentTimeStamp (),
 						SqlField.CreateName (this.table.Columns[ConnectionManager.TableFactory.ColumnRefreshTimeName].GetSqlName ())
 					)

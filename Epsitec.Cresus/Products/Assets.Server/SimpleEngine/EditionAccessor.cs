@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							property.Value.FinalAmount,
 							null,
 							property.Value.FinalAmount,
-							property.Value.Substract,
+							property.Value.Subtract,
 							property.Value.Rate,
 							false
 						);

@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database
 		Unknown,
 
 		MathAdd,								//	a + b
-		MathSubstract,							//	a - b
+		MathSubtract,							//	a - b
 		MathMultiply,							//	a * b
 		MathDivide,								//	a / b
 

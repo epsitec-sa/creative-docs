@@ -104,7 +104,7 @@ namespace Epsitec.Common.Widgets
 		NumericMultiply		= 106,
 		NumericAdd			= 107,
 //?		NumericSeparator	= 108,
-		NumericSubstract	= 109,
+		NumericSubtract	= 109,
 		NumericDecimal		= 110,
 		NumericDivide		= 111,
 

@@ -223,7 +223,7 @@ namespace Epsitec.Common.Widgets
 
 			this.ComboAddCode(KeyCode.NumericDivide);
 			this.ComboAddCode(KeyCode.NumericMultiply);
-			this.ComboAddCode(KeyCode.NumericSubstract);
+			this.ComboAddCode(KeyCode.NumericSubtract);
 			this.ComboAddCode(KeyCode.NumericAdd);
 			this.ComboAddCode(KeyCode.NumericDecimal);
 			this.ComboAddCode(KeyCode.NumericEnter);

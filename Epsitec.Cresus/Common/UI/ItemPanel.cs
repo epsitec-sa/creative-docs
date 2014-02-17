@@ -1840,7 +1840,7 @@ namespace Epsitec.Common.UI
 					message.Handled = true;
 					break;
 
-				case KeyCode.NumericSubstract:
+				case KeyCode.NumericSubtract:
 					this.ProcessExpandKey (false);
 					message.Handled = true;
 					break;

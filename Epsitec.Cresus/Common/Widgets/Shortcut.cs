@@ -264,7 +264,7 @@ namespace Epsitec.Common.Widgets
 							break;
 
 						case KeyCode.NumericAdd:
-						case KeyCode.NumericSubstract:
+						case KeyCode.NumericSubtract:
 						case KeyCode.NumericMultiply:
 						case KeyCode.NumericDivide:
 						case KeyCode.NumericDecimal:

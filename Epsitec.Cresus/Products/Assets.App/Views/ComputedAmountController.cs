@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ca.InitialAmount,
 					ca.ArgumentAmount,
 					ca.FinalAmount,
-					!ca.Substract,
+					!ca.Subtract,
 					ca.Rate,
 					ca.ArgumentDefined
 				);
@@ -271,7 +271,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ca.InitialAmount,
 					ca.ArgumentAmount,
 					final,
-					ca.Substract,
+					ca.Subtract,
 					ca.Rate,
 					ca.ArgumentDefined
 				);
@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ca.InitialAmount,
 					0.0m,
 					ca.FinalAmount,
-					ca.Substract,
+					ca.Subtract,
 					!ca.Rate,
 					ca.ArgumentDefined
 				);
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ca.InitialAmount,
 					argument,
 					ca.FinalAmount,
-					ca.Substract,
+					ca.Subtract,
 					ca.Rate,
 					ca.ArgumentDefined
 				);
@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ca.InitialAmount,
 					argument,
 					final,
-					ca.Substract,
+					ca.Subtract,
 					ca.Rate,
 					true
 				);
@@ -344,7 +344,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ca.InitialAmount,
 					argument,
 					final,
-					ca.Substract,
+					ca.Subtract,
 					ca.Rate,
 					false
 				);
@@ -391,7 +391,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var ca = this.computedAmount.Value;
 
-					this.addSubButton.GlyphShape = ca.Substract ? GlyphShape.Minus : GlyphShape.Plus;
+					this.addSubButton.GlyphShape = ca.Subtract ? GlyphShape.Minus : GlyphShape.Plus;
 					this.rateButton.Text = ca.Rate ? "%" : "CHF";
 					this.equalText.Text = "=";
 
