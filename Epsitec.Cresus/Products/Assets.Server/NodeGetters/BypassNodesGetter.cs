@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Server.NodesGetter
+namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	/// <summary>
 	/// Classe totalement inutile, juste pour l'exemple !

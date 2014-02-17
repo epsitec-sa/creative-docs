@@ -81,8 +81,8 @@
     <Compile Include="Helpers\TreeTableFiller.cs" />
     <Compile Include="EventHandler.cs" />
     <Compile Include="Helpers\Text.cs" />
-    <Compile Include="NodesGetter\LastViewNode.cs" />
-    <Compile Include="NodesGetter\LastViewsNodesGetter.cs" />
+    <Compile Include="NodeGetters\LastViewNode.cs" />
+    <Compile Include="NodeGetters\LastViewsNodesGetter.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
     <Compile Include="Popups\CategoriesPopup.cs" />

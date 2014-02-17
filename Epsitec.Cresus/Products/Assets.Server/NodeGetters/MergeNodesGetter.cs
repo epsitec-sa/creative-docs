@@ -6,7 +6,7 @@ using System.Linq;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.Server.NodesGetter
+namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	/// <summary>
 	/// Gère l'accès en lecture à la fusion des objets dans les groupes.

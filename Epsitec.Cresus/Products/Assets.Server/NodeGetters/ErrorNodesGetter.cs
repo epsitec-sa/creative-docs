@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
-namespace Epsitec.Cresus.Assets.Server.NodesGetter
+namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	/// <summary>
 	/// Donne un accès en lecture à une liste d'erreurs ou de messages,

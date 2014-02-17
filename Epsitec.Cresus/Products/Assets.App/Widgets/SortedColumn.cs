@@ -1,7 +1,7 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Cresus.Assets.Server.NodesGetter;
+using Epsitec.Cresus.Assets.Server.NodeGetters;
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public class SortedColumn

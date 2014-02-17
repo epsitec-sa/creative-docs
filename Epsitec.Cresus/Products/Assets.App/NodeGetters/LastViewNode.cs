@@ -6,7 +6,7 @@ using System.Linq;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.NodesGetter
+namespace Epsitec.Cresus.Assets.App.NodeGetters
 {
 	/// <summary>
 	///	Noeud correspondant à une ligne de la liste des anciennes vues.

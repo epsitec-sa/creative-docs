@@ -3,10 +3,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.NodesGetter;
+using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.NodesGetter
+namespace Epsitec.Cresus.Assets.App.NodeGetters
 {
 	public class LastViewsNodesGetter : AbstractNodesGetter<LastViewNode>  // outputNodes
 	{
