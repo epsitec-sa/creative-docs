@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public override int GetHashCode()
 		{
-			return this.date.GetHashCode ();
+			return this.date.GetHashCode () ^ this.position;
 		}
 
 		public override bool Equals(object obj)
