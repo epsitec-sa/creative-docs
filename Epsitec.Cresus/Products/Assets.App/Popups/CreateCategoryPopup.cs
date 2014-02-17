@@ -26,17 +26,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.controller = new NavigationTreeTableController ();
 
-			var primary      = this.accessor.GetNodesGetter (BaseType.Categories);
-			var secondary    = new SortableNodesGetter (primary, this.accessor, BaseType.Categories);
-			this.nodesGetter = new SorterNodesGetter (secondary);
+			var primary      = this.accessor.GetNodeGetter (BaseType.Categories);
+			var secondary    = new SortableNodeGetter (primary, this.accessor, BaseType.Categories);
+			this.nodeGetter = new SorterNodeGetter (secondary);
 
 			secondary.SetParams (null, SortingInstructions.Default);
-			this.nodesGetter.SetParams (SortingInstructions.Default);
+			this.nodeGetter.SetParams (SortingInstructions.Default);
 
 			this.visibleSelectedRow = -1;
 			this.UpdateSelectedRow ();
 
-			this.dataFiller = new SingleCategoriesTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new SingleCategoriesTreeTableFiller (this.accessor, this.nodeGetter);
 		}
 
 
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 
-				var node = this.nodesGetter[this.visibleSelectedRow];
+				var node = this.nodeGetter[this.visibleSelectedRow];
 				this.ObjectModel = node.Guid;
 
 				this.UpdateController ();
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (this.visibleSelectedRow != -1)
 			{
-				var node = this.nodesGetter[this.visibleSelectedRow];
+				var node = this.nodeGetter[this.visibleSelectedRow];
 				this.ObjectModel = node.Guid;
 			}
 		}
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor						accessor;
 		private readonly NavigationTreeTableController		controller;
-		private readonly SorterNodesGetter					nodesGetter;
+		private readonly SorterNodeGetter					nodeGetter;
 		private readonly SingleCategoriesTreeTableFiller	dataFiller;
 
 		private TextField									textField;

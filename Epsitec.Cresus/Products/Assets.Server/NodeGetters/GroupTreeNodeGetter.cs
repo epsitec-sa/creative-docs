@@ -14,28 +14,28 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///     |
 	///     o  GuidNode (BaseType.Groups)
 	///     V
-	/// GroupParentNodesGetter
+	/// GroupParentNodeGetter
 	///     |
 	///     o  ParentNode
 	///     V
-	/// GroupLevelNodesGetter
+	/// GroupLevelNodeGetter
 	///     |
 	///     o  LevelNode
 	///     V
-	/// TreeObjectsNodesGetter
+	/// TreeObjectsNodeGetter
 	///     |
 	///     o  TreeNode
 	///     V
 	/// 
 	/// </summary>
-	public class GroupTreeNodesGetter : AbstractNodesGetter<TreeNode>, ITreeFunctions  // outputNodes
+	public class GroupTreeNodeGetter : AbstractNodeGetter<TreeNode>, ITreeFunctions  // outputNodes
 	{
-		public GroupTreeNodesGetter(DataAccessor accessor, AbstractNodesGetter<GuidNode> inputNodes)
+		public GroupTreeNodeGetter(DataAccessor accessor, AbstractNodeGetter<GuidNode> inputNodes)
 		{
 			this.inputNodes        = inputNodes;
-			this.parentNodesGetter = new GroupParentNodesGetter (inputNodes, accessor);
-			this.levelNodesGetter  = new GroupLevelNodesGetter (this.parentNodesGetter, accessor);
-			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.levelNodesGetter);
+			this.parentNodeGetter = new GroupParentNodeGetter (inputNodes, accessor);
+			this.levelNodeGetter  = new GroupLevelNodeGetter (this.parentNodeGetter, accessor);
+			this.treeObjectsGetter = new TreeObjectsNodeGetter (this.levelNodeGetter);
 		}
 
 
@@ -73,8 +73,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private void UpdateData()
 		{
-			this.parentNodesGetter.SetParams (this.timestamp, this.sortingInstructions);
-			this.levelNodesGetter.SetParams(Guid.Empty, this.sortingInstructions, false);
+			this.parentNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
+			this.levelNodeGetter.SetParams(Guid.Empty, this.sortingInstructions, false);
 			this.treeObjectsGetter.SetParams (inputIsMerge: false);
 		}
 
@@ -128,10 +128,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		#endregion
 
 
-		private readonly AbstractNodesGetter<GuidNode>	inputNodes;
-		private readonly GroupParentNodesGetter			parentNodesGetter;
-		private readonly GroupLevelNodesGetter			levelNodesGetter;
-		private readonly TreeObjectsNodesGetter			treeObjectsGetter;
+		private readonly AbstractNodeGetter<GuidNode>	inputNodes;
+		private readonly GroupParentNodeGetter			parentNodeGetter;
+		private readonly GroupLevelNodeGetter			levelNodeGetter;
+		private readonly TreeObjectsNodeGetter			treeObjectsGetter;
 
 		private Timestamp?								timestamp;
 		private SortingInstructions						sortingInstructions;

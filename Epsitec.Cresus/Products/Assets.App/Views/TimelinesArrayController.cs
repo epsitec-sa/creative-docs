@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.selectedColumn = -1;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
-			var groupNodesGetter  = this.accessor.GetNodesGetter (BaseType.Groups);
-			var objectNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
-			this.nodesGetter      = new ObjectsNodesGetter (this.accessor, groupNodesGetter, objectNodesGetter);
+			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
+			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Objects);
+			this.nodeGetter      = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
-			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.nodeGetter);
 
 			this.arrayLogic = new TimelinesArrayLogic (this.accessor);
 			this.dataArray = new TimelinesArrayLogic.DataArray ();
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public void UpdateData()
 		{
 			var timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
-			this.nodesGetter.SetParams (timestamp, this.rootGuid, SortingInstructions.Default);
+			this.nodeGetter.SetParams (timestamp, this.rootGuid, SortingInstructions.Default);
 			this.dataFiller.Timestamp = timestamp;
 
 			this.UpdateDataArray ();
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.selectedRow != -1)
 				{
-					var node = this.nodesGetter[this.selectedRow];
+					var node = this.nodeGetter[this.selectedRow];
 					if (!node.IsEmpty)
 					{
 						return node.Guid;
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				var selectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == value);
+				var selectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == value);
 				this.SetSelection (selectedRow, this.selectedColumn);
 			}
 		}
@@ -511,7 +511,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var guid = this.SelectedGuid;
 			var timestamp = this.SelectedTimestamp;
 
-			this.nodesGetter.CompactOrExpand (row);
+			this.nodeGetter.CompactOrExpand (row);
 			this.UpdateDataArray ();
 			this.UpdateScroller ();
 			this.UpdateController ();
@@ -527,7 +527,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var guid = this.SelectedGuid;
 			var timestamp = this.SelectedTimestamp;
 
-			this.nodesGetter.CompactAll ();
+			this.nodeGetter.CompactAll ();
 			this.UpdateDataArray ();
 			this.UpdateScroller ();
 			this.UpdateController ();
@@ -543,7 +543,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var guid = this.SelectedGuid;
 			var timestamp = this.SelectedTimestamp;
 
-			this.nodesGetter.ExpandAll ();
+			this.nodeGetter.ExpandAll ();
 			this.UpdateDataArray ();
 			this.UpdateScroller ();
 			this.UpdateController ();
@@ -960,7 +960,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			var totalRows   = (decimal) this.nodesGetter.Count;
+			var totalRows   = (decimal) this.nodeGetter.Count;
 			var visibleRows = (decimal) this.VisibleRows;
 
 			if (visibleRows < 0 || totalRows == 0)
@@ -993,7 +993,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				int firstRow    = this.TopVisibleRow;
 				int visibleRows = this.VisibleRows;
-				int count = System.Math.Min (this.nodesGetter.Count, firstRow+visibleRows);
+				int count = System.Math.Min (this.nodeGetter.Count, firstRow+visibleRows);
 
 				for (int row=firstRow; row<count; row++)
 				{
@@ -1005,7 +1005,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private int LineToRow(int line)
 		{
 			var dummy = this.DummyCount;
-			int count = System.Math.Min (this.nodesGetter.Count, this.VisibleRows);
+			int count = System.Math.Min (this.nodeGetter.Count, this.VisibleRows);
 
 			if (line >= dummy && line < dummy+count)
 			{
@@ -1023,7 +1023,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	pour occuper l'espace vide.
 			get
 			{
-				return System.Math.Max (this.VisibleRows - this.nodesGetter.Count, 0);
+				return System.Math.Max (this.VisibleRows - this.nodeGetter.Count, 0);
 			}
 		}
 
@@ -1071,7 +1071,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
-			this.arrayLogic.Update (this.dataArray, this.nodesGetter, this.Filter);
+			this.arrayLogic.Update (this.dataArray, this.nodeGetter, this.Filter);
 		}
 
 
@@ -1084,8 +1084,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateObjectCommand (ToolbarCommand.Next,  this.selectedRow, this.NextRowIndex);
 			this.UpdateObjectCommand (ToolbarCommand.Last,  this.selectedRow, this.LastRowIndex);
 
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.nodesGetter.IsAllCompacted);
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.nodesGetter.IsAllExpanded);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.nodeGetter.IsAllCompacted);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.nodeGetter.IsAllExpanded);
 
 			this.objectsToolbar.SetCommandEnable (ToolbarCommand.New,      true);
 			this.objectsToolbar.SetCommandEnable (ToolbarCommand.Delete,   this.SelectedObject != null);
@@ -1120,7 +1120,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.selectedRow != -1)
 				{
-					var node = this.nodesGetter[this.selectedRow];
+					var node = this.nodeGetter[this.selectedRow];
 					if (!node.IsEmpty)
 					{
 						return node.BaseType == BaseType.Objects;
@@ -1171,7 +1171,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					int i = this.selectedRow - 1;
 					i = System.Math.Max (i, 0);
-					i = System.Math.Min (i, this.nodesGetter.Count - 1);
+					i = System.Math.Min (i, this.nodeGetter.Count - 1);
 					return i;
 				}
 			}
@@ -1189,7 +1189,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					int i = this.selectedRow + 1;
 					i = System.Math.Max (i, 0);
-					i = System.Math.Min (i, this.nodesGetter.Count - 1);
+					i = System.Math.Min (i, this.nodeGetter.Count - 1);
 					return i;
 				}
 			}
@@ -1199,7 +1199,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.nodesGetter.Count - 1;
+				return this.nodeGetter.Count - 1;
 			}
 		}
 		#endregion
@@ -1343,7 +1343,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.selectedRow != -1)
 				{
-					var node = this.nodesGetter[this.selectedRow];
+					var node = this.nodeGetter[this.selectedRow];
 					if (!node.IsEmpty)
 					{
 						return this.accessor.GetObject (node.BaseType, node.Guid);
@@ -1385,7 +1385,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private const int leftColumnWidth = 180;
 
 		private readonly DataAccessor						accessor;
-		private readonly ObjectsNodesGetter					nodesGetter;
+		private readonly ObjectsNodeGetter					nodeGetter;
 		private readonly SingleObjectsTreeTableFiller		dataFiller;
 		private readonly TimelinesArrayLogic				arrayLogic;
 		private readonly TimelinesArrayLogic.DataArray		dataArray;

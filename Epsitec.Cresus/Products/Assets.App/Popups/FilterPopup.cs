@@ -25,14 +25,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller = new NavigationTreeTableController();
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
-			this.nodesGetter = new GroupTreeNodesGetter (this.accessor, primaryNodesGetter);
-			this.nodesGetter.SetParams (null, SortingInstructions.Default);
+			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
+			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, primaryNodeGetter);
+			this.nodeGetter.SetParams (null, SortingInstructions.Default);
 
-			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
+			this.visibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 			this.hasFilter = (this.visibleSelectedRow != -1);
 
-			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.UpdateController ();
 
-				var node = this.nodesGetter[this.visibleSelectedRow];
+				var node = this.nodeGetter[this.visibleSelectedRow];
 				this.OnNavigate (node.Guid);
 				this.ClosePopup ();
 			};
@@ -117,13 +117,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var guid = this.SelectedGuid;
 
 			int row = 0;
-			while (row < this.nodesGetter.Count)
+			while (row < this.nodeGetter.Count)
 			{
-				var node = this.nodesGetter[row];
+				var node = this.nodeGetter[row];
 
 				if (node.Level == 1)
 				{
-					this.nodesGetter.CompactOrExpand (row);
+					this.nodeGetter.CompactOrExpand (row);
 				}
 
 				row++;
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Etend ou compacte une ligne (inverse son mode actuel).
 			var guid = this.SelectedGuid;
 
-			this.nodesGetter.CompactOrExpand (row);
+			this.nodeGetter.CompactOrExpand (row);
 			this.UpdateController ();
 
 			this.SelectedGuid = guid;
@@ -149,9 +149,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			get
 			{
 				int sel = this.visibleSelectedRow;
-				if (sel != -1 && sel < this.nodesGetter.Count)
+				if (sel != -1 && sel < this.nodeGetter.Count)
 				{
-					return this.nodesGetter[sel].Guid;
+					return this.nodeGetter[sel].Guid;
 				}
 				else
 				{
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	visible, vers le haut.
 			set
 			{
-				this.visibleSelectedRow = this.nodesGetter.SearchBestIndex (value);
+				this.visibleSelectedRow = this.nodeGetter.SearchBestIndex (value);
 				this.UpdateController ();
 			}
 		}
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly GroupTreeNodesGetter			nodesGetter;
+		private readonly GroupTreeNodeGetter			nodeGetter;
 		private readonly SingleGroupsTreeTableFiller	dataFiller;
 		private readonly bool							hasFilter;
 

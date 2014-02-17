@@ -15,41 +15,41 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///     |
 	///     o  GuidNode (BaseType.Groups)
 	///     V
-	/// GroupParentNodesGetter
+	/// GroupParentNodeGetter
 	///     |
 	///     o  ParentNode
 	///     V
-	/// GroupLevelNodesGetter
+	/// GroupLevelNodeGetter
 	///     |
 	///     o  LevelNode                     SortableNode              GuidNode (BaseType.Objects)
 	///     V
-	/// MergeNodesGetter <-o- SorterNodesGetter <-o- SortableNodesGetter <-o-
+	/// MergeNodeGetter <-o- SorterNodeGetter <-o- SortableNodeGetter <-o-
 	///     |
 	///     o  LevelNode
 	///     V
-	/// TreeObjectsNodesGetter
+	/// TreeObjectsNodeGetter
 	///     |
 	///     o  TreeNode
 	///     V
-	/// CumulNodesGetter
+	/// CumulNodeGetter
 	///     |
 	///     o  CumulNode
 	///     V
 	/// 
 	/// </summary>
-	public class ObjectsNodesGetter : AbstractNodesGetter<CumulNode>, ITreeFunctions  // outputNodes
+	public class ObjectsNodeGetter : AbstractNodeGetter<CumulNode>, ITreeFunctions  // outputNodes
 	{
-		public ObjectsNodesGetter(DataAccessor accessor, AbstractNodesGetter<GuidNode> groupNodes, AbstractNodesGetter<GuidNode> objectNodes)
+		public ObjectsNodeGetter(DataAccessor accessor, AbstractNodeGetter<GuidNode> groupNodes, AbstractNodeGetter<GuidNode> objectNodes)
 		{
-			this.objectNodesGetter1 = new SortableNodesGetter (objectNodes, accessor, BaseType.Objects);
-			this.objectNodesGetter2 = new SorterNodesGetter (this.objectNodesGetter1);
+			this.objectNodeGetter1 = new SortableNodeGetter (objectNodes, accessor, BaseType.Objects);
+			this.objectNodeGetter2 = new SorterNodeGetter (this.objectNodeGetter1);
 
-			this.groupNodesGetter1 = new GroupParentNodesGetter (groupNodes, accessor);
-			this.groupNodesGetter2 = new GroupLevelNodesGetter (this.groupNodesGetter1, accessor);
+			this.groupNodeGetter1 = new GroupParentNodeGetter (groupNodes, accessor);
+			this.groupNodeGetter2 = new GroupLevelNodeGetter (this.groupNodeGetter1, accessor);
 
-			this.mergeNodesGetter  = new MergeNodesGetter (accessor, this.groupNodesGetter2, this.objectNodesGetter2);
-			this.treeObjectsGetter = new TreeObjectsNodesGetter (this.mergeNodesGetter);
-			this.cumulNodesGetter  = new CumulNodesGetter (accessor, this.treeObjectsGetter);
+			this.mergeNodeGetter  = new MergeNodeGetter (accessor, this.groupNodeGetter2, this.objectNodeGetter2);
+			this.treeObjectsGetter = new TreeObjectsNodeGetter (this.mergeNodeGetter);
+			this.cumulNodeGetter  = new CumulNodeGetter (accessor, this.treeObjectsGetter);
 
 			this.sortingInstructions = SortingInstructions.Empty;
 		}
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				return this.cumulNodesGetter.Count;
+				return this.cumulNodeGetter.Count;
 			}
 		}
 
@@ -77,9 +77,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				if (index >= 0 && index < this.cumulNodesGetter.Count)
+				if (index >= 0 && index < this.cumulNodeGetter.Count)
 				{
-					return this.cumulNodesGetter[index];
+					return this.cumulNodeGetter[index];
 				}
 				else
 				{
@@ -92,21 +92,21 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public ComputedAmount? GetValue(DataObject obj, CumulNode node, ObjectField field)
 		{
 			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
-			return this.cumulNodesGetter.GetValue (obj, node, field);
+			return this.cumulNodeGetter.GetValue (obj, node, field);
 		}
 
 
 		private void UpdateData()
 		{
-			this.objectNodesGetter1.SetParams (this.timestamp, this.sortingInstructions);
-			this.objectNodesGetter2.SetParams (this.sortingInstructions);
+			this.objectNodeGetter1.SetParams (this.timestamp, this.sortingInstructions);
+			this.objectNodeGetter2.SetParams (this.sortingInstructions);
 
-			this.groupNodesGetter1.SetParams (this.timestamp, this.sortingInstructions);
-			this.groupNodesGetter2.SetParams (this.rootGuid, this.sortingInstructions, this.rootGuid.IsEmpty);
+			this.groupNodeGetter1.SetParams (this.timestamp, this.sortingInstructions);
+			this.groupNodeGetter2.SetParams (this.rootGuid, this.sortingInstructions, this.rootGuid.IsEmpty);
 
-			this.mergeNodesGetter.SetParams (this.timestamp);
+			this.mergeNodeGetter.SetParams (this.timestamp);
 			this.treeObjectsGetter.SetParams (inputIsMerge: true);
-			this.cumulNodesGetter.SetParams (this.timestamp);
+			this.cumulNodeGetter.SetParams (this.timestamp);
 		}
 
 
@@ -130,19 +130,19 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public void CompactOrExpand(int index)
 		{
 			this.treeObjectsGetter.CompactOrExpand (index);
-			this.cumulNodesGetter.SetParams (this.timestamp);
+			this.cumulNodeGetter.SetParams (this.timestamp);
 		}
 
 		public void CompactAll()
 		{
 			this.treeObjectsGetter.CompactAll ();
-			this.cumulNodesGetter.SetParams (this.timestamp);
+			this.cumulNodeGetter.SetParams (this.timestamp);
 		}
 
 		public void ExpandAll()
 		{
 			this.treeObjectsGetter.ExpandAll ();
-			this.cumulNodesGetter.SetParams (this.timestamp);
+			this.cumulNodeGetter.SetParams (this.timestamp);
 		}
 
 		public int SearchBestIndex(Guid value)
@@ -162,13 +162,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		#endregion
 
 
-		private readonly SortableNodesGetter		objectNodesGetter1;
-		private readonly SorterNodesGetter			objectNodesGetter2;
-		private readonly GroupParentNodesGetter		groupNodesGetter1;
-		private readonly GroupLevelNodesGetter		groupNodesGetter2;
-		private readonly MergeNodesGetter			mergeNodesGetter;
-		private readonly TreeObjectsNodesGetter		treeObjectsGetter;
-		private readonly CumulNodesGetter			cumulNodesGetter;
+		private readonly SortableNodeGetter		objectNodeGetter1;
+		private readonly SorterNodeGetter			objectNodeGetter2;
+		private readonly GroupParentNodeGetter		groupNodeGetter1;
+		private readonly GroupLevelNodeGetter		groupNodeGetter2;
+		private readonly MergeNodeGetter			mergeNodeGetter;
+		private readonly TreeObjectsNodeGetter		treeObjectsGetter;
+		private readonly CumulNodeGetter			cumulNodeGetter;
 
 		private Timestamp?							timestamp;
 		private Guid								rootGuid;

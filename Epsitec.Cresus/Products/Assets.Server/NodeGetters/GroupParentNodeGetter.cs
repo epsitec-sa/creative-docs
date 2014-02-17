@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// et des valeurs pour le tri (ComparableData).
 	/// GuidNode -> ParentNode
 	/// </summary>
-	public class GroupParentNodesGetter : AbstractNodesGetter<ParentNode>  // outputNodes
+	public class GroupParentNodeGetter : AbstractNodeGetter<ParentNode>  // outputNodes
 	{
-		public GroupParentNodesGetter(AbstractNodesGetter<GuidNode> inputNodes, DataAccessor accessor)
+		public GroupParentNodeGetter(AbstractNodeGetter<GuidNode> inputNodes, DataAccessor accessor)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly AbstractNodesGetter<GuidNode>	inputNodes;
+		private readonly AbstractNodeGetter<GuidNode>	inputNodes;
 		private readonly DataAccessor					accessor;
 
 		private Timestamp?								timestamp;

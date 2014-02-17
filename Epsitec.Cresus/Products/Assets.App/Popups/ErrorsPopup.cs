@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.controller = new NavigationTreeTableController ();
 
-			this.nodesGetter = new ErrorNodesGetter (this.errors);
-			this.dataFiller = new ErrorsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.nodeGetter = new ErrorNodeGetter (this.errors);
+			this.dataFiller = new ErrorsTreeTableFiller (this.accessor, this.nodeGetter);
 
 			this.visibleSelectedRow = -1;
 		}
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly DataAccessor						accessor;
 		private readonly List<Error>						errors;
 		private readonly NavigationTreeTableController		controller;
-		private readonly ErrorNodesGetter					nodesGetter;
+		private readonly ErrorNodeGetter					nodeGetter;
 		private readonly ErrorsTreeTableFiller				dataFiller;
 
 		private int											visibleSelectedRow;

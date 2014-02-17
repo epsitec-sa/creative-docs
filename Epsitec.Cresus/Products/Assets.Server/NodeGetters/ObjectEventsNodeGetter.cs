@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// Accès en lecture aux événements triables d'un objet.
 	/// événements d'un objet -> SortableNode
 	/// </summary>
-	public class ObjectEventsNodesGetter : AbstractNodesGetter<SortableNode>  // outputNodes
+	public class ObjectEventsNodeGetter : AbstractNodeGetter<SortableNode>  // outputNodes
 	{
 		public void SetParams(DataObject dataObject, SortingInstructions sortingInstructions)
 		{

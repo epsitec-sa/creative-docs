@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Etend ou compacte une ligne (inverse son mode actuel).
 			using (new SaveSelectedGuid (this))
 			{
-				this.TreeNodesGetter.CompactOrExpand (row);
+				this.TreeNodeGetter.CompactOrExpand (row);
 				this.UpdateController ();
 				this.UpdateToolbar ();
 			}
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Compacte toutes les lignes.
 			using (new SaveSelectedGuid (this))
 			{
-				this.TreeNodesGetter.CompactAll ();
+				this.TreeNodeGetter.CompactAll ();
 				this.UpdateController ();
 				this.UpdateToolbar ();
 			}
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Etend toutes les lignes.
 			using (new SaveSelectedGuid (this))
 			{
-				this.TreeNodesGetter.ExpandAll ();
+				this.TreeNodeGetter.ExpandAll ();
 				this.UpdateController ();
 				this.UpdateToolbar ();
 			}
@@ -329,7 +329,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					int i = this.VisibleSelectedRow - 1;
 					i = System.Math.Max (i, 0);
-					i = System.Math.Min (i, this.nodesGetter.Count - 1);
+					i = System.Math.Min (i, this.nodeGetter.Count - 1);
 					return i;
 				}
 			}
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					int i = this.VisibleSelectedRow + 1;
 					i = System.Math.Max (i, 0);
-					i = System.Math.Min (i, this.nodesGetter.Count - 1);
+					i = System.Math.Min (i, this.nodeGetter.Count - 1);
 					return i;
 				}
 			}
@@ -357,7 +357,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.nodesGetter.Count - 1;
+				return this.nodeGetter.Count - 1;
 			}
 		}
 
@@ -380,11 +380,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private ITreeFunctions TreeNodesGetter
+		private ITreeFunctions TreeNodeGetter
 		{
 			get
 			{
-				return this.nodesGetter as ITreeFunctions;
+				return this.nodeGetter as ITreeFunctions;
 			}
 		}
 
@@ -428,7 +428,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected string						title;
 		protected bool							hasFilter;
 		protected bool							hasTreeOperations;
-		protected AbstractNodesGetter<T>		nodesGetter;
+		protected AbstractNodeGetter<T>		nodeGetter;
 		protected AbstractTreeTableFiller<T>	dataFiller;
 		protected TopTitle						topTitle;
 		protected NavigationTreeTableController	controller;

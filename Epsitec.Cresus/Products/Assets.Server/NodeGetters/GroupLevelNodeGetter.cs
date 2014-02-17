@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// ordonnées avec une indication du level.
 	/// ParentNode -> LevelNode
 	/// </summary>
-	public class GroupLevelNodesGetter : AbstractNodesGetter<LevelNode>  // outputNodes
+	public class GroupLevelNodeGetter : AbstractNodeGetter<LevelNode>  // outputNodes
 	{
-		public GroupLevelNodesGetter(AbstractNodesGetter<ParentNode> inputNodes, DataAccessor accessor)
+		public GroupLevelNodeGetter(AbstractNodeGetter<ParentNode> inputNodes, DataAccessor accessor)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			//	Construit la liste finale consultable en sortie.
 			foreach (var treeNode in list)
 			{
-				int level = GroupLevelNodesGetter.GetLevel (treeNode);
+				int level = GroupLevelNodeGetter.GetLevel (treeNode);
 				var n = new LevelNode (treeNode.Node.Guid, BaseType.Groups, level, null);
 				this.levelNodes.Add (n);
 			}
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly AbstractNodesGetter<ParentNode> inputNodes;
+		private readonly AbstractNodeGetter<ParentNode> inputNodes;
 		private readonly DataAccessor					accessor;
 		private readonly List<LevelNode>				levelNodes;
 

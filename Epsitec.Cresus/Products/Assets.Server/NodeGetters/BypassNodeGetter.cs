@@ -11,9 +11,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// Pourra servir de base pour implémenter un filtre, par exemple.
 	/// GuidNode -> GuidNode
 	/// </summary>
-	public class BypassNodesGetter : AbstractNodesGetter<GuidNode>  // outputNodes
+	public class BypassNodeGetter : AbstractNodeGetter<GuidNode>  // outputNodes
 	{
-		public BypassNodesGetter(AbstractNodesGetter<GuidNode> inputNodes)
+		public BypassNodeGetter(AbstractNodeGetter<GuidNode> inputNodes)
 		{
 			this.inputNodes = inputNodes;
 		}
@@ -36,6 +36,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly AbstractNodesGetter<GuidNode> inputNodes;
+		private readonly AbstractNodeGetter<GuidNode> inputNodes;
 	}
 }

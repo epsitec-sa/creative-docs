@@ -97,21 +97,21 @@
     <Compile Include="DataFillers\TreeTableContentItem.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="NodeGetters\ComparableData.cs" />
-    <Compile Include="NodeGetters\CumulNodesGetter.cs" />
+    <Compile Include="NodeGetters\CumulNodeGetter.cs" />
     <Compile Include="NodeGetters\CumulNode.cs" />
     <Compile Include="NodeGetters\ITreeFunctions.cs" />
-    <Compile Include="NodeGetters\ErrorNodesGetter.cs" />
+    <Compile Include="NodeGetters\ErrorNodeGetter.cs" />
     <Compile Include="NodeGetters\SortedType.cs" />
     <Compile Include="NodeGetters\SortingInstructions.cs" />
     <Compile Include="NodeGetters\SortingMachine.cs" />
-    <Compile Include="NodeGetters\SorterNodesGetter.cs" />
-    <Compile Include="NodeGetters\SortableNodesGetter.cs" />
+    <Compile Include="NodeGetters\SorterNodeGetter.cs" />
+    <Compile Include="NodeGetters\SortableNodeGetter.cs" />
     <Compile Include="NodeGetters\SortableNode.cs" />
-    <Compile Include="NodeGetters\ObjectsNodesGetter.cs" />
-    <Compile Include="NodeGetters\MergeNodesGetter.cs" />
-    <Compile Include="NodeGetters\HistoryNodesGetter.cs" />
+    <Compile Include="NodeGetters\ObjectsNodeGetter.cs" />
+    <Compile Include="NodeGetters\MergeNodeGetter.cs" />
+    <Compile Include="NodeGetters\HistoryNodeGetter.cs" />
     <Compile Include="SimpleEngine\AbstractDataProperty.cs" />
-    <Compile Include="NodeGetters\BypassNodesGetter.cs" />
+    <Compile Include="NodeGetters\BypassNodeGetter.cs" />
     <Compile Include="SimpleEngine\ComputedAmount.cs" />
     <Compile Include="SimpleEngine\BaseType.cs" />
     <Compile Include="BusinessLogic\DataDescriptions.cs" />
@@ -120,8 +120,8 @@
     <Compile Include="BusinessLogic\TimelineData.cs" />
     <Compile Include="BusinessLogic\TimelineGlyph.cs" />
     <Compile Include="BusinessLogic\TimelineMode.cs" />
-    <Compile Include="NodeGetters\GroupTreeNodesGetter.cs" />
-    <Compile Include="NodeGetters\GroupLevelNodesGetter.cs" />
+    <Compile Include="NodeGetters\GroupTreeNodeGetter.cs" />
+    <Compile Include="NodeGetters\GroupLevelNodeGetter.cs" />
     <Compile Include="SimpleEngine\DataGuidRatioProperty.cs" />
     <Compile Include="SimpleEngine\GuidRatio.cs" />
     <Compile Include="SimpleEngine\SkeletonMandat.cs" />
@@ -129,11 +129,11 @@
     <Compile Include="SimpleEngine\EditionAccessor.cs" />
     <Compile Include="SimpleEngine\DataGuidProperty.cs" />
     <Compile Include="NodeGetters\ParentNode.cs" />
-    <Compile Include="NodeGetters\GroupParentNodesGetter.cs" />
+    <Compile Include="NodeGetters\GroupParentNodeGetter.cs" />
     <Compile Include="NodeGetters\TreeNode.cs" />
     <Compile Include="NodeGetters\LevelNode.cs" />
-    <Compile Include="NodeGetters\ObjectEventsNodesGetter.cs" />
-    <Compile Include="NodeGetters\AbstractNodesGetter.cs" />
+    <Compile Include="NodeGetters\ObjectEventsNodeGetter.cs" />
+    <Compile Include="NodeGetters\AbstractNodeGetter.cs" />
     <Compile Include="NodeGetters\GuidNode.cs" />
     <Compile Include="BusinessLogic\ObjectCalculator.cs" />
     <Compile Include="SimpleEngine\GuidList.cs" />
@@ -155,7 +155,7 @@
     <Compile Include="SimpleEngine\DataStringProperty.cs" />
     <Compile Include="SimpleEngine\Timestamp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="NodeGetters\TreeObjectsNodesGetter.cs" />
+    <Compile Include="NodeGetters\TreeObjectsNodeGetter.cs" />
     <Compile Include="NodeGetters\NodeType.cs" />
   </ItemGroup>
   <ItemGroup>

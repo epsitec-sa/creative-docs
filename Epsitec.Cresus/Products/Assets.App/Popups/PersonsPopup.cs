@@ -21,16 +21,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.controller = new NavigationTreeTableController ();
 
-			var primary      = this.accessor.GetNodesGetter (BaseType.Persons);
-			var secondary    = new SortableNodesGetter (primary, this.accessor, BaseType.Persons);
-			this.nodesGetter = new SorterNodesGetter (secondary);
+			var primary      = this.accessor.GetNodeGetter (BaseType.Persons);
+			var secondary    = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
+			this.nodeGetter = new SorterNodeGetter (secondary);
 
 			secondary.SetParams (null, SortingInstructions.Default);
-			this.nodesGetter.SetParams (SortingInstructions.Default);
+			this.nodeGetter.SetParams (SortingInstructions.Default);
 
-			this.visibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
+			this.visibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 
-			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.nodeGetter);
 		}
 
 
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.UpdateController ();
 
-				var node = this.nodesGetter[this.visibleSelectedRow];
+				var node = this.nodeGetter[this.visibleSelectedRow];
 				this.OnNavigate (node.Guid);
 				this.ClosePopup ();
 			};
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Utilise au maximum les 4/10 de la hauteur.
 			int max = (int) (h*0.4) / PersonsPopup.rowHeight;
 
-			int rows = System.Math.Min (this.nodesGetter.Count, max);
+			int rows = System.Math.Min (this.nodeGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
 
 			int dx = PersonsPopup.popupWidth
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly SorterNodesGetter				nodesGetter;
+		private readonly SorterNodeGetter				nodeGetter;
 		private readonly PersonsTreeTableFiller			dataFiller;
 
 		private int										visibleSelectedRow;

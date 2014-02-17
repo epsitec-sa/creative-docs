@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.controller = new NavigationTreeTableController();
 
-			this.nodesGetter = new LastViewsNodesGetter ();
-			this.nodesGetter.SetParams (this.ViewStatesToNavigationNodes (this.viewStates));
+			this.nodeGetter = new LastViewsNodeGetter ();
+			this.nodeGetter.SetParams (this.ViewStatesToNavigationNodes (this.viewStates));
 			this.SelectedGuid = selection;
 
-			this.dataFiller = new LastViewsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new LastViewsTreeTableFiller (this.accessor, this.nodeGetter);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -89,12 +89,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var node = this.nodesGetter[this.visibleSelectedRow];
+				var node = this.nodeGetter[this.visibleSelectedRow];
 				return node.NavigationGuid;
 			}
 			set
 			{
-				this.visibleSelectedRow = this.nodesGetter.SearchIndex (value);
+				this.visibleSelectedRow = this.nodeGetter.SearchIndex (value);
 			}
 		}
 
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Utilise au maximum les 3/4 de la hauteur.
 			int max = (int) (h*0.75) / LastViewsPopup.rowHeight;
 
-			int rows = System.Math.Min (this.nodesGetter.Count, max);
+			int rows = System.Math.Min (this.nodeGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
 
 			int dx = LastViewsTreeTableFiller.TotalWidth
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				viewState.Pin = !viewState.Pin;
 
-				this.nodesGetter.SetParams (this.ViewStatesToNavigationNodes (this.viewStates));
+				this.nodeGetter.SetParams (this.ViewStatesToNavigationNodes (this.viewStates));
 				this.UpdateController ();
 			}
 		}
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly DataAccessor					accessor;
 		private readonly List<AbstractViewState>		viewStates;
 		private readonly NavigationTreeTableController	controller;
-		private readonly LastViewsNodesGetter			nodesGetter;
+		private readonly LastViewsNodeGetter			nodeGetter;
 		private readonly LastViewsTreeTableFiller		dataFiller;
 
 		private int										visibleSelectedRow;

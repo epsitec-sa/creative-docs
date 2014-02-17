@@ -12,9 +12,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// Gère l'accès en lecture "en arbre" à des objets. Les groupes compactés sont
 	/// vu avec des valeurs égales au total des sous-objets cachés.
 	/// </summary>
-	public class CumulNodesGetter : AbstractNodesGetter<CumulNode>  // outputNodes
+	public class CumulNodeGetter : AbstractNodeGetter<CumulNode>  // outputNodes
 	{
-		public CumulNodesGetter(DataAccessor accessor, TreeObjectsNodesGetter inputNodes)
+		public CumulNodeGetter(DataAccessor accessor, TreeObjectsNodeGetter inputNodes)
 		{
 			this.accessor   = accessor;
 			this.inputNodes = inputNodes;
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				if (node.BaseType == BaseType.Objects)
 				{
 					//	S'il s'agit d'un objet, on retourne le montant en tenant compte du ratio.
-					return CumulNodesGetter.GetValueAccordingToRatio (obj, this.timestamp, node.Ratio, field);
+					return CumulNodeGetter.GetValueAccordingToRatio (obj, this.timestamp, node.Ratio, field);
 				}
 				else
 				{
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 					foreach (var field in DataAccessor.ValueFields)
 					{
-						var ca = CumulNodesGetter.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, field);
+						var ca = CumulNodeGetter.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, field);
 						if (ca.HasValue)
 						{
 							if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 
 		private readonly DataAccessor			accessor;
-		private readonly TreeObjectsNodesGetter	inputNodes;
+		private readonly TreeObjectsNodeGetter	inputNodes;
 		private readonly List<CumulNode>		outputNodes;
 
 		private Timestamp?						timestamp;

@@ -28,9 +28,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///    >  Object
 	/// 
 	/// </summary>
-	public class MergeNodesGetter : AbstractNodesGetter<LevelNode>  // outputNodes
+	public class MergeNodeGetter : AbstractNodeGetter<LevelNode>  // outputNodes
 	{
-		public MergeNodesGetter(DataAccessor accessor, AbstractNodesGetter<LevelNode> groupNodes, AbstractNodesGetter<SortableNode> objectNodes)
+		public MergeNodeGetter(DataAccessor accessor, AbstractNodeGetter<LevelNode> groupNodes, AbstractNodeGetter<SortableNode> objectNodes)
 		{
 			this.accessor    = accessor;
 			this.groupNodes  = groupNodes;
@@ -125,8 +125,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 
 		private readonly DataAccessor						accessor;
-		private readonly AbstractNodesGetter<LevelNode>		groupNodes;
-		private readonly AbstractNodesGetter<SortableNode>	objectNodes;
+		private readonly AbstractNodeGetter<LevelNode>		groupNodes;
+		private readonly AbstractNodeGetter<SortableNode>	objectNodes;
 		private readonly List<LevelNode>					outputNodes;
 
 		private Timestamp?									timestamp;

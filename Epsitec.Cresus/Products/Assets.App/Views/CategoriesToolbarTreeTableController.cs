@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
 
-			var primary = this.accessor.GetNodesGetter (BaseType.Categories);
-			this.secondaryGetter = new SortableNodesGetter (primary, this.accessor, BaseType.Categories);
-			this.nodesGetter = new SorterNodesGetter (this.secondaryGetter);
+			var primary = this.accessor.GetNodeGetter (BaseType.Categories);
+			this.secondaryGetter = new SortableNodeGetter (primary, this.accessor, BaseType.Categories);
+			this.nodeGetter = new SorterNodeGetter (this.secondaryGetter);
 
 			this.title = "Catégories d'immobilisation";
 		}
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void UpdateData()
 		{
 			this.secondaryGetter.SetParams (null, this.sortingInstructions);
-			(this.nodesGetter as SorterNodesGetter).SetParams (this.sortingInstructions);
+			(this.nodeGetter as SorterNodeGetter).SetParams (this.sortingInstructions);
 
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -59,9 +59,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				int sel = this.VisibleSelectedRow;
-				if (sel != -1 && sel < this.nodesGetter.Count)
+				if (sel != -1 && sel < this.nodeGetter.Count)
 				{
-					return this.nodesGetter[sel].Guid;
+					return this.nodeGetter[sel].Guid;
 				}
 				else
 				{
@@ -71,14 +71,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Sélectionne l'objet ayant un Guid donné.
 			set
 			{
-				this.VisibleSelectedRow = this.nodesGetter.Nodes.ToList ().FindIndex (x => x.Guid == value);
+				this.VisibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == value);
 			}
 		}
 
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller);
 
 			this.controller.AddSortedColumn (0);
@@ -157,6 +157,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private SortableNodesGetter secondaryGetter;
+		private SortableNodeGetter secondaryGetter;
 	}
 }

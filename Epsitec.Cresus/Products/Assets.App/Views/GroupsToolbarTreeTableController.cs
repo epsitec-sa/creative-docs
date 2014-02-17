@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodesGetter = this.accessor.GetNodesGetter (BaseType.Groups);
-			this.nodesGetter = new GroupTreeNodesGetter (this.accessor, primaryNodesGetter);
+			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
+			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, primaryNodeGetter);
 
 			this.title = "Groupes d'immobilisation";
 		}
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void UpdateData()
 		{
-			this.NodesGetter.SetParams (null, this.sortingInstructions);
+			this.NodeGetter.SetParams (null, this.sortingInstructions);
 
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -56,11 +56,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.NodesGetter.AllToVisible (this.selectedRow);
+				return this.NodeGetter.AllToVisible (this.selectedRow);
 			}
 			set
 			{
-				this.SelectedRow = this.NodesGetter.VisibleToAll (value);
+				this.SelectedRow = this.NodeGetter.VisibleToAll (value);
 			}
 		}
 
@@ -70,9 +70,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				int sel = this.VisibleSelectedRow;
-				if (sel != -1 && sel < this.nodesGetter.Count)
+				if (sel != -1 && sel < this.nodeGetter.Count)
 				{
-					return this.nodesGetter[sel].Guid;
+					return this.nodeGetter[sel].Guid;
 				}
 				else
 				{
@@ -84,14 +84,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	visible, vers le haut.
 			set
 			{
-				this.VisibleSelectedRow = this.NodesGetter.SearchBestIndex (value);
+				this.VisibleSelectedRow = this.NodeGetter.SearchBestIndex (value);
 			}
 		}
 
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller);
 
 			this.controller.AddSortedColumn (0);
@@ -168,16 +168,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.UpdateToolbar ();
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.NodesGetter.IsAllCompacted);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.NodesGetter.IsAllExpanded);
+			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.NodeGetter.IsAllCompacted);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.NodeGetter.IsAllExpanded);
 		}
 
 
-		private GroupTreeNodesGetter NodesGetter
+		private GroupTreeNodeGetter NodeGetter
 		{
 			get
 			{
-				return this.nodesGetter as GroupTreeNodesGetter;
+				return this.nodeGetter as GroupTreeNodeGetter;
 			}
 		}
 	}

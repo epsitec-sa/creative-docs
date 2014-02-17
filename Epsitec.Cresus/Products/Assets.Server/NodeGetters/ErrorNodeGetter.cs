@@ -11,9 +11,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// Donne un accès en lecture à une liste d'erreurs ou de messages,
 	/// sans tri ni filtre.
 	/// </summary>
-	public class ErrorNodesGetter : AbstractNodesGetter<Error>  // outputNodes
+	public class ErrorNodeGetter : AbstractNodeGetter<Error>  // outputNodes
 	{
-		public ErrorNodesGetter(List<Error> errors)
+		public ErrorNodeGetter(List<Error> errors)
 		{
 			this.errors = errors;
 		}

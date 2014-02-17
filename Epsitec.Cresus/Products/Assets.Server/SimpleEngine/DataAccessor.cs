@@ -61,17 +61,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-
-		#region NodesGetter
-		public GuidNodesGetter GetNodesGetter(BaseType baseType)
+		#region NodeGetter
+		
+		public GuidNodeGetter GetNodeGetter(BaseType baseType)
 		{
 			//	Retourne un moyen standardisé d'accès en lecture aux données d'une base.
-			return new GuidNodesGetter (this.mandat, baseType);
+			return new GuidNodeGetter (this.mandat, baseType);
 		}
 
-		public class GuidNodesGetter : AbstractNodesGetter<GuidNode>
+		public class GuidNodeGetter : AbstractNodeGetter<GuidNode>
 		{
-			public GuidNodesGetter(DataMandat mandat, BaseType baseType)
+			public GuidNodeGetter(DataMandat mandat, BaseType baseType)
 			{
 				this.mandat   = mandat;
 				this.baseType = baseType;
@@ -105,10 +105,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			private readonly DataMandat			mandat;
 			private readonly BaseType			baseType;
 		}
+		
 		#endregion
 
-
 		#region Objects
+		
 		public DataObject GetObject(BaseType baseType, Guid objectGuid)
 		{
 			return this.mandat.GetData (baseType)[objectGuid];
@@ -200,8 +201,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 		}
+		
 		#endregion
-
 
 		public static bool IsOneShotField(ObjectField objectField)
 		{

@@ -8,7 +8,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.NodeGetters
 {
-	public class LastViewsNodesGetter : AbstractNodesGetter<LastViewNode>  // outputNodes
+	public class LastViewsNodeGetter : AbstractNodeGetter<LastViewNode>  // outputNodes
 	{
 		public void SetParams(List<LastViewNode> viewStates)
 		{

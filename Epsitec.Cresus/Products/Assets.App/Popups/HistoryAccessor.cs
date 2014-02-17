@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.obj       = this.accessor.GetObject (baseType, objectGuid);
 			this.timestamp = timestamp;
 
-			this.getter = new HistoryNodesGetter ();
+			this.getter = new HistoryNodeGetter ();
 			this.getter.SetParams (this.obj, this.field, this.timestamp);
 
 			this.filler = new HistoryTreeTableFiller (this.accessor, this.getter, this.field)
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly DataObject									obj;
 		private readonly Timestamp?									timestamp;
 
-		private readonly HistoryNodesGetter							getter;
+		private readonly HistoryNodeGetter							getter;
 		private readonly HistoryTreeTableFiller						filler;
 	}
 }

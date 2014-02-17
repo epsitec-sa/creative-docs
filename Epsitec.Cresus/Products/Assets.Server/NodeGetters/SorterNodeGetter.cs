@@ -11,9 +11,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// et SecondaryOrderedValue (ComparableData).
 	/// SortableNode -> SortableNode
 	/// </summary>
-	public class SorterNodesGetter : AbstractNodesGetter<SortableNode>  // outputNodes
+	public class SorterNodeGetter : AbstractNodeGetter<SortableNode>  // outputNodes
 	{
-		public SorterNodesGetter(AbstractNodesGetter<SortableNode> inputNodes)
+		public SorterNodeGetter(AbstractNodeGetter<SortableNode> inputNodes)
 		{
 			this.inputNodes = inputNodes;
 		}
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 		
-		private readonly AbstractNodesGetter<SortableNode>	inputNodes;
+		private readonly AbstractNodeGetter<SortableNode>	inputNodes;
 		private SortableNode[]								outputNodes;
 		private SortingInstructions							sortingInstructions;
 	}

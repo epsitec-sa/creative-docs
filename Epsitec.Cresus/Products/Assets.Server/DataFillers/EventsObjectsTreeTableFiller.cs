@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class EventsObjectsTreeTableFiller : AbstractTreeTableFiller<SortableNode>
 	{
-		public EventsObjectsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<SortableNode> nodesGetter)
-			: base (accessor, nodesGetter)
+		public EventsObjectsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<SortableNode> nodeGetter)
+			: base (accessor, nodeGetter)
 		{
 		}
 
@@ -74,12 +74,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= this.nodesGetter.Count)
+				if (firstRow+i >= this.nodeGetter.Count)
 				{
 					break;
 				}
 
-				var node = this.nodesGetter[firstRow+i];
+				var node = this.nodeGetter[firstRow+i];
 				var e    = this.DataObject.GetEvent (node.Guid);
 				System.Diagnostics.Debug.Assert (e != null);
 

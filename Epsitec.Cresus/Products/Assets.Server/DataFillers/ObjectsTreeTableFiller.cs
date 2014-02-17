@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class ObjectsTreeTableFiller : AbstractTreeTableFiller<CumulNode>
 	{
-		public ObjectsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<CumulNode> nodesGetter)
-			: base (accessor, nodesGetter)
+		public ObjectsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<CumulNode> nodeGetter)
+			: base (accessor, nodeGetter)
 		{
 		}
 
@@ -83,12 +83,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= this.nodesGetter.Count)
+				if (firstRow+i >= this.nodeGetter.Count)
 				{
 					break;
 				}
 
-				var node     = this.nodesGetter[firstRow+i];
+				var node     = this.nodeGetter[firstRow+i];
 				var guid     = node.Guid;
 				var baseType = node.BaseType;
 				var level    = node.Level;
@@ -96,9 +96,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var obj = this.accessor.GetObject (baseType, guid);
 
-				var valeur1     = this.NodesGetter.GetValue (obj, node, ObjectField.MainValue);
-				var valeur2     = this.NodesGetter.GetValue (obj, node, ObjectField.Value1);
-				var valeur3     = this.NodesGetter.GetValue (obj, node, ObjectField.Value2);
+				var valeur1     = this.NodeGetter.GetValue (obj, node, ObjectField.MainValue);
+				var valeur2     = this.NodeGetter.GetValue (obj, node, ObjectField.Value1);
+				var valeur3     = this.NodeGetter.GetValue (obj, node, ObjectField.Value2);
 
 				var nom         = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
 				var numéro      = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
@@ -177,11 +177,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private ObjectsNodesGetter NodesGetter
+		private ObjectsNodeGetter NodeGetter
 		{
 			get
 			{
-				return this.nodesGetter as ObjectsNodesGetter;
+				return this.nodeGetter as ObjectsNodeGetter;
 			}
 		}
 	}

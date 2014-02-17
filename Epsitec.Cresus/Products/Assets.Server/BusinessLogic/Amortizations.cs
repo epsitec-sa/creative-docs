@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public List<Error> Preview(DateRange processRange)
 		{
 			var errors = new List<Error> ();
-			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
+			var getter = this.accessor.GetNodeGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
 			{
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public List<Error> Fix()
 		{
 			var errors = new List<Error> ();
-			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
+			var getter = this.accessor.GetNodeGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public List<Error> Unpreview()
 		{
 			var errors = new List<Error> ();
-			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
+			var getter = this.accessor.GetNodeGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
 			{
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public List<Error> Delete(System.DateTime startDate)
 		{
 			var errors = new List<Error> ();
-			var getter = this.accessor.GetNodesGetter (BaseType.Objects);
+			var getter = this.accessor.GetNodeGetter (BaseType.Objects);
 
 			foreach (var node in getter.Nodes)
 			{

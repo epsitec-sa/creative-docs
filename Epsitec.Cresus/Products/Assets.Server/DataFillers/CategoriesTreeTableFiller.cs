@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class CategoriesTreeTableFiller : AbstractTreeTableFiller<SortableNode>
 	{
-		public CategoriesTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<SortableNode> nodesGetter)
-			: base (accessor, nodesGetter)
+		public CategoriesTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<SortableNode> nodeGetter)
+			: base (accessor, nodeGetter)
 		{
 		}
 
@@ -64,12 +64,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= this.nodesGetter.Count)
+				if (firstRow+i >= this.nodeGetter.Count)
 				{
 					break;
 				}
 
-				var node  = this.nodesGetter[firstRow+i];
+				var node  = this.nodeGetter[firstRow+i];
 				var guid  = node.Guid;
 				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
 

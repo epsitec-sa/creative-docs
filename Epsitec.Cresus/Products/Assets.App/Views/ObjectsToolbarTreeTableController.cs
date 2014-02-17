@@ -22,9 +22,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
-			var groupNodesGetter  = this.accessor.GetNodesGetter (BaseType.Groups);
-			var objectNodesGetter = this.accessor.GetNodesGetter (BaseType.Objects);
-			this.nodesGetter = new ObjectsNodesGetter (this.accessor, groupNodesGetter, objectNodesGetter);
+			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
+			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Objects);
+			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
 			this.title = "Objets d'immobilisation";
 		}
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void UpdateData()
 		{
-			this.NodesGetter.SetParams (this.timestamp, this.rootGuid, this.sortingInstructions);
+			this.NodeGetter.SetParams (this.timestamp, this.rootGuid, this.sortingInstructions);
 			this.dataFiller.Timestamp = this.timestamp;
 
 			this.UpdateController ();
@@ -75,11 +75,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.NodesGetter.AllToVisible (this.selectedRow);
+				return this.NodeGetter.AllToVisible (this.selectedRow);
 			}
 			set
 			{
-				this.SelectedRow = this.NodesGetter.VisibleToAll (value);
+				this.SelectedRow = this.NodeGetter.VisibleToAll (value);
 			}
 		}
 
@@ -101,9 +101,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				int sel = this.VisibleSelectedRow;
-				if (sel != -1 && sel < this.nodesGetter.Count)
+				if (sel != -1 && sel < this.nodeGetter.Count)
 				{
-					return this.nodesGetter[sel].Guid;
+					return this.nodeGetter[sel].Guid;
 				}
 				else
 				{
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	visible, vers le haut.
 			set
 			{
-				this.VisibleSelectedRow = this.NodesGetter.SearchBestIndex (value);
+				this.VisibleSelectedRow = this.NodeGetter.SearchBestIndex (value);
 			}
 		}
 
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.controller, this.dataFiller);
 
 			this.controller.AddSortedColumn (0);
@@ -239,16 +239,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.toolbar.SetCommandActivate (ToolbarCommand.Filter, !this.rootGuid.IsEmpty);
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.NodesGetter.IsAllCompacted);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.NodesGetter.IsAllExpanded);
+			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.NodeGetter.IsAllCompacted);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.NodeGetter.IsAllExpanded);
 		}
 
 
-		private ObjectsNodesGetter NodesGetter
+		private ObjectsNodeGetter NodeGetter
 		{
 			get
 			{
-				return this.nodesGetter as ObjectsNodesGetter;
+				return this.nodeGetter as ObjectsNodeGetter;
 			}
 		}
 

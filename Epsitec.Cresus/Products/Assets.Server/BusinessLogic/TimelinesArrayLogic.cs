@@ -16,18 +16,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void Update(DataArray dataArray, ObjectsNodesGetter nodesGetter, System.Func<DataEvent, bool> filter = null)
+		public void Update(DataArray dataArray, ObjectsNodeGetter nodeGetter, System.Func<DataEvent, bool> filter = null)
 		{
 			//	Met à jour this.dataArray en fonction de l'ensemble des événements de
 			//	tous les objets. Cela nécessite d'accéder à l'ensemble des données, ce
 			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
-			dataArray.Clear (nodesGetter.Count);
+			dataArray.Clear (nodeGetter.Count);
 
-			for (int row=0; row<nodesGetter.Count; row++)
+			for (int row=0; row<nodeGetter.Count; row++)
 			{
-				var node = nodesGetter[row];
+				var node = nodeGetter[row];
 				var obj = this.accessor.GetObject (node.BaseType, node.Guid);
 
 				var label = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
@@ -47,9 +47,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			//	Marque les intervalles bloqués, qui seront hachurés.
-			for (int row=0; row<nodesGetter.Count; row++)
+			for (int row=0; row<nodeGetter.Count; row++)
 			{
-				var node = nodesGetter[row];
+				var node = nodeGetter[row];
 
 				if (node.BaseType == BaseType.Objects)
 				{

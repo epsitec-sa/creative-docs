@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// triable (ComparableData).
 	/// GuidNode -> SortableNode
 	/// </summary>
-	public class SortableNodesGetter : AbstractNodesGetter<SortableNode>  // outputNodes
+	public class SortableNodeGetter : AbstractNodeGetter<SortableNode>  // outputNodes
 	{
-		public SortableNodesGetter(AbstractNodesGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public SortableNodeGetter(AbstractNodeGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly AbstractNodesGetter<GuidNode>	inputNodes;
+		private readonly AbstractNodeGetter<GuidNode>	inputNodes;
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
 

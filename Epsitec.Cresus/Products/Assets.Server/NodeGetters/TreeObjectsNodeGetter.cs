@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// est visible, en compactant/étendant des noeuds.
 	/// LevelNode -> TreeNode
 	/// </summary>
-	public class TreeObjectsNodesGetter : AbstractNodesGetter<TreeNode>, ITreeFunctions  // outputNodes
+	public class TreeObjectsNodeGetter : AbstractNodeGetter<TreeNode>, ITreeFunctions  // outputNodes
 	{
-		public TreeObjectsNodesGetter(AbstractNodesGetter<LevelNode> inputNodes)
+		public TreeObjectsNodeGetter(AbstractNodeGetter<LevelNode> inputNodes)
 		{
 			this.inputNodes = inputNodes;
 
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly AbstractNodesGetter<LevelNode>	inputNodes;
+		private readonly AbstractNodeGetter<LevelNode>	inputNodes;
 		private readonly List<TreeNode>					nodes;
 		private readonly List<int>						nodeIndexes;
 

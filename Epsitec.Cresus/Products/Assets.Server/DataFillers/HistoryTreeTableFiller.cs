@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class HistoryTreeTableFiller : AbstractTreeTableFiller<GuidNode>
 	{
-		public HistoryTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<GuidNode> nodesGetter, ObjectField field)
-			: base (accessor, nodesGetter)
+		public HistoryTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<GuidNode> nodeGetter, ObjectField field)
+			: base (accessor, nodeGetter)
 		{
 			this.field = field;
 		}
@@ -340,12 +340,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= this.nodesGetter.Count)
+				if (firstRow+i >= this.nodeGetter.Count)
 				{
 					break;
 				}
 
-				var node = this.nodesGetter[firstRow+i];
+				var node = this.nodeGetter[firstRow+i];
 				var e = this.DataObject.GetEvent (node.Guid);
 				yield return e;
 			}

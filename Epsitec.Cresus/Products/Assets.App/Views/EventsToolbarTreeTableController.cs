@@ -19,8 +19,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
 
-			this.eventsNodesGetter = new ObjectEventsNodesGetter ();
-			this.nodesGetter = new SorterNodesGetter (this.eventsNodesGetter);
+			this.eventsNodeGetter = new ObjectEventsNodeGetter ();
+			this.nodeGetter = new SorterNodeGetter (this.eventsNodeGetter);
 
 			this.title = "Evénements";
 		}
@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 	
 		public override void UpdateData()
 		{
-			this.eventsNodesGetter.SetParams (this.obj, this.sortingInstructions);
-			this.NodesGetter.SetParams (this.sortingInstructions);
+			this.eventsNodeGetter.SetParams (this.obj, this.sortingInstructions);
+			this.NodeGetter.SetParams (this.sortingInstructions);
 
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -86,8 +86,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new EventsObjectsTreeTableFiller (this.accessor, this.nodesGetter);
-			//?this.dataFiller = new AmortizationsObjectsTreeTableFiller (this.accessor, this.nodesGetter);
+			this.dataFiller = new EventsObjectsTreeTableFiller (this.accessor, this.nodeGetter);
+			//?this.dataFiller = new AmortizationsObjectsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller);
 
 			this.controller.AddSortedColumn (0);
@@ -231,16 +231,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private SorterNodesGetter NodesGetter
+		private SorterNodeGetter NodeGetter
 		{
 			get
 			{
-				return this.nodesGetter as SorterNodesGetter;
+				return this.nodeGetter as SorterNodeGetter;
 			}
 		}
 
 
-		private readonly ObjectEventsNodesGetter	eventsNodesGetter;
+		private readonly ObjectEventsNodeGetter	eventsNodeGetter;
 
 		private Guid								objectGuid;
 		private DataObject							obj;

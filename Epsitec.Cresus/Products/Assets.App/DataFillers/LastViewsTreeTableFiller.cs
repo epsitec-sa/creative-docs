@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 {
 	public class LastViewsTreeTableFiller : AbstractTreeTableFiller<LastViewNode>
 	{
-		public LastViewsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<LastViewNode> nodesGetter)
-			: base (accessor, nodesGetter)
+		public LastViewsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<LastViewNode> nodeGetter)
+			: base (accessor, nodeGetter)
 		{
 		}
 
@@ -57,12 +57,12 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= this.nodesGetter.Count)
+				if (firstRow+i >= this.nodeGetter.Count)
 				{
 					break;
 				}
 
-				var node  = this.nodesGetter[firstRow+i];
+				var node  = this.nodeGetter[firstRow+i];
 
 				int    pin  = node.Pin ? 1 : 0;
 				string icon = StaticDescriptions.GetViewTypeIcon (node.ViewType);

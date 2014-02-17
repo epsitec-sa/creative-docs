@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// plus de celui placé à ForcedTimestamp.
 	/// événements d'un objet -> GuidNode
 	/// </summary>
-	public class HistoryNodesGetter : AbstractNodesGetter<GuidNode>  // outputNodes
+	public class HistoryNodeGetter : AbstractNodeGetter<GuidNode>  // outputNodes
 	{
-		public HistoryNodesGetter()
+		public HistoryNodeGetter()
 		{
 			this.nodes = new List<GuidNode> ();
 		}

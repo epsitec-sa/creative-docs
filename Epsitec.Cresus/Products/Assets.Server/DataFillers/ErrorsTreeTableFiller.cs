@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 	/// </summary>
 	public class ErrorsTreeTableFiller : AbstractTreeTableFiller<Error>
 	{
-		public ErrorsTreeTableFiller(DataAccessor accessor, AbstractNodesGetter<Error> nodesGetter)
-			: base (accessor, nodesGetter)
+		public ErrorsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<Error> nodeGetter)
+			: base (accessor, nodeGetter)
 		{
 		}
 
@@ -49,12 +49,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			for (int i=0; i<count; i++)
 			{
-				if (firstRow+i >= this.nodesGetter.Count)
+				if (firstRow+i >= this.nodeGetter.Count)
 				{
 					break;
 				}
 
-				var error = this.nodesGetter[firstRow+i];
+				var error = this.nodeGetter[firstRow+i];
 				bool isError = !error.IsMessage;
 
 				var nom     = ErrorDescription.GetErrorObject (this.accessor, error);
