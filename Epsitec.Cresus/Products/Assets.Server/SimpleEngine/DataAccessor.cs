@@ -8,7 +8,7 @@ using Epsitec.Cresus.Assets.Server.NodeGetters;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public class DataAccessor
+	public partial class DataAccessor
 	{
 		public DataAccessor()
 		{
@@ -61,52 +61,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		#region NodeGetter
-		
 		public AbstractNodeGetter<GuidNode> GetNodeGetter(BaseType baseType)
 		{
 			//	Retourne un moyen standardisé d'accès en lecture aux données d'une base.
 			return new GuidNodeGetter (this.mandat, baseType);
 		}
-
-		private class GuidNodeGetter : AbstractNodeGetter<GuidNode>
-		{
-			public GuidNodeGetter(DataMandat mandat, BaseType baseType)
-			{
-				this.mandat   = mandat;
-				this.baseType = baseType;
-			}
-
-			public override int					Count
-			{
-				get
-				{
-					return this.Data.Count;
-				}
-			}
-
-			public override GuidNode			this[int index]
-			{
-				get
-				{
-					var obj = this.Data[index];
-					return new GuidNode (obj.Guid);
-				}
-			}
-
-			private GuidList<DataObject>		Data
-			{
-				get
-				{
-					return this.mandat.GetData (this.baseType);
-				}
-			}
-
-			private readonly DataMandat			mandat;
-			private readonly BaseType			baseType;
-		}
-		
-		#endregion
 
 		#region Objects
 		
