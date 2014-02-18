@@ -331,6 +331,7 @@
     <EmbeddedResource Include="Images\Amortizations.Fix.icon" />
     <EmbeddedResource Include="Images\Amortizations.Unpreview.icon" />
     <EmbeddedResource Include="Images\Amortizations.Info.icon" />
+    <EmbeddedResource Include="Images\Amortizations.ToExtra.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

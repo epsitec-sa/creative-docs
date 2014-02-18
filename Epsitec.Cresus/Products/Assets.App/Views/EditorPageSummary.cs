@@ -112,9 +112,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne la page permettant d'éditer un champ donné.
 			switch (field)
 			{
-				case ObjectField.OneShotNuméro:
-				case ObjectField.OneShotDateOpération:
-				case ObjectField.OneShotCommentaire:
+				case ObjectField.OneShotNumber:
+				case ObjectField.OneShotDateOperation:
+				case ObjectField.OneShotComment:
 				case ObjectField.OneShotDocuments:
 					return PageType.OneShot;
 
@@ -200,9 +200,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var c1 = new List<ObjectSummaryControllerTile> ()
 				{
 					new ObjectSummaryControllerTile ("Evénement"),
-					new ObjectSummaryControllerTile (ObjectField.OneShotNuméro),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDateOpération),
-					new ObjectSummaryControllerTile (ObjectField.OneShotCommentaire),
+					new ObjectSummaryControllerTile (ObjectField.OneShotNumber),
+					new ObjectSummaryControllerTile (ObjectField.OneShotDateOperation),
+					new ObjectSummaryControllerTile (ObjectField.OneShotComment),
 					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
 
 					ObjectSummaryControllerTile.Empty,

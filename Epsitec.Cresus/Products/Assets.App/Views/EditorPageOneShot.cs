@@ -26,9 +26,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins = new Epsitec.Common.Drawing.Margins (0, 0, 0, 20),
 			};
 
-			this.CreateStringController (parent, ObjectField.OneShotNuméro,      editWidth: 90);
-			this.CreateDateController   (parent, ObjectField.OneShotDateOpération);
-			this.CreateStringController (parent, ObjectField.OneShotCommentaire, lineCount: 5);
+			this.CreateStringController (parent, ObjectField.OneShotNumber,      editWidth: 90);
+			this.CreateDateController   (parent, ObjectField.OneShotDateOperation);
+			this.CreateStringController (parent, ObjectField.OneShotComment, lineCount: 5);
 			this.CreateStringController (parent, ObjectField.OneShotDocuments,   lineCount: 5);
 		}
 	}

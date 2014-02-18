@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				var e = new DataEvent (start, EventType.Input);
 				o0.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (EmptyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (EmptyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty (ObjectField.Name, "Groupes"));
 			}
 
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				var e = new DataEvent (start, EventType.Input);
 				oImmob.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNuméro, (EmptyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (EmptyMandat.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty   (ObjectField.GroupParent, o0.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Name, "Immobilisations"));
 			}

@@ -13,13 +13,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			switch (field)
 			{
-				case ObjectField.OneShotNuméro:
+				case ObjectField.OneShotNumber:
 					return "Evénement numéro";
 
-				case ObjectField.OneShotDateOpération:
+				case ObjectField.OneShotDateOperation:
 					return "Date opération";
 
-				case ObjectField.OneShotCommentaire:
+				case ObjectField.OneShotComment:
 					return "Commentaire";
 
 				case ObjectField.OneShotDocuments:

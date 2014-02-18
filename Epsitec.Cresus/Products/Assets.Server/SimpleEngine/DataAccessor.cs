@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = new DataEvent (ts, type);
 
 				//	Ajoute la date du jour comme date valeur.
-				var p = new DataDateProperty (ObjectField.OneShotDateOpération, Timestamp.Now.Date);
+				var p = new DataDateProperty (ObjectField.OneShotDateOperation, Timestamp.Now.Date);
 				e.AddProperty (p);
 
 				obj.AddEvent (e);
@@ -168,9 +168,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			switch (objectField)
 			{
-				case ObjectField.OneShotNuméro:
-				case ObjectField.OneShotDateOpération:
-				case ObjectField.OneShotCommentaire:
+				case ObjectField.OneShotNumber:
+				case ObjectField.OneShotDateOperation:
+				case ObjectField.OneShotComment:
 				case ObjectField.OneShotDocuments:
 					return true;
 
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.Prorata:
 					return FieldType.Int;
 
-				case ObjectField.OneShotDateOpération:
+				case ObjectField.OneShotDateOperation:
 					return FieldType.Date;
 
 				case ObjectField.GroupParent:

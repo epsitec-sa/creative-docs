@@ -62,6 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsPreview,   true);
 			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsFix,       true);
+			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsToExtra,   true);
 			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsUnpreview, true);
 			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsDelete,    true);
 			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsInfo,      true);
@@ -115,6 +116,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 								"Fixer pour un",
 								"Fixer pour tous",
 								this.FixAmortisations);
+							break;
+
+						case ToolbarCommand.AmortizationsToExtra:
+							this.TransformToExtra ();
 							break;
 
 						case ToolbarCommand.AmortizationsUnpreview:
@@ -354,6 +359,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.DeepUpdateUI ();
 		}
 
+		private void TransformToExtra()
+		{
+			//	Transforme un amortissement ordinaire en extraordinaire.
+			if (!this.selectedGuid.IsEmpty && this.selectedTimestamp.HasValue)
+			{
+				var asset = this.accessor.GetObject (BaseType.Assets, this.selectedGuid);
+				if (asset != null)
+				{
+					var e = asset.GetEvent (this.selectedTimestamp.Value);
+					if (e != null)
+					{
+						var p = e.GetProperty (ObjectField.MainValue) as DataComputedAmountProperty;
+						if (p != null)
+						{
+							//	Supprime l'amortissement ordinaire.
+							this.accessor.RemoveObjectEvent (asset, this.selectedTimestamp);
+
+							//	Crée un amortissement extraordinaire.
+							var newEvent = this.accessor.CreateObjectEvent (asset, this.selectedTimestamp.Value.Date, EventType.AmortizationExtra);
+
+							var newCA = new ComputedAmount (p.Value.InitialAmount.Value, p.Value.FinalAmount.Value, true);
+
+							var newProp = new DataComputedAmountProperty (ObjectField.MainValue, newCA);
+							newEvent.AddProperty (newProp);
+
+							AssetCalculator.UpdateComputedAmounts (asset);
+
+							this.DeepUpdateUI ();
+						}
+					}
+				}
+			}
+		}
+
 
 		private void ShowAmortizationsPopup(Widget target, bool fromAllowed, bool toAllowed, string title, string one, string all, System.Action<DateRange, bool> action)
 		{
@@ -469,6 +508,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.isEditing)
 			{
+				this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsToExtra, false);
+
 				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
 
 				this.mainToolbar.SetCommandEnable (ToolbarCommand.Accept, this.objectEditor.EditionDirty);
@@ -476,10 +517,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
+				this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsToExtra, this.IsToExtraPossible);
+
 				this.mainToolbar.SetCommandEnable (ToolbarCommand.Edit, this.IsEditingPossible);
 
 				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			}
+		}
+
+		private bool IsToExtraPossible
+		{
+			get
+			{
+				if (!this.selectedGuid.IsEmpty && this.selectedTimestamp.HasValue)
+				{
+					var asset = this.accessor.GetObject (BaseType.Assets, this.selectedGuid);
+					if (asset != null)
+					{
+						var e = asset.GetEvent (this.selectedTimestamp.Value);
+						if (e != null)
+						{
+							return e.Type == EventType.AmortizationPreview
+								|| e.Type == EventType.AmortizationAuto;
+						}
+					}
+				}
+
+				return false;
 			}
 		}
 

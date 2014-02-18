@@ -51,6 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		AmortizationsPreview,
 		AmortizationsFix,
+		AmortizationsToExtra,
 		AmortizationsUnpreview,
 		AmortizationsDelete,
 		AmortizationsInfo,

@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.amortizationsToolbar = new AmortizationsToolbar ();
 					var toolbar = this.amortizationsToolbar.CreateUI (topRightBox);
-					toolbar.PreferredWidth = 150;
+					toolbar.PreferredWidth = 170;
 					toolbar.Dock = DockStyle.Left;
 				}
 			}

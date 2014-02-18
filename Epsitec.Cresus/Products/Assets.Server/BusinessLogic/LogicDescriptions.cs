@@ -172,9 +172,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				yield return ObjectField.OneShotNuméro;
-				yield return ObjectField.OneShotDateOpération;
-				yield return ObjectField.OneShotCommentaire;
+				yield return ObjectField.OneShotNumber;
+				yield return ObjectField.OneShotDateOperation;
+				yield return ObjectField.OneShotComment;
 				yield return ObjectField.OneShotDocuments;
 
 				yield return ObjectField.GroupParent;
