@@ -358,7 +358,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return new AssetsViewState
 				{
-					ViewType          = ViewType.Objects,
+					ViewType          = ViewType.Assets,
 					ViewMode          = this.viewMode,
 					PageType          = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
 					IsShowEvents      = this.isShowEvents,

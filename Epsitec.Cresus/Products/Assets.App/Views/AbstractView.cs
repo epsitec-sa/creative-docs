@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (viewType)
 			{
-				case ViewType.Objects:
+				case ViewType.Assets:
 					return new AssetsView (accessor, toolbar);
 
 				case ViewType.Amortizations:

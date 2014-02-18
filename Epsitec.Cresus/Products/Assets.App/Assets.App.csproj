@@ -159,7 +159,7 @@
     <Compile Include="Widgets\ColoredButton.cs" />
     <Compile Include="Views\EditorPageValues.cs" />
     <Compile Include="Views\EditorPageAmortization.cs" />
-    <Compile Include="Views\EditorPageObject.cs" />
+    <Compile Include="Views\EditorPageAsset.cs" />
     <Compile Include="Views\PageType.cs" />
     <Compile Include="Views\EditorPageSummary.cs" />
     <Compile Include="Views\NavigatorController.cs" />
@@ -248,7 +248,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Images\View.Groups.icon" />
-    <EmbeddedResource Include="Images\View.Objects.icon" />
+    <EmbeddedResource Include="Images\View.Assets.icon" />
     <EmbeddedResource Include="Images\View.Categories.icon" />
     <EmbeddedResource Include="Images\View.Events.icon" />
     <EmbeddedResource Include="Images\View.Reports.icon" />

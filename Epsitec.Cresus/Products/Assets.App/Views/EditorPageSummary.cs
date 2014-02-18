@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return PageType.Groups;
 
 				default:
-					return PageType.Object;
+					return PageType.Asset;
 			}
 		}
 

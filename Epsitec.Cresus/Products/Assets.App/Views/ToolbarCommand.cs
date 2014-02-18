@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		NavigateForward,
 		NavigateMenu,
 
-		ViewTypeObjects,
+		ViewTypeAssets,
 		ViewTypeAmortizations,
 		ViewTypeCategories,
 		ViewTypeGroups,

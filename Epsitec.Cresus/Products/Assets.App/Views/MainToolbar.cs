@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override FrameBox CreateUI(Widget parent)
 		{
-			this.viewType = ViewType.Objects;
+			this.viewType = ViewType.Assets;
 			this.viewMode = ViewMode.Single;
 			this.simulation = 0;
 
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonNavigateForward = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.NavigateForward,       "Navigate.Forward",      "Avancer à la vue suivante");
 			this.buttonNavigateMenu    = this.CreateCommandButton  (DockStyle.Left,         ToolbarCommand.NavigateMenu,          "Navigate.Menu",         "Dernières vues");
 								       													   									     
-			this.buttonObjects         = this.CreateViewTypeButton (ViewType.Objects,       ToolbarCommand.ViewTypeObjects,       StaticDescriptions.GetViewTypeIcon (ViewType.Objects),       StaticDescriptions.GetViewTypeDescription (ViewType.Objects));
+			this.buttonAssets          = this.CreateViewTypeButton (ViewType.Assets,        ToolbarCommand.ViewTypeAssets,        StaticDescriptions.GetViewTypeIcon (ViewType.Assets),        StaticDescriptions.GetViewTypeDescription (ViewType.Assets));
 			this.buttonAmortizations   = this.CreateViewTypeButton (ViewType.Amortizations, ToolbarCommand.ViewTypeAmortizations, StaticDescriptions.GetViewTypeIcon (ViewType.Amortizations), StaticDescriptions.GetViewTypeDescription (ViewType.Amortizations));
 			this.buttonCategories      = this.CreateViewTypeButton (ViewType.Categories,    ToolbarCommand.ViewTypeCategories,    StaticDescriptions.GetViewTypeIcon (ViewType.Categories),    StaticDescriptions.GetViewTypeDescription (ViewType.Categories));
 			this.buttonGroups          = this.CreateViewTypeButton (ViewType.Groups,        ToolbarCommand.ViewTypeGroups,        StaticDescriptions.GetViewTypeIcon (ViewType.Groups),        StaticDescriptions.GetViewTypeDescription (ViewType.Groups));
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewTypeCommands()
 		{
-			this.SetCommandActivate (ToolbarCommand.ViewTypeObjects,       this.viewType == ViewType.Objects      );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeAssets,        this.viewType == ViewType.Assets      );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeAmortizations, this.viewType == ViewType.Amortizations);
 			this.SetCommandActivate (ToolbarCommand.ViewTypeCategories,    this.viewType == ViewType.Categories   );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeGroups,        this.viewType == ViewType.Groups       );
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewModeCommands()
 		{
-			if (this.viewType == ViewType.Objects)
+			if (this.viewType == ViewType.Assets)
 			{
 				this.SetCommandActivate (ToolbarCommand.ViewModeSingle,   this.viewMode == ViewMode.Single  );
 				this.SetCommandActivate (ToolbarCommand.ViewModeEvent,    this.viewMode == ViewMode.Event   );
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonNavigateForward;
 		private IconButton						buttonNavigateMenu;
 
-		private IconButton						buttonObjects;
+		private IconButton						buttonAssets;
 		private IconButton						buttonAmortizations;
 		private IconButton						buttonCategories;
 		private IconButton						buttonGroups;

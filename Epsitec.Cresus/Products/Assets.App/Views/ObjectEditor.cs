@@ -291,12 +291,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 						case EventType.Modification:
 						case EventType.Reorganization:
-							yield return PageType.Object;
+							yield return PageType.Asset;
 							yield return PageType.Groups;
 							break;
 
 						default:  // accès à toutes les pages
-							yield return PageType.Object;
+							yield return PageType.Asset;
 							yield return PageType.Persons;
 							yield return PageType.Groups;
 							yield return PageType.Values;

@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			};
 
-			this.CreateView (ViewType.Objects);
+			this.CreateView (ViewType.Assets);
 			this.UpdateToolbar ();
 		}
 
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			AssetsApplication.SelectedMandat = rank;
 			this.accessor.Mandat = AssetsApplication.GetMandat (rank);
 
-			this.CreateView (ViewType.Objects);
+			this.CreateView (ViewType.Assets);
 		}
 
 

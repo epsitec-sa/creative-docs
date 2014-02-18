@@ -9,7 +9,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public enum ViewType
 	{
 		Unknown,
-		Objects,
+
+		Assets,
 		Amortizations,
 		Categories,
 		Groups,

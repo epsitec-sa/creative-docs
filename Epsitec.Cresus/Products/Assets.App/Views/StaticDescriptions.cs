@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (viewType)
 			{
-				case ViewType.Objects:
-					return "View.Objects";
+				case ViewType.Assets:
+					return "View.Assets";
 
 				case ViewType.Amortizations:
 					return "View.Amortizations";
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (viewType)
 			{
-				case ViewType.Objects:
+				case ViewType.Assets:
 					return "Objets d'immobilisation";
 
 				case ViewType.Amortizations:
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case PageType.Summary:
 					return "Résumé";
 
-				case PageType.Object:
+				case PageType.Asset:
 					return "Général";
 
 				case PageType.Persons:

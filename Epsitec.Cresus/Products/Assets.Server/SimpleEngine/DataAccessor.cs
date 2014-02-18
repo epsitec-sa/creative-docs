@@ -163,6 +163,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		
 		#endregion
 
+
 		public static bool IsOneShotField(ObjectField objectField)
 		{
 			switch (objectField)
