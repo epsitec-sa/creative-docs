@@ -11,14 +11,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		public static string GetErrorObject(DataAccessor accessor, Error error)
 		{
-			var obj = accessor.GetObject (BaseType.Objects, error.ObjectGuid);
+			var obj = accessor.GetObject (BaseType.Assets, error.ObjectGuid);
 			if (obj == null)
 			{
 				return null;
 			}
 			else
 			{
-				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
+				return AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
 			}
 		}
 

@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			foreach (var group in list)
 			{
-				var nom = ObjectCalculator.GetObjectPropertyString (group, null, ObjectField.Name);
+				var nom = AssetCalculator.GetObjectPropertyString (group, null, ObjectField.Name);
 				if (nom == text)
 				{
 					return group.Guid;

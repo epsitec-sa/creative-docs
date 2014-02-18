@@ -46,8 +46,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				var node      = this.inputNodes[index];
 				var obj       = this.accessor.GetObject (BaseType.Groups, node.Guid);
 				var parent    = this.GetParent (obj);
-				var primary   = ObjectCalculator.GetComparableData (obj, this.timestamp, this.sortingInstructions.PrimaryField);
-				var secondary = ObjectCalculator.GetComparableData (obj, this.timestamp, this.sortingInstructions.SecondaryField);
+				var primary   = AssetCalculator.GetComparableData (obj, this.timestamp, this.sortingInstructions.PrimaryField);
+				var secondary = AssetCalculator.GetComparableData (obj, this.timestamp, this.sortingInstructions.SecondaryField);
 
 				return new ParentNode (node.Guid, parent, primary, secondary);
 			}
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			if (obj != null)
 			{
-				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, this.timestamp, ObjectField.GroupParent) as DataGuidProperty;
+				var p = AssetCalculator.GetObjectSyntheticProperty (obj, this.timestamp, ObjectField.GroupParent) as DataGuidProperty;
 				if (p != null)
 				{
 					return p.Value;

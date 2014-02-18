@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return null;
 			}
 
-			return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
+			return AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
 		}
 
 
@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return null;
 			}
 
-			var name   = ObjectCalculator.GetObjectPropertyString  (obj, null, ObjectField.Name);
-			var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.AmortizationRate);
-			var type   = ObjectCalculator.GetObjectPropertyInt     (obj, null, ObjectField.AmortizationType);
-			var period = ObjectCalculator.GetObjectPropertyInt     (obj, null, ObjectField.Periodicity);
+			var name   = AssetCalculator.GetObjectPropertyString  (obj, null, ObjectField.Name);
+			var taux   = AssetCalculator.GetObjectPropertyDecimal (obj, null, ObjectField.AmortizationRate);
+			var type   = AssetCalculator.GetObjectPropertyInt     (obj, null, ObjectField.AmortizationType);
+			var period = AssetCalculator.GetObjectPropertyInt     (obj, null, ObjectField.Periodicity);
 
 			var stringTaux   = TypeConverters.RateToString (taux);
 			var stringType   = EnumDictionaries.GetAmortizationTypeName (type);

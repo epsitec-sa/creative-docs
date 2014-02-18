@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public static TreeNode Empty = new TreeNode (Guid.Empty, BaseType.Objects, -1, null, NodeType.None);
+		public static TreeNode Empty = new TreeNode (Guid.Empty, BaseType.Assets, -1, null, NodeType.None);
 
 		public readonly Guid				Guid;
 		public readonly BaseType			BaseType;

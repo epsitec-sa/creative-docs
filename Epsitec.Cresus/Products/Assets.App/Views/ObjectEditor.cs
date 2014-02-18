@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			switch (baseType)
 			{
-				case BaseType.Objects:
+				case BaseType.Assets:
 					return ObjectEditor.GetObjectAvailablePages (hasEvent, type);
 
 				case BaseType.Categories:

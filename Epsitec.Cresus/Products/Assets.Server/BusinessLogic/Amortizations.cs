@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public List<Error> Preview(DateRange processRange)
 		{
 			var errors = new List<Error> ();
-			var getter = this.accessor.GetNodeGetter (BaseType.Objects);
+			var getter = this.accessor.GetNodeGetter (BaseType.Assets);
 
 			foreach (var node in getter.Nodes)
 			{
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public List<Error> Fix()
 		{
 			var errors = new List<Error> ();
-			var getter = this.accessor.GetNodeGetter (BaseType.Objects);
+			var getter = this.accessor.GetNodeGetter (BaseType.Assets);
 
 			foreach (var node in getter.Nodes)
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public List<Error> Unpreview()
 		{
 			var errors = new List<Error> ();
-			var getter = this.accessor.GetNodeGetter (BaseType.Objects);
+			var getter = this.accessor.GetNodeGetter (BaseType.Assets);
 
 			foreach (var node in getter.Nodes)
 			{
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public List<Error> Delete(System.DateTime startDate)
 		{
 			var errors = new List<Error> ();
-			var getter = this.accessor.GetNodeGetter (BaseType.Objects);
+			var getter = this.accessor.GetNodeGetter (BaseType.Assets);
 
 			foreach (var node in getter.Nodes)
 			{
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var errors = new List<Error> ();
 
-			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
+			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
 			this.GeneratesAmortizationsPreview (errors, processRange, objectGuid);
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var errors = new List<Error> ();
 
-			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
+			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
 			int count = Amortizations.FixEvents (obj, DateRange.Full);
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var errors = new List<Error> ();
 
-			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
+			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
 			int count = Amortizations.RemoveEvents (obj, EventType.AmortizationPreview, DateRange.Full);
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var errors = new List<Error> ();
 
-			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
+			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
 			int count = Amortizations.RemoveEvents (obj, EventType.AmortizationAuto, new DateRange (startDate, System.DateTime.MaxValue));
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private void GeneratesAmortizationsPreview(List<Error> errors, DateRange processRange, Guid objectGuid)
 		{
 			//	Génère les aperçus d'amortissement pour un objet donné.
-			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
+			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
 			//	Supprime tous les aperçus d'amortissement.
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var endDate = beginDate.AddMonths (def.PeriodMonthCount);
 			var range = new DateRange (beginDate, endDate);
 
-			if (ObjectCalculator.IsEventLocked (obj, new Timestamp (range.ExcludeTo.AddSeconds (-1), 0)))
+			if (AssetCalculator.IsEventLocked (obj, new Timestamp (range.ExcludeTo.AddSeconds (-1), 0)))
 			{
 				return AmortizationDetails.Empty;
 			}
@@ -308,12 +308,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Collecte tous les champs qui définissent comment amortir. Ils peuvent provenir
 			//	de plusieurs événements différents.
-			var taux     = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.AmortizationRate);
-			var type     = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationType);
-			var period   = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.Periodicity);
-			var prorata  = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.Prorata);
-			var round    = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.Round);
-			var residual = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ResidualValue);
+			var taux     = AssetCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.AmortizationRate);
+			var type     = AssetCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationType);
+			var period   = AssetCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.Periodicity);
+			var prorata  = AssetCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.Prorata);
+			var round    = AssetCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.Round);
+			var residual = AssetCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ResidualValue);
 
 			if (taux.HasValue && type.HasValue && period.HasValue)
 			{
@@ -343,7 +343,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				//	Pour mettre à jour les éventuels amortissements extraordinaires suivants.
 				//	Accesoireemnt, cela recalcule l'événement que l'on vient de créer, mais
 				//	cela devrait être sans conséquence.
-				ObjectCalculator.UpdateComputedAmounts (obj);
+				AssetCalculator.UpdateComputedAmounts (obj);
 			}
 		}
 

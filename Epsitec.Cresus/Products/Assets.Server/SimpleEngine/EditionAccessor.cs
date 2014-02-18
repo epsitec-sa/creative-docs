@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				if (this.computedAmountDirty)
 				{
-					ObjectCalculator.UpdateComputedAmounts (this.obj);
+					AssetCalculator.UpdateComputedAmounts (this.obj);
 				}
 
 				this.CancelObjectEdition ();
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				if (this.obj != null && this.timestamp.HasValue)
 				{
 					var before = this.timestamp.Value.JustBefore;
-					property = ObjectCalculator.GetObjectProperty (this.obj, before, field, true) as DataComputedAmountProperty;
+					property = AssetCalculator.GetObjectProperty (this.obj, before, field, true) as DataComputedAmountProperty;
 
 					if (property != null)
 					{
@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				if (this.obj != null && this.timestamp.HasValue)
 				{
 					var before = this.timestamp.Value.JustBefore;
-					return ObjectCalculator.GetObjectProperty (this.obj, before, field, true);
+					return AssetCalculator.GetObjectProperty (this.obj, before, field, true);
 				}
 			}
 

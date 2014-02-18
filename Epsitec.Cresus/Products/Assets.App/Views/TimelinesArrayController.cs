@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
-			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Objects);
+			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
 			this.nodeGetter      = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
 			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.nodeGetter);
@@ -497,7 +497,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ObjectDeleteSelection()
 		{
-			this.accessor.RemoveObject (BaseType.Objects, this.SelectedGuid);
+			this.accessor.RemoveObject (BaseType.Assets, this.SelectedGuid);
 			this.UpdateData ();
 		}
 
@@ -572,14 +572,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateObject(System.DateTime date, string name)
 		{
-			var guid = this.accessor.CreateObject (BaseType.Objects, date, name, Guid.Empty);
-			var obj = this.accessor.GetObject (BaseType.Objects, guid);
+			var guid = this.accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty);
+			var obj = this.accessor.GetObject (BaseType.Assets, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
 			this.UpdateData ();
 
 			this.SelectedGuid = guid;
-			this.SelectedTimestamp = ObjectCalculator.GetLastTimestamp (obj);
+			this.SelectedTimestamp = AssetCalculator.GetLastTimestamp (obj);
 
 			this.OnStartEditing (EventType.Input, this.SelectedTimestamp.GetValueOrDefault ());
 		}
@@ -638,8 +638,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				var popup = new NewEventPopup (this.accessor)
 				{
-					BaseType   = BaseType.Objects,
-					DataObject = this.accessor.GetObject (BaseType.Objects, this.SelectedGuid),
+					BaseType   = BaseType.Assets,
+					DataObject = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid),
 					Timestamp  = timestamp.Value,
 				};
 
@@ -685,7 +685,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne le type de l'événement sélectionné.
 			get
 			{
-				var obj = this.accessor.GetObject (BaseType.Objects, this.SelectedGuid);
+				var obj = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid);
 				if (obj != null && this.SelectedTimestamp.HasValue)
 				{
 					var e = obj.GetEvent (this.SelectedTimestamp.Value);
@@ -736,7 +736,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateEvent(System.DateTime date, string buttonName)
 		{
-			var obj = this.accessor.GetObject (BaseType.Objects, this.SelectedGuid);
+			var obj = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid);
 			if (obj != null)
 			{
 				var type = TimelinesArrayController.ParseEventType (buttonName);
@@ -1124,7 +1124,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var node = this.nodeGetter[this.selectedRow];
 					if (!node.IsEmpty)
 					{
-						return node.BaseType == BaseType.Objects;
+						return node.BaseType == BaseType.Assets;
 					}
 				}
 

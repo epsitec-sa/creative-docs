@@ -59,7 +59,7 @@
     <Compile Include="BusinessLogic\TimelinesMode.cs" />
     <Compile Include="BusinessLogic\ProrataDetails.cs" />
     <Compile Include="BusinessLogic\ProrataType.cs" />
-    <Compile Include="BusinessLogic\ObjectsLogic.cs" />
+    <Compile Include="BusinessLogic\AssetsLogic.cs" />
     <Compile Include="BusinessLogic\EnumDictionaries.cs" />
     <Compile Include="BusinessLogic\Periodicity.cs" />
     <Compile Include="BusinessLogic\PersonsLogic.cs" />
@@ -78,11 +78,11 @@
     <Compile Include="DataFillers\ErrorsTreeTableFiller.cs" />
     <Compile Include="DataFillers\SingleCategoriesTreeTableFiller.cs" />
     <Compile Include="DataFillers\SingleGroupsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\EventsObjectsTreeTableFiller.cs" />
+    <Compile Include="DataFillers\EventsAssetsTreeTableFiller.cs" />
     <Compile Include="DataFillers\GroupsTreeTableFiller.cs" />
     <Compile Include="DataFillers\HistoryTreeTableFiller.cs" />
     <Compile Include="DataFillers\ITreeTableCell.cs" />
-    <Compile Include="DataFillers\ObjectsTreeTableFiller.cs" />
+    <Compile Include="DataFillers\AssetsTreeTableFiller.cs" />
     <Compile Include="DataFillers\SingleObjectsTreeTableFiller.cs" />
     <Compile Include="DataFillers\TreeTableCellComputedAmount.cs" />
     <Compile Include="DataFillers\TreeTableCellDate.cs" />
@@ -137,7 +137,7 @@
     <Compile Include="NodeGetters\ObjectEventsNodeGetter.cs" />
     <Compile Include="NodeGetters\AbstractNodeGetter.cs" />
     <Compile Include="NodeGetters\GuidNode.cs" />
-    <Compile Include="BusinessLogic\ObjectCalculator.cs" />
+    <Compile Include="BusinessLogic\AssetCalculator.cs" />
     <Compile Include="SimpleEngine\GuidList.cs" />
     <Compile Include="SimpleEngine\DataDateProperty.cs" />
     <Compile Include="SimpleEngine\DataComputedAmountProperty.cs" />

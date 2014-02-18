@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var obj = this.accessor.GetObject (this.baseType, guid);
 			if (obj != null)
 			{
-				return ObjectCalculator.GetLastTimestamp (obj);
+				return AssetCalculator.GetLastTimestamp (obj);
 			}
 
 			return null;
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (viewType)
 			{
 				case ViewType.Objects:
-					return new ObjectsView (accessor, toolbar);
+					return new AssetsView (accessor, toolbar);
 
 				case ViewType.Amortizations:
 					return new AmortizationsView (accessor, toolbar);

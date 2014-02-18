@@ -51,8 +51,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					var pp = e.GetProperty (this.sortingInstructions.PrimaryField);
 					var sp = e.GetProperty (this.sortingInstructions.SecondaryField);
 
-					var primary   = ObjectCalculator.GetComparableData (pp);
-					var secondary = ObjectCalculator.GetComparableData (sp);
+					var primary   = AssetCalculator.GetComparableData (pp);
+					var secondary = AssetCalculator.GetComparableData (sp);
 
 					return new SortableNode (e.Guid, primary, secondary);
 				}

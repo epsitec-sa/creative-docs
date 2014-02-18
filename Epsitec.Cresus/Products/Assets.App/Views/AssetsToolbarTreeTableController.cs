@@ -13,9 +13,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectsToolbarTreeTableController : AbstractToolbarTreeTableController<CumulNode>, IDirty
+	public class AssetsToolbarTreeTableController : AbstractToolbarTreeTableController<CumulNode>, IDirty
 	{
-		public ObjectsToolbarTreeTableController(DataAccessor accessor)
+		public AssetsToolbarTreeTableController(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.hasFilter         = true;
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
-			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Objects);
+			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
 			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
 			this.title = "Objets d'immobilisation";
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new ObjectsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.controller, this.dataFiller);
 
 			this.controller.AddSortedColumn (0);
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "yes")
 					{
-						this.accessor.RemoveObject (BaseType.Objects, this.SelectedGuid);
+						this.accessor.RemoveObject (BaseType.Assets, this.SelectedGuid);
 						this.UpdateData ();
 						this.OnUpdateAfterDelete ();
 					}
@@ -220,14 +220,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateObject(System.DateTime date, string name)
 		{
-			var guid = this.accessor.CreateObject (BaseType.Objects, date, name, Guid.Empty);
-			var obj = this.accessor.GetObject (BaseType.Objects, guid);
+			var guid = this.accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty);
+			var obj = this.accessor.GetObject (BaseType.Assets, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 			
 			this.UpdateData ();
 
 			this.SelectedGuid = guid;
-			this.SelectedTimestamp = ObjectCalculator.GetLastTimestamp (obj);
+			this.SelectedTimestamp = AssetCalculator.GetLastTimestamp (obj);
 			
 			this.OnUpdateAfterCreate (guid, EventType.Input, this.selectedTimestamp.GetValueOrDefault ());
 		}

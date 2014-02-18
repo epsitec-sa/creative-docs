@@ -127,7 +127,7 @@
     <Compile Include="Views\IDirty.cs" />
     <Compile Include="Views\GroupsViewState.cs" />
     <Compile Include="Views\PersonsViewState.cs" />
-    <Compile Include="Views\ObjectsViewState.cs" />
+    <Compile Include="Views\AssetsViewState.cs" />
     <Compile Include="Views\NameValueListSerializer.cs" />
     <Compile Include="Views\PersonGuidFieldController.cs" />
     <Compile Include="Views\EditorPagePersons.cs" />
@@ -152,8 +152,8 @@
     <Compile Include="Views\EditorPageCategory.cs" />
     <Compile Include="Views\IntFieldController.cs" />
     <Compile Include="Views\EventsToolbarTreeTableController.cs" />
-    <Compile Include="Views\ObjectsToolbarTreeTableController.cs" />
-    <Compile Include="Views\ObjectsView.cs" />
+    <Compile Include="Views\AssetsToolbarTreeTableController.cs" />
+    <Compile Include="Views\AssetsView.cs" />
     <Compile Include="Views\SummaryController.cs" />
     <Compile Include="Views\SummaryControllerTile.cs" />
     <Compile Include="Widgets\ColoredButton.cs" />
@@ -169,7 +169,7 @@
     <Compile Include="Views\DecimalFieldController.cs" />
     <Compile Include="Views\StringFieldController.cs" />
     <Compile Include="Views\ObjectEditor.cs" />
-    <Compile Include="Views\ObjectsToolbarTimelineController.cs" />
+    <Compile Include="Views\AssetsToolbarTimelineController.cs" />
     <Compile Include="Views\TimelineToolbar.cs" />
     <Compile Include="Views\EditToolbar.cs" />
     <Compile Include="Views\TreeTableToolbar.cs" />

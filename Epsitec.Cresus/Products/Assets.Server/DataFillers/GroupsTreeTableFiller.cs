@@ -56,8 +56,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (BaseType.Groups, node.Guid);
 
-				var nom         = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
-				var description = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Description);
+				var nom         = AssetCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var description = AssetCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Description);
 
 				var sf = new TreeTableCellTree   (true, level, type, nom, isSelected: (i == selection));
 				var s1 = new TreeTableCellString (true, description,      isSelected: (i == selection));

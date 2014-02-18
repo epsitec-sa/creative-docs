@@ -7,19 +7,19 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public static class ObjectsLogic
+	public static class AssetsLogic
 	{
 		public static string GetShortName(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le nom court d'un objet, du genre:
 			//	"Toyota Yaris Verso"
-			var obj = accessor.GetObject (BaseType.Objects, guid);
-			if (obj == null)
+			var asset = accessor.GetObject (BaseType.Assets, guid);
+			if (asset == null)
 			{
 				return null;
 			}
 
-			return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
+			return AssetCalculator.GetObjectPropertyString (asset, null, ObjectField.Name);
 		}
 	}
 }

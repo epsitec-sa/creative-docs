@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				foreach (var type in ObjectCalculator.EventTypes)
+				foreach (var type in AssetCalculator.EventTypes)
 				{
 					yield return this.GetButtonDescription (type);
 				}
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private ButtonDescription GetButtonDescription(EventType type)
 		{
-			var types = ObjectCalculator.GetPlausibleEventTypes (this.DataObject, this.Timestamp);
+			var types = AssetCalculator.GetPlausibleEventTypes (this.DataObject, this.Timestamp);
 			bool enable = types.ToArray ().Contains (type);
 
 			switch (type)

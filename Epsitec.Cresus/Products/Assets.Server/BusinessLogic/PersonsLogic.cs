@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
+				return AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
 			}
 		}
 
@@ -36,9 +36,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				var t1 = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.FirstName);
-				var t2 = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
-				var t3 = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Company);
+				var t1 = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.FirstName);
+				var t2 = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
+				var t3 = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Company);
 
 				return string.Join (" ", t1, t2, t3).Trim ();
 			}
@@ -63,36 +63,36 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var lines = new List<string> ();
 
-				var titre = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Title);
+				var titre = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Title);
 				PersonsLogic.PutLine (lines, titre);
 
-				var prénom = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.FirstName);
-				var nom    = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
+				var prénom = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.FirstName);
+				var nom    = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
 				PersonsLogic.PutLine (lines, prénom, nom);
 
-				var entreprise = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Company);
+				var entreprise = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Company);
 				PersonsLogic.PutLine (lines, entreprise);
 
-				var adresse = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Address);
+				var adresse = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Address);
 				PersonsLogic.PutLine (lines, adresse);
 
-				var npa   = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Zip);
-				var ville = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.City);
+				var npa   = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Zip);
+				var ville = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.City);
 				PersonsLogic.PutLine (lines, npa, ville);
 
-				var pays = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Country);
+				var pays = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Country);
 				PersonsLogic.PutLine (lines, pays);
 
-				var tel1 = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Phone1);
+				var tel1 = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Phone1);
 				PersonsLogic.PutLine (lines, tel1);
 
-				var tel2 = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Phone2);
+				var tel2 = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Phone2);
 				PersonsLogic.PutLine (lines, tel2);
 
-				var tel3 = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Phone3);
+				var tel3 = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Phone3);
 				PersonsLogic.PutLine (lines, tel3);
 
-				var mail = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Mail);
+				var mail = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Mail);
 				PersonsLogic.PutLine (lines, mail);
 
 				return string.Join ("<br/>", lines);

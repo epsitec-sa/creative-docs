@@ -9,9 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public class ObjectsTreeTableFiller : AbstractTreeTableFiller<CumulNode>
+	public class AssetsTreeTableFiller : AbstractTreeTableFiller<CumulNode>
 	{
-		public ObjectsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<CumulNode> nodeGetter)
+		public AssetsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<CumulNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}
@@ -100,18 +100,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var valeur2     = this.NodeGetter.GetValue (obj, node, ObjectField.Value1);
 				var valeur3     = this.NodeGetter.GetValue (obj, node, ObjectField.Value2);
 
-				var nom         = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
-				var numéro      = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
-				var maintenance = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Maintenance);
-				var couleur     = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Color);
-				var série       = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.SerialNumber);
+				var nom         = AssetCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var numéro      = AssetCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
+				var maintenance = AssetCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Maintenance);
+				var couleur     = AssetCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Color);
+				var série       = AssetCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.SerialNumber);
 
-				var guid0       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+0);
-				var guid1       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+1);
-				var guid2       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+2);
-				var guid3       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+3);
-				var guid4       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+4);
-				var guid5       = ObjectCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+5);
+				var guid0       = AssetCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+0);
+				var guid1       = AssetCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+1);
+				var guid2       = AssetCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+2);
+				var guid3       = AssetCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+3);
+				var guid4       = AssetCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+4);
+				var guid5       = AssetCalculator.GetObjectPropertyGuidRatio (obj, this.Timestamp, ObjectField.GroupGuidRatio+5);
 
 				var group0 = GroupsLogic.GetShortName (this.accessor, guid0);
 				var group1 = GroupsLogic.GetShortName (this.accessor, guid1);

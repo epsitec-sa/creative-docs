@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			this.Guid = Guid.NewGuid ();
 
-			this.objects    = new GuidList<DataObject> ();
+			this.assets     = new GuidList<DataObject> ();
 			this.categories = new GuidList<DataObject> ();
 			this.groups     = new GuidList<DataObject> ();
 			this.persons    = new GuidList<DataObject> ();
@@ -33,8 +33,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			switch (type)
 			{
-				case BaseType.Objects:
-					return this.objects;
+				case BaseType.Assets:
+					return this.assets;
 
 				case BaseType.Categories:
 					return this.categories;
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private readonly GuidList<DataObject>	objects;
+		private readonly GuidList<DataObject>	assets;
 		private readonly GuidList<DataObject>	categories;
 		private readonly GuidList<DataObject>	groups;
 		private readonly GuidList<DataObject>	persons;

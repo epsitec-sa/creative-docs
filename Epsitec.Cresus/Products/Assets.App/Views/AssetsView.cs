@@ -10,15 +10,15 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectsView : AbstractView
+	public class AssetsView : AbstractView
 	{
-		public ObjectsView(DataAccessor accessor, MainToolbar toolbar)
+		public AssetsView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
-			this.baseType = BaseType.Objects;
+			this.baseType = BaseType.Assets;
 
-			this.listController           = new ObjectsToolbarTreeTableController (this.accessor);
-			this.timelineController       = new ObjectsToolbarTimelineController (this.accessor, this.baseType);
+			this.listController           = new AssetsToolbarTreeTableController (this.accessor);
+			this.timelineController       = new AssetsToolbarTimelineController (this.accessor, this.baseType);
 			this.eventsController         = new EventsToolbarTreeTableController (this.accessor);
 			this.timelinesArrayController = new TimelinesArrayController (this.accessor);
 			this.objectEditor             = new ObjectEditor (this.accessor, this.baseType, isTimeless: false);
@@ -356,7 +356,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return new ObjectsViewState
+				return new AssetsViewState
 				{
 					ViewType          = ViewType.Objects,
 					ViewMode          = this.viewMode,
@@ -368,7 +368,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				var viewState = value as ObjectsViewState;
+				var viewState = value as AssetsViewState;
 				System.Diagnostics.Debug.Assert (viewState != null);
 
 				this.viewMode          = viewState.ViewMode;
@@ -772,8 +772,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly ObjectsToolbarTreeTableController	listController;
-		private readonly ObjectsToolbarTimelineController	timelineController;
+		private readonly AssetsToolbarTreeTableController	listController;
+		private readonly AssetsToolbarTimelineController	timelineController;
 		private readonly EventsToolbarTreeTableController	eventsController;
 		private readonly TimelinesArrayController			timelinesArrayController;
 		private readonly ObjectEditor						objectEditor;

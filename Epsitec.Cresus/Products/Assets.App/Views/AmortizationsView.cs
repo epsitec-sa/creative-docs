@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public AmortizationsView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
-			this.baseType = BaseType.Objects;
+			this.baseType = BaseType.Assets;
 
 			this.timelinesArrayController = new TimelinesArrayController (this.accessor)
 			{

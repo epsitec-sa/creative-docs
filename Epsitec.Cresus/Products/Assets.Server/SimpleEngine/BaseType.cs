@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public enum BaseType
 	{
-		Objects,
+		Assets,
 		Categories,
 		Groups,
 		Persons,

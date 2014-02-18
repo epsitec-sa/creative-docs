@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
 			if (obj != null)
 			{
-				if (node.BaseType == BaseType.Objects)
+				if (node.BaseType == BaseType.Assets)
 				{
 					//	S'il s'agit d'un objet, on retourne le montant en tenant compte du ratio.
 					return CumulNodeGetter.GetValueAccordingToRatio (obj, this.timestamp, node.Ratio, field);
@@ -100,9 +100,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			foreach (var hiddenTreeNode in hiddenTreeNodes)
 			{
-				if (hiddenTreeNode.BaseType == BaseType.Objects)
+				if (hiddenTreeNode.BaseType == BaseType.Assets)
 				{
-					var obj = this.accessor.GetObject (BaseType.Objects, hiddenTreeNode.Guid);
+					var obj = this.accessor.GetObject (BaseType.Assets, hiddenTreeNode.Guid);
 
 					foreach (var field in DataAccessor.ValueFields)
 					{
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 			else
 			{
-				var value = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, field);
+				var value = AssetCalculator.GetObjectPropertyComputedAmount (obj, timestamp, field);
 
 				if (value.HasValue && ratio.HasValue)  // y a-t-il un ratio ?
 				{

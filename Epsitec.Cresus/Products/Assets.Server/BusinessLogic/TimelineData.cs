@@ -134,8 +134,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var type = e.Type;
 						var glyph = TimelineData.TypeToGlyph (type);
 
-						var value1 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.MainValue);
-						var value2 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Value1);
+						var value1 = AssetCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.MainValue);
+						var value2 = AssetCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Value1);
 
 						decimal? v1 = value1 != null && value1.HasValue ? value1.Value.FinalAmount : null;
 						decimal? v2 = value2 != null && value2.HasValue ? value2.Value.FinalAmount : null;
@@ -203,13 +203,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Toutes les dates avant un événement d'entrée ou après un événement de
 			//	sortie sont marquées comme bloquées. Elles auront un fond hachuré.
 			var obj = this.accessor.GetObject (this.baseType, objectGuid);
-			var lockedIntervals = ObjectCalculator.GetLockedIntervals (obj);
+			var lockedIntervals = AssetCalculator.GetLockedIntervals (obj);
 
 			for (int i=0; i<this.cells.Count; i++)
 			{
 				var cell = this.cells[i];
 
-				if (ObjectCalculator.IsLocked (lockedIntervals, cell.Timestamp))
+				if (AssetCalculator.IsLocked (lockedIntervals, cell.Timestamp))
 				{
 					cell.IsLocked = true;
 					this.cells[i] = cell;

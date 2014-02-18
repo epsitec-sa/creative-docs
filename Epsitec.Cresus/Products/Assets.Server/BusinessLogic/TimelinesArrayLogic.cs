@@ -30,10 +30,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var node = nodeGetter[row];
 				var obj = this.accessor.GetObject (node.BaseType, node.Guid);
 
-				var label = ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
+				var label = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
 				dataArray.RowsLabel.Add (label);
 
-				if (node.BaseType == BaseType.Objects)
+				if (node.BaseType == BaseType.Assets)
 				{
 					foreach (var e in obj.Events)
 					{
@@ -51,15 +51,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var node = nodeGetter[row];
 
-				if (node.BaseType == BaseType.Objects)
+				if (node.BaseType == BaseType.Assets)
 				{
 					var obj = this.accessor.GetObject (node.BaseType, node.Guid);
-					var lockedIntervals = ObjectCalculator.GetLockedIntervals (obj);
+					var lockedIntervals = AssetCalculator.GetLockedIntervals (obj);
 
 					for (int c=0; c<dataArray.ColumnsCount; c++)
 					{
 						var column = dataArray.GetColumn (c);
-						if (ObjectCalculator.IsLocked (lockedIntervals, column.Timestamp))
+						if (AssetCalculator.IsLocked (lockedIntervals, column.Timestamp))
 						{
 							column[row] = new DataCell (column[row].Glyph, true, false, column[row].Tooltip);
 						}

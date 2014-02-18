@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public static LevelNode Empty = new LevelNode (Guid.Empty, BaseType.Objects, -1, null);
+		public static LevelNode Empty = new LevelNode (Guid.Empty, BaseType.Assets, -1, null);
 
 		public readonly Guid				Guid;
 		public readonly BaseType			BaseType;

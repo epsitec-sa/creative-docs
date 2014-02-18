@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public static CumulNode Empty = new CumulNode (Guid.Empty, BaseType.Objects, -1, null, NodeType.None);
+		public static CumulNode Empty = new CumulNode (Guid.Empty, BaseType.Assets, -1, null, NodeType.None);
 
 		public readonly Guid				Guid;
 		public readonly BaseType			BaseType;

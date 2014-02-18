@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectsViewState : AbstractViewState, System.IEquatable<AbstractViewState>
+	public class AssetsViewState : AbstractViewState, System.IEquatable<AbstractViewState>
 	{
 		public ViewMode							ViewMode;
 		public bool								IsShowEvents;
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return false;
 			}
 
-			var o = other as ObjectsViewState;
+			var o = other as AssetsViewState;
 
 			if (o == null)
 			{
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (!this.SelectedGuid.IsEmpty)
 			{
-				return ObjectsLogic.GetShortName (accessor, this.SelectedGuid);
+				return AssetsLogic.GetShortName (accessor, this.SelectedGuid);
 			}
 
 			return null;

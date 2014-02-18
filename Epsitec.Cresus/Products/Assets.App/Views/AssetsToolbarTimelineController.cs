@@ -13,9 +13,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ObjectsToolbarTimelineController : IDirty
+	public class AssetsToolbarTimelineController : IDirty
 	{
-		public ObjectsToolbarTimelineController(DataAccessor accessor, BaseType baseType)
+		public AssetsToolbarTimelineController(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
@@ -381,7 +381,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (!guid.IsEmpty)
 			{
-				var type = ObjectsToolbarTimelineController.ParseEventType (buttonName);
+				var type = AssetsToolbarTimelineController.ParseEventType (buttonName);
 				var e = this.accessor.CreateObjectEvent (this.obj, date, type);
 
 				if (e != null)
@@ -790,7 +790,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private class SaveCurrentDate : System.IDisposable
 		{
-			public SaveCurrentDate(ObjectsToolbarTimelineController controller)
+			public SaveCurrentDate(AssetsToolbarTimelineController controller)
 			{
 				this.controller = controller;
 				this.currentDate = this.controller.CurrentDate;
@@ -801,7 +801,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.controller.CurrentDate = this.currentDate;
 			}
 
-			private readonly ObjectsToolbarTimelineController	controller;
+			private readonly AssetsToolbarTimelineController	controller;
 			private readonly System.DateTime?					currentDate;
 		}
 

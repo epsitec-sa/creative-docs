@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.line3a.Children.Clear ();
 			this.line3b.Children.Clear ();
 
-			var obj = this.accessor.GetObject (BaseType.Objects, objectGuid);
+			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			if (obj == null)
 			{
 				return;

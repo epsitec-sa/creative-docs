@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.objectGuid != value)
 				{
 					this.objectGuid = value;
-					this.obj = this.accessor.GetObject (BaseType.Objects, this.objectGuid);
+					this.obj = this.accessor.GetObject (BaseType.Assets, this.objectGuid);
 
 					this.dataFiller.DataObject = this.obj;
 
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new EventsObjectsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new EventsAssetsTreeTableFiller (this.accessor, this.nodeGetter);
 			//?this.dataFiller = new AmortizationsObjectsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller);
 
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				var popup = new NewEventPopup (this.accessor)
 				{
-					BaseType   = BaseType.Objects,
+					BaseType   = BaseType.Assets,
 					DataObject = this.obj,
 					Timestamp  = timestamp.Value,
 				};
