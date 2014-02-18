@@ -126,6 +126,7 @@
     <Compile Include="SwissPostZipType.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DataFiles\MatchStreetZip.zip" />
     <None Include="Service References\ServiceReference.Directories.SearchAddress\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

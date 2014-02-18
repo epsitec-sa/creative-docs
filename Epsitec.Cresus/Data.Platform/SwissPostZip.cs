@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Net;
@@ -38,10 +38,19 @@ namespace Epsitec.Data.Platform
 			{
 				using (var stream = client.OpenRead (uri))
 				{
-					var zipFile = new Epsitec.Common.IO.ZipFile ();
-					zipFile.LoadFile (stream);
-					var zipEntry = zipFile.Entries.First ();
-					return System.Text.Encoding.Default.GetString (zipEntry.Data);
+					try
+					{
+						var zipFile = new Epsitec.Common.IO.ZipFile ();
+						zipFile.LoadFile (stream);
+						var zipEntry = zipFile.Entries.First ();
+						return System.Text.Encoding.Default.GetString (zipEntry.Data);
+					}
+					catch
+					{
+						var assembly = System.Reflection.Assembly.GetExecutingAssembly ();
+						var resource = "Epsitec.Data.Platform.DataFiles.MatchStreetZip.zip";
+						return Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, resource);
+					}
 				}
 			}
 		}
