@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -33,12 +33,35 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
+		public static void TryFixUselessMissingSubscriptions(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				EChWarningsFixer.LogToConsole ("Fixing incorrect missing subscriptions...");
+				EChWarningsFixer.FixSubscriptionWarnings (businessContext);
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
+
+		public static void TryFixDepartureWarnings(CoreData coreData)
+		{
+
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				EChWarningsFixer.LogToConsole ("Fixing useless departure warnings...");
+				EChWarningsFixer.FixDepartureWarnings (businessContext);
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+
+			}
+		}
+
 		public static void TryFixAll(CoreData coreData)
 		{
 			
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				
 				EChWarningsFixer.LogToConsole ("Fix Reported Person Linkage For arrivals");
 
 				EChWarningsFixer.FixReportedPersonLinkageForArrivals (businessContext);
@@ -97,6 +120,61 @@ namespace Epsitec.Aider.Data.Job
 				EChWarningsFixer.DetectDuplicatedChildForBirths (businessContext);
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
+
+		private static void FixDepartureWarnings(BusinessContext businessContext)
+		{
+			var example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.EChProcessDeparture
+			};
+
+			var warnings = businessContext.GetByExample<AiderPersonWarningEntity> (example).ToArray ();
+
+			foreach (var warning in warnings)
+			{
+				var arrivals = warning.Person.Warnings.Where (x => x.WarningType == WarningType.EChProcessArrival);
+
+				if (arrivals.Any ())
+				{
+					System.Diagnostics.Debug.WriteLine ("Discard arrival and departure warnings for " + warning.Person.DisplayName);
+					AiderPersonWarningEntity.Delete (businessContext, warning);
+					AiderPersonWarningEntity.Delete (businessContext, arrivals.First ());
+				}
+			}
+		}
+
+		private static void FixSubscriptionWarnings(BusinessContext businessContext)
+		{
+			var example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.SubscriptionMissing
+			};
+
+			var warnings = businessContext.GetByExample<AiderPersonWarningEntity> (example).ToArray ();
+
+			foreach (var warning in warnings)
+			{
+				bool remove = false;
+
+				if (warning.Person.IsNull ())
+				{
+					remove = true;
+				}
+				if (warning.Person.Confession != PersonConfession.Protestant)
+				{
+					remove = true;
+				}
+
+				if (remove)
+				{
+					AiderPersonWarningEntity.Delete (businessContext, warning);
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine ("Keep " + warning.Person.DisplayName);
+				}
 			}
 		}
 

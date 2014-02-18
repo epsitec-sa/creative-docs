@@ -426,7 +426,7 @@ namespace Epsitec.Aider.Data.Common
 			return dataContext.GetByExample (example).Single ();
 		}
 
-		private static AiderGroupEntity FindNoParishGroup(BusinessContext businessContext)
+		public static AiderGroupEntity FindNoParishGroup(BusinessContext businessContext)
 		{
 			var example = new AiderGroupEntity ()
 			{

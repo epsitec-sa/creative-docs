@@ -166,6 +166,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-fixnoparish"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixNoParish (args));
+					return;
+				}
+
 				if (args.Contains ("-fixcontactnames"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixContactNames (args));
@@ -238,9 +244,21 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-fixdeparturewarnings"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixDepartureWarnings (args));
+					return;
+				}
+
 				if (args.Contains ("-fixmissingsubscriptions"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixMissingSubscriptions (args));
+					return;
+				}
+
+				if (args.Contains ("-fixuselessmissingsubscriptions"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixUselessMissingSubscriptions (args));
 					return;
 				}
 
@@ -510,13 +528,12 @@ namespace Epsitec.Aider
 		{
 			var parishRepository = ParishAddressRepository.Current;
 
-			AiderProgram.RunWithCoreData
-			(
-				coreData => ParishAssignationFixer.FixParishAssignations
-				(
-					parishRepository, coreData
-				)
-			);
+			AiderProgram.RunWithCoreData (coreData => ParishAssignationFixer.FixParishAssignations (parishRepository, coreData));
+		}
+
+		private static void FixNoParish(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData => ParishAssignationFixer.FixNoParish (coreData));
 		}
 
 		private static void FixContactNames(string[] args)
@@ -598,8 +615,27 @@ namespace Epsitec.Aider
 						System.Console.WriteLine ("Press RETURN to quit");
 						System.Console.ReadLine ();
 					});
-			
 		}
+
+		private static void FixDepartureWarnings(string[] args)
+		{
+			AiderProgram.RunWithCoreData ( coreData => {
+						EChWarningsFixer.TryFixDepartureWarnings (coreData);
+						System.Console.WriteLine ("Press RETURN to quit");
+						System.Console.ReadLine ();
+					});
+		}
+
+		private static void FixUselessMissingSubscriptions(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				EChWarningsFixer.TryFixUselessMissingSubscriptions (coreData);
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
+
 
 		private static void FixMissingSubscriptions(string[] args)
 		{
@@ -609,7 +645,6 @@ namespace Epsitec.Aider
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});
-
 		}
 
 		private static void FindPotentialDuplicatedPersons(string[] args)

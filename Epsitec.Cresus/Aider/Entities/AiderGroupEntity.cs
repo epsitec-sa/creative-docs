@@ -736,7 +736,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private IList<AiderGroupParticipantEntity> FindParticipants(DataContext dataContext, int count)
+		public IList<AiderGroupParticipantEntity> FindParticipants(DataContext dataContext, int count)
 		{
 			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true);
 
@@ -834,7 +834,7 @@ namespace Epsitec.Aider.Entities
 			return subgroups.Max (g => g.GroupLevel);
 		}
 
-		private int FindParticipantCount(DataContext dataContext)
+		public int FindParticipantCount(DataContext dataContext)
 		{
 			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true);
 

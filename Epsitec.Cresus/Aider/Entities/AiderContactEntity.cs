@@ -229,6 +229,11 @@ namespace Epsitec.Aider.Entities
 			{
 				throw new System.ArgumentException ("Cannot create contact for a dead person.");
 			}
+
+			if (person.eCH_Person.AdultMaritalStatus == PersonMaritalStatus.None)
+			{
+				role = HouseholdRole.None;
+			}
 			
 			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonHousehold);
 

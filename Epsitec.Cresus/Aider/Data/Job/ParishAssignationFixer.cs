@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -13,18 +16,35 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Data.Job
 {
-
-
 	/// <summary>
 	/// This job corrects all parish assignations in the database.
 	/// </summary>
 	public static class ParishAssignationFixer
 	{
+		public static void FixNoParish(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				var noParishGroup = ParishAssigner.FindNoParishGroup (businessContext);
 
+				int count = noParishGroup.FindParticipantCount (businessContext.DataContext);
+				var all   = noParishGroup.FindParticipants (businessContext.DataContext, count).ToArray ();
+
+				foreach (var person in all.Select (x => x.Person).Where (x => x.IsNotNull ()))
+				{
+					if (Rules.AiderPersonBusinessRules.ReassignParish (businessContext, person))
+					{
+						System.Diagnostics.Debug.WriteLine ("Reassigned "+person.DisplayName);
+					}
+				}
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
 
 		public static void FixParishAssignations
 		(
@@ -229,6 +249,4 @@ namespace Epsitec.Aider.Data.Job
 
 
 	}
-
-
 }

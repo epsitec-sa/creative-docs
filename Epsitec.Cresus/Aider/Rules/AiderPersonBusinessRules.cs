@@ -218,25 +218,26 @@ namespace Epsitec.Aider.Rules
 
 		private static bool IsReassignNeeded(BusinessContext context, AiderPersonEntity person)
 		{
-			if ((ParishAssigner.IsInValidParish (ParishAddressRepository.Current, person)) ||
-				(ParishAssigner.IsInNoParishGroup (person)))
-			{
-				return false;
-			}
-			else if (person.Warnings.Any (x => x.WarningType == WarningType.ParishMismatch))
-			{
-				return false;
-			}
-			else
+			if (ParishAssigner.IsInNoParishGroup (person))
 			{
 				return true;
 			}
+			if (ParishAssigner.IsInValidParish (ParishAddressRepository.Current, person))
+			{
+				return false;
+			}
+			if (person.Warnings.Any (x => x.WarningType == WarningType.ParishMismatch))
+			{
+				return false;
+			}
+			
+			return true;
 		}
 
-		private static void ReassignParish(BusinessContext context, AiderPersonEntity person)
+		public static bool ReassignParish(BusinessContext context, AiderPersonEntity person)
 		{
 			var oldParishName      = person.ParishGroup.Name;
-			var oldParishGroupPath = person.ParishGroupPathCache;
+			var oldParishGroupPath = person.ParishGroupPathCache ?? "NOPA.";
 
 			AiderPersonBusinessRules.AssignParish (context, person);
 
@@ -245,7 +246,7 @@ namespace Epsitec.Aider.Rules
 
 			if (oldParishGroupPath == newParishGroupPath)
 			{
-				return;
+				return false;
 			}
 
 			var title = Resources.Text ("Nouvelle paroisse de domicile");
@@ -255,8 +256,16 @@ namespace Epsitec.Aider.Rules
 														"a été appliquée:\n \n",
 														oldParishName, "\n->\n", newParishName);
 
-			AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, WarningType.ParishDeparture, title, description);
-			AiderPersonWarningEntity.Create (context, person, newParishGroupPath, WarningType.ParishArrival, title, description);
+			if (oldParishGroupPath != "NOPA.")
+			{
+				AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, WarningType.ParishDeparture, title, description);
+			}
+			if (newParishGroupPath != "NOPA.")
+			{
+				AiderPersonWarningEntity.Create (context, person, newParishGroupPath, WarningType.ParishArrival, title, description);
+			}
+
+			return true;
 		}
 
 		private static void AssignParish(BusinessContext context, AiderPersonEntity person)
