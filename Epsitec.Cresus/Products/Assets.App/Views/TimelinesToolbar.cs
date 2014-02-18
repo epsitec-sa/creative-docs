@@ -14,17 +14,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TimelinesToolbar : AbstractCommandToolbar
 	{
-		public TimelineMode						TimelineMode
+		public TimelinesMode					TimelinesMode
 		{
 			get
 			{
-				return this.timelineMode;
+				return this.timelinesMode;
 			}
 			set
 			{
-				if (this.timelineMode != value)
+				if (this.timelinesMode != value)
 				{
-					this.timelineMode = value;
+					this.timelinesMode = value;
 					this.UpdateModeButtons ();
 				}
 			}
@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonCompacted = this.CreateModeButton   (TimelineMode.Compacted, ToolbarCommand.CompactAll, "Timeline.Single", "Affichage étroit");
-			this.buttonExpended  = this.CreateModeButton   (TimelineMode.Expanded,  ToolbarCommand.ExpandAll,  "Timeline.Double", "Affichage large");
+			this.buttonCompacted = this.CreateModeButton   (TimelinesMode.Narrow, ToolbarCommand.Narrow, "Timeline.Narrow", "Affichage étroit");
+			this.buttonExpended  = this.CreateModeButton   (TimelinesMode.Wide,   ToolbarCommand.Wide,   "Timeline.Wide",   "Affichage large");
 
 			this.buttonFirst    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First,    "Timeline.First",    "Retour sur le premier événement");
 			this.buttonPrev     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur l'événement précédent");
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private IconButton CreateModeButton(TimelineMode mode, ToolbarCommand command, string icon, string tooltip)
+		private IconButton CreateModeButton(TimelinesMode mode, ToolbarCommand command, string icon, string tooltip)
 		{
 			//	Utilise DockStyle.None, car le bouton est positionnée avec SetManualBounds.
 			var button = this.CreateCommandButton (DockStyle.None, command, icon, tooltip);
@@ -76,35 +76,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.ChangeMode (mode);
 				this.UpdateModeButtons ();
-				this.OnModeChanged (this.timelineMode);
+				this.OnModeChanged (this.timelinesMode);
 			};
 
 			return button;
 		}
 
 
-		private void ChangeMode(TimelineMode mode)
+		private void ChangeMode(TimelinesMode mode)
 		{
-			if (mode == TimelineMode.Compacted)
+			if (mode == TimelinesMode.Narrow)
 			{
-				this.timelineMode |=  TimelineMode.Compacted;
-				this.timelineMode &= ~TimelineMode.Expanded;
+				this.timelinesMode |=  TimelinesMode.Narrow;
+				this.timelinesMode &= ~TimelinesMode.Wide;
 			}
-			else if (mode == TimelineMode.Expanded)
+			else if (mode == TimelinesMode.Wide)
 			{
-				this.timelineMode |=  TimelineMode.Expanded;
-				this.timelineMode &= ~TimelineMode.Compacted;
+				this.timelinesMode |=  TimelinesMode.Wide;
+				this.timelinesMode &= ~TimelinesMode.Narrow;
 			}
 			else
 			{
-				this.timelineMode ^= mode;
+				this.timelinesMode ^= mode;
 			}
 		}
 
 		private void UpdateModeButtons()
 		{
-			this.SetCommandActivate (ToolbarCommand.CompactAll, (this.timelineMode & TimelineMode.Compacted) != 0);
-			this.SetCommandActivate (ToolbarCommand.ExpandAll,  (this.timelineMode & TimelineMode.Expanded ) != 0);
+			this.SetCommandActivate (ToolbarCommand.Narrow, (this.timelinesMode & TimelinesMode.Narrow) != 0);
+			this.SetCommandActivate (ToolbarCommand.Wide,   (this.timelinesMode & TimelinesMode.Wide )  != 0);
 		}
 
 
@@ -180,12 +180,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
-		private void OnModeChanged(TimelineMode timelineMode)
+		private void OnModeChanged(TimelinesMode timelinesMode)
 		{
-			this.ModeChanged.Raise (this, timelineMode);
+			this.ModeChanged.Raise (this, timelinesMode);
 		}
 
-		public event EventHandler<TimelineMode> ModeChanged;
+		public event EventHandler<TimelinesMode> ModeChanged;
 		#endregion
 
 
@@ -203,6 +203,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonDelete;
 		private IconButton						buttonDeselect;
 
-		private TimelineMode					timelineMode;
+		private TimelinesMode					timelinesMode;
 	}
 }

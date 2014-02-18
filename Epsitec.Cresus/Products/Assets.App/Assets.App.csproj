@@ -303,8 +303,8 @@
     <EmbeddedResource Include="Images\Show.TimelineEvent.icon" />
     <EmbeddedResource Include="Images\Show.TimelineSingle.icon" />
     <EmbeddedResource Include="Images\Show.TimelineMultiple.icon" />
-    <EmbeddedResource Include="Images\Timeline.Double.icon" />
-    <EmbeddedResource Include="Images\Timeline.Single.icon" />
+    <EmbeddedResource Include="Images\Timeline.Wide.icon" />
+    <EmbeddedResource Include="Images\Timeline.Narrow.icon" />
     <EmbeddedResource Include="Images\TreeTable.Filter.icon" />
     <EmbeddedResource Include="Images\Main.Open.icon" />
     <EmbeddedResource Include="Images\Popup.Close.icon" />
