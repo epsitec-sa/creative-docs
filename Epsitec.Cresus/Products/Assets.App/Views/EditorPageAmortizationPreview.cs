@@ -71,6 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else
 				{
 					var rnd = ad.FinalValue.GetValueOrDefault () - (ad.InitialValue.GetValueOrDefault () - (ad.BaseValue.GetValueOrDefault () * ad.Def.EffectiveRate * ad.Prorata.Quotient.GetValueOrDefault (1.0m)));
+					decimal? q = ad.Prorata.IsFullPeriod ? null : ad.Prorata.Quotient;
 
 					this.CreateAmount (this.line2b, ad.FinalValue, "Valeur finale amortie");
 					this.CreateOper   (this.line2b, 20, "=");
@@ -80,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.CreateOper   (this.line2b, 20, "×");
 					this.CreateRate   (this.line2b, ad.Def.EffectiveRate, "Taux adapté selon la périodicité");
 					this.CreateOper   (this.line2b, 20, "×");
-					this.CreateRate   (this.line2b, ad.Prorata.Quotient, "Facteur correctif si \"au prorata\"");
+					this.CreateRate   (this.line2b, q, "Facteur correctif si \"au prorata\"");
 					this.CreateOper   (this.line2b, 30, rnd >= 0 ? ") +" : ") −");
 					this.CreateAmount (this.line2b, System.Math.Abs (rnd), "Arrondi");
 				}
