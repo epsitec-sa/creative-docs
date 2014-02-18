@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.ArgumentAmount  = null;
 			this.FinalAmount     = finalAmount;
 			this.Computed        = false;
-			this.Subtract       = true;
+			this.Subtract        = true;
 			this.Rate            = true;
 			this.ArgumentDefined = false;
 		}
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			this.InitialAmount   = initialAmount;
 			this.FinalAmount     = finalAmount;
-			this.Subtract       = initialAmount > finalAmount;
+			this.Subtract        = initialAmount > finalAmount;
 			this.Computed        = true;
 			this.Rate            = rate;
 			this.ArgumentAmount  = ComputedAmount.ComputeArgument (this.InitialAmount, finalAmount, this.Subtract, this.Rate);
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.ArgumentAmount  = argumentAmount;
 			this.FinalAmount     = finalAmount;
 			this.Computed        = true;
-			this.Subtract       = subtract;
+			this.Subtract        = subtract;
 			this.Rate            = rate;
 			this.ArgumentDefined = argumentDefined;
 		}
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				this.ArgumentAmount  = current.ArgumentAmount;
 				this.FinalAmount     = ComputedAmount.ComputeFinal (initial, current.ArgumentAmount, current.Subtract, current.Rate);
 				this.Computed        = true;
-				this.Subtract       = current.Subtract;
+				this.Subtract        = current.Subtract;
 				this.Rate            = current.Rate;
 				this.ArgumentDefined = true;
 			}
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					this.ArgumentAmount  = -a;
 					this.FinalAmount     = current.FinalAmount;
 					this.Computed        = true;
-					this.Subtract       = !current.Subtract;
+					this.Subtract        = !current.Subtract;
 					this.Rate            = current.Rate;
 					this.ArgumentDefined = false;
 				}
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					this.ArgumentAmount  = a;
 					this.FinalAmount     = current.FinalAmount;
 					this.Computed        = true;
-					this.Subtract       = current.Subtract;
+					this.Subtract        = current.Subtract;
 					this.Rate            = current.Rate;
 					this.ArgumentDefined = false;
 				}
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			this.Computed        = model.Computed;
-			this.Subtract       = model.Subtract;
+			this.Subtract        = model.Subtract;
 			this.Rate            = model.Rate;
 			this.ArgumentDefined = model.ArgumentDefined;
 		}
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.ArgumentAmount  = null;
 			this.FinalAmount     = a.FinalAmount + b.FinalAmount;
 			this.Computed        = false;
-			this.Subtract       = true;
+			this.Subtract        = true;
 			this.Rate            = true;
 			this.ArgumentDefined = false;
 		}
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				&& (a.ArgumentAmount  == b.ArgumentAmount)
 				&& (a.FinalAmount     == b.FinalAmount)
 				&& (a.Computed        == b.Computed)
-				&& (a.Subtract       == b.Subtract)
+				&& (a.Subtract        == b.Subtract)
 				&& (a.Rate            == b.Rate)
 				&& (a.ArgumentDefined == b.ArgumentDefined);
 		}
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				|| (a.ArgumentAmount  != b.ArgumentAmount)
 				|| (a.FinalAmount     != b.FinalAmount)
 				|| (a.Computed        != b.Computed)
-				|| (a.Subtract       != b.Subtract)
+				|| (a.Subtract        != b.Subtract)
 				|| (a.Rate            != b.Rate)
 				|| (a.ArgumentDefined != b.ArgumentDefined);
 		}

@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.UpdateData ();
 					this.SelectedTimestamp = e.Timestamp;
-					this.OnStartEditing (type);
+					this.OnStartEditing (type, e.Timestamp);
 					this.OnDeepUpdate ();
 				}
 			}
@@ -900,12 +900,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<int> CellDoubleClicked;
 
 
-		private void OnStartEditing(EventType eventType)
+		private void OnStartEditing(EventType eventType, Timestamp timestamp)
 		{
-			this.StartEditing.Raise (this, eventType);
+			this.StartEditing.Raise (this, eventType, timestamp);
 		}
 
-		public event EventHandler<EventType> StartEditing;
+		public event EventHandler<EventType, Timestamp> StartEditing;
 
 
 		private void OnDeepUpdate()

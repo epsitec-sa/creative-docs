@@ -122,9 +122,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			//	Connexion des événements de la timeline en bas.
 			{
-				this.timelineController.StartEditing += delegate (object sender, EventType eventType)
+				this.timelineController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
 				{
-					this.OnStartEdit (eventType);
+					this.OnStartEdit (eventType, timestamp);
 				};
 
 				this.timelineController.DeepUpdate += delegate
@@ -478,7 +478,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateUI ();
 		}
 
-		private void OnStartEdit(EventType eventType, Timestamp? timestamp = null)
+		private void OnStartEdit(EventType eventType, Timestamp? timestamp)
 		{
 			this.isEditing = true;
 			this.selectedTimestamp = timestamp;
