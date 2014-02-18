@@ -201,16 +201,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ObjectField.Person4;
 				yield return ObjectField.Person5;
 
-				yield return ObjectField.GroupGuidRatio+0;
-				yield return ObjectField.GroupGuidRatio+1;
-				yield return ObjectField.GroupGuidRatio+2;
-				yield return ObjectField.GroupGuidRatio+3;
-				yield return ObjectField.GroupGuidRatio+4;
-				yield return ObjectField.GroupGuidRatio+5;
-				yield return ObjectField.GroupGuidRatio+6;
-				yield return ObjectField.GroupGuidRatio+7;
-				yield return ObjectField.GroupGuidRatio+8;
-				yield return ObjectField.GroupGuidRatio+9;
+				for (int i=0; i<=ObjectField.GroupGuidRatioLast-ObjectField.GroupGuidRatioFirst; i++)
+				{
+					yield return ObjectField.GroupGuidRatioFirst+i;
+				}
 
 				yield return ObjectField.CategoryName;
 

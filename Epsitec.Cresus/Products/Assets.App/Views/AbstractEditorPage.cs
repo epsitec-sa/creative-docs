@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnGoto (viewState);
 			};
 
-			this.fieldControllers.Add (ObjectField.GroupGuidRatio, controller);
+			this.fieldControllers.Add (ObjectField.GroupGuidRatioFirst, controller);
 		}
 
 		protected void CreateStringController(Widget parent, ObjectField field, int editWidth = 380, int lineCount = 1)

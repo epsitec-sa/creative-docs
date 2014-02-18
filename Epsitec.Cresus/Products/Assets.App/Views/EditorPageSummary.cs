@@ -110,6 +110,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public static PageType GetPageType(ObjectField field)
 		{
 			//	Retourne la page permettant d'éditer un champ donné.
+			if (field >= ObjectField.GroupGuidRatioFirst &&
+				field <= ObjectField.GroupGuidRatioLast)
+			{
+				return PageType.Groups;
+			}
+
 			switch (field)
 			{
 				case ObjectField.OneShotNumber:
@@ -154,18 +160,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Person4:
 				case ObjectField.Person5:
 					return PageType.Persons;
-
-				case ObjectField.GroupGuidRatio+0:
-				case ObjectField.GroupGuidRatio+1:
-				case ObjectField.GroupGuidRatio+2:
-				case ObjectField.GroupGuidRatio+3:
-				case ObjectField.GroupGuidRatio+4:
-				case ObjectField.GroupGuidRatio+5:
-				case ObjectField.GroupGuidRatio+6:
-				case ObjectField.GroupGuidRatio+7:
-				case ObjectField.GroupGuidRatio+8:
-				case ObjectField.GroupGuidRatio+9:
-					return PageType.Groups;
 
 				default:
 					return PageType.Asset;
@@ -229,17 +223,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var c2 = new List<ObjectSummaryControllerTile> ()
 				{
 					new ObjectSummaryControllerTile ("Regroupements"),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+0),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+1),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+2),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+3),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+4),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+5),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+6),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+7),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+8),
-					new ObjectSummaryControllerTile (ObjectField.GroupGuidRatio+9),
 				};
+				for (int i=0; i<=ObjectField.GroupGuidRatioLast-ObjectField.GroupGuidRatioFirst; i++)
+				{
+					c2.Add (new ObjectSummaryControllerTile (ObjectField.GroupGuidRatioFirst+i));
+				}
 				list.Add (c2);
 
 				var c3 = new List<ObjectSummaryControllerTile> ()

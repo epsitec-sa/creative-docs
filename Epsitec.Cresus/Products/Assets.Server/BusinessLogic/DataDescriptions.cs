@@ -11,6 +11,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		public static string GetObjectFieldDescription(ObjectField field)
 		{
+			if (field >= ObjectField.GroupGuidRatioFirst &&
+				field <= ObjectField.GroupGuidRatioLast)
+			{
+				return "Dans le groupe";
+			}
+
 			switch (field)
 			{
 				case ObjectField.OneShotNumber:
@@ -124,18 +130,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				case ObjectField.Compte8:
 					return "Amortissement extra. ou rééval.";
-
-				case ObjectField.GroupGuidRatio+0:
-				case ObjectField.GroupGuidRatio+1:
-				case ObjectField.GroupGuidRatio+2:
-				case ObjectField.GroupGuidRatio+3:
-				case ObjectField.GroupGuidRatio+4:
-				case ObjectField.GroupGuidRatio+5:
-				case ObjectField.GroupGuidRatio+6:
-				case ObjectField.GroupGuidRatio+7:
-				case ObjectField.GroupGuidRatio+8:
-				case ObjectField.GroupGuidRatio+9:
-					return "Dans le groupe";
 
 				case ObjectField.Title:
 					return "Titre";
