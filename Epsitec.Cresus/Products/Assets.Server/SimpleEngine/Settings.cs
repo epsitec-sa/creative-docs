@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.personsFields = new List<UserField> ();
 
 			this.objectFieldDict = new Dictionary<ObjectField, UserField> ();
-			this.guidDict = new Dictionary<Guid, UserField> ();
+			this.guidDict        = new Dictionary<Guid, UserField> ();
 		}
 
 
@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public void SetTempDataObject(DataObject obj)
 		{
+			//	Réinjecte l'objet temporaire dans les définitions des rubriques utilisateur.
 			var e = obj.GetEvent (0);
 			System.Diagnostics.Debug.Assert (e != null);
 
@@ -78,8 +79,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var baseType = this.GetBaseType (guid);
 			var index = this.GetIndex (baseType, guid);
 
+			//	Supprime l'ancienne rubrique utilisateur.
 			this.RemoveUserField (guid);
 
+			//	Recrée la nouvelle rubrique utilisateur, au même emplacement et sans
+			//	modifier son Guid.
 			var userField = new UserField (guid, name, field, type, max);
 			this.InsertUserField (baseType, index, userField);
 
@@ -89,11 +93,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public IEnumerable<UserField> GetUserFields(BaseType baseType)
 		{
+			//	Retourne la liste des rubriques utilisateur.
 			return this.GetUserFieldsList (baseType);
 		}
 
 		public void AddUserField(BaseType baseType, UserField userField)
 		{
+			//	Ajoute une rubrique utilisateur à la fin de la liste.
 			var list = this.GetUserFieldsList (baseType);
 			list.Add (userField);
 
@@ -102,6 +108,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public void InsertUserField(BaseType baseType, int index, UserField userField)
 		{
+			//	Ajoute une rubrique utilisateur à l'index choisi.
 			var list = this.GetUserFieldsList (baseType);
 			list.Insert (index, userField);
 
@@ -110,6 +117,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public int GetIndex(BaseType baseType, Guid guid)
 		{
+			//	Retourne l'index d'une rubrique utilisateur.
 			var list = this.GetUserFieldsList (baseType);
 			int index = list.FindIndex (x => x.Guid == guid);
 			System.Diagnostics.Debug.Assert (index != -1);
@@ -118,6 +126,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public BaseType GetBaseType(Guid guid)
 		{
+			//	Retourne la base d'une rubrique utilisateur.
 			foreach (var baseType in Settings.BaseTypes)
 			{
 				var list = this.GetUserFieldsList (baseType);
@@ -134,6 +143,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public BaseType RemoveUserField(Guid guid)
 		{
+			//	Supprime une rubrique utilisateur.
 			foreach (var baseType in Settings.BaseTypes)
 			{
 				var list = this.GetUserFieldsList (baseType);
@@ -154,16 +164,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public FieldType GetUserFieldType(ObjectField field)
 		{
+			//	Retourne le type d'une rubrique utilisateur.
 			return this.GetUserField (field).Type;
 		}
 
 		public string GetUserFieldName(ObjectField field)
 		{
+			//	Retourne le nom d'une rubrique utilisateur.
 			return this.GetUserField (field).Name;
 		}
 
 		public UserField GetUserField(ObjectField field)
 		{
+			//	Retourne une rubrique utilisateur.
 			UserField userField;
 
 			if (this.objectFieldDict.TryGetValue (field, out userField))
@@ -176,6 +189,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public UserField GetUserField(Guid guid)
 		{
+			//	Retourne une rubrique utilisateur.
 			UserField userField;
 
 			if (this.guidDict.TryGetValue (guid, out userField))
@@ -212,7 +226,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private void Update()
 		{
-			//	Doit être appelé après avoir modifié le contenu de AssetsField et/ou PersonsFields.
+			//	Met à jour les dictionnaires après une modification d'une rubrique utilisateur.
 			this.objectFieldDict.Clear ();
 			this.guidDict.Clear ();
 
@@ -232,6 +246,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private List<UserField> GetUserFieldsList(BaseType baseType)
 		{
+			//	Retourne la liste des rubriques utilisateur d'une base.
 			switch (baseType)
 			{
 				case BaseType.Assets:
@@ -247,6 +262,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static IEnumerable<BaseType> BaseTypes
 		{
+			//	Retourne les bases contenant des rubriques utilisateur.
 			get
 			{
 				yield return BaseType.Assets;
@@ -255,9 +271,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private readonly List<UserField>		assetsFields;
-		private readonly List<UserField>		personsFields;
-		private readonly Dictionary<ObjectField, UserField> objectFieldDict;
-		private readonly Dictionary<Guid, UserField> guidDict;
+		private readonly List<UserField>					assetsFields;
+		private readonly List<UserField>					personsFields;
+		private readonly Dictionary<ObjectField, UserField>	objectFieldDict;
+		private readonly Dictionary<Guid, UserField>		guidDict;
 	}
 }

@@ -74,8 +74,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return new GuidNodeGetter (this.mandat, baseType);
 		}
 
+
 		#region Objects
-		
 		public DataObject GetObject(BaseType baseType, Guid objectGuid)
 		{
 			if (baseType == BaseType.UserFields)
@@ -174,7 +174,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 		}
-		
 		#endregion
 
 
