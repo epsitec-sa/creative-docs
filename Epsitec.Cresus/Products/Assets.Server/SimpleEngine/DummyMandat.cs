@@ -30,15 +30,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			DummyMandat.AddSettings (mandat, BaseType.Assets, "Couleur", FieldType.String, 50);
 			DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro de série", FieldType.String, 50);
 
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Entreprise", FieldType.String, 100);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Adresse", FieldType.String, 100);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "NPA", FieldType.String, 10);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Ville", FieldType.String, 50);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Pays", FieldType.String, 50);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Téléphone prof.", FieldType.String, 20);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Téléphone privé", FieldType.String, 20);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Téléphone mobile", FieldType.String, 20);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "E-mail", FieldType.String, 100);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Prénom", FieldType.String, 120);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Titre", FieldType.String, 80);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Entreprise", FieldType.String, 120);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Adresse", FieldType.String, 150);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "NPA", FieldType.String, 50);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Ville", FieldType.String, 120);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Pays", FieldType.String, 120);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. prof.", FieldType.String, 100);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. privé", FieldType.String, 100);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. portable", FieldType.String, 100);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "E-mail", FieldType.String, 200);
 		}
 
 		internal static void AddSettings(DataMandat mandat, BaseType baseType, string name, FieldType type, int maxLength = 100)

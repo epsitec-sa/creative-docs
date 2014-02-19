@@ -167,8 +167,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.UserFieldType:
 					return "Type";
 
-				case ObjectField.UserFieldMax:
-					return "Longueur max";
+				case ObjectField.UserFieldWidth:
+					return "Largeur";
 
 				default:
 					return null;

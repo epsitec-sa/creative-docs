@@ -8,22 +8,22 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public struct UserField
 	{
-		public UserField(Guid guid, string name, ObjectField field, FieldType type, int maxLength = 100)
+		public UserField(Guid guid, string name, ObjectField field, FieldType type, int width = 100)
 		{
-			this.Guid      = guid;
-			this.Name      = name;
-			this.Field     = field;
-			this.Type      = type;
-			this.MaxLength = maxLength;
+			this.Guid  = guid;
+			this.Name  = name;
+			this.Field = field;
+			this.Type  = type;
+			this.Width = width;
 		}
 
 		public UserField(string name, ObjectField field, FieldType type, int maxLength = 100)
 		{
-			this.Guid      = Guid.NewGuid ();
-			this.Name      = name;
-			this.Field     = field;
-			this.Type      = type;
-			this.MaxLength = maxLength;
+			this.Guid  = Guid.NewGuid ();
+			this.Name  = name;
+			this.Field = field;
+			this.Type  = type;
+			this.Width = maxLength;
 		}
 
 		public bool IsEmpty
@@ -44,6 +44,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public readonly string					Name;
 		public readonly ObjectField				Field;
 		public readonly FieldType				Type;
-		public readonly int						MaxLength;
+		public readonly int						Width;
 	}
 }

@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateStringController (parent, ObjectField.Name);
 			this.CreateEnumController   (parent, ObjectField.UserFieldType, EnumDictionaries.DictFieldTypes, editWidth: 100);
-			this.CreateIntController    (parent, ObjectField.UserFieldMax);
+			this.CreateIntController    (parent, ObjectField.UserFieldWidth);
 		}
 	}
 }

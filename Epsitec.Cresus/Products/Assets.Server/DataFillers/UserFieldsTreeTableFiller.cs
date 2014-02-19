@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				yield return ObjectField.Name;
 				yield return ObjectField.UserFieldType;
-				yield return ObjectField.UserFieldMax;
+				yield return ObjectField.UserFieldWidth;
 			}
 		}
 
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Nom"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Type"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     50, "Lg max"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     50, "Largeur"));
 
 				return list.ToArray ();
 			}
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var text0  = userField.Name;
 				var text1  = EnumDictionaries.GetFieldTypeName (userField.Type);
-				var text2  = userField.MaxLength;
+				var text2  = userField.Width;
 
 				var s0  = new TreeTableCellString (true, text0,  isSelected: (i == selection));
 				var s1  = new TreeTableCellString (true, text1,  isSelected: (i == selection));

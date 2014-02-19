@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			var p1 = new DataStringProperty (ObjectField.Name,           userField.Name);
 			var p2 = new DataIntProperty    (ObjectField.UserFieldType,  (int) userField.Type);
-			var p3 = new DataIntProperty    (ObjectField.UserFieldMax,   userField.MaxLength);
+			var p3 = new DataIntProperty    (ObjectField.UserFieldWidth, userField.Width);
 			var p4 = new DataIntProperty    (ObjectField.UserFieldField, (int) userField.Field);
 			var p5 = new DataGuidProperty   (ObjectField.UserFieldGuid,  guid);
 
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			var p1 = e.GetProperty (ObjectField.Name          ) as DataStringProperty;
 			var p2 = e.GetProperty (ObjectField.UserFieldType ) as DataIntProperty;
-			var p3 = e.GetProperty (ObjectField.UserFieldMax  ) as DataIntProperty;
+			var p3 = e.GetProperty (ObjectField.UserFieldWidth) as DataIntProperty;
 			var p4 = e.GetProperty (ObjectField.UserFieldField) as DataIntProperty;
 			var p5 = e.GetProperty (ObjectField.UserFieldGuid ) as DataGuidProperty;
 
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			var name  =               p1.Value;
 			var type  = (FieldType)   p2.Value;
-			var max   =               p3.Value;
+			var width =               p3.Value;
 			var field = (ObjectField) p4.Value;
 			var guid  =               p5.Value;
 
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			//	Recrée la nouvelle rubrique utilisateur, au même emplacement et sans
 			//	modifier son Guid.
-			var userField = new UserField (guid, name, field, type, max);
+			var userField = new UserField (guid, name, field, type, width);
 			this.InsertUserField (baseType, index, userField);
 
 			this.Update ();

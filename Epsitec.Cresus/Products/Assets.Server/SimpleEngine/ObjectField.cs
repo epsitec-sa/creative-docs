@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		EventType,
 
 		UserFieldType,
-		UserFieldMax,
+		UserFieldWidth,
 		UserFieldField,
 		UserFieldGuid,
 
