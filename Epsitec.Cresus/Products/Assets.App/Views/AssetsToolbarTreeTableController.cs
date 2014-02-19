@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
 			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
-			this.title = "Objets d'immobilisation";
+			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Assets);
 		}
 
 

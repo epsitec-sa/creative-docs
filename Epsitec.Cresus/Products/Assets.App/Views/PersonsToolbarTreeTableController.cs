@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.secondaryGetter = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
 			this.nodeGetter = new SorterNodeGetter (this.secondaryGetter);
 
-			this.title = "Personnes";
+			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Persons);
 		}
 
 

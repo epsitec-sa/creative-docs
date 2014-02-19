@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.secondaryGetter = new SortableNodeGetter (primary, this.accessor, BaseType.Categories);
 			this.nodeGetter = new SorterNodeGetter (this.secondaryGetter);
 
-			this.title = "Catégories d'immobilisation";
+			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Categories);
 		}
 
 

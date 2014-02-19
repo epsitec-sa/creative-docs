@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelinesArrayController = new TimelinesArrayController (this.accessor)
 			{
-				Title                   = "Amortissements",
+				Title                   = StaticDescriptions.GetViewTypeDescription (ViewType.Amortizations),
 				HasAmortizationsToolbar = true,
 				Filter                  = AmortizationsView.EventFilter,
 			};

@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, primaryNodeGetter);
 
-			this.title = "Groupes d'immobilisation";
+			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Groups);
 		}
 
 

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelinesArrayController = new TimelinesArrayController (this.accessor)
 			{
-				Title = "Objets d'immobilisation",
+				Title = StaticDescriptions.GetViewTypeDescription (ViewType.Assets),
 			};
 
 			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, isTimeless: false);
