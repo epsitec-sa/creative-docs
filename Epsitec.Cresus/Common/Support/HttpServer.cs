@@ -37,7 +37,14 @@ namespace Epsitec.Common.Support
 			// access it.
 			this.httpListener = new HttpListener ();
 			this.httpListener.Prefixes.Add (uri.ToString ());
-			this.httpListener.Start ();
+			try
+			{
+				this.httpListener.Start ();
+			}
+			catch
+			{
+
+			}
 
 			// Set up and starts the thread that will asynchronously handle the requests of the
 			// HttpListener.

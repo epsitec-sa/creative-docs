@@ -1,10 +1,9 @@
 //	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Entities;
-
 using Epsitec.Cresus.Bricks;
-
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
@@ -15,6 +14,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<AiderGroupDefEntity> wall)
 		{
 			wall.AddBrick ()
+				.EnableActionMenu<ActionAiderGroupDefViewController0CreateSubGroups> ().IfTrue (this.HasUserPowerLevel			(UserPowerLevel.Administrator) && this.Entity.SubgroupsAllowed)
 				.Input ()
 					.Field (x => x.Name)
 						.ReadOnly ()

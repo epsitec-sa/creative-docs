@@ -347,6 +347,19 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByRequest (request);
 		}
 
+		public static IList<AiderGroupEntity> FindGroupsFromPathAndLevel(BusinessContext businessContext,int level,string path)
+		{
+			var dataContext = businessContext.DataContext;
+
+			var example = new AiderGroupEntity ();
+			var request = Request.Create (example);
+
+			request.AddCondition (dataContext, example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path));
+			request.AddSortClause (ValueField.Create (example, x => x.Name));
+
+			return dataContext.GetByRequest (request);
+		}
+
 		public static IList<AiderGroupEntity> FindRootGroups(BusinessContext businessContext)
 		{
 			var dataContext = businessContext.DataContext;
