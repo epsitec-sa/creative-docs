@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 
@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent          = parent,
 				Dock            = DockStyle.Top,
 				PreferredHeight = AbstractCommandToolbar.secondaryToolbarHeight,
-				BackColor       = ColorManager.ToolbarBackgroundColor,
+				BackColor       = ColorManager.SettingsToolbarBackgroundColor,
 			};
 
 			this.CreateButton (ToolbarCommand.SettingsGeneral,     "Settings.General");

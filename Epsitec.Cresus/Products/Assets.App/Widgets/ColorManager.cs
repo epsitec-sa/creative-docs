@@ -28,6 +28,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color SettingsToolbarBackgroundColor
+		{
+			get
+			{
+				return Color.FromHexa ("a0a0a0");
+			}
+		}
+
 		public static Color GetBackgroundColor(bool isHover = false)
 		{
 			if (isHover)

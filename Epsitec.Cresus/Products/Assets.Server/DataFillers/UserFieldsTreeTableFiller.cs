@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			get
 			{
 				yield return ObjectField.Name;
-				yield return ObjectField.EventType;
-				yield return ObjectField.Description;
+				yield return ObjectField.UserFieldType;
+				yield return ObjectField.UserFieldMax;
 			}
 		}
 
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var list = new List<TreeTableColumnDescription> ();
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Nom"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 130, "Type"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Type"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     50, "Lg max"));
 
 				return list.ToArray ();
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var node  = this.nodeGetter[firstRow+i];
-				var userField = this.accessor.Mandat.Settings.GetUserField (node.Guid);
+				var userField = this.accessor.Settings.GetUserField (node.Guid);
 
 				var text0  = userField.Name;
 				var text1  = EnumDictionaries.GetFieldTypeName (userField.Type);

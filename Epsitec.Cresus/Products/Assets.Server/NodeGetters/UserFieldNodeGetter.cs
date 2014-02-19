@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			this.nodes.Clear ();
 
-			foreach (var userField in this.accessor.Mandat.Settings.GetUserFields (this.baseType))
+			foreach (var userField in this.accessor.Settings.GetUserFields (this.baseType))
 			{
 				var node = new GuidNode (userField.Guid);
 				this.nodes.Add (node);

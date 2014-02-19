@@ -102,9 +102,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnNew()
 		{
-			var newField = this.accessor.Mandat.Settings.GetNewUserObjectField();
+			var newField = this.accessor.Settings.GetNewUserObjectField();
 			var userField = new UserField ("Nouveau", newField, FieldType.String);
-			this.accessor.Mandat.Settings.AddUserField (this.baseType, userField);
+			this.accessor.Settings.AddUserField (this.baseType, userField);
 
 			this.UpdateData ();
 			this.OnUpdateAfterCreate (Guid.Empty, EventType.Unknown, Timestamp.Now);
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "yes")
 					{
-						this.accessor.Mandat.Settings.RemoveUserField (this.baseType, this.SelectedGuid);
+						this.accessor.Settings.RemoveUserField (this.SelectedGuid);
 						this.UpdateData ();
 						this.OnUpdateAfterDelete ();
 					}

@@ -62,6 +62,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case BaseType.Persons:
 						return PageType.Person;
 
+					case BaseType.UserFields:
+						return PageType.UserFields;
+
 					default:
 						var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
 
@@ -182,10 +185,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasEvent   = false;
 			this.eventType  = EventType.Unknown;
 
-			var obj = this.accessor.GetObject (this.baseType, this.objectGuid);
-			if (obj != null)
+			if (this.obj != null)
 			{
-				var e = obj.GetEvent (this.timestamp);
+				var e = this.obj.GetEvent (this.timestamp);
 				if (e != null)
 				{
 					this.hasEvent  = true;
@@ -259,6 +261,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case BaseType.Persons:
 					return ObjectEditor.GetPersonAvailablePages (hasEvent, type);
 
+				case BaseType.UserFields:
+					return ObjectEditor.GetUserFieldAvailablePages (hasEvent, type);
+
 				default:
 					return null;
 			}
@@ -323,6 +328,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
 			yield return PageType.Person;
+		}
+
+		private static IEnumerable<PageType> GetUserFieldAvailablePages(bool hasEvent, EventType type)
+		{
+			//	Retourne les pages autorisées pour un type d'événement donné.
+			yield return PageType.UserFields;
 		}
 
 

@@ -12,5 +12,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Categories,
 		Groups,
 		Persons,
+		UserFields,
 	}
 }

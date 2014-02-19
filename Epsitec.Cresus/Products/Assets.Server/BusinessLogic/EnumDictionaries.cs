@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var dict = new Dictionary<int, string> ();
 
-				dict.Add ((int) FieldType.String,         "Chaîne de caractères");
+				dict.Add ((int) FieldType.String,         "Texte");
 				dict.Add ((int) FieldType.ComputedAmount, "Montant");
 				dict.Add ((int) FieldType.Decimal,        "Nombre réel");
 				dict.Add ((int) FieldType.Int,            "Nombre entier");

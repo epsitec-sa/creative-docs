@@ -71,6 +71,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		EventGlyph,
 		EventType,
 
+		UserFieldType,
+		UserFieldMax,
+		UserFieldField,
+		UserFieldGuid,
+
 		MainValue = 10000,
 		Value1,
 		Value2,

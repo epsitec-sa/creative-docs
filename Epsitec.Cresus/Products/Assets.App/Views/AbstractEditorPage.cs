@@ -540,6 +540,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case PageType.Person:
 					return new EditorPagePerson (accessor, baseType, isTimeless: true);
 
+				case PageType.UserFields:
+					return new EditorPageUserField (accessor, baseType, isTimeless: true);
+
 				default:
 					System.Diagnostics.Debug.Fail ("Unsupported page type");
 					return null;

@@ -22,5 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Category,
 		Group,
 		Person,
+
+		UserFields,
 	}
 }

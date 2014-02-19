@@ -164,6 +164,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.Mail:
 					return "Adresse e-mail";
 
+				case ObjectField.UserFieldType:
+					return "Type";
+
+				case ObjectField.UserFieldMax:
+					return "Longueur max";
+
 				default:
 					return null;
 			}

@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseType = baseType;
 
 			this.listController = new UserFieldsToolbarTreeTableController (this.accessor, this.baseType);
-			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, isTimeless: true);
+			this.objectEditor = new ObjectEditor (this.accessor, BaseType.UserFields, isTimeless: true);
 
 			this.ignoreChanges = new SafeCounter ();
 		}
@@ -236,14 +236,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateEditor()
 		{
-			//?var timestamp = this.GetLastTimestamp (this.selectedGuid);
-			//?
-			//?if (!timestamp.HasValue)
-			//?{
-			//?	timestamp = Timestamp.Now;
-			//?}
-			//?
-			//?this.objectEditor.SetObject (this.selectedGuid, timestamp);
+			this.objectEditor.SetObject (this.selectedGuid, Timestamp.MaxValue);
 		}
 
 		

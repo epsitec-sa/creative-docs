@@ -54,9 +54,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = this.obj.GetEvent (this.timestamp.Value);
 				e.SetProperties (this.dataEvent);
 
-				if (this.computedAmountDirty)
+				if (this.baseType == BaseType.UserFields)
 				{
-					AssetCalculator.UpdateComputedAmounts (this.accessor, this.obj);
+					this.accessor.Settings.SetTempDataObject (this.obj);
+				}
+				else
+				{
+					if (this.computedAmountDirty)
+					{
+						AssetCalculator.UpdateComputedAmounts (this.accessor, this.obj);
+					}
 				}
 
 				this.CancelObjectEdition ();

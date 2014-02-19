@@ -8,6 +8,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public struct UserField
 	{
+		public UserField(Guid guid, string name, ObjectField field, FieldType type, int maxLength = 100)
+		{
+			this.Guid      = guid;
+			this.Name      = name;
+			this.Field     = field;
+			this.Type      = type;
+			this.MaxLength = maxLength;
+		}
+
 		public UserField(string name, ObjectField field, FieldType type, int maxLength = 100)
 		{
 			this.Guid      = Guid.NewGuid ();
