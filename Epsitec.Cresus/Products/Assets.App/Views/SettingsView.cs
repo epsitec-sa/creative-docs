@@ -92,20 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbar()
 		{
-			foreach (var cmd in SettingsView.Commands)
-			{
-				this.toolbar.SetCommandActivate (cmd, this.selectedCommand == cmd);
-			}
-		}
-
-		private static IEnumerable<ToolbarCommand> Commands
-		{
-			get
-			{
-				yield return ToolbarCommand.SettingsGeneral;
-				yield return ToolbarCommand.SettingsAssetsView;
-				yield return ToolbarCommand.SettingsPersonsView;
-			}
+			this.toolbar.UpdateToolbar (this.selectedCommand);
 		}
 
 

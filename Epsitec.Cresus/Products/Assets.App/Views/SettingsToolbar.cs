@@ -28,6 +28,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return this.toolbar;
 		}
 
+		public void UpdateToolbar(ToolbarCommand selectedCommand)
+		{
+			foreach (var command in SettingsToolbar.Commands)
+			{
+				this.SetCommandActivate (command, command == selectedCommand);
+			}
+		}
+
+
 		private void CreateButton(ToolbarCommand command, string icon)
 		{
 			string tooltip = SettingsToolbar.GetCommandDescription (command);
@@ -53,6 +62,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				default:
 					return null;
 
+			}
+		}
+
+		private static IEnumerable<ToolbarCommand> Commands
+		{
+			get
+			{
+				yield return ToolbarCommand.SettingsGeneral;
+				yield return ToolbarCommand.SettingsAssetsView;
+				yield return ToolbarCommand.SettingsPersonsView;
 			}
 		}
 	}
