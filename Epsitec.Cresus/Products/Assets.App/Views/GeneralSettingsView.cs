@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class GeneralSettingsView : AbstractSettingsView
 	{
-		public GeneralSettingsView(DataAccessor accessor)
-			: base (accessor)
+		public GeneralSettingsView(DataAccessor accessor, MainToolbar mainToolbar)
+			: base (accessor, mainToolbar)
 		{
 		}
 

@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.settingsViewFrame.Children.Clear ();
 
-			this.settingsView = AbstractSettingsView.CreateView (this.accessor, this.selectedCommand);
+			this.settingsView = AbstractSettingsView.CreateView (this.accessor, this.mainToolbar, this.selectedCommand);
 			this.settingsView.CreateUI (this.settingsViewFrame);
 		}
 

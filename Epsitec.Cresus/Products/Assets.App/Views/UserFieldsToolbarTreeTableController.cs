@@ -11,7 +11,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class UserFieldsToolbarTreeTableController : AbstractToolbarTreeTableController<UserFieldNode>, IDirty
+	public class UserFieldsToolbarTreeTableController : AbstractToolbarTreeTableController<GuidNode>, IDirty
 	{
 		public UserFieldsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor)
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public ObjectField SelectedField
+		public Guid								SelectedGuid
 		{
 			//	Retourne le champ actuellement sélectionné.
 			get
@@ -72,16 +72,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				int sel = this.VisibleSelectedRow;
 				if (sel != -1 && sel < this.nodeGetter.Count)
 				{
-					return this.nodeGetter[sel].Field;
+					return this.nodeGetter[sel].Guid;
 				}
 				else
 				{
-					return ObjectField.Unknown;
+					return Guid.Empty;
 				}
 			}
 			set
 			{
-				this.VisibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Field == value);
+				this.VisibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == value);
 			}
 		}
 
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new UserFieldsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<UserFieldNode>.FillColumns (this.controller, this.dataFiller);
+			TreeTableFiller<GuidNode>.FillColumns (this.controller, this.dataFiller);
 
 			this.controller.AddSortedColumn (0);
 		}
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "yes")
 					{
-						this.accessor.Mandat.Settings.RemoveUserField (this.baseType, this.SelectedField);
+						this.accessor.Mandat.Settings.RemoveUserField (this.baseType, this.SelectedGuid);
 						this.UpdateData ();
 						this.OnUpdateAfterDelete ();
 					}

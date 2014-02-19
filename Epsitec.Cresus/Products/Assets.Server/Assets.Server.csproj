@@ -100,7 +100,6 @@
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="NodeGetters\ComparableData.cs" />
     <Compile Include="NodeGetters\UserFieldNodeGetter.cs" />
-    <Compile Include="NodeGetters\UserFieldNode.cs" />
     <Compile Include="NodeGetters\CumulNodeGetter.cs" />
     <Compile Include="NodeGetters\CumulNode.cs" />
     <Compile Include="NodeGetters\ITreeFunctions.cs" />

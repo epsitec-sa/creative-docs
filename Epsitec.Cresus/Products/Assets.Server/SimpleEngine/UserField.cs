@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		public UserField(string name, ObjectField field, FieldType type, int maxLength = 100)
 		{
+			this.Guid      = Guid.NewGuid ();
 			this.Name      = name;
 			this.Field     = field;
 			this.Type      = type;
@@ -30,6 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public static UserField Empty = new UserField (null, ObjectField.Unknown, FieldType.Unknown, 0);
 
 
+		public readonly Guid					Guid;
 		public readonly string					Name;
 		public readonly ObjectField				Field;
 		public readonly FieldType				Type;

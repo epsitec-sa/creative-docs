@@ -7,14 +7,14 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
-	public class UserFieldNodeGetter : AbstractNodeGetter<UserFieldNode>  // outputNodes
+	public class UserFieldNodeGetter : AbstractNodeGetter<GuidNode>  // outputNodes
 	{
 		public UserFieldNodeGetter(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
 
-			this.nodes = new List<UserFieldNode> ();
+			this.nodes = new List<GuidNode> ();
 		}
 
 
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			foreach (var userField in this.accessor.Mandat.Settings.GetUserFields (this.baseType))
 			{
-				var node = new UserFieldNode (userField.Field);
+				var node = new GuidNode (userField.Guid);
 				this.nodes.Add (node);
 			}
 		}
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override UserFieldNode this[int index]
+		public override GuidNode this[int index]
 		{
 			get
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 				else
 				{
-					return UserFieldNode.Empty;
+					return GuidNode.Empty;
 				}
 			}
 		}
@@ -56,6 +56,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private readonly DataAccessor			accessor;
 		private readonly BaseType				baseType;
-		private readonly List<UserFieldNode>	nodes;
+		private readonly List<GuidNode>			nodes;
 	}
 }

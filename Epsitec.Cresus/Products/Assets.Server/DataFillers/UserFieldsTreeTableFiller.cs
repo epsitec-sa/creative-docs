@@ -9,9 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public class UserFieldsTreeTableFiller : AbstractTreeTableFiller<UserFieldNode>
+	public class UserFieldsTreeTableFiller : AbstractTreeTableFiller<GuidNode>
 	{
-		public UserFieldsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<UserFieldNode> nodeGetter)
+		public UserFieldsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<GuidNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var node  = this.nodeGetter[firstRow+i];
-				var userField = this.accessor.Mandat.Settings.GetUserField (node.Field);
+				var userField = this.accessor.Mandat.Settings.GetUserField (node.Guid);
 
 				var text0  = userField.Name;
 				var text1  = EnumDictionaries.GetFieldTypeName (userField.Type);

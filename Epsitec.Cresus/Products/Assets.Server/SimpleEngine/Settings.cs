@@ -13,7 +13,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.assetsFields  = new List<UserField> ();
 			this.personsFields = new List<UserField> ();
 
-			this.userFields = new Dictionary<ObjectField, UserField> ();
+			this.objectFieldDict = new Dictionary<ObjectField, UserField> ();
+			this.guidDict = new Dictionary<Guid, UserField> ();
 		}
 
 
@@ -38,10 +39,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.Update ();
 		}
 
-		public void RemoveUserField(BaseType baseType, ObjectField field)
+		public void RemoveUserField(BaseType baseType, Guid guid)
 		{
 			var list = this.GetUserFieldsList (baseType);
-			var index = list.FindIndex (x => x.Field == field);
+			var index = list.FindIndex (x => x.Guid == guid);
 			list.RemoveAt (index);
 
 			this.Update ();
@@ -62,7 +63,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			UserField userField;
 
-			if (this.userFields.TryGetValue (field, out userField))
+			if (this.objectFieldDict.TryGetValue (field, out userField))
+			{
+				return userField;
+			}
+
+			return UserField.Empty;
+		}
+
+		public UserField GetUserField(Guid guid)
+		{
+			UserField userField;
+
+			if (this.guidDict.TryGetValue (guid, out userField))
 			{
 				return userField;
 			}
@@ -74,9 +87,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public ObjectField GetNewUserObjectField()
 		{
 			//	Retourne un nouveau champ utilisateur libre.
-			if (this.userFields.Any ())
+			if (this.objectFieldDict.Any ())
 			{
-				ObjectField max = this.userFields.Max (x => x.Key);
+				ObjectField max = this.objectFieldDict.Max (x => x.Key);
 
 				if (max == ObjectField.UserFieldLast)
 				{
@@ -97,16 +110,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private void Update()
 		{
 			//	Doit être appelé après avoir modifié le contenu de AssetsField et/ou PersonsFields.
-			this.userFields.Clear ();
+			this.objectFieldDict.Clear ();
+			this.guidDict.Clear ();
 
 			foreach (var field in this.assetsFields)
 			{
-				this.userFields.Add (field.Field, field);
+				this.objectFieldDict.Add (field.Field, field);
+				this.guidDict.Add (field.Guid, field);
 			}
 
 			foreach (var field in this.personsFields)
 			{
-				this.userFields.Add (field.Field, field);
+				this.objectFieldDict.Add (field.Field, field);
+				this.guidDict.Add (field.Guid, field);
 			}
 		}
 
@@ -129,6 +145,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private readonly List<UserField>		assetsFields;
 		private readonly List<UserField>		personsFields;
-		private readonly Dictionary<ObjectField, UserField> userFields;
+		private readonly Dictionary<ObjectField, UserField> objectFieldDict;
+		private readonly Dictionary<Guid, UserField> guidDict;
 	}
 }

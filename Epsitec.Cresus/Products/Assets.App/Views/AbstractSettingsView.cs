@@ -10,9 +10,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractSettingsView
 	{
-		public AbstractSettingsView(DataAccessor accessor)
+		public AbstractSettingsView(DataAccessor accessor, MainToolbar mainToolbar)
 		{
-			this.accessor = accessor;
+			this.accessor    = accessor;
+			this.mainToolbar = mainToolbar;
 		}
 
 
@@ -21,18 +22,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractSettingsView CreateView(DataAccessor accessor, ToolbarCommand command)
+		public static AbstractSettingsView CreateView(DataAccessor accessor, MainToolbar mainToolbar, ToolbarCommand command)
 		{
 			switch (command)
 			{
 				case ToolbarCommand.SettingsGeneral:
-					return new GeneralSettingsView (accessor);
+					return new GeneralSettingsView (accessor, mainToolbar);
 
 				case ToolbarCommand.SettingsAssetsView:
-					return new UserFieldsSettingsView (accessor, BaseType.Assets);
+					return new UserFieldsSettingsView (accessor, mainToolbar, BaseType.Assets);
 
 				case ToolbarCommand.SettingsPersonsView:
-					return new UserFieldsSettingsView (accessor, BaseType.Persons);
+					return new UserFieldsSettingsView (accessor, mainToolbar, BaseType.Persons);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown SettingsView {0}", command.ToString ()));
@@ -41,5 +42,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected readonly DataAccessor			accessor;
+		protected readonly MainToolbar			mainToolbar;
 	}
 }
