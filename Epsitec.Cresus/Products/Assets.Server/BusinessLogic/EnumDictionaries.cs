@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
@@ -72,6 +73,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
+		public static string GetFieldTypeName(FieldType type)
+		{
+			string s;
+			if (EnumDictionaries.DictFieldTypes.TryGetValue ((int) type, out s))
+			{
+				return s;
+			}
+
+			return null;
+		}
+
 
 		//	Ici, il est préférable de ne pas avoir de mécanisme automatique pour
 		//	générer les dictionnaires à partir des enumérations C#. En effet, les
@@ -118,6 +130,22 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				dict.Add ((int) ProrataType.Prorata365, "Sur 365 jours");
 				dict.Add ((int) ProrataType.Prorata360, "Sur 360 jours");
 				dict.Add ((int) ProrataType.Prorata12,  "Sur 12 mois");
+
+				return dict;
+			}
+		}
+
+		public static Dictionary<int, string> DictFieldTypes
+		{
+			get
+			{
+				var dict = new Dictionary<int, string> ();
+
+				dict.Add ((int) FieldType.String,         "Chaîne de caractères");
+				dict.Add ((int) FieldType.ComputedAmount, "Montant");
+				dict.Add ((int) FieldType.Decimal,        "Nombre réel");
+				dict.Add ((int) FieldType.Int,            "Nombre entier");
+				dict.Add ((int) FieldType.Date,           "Date");
 
 				return dict;
 			}

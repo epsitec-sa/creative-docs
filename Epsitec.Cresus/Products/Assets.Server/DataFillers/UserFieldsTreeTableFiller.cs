@@ -34,8 +34,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var list = new List<TreeTableColumnDescription> ();
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Nom"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Type"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  80, "Lg max"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 130, "Type"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     50, "Lg max"));
 
 				return list.ToArray ();
 			}
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var c0  = new TreeTableColumnItem<TreeTableCellString> ();
 			var c1  = new TreeTableColumnItem<TreeTableCellString> ();
-			var c2  = new TreeTableColumnItem<TreeTableCellString> ();
+			var c2  = new TreeTableColumnItem<TreeTableCellInt> ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -58,12 +58,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var userField = this.accessor.Mandat.Settings.GetUserField (node.Field);
 
 				var text0  = userField.Name;
-				var text1  = userField.Type.ToString();
-				var text2  = userField.MaxLength.ToString ();
+				var text1  = EnumDictionaries.GetFieldTypeName (userField.Type);
+				var text2  = userField.MaxLength;
 
 				var s0  = new TreeTableCellString (true, text0,  isSelected: (i == selection));
 				var s1  = new TreeTableCellString (true, text1,  isSelected: (i == selection));
-				var s2  = new TreeTableCellString (true, text2,  isSelected: (i == selection));
+				var s2  = new TreeTableCellInt    (true, text2,  isSelected: (i == selection));
 
 				c0.AddRow (s0);
 				c1.AddRow (s1);
