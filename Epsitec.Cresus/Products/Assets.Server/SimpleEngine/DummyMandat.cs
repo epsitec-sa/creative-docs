@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			var mandat = new DataMandat ("Exemple", new System.DateTime (2000, 1, 1), new System.DateTime (2050, 12, 31));
 
+			DummyMandat.AddSettings (mandat);
 			DummyMandat.AddPersons (mandat);
 			DummyMandat.AddCategories (mandat);
 			DummyMandat.AddGroups (mandat);
@@ -20,6 +21,32 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			return mandat;
 		}
+
+
+		internal static void AddSettings(DataMandat mandat)
+		{
+			DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur d'assurance", FieldType.ComputedAmount);
+			DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur fiscale", FieldType.ComputedAmount);
+			DummyMandat.AddSettings (mandat, BaseType.Assets, "Couleur", FieldType.String, 50);
+			DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro de série", FieldType.String, 50);
+
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Entreprise", FieldType.String, 100);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Adresse", FieldType.String, 100);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "NPA", FieldType.String, 10);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Ville", FieldType.String, 50);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Pays", FieldType.String, 50);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Téléphone prof.", FieldType.String, 20);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Téléphone privé", FieldType.String, 20);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "Téléphone mobile", FieldType.String, 20);
+			DummyMandat.AddSettings (mandat, BaseType.Persons, "E-mail", FieldType.String, 100);
+		}
+
+		internal static void AddSettings(DataMandat mandat, BaseType baseType, string name, FieldType type, int maxLength = 100)
+		{
+			var field = mandat.Settings.GetNewUserObjectField ();
+			mandat.Settings.AddUserField (baseType, new UserField (name, field, type, maxLength));
+		}
+
 
 		internal static void AddObjects(DataMandat mandat)
 		{

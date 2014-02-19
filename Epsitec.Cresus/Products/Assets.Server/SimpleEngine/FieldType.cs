@@ -8,6 +8,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public enum FieldType
 	{
+		Unknown,
+
 		String,
 		Decimal,
 		ComputedAmount,

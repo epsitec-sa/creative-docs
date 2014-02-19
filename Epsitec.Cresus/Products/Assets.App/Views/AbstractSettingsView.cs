@@ -29,10 +29,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return new GeneralSettingsView (accessor);
 
 				case ToolbarCommand.SettingsAssetsView:
-					return new AssetsViewSettingsView (accessor);
+					return new UserFieldsSettingsView (accessor, BaseType.Assets);
 
 				case ToolbarCommand.SettingsPersonsView:
-					return new PersonsViewSettingsView (accessor);
+					return new UserFieldsSettingsView (accessor, BaseType.Persons);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown SettingsView {0}", command.ToString ()));

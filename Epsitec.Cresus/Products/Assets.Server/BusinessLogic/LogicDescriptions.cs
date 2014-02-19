@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				string line = null;
 
-				switch (DataAccessor.GetFieldType (field))
+				switch (accessor.GetFieldType (field))
 				{
 					case FieldType.String:
 						line = AssetCalculator.GetObjectPropertyString (obj, timestamp, field, false);
@@ -106,8 +106,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						break;
 					}
 
-					var desc = DataDescriptions.GetObjectFieldDescription (field);
-					list.Add (LogicDescriptions.GetTooltipLine (desc, line));
+					var name = accessor.GetFieldName (field);
+					list.Add (LogicDescriptions.GetTooltipLine (name, line));
 				}
 			}
 

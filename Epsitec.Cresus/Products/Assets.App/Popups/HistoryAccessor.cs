@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				return HistoryTreeTableFiller.DateColumnWidth
 					 + HistoryTreeTableFiller.GlyphColumnWidth
-					 + HistoryTreeTableFiller.GetValueColumnWidth (this.field);
+					 + this.filler.GetValueColumnWidth (this.field);
 			}
 		}
 

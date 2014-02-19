@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Accessor  = this.accessor,
 				Field     = field,
-				Label     = DataDescriptions.GetObjectFieldDescription (field),
+				Label     = this.accessor.GetFieldName (field),
 				EditWidth = 380,
 				TabIndex  = ++this.tabIndex,
 			};
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Accessor  = this.accessor,
 				Field     = field,
-				Label     = DataDescriptions.GetObjectFieldDescription (field),
+				Label     = this.accessor.GetFieldName (field),
 				EditWidth = 380,
 				TabIndex  = ++this.tabIndex,
 			};
@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new StringFieldController
 			{
 				Field     = field,
-				Label     = DataDescriptions.GetObjectFieldDescription (field),
+				Label     = this.accessor.GetFieldName (field),
 				EditWidth = editWidth,
 				LineCount = lineCount,
 				TabIndex  = ++this.tabIndex,
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new EnumFieldController
 			{
 				Field     = field,
-				Label     = DataDescriptions.GetObjectFieldDescription (field),
+				Label     = this.accessor.GetFieldName (field),
 				EditWidth = editWidth,
 				Enums     = enums,
 				TabIndex  = ++this.tabIndex,
@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new DecimalFieldController
 			{
 				Field         = field,
-				Label         = DataDescriptions.GetObjectFieldDescription (field),
+				Label         = this.accessor.GetFieldName (field),
 				DecimalFormat = format,
 				TabIndex      = ++this.tabIndex,
 			};
@@ -361,7 +361,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new ComputedAmountFieldController
 			{
 				Field     = field,
-				Label     = DataDescriptions.GetObjectFieldDescription (field),
+				Label     = this.accessor.GetFieldName (field),
 				TabIndex  = ++this.tabIndex,
 			};
 
@@ -395,7 +395,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new IntFieldController
 			{
 				Field     = field,
-				Label     = DataDescriptions.GetObjectFieldDescription (field),
+				Label     = this.accessor.GetFieldName (field),
 				TabIndex  = ++this.tabIndex,
 			};
 
@@ -429,7 +429,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var controller = new DateFieldController
 			{
 				Field     = field,
-				Label     = DataDescriptions.GetObjectFieldDescription (field),
+				Label     = this.accessor.GetFieldName (field),
 				TabIndex  = ++this.tabIndex,
 			};
 

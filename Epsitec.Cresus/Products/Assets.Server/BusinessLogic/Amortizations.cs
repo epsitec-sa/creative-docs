@@ -343,7 +343,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				//	Pour mettre à jour les éventuels amortissements extraordinaires suivants.
 				//	Accesoireemnt, cela recalcule l'événement que l'on vient de créer, mais
 				//	cela devrait être sans conséquence.
-				AssetCalculator.UpdateComputedAmounts (obj);
+				AssetCalculator.UpdateComputedAmounts (this.accessor, obj);
 			}
 		}
 

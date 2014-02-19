@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				//	Recalcule tout.
 				foreach (var obj in this.mandat.GetData (BaseType.Assets))
 				{
-					AssetCalculator.UpdateComputedAmounts (obj);
+					AssetCalculator.UpdateComputedAmounts (this, obj);
 				}
 			}
 		}
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (p);
 
 				obj.AddEvent (e);
-				AssetCalculator.UpdateComputedAmounts (obj);
+				AssetCalculator.UpdateComputedAmounts (this, obj);
 				return e;
 			}
 
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				if (e != null)
 				{
 					obj.RemoveEvent (e);
-					AssetCalculator.UpdateComputedAmounts (obj);
+					AssetCalculator.UpdateComputedAmounts (this, obj);
 				}
 			}
 		}
@@ -190,26 +190,49 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public static IEnumerable<ObjectField> ValueFields
+		public IEnumerable<ObjectField> ValueFields
 		{
 			get
 			{
 				yield return ObjectField.MainValue;
-				yield return ObjectField.Value1;
-				yield return ObjectField.Value2;
-				yield return ObjectField.Value3;
-				yield return ObjectField.Value4;
-				yield return ObjectField.Value5;
-				yield return ObjectField.Value6;
-				yield return ObjectField.Value7;
-				yield return ObjectField.Value8;
-				yield return ObjectField.Value9;
-				yield return ObjectField.Value10;
+
+				foreach (var x in this.mandat.Settings.GetUserFields (BaseType.Assets).Where (x => x.Type == FieldType.ComputedAmount))
+				{
+					yield return x.Field;
+				}
+
+				//?yield return ObjectField.Value1;
+				//?yield return ObjectField.Value2;
+				//?yield return ObjectField.Value3;
+				//?yield return ObjectField.Value4;
+				//?yield return ObjectField.Value5;
+				//?yield return ObjectField.Value6;
+				//?yield return ObjectField.Value7;
+				//?yield return ObjectField.Value8;
+				//?yield return ObjectField.Value9;
+				//?yield return ObjectField.Value10;
 			}
 		}
 
-		public static FieldType GetFieldType(ObjectField objectField)
+		public string GetFieldName(ObjectField objectField)
 		{
+			if (objectField >= ObjectField.UserFieldFirst &&
+				objectField <= ObjectField.UserFieldLast)
+			{
+				return this.mandat.Settings.GetUserFieldName (objectField);
+			}
+
+			return DataDescriptions.GetObjectFieldDescription (objectField);
+		}
+
+		public FieldType GetFieldType(ObjectField objectField)
+		{
+			if (objectField >= ObjectField.UserFieldFirst &&
+				objectField <= ObjectField.UserFieldLast)
+			{
+				return this.mandat.Settings.GetUserFieldType (objectField);
+			}
+
 			if (objectField >= ObjectField.GroupGuidRatioFirst &&
 				objectField <= ObjectField.GroupGuidRatioLast)
 			{

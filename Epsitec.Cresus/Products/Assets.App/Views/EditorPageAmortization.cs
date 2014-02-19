@@ -136,8 +136,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ImportField(DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
 		{
-			var typeSrc = DataAccessor.GetFieldType (fieldSrc);
-			var typeDst = DataAccessor.GetFieldType (fieldDst);
+			var typeSrc = this.accessor.GetFieldType (fieldSrc);
+			var typeDst = this.accessor.GetFieldType (fieldDst);
 			System.Diagnostics.Debug.Assert (typeSrc == typeDst);
 
 			switch (typeSrc)

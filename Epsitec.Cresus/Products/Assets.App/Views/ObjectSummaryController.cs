@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return null;
 			}
 
-			string text = DataDescriptions.GetObjectFieldDescription (tile.Field);
+			string text = this.accessor.GetFieldName (tile.Field);
 			return new SummaryControllerTile (text, alignment: ContentAlignment.MiddleRight, simpleText: true);
 		}
 
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			string text = null;
 			var alignment = ContentAlignment.MiddleCenter;
 
-			switch (DataAccessor.GetFieldType (tile.Field))
+			switch (this.accessor.GetFieldType (tile.Field))
 			{
 				case FieldType.Decimal:
 					var d = AssetCalculator.GetObjectPropertyDecimal (this.obj, this.timestamp, tile.Field);
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 			}
 
-			string tooltip = DataDescriptions.GetObjectFieldDescription (tile.Field);
+			string tooltip = this.accessor.GetFieldName (tile.Field);
 			bool hilited   = this.IsHilited (tile.Field);
 			bool readOnly  = this.IsReadonly (tile.Field);
 

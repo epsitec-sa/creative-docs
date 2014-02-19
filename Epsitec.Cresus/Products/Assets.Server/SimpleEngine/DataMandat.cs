@@ -17,10 +17,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			this.Guid = Guid.NewGuid ();
 
+			this.settings = new Settings ();
+
 			this.assets     = new GuidList<DataObject> ();
 			this.categories = new GuidList<DataObject> ();
 			this.groups     = new GuidList<DataObject> ();
 			this.persons    = new GuidList<DataObject> ();
+		}
+
+		public Settings							Settings
+		{
+			get
+			{
+				return this.settings;
+			}
 		}
 
 		public readonly string					Name;
@@ -51,6 +61,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		private readonly Settings				settings;
 		private readonly GuidList<DataObject>	assets;
 		private readonly GuidList<DataObject>	categories;
 		private readonly GuidList<DataObject>	groups;

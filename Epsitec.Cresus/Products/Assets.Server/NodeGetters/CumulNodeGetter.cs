@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				{
 					var obj = this.accessor.GetObject (BaseType.Assets, hiddenTreeNode.Guid);
 
-					foreach (var field in DataAccessor.ValueFields)
+					foreach (var field in this.accessor.ValueFields)
 					{
 						var ca = CumulNodeGetter.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, field);
 						if (ca.HasValue)

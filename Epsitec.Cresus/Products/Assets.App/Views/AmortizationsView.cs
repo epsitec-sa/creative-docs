@@ -385,7 +385,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 							var newProp = new DataComputedAmountProperty (ObjectField.MainValue, newCA);
 							newEvent.AddProperty (newProp);
 
-							AssetCalculator.UpdateComputedAmounts (asset);
+							AssetCalculator.UpdateComputedAmounts (this.accessor, asset);
 
 							this.DeepUpdateUI ();
 						}

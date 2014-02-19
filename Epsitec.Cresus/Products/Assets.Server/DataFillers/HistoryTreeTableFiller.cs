@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date,  HistoryTreeTableFiller.DateColumnWidth, "Date"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph, HistoryTreeTableFiller.GlyphColumnWidth, ""));
 
-				switch (DataAccessor.GetFieldType (this.field))
+				switch (this.accessor.GetFieldType (this.field))
 				{
 					case FieldType.Decimal:
 						switch (Format.GetFieldFormat (this.field))
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			//	Peuple la 3ème colonne dont le type varie.
 			//	Je n'ai pas trouvé comment faire plus simple...
-			switch (DataAccessor.GetFieldType (this.field))
+			switch (this.accessor.GetFieldType (this.field))
 			{
 				case FieldType.String:
 					this.PutString (content, firstRow, count, selection);
@@ -356,13 +356,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				return HistoryTreeTableFiller.GetValueColumnWidth (this.field);
+				return this.GetValueColumnWidth (this.field);
 			}
 		}
 
-		public static int GetValueColumnWidth(ObjectField field)
+		public int GetValueColumnWidth(ObjectField field)
 		{
-			switch (DataAccessor.GetFieldType (field))
+			switch (this.accessor.GetFieldType (field))
 			{
 				case FieldType.Date:
 					return 70;

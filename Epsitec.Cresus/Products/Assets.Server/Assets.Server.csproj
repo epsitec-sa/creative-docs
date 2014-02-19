@@ -74,6 +74,7 @@
     <Compile Include="BusinessLogic\TimelinesArrayLogic.cs" />
     <Compile Include="DataFillers\AbstractTreeTableFiller.cs" />
     <Compile Include="DataFillers\CategoriesTreeTableFiller.cs" />
+    <Compile Include="DataFillers\UserFieldsTreeTableFiller.cs" />
     <Compile Include="DataFillers\PersonsTreeTableFiller.cs" />
     <Compile Include="DataFillers\ErrorsTreeTableFiller.cs" />
     <Compile Include="DataFillers\SingleCategoriesTreeTableFiller.cs" />
@@ -98,6 +99,8 @@
     <Compile Include="DataFillers\TreeTableContentItem.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="NodeGetters\ComparableData.cs" />
+    <Compile Include="NodeGetters\UserFieldNodeGetter.cs" />
+    <Compile Include="NodeGetters\UserFieldNode.cs" />
     <Compile Include="NodeGetters\CumulNodeGetter.cs" />
     <Compile Include="NodeGetters\CumulNode.cs" />
     <Compile Include="NodeGetters\ITreeFunctions.cs" />
@@ -123,6 +126,8 @@
     <Compile Include="BusinessLogic\TimelineMode.cs" />
     <Compile Include="NodeGetters\GroupTreeNodeGetter.cs" />
     <Compile Include="NodeGetters\GroupLevelNodeGetter.cs" />
+    <Compile Include="SimpleEngine\Settings.cs" />
+    <Compile Include="SimpleEngine\UserField.cs" />
     <Compile Include="SimpleEngine\DataAccessor.NodeGetter.cs" />
     <Compile Include="SimpleEngine\DataGuidRatioProperty.cs" />
     <Compile Include="SimpleEngine\GuidRatio.cs" />

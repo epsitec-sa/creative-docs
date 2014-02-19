@@ -123,8 +123,8 @@
     <Compile Include="Views\AmortizationsViewState.cs" />
     <Compile Include="Views\AmortizationsToolbar.cs" />
     <Compile Include="Views\AbstractSettingsView.cs" />
-    <Compile Include="Views\AssetsViewSettingsView.cs" />
-    <Compile Include="Views\PersonsViewSettingsView.cs" />
+    <Compile Include="Views\UserFieldsToolbarTreeTableController.cs" />
+    <Compile Include="Views\UserFieldsSettingsView.cs" />
     <Compile Include="Views\GeneralSettingsView.cs" />
     <Compile Include="Views\SettingsViewState.cs" />
     <Compile Include="Views\SettingsToolbar.cs" />

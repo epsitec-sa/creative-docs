@@ -455,11 +455,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 		#region Update computed amount
-		public static void UpdateComputedAmounts(DataObject obj)
+		public static void UpdateComputedAmounts(DataAccessor accessor, DataObject obj)
 		{
 			if (obj != null)
 			{
-				foreach (var field in DataAccessor.ValueFields)
+				foreach (var field in accessor.ValueFields)
 				{
 					decimal? last = null;
 
