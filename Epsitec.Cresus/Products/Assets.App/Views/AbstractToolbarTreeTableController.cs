@@ -428,7 +428,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected string						title;
 		protected bool							hasFilter;
 		protected bool							hasTreeOperations;
-		protected AbstractNodeGetter<T>		nodeGetter;
+		protected AbstractNodeGetter<T>			nodeGetter;
 		protected AbstractTreeTableFiller<T>	dataFiller;
 		protected TopTitle						topTitle;
 		protected NavigationTreeTableController	controller;

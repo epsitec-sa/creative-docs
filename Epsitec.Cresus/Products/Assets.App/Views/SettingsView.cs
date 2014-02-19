@@ -3,10 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -17,11 +14,105 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public SettingsView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
+			this.selectedCommand = ToolbarCommand.SettingsGeneral;
 		}
 
 		public override void CreateUI(Widget parent)
 		{
-			base.CreateUI (parent);
+			this.topTitle = new TopTitle
+			{
+				Parent = parent,
+			};
+
+			this.topTitle.SetTitle (StaticDescriptions.GetViewTypeDescription (ViewType.Settings));
+
+			this.toolbar = new SettingsToolbar ();
+			this.toolbar.CreateUI (parent);
+
+			this.settingsViewFrame = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Fill,
+			};
+
+			//	Connexion des événements de la toolbar.
+			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				this.selectedCommand = command;
+				this.DeepUpdateUI ();
+				this.OnViewStateChanged (this.ViewState);
+			};
+
+			this.DeepUpdateUI ();
 		}
+
+
+		public override void DeepUpdateUI()
+		{
+			this.DataChanged ();
+			this.UpdateUI ();
+		}
+
+		public override void UpdateUI()
+		{
+			this.CreateSettingsView ();
+			this.UpdateToolbar ();
+		}
+
+
+		public override AbstractViewState ViewState
+		{
+			get
+			{
+				return new SettingsViewState
+				{
+					ViewType        = ViewType.Settings,
+					SelectedCommand = this.selectedCommand,
+				};
+			}
+			set
+			{
+				var viewState = value as SettingsViewState;
+				System.Diagnostics.Debug.Assert (viewState != null);
+
+				this.selectedCommand = viewState.SelectedCommand;
+
+				this.UpdateUI ();
+			}
+		}
+
+
+		private void CreateSettingsView()
+		{
+			this.settingsViewFrame.Children.Clear ();
+
+			this.settingsView = AbstractSettingsView.CreateView (this.accessor, this.selectedCommand);
+			this.settingsView.CreateUI (this.settingsViewFrame);
+		}
+
+		private void UpdateToolbar()
+		{
+			foreach (var cmd in SettingsView.Commands)
+			{
+				this.toolbar.SetCommandActivate (cmd, this.selectedCommand == cmd);
+			}
+		}
+
+		private static IEnumerable<ToolbarCommand> Commands
+		{
+			get
+			{
+				yield return ToolbarCommand.SettingsGeneral;
+				yield return ToolbarCommand.SettingsAssetsView;
+				yield return ToolbarCommand.SettingsPersonsView;
+			}
+		}
+
+
+		private TopTitle						topTitle;
+		private SettingsToolbar					toolbar;
+		private ToolbarCommand					selectedCommand;
+		private FrameBox						settingsViewFrame;
+		private AbstractSettingsView			settingsView;
 	}
 }

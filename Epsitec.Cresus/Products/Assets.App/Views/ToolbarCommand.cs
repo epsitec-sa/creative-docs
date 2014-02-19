@@ -55,5 +55,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		AmortizationsUnpreview,
 		AmortizationsDelete,
 		AmortizationsInfo,
+
+		SettingsGeneral,
+		SettingsAssetsView,
+		SettingsPersonsView,
 	}
 }
