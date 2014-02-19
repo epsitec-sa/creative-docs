@@ -17,11 +17,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.baseType = BaseType.Assets;
 
-			this.listController           = new AssetsToolbarTreeTableController (this.accessor);
-			this.timelineController       = new AssetsToolbarTimelineController (this.accessor, this.baseType);
-			this.eventsController         = new EventsToolbarTreeTableController (this.accessor);
-			this.timelinesArrayController = new TimelinesArrayController (this.accessor);
-			this.objectEditor             = new ObjectEditor (this.accessor, this.baseType, isTimeless: false);
+			this.listController     = new AssetsToolbarTreeTableController (this.accessor);
+			this.timelineController = new AssetsToolbarTimelineController (this.accessor, this.baseType);
+			this.eventsController   = new EventsToolbarTreeTableController (this.accessor);
+
+			this.timelinesArrayController = new TimelinesArrayController (this.accessor)
+			{
+				Title = "Objets d'immobilisation",
+			};
+
+			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, isTimeless: false);
 
 			this.viewMode = ViewMode.Single;
 		}

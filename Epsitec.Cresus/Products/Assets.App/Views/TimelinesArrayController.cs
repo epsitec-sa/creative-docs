@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
+		public string							Title;
 		public System.Func<DataEvent, bool>		Filter;
 		public bool								HasAmortizationsToolbar;
 
@@ -146,7 +147,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent = parent,
 			};
 
-			this.topTitle.SetTitle ("Objets d'immobilisation");
+			this.topTitle.SetTitle (this.Title);
 
 			var box = new FrameBox
 			{

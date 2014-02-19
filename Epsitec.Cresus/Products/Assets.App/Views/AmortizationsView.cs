@@ -20,7 +20,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelinesArrayController = new TimelinesArrayController (this.accessor)
 			{
+				Title                   = "Amortissements",
 				HasAmortizationsToolbar = true,
+				Filter                  = AmortizationsView.EventFilter,
 			};
 
 			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, isTimeless: false);
@@ -58,7 +60,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.timelinesArrayController.CreateUI (this.timelinesArrayFrameBox);
-			this.timelinesArrayController.Filter = AmortizationsView.EventFilter;
 
 			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsPreview,   true);
 			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsFix,       true);
