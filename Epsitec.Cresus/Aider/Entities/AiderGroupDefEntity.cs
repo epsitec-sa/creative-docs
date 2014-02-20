@@ -87,6 +87,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public static AiderGroupDefEntity CreateSubGroupDef(BusinessContext businessContext, AiderGroupDefEntity parent, string name, GroupClassification groupClass)
+		{
+			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
+
+			aiderGroupDef.Name = name;
+			aiderGroupDef.Number = ""; //?
+			aiderGroupDef.Level = parent.Level + 1;
+			aiderGroupDef.SubgroupsAllowed = false;
+			aiderGroupDef.MembersAllowed = false;
+
+			var number = AiderGroupIds.FindNextSubGroupNumber (parent.Subgroups.Select (g => g.PathTemplate));
+			aiderGroupDef.PathTemplate = AiderGroupIds.CreateDefinitionSubgroupPath (parent.PathTemplate, number);
+
+			aiderGroupDef.Classification = groupClass;
+			aiderGroupDef.Mutability = Mutability.Customizable;
+
+			//uplink
+			parent.Subgroups.Add (aiderGroupDef);
+
+			return aiderGroupDef;
+		}
+
 		public bool IsRegion()
 		{
 			return this.Level == AiderGroupIds.RegionLevel

@@ -14,7 +14,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<AiderGroupDefEntity> wall)
 		{
 			wall.AddBrick ()
-				.EnableActionMenu<ActionAiderGroupDefViewController0CreateSubGroups> ().IfTrue (this.HasUserPowerLevel			(UserPowerLevel.Administrator) && this.Entity.SubgroupsAllowed)
+				.EnableActionMenu<ActionAiderGroupDefViewController0CreateSubGroupDef> ().IfTrue (this.HasUserPowerLevel			(UserPowerLevel.Administrator) && this.Entity.SubgroupsAllowed)
 				.Input ()
 					.Field (x => x.Name)
 						.ReadOnly ()

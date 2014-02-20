@@ -261,6 +261,12 @@ namespace Epsitec.Aider.Data.Common
 			return int.Parse (number);
 		}
 
+		public static int FindNextSubGroupNumber(IEnumerable<string> subGroupsPath)
+		{
+			var subgroupsNumber = subGroupsPath.Select (g => System.Convert.ToInt32 (g.Substring (g.Length - AiderGroupIds.SuffixStart).TrimEnd ('.')));
+			return subgroupsNumber.Max () + 1;
+		}
+
 		private static string GetGroupPathPart(string path)
 		{
 			return path.Substring (path.Length - AiderGroupIds.PartLength);

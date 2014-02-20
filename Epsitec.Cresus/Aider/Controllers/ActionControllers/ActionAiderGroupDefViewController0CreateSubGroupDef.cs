@@ -11,17 +11,8 @@ using Epsitec.Cresus.Core.Controllers.ActionControllers;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (0)]
-	public sealed class ActionAiderGroupDefViewController0CreateSubGroups : TemplateActionViewController<AiderGroupDefEntity, AiderGroupDefEntity>
+	public sealed class ActionAiderGroupDefViewController0CreateSubGroupDef : ActionViewController<AiderGroupDefEntity>
 	{
-		public override bool					RequiresAdditionalEntity
-		{
-			get
-			{
-				return false;
-			}
-		}
-		
-		
 		public override FormattedText GetTitle()
 		{
 			return "Créer un sous groupe";
@@ -29,7 +20,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<string> (this.Execute);
+			return ActionExecutor.Create<string, Enumerations.GroupClassification> (this.Execute);
 		}
 
 
@@ -40,24 +31,30 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Field<string> ()
 					.Title ("Nom du sous groupe")
 				.End ()
+				.Field<Enumerations.GroupClassification> ()
+					.Title ("Classification")
+				.End ()
 			.End ();
 		}
 
-		private void Execute(string name)
+		private void Execute(string name,Enumerations.GroupClassification groupClass)
 		{
 			if (string.IsNullOrWhiteSpace (name))
 			{
 				throw new BusinessRuleException ("Le nom ne peut pas être vide");
 			}
 			
-			//TOFO INSTANCE
-			//var groupDef = new AiderGroupDefEntity
-			//Searching same levels group
-			//var groupsToComplete = AiderGroupEntity.FindGroupsFromPathAndLevel (this.BusinessContext, this.Entity.Level, this.Entity.PathTemplate);
-			//foreach (var group in groupsToComplete)
-			//{
-			//	
-			//}
+			
+			var groupeDef = AiderGroupDefEntity.CreateSubGroupDef (this.BusinessContext, this.Entity, name, groupClass);
+
+			//TODO INSTANCE
+			/*
+			var regions = AiderGroupEntity.FindRegionRootGroups(this.BusinessContext);
+			foreach(var region in regions)
+			{
+				groupeDef.InstantiateParish(this.BusinessContext,region,
+			}*/
+
 		}
 	}
 }
