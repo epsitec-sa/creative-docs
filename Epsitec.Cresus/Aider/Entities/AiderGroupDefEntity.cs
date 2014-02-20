@@ -87,21 +87,21 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public static AiderGroupDefEntity CreateSubGroupDef(BusinessContext businessContext, AiderGroupDefEntity parent, string name, GroupClassification groupClass)
+		public static AiderGroupDefEntity CreateSubGroupDef(BusinessContext businessContext, AiderGroupDefEntity parent, string name, GroupClassification groupClass, bool subgroupsAllowed, bool membersAllowed, bool isMutable)
 		{
 			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
 			aiderGroupDef.Name = name;
 			aiderGroupDef.Number = ""; //?
 			aiderGroupDef.Level = parent.Level + 1;
-			aiderGroupDef.SubgroupsAllowed = false;
-			aiderGroupDef.MembersAllowed = false;
+			aiderGroupDef.SubgroupsAllowed = subgroupsAllowed;
+			aiderGroupDef.MembersAllowed = membersAllowed;
 
 			var number = AiderGroupIds.FindNextSubGroupNumber (parent.Subgroups.Select (g => g.PathTemplate));
 			aiderGroupDef.PathTemplate = AiderGroupIds.CreateDefinitionSubgroupPath (parent.PathTemplate, number);
 
 			aiderGroupDef.Classification = groupClass;
-			aiderGroupDef.Mutability = Mutability.Customizable;
+			aiderGroupDef.Mutability = isMutable ? Mutability.Customizable : Mutability.None;
 
 			//uplink
 			parent.Subgroups.Add (aiderGroupDef);

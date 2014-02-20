@@ -20,7 +20,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<string, Enumerations.GroupClassification> (this.Execute);
+			return ActionExecutor.Create<string, Enumerations.GroupClassification,bool,bool,bool> (this.Execute);
 		}
 
 
@@ -34,10 +34,19 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Field<Enumerations.GroupClassification> ()
 					.Title ("Classification")
 				.End ()
+				.Field<bool> ()
+					.Title ("Membres autorisés")
+				.End ()
+				.Field<bool> ()
+					.Title ("Sous-groupes autorisés")
+				.End ()
+				.Field<bool> ()
+					.Title ("Sous-groupes modifiables")
+				.End ()
 			.End ();
 		}
 
-		private void Execute(string name,Enumerations.GroupClassification groupClass)
+		private void Execute(string name, Enumerations.GroupClassification groupClass, bool membersAllowed, bool subgroupsAllowed, bool isMutable)
 		{
 			if (string.IsNullOrWhiteSpace (name))
 			{
@@ -45,15 +54,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 			
 			
-			var groupeDef = AiderGroupDefEntity.CreateSubGroupDef (this.BusinessContext, this.Entity, name, groupClass);
+			var groupeDef = AiderGroupDefEntity.CreateSubGroupDef (this.BusinessContext, this.Entity, name, groupClass,subgroupsAllowed,membersAllowed,isMutable);
 
-			//TODO INSTANCE
-			/*
-			var regions = AiderGroupEntity.FindRegionRootGroups(this.BusinessContext);
-			foreach(var region in regions)
+			//Create groups at right place
+			var groupToComplete = AiderGroupEntity.FindGroupsFromPathAndLevel (this.BusinessContext, this.Entity.Level, this.Entity.PathTemplate);
+			foreach (var group in groupToComplete)
 			{
-				groupeDef.InstantiateParish(this.BusinessContext,region,
-			}*/
+				group.CreateSubgroup (this.BusinessContext, groupeDef);
+			}
 
 		}
 	}
