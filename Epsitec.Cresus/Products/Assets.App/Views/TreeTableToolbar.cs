@@ -147,34 +147,84 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IEnumerable<ButtonState> GetButtons(double width, double size)
 		{
-			int f = this.hasFilter ? 1:0;
+			bool prevNext      = false;
+			bool firstLast     = false;
+			bool compactExpand = false;
+			bool moveLimit     = false;
+			bool moveStep      = false;
+			bool sep1          = false;
+			bool sep2          = false;
+			bool sep3          = false;
 
-			bool prevNext      = width > size*(f+5) + AbstractCommandToolbar.separatorWidth*1;
-			bool firstLast     = width > size*(f+7) + AbstractCommandToolbar.separatorWidth*2;
-			bool compactExpand = width > size*(f+9) + AbstractCommandToolbar.separatorWidth*3 && this.hasTreeOperations;
-			bool move          = this.hasMoveOperations;
+			double used = size*3;  // place pour New/Delete/Deselect
+
+			if (this.hasFilter)
+			{
+				used += size + AbstractCommandToolbar.separatorWidth;  // place pour Filter
+			}
+
+			if (this.hasMoveOperations)
+			{
+				used += AbstractCommandToolbar.separatorWidth;
+				sep3 = true;
+
+				if (width > used + size*2)
+				{
+					used += size*2;
+					moveStep = true;
+				}
+
+				if (width > used + size*2)
+				{
+					used += size*2;
+					moveLimit = true;
+				}
+			}
+
+			if (width > used + size*2 + AbstractCommandToolbar.separatorWidth)
+			{
+				used += size*2 + AbstractCommandToolbar.separatorWidth;
+				prevNext = true;
+				sep1 = true;
+
+				if (width > used + size*2)
+				{
+					used += size*2;
+					firstLast = true;
+				}
+			}
+
+			if (this.hasTreeOperations)
+			{
+				if (width > used + size*2 + AbstractCommandToolbar.separatorWidth)
+				{
+					used += size*2 + AbstractCommandToolbar.separatorWidth;
+					compactExpand = true;
+					sep2 = true;
+				}
+			}
 
 			yield return new ButtonState (this.buttonFilter, this.hasFilter);
-			yield return new ButtonState (this.separator1, this.hasFilter);
+			yield return new ButtonState (this.separator1,   this.hasFilter);
 
 			yield return new ButtonState (this.buttonFirst, firstLast);
 			yield return new ButtonState (this.buttonPrev,  prevNext);
 			yield return new ButtonState (this.buttonNext,  prevNext);
 			yield return new ButtonState (this.buttonLast,  firstLast);
 
-			yield return new ButtonState (this.separator1, firstLast || prevNext);
+			yield return new ButtonState (this.separator1, sep1);
 
 			yield return new ButtonState (this.buttonCompactAll, compactExpand);
 			yield return new ButtonState (this.buttonExpandAll,  compactExpand);
 
-			yield return new ButtonState (this.separator2, compactExpand);
+			yield return new ButtonState (this.separator2, sep2);
 
-			yield return new ButtonState (this.buttonMoveTop,    move);
-			yield return new ButtonState (this.buttonMoveUp,     move);
-			yield return new ButtonState (this.buttonMoveDown,   move);
-			yield return new ButtonState (this.buttonMoveBottom, move);
+			yield return new ButtonState (this.buttonMoveTop,    moveLimit);
+			yield return new ButtonState (this.buttonMoveUp,     moveStep);
+			yield return new ButtonState (this.buttonMoveDown,   moveStep);
+			yield return new ButtonState (this.buttonMoveBottom, moveLimit);
 
-			yield return new ButtonState (this.separator3, move);
+			yield return new ButtonState (this.separator3, sep3);
 
 			yield return new ButtonState (this.buttonNew);
 			yield return new ButtonState (this.buttonDelete);
