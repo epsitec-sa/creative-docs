@@ -127,6 +127,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public bool								AllowsSorting
+		{
+			get
+			{
+				return this.treeTable.AllowsSorting;
+			}
+			set
+			{
+				this.treeTable.AllowsSorting = value;
+			}
+		}
+
 		public int								VisibleRowsCount
 		{
 			get

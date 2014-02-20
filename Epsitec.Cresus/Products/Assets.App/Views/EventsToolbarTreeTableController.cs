@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
+			this.hasMoveOperations = false;
 
 			this.eventsNodeGetter = new ObjectEventsNodeGetter ();
 			this.nodeGetter = new SorterNodeGetter (this.eventsNodeGetter);

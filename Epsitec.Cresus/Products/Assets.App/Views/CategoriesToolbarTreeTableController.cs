@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
+			this.hasMoveOperations = false;
 
 			var primary = this.accessor.GetNodeGetter (BaseType.Categories);
 			this.secondaryGetter = new SortableNodeGetter (primary, this.accessor, BaseType.Categories);

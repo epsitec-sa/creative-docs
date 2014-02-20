@@ -23,30 +23,33 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		internal static void AddSettings(DataMandat mandat)
+		private static void AddSettings(DataMandat mandat)
 		{
-			DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur d'assurance", FieldType.ComputedAmount);
-			DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur fiscale", FieldType.ComputedAmount);
-			DummyMandat.AddSettings (mandat, BaseType.Assets, "Couleur", FieldType.String, 50);
-			DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro de série", FieldType.String, 50);
+			DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur d'assurance", FieldType.ComputedAmount, 100, 380, 1, 0);
+			DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur fiscale",     FieldType.ComputedAmount, 100, 380, 1, 0);
+			DummyMandat.AddSettings (mandat, BaseType.Assets, "Couleur",            FieldType.String,          50, 380, 1, 0);
+			DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro de série",    FieldType.String,          50, 380, 1, 0);
 
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Prénom", FieldType.String, 120);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Titre", FieldType.String, 80);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Entreprise", FieldType.String, 120);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Adresse", FieldType.String, 150);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "NPA", FieldType.String, 50);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Ville", FieldType.String, 120);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Pays", FieldType.String, 120);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. prof.", FieldType.String, 100);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. privé", FieldType.String, 100);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. portable", FieldType.String, 100);
-			DummyMandat.AddSettings (mandat, BaseType.Persons, "E-mail", FieldType.String, 200);
+			DummyMandat.fieldLastName    = DummyMandat.AddSettings (mandat, BaseType.Persons, "Nom",           FieldType.String, 120, 380, 1,  0);
+			DummyMandat.fieldFirstName   = DummyMandat.AddSettings (mandat, BaseType.Persons, "Prénom",        FieldType.String, 120, 380, 1,  0);
+			DummyMandat.fieldTitle       = DummyMandat.AddSettings (mandat, BaseType.Persons, "Titre",         FieldType.String,  80, 120, 1,  0);
+			DummyMandat.fieldCompany     = DummyMandat.AddSettings (mandat, BaseType.Persons, "Entreprise",    FieldType.String, 120, 380, 1,  0);
+			DummyMandat.fieldAddress     = DummyMandat.AddSettings (mandat, BaseType.Persons, "Adresse",       FieldType.String, 150, 380, 2,  0);
+			DummyMandat.fieldZip         = DummyMandat.AddSettings (mandat, BaseType.Persons, "NPA",           FieldType.String,  50,  60, 1,  0);
+			DummyMandat.fieldCity        = DummyMandat.AddSettings (mandat, BaseType.Persons, "Ville",         FieldType.String, 120, 380, 1,  0);
+			DummyMandat.fieldCountry     = DummyMandat.AddSettings (mandat, BaseType.Persons, "Pays",          FieldType.String, 120, 380, 1,  0);
+			DummyMandat.fieldPhone1      = DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. prof.",    FieldType.String, 100, 120, 1, 10);
+			DummyMandat.fieldPhone2      = DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. privé",    FieldType.String, 100, 120, 1,  0);
+			DummyMandat.fieldPhone3      = DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. portable", FieldType.String, 100, 120, 1,  0);
+			DummyMandat.fieldMail        = DummyMandat.AddSettings (mandat, BaseType.Persons, "E-mail",        FieldType.String, 200, 380, 1,  0);
+			DummyMandat.fieldDescription = DummyMandat.AddSettings (mandat, BaseType.Persons, "Description",   FieldType.String, 200, 380, 5, 10);
 		}
 
-		internal static void AddSettings(DataMandat mandat, BaseType baseType, string name, FieldType type, int maxLength = 100)
+		internal static ObjectField AddSettings(DataMandat mandat, BaseType baseType, string name, FieldType type, int columnWidth, int lineWidth, int lineCount, int topMargin)
 		{
 			var field = mandat.Settings.GetNewUserObjectField ();
-			mandat.Settings.AddUserField (baseType, new UserField (name, field, type, maxLength));
+			mandat.Settings.AddUserField (baseType, new UserField (name, field, type, columnWidth, lineWidth, lineCount, topMargin));
+			return field;
 		}
 
 
@@ -644,18 +647,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Monsieur"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Daniel"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Roux"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Epsitec SA"));
-					e.AddProperty (new DataStringProperty (ObjectField.Address, "Crésentine 33"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "1023"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Crissier"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Phone1, "021 671 05 92"));
-					e.AddProperty (new DataStringProperty (ObjectField.Phone2, "021 671 05 91"));
-					e.AddProperty (new DataStringProperty (ObjectField.Phone3, "078 671 95 87"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "roux@epsitec.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Monsieur"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Daniel"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Roux"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Epsitec SA"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldAddress, "Crésentine 33"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "1023"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Crissier"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldPhone1, "021 671 05 92"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldPhone2, "021 671 05 91"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldPhone3, "078 671 95 87"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "roux@epsitec.ch"));
 				}
 			}
 
@@ -665,14 +668,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Monsieur"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Pierre"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Arnaud"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Epsitec SA"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "1400"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Yverdon-les-Bains"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "arnaud@epsitec.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Monsieur"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Pierre"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Arnaud"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Epsitec SA"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "1400"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Yverdon-les-Bains"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "arnaud@epsitec.ch"));
 				}
 			}
 
@@ -682,14 +685,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Madame"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Yédah"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Adjao"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Epsitec SA"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "1400"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Yverdon-les-Bains"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "adjao@epsitec.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Madame"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Yédah"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Adjao"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Epsitec SA"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "1400"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Yverdon-les-Bains"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "adjao@epsitec.ch"));
 				}
 			}
 
@@ -699,12 +702,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Monsieur"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "David"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Besuchet"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Epsitec SA"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "besuchet@epsitec.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Monsieur"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "David"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Besuchet"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Epsitec SA"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "besuchet@epsitec.ch"));
 				}
 			}
 
@@ -714,14 +717,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Madame"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Sandra"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Nicolet"));
-					e.AddProperty (new DataStringProperty (ObjectField.Address, "Ch. du Levant 12"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "1002"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Lausanne"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "snicolet@bluewin.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Madame"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Sandra"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Nicolet"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldAddress, "Ch. du Levant 12"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "1002"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Lausanne"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "snicolet@bluewin.ch"));
 				}
 			}
 
@@ -731,16 +734,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Monsieur"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Jean-Paul"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "André"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Mecano SA"));
-					e.AddProperty (new DataStringProperty (ObjectField.Address, "ZI. en Budron E<br/>Case postale 18"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "1025"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Le Mont-sur-Lausanne"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Phone3, "079 520 44 12"));
-					e.AddProperty (new DataStringProperty (ObjectField.Description, "Réparateur officiel des stores Flexilux depuis 2008"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Monsieur"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Jean-Paul"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "André"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Mecano SA"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldAddress, "ZI. en Budron E<br/>Case postale 18"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "1025"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Le Mont-sur-Lausanne"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldPhone3, "079 520 44 12"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldDescription, "Réparateur officiel des stores Flexilux depuis 2008"));
 				}
 			}
 
@@ -750,12 +753,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Madame"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Josianne"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Schmidt"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Mathematika sàrl"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "josianne.schmidt@mathematika.com"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Madame"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Josianne"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Schmidt"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Mathematika sàrl"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "josianne.schmidt@mathematika.com"));
 				}
 			}
 
@@ -765,13 +768,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Madame"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Christine"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Mercier"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Mathematika sàrl"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Phone3, "078 840 12 13"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "christine.mercier@mathematika.com"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Madame"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Christine"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Mercier"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Mathematika sàrl"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldPhone3, "078 840 12 13"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "christine.mercier@mathematika.com"));
 				}
 			}
 
@@ -781,13 +784,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Monsieur"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Frédérique"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Bonnard"));
-					e.AddProperty (new DataStringProperty (ObjectField.Address, "Ch. des Lys 45"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "1009"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Prilly"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Monsieur"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Frédérique"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Bonnard"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldAddress, "Ch. des Lys 45"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "1009"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Prilly"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
 				}
 			}
 
@@ -797,14 +800,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Monsieur"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Dubosson"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Fixnet AG"));
-					e.AddProperty (new DataStringProperty (ObjectField.Address, "Market Platz 143"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "8003"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Zürich"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "dubosson@fixnet.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Monsieur"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Dubosson"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Fixnet AG"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldAddress, "Market Platz 143"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "8003"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Zürich"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "dubosson@fixnet.ch"));
 				}
 			}
 
@@ -814,15 +817,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Monsieur"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Hans"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Klein"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Fixnet AG"));
-					e.AddProperty (new DataStringProperty (ObjectField.Address, "Market Platz 143"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "8003"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Zürich"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "klein@fixnet.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Monsieur"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Hans"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Klein"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Fixnet AG"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldAddress, "Market Platz 143"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "8003"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Zürich"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "klein@fixnet.ch"));
 				}
 			}
 
@@ -832,15 +835,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Madame"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Pauline"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Gardaz"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Fixnet AG"));
-					e.AddProperty (new DataStringProperty (ObjectField.Address, "Market Platz 143"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "8003"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Zürich"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "gardaz@fixnet.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Madame"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Pauline"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Gardaz"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Fixnet AG"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldAddress, "Market Platz 143"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "8003"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Zürich"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "gardaz@fixnet.ch"));
 				}
 			}
 
@@ -850,14 +853,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Monsieur"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Marc-Antoine"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Frutiger"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Garage du Soleil"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "1092"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Belmont"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Phone1, "021 682 40 61"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Monsieur"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Marc-Antoine"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Frutiger"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Garage du Soleil"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "1092"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Belmont"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldPhone1, "021 682 40 61"));
 				}
 			}
 
@@ -867,14 +870,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Monsieur"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "François"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Borlandi"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Maxi Store SA"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "1004"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Lausanne"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Phone3, "079 905 33 41"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Monsieur"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "François"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Borlandi"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Maxi Store SA"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "1004"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Lausanne"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldPhone3, "079 905 33 41"));
 				}
 			}
 
@@ -884,15 +887,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Monsieur"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Ernesto"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Di Magnolia"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "Merlin Transport SA"));
-					e.AddProperty (new DataStringProperty (ObjectField.Address, "Place du Tunnel 2"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "1800"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Vevey"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "support@merlin.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Monsieur"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Ernesto"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Di Magnolia"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "Merlin Transport SA"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldAddress, "Place du Tunnel 2"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "1800"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Vevey"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "support@merlin.ch"));
 				}
 			}
 
@@ -902,14 +905,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Madame"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Françoise"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Diserens"));
-					e.AddProperty (new DataStringProperty (ObjectField.Company, "CHUV"));
-					e.AddProperty (new DataStringProperty (ObjectField.Zip, "1000"));
-					e.AddProperty (new DataStringProperty (ObjectField.City, "Lausanne"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "francoise.diserens@chuv.vd.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Madame"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Françoise"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Diserens"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCompany, "CHUV"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldZip, "1000"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCity, "Lausanne"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "francoise.diserens@chuv.vd.ch"));
 				}
 			}
 
@@ -919,11 +922,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Madame"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Emilie"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Franco"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "emilie.franco@bluewin.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Madame"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Emilie"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Franco"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "emilie.franco@bluewin.ch"));
 				}
 			}
 
@@ -933,11 +936,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Madame"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Paulette"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Sigmund"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "paulette.simoulino@bluewin.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Madame"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Paulette"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Sigmund"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "paulette.simoulino@bluewin.ch"));
 				}
 			}
 
@@ -947,11 +950,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					var e = new DataEvent (start, EventType.Input);
 					o.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.Title, "Madame"));
-					e.AddProperty (new DataStringProperty (ObjectField.FirstName, "Géraldine"));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Traxel"));
-					e.AddProperty (new DataStringProperty (ObjectField.Country, "Suisse"));
-					e.AddProperty (new DataStringProperty (ObjectField.Mail, "geraldine.traxel@bluewin.ch"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldTitle, "Madame"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldFirstName, "Géraldine"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldLastName, "Traxel"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldCountry, "Suisse"));
+					e.AddProperty (new DataStringProperty (DummyMandat.fieldMail, "geraldine.traxel@bluewin.ch"));
 				}
 			}
 		}
@@ -1531,7 +1534,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			foreach (var person in list)
 			{
-				var nom = AssetCalculator.GetObjectPropertyString (person, null, ObjectField.Name);
+				var nom = AssetCalculator.GetObjectPropertyString (person, null, DummyMandat.fieldLastName);
 				if (nom == text)
 				{
 					return person.Guid;
@@ -1580,6 +1583,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private static int EventNumber = 1;
 		private static int CategoryNumber = 1;
 		private static int GroupNumber = 1;
+
+		private static ObjectField fieldLastName;
+		private static ObjectField fieldFirstName;
+		private static ObjectField fieldTitle;
+		private static ObjectField fieldCompany;
+		private static ObjectField fieldAddress;
+		private static ObjectField fieldZip;
+		private static ObjectField fieldCity;
+		private static ObjectField fieldCountry;
+		private static ObjectField fieldPhone1;
+		private static ObjectField fieldPhone2;
+		private static ObjectField fieldPhone3;
+		private static ObjectField fieldMail;
+		private static ObjectField fieldDescription;
 	}
 
 }

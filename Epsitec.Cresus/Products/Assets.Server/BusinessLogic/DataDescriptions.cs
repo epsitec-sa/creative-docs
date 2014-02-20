@@ -131,44 +131,53 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.Compte8:
 					return "Amortissement extra. ou rééval.";
 
-				case ObjectField.Title:
-					return "Titre";
-
-				case ObjectField.Company:
-					return "Entreprise";
-
-				case ObjectField.FirstName:
-					return "Prénom";
-
-				case ObjectField.Address:
-					return "Adresse";
-
-				case ObjectField.Zip:
-					return "NPA";
-
-				case ObjectField.City:
-					return "Ville";
-
-				case ObjectField.Country:
-					return "Pays";
-
-				case ObjectField.Phone1:
-					return "Téléphone prof.";
-
-				case ObjectField.Phone2:
-					return "Téléphone privé";
-
-				case ObjectField.Phone3:
-					return "Téléphone portable";
-
-				case ObjectField.Mail:
-					return "Adresse e-mail";
+				//-case ObjectField.Title:
+				//-	return "Titre";
+				//-
+				//-case ObjectField.Company:
+				//-	return "Entreprise";
+				//-
+				//-case ObjectField.FirstName:
+				//-	return "Prénom";
+				//-
+				//-case ObjectField.Address:
+				//-	return "Adresse";
+				//-
+				//-case ObjectField.Zip:
+				//-	return "NPA";
+				//-
+				//-case ObjectField.City:
+				//-	return "Ville";
+				//-
+				//-case ObjectField.Country:
+				//-	return "Pays";
+				//-
+				//-case ObjectField.Phone1:
+				//-	return "Téléphone prof.";
+				//-
+				//-case ObjectField.Phone2:
+				//-	return "Téléphone privé";
+				//-
+				//-case ObjectField.Phone3:
+				//-	return "Téléphone portable";
+				//-
+				//-case ObjectField.Mail:
+				//-	return "Adresse e-mail";
 
 				case ObjectField.UserFieldType:
 					return "Type";
 
-				case ObjectField.UserFieldWidth:
-					return "Largeur";
+				case ObjectField.UserFieldColumnWidth:
+					return "Largeur colonne";
+
+				case ObjectField.UserFieldLineWidth:
+					return "Largeur ligne";
+
+				case ObjectField.UserFieldLineCount:
+					return "Nombre de lignes";
+
+				case ObjectField.UserFieldTopMargin:
+					return "Marge supérieure";
 
 				default:
 					return null;

@@ -28,8 +28,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.headerHeight = headerHeight;
 			this.footerHeight = footerHeight;
 
-			this.AllowsMovement = true;
-
 			this.hoverMode = TreeTableHoverMode.VerticalGradient;
 
 			this.columnsMapper    = new List<int> ();
@@ -74,10 +72,29 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				layer.CreateUI ();
 			}
+
+			this.AllowsMovement = true;
+			this.AllowsSorting  = true;
 		}
 
 
 		public bool								AllowsMovement;
+
+		public bool								AllowsSorting
+		{
+			get
+			{
+				return this.allowsSorting;
+			}
+			set
+			{
+				if (this.allowsSorting != value)
+				{
+					this.allowsSorting = value;
+					this.UpdateSortedColumns ();
+				}
+			}
+		}
 
 		public int								VScrollerTopMargin
 		{
@@ -209,7 +226,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var column = this.treeTableColumns[i];
 				int j = this.sortedColumns.FindIndex (x => x.Column == i);
 
-				if (j == -1)
+				if (j == -1 || !this.AllowsSorting)
 				{
 					column.SetSortedColumn (SortedType.None, false);
 				}
@@ -763,5 +780,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private int										footerHeight;
 		private int										rowHeight;
 		private TreeTableHoverMode						hoverMode;
+		private bool									allowsSorting;
 	}
 }

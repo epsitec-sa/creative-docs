@@ -8,22 +8,28 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public struct UserField
 	{
-		public UserField(Guid guid, string name, ObjectField field, FieldType type, int width = 100)
+		public UserField(Guid guid, string name, ObjectField field, FieldType type, int columnWidth, int lineWidth, int lineCount, int topMargin)
 		{
-			this.Guid  = guid;
-			this.Name  = name;
-			this.Field = field;
-			this.Type  = type;
-			this.Width = width;
+			this.Guid        = guid;
+			this.Name        = name;
+			this.Field       = field;
+			this.Type        = type;
+			this.ColumnWidth = columnWidth;
+			this.LineWidth   = lineWidth;
+			this.LineCount   = lineCount;
+			this.TopMargin   = topMargin;
 		}
 
-		public UserField(string name, ObjectField field, FieldType type, int maxLength = 100)
+		public UserField(string name, ObjectField field, FieldType type, int columnWidth, int lineWidth, int lineCount, int topMargin)
 		{
-			this.Guid  = Guid.NewGuid ();
-			this.Name  = name;
-			this.Field = field;
-			this.Type  = type;
-			this.Width = maxLength;
+			this.Guid        = Guid.NewGuid ();
+			this.Name        = name;
+			this.Field       = field;
+			this.Type        = type;
+			this.ColumnWidth = columnWidth;
+			this.LineWidth   = lineWidth;
+			this.LineCount   = lineCount;
+			this.TopMargin   = topMargin;
 		}
 
 		public bool IsEmpty
@@ -37,13 +43,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public static UserField Empty = new UserField (null, ObjectField.Unknown, FieldType.Unknown, 0);
+		public static UserField Empty = new UserField (null, ObjectField.Unknown, FieldType.Unknown, 0, 0, 0, 0);
 
 
 		public readonly Guid					Guid;
 		public readonly string					Name;
 		public readonly ObjectField				Field;
 		public readonly FieldType				Type;
-		public readonly int						Width;
+		public readonly int						ColumnWidth;
+		public readonly int						LineWidth;
+		public readonly int						LineCount;
+		public readonly int						TopMargin;
 	}
 }

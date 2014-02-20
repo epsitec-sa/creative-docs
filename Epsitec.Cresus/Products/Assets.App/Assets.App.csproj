@@ -342,6 +342,10 @@
     <EmbeddedResource Include="Images\Settings.General.icon" />
     <EmbeddedResource Include="Images\Settings.PersonsView.icon" />
     <EmbeddedResource Include="Images\Settings.AssetsView.icon" />
+    <EmbeddedResource Include="Images\TreeTable.MoveDown.icon" />
+    <EmbeddedResource Include="Images\TreeTable.MoveUp.icon" />
+    <EmbeddedResource Include="Images\TreeTable.MoveTop.icon" />
+    <EmbeddedResource Include="Images\TreeTable.MoveBottom.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

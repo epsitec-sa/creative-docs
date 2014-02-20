@@ -458,13 +458,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.fieldControllers.Add (field, controller);
 		}
 
-		protected void CreateSepartor(Widget parent)
+		protected void CreateSepartor(Widget parent, int margin = 10)
 		{
 			new FrameBox
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = 10,
+				PreferredHeight = margin,
 			};
 		}
 

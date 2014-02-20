@@ -44,6 +44,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public bool								HasMoveOperations
+		{
+			get
+			{
+				return this.hasMoveOperations;
+			}
+			set
+			{
+				if (this.hasMoveOperations != value)
+				{
+					this.hasMoveOperations = value;
+					this.Adjust ();
+				}
+			}
+		}
+
 
 		public override FrameBox CreateUI(Widget parent)
 		{
@@ -70,6 +86,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etend tout");
 			
 			this.separator2       = this.CreateSeparator     (DockStyle.None);
+			
+			this.buttonMoveTop    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveTop,    "TreeTable.MoveTop",    "Déplace la ligne au sommet");
+			this.buttonMoveUp     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveUp,     "TreeTable.MoveUp",     "Monte la ligne");
+			this.buttonMoveDown   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveDown,   "TreeTable.MoveDown",   "Descend la ligne");
+			this.buttonMoveBottom = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveBottom, "TreeTable.MoveBottom", "Déplace la ligne à la fin");
+
+			this.separator3       = this.CreateSeparator     (DockStyle.None);
 			
 			this.buttonNew        = this.CreateCommandButton (DockStyle.None, ToolbarCommand.New,        "TreeTable.New",        "Nouvel ligne");
 			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
@@ -129,6 +152,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool prevNext      = width > size*(f+5) + AbstractCommandToolbar.separatorWidth*1;
 			bool firstLast     = width > size*(f+7) + AbstractCommandToolbar.separatorWidth*2;
 			bool compactExpand = width > size*(f+9) + AbstractCommandToolbar.separatorWidth*3 && this.hasTreeOperations;
+			bool move          = this.hasMoveOperations;
 
 			yield return new ButtonState (this.buttonFilter, this.hasFilter);
 			yield return new ButtonState (this.separator1, this.hasFilter);
@@ -144,6 +168,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			yield return new ButtonState (this.buttonExpandAll,  compactExpand);
 
 			yield return new ButtonState (this.separator2, compactExpand);
+
+			yield return new ButtonState (this.buttonMoveTop,    move);
+			yield return new ButtonState (this.buttonMoveUp,     move);
+			yield return new ButtonState (this.buttonMoveDown,   move);
+			yield return new ButtonState (this.buttonMoveBottom, move);
+
+			yield return new ButtonState (this.separator3, move);
 
 			yield return new ButtonState (this.buttonNew);
 			yield return new ButtonState (this.buttonDelete);
@@ -177,11 +208,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private FrameBox						separator2;
 
+		private IconButton						buttonMoveTop;
+		private IconButton						buttonMoveUp;
+		private IconButton						buttonMoveDown;
+		private IconButton						buttonMoveBottom;
+
+		private FrameBox						separator3;
+
 		private IconButton						buttonNew;
 		private IconButton						buttonDelete;
 		private IconButton						buttonDeselect;
 
 		private bool							hasFilter;
 		private bool							hasTreeOperations;
+		private bool							hasMoveOperations;
 	}
 }

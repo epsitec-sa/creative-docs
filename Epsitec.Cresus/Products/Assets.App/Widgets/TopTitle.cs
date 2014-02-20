@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.Dock             = DockStyle.Top;
 			this.PreferredHeight  = TopTitle.height;
 			this.ContentAlignment = ContentAlignment.MiddleCenter;
+			this.TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			this.BackColor        = ColorManager.WindowBackgroundColor;
 		}
 

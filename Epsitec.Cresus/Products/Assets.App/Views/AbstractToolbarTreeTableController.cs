@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.CreateUI (parent);
 			this.toolbar.HasFilter         = this.hasFilter;
 			this.toolbar.HasTreeOperations = this.hasTreeOperations;
+			this.toolbar.HasMoveOperations = this.hasMoveOperations;
 
 			this.CreateTreeTable (parent);
 			this.CreateNodeFiller ();
@@ -69,6 +70,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case ToolbarCommand.ExpandAll:
 						this.OnExpandAll ();
+						break;
+
+					case ToolbarCommand.MoveTop:
+						this.OnMoveTop ();
+						break;
+
+					case ToolbarCommand.MoveUp:
+						this.OnMoveUp ();
+						break;
+
+					case ToolbarCommand.MoveDown:
+						this.OnMoveDown ();
+						break;
+
+					case ToolbarCommand.MoveBottom:
+						this.OnMoveBottom ();
 						break;
 
 					case ToolbarCommand.New:
@@ -208,6 +225,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		protected virtual void OnMoveTop()
+		{
+		}
+
+		protected virtual void OnMoveUp()
+		{
+		}
+
+		protected virtual void OnMoveDown()
+		{
+		}
+
+		protected virtual void OnMoveBottom()
+		{
+		}
+
 		protected virtual void OnDeselect()
 		{
 		}
@@ -292,24 +325,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			int row = this.VisibleSelectedRow;
 
-			this.UpdateCommand (ToolbarCommand.First, row, this.FirstRowIndex);
-			this.UpdateCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);
-			this.UpdateCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
-			this.UpdateCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
+			this.UpdateSelCommand (ToolbarCommand.First, row, this.FirstRowIndex);
+			this.UpdateSelCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);
+			this.UpdateSelCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
+			this.UpdateSelCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
+
+			this.UpdateMoveCommand (ToolbarCommand.MoveTop,    row, this.FirstRowIndex);
+			this.UpdateMoveCommand (ToolbarCommand.MoveUp,     row, this.PrevRowIndex);
+			this.UpdateMoveCommand (ToolbarCommand.MoveDown,   row, this.NextRowIndex);
+			this.UpdateMoveCommand (ToolbarCommand.MoveBottom, row, this.LastRowIndex);
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.New,      true);
 			this.toolbar.SetCommandEnable (ToolbarCommand.Delete,   row != -1);
 			this.toolbar.SetCommandEnable (ToolbarCommand.Deselect, row != -1);
 		}
 
-		protected void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		private void UpdateSelCommand(ToolbarCommand command, int selectedCell, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
 			this.toolbar.SetCommandEnable (command, enable);
 		}
 
+		private void UpdateMoveCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		{
+			bool enable = (newSelection.HasValue && selectedCell != -1 && selectedCell != newSelection.Value);
+			this.toolbar.SetCommandEnable (command, enable);
+		}
 
-		private int? FirstRowIndex
+
+		protected int? FirstRowIndex
 		{
 			get
 			{
@@ -317,7 +361,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private int? PrevRowIndex
+		protected int? PrevRowIndex
 		{
 			get
 			{
@@ -335,7 +379,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private int? NextRowIndex
+		protected int? NextRowIndex
 		{
 			get
 			{
@@ -353,7 +397,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private int? LastRowIndex
+		protected int? LastRowIndex
 		{
 			get
 			{
@@ -428,6 +472,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected string						title;
 		protected bool							hasFilter;
 		protected bool							hasTreeOperations;
+		protected bool							hasMoveOperations;
 		protected AbstractNodeGetter<T>			nodeGetter;
 		protected AbstractTreeTableFiller<T>	dataFiller;
 		protected TopTitle						topTitle;

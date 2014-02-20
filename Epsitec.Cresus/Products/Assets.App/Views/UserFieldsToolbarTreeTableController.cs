@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -20,6 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
+			this.hasMoveOperations = true;
 
 			this.nodeGetter = new UserFieldNodeGetter (this.accessor, this.baseType);
 
@@ -55,6 +57,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
+		public override void CreateUI(Widget parent)
+		{
+			base.CreateUI (parent);
+
+			this.controller.AllowsSorting = false;
+		}
+
+
 		public override void UpdateData()
 		{
 			(this.nodeGetter as UserFieldNodeGetter).SetParams ();
@@ -64,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public Guid								SelectedGuid
+		public override Guid					SelectedGuid
 		{
 			//	Retourne le champ actuellement sélectionné.
 			get
@@ -95,6 +105,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected override void OnMoveTop()
+		{
+			this.MoveUserField (this.VisibleSelectedRow, this.FirstRowIndex);
+		}
+
+		protected override void OnMoveUp()
+		{
+			this.MoveUserField (this.VisibleSelectedRow, this.PrevRowIndex);
+		}
+
+		protected override void OnMoveDown()
+		{
+			this.MoveUserField (this.VisibleSelectedRow, this.NextRowIndex);
+		}
+
+		protected override void OnMoveBottom()
+		{
+			this.MoveUserField (this.VisibleSelectedRow, this.LastRowIndex);
+		}
+
 		protected override void OnDeselect()
 		{
 			this.VisibleSelectedRow = -1;
@@ -103,11 +133,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void OnNew()
 		{
 			var newField = this.accessor.Settings.GetNewUserObjectField();
-			var userField = new UserField ("Nouveau", newField, FieldType.String);
+			var userField = new UserField ("Nouveau", newField, FieldType.String, 120, 380, 1, 0);
 			this.accessor.Settings.AddUserField (this.baseType, userField);
 
 			this.UpdateData ();
-			this.OnUpdateAfterCreate (Guid.Empty, EventType.Unknown, Timestamp.Now);
+			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
 		}
 
 		protected override void OnDelete()
@@ -136,6 +166,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private BaseType baseType;
+		private void MoveUserField(int currentRow, int? newRow)
+		{
+			//	Déplace une rubrique à un nouvel emplacement.
+			if (currentRow == -1 || !newRow.HasValue)
+			{
+				return;
+			}
+
+			var node = (this.nodeGetter as UserFieldNodeGetter)[currentRow];
+			var userField = this.accessor.Settings.GetUserField (node.Guid);
+			System.Diagnostics.Debug.Assert (!userField.IsEmpty);
+
+			//	Supprime la rubrique à l'endroit actuel.
+			this.accessor.Settings.RemoveUserField (node.Guid);
+
+			//	Insère la rubrique au nouvel endroit.
+			int index = newRow.Value;
+			this.accessor.Settings.InsertUserField (this.baseType, index, userField);
+
+			//	Met à jour et sélectionne la rubrique déplacée.
+			this.UpdateData ();
+			this.VisibleSelectedRow = index;
+		}
+
+
+		private BaseType						baseType;
 	}
 }

@@ -36,11 +36,37 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
+#if false
 				var t1 = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.FirstName);
 				var t2 = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
 				var t3 = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Company);
 
 				return string.Join (" ", t1, t2, t3).Trim ();
+#else
+				//	On prend les 4 premiers champs de type texte, habituellement Nom,
+				//	Prénom, Titre et Entreprise.
+				var list = new List<string> ();
+				int count = 0;
+
+				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons).Where (x => x.Type == FieldType.String))
+				{
+					var text = AssetCalculator.GetObjectPropertyString (obj, null, userField.Field);
+
+					if (!string.IsNullOrEmpty (text))
+					{
+						list.Add (text);
+					}
+
+					count++;
+
+					if (count >= 4)
+					{
+						break;
+					}
+				}
+
+				return string.Join (" ", list).Trim ();
+#endif
 			}
 		}
 
@@ -63,6 +89,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var lines = new List<string> ();
 
+#if false
 				var titre = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Title);
 				PersonsLogic.PutLine (lines, titre);
 
@@ -94,6 +121,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				var mail = AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Mail);
 				PersonsLogic.PutLine (lines, mail);
+#else
+				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons))
+				{
+					var text = AssetCalculator.GetObjectPropertyString (obj, null, userField.Field);
+					PersonsLogic.PutLine (lines, text);
+				}
+#endif
 
 				return string.Join ("<br/>", lines);
 			}

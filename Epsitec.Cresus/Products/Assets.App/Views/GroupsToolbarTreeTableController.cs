@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.hasFilter         = false;
 			this.hasTreeOperations = true;
+			this.hasMoveOperations = false;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);

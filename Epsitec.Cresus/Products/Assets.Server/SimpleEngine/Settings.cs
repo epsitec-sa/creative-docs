@@ -37,17 +37,23 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var e = new DataEvent (Timestamp.MaxValue, EventType.Input);
 			obj.AddEvent (e);
 
-			var p1 = new DataStringProperty (ObjectField.Name,           userField.Name);
-			var p2 = new DataIntProperty    (ObjectField.UserFieldType,  (int) userField.Type);
-			var p3 = new DataIntProperty    (ObjectField.UserFieldWidth, userField.Width);
-			var p4 = new DataIntProperty    (ObjectField.UserFieldField, (int) userField.Field);
-			var p5 = new DataGuidProperty   (ObjectField.UserFieldGuid,  guid);
+			var p1 = new DataStringProperty (ObjectField.Name,                 userField.Name);
+			var p2 = new DataIntProperty    (ObjectField.UserFieldType,        (int) userField.Type);
+			var p3 = new DataIntProperty    (ObjectField.UserFieldColumnWidth, userField.ColumnWidth);
+			var p4 = new DataIntProperty    (ObjectField.UserFieldLineWidth,   userField.LineWidth);
+			var p5 = new DataIntProperty    (ObjectField.UserFieldLineCount,   userField.LineCount);
+			var p6 = new DataIntProperty    (ObjectField.UserFieldTopMargin,   userField.TopMargin);
+			var p7 = new DataIntProperty    (ObjectField.UserFieldField,       (int) userField.Field);
+			var p8 = new DataGuidProperty   (ObjectField.UserFieldGuid,        guid);
 
 			e.AddProperty (p1);
 			e.AddProperty (p2);
 			e.AddProperty (p3);
 			e.AddProperty (p4);
 			e.AddProperty (p5);
+			e.AddProperty (p6);
+			e.AddProperty (p7);
+			e.AddProperty (p8);
 
 			return obj;
 		}
@@ -58,23 +64,32 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var e = obj.GetEvent (0);
 			System.Diagnostics.Debug.Assert (e != null);
 
-			var p1 = e.GetProperty (ObjectField.Name          ) as DataStringProperty;
-			var p2 = e.GetProperty (ObjectField.UserFieldType ) as DataIntProperty;
-			var p3 = e.GetProperty (ObjectField.UserFieldWidth) as DataIntProperty;
-			var p4 = e.GetProperty (ObjectField.UserFieldField) as DataIntProperty;
-			var p5 = e.GetProperty (ObjectField.UserFieldGuid ) as DataGuidProperty;
+			var p1 = e.GetProperty (ObjectField.Name                ) as DataStringProperty;
+			var p2 = e.GetProperty (ObjectField.UserFieldType       ) as DataIntProperty;
+			var p3 = e.GetProperty (ObjectField.UserFieldColumnWidth) as DataIntProperty;
+			var p4 = e.GetProperty (ObjectField.UserFieldLineWidth  ) as DataIntProperty;
+			var p5 = e.GetProperty (ObjectField.UserFieldLineCount  ) as DataIntProperty;
+			var p6 = e.GetProperty (ObjectField.UserFieldTopMargin  ) as DataIntProperty;
+			var p7 = e.GetProperty (ObjectField.UserFieldField      ) as DataIntProperty;
+			var p8 = e.GetProperty (ObjectField.UserFieldGuid       ) as DataGuidProperty;
 
 			System.Diagnostics.Debug.Assert (p1 != null);
 			System.Diagnostics.Debug.Assert (p2 != null);
 			System.Diagnostics.Debug.Assert (p3 != null);
 			System.Diagnostics.Debug.Assert (p4 != null);
 			System.Diagnostics.Debug.Assert (p5 != null);
+			System.Diagnostics.Debug.Assert (p6 != null);
+			System.Diagnostics.Debug.Assert (p7 != null);
+			System.Diagnostics.Debug.Assert (p8 != null);
 
-			var name  =               p1.Value;
-			var type  = (FieldType)   p2.Value;
-			var width =               p3.Value;
-			var field = (ObjectField) p4.Value;
-			var guid  =               p5.Value;
+			var name        =               p1.Value;
+			var type        = (FieldType)   p2.Value;
+			var columnWidth =               p3.Value;
+			var lineWidth   =               p4.Value;
+			var lineCount   =               p5.Value;
+			var topMargin   =               p6.Value;
+			var field       = (ObjectField) p7.Value;
+			var guid        =               p8.Value;
 
 			var baseType = this.GetBaseType (guid);
 			var index = this.GetIndex (baseType, guid);
@@ -84,7 +99,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			//	Recrée la nouvelle rubrique utilisateur, au même emplacement et sans
 			//	modifier son Guid.
-			var userField = new UserField (guid, name, field, type, width);
+			var userField = new UserField (guid, name, field, type, columnWidth, lineWidth, lineCount, topMargin);
 			this.InsertUserField (baseType, index, userField);
 
 			this.Update ();

@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.hasFilter         = true;
 			this.hasTreeOperations = true;
+			this.hasMoveOperations = false;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);

@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+#if false
 			this.CreateStringController (parent, ObjectField.Title, editWidth: 120);
 			this.CreateStringController (parent, ObjectField.FirstName);
 			this.CreateStringController (parent, ObjectField.Name);
@@ -37,6 +38,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateSepartor (parent);
 
 			this.CreateStringController (parent, ObjectField.Description, lineCount: 5);
+#else
+			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons))
+			{
+				if (userField.TopMargin > 0)
+				{
+					this.CreateSepartor (parent, userField.TopMargin);
+				}
+
+				this.CreateStringController (parent, userField.Field, userField.LineWidth, userField.LineCount);
+			}
+#endif
 		}
 	}
 }
