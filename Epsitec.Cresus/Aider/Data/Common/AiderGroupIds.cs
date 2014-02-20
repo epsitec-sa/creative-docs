@@ -87,7 +87,7 @@ namespace Epsitec.Aider.Data.Common
 			{
 				path = path.Substring (5);
 
-				if ((path.StartsWith (AiderGroupIds.RegionPrefix)) &&
+				if ((path.StartsWith (AiderGroupIds.ParishPrefix)) &&
 					(path.EndsWith (AiderGroupIds.Suffix)))
 				{
 					return true;
