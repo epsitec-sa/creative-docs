@@ -55,12 +55,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (node.BaseType, node.Guid);
 
-				var nom = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var name = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
-				var sf = new TreeTableCellTree (level, type, nom, cellState);
+				var cell = new TreeTableCellTree (level, type, name, cellState);
 
-				content.Columns[0].AddRow (sf);
+				content.Columns[0].AddRow (cell);
 			}
 
 			return content;

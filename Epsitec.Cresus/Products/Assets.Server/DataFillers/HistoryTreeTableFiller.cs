@@ -105,12 +105,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var glyph = TimelineData.TypeToGlyph (e.Type);
 
 				var cellState = (row == selection) ? CellState.Selected : CellState.None;
-				var s1 = new TreeTableCellDate  (date,  cellState);
-				var s2 = new TreeTableCellGlyph (glyph, cellState);
+
+				var cell1 = new TreeTableCellDate  (date,  cellState);
+				var cell2 = new TreeTableCellGlyph (glyph, cellState);
 				row++;
 
-				content.Columns[0].AddRow (s1);
-				content.Columns[1].AddRow (s2);
+				content.Columns[0].AddRow (cell1);
+				content.Columns[1].AddRow (cell2);
 			}
 
 			this.PutValue(content, firstRow, count, selection);

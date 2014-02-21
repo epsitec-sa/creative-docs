@@ -71,39 +71,40 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid  = node.Guid;
 				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
 
-				var nom    = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
-				var numéro = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
-				var taux   = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationRate);
+				var name   = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var number = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
+				var rate   = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationRate);
 				var type   = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationType);
 				var period = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Periodicity);
 				var prorat = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Prorata);
 				var round  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.Round);
-				var residu = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ResidualValue);
+				var resid  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ResidualValue);
 
 				var t = EnumDictionaries.GetAmortizationTypeName (type);
 				var c = EnumDictionaries.GetPeriodicityName (period);
 				var r = EnumDictionaries.GetProrataTypeName (prorat);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
-				var s0 = new TreeTableCellString  (nom,    cellState);
-				var s1 = new TreeTableCellString  (numéro, cellState);
-				var s2 = new TreeTableCellDecimal (taux,   cellState);
-				var s3 = new TreeTableCellString  (t,      cellState);
-				var s4 = new TreeTableCellString  (c,      cellState);
-				var s5 = new TreeTableCellString  (r,      cellState);
-				var s6 = new TreeTableCellDecimal (round,  cellState);
-				var s7 = new TreeTableCellDecimal (residu, cellState);
+
+				var cell0 = new TreeTableCellString  (name,    cellState);
+				var cell1 = new TreeTableCellString  (number,  cellState);
+				var cell2 = new TreeTableCellDecimal (rate,    cellState);
+				var cell3 = new TreeTableCellString  (t,       cellState);
+				var cell4 = new TreeTableCellString  (c,       cellState);
+				var cell5 = new TreeTableCellString  (r,       cellState);
+				var cell6 = new TreeTableCellDecimal (round,   cellState);
+				var cell7 = new TreeTableCellDecimal (resid,   cellState);
 
 				int columnRank = 0;
 
-				content.Columns[columnRank++].AddRow (s0);
-				content.Columns[columnRank++].AddRow (s1);
-				content.Columns[columnRank++].AddRow (s2);
-				content.Columns[columnRank++].AddRow (s3);
-				content.Columns[columnRank++].AddRow (s4);
-				content.Columns[columnRank++].AddRow (s5);
-				content.Columns[columnRank++].AddRow (s6);
-				content.Columns[columnRank++].AddRow (s7);
+				content.Columns[columnRank++].AddRow (cell0);
+				content.Columns[columnRank++].AddRow (cell1);
+				content.Columns[columnRank++].AddRow (cell2);
+				content.Columns[columnRank++].AddRow (cell3);
+				content.Columns[columnRank++].AddRow (cell4);
+				content.Columns[columnRank++].AddRow (cell5);
+				content.Columns[columnRank++].AddRow (cell6);
+				content.Columns[columnRank++].AddRow (cell7);
 			}
 
 			return content;

@@ -74,21 +74,22 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var text5  = userField.TopMargin;
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
-				var s0  = new TreeTableCellString (text0, cellState);
-				var s1  = new TreeTableCellString (text1, cellState);
-				var s2  = new TreeTableCellInt    (text2, cellState);
-				var s3  = new TreeTableCellInt    (text3, cellState);
-				var s4  = new TreeTableCellInt    (text4, cellState);
-				var s5  = new TreeTableCellInt    (text5, cellState);
+
+				var cell0 = new TreeTableCellString (text0, cellState);
+				var cell1 = new TreeTableCellString (text1, cellState);
+				var cell2 = new TreeTableCellInt    (text2, cellState);
+				var cell3 = new TreeTableCellInt    (text3, cellState);
+				var cell4 = new TreeTableCellInt    (text4, cellState);
+				var cell5 = new TreeTableCellInt    (text5, cellState);
 
 				int columnRank = 0;
 
-				content.Columns[columnRank++].AddRow (s0);
-				content.Columns[columnRank++].AddRow (s1);
-				content.Columns[columnRank++].AddRow (s2);
-				content.Columns[columnRank++].AddRow (s3);
-				content.Columns[columnRank++].AddRow (s4);
-				content.Columns[columnRank++].AddRow (s5);
+				content.Columns[columnRank++].AddRow (cell0);
+				content.Columns[columnRank++].AddRow (cell1);
+				content.Columns[columnRank++].AddRow (cell2);
+				content.Columns[columnRank++].AddRow (cell3);
+				content.Columns[columnRank++].AddRow (cell4);
+				content.Columns[columnRank++].AddRow (cell5);
 			}
 
 			return content;

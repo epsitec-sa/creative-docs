@@ -118,26 +118,26 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var glyph  = TimelineData.TypeToGlyph (eventType);
 				var type   = DataDescriptions.GetEventDescription (eventType);
 				var value  = ObjectProperties.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue,   synthetic: false);
-				var nom    = ObjectProperties.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,        synthetic: false);
+				var name   = ObjectProperties.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,        synthetic: false);
 				var number = ObjectProperties.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Number,      synthetic: false);
 				var desc   = ObjectProperties.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Description, synthetic: false);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var s1 = new TreeTableCellString         (date,   cellState);
-				var s2 = new TreeTableCellGlyph          (glyph,  cellState);
-				var s3 = new TreeTableCellString         (type,   cellState);
-				var s4 = new TreeTableCellComputedAmount (value,  cellState);
-				var s7 = new TreeTableCellString         (nom,    cellState);
-				var s8 = new TreeTableCellString         (number, cellState);
-				var s9 = new TreeTableCellString         (desc,   cellState);
+				var cell1 = new TreeTableCellString         (date,   cellState);
+				var cell2 = new TreeTableCellGlyph          (glyph,  cellState);
+				var cell3 = new TreeTableCellString         (type,   cellState);
+				var cell4 = new TreeTableCellComputedAmount (value,  cellState);
+				var cell5 = new TreeTableCellString         (name,   cellState);
+				var cell6 = new TreeTableCellString         (number, cellState);
+				var cell7 = new TreeTableCellString         (desc,   cellState);
 
 				int columnRank = 0;
 
-				content.Columns[columnRank++].AddRow (s1);
-				content.Columns[columnRank++].AddRow (s2);
-				content.Columns[columnRank++].AddRow (s3);
-				content.Columns[columnRank++].AddRow (s4);
+				content.Columns[columnRank++].AddRow (cell1);
+				content.Columns[columnRank++].AddRow (cell2);
+				content.Columns[columnRank++].AddRow (cell3);
+				content.Columns[columnRank++].AddRow (cell4);
 
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
 					.Where (x => x.Type == FieldType.ComputedAmount))
@@ -146,9 +146,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					content.Columns[columnRank++].AddRow (cell);
 				}
 
-				content.Columns[columnRank++].AddRow (s7);
-				content.Columns[columnRank++].AddRow (s8);
-				content.Columns[columnRank++].AddRow (s9);
+				content.Columns[columnRank++].AddRow (cell5);
+				content.Columns[columnRank++].AddRow (cell6);
+				content.Columns[columnRank++].AddRow (cell7);
 
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
 					.Where (x => x.Type != FieldType.ComputedAmount))

@@ -60,18 +60,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (BaseType.Groups, node.Guid);
 
-				var nom         = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var name        = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
 				var description = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Description);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
-				var sf = new TreeTableCellTree   (level, type, nom, cellState);
-				var s1 = new TreeTableCellString (description,      cellState);
+
+				var cell0 = new TreeTableCellTree   (level, type, name, cellState);
+				var cell1 = new TreeTableCellString (description,       cellState);
 
 				int columnRank = 0;
 
-				content.Columns[columnRank++].AddRow (sf);
-				content.Columns[columnRank++].AddRow (s1);
-
+				content.Columns[columnRank++].AddRow (cell0);
+				content.Columns[columnRank++].AddRow (cell1);
 			}
 
 			return content;
