@@ -36,8 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				default:
-					this.title = "?";
-					break;
+					throw new System.InvalidOperationException (string.Format ("Unknown BaseType {0}", this.baseType.ToString ()));
 			}
 		}
 
@@ -134,7 +133,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var newField = this.accessor.Settings.GetNewUserObjectField();
 			var userField = new UserField ("Nouveau", newField, FieldType.String, 120, 380, 1, 0);
-			this.accessor.Settings.AddUserField (this.baseType, userField);
+
+			int index = this.VisibleSelectedRow;
+			if (index == -1)
+			{
+				index = this.nodeGetter.Count;  // insère à la fin
+			}
+
+			this.accessor.Settings.InsertUserField (this.baseType, index, userField);
 
 			this.UpdateData ();
 			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
