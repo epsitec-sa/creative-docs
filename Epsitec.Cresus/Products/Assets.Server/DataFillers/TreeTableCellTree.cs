@@ -10,54 +10,30 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 	public class TreeTableCellTree : AbstractTreeTableCell
 	{
 		public TreeTableCellTree(bool isValid, int level, NodeType type, string value, bool isSelected = false, bool isEvent = false, bool isError = false, bool isUnavailable = false)
+			: base (isValid, isSelected, isEvent, isError, isUnavailable)
 		{
-			this.IsValid       = isValid;
-			this.Level         = level;
-			this.Type          = type;
-			this.Value         = value;
-			this.IsSelected    = isSelected;
-			this.IsEvent       = isEvent;
-			this.IsError       = isError;
-			this.IsUnavailable = isUnavailable;
+			this.Level = level;
+			this.Type  = type;
+			this.Value = value;
 		}
 
 
-		public readonly bool					IsValid;
 		public readonly int						Level;
 		public readonly NodeType				Type;
 		public readonly string					Value;
-		public readonly bool					IsSelected;
-		public readonly bool					IsEvent;
-		public readonly bool					IsError;
-		public readonly bool					IsUnavailable;
 
 		
 		public override string ToString()
 		{
 			var buffer = new System.Text.StringBuilder ();
 
-			if (!this.IsValid)
-			{
-				buffer.Append ("invalid ");
-			}
-
-			buffer.Append (this.Level);
+			buffer.Append (this.Value);
 			buffer.Append (" ");
 			buffer.Append (this.Type);
 			buffer.Append (" ");
-			buffer.Append (this.Value);
-			buffer.Append (" ");
+			buffer.Append (this.Level);
 
-			if (this.IsSelected)
-			{
-				buffer.Append (" selected");
-			}
-			if (this.IsError)
-			{
-				buffer.Append (" error");
-			}
-
-			return buffer.ToString ();
+			return buffer.ToString () + base.ToString ();
 		}
 	}
 }

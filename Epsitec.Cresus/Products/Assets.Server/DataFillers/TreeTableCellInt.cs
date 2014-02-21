@@ -9,46 +9,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 	public class TreeTableCellInt : AbstractTreeTableCell
 	{
 		public TreeTableCellInt(bool isValid, int? value, bool isSelected = false, bool isEvent = false, bool isError = false, bool isUnavailable = false)
+			: base (isValid, isSelected, isEvent, isError, isUnavailable)
 		{
-			this.IsValid       = isValid;
-			this.Value         = value;
-			this.IsSelected    = isSelected;
-			this.IsEvent       = isEvent;
-			this.IsError       = isError;
-			this.IsUnavailable = isUnavailable;
+			this.Value = value;
 		}
 
 
-		public readonly bool					IsValid;
 		public readonly int?					Value;
-		public readonly bool					IsSelected;
-		public readonly bool					IsEvent;
-		public readonly bool					IsError;
-		public readonly bool					IsUnavailable;
 
 		
 		public override string ToString()
 		{
-			var buffer = new System.Text.StringBuilder ();
-
-			if (!this.IsValid)
-			{
-				buffer.Append ("invalid ");
-			}
-
-			buffer.Append (this.Value);
-			buffer.Append (" ");
-
-			if (this.IsSelected)
-			{
-				buffer.Append (" selected");
-			}
-			if (this.IsError)
-			{
-				buffer.Append (" error");
-			}
-
-			return buffer.ToString ();
+			return this.Value.ToString () + base.ToString ();
 		}
 	}
 }
