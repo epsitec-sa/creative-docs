@@ -78,8 +78,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var obj = this.accessor.GetObject (baseType, guid);
 
-				var nom     = AssetCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
-				var numéro  = AssetCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number);
+				var nom     = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var numéro  = ObjectCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number);
 				var valeur1 = this.NodeGetter.GetValue (obj, node, ObjectField.MainValue);
 
 				var cellState1 = (i == selection) ? CellState.Selected : CellState.None;

@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				return AssetCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
+				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
 			}
 		}
 

@@ -1496,20 +1496,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			if (cat != null)
 			{
-				var taux   = AssetCalculator.GetObjectPropertyDecimal (cat, null, ObjectField.AmortizationRate);
-				var type   = AssetCalculator.GetObjectPropertyInt     (cat, null, ObjectField.AmortizationType);
-				var period = AssetCalculator.GetObjectPropertyInt     (cat, null, ObjectField.Periodicity);
-				var prorat = AssetCalculator.GetObjectPropertyInt     (cat, null, ObjectField.Prorata);
-				var round  = AssetCalculator.GetObjectPropertyDecimal (cat, null, ObjectField.Round);
-				var rest   = AssetCalculator.GetObjectPropertyDecimal (cat, null, ObjectField.ResidualValue);
-				var c1     = AssetCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte1);
-				var c2     = AssetCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte2);
-				var c3     = AssetCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte3);
-				var c4     = AssetCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte4);
-				var c5     = AssetCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte5);
-				var c6     = AssetCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte6);
-				var c7     = AssetCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte7);
-				var c8     = AssetCalculator.GetObjectPropertyString (cat, null, ObjectField.Compte8);
+				var taux   = ObjectCalculator.GetObjectPropertyDecimal (cat, null, ObjectField.AmortizationRate);
+				var type   = ObjectCalculator.GetObjectPropertyInt     (cat, null, ObjectField.AmortizationType);
+				var period = ObjectCalculator.GetObjectPropertyInt     (cat, null, ObjectField.Periodicity);
+				var prorat = ObjectCalculator.GetObjectPropertyInt     (cat, null, ObjectField.Prorata);
+				var round  = ObjectCalculator.GetObjectPropertyDecimal (cat, null, ObjectField.Round);
+				var rest   = ObjectCalculator.GetObjectPropertyDecimal (cat, null, ObjectField.ResidualValue);
+				var c1     = ObjectCalculator.GetObjectPropertyString  (cat, null, ObjectField.Compte1);
+				var c2     = ObjectCalculator.GetObjectPropertyString  (cat, null, ObjectField.Compte2);
+				var c3     = ObjectCalculator.GetObjectPropertyString  (cat, null, ObjectField.Compte3);
+				var c4     = ObjectCalculator.GetObjectPropertyString  (cat, null, ObjectField.Compte4);
+				var c5     = ObjectCalculator.GetObjectPropertyString  (cat, null, ObjectField.Compte5);
+				var c6     = ObjectCalculator.GetObjectPropertyString  (cat, null, ObjectField.Compte6);
+				var c7     = ObjectCalculator.GetObjectPropertyString  (cat, null, ObjectField.Compte7);
+				var c8     = ObjectCalculator.GetObjectPropertyString  (cat, null, ObjectField.Compte8);
 
 				e.AddProperty (new DataStringProperty  (ObjectField.CategoryName,     nom));
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, taux.GetValueOrDefault ()));
@@ -1535,7 +1535,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			foreach (var person in list)
 			{
-				var nom = AssetCalculator.GetObjectPropertyString (person, null, DummyMandat.fieldLastName);
+				var nom = ObjectCalculator.GetObjectPropertyString (person, null, DummyMandat.fieldLastName);
 				if (nom == text)
 				{
 					return person.Guid;
@@ -1552,7 +1552,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			foreach (var group in list)
 			{
-				var nom = AssetCalculator.GetObjectPropertyString (group, null, ObjectField.Name);
+				var nom = ObjectCalculator.GetObjectPropertyString (group, null, ObjectField.Name);
 				if (nom == text)
 				{
 					return group;
@@ -1569,7 +1569,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			foreach (var group in list)
 			{
-				var nom = AssetCalculator.GetObjectPropertyString (group, null, ObjectField.Name);
+				var nom = ObjectCalculator.GetObjectPropertyString (group, null, ObjectField.Name);
 				if (nom == text)
 				{
 					return new GuidRatio(group.Guid, ratio);

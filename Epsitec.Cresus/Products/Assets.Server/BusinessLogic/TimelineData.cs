@@ -135,12 +135,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var type = e.Type;
 						var glyph = TimelineData.TypeToGlyph (type);
 
-						var value1 = AssetCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.MainValue);
+						var value1 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.MainValue);
 
 						ComputedAmount? value2 = null;
 						if (userValueField != ObjectField.Unknown)
 						{
-							value2 = AssetCalculator.GetObjectPropertyComputedAmount (obj, t, userValueField);
+							value2 = ObjectCalculator.GetObjectPropertyComputedAmount (obj, t, userValueField);
 						}
 
 						decimal? v1 = value1 != null && value1.HasValue ? value1.Value.FinalAmount : null;

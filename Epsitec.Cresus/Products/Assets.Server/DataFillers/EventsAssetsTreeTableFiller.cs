@@ -114,23 +114,23 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var timestamp  = e.Timestamp;
 				var eventType  = e.Type;
 
-				var date    = TypeConverters.DateToString (timestamp.Date);
-				var glyph   = TimelineData.TypeToGlyph (eventType);
-				var type    = DataDescriptions.GetEventDescription (eventType);
-				var valeur1 = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue,   synthetic: false);
-				var nom     = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,        synthetic: false);
-				var number  = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Number,      synthetic: false);
-				var desc    = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Description, synthetic: false);
+				var date   = TypeConverters.DateToString (timestamp.Date);
+				var glyph  = TimelineData.TypeToGlyph (eventType);
+				var type   = DataDescriptions.GetEventDescription (eventType);
+				var value  = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue,   synthetic: false);
+				var nom    = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,        synthetic: false);
+				var number = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Number,      synthetic: false);
+				var desc   = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Description, synthetic: false);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var s1 = new TreeTableCellString         (date,    cellState);
-				var s2 = new TreeTableCellGlyph          (glyph,   cellState);
-				var s3 = new TreeTableCellString         (type,    cellState);
-				var s4 = new TreeTableCellComputedAmount (valeur1, cellState);
-				var s7 = new TreeTableCellString         (nom,     cellState);
-				var s8 = new TreeTableCellString         (number,  cellState);
-				var s9 = new TreeTableCellString         (desc,    cellState);
+				var s1 = new TreeTableCellString         (date,   cellState);
+				var s2 = new TreeTableCellGlyph          (glyph,  cellState);
+				var s3 = new TreeTableCellString         (type,   cellState);
+				var s4 = new TreeTableCellComputedAmount (value,  cellState);
+				var s7 = new TreeTableCellString         (nom,    cellState);
+				var s8 = new TreeTableCellString         (number, cellState);
+				var s9 = new TreeTableCellString         (desc,   cellState);
 
 				int columnRank = 0;
 

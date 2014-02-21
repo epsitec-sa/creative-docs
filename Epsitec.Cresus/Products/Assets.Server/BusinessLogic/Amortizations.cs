@@ -308,12 +308,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Collecte tous les champs qui définissent comment amortir. Ils peuvent provenir
 			//	de plusieurs événements différents.
-			var taux     = AssetCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.AmortizationRate);
-			var type     = AssetCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationType);
-			var period   = AssetCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.Periodicity);
-			var prorata  = AssetCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.Prorata);
-			var round    = AssetCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.Round);
-			var residual = AssetCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ResidualValue);
+			var taux     = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.AmortizationRate);
+			var type     = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationType);
+			var period   = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.Periodicity);
+			var prorata  = ObjectCalculator.GetObjectPropertyInt     (obj, timestamp, ObjectField.Prorata);
+			var round    = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.Round);
+			var residual = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ResidualValue);
 
 			if (taux.HasValue && type.HasValue && period.HasValue)
 			{

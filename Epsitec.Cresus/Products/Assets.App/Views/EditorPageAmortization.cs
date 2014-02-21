@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ImportFieldString(DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
 		{
-			var s = AssetCalculator.GetObjectPropertyString (catObj, null, fieldSrc);
+			var s = ObjectCalculator.GetObjectPropertyString (catObj, null, fieldSrc);
 			if (!string.IsNullOrEmpty (s))
 			{
 				this.accessor.EditionAccessor.SetField (fieldDst, s);
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ImportFieldDecimal(DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
 		{
-			var d = AssetCalculator.GetObjectPropertyDecimal (catObj, null, fieldSrc);
+			var d = ObjectCalculator.GetObjectPropertyDecimal (catObj, null, fieldSrc);
 			if (d.HasValue)
 			{
 				this.accessor.EditionAccessor.SetField (fieldDst, d);
