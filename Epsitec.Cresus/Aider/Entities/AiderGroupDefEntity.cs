@@ -96,8 +96,8 @@ namespace Epsitec.Aider.Entities
 			aiderGroupDef.Level = parent.Level + 1;
 			aiderGroupDef.SubgroupsAllowed = subgroupsAllowed;
 			aiderGroupDef.MembersAllowed = membersAllowed;
-
-			var number = AiderGroupIds.FindNextSubGroupNumber (parent.Subgroups.Select (g => g.PathTemplate));
+			
+			var number = AiderGroupIds.FindNextSubGroupDefNumber (parent.Subgroups.Select (g => g.PathTemplate));
 			aiderGroupDef.PathTemplate = AiderGroupIds.CreateDefinitionSubgroupPath (parent.PathTemplate, number);
 
 			aiderGroupDef.Classification = groupClass;
