@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (type != FieldType.String)
 			{
 				lineWidth = null;
-				LineCount = null;
+				lineCount = null;
 			}
 
 			this.Guid        = guid;
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (type != FieldType.String)
 			{
 				lineWidth = null;
-				LineCount = null;
+				lineCount = null;
 			}
 
 			this.Guid        = Guid.NewGuid ();

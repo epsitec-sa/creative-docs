@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (userField.Type)
 			{
 				case FieldType.String:
-					this.CreateStringController (parent, userField.Field, userField.LineWidth.GetValueOrDefault (380), userField.LineCount.GetValueOrDefault (1));
+					this.CreateStringController (parent, userField.Field, userField.LineWidth.GetValueOrDefault (AbstractFieldController.maxWidth), userField.LineCount.GetValueOrDefault (1));
 					break;
 
 				case FieldType.Int:
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Accessor  = this.accessor,
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
-				EditWidth = 380,
+				EditWidth = AbstractFieldController.maxWidth,
 				TabIndex  = ++this.tabIndex,
 			};
 
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Accessor  = this.accessor,
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
-				EditWidth = 380,
+				EditWidth = AbstractFieldController.maxWidth,
 				TabIndex  = ++this.tabIndex,
 			};
 
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.fieldControllers.Add (ObjectField.GroupGuidRatioFirst, controller);
 		}
 
-		protected void CreateStringController(Widget parent, ObjectField field, int editWidth = 380, int lineCount = 1)
+		protected void CreateStringController(Widget parent, ObjectField field, int editWidth = AbstractFieldController.maxWidth, int lineCount = 1)
 		{
 			var controller = new StringFieldController
 			{
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.fieldControllers.Add (field, controller);
 		}
 
-		protected void CreateEnumController(Widget parent, ObjectField field, Dictionary<int, string> enums, int editWidth = 380)
+		protected void CreateEnumController(Widget parent, ObjectField field, Dictionary<int, string> enums, int editWidth = AbstractFieldController.maxWidth)
 		{
 			var controller = new EnumFieldController
 			{

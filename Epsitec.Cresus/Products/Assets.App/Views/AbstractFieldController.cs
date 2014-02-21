@@ -22,12 +22,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public int								TabIndex;
 		public int								LabelWidth = 100;
-		public int								EditWidth = 380;
 		public bool								HideAdditionalButtons;
 		public EventType						EventType;
 		public ObjectField						Field;
 
-		public PropertyState					PropertyState
+		public int								EditWidth
+		{
+			get
+			{
+				return this.editWidth;
+			}
+			set
+			{
+				this.editWidth = System.Math.Min (value, AbstractFieldController.maxWidth);
+			}
+		}
+
+		public PropertyState PropertyState
 		{
 			get
 			{
@@ -259,6 +270,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		public const int lineHeight = 17;
+		public const int maxWidth   = 380;
 
 		protected readonly SafeCounter			ignoreChanges;
 
@@ -266,6 +278,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private string							label;
 		private IconButton						historyButton;
 		private IconButton						clearButton;
+		private int								editWidth;
 		protected PropertyState					propertyState;
 	}
 }
