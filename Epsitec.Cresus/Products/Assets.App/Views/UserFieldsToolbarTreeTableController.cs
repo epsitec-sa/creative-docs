@@ -28,11 +28,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (this.baseType)
 			{
 				case BaseType.Assets:
-					this.title = "Champs supplémentaires des objets d'immobilisation";
+					this.title = SettingsToolbar.GetCommandDescription (ToolbarCommand.SettingsAssetsView);
 					break;
 
 				case BaseType.Persons:
-					this.title = "Champs supplémentaires des personnes";
+					this.title = SettingsToolbar.GetCommandDescription (ToolbarCommand.SettingsPersonsView);
 					break;
 
 				default:

@@ -117,19 +117,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private int DetectSeparator(Point pos)
 		{
-			if (pos.Y >= this.foreground.ActualHeight-this.HeaderHeight && pos.Y < this.foreground.ActualHeight)
+			//	On saute la colonne 0 qui est tout à gauche.
+			for (int i=1; i<=this.ColumnCount; i++)
 			{
-				//	On saute la colonne 0 qui est tout à gauche.
-				for (int i=1; i<=this.ColumnCount; i++)
-				{
-					double? x = this.GetSeparatorX (i);
+				double? x = this.GetSeparatorX (i);
 
-					if (x.HasValue &&
-						pos.X >= x.Value - 4 &&
-						pos.X <= x.Value + 4)
-					{
-						return i;
-					}
+				if (x.HasValue &&
+					pos.X >= x.Value - 4 &&
+					pos.X <= x.Value + 4)
+				{
+					return i;
 				}
 			}
 

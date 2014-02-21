@@ -54,10 +54,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "Réglages généraux";
 
 				case ToolbarCommand.SettingsAssetsView:
-					return "Réglages des objets d'immobilisation";
+					return "Champs supplémentaires des objets d'immobilisation";
 
 				case ToolbarCommand.SettingsPersonsView:
-					return "Réglages des personnes";
+					return "Champs supplémentaires des personnes";
 
 				default:
 					return null;
