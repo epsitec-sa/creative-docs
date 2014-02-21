@@ -67,8 +67,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					var cellState = (i == selection) ? CellState.Selected : CellState.None;
 					var cell = AbstractTreeTableCell.CreateTreeTableCell (obj, this.Timestamp, userField, inputValue, cellState);
 
-					var column = content.Columns[columnRank++];
-					column.AddRow (cell);
+					content.Columns[columnRank++].AddRow (cell);
 				}
 			}
 

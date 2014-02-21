@@ -205,9 +205,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					new ObjectSummaryControllerTile (ObjectField.Number),
 					new ObjectSummaryControllerTile (ObjectField.Name),
 					new ObjectSummaryControllerTile (ObjectField.Description),
-					new ObjectSummaryControllerTile (ObjectField.Maintenance),
-					new ObjectSummaryControllerTile (ObjectField.Color),
-					new ObjectSummaryControllerTile (ObjectField.SerialNumber),
 
 					ObjectSummaryControllerTile.Empty,
 

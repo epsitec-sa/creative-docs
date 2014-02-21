@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Number,
 		Name,
 		Description,
-		Maintenance,
-		Color,
-		SerialNumber,
+		//-Maintenance,
+		//-Color,
+		//-SerialNumber,
 
 		Person1,
 		Person2,

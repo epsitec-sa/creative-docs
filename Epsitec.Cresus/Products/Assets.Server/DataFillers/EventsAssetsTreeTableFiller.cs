@@ -30,9 +30,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.Value2;
 				yield return ObjectField.Name;
 				yield return ObjectField.Number;
-				yield return ObjectField.Maintenance;
-				yield return ObjectField.Color;
-				yield return ObjectField.SerialNumber;
 			}
 		}
 
@@ -48,9 +45,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur comptable"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur assurance"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur imposable"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         120, "Maintenance"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          60, "Couleur"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         200, "Numéro de série"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         180, "Objet"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          50, "N°"));
 
@@ -68,9 +62,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			var c6  = new TreeTableColumnItem ();
 			var c7  = new TreeTableColumnItem ();
 			var c8  = new TreeTableColumnItem ();
-			var c9  = new TreeTableColumnItem ();
-			var c10 = new TreeTableColumnItem ();
-			var c11 = new TreeTableColumnItem ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -86,30 +77,24 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var timestamp  = e.Timestamp;
 				var eventType  = e.Type;
 
-				var date        = TypeConverters.DateToString (timestamp.Date);
-				var glyph       = TimelineData.TypeToGlyph (eventType);
-				var type        = DataDescriptions.GetEventDescription (eventType);
-				var valeur1     = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue,     synthetic: false);
-				var valeur2     = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Value1,     synthetic: false);
-				var valeur3     = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Value2,     synthetic: false);
-				var nom         = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,         synthetic: false);
-				var numéro      = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Number,      synthetic: false);
-				var maintenance = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Maintenance, synthetic: false);
-				var couleur     = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Color,     synthetic: false);
-				var série       = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.SerialNumber, synthetic: false);
+				var date    = TypeConverters.DateToString (timestamp.Date);
+				var glyph   = TimelineData.TypeToGlyph (eventType);
+				var type    = DataDescriptions.GetEventDescription (eventType);
+				var valeur1 = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue,     synthetic: false);
+				var valeur2 = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Value1,     synthetic: false);
+				var valeur3 = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Value2,     synthetic: false);
+				var nom     = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,         synthetic: false);
+				var numéro  = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Number,      synthetic: false);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
-				var s1 = new TreeTableCellString         (date,        cellState);
-				var s2 = new TreeTableCellGlyph          (glyph,       cellState);
-				var s3 = new TreeTableCellString         (type,        cellState);
-				var s4 = new TreeTableCellComputedAmount (valeur1,     cellState);
-				var s5 = new TreeTableCellComputedAmount (valeur2,     cellState);
-				var s6 = new TreeTableCellComputedAmount (valeur3,     cellState);
-				var s7 = new TreeTableCellString         (maintenance, cellState);
-				var s8 = new TreeTableCellString         (couleur,     cellState);
-				var s9 = new TreeTableCellString         (série,       cellState);
-				var s10 = new TreeTableCellString        (nom,         cellState);
-				var s11 = new TreeTableCellString        (numéro,      cellState);
+				var s1 = new TreeTableCellString         (date,    cellState);
+				var s2 = new TreeTableCellGlyph          (glyph,   cellState);
+				var s3 = new TreeTableCellString         (type,    cellState);
+				var s4 = new TreeTableCellComputedAmount (valeur1, cellState);
+				var s5 = new TreeTableCellComputedAmount (valeur2, cellState);
+				var s6 = new TreeTableCellComputedAmount (valeur3, cellState);
+				var s7 = new TreeTableCellString         (nom,     cellState);
+				var s8 = new TreeTableCellString         (numéro,  cellState);
 
 				c1.AddRow (s1);
 				c2.AddRow (s2);
@@ -119,9 +104,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				c6.AddRow (s6);
 				c7.AddRow (s7);
 				c8.AddRow (s8);
-				c9.AddRow (s9);
-				c10.AddRow (s10);
-				c11.AddRow (s11);
 			}
 
 			var content = new TreeTableContentItem ();
@@ -134,9 +116,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			content.Columns.Add (c6);
 			content.Columns.Add (c7);
 			content.Columns.Add (c8);
-			content.Columns.Add (c9);
-			content.Columns.Add (c10);
-			content.Columns.Add (c11);
 
 			return content;
 		}
