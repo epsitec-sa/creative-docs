@@ -60,8 +60,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var nom     = ErrorDescription.GetErrorObject (this.accessor, error);
 				var message = ErrorDescription.GetErrorDescription (error);
 
-				var s1 = new TreeTableCellString (true, nom,     isSelected: (i == selection), isError: isError);
-				var s2 = new TreeTableCellString (true, message, isSelected: (i == selection), isError: isError);
+				var cellState = (i == selection) ? CellState.Selected : CellState.None;
+				cellState |= (isError ? CellState.Error : CellState.None);
+
+				var s1 = new TreeTableCellString (nom,     cellState);
+				var s2 = new TreeTableCellString (message, cellState);
 
 				c1.AddRow (s1);
 				c2.AddRow (s2);

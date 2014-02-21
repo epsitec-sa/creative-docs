@@ -31,11 +31,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				var list = new List<TreeTableColumnDescription> ();
+				var columns = new List<TreeTableColumnDescription> ();
 
-				AbstractTreeTableCell.AddColumnDescription (list, accessor.Settings.GetUserFields (BaseType.Persons));
+				AbstractTreeTableCell.AddColumnDescription (columns, accessor.Settings.GetUserFields (BaseType.Persons));
 
-				return list.ToArray ();
+				return columns.ToArray ();
 			}
 		}
 
@@ -64,7 +64,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons))
 				{
 					bool inputValue = (columnRank == 0);
-					var cell = AbstractTreeTableCell.CreateTreeTableCell (obj, this.Timestamp, userField, inputValue, isSelected: (i == selection));
+					var cellState = (i == selection) ? CellState.Selected : CellState.None;
+					var cell = AbstractTreeTableCell.CreateTreeTableCell (obj, this.Timestamp, userField, inputValue, cellState);
 
 					var column = content.Columns[columnRank++];
 					column.AddRow (cell);

@@ -86,14 +86,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var c = EnumDictionaries.GetPeriodicityName (period);
 				var r = EnumDictionaries.GetProrataTypeName (prorat);
 
-				var s0 = new TreeTableCellString  (true, nom,    isSelected: (i == selection));
-				var s1 = new TreeTableCellString  (true, numéro, isSelected: (i == selection));
-				var s2 = new TreeTableCellDecimal (true, taux,   isSelected: (i == selection));
-				var s3 = new TreeTableCellString  (true, t,      isSelected: (i == selection));
-				var s4 = new TreeTableCellString  (true, c,      isSelected: (i == selection));
-				var s5 = new TreeTableCellString  (true, r,      isSelected: (i == selection));
-				var s6 = new TreeTableCellDecimal (true, round,  isSelected: (i == selection));
-				var s7 = new TreeTableCellDecimal (true, residu, isSelected: (i == selection));
+				var cellState = (i == selection) ? CellState.Selected : CellState.None;
+				var s0 = new TreeTableCellString  (nom,    cellState);
+				var s1 = new TreeTableCellString  (numéro, cellState);
+				var s2 = new TreeTableCellDecimal (taux,   cellState);
+				var s3 = new TreeTableCellString  (t,      cellState);
+				var s4 = new TreeTableCellString  (c,      cellState);
+				var s5 = new TreeTableCellString  (r,      cellState);
+				var s6 = new TreeTableCellDecimal (round,  cellState);
+				var s7 = new TreeTableCellDecimal (residu, cellState);
 
 				c0.AddRow (s0);
 				c1.AddRow (s1);

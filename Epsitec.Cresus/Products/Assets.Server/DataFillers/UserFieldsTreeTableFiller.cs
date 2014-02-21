@@ -73,12 +73,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var text4  = userField.LineCount;
 				var text5  = userField.TopMargin;
 
-				var s0  = new TreeTableCellString (true, text0,  isSelected: (i == selection));
-				var s1  = new TreeTableCellString (true, text1,  isSelected: (i == selection));
-				var s2  = new TreeTableCellInt    (true, text2,  isSelected: (i == selection));
-				var s3  = new TreeTableCellInt    (true, text3,  isSelected: (i == selection));
-				var s4  = new TreeTableCellInt    (true, text4,  isSelected: (i == selection));
-				var s5  = new TreeTableCellInt    (true, text5,  isSelected: (i == selection));
+				var cellState = (i == selection) ? CellState.Selected : CellState.None;
+				var s0  = new TreeTableCellString (text0, cellState);
+				var s1  = new TreeTableCellString (text1, cellState);
+				var s2  = new TreeTableCellInt    (text2, cellState);
+				var s3  = new TreeTableCellInt    (text3, cellState);
+				var s4  = new TreeTableCellInt    (text4, cellState);
+				var s5  = new TreeTableCellInt    (text5, cellState);
 
 				c0.AddRow (s0);
 				c1.AddRow (s1);

@@ -87,16 +87,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var couleur     = AssetCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Color);
 				var série       = AssetCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.SerialNumber);
 
-				var grouping = (type != NodeType.Final);
+				var cellState1 = (i == selection) ? CellState.Selected : CellState.None;
+				var cellState2 = cellState1 | (type == NodeType.Final ? CellState.None : CellState.Unavailable);
 
-				var sf = new TreeTableCellTree           (true, level, type, nom, isSelected: (i == selection));
-				var s1 = new TreeTableCellString         (true, numéro,           isSelected: (i == selection));
-				var s2 = new TreeTableCellComputedAmount (true, valeur1,          isSelected: (i == selection), isUnavailable: grouping);
-				var s3 = new TreeTableCellComputedAmount (true, valeur2,          isSelected: (i == selection), isUnavailable: grouping);
-				var s4 = new TreeTableCellComputedAmount (true, valeur3,          isSelected: (i == selection), isUnavailable: grouping);
-				var s5 = new TreeTableCellString         (true, maintenance,      isSelected: (i == selection), isUnavailable: grouping);
-				var s6 = new TreeTableCellString         (true, couleur,          isSelected: (i == selection), isUnavailable: grouping);
-				var s7 = new TreeTableCellString         (true, série,            isSelected: (i == selection), isUnavailable: grouping);
+				var sf = new TreeTableCellTree           (level, type, nom, cellState1);
+				var s1 = new TreeTableCellString         (numéro,           cellState1);
+				var s2 = new TreeTableCellComputedAmount (valeur1,          cellState2);
+				var s3 = new TreeTableCellComputedAmount (valeur2,          cellState2);
+				var s4 = new TreeTableCellComputedAmount (valeur3,          cellState2);
+				var s5 = new TreeTableCellString         (maintenance,      cellState2);
+				var s6 = new TreeTableCellString         (couleur,          cellState2);
+				var s7 = new TreeTableCellString         (série,            cellState2);
 
 				cf.AddRow (sf);
 				c1.AddRow (s1);

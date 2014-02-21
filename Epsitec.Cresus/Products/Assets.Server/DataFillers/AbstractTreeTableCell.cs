@@ -10,47 +10,34 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public abstract class AbstractTreeTableCell
 	{
-		public AbstractTreeTableCell(bool isValid, bool isSelected = false, bool isEvent = false, bool isError = false, bool isUnavailable = false)
+		public AbstractTreeTableCell(CellState cellState)
 		{
-			this.IsValid       = isValid;
-			this.IsSelected    = isSelected;
-			this.IsEvent       = isEvent;
-			this.IsError       = isError;
-			this.IsUnavailable = isUnavailable;
+			this.CellState = cellState;
 		}
 
-		public readonly bool					IsValid;
-		public readonly bool					IsSelected;
-		public readonly bool					IsEvent;
-		public readonly bool					IsError;
-		public readonly bool					IsUnavailable;
+		public readonly CellState				CellState;
 
 
 		public override string ToString()
 		{
 			var buffer = new System.Text.StringBuilder ();
 
-			if (!this.IsValid)
-			{
-				buffer.Append (" Invalid");
-			}
-
-			if (this.IsSelected)
+			if ((this.CellState & CellState.Selected) != 0)
 			{
 				buffer.Append (" Selected");
 			}
 
-			if (this.IsEvent)
+			if ((this.CellState & CellState.Event) != 0)
 			{
 				buffer.Append (" Event");
 			}
 
-			if (this.IsError)
+			if ((this.CellState & CellState.Error) != 0)
 			{
 				buffer.Append (" Error");
 			}
 
-			if (this.IsUnavailable)
+			if ((this.CellState & CellState.Unavailable) != 0)
 			{
 				buffer.Append (" Unavailable");
 			}
@@ -68,32 +55,33 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
-		public static AbstractTreeTableCell CreateTreeTableCell(DataObject obj, Timestamp? timestamp,
-			UserField userField, bool inputValue,
-			bool isValid = true, bool isSelected = false, bool isEvent = false,
-			bool isError = false, bool isUnavailable = false)
+		public static AbstractTreeTableCell CreateTreeTableCell(DataObject obj,
+			Timestamp? timestamp,
+			UserField userField,
+			bool inputValue,
+			CellState cellState)
 		{
 			switch (userField.Type)
 			{
 				case FieldType.String:
 					var text = AssetCalculator.GetObjectPropertyString (obj, timestamp, userField.Field, inputValue);
-					return new TreeTableCellString (isValid, text, isSelected, isEvent, isError, isUnavailable);
+					return new TreeTableCellString (text, cellState);
 
 				case FieldType.Int:
 					var i = AssetCalculator.GetObjectPropertyInt (obj, timestamp, userField.Field, inputValue);
-					return new TreeTableCellInt (isValid, i, isSelected, isEvent, isError, isUnavailable);
+					return new TreeTableCellInt (i, cellState);
 
 				case FieldType.Decimal:
 					var d = AssetCalculator.GetObjectPropertyDecimal (obj, timestamp, userField.Field, inputValue);
-					return new TreeTableCellDecimal (isValid, d, isSelected, isEvent, isError, isUnavailable);
+					return new TreeTableCellDecimal (d, cellState);
 
 				case FieldType.ComputedAmount:
 					var ca = AssetCalculator.GetObjectPropertyComputedAmount (obj, timestamp, userField.Field, inputValue);
-					return new TreeTableCellComputedAmount (isValid, ca, isSelected, isEvent, isError, isUnavailable);
+					return new TreeTableCellComputedAmount (ca, cellState);
 
 				case FieldType.Date:
 					var date = AssetCalculator.GetObjectPropertyDate (obj, timestamp, userField.Field, inputValue);
-					return new TreeTableCellDate (isValid, date, isSelected, isEvent, isError, isUnavailable);
+					return new TreeTableCellDate (date, cellState);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown FieldType {0}", userField.Type.ToString ()));

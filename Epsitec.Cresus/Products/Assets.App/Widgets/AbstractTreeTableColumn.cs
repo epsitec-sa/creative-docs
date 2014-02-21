@@ -133,9 +133,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var rect = this.GetCellsRect (y);
 
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
+				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.CellState));
 
-				if (cell.IsUnavailable)
+				if ((cell.CellState & CellState.Unavailable) != 0)
 				{
 					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
 				}
@@ -397,17 +397,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected Color GetCellColor(bool isHover, bool isSelected, bool isEvent, bool isError = false)
+		protected Color GetCellColor(bool isHover, CellState cellState)
 		{
-			if (isSelected)
+			if ((cellState & CellState.Selected) != 0)
 			{
 				return ColorManager.SelectionColor;
 			}
-			else if (isEvent)
+			else if ((cellState & CellState.Event) != 0)
 			{
 				return ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
 			}
-			else if (isError)
+			else if ((cellState & CellState.Error) != 0)
 			{
 				return ColorManager.ErrorColor;
 			}

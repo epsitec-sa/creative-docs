@@ -9,8 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class TreeTableCellComputedAmount : AbstractTreeTableCell
 	{
-		public TreeTableCellComputedAmount(bool isValid, ComputedAmount? value, bool isSelected = false, bool isEvent = false, bool isError = false, bool isUnavailable = false)
-			: base (isValid, isSelected, isEvent, isError, isUnavailable)
+		public TreeTableCellComputedAmount(ComputedAmount? value, CellState cellState)
+			: base (cellState)
 		{
 			this.Value = value;
 		}

@@ -98,17 +98,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var couleur     = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Color,     synthetic: false);
 				var série       = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.SerialNumber, synthetic: false);
 
-				var s1 = new TreeTableCellString         (true, date,        isSelected: (i == selection));
-				var s2 = new TreeTableCellGlyph          (true, glyph,       isSelected: (i == selection));
-				var s3 = new TreeTableCellString         (true, type,        isSelected: (i == selection));
-				var s4 = new TreeTableCellComputedAmount (true, valeur1,     isSelected: (i == selection));
-				var s5 = new TreeTableCellComputedAmount (true, valeur2,     isSelected: (i == selection));
-				var s6 = new TreeTableCellComputedAmount (true, valeur3,     isSelected: (i == selection));
-				var s7 = new TreeTableCellString         (true, maintenance, isSelected: (i == selection));
-				var s8 = new TreeTableCellString         (true, couleur,     isSelected: (i == selection));
-				var s9 = new TreeTableCellString         (true, série,       isSelected: (i == selection));
-				var s10 = new TreeTableCellString        (true, nom,         isSelected: (i == selection));
-				var s11 = new TreeTableCellString        (true, numéro,      isSelected: (i == selection));
+				var cellState = (i == selection) ? CellState.Selected : CellState.None;
+				var s1 = new TreeTableCellString         (date,        cellState);
+				var s2 = new TreeTableCellGlyph          (glyph,       cellState);
+				var s3 = new TreeTableCellString         (type,        cellState);
+				var s4 = new TreeTableCellComputedAmount (valeur1,     cellState);
+				var s5 = new TreeTableCellComputedAmount (valeur2,     cellState);
+				var s6 = new TreeTableCellComputedAmount (valeur3,     cellState);
+				var s7 = new TreeTableCellString         (maintenance, cellState);
+				var s8 = new TreeTableCellString         (couleur,     cellState);
+				var s9 = new TreeTableCellString         (série,       cellState);
+				var s10 = new TreeTableCellString        (nom,         cellState);
+				var s11 = new TreeTableCellString        (numéro,      cellState);
 
 				c1.AddRow (s1);
 				c2.AddRow (s2);

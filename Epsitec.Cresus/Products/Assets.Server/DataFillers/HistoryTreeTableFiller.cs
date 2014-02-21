@@ -100,8 +100,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var date  = e.Timestamp.Date;
 				var glyph = TimelineData.TypeToGlyph (e.Type);
 
-				var s1 = new TreeTableCellDate  (true, date,  isSelected: (i == selection));
-				var s2 = new TreeTableCellGlyph (true, glyph, isSelected: (i == selection));
+				var cellState = (i == selection) ? CellState.Selected : CellState.None;
+				var s1 = new TreeTableCellDate  (date,  cellState);
+				var s2 = new TreeTableCellGlyph (glyph, cellState);
 				i++;
 
 				c1.AddRow (s1);
@@ -172,7 +173,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					value = property.Value;
 				}
 
-				var cell = new TreeTableCellString (true, value, isSelected: (i++ == selection));
+				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
+				var cell = new TreeTableCellString (value, cellState);
 				columnItem.AddRow (cell);
 			}
 
@@ -194,7 +196,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					value = property.Value;
 				}
 
-				var cell = new TreeTableCellDecimal (true, value, isSelected: (i++ == selection));
+				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
+				var cell = new TreeTableCellDecimal (value, cellState);
 				columnItem.AddRow (cell);
 			}
 
@@ -216,7 +219,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					value = property.Value;
 				}
 
-				var cell = new TreeTableCellDate (true, value, isSelected: (i++ == selection));
+				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
+				var cell = new TreeTableCellDate (value, cellState);
 				columnItem.AddRow (cell);
 			}
 
@@ -238,7 +242,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					value = property.Value;
 				}
 
-				var cell = new TreeTableCellInt (true, value, isSelected: (i++ == selection));
+				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
+				var cell = new TreeTableCellInt (value, cellState);
 				columnItem.AddRow (cell);
 			}
 
@@ -260,7 +265,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					value = property.Value;
 				}
 
-				var cell = new TreeTableCellComputedAmount (true, value, isSelected: (i++ == selection));
+				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
+				var cell = new TreeTableCellComputedAmount (value, cellState);
 				columnItem.AddRow (cell);
 			}
 
@@ -283,7 +289,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var text = GroupsLogic.GetFullName (this.accessor, value);
-				var cell = new TreeTableCellString (true, text, isSelected: (i++ == selection));
+				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
+				var cell = new TreeTableCellString (text, cellState);
 				columnItem.AddRow (cell);
 			}
 
@@ -306,7 +313,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var text = PersonsLogic.GetFullName (this.accessor, value);
-				var cell = new TreeTableCellString (true, text, isSelected: (i++ == selection));
+				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
+				var cell = new TreeTableCellString (text, cellState);
 				columnItem.AddRow (cell);
 			}
 
@@ -329,7 +337,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var text = GroupsLogic.GetFullName (this.accessor, value);
-				var cell = new TreeTableCellString (true, text, isSelected: (i++ == selection));
+				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
+				var cell = new TreeTableCellString (text, cellState);
 				columnItem.AddRow (cell);
 			}
 

@@ -79,13 +79,13 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 					date = null;
 				}
 
-				bool isSelected = (i == selection);
+				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var s1 = new TreeTableCellInt    (true, pin,  isSelected: isSelected);
-				var s2 = new TreeTableCellString (true, icon, isSelected: isSelected);
-				var s3 = new TreeTableCellString (true, type, isSelected: isSelected);
-				var s4 = new TreeTableCellDate   (true, date, isSelected: isSelected);
-				var s5 = new TreeTableCellString (true, desc, isSelected: isSelected);
+				var s1 = new TreeTableCellInt    (pin,  cellState);
+				var s2 = new TreeTableCellString (icon, cellState);
+				var s3 = new TreeTableCellString (type, cellState);
+				var s4 = new TreeTableCellDate   (date, cellState);
+				var s5 = new TreeTableCellString (desc, cellState);
 
 				c1.AddRow (s1);
 				c2.AddRow (s2);
