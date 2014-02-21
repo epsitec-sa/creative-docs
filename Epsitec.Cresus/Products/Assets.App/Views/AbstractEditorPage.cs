@@ -153,6 +153,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected void CreateController(Widget parent, UserField userField)
+		{
+			//	Crée un contrôleur du bon type pour un UserField.
+			if (userField.TopMargin > 0)
+			{
+				this.CreateSepartor (parent, userField.TopMargin);
+			}
+
+			switch (userField.Type)
+			{
+				case FieldType.String:
+					this.CreateStringController (parent, userField.Field, userField.LineWidth, userField.LineCount);
+					break;
+
+				case FieldType.Int:
+					this.CreateIntController (parent, userField.Field);
+					break;
+
+				case FieldType.Decimal:
+					this.CreateDecimalController (parent, userField.Field, DecimalFormat.Real);
+					break;
+
+				case FieldType.ComputedAmount:
+					this.CreateComputedAmountController (parent, userField.Field);
+					break;
+
+				case FieldType.Date:
+					this.CreateDateController (parent, userField.Field);
+					break;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Unknown FieldType {0}", userField.Type.ToString ()));
+			}
+		}
+
 		protected void CreateGroupGuidController(Widget parent, ObjectField field)
 		{
 			var controller = new GroupGuidFieldController

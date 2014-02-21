@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Dessine la punaise. En mode "unpin", elle n'est dessinée
 			//	que lorsque la souris survole la ligne.
 			var cell = c as TreeTableCellInt;
+			System.Diagnostics.Debug.Assert (cell != null);
 
 			if (cell.Value.HasValue && (cell.Value.Value == 1 || y == this.hilitedHoverRow))
 			{

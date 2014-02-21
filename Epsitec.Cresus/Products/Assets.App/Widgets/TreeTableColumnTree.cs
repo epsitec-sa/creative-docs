@@ -55,6 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		protected override void PaintCell(Graphics graphics, Rectangle rect, int y, AbstractTreeTableCell c)
 		{
 			var cell = c as TreeTableCellTree;
+			System.Diagnostics.Debug.Assert (cell != null);
 
 			if (!string.IsNullOrEmpty (cell.Value))
 			{

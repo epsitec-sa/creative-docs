@@ -41,12 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 #else
 			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons))
 			{
-				if (userField.TopMargin > 0)
-				{
-					this.CreateSepartor (parent, userField.TopMargin);
-				}
-
-				this.CreateStringController (parent, userField.Field, userField.LineWidth, userField.LineCount);
+				this.CreateController (parent, userField);
 			}
 #endif
 		}
