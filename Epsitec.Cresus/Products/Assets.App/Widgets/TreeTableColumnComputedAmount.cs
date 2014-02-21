@@ -20,57 +20,50 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public override void SetCells(TreeTableColumnItem columnItem)
-		{
-			this.cells = columnItem.GetArray<TreeTableCellComputedAmount> ();
-			this.Invalidate ();
-		}
-
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation(graphics, clipRect);
 
-			if (this.cells != null)
+			int y = 0;
+
+			foreach (var c in this.cells)
 			{
-				int y = 0;
+				var cell = c as TreeTableCellComputedAmount;
+				System.Diagnostics.Debug.Assert (cell != null);
 
-				foreach (var cell in this.cells)
+				//	Dessine le fond.
+				var rect = this.GetCellsRect (y);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.GetCellColor(y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
+
+				if (cell.IsUnavailable)
 				{
-					//	Dessine le fond.
-					var rect = this.GetCellsRect (y);
-
-					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (this.GetCellColor(y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
-
-					if (cell.IsUnavailable)
-					{
-						this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
-					}
-
-					//	Dessine le montant.
-					if (cell.Value.HasValue)
-					{
-						var textRect = this.GetContentDeflateRectangle (rect);
-
-						string text;
-						if (this.details)
-						{
-							text = TypeConverters.ComputedAmountToString (cell.Value);
-						}
-						else
-						{
-							text = TypeConverters.AmountToString (cell.Value.Value.FinalAmount);
-						}
-
-						this.PaintText (graphics, textRect, text);
-					}
-
-					//	Dessine la grille.
-					this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-					y++;
+					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
 				}
+
+				//	Dessine le montant.
+				if (cell.Value.HasValue)
+				{
+					var textRect = this.GetContentDeflateRectangle (rect);
+
+					string text;
+					if (this.details)
+					{
+						text = TypeConverters.ComputedAmountToString (cell.Value);
+					}
+					else
+					{
+						text = TypeConverters.AmountToString (cell.Value.Value.FinalAmount);
+					}
+
+					this.PaintText (graphics, textRect, text);
+				}
+
+				//	Dessine la grille.
+				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
+
+				y++;
 			}
 		}
 
@@ -84,6 +77,5 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		private readonly bool details;
-		private TreeTableCellComputedAmount[] cells;
 	}
 }

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public struct TreeTableCellString : ITreeTableCell
+	public class TreeTableCellString : AbstractTreeTableCell
 	{
 		public TreeTableCellString(bool isValid, string value, bool isSelected = false, bool isEvent = false, bool isError = false, bool isUnavailable = false)
 		{

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public interface ITreeTableCell
+	public abstract class AbstractTreeTableCell
 	{
 	}
 }

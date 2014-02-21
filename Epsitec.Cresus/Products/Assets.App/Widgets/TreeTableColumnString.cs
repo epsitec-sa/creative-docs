@@ -14,50 +14,40 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnString : AbstractTreeTableColumn
 	{
-		public override void SetCells(TreeTableColumnItem columnItem)
-		{
-			this.cells = columnItem.GetArray<TreeTableCellString> ();
-			this.Invalidate ();
-		}
-
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation(graphics, clipRect);
 
-			if (this.cells != null)
+			int y = 0;
+
+			foreach (var c in this.cells)
 			{
-				int y = 0;
+				var cell = c as TreeTableCellString;
+				System.Diagnostics.Debug.Assert (cell != null);
 
-				foreach (var cell in this.cells)
+				//	Dessine le fond.
+				var rect = this.GetCellsRect (y);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent, cell.IsError));
+
+				if (cell.IsUnavailable)
 				{
-					//	Dessine le fond.
-					var rect = this.GetCellsRect (y);
-
-					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent, cell.IsError));
-
-					if (cell.IsUnavailable)
-					{
-						this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
-					}
-
-					//	Dessine le texte.
-					if (!string.IsNullOrEmpty (cell.Value))
-					{
-						var textRect = this.GetContentDeflateRectangle (rect);
-						this.PaintText (graphics, textRect, cell.Value);
-					}
-
-					//	Dessine la grille.
-					this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-					y++;
+					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
 				}
+
+				//	Dessine le texte.
+				if (!string.IsNullOrEmpty (cell.Value))
+				{
+					var textRect = this.GetContentDeflateRectangle (rect);
+					this.PaintText (graphics, textRect, cell.Value);
+				}
+
+				//	Dessine la grille.
+				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
+
+				y++;
 			}
 		}
-
-
-		private TreeTableCellString[] cells;
 	}
 }

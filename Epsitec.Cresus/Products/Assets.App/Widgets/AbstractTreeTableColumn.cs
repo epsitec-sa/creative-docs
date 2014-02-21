@@ -115,6 +115,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public virtual void SetCells(TreeTableColumnItem columnItem)
 		{
+			this.cells = columnItem.Cells;
+			this.Invalidate ();
 		}
 
 
@@ -407,6 +409,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private readonly TextLayout				textLayout;
 
+		protected IEnumerable<AbstractTreeTableCell> cells;
 		private TreeTableHoverMode				hoverMode;
 		protected int							hilitedHoverRow;
 		private SortedType						sortedType;

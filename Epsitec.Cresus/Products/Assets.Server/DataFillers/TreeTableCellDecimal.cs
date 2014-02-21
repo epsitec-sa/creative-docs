@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public struct TreeTableCellDecimal : ITreeTableCell
+	public class TreeTableCellDecimal : AbstractTreeTableCell
 	{
 		public TreeTableCellDecimal(bool isValid, decimal? value, bool isSelected = false, bool isEvent = false, bool isError = false, bool isUnavailable = false)
 		{

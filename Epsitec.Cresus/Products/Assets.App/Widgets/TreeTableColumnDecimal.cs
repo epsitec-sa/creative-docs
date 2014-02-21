@@ -21,64 +21,57 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public override void SetCells(TreeTableColumnItem columnItem)
-		{
-			this.cells = columnItem.GetArray<TreeTableCellDecimal> ();
-			this.Invalidate ();
-		}
-
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation(graphics, clipRect);
 
-			if (this.cells != null)
+			int y = 0;
+
+			foreach (var c in this.cells)
 			{
-				int y = 0;
+				var cell = c as TreeTableCellDecimal;
+				System.Diagnostics.Debug.Assert (cell != null);
 
-				foreach (var cell in this.cells)
+				//	Dessine le fond.
+				var rect = this.GetCellsRect (y);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
+
+				if (cell.IsUnavailable)
 				{
-					//	Dessine le fond.
-					var rect = this.GetCellsRect (y);
-
-					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
-
-					if (cell.IsUnavailable)
-					{
-						this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
-					}
-
-					//	Dessine le montant.
-					if (cell.Value.HasValue)
-					{
-						var textRect = this.GetContentDeflateRectangle (rect);
-
-						string text = null;
-
-						switch (this.format)
-						{
-							case DecimalFormat.Rate:
-								text = TypeConverters.RateToString (cell.Value);
-								break;
-
-							case DecimalFormat.Amount:
-								text = TypeConverters.AmountToString (cell.Value);
-								break;
-
-							case DecimalFormat.Real:
-								text = TypeConverters.DecimalToString (cell.Value);
-								break;
-						}
-
-						this.PaintText (graphics, textRect, text);
-					}
-
-					//	Dessine la grille.
-					this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-					y++;
+					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
 				}
+
+				//	Dessine le montant.
+				if (cell.Value.HasValue)
+				{
+					var textRect = this.GetContentDeflateRectangle (rect);
+
+					string text = null;
+
+					switch (this.format)
+					{
+						case DecimalFormat.Rate:
+							text = TypeConverters.RateToString (cell.Value);
+							break;
+
+						case DecimalFormat.Amount:
+							text = TypeConverters.AmountToString (cell.Value);
+							break;
+
+						case DecimalFormat.Real:
+							text = TypeConverters.DecimalToString (cell.Value);
+							break;
+					}
+
+					this.PaintText (graphics, textRect, text);
+				}
+
+				//	Dessine la grille.
+				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
+
+				y++;
 			}
 		}
 
@@ -92,6 +85,5 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		private readonly DecimalFormat format;
-		private TreeTableCellDecimal[] cells;
 	}
 }

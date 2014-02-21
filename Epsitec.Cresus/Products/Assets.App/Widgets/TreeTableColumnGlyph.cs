@@ -14,49 +14,39 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnGlyph : AbstractTreeTableColumn
 	{
-		public override void SetCells(TreeTableColumnItem columnItem)
-		{
-			this.cells = columnItem.GetArray<TreeTableCellGlyph> ();
-			this.Invalidate ();
-		}
-
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation(graphics, clipRect);
 
-			if (this.cells != null)
+			int y = 0;
+
+			foreach (var c in this.cells)
 			{
-				int y = 0;
+				var cell = c as TreeTableCellGlyph;
+				System.Diagnostics.Debug.Assert (cell != null);
 
-				foreach (var cell in this.cells)
+				//	Dessine le fond.
+				var rect = this.GetCellsRect (y);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
+
+				if (cell.IsUnavailable)
 				{
-					//	Dessine le fond.
-					var rect = this.GetCellsRect (y);
-
-					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
-
-					if (cell.IsUnavailable)
-					{
-						this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
-					}
-
-					//	Dessine le glyph.
-					if (cell.Value.HasValue)
-					{
-						PaintEventGlyph.Paint (graphics, rect, cell.Value.Value);
-					}
-
-					//	Dessine la grille.
-					this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-					y++;
+					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
 				}
+
+				//	Dessine le glyph.
+				if (cell.Value.HasValue)
+				{
+					PaintEventGlyph.Paint (graphics, rect, cell.Value.Value);
+				}
+
+				//	Dessine la grille.
+				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
+
+				y++;
 			}
 		}
-
-
-		private TreeTableCellGlyph[] cells;
 	}
 }

@@ -53,14 +53,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		public override TreeTableContentItem GetContent(int firstRow, int count, int selection)
 		{
-			var cf = new TreeTableColumnItem<TreeTableCellTree> ();
-			var c1 = new TreeTableColumnItem<TreeTableCellString> ();
-			var c2 = new TreeTableColumnItem<TreeTableCellComputedAmount> ();
-			var c3 = new TreeTableColumnItem<TreeTableCellComputedAmount> ();
-			var c4 = new TreeTableColumnItem<TreeTableCellComputedAmount> ();
-			var c5 = new TreeTableColumnItem<TreeTableCellString> ();
-			var c6 = new TreeTableColumnItem<TreeTableCellString> ();
-			var c7 = new TreeTableColumnItem<TreeTableCellString> ();
+			var cf = new TreeTableColumnItem ();
+			var c1 = new TreeTableColumnItem ();
+			var c2 = new TreeTableColumnItem ();
+			var c3 = new TreeTableColumnItem ();
+			var c4 = new TreeTableColumnItem ();
+			var c5 = new TreeTableColumnItem ();
+			var c6 = new TreeTableColumnItem ();
+			var c7 = new TreeTableColumnItem ();
 
 			for (int i=0; i<count; i++)
 			{

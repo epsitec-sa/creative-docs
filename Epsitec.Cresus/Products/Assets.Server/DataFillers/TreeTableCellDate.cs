@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public struct TreeTableCellDate : ITreeTableCell
+	public class TreeTableCellDate : AbstractTreeTableCell
 	{
 		public TreeTableCellDate(bool isValid, System.DateTime? value, bool isSelected = false, bool isEvent = false, bool isError = false, bool isUnavailable = false)
 		{

@@ -91,8 +91,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		public override TreeTableContentItem GetContent(int firstRow, int count, int selection)
 		{
-			var c1 = new TreeTableColumnItem<TreeTableCellDate> ();
-			var c2 = new TreeTableColumnItem<TreeTableCellGlyph> ();
+			var c1 = new TreeTableColumnItem ();
+			var c2 = new TreeTableColumnItem ();
 
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private void PutString(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem<TreeTableCellString> ();
+			var columnItem = new TreeTableColumnItem ();
 
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private void PutDecimal(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem<TreeTableCellDecimal> ();
+			var columnItem = new TreeTableColumnItem ();
 
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private void PutDate(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem<TreeTableCellDate> ();
+			var columnItem = new TreeTableColumnItem ();
 
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private void PutInt(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem<TreeTableCellInt> ();
+			var columnItem = new TreeTableColumnItem ();
 
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private void PutComputedAmount(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem<TreeTableCellComputedAmount> ();
+			var columnItem = new TreeTableColumnItem ();
 
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private void PutGuidGroup(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem<TreeTableCellString> ();
+			var columnItem = new TreeTableColumnItem ();
 
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private void PutGuidPerson(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem<TreeTableCellString> ();
+			var columnItem = new TreeTableColumnItem ();
 
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private void PutGuidRatio(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem<TreeTableCellString> ();
+			var columnItem = new TreeTableColumnItem ();
 
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))

@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.Server.NodeGetters;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public struct TreeTableCellTree : ITreeTableCell
+	public class TreeTableCellTree : AbstractTreeTableCell
 	{
 		public TreeTableCellTree(bool isValid, int level, NodeType type, string value, bool isSelected = false, bool isEvent = false, bool isError = false, bool isUnavailable = false)
 		{

@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public struct TreeTableCellComputedAmount : ITreeTableCell
+	public class TreeTableCellComputedAmount : AbstractTreeTableCell
 	{
 		public TreeTableCellComputedAmount(bool isValid, ComputedAmount? value, bool isSelected = false, bool isEvent = false, bool isError = false, bool isUnavailable = false)
 		{

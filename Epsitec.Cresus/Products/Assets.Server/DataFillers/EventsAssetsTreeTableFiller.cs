@@ -60,17 +60,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		public override TreeTableContentItem GetContent(int firstRow, int count, int selection)
 		{
-			var c1  = new TreeTableColumnItem<TreeTableCellString> ();
-			var c2  = new TreeTableColumnItem<TreeTableCellGlyph> ();
-			var c3  = new TreeTableColumnItem<TreeTableCellString> ();
-			var c4  = new TreeTableColumnItem<TreeTableCellComputedAmount> ();
-			var c5  = new TreeTableColumnItem<TreeTableCellComputedAmount> ();
-			var c6  = new TreeTableColumnItem<TreeTableCellComputedAmount> ();
-			var c7  = new TreeTableColumnItem<TreeTableCellString> ();
-			var c8  = new TreeTableColumnItem<TreeTableCellString> ();
-			var c9  = new TreeTableColumnItem<TreeTableCellString> ();
-			var c10 = new TreeTableColumnItem<TreeTableCellString> ();
-			var c11 = new TreeTableColumnItem<TreeTableCellString> ();
+			var c1  = new TreeTableColumnItem ();
+			var c2  = new TreeTableColumnItem ();
+			var c3  = new TreeTableColumnItem ();
+			var c4  = new TreeTableColumnItem ();
+			var c5  = new TreeTableColumnItem ();
+			var c6  = new TreeTableColumnItem ();
+			var c7  = new TreeTableColumnItem ();
+			var c8  = new TreeTableColumnItem ();
+			var c9  = new TreeTableColumnItem ();
+			var c10 = new TreeTableColumnItem ();
+			var c11 = new TreeTableColumnItem ();
 
 			for (int i=0; i<count; i++)
 			{

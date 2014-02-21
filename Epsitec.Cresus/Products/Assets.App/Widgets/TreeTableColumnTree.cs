@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public override void SetCells(TreeTableColumnItem columnItem)
 		{
-			this.cells = columnItem.GetArray<TreeTableCellTree> ();
+			this.cells = columnItem.Cells;
 
 			this.CreateTreeButtons ();
 			this.Invalidate ();
@@ -56,35 +56,35 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			base.PaintBackgroundImplementation(graphics, clipRect);
 
-			if (this.cells != null)
+			int y = 0;
+
+			foreach (var c in this.cells)
 			{
-				int y = 0;
+				var cell = c as TreeTableCellTree;
+				System.Diagnostics.Debug.Assert (cell != null);
 
-				foreach (var cell in this.cells)
+				//	Dessine le fond.
+				var rect = this.GetCellsRect (y);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
+
+				if (cell.IsUnavailable)
 				{
-					//	Dessine le fond.
-					var rect = this.GetCellsRect (y);
-
-					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
-
-					if (cell.IsUnavailable)
-					{
-						this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
-					}
-
-					//	Dessine le texte.
-					if (!string.IsNullOrEmpty (cell.Value))
-					{
-						var textRect = this.GetTextRectangle (y, cell.Level);
-						this.PaintText (graphics, textRect, cell.Value);
-					}
-
-					//	Dessine la grille.
-					this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-					y++;
+					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
 				}
+
+				//	Dessine le texte.
+				if (!string.IsNullOrEmpty (cell.Value))
+				{
+					var textRect = this.GetTextRectangle (y, cell.Level);
+					this.PaintText (graphics, textRect, cell.Value);
+				}
+
+				//	Dessine la grille.
+				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
+
+				y++;
 			}
 		}
 
@@ -149,49 +149,49 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Crée les petits boutons pour la gestion de l'arborescence.
 			this.Children.Clear ();
 
-			if (this.cells != null)
+			int y = 0;
+
+			foreach (var c in this.cells)
 			{
-				int y = 0;
+				var cell = c as TreeTableCellTree;
+				System.Diagnostics.Debug.Assert (cell != null);
 
-				foreach (var cell in this.cells)
+				if (cell.Type == NodeType.Compacted ||
+					cell.Type == NodeType.Expanded)
 				{
-					if (cell.Type == NodeType.Compacted ||
-						cell.Type == NodeType.Expanded)
+					var rect = this.GetGlyphRectangle (y, cell.Level);
+
+					var button = new GlyphButton
 					{
-						var rect = this.GetGlyphRectangle (y, cell.Level);
+						Parent      = this,
+						GlyphShape  = cell.Type == NodeType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
+						ButtonStyle = ButtonStyle.ToolItem,
+						Name        = TreeTableColumnTree.Serialize (y, cell.Type),
+					};
 
-						var button = new GlyphButton
-						{
-							Parent      = this,
-							GlyphShape  = cell.Type == NodeType.Compacted ? GlyphShape.ArrowRight : GlyphShape.ArrowDown,
-							ButtonStyle = ButtonStyle.ToolItem,
-							Name        = TreeTableColumnTree.Serialize (y, cell.Type),
-						};
+					button.SetManualBounds (rect);
 
-						button.SetManualBounds (rect);
+					button.MouseMove += delegate (object sender, MessageEventArgs e)
+					{
+						//	Si la souris est bougée dans le bouton, il faut passer l'information
+						//	au widget sous-jacent (TreeTable), afin que la ligne survolée soit
+						//	mise en évidence.
+						int row;
+						NodeType type;
+						TreeTableColumnTree.Deserialize (button.Name, out row, out type);
+						this.OnChildrenMouseMove (row);
+					};
 
-						button.MouseMove += delegate (object sender, MessageEventArgs e)
-						{
-							//	Si la souris est bougée dans le bouton, il faut passer l'information
-							//	au widget sous-jacent (TreeTable), afin que la ligne survolée soit
-							//	mise en évidence.
-							int row;
-							NodeType type;
-							TreeTableColumnTree.Deserialize (button.Name, out row, out type);
-							this.OnChildrenMouseMove (row);
-						};
-
-						button.Clicked += delegate
-						{
-							int row;
-							NodeType type;
-							TreeTableColumnTree.Deserialize (button.Name, out row, out type);
-							this.OnTreeButtonClicked (row, type);
-						};
-					}
-
-					y++;
+					button.Clicked += delegate
+					{
+						int row;
+						NodeType type;
+						TreeTableColumnTree.Deserialize (button.Name, out row, out type);
+						this.OnTreeButtonClicked (row, type);
+					};
 				}
+
+				y++;
 			}
 		}
 
@@ -249,8 +249,5 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public event EventHandler<int, NodeType> TreeButtonClicked;
 		#endregion
-
-
-		private TreeTableCellTree[] cells;
 	}
 }

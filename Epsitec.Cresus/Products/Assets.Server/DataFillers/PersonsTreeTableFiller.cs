@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons))
 			{
-				var column  = new TreeTableColumnItem<TreeTableCellString> ();
+				var column  = new TreeTableColumnItem ();
 				content.Columns.Add (column);
 			}
 
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					var text = AssetCalculator.GetObjectPropertyString (obj, this.Timestamp, userField.Field, inputValue);
 					var cell = new TreeTableCellString (true, text, isSelected: (i == selection));
 
-					var column = content.Columns[columnRank++] as TreeTableColumnItem<TreeTableCellString>;
+					var column = content.Columns[columnRank++];
 					column.AddRow (cell);
 				}
 
