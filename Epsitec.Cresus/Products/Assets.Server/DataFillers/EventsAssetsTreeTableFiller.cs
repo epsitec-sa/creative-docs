@@ -35,6 +35,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				yield return ObjectField.Name;
 				yield return ObjectField.Number;
+				yield return ObjectField.Description;
+
+				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type != FieldType.ComputedAmount))
+				{
+					yield return userField.Field;
+				}
 			}
 		}
 
@@ -55,6 +62,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         180, "Objet"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          50, "N°"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         200, "Description"));
+
+				AbstractTreeTableCell.AddColumnDescription (columns,
+					accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type != FieldType.ComputedAmount));
 
 				return columns.ToArray ();
 			}
@@ -76,9 +88,16 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns.Add (column);
 			}
 
-			for (int i=0; i<2; i++)
+			for (int i=0; i<3; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
+			}
+
+			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
+				.Where (x => x.Type != FieldType.ComputedAmount))
+			{
+				var column  = new TreeTableColumnItem ();
+				content.Columns.Add (column);
 			}
 
 			for (int i=0; i<count; i++)
@@ -98,9 +117,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var date    = TypeConverters.DateToString (timestamp.Date);
 				var glyph   = TimelineData.TypeToGlyph (eventType);
 				var type    = DataDescriptions.GetEventDescription (eventType);
-				var valeur1 = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue, synthetic: false);
-				var nom     = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,      synthetic: false);
-				var numéro  = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Number,    synthetic: false);
+				var valeur1 = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue,   synthetic: false);
+				var nom     = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,        synthetic: false);
+				var number  = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Number,      synthetic: false);
+				var desc    = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Description, synthetic: false);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
@@ -109,7 +129,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var s3 = new TreeTableCellString         (type,    cellState);
 				var s4 = new TreeTableCellComputedAmount (valeur1, cellState);
 				var s7 = new TreeTableCellString         (nom,     cellState);
-				var s8 = new TreeTableCellString         (numéro,  cellState);
+				var s8 = new TreeTableCellString         (number,  cellState);
+				var s9 = new TreeTableCellString         (desc,    cellState);
 
 				int columnRank = 0;
 
@@ -127,6 +148,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				content.Columns[columnRank++].AddRow (s7);
 				content.Columns[columnRank++].AddRow (s8);
+				content.Columns[columnRank++].AddRow (s9);
+
+				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type != FieldType.ComputedAmount))
+				{
+					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.DataObject, timestamp, userField, false, cellState, synthetic: false);
+					content.Columns[columnRank++].AddRow (cell);
+				}
 			}
 
 			return content;
