@@ -47,6 +47,8 @@ namespace Epsitec.Data.Platform
 					}
 					catch
 					{
+						System.Diagnostics.Trace.WriteLine ("match.post.ch: server did not return a valid MAT[CH]zip file.");
+						
 						var assembly = System.Reflection.Assembly.GetExecutingAssembly ();
 						var resource = "Epsitec.Data.Platform.DataFiles.MatchStreetZip.zip";
 						return Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, resource);
