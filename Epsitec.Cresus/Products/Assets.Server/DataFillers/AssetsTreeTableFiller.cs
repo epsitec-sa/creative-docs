@@ -85,15 +85,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cellState1 = (i == selection) ? CellState.Selected : CellState.None;
 				var cellState2 = cellState1 | (type == NodeType.Final ? CellState.None : CellState.Unavailable);
 
-				var sf = new TreeTableCellTree           (level, type, nom, cellState1);
-				var s1 = new TreeTableCellString         (numéro,           cellState1);
-				var s2 = new TreeTableCellComputedAmount (valeur1,          cellState2);
+				var s1 = new TreeTableCellTree           (level, type, nom, cellState1);
+				var s2 = new TreeTableCellString         (numéro,           cellState1);
+				var s3 = new TreeTableCellComputedAmount (valeur1,          cellState2);
 
 				int columnRank = 0;
 
-				content.Columns[columnRank++].AddRow (sf);
 				content.Columns[columnRank++].AddRow (s1);
 				content.Columns[columnRank++].AddRow (s2);
+				content.Columns[columnRank++].AddRow (s3);
 
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
 				{

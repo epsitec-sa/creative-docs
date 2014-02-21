@@ -60,11 +60,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid = node.Guid;
 				var obj  = this.accessor.GetObject (BaseType.Persons, guid);
 
+				var cellState = (i == selection) ? CellState.Selected : CellState.None;
+
 				int columnRank = 0;
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons))
 				{
 					bool inputValue = (columnRank == 0);
-					var cellState = (i == selection) ? CellState.Selected : CellState.None;
 					var cell = AbstractTreeTableCell.CreateTreeTableCell (obj, this.Timestamp, userField, inputValue, cellState);
 
 					content.Columns[columnRank++].AddRow (cell);

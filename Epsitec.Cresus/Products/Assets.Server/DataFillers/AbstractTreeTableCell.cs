@@ -57,29 +57,29 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 		public static AbstractTreeTableCell CreateTreeTableCell(DataObject obj, Timestamp? timestamp,
-			UserField userField, bool inputValue, CellState cellState)
+			UserField userField, bool inputValue, CellState cellState, bool synthetic = true)
 		{
 			//	Retourne le contenu d'une cellule pour une rubrique utilisateur.
 			switch (userField.Type)
 			{
 				case FieldType.String:
-					var text = AssetCalculator.GetObjectPropertyString (obj, timestamp, userField.Field, inputValue: inputValue);
+					var text = AssetCalculator.GetObjectPropertyString (obj, timestamp, userField.Field, synthetic: synthetic, inputValue: inputValue);
 					return new TreeTableCellString (text, cellState);
 
 				case FieldType.Int:
-					var i = AssetCalculator.GetObjectPropertyInt (obj, timestamp, userField.Field);
+					var i = AssetCalculator.GetObjectPropertyInt (obj, timestamp, userField.Field, synthetic: synthetic);
 					return new TreeTableCellInt (i, cellState);
 
 				case FieldType.Decimal:
-					var d = AssetCalculator.GetObjectPropertyDecimal (obj, timestamp, userField.Field);
+					var d = AssetCalculator.GetObjectPropertyDecimal (obj, timestamp, userField.Field, synthetic: synthetic);
 					return new TreeTableCellDecimal (d, cellState);
 
 				case FieldType.ComputedAmount:
-					var ca = AssetCalculator.GetObjectPropertyComputedAmount (obj, timestamp, userField.Field);
+					var ca = AssetCalculator.GetObjectPropertyComputedAmount (obj, timestamp, userField.Field, synthetic: synthetic);
 					return new TreeTableCellComputedAmount (ca, cellState);
 
 				case FieldType.Date:
-					var date = AssetCalculator.GetObjectPropertyDate (obj, timestamp, userField.Field);
+					var date = AssetCalculator.GetObjectPropertyDate (obj, timestamp, userField.Field, synthetic: synthetic);
 					return new TreeTableCellDate (date, cellState);
 
 				default:
