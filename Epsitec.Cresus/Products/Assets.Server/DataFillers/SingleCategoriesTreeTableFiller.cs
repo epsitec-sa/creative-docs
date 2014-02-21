@@ -29,17 +29,19 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				var list = new List<TreeTableColumnDescription> ();
+				var columns = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 200, "Catégories"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 200, "Catégories"));
 
-				return list.ToArray ();
+				return columns.ToArray ();
 			}
 		}
 
 		public override TreeTableContentItem GetContent(int firstRow, int count, int selection)
 		{
-			var c0 = new TreeTableColumnItem ();
+			var content = new TreeTableContentItem ();
+
+			content.Columns.Add (new TreeTableColumnItem ());
 
 			for (int i=0; i<count; i++)
 			{
@@ -56,12 +58,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 				var s0 = new TreeTableCellString (nom, cellState);
 
-				c0.AddRow (s0);
+				content.Columns[0].AddRow (s0);
 			}
-
-			var content = new TreeTableContentItem ();
-
-			content.Columns.Add (c0);
 
 			return content;
 		}

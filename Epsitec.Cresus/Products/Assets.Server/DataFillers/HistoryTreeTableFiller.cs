@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			//	3) La valeur d'un type variable
 			get
 			{
-				var list = new List<TreeTableColumnDescription> ();
+				var columns = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date,  HistoryTreeTableFiller.DateColumnWidth, "Date"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph, HistoryTreeTableFiller.GlyphColumnWidth, ""));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Date,  HistoryTreeTableFiller.DateColumnWidth, "Date"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph, HistoryTreeTableFiller.GlyphColumnWidth, ""));
 
 				switch (this.accessor.GetFieldType (this.field))
 				{
@@ -45,74 +45,74 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						switch (Format.GetFieldFormat (this.field))
 						{
 							case DecimalFormat.Rate:
-								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, this.ValueColumnWidth, "Valeur"));
+								columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, this.ValueColumnWidth, "Valeur"));
 								break;
 
 							case DecimalFormat.Amount:
-								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, this.ValueColumnWidth, "Valeur"));
+								columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, this.ValueColumnWidth, "Valeur"));
 								break;
 
 							default:
-								list.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, this.ValueColumnWidth, "Valeur"));
+								columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, this.ValueColumnWidth, "Valeur"));
 								break;
 						}
 						break;
 
 					case FieldType.Date:
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Date, this.ValueColumnWidth, "Valeur"));
 						break;
 
 					case FieldType.Int:
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.Int, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Int, this.ValueColumnWidth, "Valeur"));
 						break;
 
 					case FieldType.ComputedAmount:
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.DetailedComputedAmount, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (TreeTableColumnType.DetailedComputedAmount, this.ValueColumnWidth, "Valeur"));
 						break;
 
 					case FieldType.GuidGroup:
 					case FieldType.GuidPerson:
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
 						break;
 
 					case FieldType.GuidRatio:
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
 						break;
 
 					default:
-						list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
 						break;
 				}
 
-				return list.ToArray ();
+				return columns.ToArray ();
 			}
 		}
 
 
 		public override TreeTableContentItem GetContent(int firstRow, int count, int selection)
 		{
-			var c1 = new TreeTableColumnItem ();
-			var c2 = new TreeTableColumnItem ();
+			var content = new TreeTableContentItem ();
 
-			int i = 0;
+			for (int i=0; i<3; i++)
+			{
+				content.Columns.Add (new TreeTableColumnItem ());
+			}
+
+			int row = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
 			{
 				var date  = e.Timestamp.Date;
 				var glyph = TimelineData.TypeToGlyph (e.Type);
 
-				var cellState = (i == selection) ? CellState.Selected : CellState.None;
+				var cellState = (row == selection) ? CellState.Selected : CellState.None;
 				var s1 = new TreeTableCellDate  (date,  cellState);
 				var s2 = new TreeTableCellGlyph (glyph, cellState);
-				i++;
+				row++;
 
-				c1.AddRow (s1);
-				c2.AddRow (s2);
+				content.Columns[0].AddRow (s1);
+				content.Columns[1].AddRow (s2);
 			}
 
-			var content = new TreeTableContentItem ();
-
-			content.Columns.Add (c1);
-			content.Columns.Add (c2);
 			this.PutValue(content, firstRow, count, selection);
 
 			return content;
@@ -160,8 +160,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private void PutString(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem ();
-
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
 			{
@@ -175,16 +173,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
 				var cell = new TreeTableCellString (value, cellState);
-				columnItem.AddRow (cell);
-			}
 
-			content.Columns.Add (columnItem);
+				content.Columns[2].AddRow (cell);
+			}
 		}
 
 		private void PutDecimal(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem ();
-
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
 			{
@@ -198,16 +193,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
 				var cell = new TreeTableCellDecimal (value, cellState);
-				columnItem.AddRow (cell);
-			}
 
-			content.Columns.Add (columnItem);
+				content.Columns[2].AddRow (cell);
+			}
 		}
 
 		private void PutDate(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem ();
-
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
 			{
@@ -221,16 +213,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
 				var cell = new TreeTableCellDate (value, cellState);
-				columnItem.AddRow (cell);
-			}
 
-			content.Columns.Add (columnItem);
+				content.Columns[2].AddRow (cell);
+			}
 		}
 
 		private void PutInt(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem ();
-
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
 			{
@@ -244,16 +233,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
 				var cell = new TreeTableCellInt (value, cellState);
-				columnItem.AddRow (cell);
-			}
 
-			content.Columns.Add (columnItem);
+				content.Columns[2].AddRow (cell);
+			}
 		}
 
 		private void PutComputedAmount(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem ();
-
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
 			{
@@ -267,16 +253,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
 				var cell = new TreeTableCellComputedAmount (value, cellState);
-				columnItem.AddRow (cell);
-			}
 
-			content.Columns.Add (columnItem);
+				content.Columns[2].AddRow (cell);
+			}
 		}
 
 		private void PutGuidGroup(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem ();
-
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
 			{
@@ -291,16 +274,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var text = GroupsLogic.GetFullName (this.accessor, value);
 				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
 				var cell = new TreeTableCellString (text, cellState);
-				columnItem.AddRow (cell);
-			}
 
-			content.Columns.Add (columnItem);
+				content.Columns[2].AddRow (cell);
+			}
 		}
 
 		private void PutGuidPerson(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem ();
-
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
 			{
@@ -315,16 +295,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var text = PersonsLogic.GetFullName (this.accessor, value);
 				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
 				var cell = new TreeTableCellString (text, cellState);
-				columnItem.AddRow (cell);
-			}
 
-			content.Columns.Add (columnItem);
+				content.Columns[2].AddRow (cell);
+			}
 		}
 
 		private void PutGuidRatio(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
-			var columnItem = new TreeTableColumnItem ();
-
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))
 			{
@@ -339,10 +316,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var text = GroupsLogic.GetFullName (this.accessor, value);
 				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
 				var cell = new TreeTableCellString (text, cellState);
-				columnItem.AddRow (cell);
-			}
 
-			content.Columns.Add (columnItem);
+				content.Columns[2].AddRow (cell);
+			}
 		}
 
 		private IEnumerable<DataEvent> GetEvents(int firstRow, int count)

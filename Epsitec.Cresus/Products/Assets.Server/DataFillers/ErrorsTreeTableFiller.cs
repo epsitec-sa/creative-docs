@@ -33,19 +33,23 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				var list = new List<TreeTableColumnDescription> ();
+				var columns = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Objet"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 300, "Message"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Objet"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 300, "Message"));
 
-				return list.ToArray ();
+				return columns.ToArray ();
 			}
 		}
 
 		public override TreeTableContentItem GetContent(int firstRow, int count, int selection)
 		{
-			var c1 = new TreeTableColumnItem ();
-			var c2 = new TreeTableColumnItem ();
+			var content = new TreeTableContentItem ();
+
+			for (int i=0; i<2; i++)
+			{
+				content.Columns.Add (new TreeTableColumnItem ());
+			}
 
 			for (int i=0; i<count; i++)
 			{
@@ -66,14 +70,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var s1 = new TreeTableCellString (nom,     cellState);
 				var s2 = new TreeTableCellString (message, cellState);
 
-				c1.AddRow (s1);
-				c2.AddRow (s2);
+				int columnRank = 0;
+
+				content.Columns[columnRank++].AddRow (s1);
+				content.Columns[columnRank++].AddRow (s2);
+
 			}
-
-			var content = new TreeTableContentItem ();
-
-			content.Columns.Add (c1);
-			content.Columns.Add (c2);
 
 			return content;
 		}
