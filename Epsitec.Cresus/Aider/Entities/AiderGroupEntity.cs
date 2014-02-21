@@ -515,8 +515,13 @@ namespace Epsitec.Aider.Entities
 
 		public void ImportMembers(BusinessContext businessContext, AiderGroupEntity source, Date? startDate, FormattedText comment)
 		{
+			var today    = Date.Today;
+			var tomorrow = today.AddDays (1);
+
 			var participations = source
 				.FindParticipations (businessContext)
+				.Where (x => x.EndDate.GetValueOrDefault (tomorrow) > today)
+				.Where (x => x.StartDate.GetValueOrDefault (today) <= today)
 				.Select (p => new ParticipationData (p))
 				.ToList ();
 
