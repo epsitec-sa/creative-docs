@@ -209,21 +209,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				yield return ObjectField.MainValue;
 
-				foreach (var x in this.Settings.GetUserFields (BaseType.Assets).Where (x => x.Type == FieldType.ComputedAmount))
+				foreach (var x in this.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type == FieldType.ComputedAmount))
 				{
 					yield return x.Field;
 				}
-
-				//?yield return ObjectField.Value1;
-				//?yield return ObjectField.Value2;
-				//?yield return ObjectField.Value3;
-				//?yield return ObjectField.Value4;
-				//?yield return ObjectField.Value5;
-				//?yield return ObjectField.Value6;
-				//?yield return ObjectField.Value7;
-				//?yield return ObjectField.Value8;
-				//?yield return ObjectField.Value9;
-				//?yield return ObjectField.Value10;
 			}
 		}
 
@@ -255,16 +245,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			switch (objectField)
 			{
 				case ObjectField.MainValue:
-				case ObjectField.Value1:
-				case ObjectField.Value2:
-				case ObjectField.Value3:
-				case ObjectField.Value4:
-				case ObjectField.Value5:
-				case ObjectField.Value6:
-				case ObjectField.Value7:
-				case ObjectField.Value8:
-				case ObjectField.Value9:
-				case ObjectField.Value10:
 					return FieldType.ComputedAmount;
 
 				case ObjectField.AmortizationRate:

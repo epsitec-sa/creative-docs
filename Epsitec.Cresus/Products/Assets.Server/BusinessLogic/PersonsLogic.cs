@@ -48,7 +48,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var list = new List<string> ();
 				int count = 0;
 
-				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons).Where (x => x.Type == FieldType.String))
+				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons)
+					.Where (x => x.Type == FieldType.String))
 				{
 					var text = AssetCalculator.GetObjectPropertyString (obj, null, userField.Field);
 

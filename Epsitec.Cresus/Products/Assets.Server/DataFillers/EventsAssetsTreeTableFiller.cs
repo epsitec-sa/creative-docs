@@ -26,8 +26,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.EventGlyph;
 				yield return ObjectField.EventType;
 				yield return ObjectField.MainValue;
-				yield return ObjectField.Value1;
-				yield return ObjectField.Value2;
 				yield return ObjectField.Name;
 				yield return ObjectField.Number;
 			}
@@ -43,8 +41,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,           20, ""));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         110, "Type"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur comptable"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur assurance"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur imposable"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         180, "Objet"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          50, "N°"));
 
@@ -58,8 +54,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			var c2  = new TreeTableColumnItem ();
 			var c3  = new TreeTableColumnItem ();
 			var c4  = new TreeTableColumnItem ();
-			var c5  = new TreeTableColumnItem ();
-			var c6  = new TreeTableColumnItem ();
 			var c7  = new TreeTableColumnItem ();
 			var c8  = new TreeTableColumnItem ();
 
@@ -81,8 +75,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var glyph   = TimelineData.TypeToGlyph (eventType);
 				var type    = DataDescriptions.GetEventDescription (eventType);
 				var valeur1 = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue,     synthetic: false);
-				var valeur2 = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Value1,     synthetic: false);
-				var valeur3 = AssetCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.Value2,     synthetic: false);
 				var nom     = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,         synthetic: false);
 				var numéro  = AssetCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Number,      synthetic: false);
 
@@ -91,8 +83,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var s2 = new TreeTableCellGlyph          (glyph,   cellState);
 				var s3 = new TreeTableCellString         (type,    cellState);
 				var s4 = new TreeTableCellComputedAmount (valeur1, cellState);
-				var s5 = new TreeTableCellComputedAmount (valeur2, cellState);
-				var s6 = new TreeTableCellComputedAmount (valeur3, cellState);
 				var s7 = new TreeTableCellString         (nom,     cellState);
 				var s8 = new TreeTableCellString         (numéro,  cellState);
 
@@ -100,8 +90,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				c2.AddRow (s2);
 				c3.AddRow (s3);
 				c4.AddRow (s4);
-				c5.AddRow (s5);
-				c6.AddRow (s6);
 				c7.AddRow (s7);
 				c8.AddRow (s8);
 			}
@@ -112,8 +100,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			content.Columns.Add (c2);
 			content.Columns.Add (c3);
 			content.Columns.Add (c4);
-			content.Columns.Add (c5);
-			content.Columns.Add (c6);
 			content.Columns.Add (c7);
 			content.Columns.Add (c8);
 

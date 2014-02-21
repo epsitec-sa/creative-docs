@@ -125,16 +125,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return PageType.OneShot;
 
 				case ObjectField.MainValue:
-				case ObjectField.Value1:
-				case ObjectField.Value2:
-				case ObjectField.Value3:
-				case ObjectField.Value4:
-				case ObjectField.Value5:
-				case ObjectField.Value6:
-				case ObjectField.Value7:
-				case ObjectField.Value8:
-				case ObjectField.Value9:
-				case ObjectField.Value10:
 					return PageType.Values;
 
 				case ObjectField.CategoryName:
@@ -231,8 +221,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					new ObjectSummaryControllerTile ("Valeurs"),
 					new ObjectSummaryControllerTile (ObjectField.MainValue),
-					new ObjectSummaryControllerTile (ObjectField.Value1),
-					new ObjectSummaryControllerTile (ObjectField.Value2),
 
 					ObjectSummaryControllerTile.Empty,
 

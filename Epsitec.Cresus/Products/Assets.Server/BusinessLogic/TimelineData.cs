@@ -117,6 +117,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (obj != null)
 			{
 				int eventCount = obj.EventsCount;
+				var userValueField = this.UserValueField;
 
 				for (int i=0; i<eventCount; i++)
 				{
@@ -135,7 +136,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var glyph = TimelineData.TypeToGlyph (type);
 
 						var value1 = AssetCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.MainValue);
-						var value2 = AssetCalculator.GetObjectPropertyComputedAmount (obj, t, ObjectField.Value1);
+
+						ComputedAmount? value2 = null;
+						if (userValueField != ObjectField.Unknown)
+						{
+							value2 = AssetCalculator.GetObjectPropertyComputedAmount (obj, t, userValueField);
+						}
 
 						decimal? v1 = value1 != null && value1.HasValue ? value1.Value.FinalAmount : null;
 						decimal? v2 = value2 != null && value2.HasValue ? value2.Value.FinalAmount : null;
@@ -166,6 +172,25 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 							this.cells[index] = cell;
 						}
 					}
+				}
+			}
+		}
+
+		private ObjectField UserValueField
+		{
+			get
+			{
+				var userField = this.accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type == FieldType.ComputedAmount)
+					.FirstOrDefault ();
+
+				if (userField.IsEmpty)
+				{
+					return ObjectField.Unknown;
+				}
+				else
+				{
+					return userField.Field;
 				}
 			}
 		}

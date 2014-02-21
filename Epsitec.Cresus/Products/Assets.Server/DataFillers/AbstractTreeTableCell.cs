@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		public static void AddColumnDescription(List<TreeTableColumnDescription> columns, IEnumerable<UserField> userFields)
 		{
+			//	Ajoute les descriptifs de colonnes pour une liste de rubriques utilisateur.
 			foreach (var userField in userFields)
 			{
 				var type = AbstractTreeTableCell.GetColumnType (userField.Type);
@@ -58,6 +59,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public static AbstractTreeTableCell CreateTreeTableCell(DataObject obj, Timestamp? timestamp,
 			UserField userField, bool inputValue, CellState cellState)
 		{
+			//	Retourne le contenu d'une cellule pour une rubrique utilisateur.
 			switch (userField.Type)
 			{
 				case FieldType.String:

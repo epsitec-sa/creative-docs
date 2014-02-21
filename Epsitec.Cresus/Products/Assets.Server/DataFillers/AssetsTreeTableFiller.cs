@@ -24,8 +24,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.Name;
 				yield return ObjectField.Number;
 				yield return ObjectField.MainValue;
-				yield return ObjectField.Value1;
-				yield return ObjectField.Value2;
 
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
 				{
@@ -42,9 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,           180, "Objet"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          50, "N°"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur comptable"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur assurance"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur imposable"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 110, "Valeur comptable"));
 
 				AbstractTreeTableCell.AddColumnDescription (columns, accessor.Settings.GetUserFields (BaseType.Assets));
 
@@ -56,7 +52,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<5; i++)
+			for (int i=0; i<3; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -84,10 +80,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var nom     = AssetCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
 				var numéro  = AssetCalculator.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number);
-
 				var valeur1 = this.NodeGetter.GetValue (obj, node, ObjectField.MainValue);
-				var valeur2 = this.NodeGetter.GetValue (obj, node, ObjectField.Value1);
-				var valeur3 = this.NodeGetter.GetValue (obj, node, ObjectField.Value2);
 
 				var cellState1 = (i == selection) ? CellState.Selected : CellState.None;
 				var cellState2 = cellState1 | (type == NodeType.Final ? CellState.None : CellState.Unavailable);
@@ -95,16 +88,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var sf = new TreeTableCellTree           (level, type, nom, cellState1);
 				var s1 = new TreeTableCellString         (numéro,           cellState1);
 				var s2 = new TreeTableCellComputedAmount (valeur1,          cellState2);
-				var s3 = new TreeTableCellComputedAmount (valeur2,          cellState2);
-				var s4 = new TreeTableCellComputedAmount (valeur3,          cellState2);
 
 				int columnRank = 0;
 
 				content.Columns[columnRank++].AddRow (sf);
 				content.Columns[columnRank++].AddRow (s1);
 				content.Columns[columnRank++].AddRow (s2);
-				content.Columns[columnRank++].AddRow (s3);
-				content.Columns[columnRank++].AddRow (s4);
 
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
 				{
