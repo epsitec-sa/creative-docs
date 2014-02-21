@@ -25,8 +25,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static void AddSettings(DataMandat mandat)
 		{
-			DummyMandat.fieldValue1      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur assurance", FieldType.ComputedAmount, 110, 380, 1,  0);
-			DummyMandat.fieldValue2      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur fiscale",   FieldType.ComputedAmount, 110, 380, 1,  0);
+			DummyMandat.fieldValue1      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur assurance", FieldType.ComputedAmount, 110, null, null, 0);
+			DummyMandat.fieldValue2      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur fiscale",   FieldType.ComputedAmount, 110, null, null, 0);
 			DummyMandat.fieldOwner       = DummyMandat.AddSettings (mandat, BaseType.Assets, "Propriétaire",     FieldType.String,         120, 380, 1, 10);
 			DummyMandat.fieldColor       = DummyMandat.AddSettings (mandat, BaseType.Assets, "Couleur",          FieldType.String,         100, 380, 1,  0);
 			DummyMandat.fieldSerial      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro de série",  FieldType.String,         150, 380, 1,  0);
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			DummyMandat.fieldDescription = DummyMandat.AddSettings (mandat, BaseType.Persons, "Description",    FieldType.String, 200, 380, 5, 10);
 		}
 
-		internal static ObjectField AddSettings(DataMandat mandat, BaseType baseType, string name, FieldType type, int columnWidth, int lineWidth, int lineCount, int topMargin)
+		internal static ObjectField AddSettings(DataMandat mandat, BaseType baseType, string name, FieldType type, int columnWidth, int? lineWidth, int? lineCount, int topMargin)
 		{
 			var field = mandat.Settings.GetNewUserObjectField ();
 			mandat.Settings.AddUserField (baseType, new UserField (name, field, type, columnWidth, lineWidth, lineCount, topMargin));

@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (userField.Type)
 			{
 				case FieldType.String:
-					this.CreateStringController (parent, userField.Field, userField.LineWidth, userField.LineCount);
+					this.CreateStringController (parent, userField.Field, userField.LineWidth.GetValueOrDefault (380), userField.LineCount.GetValueOrDefault (1));
 					break;
 
 				case FieldType.Int:

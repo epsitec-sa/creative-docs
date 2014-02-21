@@ -8,8 +8,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public struct UserField
 	{
-		public UserField(Guid guid, string name, ObjectField field, FieldType type, int columnWidth, int lineWidth, int lineCount, int topMargin)
+		public UserField(Guid guid, string name, ObjectField field, FieldType type, int columnWidth, int? lineWidth, int? lineCount, int topMargin)
 		{
+			if (type != FieldType.String)
+			{
+				lineWidth = null;
+				LineCount = null;
+			}
+
 			this.Guid        = guid;
 			this.Name        = name;
 			this.Field       = field;
@@ -20,8 +26,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.TopMargin   = topMargin;
 		}
 
-		public UserField(string name, ObjectField field, FieldType type, int columnWidth, int lineWidth, int lineCount, int topMargin)
+		public UserField(string name, ObjectField field, FieldType type, int columnWidth, int? lineWidth, int? lineCount, int topMargin)
 		{
+			if (type != FieldType.String)
+			{
+				lineWidth = null;
+				LineCount = null;
+			}
+
 			this.Guid        = Guid.NewGuid ();
 			this.Name        = name;
 			this.Field       = field;
@@ -43,7 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public static UserField Empty = new UserField (null, ObjectField.Unknown, FieldType.Unknown, 0, 0, 0, 0);
+		public static UserField Empty = new UserField (null, ObjectField.Unknown, FieldType.Unknown, 0, null, null, 0);
 
 
 		public readonly Guid					Guid;
@@ -51,8 +63,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public readonly ObjectField				Field;
 		public readonly FieldType				Type;
 		public readonly int						ColumnWidth;
-		public readonly int						LineWidth;
-		public readonly int						LineCount;
+		public readonly int?					LineWidth;
+		public readonly int?					LineCount;
 		public readonly int						TopMargin;
 	}
 }
