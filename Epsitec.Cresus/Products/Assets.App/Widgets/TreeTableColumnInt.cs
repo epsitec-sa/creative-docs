@@ -14,41 +14,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnInt : AbstractTreeTableColumn
 	{
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		protected override void PaintCell(Graphics graphics, Rectangle rect, int y, AbstractTreeTableCell c)
 		{
-			base.PaintBackgroundImplementation(graphics, clipRect);
+			var cell = c as TreeTableCellInt;
 
-			int y = 0;
-
-			foreach (var c in this.cells)
+			if (cell.Value.HasValue)
 			{
-				var cell = c as TreeTableCellInt;
-				System.Diagnostics.Debug.Assert (cell != null);
+				var textRect = this.GetContentDeflateRectangle (rect);
+				string text = TypeConverters.IntToString (cell.Value);
 
-				//	Dessine le fond.
-				var rect = this.GetCellsRect (y);
-
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
-
-				if (cell.IsUnavailable)
-				{
-					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
-				}
-
-				//	Dessine le montant.
-				if (cell.Value.HasValue)
-				{
-					var textRect = this.GetContentDeflateRectangle (rect);
-					string text = TypeConverters.IntToString (cell.Value);
-
-					this.PaintText (graphics, textRect, text);
-				}
-
-				//	Dessine la grille.
-				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-				y++;
+				this.PaintText (graphics, textRect, text);
 			}
 		}
 

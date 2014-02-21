@@ -52,39 +52,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			base.ProcessMessage (message, pos);
 		}
 
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		protected override void PaintCell(Graphics graphics, Rectangle rect, int y, AbstractTreeTableCell c)
 		{
-			base.PaintBackgroundImplementation(graphics, clipRect);
+			var cell = c as TreeTableCellTree;
 
-			int y = 0;
-
-			foreach (var c in this.cells)
+			if (!string.IsNullOrEmpty (cell.Value))
 			{
-				var cell = c as TreeTableCellTree;
-				System.Diagnostics.Debug.Assert (cell != null);
-
-				//	Dessine le fond.
-				var rect = this.GetCellsRect (y);
-
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
-
-				if (cell.IsUnavailable)
-				{
-					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
-				}
-
-				//	Dessine le texte.
-				if (!string.IsNullOrEmpty (cell.Value))
-				{
-					var textRect = this.GetTextRectangle (y, cell.Level);
-					this.PaintText (graphics, textRect, cell.Value);
-				}
-
-				//	Dessine la grille.
-				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-				y++;
+				var textRect = this.GetTextRectangle (y, cell.Level);
+				this.PaintText (graphics, textRect, cell.Value);
 			}
 		}
 

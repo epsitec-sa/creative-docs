@@ -14,44 +14,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnPin : AbstractTreeTableColumn
 	{
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		protected override void PaintCell(Graphics graphics, Rectangle rect, int y, AbstractTreeTableCell c)
 		{
-			base.PaintBackgroundImplementation(graphics, clipRect);
+			//	Dessine la punaise. En mode "unpin", elle n'est dessinée
+			//	que lorsque la souris survole la ligne.
+			var cell = c as TreeTableCellInt;
 
-			int y = 0;
-
-			foreach (var c in this.cells)
+			if (cell.Value.HasValue && (cell.Value.Value == 1 || y == this.hilitedHoverRow))
 			{
-				var cell = c as TreeTableCellInt;
-				System.Diagnostics.Debug.Assert (cell != null);
+				var textRect = rect;
+				textRect.Offset (-1, 1);
 
-				//	Dessine le fond.
-				var rect = this.GetCellsRect (y);
-
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent, cell.IsError));
-
-				if (cell.IsUnavailable)
-				{
-					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
-				}
-
-				//	Dessine la punaise. En mode "unpin", elle n'est dessinée
-				//	que lorsque la souris survole la ligne.
-				if (cell.Value.HasValue && (cell.Value.Value == 1 || y == this.hilitedHoverRow))
-				{
-					var textRect = rect;
-					textRect.Offset (-1, 1);
-
-					string icon = cell.Value.Value == 1 ? "TreeTable.Pin" : "TreeTable.Unpin";
-					var text = Misc.GetRichTextImg (icon, verticalOffset: 0, iconSize: new Size (16, 16));
-					this.PaintText (graphics, textRect, text);
-				}
-
-				//	Dessine la grille.
-				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-				y++;
+				string icon = cell.Value.Value == 1 ? "TreeTable.Pin" : "TreeTable.Unpin";
+				var text = Misc.GetRichTextImg (icon, verticalOffset: 0, iconSize: new Size (16, 16));
+				this.PaintText (graphics, textRect, text);
 			}
 		}
 

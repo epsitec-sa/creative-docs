@@ -21,57 +21,32 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		protected override void PaintCell(Graphics graphics, Rectangle rect, int y, AbstractTreeTableCell c)
 		{
-			base.PaintBackgroundImplementation(graphics, clipRect);
+			var cell = c as TreeTableCellDecimal;
 
-			int y = 0;
-
-			foreach (var c in this.cells)
+			if (cell.Value.HasValue)
 			{
-				var cell = c as TreeTableCellDecimal;
-				System.Diagnostics.Debug.Assert (cell != null);
+				var textRect = this.GetContentDeflateRectangle (rect);
 
-				//	Dessine le fond.
-				var rect = this.GetCellsRect (y);
+				string text = null;
 
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
-
-				if (cell.IsUnavailable)
+				switch (this.format)
 				{
-					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
+					case DecimalFormat.Rate:
+						text = TypeConverters.RateToString (cell.Value);
+						break;
+
+					case DecimalFormat.Amount:
+						text = TypeConverters.AmountToString (cell.Value);
+						break;
+
+					case DecimalFormat.Real:
+						text = TypeConverters.DecimalToString (cell.Value);
+						break;
 				}
 
-				//	Dessine le montant.
-				if (cell.Value.HasValue)
-				{
-					var textRect = this.GetContentDeflateRectangle (rect);
-
-					string text = null;
-
-					switch (this.format)
-					{
-						case DecimalFormat.Rate:
-							text = TypeConverters.RateToString (cell.Value);
-							break;
-
-						case DecimalFormat.Amount:
-							text = TypeConverters.AmountToString (cell.Value);
-							break;
-
-						case DecimalFormat.Real:
-							text = TypeConverters.DecimalToString (cell.Value);
-							break;
-					}
-
-					this.PaintText (graphics, textRect, text);
-				}
-
-				//	Dessine la grille.
-				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-				y++;
+				this.PaintText (graphics, textRect, text);
 			}
 		}
 

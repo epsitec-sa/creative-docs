@@ -124,6 +124,34 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.PaintHeader (graphics);
 			this.PaintFooter (graphics);
+
+			int y = 0;
+
+			foreach (var cell in this.cells)
+			{
+				//	Dessine le fond.
+				var rect = this.GetCellsRect (y);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
+
+				if (cell.IsUnavailable)
+				{
+					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
+				}
+
+				//	Dessine la valeur.
+				this.PaintCell (graphics, rect, y, cell);
+
+				//	Dessine la grille.
+				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
+
+				y++;
+			}
+		}
+
+		protected virtual void PaintCell(Graphics graphics, Rectangle rect, int y, AbstractTreeTableCell cell)
+		{
 		}
 		
 

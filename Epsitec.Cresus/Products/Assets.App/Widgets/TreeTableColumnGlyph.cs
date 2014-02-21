@@ -14,38 +14,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnGlyph : AbstractTreeTableColumn
 	{
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		protected override void PaintCell(Graphics graphics, Rectangle rect, int y, AbstractTreeTableCell c)
 		{
-			base.PaintBackgroundImplementation(graphics, clipRect);
+			var cell = c as TreeTableCellGlyph;
 
-			int y = 0;
-
-			foreach (var c in this.cells)
+			if (cell.Value.HasValue)
 			{
-				var cell = c as TreeTableCellGlyph;
-				System.Diagnostics.Debug.Assert (cell != null);
-
-				//	Dessine le fond.
-				var rect = this.GetCellsRect (y);
-
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.IsSelected, cell.IsEvent));
-
-				if (cell.IsUnavailable)
-				{
-					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
-				}
-
-				//	Dessine le glyph.
-				if (cell.Value.HasValue)
-				{
-					PaintEventGlyph.Paint (graphics, rect, cell.Value.Value);
-				}
-
-				//	Dessine la grille.
-				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-				y++;
+				PaintEventGlyph.Paint (graphics, rect, cell.Value.Value);
 			}
 		}
 	}
