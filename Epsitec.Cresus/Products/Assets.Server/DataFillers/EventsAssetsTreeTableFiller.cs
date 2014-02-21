@@ -117,10 +117,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var date   = TypeConverters.DateToString (timestamp.Date);
 				var glyph  = TimelineData.TypeToGlyph (eventType);
 				var type   = DataDescriptions.GetEventDescription (eventType);
-				var value  = ObjectCalculator.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue,   synthetic: false);
-				var nom    = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,        synthetic: false);
-				var number = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Number,      synthetic: false);
-				var desc   = ObjectCalculator.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Description, synthetic: false);
+				var value  = ObjectProperties.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue,   synthetic: false);
+				var nom    = ObjectProperties.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Name,        synthetic: false);
+				var number = ObjectProperties.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Number,      synthetic: false);
+				var desc   = ObjectProperties.GetObjectPropertyString         (this.DataObject, timestamp, ObjectField.Description, synthetic: false);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 

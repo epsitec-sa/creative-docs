@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
+				return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
 			}
 		}
 
@@ -72,8 +72,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					break;
 				}
 
-				list.Insert (0, ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name));
-				guid = ObjectCalculator.GetObjectPropertyGuid (obj, null, ObjectField.GroupParent);
+				list.Insert (0, ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name));
+				guid = ObjectProperties.GetObjectPropertyGuid (obj, null, ObjectField.GroupParent);
 			}
 
 			if (list.Count > 1)

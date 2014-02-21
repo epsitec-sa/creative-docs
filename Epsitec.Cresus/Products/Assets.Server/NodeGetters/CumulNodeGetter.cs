@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 			else
 			{
-				var value = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, field);
+				var value = ObjectProperties.GetObjectPropertyComputedAmount (obj, timestamp, field);
 
 				if (value.HasValue && ratio.HasValue)  // y a-t-il un ratio ?
 				{

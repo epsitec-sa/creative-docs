@@ -46,8 +46,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			{
 				var node      = this.inputNodes[index];
 				var obj       = this.accessor.GetObject (this.baseType, node.Guid);
-				var primary   = ObjectCalculator.GetComparableData (obj, this.timestamp, this.sortingInstructions.PrimaryField);
-				var secondary = ObjectCalculator.GetComparableData (obj, this.timestamp, this.sortingInstructions.SecondaryField);
+				var primary   = ObjectProperties.GetComparableData (obj, this.timestamp, this.sortingInstructions.PrimaryField);
+				var secondary = ObjectProperties.GetComparableData (obj, this.timestamp, this.sortingInstructions.SecondaryField);
 
 				return new SortableNode (node.Guid, primary, secondary);
 			}

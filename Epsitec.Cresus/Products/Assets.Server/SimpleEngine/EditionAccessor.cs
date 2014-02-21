@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				if (this.obj != null && this.timestamp.HasValue)
 				{
 					var before = this.timestamp.Value.JustBefore;
-					property = ObjectCalculator.GetObjectProperty (this.obj, before, field, true) as DataComputedAmountProperty;
+					property = ObjectProperties.GetObjectProperty (this.obj, before, field, true) as DataComputedAmountProperty;
 
 					if (property != null)
 					{
@@ -377,7 +377,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				if (this.obj != null && this.timestamp.HasValue)
 				{
 					var before = this.timestamp.Value.JustBefore;
-					return ObjectCalculator.GetObjectProperty (this.obj, before, field, true);
+					return ObjectProperties.GetObjectProperty (this.obj, before, field, true);
 				}
 			}
 

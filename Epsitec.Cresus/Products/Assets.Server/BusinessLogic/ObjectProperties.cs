@@ -7,11 +7,11 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public static class ObjectCalculator
+	public static class ObjectProperties
 	{
 		public static int? GetObjectPropertyInt(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
 		{
-			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataIntProperty;
+			var p = ObjectProperties.GetObjectProperty (obj, timestamp, field, synthetic) as DataIntProperty;
 
 			if (p == null)
 			{
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static decimal? GetObjectPropertyDecimal(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
 		{
-			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataDecimalProperty;
+			var p = ObjectProperties.GetObjectProperty (obj, timestamp, field, synthetic) as DataDecimalProperty;
 
 			if (p == null)
 			{
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static ComputedAmount? GetObjectPropertyComputedAmount(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
 		{
-			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataComputedAmountProperty;
+			var p = ObjectProperties.GetObjectProperty (obj, timestamp, field, synthetic) as DataComputedAmountProperty;
 
 			if (p == null)
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static System.DateTime? GetObjectPropertyDate(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
 		{
-			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataDateProperty;
+			var p = ObjectProperties.GetObjectProperty (obj, timestamp, field, synthetic) as DataDateProperty;
 
 			if (p == null)
 			{
@@ -67,13 +67,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static Guid GetObjectPropertyGuid(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true, bool inputValue = false)
 		{
-			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataGuidProperty;
+			var p = ObjectProperties.GetObjectProperty (obj, timestamp, field, synthetic) as DataGuidProperty;
 
 			if (p == null)
 			{
 				if (inputValue)
 				{
-					p = ObjectCalculator.GetObjectInputProperty (obj, field) as DataGuidProperty;
+					p = ObjectProperties.GetObjectInputProperty (obj, field) as DataGuidProperty;
 					if (p != null)
 					{
 						return p.Value;
@@ -90,13 +90,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static GuidRatio GetObjectPropertyGuidRatio(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true, bool inputValue = false)
 		{
-			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataGuidRatioProperty;
+			var p = ObjectProperties.GetObjectProperty (obj, timestamp, field, synthetic) as DataGuidRatioProperty;
 
 			if (p == null)
 			{
 				if (inputValue)
 				{
-					p = ObjectCalculator.GetObjectInputProperty (obj, field) as DataGuidRatioProperty;
+					p = ObjectProperties.GetObjectInputProperty (obj, field) as DataGuidRatioProperty;
 					if (p != null)
 					{
 						return p.Value;
@@ -113,13 +113,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static string GetObjectPropertyString(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true, bool inputValue = false)
 		{
-			var p = ObjectCalculator.GetObjectProperty (obj, timestamp, field, synthetic) as DataStringProperty;
+			var p = ObjectProperties.GetObjectProperty (obj, timestamp, field, synthetic) as DataStringProperty;
 
 			if (p == null)
 			{
 				if (inputValue)
 				{
-					p = ObjectCalculator.GetObjectInputProperty (obj, field) as DataStringProperty;
+					p = ObjectProperties.GetObjectInputProperty (obj, field) as DataStringProperty;
 					if (p != null && !string.IsNullOrEmpty (p.Value))
 					{
 						return string.Concat ("<i>", p.Value, "</i>");
@@ -139,16 +139,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			if (obj != null)
 			{
-				var p = ObjectCalculator.GetObjectSyntheticProperty (obj, timestamp, field);
+				var p = ObjectProperties.GetObjectSyntheticProperty (obj, timestamp, field);
 
 				if (p == null)
 				{
 					//	Pour le tri, si on n'a pas trouvé de propriété, on prend
 					//	celle définie lors de l'événement d'entrée.
-					p = ObjectCalculator.GetObjectInputProperty (obj, field);
+					p = ObjectProperties.GetObjectInputProperty (obj, field);
 				}
 
-				return ObjectCalculator.GetComparableData (p);
+				return ObjectProperties.GetComparableData (p);
 			}
 
 			return ComparableData.Empty;
@@ -188,11 +188,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			if (synthetic || !timestamp.HasValue)
 			{
-				return ObjectCalculator.GetObjectSyntheticProperty (obj, timestamp, field);
+				return ObjectProperties.GetObjectSyntheticProperty (obj, timestamp, field);
 			}
 			else
 			{
-				return ObjectCalculator.GetObjectSingleProperty (obj, timestamp.Value, field);
+				return ObjectProperties.GetObjectSingleProperty (obj, timestamp.Value, field);
 			}
 		}
 

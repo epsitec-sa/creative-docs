@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 					foreach (var field in DataAccessor.GroupGuidRatioFields)
 					{
-						var gr = ObjectCalculator.GetObjectPropertyGuidRatio
+						var gr = ObjectProperties.GetObjectPropertyGuidRatio
 						(
 							obj,
 							this.timestamp,

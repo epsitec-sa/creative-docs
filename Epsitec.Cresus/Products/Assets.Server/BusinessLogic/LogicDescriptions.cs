@@ -22,11 +22,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				switch (accessor.GetFieldType (field))
 				{
 					case FieldType.String:
-						line = ObjectCalculator.GetObjectPropertyString (obj, timestamp, field, false);
+						line = ObjectProperties.GetObjectPropertyString (obj, timestamp, field, false);
 						break;
 
 					case FieldType.Decimal:
-						var d = ObjectCalculator.GetObjectPropertyDecimal (obj, timestamp, field, false);
+						var d = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, field, false);
 						if (d.HasValue)
 						{
 							switch (Format.GetFieldFormat (field))
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						break;
 
 					case FieldType.ComputedAmount:
-						var ca = ObjectCalculator.GetObjectPropertyComputedAmount (obj, timestamp, field, false);
+						var ca = ObjectProperties.GetObjectPropertyComputedAmount (obj, timestamp, field, false);
 						if (ca.HasValue)
 						{
 							line = Helpers.TypeConverters.AmountToString (ca.Value.FinalAmount);
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						break;
 
 					case FieldType.Int:
-						var i = ObjectCalculator.GetObjectPropertyInt (obj, timestamp, field, false);
+						var i = ObjectProperties.GetObjectPropertyInt (obj, timestamp, field, false);
 						if (i.HasValue)
 						{
 							line = Helpers.TypeConverters.IntToString (i);
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						break;
 
 					case FieldType.Date:
-						var da = ObjectCalculator.GetObjectPropertyDate (obj, timestamp, field, false);
+						var da = ObjectProperties.GetObjectPropertyDate (obj, timestamp, field, false);
 						if (da.HasValue)
 						{
 							line = Helpers.TypeConverters.DateToString (da);
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						break;
 
 					case FieldType.GuidGroup:
-						var gg = ObjectCalculator.GetObjectPropertyGuid (obj, timestamp, field, false);
+						var gg = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, field, false);
 						var tg = GroupsLogic.GetShortName (accessor, gg);
 						if (!string.IsNullOrEmpty (tg))
 						{
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						break;
 
 					case FieldType.GuidPerson:
-						var gp = ObjectCalculator.GetObjectPropertyGuid (obj, timestamp, field, false);
+						var gp = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, field, false);
 						var tp = PersonsLogic.GetShortName (accessor, gp);
 						if (!string.IsNullOrEmpty (tp))
 						{
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						break;
 
 					case FieldType.GuidRatio:
-						var gr = ObjectCalculator.GetObjectPropertyGuidRatio (obj, timestamp, field, false);
+						var gr = ObjectProperties.GetObjectPropertyGuidRatio (obj, timestamp, field, false);
 						var tr = GroupsLogic.GetShortName (accessor, gr);
 						if (!string.IsNullOrEmpty (tr))
 						{

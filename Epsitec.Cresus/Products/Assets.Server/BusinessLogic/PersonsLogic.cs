@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				return ObjectCalculator.GetObjectPropertyString (obj, null, ObjectField.Name);
+				return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
 			}
 		}
 
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons)
 					.Where (x => x.Type == FieldType.String))
 				{
-					var text = ObjectCalculator.GetObjectPropertyString (obj, null, userField.Field);
+					var text = ObjectProperties.GetObjectPropertyString (obj, null, userField.Field);
 
 					if (!string.IsNullOrEmpty (text))
 					{
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 #else
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons))
 				{
-					var text = ObjectCalculator.GetObjectPropertyString (obj, null, userField.Field);
+					var text = ObjectProperties.GetObjectPropertyString (obj, null, userField.Field);
 					PersonsLogic.PutLine (lines, text);
 				}
 #endif

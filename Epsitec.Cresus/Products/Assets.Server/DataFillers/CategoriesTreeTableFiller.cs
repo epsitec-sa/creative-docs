@@ -73,14 +73,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid  = node.Guid;
 				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
 
-				var nom    = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
-				var numéro = ObjectCalculator.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
-				var taux   = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationRate);
-				var type   = ObjectCalculator.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationType);
-				var period = ObjectCalculator.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Periodicity);
-				var prorat = ObjectCalculator.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Prorata);
-				var round  = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.Round);
-				var residu = ObjectCalculator.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ResidualValue);
+				var nom    = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var numéro = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
+				var taux   = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationRate);
+				var type   = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationType);
+				var period = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Periodicity);
+				var prorat = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Prorata);
+				var round  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.Round);
+				var residu = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ResidualValue);
 
 				var t = EnumDictionaries.GetAmortizationTypeName (type);
 				var c = EnumDictionaries.GetPeriodicityName (period);
