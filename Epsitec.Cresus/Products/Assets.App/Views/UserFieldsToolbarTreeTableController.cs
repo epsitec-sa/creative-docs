@@ -131,11 +131,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnNew()
 		{
-			var newField = this.accessor.Settings.GetNewUserObjectField();
+			var newField = this.accessor.Settings.GetNewUserField();
+			if (newField == ObjectField.Unknown)
+			{
+				return;
+			}
+
 			var userField = new UserField ("Nouveau", newField, FieldType.String, 120, AbstractFieldController.maxWidth, 1, 0);
 
 			int index = this.VisibleSelectedRow;
-			if (index == -1)
+			if (index == -1)  // pas de sélection ?
 			{
 				index = this.nodeGetter.Count;  // insère à la fin
 			}

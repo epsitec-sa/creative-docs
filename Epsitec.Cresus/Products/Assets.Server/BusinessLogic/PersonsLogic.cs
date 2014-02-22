@@ -14,14 +14,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Retourne le nom court d'une personne, du genre:
 			//	"Dupond"
 			var obj = accessor.GetObject (BaseType.Persons, guid);
-			if (obj == null)
+			if (obj != null)
 			{
-				return null;
+				//	On cherche la première rubrique string, qui devrait être
+				//	le nom.
+				var userField = accessor.Settings.GetUserFields (BaseType.Persons)
+					.Where (x => x.Type == FieldType.String)
+					.FirstOrDefault ();
+
+				if (!userField.IsEmpty)
+				{
+					return ObjectProperties.GetObjectPropertyString (obj, null, userField.Field);
+				}
 			}
-			else
-			{
-				return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
-			}
+
+			return null;
 		}
 
 

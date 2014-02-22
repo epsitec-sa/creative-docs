@@ -101,19 +101,45 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (!tile.IsEmpty)
 			{
-				var type = EditorPageSummary.GetPageType (tile.Field);
+				var type = EditorPageSummary.GetPageType (this.accessor, tile.Field);
 				this.OnPageOpen (type, tile.Field);
 			}
 		}
 
 
-		public static PageType GetPageType(ObjectField field)
+		public static PageType GetPageType(DataAccessor accessor, ObjectField field)
 		{
 			//	Retourne la page permettant d'éditer un champ donné.
 			if (field >= ObjectField.GroupGuidRatioFirst &&
 				field <= ObjectField.GroupGuidRatioLast)
 			{
 				return PageType.Groups;
+			}
+
+			var userField = accessor.Settings.GetUserField (field);
+			if (!userField.IsEmpty)
+			{
+				var baseType = accessor.Settings.GetBaseType (userField.Guid);
+
+				if (baseType == BaseType.Assets)
+				{
+					if (userField.Type == FieldType.ComputedAmount)
+					{
+						return PageType.Values;
+					}
+					else if (userField.Type == FieldType.GuidPerson)
+					{
+						return PageType.Persons;
+					}
+					else
+					{
+						return PageType.Asset;
+					}
+				}
+				else if (baseType == BaseType.Persons)
+				{
+					return PageType.Person;
+				}
 			}
 
 			switch (field)
@@ -174,32 +200,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var list = new List<List<ObjectSummaryControllerTile>> ();
 
-				var c1 = new List<ObjectSummaryControllerTile> ()
-				{
-					new ObjectSummaryControllerTile ("Evénement"),
-					new ObjectSummaryControllerTile (ObjectField.OneShotNumber),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDateOperation),
-					new ObjectSummaryControllerTile (ObjectField.OneShotComment),
-					new ObjectSummaryControllerTile (ObjectField.OneShotDocuments),
-
-					ObjectSummaryControllerTile.Empty,
-
-					new ObjectSummaryControllerTile ("Général"),
-					new ObjectSummaryControllerTile (ObjectField.Number),
-					new ObjectSummaryControllerTile (ObjectField.Name),
-					new ObjectSummaryControllerTile (ObjectField.Description),
-
-					ObjectSummaryControllerTile.Empty,
-
-					new ObjectSummaryControllerTile ("Personnes"),
-					//-new ObjectSummaryControllerTile (ObjectField.Person1),
-					//-new ObjectSummaryControllerTile (ObjectField.Person2),
-					//-new ObjectSummaryControllerTile (ObjectField.Person3),
-					//-new ObjectSummaryControllerTile (ObjectField.Person4),
-					//-new ObjectSummaryControllerTile (ObjectField.Person5),
-				};
+				//	Première colonne.
+				var c1 = new List<ObjectSummaryControllerTile> ();
 				list.Add (c1);
 
+				c1.Add (new ObjectSummaryControllerTile ("Evénement"));
+
+				c1.Add (new ObjectSummaryControllerTile ("Evénement"));
+				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotNumber));
+				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDateOperation));
+				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotComment));
+				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDocuments));
+
+				c1.Add (ObjectSummaryControllerTile.Empty);
+
+				c1.Add (new ObjectSummaryControllerTile ("Général"));
+				c1.Add (new ObjectSummaryControllerTile (ObjectField.Number));
+				c1.Add (new ObjectSummaryControllerTile (ObjectField.Name));
+				c1.Add (new ObjectSummaryControllerTile (ObjectField.Description));
+
+				foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type != FieldType.ComputedAmount && x.Type != FieldType.GuidPerson))
+				{
+					c1.Add (new ObjectSummaryControllerTile (userField.Field));
+				}
+
+				c1.Add(ObjectSummaryControllerTile.Empty);
+
+				c1.Add(new ObjectSummaryControllerTile ("Personnes"));
+
+				foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type == FieldType.GuidPerson))
+				{
+					c1.Add (new ObjectSummaryControllerTile (userField.Field));
+				}
+
+				//	Deuxième colonne.
 				var c2 = new List<ObjectSummaryControllerTile> ()
 				{
 					new ObjectSummaryControllerTile ("Regroupements"),
@@ -210,31 +246,37 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				list.Add (c2);
 
-				var c3 = new List<ObjectSummaryControllerTile> ()
-				{
-					new ObjectSummaryControllerTile ("Valeurs"),
-					new ObjectSummaryControllerTile (ObjectField.MainValue),
-
-					ObjectSummaryControllerTile.Empty,
-
-					new ObjectSummaryControllerTile ("Amortissements"),
-					new ObjectSummaryControllerTile (ObjectField.CategoryName),
-					new ObjectSummaryControllerTile (ObjectField.AmortizationRate),
-					new ObjectSummaryControllerTile (ObjectField.AmortizationType),
-					new ObjectSummaryControllerTile (ObjectField.Periodicity),
-					new ObjectSummaryControllerTile (ObjectField.Prorata),
-					new ObjectSummaryControllerTile (ObjectField.Round),
-					new ObjectSummaryControllerTile (ObjectField.ResidualValue),
-					new ObjectSummaryControllerTile (ObjectField.Compte1),
-					new ObjectSummaryControllerTile (ObjectField.Compte2),
-					new ObjectSummaryControllerTile (ObjectField.Compte3),
-					new ObjectSummaryControllerTile (ObjectField.Compte4),
-					new ObjectSummaryControllerTile (ObjectField.Compte5),
-					new ObjectSummaryControllerTile (ObjectField.Compte6),
-					new ObjectSummaryControllerTile (ObjectField.Compte7),
-					new ObjectSummaryControllerTile (ObjectField.Compte8),
-				};
+				//	Troisième colonne.
+				var c3 = new List<ObjectSummaryControllerTile> ();
 				list.Add (c3);
+
+				c3.Add (new ObjectSummaryControllerTile ("Valeurs"));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.MainValue));
+
+				foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type == FieldType.ComputedAmount))
+				{
+					c3.Add (new ObjectSummaryControllerTile (userField.Field));
+				}
+
+				c3.Add (ObjectSummaryControllerTile.Empty);
+
+				c3.Add (new ObjectSummaryControllerTile ("Amortissements"));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.CategoryName));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AmortizationRate));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AmortizationType));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Periodicity));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Prorata));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Round));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.ResidualValue));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte1));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte2));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte3));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte4));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte5));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte6));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte7));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte8));
 
 				return list;
 			}

@@ -31,12 +31,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		ResidualValue,
 		Round,
 
-		LastViewsPin,
-		LastViewsType,
-		LastViewsPage,
-		LastViewsDate,
-		LastViewsDescription,
-
 		Compte1,
 		Compte2,
 		Compte3,
@@ -49,6 +43,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		EventDate,
 		EventGlyph,
 		EventType,
+
+		LastViewsPin,
+		LastViewsType,
+		LastViewsPage,
+		LastViewsDate,
+		LastViewsDescription,
 
 		UserFieldType,
 		UserFieldColumnWidth,

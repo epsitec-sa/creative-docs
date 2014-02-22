@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		internal static ObjectField AddSettings(DataMandat mandat, BaseType baseType, string name, FieldType type, int columnWidth, int? lineWidth, int? lineCount, int topMargin)
 		{
-			var field = mandat.Settings.GetNewUserObjectField ();
+			var field = mandat.Settings.GetNewUserField ();
 			mandat.Settings.AddUserField (baseType, new UserField (name, field, type, columnWidth, lineWidth, lineCount, topMargin));
 			return field;
 		}

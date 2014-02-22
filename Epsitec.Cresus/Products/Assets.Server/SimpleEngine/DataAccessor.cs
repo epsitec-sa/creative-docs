@@ -192,6 +192,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+
 		public static IEnumerable<ObjectField> GroupGuidRatioFields
 		{
 			get
@@ -216,6 +217,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 		}
+
 
 		public string GetFieldName(ObjectField objectField)
 		{

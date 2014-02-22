@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var userField = this.GetUserField (guid);
 			if (userField.IsEmpty)
 			{
-				throw new System.InvalidOperationException ("GetTempDataObject: Guid does not exist");
+				throw new System.InvalidOperationException ("Guid does not exist");
 			}
 
 			var obj = new DataObject ();
@@ -121,8 +121,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	modifier son Guid.
 			var userField = new UserField (guid, name, field, type, columnWidth, lineWidth, lineCount, topMargin);
 			this.InsertUserField (baseType, index, userField);
-
-			this.Update ();
 		}
 
 
@@ -150,7 +148,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.Update ();
 		}
 
-		public int GetIndex(BaseType baseType, Guid guid)
+		private int GetIndex(BaseType baseType, Guid guid)
 		{
 			//	Retourne l'index d'une rubrique utilisateur.
 			var list = this.GetUserFieldsList (baseType);
@@ -173,7 +171,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
-			throw new System.InvalidOperationException ("GetBaseType: Unknown Guid");
+			throw new System.InvalidOperationException ("Unknown Guid");
 		}
 
 		public BaseType RemoveUserField(Guid guid)
@@ -193,7 +191,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
-			throw new System.InvalidOperationException ("RemoveUserField: Unknown Guid");
+			throw new System.InvalidOperationException ("Unknown Guid");
 		}
 
 
@@ -236,7 +234,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public ObjectField GetNewUserObjectField()
+		public ObjectField GetNewUserField()
 		{
 			//	Retourne un nouveau champ utilisateur libre.
 			if (this.objectFieldDict.Any ())
