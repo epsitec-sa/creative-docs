@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
 					.Where (x => x.Type == FieldType.ComputedAmount))
 				{
-					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.DataObject, timestamp, userField, false, cellState, synthetic: false);
+					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, this.DataObject, timestamp, userField, false, cellState, synthetic: false);
 					content.Columns[columnRank++].AddRow (cell);
 				}
 
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
 					.Where (x => x.Type != FieldType.ComputedAmount))
 				{
-					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.DataObject, timestamp, userField, false, cellState, synthetic: false);
+					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, this.DataObject, timestamp, userField, false, cellState, synthetic: false);
 					content.Columns[columnRank++].AddRow (cell);
 				}
 			}

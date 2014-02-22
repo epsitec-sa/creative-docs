@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStringController (parent, ObjectField.Description, lineCount: 5);
 
 			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
-				.Where (x => x.Type != FieldType.ComputedAmount))
+				.Where (x => x.Type != FieldType.ComputedAmount && x.Type != FieldType.GuidPerson))
 			{
 				this.CreateController (parent, userField);
 			}

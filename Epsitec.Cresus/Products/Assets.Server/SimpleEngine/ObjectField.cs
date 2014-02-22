@@ -22,12 +22,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Description,
 		MainValue,
 
-		Person1,
-		Person2,
-		Person3,
-		Person4,
-		Person5,
-
 		//	Définitions d'une catégorie.
 		CategoryName,
 		AmortizationRate,

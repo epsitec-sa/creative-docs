@@ -3,10 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -21,11 +18,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreatePersonGuidController (parent, ObjectField.Person1);
-			this.CreatePersonGuidController (parent, ObjectField.Person2);
-			this.CreatePersonGuidController (parent, ObjectField.Person3);
-			this.CreatePersonGuidController (parent, ObjectField.Person4);
-			this.CreatePersonGuidController (parent, ObjectField.Person5);
+			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
+				.Where (x => x.Type == FieldType.GuidPerson))
+			{
+				this.CreateController (parent, userField);
+			}
 		}
 	}
 }

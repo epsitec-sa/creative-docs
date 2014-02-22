@@ -183,6 +183,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.CreateDateController (parent, userField.Field);
 					break;
 
+				case FieldType.GuidPerson:
+					this.CreatePersonGuidController (parent, userField.Field);
+					break;
+
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown FieldType {0}", userField.Type.ToString ()));
 			}

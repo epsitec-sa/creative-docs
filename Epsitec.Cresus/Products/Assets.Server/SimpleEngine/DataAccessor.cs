@@ -263,13 +263,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.GroupParent:
 					return FieldType.GuidGroup;
 
-				case ObjectField.Person1:
-				case ObjectField.Person2:
-				case ObjectField.Person3:
-				case ObjectField.Person4:
-				case ObjectField.Person5:
-					return FieldType.GuidPerson;
-
 				default:
 					return FieldType.String;
 			}

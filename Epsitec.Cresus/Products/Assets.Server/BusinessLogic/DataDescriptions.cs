@@ -49,21 +49,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.CategoryName:
 					return "Catégorie d'immob.";
 
-				case ObjectField.Person1:
-					return "Responsable";
-
-				case ObjectField.Person2:
-					return "Fournisseur";
-
-				case ObjectField.Person3:
-					return "Maintenance";
-
-				case ObjectField.Person4:
-					return "Concierge";
-
-				case ObjectField.Person5:
-					return "Conseiller";
-
 				case ObjectField.AmortizationRate:
 					return "Taux";
 

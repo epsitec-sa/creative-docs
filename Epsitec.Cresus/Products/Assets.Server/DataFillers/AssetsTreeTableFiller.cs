@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
 				{
-					var cell = AbstractTreeTableCell.CreateTreeTableCell (obj, this.Timestamp, userField, false, cellState2);
+					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, obj, this.Timestamp, userField, false, cellState2);
 					content.Columns[columnRank++].AddRow (cell);
 				}
 			}

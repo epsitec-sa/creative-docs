@@ -30,6 +30,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			DummyMandat.fieldOwner       = DummyMandat.AddSettings (mandat, BaseType.Assets, "Propriétaire",     FieldType.String,         120, 380, 1, 10);
 			DummyMandat.fieldColor       = DummyMandat.AddSettings (mandat, BaseType.Assets, "Couleur",          FieldType.String,         100, 380, 1,  0);
 			DummyMandat.fieldSerial      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro de série",  FieldType.String,         150, 380, 1,  0);
+			DummyMandat.fieldPerson1     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Responsable",      FieldType.GuidPerson,     150, null, null,  0);
+			DummyMandat.fieldPerson2     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Fournisseur",      FieldType.GuidPerson,     150, null, null,  0);
+			DummyMandat.fieldPerson3     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Maintenance",      FieldType.GuidPerson,     150, null, null,  0);
+			DummyMandat.fieldPerson4     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Concierge",        FieldType.GuidPerson,     150, null, null,  0);
+			DummyMandat.fieldPerson5     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Conseiller",       FieldType.GuidPerson,     150, null, null,  0);
 
 			DummyMandat.fieldLastName    = DummyMandat.AddSettings (mandat, BaseType.Persons, "Nom",            FieldType.String, 120, 380, 1,  0);
 			DummyMandat.fieldFirstName   = DummyMandat.AddSettings (mandat, BaseType.Persons, "Prénom",         FieldType.String, 120, 380, 1,  0);
@@ -82,9 +87,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.MainValue,     new ComputedAmount (3000000.0m)));
 					e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1,     new ComputedAmount (2500000.0m)));
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Paul"));
-					e.AddProperty (new DataGuidProperty           (ObjectField.Person1, DummyMandat.GetPerson (mandat, "Arnaud")));
-					e.AddProperty (new DataGuidProperty           (ObjectField.Person2, DummyMandat.GetPerson (mandat, "Schmidt")));
-					e.AddProperty (new DataGuidProperty           (ObjectField.Person4, DummyMandat.GetPerson (mandat, "Bonnard")));
+					e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson1, DummyMandat.GetPerson (mandat, "Arnaud")));
+					e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson2, DummyMandat.GetPerson (mandat, "Schmidt")));
+					e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson4, DummyMandat.GetPerson (mandat, "Bonnard")));
 					DummyMandat.AddAmortissement (mandat, "Bureaux", e);
 				}
 
@@ -117,8 +122,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataComputedAmountProperty (ObjectField.MainValue,     new ComputedAmount (4550000.0m)));
 					e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1,     new ComputedAmount (6000000.0m)));
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Paul"));
-					e.AddProperty (new DataGuidProperty           (ObjectField.Person1, DummyMandat.GetPerson (mandat, "Arnaud")));
-					e.AddProperty (new DataGuidProperty           (ObjectField.Person3, DummyMandat.GetPerson (mandat, "Mercier")));
+					e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson1, DummyMandat.GetPerson (mandat, "Arnaud")));
+					e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson3, DummyMandat.GetPerson (mandat, "Mercier")));
 					DummyMandat.AddAmortissement (mandat, "Bureaux", e);
 				}
 
@@ -150,8 +155,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.MainValue,     new ComputedAmount (2000000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1,     new ComputedAmount (3000000.0m)));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Sandra"));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Person1, DummyMandat.GetPerson (mandat, "André")));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Person5, DummyMandat.GetPerson (mandat, "Klein")));
+				e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson1, DummyMandat.GetPerson (mandat, "André")));
+				e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson5, DummyMandat.GetPerson (mandat, "Klein")));
 				DummyMandat.AddAmortissement (mandat, "Bureaux", e);
 			}
 
@@ -186,7 +191,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.MainValue,     new ComputedAmount (8000000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1,     new ComputedAmount (9500000.0m)));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "René"));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Person1, DummyMandat.GetPerson (mandat, "Arnaud")));
+				e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson1, DummyMandat.GetPerson (mandat, "Arnaud")));
 				DummyMandat.AddAmortissement (mandat, "Usines", e);
 			}
 
@@ -235,9 +240,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.MainValue,     new ComputedAmount (5320000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1,     new ComputedAmount (5000000.0m)));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Paul"));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Person1, DummyMandat.GetPerson (mandat, "Gardaz")));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Person3, DummyMandat.GetPerson (mandat, "André")));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Person4, DummyMandat.GetPerson (mandat, "André")));
+				e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson1, DummyMandat.GetPerson (mandat, "Gardaz")));
+				e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson3, DummyMandat.GetPerson (mandat, "André")));
+				e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson4, DummyMandat.GetPerson (mandat, "André")));
 				DummyMandat.AddAmortissement (mandat, "Usines", e);
 			}
 
@@ -289,7 +294,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Jean-François"));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldColor,     "Blanc"));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldSerial, "25004-800-65210-45R"));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Person3, DummyMandat.GetPerson (mandat, "Frutiger")));
+				e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson3, DummyMandat.GetPerson (mandat, "Frutiger")));
 				DummyMandat.AddAmortissement (mandat, "Camions", e);
 			}
 
@@ -308,7 +313,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Serge"));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldColor,     "Rouge"));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldSerial, "25004-800-20087-20X"));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Person3, DummyMandat.GetPerson (mandat, "Frutiger")));
+				e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson3, DummyMandat.GetPerson (mandat, "Frutiger")));
 				DummyMandat.AddAmortissement (mandat, "Camions", e);
 			}
 
@@ -327,7 +332,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1,     new ComputedAmount (75000.0m)));
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Jean-Pierre"));
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldColor,     "Blanc"));
-					e.AddProperty (new DataGuidProperty           (ObjectField.Person3, DummyMandat.GetPerson (mandat, "Frutiger")));
+					e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson3, DummyMandat.GetPerson (mandat, "Frutiger")));
 					DummyMandat.AddAmortissement (mandat, "Camions", e);
 				}
 
@@ -354,7 +359,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Olivier"));
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldColor,     "Jaune/Noir"));
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldSerial, "T40-56-200-65E4"));
-					e.AddProperty (new DataGuidProperty           (ObjectField.Person3, DummyMandat.GetPerson (mandat, "Frutiger")));
+					e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson3, DummyMandat.GetPerson (mandat, "Frutiger")));
 					DummyMandat.AddAmortissement (mandat, "Camions", e);
 				}
 
@@ -432,7 +437,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Simon"));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldColor,     "Noir"));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldSerial, "D456-0003232-0005"));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Person3, DummyMandat.GetPerson (mandat, "Frutiger")));
+				e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson3, DummyMandat.GetPerson (mandat, "Frutiger")));
 				DummyMandat.AddAmortissement (mandat, "Voitures", e);
 			}
 
@@ -467,7 +472,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataComputedAmountProperty (ObjectField.MainValue,     new ComputedAmount (8000.0m)));
 				e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1,     new ComputedAmount (5000.0m)));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Dominique"));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Person3, DummyMandat.GetPerson (mandat, "Frutiger")));
+				e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson3, DummyMandat.GetPerson (mandat, "Frutiger")));
 				DummyMandat.AddAmortissement (mandat, "Voitures", e);
 			}
 
@@ -485,7 +490,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Denise"));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldColor,     "Rouge"));
 				e.AddProperty (new DataStringProperty         (DummyMandat.fieldSerial, "456000433434002"));
-				e.AddProperty (new DataGuidProperty           (ObjectField.Person3, DummyMandat.GetPerson (mandat, "Frutiger")));
+				e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson3, DummyMandat.GetPerson (mandat, "Frutiger")));
 				DummyMandat.AddAmortissement (mandat, "Voitures", e);
 			}
 
@@ -522,7 +527,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Christiane"));
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldColor,     "Gris"));
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldSerial, "F40T-500023-40232-30987-M"));
-					e.AddProperty (new DataGuidProperty           (ObjectField.Person3, DummyMandat.GetPerson (mandat, "Frutiger")));
+					e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson3, DummyMandat.GetPerson (mandat, "Frutiger")));
 					DummyMandat.AddAmortissement (mandat, "Voitures", e);
 				}
 
@@ -586,7 +591,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldOwner, "Georges"));
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldColor,     "Noire"));
 					e.AddProperty (new DataStringProperty         (DummyMandat.fieldSerial, "F30T-340407-52118-40720-R"));
-					e.AddProperty (new DataGuidProperty           (ObjectField.Person3, DummyMandat.GetPerson (mandat, "Frutiger")));
+					e.AddProperty (new DataGuidProperty           (DummyMandat.fieldPerson3, DummyMandat.GetPerson (mandat, "Frutiger")));
 					DummyMandat.AddAmortissement (mandat, "Voitures", e);
 				}
 
@@ -1590,6 +1595,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private static ObjectField fieldOwner;
 		private static ObjectField fieldColor;
 		private static ObjectField fieldSerial;
+		private static ObjectField fieldPerson1;
+		private static ObjectField fieldPerson2;
+		private static ObjectField fieldPerson3;
+		private static ObjectField fieldPerson4;
+		private static ObjectField fieldPerson5;
 
 		private static ObjectField fieldLastName;
 		private static ObjectField fieldFirstName;

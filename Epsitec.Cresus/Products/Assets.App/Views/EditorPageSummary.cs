@@ -144,13 +144,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Compte8:
 					return PageType.Amortization;
 
-				case ObjectField.Person1:
-				case ObjectField.Person2:
-				case ObjectField.Person3:
-				case ObjectField.Person4:
-				case ObjectField.Person5:
-					return PageType.Persons;
-
 				default:
 					return PageType.Asset;
 			}
@@ -199,11 +192,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ObjectSummaryControllerTile.Empty,
 
 					new ObjectSummaryControllerTile ("Personnes"),
-					new ObjectSummaryControllerTile (ObjectField.Person1),
-					new ObjectSummaryControllerTile (ObjectField.Person2),
-					new ObjectSummaryControllerTile (ObjectField.Person3),
-					new ObjectSummaryControllerTile (ObjectField.Person4),
-					new ObjectSummaryControllerTile (ObjectField.Person5),
+					//-new ObjectSummaryControllerTile (ObjectField.Person1),
+					//-new ObjectSummaryControllerTile (ObjectField.Person2),
+					//-new ObjectSummaryControllerTile (ObjectField.Person3),
+					//-new ObjectSummaryControllerTile (ObjectField.Person4),
+					//-new ObjectSummaryControllerTile (ObjectField.Person5),
 				};
 				list.Add (c1);
 

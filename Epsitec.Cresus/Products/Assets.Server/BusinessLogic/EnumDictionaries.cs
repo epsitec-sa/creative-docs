@@ -146,6 +146,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				dict.Add ((int) FieldType.Decimal,        "Nombre réel");
 				dict.Add ((int) FieldType.Int,            "Nombre entier");
 				dict.Add ((int) FieldType.Date,           "Date");
+				dict.Add ((int) FieldType.GuidPerson,     "Personne");
 
 				return dict;
 			}

@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons))
 				{
 					bool inputValue = (columnRank == 0);
-					var cell = AbstractTreeTableCell.CreateTreeTableCell (obj, this.Timestamp, userField, inputValue, cellState);
+					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, obj, this.Timestamp, userField, inputValue, cellState);
 
 					content.Columns[columnRank++].AddRow (cell);
 				}
