@@ -16,14 +16,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 	/// </summary>
 	public class SummaryController
 	{
-		public SummaryController()
-		{
-			this.TileSize = new Size (100, AbstractFieldController.lineHeight);
-		}
-
-
-		public Size								TileSize;
-
 		public void CreateUI(Widget parent)
 		{
 			this.frameBox = new FrameBox
@@ -70,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						Name            = SummaryController.PutRowColumn (row, column),
 						Dock            = DockStyle.Top,
 						PreferredWidth  = width,
-						PreferredHeight = this.TileSize.Height,
+						PreferredHeight = AbstractFieldController.lineHeight,
 						Margins         = new Margins (0, 1, 0, 1),
 						TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 					};
