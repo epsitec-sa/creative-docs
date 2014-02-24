@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Title = StaticDescriptions.GetViewTypeDescription (ViewType.Assets),
 			};
 
-			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, isTimeless: false);
+			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: false);
 
 			this.viewMode = ViewMode.Single;
 		}

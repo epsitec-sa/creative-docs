@@ -13,11 +13,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractEditorPage
 	{
-		public AbstractEditorPage(DataAccessor accessor, BaseType baseType, bool isTimeless)
+		public AbstractEditorPage(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
 		{
-			this.accessor   = accessor;
-			this.baseType   = baseType;
-			this.isTimeless = isTimeless;
+			this.accessor    = accessor;
+			this.baseType    = baseType;
+			this.subBaseType = subBaseType;
+			this.isTimeless  = isTimeless;
 
 			this.fieldControllers = new Dictionary<ObjectField, AbstractFieldController> ();
 		}
@@ -542,45 +543,45 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractEditorPage CreatePage(DataAccessor accessor, BaseType baseType, PageType page)
+		public static AbstractEditorPage CreatePage(DataAccessor accessor, BaseType baseType, BaseType subBaseType, PageType page)
 		{
 			switch (page)
 			{
 				case PageType.OneShot:
-					return new EditorPageOneShot (accessor, baseType, isTimeless: false);
+					return new EditorPageOneShot (accessor, baseType, subBaseType, isTimeless: false);
 
 				case PageType.Summary:
-					return new EditorPageSummary (accessor, baseType, isTimeless: false);
+					return new EditorPageSummary (accessor, baseType, subBaseType, isTimeless: false);
 
 				case PageType.Asset:
-					return new EditorPageAsset (accessor, baseType, isTimeless: false);
+					return new EditorPageAsset (accessor, baseType, subBaseType, isTimeless: false);
 
 				case PageType.Persons:
-					return new EditorPagePersons (accessor, baseType, isTimeless: false);
+					return new EditorPagePersons (accessor, baseType, subBaseType, isTimeless: false);
 
 				case PageType.Values:
-					return new EditorPageValues (accessor, baseType, isTimeless: false);
+					return new EditorPageValues (accessor, baseType, subBaseType, isTimeless: false);
 
 				case PageType.Amortization:
-					return new EditorPageAmortization (accessor, baseType, isTimeless: false);
+					return new EditorPageAmortization (accessor, baseType, subBaseType, isTimeless: false);
 
 				case PageType.AmortizationPreview:
-					return new EditorPageAmortizationPreview (accessor, baseType, isTimeless: false);
+					return new EditorPageAmortizationPreview (accessor, baseType, subBaseType, isTimeless: false);
 
 				case PageType.Groups:
-					return new EditorPageGroups (accessor, baseType, isTimeless: false);
+					return new EditorPageGroups (accessor, baseType, subBaseType, isTimeless: false);
 
 				case PageType.Category:
-					return new EditorPageCategory (accessor, baseType, isTimeless: true);
+					return new EditorPageCategory (accessor, baseType, subBaseType, isTimeless: true);
 
 				case PageType.Group:
-					return new EditorPageGroup (accessor, baseType, isTimeless: true);
+					return new EditorPageGroup (accessor, baseType, subBaseType, isTimeless: true);
 
 				case PageType.Person:
-					return new EditorPagePerson (accessor, baseType, isTimeless: true);
+					return new EditorPagePerson (accessor, baseType, subBaseType, isTimeless: true);
 
 				case PageType.UserFields:
-					return new EditorPageUserField (accessor, baseType, isTimeless: true);
+					return new EditorPageUserField (accessor, baseType, subBaseType, isTimeless: true);
 
 				default:
 					System.Diagnostics.Debug.Fail ("Unsupported page type");
@@ -625,6 +626,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected readonly DataAccessor				accessor;
 		protected readonly BaseType					baseType;
+		protected readonly BaseType					subBaseType;
 		protected readonly bool						isTimeless;
 		private Dictionary<ObjectField, AbstractFieldController> fieldControllers;
 

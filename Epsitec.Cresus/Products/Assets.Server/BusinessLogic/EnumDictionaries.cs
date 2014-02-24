@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static string GetFieldTypeName(FieldType type)
 		{
 			string s;
-			if (EnumDictionaries.DictFieldTypes.TryGetValue ((int) type, out s))
+			if (EnumDictionaries.GetDictFieldTypes ().TryGetValue ((int) type, out s))
 			{
 				return s;
 			}
@@ -135,21 +135,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static Dictionary<int, string> DictFieldTypes
+		public static Dictionary<int, string> GetDictFieldTypes(bool hasComplexTypes = true)
 		{
-			get
+			var dict = new Dictionary<int, string> ();
+
+			dict.Add ((int) FieldType.String, "Texte");
+
+			if (hasComplexTypes)
 			{
-				var dict = new Dictionary<int, string> ();
-
-				dict.Add ((int) FieldType.String,         "Texte");
 				dict.Add ((int) FieldType.ComputedAmount, "Montant");
-				dict.Add ((int) FieldType.Decimal,        "Nombre réel");
-				dict.Add ((int) FieldType.Int,            "Nombre entier");
-				dict.Add ((int) FieldType.Date,           "Date");
-				dict.Add ((int) FieldType.GuidPerson,     "Personne");
-
-				return dict;
 			}
+
+			dict.Add ((int) FieldType.Decimal, "Nombre réel");
+			dict.Add ((int) FieldType.Int,     "Nombre entier");
+			dict.Add ((int) FieldType.Date,    "Date");
+
+			if (hasComplexTypes)
+			{
+				dict.Add ((int) FieldType.GuidPerson, "Personne");
+			}
+
+			return dict;
 		}
 	}
 }

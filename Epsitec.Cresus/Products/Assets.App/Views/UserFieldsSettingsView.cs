@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseType = baseType;
 
 			this.listController = new UserFieldsToolbarTreeTableController (this.accessor, this.baseType);
-			this.objectEditor = new ObjectEditor (this.accessor, BaseType.UserFields, isTimeless: true);
+			this.objectEditor = new ObjectEditor (this.accessor, BaseType.UserFields, this.baseType, isTimeless: true);
 
 			this.ignoreChanges = new SafeCounter ();
 		}

@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EditorPageCategory : AbstractEditorPage
 	{
-		public EditorPageCategory(DataAccessor accessor, BaseType baseType, bool isTimeless)
-			: base (accessor, baseType, isTimeless)
+		public EditorPageCategory(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
+			: base (accessor, baseType, subBaseType, isTimeless)
 		{
 		}
 

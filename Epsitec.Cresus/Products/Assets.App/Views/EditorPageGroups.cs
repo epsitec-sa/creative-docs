@@ -10,8 +10,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EditorPageGroups : AbstractEditorPage
 	{
-		public EditorPageGroups(DataAccessor accessor, BaseType baseType, bool isTimeless)
-			: base (accessor, baseType, isTimeless)
+		public EditorPageGroups(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
+			: base (accessor, baseType, subBaseType, isTimeless)
 		{
 		}
 

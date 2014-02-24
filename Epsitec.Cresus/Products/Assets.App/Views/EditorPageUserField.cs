@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EditorPageUserField : AbstractEditorPage
 	{
-		public EditorPageUserField(DataAccessor accessor, BaseType baseType, bool isTimeless)
-			: base (accessor, baseType, isTimeless)
+		public EditorPageUserField(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
+			: base (accessor, baseType, subBaseType, isTimeless)
 		{
 		}
 
@@ -20,7 +20,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void CreateUI(Widget parent)
 		{
 			this.CreateStringController (parent, ObjectField.Name);
-			this.CreateEnumController   (parent, ObjectField.UserFieldType, EnumDictionaries.DictFieldTypes, editWidth: 100);
+
+			Dictionary<int, string> dict;
+			if (this.subBaseType == BaseType.Assets)
+			{
+				dict = EnumDictionaries.GetDictFieldTypes ();
+			}
+			else
+			{
+				dict = EnumDictionaries.GetDictFieldTypes (hasComplexTypes: false);
+			}
+			this.CreateEnumController (parent, ObjectField.UserFieldType, dict, editWidth: 100);
 
 			this.CreateSepartor (parent);
 

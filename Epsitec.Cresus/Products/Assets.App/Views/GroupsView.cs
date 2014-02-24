@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseType = BaseType.Groups;
 
 			this.listController = new GroupsToolbarTreeTableController (this.accessor);
-			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, isTimeless: true);
+			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: true);
 		}
 
 
