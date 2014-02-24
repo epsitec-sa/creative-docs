@@ -53,15 +53,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			foreach (var userField in userFields)
 			{
-				var type = AbstractTreeTableCell.GetColumnType (userField.Type);
+				TreeTableColumnType type;
 
 				if (treeFirst && columnRank == 0)
 				{
 					type = TreeTableColumnType.Tree;
 				}
+				else
+				{
+					type = AbstractTreeTableCell.GetColumnType (userField.Type);
+				}
 
 				columns.Add (new TreeTableColumnDescription (type, userField.ColumnWidth, userField.Name));
-
 				columnRank++;
 			}
 		}

@@ -29,8 +29,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var node = nodeGetter[row];
 				var obj = this.accessor.GetObject (node.BaseType, node.Guid);
+				var field = this.accessor.GetMainStringField (node.BaseType);
 
-				var label = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+				var label = ObjectProperties.GetObjectPropertyString (obj, null, field);
 				dataArray.RowsLabel.Add (label);
 
 				if (node.BaseType == BaseType.Assets)

@@ -20,10 +20,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateComputedAmountController (parent, ObjectField.MainValue);
 
-			foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Assets)
-				.Where (x => x.Type == FieldType.ComputedAmount))
+			foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)
+				.Where (x => x.Type == FieldType.ComputedAmount)
+				.Select (x => x.Field))
 			{
-				this.CreateComputedAmountController (parent, userField.Field);
+				this.CreateComputedAmountController (parent, field);
 			}
 		}
 	}

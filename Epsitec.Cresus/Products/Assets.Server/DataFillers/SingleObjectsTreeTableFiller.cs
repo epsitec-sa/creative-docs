@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (node.BaseType, node.Guid);
 
-				var field = this.GetNameField (node.BaseType);
+				var field = this.accessor.GetMainStringField (node.BaseType);
 				var name = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, field, inputValue: true);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
@@ -65,22 +65,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 
 			return content;
-		}
-
-		private ObjectField GetNameField(BaseType baseType)
-		{
-			if (baseType == BaseType.Groups)
-			{
-				return ObjectField.Name;
-			}
-			else
-			{
-				var userField = this.accessor.Settings.GetUserFields (baseType)
-					.Where (x => x.Type == FieldType.String)
-					.FirstOrDefault ();
-
-				return userField.Field;
-			}
 		}
 	}
 }

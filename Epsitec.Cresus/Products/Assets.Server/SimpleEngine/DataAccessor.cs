@@ -102,7 +102,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, parent));
 			}
 
-			e.AddProperty (new DataStringProperty (ObjectField.Name, name));
+			var field = this.GetMainStringField (baseType);
+			e.AddProperty (new DataStringProperty (field, name));
 		
 			return obj.Guid;
 		}
@@ -193,6 +194,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		public ObjectField GetMainStringField(BaseType baseType)
+		{
+			if (baseType == BaseType.Assets ||
+				baseType == BaseType.Persons)
+			{
+				return this.Settings.GetMainStringField (baseType);
+			}
+			else
+			{
+				return ObjectField.Name;
+			}
+		}
+
+
 		public static IEnumerable<ObjectField> GroupGuidRatioFields
 		{
 			get
@@ -210,10 +225,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				yield return ObjectField.MainValue;
 
-				foreach (var x in this.Settings.GetUserFields (BaseType.Assets)
-					.Where (x => x.Type == FieldType.ComputedAmount))
+				foreach (var field in this.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type == FieldType.ComputedAmount)
+					.Select (x => x.Field))
 				{
-					yield return x.Field;
+					yield return field;
 				}
 			}
 		}

@@ -23,11 +23,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				//	On prend les champs de type texte ayant un SummaryOrder.
 				var list = new List<string> ();
 
-				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
+				foreach (var field in accessor.Settings.GetUserFields (BaseType.Assets)
 					.Where (x => x.Type == FieldType.String && x.SummaryOrder.HasValue)
-					.OrderBy (x => x.SummaryOrder))
+					.OrderBy (x => x.SummaryOrder)
+					.Select (x => x.Field))
 				{
-					var text = ObjectProperties.GetObjectPropertyString (obj, null, userField.Field);
+					var text = ObjectProperties.GetObjectPropertyString (obj, null, field);
 
 					if (!string.IsNullOrEmpty (text))
 					{

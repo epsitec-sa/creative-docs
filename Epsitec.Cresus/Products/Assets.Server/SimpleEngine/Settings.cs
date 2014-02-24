@@ -137,6 +137,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		public ObjectField GetMainStringField(BaseType baseType)
+		{
+			return this.GetUserFields (baseType)
+				.Where (x => x.Type == FieldType.String)
+				.Select (x => x.Field)
+				.FirstOrDefault ();
+		}
+
+
 		public IEnumerable<UserField> GetUserFields(BaseType baseType)
 		{
 			//	Retourne la liste des rubriques utilisateur.

@@ -214,19 +214,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 				c1.Add (ObjectSummaryControllerTile.Empty);
 
 				c1.Add (new ObjectSummaryControllerTile ("Général"));
-				foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Assets)
-					.Where (x => x.Type != FieldType.ComputedAmount && x.Type != FieldType.GuidPerson))
+				foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type != FieldType.ComputedAmount && x.Type != FieldType.GuidPerson)
+					.Select (x => x.Field))
 				{
-					c1.Add (new ObjectSummaryControllerTile (userField.Field));
+					c1.Add (new ObjectSummaryControllerTile (field));
 				}
 
 				c1.Add(ObjectSummaryControllerTile.Empty);
 
 				c1.Add(new ObjectSummaryControllerTile ("Personnes"));
-				foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Assets)
-					.Where (x => x.Type == FieldType.GuidPerson))
+				foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type == FieldType.GuidPerson)
+					.Select (x => x.Field))
 				{
-					c1.Add (new ObjectSummaryControllerTile (userField.Field));
+					c1.Add (new ObjectSummaryControllerTile (field));
 				}
 
 				//	Deuxième colonne.
@@ -247,10 +249,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				c3.Add (new ObjectSummaryControllerTile ("Valeurs"));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.MainValue));
 
-				foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Assets)
-					.Where (x => x.Type == FieldType.ComputedAmount))
+				foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type == FieldType.ComputedAmount)
+					.Select (x => x.Field))
 				{
-					c3.Add (new ObjectSummaryControllerTile (userField.Field));
+					c3.Add (new ObjectSummaryControllerTile (field));
 				}
 
 				c3.Add (ObjectSummaryControllerTile.Empty);
