@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (!this.SelectedGuid.IsEmpty)
 			{
-				return AssetsLogic.GetShortName (accessor, this.SelectedGuid);
+				return AssetsLogic.GetSummary (accessor, this.SelectedGuid);
 			}
 
 			return null;

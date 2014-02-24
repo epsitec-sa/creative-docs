@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (!this.SelectedGuid.IsEmpty)
 			{
-				return PersonsLogic.GetFullName (accessor, this.SelectedGuid);
+				return PersonsLogic.GetSummary (accessor, this.SelectedGuid);
 			}
 
 			return null;

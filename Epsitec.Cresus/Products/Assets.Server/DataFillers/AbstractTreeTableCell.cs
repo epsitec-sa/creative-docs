@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case FieldType.GuidPerson:
 					var guid = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, userField.Field, synthetic: synthetic);
-					var person = PersonsLogic.GetFullName (accessor, guid);
+					var person = PersonsLogic.GetSummary (accessor, guid);
 					return new TreeTableCellString (person, cellState);
 
 				default:

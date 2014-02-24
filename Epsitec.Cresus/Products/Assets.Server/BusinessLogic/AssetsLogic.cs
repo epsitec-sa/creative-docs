@@ -9,26 +9,34 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AssetsLogic
 	{
-		public static string GetShortName(DataAccessor accessor, Guid guid)
+		public static string GetSummary(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le nom court d'un objet, du genre:
 			//	"Toyota Yaris Verso"
-			var asset = accessor.GetObject (BaseType.Assets, guid);
-			if (asset != null)
+			var obj = accessor.GetObject (BaseType.Assets, guid);
+			if (obj == null)
 			{
-				//	On cherche la première rubrique string, qui devrait être
-				//	le nom.
-				var userField = accessor.Settings.GetUserFields (BaseType.Assets)
-					.Where (x => x.Type == FieldType.String)
-					.FirstOrDefault ();
-
-				if (!userField.IsEmpty)
-				{
-					return ObjectProperties.GetObjectPropertyString (asset, null, userField.Field);
-				}
+				return null;
 			}
+			else
+			{
+				//	On prend les champs de type texte ayant un SummaryOrder.
+				var list = new List<string> ();
 
-			return null;
+				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type == FieldType.String && x.SummaryOrder.HasValue)
+					.OrderBy (x => x.SummaryOrder))
+				{
+					var text = ObjectProperties.GetObjectPropertyString (obj, null, userField.Field);
+
+					if (!string.IsNullOrEmpty (text))
+					{
+						list.Add (text);
+					}
+				}
+
+				return string.Join (" ", list).Trim ();
+			}
 		}
 	}
 }

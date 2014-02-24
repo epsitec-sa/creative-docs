@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.UserFieldLineWidth;
 				yield return ObjectField.UserFieldLineCount;
 				yield return ObjectField.UserFieldTopMargin;
+				yield return ObjectField.UserFieldSummaryOrder;
 			}
 		}
 
@@ -42,6 +43,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     70, "Lg ligne"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     70, "Nb lignes"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     70, "Marge sup."));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     70, "Ds résumé"));
 
 				return columns.ToArray ();
 			}
@@ -51,7 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<6; i++)
+			for (int i=0; i<7; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -72,6 +74,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var text3  = userField.LineWidth;
 				var text4  = userField.LineCount;
 				var text5  = userField.TopMargin;
+				var text6  = userField.SummaryOrder;
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
@@ -81,6 +84,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell3 = new TreeTableCellInt    (text3, cellState);
 				var cell4 = new TreeTableCellInt    (text4, cellState);
 				var cell5 = new TreeTableCellInt    (text5, cellState);
+				var cell6 = new TreeTableCellInt    (text6, cellState);
 
 				int columnRank = 0;
 
@@ -90,6 +94,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell3);
 				content.Columns[columnRank++].AddRow (cell4);
 				content.Columns[columnRank++].AddRow (cell5);
+				content.Columns[columnRank++].AddRow (cell6);
 			}
 
 			return content;

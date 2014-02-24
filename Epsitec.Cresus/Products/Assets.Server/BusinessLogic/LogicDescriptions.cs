@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					case FieldType.GuidPerson:
 						var gp = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, field, false);
-						var tp = PersonsLogic.GetShortName (accessor, gp);
+						var tp = PersonsLogic.GetSummary (accessor, gp);
 						if (!string.IsNullOrEmpty (tp))
 						{
 							line = tp;

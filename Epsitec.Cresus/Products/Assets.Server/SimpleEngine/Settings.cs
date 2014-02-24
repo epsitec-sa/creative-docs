@@ -58,14 +58,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (p5);
 			}
 
-			var p6 = new DataIntProperty (ObjectField.UserFieldTopMargin, userField.TopMargin);
-			e.AddProperty (p6);
+			if (userField.SummaryOrder.HasValue)
+			{
+				var p6 = new DataIntProperty (ObjectField.UserFieldSummaryOrder, userField.SummaryOrder.Value);
+				e.AddProperty (p6);
+			}
 
-			var p7 = new DataIntProperty (ObjectField.UserFieldField, (int) userField.Field);
+			var p7 = new DataIntProperty (ObjectField.UserFieldTopMargin, userField.TopMargin);
 			e.AddProperty (p7);
-	
-			var p8 = new DataGuidProperty (ObjectField.UserFieldGuid, guid);
+
+			var p8 = new DataIntProperty (ObjectField.UserFieldField, (int) userField.Field);
 			e.AddProperty (p8);
+	
+			var p9 = new DataGuidProperty (ObjectField.UserFieldGuid, guid);
+			e.AddProperty (p9);
 
 			return obj;
 		}
@@ -76,28 +82,29 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var e = obj.GetEvent (0);
 			System.Diagnostics.Debug.Assert (e != null);
 
-			var p1 = e.GetProperty (ObjectField.Name                ) as DataStringProperty;
-			var p2 = e.GetProperty (ObjectField.UserFieldType       ) as DataIntProperty;
-			var p3 = e.GetProperty (ObjectField.UserFieldColumnWidth) as DataIntProperty;
-			var p4 = e.GetProperty (ObjectField.UserFieldLineWidth  ) as DataIntProperty;
-			var p5 = e.GetProperty (ObjectField.UserFieldLineCount  ) as DataIntProperty;
-			var p6 = e.GetProperty (ObjectField.UserFieldTopMargin  ) as DataIntProperty;
-			var p7 = e.GetProperty (ObjectField.UserFieldField      ) as DataIntProperty;
-			var p8 = e.GetProperty (ObjectField.UserFieldGuid       ) as DataGuidProperty;
+			var p1 = e.GetProperty (ObjectField.Name                 ) as DataStringProperty;
+			var p2 = e.GetProperty (ObjectField.UserFieldType        ) as DataIntProperty;
+			var p3 = e.GetProperty (ObjectField.UserFieldColumnWidth ) as DataIntProperty;
+			var p4 = e.GetProperty (ObjectField.UserFieldLineWidth   ) as DataIntProperty;
+			var p5 = e.GetProperty (ObjectField.UserFieldLineCount   ) as DataIntProperty;
+			var p6 = e.GetProperty (ObjectField.UserFieldSummaryOrder) as DataIntProperty;
+			var p7 = e.GetProperty (ObjectField.UserFieldTopMargin   ) as DataIntProperty;
+			var p8 = e.GetProperty (ObjectField.UserFieldField       ) as DataIntProperty;
+			var p9 = e.GetProperty (ObjectField.UserFieldGuid        ) as DataGuidProperty;
 
 			System.Diagnostics.Debug.Assert (p1 != null);
 			System.Diagnostics.Debug.Assert (p2 != null);
 			System.Diagnostics.Debug.Assert (p3 != null);
-			System.Diagnostics.Debug.Assert (p6 != null);
 			System.Diagnostics.Debug.Assert (p7 != null);
 			System.Diagnostics.Debug.Assert (p8 != null);
+			System.Diagnostics.Debug.Assert (p9 != null);
 
 			var  name        =               p1.Value;
 			var  type        = (FieldType)   p2.Value;
 			var  columnWidth =               p3.Value;
-			var  topMargin   =               p6.Value;
-			var  field       = (ObjectField) p7.Value;
-			var  guid        =               p8.Value;
+			var  topMargin   =               p7.Value;
+			var  field       = (ObjectField) p8.Value;
+			var  guid        =               p9.Value;
 
 			int? lineWidth = null;
 			if (p4 != null && type == FieldType.String)
@@ -111,6 +118,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				lineCount = p5.Value;
 			}
 
+			int? summaryOrder = null;
+			if (p6 != null && type == FieldType.String)
+			{
+				summaryOrder = p6.Value;
+			}
+
 			var baseType = this.GetBaseType (guid);
 			var index = this.GetIndex (baseType, guid);
 
@@ -119,7 +132,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			//	Recrée la nouvelle rubrique utilisateur, au même emplacement et sans
 			//	modifier son Guid.
-			var userField = new UserField (guid, name, field, type, columnWidth, lineWidth, lineCount, topMargin);
+			var userField = new UserField (guid, name, field, type, columnWidth, lineWidth, lineCount, summaryOrder, topMargin);
 			this.InsertUserField (baseType, index, userField);
 		}
 

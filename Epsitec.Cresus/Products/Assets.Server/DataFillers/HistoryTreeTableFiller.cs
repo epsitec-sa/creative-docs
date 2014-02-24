@@ -293,7 +293,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					value = property.Value;
 				}
 
-				var text = PersonsLogic.GetFullName (this.accessor, value);
+				var text = PersonsLogic.GetSummary (this.accessor, value);
 				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
 				var cell = new TreeTableCellString (text, cellState);
 

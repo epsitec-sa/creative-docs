@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateIntController    (parent, ObjectField.UserFieldLineWidth);
 			this.CreateIntController    (parent, ObjectField.UserFieldLineCount);
 			this.CreateIntController    (parent, ObjectField.UserFieldTopMargin);
+			this.CreateIntController    (parent, ObjectField.UserFieldSummaryOrder);
 		}
 	}
 }

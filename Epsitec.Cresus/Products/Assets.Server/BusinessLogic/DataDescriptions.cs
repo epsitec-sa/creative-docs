@@ -106,6 +106,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.UserFieldTopMargin:
 					return "Marge supérieure";
 
+				case ObjectField.UserFieldSummaryOrder:
+					return "Ordre dans résumé";
+
 				default:
 					return null;
 			}

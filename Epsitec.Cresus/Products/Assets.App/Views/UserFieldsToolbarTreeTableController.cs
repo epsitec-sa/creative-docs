@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			var userField = new UserField ("Nouveau", newField, FieldType.String, 120, AbstractFieldController.maxWidth, 1, 0);
+			var userField = new UserField ("Nouveau", newField, FieldType.String, 120, AbstractFieldController.maxWidth, 1, null, 0);
 
 			int index = this.VisibleSelectedRow;
 			if (index == -1)  // pas de sélection ?

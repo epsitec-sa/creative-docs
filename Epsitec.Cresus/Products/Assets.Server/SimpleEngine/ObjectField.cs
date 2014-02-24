@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		UserFieldColumnWidth,
 		UserFieldLineWidth,
 		UserFieldLineCount,
+		UserFieldSummaryOrder,
 		UserFieldTopMargin,
 		UserFieldField,
 		UserFieldGuid,

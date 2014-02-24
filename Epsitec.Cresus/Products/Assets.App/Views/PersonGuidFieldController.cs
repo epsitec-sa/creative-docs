@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.button != null)
 			{
-				var text = PersonsLogic.GetSummary (this.Accessor, this.value);
+				var text = PersonsLogic.GetFullDescription (this.Accessor, this.value);
 				ToolTip.Default.SetToolTip (this.button, text);
 			}
 
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string GuidToString(Guid guid)
 		{
-			return PersonsLogic.GetFullName (this.Accessor, guid);
+			return PersonsLogic.GetSummary (this.Accessor, guid);
 		}
 
 

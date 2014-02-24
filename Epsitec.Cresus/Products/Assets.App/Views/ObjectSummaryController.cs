@@ -278,7 +278,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var gp = ObjectProperties.GetObjectPropertyGuid (this.obj, this.timestamp, tile.Field);
 					if (!gp.IsEmpty)
 					{
-						text = PersonsLogic.GetShortName (this.accessor, gp);
+						text = PersonsLogic.GetSummary (this.accessor, gp);
 						alignment = ContentAlignment.MiddleLeft;
 					}
 					break;
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 			}
 
-			string tooltip = this.accessor.GetFieldName (tile.Field);
+			string tooltip = string.Join ("<br/>", this.accessor.GetFieldName (tile.Field), text);
 			bool hilited   = this.IsHilited (tile.Field);
 			bool readOnly  = this.IsReadonly (tile.Field);
 

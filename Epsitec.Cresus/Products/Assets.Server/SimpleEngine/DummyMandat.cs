@@ -25,39 +25,39 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static void AddSettings(DataMandat mandat)
 		{
-			DummyMandat.fieldName        = DummyMandat.AddSettings (mandat, BaseType.Assets, "Nom",              FieldType.String,         180, 380, 1,  0);
-			DummyMandat.fieldNumber      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro",           FieldType.String,          90,  90, 1,  0);
-			DummyMandat.fieldValue1      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur assurance", FieldType.ComputedAmount, 110, null, null, 0);
-			DummyMandat.fieldValue2      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur fiscale",   FieldType.ComputedAmount, 110, null, null, 0);
-			DummyMandat.fieldOwner       = DummyMandat.AddSettings (mandat, BaseType.Assets, "Propriétaire",     FieldType.String,         120, 380, 1, 10);
-			DummyMandat.fieldColor       = DummyMandat.AddSettings (mandat, BaseType.Assets, "Couleur",          FieldType.String,         100, 380, 1,  0);
-			DummyMandat.fieldSerial      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro de série",  FieldType.String,         150, 380, 1,  0);
-			DummyMandat.fieldPerson1     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Responsable",      FieldType.GuidPerson,     150, null, null, 0);
-			DummyMandat.fieldPerson2     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Fournisseur",      FieldType.GuidPerson,     150, null, null, 0);
-			DummyMandat.fieldPerson3     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Maintenance",      FieldType.GuidPerson,     150, null, null, 0);
-			DummyMandat.fieldPerson4     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Concierge",        FieldType.GuidPerson,     150, null, null, 0);
-			DummyMandat.fieldPerson5     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Conseiller",       FieldType.GuidPerson,     150, null, null, 0);
-			DummyMandat.fieldAssetDesc   = DummyMandat.AddSettings (mandat, BaseType.Assets, "Description",      FieldType.String,         120, 380, 5, 10);
+			DummyMandat.fieldName        = DummyMandat.AddSettings (mandat, BaseType.Assets, "Nom",              FieldType.String,         180, 380,  1,    1,     0);
+			DummyMandat.fieldNumber      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro",           FieldType.String,          90,  90,  1,    null,  0);
+			DummyMandat.fieldValue1      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur assurance", FieldType.ComputedAmount, 110, null, null, null,  0);
+			DummyMandat.fieldValue2      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur fiscale",   FieldType.ComputedAmount, 110, null, null, null,  0);
+			DummyMandat.fieldOwner       = DummyMandat.AddSettings (mandat, BaseType.Assets, "Propriétaire",     FieldType.String,         120, 380,  1,    null, 10);
+			DummyMandat.fieldColor       = DummyMandat.AddSettings (mandat, BaseType.Assets, "Couleur",          FieldType.String,         100, 380,  1,    null,  0);
+			DummyMandat.fieldSerial      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro de série",  FieldType.String,         150, 380,  1,    null,  0);
+			DummyMandat.fieldPerson1     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Responsable",      FieldType.GuidPerson,     150, null, null, null,  0);
+			DummyMandat.fieldPerson2     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Fournisseur",      FieldType.GuidPerson,     150, null, null, null,  0);
+			DummyMandat.fieldPerson3     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Maintenance",      FieldType.GuidPerson,     150, null, null, null,  0);
+			DummyMandat.fieldPerson4     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Concierge",        FieldType.GuidPerson,     150, null, null, null,  0);
+			DummyMandat.fieldPerson5     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Conseiller",       FieldType.GuidPerson,     150, null, null, null,  0);
+			DummyMandat.fieldAssetDesc   = DummyMandat.AddSettings (mandat, BaseType.Assets, "Description",      FieldType.String,         120, 380,  5,    null, 10);
 
-			DummyMandat.fieldLastName    = DummyMandat.AddSettings (mandat, BaseType.Persons, "Nom",            FieldType.String, 120, 380, 1,  0);
-			DummyMandat.fieldFirstName   = DummyMandat.AddSettings (mandat, BaseType.Persons, "Prénom",         FieldType.String, 120, 380, 1,  0);
-			DummyMandat.fieldTitle       = DummyMandat.AddSettings (mandat, BaseType.Persons, "Titre",          FieldType.String,  80, 120, 1,  0);
-			DummyMandat.fieldCompany     = DummyMandat.AddSettings (mandat, BaseType.Persons, "Entreprise",     FieldType.String, 120, 380, 1,  0);
-			DummyMandat.fieldAddress     = DummyMandat.AddSettings (mandat, BaseType.Persons, "Adresse",        FieldType.String, 150, 380, 2,  0);
-			DummyMandat.fieldZip         = DummyMandat.AddSettings (mandat, BaseType.Persons, "NPA",            FieldType.String,  50,  60, 1,  0);
-			DummyMandat.fieldCity        = DummyMandat.AddSettings (mandat, BaseType.Persons, "Ville",          FieldType.String, 120, 380, 1,  0);
-			DummyMandat.fieldCountry     = DummyMandat.AddSettings (mandat, BaseType.Persons, "Pays",           FieldType.String, 120, 380, 1,  0);
-			DummyMandat.fieldPhone1      = DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. prof.",     FieldType.String, 100, 120, 1, 10);
-			DummyMandat.fieldPhone2      = DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. privé",     FieldType.String, 100, 120, 1,  0);
-			DummyMandat.fieldPhone3      = DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. portable",  FieldType.String, 100, 120, 1,  0);
-			DummyMandat.fieldMail        = DummyMandat.AddSettings (mandat, BaseType.Persons, "E-mail",         FieldType.String, 200, 380, 1,  0);
-			DummyMandat.fieldPersonDesc  = DummyMandat.AddSettings (mandat, BaseType.Persons, "Description",    FieldType.String, 200, 380, 5, 10);
+			DummyMandat.fieldLastName    = DummyMandat.AddSettings (mandat, BaseType.Persons, "Nom",            FieldType.String, 120, 380, 1, 2,     0);
+			DummyMandat.fieldFirstName   = DummyMandat.AddSettings (mandat, BaseType.Persons, "Prénom",         FieldType.String, 120, 380, 1, 1,     0);
+			DummyMandat.fieldTitle       = DummyMandat.AddSettings (mandat, BaseType.Persons, "Titre",          FieldType.String,  80, 120, 1, null,  0);
+			DummyMandat.fieldCompany     = DummyMandat.AddSettings (mandat, BaseType.Persons, "Entreprise",     FieldType.String, 120, 380, 1, 3,     0);
+			DummyMandat.fieldAddress     = DummyMandat.AddSettings (mandat, BaseType.Persons, "Adresse",        FieldType.String, 150, 380, 2, null,  0);
+			DummyMandat.fieldZip         = DummyMandat.AddSettings (mandat, BaseType.Persons, "NPA",            FieldType.String,  50,  60, 1, null,  0);
+			DummyMandat.fieldCity        = DummyMandat.AddSettings (mandat, BaseType.Persons, "Ville",          FieldType.String, 120, 380, 1, null,  0);
+			DummyMandat.fieldCountry     = DummyMandat.AddSettings (mandat, BaseType.Persons, "Pays",           FieldType.String, 120, 380, 1, null,  0);
+			DummyMandat.fieldPhone1      = DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. prof.",     FieldType.String, 100, 120, 1, null, 10);
+			DummyMandat.fieldPhone2      = DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. privé",     FieldType.String, 100, 120, 1, null,  0);
+			DummyMandat.fieldPhone3      = DummyMandat.AddSettings (mandat, BaseType.Persons, "Tél. portable",  FieldType.String, 100, 120, 1, null,  0);
+			DummyMandat.fieldMail        = DummyMandat.AddSettings (mandat, BaseType.Persons, "E-mail",         FieldType.String, 200, 380, 1, null,  0);
+			DummyMandat.fieldPersonDesc  = DummyMandat.AddSettings (mandat, BaseType.Persons, "Description",    FieldType.String, 200, 380, 5, null, 10);
 		}
 
-		internal static ObjectField AddSettings(DataMandat mandat, BaseType baseType, string name, FieldType type, int columnWidth, int? lineWidth, int? lineCount, int topMargin)
+		internal static ObjectField AddSettings(DataMandat mandat, BaseType baseType, string name, FieldType type, int columnWidth, int? lineWidth, int? lineCount, int? summaryOrder, int topMargin)
 		{
 			var field = mandat.Settings.GetNewUserField ();
-			mandat.Settings.AddUserField (baseType, new UserField (name, field, type, columnWidth, lineWidth, lineCount, topMargin));
+			mandat.Settings.AddUserField (baseType, new UserField (name, field, type, columnWidth, lineWidth, lineCount, summaryOrder, topMargin));
 			return field;
 		}
 
