@@ -22,12 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				yield return ObjectField.EventDate;
-				yield return ObjectField.EventGlyph;
-				yield return ObjectField.EventType;
-				yield return ObjectField.MainValue;
-
-				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+				foreach (var userField in this.UserFields)
 				{
 					yield return userField.Field;
 				}
@@ -40,12 +35,21 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          70, "Date"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph,           20, ""));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,         110, "Type"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 120, "Valeur comptable"));
-
-				AbstractTreeTableCell.AddColumnDescription (columns, accessor.Settings.GetUserFields (BaseType.Assets));
+				foreach (var userField in this.UserFields)
+				{
+					TreeTableColumnType type;
+				
+					if (userField.Field == ObjectField.EventGlyph)
+					{
+						type = TreeTableColumnType.Glyph;
+					}
+					else
+					{
+						type = AbstractTreeTableCell.GetColumnType (userField.Type);
+					}
+				
+					columns.Add (new TreeTableColumnDescription (type, userField.ColumnWidth, userField.Name));
+				}
 
 				return columns.ToArray ();
 			}
@@ -55,12 +59,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<4; i++)
-			{
-				content.Columns.Add (new TreeTableColumnItem ());
-			}
-
-			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+			foreach (var userField in this.UserFields)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -76,36 +75,64 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var e    = this.DataObject.GetEvent (node.Guid);
 				System.Diagnostics.Debug.Assert (e != null);
 
-				var timestamp  = e.Timestamp;
-				var eventType  = e.Type;
-
-				var date   = TypeConverters.DateToString (timestamp.Date);
-				var glyph  = TimelineData.TypeToGlyph (eventType);
-				var type   = DataDescriptions.GetEventDescription (eventType);
-				var value  = ObjectProperties.GetObjectPropertyComputedAmount (this.DataObject, timestamp, ObjectField.MainValue,   synthetic: false);
+				var timestamp = e.Timestamp;
+				var eventType = e.Type;
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var cell1 = new TreeTableCellString         (date,  cellState);
-				var cell2 = new TreeTableCellGlyph          (glyph, cellState);
-				var cell3 = new TreeTableCellString         (type,  cellState);
-				var cell4 = new TreeTableCellComputedAmount (value, cellState);
-
 				int columnRank = 0;
 
-				content.Columns[columnRank++].AddRow (cell1);
-				content.Columns[columnRank++].AddRow (cell2);
-				content.Columns[columnRank++].AddRow (cell3);
-				content.Columns[columnRank++].AddRow (cell4);
-
-				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+				foreach (var userField in this.UserFields)
 				{
-					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, this.DataObject, timestamp, userField, false, cellState, synthetic: false);
+					AbstractTreeTableCell cell;
+
+					if (userField.Field == ObjectField.EventDate)
+					{
+						var date = TypeConverters.DateToString (timestamp.Date);
+						cell = new TreeTableCellString (date, cellState);
+					}
+					else if (userField.Field == ObjectField.EventGlyph)
+					{
+						var glyph= TimelineData.TypeToGlyph (eventType);
+						cell = new TreeTableCellGlyph (glyph, cellState);
+					}
+					else if (userField.Field == ObjectField.EventType)
+					{
+						var type = DataDescriptions.GetEventDescription (eventType);
+						cell = new TreeTableCellString (type, cellState);
+					}
+					else
+					{
+						cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, this.DataObject, timestamp, userField, false, cellState, synthetic: false);
+					}
+
 					content.Columns[columnRank++].AddRow (cell);
 				}
 			}
 
 			return content;
+		}
+
+		private IEnumerable<UserField> UserFields
+		{
+			get
+			{
+				yield return new UserField ("Date", ObjectField.EventDate,  FieldType.String,  70, null, null, null, 0);
+				yield return new UserField ("",     ObjectField.EventGlyph, FieldType.String,  20, null, null, null, 0);
+				yield return new UserField ("Type", ObjectField.EventType,  FieldType.String, 110, null, null, null, 0);
+
+				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+				{
+					if (userField.Type == FieldType.ComputedAmount)
+					{
+						//	Juste avant la première valeur utilisateur, on injecte la valeur comptable.
+						//	Le Guid créé à la volée n'est pas utilisé !
+						yield return new UserField (DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.ComputedAmount, userField.ColumnWidth, null, null, null, 0);
+					}
+
+					yield return userField;
+				}
+			}
 		}
 	}
 }

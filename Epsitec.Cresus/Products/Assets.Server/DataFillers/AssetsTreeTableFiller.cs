@@ -46,8 +46,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			foreach (var userField in this.UserFields)
 			{
-				var column  = new TreeTableColumnItem ();
-				content.Columns.Add (column);
+				content.Columns.Add (new TreeTableColumnItem ());
 			}
 
 			for (int i=0; i<count; i++)
