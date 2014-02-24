@@ -14,12 +14,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Retourne le nom court d'un objet, du genre:
 			//	"Toyota Yaris Verso"
 			var asset = accessor.GetObject (BaseType.Assets, guid);
-			if (asset == null)
+			if (asset != null)
 			{
-				return null;
+				//	On cherche la première rubrique string, qui devrait être
+				//	le nom.
+				var userField = accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type == FieldType.String)
+					.FirstOrDefault ();
+
+				if (!userField.IsEmpty)
+				{
+					return ObjectProperties.GetObjectPropertyString (asset, null, userField.Field);
+				}
 			}
 
-			return ObjectProperties.GetObjectPropertyString (asset, null, ObjectField.Name);
+			return null;
 		}
 	}
 }
