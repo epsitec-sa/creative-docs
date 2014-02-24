@@ -10,6 +10,7 @@ ConfigureExperimentalFeature ("ElasticSearch");
 ConfigureExperimentalFeature ("QuickSearch");
 ConfigureExperimentalFeature ("Search");
 ConfigureExperimentalFeature ("Mailing");
+ConfigureExperimentalFeature ("OfficeManagement");
 ConfigureExperimentalFeature ("Warnings");
 ConfigureExperimentalFeature ("EntityBag");
 ConfigureExperimentalFeature ("ActionPage");

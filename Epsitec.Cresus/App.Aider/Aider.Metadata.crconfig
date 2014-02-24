@@ -27,6 +27,8 @@ AiderPersonWarning = [LVALB]
 AiderMailing = [LVOA03]
 AiderMailingCategory = [LVO013]
 AiderMailingParticipant = [LVOL03]
+AiderOfficeManagement = [LVO613]
+AiderOfficeSettings = [LVOA13]
 
 <meta>
   <T>
@@ -1311,8 +1313,17 @@ AiderMailingParticipant = [LVOL03]
         <disp m="Visible" />
       </col>	  
     </t>
-  </T>
 
+
+    <t eid="@AiderOfficeManagement" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeManagement:[LVO913]" title="Paroisse" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+    </t>
+
+
+  </T>
   <!-- DataSets -->
 
   <D>
@@ -1472,6 +1483,10 @@ AiderMailingParticipant = [LVOL03]
 #[Feature:Mailing]    <d cid="[LVO003]" teid="@AiderContact" tn="default" df="false" d="false" ec="true" ed="true" dg="">
 #[Feature:Mailing]      <R><r>@user</r></R>
 #[Feature:Mailing]    </d>
+
+#[Feature:OfficeManagement]    <d cid="[LVOG13]" teid="@AiderOfficeManagement" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="">
+#[Feature:OfficeManagement]      <R><r>@user</r></R>
+#[Feature:OfficeManagement]    </d>
   </D>
   <G/>
 </meta>

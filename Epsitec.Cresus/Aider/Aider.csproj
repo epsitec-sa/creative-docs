@@ -161,6 +161,8 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderSubscriptionViewController1FlagSuspended.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController65ProcessDepartureAndHide.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupDefViewController0CreateSubGroupDef.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderOfficeManagementViewController0CreateSettings.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderOfficeSettingsViewController0ActivateSettings.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderGroupExtractionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
@@ -171,12 +173,14 @@
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderMailingViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderMailingCategoryViewController0.cs" />
+    <Compile Include="Controllers\CreationControllers\BrickCreationAiderOfficeManagementViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderUserViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderLegalPersonViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderMailingController0.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderOfficeSettingsViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupExtractionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderMailingCategoryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderMailingViewController1Mailing.cs" />
@@ -191,6 +195,8 @@
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController1ExcludedContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController0RecipientsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController1Settings.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupExtractionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderMailingCategoryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderMailingViewController1Recipients.cs" />
@@ -272,6 +278,8 @@
     <Compile Include="Entities\AiderMailingEntity.cs" />
     <Compile Include="Entities\AiderMailingParticipantEntity.cs" />
     <Compile Include="Entities\AiderMailingCategoryEntity.cs" />
+    <Compile Include="Entities\AiderOfficeManagementEntity.cs" />
+    <Compile Include="Entities\AiderOfficeSettingsEntity.cs" />
     <Compile Include="Entities\eCH_ReportedPersonEntity.cs" />
     <Compile Include="Entities\IAiderWarningExampleFactoryGetter.cs" />
     <Compile Include="Entities\ParticipationData.cs" />
