@@ -34,7 +34,23 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				AbstractTreeTableCell.AddColumnDescription (columns, this.UserFields, treeFirst: true);
+				int columnRank = 0;
+				foreach (var userField in this.UserFields)
+				{
+					TreeTableColumnType type;
+
+					if (columnRank == 0)
+					{
+						type = TreeTableColumnType.Tree;
+					}
+					else
+					{
+						type = AbstractTreeTableCell.GetColumnType (userField.Type);
+					}
+
+					columns.Add (new TreeTableColumnDescription (type, userField.ColumnWidth, userField.Name));
+					columnRank++;
+				}
 
 				return columns.ToArray ();
 			}
