@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public static void AddColumnDescription(List<TreeTableColumnDescription> columns, IEnumerable<UserField> userFields, bool treeFirst = true)
+		public static void AddColumnDescription(List<TreeTableColumnDescription> columns, IEnumerable<UserField> userFields, bool treeFirst = false)
 		{
 			//	Ajoute les descriptifs de colonnes pour une liste de rubriques utilisateur.
 			int columnRank = 0;

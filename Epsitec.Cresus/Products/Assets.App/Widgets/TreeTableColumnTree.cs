@@ -17,6 +17,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnTree : AbstractTreeTableColumn
 	{
+		public TreeTableColumnTree()
+		{
+		}
+
 		public bool								IndependentColumn;
 
 		public override void SetCells(TreeTableColumnItem columnItem)

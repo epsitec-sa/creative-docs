@@ -17,8 +17,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		OneShotDocuments,
 
 		GroupParent,
-		Number,
 		Name,
+		Number,
 		Description,
 		MainValue,
 
