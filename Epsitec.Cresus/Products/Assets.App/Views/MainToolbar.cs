@@ -87,7 +87,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonCategories      = this.CreateViewTypeButton (ViewType.Categories,    ToolbarCommand.ViewTypeCategories,    StaticDescriptions.GetViewTypeIcon (ViewType.Categories),    StaticDescriptions.GetViewTypeDescription (ViewType.Categories));
 			this.buttonGroups          = this.CreateViewTypeButton (ViewType.Groups,        ToolbarCommand.ViewTypeGroups,        StaticDescriptions.GetViewTypeIcon (ViewType.Groups),        StaticDescriptions.GetViewTypeDescription (ViewType.Groups));
 			this.buttonPersons         = this.CreateViewTypeButton (ViewType.Persons,       ToolbarCommand.ViewTypePersons,       StaticDescriptions.GetViewTypeIcon (ViewType.Persons),       StaticDescriptions.GetViewTypeDescription (ViewType.Persons));
-			this.buttonEvents          = this.CreateViewTypeButton (ViewType.Events,        ToolbarCommand.ViewTypeEvents,        StaticDescriptions.GetViewTypeIcon (ViewType.Events),        StaticDescriptions.GetViewTypeDescription (ViewType.Events));
 			this.buttonReports         = this.CreateViewTypeButton (ViewType.Reports,       ToolbarCommand.ViewTypeReports,       StaticDescriptions.GetViewTypeIcon (ViewType.Reports),       StaticDescriptions.GetViewTypeDescription (ViewType.Reports));
 			this.buttonSettings        = this.CreateViewTypeButton (ViewType.Settings,      ToolbarCommand.ViewTypeSettings,      StaticDescriptions.GetViewTypeIcon (ViewType.Settings),      StaticDescriptions.GetViewTypeDescription (ViewType.Settings));
 								       													   									     
@@ -204,7 +203,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonCategories;
 		private IconButton						buttonGroups;
 		private IconButton						buttonPersons;
-		private IconButton						buttonEvents;
 		private IconButton						buttonReports;
 		private IconButton						buttonSettings;
 

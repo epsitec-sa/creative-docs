@@ -23,12 +23,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateEnumController   (parent, ObjectField.UserFieldType, EnumDictionaries.DictFieldTypes, editWidth: 100);
 
 			this.CreateSepartor (parent);
-			
-			this.CreateIntController    (parent, ObjectField.UserFieldColumnWidth);
-			this.CreateIntController    (parent, ObjectField.UserFieldLineWidth);
-			this.CreateIntController    (parent, ObjectField.UserFieldLineCount);
-			this.CreateIntController    (parent, ObjectField.UserFieldTopMargin);
-			this.CreateIntController    (parent, ObjectField.UserFieldSummaryOrder);
+
+			new StaticText
+			{
+				Parent  = parent,
+				Text    = "Dans le tableau:",
+				Dock    = DockStyle.Top,
+				Margins = new Epsitec.Common.Drawing.Margins (0, 0, 20, 10),
+			};
+
+			this.CreateIntController (parent, ObjectField.UserFieldColumnWidth);
+
+			new StaticText
+			{
+				Parent  = parent,
+				Text    = "Lors de l'édition:",
+				Dock    = DockStyle.Top,
+				Margins = new Epsitec.Common.Drawing.Margins (0, 0, 20, 10),
+			};
+
+			this.CreateIntController (parent, ObjectField.UserFieldLineWidth);
+			this.CreateIntController (parent, ObjectField.UserFieldLineCount);
+			this.CreateIntController (parent, ObjectField.UserFieldTopMargin);
+
+			new StaticText
+			{
+				Parent  = parent,
+				Text    = "Texte résumé:",
+				Dock    = DockStyle.Top,
+				Margins = new Epsitec.Common.Drawing.Margins (0, 0, 20, 10),
+			};
+
+			this.CreateIntController (parent, ObjectField.UserFieldSummaryOrder);
 		}
 	}
 }

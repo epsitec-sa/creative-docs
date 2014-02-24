@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "Définitions de la personne";
 
 				case PageType.UserFields:
-					return "Définitions du champ supplémentaire";
+					return "Définitions du champ";
 
 				default:
 					return null;

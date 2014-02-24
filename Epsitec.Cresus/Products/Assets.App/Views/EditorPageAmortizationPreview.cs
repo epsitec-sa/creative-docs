@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (!ad.Def.IsEmpty)
 				{
 					this.CreateTitle (this.line1a, "Paramètres", "Paramètres de l'amortissement, définis dans l'objet");
-					this.CreateText  (this.line1b, 600, ad.Def.GetFullName ());
+					this.CreateText  (this.line1b, AbstractView.editionWidth-20, ad.Def.GetFullName ());
 				}
 
 				this.CreateTitle (this.line2a, "Calcul", "Calcul effectué pour obtenir la valeur finale amortie");
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent           = parent,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = 90,
+				PreferredWidth   = 80,
 				IsReadOnly       = true,
 				Text             = TypeConverters.AmountToString (value),
 				Margins          = new Margins (0, 0, 5, 5),
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent           = parent,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = 600,
+				PreferredWidth   = AbstractView.editionWidth-20,
 				Text             = text,
 				ContentAlignment = ContentAlignment.BottomLeft,
 				Margins          = new Margins (0, 0, 10, 0),

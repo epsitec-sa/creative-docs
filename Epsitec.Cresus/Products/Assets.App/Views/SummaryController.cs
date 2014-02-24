@@ -49,23 +49,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			for (int column = 0; column < columnsCount; column++ )
 			{
+				//	Calcule une largeur permettant d'afficher 6 colonnes.
+				//	Les colonnes de données (impaires) occupent plus de place
+				//	que celle de description (paires).
+				int w = (AbstractView.editionWidth-30) / 6;
+				int width = (column%2 == 0) ? w-20 : w+20;
+
 				var columnFrame = new FrameBox
 				{
 					Parent         = this.frameBox,
 					Dock           = DockStyle.Left,
-					PreferredWidth = 120,
+					PreferredWidth = width,
 				};
 
 				for (int row = 0; row < rowsCount; row++)
 				{
 					var button = new ColoredButton
 					{
-						Parent        = columnFrame,
-						Name          = SummaryController.PutRowColumn (row, column),
-						Dock          = DockStyle.Top,
-						PreferredSize = this.TileSize,
-						Margins       = new Margins (0, 1, 0, 1),
-						TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+						Parent          = columnFrame,
+						Name            = SummaryController.PutRowColumn (row, column),
+						Dock            = DockStyle.Top,
+						PreferredWidth  = width,
+						PreferredHeight = this.TileSize.Height,
+						Margins         = new Margins (0, 1, 0, 1),
+						TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 					};
 
 					this.UpdateButton (button, this.GetTile (column, row));
