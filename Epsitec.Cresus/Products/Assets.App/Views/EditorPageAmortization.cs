@@ -150,6 +150,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.ImportFieldDecimal (catObj, fieldSrc, fieldDst);
 					break;
 
+				case FieldType.Int:
+					this.ImportFieldInt (catObj, fieldSrc, fieldDst);
+					break;
+
 				default:
 					System.Diagnostics.Debug.Fail ("Not supported");
 					break;
@@ -168,6 +172,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void ImportFieldDecimal(DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
 		{
 			var d = ObjectProperties.GetObjectPropertyDecimal (catObj, null, fieldSrc);
+			if (d.HasValue)
+			{
+				this.accessor.EditionAccessor.SetField (fieldDst, d);
+			}
+		}
+
+		private void ImportFieldInt(DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
+		{
+			var d = ObjectProperties.GetObjectPropertyInt (catObj, null, fieldSrc);
 			if (d.HasValue)
 			{
 				this.accessor.EditionAccessor.SetField (fieldDst, d);
