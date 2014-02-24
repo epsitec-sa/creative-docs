@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (field >= ObjectField.GroupGuidRatioFirst &&
 				field <= ObjectField.GroupGuidRatioLast)
 			{
-				return "Dans le groupe";
+				return "Dans";
 			}
 
 			switch (field)

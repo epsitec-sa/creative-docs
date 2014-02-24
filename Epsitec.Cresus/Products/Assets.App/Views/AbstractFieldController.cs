@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		public int								TabIndex;
-		public int								LabelWidth = 100;
+		public int								LabelWidth = AbstractFieldController.labelWidth;
 		public bool								HideAdditionalButtons;
 		public EventType						EventType;
 		public ObjectField						Field;
@@ -270,6 +270,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		public const int lineHeight = 17;
+		public const int labelWidth = 100;
 		public const int maxWidth   = 380;
 
 		protected readonly SafeCounter			ignoreChanges;
