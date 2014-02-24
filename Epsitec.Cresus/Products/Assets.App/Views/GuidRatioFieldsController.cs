@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			//	Montre les bonnes lignes existantes.
 			int y = 0;
-			foreach (var field in this.SortedFields)
+			foreach (var field in GroupsGuidRatioLogic.GetSortedFields (this.accessor))
 			{
 				var label = (y == 0) ? "Regroupements" : "";  // légende uniquement pour le premier
 				this.UpdateController (field, y, label);
@@ -192,38 +192,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private IEnumerable<ObjectField> SortedFields
-		{
-			//	Retourne la liste des champs, triés par ordre alphabétique des noms
-			//	complets des groupes.
-			get
-			{
-				return this.UsedFields.OrderBy (x => this.GetName (x));
-			}
-		}
-
-		private string GetName(ObjectField field)
-		{
-			//	Retourne le nom complet d'un groupe, en vue du tri.
-			var gr = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
-			return GroupsLogic.GetFullName (this.accessor, gr.Guid);
-		}
-
-		private IEnumerable<ObjectField> UsedFields
-		{
-			//	Retourne la liste des champs utilisé par l'objet en édition, non triée.
-			get
-			{
-				foreach (var field in DataAccessor.GroupGuidRatioFields)
-				{
-					var gr = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
-					if (!gr.IsEmpty)
-					{
-						yield return field;
-					}
-				}
-			}
-		}
 
 		private ObjectField FreeField
 		{

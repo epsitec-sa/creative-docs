@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						if (userField.Type == FieldType.ComputedAmount)
 						{
 							//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
-							//	pour tenir compte des cumuls.
+							//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
 							var ca = this.NodeGetter.GetValue (obj, node, userField.Field);
 							cell = new TreeTableCellComputedAmount (ca, cellState2);
 						}
@@ -111,6 +111,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					if (userField.Type == FieldType.ComputedAmount)
 					{
 						//	Juste avant la première valeur utilisateur, on injecte la valeur comptable.
+						//	Le Guid créé à la volée n'est pas utilisé !
 						yield return new UserField (DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.ComputedAmount, userField.ColumnWidth, null, null, 0);
 					}
 

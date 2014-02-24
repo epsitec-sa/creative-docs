@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -205,8 +206,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				list.Add (c1);
 
 				c1.Add (new ObjectSummaryControllerTile ("Evénement"));
-
-				c1.Add (new ObjectSummaryControllerTile ("Evénement"));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotNumber));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDateOperation));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotComment));
@@ -215,10 +214,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				c1.Add (ObjectSummaryControllerTile.Empty);
 
 				c1.Add (new ObjectSummaryControllerTile ("Général"));
-				c1.Add (new ObjectSummaryControllerTile (ObjectField.Number));
-				c1.Add (new ObjectSummaryControllerTile (ObjectField.Name));
-				c1.Add (new ObjectSummaryControllerTile (ObjectField.Description));
-
 				foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Assets)
 					.Where (x => x.Type != FieldType.ComputedAmount && x.Type != FieldType.GuidPerson))
 				{
@@ -228,7 +223,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				c1.Add(ObjectSummaryControllerTile.Empty);
 
 				c1.Add(new ObjectSummaryControllerTile ("Personnes"));
-
 				foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Assets)
 					.Where (x => x.Type == FieldType.GuidPerson))
 				{
@@ -240,9 +234,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					new ObjectSummaryControllerTile ("Regroupements"),
 				};
-				for (int i=0; i<=ObjectField.GroupGuidRatioLast-ObjectField.GroupGuidRatioFirst; i++)
+				foreach (var field in GroupsGuidRatioLogic.GetSortedFields (this.accessor))
 				{
-					c2.Add (new ObjectSummaryControllerTile (ObjectField.GroupGuidRatioFirst+i));
+					c2.Add (new ObjectSummaryControllerTile (field));
 				}
 				list.Add (c2);
 
