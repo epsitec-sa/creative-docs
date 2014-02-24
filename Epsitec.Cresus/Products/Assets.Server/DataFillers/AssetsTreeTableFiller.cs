@@ -21,11 +21,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				yield return ObjectField.Name;
-				yield return ObjectField.Number;
-				yield return ObjectField.MainValue;
-
-				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+				foreach (var userField in this.UserFields)
 				{
 					yield return userField.Field;
 				}
@@ -38,11 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,           180, "Objet"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,          50, "N°"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.ComputedAmount, 110, "Valeur comptable"));
-
-				AbstractTreeTableCell.AddColumnDescription (columns, accessor.Settings.GetUserFields (BaseType.Assets));
+				AbstractTreeTableCell.AddColumnDescription (columns, this.UserFields, treeFirst: true);
 
 				return columns.ToArray ();
 			}
@@ -52,12 +44,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<3; i++)
-			{
-				content.Columns.Add (new TreeTableColumnItem ());
-			}
-
-			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+			foreach (var userField in this.UserFields)
 			{
 				var column  = new TreeTableColumnItem ();
 				content.Columns.Add (column);
@@ -78,26 +65,35 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var obj = this.accessor.GetObject (baseType, guid);
 
-				var name   = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
-				var number = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number);
-				var value  = this.NodeGetter.GetValue (obj, node, ObjectField.MainValue);
-
 				var cellState1 = (i == selection) ? CellState.Selected : CellState.None;
 				var cellState2 = cellState1 | (type == NodeType.Final ? CellState.None : CellState.Unavailable);
 
-				var cell1 = new TreeTableCellTree           (level, type, name, cellState1);
-				var cell2 = new TreeTableCellString         (number,            cellState1);
-				var cell3 = new TreeTableCellComputedAmount (value,             cellState2);
-
 				int columnRank = 0;
-
-				content.Columns[columnRank++].AddRow (cell1);
-				content.Columns[columnRank++].AddRow (cell2);
-				content.Columns[columnRank++].AddRow (cell3);
-
-				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+				foreach (var userField in this.UserFields)
 				{
-					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, obj, this.Timestamp, userField, false, cellState2);
+					AbstractTreeTableCell cell;
+
+					if (columnRank == 0)
+					{
+						var field = (baseType == BaseType.Groups) ? ObjectField.Name : userField.Field;
+						var text = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, field, inputValue: true);
+						cell = new TreeTableCellTree (level, type, text, cellState1);
+					}
+					else
+					{
+						if (userField.Type == FieldType.ComputedAmount)
+						{
+							//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
+							//	pour tenir compte des cumuls.
+							var ca = this.NodeGetter.GetValue (obj, node, userField.Field);
+							cell = new TreeTableCellComputedAmount (ca, cellState2);
+						}
+						else
+						{
+							cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, obj, this.Timestamp, userField, false, cellState2);
+						}
+					}
+
 					content.Columns[columnRank++].AddRow (cell);
 				}
 			}
@@ -105,6 +101,23 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			return content;
 		}
 
+
+		private IEnumerable<UserField> UserFields
+		{
+			get
+			{
+				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+				{
+					if (userField.Type == FieldType.ComputedAmount)
+					{
+						//	Juste avant la première valeur utilisateur, on injecte la valeur comptable.
+						yield return new UserField (DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.ComputedAmount, userField.ColumnWidth, null, null, 0);
+					}
+
+					yield return userField;
+				}
+			}
+		}
 
 		private ObjectsNodeGetter NodeGetter
 		{

@@ -46,13 +46,23 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public static void AddColumnDescription(List<TreeTableColumnDescription> columns, IEnumerable<UserField> userFields)
+		public static void AddColumnDescription(List<TreeTableColumnDescription> columns, IEnumerable<UserField> userFields, bool treeFirst = true)
 		{
 			//	Ajoute les descriptifs de colonnes pour une liste de rubriques utilisateur.
+			int columnRank = 0;
+
 			foreach (var userField in userFields)
 			{
 				var type = AbstractTreeTableCell.GetColumnType (userField.Type);
+
+				if (treeFirst && columnRank == 0)
+				{
+					type = TreeTableColumnType.Tree;
+				}
+
 				columns.Add (new TreeTableColumnDescription (type, userField.ColumnWidth, userField.Name));
+
+				columnRank++;
 			}
 		}
 
@@ -92,7 +102,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
-		private static TreeTableColumnType GetColumnType(FieldType type)
+		public static TreeTableColumnType GetColumnType(FieldType type)
 		{
 			switch (type)
 			{

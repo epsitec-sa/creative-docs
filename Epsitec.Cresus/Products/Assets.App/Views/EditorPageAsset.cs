@@ -18,10 +18,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateStringController (parent, ObjectField.Number, editWidth: 90);
-			this.CreateStringController (parent, ObjectField.Name);
-			this.CreateStringController (parent, ObjectField.Description, lineCount: 5);
-
 			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
 				.Where (x => x.Type != FieldType.ComputedAmount && x.Type != FieldType.GuidPerson))
 			{
