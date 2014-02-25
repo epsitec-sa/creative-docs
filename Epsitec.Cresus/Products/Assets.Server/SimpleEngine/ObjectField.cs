@@ -40,6 +40,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Compte7,
 		Compte8,
 
+		//	Définitions d'un compte.
+		AccountCategory,
+		AccountType,
+
 		EventDate,
 		EventGlyph,
 		EventType,

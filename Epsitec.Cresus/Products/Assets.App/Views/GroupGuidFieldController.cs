@@ -12,6 +12,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
+	/// <summary>
+	/// Contrôleur permettant de choisir un goupe (champ ObjectField.GroupParent) pour
+	/// les groupes d'immobilisations ou les comptes (plan comptable).
+	/// </summary>
 	public class GroupGuidFieldController : AbstractFieldController
 	{
 		public DataAccessor						Accessor;

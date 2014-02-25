@@ -23,7 +23,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				yield return ObjectField.Number;
 				yield return ObjectField.Name;
-				yield return ObjectField.Description;
+				yield return ObjectField.AccountCategory;
+				yield return ObjectField.AccountType;
 			}
 		}
 
@@ -35,7 +36,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   100, "Numéro"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 200, "Compte"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 400, "Description"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Catégorie"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Type"));
 
 				return columns.ToArray ();
 			}
@@ -45,7 +47,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<3; i++)
+			for (int i=0; i<4; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -62,21 +64,27 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (BaseType.Accounts, node.Guid);
 
-				var number      = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number, inputValue: true);
-				var name        = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name);
-				var description = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Description);
+				var number   = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number, inputValue: true);
+				var name     = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name);
+				var category = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.AccountCategory);
+				var accType  = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.AccountType);
+
+				var c = EnumDictionaries.GetAccountCategoryName ((AccountCategory) category);
+				var t = EnumDictionaries.GetAccountTypeName     ((AccountType)     accType);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
 				var cell0 = new TreeTableCellTree   (level, type, number, cellState);
 				var cell1 = new TreeTableCellString (name,                cellState);
-				var cell2 = new TreeTableCellString (description,         cellState);
+				var cell2 = new TreeTableCellString (c,                   cellState);
+				var cell3 = new TreeTableCellString (t,                   cellState);
 
 				int columnRank = 0;
 
 				content.Columns[columnRank++].AddRow (cell0);
 				content.Columns[columnRank++].AddRow (cell1);
 				content.Columns[columnRank++].AddRow (cell2);
+				content.Columns[columnRank++].AddRow (cell3);
 			}
 
 			return content;

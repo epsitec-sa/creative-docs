@@ -14,7 +14,8 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Choix d'un objet dans la base de données des groupes.
+	/// Choix d'un objet dans la base de données des groupes d'immobilisations ou
+	/// des comptes (plan comptable).
 	/// </summary>
 	public class GroupsPopup : AbstractPopup
 	{

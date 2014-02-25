@@ -24,6 +24,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateGroupGuidController (parent, ObjectField.GroupParent, BaseType.Accounts);
 			this.CreateStringController    (parent, ObjectField.Number);
 			this.CreateStringController    (parent, ObjectField.Name);
+			this.CreateEnumController      (parent, ObjectField.AccountCategory, EnumDictionaries.DictAccountCategories, editWidth: 100);
+			this.CreateEnumController      (parent, ObjectField.AccountType,     EnumDictionaries.DictAccountTypes,      editWidth: 100);
 			this.CreateStringController    (parent, ObjectField.Description, lineCount: 5);
 		}
 	}

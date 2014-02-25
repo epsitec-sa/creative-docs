@@ -148,6 +148,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyAccounts.AccountNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty (ObjectField.Number, number));
 				e.AddProperty (new DataStringProperty (ObjectField.Name, name));
+				e.AddProperty (new DataIntProperty    (ObjectField.AccountCategory, (int) category));
+				e.AddProperty (new DataIntProperty    (ObjectField.AccountType, (int) type));
 			}
 
 			//?System.Console.WriteLine (number);

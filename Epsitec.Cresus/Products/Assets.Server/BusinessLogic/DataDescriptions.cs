@@ -109,6 +109,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.UserFieldSummaryOrder:
 					return "Ordre dans résumé";
 
+				case ObjectField.AccountCategory:
+					return "Catégorie";
+
+				case ObjectField.AccountType:
+					return "Type";
+
 				default:
 					return null;
 			}

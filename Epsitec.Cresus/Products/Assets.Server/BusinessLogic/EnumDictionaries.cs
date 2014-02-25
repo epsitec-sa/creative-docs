@@ -84,6 +84,28 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
+		public static string GetAccountCategoryName(AccountCategory category)
+		{
+			string s;
+			if (EnumDictionaries.DictAccountCategories.TryGetValue ((int) category, out s))
+			{
+				return s;
+			}
+
+			return null;
+		}
+
+		public static string GetAccountTypeName(AccountType type)
+		{
+			string s;
+			if (EnumDictionaries.DictAccountTypes.TryGetValue ((int) type, out s))
+			{
+				return s;
+			}
+
+			return null;
+		}
+
 
 		//	Ici, il est préférable de ne pas avoir de mécanisme automatique pour
 		//	générer les dictionnaires à partir des enumérations C#. En effet, les
@@ -156,6 +178,36 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			return dict;
+		}
+
+		public static Dictionary<int, string> DictAccountCategories
+		{
+			get
+			{
+				var dict = new Dictionary<int, string> ();
+
+				dict.Add ((int) AccountCategory.Actif,        "Actif");
+				dict.Add ((int) AccountCategory.Passif,       "Passif");
+				dict.Add ((int) AccountCategory.Charge,       "Charge");
+				dict.Add ((int) AccountCategory.Produit,      "Produit");
+				dict.Add ((int) AccountCategory.Exploitation, "Exploitation");
+
+				return dict;
+			}
+		}
+
+		public static Dictionary<int, string> DictAccountTypes
+		{
+			get
+			{
+				var dict = new Dictionary<int, string> ();
+
+				dict.Add ((int) AccountType.Normal, "Normal");
+				dict.Add ((int) AccountType.Groupe, "Regroupement");
+				dict.Add ((int) AccountType.TVA,    "TVA");
+
+				return dict;
+			}
 		}
 	}
 }
