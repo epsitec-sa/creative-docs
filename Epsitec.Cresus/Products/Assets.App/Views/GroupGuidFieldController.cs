@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public class GroupGuidFieldController : AbstractFieldController
 	{
 		public DataAccessor						Accessor;
+		public BaseType							BaseType;
 
 		public Guid								Value
 		{
@@ -110,7 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowPopup()
 		{
-			var popup = new GroupsPopup (this.Accessor, this.Value);
+			var popup = new GroupsPopup (this.Accessor, this.BaseType, this.Value);
 
 			popup.Create (this.button, leftOrRight: true);
 
@@ -123,7 +124,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string GuidToString(Guid guid)
 		{
-			return GroupsLogic.GetFullName (this.Accessor, guid);
+			if (this.BaseType == BaseType.Groups)
+			{
+				return GroupsLogic.GetFullName (this.Accessor, guid);
+			}
+			else if (this.BaseType == BaseType.Accounts)
+			{
+				return AccountsLogic.GetFullName (this.Accessor, guid);
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.BaseType.ToString ()));
+			}
 		}
 
 

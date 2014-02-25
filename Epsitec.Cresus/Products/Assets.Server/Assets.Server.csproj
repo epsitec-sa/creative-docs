@@ -56,6 +56,7 @@
     <Compile Include="BusinessLogic\Amortizations.cs" />
     <Compile Include="BusinessLogic\CategoriesLogic.cs" />
     <Compile Include="BusinessLogic\AmortizationDetails.cs" />
+    <Compile Include="BusinessLogic\AccountsLogic.cs" />
     <Compile Include="BusinessLogic\GroupsGuidRatioLogic.cs" />
     <Compile Include="BusinessLogic\ObjectProperties.cs" />
     <Compile Include="BusinessLogic\TimelinesMode.cs" />

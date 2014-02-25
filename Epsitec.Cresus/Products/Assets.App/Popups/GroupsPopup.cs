@@ -18,15 +18,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class GroupsPopup : AbstractPopup
 	{
-		public GroupsPopup(DataAccessor accessor, Guid selectedGuid)
+		public GroupsPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid)
 		{
 			this.accessor = accessor;
+			this.baseType = baseType;
 
 			this.controller = new NavigationTreeTableController();
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
-			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
+			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
+			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);
 			this.nodeGetter.SetParams (null, SortingInstructions.Default);
 
 			this.visibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
@@ -166,6 +167,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int popupWidth       = 200;
 
 		private readonly DataAccessor					accessor;
+		private readonly BaseType						baseType;
 		private readonly NavigationTreeTableController	controller;
 		private readonly GroupTreeNodeGetter			nodeGetter;
 		private readonly SingleGroupsTreeTableFiller	dataFiller;

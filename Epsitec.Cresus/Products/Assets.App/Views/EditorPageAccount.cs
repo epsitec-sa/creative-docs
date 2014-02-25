@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			parent = this.CreateScrollable (parent);
 
-			this.CreateGroupGuidController (parent, ObjectField.GroupParent);
+			this.CreateGroupGuidController (parent, ObjectField.GroupParent, BaseType.Accounts);
 			this.CreateStringController    (parent, ObjectField.Number);
 			this.CreateStringController    (parent, ObjectField.Name);
 			this.CreateStringController    (parent, ObjectField.Description, lineCount: 5);

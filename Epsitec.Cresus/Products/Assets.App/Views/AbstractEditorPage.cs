@@ -195,11 +195,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void CreateGroupGuidController(Widget parent, ObjectField field)
+		protected void CreateGroupGuidController(Widget parent, ObjectField field, BaseType baseType)
 		{
 			var controller = new GroupGuidFieldController
 			{
 				Accessor  = this.accessor,
+				BaseType  = baseType,
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
 				EditWidth = AbstractFieldController.maxWidth,

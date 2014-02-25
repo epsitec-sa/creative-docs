@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowPopup()
 		{
-			var popup = new GroupsPopup (this.Accessor, this.Value.Guid);
+			var popup = new GroupsPopup (this.Accessor, BaseType.Groups, this.Value.Guid);
 
 			popup.Create (this.button, leftOrRight: true);
 
