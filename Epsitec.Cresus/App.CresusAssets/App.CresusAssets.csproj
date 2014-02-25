@@ -81,6 +81,7 @@
     <Content Include="Cresus.Core.Library.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="External\Data\pme 2011.crp" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

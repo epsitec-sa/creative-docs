@@ -128,6 +128,8 @@
     <Compile Include="BusinessLogic\TimelineMode.cs" />
     <Compile Include="NodeGetters\GroupTreeNodeGetter.cs" />
     <Compile Include="NodeGetters\GroupLevelNodeGetter.cs" />
+    <Compile Include="SimpleEngine\AccountCategory.cs" />
+    <Compile Include="SimpleEngine\AccountType.cs" />
     <Compile Include="SimpleEngine\DummyAccounts.cs" />
     <Compile Include="SimpleEngine\Settings.cs" />
     <Compile Include="SimpleEngine\UserField.cs" />
