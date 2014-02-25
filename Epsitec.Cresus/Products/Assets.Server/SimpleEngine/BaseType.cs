@@ -13,6 +13,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Groups,
 		Persons,
 		UserFields,
-		PlanComptable,
+		Accounts,
 	}
 }

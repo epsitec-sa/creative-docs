@@ -21,10 +21,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.SettingsToolbarBackgroundColor,
 			};
 
-			this.CreateButton (ToolbarCommand.SettingsGeneral,       "Settings.General");
-			this.CreateButton (ToolbarCommand.SettingsAssetsView,    "Settings.AssetsView");
-			this.CreateButton (ToolbarCommand.SettingsPersonsView,   "Settings.PersonsView");
-			this.CreateButton (ToolbarCommand.SettingsPlanComptable, "Settings.PlanComptable");
+			this.CreateButton (ToolbarCommand.SettingsGeneral,     "Settings.General");
+			this.CreateButton (ToolbarCommand.SettingsAssetsView,  "Settings.AssetsView");
+			this.CreateButton (ToolbarCommand.SettingsPersonsView, "Settings.PersonsView");
+			this.CreateButton (ToolbarCommand.SettingsAccounts,    "Settings.Accounts");
 
 			return this.toolbar;
 		}
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ToolbarCommand.SettingsPersonsView:
 					return "Champs des personnes";
 
-				case ToolbarCommand.SettingsPlanComptable:
+				case ToolbarCommand.SettingsAccounts:
 					return "Plan comptable";
 
 				default:
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				yield return ToolbarCommand.SettingsGeneral;
 				yield return ToolbarCommand.SettingsAssetsView;
 				yield return ToolbarCommand.SettingsPersonsView;
-				yield return ToolbarCommand.SettingsPlanComptable;
+				yield return ToolbarCommand.SettingsAccounts;
 			}
 		}
 	}

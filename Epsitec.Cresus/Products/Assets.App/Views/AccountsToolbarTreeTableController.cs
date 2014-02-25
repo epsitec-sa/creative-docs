@@ -12,9 +12,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class PlanComptableToolbarTreeTableController : AbstractToolbarTreeTableController<TreeNode>, IDirty
+	public class AccountsToolbarTreeTableController : AbstractToolbarTreeTableController<TreeNode>, IDirty
 	{
-		public PlanComptableToolbarTreeTableController(DataAccessor accessor)
+		public AccountsToolbarTreeTableController(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.hasFilter         = false;
@@ -22,10 +22,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasMoveOperations = false;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.PlanComptable);
-			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.PlanComptable, primaryNodeGetter);
+			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Accounts);
+			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Accounts, primaryNodeGetter);
 
-			this.title = SettingsToolbar.GetCommandDescription (ToolbarCommand.SettingsPlanComptable);
+			this.title = SettingsToolbar.GetCommandDescription (ToolbarCommand.SettingsAccounts);
 		}
 
 
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new PlanComptableTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new AccountsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller);
 
 			this.controller.AddSortedColumn (0);
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "yes")
 					{
-						this.accessor.RemoveObject (BaseType.PlanComptable, this.SelectedGuid);
+						this.accessor.RemoveObject (BaseType.Accounts, this.SelectedGuid);
 						this.UpdateData ();
 						this.OnUpdateAfterDelete ();
 					}
@@ -154,8 +154,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateObject(string name, Guid parent)
 		{
 			var date = this.accessor.Mandat.StartDate;
-			var guid = this.accessor.CreateObject (BaseType.PlanComptable, date, name, parent);
-			var obj = this.accessor.GetObject (BaseType.PlanComptable, guid);
+			var guid = this.accessor.CreateObject (BaseType.Accounts, date, name, parent);
+			var obj = this.accessor.GetObject (BaseType.Accounts, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 			
 			this.UpdateData ();

@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case BaseType.UserFields:
 						return PageType.UserFields;
 
-					case BaseType.PlanComptable:
+					case BaseType.Accounts:
 						return PageType.Compte;
 
 					default:
@@ -266,8 +266,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case BaseType.UserFields:
 					return ObjectEditor.GetUserFieldAvailablePages (hasEvent, type);
 
-				case BaseType.PlanComptable:
-					return ObjectEditor.GetPlanComptableAvailablePages (hasEvent, type);
+				case BaseType.Accounts:
+					return ObjectEditor.GetAccountsAvailablePages (hasEvent, type);
 
 				default:
 					return null;
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			yield return PageType.UserFields;
 		}
 
-		private static IEnumerable<PageType> GetPlanComptableAvailablePages(bool hasEvent, EventType type)
+		private static IEnumerable<PageType> GetAccountsAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
 			yield return PageType.Compte;

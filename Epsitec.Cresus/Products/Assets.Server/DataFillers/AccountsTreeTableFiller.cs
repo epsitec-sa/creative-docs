@@ -9,9 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public class PlanComptableTreeTableFiller : AbstractTreeTableFiller<TreeNode>
+	public class AccountsTreeTableFiller : AbstractTreeTableFiller<TreeNode>
 	{
-		public PlanComptableTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<TreeNode> nodeGetter)
+		public AccountsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<TreeNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var node  = this.nodeGetter[firstRow+i];
 				var level = node.Level;
 				var type  = node.Type;
-				var obj   = this.accessor.GetObject (BaseType.Groups, node.Guid);
+				var obj   = this.accessor.GetObject (BaseType.Accounts, node.Guid);
 
 				var number      = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number, inputValue: true);
 				var name        = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name);

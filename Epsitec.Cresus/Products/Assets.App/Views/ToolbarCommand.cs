@@ -64,6 +64,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		SettingsGeneral,
 		SettingsAssetsView,
 		SettingsPersonsView,
-		SettingsPlanComptable,
+		SettingsAccounts,
 	}
 }

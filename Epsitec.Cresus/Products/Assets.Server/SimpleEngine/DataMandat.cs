@@ -19,11 +19,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			this.settings = new Settings ();
 
-			this.assets        = new GuidList<DataObject> ();
-			this.categories    = new GuidList<DataObject> ();
-			this.groups        = new GuidList<DataObject> ();
-			this.persons       = new GuidList<DataObject> ();
-			this.planComptable = new GuidList<DataObject> ();
+			this.assets     = new GuidList<DataObject> ();
+			this.categories = new GuidList<DataObject> ();
+			this.groups     = new GuidList<DataObject> ();
+			this.persons    = new GuidList<DataObject> ();
+			this.accounts   = new GuidList<DataObject> ();
 		}
 
 		public Settings							Settings
@@ -56,8 +56,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case BaseType.Persons:
 					return this.persons;
 
-				case BaseType.PlanComptable:
-					return this.planComptable;
+				case BaseType.Accounts:
+					return this.accounts;
 
 				default:
 					return null;
@@ -70,6 +70,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private readonly GuidList<DataObject>	categories;
 		private readonly GuidList<DataObject>	groups;
 		private readonly GuidList<DataObject>	persons;
-		private readonly GuidList<DataObject>	planComptable;
+		private readonly GuidList<DataObject>	accounts;
 	}
 }

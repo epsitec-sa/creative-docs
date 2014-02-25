@@ -10,14 +10,14 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class PlanComptableSettingsView : AbstractSettingsView
+	public class AccountsSettingsView : AbstractSettingsView
 	{
-		public PlanComptableSettingsView(DataAccessor accessor, MainToolbar mainToolbar)
+		public AccountsSettingsView(DataAccessor accessor, MainToolbar mainToolbar)
 			: base (accessor, mainToolbar)
 		{
-			this.baseType = BaseType.PlanComptable;
+			this.baseType = BaseType.Accounts;
 
-			this.listController = new PlanComptableToolbarTreeTableController (this.accessor);
+			this.listController = new AccountsToolbarTreeTableController (this.accessor);
 			this.objectEditor = new ObjectEditor (this.accessor, BaseType.UserFields, this.baseType, isTimeless: true);
 
 			this.ignoreChanges = new SafeCounter ();
@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly BaseType							baseType;
-		private readonly PlanComptableToolbarTreeTableController listController;
+		private readonly AccountsToolbarTreeTableController listController;
 		private readonly ObjectEditor						objectEditor;
 		private readonly SafeCounter						ignoreChanges;
 

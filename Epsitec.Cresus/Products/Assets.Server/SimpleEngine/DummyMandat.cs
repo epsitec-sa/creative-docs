@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var mandat = new DataMandat ("Exemple", new System.DateTime (2000, 1, 1), new System.DateTime (2050, 12, 31));
 
 			DummyMandat.AddSettings (mandat);
+			DummyMandat.AddAccounts (mandat);
 			DummyMandat.AddPersons (mandat);
 			DummyMandat.AddCategories (mandat);
 			DummyMandat.AddGroups (mandat);
@@ -1098,6 +1099,47 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
 				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
 			}
+		}
+
+		private static void AddAccounts(DataMandat mandat)
+		{
+			var accounts = mandat.GetData (BaseType.Accounts);
+
+			var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
+
+			var o0 = new DataObject ();
+			accounts.Add (o0);
+			{
+				var e = new DataEvent (start, EventType.Input);
+				o0.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, "Comptes"));
+			}
+
+			///////////////
+
+			var oActif = new DataObject ();
+			accounts.Add (oActif);
+			{
+				var e = new DataEvent (start, EventType.Input);
+				oActif.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.GroupNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o0.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Number, "10"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, "Actif"));
+			}
+
+			var o1 = new DataObject ();
+			accounts.Add (o1);
+			{
+				var e = new DataEvent (start, EventType.Input);
+				o1.AddEvent (e);
+				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
+				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oActif.Guid));
+				e.AddProperty (new DataStringProperty (ObjectField.Number, "1000"));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, "Caisse"));
+			}
+
 		}
 
 		private static void AddGroups(DataMandat mandat)
