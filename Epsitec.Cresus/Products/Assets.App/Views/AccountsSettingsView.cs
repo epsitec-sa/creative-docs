@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -18,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseType = BaseType.Accounts;
 
 			this.listController = new AccountsToolbarTreeTableController (this.accessor);
-			this.objectEditor = new ObjectEditor (this.accessor, BaseType.UserFields, this.baseType, isTimeless: true);
+			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: true);
 
 			this.ignoreChanges = new SafeCounter ();
 		}
@@ -236,7 +237,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateEditor()
 		{
-			this.objectEditor.SetObject (this.selectedGuid, Timestamp.MaxValue);
+			var timestamp = this.GetLastTimestamp (this.selectedGuid);
+
+			if (!timestamp.HasValue)
+			{
+				timestamp = Timestamp.Now;
+			}
+
+			this.objectEditor.SetObject (this.selectedGuid, timestamp);
+		}
+
+		private Timestamp? GetLastTimestamp(Guid guid)
+		{
+			var obj = this.accessor.GetObject (this.baseType, guid);
+			if (obj != null)
+			{
+				return AssetCalculator.GetLastTimestamp (obj);
+			}
+
+			return null;
 		}
 
 

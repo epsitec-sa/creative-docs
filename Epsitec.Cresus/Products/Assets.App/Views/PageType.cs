@@ -25,6 +25,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		UserFields,
 
-		Compte,
+		Account,
 	}
 }

@@ -120,6 +120,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case PageType.UserFields:
 					return "Définitions du champ";
 
+				case PageType.Account:
+					return "Définitions du compte";
+
 				default:
 					return null;
 			}

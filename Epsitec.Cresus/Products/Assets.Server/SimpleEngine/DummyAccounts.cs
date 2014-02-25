@@ -23,8 +23,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				var accounts = mandat.GetData (BaseType.Accounts);
 
+#if false
+				var o = DummyAccounts.AddAccount (accounts, "0", "Plan comptable", AccountCategory.Unknown, AccountType.Groupe);
+				var a = DummyAccounts.AddAccount (accounts, "1", "Blupi", AccountCategory.Unknown, AccountType.Groupe);
+				var b = DummyAccounts.AddAccount (accounts, "2", "Toto", AccountCategory.Unknown, AccountType.Groupe);
+
+				DummyAccounts.AddGroup (a, o);
+				DummyAccounts.AddGroup (b, o);
+#else
 				DummyAccounts.AddAccount (accounts, "0", "Plan comptable", AccountCategory.Unknown, AccountType.Groupe);
 				DummyAccounts.Import (lines, accounts);
+#endif
 			}
 		}
 
