@@ -35,6 +35,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ToolbarCommand.SettingsPersonsView:
 					return new UserFieldsSettingsView (accessor, mainToolbar, BaseType.Persons);
 
+				case ToolbarCommand.SettingsPlanComptable:
+					return new PlanComptableSettingsView (accessor, mainToolbar);
+
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown SettingsView {0}", command.ToString ()));
 			}

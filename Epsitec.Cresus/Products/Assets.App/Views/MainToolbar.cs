@@ -84,6 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 								       													   									     
 			this.buttonAssets          = this.CreateViewTypeButton (ViewType.Assets,        ToolbarCommand.ViewTypeAssets,        StaticDescriptions.GetViewTypeIcon (ViewType.Assets),        StaticDescriptions.GetViewTypeDescription (ViewType.Assets));
 			this.buttonAmortizations   = this.CreateViewTypeButton (ViewType.Amortizations, ToolbarCommand.ViewTypeAmortizations, StaticDescriptions.GetViewTypeIcon (ViewType.Amortizations), StaticDescriptions.GetViewTypeDescription (ViewType.Amortizations));
+			this.buttonEcritures       = this.CreateViewTypeButton (ViewType.Ecritures,     ToolbarCommand.ViewTypeEcritures,     StaticDescriptions.GetViewTypeIcon (ViewType.Ecritures),     StaticDescriptions.GetViewTypeDescription (ViewType.Ecritures));
 			this.buttonCategories      = this.CreateViewTypeButton (ViewType.Categories,    ToolbarCommand.ViewTypeCategories,    StaticDescriptions.GetViewTypeIcon (ViewType.Categories),    StaticDescriptions.GetViewTypeDescription (ViewType.Categories));
 			this.buttonGroups          = this.CreateViewTypeButton (ViewType.Groups,        ToolbarCommand.ViewTypeGroups,        StaticDescriptions.GetViewTypeIcon (ViewType.Groups),        StaticDescriptions.GetViewTypeDescription (ViewType.Groups));
 			this.buttonPersons         = this.CreateViewTypeButton (ViewType.Persons,       ToolbarCommand.ViewTypePersons,       StaticDescriptions.GetViewTypeIcon (ViewType.Persons),       StaticDescriptions.GetViewTypeDescription (ViewType.Persons));
@@ -143,8 +144,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewTypeCommands()
 		{
-			this.SetCommandActivate (ToolbarCommand.ViewTypeAssets,        this.viewType == ViewType.Assets      );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeAssets,        this.viewType == ViewType.Assets       );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeAmortizations, this.viewType == ViewType.Amortizations);
+			this.SetCommandActivate (ToolbarCommand.ViewTypeEcritures,     this.viewType == ViewType.Ecritures    );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeCategories,    this.viewType == ViewType.Categories   );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeGroups,        this.viewType == ViewType.Groups       );
 			this.SetCommandActivate (ToolbarCommand.ViewTypePersons,       this.viewType == ViewType.Persons      );
@@ -200,6 +202,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IconButton						buttonAssets;
 		private IconButton						buttonAmortizations;
+		private IconButton						buttonEcritures;
 		private IconButton						buttonCategories;
 		private IconButton						buttonGroups;
 		private IconButton						buttonPersons;

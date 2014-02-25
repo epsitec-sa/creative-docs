@@ -127,6 +127,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.Amortizations:
 					return new AmortizationsView (accessor, toolbar);
 
+				case ViewType.Ecritures:
+					return new EcrituresView (accessor, toolbar);
+
 				case ViewType.Categories:
 					return new CategoriesView (accessor, toolbar);
 

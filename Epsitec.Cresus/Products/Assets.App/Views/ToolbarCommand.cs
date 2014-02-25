@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		ViewTypeAssets,
 		ViewTypeAmortizations,
+		ViewTypeEcritures,
 		ViewTypeCategories,
 		ViewTypeGroups,
 		ViewTypePersons,
@@ -63,5 +64,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		SettingsGeneral,
 		SettingsAssetsView,
 		SettingsPersonsView,
+		SettingsPlanComptable,
 	}
 }

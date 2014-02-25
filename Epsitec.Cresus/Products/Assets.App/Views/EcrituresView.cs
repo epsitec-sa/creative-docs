@@ -9,9 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ReportsView : AbstractView
+	public class EcrituresView : AbstractView
 	{
-		public ReportsView(DataAccessor accessor, MainToolbar toolbar)
+		public EcrituresView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
 		}
