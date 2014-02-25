@@ -136,6 +136,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.textField.SelectAll ();
 			this.textField.Focus ();
+
+			base.SetFocus ();
 		}
 
 

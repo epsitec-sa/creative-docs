@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public PropertyState PropertyState
+		public PropertyState					PropertyState
 		{
 			get
 			{
@@ -91,6 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void SetFocus()
 		{
+			this.ScrollToField ();
 		}
 
 		private void CreateLabel()
@@ -239,6 +240,53 @@ namespace Epsitec.Cresus.Assets.App.Views
 					textField.BackColor = color;
 					textField.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
 				}
+			}
+		}
+
+
+		private void ScrollToField()
+		{
+			//	Déplace l'ascenseur vertical de la zone Scrollable, afin que le FieldController
+			//	soit entièrement visible.
+			var scrollable = this.ParentScrollable;
+			if (scrollable == null)
+			{
+				return;
+			}
+
+			double yTop    = scrollable.Viewport.ActualHeight - scrollable.ViewportOffsetY;
+			double yBottom = scrollable.Viewport.ActualHeight - scrollable.ViewportOffsetY - scrollable.ActualHeight;
+			var rect = this.frameBox.ActualBounds;
+
+			if (rect.Top > yTop)
+			{
+				scrollable.ViewportOffsetY = scrollable.Viewport.ActualHeight - rect.Top;
+			}
+
+			if (rect.Bottom < yBottom)
+			{
+				scrollable.ViewportOffsetY = scrollable.Viewport.ActualHeight - rect.Bottom - scrollable.ActualHeight;
+			}
+		}
+
+		private Scrollable ParentScrollable
+		{
+			//	Retourne le Scrollable parent.
+			get
+			{
+				Widget parent = this.frameBox.Parent;
+
+				while (parent != null)
+				{
+					if (parent is Scrollable)
+					{
+						return parent as Scrollable;
+					}
+
+					parent = parent.Parent;
+				}
+
+				return null;
 			}
 		}
 

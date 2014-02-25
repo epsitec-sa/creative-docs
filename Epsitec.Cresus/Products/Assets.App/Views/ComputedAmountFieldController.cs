@@ -128,6 +128,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void SetFocus()
 		{
 			this.controller.SetFocus ();
+
+			base.SetFocus ();
 		}
 
 
