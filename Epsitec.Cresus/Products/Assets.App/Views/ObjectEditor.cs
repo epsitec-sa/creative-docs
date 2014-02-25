@@ -65,6 +65,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case BaseType.UserFields:
 						return PageType.UserFields;
 
+					case BaseType.PlanComptable:
+						return PageType.Compte;
+
 					default:
 						var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
 
@@ -263,6 +266,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case BaseType.UserFields:
 					return ObjectEditor.GetUserFieldAvailablePages (hasEvent, type);
 
+				case BaseType.PlanComptable:
+					return ObjectEditor.GetPlanComptableAvailablePages (hasEvent, type);
+
 				default:
 					return null;
 			}
@@ -333,6 +339,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
 			yield return PageType.UserFields;
+		}
+
+		private static IEnumerable<PageType> GetPlanComptableAvailablePages(bool hasEvent, EventType type)
+		{
+			//	Retourne les pages autorisées pour un type d'événement donné.
+			yield return PageType.Compte;
 		}
 
 

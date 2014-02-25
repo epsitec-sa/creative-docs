@@ -44,8 +44,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.objectNodeGetter1 = new SortableNodeGetter (objectNodes, accessor, BaseType.Assets);
 			this.objectNodeGetter2 = new SorterNodeGetter (this.objectNodeGetter1);
 
-			this.groupNodeGetter1 = new GroupParentNodeGetter (groupNodes, accessor);
-			this.groupNodeGetter2 = new GroupLevelNodeGetter (this.groupNodeGetter1, accessor);
+			this.groupNodeGetter1 = new GroupParentNodeGetter (groupNodes, accessor, BaseType.Groups);
+			this.groupNodeGetter2 = new GroupLevelNodeGetter (this.groupNodeGetter1, accessor, BaseType.Groups);
 
 			this.mergeNodeGetter  = new MergeNodeGetter (accessor, this.groupNodeGetter2, this.objectNodeGetter2);
 			this.treeObjectsGetter = new TreeObjectsNodeGetter (this.mergeNodeGetter);

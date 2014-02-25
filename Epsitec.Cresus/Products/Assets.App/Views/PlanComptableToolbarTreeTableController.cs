@@ -12,9 +12,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class GroupsToolbarTreeTableController : AbstractToolbarTreeTableController<TreeNode>, IDirty
+	public class PlanComptableToolbarTreeTableController : AbstractToolbarTreeTableController<TreeNode>, IDirty
 	{
-		public GroupsToolbarTreeTableController(DataAccessor accessor)
+		public PlanComptableToolbarTreeTableController(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.hasFilter         = false;
@@ -22,10 +22,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasMoveOperations = false;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
-			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
+			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.PlanComptable);
+			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.PlanComptable, primaryNodeGetter);
 
-			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Groups);
+			this.title = SettingsToolbar.GetCommandDescription (ToolbarCommand.SettingsPlanComptable);
 		}
 
 
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new PlanComptableTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller);
 
 			this.controller.AddSortedColumn (0);
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var popup = new YesNoPopup
 				{
-					Question = "Voulez-vous supprimer le groupe sélectionné ?",
+					Question = "Voulez-vous supprimer le compte sélectionné ?",
 				};
 
 				popup.Create (target, leftOrRight: true);
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "yes")
 					{
-						this.accessor.RemoveObject (BaseType.Groups, this.SelectedGuid);
+						this.accessor.RemoveObject (BaseType.PlanComptable, this.SelectedGuid);
 						this.UpdateData ();
 						this.OnUpdateAfterDelete ();
 					}
@@ -154,8 +154,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateObject(string name, Guid parent)
 		{
 			var date = this.accessor.Mandat.StartDate;
-			var guid = this.accessor.CreateObject (BaseType.Groups, date, name, parent);
-			var obj = this.accessor.GetObject (BaseType.Groups, guid);
+			var guid = this.accessor.CreateObject (BaseType.PlanComptable, date, name, parent);
+			var obj = this.accessor.GetObject (BaseType.PlanComptable, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 			
 			this.UpdateData ();

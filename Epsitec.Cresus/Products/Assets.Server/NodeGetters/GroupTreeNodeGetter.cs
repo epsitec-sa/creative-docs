@@ -30,11 +30,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public class GroupTreeNodeGetter : AbstractNodeGetter<TreeNode>, ITreeFunctions  // outputNodes
 	{
-		public GroupTreeNodeGetter(DataAccessor accessor, AbstractNodeGetter<GuidNode> inputNodes)
+		public GroupTreeNodeGetter(DataAccessor accessor, BaseType baseType, AbstractNodeGetter<GuidNode> inputNodes)
 		{
 			this.inputNodes        = inputNodes;
-			this.parentNodeGetter = new GroupParentNodeGetter (inputNodes, accessor);
-			this.levelNodeGetter  = new GroupLevelNodeGetter (this.parentNodeGetter, accessor);
+			this.parentNodeGetter = new GroupParentNodeGetter (inputNodes, accessor, baseType);
+			this.levelNodeGetter  = new GroupLevelNodeGetter (this.parentNodeGetter, accessor, baseType);
 			this.treeObjectsGetter = new TreeObjectsNodeGetter (this.levelNodeGetter);
 		}
 

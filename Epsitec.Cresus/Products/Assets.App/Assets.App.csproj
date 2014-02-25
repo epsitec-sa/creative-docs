@@ -123,6 +123,7 @@
     <Compile Include="Views\AmortizationsViewState.cs" />
     <Compile Include="Views\AmortizationsToolbar.cs" />
     <Compile Include="Views\AbstractSettingsView.cs" />
+    <Compile Include="Views\PlanComptableToolbarTreeTableController.cs" />
     <Compile Include="Views\PlanComptableSettingsView.cs" />
     <Compile Include="Views\EcrituresView.cs" />
     <Compile Include="Views\EditorPageUserField.cs" />
