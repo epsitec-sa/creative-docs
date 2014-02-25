@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			parent = this.CreateScrollable (parent);
+
 			this.line1a = this.CreateFrame (parent, false);
 			this.line1b = this.CreateFrame (parent, false);
 			this.line2a = this.CreateFrame (parent, true);
@@ -57,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (!ad.Def.IsEmpty)
 				{
 					this.CreateTitle (this.line1a, "Paramètres", "Paramètres de l'amortissement, définis dans l'objet");
-					this.CreateText  (this.line1b, AbstractView.editionWidth-20, ad.Def.GetFullName ());
+					this.CreateText  (this.line1b, EditorPageAmortizationPreview.width, ad.Def.GetFullName ());
 				}
 
 				this.CreateTitle (this.line2a, "Calcul", "Calcul effectué pour obtenir la valeur finale amortie");
@@ -136,7 +138,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent           = parent,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = 50,
+				PreferredWidth   = 45,
 				IsReadOnly       = true,
 				Text             = TypeConverters.RateToString (value),
 				Margins          = new Margins (0, 0, 5, 5),
@@ -154,7 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent           = parent,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = 60,
+				PreferredWidth   = 55,
 				IsReadOnly       = true,
 				Text             = TypeConverters.DecimalToString (value),
 				Margins          = new Margins (0, 0, 5, 5),
@@ -172,7 +174,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent           = parent,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = AbstractView.editionWidth-20,
+				PreferredWidth   = EditorPageAmortizationPreview.width,
 				Text             = text,
 				ContentAlignment = ContentAlignment.BottomLeft,
 				Margins          = new Margins (0, 0, 10, 0),
@@ -213,6 +215,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			label.TextLayout.DefaultFontSize = 16.0;
 		}
+
+
+		private const int width = AbstractView.editionWidth - 20 - AbstractView.scrollerDefaultBreadth;
 
 
 		private FrameBox line1a;

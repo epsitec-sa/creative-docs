@@ -3,9 +3,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -509,6 +511,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected Widget CreateScrollable(Widget parent)
+		{
+			this.scrollable = new Scrollable
+			{
+				Parent                 = parent,
+				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+				VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways,
+				Dock                   = DockStyle.Fill,
+				Margins                = new Margins (10, 0, 0, 0),
+			};
+
+			this.scrollable.Viewport.IsAutoFitting = true;
+			this.scrollable.Viewport.Padding = new Margins (0, 10, 10, 10);
+
+			return this.scrollable.Viewport;
+		}
+
+		protected void CreateRightGrey(Widget parent)
+		{
+			//	Crée la bande grise à droite, qui prolonge visuellement l'ascenseur.
+			new FrameBox
+			{
+				Parent         = parent,
+				Anchor         = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right,
+				PreferredWidth = AbstractView.scrollerDefaultBreadth,
+				BackColor      = ColorManager.WindowBackgroundColor,
+			};
+		}
+
+
 		protected void ShowHistoryPopup(Widget target, ObjectField field)
 		{
 			var popup = new HistoryPopup (this.accessor, this.baseType, this.objectGuid, this.timestamp, field);
@@ -630,6 +662,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected readonly bool						isTimeless;
 		private Dictionary<ObjectField, AbstractFieldController> fieldControllers;
 
+		protected Scrollable						scrollable;
 		protected Guid								objectGuid;
 		protected DataObject						obj;
 		protected Timestamp							timestamp;

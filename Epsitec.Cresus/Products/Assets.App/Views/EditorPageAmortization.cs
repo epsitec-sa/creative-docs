@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			parent = this.CreateScrollable (parent);
+
 			this.CreateStringController  (parent, ObjectField.CategoryName);
 			this.CreateDecimalController (parent, ObjectField.AmortizationRate, DecimalFormat.Rate);
 			this.CreateEnumController    (parent, ObjectField.AmortizationType, EnumDictionaries.DictAmortizationTypes, editWidth: 90);

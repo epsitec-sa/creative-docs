@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			parent = this.CreateScrollable (parent);
+
 			this.CreateComputedAmountController (parent, ObjectField.MainValue);
 
 			foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)

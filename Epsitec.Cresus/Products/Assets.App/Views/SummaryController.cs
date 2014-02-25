@@ -18,11 +18,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public void CreateUI(Widget parent)
 		{
-			this.frameBox = new FrameBox
+			this.scrollable = new Scrollable
 			{
-				Parent = parent,
-				Dock   = DockStyle.Fill,
+				Parent                 = parent,
+				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+				VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways,
+				Dock                   = DockStyle.Fill,
+				Margins                = new Margins (10, 0, 0, 0),
 			};
+
+			this.scrollable.Viewport.IsAutoFitting = true;
 		}
 
 		public void SetTiles(List<List<SummaryControllerTile?>> tiles)
@@ -34,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateTiles()
 		{
-			this.frameBox.Children.Clear ();
+			this.scrollable.Viewport.Children.Clear ();
 
 			int columnsCount = this.ColumnsCount;
 			int rowsCount    = this.RowsCount;
@@ -44,14 +49,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				//	Calcule une largeur permettant d'afficher 6 colonnes.
 				//	Les colonnes de données (impaires) occupent plus de place
 				//	que celle de description (paires).
-				int w = (AbstractView.editionWidth-30) / 6;
+				int w = (AbstractView.editionWidth-20-AbstractView.scrollerDefaultBreadth) / 6;
 				int width = (column%2 == 0) ? w-20 : w+20;
 
 				var columnFrame = new FrameBox
 				{
-					Parent         = this.frameBox,
+					Parent         = this.scrollable.Viewport,
 					Dock           = DockStyle.Left,
-					PreferredWidth = width,
+					PreferredWidth = width-1,
 				};
 
 				for (int row = 0; row < rowsCount; row++)
@@ -61,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						Parent          = columnFrame,
 						Name            = SummaryController.PutRowColumn (row, column),
 						Dock            = DockStyle.Top,
-						PreferredWidth  = width,
+						PreferredWidth  = width-1,
 						PreferredHeight = AbstractFieldController.lineHeight,
 						Margins         = new Margins (0, 1, 0, 1),
 						TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
@@ -222,7 +227,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private FrameBox							frameBox;
+		private Scrollable							scrollable;
 		private List<List<SummaryControllerTile?>>	tiles;
 	}
 }

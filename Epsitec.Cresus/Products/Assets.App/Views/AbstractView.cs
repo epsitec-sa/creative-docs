@@ -166,7 +166,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		public const int editionWidth = AbstractFieldController.labelWidth + AbstractFieldController.maxWidth + 80;
+		public const int scrollerDefaultBreadth = 17;  // AbstractScroller.DefaultBreadth pas const !
+		public const int editionWidth = AbstractFieldController.labelWidth + AbstractFieldController.maxWidth + 70 + AbstractView.scrollerDefaultBreadth;
 
 		protected readonly DataAccessor			accessor;
 		protected readonly MainToolbar			mainToolbar;

@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent          = parent,
 				Dock            = DockStyle.Top,
 				PreferredHeight = 30,
-				Margins         = new Margins (0, 0, 0, 20),
+				Margins         = new Margins (10),
 			};
 
 			this.controller.CreateUI (parent);

@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			parent = this.CreateScrollable (parent);
+
 			this.CreateGuidRatiosController (parent);
 		}
 	}

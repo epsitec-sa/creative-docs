@@ -19,6 +19,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			parent = this.CreateScrollable (parent);
+
 			this.CreateStringController (parent, ObjectField.Name);
 
 			Dictionary<int, string> dict;

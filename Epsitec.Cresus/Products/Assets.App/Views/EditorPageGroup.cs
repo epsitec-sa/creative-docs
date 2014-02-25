@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			parent = this.CreateScrollable (parent);
+
 			this.CreateGroupGuidController (parent, ObjectField.GroupParent);
 			this.CreateStringController    (parent, ObjectField.Name);
 			this.CreateStringController    (parent, ObjectField.Description, lineCount: 5);

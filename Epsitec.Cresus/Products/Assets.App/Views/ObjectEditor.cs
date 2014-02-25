@@ -102,8 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent         = box,
 				Dock           = DockStyle.Left,
-				PreferredWidth = 560,
-				Padding        = new Margins (10),
+				PreferredWidth = AbstractView.editionWidth,
 				BackColor      = ColorManager.EditBackgroundColor,
 			};
 

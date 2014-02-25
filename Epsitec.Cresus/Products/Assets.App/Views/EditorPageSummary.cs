@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			this.CreateRightGrey (parent);
 			this.summaryController.CreateUI (parent);
 			this.CreateCommentaries (parent);
 		}
@@ -44,20 +45,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateCommentaries(Widget parent)
 		{
-			const int size = AbstractFieldController.lineHeight;
+			const int h = AbstractFieldController.lineHeight;
 
 			this.commentaries = new FrameBox
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Bottom,
-				PreferredHeight = size,
+				PreferredHeight = h,
+				Margins         = new Margins (10),
 			};
 
 			new FrameBox
 			{
 				Parent        = this.commentaries,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (size, size),
+				PreferredSize = new Size (h, h),
 				BackColor     = ColorManager.NormalFieldColor,
 			};
 
@@ -66,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent        = this.commentaries,
 				Text          = "Champ pouvant être défini par cet événement",
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (250, size),
+				PreferredSize = new Size (250, h),
 				Margins       = new Margins (10, 0, 0, 0),
 			};
 
@@ -74,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent        = this.commentaries,
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (size, size),
+				PreferredSize = new Size (h, h),
 			};
 
 			new StaticText
@@ -82,7 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent        = this.commentaries,
 				Text          = "Champ défini par cet événement",
 				Dock          = DockStyle.Left,
-				PreferredSize = new Size (200, size),
+				PreferredSize = new Size (200, h),
 				Margins       = new Margins (10, 0, 0, 0),
 			};
 
