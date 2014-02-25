@@ -35,7 +35,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
 				.EnableActionMenu<ActionAiderPersonViewController5AddHousehold> ()
 				.EnableActionOnDrop<ActionAiderPersonViewController8FusionOnDrop> ()
-				.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
 				.Text (x => x.GetPersonalDataSummary ());
@@ -52,11 +51,29 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (x => TextFormatter.FormatText ("Détails techniques du RCH"))
 				.Text (x => SummaryAiderPersonViewController.GetTechnicalSummary (x));
 
-			wall.AddBrick (x => x.ParishGroup)
+			//PAROISSE
+			if (string.IsNullOrEmpty (this.Entity.GeoParishGroupPathCache))
+			{
+				wall.AddBrick ()
+				.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
 				.Icon ("Data.AiderGroup.Parish")
 				.Title ("Paroisse")
-				.Text (x => x.Name)
-				.Attribute (BrickMode.DefaultToSummarySubView);
+				.Text (p => p.ParishGroup.Name);
+			}
+			else
+			{
+				var origine = AiderGroupEntity.FindGroups (this.BusinessContext, this.Entity.GeoParishGroupPathCache).First ();
+				var text =  "Paroisse d'origine:\n"
+					+		origine.Name + "\n"
+					+		"Dérogé vers:\n"
+					+		this.Entity.ParishGroup.Name;
+
+				wall.AddBrick ()
+				.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
+				.Icon ("Data.AiderGroup.Parish")
+				.Title ("Paroisse")
+				.Text (TextFormatter.FormatText(text));
+			}
 
 			wall.AddBrick ()
 				.Icon ("Data.AiderGroup.People")

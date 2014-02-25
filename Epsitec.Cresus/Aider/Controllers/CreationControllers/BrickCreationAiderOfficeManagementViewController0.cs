@@ -19,9 +19,6 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		{
 			action
 				.Title ("Ajouter un secrétariat")
-				.Field<string> ()
-					.Title ("Nom")
-				.End ()
 				.Field<AiderGroupEntity> ()
 					.Title ("Paroisse de référence")
 					.WithSpecialField<AiderGroupSpecialField<AiderOfficeManagementEntity>> ()
@@ -30,16 +27,11 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<string, AiderGroupEntity, AiderOfficeManagementEntity> (this.Execute);
+			return FunctionExecutor.Create<AiderGroupEntity, AiderOfficeManagementEntity> (this.Execute);
 		}
 
-		private AiderOfficeManagementEntity Execute(string name, AiderGroupEntity group)
+		private AiderOfficeManagementEntity Execute(AiderGroupEntity group)
 		{
-			if (string.IsNullOrEmpty (name))
-			{
-				throw new BusinessRuleException ("Le nom est obligatoire");
-			}
-
 			if (group.IsNull ())
 			{
 				throw new BusinessRuleException ("Un groupe de référence est obligatoire");
@@ -52,7 +44,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				}
 			}
 
-			return AiderOfficeManagementEntity.Create (this.BusinessContext, name, group);
+			return AiderOfficeManagementEntity.Create (this.BusinessContext, group.Name, group);
 		}
 	}
 }

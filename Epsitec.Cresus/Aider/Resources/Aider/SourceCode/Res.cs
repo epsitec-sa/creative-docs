@@ -1405,6 +1405,14 @@ namespace Epsitec.Aider
 				
 				public static class WarningType
 				{
+					//	designer:cap/LVOO13
+					public static global::Epsitec.Common.Types.Caption DerogationChange
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 56));
+						}
+					}
 					//	designer:cap/LVGR32
 					public static global::Epsitec.Common.Types.Caption EChAddressChanged
 					{
