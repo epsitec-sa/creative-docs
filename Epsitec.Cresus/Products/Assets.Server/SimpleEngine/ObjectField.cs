@@ -59,8 +59,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		UserFieldField,
 		UserFieldGuid,
 
-		GroupGuidRatioFirst = 10100,
-		GroupGuidRatioLast  = 10119,
+		GroupGuidRatioFirst = 10000,
+		GroupGuidRatioLast  = 10099,
 
 		UserFieldFirst = 20000,
 		UserFieldLast  = 29999,

@@ -9,6 +9,26 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AssetsLogic
 	{
+		public static IEnumerable<UserField> GetUserFields(DataAccessor accessor)
+		{
+			//	Retourne les champs d'un objet d'immobilisation.
+			bool mainValue = false;
+
+			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+			{
+				if (!mainValue && userField.Type == FieldType.ComputedAmount)
+				{
+					//	Juste avant la première valeur utilisateur, on injecte la valeur comptable.
+					//	Le Guid créé à la volée n'est pas utilisé !
+					yield return new UserField (DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.ComputedAmount, userField.ColumnWidth, null, null, null, 0);
+					mainValue = true;
+				}
+
+				yield return userField;
+			}
+		}
+
+
 		public static string GetSummary(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le nom court d'un objet, du genre:

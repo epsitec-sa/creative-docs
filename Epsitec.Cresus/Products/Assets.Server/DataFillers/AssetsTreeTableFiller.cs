@@ -121,17 +121,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
-				{
-					if (userField.Type == FieldType.ComputedAmount)
-					{
-						//	Juste avant la première valeur utilisateur, on injecte la valeur comptable.
-						//	Le Guid créé à la volée n'est pas utilisé !
-						yield return new UserField (DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.ComputedAmount, userField.ColumnWidth, null, null, null, 0);
-					}
-
-					yield return userField;
-				}
+				return AssetsLogic.GetUserFields (this.accessor);
 			}
 		}
 

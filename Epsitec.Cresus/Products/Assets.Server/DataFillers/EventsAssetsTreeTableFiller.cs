@@ -121,15 +121,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return new UserField ("",     ObjectField.EventGlyph, FieldType.String,  20, null, null, null, 0);
 				yield return new UserField ("Type", ObjectField.EventType,  FieldType.String, 110, null, null, null, 0);
 
-				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+				foreach (var userField in AssetsLogic.GetUserFields (this.accessor))
 				{
-					if (userField.Type == FieldType.ComputedAmount)
-					{
-						//	Juste avant la première valeur utilisateur, on injecte la valeur comptable.
-						//	Le Guid créé à la volée n'est pas utilisé !
-						yield return new UserField (DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.ComputedAmount, userField.ColumnWidth, null, null, null, 0);
-					}
-
 					yield return userField;
 				}
 			}

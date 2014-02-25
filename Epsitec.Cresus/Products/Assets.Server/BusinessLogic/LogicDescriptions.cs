@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			list.Add (LogicDescriptions.GetEventDescription (timestamp, eventType));
 
-			foreach (var field in LogicDescriptions.ObjectFields)
+			foreach (var field in LogicDescriptions.GetObjectFields (accessor))
 			{
 				string line = null;
 
@@ -168,44 +168,39 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private static IEnumerable<ObjectField> ObjectFields
+		private static IEnumerable<ObjectField> GetObjectFields(DataAccessor accessor)
 		{
-			get
+			yield return ObjectField.OneShotNumber;
+			yield return ObjectField.OneShotDateOperation;
+			yield return ObjectField.OneShotComment;
+			yield return ObjectField.OneShotDocuments;
+
+			foreach (var userField in AssetsLogic.GetUserFields (accessor))
 			{
-				yield return ObjectField.OneShotNumber;
-				yield return ObjectField.OneShotDateOperation;
-				yield return ObjectField.OneShotComment;
-				yield return ObjectField.OneShotDocuments;
-
-				yield return ObjectField.GroupParent;
-				yield return ObjectField.Number;
-				yield return ObjectField.Name;
-				yield return ObjectField.Description;
-				yield return ObjectField.MainValue;
-
-				for (int i=0; i<=ObjectField.GroupGuidRatioLast-ObjectField.GroupGuidRatioFirst; i++)
-				{
-					yield return ObjectField.GroupGuidRatioFirst+i;
-				}
-
-				yield return ObjectField.CategoryName;
-
-				yield return ObjectField.AmortizationRate;
-				yield return ObjectField.AmortizationType;
-				yield return ObjectField.Periodicity;
-				yield return ObjectField.Prorata;
-				yield return ObjectField.Round;
-				yield return ObjectField.ResidualValue;
-
-				yield return ObjectField.Compte1;
-				yield return ObjectField.Compte2;
-				yield return ObjectField.Compte3;
-				yield return ObjectField.Compte4;
-				yield return ObjectField.Compte5;
-				yield return ObjectField.Compte6;
-				yield return ObjectField.Compte7;
-				yield return ObjectField.Compte8;
+				yield return userField.Field;
 			}
+
+			//?for (int i=0; i<=ObjectField.GroupGuidRatioLast-ObjectField.GroupGuidRatioFirst; i++)
+			//?{
+			//?	yield return ObjectField.GroupGuidRatioFirst+i;
+			//?}
+
+			yield return ObjectField.CategoryName;
+			yield return ObjectField.AmortizationRate;
+			yield return ObjectField.AmortizationType;
+			yield return ObjectField.Periodicity;
+			yield return ObjectField.Prorata;
+			yield return ObjectField.Round;
+			yield return ObjectField.ResidualValue;
+
+			yield return ObjectField.Compte1;
+			yield return ObjectField.Compte2;
+			yield return ObjectField.Compte3;
+			yield return ObjectField.Compte4;
+			yield return ObjectField.Compte5;
+			yield return ObjectField.Compte6;
+			yield return ObjectField.Compte7;
+			yield return ObjectField.Compte8;
 		}
 	}
 }
