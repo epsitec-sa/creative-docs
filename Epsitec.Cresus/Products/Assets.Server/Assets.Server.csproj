@@ -80,6 +80,7 @@
     <Compile Include="DataFillers\AbstractTreeTableCell.cs" />
     <Compile Include="DataFillers\CellState.cs" />
     <Compile Include="DataFillers\AccountsTreeTableFiller.cs" />
+    <Compile Include="DataFillers\SingleAccountsTreeTableFiller.cs" />
     <Compile Include="DataFillers\UserFieldsTreeTableFiller.cs" />
     <Compile Include="DataFillers\PersonsTreeTableFiller.cs" />
     <Compile Include="DataFillers\ErrorsTreeTableFiller.cs" />

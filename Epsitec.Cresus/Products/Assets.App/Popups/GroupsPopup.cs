@@ -32,7 +32,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.visibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 
-			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter);
+			if (this.baseType == BaseType.Groups)
+			{
+				this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter);
+			}
+			else if (this.baseType == BaseType.Accounts)
+			{
+				this.dataFiller = new SingleAccountsTreeTableFiller (this.accessor, this.nodeGetter);
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.baseType.ToString ()));
+			}
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -137,7 +148,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			int rows = System.Math.Min (this.nodeGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
 
-			int dx = GroupsPopup.popupWidth
+			int dx = this.PopupWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			int dy = AbstractPopup.titleHeight
@@ -145,6 +156,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			return new Size (dx, dy);
+		}
+
+		private int PopupWidth
+		{
+			get
+			{
+				if (this.baseType == BaseType.Groups)
+				{
+					return 200;  // colonne nom
+				}
+				else if (this.baseType == BaseType.Accounts)
+				{
+					return 100 + 300;  // colonnes numéro et compte
+				}
+				else
+				{
+					throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.baseType.ToString ()));
+				}
+			}
 		}
 
 		private void UpdateController(bool crop = true)
@@ -164,13 +194,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private const int rowHeight        = 18;
-		private const int popupWidth       = 200;
 
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
 		private readonly NavigationTreeTableController	controller;
 		private readonly GroupTreeNodeGetter			nodeGetter;
-		private readonly SingleGroupsTreeTableFiller	dataFiller;
+		private readonly AbstractTreeTableFiller<TreeNode> dataFiller;
 
 		private int										visibleSelectedRow;
 	}
