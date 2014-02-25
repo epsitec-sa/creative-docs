@@ -29,6 +29,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupAndSubGroupMembersDisplay = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 82));
 				//	designer:cap/LVA2D
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupDef = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 418));
+				//	designer:cap/LVON13
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupDerogationsMembersDisplay = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 55));
 				//	designer:cap/LVAEI
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupExtraction = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 590));
 				//	designer:cap/LVO603
@@ -88,6 +90,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderGroupAndSubGroupMembersDisplay = 0x3F500050000052L;
 				//	designer:cap/LVA2D
 				public const long ShowAiderGroupDef = 0x3F50000A0001A2L;
+				//	designer:cap/LVON13
+				public const long ShowAiderGroupDerogationsMembersDisplay = 0x3F500078000037L;
 				//	designer:cap/LVAEI
 				public const long ShowAiderGroupExtraction = 0x3F50000A00024EL;
 				//	designer:cap/LVO603
@@ -521,6 +525,22 @@ namespace Epsitec.Aider
 				
 				public static class GroupClassification
 				{
+					//	designer:cap/LVOL13
+					public static global::Epsitec.Common.Types.Caption DerogationIn
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 53));
+						}
+					}
+					//	designer:cap/LVOM13
+					public static global::Epsitec.Common.Types.Caption DerogationOut
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 54));
+						}
+					}
 					//	designer:cap/LVABD
 					public static global::Epsitec.Common.Types.Caption Function
 					{

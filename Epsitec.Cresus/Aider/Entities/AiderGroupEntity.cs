@@ -764,6 +764,16 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
 		}
 
+		public IList<AiderGroupParticipantEntity> FindParticipations(BusinessContext businessContext)
+		{
+			var example = new AiderGroupParticipantEntity ()
+			{
+				Group = this
+			};
+
+			return businessContext.DataContext.GetByExample (example);
+		}
+
 		private IList<AiderContactEntity> FindGroupAndSubGroupParticipants(DataContext dataContext, int count)
 		{
 			var request = AiderGroupParticipantEntity.CreateGroupAndSubGroupMemberRequest (dataContext, this, true);
@@ -809,16 +819,6 @@ namespace Epsitec.Aider.Entities
 			request.AddSortClause (ValueField.Create (example, g => g.GroupLevel), SortOrder.Ascending);
 
 			return dataContext.GetByRequest<AiderGroupEntity> (request);
-		}
-
-		private IList<AiderGroupParticipantEntity> FindParticipations(BusinessContext businessContext)
-		{
-			var example = new AiderGroupParticipantEntity ()
-			{
-				Group = this
-			};
-
-			return businessContext.DataContext.GetByExample (example);
 		}
 
 		private IList<AiderGroupEntity> FindAllSubgroups(DataContext dataContext)

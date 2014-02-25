@@ -1487,6 +1487,10 @@ AiderOfficeSettings = [LVOA13]
 #[Feature:OfficeManagement]    <d cid="[LVOG13]" teid="@AiderOfficeManagement" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="">
 #[Feature:OfficeManagement]      <R><r>@user</r></R>
 #[Feature:OfficeManagement]    </d>
+
+#[Feature:OfficeManagement]    <d cid="[LVON13]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false"  dg="">
+#[Feature:OfficeManagement]      <R><r>@user</r></R>
+#[Feature:OfficeManagement]    </d>
   </D>
   <G/>
 </meta>

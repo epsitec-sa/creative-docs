@@ -244,7 +244,7 @@
   <data name="Val.Enum.GroupClassification.None" id="AUB">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.GroupClassification.Region" id="AVB">&lt;s:data id="_0" f:Name="Region" f:Labels="{Collection {Text 'Régions'}}" /&gt;</data>
   <data name="Val.Enum.GroupClassification.Parish" id="A0C">&lt;s:data id="_0" f:Name="Parish" f:Labels="{Collection {Text 'Paroisses'}}" /&gt;</data>
-  <data name="Typ.Enum.GroupClassification" id="ATB">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.GroupClassification" f:_1.SystemType="E:Epsitec.Aider.Enumerations.GroupClassification, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAUB]'}, {Text '1 [LVABD]'}, {Text '2 [LVAVB]'}, {Text '3 [LVA0C]'}, {Text '4 [LVG922]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.GroupClassification, Aider/None" f:Labels="{Collection {Text 'Classification du groupe'}}" /&gt;</data>
+  <data name="Typ.Enum.GroupClassification" id="ATB">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.GroupClassification" f:_1.SystemType="E:Epsitec.Aider.Enumerations.GroupClassification, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAUB]'}, {Text '1 [LVABD]'}, {Text '2 [LVAVB]'}, {Text '3 [LVA0C]'}, {Text '4 [LVG922]'}, {Text '5 [LVOL13]'}, {Text '6 [LVOM13]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.GroupClassification, Aider/None" f:Labels="{Collection {Text 'Classification du groupe'}}" /&gt;</data>
   <data name="Fld.AiderGroupDef.Classification" id="A1C">&lt;s:data id="_0" f:Name="Classification" f:Labels="{Collection {Text 'Classification'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.None" id="A3C">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.Generic" id="A4C">&lt;s:data id="_0" f:Name="Generic" f:Labels="{Collection {Text 'Avertissement générique'}}" /&gt;</data>
@@ -545,4 +545,7 @@
   <data name="Fld.AiderOfficeSettings.Office" id="OI13">&lt;s:data id="_0" f:Name="Office" /&gt;</data>
   <data name="Fld.AiderOfficeSettings.IsCurrentSettings" id="OJ13">&lt;s:data id="_0" f:Name="IsCurrentSettings" /&gt;</data>
   <data name="Fld.AiderOfficeSettings.Name" id="OK13">&lt;s:data id="_0" f:Name="Name" f:Labels="{Collection {Text 'Nom du réglage'}}" /&gt;</data>
+  <data name="Val.Enum.GroupClassification.DerogationIn" id="OL13">&lt;s:data id="_0" f:Name="DerogationIn" f:Labels="{Collection {Text 'Dérogations entrantes'}}" /&gt;</data>
+  <data name="Val.Enum.GroupClassification.DerogationOut" id="OM13">&lt;s:data id="_0" f:Name="DerogationOut" f:Labels="{Collection {Text 'Dérogations sortantes'}}" /&gt;</data>
+  <data name="Cmd.Base.ShowAiderGroupDerogationsMembersDisplay" id="ON13">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderGroupDerogationsMembersDisplay" f:Icon="manifest:Epsitec.Aider.Images.Data.AiderGroup.Parish.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Dérogations'}}" /&gt;</data>
 </bundle>

@@ -163,6 +163,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupDefViewController0CreateSubGroupDef.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderOfficeManagementViewController0CreateSettings.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderOfficeSettingsViewController0ActivateSettings.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController11Derogate.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderGroupExtractionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderLegalPersonViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderLegalPersonViewController1Address.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderSubscriptionViewController.cs" />
+    <Compile Include="Controllers\SetControllers\SetAiderGroupViewController2DerogationsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController1ExcludedContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController0RecipientsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />

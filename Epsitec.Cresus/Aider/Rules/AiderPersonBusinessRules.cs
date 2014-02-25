@@ -230,7 +230,13 @@ namespace Epsitec.Aider.Rules
 			{
 				return false;
 			}
-			
+
+			//Derogation case
+			if (person.GeoParishGroupPathCache != person.ParishGroupPathCache)
+			{
+				return false;
+			}
+
 			return true;
 		}
 

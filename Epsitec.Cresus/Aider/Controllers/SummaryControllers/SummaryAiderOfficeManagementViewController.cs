@@ -25,6 +25,20 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
+			wall.AddBrick (p => p.ParishGroup.Subgroups.Where(s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn).First ())
+					.Icon ("Data.AiderGroup.People")
+					.Title ("Dérogations entrantes")
+					.Text ("...")
+					.Attribute (BrickMode.DefaultToSetSubView)
+					.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
+
+			wall.AddBrick (p => p.ParishGroup.Subgroups.Where (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ())
+					.Icon ("Data.AiderGroup.People")
+					.Title ("Dérogations sortantes")
+					.Text ("...")
+					.Attribute (BrickMode.DefaultToSetSubView)
+					.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
+
 			wall.AddBrick ()
 				.Icon ("Base.BusinessSettings")
 				.Title (p => p.GetSettingsTitleSummary ())
@@ -32,6 +46,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController1Settings))
 				.EnableActionMenu<ActionAiderOfficeManagementViewController0CreateSettings> ();
+	
 		}
 	}
 }

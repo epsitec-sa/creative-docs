@@ -35,6 +35,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
 				.EnableActionMenu<ActionAiderPersonViewController5AddHousehold> ()
 				.EnableActionOnDrop<ActionAiderPersonViewController8FusionOnDrop> ()
+				.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
 				.Text (x => x.GetPersonalDataSummary ());
