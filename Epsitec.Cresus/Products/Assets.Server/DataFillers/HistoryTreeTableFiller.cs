@@ -72,6 +72,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 					case FieldType.GuidGroup:
 					case FieldType.GuidPerson:
+					case FieldType.GuidAccount:
 						columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
 						break;
 
@@ -151,6 +152,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case FieldType.GuidPerson:
 					this.PutGuidPerson (content, firstRow, count, selection);
+					break;
+
+				case FieldType.GuidAccount:
+					this.PutGuidAccount (content, firstRow, count, selection);
 					break;
 
 				case FieldType.GuidRatio:
@@ -301,6 +306,27 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
+		private void PutGuidAccount(TreeTableContentItem content, int firstRow, int count, int selection)
+		{
+			int i = 0;
+			foreach (var e in this.GetEvents (firstRow, count))
+			{
+				var value = Guid.Empty;
+
+				var property = e.GetProperty (this.field) as DataGuidProperty;
+				if (property != null)
+				{
+					value = property.Value;
+				}
+
+				var text = AccountsLogic.GetSummary (this.accessor, value);
+				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
+				var cell = new TreeTableCellString (text, cellState);
+
+				content.Columns[2].AddRow (cell);
+			}
+		}
+
 		private void PutGuidRatio(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
 			int i = 0;
@@ -364,6 +390,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case FieldType.GuidGroup:
 				case FieldType.GuidPerson:
+				case FieldType.GuidAccount:
 					return 300;
 
 				case FieldType.GuidRatio:

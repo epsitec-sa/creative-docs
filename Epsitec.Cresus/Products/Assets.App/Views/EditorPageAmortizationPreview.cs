@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void CreateUI(Widget parent)
+		protected internal override void CreateUI(Widget parent)
 		{
 			parent = this.CreateScrollable (parent);
 

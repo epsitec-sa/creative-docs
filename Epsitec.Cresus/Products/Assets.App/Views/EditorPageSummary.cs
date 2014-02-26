@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void CreateUI(Widget parent)
+		protected internal override void CreateUI(Widget parent)
 		{
 			this.CreateRightGrey (parent);
 			this.summaryController.CreateUI (parent);
@@ -133,6 +133,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					else if (userField.Type == FieldType.GuidPerson)
 					{
 						return PageType.Persons;
+					}
+					else if (userField.Type == FieldType.GuidAccount)
+					{
+						return PageType.Amortization;
 					}
 					else
 					{

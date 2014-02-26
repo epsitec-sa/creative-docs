@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
@@ -36,6 +37,25 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 #endif
 			}
 		}
+
+
+		public static Guid GetAccount(DataMandat mandat, string text)
+		{
+			var list = mandat.GetData (BaseType.Accounts);
+
+			foreach (var account in list)
+			{
+				var nom = ObjectProperties.GetObjectPropertyString (account, null, ObjectField.Number);
+				if (nom == text)
+				{
+					return account.Guid;
+				}
+			}
+
+			System.Diagnostics.Debug.Fail (string.Format ("Le compte {0} n'existe pas !", text));
+			return Guid.Empty;
+		}
+
 
 		private static void Import(string[] lines, GuidList<DataObject> accounts)
 		{

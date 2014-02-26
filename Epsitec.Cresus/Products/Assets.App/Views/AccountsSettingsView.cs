@@ -144,6 +144,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public static AbstractViewState GetViewState(Guid accountGuid)
+		{
+			//	Retourne un ViewState permettant de voir un compte donné.
+			//	TODO: finir...
+			return new SettingsViewState
+			{
+				ViewType        = ViewType.Settings,
+				SelectedCommand = ToolbarCommand.SettingsAccounts,
+			};
+		}
+
+
 		public void OnCommand(ToolbarCommand command)
 		{
 			switch (command)

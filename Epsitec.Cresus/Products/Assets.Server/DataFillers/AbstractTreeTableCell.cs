@@ -73,9 +73,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new TreeTableCellDate (date, cellState);
 
 				case FieldType.GuidPerson:
-					var guid = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, userField.Field, synthetic: synthetic);
-					var person = PersonsLogic.GetSummary (accessor, guid);
+					var gp = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, userField.Field, synthetic: synthetic);
+					var person = PersonsLogic.GetSummary (accessor, gp);
 					return new TreeTableCellString (person, cellState);
+
+				case FieldType.GuidAccount:
+					var ga = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, userField.Field, synthetic: synthetic);
+					var account = AccountsLogic.GetSummary (accessor, ga);
+					return new TreeTableCellString (account, cellState);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown FieldType {0}", userField.Type.ToString ()));
@@ -87,6 +92,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			switch (type)
 			{
 				case FieldType.String:
+				case FieldType.GuidPerson:
+				case FieldType.GuidAccount:
 					return TreeTableColumnType.String;
 
 				case FieldType.Int:
@@ -100,9 +107,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case FieldType.Date:
 					return TreeTableColumnType.Date;
-
-				case FieldType.GuidPerson:
-					return TreeTableColumnType.String;
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown FieldType {0}", type.ToString ()));

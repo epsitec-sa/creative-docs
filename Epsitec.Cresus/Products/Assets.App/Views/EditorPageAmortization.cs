@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void CreateUI(Widget parent)
+		protected internal override void CreateUI(Widget parent)
 		{
 			parent = this.CreateScrollable (parent);
 
@@ -32,14 +32,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.CreateSepartor (parent);
 
-			this.CreateStringController (parent, ObjectField.Compte1);
-			this.CreateStringController (parent, ObjectField.Compte2);
-			this.CreateStringController (parent, ObjectField.Compte3);
-			this.CreateStringController (parent, ObjectField.Compte4);
-			this.CreateStringController (parent, ObjectField.Compte5);
-			this.CreateStringController (parent, ObjectField.Compte6);
-			this.CreateStringController (parent, ObjectField.Compte7);
-			this.CreateStringController (parent, ObjectField.Compte8);
+			this.CreateAccountGuidController (parent, ObjectField.Compte1);
+			this.CreateAccountGuidController (parent, ObjectField.Compte2);
+			this.CreateAccountGuidController (parent, ObjectField.Compte3);
+			this.CreateAccountGuidController (parent, ObjectField.Compte4);
+			this.CreateAccountGuidController (parent, ObjectField.Compte5);
+			this.CreateAccountGuidController (parent, ObjectField.Compte6);
+			this.CreateAccountGuidController (parent, ObjectField.Compte7);
+			this.CreateAccountGuidController (parent, ObjectField.Compte8);
 
 			this.CreateImportButton (parent);
 		}
@@ -156,6 +156,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.ImportFieldInt (catObj, fieldSrc, fieldDst);
 					break;
 
+				case FieldType.GuidAccount:
+					this.ImportFieldGuidAccount (catObj, fieldSrc, fieldDst);
+					break;
+
 				default:
 					System.Diagnostics.Debug.Fail ("Not supported");
 					break;
@@ -184,6 +188,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var d = ObjectProperties.GetObjectPropertyInt (catObj, null, fieldSrc);
 			if (d.HasValue)
+			{
+				this.accessor.EditionAccessor.SetField (fieldDst, d);
+			}
+		}
+
+		private void ImportFieldGuidAccount(DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
+		{
+			var d = ObjectProperties.GetObjectPropertyGuid (catObj, null, fieldSrc);
+			if (!d.IsEmpty)
 			{
 				this.accessor.EditionAccessor.SetField (fieldDst, d);
 			}

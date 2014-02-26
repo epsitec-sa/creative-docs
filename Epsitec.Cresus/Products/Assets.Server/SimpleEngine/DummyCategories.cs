@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				var e = new DataEvent (start, EventType.Input);
 				o11.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyCategories.CategoryNumber++).ToString ()));
+				e.AddProperty (new DataStringProperty  (ObjectField.OneShotNumber, (DummyCategories.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty  (ObjectField.Number,            "11"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Name,               "Bureaux"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.1m));
@@ -30,14 +30,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1000.0m));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 1000.0m));
 
-				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte1, DummyAccounts.GetAccount (mandat, "1300")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte2, DummyAccounts.GetAccount (mandat, "1410")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte3, DummyAccounts.GetAccount (mandat, "1530")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte4, DummyAccounts.GetAccount (mandat, "1600")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte5, DummyAccounts.GetAccount (mandat, "2440")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte6, DummyAccounts.GetAccount (mandat, "1510")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte7, DummyAccounts.GetAccount (mandat, "1520")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte8, DummyAccounts.GetAccount (mandat, "1601")));
 			}
 
 			var o12 = new DataObject ();
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				var e = new DataEvent (start, EventType.Input);
 				o12.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyCategories.CategoryNumber++).ToString ()));
+				e.AddProperty (new DataStringProperty  (ObjectField.OneShotNumber, (DummyCategories.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty  (ObjectField.Number,            "12"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Name,               "Usines"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.12m));
@@ -55,14 +55,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1000.0m));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 10000.0m));
 
-				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte1, DummyAccounts.GetAccount (mandat, "1300")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte2, DummyAccounts.GetAccount (mandat, "1410")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte3, DummyAccounts.GetAccount (mandat, "1530")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte4, DummyAccounts.GetAccount (mandat, "1600")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte5, DummyAccounts.GetAccount (mandat, "2440")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte6, DummyAccounts.GetAccount (mandat, "1510")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte7, DummyAccounts.GetAccount (mandat, "1520")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte8, DummyAccounts.GetAccount (mandat, "1601")));
 			}
 
 			var o21 = new DataObject ();
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				var e = new DataEvent (start, EventType.Input);
 				o21.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyCategories.CategoryNumber++).ToString ()));
+				e.AddProperty (new DataStringProperty  (ObjectField.OneShotNumber, (DummyCategories.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty  (ObjectField.Number,            "21"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Name,               "Camions"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.15m));
@@ -80,14 +80,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1.0m));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 100.0m));
 
-				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte1, DummyAccounts.GetAccount (mandat, "1300")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte2, DummyAccounts.GetAccount (mandat, "1410")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte3, DummyAccounts.GetAccount (mandat, "1530")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte4, DummyAccounts.GetAccount (mandat, "1600")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte5, DummyAccounts.GetAccount (mandat, "2440")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte6, DummyAccounts.GetAccount (mandat, "1510")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte7, DummyAccounts.GetAccount (mandat, "1520")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte8, DummyAccounts.GetAccount (mandat, "1601")));
 			}
 
 			var o22 = new DataObject ();
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				var e = new DataEvent (start, EventType.Input);
 				o22.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyCategories.CategoryNumber++).ToString ()));
+				e.AddProperty (new DataStringProperty  (ObjectField.OneShotNumber, (DummyCategories.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty  (ObjectField.Number,            "22"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Name,               "Camionnettes"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.21m));
@@ -105,14 +105,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1.0m));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 100.0m));
 
-				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte1, DummyAccounts.GetAccount (mandat, "1300")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte2, DummyAccounts.GetAccount (mandat, "1410")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte3, DummyAccounts.GetAccount (mandat, "1530")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte4, DummyAccounts.GetAccount (mandat, "1600")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte5, DummyAccounts.GetAccount (mandat, "2440")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte6, DummyAccounts.GetAccount (mandat, "1510")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte7, DummyAccounts.GetAccount (mandat, "1520")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte8, DummyAccounts.GetAccount (mandat, "1601")));
 			}
 
 			var o23 = new DataObject ();
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				var e = new DataEvent (start, EventType.Input);
 				o23.AddEvent (e);
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyCategories.CategoryNumber++).ToString ()));
+				e.AddProperty (new DataStringProperty  (ObjectField.OneShotNumber, (DummyCategories.CategoryNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty  (ObjectField.Number,            "23"));
 				e.AddProperty (new DataStringProperty  (ObjectField.Name,               "Voitures"));
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, 0.25m));
@@ -130,14 +130,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1.0m));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 100.0m));
 
-				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte1, DummyAccounts.GetAccount (mandat, "1300")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte2, DummyAccounts.GetAccount (mandat, "1410")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte3, DummyAccounts.GetAccount (mandat, "1530")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte4, DummyAccounts.GetAccount (mandat, "1600")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte5, DummyAccounts.GetAccount (mandat, "2440")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte6, DummyAccounts.GetAccount (mandat, "1510")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte7, DummyAccounts.GetAccount (mandat, "1520")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Compte8, DummyAccounts.GetAccount (mandat, "1601")));
 			}
 		}
 

@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public virtual void CreateUI(Widget parent)
+		protected internal virtual void CreateUI(Widget parent)
 		{
 		}
 
@@ -122,6 +122,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
+				else if (controller is AccountGuidFieldController)
+				{
+					var c = controller as AccountGuidFieldController;
+
+					c.EventType     = this.eventType;
+					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
+					c.PropertyState = this.GetPropertyState (field);
+				}
 				else if (controller is GuidRatioFieldController)
 				{
 					var c = controller as GuidRatioFieldController;
@@ -190,6 +198,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.CreatePersonGuidController (parent, userField.Field);
 					break;
 
+				case FieldType.GuidAccount:
+					this.CreateAccountGuidController (parent, userField.Field);
+					break;
+
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown FieldType {0}", userField.Type.ToString ()));
 			}
@@ -235,6 +247,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected void CreatePersonGuidController(Widget parent, ObjectField field)
 		{
 			var controller = new PersonGuidFieldController
+			{
+				Accessor  = this.accessor,
+				Field     = field,
+				Label     = this.accessor.GetFieldName (field),
+				EditWidth = AbstractFieldController.maxWidth,
+				TabIndex  = ++this.tabIndex,
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (of);
+				controller.PropertyState = this.GetPropertyState (of);
+
+				this.OnValueEdited (of);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.ShowHistoryPopup (target, of);
+			};
+
+			controller.Goto += delegate (object sender, AbstractViewState viewState)
+			{
+				this.OnGoto (viewState);
+			};
+
+			this.fieldControllers.Add (field, controller);
+		}
+
+		protected void CreateAccountGuidController(Widget parent, ObjectField field)
+		{
+			var controller = new AccountGuidFieldController
 			{
 				Accessor  = this.accessor,
 				Field     = field,

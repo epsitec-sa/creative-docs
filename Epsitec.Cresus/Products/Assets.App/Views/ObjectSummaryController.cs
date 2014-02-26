@@ -283,6 +283,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 					break;
 
+				case FieldType.GuidAccount:
+					var ga = ObjectProperties.GetObjectPropertyGuid (this.obj, this.timestamp, tile.Field);
+					if (!ga.IsEmpty)
+					{
+						text = AccountsLogic.GetSummary (this.accessor, ga);
+						alignment = ContentAlignment.MiddleLeft;
+					}
+					break;
+
 				case FieldType.GuidRatio:
 					var gr = ObjectProperties.GetObjectPropertyGuidRatio (this.obj, this.timestamp, tile.Field);
 					if (!gr.IsEmpty)

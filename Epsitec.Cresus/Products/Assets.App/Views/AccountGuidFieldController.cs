@@ -12,14 +12,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	/// <summary>
-	/// Contrôleur permettant de choisir un goupe (champ ObjectField.GroupParent) pour
-	/// les groupes d'immobilisations ou les comptes (plan comptable).
-	/// </summary>
-	public class GroupGuidFieldController : AbstractFieldController
+	public class AccountGuidFieldController : AbstractFieldController
 	{
 		public DataAccessor						Accessor;
-		public BaseType							BaseType;
 
 		public Guid								Value
 		{
@@ -37,6 +32,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						this.button.Text = this.GuidToString (this.value);
 					}
+
+					this.UpdateButtons ();
 				}
 			}
 		}
@@ -68,6 +65,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.button.NormalColor = ColorManager.NormalFieldColor;
 					}
 				}
+
+				this.UpdateButtons ();
 			}
 		}
 
@@ -82,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				HoverColor       = ColorManager.HoverColor,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = this.EditWidth,
+				PreferredWidth   = this.EditWidth-AbstractFieldController.lineHeight,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
 				TabIndex         = this.TabIndex,
@@ -101,6 +100,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight  = AbstractFieldController.lineHeight,
 			};
 
+			this.CreateGotoAccountButton ();
+
+			//	Connexion des événements.
 			this.button.Clicked += delegate
 			{
 				this.ShowPopup ();
@@ -112,10 +114,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
+		private void CreateGotoAccountButton()
+		{
+			this.gotoButton = this.CreateGotoButton ();
+
+			ToolTip.Default.SetToolTip (this.gotoButton, "Montre les détails du compte");
+
+			this.gotoButton.Clicked += delegate
+			{
+				if (!this.value.IsEmpty)
+				{
+					var viewState = AccountsSettingsView.GetViewState (this.value);
+					this.OnGoto (viewState);
+				}
+			};
+		}
+
+		private void UpdateButtons()
+		{
+			if (this.button != null)
+			{
+				var text = AccountsLogic.GetSummary (this.Accessor, this.value);
+				ToolTip.Default.SetToolTip (this.button, text);
+			}
+
+			if (this.gotoButton != null)
+			{
+				this.gotoButton.Visibility = !this.value.IsEmpty;
+			}
+		}
+
 
 		private void ShowPopup()
 		{
-			var popup = new GroupsPopup (this.Accessor, this.BaseType, this.Value);
+			var popup = new GroupsPopup (this.Accessor, BaseType.Accounts, this.Value);
 
 			popup.Create (this.button, leftOrRight: true);
 
@@ -128,22 +160,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string GuidToString(Guid guid)
 		{
-			if (this.BaseType == BaseType.Groups)
-			{
-				return GroupsLogic.GetFullName (this.Accessor, guid);
-			}
-			else if (this.BaseType == BaseType.Accounts)
-			{
-				return AccountsLogic.GetSummary (this.Accessor, guid);
-			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.BaseType.ToString ()));
-			}
+			return AccountsLogic.GetSummary (this.Accessor, guid);
 		}
 
 
 		private ColoredButton					button;
+		private IconButton						gotoButton;
 		private Guid							value;
 	}
 }
