@@ -57,6 +57,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateSettingsView ();
 			this.UpdateToolbar ();
+
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 
