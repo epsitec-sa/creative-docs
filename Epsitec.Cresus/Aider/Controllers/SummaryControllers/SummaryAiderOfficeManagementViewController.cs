@@ -28,14 +28,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick (p => p.ParishGroup.Subgroups.Where(s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn).First ())
 					.Icon ("Data.AiderGroup.People")
 					.Title ("Dérogations entrantes")
-					.Text ("...")
+					.Text (p => p.GetParticipantsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
 
 			wall.AddBrick (p => p.ParishGroup.Subgroups.Where (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ())
 					.Icon ("Data.AiderGroup.People")
 					.Title ("Dérogations sortantes")
-					.Text ("...")
+					.Text (p => p.GetParticipantsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
 

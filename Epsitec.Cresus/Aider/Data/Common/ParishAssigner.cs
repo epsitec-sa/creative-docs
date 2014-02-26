@@ -346,13 +346,21 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		public static bool IsInValidParish(ParishAddressRepository parishRepository, AiderPersonEntity person)
+		public static bool IsInValidParish(BusinessContext context, ParishAddressRepository parishRepository, AiderPersonEntity person)
 		{
 			var contact = person.GetMainContact ();
 			var address = contact.IsNull () ? null : contact.Address;
 
 			var parishGroup = person.ParishGroup;
 
+			//Derogation case
+			if (! string.IsNullOrEmpty (person.GeoParishGroupPathCache))
+			{
+				var geoParishGroup = AiderGroupEntity.FindGroups (context, person.GeoParishGroupPathCache).First ();
+
+				return ParishAssigner.IsInValidParish (parishRepository, address, geoParishGroup);
+			}
+			
 			return ParishAssigner.IsInValidParish (parishRepository, address, parishGroup);
 		}
 

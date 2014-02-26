@@ -93,6 +93,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				{
 					//Add derogation in participation
 					derogationInGroup.AddParticipations (this.BusinessContext, contactAsList.Select (c => new ParticipationData (c)), date, new FormattedText ("Dérogation entrante"));
+
+					//Warn old derogated parish
+					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache, Enumerations.WarningType.ParishDeparture, "Fin de dérogation");	
 					//Warn NewParish
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path, Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de " + person.ParishGroup.Name);
 					//Warn GeoParish for a Derogation Change

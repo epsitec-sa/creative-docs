@@ -95,7 +95,7 @@ namespace Epsitec.Aider.Data.Job
 		)
 		{
 			var personsToFix = persons
-				.Where (p => !ParishAssigner.IsInValidParish (parishRepository, p))
+				.Where (p => !ParishAssigner.IsInValidParish (businessContext, parishRepository, p))
 				.Select (p => businessContext.DataContext.GetNormalizedEntityKey (p).Value)
 				.ToList ();
 
