@@ -274,16 +274,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne le Scrollable parent.
 			get
 			{
-				Widget parent = this.frameBox.Parent;
-
-				while (parent != null)
+				if (this.frameBox != null)
 				{
-					if (parent is Scrollable)
-					{
-						return parent as Scrollable;
-					}
+					Widget parent = this.frameBox.Parent;
 
-					parent = parent.Parent;
+					while (parent != null)
+					{
+						if (parent is Scrollable)
+						{
+							return parent as Scrollable;
+						}
+
+						parent = parent.Parent;
+					}
 				}
 
 				return null;
