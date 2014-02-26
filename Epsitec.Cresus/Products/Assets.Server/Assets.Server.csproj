@@ -132,6 +132,10 @@
     <Compile Include="NodeGetters\GroupLevelNodeGetter.cs" />
     <Compile Include="SimpleEngine\AccountCategory.cs" />
     <Compile Include="SimpleEngine\AccountType.cs" />
+    <Compile Include="SimpleEngine\DummyAmortizations.cs" />
+    <Compile Include="SimpleEngine\DummyGroups.cs" />
+    <Compile Include="SimpleEngine\DummyCategories.cs" />
+    <Compile Include="SimpleEngine\DummyPersons.cs" />
     <Compile Include="SimpleEngine\DummyAccounts.cs" />
     <Compile Include="SimpleEngine\Settings.cs" />
     <Compile Include="SimpleEngine\UserField.cs" />
