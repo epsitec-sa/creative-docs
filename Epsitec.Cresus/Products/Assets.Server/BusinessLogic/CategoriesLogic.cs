@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class CategoriesLogic
 	{
-		public static string GetShortName(DataAccessor accessor, Guid guid)
+		public static string GetSummary(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le nom court d'une catégorie, du genre:
 			//	"Véhicules"

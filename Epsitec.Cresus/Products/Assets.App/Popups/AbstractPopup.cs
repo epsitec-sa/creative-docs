@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -20,9 +19,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public abstract class AbstractPopup : Widget
 	{
-		public Color							BackColor = ColorManager.GetBackgroundColor ();
-
-
 		public void Create(Widget target, bool leftOrRight = false)
 		{
 			//	Crée le popup, dont la queue pointera vers le widget target.
@@ -420,13 +416,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				//	Intérieur blanc avec la queue.
 				var rect = this.dialogRect;
 				graphics.AddFilledPath (BalloonPath.GetPath (rect, this.targetRect, this.QueueThickness));
-				graphics.RenderSolid (Color.FromAlphaColor (alpha, this.BackColor));
+				graphics.RenderSolid (Color.FromAlphaColor (alpha, this.backColor));
 
 				//	Intérieur blanc rectangulaire.
 				if (alpha < 1.0)
 				{
 					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (this.BackColor);
+					graphics.RenderSolid (this.backColor);
 				}
 
 				//	Petit filet sombre.
@@ -461,7 +457,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				//	Intérieur blanc rectangulaire.
 				var rect = this.dialogRect;
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.BackColor);
+				graphics.RenderSolid (this.backColor);
 
 				//	Petit filet sombre.
 				rect.Inflate (0.5);
@@ -587,6 +583,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const double					frameThickness = 8;
 		private const double					spacing        = 20;
 
+		private Color							backColor = ColorManager.GetBackgroundColor ();
 		private Widget							target;
 		private Rectangle						dialogRect;
 		private Rectangle						targetReal;

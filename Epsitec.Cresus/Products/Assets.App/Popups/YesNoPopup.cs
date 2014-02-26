@@ -112,7 +112,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private const int margins      = 20;
-		private const int titleHeight  = 30;
 		private const int dialogWidth  = 260;
 		private const int dialogHeight = 100;
 		private const int radioHeight  = 20;
