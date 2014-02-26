@@ -33,14 +33,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.CreateSepartor (parent);
 
-			this.CreateAccountGuidController (parent, ObjectField.Compte1);
-			this.CreateAccountGuidController (parent, ObjectField.Compte2);
-			this.CreateAccountGuidController (parent, ObjectField.Compte3);
-			this.CreateAccountGuidController (parent, ObjectField.Compte4);
-			this.CreateAccountGuidController (parent, ObjectField.Compte5);
-			this.CreateAccountGuidController (parent, ObjectField.Compte6);
-			this.CreateAccountGuidController (parent, ObjectField.Compte7);
-			this.CreateAccountGuidController (parent, ObjectField.Compte8);
+			this.CreateAccountGuidController (parent, ObjectField.Account1);
+			this.CreateAccountGuidController (parent, ObjectField.Account2);
+			this.CreateAccountGuidController (parent, ObjectField.Account3);
+			this.CreateAccountGuidController (parent, ObjectField.Account4);
+			this.CreateAccountGuidController (parent, ObjectField.Account5);
+			this.CreateAccountGuidController (parent, ObjectField.Account6);
+			this.CreateAccountGuidController (parent, ObjectField.Account7);
+			this.CreateAccountGuidController (parent, ObjectField.Account8);
 		}
 	}
 }

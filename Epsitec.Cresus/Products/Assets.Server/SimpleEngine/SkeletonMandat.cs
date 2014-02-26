@@ -43,14 +43,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Annual));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  1000.0m));
 
-				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account1, "1300 - Actifs transitoires"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account2, "1410 - Conptes de placement"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account3, "1530 - Véhicules"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account4, "1600 - Immeubles"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account5, "2440 - Hypothèques"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account6, "1510 - Outillage"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account7, "1520 - Informatique"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account8, "1601 - Terrains"));
 			}
 
 			var o12 = new DataObject ();
@@ -66,14 +66,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Annual));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  10000.0m));
 
-				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account1, "1300 - Actifs transitoires"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account2, "1410 - Conptes de placement"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account3, "1530 - Véhicules"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account4, "1600 - Immeubles"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account5, "2440 - Hypothèques"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account6, "1510 - Outillage"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account7, "1520 - Informatique"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account8, "1601 - Terrains"));
 			}
 
 			var o21 = new DataObject ();
@@ -89,14 +89,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Trimestrial));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  100.0m));
 
-				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account1, "1300 - Actifs transitoires"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account2, "1410 - Conptes de placement"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account3, "1530 - Véhicules"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account4, "1600 - Immeubles"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account5, "2440 - Hypothèques"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account6, "1510 - Outillage"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account7, "1520 - Informatique"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account8, "1601 - Terrains"));
 			}
 
 			var o22 = new DataObject ();
@@ -112,14 +112,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Semestrial));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  100.0m));
 
-				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account1, "1300 - Actifs transitoires"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account2, "1410 - Conptes de placement"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account3, "1530 - Véhicules"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account4, "1600 - Immeubles"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account5, "2440 - Hypothèques"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account6, "1510 - Outillage"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account7, "1520 - Informatique"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account8, "1601 - Terrains"));
 			}
 
 			var o23 = new DataObject ();
@@ -135,14 +135,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,       (int) Periodicity.Semestrial));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,  100.0m));
 
-				e.AddProperty (new DataStringProperty (ObjectField.Compte1, "1300 - Actifs transitoires"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte2, "1410 - Conptes de placement"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte3, "1530 - Véhicules"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte4, "1600 - Immeubles"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte5, "2440 - Hypothèques"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte6, "1510 - Outillage"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte7, "1520 - Informatique"));
-				e.AddProperty (new DataStringProperty (ObjectField.Compte8, "1601 - Terrains"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account1, "1300 - Actifs transitoires"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account2, "1410 - Conptes de placement"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account3, "1530 - Véhicules"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account4, "1600 - Immeubles"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account5, "2440 - Hypothèques"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account6, "1510 - Outillage"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account7, "1520 - Informatique"));
+				e.AddProperty (new DataStringProperty (ObjectField.Account8, "1601 - Terrains"));
 			}
 		}
 

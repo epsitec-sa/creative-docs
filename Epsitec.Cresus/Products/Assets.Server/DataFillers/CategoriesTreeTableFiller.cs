@@ -30,14 +30,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.Round;
 				yield return ObjectField.ResidualValue;
 
-				yield return ObjectField.Compte1;
-				yield return ObjectField.Compte2;
-				yield return ObjectField.Compte3;
-				yield return ObjectField.Compte4;
-				yield return ObjectField.Compte5;
-				yield return ObjectField.Compte6;
-				yield return ObjectField.Compte7;
-				yield return ObjectField.Compte8;
+				yield return ObjectField.Account1;
+				yield return ObjectField.Account2;
+				yield return ObjectField.Account3;
+				yield return ObjectField.Account4;
+				yield return ObjectField.Account5;
+				yield return ObjectField.Account6;
+				yield return ObjectField.Account7;
+				yield return ObjectField.Account8;
 			}
 		}
 
@@ -113,14 +113,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell17 = new TreeTableCellDecimal (round,  cellState);
 				var cell18 = new TreeTableCellDecimal (resid,  cellState);
 
-				var cell21 = new TreeTableCellString (this.GetCompte (obj, ObjectField.Compte1), cellState);
-				var cell22 = new TreeTableCellString (this.GetCompte (obj, ObjectField.Compte2), cellState);
-				var cell23 = new TreeTableCellString (this.GetCompte (obj, ObjectField.Compte3), cellState);
-				var cell24 = new TreeTableCellString (this.GetCompte (obj, ObjectField.Compte4), cellState);
-				var cell25 = new TreeTableCellString (this.GetCompte (obj, ObjectField.Compte5), cellState);
-				var cell26 = new TreeTableCellString (this.GetCompte (obj, ObjectField.Compte6), cellState);
-				var cell27 = new TreeTableCellString (this.GetCompte (obj, ObjectField.Compte7), cellState);
-				var cell28 = new TreeTableCellString (this.GetCompte (obj, ObjectField.Compte8), cellState);
+				var cell21 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account1), cellState);
+				var cell22 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account2), cellState);
+				var cell23 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account3), cellState);
+				var cell24 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account4), cellState);
+				var cell25 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account5), cellState);
+				var cell26 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account6), cellState);
+				var cell27 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account7), cellState);
+				var cell28 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account8), cellState);
 
 				int columnRank = 0;
 
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			return content;
 		}
 
-		private string GetCompte(DataObject obj, ObjectField field)
+		private string GetAccount(DataObject obj, ObjectField field)
 		{
 			var guid = ObjectProperties.GetObjectPropertyGuid (obj, this.Timestamp, field);
 			return AccountsLogic.GetSummary (this.accessor, guid);

@@ -67,28 +67,28 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.ResidualValue:
 					return "Valeur résiduelle";
 
-				case ObjectField.Compte1:
+				case ObjectField.Account1:
 					return "Bilan";
 
-				case ObjectField.Compte2:
+				case ObjectField.Account2:
 					return "Compte d'amortissement";
 
-				case ObjectField.Compte3:
+				case ObjectField.Account3:
 					return "Contrepartie acquisition";
 
-				case ObjectField.Compte4:
+				case ObjectField.Account4:
 					return "Contrepartie vente";
 
-				case ObjectField.Compte5:
+				case ObjectField.Account5:
 					return "Réévaluation";
 
-				case ObjectField.Compte6:
+				case ObjectField.Account6:
 					return "Revalorisation";
 
-				case ObjectField.Compte7:
+				case ObjectField.Account7:
 					return "Fonds d’amortissement";
 
-				case ObjectField.Compte8:
+				case ObjectField.Account8:
 					return "Amortissement extra. ou rééval.";
 
 				case ObjectField.UserFieldType:

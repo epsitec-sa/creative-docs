@@ -31,14 +31,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		ResidualValue,
 		Round,
 
-		Compte1,
-		Compte2,
-		Compte3,
-		Compte4,
-		Compte5,
-		Compte6,
-		Compte7,
-		Compte8,
+		Account1,
+		Account2,
+		Account3,
+		Account4,
+		Account5,
+		Account6,
+		Account7,
+		Account8,
 
 		//	Définitions d'un compte.
 		AccountCategory,

@@ -167,14 +167,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Prorata:
 				case ObjectField.Round:
 				case ObjectField.ResidualValue:
-				case ObjectField.Compte1:
-				case ObjectField.Compte2:
-				case ObjectField.Compte3:
-				case ObjectField.Compte4:
-				case ObjectField.Compte5:
-				case ObjectField.Compte6:
-				case ObjectField.Compte7:
-				case ObjectField.Compte8:
+				case ObjectField.Account1:
+				case ObjectField.Account2:
+				case ObjectField.Account3:
+				case ObjectField.Account4:
+				case ObjectField.Account5:
+				case ObjectField.Account6:
+				case ObjectField.Account7:
+				case ObjectField.Account8:
 					return PageType.Amortization;
 
 				default:
@@ -272,14 +272,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.Prorata));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.Round));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.ResidualValue));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte1));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte2));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte3));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte4));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte5));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte6));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte7));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Compte8));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account1));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account2));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account3));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account4));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account5));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account6));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account7));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account8));
 
 				return list;
 			}
