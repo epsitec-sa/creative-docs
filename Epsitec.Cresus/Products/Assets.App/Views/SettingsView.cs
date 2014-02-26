@@ -70,6 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					ViewType        = ViewType.Settings,
 					SelectedCommand = this.selectedCommand,
+					SelectedGuid    = this.settingsView.SelectedGuid,
 				};
 			}
 			set
@@ -78,6 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				System.Diagnostics.Debug.Assert (viewState != null);
 
 				this.selectedCommand = viewState.SelectedCommand;
+				this.settingsView.SelectedGuid = viewState.SelectedGuid;
 
 				this.UpdateUI ();
 			}

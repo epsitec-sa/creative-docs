@@ -25,6 +25,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public override Guid					SelectedGuid
+		{
+			get
+			{
+				return this.listController.SelectedGuid;
+			}
+			set
+			{
+				this.listController.SelectedGuid = value;
+			}
+		}
+
+	
 		public override void CreateUI(Widget parent)
 		{
 			var topBox = new FrameBox

@@ -56,23 +56,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		public override void CreateUI(Widget parent)
-		{
-			base.CreateUI (parent);
-
-			this.controller.AllowsSorting = false;
-		}
-
-
-		public override void UpdateData()
-		{
-			(this.nodeGetter as UserFieldNodeGetter).SetParams ();
-
-			this.UpdateController ();
-			this.UpdateToolbar ();
-		}
-
-
 		public override Guid					SelectedGuid
 		{
 			//	Retourne le champ actuellement sélectionné.
@@ -92,6 +75,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.VisibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == value);
 			}
+		}
+
+
+		public override void CreateUI(Widget parent)
+		{
+			base.CreateUI (parent);
+
+			this.controller.AllowsSorting = false;
+		}
+
+
+		public override void UpdateData()
+		{
+			(this.nodeGetter as UserFieldNodeGetter).SetParams ();
+
+			this.UpdateController ();
+			this.UpdateToolbar ();
 		}
 
 

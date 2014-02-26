@@ -17,6 +17,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public virtual Guid						SelectedGuid
+		{
+			get
+			{
+				return Guid.Empty;
+			}
+			set
+			{
+			}
+		}
+
+
 		public virtual void CreateUI(Widget parent)
 		{
 		}
