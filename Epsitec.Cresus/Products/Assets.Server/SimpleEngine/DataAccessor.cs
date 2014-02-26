@@ -281,6 +281,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.GroupParent:
 					return FieldType.GuidGroup;
 
+				case ObjectField.Compte1:
+				case ObjectField.Compte2:
+				case ObjectField.Compte3:
+				case ObjectField.Compte4:
+				case ObjectField.Compte5:
+				case ObjectField.Compte6:
+				case ObjectField.Compte7:
+				case ObjectField.Compte8:
+					return FieldType.GuidAccount;
+
 				default:
 					return FieldType.String;
 			}

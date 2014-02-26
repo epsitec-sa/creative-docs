@@ -48,9 +48,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var columns = new List<TreeTableColumnDescription> ();
 
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 180, "Catégorie"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 50, "N°"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate, 80, "Taux"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 80, "Type"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  50, "N°"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate,    80, "Taux"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  80, "Type"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Périodicité"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Prorata"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, 100, "Arrondi"));
@@ -89,12 +89,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid  = node.Guid;
 				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
 
-				var name   = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
-				var number = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number);
+				var name   = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var number = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
 				var rate   = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationRate);
-				var type   = ObjectProperties.GetObjectPropertyInt (obj, this.Timestamp, ObjectField.AmortizationType);
-				var period = ObjectProperties.GetObjectPropertyInt (obj, this.Timestamp, ObjectField.Periodicity);
-				var prorat = ObjectProperties.GetObjectPropertyInt (obj, this.Timestamp, ObjectField.Prorata);
+				var type   = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationType);
+				var period = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Periodicity);
+				var prorat = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Prorata);
 				var round  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.Round);
 				var resid  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ResidualValue);
 
