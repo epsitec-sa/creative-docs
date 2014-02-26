@@ -142,8 +142,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.Reports:
 					return new ReportsView (accessor, toolbar);
 
-				case ViewType.Settings:
-					return new SettingsView (accessor, toolbar);
+				case ViewType.AssetsSettings:
+					return new UserFieldsSettingsView (accessor, toolbar, BaseType.Assets);
+
+				case ViewType.PersonsSettings:
+					return new UserFieldsSettingsView (accessor, toolbar, BaseType.Persons);
+
+				case ViewType.AccountsSettings:
+					return new AccountsSettingsView (accessor, toolbar);
 
 				default:
 					return null;

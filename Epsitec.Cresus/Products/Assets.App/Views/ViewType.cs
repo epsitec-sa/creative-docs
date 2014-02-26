@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Persons,
 		Events,
 		Reports,
-		Settings,
+		AssetsSettings,
+		PersonsSettings,
+		AccountsSettings,
 	}
 }

@@ -3,24 +3,29 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class UserFieldsSettingsView : AbstractSettingsView
+	public class UserFieldsSettingsView : AbstractView
 	{
-		public UserFieldsSettingsView(DataAccessor accessor, MainToolbar mainToolbar, BaseType baseType)
-			: base (accessor, mainToolbar)
+		public UserFieldsSettingsView(DataAccessor accessor, MainToolbar toolbar, BaseType baseType)
+			: base (accessor, toolbar)
 		{
 			this.baseType = baseType;
 
 			this.listController = new UserFieldsToolbarTreeTableController (this.accessor, this.baseType);
-			this.objectEditor = new ObjectEditor (this.accessor, BaseType.UserFields, this.baseType, isTimeless: true);
+			this.objectEditor   = new ObjectEditor (this.accessor, BaseType.UserFields, this.baseType, isTimeless: true);
+		}
 
-			this.ignoreChanges = new SafeCounter ();
+
+		public override void Dispose()
+		{
+			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
 		}
 
 
@@ -50,12 +55,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.objectEditor.CreateUI (this.editFrameBox);
 
 			this.DeepUpdateUI ();
-
-			//	Connexion des événements de la MainToolbar.
-			this.mainToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			{
-				this.OnCommand (command);
-			};
 
 			//	Connexion des événements de la liste des objets à gauche.
 			{
@@ -98,18 +97,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void DataChanged()
+		public override void DataChanged()
 		{
 			this.listController.DirtyData = true;
 		}
 
-		public void DeepUpdateUI()
+		public override void DeepUpdateUI()
 		{
 			this.DataChanged ();
 			this.UpdateUI ();
 		}
 
-		public void UpdateUI()
+		public override void UpdateUI()
 		{
 			if (this.accessor.EditionAccessor.SaveObjectEdition ())
 			{
@@ -140,11 +139,54 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
+
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 
-		public void OnCommand(ToolbarCommand command)
+		public override AbstractViewState ViewState
 		{
+			get
+			{
+				ViewType viewType;
+
+				switch (this.baseType)
+				{
+					case BaseType.Assets:
+						viewType = ViewType.AssetsSettings;
+						break;
+
+					case BaseType.Persons:
+						viewType = ViewType.PersonsSettings;
+						break;
+
+					default:
+						throw new System.InvalidOperationException (string.Format ("Unknown BaseType {0}", this.baseType.ToString ()));
+				}
+
+				return new SettingsViewState
+				{
+					ViewType     = viewType,
+					BaseType     = this.baseType,
+					SelectedGuid = this.selectedGuid,
+				};
+			}
+			set
+			{
+				var viewState = value as SettingsViewState;
+				System.Diagnostics.Debug.Assert (viewState != null);
+
+				this.selectedGuid = viewState.SelectedGuid;
+
+				this.UpdateUI ();
+			}
+		}
+
+
+		public override void OnCommand(ToolbarCommand command)
+		{
+			base.OnCommand (command);
+
 			switch (command)
 			{
 				case ToolbarCommand.Edit:
@@ -267,10 +309,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly BaseType							baseType;
 		private readonly UserFieldsToolbarTreeTableController listController;
 		private readonly ObjectEditor						objectEditor;
-		private readonly SafeCounter						ignoreChanges;
 
 		private FrameBox									listFrameBox;
 		private FrameBox									editFrameBox;

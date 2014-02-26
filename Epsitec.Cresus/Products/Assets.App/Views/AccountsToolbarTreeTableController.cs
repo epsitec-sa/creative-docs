@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Accounts);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Accounts, primaryNodeGetter);
 
-			this.title = SettingsToolbar.GetCommandDescription (ToolbarCommand.SettingsAccounts);
+			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.AccountsSettings);
 		}
 
 

@@ -36,8 +36,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.Reports:
 					return "View.Reports";
 
-				case ViewType.Settings:
-					return "View.Settings";
+				case ViewType.AssetsSettings:
+					return "View.AssetsSettings";
+
+				case ViewType.PersonsSettings:
+					return "View.PersonsSettings";
+
+				case ViewType.AccountsSettings:
+					return "View.AccountsSettings";
 
 				default:
 					return null;
@@ -72,8 +78,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.Reports:
 					return "Rapports et statistiques";
 
-				case ViewType.Settings:
-					return "Réglages";
+				case ViewType.AssetsSettings:
+					//?return "Réglages — Champs des objets d'immobilisations";
+					return "Champs des objets d'immobilisations";
+
+				case ViewType.PersonsSettings:
+					//?return "Réglages — Champs des personnes";
+					return "Champs des personnes";
+
+				case ViewType.AccountsSettings:
+					//?return "Réglages — Plan comptable";
+					return "Plan comptable";
 
 				default:
 					return null;

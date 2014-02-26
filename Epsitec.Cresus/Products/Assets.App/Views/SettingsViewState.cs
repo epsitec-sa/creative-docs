@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class SettingsViewState : AbstractViewState, System.IEquatable<AbstractViewState>
 	{
-		public ToolbarCommand					SelectedCommand;
+		public BaseType							BaseType;
 		public Guid								SelectedGuid;
 
 
@@ -29,35 +29,45 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return false;
 			}
 
-			return this.ViewType        == o.ViewType
-				&& this.SelectedCommand == o.SelectedCommand
-				&& this.SelectedGuid    == o.SelectedGuid;
+			return this.ViewType     == o.ViewType
+				&& this.BaseType     == o.BaseType
+				&& this.SelectedGuid == o.SelectedGuid;
 		}
 		#endregion
 
 
 		protected override string GetDescription(DataAccessor accessor)
 		{
-			string text = SettingsToolbar.GetCommandDescription (this.SelectedCommand);
-			string sel = null;
+			string name, sel;
 
-			if (!this.SelectedGuid.IsEmpty)
+			switch (this.BaseType)
 			{
-				sel = AccountsLogic.GetSummary (accessor, this.SelectedGuid);
+				case BaseType.Assets:
+					name = StaticDescriptions.GetViewTypeDescription (ViewType.AssetsSettings);
+					sel = UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
+					break;
 
-				if (sel == null)
-				{
-					
-				}
+				case BaseType.Persons:
+					name = StaticDescriptions.GetViewTypeDescription (ViewType.PersonsSettings);
+					sel = UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
+					break;
+
+				case BaseType.Accounts:
+					name = StaticDescriptions.GetViewTypeDescription (ViewType.AccountsSettings);
+					sel = AccountsLogic.GetSummary (accessor, this.SelectedGuid);
+					break;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.BaseType.ToString ()));
 			}
 
 			if (string.IsNullOrEmpty (sel))
 			{
-				return text;
+				return name;
 			}
 			else
 			{
-				return string.Concat (text, ", ", sel);
+				return string.Concat (name, ", ", sel);
 			}
 		}
 	}

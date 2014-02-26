@@ -3,41 +3,32 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AccountsSettingsView : AbstractSettingsView
+	public class AccountsSettingsView : AbstractView
 	{
-		public AccountsSettingsView(DataAccessor accessor, MainToolbar mainToolbar)
-			: base (accessor, mainToolbar)
+		public AccountsSettingsView(DataAccessor accessor, MainToolbar toolbar)
+			: base (accessor, toolbar)
 		{
 			this.baseType = BaseType.Accounts;
 
 			this.listController = new AccountsToolbarTreeTableController (this.accessor);
-			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: true);
-
-			this.ignoreChanges = new SafeCounter ();
+			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: true);
 		}
 
 
-		public override Guid					SelectedGuid
+		public override void Dispose()
 		{
-			get
-			{
-				return this.listController.SelectedGuid;
-			}
-			set
-			{
-				this.listController.SelectedGuid = value;
-			}
+			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
 		}
 
-	
+
 		public override void CreateUI(Widget parent)
 		{
 			var topBox = new FrameBox
@@ -64,12 +55,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.objectEditor.CreateUI (this.editFrameBox);
 
 			this.DeepUpdateUI ();
-
-			//	Connexion des événements de la MainToolbar.
-			this.mainToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			{
-				this.OnCommand (command);
-			};
 
 			//	Connexion des événements de la liste des objets à gauche.
 			{
@@ -112,18 +97,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void DataChanged()
+		public override void DataChanged()
 		{
 			this.listController.DirtyData = true;
 		}
 
-		public void DeepUpdateUI()
+		public override void DeepUpdateUI()
 		{
 			this.DataChanged ();
 			this.UpdateUI ();
 		}
 
-		public void UpdateUI()
+		public override void UpdateUI()
 		{
 			if (this.accessor.EditionAccessor.SaveObjectEdition ())
 			{
@@ -154,23 +139,50 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
+
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 
 		public static AbstractViewState GetViewState(Guid accountGuid)
 		{
 			//	Retourne un ViewState permettant de voir un compte donné.
-			//	TODO: finir...
 			return new SettingsViewState
 			{
-				ViewType        = ViewType.Settings,
-				SelectedCommand = ToolbarCommand.SettingsAccounts,
+				ViewType     = ViewType.AccountsSettings,
+				BaseType     = BaseType.Accounts,
+				SelectedGuid = accountGuid,
 			};
 		}
 
 
-		public void OnCommand(ToolbarCommand command)
+		public override AbstractViewState ViewState
 		{
+			get
+			{
+				return new SettingsViewState
+				{
+					ViewType     = ViewType.AccountsSettings,
+					BaseType     = this.baseType,
+					SelectedGuid = this.selectedGuid,
+				};
+			}
+			set
+			{
+				var viewState = value as SettingsViewState;
+				System.Diagnostics.Debug.Assert (viewState != null);
+
+				this.selectedGuid = viewState.SelectedGuid;
+
+				this.UpdateUI ();
+			}
+		}
+
+
+		public override void OnCommand(ToolbarCommand command)
+		{
+			base.OnCommand (command);
+
 			switch (command)
 			{
 				case ToolbarCommand.Edit:
@@ -272,17 +284,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.objectEditor.SetObject (this.selectedGuid, timestamp);
 		}
 
-		private Timestamp? GetLastTimestamp(Guid guid)
-		{
-			var obj = this.accessor.GetObject (this.baseType, guid);
-			if (obj != null)
-			{
-				return AssetCalculator.GetLastTimestamp (obj);
-			}
-
-			return null;
-		}
-
 
 		private void UpdateToolbars()
 		{
@@ -311,10 +312,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly BaseType							baseType;
 		private readonly AccountsToolbarTreeTableController listController;
 		private readonly ObjectEditor						objectEditor;
-		private readonly SafeCounter						ignoreChanges;
 
 		private FrameBox									listFrameBox;
 		private FrameBox									editFrameBox;

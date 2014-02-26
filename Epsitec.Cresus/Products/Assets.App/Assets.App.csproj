@@ -122,7 +122,6 @@
     <Compile Include="Views\AmortizationsView.cs" />
     <Compile Include="Views\AmortizationsViewState.cs" />
     <Compile Include="Views\AmortizationsToolbar.cs" />
-    <Compile Include="Views\AbstractSettingsView.cs" />
     <Compile Include="Views\AccountsToolbarTreeTableController.cs" />
     <Compile Include="Views\AccountsSettingsView.cs" />
     <Compile Include="Views\AccountGuidFieldController.cs" />
@@ -131,9 +130,7 @@
     <Compile Include="Views\EditorPageUserField.cs" />
     <Compile Include="Views\UserFieldsToolbarTreeTableController.cs" />
     <Compile Include="Views\UserFieldsSettingsView.cs" />
-    <Compile Include="Views\GeneralSettingsView.cs" />
     <Compile Include="Views\SettingsViewState.cs" />
-    <Compile Include="Views\SettingsToolbar.cs" />
     <Compile Include="Views\EditorPageAmortizationPreview.cs" />
     <Compile Include="Views\EnumFieldController.cs" />
     <Compile Include="Views\IDirty.cs" />
@@ -209,7 +206,6 @@
     <Compile Include="Widgets\SimpleTreeTableController.cs" />
     <Compile Include="Widgets\TopTitle.cs" />
     <Compile Include="Widgets\MouseCursorManager.cs" />
-    <Compile Include="Views\SettingsView.cs" />
     <Compile Include="Views\ReportsView.cs" />
     <Compile Include="Views\MainToolbar.cs" />
     <Compile Include="Views\MainView.cs" />
@@ -353,6 +349,9 @@
     <EmbeddedResource Include="Images\TreeTable.MoveBottom.icon" />
     <EmbeddedResource Include="Images\View.Ecritures.icon" />
     <EmbeddedResource Include="Images\Settings.Accounts.icon" />
+    <EmbeddedResource Include="Images\View.AccountsSettings.icon" />
+    <EmbeddedResource Include="Images\View.AssetsSettings.icon" />
+    <EmbeddedResource Include="Images\View.PersonsSettings.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

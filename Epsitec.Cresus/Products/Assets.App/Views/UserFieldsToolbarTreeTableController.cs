@@ -28,11 +28,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (this.baseType)
 			{
 				case BaseType.Assets:
-					this.title = SettingsToolbar.GetCommandDescription (ToolbarCommand.SettingsAssetsView);
+					this.title = StaticDescriptions.GetViewTypeDescription (ViewType.AssetsSettings);
 					break;
 
 				case BaseType.Persons:
-					this.title = SettingsToolbar.GetCommandDescription (ToolbarCommand.SettingsPersonsView);
+					this.title = StaticDescriptions.GetViewTypeDescription (ViewType.PersonsSettings);
 					break;
 
 				default:

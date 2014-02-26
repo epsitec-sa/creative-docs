@@ -89,7 +89,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonGroups          = this.CreateViewTypeButton (ViewType.Groups,        ToolbarCommand.ViewTypeGroups,        StaticDescriptions.GetViewTypeIcon (ViewType.Groups),        StaticDescriptions.GetViewTypeDescription (ViewType.Groups));
 			this.buttonPersons         = this.CreateViewTypeButton (ViewType.Persons,       ToolbarCommand.ViewTypePersons,       StaticDescriptions.GetViewTypeIcon (ViewType.Persons),       StaticDescriptions.GetViewTypeDescription (ViewType.Persons));
 			this.buttonReports         = this.CreateViewTypeButton (ViewType.Reports,       ToolbarCommand.ViewTypeReports,       StaticDescriptions.GetViewTypeIcon (ViewType.Reports),       StaticDescriptions.GetViewTypeDescription (ViewType.Reports));
-			this.buttonSettings        = this.CreateViewTypeButton (ViewType.Settings,      ToolbarCommand.ViewTypeSettings,      StaticDescriptions.GetViewTypeIcon (ViewType.Settings),      StaticDescriptions.GetViewTypeDescription (ViewType.Settings));
+			this.buttonAssetsSettings  = this.CreateViewTypeButton (ViewType.AssetsSettings,   ToolbarCommand.ViewTypeAssetsSettings,      StaticDescriptions.GetViewTypeIcon (ViewType.AssetsSettings),      StaticDescriptions.GetViewTypeDescription (ViewType.AssetsSettings));
+			this.buttonPersonsSettings = this.CreateViewTypeButton (ViewType.PersonsSettings,  ToolbarCommand.ViewTypePersonsSettings,      StaticDescriptions.GetViewTypeIcon (ViewType.PersonsSettings),     StaticDescriptions.GetViewTypeDescription (ViewType.PersonsSettings));
+			this.buttonAccountsSettings= this.CreateViewTypeButton (ViewType.AccountsSettings, ToolbarCommand.ViewTypeAccountsSettings,      StaticDescriptions.GetViewTypeIcon (ViewType.AccountsSettings),    StaticDescriptions.GetViewTypeDescription (ViewType.AccountsSettings));
 								       													   									     
 			this.buttonSingle          = this.CreateViewModeButton (ViewMode.Single,        ToolbarCommand.ViewModeSingle,        "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
 			this.buttonEvent           = this.CreateViewModeButton (ViewMode.Event,         ToolbarCommand.ViewModeEvent,         "Show.TimelineEvent",    "Tableau des événements");
@@ -102,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonAccept          = this.CreateCommandButton  (DockStyle.Right,        ToolbarCommand.Accept,                "Edit.Accept",           "Accepter les modifications");
 
 			this.buttonOpen    .Margins = new Margins (0, 10, 0, 0);
-			this.buttonSettings.Margins = new Margins (0, 10, 0, 0);
+			this.buttonAccountsSettings.Margins = new Margins (0, 10, 0, 0);
 			this.buttonMultiple.Margins = new Margins (0, 40, 0, 0);
 
 			this.UpdateViewTypeCommands ();
@@ -152,7 +154,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetCommandActivate (ToolbarCommand.ViewTypePersons,       this.viewType == ViewType.Persons      );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeEvents,        this.viewType == ViewType.Events       );
 			this.SetCommandActivate (ToolbarCommand.ViewTypeReports,       this.viewType == ViewType.Reports      );
-			this.SetCommandActivate (ToolbarCommand.ViewTypeSettings,      this.viewType == ViewType.Settings     );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeAssetsSettings,      this.viewType == ViewType.AssetsSettings     );
+			this.SetCommandActivate (ToolbarCommand.ViewTypePersonsSettings,      this.viewType == ViewType.PersonsSettings     );
+			this.SetCommandActivate (ToolbarCommand.ViewTypeAccountsSettings,      this.viewType == ViewType.AccountsSettings     );
 		}
 
 		private void UpdateViewModeCommands()
@@ -207,7 +211,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonGroups;
 		private IconButton						buttonPersons;
 		private IconButton						buttonReports;
-		private IconButton						buttonSettings;
+		private IconButton						buttonAssetsSettings;
+		private IconButton						buttonPersonsSettings;
+		private IconButton						buttonAccountsSettings;
 
 		private IconButton						buttonSingle;
 		private IconButton						buttonEvent;
