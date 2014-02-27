@@ -51,6 +51,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public static AmortizedAmount? GetObjectPropertyAmortizedAmount(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
+		{
+			var p = ObjectProperties.GetObjectProperty (obj, timestamp, field, synthetic) as DataAmortizedAmountProperty;
+
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
 		public static System.DateTime? GetObjectPropertyDate(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
 		{
 			var p = ObjectProperties.GetObjectProperty (obj, timestamp, field, synthetic) as DataDateProperty;
@@ -169,6 +183,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				else if (property is DataComputedAmountProperty)
 				{
 					return new ComparableData ((property as DataComputedAmountProperty).Value.FinalAmount.GetValueOrDefault ());
+				}
+				else if (property is DataAmortizedAmountProperty)
+				{
+					return new ComparableData ((property as DataAmortizedAmountProperty).Value.FinalAmount.GetValueOrDefault ());
 				}
 				else if (property is DataDateProperty)
 				{

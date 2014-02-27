@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+#if false
 		protected internal override void CreateUI(Widget parent)
 		{
 			parent = this.CreateScrollable (parent);
@@ -226,5 +227,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox line2b;
 		private FrameBox line3a;
 		private FrameBox line3b;
+#else
+		protected internal override void CreateUI(Widget parent)
+		{
+			parent = this.CreateScrollable (parent);
+
+			this.CreateAmortizedAmountController (parent, ObjectField.MainValue);
+		}
+#endif
 	}
 }

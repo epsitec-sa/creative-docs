@@ -256,6 +256,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 					break;
 
+				case FieldType.AmortizedAmount:
+					var aa = ObjectProperties.GetObjectPropertyAmortizedAmount (this.obj, this.timestamp, tile.Field);
+					if (aa.HasValue)
+					{
+						text = TypeConverters.AmountToString (aa.Value.FinalAmount);
+						alignment = ContentAlignment.MiddleRight;
+					}
+					break;
+
 				case FieldType.Date:
 					var da = ObjectProperties.GetObjectPropertyDate (this.obj, this.timestamp, tile.Field);
 					if (da.HasValue)

@@ -40,8 +40,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					column = new TreeTableColumnComputedAmount (details: false);
 					break;
 
+				case TreeTableColumnType.AmortizedAmount:
+					column = new TreeTableColumnAmortizedAmount (details: false);
+					break;
+
 				case TreeTableColumnType.DetailedComputedAmount:
 					column = new TreeTableColumnComputedAmount (details: true);
+					break;
+
+				case TreeTableColumnType.DetailedAmortizedAmount:
+					column = new TreeTableColumnAmortizedAmount (details: true);
 					break;
 
 				case TreeTableColumnType.Int:

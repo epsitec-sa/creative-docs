@@ -27,6 +27,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				return new DataComputedAmountProperty (model as DataComputedAmountProperty);
 			}
+			else if (model is DataAmortizedAmountProperty)
+			{
+				return new DataAmortizedAmountProperty (model as DataAmortizedAmountProperty);
+			}
 			else if (model is DataDateProperty)
 			{
 				return new DataDateProperty (model as DataDateProperty);

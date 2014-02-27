@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		String,
 		Decimal,
 		ComputedAmount,
+		AmortizedAmount,
 		Int,
 		Date,
 		GuidGroup,		// Guid d'un groupe

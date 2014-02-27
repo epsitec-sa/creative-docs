@@ -103,6 +103,21 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							var ca = this.NodeGetter.GetValue (obj, node, userField.Field);
 							cell = new TreeTableCellComputedAmount (ca, cellState2);
 						}
+						else if (userField.Type == FieldType.AmortizedAmount)
+						{
+							//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
+							//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
+							var ca = this.NodeGetter.GetValue (obj, node, userField.Field);
+							if (ca.HasValue)
+							{
+								var aa = new AmortizedAmount (ca.Value.FinalAmount);
+								cell = new TreeTableCellAmortizedAmount (aa, cellState2);
+							}
+							else
+							{
+								cell = new TreeTableCellAmortizedAmount (null, cellState2);
+							}
+						}
 						else
 						{
 							cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, obj, this.Timestamp, userField, false, cellState2);

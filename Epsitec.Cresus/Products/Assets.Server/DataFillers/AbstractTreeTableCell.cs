@@ -68,6 +68,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					var ca = ObjectProperties.GetObjectPropertyComputedAmount (obj, timestamp, userField.Field, synthetic: synthetic);
 					return new TreeTableCellComputedAmount (ca, cellState);
 
+				case FieldType.AmortizedAmount:
+					var aa = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, userField.Field, synthetic: synthetic);
+					return new TreeTableCellAmortizedAmount (aa, cellState);
+
 				case FieldType.Date:
 					var date = ObjectProperties.GetObjectPropertyDate (obj, timestamp, userField.Field, synthetic: synthetic);
 					return new TreeTableCellDate (date, cellState);
@@ -104,6 +108,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case FieldType.ComputedAmount:
 					return TreeTableColumnType.ComputedAmount;
+
+				case FieldType.AmortizedAmount:
+					return TreeTableColumnType.AmortizedAmount;
 
 				case FieldType.Date:
 					return TreeTableColumnType.Date;

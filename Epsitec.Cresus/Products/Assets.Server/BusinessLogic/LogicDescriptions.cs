@@ -54,6 +54,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						}
 						break;
 
+					case FieldType.AmortizedAmount:
+						var aa = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, field, false);
+						if (aa.HasValue)
+						{
+							line = Helpers.TypeConverters.AmountToString (aa.Value.FinalAmount);
+						}
+						break;
+
 					case FieldType.Int:
 						var i = ObjectProperties.GetObjectPropertyInt (obj, timestamp, field, false);
 						if (i.HasValue)

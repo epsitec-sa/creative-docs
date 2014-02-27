@@ -126,6 +126,8 @@
     <Compile Include="Views\AccountsToolbarTreeTableController.cs" />
     <Compile Include="Views\AccountsSettingsView.cs" />
     <Compile Include="Views\AccountGuidFieldController.cs" />
+    <Compile Include="Views\AmortizedAmountFieldController.cs" />
+    <Compile Include="Views\AmortizedAmountController.cs" />
     <Compile Include="Views\EditorPageAccount.cs" />
     <Compile Include="Views\EcrituresView.cs" />
     <Compile Include="Views\EditorPageUserField.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="Helpers\EventExtensions.cs" />
     <Compile Include="Widgets\Calendar.cs" />
     <Compile Include="Widgets\CalendarController.cs" />
+    <Compile Include="Widgets\TreeTableColumnAmortizedAmount.cs" />
     <Compile Include="Widgets\TreeTableColumnPin.cs" />
     <Compile Include="Widgets\TreeTableColumnIcon.cs" />
     <Compile Include="Widgets\SortedColumn.cs" />

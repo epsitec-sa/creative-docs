@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int margins  = 3;
+		private const int margins    = 5;
 		private const int buttonSize = AbstractCommandToolbar.primaryToolbarHeight;
 
 	}

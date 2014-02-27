@@ -70,6 +70,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						columns.Add (new TreeTableColumnDescription (TreeTableColumnType.DetailedComputedAmount, this.ValueColumnWidth, "Valeur"));
 						break;
 
+					case FieldType.AmortizedAmount:
+						columns.Add (new TreeTableColumnDescription (TreeTableColumnType.DetailedAmortizedAmount, this.ValueColumnWidth, "Valeur"));
+						break;
+
 					case FieldType.GuidGroup:
 					case FieldType.GuidPerson:
 					case FieldType.GuidAccount:
@@ -144,6 +148,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case FieldType.ComputedAmount:
 					this.PutComputedAmount (content, firstRow, count, selection);
+					break;
+
+				case FieldType.AmortizedAmount:
+					this.PutAmortizedAmount (content, firstRow, count, selection);
 					break;
 
 				case FieldType.GuidGroup:
@@ -259,6 +267,26 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
 				var cell = new TreeTableCellComputedAmount (value, cellState);
+
+				content.Columns[2].AddRow (cell);
+			}
+		}
+
+		private void PutAmortizedAmount(TreeTableContentItem content, int firstRow, int count, int selection)
+		{
+			int i = 0;
+			foreach (var e in this.GetEvents (firstRow, count))
+			{
+				AmortizedAmount? value = null;
+
+				var property = e.GetProperty (this.field) as DataAmortizedAmountProperty;
+				if (property != null)
+				{
+					value = property.Value;
+				}
+
+				var cellState = (i++ == selection) ? CellState.Selected : CellState.None;
+				var cell = new TreeTableCellAmortizedAmount (value, cellState);
 
 				content.Columns[2].AddRow (cell);
 			}
@@ -386,6 +414,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return 70;
 
 				case FieldType.ComputedAmount:
+				case FieldType.AmortizedAmount:
 					return 170;
 
 				case FieldType.GuidGroup:

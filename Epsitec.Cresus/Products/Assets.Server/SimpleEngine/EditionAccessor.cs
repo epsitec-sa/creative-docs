@@ -139,6 +139,46 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return null;
 		}
 
+		public AmortizedAmount? GetFieldAmortizedAmount(ObjectField field)
+		{
+			if (this.dataEvent != null)
+			{
+				var property = this.dataEvent.GetProperty (field) as DataAmortizedAmountProperty;
+				if (property != null)
+				{
+					return property.Value;
+				}
+
+				if (this.obj != null && this.timestamp.HasValue)
+				{
+					var before = this.timestamp.Value.JustBefore;
+					property = ObjectProperties.GetObjectProperty (this.obj, before, field, true) as DataAmortizedAmountProperty;
+
+					if (property != null)
+					{
+						//	Cette situation est tordue. On demande le montant calculé à un
+						//	instant pour lequel il n'existe pas. On cherche donc le précédent,
+						//	mais on ne peut pas le retourner tel quel. On doit retourner un
+						//	montant qui a une valeur initiale égale à la valeur finale du
+						//	montant précédent trouvé.
+						return new AmortizedAmount
+						(
+							property.Value.FinalAmount,
+							null,
+							null,
+							null,
+							null,
+							null,
+							property.Value.FinalAmount,
+							property.Value.AmortizationType
+						);
+					}
+				}
+			}
+
+			return null;
+		}
+
 		public System.DateTime? GetFieldDate(ObjectField field)
 		{
 			var p = this.GetProperty (field) as DataDateProperty;
@@ -234,6 +274,26 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				if (value.HasValue)
 				{
 					var newProperty = new DataComputedAmountProperty (field, value.Value);
+					e.AddProperty (newProperty);
+				}
+				else
+				{
+					e.RemoveProperty (field);
+				}
+
+				this.dirty = true;
+				this.computedAmountDirty = true;
+			}
+		}
+
+		public void SetField(ObjectField field, AmortizedAmount? value)
+		{
+			var e = this.dataEvent;
+			if (e != null)
+			{
+				if (value.HasValue)
+				{
+					var newProperty = new DataAmortizedAmountProperty (field, value.Value);
 					e.AddProperty (newProperty);
 				}
 				else

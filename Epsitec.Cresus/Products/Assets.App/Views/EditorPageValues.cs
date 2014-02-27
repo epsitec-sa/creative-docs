@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			parent = this.CreateScrollable (parent);
 
-			this.CreateComputedAmountController (parent, ObjectField.MainValue);
+			this.CreateAmortizedAmountController (parent, ObjectField.MainValue);
 
 			foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)
 				.Where (x => x.Type == FieldType.ComputedAmount)

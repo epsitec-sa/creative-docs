@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			switch (objectField)
 			{
 				case ObjectField.MainValue:
-					return FieldType.ComputedAmount;
+					return FieldType.AmortizedAmount;
 
 				case ObjectField.AmortizationRate:
 				case ObjectField.ResidualValue:

@@ -90,6 +90,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.Value         = this.accessor.EditionAccessor.GetFieldComputedAmount (field);
 					c.PropertyState = this.GetPropertyState (field);
 				}
+				else if (controller is AmortizedAmountFieldController)
+				{
+					var c = controller as AmortizedAmountFieldController;
+
+					c.EventType     = this.eventType;
+					c.Value         = this.accessor.EditionAccessor.GetFieldAmortizedAmount (field);
+					c.PropertyState = this.GetPropertyState (field);
+				}
 				else if (controller is IntFieldController)
 				{
 					var c = controller as IntFieldController;
@@ -188,6 +196,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case FieldType.ComputedAmount:
 					this.CreateComputedAmountController (parent, userField.Field);
+					break;
+
+				case FieldType.AmortizedAmount:
+					this.CreateAmortizedAmountController (parent, userField.Field);
 					break;
 
 				case FieldType.Date:
@@ -463,6 +475,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
 				controller.Value         = this.accessor.EditionAccessor.GetFieldComputedAmount (of);
+				controller.PropertyState = this.GetPropertyState (of);
+
+				this.OnValueEdited (of);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.ShowHistoryPopup (target, of);
+			};
+
+			controller.Goto += delegate (object sender, AbstractViewState viewState)
+			{
+				this.OnGoto (viewState);
+			};
+
+			this.fieldControllers.Add (field, controller);
+		}
+
+		protected void CreateAmortizedAmountController(Widget parent, ObjectField field)
+		{
+			var controller = new AmortizedAmountFieldController
+			{
+				Field     = field,
+				Label     = this.accessor.GetFieldName (field),
+				TabIndex  = ++this.tabIndex,
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldAmortizedAmount (of);
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
