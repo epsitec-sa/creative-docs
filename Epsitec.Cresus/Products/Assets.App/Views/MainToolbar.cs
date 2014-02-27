@@ -261,9 +261,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.Persons:
 					return ToolbarCommand.ViewTypePersons;
 
-				case ViewType.Events:
-					return ToolbarCommand.ViewTypeEvents;
-
 				case ViewType.Reports:
 					return ToolbarCommand.ViewTypeReports;
 
@@ -301,7 +298,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				yield return ViewType.Categories;
 				yield return ViewType.Groups;
 				yield return ViewType.Persons;
-				yield return ViewType.Events;
 				yield return ViewType.Reports;
 				yield return ViewType.AssetsSettings;
 				yield return ViewType.PersonsSettings;

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.eventsNodeGetter = new ObjectEventsNodeGetter ();
 			this.nodeGetter = new SorterNodeGetter (this.eventsNodeGetter);
 
-			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Events);
+			this.title = "Evénements";
 		}
 
 

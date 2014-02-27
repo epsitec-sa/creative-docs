@@ -30,9 +30,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.Persons:
 					return "View.Persons";
 
-				case ViewType.Events:
-					return "View.Events";
-
 				case ViewType.Reports:
 					return "View.Reports";
 
@@ -71,9 +68,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case ViewType.Persons:
 					return "Personnes";
-
-				case ViewType.Events:
-					return "Evénements";
 
 				case ViewType.Reports:
 					return "Rapports et statistiques";
