@@ -70,7 +70,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public void UpdateData()
 		{
 			var timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
-			this.nodeGetter.SetParams (timestamp, this.rootGuid, SortingInstructions.Default);
+			var sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Assets), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
+
+			this.nodeGetter.SetParams (timestamp, this.rootGuid, sortingInstructions);
 			this.dataFiller.Timestamp = timestamp;
 
 			this.UpdateDataArray ();

@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public ComputedAmount? GetValue(DataObject obj, CumulNode node, ObjectField field)
+		public decimal? GetValue(DataObject obj, CumulNode node, ObjectField field)
 		{
 			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
 			if (obj != null)
@@ -61,10 +61,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				else
 				{
 					//	S'il s'agit d'un groupe et qu'il est compacté, on retourne le total cumulé.
-					ComputedAmount ca;
-					if (node.Cumuls.TryGetValue (field, out ca))
+					decimal v;
+					if (node.Cumuls.TryGetValue (field, out v))
 					{
-						return ca;
+						return v;
 					}
 				}
 			}
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		private void ComputeCumuls(Dictionary<ObjectField, ComputedAmount> cumuls, TreeNode[] hiddenTreeNodes)
+		private void ComputeCumuls(Dictionary<ObjectField, decimal> cumuls, TreeNode[] hiddenTreeNodes)
 		{
 			foreach (var hiddenTreeNode in hiddenTreeNodes)
 			{
@@ -106,16 +106,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 					foreach (var field in this.accessor.ValueFields)
 					{
-						var ca = CumulNodeGetter.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, field);
-						if (ca.HasValue)
+						var v = CumulNodeGetter.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, field);
+						if (v.HasValue)
 						{
 							if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
 							{
-								cumuls[field] = new ComputedAmount (cumuls[field], ca.Value);  // addition
+								cumuls[field] += v.Value;  // addition
 							}
 							else  // première valeur ?
 							{
-								cumuls[field] = ca.Value;
+								cumuls[field] = v.Value;
 							}
 						}
 					}
@@ -123,24 +123,46 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		private static ComputedAmount? GetValueAccordingToRatio(DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
+		private static decimal? GetValueAccordingToRatio(DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
 		{
 			//	Retourne la valeur d'un champ ObjectField.Valeur*, en tenant compte du ratio.
-			if (obj == null)
+			if (obj != null)
 			{
-				return null;
-			}
-			else
-			{
-				var value = ObjectProperties.GetObjectPropertyComputedAmount (obj, timestamp, field);
+				decimal? m = null;
 
-				if (value.HasValue && ratio.HasValue)  // y a-t-il un ratio ?
+				if (field == ObjectField.MainValue)
 				{
-					return new ComputedAmount (value.Value, ratio.Value);
+					var value = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, field);
+
+					if (value.HasValue && value.Value.FinalAmount.HasValue)
+					{
+						m = value.Value.FinalAmount.Value;
+					}
+				}
+				else
+				{
+					var value = ObjectProperties.GetObjectPropertyComputedAmount (obj, timestamp, field);
+
+					if (value.HasValue && value.Value.FinalAmount.HasValue)
+					{
+						m = value.Value.FinalAmount.Value;
+					}
 				}
 
-				return value;
+				if (m.HasValue)
+				{
+					if (ratio.HasValue)  // y a-t-il un ratio ?
+					{
+						return m.Value * ratio.Value;
+					}
+					else
+					{
+						return m;
+					}
+				}
 			}
+
+			return null;
 		}
 
 

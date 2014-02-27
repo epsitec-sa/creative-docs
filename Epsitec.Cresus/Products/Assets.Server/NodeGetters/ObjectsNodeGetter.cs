@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public ComputedAmount? GetValue(DataObject obj, CumulNode node, ObjectField field)
+		public decimal? GetValue(DataObject obj, CumulNode node, ObjectField field)
 		{
 			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
 			return this.cumulNodeGetter.GetValue (obj, node, field);
