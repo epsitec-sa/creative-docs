@@ -11,7 +11,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		public AmortizedAmount(decimal? initialAmount, decimal? baseAmount, decimal? effectiveRate,
 			decimal? prorataNumerator, decimal? prorataDenominator,
-			decimal? roundAmount, decimal? finalAmount, AmortizationType amortizationType)
+			decimal? roundAmount, decimal? residualAmount, decimal? finalAmount,
+			AmortizationType amortizationType)
 		{
 			this.InitialAmount      = initialAmount;
 			this.BaseAmount         = baseAmount;
@@ -19,6 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.ProrataNumerator   = prorataNumerator;
 			this.ProrataDenominator = prorataDenominator;
 			this.RoundAmount        = roundAmount;
+			this.ResidualAmount     = residualAmount;
 			this.FinalAmount        = finalAmount;
 			this.AmortizationType   = amortizationType;
 		}
@@ -31,6 +33,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.ProrataNumerator   = null;
 			this.ProrataDenominator = null;
 			this.RoundAmount        = null;
+			this.ResidualAmount     = null;
 			this.FinalAmount        = finalAmount;
 			this.AmortizationType   = AmortizationType.Unknown;
 		}
@@ -43,6 +46,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.ProrataNumerator   = null;
 			this.ProrataDenominator = null;
 			this.RoundAmount        = null;
+			this.ResidualAmount     = null;
 			this.FinalAmount        = finalAmount;
 			this.AmortizationType   = AmortizationType.Degressive;
 		}
@@ -56,6 +60,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				&& (a.ProrataNumerator   == b.ProrataNumerator)
 				&& (a.ProrataDenominator == b.ProrataDenominator)
 				&& (a.RoundAmount        == b.RoundAmount)
+				&& (a.ResidualAmount     == b.ResidualAmount)
 				&& (a.FinalAmount        == b.FinalAmount)
 				&& (a.AmortizationType   == b.AmortizationType);
 		}
@@ -68,6 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				|| (a.ProrataNumerator   != b.ProrataNumerator)
 				|| (a.ProrataDenominator != b.ProrataDenominator)
 				|| (a.RoundAmount        != b.RoundAmount)
+				|| (a.ResidualAmount     != b.ResidualAmount)
 				|| (a.FinalAmount        != b.FinalAmount)
 				|| (a.AmortizationType   != b.AmortizationType);
 		}
@@ -79,6 +85,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public readonly decimal?				ProrataNumerator;
 		public readonly decimal?				ProrataDenominator;
 		public readonly decimal?				RoundAmount;
+		public readonly decimal?				ResidualAmount;
 		public readonly decimal?				FinalAmount;
 		public readonly AmortizationType		AmortizationType;
 	}

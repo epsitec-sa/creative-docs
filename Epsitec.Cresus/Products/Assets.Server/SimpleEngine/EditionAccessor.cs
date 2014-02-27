@@ -169,6 +169,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							null,
 							null,
 							null,
+							null,
 							property.Value.FinalAmount,
 							property.Value.AmortizationType
 						);

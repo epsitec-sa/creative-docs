@@ -71,6 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			this.LabelWidth = 0;
 			base.CreateUI (parent);
 
 			this.controller = new AmortizedAmountController ();

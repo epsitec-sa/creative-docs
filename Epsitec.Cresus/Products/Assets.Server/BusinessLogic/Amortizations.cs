@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Passe en revue les périodes.
 			foreach (var period in this.GetPeriods (processRange, obj))
 			{
-				var ad = this.GetAmortizationDetails (obj, period.ExcludeTo.AddDays (-1), show: false);
+				var ad = this.GetAmortizationDetails (obj, period.ExcludeTo.AddDays (-1));
 				if (!ad.IsEmpty)
 				{
 					//	On crée un aperçu de l'amortissement au 31.12.
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date, bool show = true)
+		private AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date)
 		{
 			//	Retourne tous les détails sur un amortissement ordinaire, soit pour le générer
 			//	(show = false), soit pour voir comment a été calculé un amortissement existant
@@ -214,13 +214,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			//	S'il y a déjà un (ou plusieurs) amortissement (extra)ordinaire dans la période,
 			//	on ne génère pas d'amortissement ordinaire.
-			if (!show)
+			if (Amortizations.HasAmortizations (obj, EventType.AmortizationExtra, range) ||
+				Amortizations.HasAmortizations (obj, EventType.AmortizationAuto, range))
 			{
-				if (Amortizations.HasAmortizations (obj, EventType.AmortizationExtra, range) ||
-					Amortizations.HasAmortizations (obj, EventType.AmortizationAuto, range))
-				{
-					return AmortizationDetails.Empty;
-				}
+				return AmortizationDetails.Empty;
 			}
 
 			//	Génère l'aperçu d'amortissement.
@@ -336,8 +333,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (e != null)
 			{
-				var v = new ComputedAmount (details.InitialValue.Value, details.FinalValue.Value, details.Def.Type == AmortizationType.Degressive);
-				var p = new DataComputedAmountProperty (ObjectField.MainValue, v);
+				var v = new AmortizedAmount (details.InitialValue, details.BaseValue, 
+					details.Def.EffectiveRate, details.Prorata.Numerator, details.Prorata.Denominator,
+					details.Def.Round, details.Def.Residual, details.FinalValue, details.Def.Type);
+
+				var p = new DataAmortizedAmountProperty (ObjectField.MainValue, v);
 				e.AddProperty (p);
 
 				//	Pour mettre à jour les éventuels amortissements extraordinaires suivants.
@@ -356,7 +356,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var e = obj.GetEvent (i);
 
-				var ca = e.GetProperty (ObjectField.MainValue) as DataComputedAmountProperty;
+				var ca = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 
 				if (ca != null && e.Timestamp.Date < date)
 				{
@@ -381,12 +381,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (!Amortizations.IsAmortization (e.Type))
 				{
-					var ca = e.GetProperty (ObjectField.MainValue) as DataComputedAmountProperty;
+					var aa = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 
-					if (ca != null && e.Timestamp.Date < date)
+					if (aa != null && e.Timestamp.Date < date)
 					{
 						timestamp = e.Timestamp;
-						value     = ca.Value.FinalAmount;
+						value     = aa.Value.FinalAmount;
 						return;
 					}
 				}
@@ -412,7 +412,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (Amortizations.IsAmortization (e.Type))
 				{
-					var property = e.GetProperty (ObjectField.MainValue) as DataComputedAmountProperty;
+					var property = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 
 					if (property != null && e.Timestamp.Date < date)
 					{

@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -104,6 +105,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
+			this.CreateMaxLine (parent);
+			this.CreateRoundLine (parent);
 			this.CreateAmountLine (parent);
 			this.CreateAmortizationLine (parent);
 			this.CreateProrataLine (parent);
@@ -111,41 +114,62 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateUI ();
 		}
 
+		private void CreateMaxLine(Widget parent)
+		{
+			var frame = this.CreateFrame (parent);
+
+			this.CreateLabel (frame, 100, "Valeur compable");
+			this.finalAmountTextField = this.CreateTextField (frame, true, 80, "Valeur finale amortie");
+			this.CreateOper (frame, 135, "= Max ( Valeur arrondie ,");
+			this.residualAmountTextField = this.CreateTextField (frame, false, 60, "Valeur résiduelle");
+			this.CreateOper (frame, 20, ")");
+		}
+
+		private void CreateRoundLine(Widget parent)
+		{
+			var frame = this.CreateFrame (parent);
+
+			this.CreateLabel (frame, 100, "Valeur arrondie");
+			this.roundedAmountTextField = this.CreateTextField (frame, true, 80, "Valeur amortie arrondie");
+			this.CreateOper (frame, 135, "= Arrondi ( Valeur brute ,");
+			this.roundAmountTextField = this.CreateTextField (frame, false, 60, "Arrondi");
+			this.CreateOper (frame, 20, ")");
+		}
+
 		private void CreateAmountLine(Widget parent)
 		{
 			var frame = this.CreateFrame (parent);
 
-			this.CreateOper (frame, 30, "V =");
-			this.finalAmountTextField = this.CreateAmount (frame, true, "Valeur finale amortie");
+			this.CreateLabel (frame, 100, "Valeur brute");
+			this.brutAmountTextField = this.CreateTextField (frame, true, 80, "Valeur amortie non arrondie");
 			this.CreateOper (frame, 20, "=");
-			this.initialAmountTextField = this.CreateAmount (frame, true, "Valeur précédente");
-			this.CreateOper (frame, 50, "−  A  +");
-			this.roundAmountTextField = this.CreateAmount (frame, false, "Arrondi");
+			this.initialAmountTextField = this.CreateTextField (frame, true, 80, "Valeur précédente");
+			this.CreateOper (frame, 100, "−  Amortissement");
 		}
 
 		private void CreateAmortizationLine(Widget parent)
 		{
 			var frame = this.CreateFrame (parent);
 
-			this.CreateOper (frame, 30, "A =");
-			this.amortizationAmountTextField = this.CreateAmount (frame, true, "Amortissement");
+			this.CreateLabel (frame, 100, "Amortissement");
+			this.amortizationAmountTextField = this.CreateTextField (frame, true, 80, "Amortissement");
 			this.CreateOper (frame, 20, "=");
-			this.baseAmountTextField = this.CreateAmount (frame, true, "Valeur de base");
+			this.baseAmountTextField = this.CreateTextField (frame, true, 80, "Valeur de base");
 			this.CreateOper (frame, 20, "×");
-			this.effectiveRateTextField = this.CreateRate (frame, false, "Taux adapté selon la périodicité");
-			this.CreateOper (frame, 30, "×  P");
+			this.effectiveRateTextField = this.CreateTextField (frame, false, 45, "Taux adapté selon la périodicité");
+			this.CreateOper (frame, 65, "×  Prorata");
 		}
 
 		private void CreateProrataLine(Widget parent)
 		{
 			var frame = this.CreateFrame (parent);
 
-			this.CreateOper (frame, 30, "P =");
-			this.prorataRateTextField = this.CreateRate (frame, true, "Facteur correctif si \"au prorata\"");
+			this.CreateLabel (frame, 100, "Prorata");
+			this.prorataRateTextField = this.CreateTextField (frame, true, 45, "Facteur correctif si \"au prorata\"");
 			this.CreateOper (frame, 40, "= 1−(");
-			this.prorataNumeratorTextField = this.CreateDecimal (frame, false, "Prorata, nombre effectif");
+			this.prorataNumeratorTextField = this.CreateTextField (frame, false, 45, "Prorata, nombre effectif");
 			this.CreateOper (frame, 20, "/");
-			this.prorataDenominatorTextField = this.CreateDecimal (frame, false, "Prorata, nombre total");
+			this.prorataDenominatorTextField = this.CreateTextField (frame, false, 45, "Prorata, nombre total");
 			this.CreateOper (frame, 20, ")");
 		}
 
@@ -158,21 +182,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Margins         = new Margins (0, 0, 0, 5),
 			};
-		}
-
-		private TextField CreateAmount(Widget parent, bool isReadonly, string tooltip = null)
-		{
-			return this.CreateTextField (parent, isReadonly, 80, tooltip);
-		}
-
-		private TextField CreateRate(Widget parent, bool isReadonly, string tooltip = null)
-		{
-			return this.CreateTextField (parent, isReadonly, 45, tooltip);
-		}
-
-		private TextField CreateDecimal(Widget parent, bool isReadonly, string tooltip = null)
-		{
-			return this.CreateTextField (parent, isReadonly, 55, tooltip);
 		}
 
 		private TextField CreateTextField(Widget parent, bool isReadonly, int width, string tooltip = null)
@@ -196,6 +205,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return field;
 		}
 
+		private void CreateLabel(Widget parent, int width, string text)
+		{
+			new StaticText
+			{
+				Parent           = parent,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = width,
+				PreferredHeight  = AbstractFieldController.lineHeight - 1,
+				Text             = text,
+				ContentAlignment = ContentAlignment.TopRight,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Margins          = new Margins (0, 10, 1, 0),
+			};
+		}
+
 		private void CreateOper(Widget parent, int width, string text)
 		{
 			new StaticText
@@ -206,6 +230,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Text             = text,
 				ContentAlignment = ContentAlignment.TopCenter,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Margins          = new Margins (0, 0, 0, 0),
 			};
 		}
@@ -213,7 +238,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void SetFocus()
 		{
-			this.SetFocus (this.roundAmountTextField);
+			this.SetFocus (this.finalAmountTextField);
 		}
 
 		private void SetFocus(TextField textField)
@@ -235,32 +260,115 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.amortizedAmount.HasValue)
 				{
-					this.FinalAmount        = this.amortizedAmount.Value.FinalAmount;
-					this.InitialAmount      = this.amortizedAmount.Value.InitialAmount;
-					this.RoundAmount        = this.amortizedAmount.Value.RoundAmount;
+					var fi = this.amortizedAmount.Value.FinalAmount;
+					var re = this.amortizedAmount.Value.ResidualAmount.GetValueOrDefault (0.0m);
+					var ii = this.amortizedAmount.Value.InitialAmount;
+					var rn = this.amortizedAmount.Value.RoundAmount.GetValueOrDefault (0.0m);
+					var ba = this.amortizedAmount.Value.BaseAmount;
+					var er = this.amortizedAmount.Value.EffectiveRate;
+					var nu = this.amortizedAmount.Value.ProrataNumerator;
+					var de = this.amortizedAmount.Value.ProrataDenominator;
+					var pr = 1.0m - (nu.GetValueOrDefault (0.0m) / de.GetValueOrDefault (1.0m));
+					var br = ii - (ba * er * pr);
+					var rd = AmortizationDetails.Round (br.GetValueOrDefault (), rn);
+					var mx = System.Math.Max (rd, re);
 
-					this.BaseAmount         = this.amortizedAmount.Value.BaseAmount;
-					this.EffectiveRate      = this.amortizedAmount.Value.EffectiveRate;
-					this.AmortizationAmount = this.BaseAmount * this.EffectiveRate.GetValueOrDefault (0.0m) * this.ProrataRate.GetValueOrDefault (1.0m);
-					
-					this.ProrataNumerator   = this.amortizedAmount.Value.ProrataNumerator;
-					this.ProrataDenominator = this.amortizedAmount.Value.ProrataDenominator;
-					this.ProrataRate        = this.ProrataNumerator.GetValueOrDefault (1.0m) / this.ProrataDenominator.GetValueOrDefault (1.0m);
+					this.FinalAmount        = fi;
+					this.ResidualAmount     = re;
+
+					this.RoundedAmount      = rd;
+					this.RoundAmount        = rn;
+
+					this.BrutAmount         = br;
+					this.InitialAmount      = ii;
+
+					this.AmortizationAmount = ba * er.GetValueOrDefault (0.0m) * pr;
+					this.BaseAmount         = ba;
+					this.EffectiveRate      = er;
+
+					this.ProrataRate        = pr;
+					this.ProrataNumerator   = nu;
+					this.ProrataDenominator = de;
 				}
 				else
 				{
 					this.FinalAmount        = null;
-					this.InitialAmount      = null;
+					this.ResidualAmount     = null;
+
+					this.RoundedAmount      = null;
 					this.RoundAmount        = null;
 
+					this.BrutAmount         = null;
+					this.InitialAmount      = null;
+
+					this.AmortizationAmount = null;
 					this.BaseAmount         = null;
 					this.EffectiveRate      = null;
-					this.AmortizationAmount = null;
 
+					this.ProrataRate        = null;
 					this.ProrataNumerator   = null;
 					this.ProrataDenominator = null;
-					this.ProrataRate        = null;
 				}
+			}
+		}
+
+		private decimal? FinalAmount
+		{
+			get
+			{
+				return TypeConverters.ParseAmount (this.finalAmountTextField.Text);
+			}
+			set
+			{
+				this.finalAmountTextField.Text = TypeConverters.AmountToString (value);
+			}
+		}
+
+		private decimal? ResidualAmount
+		{
+			get
+			{
+				return TypeConverters.ParseAmount (this.residualAmountTextField.Text);
+			}
+			set
+			{
+				this.residualAmountTextField.Text = TypeConverters.AmountToString (value);
+			}
+		}
+
+		private decimal? RoundedAmount
+		{
+			get
+			{
+				return TypeConverters.ParseAmount (this.roundedAmountTextField.Text);
+			}
+			set
+			{
+				this.roundedAmountTextField.Text = TypeConverters.AmountToString (value);
+			}
+		}
+
+		private decimal? RoundAmount
+		{
+			get
+			{
+				return TypeConverters.ParseAmount (this.roundAmountTextField.Text);
+			}
+			set
+			{
+				this.roundAmountTextField.Text = TypeConverters.AmountToString (value);
+			}
+		}
+
+		private decimal? BrutAmount
+		{
+			get
+			{
+				return TypeConverters.ParseAmount (this.brutAmountTextField.Text);
+			}
+			set
+			{
+				this.brutAmountTextField.Text = TypeConverters.AmountToString (value);
 			}
 		}
 
@@ -273,6 +381,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			set
 			{
 				this.initialAmountTextField.Text = TypeConverters.AmountToString (value);
+			}
+		}
+
+		private decimal? AmortizationAmount
+		{
+			get
+			{
+				return TypeConverters.ParseAmount (this.amortizationAmountTextField.Text);
+			}
+			set
+			{
+				this.amortizationAmountTextField.Text = TypeConverters.AmountToString (value);
 			}
 		}
 
@@ -300,6 +420,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private decimal? ProrataRate
+		{
+			get
+			{
+				return TypeConverters.ParseRate (this.prorataRateTextField.Text);
+			}
+			set
+			{
+				this.prorataRateTextField.Text = TypeConverters.RateToString (value);
+			}
+		}
+
 		private decimal? ProrataNumerator
 		{
 			get
@@ -321,54 +453,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			set
 			{
 				this.prorataDenominatorTextField.Text = TypeConverters.DecimalToString (value);
-			}
-		}
-
-		private decimal? ProrataRate
-		{
-			get
-			{
-				return TypeConverters.ParseRate (this.prorataRateTextField.Text);
-			}
-			set
-			{
-				this.prorataRateTextField.Text = TypeConverters.RateToString (value);
-			}
-		}
-
-		private decimal? AmortizationAmount
-		{
-			get
-			{
-				return TypeConverters.ParseAmount (this.amortizationAmountTextField.Text);
-			}
-			set
-			{
-				this.amortizationAmountTextField.Text = TypeConverters.AmountToString (value);
-			}
-		}
-
-		private decimal? RoundAmount
-		{
-			get
-			{
-				return TypeConverters.ParseAmount (this.roundAmountTextField.Text);
-			}
-			set
-			{
-				this.roundAmountTextField.Text = TypeConverters.AmountToString (value);
-			}
-		}
-
-		private decimal? FinalAmount
-		{
-			get
-			{
-				return TypeConverters.ParseAmount (this.finalAmountTextField.Text);
-			}
-			set
-			{
-				this.finalAmountTextField.Text = TypeConverters.AmountToString (value);
 			}
 		}
 
@@ -402,15 +486,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private Color							backgroundColor;
 		private PropertyState					propertyState;
 
+		private TextField						finalAmountTextField;
+		private TextField						residualAmountTextField;
+
+		private TextField						roundedAmountTextField;
+		private TextField						roundAmountTextField;
+
+		private TextField						brutAmountTextField;
 		private TextField						initialAmountTextField;
-		private TextField						baseAmountTextField;
+
 		private TextField						amortizationAmountTextField;
+		private TextField						baseAmountTextField;
 		private TextField						effectiveRateTextField;
+
+		private TextField						prorataRateTextField;
 		private TextField						prorataNumeratorTextField;
 		private TextField						prorataDenominatorTextField;
-		private TextField						prorataRateTextField;
-		private TextField						roundAmountTextField;
-		private TextField						finalAmountTextField;
+
 		private int								tabIndex;
 	}
 }

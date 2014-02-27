@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private static decimal Round(decimal value, decimal round)
+		public static decimal Round(decimal value, decimal round)
 		{
 			//	Retourne un montant arrondi.
 			if (round > 0.0m)
