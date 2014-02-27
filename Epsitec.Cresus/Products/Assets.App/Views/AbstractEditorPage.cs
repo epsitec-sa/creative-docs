@@ -692,9 +692,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case PageType.Amortization:
 					return new EditorPageAmortization (accessor, baseType, subBaseType, isTimeless: false);
 
-				case PageType.AmortizationPreview:
-					return new EditorPageAmortizationPreview (accessor, baseType, subBaseType, isTimeless: false);
-
 				case PageType.Groups:
 					return new EditorPageGroups (accessor, baseType, subBaseType, isTimeless: false);
 

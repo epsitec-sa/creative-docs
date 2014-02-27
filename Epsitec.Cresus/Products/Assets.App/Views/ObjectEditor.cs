@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (type == EventType.AmortizationAuto   ||
 				type == EventType.AmortizationPreview)
 			{
-				yield return PageType.AmortizationPreview;
+				yield return PageType.Values;
 			}
 			else
 			{
