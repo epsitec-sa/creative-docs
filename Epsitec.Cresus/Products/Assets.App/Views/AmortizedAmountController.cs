@@ -398,6 +398,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var fi = this.amortizedAmount.Value.FinalAmortizedAmount;
 					var rd = this.amortizedAmount.Value.RoundedAmortizedAmount;
 					var br = this.amortizedAmount.Value.BrutAmortizedAmount;
+					var am = this.amortizedAmount.Value.BrutAmortization;
 					var re = this.amortizedAmount.Value.ResidualAmount.GetValueOrDefault (0.0m);
 					var ii = this.amortizedAmount.Value.InitialAmount;
 					var rn = this.amortizedAmount.Value.RoundAmount.GetValueOrDefault (0.0m);
@@ -416,7 +417,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.BrutAmount         = br;
 					this.InitialAmount      = ii;
 
-					this.AmortizationAmount = ba * er.GetValueOrDefault (0.0m) * pr;
+					this.AmortizationAmount = am;
 					this.BaseAmount         = ba;
 					this.EffectiveRate      = er;
 
