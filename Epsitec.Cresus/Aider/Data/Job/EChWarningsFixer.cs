@@ -559,6 +559,11 @@ namespace Epsitec.Aider.Data.Job
 			var current = 1;
 			foreach (var warn in warningsToCheck)
 			{
+				if (warn.Person.MainContact.IsNull ())
+				{
+					continue;
+				}
+
 				var members = warn.Person.MainContact.Household.Members;
 				var potentialDuplicateChecker = new Dictionary<string, AiderPersonEntity> ();
 				foreach (var person in members)
