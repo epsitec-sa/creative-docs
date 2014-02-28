@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			Amortizations.RemoveEvents (obj, EventType.AmortizationAuto, new DateRange (processRange.ExcludeTo, System.DateTime.MaxValue));
 
 			//	Pour mettre à jour les éventuels amortissements extraordinaires suivants.
-			AssetCalculator.UpdateAmounts (this.accessor, obj);
+			Amortizations.UpdateAmounts (this.accessor, obj);
 		}
 
 		private IEnumerable<DateRange> GetPeriods(DateRange processRange, DataObject obj)
@@ -234,64 +234,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			var pd = ProrataDetails.ComputeProrata (range, valueDate, def.ProrataType);
 			return new AmortizationDetails (def, pd);
-
-#if false
-			if (def.Type == AmortizationType.Degressive)  // amortissement dégressif ?
-			{
-				//	Si la période se termine le 01.01.2014 (exclu), on cherche une valeur
-				//	au 30.12.2013 23h59, pour ne pas trouver l'amortissement lui-même.
-				Timestamp? initialTimestamp;
-				decimal? initialValue;
-				Amortizations.GetAnyValue (obj, range.ExcludeTo.AddDays (-1).AddSeconds (-1), out initialTimestamp, out initialValue);
-
-				if (initialValue.HasValue)
-				{
-					if (initialValue.Value > def.Residual)
-					{
-						//	Calcule un amortissement dégressif.
-						var pd = ProrataDetails.ComputeProrata (range, initialTimestamp.Value.Date, def.ProrataType);
-						return new AmortizationDetails (def, pd);
-					}
-				}
-
-				return AmortizationDetails.Empty;
-			}
-			else  // amortissement linéaire ?
-			{
-				Timestamp? baseTimestamp;
-				decimal? baseValue;
-				Amortizations.GetBaseValue (obj, range.ExcludeTo.AddSeconds (-1), out baseTimestamp, out baseValue);
-
-				if (baseValue.HasValue)
-				{
-					var pd = ProrataDetails.ComputeProrata (range, baseTimestamp.Value.Date, def.ProrataType);
-
-					//	Cherche la dernière valeur amortie.
-					//	Si la période se termine le 01.01.2014 (exclu), on cherche une valeur
-					//	au 30.12.2013 23h59, pour ne pas trouver l'amortissement lui-même.
-					decimal? amortizedValue;
-					Amortizations.GetAmortizedValue (obj, range.ExcludeTo.AddDays (-1).AddSeconds (-1), baseTimestamp.Value, out amortizedValue);
-
-					decimal initialValue;
-					if (amortizedValue.HasValue)
-					{
-						initialValue = amortizedValue.Value;
-					}
-					else
-					{
-						initialValue = baseValue.Value;
-					}
-
-					//	Calcule un amortissement linéaire.
-					if (initialValue > def.Residual)
-					{
-						return new AmortizationDetails (def, pd, initialValue, baseValue);
-					}
-				}
-
-				return AmortizationDetails.Empty;
-			}
-#endif
 		}
 
 
@@ -400,6 +342,136 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		#region Update amounts
+		public static void UpdateAmounts(DataAccessor accessor, DataObject obj)
+		{
+			//	Répercute les valeurs des montants selon la chronologie des événements.
+			if (obj != null)
+			{
+				foreach (var field in accessor.ValueFields)
+				{
+					decimal? lastAmount = null;
+					decimal? lastBase   = null;
+
+					foreach (var e in obj.Events)
+					{
+						if (field == ObjectField.MainValue)
+						{
+							Amortizations.UpdateAmortizedAmount (e, field, ref lastAmount, ref lastBase);
+						}
+						else
+						{
+							Amortizations.UpdateComputedAmount (e, field, ref lastAmount);
+						}
+					}
+				}
+			}
+		}
+
+		private static void UpdateAmortizedAmount(DataEvent e, ObjectField field, ref decimal? lastAmount, ref decimal? lastBase)
+		{
+			var current = Amortizations.GetAmortizedAmount (e, field);
+
+			if (current.HasValue)
+			{
+				if (current.Value.AmortizationType == AmortizationType.Unknown)  // montant fixe ?
+				{
+					lastBase = current.Value.FinalAmortizedAmount;
+				}
+				else  // amortissement ?
+				{
+					current = new AmortizedAmount
+					(
+						current.Value.AmortizationType,
+						lastAmount.HasValue ? lastAmount.Value : current.Value.InitialAmount,
+						lastBase.HasValue ? lastBase.Value : current.Value.BaseAmount,
+						current.Value.EffectiveRate,
+						current.Value.ProrataNumerator,
+						current.Value.ProrataDenominator,
+						current.Value.RoundAmount,
+						current.Value.ResidualAmount
+					);
+
+					Amortizations.SetAmortizedAmount (e, field, current);
+				}
+
+				lastAmount = current.Value.FinalAmortizedAmount;
+			}
+		}
+
+		private static void UpdateComputedAmount(DataEvent e, ObjectField field, ref decimal? lastAmount)
+		{
+			var current = Amortizations.GetComputedAmount (e, field);
+
+			if (current.HasValue)
+			{
+				if (lastAmount.HasValue == false)
+				{
+					lastAmount = current.Value.FinalAmount;
+				}
+				else
+				{
+					current = new ComputedAmount (lastAmount.Value, current.Value);
+					lastAmount = current.Value.FinalAmount;
+					Amortizations.SetComputedAmount (e, field, current);
+				}
+			}
+		}
+
+		private static AmortizedAmount? GetAmortizedAmount(DataEvent e, ObjectField field)
+		{
+			var p = e.GetProperty (field) as DataAmortizedAmountProperty;
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
+		private static void SetAmortizedAmount(DataEvent e, ObjectField field, AmortizedAmount? value)
+		{
+			if (value.HasValue)
+			{
+				var newProperty = new DataAmortizedAmountProperty (field, value.Value);
+				e.AddProperty (newProperty);
+			}
+			else
+			{
+				e.RemoveProperty (field);
+			}
+		}
+
+		private static ComputedAmount? GetComputedAmount(DataEvent e, ObjectField field)
+		{
+			var p = e.GetProperty (field) as DataComputedAmountProperty;
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
+		private static void SetComputedAmount(DataEvent e, ObjectField field, ComputedAmount? value)
+		{
+			if (value.HasValue)
+			{
+				var newProperty = new DataComputedAmountProperty (field, value.Value);
+				e.AddProperty (newProperty);
+			}
+			else
+			{
+				e.RemoveProperty (field);
+			}
+		}
+		#endregion
+
+	
 		private readonly DataAccessor			accessor;
 	}
 }

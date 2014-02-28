@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				//	Recalcule tout.
 				foreach (var obj in this.mandat.GetData (BaseType.Assets))
 				{
-					AssetCalculator.UpdateAmounts (this, obj);
+					Amortizations.UpdateAmounts (this, obj);
 				}
 			}
 		}
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (p);
 
 				obj.AddEvent (e);
-				AssetCalculator.UpdateAmounts (this, obj);
+				Amortizations.UpdateAmounts (this, obj);
 				return e;
 			}
 
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				if (e != null)
 				{
 					obj.RemoveEvent (e);
-					AssetCalculator.UpdateAmounts (this, obj);
+					Amortizations.UpdateAmounts (this, obj);
 				}
 			}
 		}
