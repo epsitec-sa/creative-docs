@@ -233,18 +233,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					{
 						//	Calcule un amortissement dégressif.
 						var pd = ProrataDetails.ComputeProrata (range, initialTimestamp.Value.Date, def.ProrataType);
-						var ad = new AmortizationDetails (def, pd, initialValue, initialValue, null);
-						var newValue = ad.FinalValue;
-
-						if (newValue < def.Residual)
-						{
-							//	On génère un dernier amortissement à la valeur résiduelle forcée.
-							return new AmortizationDetails (def, pd, initialValue, null, def.Residual);
-						}
-						else
-						{
-							return ad;
-						}
+						return new AmortizationDetails (def, pd, initialValue, initialValue);
 					}
 				}
 
@@ -279,18 +268,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					//	Calcule un amortissement linéaire.
 					if (initialValue > def.Residual)
 					{
-						var ad = new AmortizationDetails (def, pd, initialValue, baseValue, null);
-						var newValue = ad.FinalValue;
-
-						if (newValue < def.Residual)
-						{
-							//	On génère un dernier amortissement à la valeur résiduelle forcée.
-							return new AmortizationDetails (def, pd, initialValue, null, def.Residual);
-						}
-						else
-						{
-							return ad;
-						}
+						return new AmortizationDetails (def, pd, initialValue, baseValue);
 					}
 				}
 

@@ -12,14 +12,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	public struct AmortizationDetails
 	{
 		public AmortizationDetails(AmortizationDefinition def, ProrataDetails prorata,
-								   decimal? initialValue, decimal? baseValue, decimal? forcedValue)
+								   decimal? initialValue, decimal? baseValue)
 		{
 			this.Def          = def;
 			this.Prorata      = prorata;
 							
 			this.InitialValue = initialValue;
 			this.BaseValue    = baseValue;
-			this.ForcedValue  = forcedValue;
 			this.DeltaValue   = null;
 			this.FinalValue   = null;
 
@@ -47,13 +46,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (!this.IsEmpty)
 			{
-				if (this.ForcedValue.HasValue)  // y a-t-il une valeur forcée ?
-				{
-					finalValue = this.ForcedValue;
-				}
-				else if (this.InitialValue.HasValue &&
-						 this.BaseValue.HasValue &&
-						 !this.Def.IsEmpty)
+				if (this.InitialValue.HasValue &&
+					this.BaseValue.HasValue &&
+					!this.Def.IsEmpty)
 				{
 					//	Calcule la diminution de la valeur.
 					deltaValue = this.BaseValue.Value * this.Def.EffectiveRate;
@@ -68,6 +63,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					//	Effectue encore un arrondi éventuel.
 					finalValue = AmortizationDetails.Round (finalValue.Value, this.Def.Round);
+
+					//	Plafonne selon la valeur résiduelle.
+					finalValue = System.Math.Max (finalValue.Value, this.Def.Residual);
 				}
 			}
 		}
@@ -96,14 +94,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDetails Empty = new AmortizationDetails (AmortizationDefinition.Empty, ProrataDetails.Empty, null, null, null);
+		public static AmortizationDetails Empty = new AmortizationDetails (AmortizationDefinition.Empty, ProrataDetails.Empty, null, null);
 
 		public readonly AmortizationDefinition	Def;
 		public readonly ProrataDetails			Prorata;
 
 		public readonly decimal?				InitialValue;
 		public readonly decimal?				BaseValue;
-		public readonly decimal?				ForcedValue;
 		public readonly decimal?				DeltaValue;
 		public readonly decimal?				FinalValue;
 	}
