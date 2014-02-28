@@ -19,10 +19,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 							
 			this.InitialValue = initialValue;
 			this.BaseValue    = baseValue;
-			this.DeltaValue   = null;
-			this.FinalValue   = null;
-
-			this.UpdateValues (out this.DeltaValue, out this.FinalValue);
 		}
 
 		public bool								IsEmpty
@@ -34,66 +30,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private void UpdateValues(out decimal? deltaValue, out decimal? finalValue)
-		{
-			//	Retourne la valeur finale amortie.
-			//	S'il existe une valeur forcée, elle a la priorité.
-			//	Sinon, la formule de base est:
-			//	FinalValue = InitialValue - (BaseValue * EffectiveRate * ProrataQuotient)
-			//	Avec encore un calcul de l'arrondi.
-			deltaValue = null;
-			finalValue = null;
-
-			if (!this.IsEmpty)
-			{
-				if (this.InitialValue.HasValue &&
-					this.BaseValue.HasValue &&
-					!this.Def.IsEmpty)
-				{
-					//	Calcule la diminution de la valeur.
-					deltaValue = this.BaseValue.Value * this.Def.EffectiveRate;
-
-					if (this.Prorata.Quotient.HasValue)  // y a-t-il un prorata ?
-					{
-						deltaValue *= this.Prorata.Quotient.Value;
-					}
-
-					//	Calcule la valeur finale.
-					finalValue = this.InitialValue.Value - deltaValue;
-
-					//	Effectue encore un arrondi éventuel.
-					finalValue = AmortizationDetails.Round (finalValue.Value, this.Def.Round);
-
-					//	Plafonne selon la valeur résiduelle.
-					finalValue = System.Math.Max (finalValue.Value, this.Def.Residual);
-				}
-			}
-		}
-
-
-		public static decimal Round(decimal value, decimal round)
-		{
-			//	Retourne un montant arrondi.
-			if (round > 0.0m)
-			{
-				if (value < 0)
-				{
-					value -= round/2;
-				}
-				else
-				{
-					value += round/2;
-				}
-
-				return value - (value % round);
-			}
-			else
-			{
-				return value;
-			}
-		}
-
-
 		public static AmortizationDetails Empty = new AmortizationDetails (AmortizationDefinition.Empty, ProrataDetails.Empty, null, null);
 
 		public readonly AmortizationDefinition	Def;
@@ -101,7 +37,5 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public readonly decimal?				InitialValue;
 		public readonly decimal?				BaseValue;
-		public readonly decimal?				DeltaValue;
-		public readonly decimal?				FinalValue;
 	}
 }

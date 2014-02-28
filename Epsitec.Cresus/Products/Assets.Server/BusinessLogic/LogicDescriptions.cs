@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var aa = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, field, false);
 						if (aa.HasValue)
 						{
-							line = Helpers.TypeConverters.AmountToString (aa.Value.FinalAmount);
+							line = Helpers.TypeConverters.AmountToString (aa.Value.FinalAmortizedAmount);
 						}
 						break;
 

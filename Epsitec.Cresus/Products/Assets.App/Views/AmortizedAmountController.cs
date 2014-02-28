@@ -395,7 +395,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.amortizedAmount.HasValue)
 				{
-					var fi = this.amortizedAmount.Value.FinalAmount;
+					var fi = this.amortizedAmount.Value.FinalAmortizedAmount;
+					var rd = this.amortizedAmount.Value.RoundedAmortizedAmount;
+					var br = this.amortizedAmount.Value.BrutAmortizedAmount;
 					var re = this.amortizedAmount.Value.ResidualAmount.GetValueOrDefault (0.0m);
 					var ii = this.amortizedAmount.Value.InitialAmount;
 					var rn = this.amortizedAmount.Value.RoundAmount.GetValueOrDefault (0.0m);
@@ -403,10 +405,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var er = this.amortizedAmount.Value.EffectiveRate;
 					var nu = this.amortizedAmount.Value.ProrataNumerator;
 					var de = this.amortizedAmount.Value.ProrataDenominator;
-					var pr = nu.GetValueOrDefault (1.0m) / de.GetValueOrDefault (1.0m);
-					var br = ii - (ba * er * pr);
-					var rd = AmortizationDetails.Round (br.GetValueOrDefault (), rn);
-					var mx = System.Math.Max (rd, re);
+					var pr = this.amortizedAmount.Value.Prorata;
 
 					this.FinalAmount        = fi;
 					this.ResidualAmount     = re;

@@ -134,9 +134,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				{
 					var value = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, field);
 
-					if (value.HasValue && value.Value.FinalAmount.HasValue)
+					if (value.HasValue && value.Value.FinalAmortizedAmount.HasValue)
 					{
-						m = value.Value.FinalAmount.Value;
+						m = value.Value.FinalAmortizedAmount.Value;
 					}
 				}
 				else

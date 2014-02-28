@@ -51,38 +51,91 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public decimal? FinalAmount
+		public decimal? FinalAmortizedAmount
 		{
-			//	Calcule la valeur finale après amortissement, selon les paramètres de la structure.
+			//	Calcule la valeur amortie finale, en tenant compte de l'arrondi et de la
+			//	valeur résiduelle.
 			get
 			{
-				if (this.AmortizationType == AmortizationType.Unknown)
+				var rounded = this.RoundedAmortizedAmount;
+
+				if (rounded.HasValue && this.ResidualAmount.HasValue)
 				{
-					return this.InitialAmount;
+					return System.Math.Max (rounded.Value, this.ResidualAmount.Value);
 				}
 				else
 				{
-					var amortization = this.BaseAmount.GetValueOrDefault (0.0m) * this.EffectiveRate.GetValueOrDefault (1.0m) * this.Prorata;
-					var final = this.InitialAmount.GetValueOrDefault (0.0m) - amortization;
-					final = AmortizationDetails.Round (final, this.RoundAmount.GetValueOrDefault (0.0m));
-					return System.Math.Max (final, this.ResidualAmount.GetValueOrDefault (0.0m));
+					return rounded;
 				}
 			}
 		}
 
-		private decimal Prorata
+		public decimal? RoundedAmortizedAmount
 		{
+			//	Calcule la valeur amortie arrondie, sans tenir compte de la valeur résiduelle.
+			get
+			{
+				var brut = this.BrutAmortizedAmount;
+
+				if (brut.HasValue && this.RoundAmount.HasValue)
+				{
+					return AmortizedAmount.Round (brut.Value, this.RoundAmount.Value);
+				}
+				else
+				{
+					return brut;
+				}
+			}
+		}
+
+		public decimal? BrutAmortizedAmount
+		{
+			//	Calcule la valeur amortie, sans tenir compte de l'arrondi ni de la valeur
+			//	résiduelle.
+			get
+			{
+				return this.InitialAmount.GetValueOrDefault (0.0m) - this.BrutAmortization;
+			}
+		}
+
+		public decimal BrutAmortization
+		{
+			//	Calcule l'amortissement brut, qui faudra soustraire à la valeur initiale
+			//	pour obtenir la valeur amortie.
+			get
+			{
+				if (this.AmortizationType == AmortizationType.Unknown)
+				{
+					return 0.0m;
+				}
+				else
+				{
+					return this.BaseAmount.GetValueOrDefault (0.0m)
+						 * this.EffectiveRate.GetValueOrDefault (1.0m)
+						 * this.Prorata;
+				}
+			}
+		}
+
+		public decimal Prorata
+		{
+			//	Retourne le facteur multiplicateur "au prorata", compris entre 0 et 1.
 			get
 			{
 				if (this.ProrataNumerator.HasValue &&
 					this.ProrataDenominator.HasValue &&
 					this.ProrataDenominator.Value != 0.0m)
 				{
-					return this.ProrataNumerator.Value/ this.ProrataDenominator.Value;
+					var prorata = this.ProrataNumerator.Value/ this.ProrataDenominator.Value;
+
+					prorata = System.Math.Max (prorata, 0.0m);
+					prorata = System.Math.Min (prorata, 1.0m);  // garde-fou
+
+					return prorata;
 				}
 				else
 				{
-					return 1.0m;
+					return 1.0m;  // 100%
 				}
 			}
 		}
@@ -110,6 +163,29 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				|| (a.RoundAmount        != b.RoundAmount)
 				|| (a.ResidualAmount     != b.ResidualAmount)
 				|| (a.AmortizationType   != b.AmortizationType);
+		}
+
+
+		private static decimal Round(decimal value, decimal round)
+		{
+			//	Retourne un montant arrondi.
+			if (round > 0.0m)
+			{
+				if (value < 0)
+				{
+					value -= round/2;
+				}
+				else
+				{
+					value += round/2;
+				}
+
+				return value - (value % round);
+			}
+			else
+			{
+				return value;
+			}
 		}
 
 

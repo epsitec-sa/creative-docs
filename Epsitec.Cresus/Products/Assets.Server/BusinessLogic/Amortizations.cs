@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				if (ca != null && e.Timestamp.Date < date)
 				{
 					timestamp = e.Timestamp;
-					value     = ca.Value.FinalAmount;
+					value     = ca.Value.FinalAmortizedAmount;
 					return;
 				}
 			}
@@ -362,7 +362,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					if (aa != null && e.Timestamp.Date < date)
 					{
 						timestamp = e.Timestamp;
-						value     = aa.Value.FinalAmount;
+						value     = aa.Value.FinalAmortizedAmount;
 						return;
 					}
 				}
@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					if (property != null && e.Timestamp.Date < date)
 					{
-						value = property.Value.FinalAmount;
+						value = property.Value.FinalAmortizedAmount;
 						return;
 					}
 				}
