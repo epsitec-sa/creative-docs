@@ -11,14 +11,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	/// </summary>
 	public struct AmortizationDetails
 	{
-		public AmortizationDetails(AmortizationDefinition def, ProrataDetails prorata,
-								   decimal? initialValue, decimal? baseValue)
+		public AmortizationDetails(AmortizationDefinition def, ProrataDetails prorata)
 		{
 			this.Def          = def;
 			this.Prorata      = prorata;
-							
-			this.InitialValue = initialValue;
-			this.BaseValue    = baseValue;
 		}
 
 		public bool								IsEmpty
@@ -30,12 +26,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDetails Empty = new AmortizationDetails (AmortizationDefinition.Empty, ProrataDetails.Empty, null, null);
+		public static AmortizationDetails Empty = new AmortizationDetails (AmortizationDefinition.Empty, ProrataDetails.Empty);
 
 		public readonly AmortizationDefinition	Def;
 		public readonly ProrataDetails			Prorata;
-
-		public readonly decimal?				InitialValue;
-		public readonly decimal?				BaseValue;
 	}
 }

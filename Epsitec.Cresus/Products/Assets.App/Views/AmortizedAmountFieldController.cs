@@ -28,14 +28,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 						{
 							using (this.ignoreChanges.Enter ())
 							{
-								this.controller.AmortizedAmount = this.value;
+								this.controller.Value = this.value;
 							}
 						}
 						else
 						{
 							using (this.ignoreChanges.Enter ())
 							{
-								this.controller.AmortizedAmountNoEditing = this.value;
+								this.controller.ValueNoEditing = this.value;
 							}
 						}
 					}
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller = new AmortizedAmountController ();
 			this.controller.CreateUI (this.frameBox);
 			this.controller.IsReadOnly = this.PropertyState == PropertyState.Readonly;
-			this.controller.AmortizedAmount = this.value;
+			this.controller.Value = this.value;
 
 			this.controller.ValueEdited += delegate
 			{
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					using (this.ignoreChanges.Enter ())
 					{
-						this.Value = this.controller.AmortizedAmount;
+						this.Value = this.controller.Value;
 						this.OnValueEdited (this.Field);
 					}
 				}

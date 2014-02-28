@@ -8,6 +8,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AssetCalculator
 	{
+		public static Timestamp? GetFirstTimestamp(DataObject obj)
+		{
+			//	Retourne la date d'entrée d'un objet.
+			if (obj.EventsCount > 0)
+			{
+				return obj.GetEvent (0).Timestamp;
+			}
+
+			return null;
+		}
+
 		public static Timestamp? GetLastTimestamp(DataObject obj)
 		{
 			//	Retourne la date à sélectionner dans la timeline après la sélection
@@ -207,36 +218,105 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		#endregion
 
 
-		#region Update computed amount
-		public static void UpdateComputedAmounts(DataAccessor accessor, DataObject obj)
+		#region Update amounts
+		public static void UpdateAmounts(DataAccessor accessor, DataObject obj)
 		{
+			//	Répercute les valeurs des montants selon la chronologie des événements.
 			if (obj != null)
 			{
 				foreach (var field in accessor.ValueFields)
 				{
-					decimal? last = null;
+					decimal? lastAmount = null;
+					decimal? lastBase   = null;
 
 					foreach (var e in obj.Events)
 					{
-						var current = AssetCalculator.GetComputedAmount (e, field);
-
-						if (current.HasValue)
+						if (field == ObjectField.MainValue)
 						{
-							if (last.HasValue == false)
-							{
-								last = current.Value.FinalAmount;
-								current = new ComputedAmount (last);
-								AssetCalculator.SetComputedAmount (e, field, current);
-							}
-							else
-							{
-								current = new ComputedAmount (last.Value, current.Value);
-								last = current.Value.FinalAmount;
-								AssetCalculator.SetComputedAmount (e, field, current);
-							}
+							AssetCalculator.UpdateAmortizedAmount (e, field, ref lastAmount, ref lastBase);
+						}
+						else
+						{
+							AssetCalculator.UpdateComputedAmount (e, field, ref lastAmount);
 						}
 					}
 				}
+			}
+		}
+
+		private static void UpdateAmortizedAmount(DataEvent e, ObjectField field, ref decimal? lastAmount, ref decimal? lastBase)
+		{
+			var current = AssetCalculator.GetAmortizedAmount (e, field);
+
+			if (current.HasValue)
+			{
+				if (current.Value.AmortizationType == AmortizationType.Unknown)  // montant fixe ?
+				{
+					lastBase = current.Value.FinalAmortizedAmount;
+				}
+				else  // amortissement ?
+				{
+					current = new AmortizedAmount
+					(
+						current.Value.AmortizationType,
+						lastAmount.HasValue ? lastAmount.Value : current.Value.InitialAmount,
+						lastBase.HasValue ? lastBase.Value : current.Value.BaseAmount,
+						current.Value.EffectiveRate,
+						current.Value.ProrataNumerator,
+						current.Value.ProrataDenominator,
+						current.Value.RoundAmount,
+						current.Value.ResidualAmount
+					);
+
+					AssetCalculator.SetAmortizedAmount (e, field, current);
+				}
+
+				lastAmount = current.Value.FinalAmortizedAmount;
+			}
+		}
+
+		private static void UpdateComputedAmount(DataEvent e, ObjectField field, ref decimal? lastAmount)
+		{
+			var current = AssetCalculator.GetComputedAmount (e, field);
+
+			if (current.HasValue)
+			{
+				if (lastAmount.HasValue == false)
+				{
+					lastAmount = current.Value.FinalAmount;
+				}
+				else
+				{
+					current = new ComputedAmount (lastAmount.Value, current.Value);
+					lastAmount = current.Value.FinalAmount;
+					AssetCalculator.SetComputedAmount (e, field, current);
+				}
+			}
+		}
+
+		private static AmortizedAmount? GetAmortizedAmount(DataEvent e, ObjectField field)
+		{
+			var p = e.GetProperty (field) as DataAmortizedAmountProperty;
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
+			}
+		}
+
+		private static void SetAmortizedAmount(DataEvent e, ObjectField field, AmortizedAmount? value)
+		{
+			if (value.HasValue)
+			{
+				var newProperty = new DataAmortizedAmountProperty (field, value.Value);
+				e.AddProperty (newProperty);
+			}
+			else
+			{
+				e.RemoveProperty (field);
 			}
 		}
 

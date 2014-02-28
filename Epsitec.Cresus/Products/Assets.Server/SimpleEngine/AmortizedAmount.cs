@@ -166,6 +166,99 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		#region Factory
+		public static AmortizedAmount CreateType(AmortizedAmount model, AmortizationType type)
+		{
+			return new AmortizedAmount
+			(
+				type,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount
+			);
+		}
+
+		public static AmortizedAmount CreateEffectiveRate(AmortizedAmount model, decimal? effectiveRate)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				effectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount
+			);
+		}
+
+		public static AmortizedAmount CreateProrataNumerator(AmortizedAmount model, decimal? prorataNumerator)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				prorataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount
+			);
+		}
+
+		public static AmortizedAmount CreateProrataDenominator(AmortizedAmount model, decimal? prorataDenominator)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				prorataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount
+			);
+		}
+
+		public static AmortizedAmount CreateRoundAmount(AmortizedAmount model, decimal? roundAmount)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				roundAmount,
+				model.ResidualAmount
+			);
+		}
+
+		public static AmortizedAmount CreateResidualAmount(AmortizedAmount model, decimal? residualAmount)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				residualAmount
+			);
+		}
+		#endregion
+
+
 		private static decimal Round(decimal value, decimal round)
 		{
 			//	Retourne un montant arrondi.

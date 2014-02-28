@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					if (this.computedAmountDirty)
 					{
-						AssetCalculator.UpdateComputedAmounts (this.accessor, this.obj);
+						AssetCalculator.UpdateAmounts (this.accessor, this.obj);
 					}
 				}
 
