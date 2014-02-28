@@ -175,9 +175,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateLabel (parent, 100, "Valeur comptable");
 			this.finalAmountTextField = this.CreateTextField (parent, true, 80, "Valeur finale amortie");
-			        this.CreateOper (parent, "= Max (");
-			var x = this.CreateOper (parent, "Valeur arrondie");
-			        this.CreateOper (parent, ",");
+			this.CreateOper (parent, "= Max (");
+			var x = this.CreateArg (parent, "Valeur arrondie");
+			this.CreateOper (parent, ",");
 			this.residualAmountTextField = this.CreateTextField (parent, false, 60, "Valeur résiduelle");
 			this.CreateOper (parent, ")");
 
@@ -188,9 +188,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateLabel (parent, 100, "Valeur arrondie");
 			this.roundedAmountTextField = this.CreateTextField (parent, true, 80, "Valeur amortie arrondie");
-			        this.CreateOper (parent, "= Arrondi (");
-			var x = this.CreateOper (parent, "Valeur brute");
-			        this.CreateOper (parent, ",");
+			this.CreateOper (parent, "= Arrondi (");
+			var x = this.CreateArg (parent, "Valeur brute");
+			this.CreateOper (parent, ",");
 			this.roundAmountTextField = this.CreateTextField (parent, false, 60, "Arrondi");
 			this.CreateOper (parent, ")");
 
@@ -205,9 +205,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.initialAmountTextField = this.CreateTextField (parent, true, 80, "Valeur précédente");
 			this.CreateOper (parent, "× ( 100% − (");
 			this.effectiveRateTextField = this.CreateTextField (parent, false, 45, "Taux adapté selon la périodicité");
-			        this.CreateOper (parent, "×");
-			var x = this.CreateOper (parent, "Prorata");
-			        this.CreateOper (parent, ") )");
+			this.CreateOper (parent, "×");
+			var x = this.CreateArg (parent, "Prorata");
+			this.CreateOper (parent, ") )");
 
 			this.CreateLink (bottomParent, x);
 		}
@@ -218,8 +218,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.brutAmountTextField = this.CreateTextField (parent, true, 80, "Valeur amortie non arrondie");
 			this.CreateOper (parent, "=");
 			this.initialAmountTextField = this.CreateTextField (parent, true, 80, "Valeur précédente");
-			        this.CreateOper (parent, "−");
-			var x = this.CreateOper (parent, "Amortissement");
+			this.CreateOper (parent, "−");
+			var x = this.CreateArg (parent, "Amortissement");
 
 			this.CreateLink (bottomParent, x);
 		}
@@ -232,8 +232,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseAmountTextField = this.CreateTextField (parent, true, 80, "Valeur de base");
 			this.CreateOper (parent, "×");
 			this.effectiveRateTextField = this.CreateTextField (parent, false, 45, "Taux adapté selon la périodicité");
-			        this.CreateOper (parent, "×");
-			var x = this.CreateOper (parent, "Prorata");
+			this.CreateOper (parent, "×");
+			var x = this.CreateArg (parent, "Prorata");
 
 			this.CreateLink (bottomParent, x);
 		}
@@ -337,6 +337,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ContentAlignment = ContentAlignment.TopCenter,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Margins          = new Margins (0, 0, 0, 0),
+			};
+		}
+
+		private TextField CreateArg(Widget parent, string text)
+		{
+			int width = Helpers.Text.GetTextWidth (text) + 10;
+
+			return new TextField
+			{
+				Parent           = parent,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = width,
+				PreferredHeight  = AbstractFieldController.lineHeight,
+				Text             = text,
+				IsReadOnly       = true,
+				Margins          = new Margins (0, 0, 0, 0),
+				TabIndex         = ++this.tabIndex,
 			};
 		}
 

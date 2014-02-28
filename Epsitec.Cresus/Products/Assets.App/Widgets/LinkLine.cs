@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public LinkLine()
 		{
-			this.topX = -1000;
+			this.topX = -1000;  // invisible (caché à gauche)
 		}
 
 
@@ -39,12 +39,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			e.Graphics.AddFilledRectangle (rect.Left, rect.Bottom, rect.Width, 3);
 
-			if (this.topX > -100)
+			if (this.topX > -100)  // marque visible ?
 			{
 				e.Graphics.AddFilledPath (this.TrianglePath);
 			}
 
-			//?e.Graphics.RenderSolid (ColorManager.ReadonlyFieldColor);
 			e.Graphics.RenderSolid (ColorManager.WindowBackgroundColor);
 		}
 
