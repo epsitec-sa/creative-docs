@@ -194,9 +194,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date)
 		{
-			//	Retourne tous les détails sur un amortissement ordinaire, soit pour le générer
-			//	(show = false), soit pour voir comment a été calculé un amortissement existant
-			//	(show = true).
+			//	Retourne tous les détails sur un amortissement ordinaire.
 			var def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (date, 0));
 			if (def.IsEmpty)
 			{
@@ -333,9 +331,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (e != null)
 			{
-				var v = new AmortizedAmount (details.InitialValue, details.BaseValue, 
+				var v = new AmortizedAmount (details.Def.Type, details.InitialValue, details.BaseValue, 
 					details.Def.EffectiveRate, details.Prorata.Numerator, details.Prorata.Denominator,
-					details.Def.Round, details.Def.Residual, details.FinalValue, details.Def.Type);
+					details.Def.Round, details.Def.Residual);
 
 				var p = new DataAmortizedAmountProperty (ObjectField.MainValue, v);
 				e.AddProperty (p);

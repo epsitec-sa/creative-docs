@@ -598,6 +598,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
 		private AmortizationType GetType(TextFieldCombo combo)
 		{
 			if (combo != null)
