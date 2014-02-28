@@ -211,11 +211,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateLabel (parent, 100, "Prorata");
 			this.prorataRateTextField = this.CreateTextField (parent, true, 45, "Facteur correctif si \"au prorata\"");
-			this.CreateOper (parent, "= 1−(");
+			this.CreateOper (parent, "=");
 			this.prorataNumeratorTextField = this.CreateTextField (parent, false, 45, "Prorata, nombre effectif");
 			this.CreateOper (parent, "/");
 			this.prorataDenominatorTextField = this.CreateTextField (parent, false, 45, "Prorata, nombre total");
-			this.CreateOper (parent, ")");
 		}
 
 		private void CreateTypeLine(Widget parent)
@@ -332,7 +331,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var er = this.amortizedAmount.Value.EffectiveRate;
 					var nu = this.amortizedAmount.Value.ProrataNumerator;
 					var de = this.amortizedAmount.Value.ProrataDenominator;
-					var pr = 1.0m - (nu.GetValueOrDefault (0.0m) / de.GetValueOrDefault (1.0m));
+					var pr = nu.GetValueOrDefault (1.0m) / de.GetValueOrDefault (1.0m);
 					var br = ii - (ba * er * pr);
 					var rd = AmortizationDetails.Round (br.GetValueOrDefault (), rn);
 					var mx = System.Math.Max (rd, re);

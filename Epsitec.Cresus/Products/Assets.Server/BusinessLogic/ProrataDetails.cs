@@ -47,44 +47,35 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Pour une dateValue en début d'année, on retourne 1.0.
 			//	Pour une dateValue en milieu d'année, on retourne 0.5.
 			//	Pour une dateValue en fin d'année, on retourne 0.0.
-			//	Attention, Quotient vaut 1-(Numerator/Denominator) !
-			if (range.IsInside (valueDate))
+			//	Quotient vaut Numerator/Denominator
+			int n, d;
+
+			switch (type)
 			{
-				switch (type)
-				{
-					case ProrataType.None:
-						break;
+				case ProrataType.None:
+					return ProrataDetails.Empty;
 
-					case ProrataType.Prorata12:
-						{
-							int total  = ProrataDetails.GetMonthsCount (range.ExcludeTo) - ProrataDetails.GetMonthsCount (range.IncludeFrom);
-							int months = ProrataDetails.GetMonthsCount (valueDate)       - ProrataDetails.GetMonthsCount (range.IncludeFrom);
-							var quotient = 1.0m - ((decimal) months / (decimal) total);
+				case ProrataType.Prorata12:
+					d = ProrataDetails.GetMonthsCount (range.ExcludeTo) - ProrataDetails.GetMonthsCount (range.IncludeFrom);
+					n = ProrataDetails.GetMonthsCount (valueDate)       - ProrataDetails.GetMonthsCount (range.IncludeFrom);
+					break;
 
-							return new ProrataDetails (range, valueDate, (decimal) months, (decimal) total, quotient);
-						}
+				case ProrataType.Prorata360:
+					d = ProrataDetails.GetDaysCount (range.ExcludeTo) - ProrataDetails.GetDaysCount (range.IncludeFrom);
+					n = ProrataDetails.GetDaysCount (valueDate)       - ProrataDetails.GetDaysCount (range.IncludeFrom);
+					break;
 
-					case ProrataType.Prorata360:
-						{
-							int total = ProrataDetails.GetDaysCount (range.ExcludeTo) - ProrataDetails.GetDaysCount (range.IncludeFrom);
-							int days  = ProrataDetails.GetDaysCount (valueDate)       - ProrataDetails.GetDaysCount (range.IncludeFrom);
-							var quotient = 1.0m - ((decimal) days / (decimal) total);
-
-							return new ProrataDetails (range, valueDate, (decimal) days, (decimal) total, quotient);
-						}
-
-					default:
-						{
-							int total = range.ExcludeTo.Subtract (range.IncludeFrom).Days;
-							int days  = System.Math.Min (valueDate.Subtract (range.IncludeFrom).Days, total);
-							var quotient = 1.0m - ((decimal) days / (decimal) total);
-
-							return new ProrataDetails (range, valueDate, (decimal) days, (decimal) total, quotient);
-						}
-				}
+				default:
+					d = range.ExcludeTo.Subtract (range.IncludeFrom).Days;
+					n = valueDate.Subtract (range.IncludeFrom).Days;
+					break;
 			}
 
-			return ProrataDetails.Empty;
+			n = d - n;
+			n = System.Math.Max (n, 0);
+			n = System.Math.Min (n, d);
+			var quotient = (decimal) n / (decimal) d;
+			return new ProrataDetails (range, valueDate, (decimal) n, (decimal) d, quotient);
 		}
 
 

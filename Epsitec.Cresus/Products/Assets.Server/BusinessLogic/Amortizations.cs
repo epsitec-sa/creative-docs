@@ -331,11 +331,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (e != null)
 			{
-				var v = new AmortizedAmount (details.Def.Type, details.InitialValue, details.BaseValue, 
+				var aa = new AmortizedAmount (details.Def.Type, details.InitialValue, details.BaseValue, 
 					details.Def.EffectiveRate, details.Prorata.Numerator, details.Prorata.Denominator,
 					details.Def.Round, details.Def.Residual);
 
-				var p = new DataAmortizedAmountProperty (ObjectField.MainValue, v);
+				var p = new DataAmortizedAmountProperty (ObjectField.MainValue, aa);
 				e.AddProperty (p);
 
 				//	Pour mettre à jour les éventuels amortissements extraordinaires suivants.
