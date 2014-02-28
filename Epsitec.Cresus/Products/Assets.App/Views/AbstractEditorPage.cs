@@ -625,7 +625,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreateRightGrey(Widget parent)
 		{
-			//	Crée la bande grise à droite, qui prolonge visuellement l'ascenseur.
+			//	Crée la bande grise à droite, qui prolonge visuellement l'ascenseur vertical.
 			new FrameBox
 			{
 				Parent         = parent,
@@ -711,7 +711,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return new EditorPageAccount (accessor, baseType, subBaseType, isTimeless: true);
 
 				default:
-					System.Diagnostics.Debug.Fail ("Unsupported page type");
+					throw new System.InvalidOperationException (string.Format ("Unsupported page type {0}", page.ToString ()));
 					return null;
 			}
 		}

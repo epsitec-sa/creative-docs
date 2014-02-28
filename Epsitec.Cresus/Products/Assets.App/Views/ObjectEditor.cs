@@ -75,6 +75,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 						{
 							return pages[2];
 						}
+						else if (pages.Length == 1)
+						{
+							return pages[0];
+						}
 						else
 						{
 							return PageType.OneShot;
@@ -296,13 +300,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 						case EventType.Increase:
 						case EventType.Decrease:
 							yield return PageType.Values;
-							yield return PageType.Amortization;
 							break;
 
 						case EventType.Modification:
 						case EventType.Reorganization:
 							yield return PageType.Asset;
 							yield return PageType.Groups;
+							yield return PageType.Amortization;
 							break;
 
 						default:  // accès à toutes les pages

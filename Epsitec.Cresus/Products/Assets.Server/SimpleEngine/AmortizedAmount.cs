@@ -182,6 +182,21 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			);
 		}
 
+		public static AmortizedAmount CreateInitialBase(AmortizedAmount model, decimal? initialAmount, decimal? baseAmount)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				initialAmount.HasValue ? initialAmount : model.InitialAmount,
+				baseAmount.HasValue    ? baseAmount    : model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount
+			);
+		}
+
 		public static AmortizedAmount CreateEffectiveRate(AmortizedAmount model, decimal? effectiveRate)
 		{
 			return new AmortizedAmount

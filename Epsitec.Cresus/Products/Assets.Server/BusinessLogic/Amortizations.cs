@@ -380,18 +380,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 				else  // amortissement ?
 				{
-					current = new AmortizedAmount
-					(
-						current.Value.AmortizationType,
-						lastAmount.HasValue ? lastAmount.Value : current.Value.InitialAmount,
-						lastBase.HasValue ? lastBase.Value : current.Value.BaseAmount,
-						current.Value.EffectiveRate,
-						current.Value.ProrataNumerator,
-						current.Value.ProrataDenominator,
-						current.Value.RoundAmount,
-						current.Value.ResidualAmount
-					);
-
+					current = AmortizedAmount.CreateInitialBase(current.Value, lastAmount, lastBase);
 					Amortizations.SetAmortizedAmount (e, field, current);
 				}
 
