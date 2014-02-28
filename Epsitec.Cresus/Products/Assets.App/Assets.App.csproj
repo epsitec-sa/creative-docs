@@ -191,6 +191,7 @@
     <Compile Include="Helpers\EventExtensions.cs" />
     <Compile Include="Widgets\Calendar.cs" />
     <Compile Include="Widgets\CalendarController.cs" />
+    <Compile Include="Widgets\LinkLine.cs" />
     <Compile Include="Widgets\TreeTableColumnAmortizedAmount.cs" />
     <Compile Include="Widgets\TreeTableColumnPin.cs" />
     <Compile Include="Widgets\TreeTableColumnIcon.cs" />

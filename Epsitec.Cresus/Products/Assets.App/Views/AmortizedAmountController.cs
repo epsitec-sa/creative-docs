@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -105,13 +106,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
-			this.line1 = this.CreateFrame (parent);
-			this.line2 = this.CreateFrame (parent);
-			this.line3 = this.CreateFrame (parent);
-			this.line4 = this.CreateFrame (parent);
-			this.line5 = this.CreateFrame (parent);
-			this.line6 = this.CreateFrame (parent);
-			this.line7 = this.CreateFrame (parent);
+			this.line1  = this.CreateFrame (parent);
+			this.line12 = this.CreateInter (parent);
+			this.line2  = this.CreateFrame (parent);
+			this.line23 = this.CreateInter (parent);
+			this.line3  = this.CreateFrame (parent);
+			this.line34 = this.CreateInter (parent);
+			this.line4  = this.CreateFrame (parent);
+			this.line45 = this.CreateInter (parent);
+			this.line5  = this.CreateFrame (parent);
+			this.line56 = this.CreateInter (parent);
+			this.line6  = this.CreateFrame (parent);
+			this.line67 = this.CreateInter (parent);
+			this.line7  = this.CreateFrame (parent);
 
 			this.CreateLines ();
 		}
@@ -119,64 +126,78 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateLines()
 		{
 			this.line1.Children.Clear ();
+			this.line12.Children.Clear ();
 			this.line2.Children.Clear ();
+			this.line23.Children.Clear ();
 			this.line3.Children.Clear ();
+			this.line34.Children.Clear ();
 			this.line4.Children.Clear ();
+			this.line45.Children.Clear ();
 			this.line5.Children.Clear ();
+			this.line56.Children.Clear ();
 			this.line6.Children.Clear ();
+			this.line67.Children.Clear ();
 			this.line7.Children.Clear ();
 
 			this.CreateTypeLine (this.line1);
 
 			if (this.AmortizationType == Server.BusinessLogic.AmortizationType.Linear)
 			{
-				this.CreateMaxLine     (this.line2);
-				this.CreateRoundLine   (this.line3);
-				this.CreateLinearLine1 (this.line4);
-				this.CreateLinearLine2 (this.line5);
-				this.CreateProrataLine (this.line6);
+				this.CreateMaxLine     (this.line2, this.line23);
+				this.CreateRoundLine   (this.line3, this.line34);
+				this.CreateLinearLine1 (this.line4, this.line45);
+				this.CreateLinearLine2 (this.line5, this.line56);
+				this.CreateProrataLine (this.line6, this.line67);
 			}
 			else if (this.AmortizationType == Server.BusinessLogic.AmortizationType.Degressive)
 			{
-				this.CreateMaxLine        (this.line2);
-				this.CreateRoundLine      (this.line3);
-				this.CreateDegressiveLine (this.line4);
-				this.CreateProrataLine    (this.line5);
+				this.CreateMaxLine        (this.line2, this.line23);
+				this.CreateRoundLine      (this.line3, this.line34);
+				this.CreateDegressiveLine (this.line4, this.line45);
+				this.CreateProrataLine    (this.line5, this.line56);
 			}
 			else
 			{
-				this.CreateInitLine (this.line2);
+				this.CreateInitLine (this.line2, this.line23);
 			}
 
 			this.UpdateUI ();
 		}
 
 
-		private void CreateInitLine(Widget parent)
+		private void CreateInitLine(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Valeur comptable");
 			this.finalAmountTextField = this.CreateTextField (parent, false, 80, "Valeur initiale");
 		}
 
-		private void CreateMaxLine(Widget parent)
+		private void CreateMaxLine(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Valeur comptable");
 			this.finalAmountTextField = this.CreateTextField (parent, true, 80, "Valeur finale amortie");
-			this.CreateOper (parent, "= Max ( Valeur arrondie ,");
+			        this.CreateOper (parent, "= Max (");
+			var x = this.CreateOper (parent, "Valeur arrondie");
+			        this.CreateOper (parent, ",");
 			this.residualAmountTextField = this.CreateTextField (parent, false, 60, "Valeur résiduelle");
 			this.CreateOper (parent, ")");
+
+			this.CreateLink (bottomParent, x);
 		}
 
-		private void CreateRoundLine(Widget parent)
+		private void CreateRoundLine(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Valeur arrondie");
 			this.roundedAmountTextField = this.CreateTextField (parent, true, 80, "Valeur amortie arrondie");
-			this.CreateOper (parent, "= Arrondi ( Valeur brute ,");
+			        this.CreateOper (parent, "= Arrondi (");
+			var x = this.CreateOper (parent, "Valeur brute");
+			        this.CreateOper (parent, ",");
 			this.roundAmountTextField = this.CreateTextField (parent, false, 60, "Arrondi");
 			this.CreateOper (parent, ")");
+
+			this.CreateLink (bottomParent, x);
 		}
 
-		private void CreateDegressiveLine(Widget parent)
+		private void CreateDegressiveLine(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Valeur brute");
 			this.brutAmountTextField = this.CreateTextField (parent, true, 80, "Valeur amortie non arrondie");
@@ -184,19 +205,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.initialAmountTextField = this.CreateTextField (parent, true, 80, "Valeur précédente");
 			this.CreateOper (parent, "× ( 100% − (");
 			this.effectiveRateTextField = this.CreateTextField (parent, false, 45, "Taux adapté selon la périodicité");
-			this.CreateOper (parent, "×  Prorata ) )");
+			        this.CreateOper (parent, "×");
+			var x = this.CreateOper (parent, "Prorata");
+			        this.CreateOper (parent, ") )");
+
+			this.CreateLink (bottomParent, x);
 		}
 
-		private void CreateLinearLine1(Widget parent)
+		private void CreateLinearLine1(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Valeur brute");
 			this.brutAmountTextField = this.CreateTextField (parent, true, 80, "Valeur amortie non arrondie");
 			this.CreateOper (parent, "=");
 			this.initialAmountTextField = this.CreateTextField (parent, true, 80, "Valeur précédente");
-			this.CreateOper (parent, "−  Amortissement");
+			        this.CreateOper (parent, "−");
+			var x = this.CreateOper (parent, "Amortissement");
+
+			this.CreateLink (bottomParent, x);
 		}
 
-		private void CreateLinearLine2(Widget parent)
+		private void CreateLinearLine2(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Amortissement");
 			this.amortizationAmountTextField = this.CreateTextField (parent, true, 80, "Amortissement");
@@ -204,10 +232,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseAmountTextField = this.CreateTextField (parent, true, 80, "Valeur de base");
 			this.CreateOper (parent, "×");
 			this.effectiveRateTextField = this.CreateTextField (parent, false, 45, "Taux adapté selon la périodicité");
-			this.CreateOper (parent, "×  Prorata");
+			        this.CreateOper (parent, "×");
+			var x = this.CreateOper (parent, "Prorata");
+
+			this.CreateLink (bottomParent, x);
 		}
 
-		private void CreateProrataLine(Widget parent)
+		private void CreateProrataLine(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Prorata");
 			this.prorataRateTextField = this.CreateTextField (parent, true, 45, "Facteur correctif si \"au prorata\"");
@@ -241,7 +272,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent          = parent,
 				Dock            = DockStyle.Top,
 				PreferredHeight = AbstractFieldController.lineHeight,
-				Margins         = new Margins (0, 0, 0, 5),
+				Margins         = new Margins (0, 36, 0, 0),
+			};
+		}
+
+		private FrameBox CreateInter(Widget parent)
+		{
+			return new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Top,
+				PreferredHeight = 13,
+				Margins         = new Margins (0, 36, 0, 0),
 			};
 		}
 
@@ -281,11 +323,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private void CreateOper(Widget parent, string text)
+		private StaticText CreateOper(Widget parent, string text)
 		{
 			int width = Helpers.Text.GetTextWidth (text) + 10;
 
-			new StaticText
+			return new StaticText
 			{
 				Parent           = parent,
 				Dock             = DockStyle.Left,
@@ -295,6 +337,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ContentAlignment = ContentAlignment.TopCenter,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Margins          = new Margins (0, 0, 0, 0),
+			};
+		}
+
+		private void CreateLink(Widget parent, Widget link)
+		{
+			parent.Parent.Window.ForceLayout ();
+
+			new LinkLine
+			{
+				Parent  = parent,
+				TopX    = (int) link.ActualBounds.Center.X - (100+10),
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (100+10, 0, 0, 0),
 			};
 		}
 
@@ -724,11 +779,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TextFieldCombo					typeTextFieldCombo;
 
 		private FrameBox						line1;
+		private FrameBox						line12;
 		private FrameBox						line2;
+		private FrameBox						line23;
 		private FrameBox						line3;
+		private FrameBox						line34;
 		private FrameBox						line4;
+		private FrameBox						line45;
 		private FrameBox						line5;
+		private FrameBox						line56;
 		private FrameBox						line6;
+		private FrameBox						line67;
 		private FrameBox						line7;
 
 		private int								tabIndex;
