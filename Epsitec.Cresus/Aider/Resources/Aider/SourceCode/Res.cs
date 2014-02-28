@@ -573,6 +573,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 384));
 						}
 					}
+					//	designer:cap/LVOP13
+					public static global::Epsitec.Common.Types.Caption ParishOfGermanLanguage
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 57));
+						}
+					}
 					//	designer:cap/LVAVB
 					public static global::Epsitec.Common.Types.Caption Region
 					{

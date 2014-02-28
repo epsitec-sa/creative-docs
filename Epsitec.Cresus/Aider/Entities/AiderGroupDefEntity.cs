@@ -12,6 +12,8 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 namespace Epsitec.Aider.Entities
 {
@@ -87,7 +89,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public static AiderGroupDefEntity CreateSubGroupDef(BusinessContext businessContext, AiderGroupDefEntity parent, string name, GroupClassification groupClass, bool subgroupsAllowed, bool membersAllowed, bool isMutable)
+		public static AiderGroupDefEntity CreateDefinitionSubGroup(BusinessContext businessContext, AiderGroupDefEntity parent, string name, GroupClassification groupClass, bool subgroupsAllowed, bool membersAllowed, bool isMutable)
 		{
 			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
@@ -105,6 +107,25 @@ namespace Epsitec.Aider.Entities
 
 			//uplink
 			parent.Subgroups.Add (aiderGroupDef);
+
+			return aiderGroupDef;
+		}
+
+		public static AiderGroupDefEntity CreateDefinitionRootGroup(BusinessContext businessContext, string name, GroupClassification groupClass, bool isMutable)
+		{
+			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
+
+			aiderGroupDef.Name = name;
+			aiderGroupDef.Number = ""; //?
+			aiderGroupDef.Level = AiderGroupIds.TopLevel;
+			aiderGroupDef.SubgroupsAllowed = true;
+			aiderGroupDef.MembersAllowed = false;
+			var rootGroupsDefs = AiderGroupDefEntity.FindRootGroupsDefinitions(businessContext);
+			var number = AiderGroupIds.FindNextSubGroupDefNumber (rootGroupsDefs.Select (g => g.PathTemplate));
+			aiderGroupDef.PathTemplate = AiderGroupIds.CreateTopLevelPathTemplate (number);
+
+			aiderGroupDef.Classification = groupClass;
+			aiderGroupDef.Mutability = isMutable ? Mutability.Customizable : Mutability.None;
 
 			return aiderGroupDef;
 		}
@@ -131,6 +152,21 @@ namespace Epsitec.Aider.Entities
 		{
 			return this.Level == AiderGroupIds.TopLevel
 				&& this.Classification == GroupClassification.None;
+		}
+
+		public static IList<AiderGroupDefEntity> FindRootGroupsDefinitions(BusinessContext businessContext)
+		{
+			var dataContext = businessContext.DataContext;
+
+			var example = new AiderGroupDefEntity ()
+			{
+				Level = AiderGroupIds.TopLevel,
+			};
+
+			var request = Request.Create (example);
+			request.AddSortClause (ValueField.Create (example, x => x.Name));
+
+			return dataContext.GetByRequest (request);
 		}
 	}
 }

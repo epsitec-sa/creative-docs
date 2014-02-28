@@ -54,7 +54,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 			
 			
-			var groupeDef = AiderGroupDefEntity.CreateSubGroupDef (this.BusinessContext, this.Entity, name, groupClass,subgroupsAllowed,membersAllowed,isMutable);
+			var groupeDef = AiderGroupDefEntity.CreateDefinitionSubGroup (this.BusinessContext, this.Entity, name, groupClass,subgroupsAllowed,membersAllowed,isMutable);
 
 			//Create groups at right place
 			var groupToComplete = AiderGroupEntity.FindGroupsFromPathAndLevel (this.BusinessContext, this.Entity.Level, this.Entity.PathTemplate);

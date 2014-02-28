@@ -5,6 +5,7 @@ using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Data.Job;
+using Epsitec.Aider.Data.Groups;
 using Epsitec.Aider.Data.Subscription;
 
 using Epsitec.Common.Debug;
@@ -107,6 +108,18 @@ namespace Epsitec.Aider
 				if (args.Contains ("-eervparishimportation"))
 				{
 					AiderProgram.RunEervParishImportation (args);
+					return;
+				}
+
+				if (args.Contains ("-initderogations"))
+				{
+					AiderProgram.InitDerogationGroups (args);
+					return;
+				}
+
+				if (args.Contains ("-initpla"))
+				{
+					AiderProgram.InitPLAGroups (args);
 					return;
 				}
 
@@ -398,6 +411,22 @@ namespace Epsitec.Aider
 			}
 
 			throw new Exception ("Invalid mode");
+		}
+
+		private static void InitDerogationGroups(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				DerogationGroups.Create (coreData);
+			});
+		}
+
+		private static void InitPLAGroups(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				PLAGroups.Create (coreData);
+			});
 		}
 
 		private static void RunEervMainImportation(string[] args)

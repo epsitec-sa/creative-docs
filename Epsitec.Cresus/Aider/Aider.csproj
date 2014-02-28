@@ -233,6 +233,8 @@
     <Compile Include="Data\ECh\EChDataAnalyzerReporter.cs" />
     <Compile Include="Data\ECh\EChDataComparer.cs" />
     <Compile Include="Data\Eerv\EervKind.cs" />
+    <Compile Include="Data\Groups\PLAGroups.cs" />
+    <Compile Include="Data\Groups\DerogationGroups.cs" />
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\ContactNameFixer.cs" />
