@@ -395,35 +395,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.amortizedAmount.HasValue)
 				{
-					var fi = this.amortizedAmount.Value.FinalAmortizedAmount;
-					var rd = this.amortizedAmount.Value.RoundedAmortizedAmount;
-					var br = this.amortizedAmount.Value.BrutAmortizedAmount;
-					var am = this.amortizedAmount.Value.BrutAmortization;
-					var re = this.amortizedAmount.Value.ResidualAmount.GetValueOrDefault (0.0m);
-					var ii = this.amortizedAmount.Value.InitialAmount;
-					var rn = this.amortizedAmount.Value.RoundAmount.GetValueOrDefault (0.0m);
-					var ba = this.amortizedAmount.Value.BaseAmount;
-					var er = this.amortizedAmount.Value.EffectiveRate;
-					var nu = this.amortizedAmount.Value.ProrataNumerator;
-					var de = this.amortizedAmount.Value.ProrataDenominator;
-					var pr = this.amortizedAmount.Value.Prorata;
+					this.FinalAmount        = this.amortizedAmount.Value.FinalAmortizedAmount;
+					this.ResidualAmount     = this.amortizedAmount.Value.ResidualAmount.GetValueOrDefault (0.0m);
 
-					this.FinalAmount        = fi;
-					this.ResidualAmount     = re;
+					this.RoundedAmount      = this.amortizedAmount.Value.RoundedAmortizedAmount;
+					this.RoundAmount        = this.amortizedAmount.Value.RoundAmount.GetValueOrDefault (0.0m);
 
-					this.RoundedAmount      = rd;
-					this.RoundAmount        = rn;
+					this.BrutAmount         = this.amortizedAmount.Value.BrutAmortizedAmount;
+					this.InitialAmount      = this.amortizedAmount.Value.InitialAmount;
 
-					this.BrutAmount         = br;
-					this.InitialAmount      = ii;
+					this.AmortizationAmount = this.amortizedAmount.Value.BrutAmortization;
+					this.BaseAmount         = this.amortizedAmount.Value.BaseAmount;
+					this.EffectiveRate      = this.amortizedAmount.Value.EffectiveRate;
 
-					this.AmortizationAmount = am;
-					this.BaseAmount         = ba;
-					this.EffectiveRate      = er;
-
-					this.ProrataRate        = pr;
-					this.ProrataNumerator   = nu;
-					this.ProrataDenominator = de;
+					this.ProrataRate        = this.amortizedAmount.Value.Prorata;
+					this.ProrataNumerator   = this.amortizedAmount.Value.ProrataNumerator;
+					this.ProrataDenominator = this.amortizedAmount.Value.ProrataDenominator;
 				}
 				else
 				{

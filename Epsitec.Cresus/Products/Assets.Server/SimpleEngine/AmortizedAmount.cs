@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public decimal BrutAmortization
 		{
-			//	Calcule l'amortissement brut, qui faudra soustraire à la valeur initiale
+			//	Calcule l'amortissement brut, qu'il faudra soustraire à la valeur initiale
 			//	pour obtenir la valeur amortie.
 			get
 			{
