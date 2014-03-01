@@ -216,7 +216,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDateOperation));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotComment));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDocuments));
-
 				c1.Add (ObjectSummaryControllerTile.Empty);
 
 				c1.Add (new ObjectSummaryControllerTile ("Général"));
@@ -226,42 +225,53 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					c1.Add (new ObjectSummaryControllerTile (field));
 				}
-
 				c1.Add(ObjectSummaryControllerTile.Empty);
 
-				c1.Add(new ObjectSummaryControllerTile ("Personnes"));
-				foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)
+				var persons = this.accessor.Settings.GetUserFields (BaseType.Assets)
 					.Where (x => x.Type == FieldType.GuidPerson)
-					.Select (x => x.Field))
+					.Select (x => x.Field);
+				if (persons.Any ())
 				{
-					c1.Add (new ObjectSummaryControllerTile (field));
+					c1.Add (new ObjectSummaryControllerTile ("Personnes"));
+					foreach (var field in persons)
+					{
+						c1.Add (new ObjectSummaryControllerTile (field));
+					}
 				}
 
 				//	Deuxième colonne.
-				var c2 = new List<ObjectSummaryControllerTile> ()
-				{
-					new ObjectSummaryControllerTile ("Regroupements"),
-				};
-				foreach (var field in GroupsGuidRatioLogic.GetSortedFields (this.accessor))
-				{
-					c2.Add (new ObjectSummaryControllerTile (field));
-				}
+				var c2 = new List<ObjectSummaryControllerTile> ();
 				list.Add (c2);
+
+				var values = this.accessor.Settings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type == FieldType.ComputedAmount)
+					.Select (x => x.Field);
+				if (values.Any ())
+				{
+					c2.Add (new ObjectSummaryControllerTile ("Valeurs"));
+					foreach (var field in values)
+					{
+						c2.Add (new ObjectSummaryControllerTile (field));
+					}
+					c2.Add (ObjectSummaryControllerTile.Empty);
+				}
+
+				var groups = GroupsGuidRatioLogic.GetSortedFields (this.accessor);
+				if (groups.Any ())
+				{
+					c2.Add (new ObjectSummaryControllerTile ("Regroupements"));
+					foreach (var field in groups)
+					{
+						c2.Add (new ObjectSummaryControllerTile (field));
+					}
+				}
 
 				//	Troisième colonne.
 				var c3 = new List<ObjectSummaryControllerTile> ();
 				list.Add (c3);
 
-				c3.Add (new ObjectSummaryControllerTile ("Valeurs"));
+				c3.Add (new ObjectSummaryControllerTile ("Valeur comptable"));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.MainValue));
-
-				foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)
-					.Where (x => x.Type == FieldType.ComputedAmount)
-					.Select (x => x.Field))
-				{
-					c3.Add (new ObjectSummaryControllerTile (field));
-				}
-
 				c3.Add (ObjectSummaryControllerTile.Empty);
 
 				c3.Add (new ObjectSummaryControllerTile ("Amortissements"));

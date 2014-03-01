@@ -12,19 +12,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static IEnumerable<UserField> GetUserFields(DataAccessor accessor)
 		{
 			//	Retourne les champs d'un objet d'immobilisation.
-			bool mainValue = false;
+			int index = 0;
 
 			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
 			{
-				if (!mainValue && userField.Type == FieldType.ComputedAmount)
+				if (index == 1)
 				{
-					//	Juste avant la première valeur utilisateur, on injecte la valeur comptable.
+					//	Juste après la première colonne (en général le nom), on injecte la valeur comptable.
 					//	Le Guid créé à la volée n'est pas utilisé !
-					yield return new UserField (DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.AmortizedAmount, userField.ColumnWidth, null, null, null, 0);
-					mainValue = true;
+					yield return new UserField (DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.AmortizedAmount, 120, null, null, null, 0);
 				}
 
 				yield return userField;
+				index++;
 			}
 		}
 
