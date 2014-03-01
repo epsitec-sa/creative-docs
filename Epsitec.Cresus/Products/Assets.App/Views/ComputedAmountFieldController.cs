@@ -18,8 +18,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				value = this.Adjust (value);
-
 				if (this.value != value)
 				{
 					this.value = value;
@@ -43,33 +41,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				}
 			}
-		}
-
-		private ComputedAmount? Adjust(ComputedAmount? value)
-		{
-			if (value.HasValue && !value.Value.ArgumentAmount.HasValue)
-			{
-				bool subtract = true;
-
-				switch (this.EventType)
-				{
-					case EventType.Increase:
-						subtract = false;
-						break;
-				}
-
-				value = new ComputedAmount
-				(
-					value.Value.InitialAmount,
-					value.Value.ArgumentAmount,
-					value.Value.FinalAmount,
-					subtract,
-					value.Value.Rate,
-					value.Value.ArgumentDefined
-				);
-			}
-
-			return value;
 		}
 
 		private void UpdateValue()

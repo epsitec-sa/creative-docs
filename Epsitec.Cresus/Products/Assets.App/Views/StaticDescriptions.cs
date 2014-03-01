@@ -105,14 +105,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case PageType.Persons:
 					return "Personnes";
 
-				case PageType.Values:
-					return "Valeurs";
+				case PageType.UserValues:
+					return "Autres valeurs";
 
-				case PageType.Amortization:
-					return "Amortissement";
+				case PageType.AmortizationValue:
+					return "Valeur";
+
+				case PageType.AmortizationDefinition:
+					return "Amort.";
 
 				case PageType.Groups:
-					return "Regroupements";
+					return "Groupes";
 
 				case PageType.Category:
 					return "Définitions de la catégorie";

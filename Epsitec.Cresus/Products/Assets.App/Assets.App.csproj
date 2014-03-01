@@ -128,13 +128,13 @@
     <Compile Include="Views\AccountGuidFieldController.cs" />
     <Compile Include="Views\AmortizedAmountFieldController.cs" />
     <Compile Include="Views\AmortizedAmountController.cs" />
+    <Compile Include="Views\EditorPageUserValues.cs" />
     <Compile Include="Views\EditorPageAccount.cs" />
     <Compile Include="Views\EcrituresView.cs" />
     <Compile Include="Views\EditorPageUserField.cs" />
     <Compile Include="Views\UserFieldsToolbarTreeTableController.cs" />
     <Compile Include="Views\UserFieldsSettingsView.cs" />
     <Compile Include="Views\SettingsViewState.cs" />
-    <Compile Include="Views\EditorPageAmortizationPreview.cs" />
     <Compile Include="Views\EnumFieldController.cs" />
     <Compile Include="Views\IDirty.cs" />
     <Compile Include="Views\GroupsViewState.cs" />
@@ -169,8 +169,8 @@
     <Compile Include="Views\SummaryController.cs" />
     <Compile Include="Views\SummaryControllerTile.cs" />
     <Compile Include="Widgets\ColoredButton.cs" />
-    <Compile Include="Views\EditorPageValues.cs" />
-    <Compile Include="Views\EditorPageAmortization.cs" />
+    <Compile Include="Views\EditorPageAmortizationValue.cs" />
+    <Compile Include="Views\EditorPageAmortizationDefinition.cs" />
     <Compile Include="Views\EditorPageAsset.cs" />
     <Compile Include="Views\PageType.cs" />
     <Compile Include="Views\EditorPageSummary.cs" />

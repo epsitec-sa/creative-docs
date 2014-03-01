@@ -205,13 +205,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 
 				{
-					var e = new DataEvent (date2010, EventType.Reorganization);
+					var e = new DataEvent (date2010, EventType.Modification);
 					o131.AddEvent (e);
 					e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+0, DummyGroups.GetGroup (mandat, "Immeubles")));
 				}
 
 				{
-					var e = new DataEvent (date2011, EventType.Reorganization);
+					var e = new DataEvent (date2011, EventType.Modification);
 					o131.AddEvent (e);
 					e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+0, DummyGroups.GetGroup (mandat, "Suisses")));
 				}
@@ -523,14 +523,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 
 				{
-					var e = new DataEvent (new Timestamp (new System.DateTime (2003, 5, 1), 0), EventType.Increase);
+					var e = new DataEvent (new Timestamp (new System.DateTime (2003, 5, 1), 0), EventType.Modification);
 					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1, new ComputedAmount (12000.0m)));
 				}
 
 				{
-					var e = new DataEvent (new Timestamp (new System.DateTime (2003, 5, 1), 1), EventType.Increase);
+					var e = new DataEvent (new Timestamp (new System.DateTime (2003, 5, 1), 1), EventType.Modification);
 					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1, new ComputedAmount (12000.0m, 12500.0m)));
@@ -544,11 +544,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 
 				{
-					var e = new DataEvent (new Timestamp (new System.DateTime (2009, 8, 25), 0), EventType.Decrease);
+					var e = new DataEvent (new Timestamp (new System.DateTime (2009, 8, 25), 0), EventType.AmortizationExtra);
 					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataAmortizedAmountProperty (ObjectField.MainValue, new AmortizedAmount (16000.0m, 14500.0m)));
-					e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1,     new ComputedAmount (12500.0m, 11000.0m)));
+				}
+
+				{
+					var e = new DataEvent (new Timestamp (new System.DateTime (2009, 8, 25), 1), EventType.Modification);
+					o236.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
+					e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1, new ComputedAmount (12500.0m, 11000.0m)));
 				}
 
 				{
@@ -559,7 +565,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 
 				{
-					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 7, 12), 0), EventType.Decrease);
+					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 7, 12), 0), EventType.Modification);
 					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataAmortizedAmountProperty (ObjectField.MainValue, new AmortizedAmount (12000.0m)));
@@ -587,7 +593,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 
 				{
-					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 7, 1), 0), EventType.Increase);
+					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 7, 1), 0), EventType.AmortizationExtra);
 					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataAmortizedAmountProperty (ObjectField.MainValue, new AmortizedAmount (5000.0m, 5200.0m)));
@@ -617,14 +623,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 
 				{
-					var e = new DataEvent (new Timestamp (new System.DateTime (2013, 4, 14), 0), EventType.Increase);
+					var e = new DataEvent (new Timestamp (new System.DateTime (2013, 4, 14), 0), EventType.Modification);
 					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1, new ComputedAmount (2400.0m, 3000.0m, true)));
 				}
 
 				{
-					var e = new DataEvent (new Timestamp (new System.DateTime (2013, 6, 1), 0), EventType.Decrease);
+					var e = new DataEvent (new Timestamp (new System.DateTime (2013, 6, 1), 0), EventType.AmortizationExtra);
 					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataAmortizedAmountProperty (ObjectField.MainValue, new AmortizedAmount (4600.0m, 2100.0m)));

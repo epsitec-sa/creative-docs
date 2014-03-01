@@ -15,9 +15,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		AmortizationPreview,	// aperçu d'un amortissement ordinaire
 		AmortizationExtra,		// amortissement extraordinaire
 		Modification,			// modification de diverses informations
-		Reorganization,			// spécificité MCH2
-		Increase,				// revalorisation
-		Decrease,				// réévaluation
+		//?Reorganization,			// spécificité MCH2
+		//?Increase,				// revalorisation
+		//?Decrease,				// réévaluation
 		Output,					// sortie de l'inventaire, vente, vol, destruction, etc.
 	}
 }

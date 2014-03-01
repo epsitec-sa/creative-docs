@@ -259,15 +259,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EventType.Modification:
 					return TimelineGlyph.FilledCircle;
 
-				case EventType.Reorganization:
-					return TimelineGlyph.OutlinedCircle;
-
-				case EventType.Increase:
-					return TimelineGlyph.FilledUp;
-
-				case EventType.Decrease:
-					return TimelineGlyph.FilledDown;
-
 				case EventType.AmortizationAuto:
 					return TimelineGlyph.PinnedDiamond;
 

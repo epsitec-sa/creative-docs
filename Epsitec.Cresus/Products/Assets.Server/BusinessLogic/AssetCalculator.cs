@@ -122,9 +122,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				yield return EventType.Input;
 				yield return EventType.Modification;
-				yield return EventType.Reorganization;
-				yield return EventType.Increase;
-				yield return EventType.Decrease;
 				yield return EventType.AmortizationExtra;
 				yield return EventType.Output;
 			}
@@ -145,9 +142,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				nextEvent != TerminalEvent.In)
 			{
 				yield return EventType.Modification;
-				yield return EventType.Reorganization;
-				yield return EventType.Increase;
-				yield return EventType.Decrease;
 				yield return EventType.AmortizationExtra;
 			}
 

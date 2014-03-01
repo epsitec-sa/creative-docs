@@ -10,9 +10,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class EditorPageAmortization : AbstractEditorPage
+	public class EditorPageAmortizationDefinition : AbstractEditorPage
 	{
-		public EditorPageAmortization(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
+		public EditorPageAmortizationDefinition(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
 			: base (accessor, baseType, subBaseType, isTimeless)
 		{
 		}

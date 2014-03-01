@@ -179,28 +179,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			switch (type)
 			{
 				case EventType.Input:
-					return new ButtonDescription (EventType.Input, "Entrée", "Entrée dans l'inventaire, acquisition", enable);
+					return new ButtonDescription (type, "Entrée", "Entrée dans l'inventaire, acquisition", enable);
 
 				case EventType.Modification:
-					return new ButtonDescription (EventType.Modification, "Modification", "Modification de diverses informations", enable);
+					return new ButtonDescription (type, "Modification générale", "Modification de diverses informations", enable);
 
-				case EventType.Reorganization:
-					return new ButtonDescription (EventType.Reorganization, "Réorganisation", "Modification pour MCH2", enable);
-				
-				case EventType.Increase:
-					return new ButtonDescription (EventType.Increase, "Augmentation", "Revalorisation à la hausse de la valeur", enable);
-				
-				case EventType.Decrease:
-					return new ButtonDescription (EventType.Decrease, "Diminution", "Réévaluation à la baisse de la valeur", enable);
-				
 				case EventType.AmortizationExtra:
-					return new ButtonDescription (EventType.AmortizationExtra, "Amortissement extraordinaire", "Amortissement manuel", enable);
+					return new ButtonDescription (type, "Modification de la valeur", "Modification de la valeur comptable, amortissement extraordinaire, etc.", enable);
 				
 				case EventType.Output:
-					return new ButtonDescription (EventType.Output, "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.", enable);
+					return new ButtonDescription (type, "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.", enable);
 				
 				default:
-					return new ButtonDescription (EventType.Unknown, null, null, false);
+					return new ButtonDescription (type, null, null, false);
 			}
 		}
 

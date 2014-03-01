@@ -8,9 +8,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class EditorPageValues : AbstractEditorPage
+	public class EditorPageAmortizationValue : AbstractEditorPage
 	{
-		public EditorPageValues(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
+		public EditorPageAmortizationValue(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
 			: base (accessor, baseType, subBaseType, isTimeless)
 		{
 		}
@@ -21,13 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			parent = this.CreateScrollable (parent);
 
 			this.CreateAmortizedAmountController (parent, ObjectField.MainValue);
-
-			foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)
-				.Where (x => x.Type == FieldType.ComputedAmount)
-				.Select (x => x.Field))
-			{
-				this.CreateComputedAmountController (parent, field);
-			}
 		}
 	}
 }

@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (userField.Type == FieldType.ComputedAmount)
 					{
-						return PageType.Values;
+						return PageType.UserValues;
 					}
 					else if (userField.Type == FieldType.GuidPerson)
 					{
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 					else if (userField.Type == FieldType.GuidAccount)
 					{
-						return PageType.Amortization;
+						return PageType.AmortizationDefinition;
 					}
 					else
 					{
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return PageType.OneShot;
 
 				case ObjectField.MainValue:
-					return PageType.Values;
+					return PageType.AmortizationValue;
 
 				case ObjectField.CategoryName:
 				case ObjectField.AmortizationRate:
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ObjectField.Account6:
 				case ObjectField.Account7:
 				case ObjectField.Account8:
-					return PageType.Amortization;
+					return PageType.AmortizationDefinition;
 
 				default:
 					return PageType.Asset;

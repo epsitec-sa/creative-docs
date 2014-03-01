@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (type == EventType.AmortizationAuto   ||
 				type == EventType.AmortizationPreview)
 			{
-				yield return PageType.Values;
+				yield return PageType.AmortizationValue;
 			}
 			else
 			{
@@ -297,24 +297,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 					switch (type)
 					{
 						case EventType.AmortizationExtra:
-						case EventType.Increase:
-						case EventType.Decrease:
-							yield return PageType.Values;
+							yield return PageType.AmortizationValue;
 							break;
 
 						case EventType.Modification:
-						case EventType.Reorganization:
 							yield return PageType.Asset;
 							yield return PageType.Groups;
-							yield return PageType.Amortization;
+							yield return PageType.AmortizationDefinition;
+							yield return PageType.UserValues;
 							break;
 
 						default:  // accès à toutes les pages
 							yield return PageType.Asset;
 							yield return PageType.Persons;
 							yield return PageType.Groups;
-							yield return PageType.Values;
-							yield return PageType.Amortization;
+							yield return PageType.AmortizationDefinition;
+							yield return PageType.AmortizationValue;
+							yield return PageType.UserValues;
 							break;
 					}
 				}
