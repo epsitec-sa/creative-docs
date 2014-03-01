@@ -128,7 +128,6 @@
     <Compile Include="Views\AccountGuidFieldController.cs" />
     <Compile Include="Views\AmortizedAmountFieldController.cs" />
     <Compile Include="Views\AmortizedAmountController.cs" />
-    <Compile Include="Views\EditorPageUserValues.cs" />
     <Compile Include="Views\EditorPageAccount.cs" />
     <Compile Include="Views\EcrituresView.cs" />
     <Compile Include="Views\EditorPageUserField.cs" />
@@ -142,7 +141,6 @@
     <Compile Include="Views\AssetsViewState.cs" />
     <Compile Include="Views\NameValueListSerializer.cs" />
     <Compile Include="Views\PersonGuidFieldController.cs" />
-    <Compile Include="Views\EditorPagePersons.cs" />
     <Compile Include="Views\PersonsToolbarTreeTableController.cs" />
     <Compile Include="Views\EditorPagePerson.cs" />
     <Compile Include="Views\PersonsView.cs" />
