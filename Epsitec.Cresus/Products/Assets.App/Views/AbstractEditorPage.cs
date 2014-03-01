@@ -683,12 +683,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case PageType.Asset:
 					return new EditorPageAsset (accessor, baseType, subBaseType, isTimeless: false);
 
-				case PageType.Persons:
-					return new EditorPagePersons (accessor, baseType, subBaseType, isTimeless: false);
-
-				case PageType.UserValues:
-					return new EditorPageUserValues (accessor, baseType, subBaseType, isTimeless: false);
-
 				case PageType.AmortizationValue:
 					return new EditorPageAmortizationValue (accessor, baseType, subBaseType, isTimeless: false);
 

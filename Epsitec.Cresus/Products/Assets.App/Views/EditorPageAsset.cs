@@ -20,8 +20,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			parent = this.CreateScrollable (parent);
 
-			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
-				.Where (x => x.Type != FieldType.ComputedAmount && x.Type != FieldType.GuidPerson))
+			//?foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets)
+			//?	.Where (x => x.Type != FieldType.ComputedAmount && x.Type != FieldType.GuidPerson))
+			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
 			{
 				this.CreateController (parent, userField);
 			}

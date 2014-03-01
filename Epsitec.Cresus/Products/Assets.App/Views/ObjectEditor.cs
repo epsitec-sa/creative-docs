@@ -304,16 +304,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 							yield return PageType.Asset;
 							yield return PageType.Groups;
 							yield return PageType.AmortizationDefinition;
-							yield return PageType.UserValues;
 							break;
 
 						default:  // accès à toutes les pages
 							yield return PageType.Asset;
-							yield return PageType.Persons;
 							yield return PageType.Groups;
 							yield return PageType.AmortizationDefinition;
 							yield return PageType.AmortizationValue;
-							yield return PageType.UserValues;
 							break;
 					}
 				}

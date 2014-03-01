@@ -128,11 +128,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (userField.Type == FieldType.ComputedAmount)
 					{
-						return PageType.UserValues;
+						return PageType.Asset;
 					}
 					else if (userField.Type == FieldType.GuidPerson)
 					{
-						return PageType.Persons;
+						return PageType.Asset;
 					}
 					else if (userField.Type == FieldType.GuidAccount)
 					{
