@@ -87,6 +87,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			set
 			{
 				this.VisibleSelectedRow = this.NodeGetter.SearchBestIndex (value);
+
+				if (this.graphicController != null && this.showGraphic)
+				{
+					this.graphicController.SelectedGuid = this.SelectedGuid;
+				}
 			}
 		}
 
@@ -107,6 +112,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.graphicController.CreateUI (parent);
+
+			this.graphicController.SelectedTileChanged += delegate
+			{
+				this.SelectedGuid = this.graphicController.SelectedGuid;
+			};
+
+			this.graphicController.TileDoubleClicked += delegate
+			{
+				this.SelectedGuid = this.graphicController.SelectedGuid;
+				this.OnRowDoubleClicked (this.selectedRow);
+			};
 		}
 
 

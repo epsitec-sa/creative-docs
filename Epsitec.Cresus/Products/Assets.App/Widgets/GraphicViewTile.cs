@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.texts       = texts;
 			this.fontFactors = fontFactors;
 
-			this.PreferredWidth   = (this.graphicViewMode == GraphicViewMode.VerticalFinalNode) ? 20.0 : this.columnWidth;
+			this.PreferredWidth   = (this.graphicViewMode == GraphicViewMode.VerticalFinalNode) ? GraphicViewTile.verticalFinalWidth : this.columnWidth;
 			this.Margins          = new Margins (0, -1, 0, 0);
 			this.Padding          = new Margins (GraphicViewTile.margins, GraphicViewTile.margins, GraphicViewTile.margins+this.TopPadding, GraphicViewTile.margins);
 		}
@@ -61,9 +61,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var t = graphics.Transform;
 				graphics.RotateTransformDeg (90.0, rect.Center.X, rect.Center.Y);
 
-				var text = string.Join (" ", this.texts);
-				var fontSize = 11.0;  // taille adaptée pour une largeur de 20 points
-				graphics.PaintText (this.RotatedRect, text, Font.DefaultFont, fontSize, ContentAlignment.MiddleLeft);
+				var fontSize = GraphicViewTile.verticalFinalWidth * 0.5;
+				graphics.PaintText (this.RotatedRect, this.RotatedText, Font.DefaultFont, fontSize, ContentAlignment.MiddleLeft);
 
 				graphics.Transform = t;
 			}
@@ -80,6 +79,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.RenderSolid (Color.FromBrightness (0.5));
 		}
 
+
+		private string RotatedText
+		{
+			get
+			{
+				return string.Join (" ", this.texts);
+			}
+		}
 
 		private Rectangle RotatedRect
 		{
@@ -143,24 +150,32 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				Color color;
-
-				if (this.entered)
+				if (this.ActiveState == ActiveState.Yes)
 				{
-					color = ColorManager.HoverColor;
+					return ColorManager.SelectionColor;
 				}
 				else
 				{
-					color = Color.FromBrightness (0.75);
-				}
+					Color color;
 
-				var v = 0.75 + this.level * 0.05;  // 0.75 .. 0.95
-				return color.ForceV (v);
+					if (this.entered)
+					{
+						color = ColorManager.HoverColor;
+					}
+					else
+					{
+						color = Color.FromBrightness (0.75);
+					}
+
+					var v = 0.75 + this.level * 0.05;  // 0.75 .. 0.95
+					return color.ForceV (v);
+				}
 			}
 		}
 
 
-		private const double margins = 10.0;
+		private const double margins            = 10.0;
+		private const double verticalFinalWidth = 20.0;
 
 		private readonly int					level;
 		private readonly double					columnWidth;

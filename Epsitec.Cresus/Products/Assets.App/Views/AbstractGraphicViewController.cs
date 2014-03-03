@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
@@ -20,6 +21,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
+
+			this.selectedGuid = Guid.Empty;
 		}
 
 
@@ -32,6 +35,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			set
 			{
 				this.graphicViewMode = value;
+			}
+		}
+
+		public Guid								SelectedGuid
+		{
+			get
+			{
+				return this.selectedGuid;
+			}
+			set
+			{
+				this.selectedGuid = value;
+				this.UpdateController ();
 			}
 		}
 
@@ -54,16 +70,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		public virtual void Update()
+		public virtual void UpdateData()
 		{
 		}
 
+		public virtual void UpdateController(bool crop = true)
+		{
+			this.UpdateSelection (crop);
+		}
 
-		protected Widget CreateNode(Widget parent, int level, NodeType nodeType, string[] texts, double[] fontFactors)
+
+		private void UpdateSelection(bool crop)
+		{
+			this.UpdateSelection (this.scrollable.Viewport, crop);
+		}
+
+		private void UpdateSelection(Widget parent, bool crop)
+		{
+			var name = this.selectedGuid.ToString ();
+
+			foreach (Widget tile in parent.Children)
+			{
+				if (tile.Name == name)
+				{
+					tile.ActiveState = ActiveState.Yes;
+				}
+				else
+				{
+					tile.ActiveState = ActiveState.No;
+				}
+
+				this.UpdateSelection (tile, crop);
+			}
+		}
+
+
+		protected Widget CreateNode(Widget parent, Guid guid, int level, NodeType nodeType, string[] texts, double[] fontFactors)
 		{
 			var w = new GraphicViewTile (level, this.graphicViewState.ColumnWidth, nodeType, this.graphicViewMode)
 			{
 				Parent           = parent,
+				Name             = guid.ToString (),
 				ContentAlignment = ContentAlignment.TopLeft,
 				Dock             = DockStyle.Left,
 			};
@@ -71,6 +118,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			w.SetContent (texts, fontFactors);
 
 			ToolTip.Default.SetToolTip (w, string.Join (" ", texts));
+
+			w.Clicked += delegate
+			{
+				this.selectedGuid = guid;
+				this.OnSelectedTileChanged (this.selectedGuid);
+			};
+
+			w.DoubleClicked += delegate
+			{
+				this.selectedGuid = guid;
+				this.OnTileDoubleClicked (this.selectedGuid);
+			};
 
 			return w;
 		}
@@ -147,12 +206,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		#region Events handler
+		protected void OnSelectedTileChanged(Guid guid)
+		{
+			this.SelectedTileChanged.Raise (this, guid);
+		}
+
+		public event EventHandler<Guid> SelectedTileChanged;
+
+
+		protected void OnTileDoubleClicked(Guid guid)
+		{
+			this.TileDoubleClicked.Raise (this, guid);
+		}
+
+		public event EventHandler<Guid> TileDoubleClicked;
+		#endregion
+
+
 		protected readonly DataAccessor			accessor;
 		protected readonly BaseType				baseType;
 
 		protected AbstractNodeGetter<T>			nodeGetter;
+		protected Scrollable					scrollable;
 		protected GraphicViewMode				graphicViewMode;
 		protected GraphicViewState				graphicViewState;
-		protected Scrollable					scrollable;
+		protected Guid							selectedGuid;
 	}
 }

@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.NodeGetter.SetParams (timestamp, rootGuid, this.graphicViewState.SortingInstructions);
 		}
 
-		public override void Update()
+		public override void UpdateData()
 		{
 			if (this.graphicViewState == null || this.scrollable == null)
 			{
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				var texts = this.GetTexts (node.BaseType, node, fields);
-				var w = this.CreateNode (parent, node.Level, node.Type, texts, fontFactors);
+				var w = this.CreateNode (parent, node.Guid, node.Level, node.Type, texts, fontFactors);
 
 				if (parents.Count <= level+1)
 				{

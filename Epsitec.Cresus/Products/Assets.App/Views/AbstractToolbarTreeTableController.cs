@@ -127,6 +127,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void UpdateData()
 		{
+			if (this.graphicController != null && this.showGraphic)
+			{
+				this.graphicController.UpdateData ();
+			}
 		}
 
 
@@ -343,6 +347,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableFrame.Visibility = !this.showGraphic;
 			this.graphicFrame.Visibility   =  this.showGraphic;
 
+			if (this.graphicController != null && this.showGraphic)
+			{
+				this.graphicController.UpdateData ();
+				this.graphicController.SelectedGuid = this.SelectedGuid;
+			}
+
 			this.UpdateController ();
 			this.UpdateToolbar ();
 		}
@@ -359,14 +369,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateController(bool crop = true)
 		{
-			if (this.dataFiller != null)
+			if (this.dataFiller != null && !this.showGraphic)
 			{
 				TreeTableFiller<T>.FillContent (this.treeTableController, this.dataFiller, this.VisibleSelectedRow, crop);
 			}
 
 			if (this.graphicController != null && this.showGraphic)
 			{
-				this.graphicController.Update ();
+				this.graphicController.UpdateController (crop);
 			}
 		}
 
@@ -541,6 +551,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected int							selectedRow;
 		protected TreeTableToolbar				toolbar;
 		protected SortingInstructions			sortingInstructions;
-		private bool							showGraphic;
+		protected bool							showGraphic;
 	}
 }
