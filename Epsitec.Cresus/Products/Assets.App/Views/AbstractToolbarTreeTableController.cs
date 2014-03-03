@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnGraphic()
 		{
-			this.isGraphic = !this.isGraphic;
+			this.showGraphic = !this.showGraphic;
 			this.UpdateGraphicMode ();
 		}
 
@@ -340,10 +340,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateGraphicMode()
 		{
-			this.treeTableFrame.Visibility = !this.isGraphic;
-			this.graphicFrame.Visibility   =  this.isGraphic;
+			this.treeTableFrame.Visibility = !this.showGraphic;
+			this.graphicFrame.Visibility   =  this.showGraphic;
 
 			this.UpdateController ();
+			this.UpdateToolbar ();
 		}
 
 
@@ -363,7 +364,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				TreeTableFiller<T>.FillContent (this.treeTableController, this.dataFiller, this.VisibleSelectedRow, crop);
 			}
 
-			if (this.graphicController != null)
+			if (this.graphicController != null && this.showGraphic)
 			{
 				this.graphicController.Update ();
 			}
@@ -374,7 +375,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			int row = this.VisibleSelectedRow;
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.Filter, true);
-			this.toolbar.SetCommandActivate (ToolbarCommand.Graphic, this.isGraphic);
+			this.toolbar.SetCommandActivate (ToolbarCommand.Graphic, this.showGraphic);
 
 			this.UpdateSelCommand (ToolbarCommand.First, row, this.FirstRowIndex);
 			this.UpdateSelCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);
@@ -540,6 +541,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected int							selectedRow;
 		protected TreeTableToolbar				toolbar;
 		protected SortingInstructions			sortingInstructions;
-		private bool							isGraphic;
+		private bool							showGraphic;
 	}
 }

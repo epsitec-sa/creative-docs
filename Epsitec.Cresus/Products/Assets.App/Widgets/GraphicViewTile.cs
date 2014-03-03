@@ -56,11 +56,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (this.graphicViewMode == GraphicViewMode.VerticalFinalNode &&
 				this.nodeType == NodeType.Final)
 			{
+				//	Une tuile finale s'affiche verticalement (tournée de 90 degrés CCW),
+				//	avec une seule ligne qui appond tous les contenus.
 				var t = graphics.Transform;
 				graphics.RotateTransformDeg (90.0, rect.Center.X, rect.Center.Y);
 
 				var text = string.Join (" ", this.texts);
-				var fontSize = this.GetFontSize (this.texts.Length-1);
+				var fontSize = 11.0;  // taille adaptée pour une largeur de 20 points
 				graphics.PaintText (this.RotatedRect, text, Font.DefaultFont, fontSize, ContentAlignment.MiddleLeft);
 
 				graphics.Transform = t;
