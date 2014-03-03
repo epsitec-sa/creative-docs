@@ -1484,7 +1484,7 @@ AiderOfficeSettings = [LVOA13]
 #[Feature:Mailing]      <R><r>@user</r></R>
 #[Feature:Mailing]    </d>
 
-#[Feature:OfficeManagement]    <d cid="[LVOG13]" teid="@AiderOfficeManagement" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="">
+#[Feature:OfficeManagement]    <d cid="[LVOG13]" teid="@AiderOfficeManagement" tn="default" df="true" d="true" ec="false" ed="false" cvid="0" dvid="0" dg="">
 #[Feature:OfficeManagement]      <R><r>@user</r></R>
 #[Feature:OfficeManagement]    </d>
 

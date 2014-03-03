@@ -117,6 +117,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-initofficemanagement"))
+				{
+					AiderProgram.InitOfficeManagement (args);
+					return;
+				}
+
 				if (args.Contains ("-initpla"))
 				{
 					AiderProgram.InitPLAGroups (args);
@@ -413,11 +419,19 @@ namespace Epsitec.Aider
 			throw new Exception ("Invalid mode");
 		}
 
+		private static void InitOfficeManagement(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				OfficeManagementEntities.Create (coreData);
+			});
+		}
+
 		private static void InitDerogationGroups(string[] args)
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				DerogationGroups.Create (coreData);
+				DerogationGroups.CreateIfNeeded (coreData);
 			});
 		}
 

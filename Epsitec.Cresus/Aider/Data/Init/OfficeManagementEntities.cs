@@ -1,5 +1,5 @@
 ﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
@@ -21,21 +21,24 @@ using Epsitec.Cresus.Core.Entities;
 namespace Epsitec.Aider.Data.Groups
 {
 	/// <summary>
-	/// This job create missing PLA root group
+	/// This job create missing office management groups if needed
 	/// </summary>
-	public static class PLAGroups
+	public static class OfficeManagementEntities
 	{
 		public static void Create(CoreData coreData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				//var plaDef = AiderGroupDefEntity.CreateDefinitionRootGroup (businessContext, "PLA", GroupClassification.Region, false);
+				var parishGroupDef = AiderGroupEntity.FindGroups (businessContext, "R001.P001.").First ().GroupDef;
 
+				var parishGroups = AiderGroupEntity.FindGroupsFromPathAndLevel (businessContext, parishGroupDef.Level, parishGroupDef.PathTemplate);
+				foreach (var group in parishGroups)
+				{
+					AiderOfficeManagementEntity.Create (businessContext, group.Name, group);
+				}
+					
 
-				//AiderGroupDefEntity.CreateDefinitionSubGroup (businessContext, plaDef, "PLA X", GroupClassification.ParishOfGermanLanguage, true, false, false);
-				//plaDef.Instantiate (businessContext);
-
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);		
 			}
 		}
 	}

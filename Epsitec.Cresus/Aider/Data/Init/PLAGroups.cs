@@ -1,5 +1,5 @@
 ﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
@@ -21,14 +21,20 @@ using Epsitec.Cresus.Core.Entities;
 namespace Epsitec.Aider.Data.Groups
 {
 	/// <summary>
-	/// This job create missing derogation groups if needed
+	/// This job create missing PLA root group
 	/// </summary>
-	public static class DerogationGroups
+	public static class PLAGroups
 	{
 		public static void Create(CoreData coreData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
+				//var plaDef = AiderGroupDefEntity.CreateDefinitionRootGroup (businessContext, "PLA", GroupClassification.Region, false);
+
+
+				//AiderGroupDefEntity.CreateDefinitionSubGroup (businessContext, plaDef, "PLA X", GroupClassification.ParishOfGermanLanguage, true, false, false);
+				//plaDef.Instantiate (businessContext);
+
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
 		}
