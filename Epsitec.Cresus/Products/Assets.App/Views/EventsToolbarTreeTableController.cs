@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EventsToolbarTreeTableController : AbstractToolbarTreeTableController<SortableNode>, IDirty
 	{
-		public EventsToolbarTreeTableController(DataAccessor accessor)
-			: base(accessor)
+		public EventsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
+			: base(accessor, baseType)
 		{
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
@@ -89,9 +89,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.dataFiller = new EventsAssetsTreeTableFiller (this.accessor, this.nodeGetter);
 			//?this.dataFiller = new AmortizationsObjectsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller);
+			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.controller.AddSortedColumn (0);
+			this.treeTableController.AddSortedColumn (0);
 		}
 
 

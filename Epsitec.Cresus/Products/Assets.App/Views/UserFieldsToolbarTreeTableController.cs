@@ -15,10 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public class UserFieldsToolbarTreeTableController : AbstractToolbarTreeTableController<GuidNode>, IDirty
 	{
 		public UserFieldsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
-			: base (accessor)
+			: base (accessor, baseType)
 		{
-			this.baseType = baseType;
-
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = true;
@@ -82,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
-			this.controller.AllowsSorting = false;
+			this.treeTableController.AllowsSorting = false;
 		}
 
 
@@ -98,9 +96,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new UserFieldsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<GuidNode>.FillColumns (this.controller, this.dataFiller);
+			TreeTableFiller<GuidNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.controller.AddSortedColumn (0);
+			this.treeTableController.AddSortedColumn (0);
 		}
 
 
@@ -200,8 +198,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateData ();
 			this.VisibleSelectedRow = index;
 		}
-
-
-		private BaseType						baseType;
 	}
 }

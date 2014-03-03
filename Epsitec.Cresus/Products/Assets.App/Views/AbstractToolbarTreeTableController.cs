@@ -16,9 +16,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public abstract class AbstractToolbarTreeTableController<T>
 		where T : struct
 	{
-		public AbstractToolbarTreeTableController(DataAccessor accessor)
+		public AbstractToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
+			this.baseType = baseType;
 		}
 
 
@@ -29,21 +30,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent = parent,
 			};
 
+			this.treeTableFrame = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Fill,
+			};
+
+			this.graphicFrame = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Fill,
+			};
+
 			this.topTitle.SetTitle (this.title);
 
 			this.toolbar = new TreeTableToolbar ();
 			this.toolbar.CreateUI (parent);
+			this.toolbar.HasGraphic        = this.hasGraphic;
 			this.toolbar.HasFilter         = this.hasFilter;
 			this.toolbar.HasTreeOperations = this.hasTreeOperations;
 			this.toolbar.HasMoveOperations = this.hasMoveOperations;
 
-			this.CreateTreeTable (parent);
+			this.CreateTreeTable (this.treeTableFrame);
+			this.CreateGraphic (this.graphicFrame);
+			this.UpdateGraphicMode ();
+
 			this.CreateNodeFiller ();
 
 			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
 			{
 				switch (command)
 				{
+					case ToolbarCommand.Graphic:
+						this.OnGraphic ();
+						break;
+
 					case ToolbarCommand.Filter:
 						this.OnFilter ();
 						break;
@@ -147,6 +168,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		private void OnGraphic()
+		{
+			this.isGraphic = !this.isGraphic;
+			this.UpdateGraphicMode ();
+		}
 
 		protected virtual void OnFilter()
 		{
@@ -262,7 +289,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.selectedRow = -1;
 
-			this.controller = new NavigationTreeTableController ();
+			this.treeTableController = new NavigationTreeTableController ();
 
 			var frame = new FrameBox
 			{
@@ -270,18 +297,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock   = DockStyle.Fill,
 			};
 
-			this.controller.CreateUI (frame, footerHeight: 0);
+			this.treeTableController.CreateUI (frame, footerHeight: 0);
 
 			//	Pour que le calcul du nombre de lignes visibles soit correct.
 			parent.Window.ForceLayout ();
 
 			//	Connexion des événements.
-			this.controller.ContentChanged += delegate (object sender, bool crop)
+			this.treeTableController.ContentChanged += delegate (object sender, bool crop)
 			{
 				this.UpdateController (crop);
 			};
 
-			this.controller.SortingChanged += delegate
+			this.treeTableController.SortingChanged += delegate
 			{
 				using (new SaveSelectedGuid (this))
 				{
@@ -289,21 +316,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			};
 
-			this.controller.RowClicked += delegate (object sender, int row, int column)
+			this.treeTableController.RowClicked += delegate (object sender, int row, int column)
 			{
-				this.VisibleSelectedRow = this.controller.TopVisibleRow + row;
+				this.VisibleSelectedRow = this.treeTableController.TopVisibleRow + row;
 			};
 
-			this.controller.RowDoubleClicked += delegate (object sender, int row)
+			this.treeTableController.RowDoubleClicked += delegate (object sender, int row)
 			{
-				this.VisibleSelectedRow = this.controller.TopVisibleRow + row;
+				this.VisibleSelectedRow = this.treeTableController.TopVisibleRow + row;
 				this.OnRowDoubleClicked (this.VisibleSelectedRow);
 			};
 
-			this.controller.TreeButtonClicked += delegate (object sender, int row, NodeType type)
+			this.treeTableController.TreeButtonClicked += delegate (object sender, int row, NodeType type)
 			{
-				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
+				this.OnCompactOrExpand (this.treeTableController.TopVisibleRow + row);
 			};
+		}
+
+		protected virtual void CreateGraphic(Widget parent)
+		{
+		}
+
+
+		private void UpdateGraphicMode()
+		{
+			this.treeTableFrame.Visibility = !this.isGraphic;
+			this.graphicFrame.Visibility   =  this.isGraphic;
+
+			this.UpdateController ();
 		}
 
 
@@ -311,19 +351,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Met à jour les instructions de tri des getters en fonction des choix
 			//	effectués dans le TreeTable.
-			this.sortingInstructions = TreeTableFiller<T>.GetSortingInstructions (this.controller, this.dataFiller);
+			this.sortingInstructions = TreeTableFiller<T>.GetSortingInstructions (this.treeTableController, this.dataFiller);
 			this.UpdateData ();
 		}
 
 
 		protected void UpdateController(bool crop = true)
 		{
-			TreeTableFiller<T>.FillContent (this.controller, this.dataFiller, this.VisibleSelectedRow, crop);
+			if (this.dataFiller != null)
+			{
+				TreeTableFiller<T>.FillContent (this.treeTableController, this.dataFiller, this.VisibleSelectedRow, crop);
+			}
+
+			if (this.graphicController != null)
+			{
+				this.graphicController.Update ();
+			}
 		}
 
 		protected virtual void UpdateToolbar()
 		{
 			int row = this.VisibleSelectedRow;
+
+			this.toolbar.SetCommandEnable (ToolbarCommand.Filter, true);
+			this.toolbar.SetCommandActivate (ToolbarCommand.Graphic, this.isGraphic);
 
 			this.UpdateSelCommand (ToolbarCommand.First, row, this.FirstRowIndex);
 			this.UpdateSelCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);
@@ -468,17 +519,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected readonly DataAccessor			accessor;
+		protected readonly BaseType				baseType;
 
 		protected string						title;
+		protected bool							hasGraphic;
 		protected bool							hasFilter;
 		protected bool							hasTreeOperations;
 		protected bool							hasMoveOperations;
+
+		protected ObjectField					graphicSubtitleField;
+
+		protected FrameBox						treeTableFrame;
+		protected FrameBox						graphicFrame;
+
 		protected AbstractNodeGetter<T>			nodeGetter;
 		protected AbstractTreeTableFiller<T>	dataFiller;
 		protected TopTitle						topTitle;
-		protected NavigationTreeTableController	controller;
+		protected NavigationTreeTableController	treeTableController;
+		protected AbstractGraphicViewController<T> graphicController;
 		protected int							selectedRow;
 		protected TreeTableToolbar				toolbar;
 		protected SortingInstructions			sortingInstructions;
+		private bool							isGraphic;
 	}
 }

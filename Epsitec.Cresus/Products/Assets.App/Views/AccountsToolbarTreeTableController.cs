@@ -14,9 +14,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AccountsToolbarTreeTableController : AbstractToolbarTreeTableController<TreeNode>, IDirty
 	{
-		public AccountsToolbarTreeTableController(DataAccessor accessor)
-			: base (accessor)
+		public AccountsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
+			: base (accessor, baseType)
 		{
+			this.hasGraphic        = true;
 			this.hasFilter         = false;
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
@@ -93,9 +94,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new AccountsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller);
+			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.controller.AddSortedColumn (0);
+			this.treeTableController.AddSortedColumn (0);
+		}
+
+		protected override void CreateGraphic(Widget parent)
+		{
+			this.graphicController = new AccountsGraphicViewController (this.accessor, this.baseType)
+			{
+				GraphicViewMode = GraphicViewMode.VerticalFinalNode,
+			};
+
+			this.graphicController.CreateUI (parent);
 		}
 
 

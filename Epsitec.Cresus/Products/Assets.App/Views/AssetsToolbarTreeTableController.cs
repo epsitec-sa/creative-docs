@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
@@ -15,9 +16,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AssetsToolbarTreeTableController : AbstractToolbarTreeTableController<CumulNode>, IDirty
 	{
-		public AssetsToolbarTreeTableController(DataAccessor accessor)
-			: base (accessor)
+		public AssetsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
+			: base (accessor, baseType)
 		{
+			this.hasGraphic        = true;
 			this.hasFilter         = true;
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
@@ -53,6 +55,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.stateAtController = new StateAtController (this.accessor);
 			this.stateAtController.CreateUI (parent);
 
+			this.graphicFrame.Margins = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth);
+
 			this.stateAtController.DateChanged += delegate
 			{
 				this.SetDate (this.stateAtController.Date);
@@ -66,6 +70,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.NodeGetter.SetParams (this.timestamp, this.rootGuid, this.sortingInstructions);
 			this.dataFiller.Timestamp = this.timestamp;
+
+			if (this.graphicController != null)
+			{
+				this.graphicController.SetParams (this.timestamp, this.rootGuid, this.sortingInstructions);
+			}
 
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -143,9 +152,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<CumulNode>.FillColumns (this.controller, this.dataFiller);
+			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.controller.AddSortedColumn (0);
+			this.treeTableController.AddSortedColumn (0);
+		}
+
+		protected override void CreateGraphic(Widget parent)
+		{
+			this.graphicController = new AssetsGraphicViewController (this.accessor, this.baseType);
+			this.graphicController.CreateUI (parent);
 		}
 
 

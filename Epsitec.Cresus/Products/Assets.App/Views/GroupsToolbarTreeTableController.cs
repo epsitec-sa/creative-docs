@@ -14,9 +14,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class GroupsToolbarTreeTableController : AbstractToolbarTreeTableController<TreeNode>, IDirty
 	{
-		public GroupsToolbarTreeTableController(DataAccessor accessor)
-			: base (accessor)
+		public GroupsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
+			: base (accessor, baseType)
 		{
+			this.hasGraphic        = true;
 			this.hasFilter         = false;
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
@@ -93,9 +94,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller);
+			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.controller.AddSortedColumn (0);
+			this.treeTableController.AddSortedColumn (0);
+		}
+
+		protected override void CreateGraphic(Widget parent)
+		{
+			this.graphicController = new GroupsGraphicViewController (this.accessor, this.baseType);
+			this.graphicController.CreateUI (parent);
 		}
 
 

@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.baseType = BaseType.Categories;
 
-			this.listController = new CategoriesToolbarTreeTableController (this.accessor);
+			this.listController = new CategoriesToolbarTreeTableController (this.accessor, BaseType.Categories);
 			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: true);
 		}
 

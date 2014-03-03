@@ -12,6 +12,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TreeTableToolbar : AbstractCommandToolbar
 	{
+		public bool								HasGraphic
+		{
+			get
+			{
+				return this.hasGraphic;
+			}
+			set
+			{
+				if (this.hasGraphic != value)
+				{
+					this.hasGraphic = value;
+					this.Adjust ();
+				}
+			}
+		}
+
 		public bool								HasFilter
 		{
 			get
@@ -23,6 +39,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.hasFilter != value)
 				{
 					this.hasFilter = value;
+					this.Adjust ();
+				}
+			}
+		}
+
+		public bool								HasGraphicOperations
+		{
+			get
+			{
+				return this.hasGraphicOperations;
+			}
+			set
+			{
+				if (this.hasGraphicOperations != value)
+				{
+					this.hasGraphicOperations = value;
 					this.Adjust ();
 				}
 			}
@@ -73,6 +105,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
+			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Graphic,    "TreeTable.Graphic",    "Affichage graphique");
 			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Filter,     "TreeTable.Filter",     "Filtre");
 
 			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First,      "TreeTable.First",      "Retour sur la première ligne");
@@ -98,6 +131,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
 			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect,   "TreeTable.Deselect",   "Désélectionne la ligne");
 
+			this.buttonGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
 
 			this.toolbar.SizeChanged += delegate
@@ -204,8 +238,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			yield return new ButtonState (this.buttonFilter, this.hasFilter);
-			yield return new ButtonState (this.separator1,   this.hasFilter);
+			yield return new ButtonState (this.buttonGraphic, this.hasGraphic);
+			yield return new ButtonState (this.buttonFilter,  this.hasFilter);
+			yield return new ButtonState (this.separator1,    this.hasGraphic | this.hasFilter);
 
 			yield return new ButtonState (this.buttonFirst, firstLast);
 			yield return new ButtonState (this.buttonPrev,  prevNext);
@@ -244,6 +279,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private IconButton						buttonGraphic;
 		private IconButton						buttonFilter;
 
 		private IconButton						buttonFirst;
@@ -269,7 +305,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonDelete;
 		private IconButton						buttonDeselect;
 
+		private bool							hasGraphic;
 		private bool							hasFilter;
+		private bool							hasGraphicOperations;
 		private bool							hasTreeOperations;
 		private bool							hasMoveOperations;
 	}

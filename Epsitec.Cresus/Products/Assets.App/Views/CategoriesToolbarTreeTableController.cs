@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class CategoriesToolbarTreeTableController : AbstractToolbarTreeTableController<SortableNode>, IDirty
 	{
-		public CategoriesToolbarTreeTableController(DataAccessor accessor)
-			: base (accessor)
+		public CategoriesToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
+			: base (accessor, baseType)
 		{
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
@@ -80,9 +80,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller);
+			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.controller.AddSortedColumn (0);
+			this.treeTableController.AddSortedColumn (0);
 		}
 
 
