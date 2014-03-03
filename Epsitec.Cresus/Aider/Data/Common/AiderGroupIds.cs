@@ -17,6 +17,7 @@ namespace Epsitec.Aider.Data.Common
 		private const string Parish					= "P___.";
 		private const string Region					= "R___.";
 		private const string NoParish				= "NOPA.";
+		private const string ParishOfGermanLanguage = "POGL.";
 
 		private const string GroupFormat			= "{0}{1:000}.";
 		private const string PlaceholderFormat		= "<{0}>.";
@@ -47,6 +48,7 @@ namespace Epsitec.Aider.Data.Common
 		public const int RegionLevel				= 0;
 		public const int NoParishLevel				= 0;
 		public const int TopLevel					= 0;
+		public const int ParishOfGermanLanguageLevel = 0;
 
 
 		public static string GetRegionId(int regionCode)
@@ -75,6 +77,24 @@ namespace Epsitec.Aider.Data.Common
 			return false;
 		}
 
+		public static bool IsParishOfGermanLanguage(string path)
+		{
+			if (path == null)
+			{
+				return false;
+			}
+			if ((path.Length == 5) &&
+				(path.StartsWith (AiderGroupIds.ParishOfGermanLanguage)) &&
+				(path.EndsWith (AiderGroupIds.Suffix)))
+			{
+
+				return true;
+				
+			}
+
+			return false;
+		}
+
 		public static bool IsParish(string path)
 		{
 			if (path == null)
@@ -83,7 +103,8 @@ namespace Epsitec.Aider.Data.Common
 			}
 			
 			if ((path.Length == 10) &&
-				(AiderGroupIds.IsRegion (path.Substring (0, 5))))
+				(AiderGroupIds.IsRegion (path.Substring (0, 5)) || AiderGroupIds.IsParishOfGermanLanguage (path.Substring (0, 5)))
+			)
 			{
 				path = path.Substring (5);
 
@@ -194,6 +215,9 @@ namespace Epsitec.Aider.Data.Common
 				case GroupClassification.Region:
 					return AiderGroupIds.Region;
 
+				case GroupClassification.ParishOfGermanLanguage:
+					return AiderGroupIds.ParishOfGermanLanguage;
+
 				case GroupClassification.None:
 					return null;
 
@@ -261,9 +285,9 @@ namespace Epsitec.Aider.Data.Common
 			return int.Parse (number);
 		}
 
-		public static int FindNextSubGroupDefNumber(IEnumerable<string> subGroupsPath)
+		public static int FindNextSubGroupDefNumber(IEnumerable<string> subGroupsPath,char prefixChar)
 		{
-			var subGroupsPathFiltered = subGroupsPath.Where (g => g.ElementAt (g.Length - AiderGroupIds.PartLength) == 'D');
+			var subGroupsPathFiltered = subGroupsPath.Where (g => g.ElementAt (g.Length - AiderGroupIds.PartLength) == prefixChar);
 			if (subGroupsPathFiltered.Count () == 0)
 			{
 				return 1;

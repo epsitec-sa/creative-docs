@@ -29,11 +29,19 @@ namespace Epsitec.Aider.Data.Groups
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				//var plaDef = AiderGroupDefEntity.CreateDefinitionRootGroup (businessContext, "PLA", GroupClassification.Region, false);
+				var poglRoot = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
+				poglRoot.Name = "PLA";
+				poglRoot.Number = ""; //?
+				poglRoot.Level = AiderGroupIds.TopLevel;
+				poglRoot.SubgroupsAllowed = true;
+				poglRoot.MembersAllowed = false;
+				poglRoot.PathTemplate = AiderGroupIds.CreateTopLevelPathTemplate (GroupClassification.ParishOfGermanLanguage);
 
-				//AiderGroupDefEntity.CreateDefinitionSubGroup (businessContext, plaDef, "PLA X", GroupClassification.ParishOfGermanLanguage, true, false, false);
-				//plaDef.Instantiate (businessContext);
+				poglRoot.Classification = GroupClassification.ParishOfGermanLanguage;
+				poglRoot.Mutability = Mutability.None;
+
+				poglRoot.Instantiate (businessContext);
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}

@@ -89,7 +89,8 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public static AiderGroupDefEntity CreateDefinitionSubGroup(BusinessContext businessContext, AiderGroupDefEntity parent, string name, GroupClassification groupClass, bool subgroupsAllowed, bool membersAllowed, bool isMutable)
+		public static AiderGroupDefEntity CreateDefinitionSubGroup(BusinessContext businessContext, AiderGroupDefEntity parent, string name, 
+			GroupClassification groupClass, bool subgroupsAllowed, bool membersAllowed, bool isMutable)
 		{
 			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
@@ -98,9 +99,17 @@ namespace Epsitec.Aider.Entities
 			aiderGroupDef.Level = parent.Level + 1;
 			aiderGroupDef.SubgroupsAllowed = subgroupsAllowed;
 			aiderGroupDef.MembersAllowed = membersAllowed;
+
+			if ((groupClass == GroupClassification.Parish) || (groupClass == GroupClassification.ParishOfGermanLanguage))
+			{
+				aiderGroupDef.PathTemplate = AiderGroupIds.CreateParishSubgroupPath (parent.PathTemplate);
+			}
+			else
+			{
+				var number = AiderGroupIds.FindNextSubGroupDefNumber (parent.Subgroups.Select (g => g.PathTemplate), 'D');
+				aiderGroupDef.PathTemplate = AiderGroupIds.CreateDefinitionSubgroupPath (parent.PathTemplate, number);
+			}
 			
-			var number = AiderGroupIds.FindNextSubGroupDefNumber (parent.Subgroups.Select (g => g.PathTemplate));
-			aiderGroupDef.PathTemplate = AiderGroupIds.CreateDefinitionSubgroupPath (parent.PathTemplate, number);
 
 			aiderGroupDef.Classification = groupClass;
 			aiderGroupDef.Mutability = isMutable ? Mutability.Customizable : Mutability.None;
@@ -120,8 +129,15 @@ namespace Epsitec.Aider.Entities
 			aiderGroupDef.Level = AiderGroupIds.TopLevel;
 			aiderGroupDef.SubgroupsAllowed = true;
 			aiderGroupDef.MembersAllowed = false;
+
+			var prefixChar = 'D';
+			if ((groupClass == GroupClassification.Parish) || (groupClass == GroupClassification.ParishOfGermanLanguage))
+			{
+				prefixChar = 'P';
+			}
+
 			var rootGroupsDefs = AiderGroupDefEntity.FindRootGroupsDefinitions(businessContext);
-			var number = AiderGroupIds.FindNextSubGroupDefNumber (rootGroupsDefs.Select (g => g.PathTemplate));
+			var number = AiderGroupIds.FindNextSubGroupDefNumber (rootGroupsDefs.Select (g => g.PathTemplate), prefixChar);
 			aiderGroupDef.PathTemplate = AiderGroupIds.CreateTopLevelPathTemplate (number);
 
 			aiderGroupDef.Classification = groupClass;
@@ -140,6 +156,12 @@ namespace Epsitec.Aider.Entities
 		{
 			return this.Level == AiderGroupIds.ParishLevel
 				&& this.Classification == GroupClassification.Parish;
+		}
+
+		public bool IsParishOfGermanLanguage()
+		{
+			return this.Level == AiderGroupIds.ParishOfGermanLanguageLevel
+				&& this.Classification == GroupClassification.ParishOfGermanLanguage;
 		}
 
 		public bool IsNoParish()

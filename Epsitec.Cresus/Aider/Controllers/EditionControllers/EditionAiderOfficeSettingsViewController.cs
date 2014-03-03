@@ -20,7 +20,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.Input ()
 					.Field (x => x.OfficialContact)
 					.Field (x => x.OfficeAddress)
-					.Field (x => x.PPFrankingAddress)
+					.Field (x => x.PPFrankingTown)
 				.End ()
 				.Input ()
 					.Field (x => x.OfficeLogoImagePath)

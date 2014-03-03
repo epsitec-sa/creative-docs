@@ -8954,24 +8954,24 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>PPFrankingAddress</c> field.
-		///	designer:fld/LVOA13/LVOE13
+		///	The <c>PPFrankingTown</c> field.
+		///	designer:fld/LVOA13/LVOQ13
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOE13]")]
-		public global::Epsitec.Aider.Entities.AiderContactEntity PPFrankingAddress
+		[global::Epsitec.Common.Support.EntityField ("[LVOQ13]")]
+		public global::Epsitec.Aider.Entities.AiderTownEntity PPFrankingTown
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVOE13]");
+				return this.GetField<global::Epsitec.Aider.Entities.AiderTownEntity> ("[LVOQ13]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.AiderContactEntity oldValue = this.PPFrankingAddress;
-				if (oldValue != value || !this.IsFieldDefined("[LVOE13]"))
+				global::Epsitec.Aider.Entities.AiderTownEntity oldValue = this.PPFrankingTown;
+				if (oldValue != value || !this.IsFieldDefined("[LVOQ13]"))
 				{
-					this.OnPPFrankingAddressChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVOE13]", oldValue, value);
-					this.OnPPFrankingAddressChanged (oldValue, value);
+					this.OnPPFrankingTownChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderTownEntity> ("[LVOQ13]", oldValue, value);
+					this.OnPPFrankingTownChanged (oldValue, value);
 				}
 			}
 		}
@@ -9048,8 +9048,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnOfficeAddressChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnOfficeAddressChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
-		partial void OnPPFrankingAddressChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
-		partial void OnPPFrankingAddressChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnPPFrankingTownChanging(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
+		partial void OnPPFrankingTownChanged(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
 		partial void OnOfficialContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnOfficialContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnOfficeLogoImagePathChanging(string oldValue, string newValue);

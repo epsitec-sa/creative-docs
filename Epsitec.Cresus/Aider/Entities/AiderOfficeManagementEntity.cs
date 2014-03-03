@@ -42,7 +42,7 @@ namespace Epsitec.Aider.Entities
 							+	"Adresse du secrétariat :\n"
 							+	currentSettings.OfficeAddress.Address.GetDisplayAddress () + "\n"
 							+	"Adresse P.P :\n"
-							+	currentSettings.PPFrankingAddress.Address.GetDisplayAddress () + "\n";
+							+	currentSettings.PPFrankingTown.ZipCode + " " + currentSettings.PPFrankingTown.Name;
 
 				return TextFormatter.FormatText (text);
 			}
@@ -78,7 +78,7 @@ namespace Epsitec.Aider.Entities
 			return office;
 		}
 
-		public static AiderOfficeSettingsEntity CreateSettings(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderContactEntity officialContact, AiderContactEntity officialAddress, AiderContactEntity ppFrankingAddress)
+		public static AiderOfficeSettingsEntity CreateSettings(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderContactEntity officialContact, AiderContactEntity officialAddress, AiderTownEntity ppFrankingTown)
 		{
 			var settings = businessContext.CreateAndRegisterEntity<AiderOfficeSettingsEntity> ();
 
@@ -95,9 +95,9 @@ namespace Epsitec.Aider.Entities
 				settings.OfficeAddress = officialAddress;
 			}
 
-			if (ppFrankingAddress.IsNotNull ())
+			if (ppFrankingTown.IsNotNull ())
 			{
-				settings.PPFrankingAddress = ppFrankingAddress;
+				settings.PPFrankingTown = ppFrankingTown;
 			}
 			if (!office.Settings.Any ())
 			{

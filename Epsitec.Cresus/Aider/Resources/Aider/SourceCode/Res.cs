@@ -2063,8 +2063,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid OfficeLogoImagePath = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 47);
 				//	designer:cap/LVOD13
 				public static readonly global::Epsitec.Common.Support.Druid OfficialContact = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 45);
-				//	designer:cap/LVOE13
-				public static readonly global::Epsitec.Common.Support.Druid PPFrankingAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 46);
+				//	designer:cap/LVOQ13
+				public static readonly global::Epsitec.Common.Support.Druid PPFrankingTown = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 58);
 			}
 			
 			public static class AiderPerson

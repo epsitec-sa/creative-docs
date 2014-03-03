@@ -55,7 +55,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			if (string.IsNullOrEmpty (this.Entity.GeoParishGroupPathCache))
 			{
 				wall.AddBrick ()
-				//.EnableActionMenu<ActionAiderPersonViewController11Derogate> () //PAS ACTIF AVANT PROCHAINE RELEASE
+				.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
 				.Icon ("Data.AiderGroup.Parish")
 				.Title ("Paroisse")
 				.Text (p => p.ParishGroup.Name);
