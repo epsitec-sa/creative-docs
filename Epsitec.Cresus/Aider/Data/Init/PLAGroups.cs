@@ -41,7 +41,35 @@ namespace Epsitec.Aider.Data.Groups
 				poglRoot.Classification = GroupClassification.ParishOfGermanLanguage;
 				poglRoot.Mutability = Mutability.None;
 
-				poglRoot.Instantiate (businessContext);
+				var poglParishBase = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
+
+				poglParishBase.Name = "PLA ...";
+				poglParishBase.Number = ""; //?
+				poglParishBase.Level = AiderGroupIds.TopLevel + 1;
+				poglParishBase.SubgroupsAllowed = true;
+				poglParishBase.MembersAllowed = false;
+				poglParishBase.PathTemplate = AiderGroupIds.CreateParishSubgroupPath (poglRoot.PathTemplate);
+				
+				poglParishBase.Classification = GroupClassification.Parish;
+				poglParishBase.Mutability = Mutability.None;
+
+				//Uplink
+				poglRoot.Subgroups.Add (poglParishBase);
+
+
+				//INSTANTIATE GROUPS
+				var poglRegion = poglRoot.Instantiate (businessContext);
+				poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Broyetal", 1);
+				poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA La Côte", 2);
+				poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Nord Vaudois", 3);
+				poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Riviera Chablais", 4);
+
+				//Villamont exception (not working correctly)
+				var region4 = AiderGroupEntity.FindGroups (businessContext, "R004.").First ();
+				var number = AiderGroupIds.FindNextSubGroupDefNumber (region4.Subgroups.Select (g => g.Path), 'P');
+				var pathPart = AiderGroupIds.GetParishId (number);
+				var fullPath = poglRegion.Path + pathPart;
+				var group = AiderGroupEntity.CreateWithCustomPath (businessContext, region4, poglParishBase, "PLA Villamont", fullPath);
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
