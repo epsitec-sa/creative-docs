@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -103,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					if (i == 0)
 					{
-						list.Add (string.Concat ("<b>", this.texts[i], "</b>"));
+						list.Add (this.texts[i].Bold ());
 					}
 					else
 					{
@@ -138,7 +139,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (index == 0 && this.IsEntered)
 			{
-				return string.Concat("<b>", this.texts[index], "</b>");
+				return this.texts[index].Bold ();
 			}
 			else
 			{

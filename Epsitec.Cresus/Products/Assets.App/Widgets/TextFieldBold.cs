@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			return new TextLayout (original)
 			{
-				Text = string.Concat ("<b>", TextConverter.ConvertToTaggedText (text), "</b>")
+				Text = text.Bold (),
 			};
 		}
 
