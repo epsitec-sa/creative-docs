@@ -73,7 +73,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				for (int i=0; i<this.texts.Length; i++)
 				{
-					this.PaintText (graphics, this.GetRect (i), this.GetText (i), this.GetFontSize (i), ContentAlignment.TopLeft);
+					var r = this.GetRect (i);
+
+					var x = this.HorizontalOffset;
+					if (x != 0)
+					{
+						//	Déplace le rectangle, afin de toujours voir le début du texte.
+						r.Offset (x, 0);
+					}
+
+					this.PaintText (graphics, r, this.GetText (i), this.GetFontSize (i), ContentAlignment.TopLeft);
 				}
 			}
 
@@ -245,6 +254,39 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			return true;
+		}
+
+
+		private double HorizontalOffset
+		{
+			//	Retourne l'offset horizontal pour afficher le texte dans la tuile, afin
+			//	que le début du texte soit visible si la partie gauche de la tuile est
+			//	partiellement cachée.
+			get
+			{
+				double x = 0.0;
+				Widget w = this;
+
+				while (w.Parent != null)
+				{
+					if (w is Scrollable)
+					{
+						if (-x > 0.0 && -x < this.ActualWidth)
+						{
+							return -x;
+						}
+						else
+						{
+							return 0.0;
+						}
+					}
+
+					x += w.ActualLocation.X;
+					w = w.Parent;
+				}
+
+				throw new System.InvalidOperationException ("Invalid parent");
+			}
 		}
 
 
