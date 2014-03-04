@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -134,8 +134,25 @@ namespace Epsitec.Aider.Entities
 
 		partial void OnParishChanging(AiderGroupEntity oldValue, AiderGroupEntity newValue)
 		{
-			this.ParishGroupPathCache = AiderGroupEntity.GetPath (newValue);
+			var path = AiderGroupEntity.GetPath (newValue);
+
+			//	Setting ParishGroupPathCache with null, while it had already the null value
+			//	before, has a side effect: the field 'ParishGroupPathCache' will no longer
+			//	be considered to be undefined or in its default state.
+			//
+			//	This would cause DataSetAccessor.CreateRequestView to produce an invalid
+			//	query (looking for entities where ParishGroupPathCache is null, whereas
+			//	the field should simply be ignored in the request).
+			//
+			//	So we make sure we don't change the path if its value was already the
+			//	same as before...
+			
+			if (this.ParishGroupPathCache != path)
+			{
+				this.ParishGroupPathCache = path;
+			}
 		}
+		
 		
 		private static SoftwareUserGroupEntity GetSoftwareUserGroup(BusinessContext businessContext, UserPowerLevel powerLevel)
 		{
