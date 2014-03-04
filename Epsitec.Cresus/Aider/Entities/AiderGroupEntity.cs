@@ -1,5 +1,5 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Enumerations;
@@ -18,10 +18,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
-using System;
-
 using System.Collections.Generic;
-
 using System.Linq;
 
 
@@ -45,8 +42,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-
-
+		
 		public bool IsChildOf(AiderGroupEntity group)
 		{
 			return AiderGroupIds.IsSameOrWithinGroup (this.Path, group.Path)
@@ -95,7 +91,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (!this.IsRegion ())
 			{
-				throw new NotSupportedException ();
+				throw new System.NotSupportedException ();
 			}
 
 			return int.Parse (this.Name.SubstringEnd (2));
@@ -187,6 +183,15 @@ namespace Epsitec.Aider.Entities
 
 		public bool CanBeRenamedByCurrentUser()
 		{
+			//	Make sure nobody ever (ever, ever) renames a parish, or else lots of problems
+			//	will occur, as parish names are defined in external resources too, and those
+			//	must be kept in sync with the group names.
+
+			if (this.IsParish ())
+			{
+				return false;
+			}
+
 			var user = AiderUserManager.Current.AuthenticatedUser;
 			var userPowerLevel = user.PowerLevel;
 
@@ -199,6 +204,7 @@ namespace Epsitec.Aider.Entities
 			return false;
 		}
 
+		
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText
@@ -292,7 +298,7 @@ namespace Epsitec.Aider.Entities
 
 		public IList<AiderContactEntity> GetAllGroupAndSubGroupParticipants()
 		{
-			return this.GetGroupAndSubGroupParticipants (this.GetGroupAndSubGroupParticipantCount ());
+			return this.GetGroupAndSubGroupParticipants ();
 		}
 
 
@@ -404,7 +410,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (!this.CanHaveSubgroups ())
 			{
-				throw new InvalidOperationException ("This group cannot have subgroups");
+				throw new System.InvalidOperationException ("This group cannot have subgroups");
 			}
 
 			var path = this.GetNextSubgroupPath ();
@@ -456,7 +462,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (!newParent.CanHaveSubgroups ())
 			{
-				throw new InvalidOperationException ("This group cannot have subgroups");
+				throw new System.InvalidOperationException ("This group cannot have subgroups");
 			}
 
 			// We start by removing this group from its current parent.
@@ -566,17 +572,17 @@ namespace Epsitec.Aider.Entities
 		{
 			if (!other.CanHaveMembers ())
 			{
-				throw new InvalidOperationException ("This group cannot have members.");
+				throw new System.InvalidOperationException ("This group cannot have members.");
 			}
 
 			if (!this.CanBeEdited ())
 			{
-				throw new InvalidOperationException ("This groups cannot be merged.");
+				throw new System.InvalidOperationException ("This groups cannot be merged.");
 			}
 
 			if (this.GetSubgroups ().Count > 0)
 			{
-				throw new InvalidOperationException ("This groups cannot be merged because it has subgroups.");
+				throw new System.InvalidOperationException ("This groups cannot be merged because it has subgroups.");
 			}
 
 			var participations = this.FindParticipations (businessContext);
@@ -608,7 +614,7 @@ namespace Epsitec.Aider.Entities
 
 			if (person.IsNull () && legalPerson.IsNull ())
 			{
-				throw new NotSupportedException ();
+				throw new System.NotSupportedException ();
 			}
 			else if (person.IsNull () && legalPerson.IsNotNull ())
 			{
@@ -660,7 +666,7 @@ namespace Epsitec.Aider.Entities
 
 			if (!number.HasValue)
 			{
-				throw new Exception ("Too many subgroups.");
+				throw new System.Exception ("Too many subgroups.");
 			}
 
 			return AiderGroupIds.CreateCustomSubgroupPath (this.Path, number.Value);
@@ -704,7 +710,7 @@ namespace Epsitec.Aider.Entities
 												() => new List<AiderGroupParticipantEntity> ());
 		}
 
-		private IList<AiderContactEntity> GetGroupAndSubGroupParticipants(int count)
+		private IList<AiderContactEntity> GetGroupAndSubGroupParticipants(int? count = null)
 		{
 			return this.ExecuteWithDataContext (c => this.FindGroupAndSubGroupParticipants (c, count),
 												() => new List<AiderContactEntity> ());
@@ -774,8 +780,13 @@ namespace Epsitec.Aider.Entities
 			return businessContext.DataContext.GetByExample (example);
 		}
 
-		private IList<AiderContactEntity> FindGroupAndSubGroupParticipants(DataContext dataContext, int count)
+		private IList<AiderContactEntity> FindGroupAndSubGroupParticipants(DataContext dataContext, int? count)
 		{
+			if ((count.HasValue) && (count.Value < 1))
+			{
+				return Common.Types.Collections.EmptyList<AiderContactEntity>.Instance;
+			}
+			
 			var request = AiderGroupParticipantEntity.CreateGroupAndSubGroupMemberRequest (dataContext, this, true);
 
 			request.Skip = 0;
@@ -863,7 +874,9 @@ namespace Epsitec.Aider.Entities
 		{
 			var request = AiderGroupParticipantEntity.CreateGroupAndSubGroupMemberRequest (dataContext, this, true);
 
-			return dataContext.GetCount (request);
+			var count = dataContext.GetCount (request);
+
+			return count;
 		}
 
 		
@@ -937,10 +950,6 @@ namespace Epsitec.Aider.Entities
 
 			return subgroup;
 		}
-
-
-
-
 
 
 		private IList<AiderGroupEntity>			subgroups;

@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -14,10 +14,10 @@ namespace Epsitec.Aider.Enumerations
 		[Hidden]
 		None = 0,
 
-		Contact         = 1,
-		Household       = 2,
-		Group           = 3,
-		GroupExtraction = 4,
+		Contact         = 1,		//	C
+		Household       = 2,		//	H
+		Group           = 3,		//	G
+		GroupExtraction = 4,		//	T --> "Transversal"
 	}
 }
 
