@@ -28,9 +28,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.texts       = texts;
 			this.fontFactors = fontFactors;
 
-			this.PreferredWidth   = (this.graphicViewMode == GraphicViewMode.VerticalFinalNode) ? GraphicViewTile.verticalFinalWidth : this.columnWidth;
-			this.Margins          = new Margins (0, -1, 0, 0);
-			this.Padding          = new Margins (GraphicViewTile.margins, GraphicViewTile.margins, GraphicViewTile.margins+this.TopPadding, GraphicViewTile.margins);
+			//	La largeur donnée est automatiquement dépassée si les tuiles filles
+			//	le demandent. Par exemple, en mode GraphicViewMode.VerticalFinalNode,
+			//	on donne la largeur la plus petite, qui est systématiquement dépassée,
+			//	sauf pour les tuiles finales.
+			this.PreferredWidth = (this.graphicViewMode == GraphicViewMode.VerticalFinalNode) ? GraphicViewTile.verticalFinalWidth : this.columnWidth;
+			this.Margins        = new Margins (0, -1, 0, 0);
+			this.Padding        = new Margins (GraphicViewTile.margins, GraphicViewTile.margins, GraphicViewTile.margins+this.TopPadding, GraphicViewTile.margins);
 		}
 
 
@@ -39,18 +43,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.IsInside = this.CheckInside (e.Point);
 			base.OnMouseMove (e);
 		}
-
-		//?protected override void OnEntered(MessageEventArgs e)
-		//?{
-		//?	this.IsInside = this.CheckInside (e.Point);
-		//?	base.OnEntered (e);
-		//?}
-		//?
-		//?protected override void OnExited(MessageEventArgs e)
-		//?{
-		//?	this.IsInside = false;
-		//?	base.OnExited (e);
-		//?}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -232,13 +224,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (this.isInside != value)
 				{
 					this.isInside = value;
-					this.Invalidate ();
+					this.Invalidate ();  // il faut redessiner
 				}
 			}
 		}
 
 		private bool CheckInside(Point pos)
 		{
+			//	Retourne true si la souris est dans la tuile, sans être dans
+			//	une tuile fille.
 			foreach (var children in this.Children)
 			{
 				if (children.ActualBounds.Contains (pos))
