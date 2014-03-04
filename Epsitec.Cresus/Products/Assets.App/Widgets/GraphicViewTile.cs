@@ -21,6 +21,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.graphicViewMode = graphicViewMode;
 
 			this.textLayout = new TextLayout ();
+
+			this.AutoDoubleClick = true;
 		}
 
 

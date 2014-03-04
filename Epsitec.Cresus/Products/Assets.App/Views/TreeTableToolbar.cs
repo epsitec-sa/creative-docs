@@ -105,8 +105,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Graphic,    "TreeTable.Graphic",    "Affichage graphique");
 			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Filter,     "TreeTable.Filter",     "Filtre");
+			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Graphic,    "TreeTable.Graphic",    "Affichage graphique");
 
 			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First,      "TreeTable.First",      "Retour sur la première ligne");
 			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Prev,       "TreeTable.Prev",       "Recule sur la ligne précédente");
@@ -240,8 +240,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			yield return new ButtonState (this.buttonGraphic, this.hasGraphic);
 			yield return new ButtonState (this.buttonFilter,  this.hasFilter);
+			yield return new ButtonState (this.buttonGraphic, this.hasGraphic);
 			yield return new ButtonState (this.separator1,    this.hasGraphic | this.hasFilter);
 
 			yield return new ButtonState (this.buttonFirst, firstLast);
@@ -281,8 +281,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private IconButton						buttonGraphic;
 		private IconButton						buttonFilter;
+		private IconButton						buttonGraphic;
 
 		private IconButton						buttonFirst;
 		private IconButton						buttonPrev;
