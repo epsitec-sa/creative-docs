@@ -25,7 +25,7 @@ namespace Epsitec.Aider.Data.Groups
 	/// </summary>
 	public static class OfficeManagementEntities
 	{
-		public static void Create(CoreData coreData)
+		public static void CreateOfficeManagementEntities(CoreData coreData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{

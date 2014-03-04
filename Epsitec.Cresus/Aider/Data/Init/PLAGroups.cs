@@ -43,7 +43,7 @@ namespace Epsitec.Aider.Data.Groups
 
 				var poglParishBase = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
-				poglParishBase.Name = "PLA ...";
+				poglParishBase.Name = "Paroisse";
 				poglParishBase.Number = ""; //?
 				poglParishBase.Level = AiderGroupIds.TopLevel + 1;
 				poglParishBase.SubgroupsAllowed = true;
@@ -64,13 +64,12 @@ namespace Epsitec.Aider.Data.Groups
 				poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Nord Vaudois", 3);
 				poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Riviera Chablais", 4);
 
-				//Villamont exception (not working correctly)
+				//Villamont exception
 				var region4 = AiderGroupEntity.FindGroups (businessContext, "R004.").First ();
+				var exempleParishGroupDef = region4.Subgroups.Where (p => p.IsParish ()).First ().GroupDef;
 				var number = AiderGroupIds.FindNextSubGroupDefNumber (region4.Subgroups.Select (g => g.Path), 'P');
-				var pathPart = AiderGroupIds.GetParishId (number);
-				var fullPath = poglRegion.Path + pathPart;
-				var group = AiderGroupEntity.CreateWithCustomPath (businessContext, region4, poglParishBase, "PLA Villamont", fullPath);
-
+				exempleParishGroupDef.InstantiateParish (businessContext, region4, "PLA Villamont", number);
+				
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
 		}

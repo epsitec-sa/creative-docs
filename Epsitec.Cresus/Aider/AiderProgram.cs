@@ -111,21 +111,9 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-initderogations"))
-				{
-					AiderProgram.InitDerogationGroups (args);
-					return;
-				}
-
 				if (args.Contains ("-initofficemanagement"))
 				{
-					AiderProgram.InitOfficeManagement (args);
-					return;
-				}
-
-				if (args.Contains ("-initpla"))
-				{
-					AiderProgram.InitPLAGroups (args);
+					ConsoleCreator.RunWithConsole (() => AiderProgram.InitOfficeManagement (args) );
 					return;
 				}
 
@@ -423,22 +411,8 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				OfficeManagementEntities.Create (coreData);
-			});
-		}
-
-		private static void InitDerogationGroups(string[] args)
-		{
-			AiderProgram.RunWithCoreData (coreData =>
-			{
+				OfficeManagementEntities.CreateOfficeManagementEntities (coreData);
 				DerogationGroups.CreateIfNeeded (coreData);
-			});
-		}
-
-		private static void InitPLAGroups(string[] args)
-		{
-			AiderProgram.RunWithCoreData (coreData =>
-			{
 				PLAGroups.Create (coreData);
 			});
 		}
