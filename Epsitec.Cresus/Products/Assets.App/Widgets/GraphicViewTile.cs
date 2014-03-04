@@ -267,13 +267,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				double x = 0.0;
 				Widget w = this;
 
+				//	On remonte jusqu'au parent de type Scrollable.
 				while (w.Parent != null)
 				{
 					if (w is Scrollable)
 					{
-						if (-x > 0.0 && -x < this.ActualWidth)
+						if (x > 0.0 && x < this.ActualWidth)
 						{
-							return -x;
+							return x;
 						}
 						else
 						{
@@ -281,7 +282,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						}
 					}
 
-					x += w.ActualLocation.X;
+					x -= w.ActualLocation.X;
 					w = w.Parent;
 				}
 
