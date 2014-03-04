@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AssetsGraphicViewController : AbstractGraphicViewController<CumulNode>
 	{
-		public AssetsGraphicViewController(DataAccessor accessor, BaseType baseType)
-			: base (accessor, baseType)
+		public AssetsGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeTableController<CumulNode> treeTableController)
+			: base (accessor, baseType, treeTableController)
 		{
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.timestamp = timestamp;
 			this.NodeGetter.SetParams (timestamp, rootGuid, this.graphicViewState.SortingInstructions);
+
+			this.UpdateData ();
 		}
 
 		public override void UpdateData()

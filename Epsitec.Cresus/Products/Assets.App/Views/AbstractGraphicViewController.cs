@@ -17,12 +17,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public abstract class AbstractGraphicViewController<T>
 		where T : struct
 	{
-		public AbstractGraphicViewController(DataAccessor accessor, BaseType baseType)
+		public AbstractGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeTableController<T> treeTableController)
 		{
-			this.accessor = accessor;
-			this.baseType = baseType;
-
-			this.selectedGuid = Guid.Empty;
+			this.accessor            = accessor;
+			this.baseType            = baseType;
+			this.treeTableController = treeTableController;
 		}
 
 
@@ -42,11 +41,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.selectedGuid;
+				return this.treeTableController.SelectedGuid;
 			}
 			set
 			{
-				this.selectedGuid = value;
+				this.treeTableController.SelectedGuid = value;
 				this.UpdateController ();
 			}
 		}
@@ -87,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateSelection(Widget parent, bool crop)
 		{
-			var name = this.selectedGuid.ToString ();
+			var name = this.SelectedGuid.ToString ();
 
 			foreach (Widget tile in parent.Children)
 			{
@@ -107,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected Widget CreateNode(Widget parent, Guid guid, int level, NodeType nodeType, string[] texts, double[] fontFactors)
 		{
-			var w = new GraphicViewTile (level, this.graphicViewState.ColumnWidth, nodeType, this.graphicViewMode)
+			var tile = new GraphicViewTile (level, this.graphicViewState.ColumnWidth, nodeType, this.graphicViewMode)
 			{
 				Parent           = parent,
 				Name             = guid.ToString (),
@@ -115,23 +114,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock             = DockStyle.Left,
 			};
 
-			w.SetContent (texts, fontFactors);
+			tile.SetContent (texts, fontFactors);
 
-			ToolTip.Default.SetToolTip (w, string.Join (" ", texts));
+			ToolTip.Default.SetToolTip (tile, string.Join (" ", texts));
 
-			w.Clicked += delegate
+			tile.Clicked += delegate
 			{
-				this.selectedGuid = guid;
-				this.OnSelectedTileChanged (this.selectedGuid);
+				this.SelectedGuid = guid;
 			};
 
-			w.DoubleClicked += delegate
+			tile.DoubleClicked += delegate
 			{
-				this.selectedGuid = guid;
-				this.OnTileDoubleClicked (this.selectedGuid);
+				this.SelectedGuid = guid;
+				this.OnTileDoubleClicked (guid);
 			};
 
-			return w;
+			return tile;
 		}
 
 		protected virtual string[] GetTexts(BaseType baseType, Guid guid, ObjectField[] fields)
@@ -207,14 +205,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
-		protected void OnSelectedTileChanged(Guid guid)
-		{
-			this.SelectedTileChanged.Raise (this, guid);
-		}
-
-		public event EventHandler<Guid> SelectedTileChanged;
-
-
 		protected void OnTileDoubleClicked(Guid guid)
 		{
 			this.TileDoubleClicked.Raise (this, guid);
@@ -226,11 +216,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected readonly DataAccessor			accessor;
 		protected readonly BaseType				baseType;
+		protected readonly AbstractToolbarTreeTableController<T> treeTableController;
 
 		protected AbstractNodeGetter<T>			nodeGetter;
 		protected Scrollable					scrollable;
 		protected GraphicViewMode				graphicViewMode;
 		protected GraphicViewState				graphicViewState;
-		protected Guid							selectedGuid;
 	}
 }

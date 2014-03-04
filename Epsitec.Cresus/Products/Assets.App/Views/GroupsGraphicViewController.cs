@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class GroupsGraphicViewController : AbstractGraphicViewController<TreeNode>
 	{
-		public GroupsGraphicViewController(DataAccessor accessor, BaseType baseType)
-			: base (accessor, baseType)
+		public GroupsGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeTableController<TreeNode> treeTableController)
+			: base (accessor, baseType, treeTableController)
 		{
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);

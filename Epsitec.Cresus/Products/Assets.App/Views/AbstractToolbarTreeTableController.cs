@@ -350,7 +350,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.graphicController != null && this.showGraphic)
 			{
 				this.graphicController.UpdateData ();
-				this.graphicController.SelectedGuid = this.SelectedGuid;
 			}
 
 			this.UpdateController ();
