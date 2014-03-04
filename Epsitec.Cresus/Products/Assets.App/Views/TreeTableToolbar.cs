@@ -192,9 +192,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			double used = size*3;  // place pour New/Delete/Deselect
 
-			if (this.hasFilter)
+			if (this.hasGraphic || this.hasFilter)
 			{
-				used += size + AbstractCommandToolbar.separatorWidth;  // place pour Filter
+				used += this.hasGraphic ? size : 0;  // place pour Graphic
+				used += this.hasFilter  ? size : 0;  // place pour Filter
+				used += AbstractCommandToolbar.separatorWidth;
 			}
 
 			if (this.hasMoveOperations)
