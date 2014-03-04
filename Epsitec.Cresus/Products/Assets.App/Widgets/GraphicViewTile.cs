@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.columnWidth     = columnWidth;
 			this.nodeType        = nodeType;
 			this.graphicViewMode = graphicViewMode;
+
+			this.textLayout = new TextLayout ();
 		}
 
 
@@ -62,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.RotateTransformDeg (90.0, rect.Center.X, rect.Center.Y);
 
 				var fontSize = GraphicViewTile.verticalFinalWidth * 0.5;
-				graphics.PaintText (this.RotatedRect, this.RotatedText, Font.DefaultFont, fontSize, ContentAlignment.MiddleLeft);
+				this.PaintText (graphics, this.RotatedRect, this.RotatedText, fontSize, ContentAlignment.MiddleLeft);
 
 				graphics.Transform = t;
 			}
@@ -70,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				for (int i=0; i<this.texts.Length; i++)
 				{
-					graphics.PaintText (this.GetRect (i), this.texts[i], Font.DefaultFont, this.GetFontSize (i), ContentAlignment.TopLeft);
+					this.PaintText (graphics, this.GetRect (i), this.texts[i], this.GetFontSize (i), ContentAlignment.TopLeft);
 				}
 			}
 
@@ -79,17 +81,45 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.RenderSolid (Color.FromBrightness (0.5));
 		}
 
+		private void PaintText(Graphics graphics, Rectangle rect, string text, double fontSize, ContentAlignment alignment)
+		{
+			//	Dessine un texte inclu dans un rectangle.
+			this.textLayout.Text            = text;
+			this.textLayout.DefaultFont     = Font.DefaultFont;
+			this.textLayout.DefaultFontSize = fontSize;
+			this.textLayout.LayoutSize      = rect.Size;
+			this.textLayout.BreakMode       = TextBreakMode.Split | TextBreakMode.SingleLine;
+			this.textLayout.Alignment       = alignment;
+
+			this.textLayout.Paint (rect.BottomLeft, graphics, rect, ColorManager.TextColor, GlyphPaintStyle.Normal);
+		}
 
 		private string RotatedText
 		{
+			//	Retourne le texte tourné, constitué de toutes les lignes.
 			get
 			{
-				return string.Join (" ", this.texts);
+				var list = new List<string> ();
+
+				for (int i=0; i<this.texts.Length; i++)
+				{
+					if (i == 0)
+					{
+						list.Add (string.Concat ("<b>", this.texts[i], "</b>"));
+					}
+					else
+					{
+						list.Add (this.texts[i]);
+					}
+				}
+
+				return string.Join (" ", list);
 			}
 		}
 
 		private Rectangle RotatedRect
 		{
+			//	Retourne le rectangle tourné de 90 degrés CCW.
 			get
 			{
 				var rect = this.Client.Bounds;
@@ -108,10 +138,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private Rectangle GetRect(int index)
 		{
+			//	Retourne le rectangle pour un texte, qui déborde volontairement à droite.
 			var rect = this.Client.Bounds;
 			var offset = this.GetTopOffset (index);
 			var h = this.GetFontSize (index) * 1.2;
-			return new Rectangle (rect.Left+GraphicViewTile.margins, rect.Top-offset-h, rect.Width-GraphicViewTile.margins*2, h);
+			return new Rectangle (rect.Left+GraphicViewTile.margins, rect.Top-offset-h, rect.Width, h);
 		}
 
 		private double TopPadding
@@ -143,7 +174,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				factor = this.fontFactors[index];
 			}
 
-			return (18.0 - this.level * 2.0) * factor;  // 18 .. 10 (si fontFactor = 1.0)
+			var fontSize = (18.0 - this.level * 2.0) * factor;  // 18 .. 10 (si fontFactor = 1.0)
+			return System.Math.Max (fontSize, 9.0);
 		}
 
 		private Color BackgroundColor
@@ -175,12 +207,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		private const double margins            = 10.0;
-		private const double verticalFinalWidth = 20.0;
+		private const double verticalFinalWidth = 22.0;
 
 		private readonly int					level;
 		private readonly double					columnWidth;
 		private readonly NodeType				nodeType;
 		private readonly GraphicViewMode		graphicViewMode;
+		private readonly TextLayout				textLayout;
 
 		private string[]						texts;
 		private double[]						fontFactors;
