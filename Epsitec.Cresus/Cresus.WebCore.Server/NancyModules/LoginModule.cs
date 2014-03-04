@@ -100,6 +100,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private bool CheckCredentials(string userName, string password)
 		{
+			if (Epsitec.Cresus.Core.Library.CoreContext.HasExperimentalFeature ("DisablePasswordCheck"))
+			{
+				return true;
+			}
+
 			return this.CoreServer.AuthenticationManager.CheckCredentials (userName, password);
 		}
 

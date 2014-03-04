@@ -17,3 +17,4 @@ ConfigureExperimentalFeature ("ActionPage");
 ConfigureExperimentalFeature ("DropZones");
 ConfigureExperimentalFeature ("Faq");
 ConfigureExperimentalFeature ("Chat");
+ConfigureExperimentalFeature ("DisablePasswordCheck");
