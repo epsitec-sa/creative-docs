@@ -34,17 +34,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected override void OnEntered(MessageEventArgs e)
+		protected override void OnMouseMove(MessageEventArgs e)
 		{
-			this.entered = true;
-			base.OnEntered (e);
+			this.IsInside = this.CheckInside (e.Point);
+			base.OnMouseMove (e);
 		}
 
-		protected override void OnExited(MessageEventArgs e)
-		{
-			this.entered = false;
-			base.OnExited (e);
-		}
+		//?protected override void OnEntered(MessageEventArgs e)
+		//?{
+		//?	this.IsInside = this.CheckInside (e.Point);
+		//?	base.OnEntered (e);
+		//?}
+		//?
+		//?protected override void OnExited(MessageEventArgs e)
+		//?{
+		//?	this.IsInside = false;
+		//?	base.OnExited (e);
+		//?}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -72,7 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				for (int i=0; i<this.texts.Length; i++)
 				{
-					this.PaintText (graphics, this.GetRect (i), this.texts[i], this.GetFontSize (i), ContentAlignment.TopLeft);
+					this.PaintText (graphics, this.GetRect (i), this.GetText (i), this.GetFontSize (i), ContentAlignment.TopLeft);
 				}
 			}
 
@@ -136,12 +142,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return new Rectangle (p1, p2);
 		}
 
+		private string GetText(int index)
+		{
+			if (index == 0 && this.IsEntered)
+			{
+				return string.Concat("<b>", this.texts[index], "</b>");
+			}
+			else
+			{
+				return this.texts[index];
+			}
+		}
+
 		private Rectangle GetRect(int index)
 		{
 			//	Retourne le rectangle pour un texte, qui déborde volontairement à droite.
 			var rect = this.Client.Bounds;
 			var offset = this.GetTopOffset (index);
-			var h = this.GetFontSize (index) * 1.2;
+			var h = this.GetFontSize (index) * 1.5;
 			return new Rectangle (rect.Left+GraphicViewTile.margins, rect.Top-offset-h, rect.Width, h);
 		}
 
@@ -159,7 +177,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			for (int i=0; i<index; i++)
 			{
-				offset += this.GetFontSize (i) * 1.2;
+				offset += this.GetFontSize (i) * 1.5;
 			}
 
 			return offset;
@@ -188,21 +206,48 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 				else
 				{
-					Color color;
-
-					if (this.entered)
+					if (this.IsInside)
 					{
-						color = ColorManager.HoverColor;
+						return ColorManager.HoverColor;
 					}
 					else
 					{
-						color = Color.FromBrightness (0.75);
+						var color = Color.FromBrightness (0.75);
+						var v = 0.75 + this.level * 0.05;  // 0.75 .. 0.95
+						return color.ForceV (v);
 					}
-
-					var v = 0.75 + this.level * 0.05;  // 0.75 .. 0.95
-					return color.ForceV (v);
 				}
 			}
+		}
+
+
+		private bool IsInside
+		{
+			get
+			{
+				return this.isInside && this.IsEntered;
+			}
+			set
+			{
+				if (this.isInside != value)
+				{
+					this.isInside = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		private bool CheckInside(Point pos)
+		{
+			foreach (var children in this.Children)
+			{
+				if (children.ActualBounds.Contains (pos))
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 
@@ -217,6 +262,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private string[]						texts;
 		private double[]						fontFactors;
-		private bool							entered;
+		private bool							isInside;
 	}
 }
