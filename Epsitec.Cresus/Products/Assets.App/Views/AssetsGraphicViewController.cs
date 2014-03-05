@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.graphicViewState.FontFactors.Add ((i == 0) ? 1.0 : 0.7);
 			}
+
+			this.graphicViewMode = GraphicViewMode.AutoWidthAllLines;
 		}
 
 

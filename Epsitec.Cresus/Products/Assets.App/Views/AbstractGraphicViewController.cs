@@ -31,18 +31,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public GraphicViewMode					GraphicViewMode
-		{
-			get
-			{
-				return this.graphicViewMode;
-			}
-			set
-			{
-				this.graphicViewMode = value;
-			}
-		}
-
 		public Guid								SelectedGuid
 		{
 			get

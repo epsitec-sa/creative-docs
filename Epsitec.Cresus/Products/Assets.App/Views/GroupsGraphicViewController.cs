@@ -21,6 +21,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.graphicViewState = new GraphicViewState ();
 			this.graphicViewState.Fields.Add (ObjectField.Name);
 			this.graphicViewState.FontFactors.Add (1.0);
+
+			this.graphicViewMode = GraphicViewMode.AutoWidthAllLines;
 		}
 
 

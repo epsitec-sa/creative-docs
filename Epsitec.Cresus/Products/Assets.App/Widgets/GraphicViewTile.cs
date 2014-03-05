@@ -127,6 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void PaintTreeButton(Graphics graphics)
 		{
+			//	Dessine le bouton en forme de petit triangle en haut à gauche.
 			if (this.IsEntered)
 			{
 				var rect = this.TreeButtonRectangle;

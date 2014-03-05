@@ -101,11 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateGraphic(Widget parent)
 		{
-			this.graphicController = new GroupsGraphicViewController (this.accessor, this.baseType, this)
-			{
-				GraphicViewMode = GraphicViewMode.AutoWidthAllLines,
-			};
-
+			this.graphicController = new GroupsGraphicViewController (this.accessor, this.baseType, this);
 			this.graphicController.CreateUI (parent);
 
 			this.graphicController.TileDoubleClicked += delegate

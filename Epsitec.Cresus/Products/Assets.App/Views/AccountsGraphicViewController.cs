@@ -24,6 +24,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.graphicViewState.FontFactors.Add (2.0);
 			this.graphicViewState.FontFactors.Add (1.0);
 			this.graphicViewState.ColumnWidth = 20;
+
+			this.graphicViewMode = GraphicViewMode.VerticalFinalNode | GraphicViewMode.AutoWidthFirstLine;
 		}
 
 
