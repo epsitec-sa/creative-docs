@@ -53,14 +53,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void CreateUI(Widget parent)
+		public Widget CreateUI(Widget parent)
 		{
 			this.mainButton = new ColoredButton
 			{
 				Parent        = parent,
 				HoverColor    = ColorManager.HoverColor,
 				AutoFocus     = false,
-				Anchor        = AnchorStyles.BottomLeft,
 				PreferredSize = new Size (100, AbstractScroller.DefaultBreadth),
 			};
 
@@ -70,6 +69,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.UpdateButton ();
+
+			return this.mainButton;
 		}
 
 

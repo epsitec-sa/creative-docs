@@ -41,6 +41,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock   = DockStyle.Fill,
 			};
 
+			this.bottomFrame = new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Bottom,
+				PreferredHeight = AbstractScroller.DefaultBreadth,
+				Visibility      = false,
+			};
+
 			this.CreateTreeTableControllerUI (this.treeTableFrame);
 			this.CreateGraphicControllerUI (this.graphicFrame);
 
@@ -167,6 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected FrameBox							treeTableFrame;
 		protected FrameBox							graphicFrame;
+		protected FrameBox							bottomFrame;
 
 		protected AbstractTreeTableFiller<T>		dataFiller;
 		protected NavigationTreeTableController		treeTableController;

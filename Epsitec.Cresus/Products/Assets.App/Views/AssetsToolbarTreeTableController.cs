@@ -71,8 +71,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateControllerUI (parent);
 
+			this.bottomFrame.Visibility = true;
+			this.CreateStateAt (this.bottomFrame);
+		}
+
+		private void CreateStateAt(Widget parent)
+		{
 			this.stateAtController = new StateAtController (this.accessor);
-			this.stateAtController.CreateUI (parent);
+			var frame = this.stateAtController.CreateUI (parent);
+			frame.Dock = DockStyle.Left;
+			
 
 			this.stateAtController.DateChanged += delegate
 			{

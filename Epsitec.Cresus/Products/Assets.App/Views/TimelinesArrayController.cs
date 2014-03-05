@@ -418,7 +418,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateStateAt(Widget parent)
 		{
 			this.stateAtController = new StateAtController (this.accessor);
-			this.stateAtController.CreateUI (parent);
+			var frame = this.stateAtController.CreateUI (parent);
+			frame.Anchor = AnchorStyles.BottomLeft;
+
 			this.stateAtController.Date = Timestamp.Now.Date;
 
 			this.stateAtController.DateChanged += delegate
