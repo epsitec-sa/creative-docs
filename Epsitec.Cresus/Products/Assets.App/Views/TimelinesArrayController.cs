@@ -66,6 +66,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public Guid								FilterGuid
+		{
+			get
+			{
+				return this.rootGuid;
+			}
+			set
+			{
+				if (this.rootGuid != value)
+				{
+					this.rootGuid = value;
+					this.UpdateTreeColumn ();
+					this.UpdateData ();
+				}
+			}
+		}
+	
 	
 		public void UpdateData()
 		{

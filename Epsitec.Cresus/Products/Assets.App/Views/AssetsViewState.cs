@@ -15,6 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public bool								IsShowEvents;
 		public Timestamp?						SelectedTimestamp;
 		public Guid								SelectedGuid;
+		public Guid								FilterTreeTableGuid;
+		public Guid								FilterTimelinesGuid;
 
 
 		#region IEquatable<AbstractViewState> Members

@@ -363,12 +363,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return new AssetsViewState
 				{
-					ViewType          = ViewType.Assets,
-					ViewMode          = this.viewMode,
-					PageType          = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
-					IsShowEvents      = this.isShowEvents,
-					SelectedTimestamp = this.selectedTimestamp,
-					SelectedGuid      = this.selectedGuid,
+					ViewType            = ViewType.Assets,
+					ViewMode            = this.viewMode,
+					PageType            = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
+					IsShowEvents        = this.isShowEvents,
+					SelectedTimestamp   = this.selectedTimestamp,
+					SelectedGuid        = this.selectedGuid,
+					FilterTreeTableGuid = this.listController.FilterGuid,
+					FilterTimelinesGuid = this.timelinesArrayController.FilterGuid,
 				};
 			}
 			set
@@ -380,6 +382,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.isShowEvents      = viewState.IsShowEvents;
 				this.selectedTimestamp = viewState.SelectedTimestamp;
 				this.selectedGuid      = viewState.SelectedGuid;
+
+				this.listController.FilterGuid = viewState.FilterTreeTableGuid;
+				this.timelinesArrayController.FilterGuid = viewState.FilterTimelinesGuid;
 
 				if (viewState.PageType == PageType.Unknown)
 				{

@@ -47,6 +47,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 		#endregion
 
+
+		public Guid								FilterGuid
+		{
+			get
+			{
+				return this.rootGuid;
+			}
+			set
+			{
+				if (this.rootGuid != value)
+				{
+					this.rootGuid = value;
+					this.UpdateData ();
+				}
+			}
+		}
+
 	
 		public override void CreateUI(Widget parent)
 		{
