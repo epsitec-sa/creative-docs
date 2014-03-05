@@ -11,9 +11,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AssetsGraphicViewController : AbstractGraphicViewController<CumulNode>
+	public class AssetsTreeGraphicViewController : AbstractTreeGraphicViewController<CumulNode>
 	{
-		public AssetsGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeTableController<CumulNode> treeTableController)
+		public AssetsTreeGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeTableController<CumulNode> treeTableController)
 			: base (accessor, baseType, treeTableController)
 		{
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
@@ -21,19 +21,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
 			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
-			this.graphicViewState = new GraphicViewState ();
+			this.treeGraphicViewState = new TreeGraphicViewState ();
 
-			this.graphicViewState.Fields.Add (this.accessor.GetMainStringField (this.baseType));
-			this.graphicViewState.Fields.AddRange (this.UserFields
+			this.treeGraphicViewState.Fields.Add (this.accessor.GetMainStringField (this.baseType));
+			this.treeGraphicViewState.Fields.AddRange (this.UserFields
 				.Where (x => x.Type == FieldType.AmortizedAmount || x.Type == FieldType.ComputedAmount)
 				.Select (x => x.Field));
 
-			for (int i=0; i<this.graphicViewState.Fields.Count; i++)
+			for (int i=0; i<this.treeGraphicViewState.Fields.Count; i++)
 			{
-				this.graphicViewState.FontFactors.Add ((i == 0) ? 1.0 : 0.7);
+				this.treeGraphicViewState.FontFactors.Add ((i == 0) ? 1.0 : 0.7);
 			}
 
-			this.graphicViewMode = GraphicViewMode.AutoWidthAllLines;
+			this.treeGraphicViewMode = TreeGraphicViewMode.AutoWidthAllLines;
 		}
 
 
@@ -48,14 +48,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void SetParams(Timestamp? timestamp, Guid rootGuid, SortingInstructions instructions)
 		{
 			this.timestamp = timestamp;
-			this.NodeGetter.SetParams (timestamp, rootGuid, this.graphicViewState.SortingInstructions);
+			this.NodeGetter.SetParams (timestamp, rootGuid, this.treeGraphicViewState.SortingInstructions);
 
 			this.UpdateData ();
 		}
 
 		public override void UpdateData()
 		{
-			if (this.graphicViewState == null || this.scrollable == null)
+			if (this.treeGraphicViewState == null || this.scrollable == null)
 			{
 				return;
 			}

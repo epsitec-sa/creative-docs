@@ -129,12 +129,12 @@
     <Compile Include="Views\AccountGuidFieldController.cs" />
     <Compile Include="Views\AmortizedAmountFieldController.cs" />
     <Compile Include="Views\AmortizedAmountController.cs" />
-    <Compile Include="Views\AccountsGraphicViewController.cs" />
-    <Compile Include="Views\AssetsGraphicViewController.cs" />
-    <Compile Include="Views\GraphicViewMode.cs" />
-    <Compile Include="Views\GroupsGraphicViewController.cs" />
-    <Compile Include="Views\GraphicViewState.cs" />
-    <Compile Include="Views\AbstractGraphicViewController.cs" />
+    <Compile Include="Views\AccountsTreeGraphicViewController.cs" />
+    <Compile Include="Views\AssetsTreeGraphicViewController.cs" />
+    <Compile Include="Views\TreeGraphicViewMode.cs" />
+    <Compile Include="Views\GroupsTreeGraphicViewController.cs" />
+    <Compile Include="Views\TreeGraphicViewState.cs" />
+    <Compile Include="Views\AbstractTreeGraphicViewController.cs" />
     <Compile Include="Views\EditorPageAccount.cs" />
     <Compile Include="Views\EcrituresView.cs" />
     <Compile Include="Views\EditorPageUserField.cs" />
@@ -196,7 +196,7 @@
     <Compile Include="Helpers\EventExtensions.cs" />
     <Compile Include="Widgets\Calendar.cs" />
     <Compile Include="Widgets\CalendarController.cs" />
-    <Compile Include="Widgets\GraphicViewTile.cs" />
+    <Compile Include="Widgets\TreeGraphicViewTile.cs" />
     <Compile Include="Widgets\LinkLine.cs" />
     <Compile Include="Widgets\TreeTableColumnAmortizedAmount.cs" />
     <Compile Include="Widgets\TreeTableColumnPin.cs" />

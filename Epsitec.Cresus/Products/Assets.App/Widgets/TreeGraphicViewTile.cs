@@ -15,9 +15,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// <summary>
 	/// Une tuile de AbstractGraphicViewController.
 	/// </summary>
-	public class GraphicViewTile : Widget
+	public class TreeGraphicViewTile : Widget
 	{
-		public GraphicViewTile(int level, double columnWidth, NodeType nodeType, GraphicViewMode graphicViewMode)
+		public TreeGraphicViewTile(int level, double columnWidth, NodeType nodeType, TreeGraphicViewMode graphicViewMode)
 		{
 			this.level           = level;
 			this.columnWidth     = columnWidth;
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	sauf pour les tuiles finales.
 			this.PreferredWidth = this.RequiredWidth;
 			this.Margins        = new Margins (0, -1, 0, 0);
-			this.Padding        = new Margins (GraphicViewTile.externalMargins, GraphicViewTile.externalMargins+1, GraphicViewTile.externalMargins+this.TopPadding, GraphicViewTile.externalMargins);
+			this.Padding        = new Margins (TreeGraphicViewTile.externalMargins, TreeGraphicViewTile.externalMargins+1, TreeGraphicViewTile.externalMargins+this.TopPadding, TreeGraphicViewTile.externalMargins);
 		}
 
 
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			graphics.Color = Color.FromBrightness (0.2);
 
-			if ((this.graphicViewMode & GraphicViewMode.VerticalFinalNode) != 0 &&
+			if ((this.graphicViewMode & TreeGraphicViewMode.VerticalFinalNode) != 0 &&
 				this.nodeType == NodeType.Final)
 			{
 				//	Une tuile finale s'affiche verticalement (tournée de 90 degrés CCW),
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var t = graphics.Transform;
 				graphics.RotateTransformDeg (90.0, rect.Center.X, rect.Center.Y);
 
-				var fontSize = GraphicViewTile.verticalFinalWidth * 0.5;
+				var fontSize = TreeGraphicViewTile.verticalFinalWidth * 0.5;
 				this.PaintText (graphics, this.RotatedRect, this.RotatedText, fontSize, ContentAlignment.MiddleLeft);
 
 				graphics.Transform = t;
@@ -146,14 +146,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Retourne la largeur requise pour la tuile.
 			get
 			{
-				if ((this.graphicViewMode & GraphicViewMode.VerticalFinalNode) != 0 &&
+				if ((this.graphicViewMode & TreeGraphicViewMode.VerticalFinalNode) != 0 &&
 					this.nodeType == NodeType.Final)
 				{
-					return GraphicViewTile.verticalFinalWidth;
+					return TreeGraphicViewTile.verticalFinalWidth;
 				}
 				else
 				{
-					if ((this.graphicViewMode & GraphicViewMode.FixedWidth) != 0)
+					if ((this.graphicViewMode & TreeGraphicViewMode.FixedWidth) != 0)
 					{
 						return this.columnWidth;
 					}
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						double width = 0.0;
 
 						int count;
-						if ((this.graphicViewMode & GraphicViewMode.AutoWidthFirstLine) != 0)
+						if ((this.graphicViewMode & TreeGraphicViewMode.AutoWidthFirstLine) != 0)
 						{
 							count = 1;
 						}
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 							width = System.Math.Max (width, w);
 						}
 
-						width += GraphicViewTile.internalMargins*2;
+						width += TreeGraphicViewTile.internalMargins*2;
 						return System.Math.Max (width, this.columnWidth);
 					}
 				}
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			get
 			{
 				var rect = this.Client.Bounds;
-				rect.Deflate (0, GraphicViewTile.internalMargins);
+				rect.Deflate (0, TreeGraphicViewTile.internalMargins);
 				return this.Rotate (rect);
 			}
 		}
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var rect = this.Client.Bounds;
 			var offset = this.GetTopOffset (index);
 			var h = this.GetFontSize (index) * 1.5;
-			return new Rectangle (rect.Left+GraphicViewTile.internalMargins, rect.Top-offset-h, rect.Width, h);
+			return new Rectangle (rect.Left+TreeGraphicViewTile.internalMargins, rect.Top-offset-h, rect.Width, h);
 		}
 
 		private double TopPadding
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private double GetTopOffset(int index)
 		{
-			var offset = GraphicViewTile.internalMargins;
+			var offset = TreeGraphicViewTile.internalMargins;
 
 			for (int i=0; i<index; i++)
 			{
@@ -436,7 +436,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private readonly int					level;
 		private readonly double					columnWidth;
 		private readonly NodeType				nodeType;
-		private readonly GraphicViewMode		graphicViewMode;
+		private readonly TreeGraphicViewMode		graphicViewMode;
 		private readonly TextLayout				textLayout;
 
 		private string[]						texts;

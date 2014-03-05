@@ -8,9 +8,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class GraphicViewState
+	public class TreeGraphicViewState
 	{
-		public GraphicViewState()
+		public TreeGraphicViewState()
 		{
 			this.fields = new List<ObjectField> ();
 			this.fontFactors = new List<double> ();

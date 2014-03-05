@@ -144,9 +144,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void UpdateData()
 		{
-			if (this.graphicController != null && this.showGraphic)
+			if (this.treeGraphicController != null && this.showGraphic)
 			{
-				this.graphicController.UpdateData ();
+				this.treeGraphicController.UpdateData ();
 			}
 		}
 
@@ -378,9 +378,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableFrame.Visibility = !this.showGraphic;
 			this.graphicFrame.Visibility   =  this.showGraphic;
 
-			if (this.graphicController != null && this.showGraphic)
+			if (this.treeGraphicController != null && this.showGraphic)
 			{
-				this.graphicController.UpdateData ();
+				this.treeGraphicController.UpdateData ();
 			}
 
 			this.UpdateController ();
@@ -404,9 +404,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				TreeTableFiller<T>.FillContent (this.treeTableController, this.dataFiller, this.VisibleSelectedRow, crop);
 			}
 
-			if (this.graphicController != null && this.showGraphic)
+			if (this.treeGraphicController != null && this.showGraphic)
 			{
-				this.graphicController.UpdateController (crop);
+				this.treeGraphicController.UpdateController (crop);
 			}
 		}
 
@@ -575,7 +575,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected AbstractTreeTableFiller<T>	dataFiller;
 		protected TopTitle						topTitle;
 		protected NavigationTreeTableController	treeTableController;
-		protected AbstractGraphicViewController<T> graphicController;
+		protected AbstractTreeGraphicViewController<T> treeGraphicController;
 		protected int							selectedRow;
 		protected TreeTableToolbar				toolbar;
 		protected SortingInstructions			sortingInstructions;

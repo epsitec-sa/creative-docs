@@ -88,9 +88,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.NodeGetter.SetParams (this.timestamp, this.rootGuid, this.sortingInstructions);
 			this.dataFiller.Timestamp = this.timestamp;
 
-			if (this.graphicController != null)
+			if (this.treeGraphicController != null)
 			{
-				this.graphicController.SetParams (this.timestamp, this.rootGuid, this.sortingInstructions);
+				this.treeGraphicController.SetParams (this.timestamp, this.rootGuid, this.sortingInstructions);
 			}
 
 			this.UpdateController ();
@@ -176,10 +176,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateGraphic(Widget parent)
 		{
-			this.graphicController = new AssetsGraphicViewController (this.accessor, this.baseType, this);
-			this.graphicController.CreateUI (parent);
+			this.treeGraphicController = new AssetsTreeGraphicViewController (this.accessor, this.baseType, this);
+			this.treeGraphicController.CreateUI (parent);
 
-			this.graphicController.TileDoubleClicked += delegate
+			this.treeGraphicController.TileDoubleClicked += delegate
 			{
 				this.OnRowDoubleClicked (this.selectedRow);
 			};

@@ -20,10 +20,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 	/// Le graphique est constitué de widgets GraphicViewTile. Grace au mode DockStyle.Left,
 	/// il a été très simple de réaliser cette vue.
 	/// </summary>
-	public abstract class AbstractGraphicViewController<T>
+	public abstract class AbstractTreeGraphicViewController<T>
 		where T : struct
 	{
-		public AbstractGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeTableController<T> treeTableController)
+		public AbstractTreeGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeTableController<T> treeTableController)
 		{
 			this.accessor            = accessor;
 			this.baseType            = baseType;
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected Widget CreateNode(Widget parent, Guid guid, int level, NodeType nodeType, string[] texts, double[] fontFactors)
 		{
-			var tile = new GraphicViewTile (level, this.graphicViewState.ColumnWidth, nodeType, this.graphicViewMode)
+			var tile = new TreeGraphicViewTile (level, this.treeGraphicViewState.ColumnWidth, nodeType, this.treeGraphicViewMode)
 			{
 				Parent           = parent,
 				Name             = guid.ToString (),
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var list = new List<ObjectField> ();
 
-			foreach (var field in this.graphicViewState.Fields)
+			foreach (var field in this.treeGraphicViewState.Fields)
 			{
 				list.Add (field);
 			}
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var list = new List<double> ();
 
-			foreach (var fontFactor in this.graphicViewState.FontFactors)
+			foreach (var fontFactor in this.treeGraphicViewState.FontFactors)
 			{
 				list.Add (fontFactor);
 			}
@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected AbstractNodeGetter<T>			nodeGetter;
 		protected Scrollable					scrollable;
-		protected GraphicViewMode				graphicViewMode;
-		protected GraphicViewState				graphicViewState;
+		protected TreeGraphicViewMode			treeGraphicViewMode;
+		protected TreeGraphicViewState			treeGraphicViewState;
 	}
 }

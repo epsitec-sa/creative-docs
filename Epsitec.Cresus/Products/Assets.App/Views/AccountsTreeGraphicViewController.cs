@@ -9,23 +9,23 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AccountsGraphicViewController : AbstractGraphicViewController<TreeNode>
+	public class AccountsTreeGraphicViewController : AbstractTreeGraphicViewController<TreeNode>
 	{
-		public AccountsGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeTableController<TreeNode> treeTableController)
+		public AccountsTreeGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeTableController<TreeNode> treeTableController)
 			: base (accessor, baseType, treeTableController)
 		{
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);
 
-			this.graphicViewState = new GraphicViewState ();
-			this.graphicViewState.Fields.Add (ObjectField.Number);
-			this.graphicViewState.Fields.Add (ObjectField.Name);
-			this.graphicViewState.FontFactors.Add (2.0);
-			this.graphicViewState.FontFactors.Add (1.0);
-			this.graphicViewState.ColumnWidth = 20;
+			this.treeGraphicViewState = new TreeGraphicViewState ();
+			this.treeGraphicViewState.Fields.Add (ObjectField.Number);
+			this.treeGraphicViewState.Fields.Add (ObjectField.Name);
+			this.treeGraphicViewState.FontFactors.Add (2.0);
+			this.treeGraphicViewState.FontFactors.Add (1.0);
+			this.treeGraphicViewState.ColumnWidth = 20;
 
-			this.graphicViewMode = GraphicViewMode.VerticalFinalNode | GraphicViewMode.AutoWidthFirstLine;
+			this.treeGraphicViewMode = TreeGraphicViewMode.VerticalFinalNode | TreeGraphicViewMode.AutoWidthFirstLine;
 		}
 
 
@@ -39,12 +39,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void UpdateData()
 		{
-			if (this.graphicViewState == null || this.scrollable == null)
+			if (this.treeGraphicViewState == null || this.scrollable == null)
 			{
 				return;
 			}
 
-			this.NodeGetter.SetParams (null, this.graphicViewState.SortingInstructions);
+			this.NodeGetter.SetParams (null, this.treeGraphicViewState.SortingInstructions);
 
 			this.scrollable.Viewport.Children.Clear ();
 
