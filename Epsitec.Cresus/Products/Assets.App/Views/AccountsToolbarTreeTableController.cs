@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.graphicController = new AccountsGraphicViewController (this.accessor, this.baseType, this)
 			{
-				GraphicViewMode = GraphicViewMode.VerticalFinalNode,
+				GraphicViewMode = GraphicViewMode.VerticalFinalNode | GraphicViewMode.AutoWidthFirstLine,
 			};
 
 			this.graphicController.CreateUI (parent);

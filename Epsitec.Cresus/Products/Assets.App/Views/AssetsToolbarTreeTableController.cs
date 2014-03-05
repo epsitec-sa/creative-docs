@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.graphicController = new AssetsGraphicViewController (this.accessor, this.baseType, this)
 			{
-				GraphicViewMode = GraphicViewMode.AllHorizontal,
+				GraphicViewMode = GraphicViewMode.AutoWidthAllLines,
 			};
 
 			this.graphicController.CreateUI (parent);

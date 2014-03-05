@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.graphicController = new GroupsGraphicViewController (this.accessor, this.baseType, this)
 			{
-				GraphicViewMode = GraphicViewMode.AllHorizontal,
+				GraphicViewMode = GraphicViewMode.AutoWidthAllLines,
 			};
 
 			this.graphicController.CreateUI (parent);

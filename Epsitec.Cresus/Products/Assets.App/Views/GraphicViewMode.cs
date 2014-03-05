@@ -6,9 +6,15 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
+	[System.Flags]
 	public enum GraphicViewMode
 	{
-		AllHorizontal,
-		VerticalFinalNode,
+		None               = 0x0000,
+
+		VerticalFinalNode  = 0x0001,
+
+		FixedWidth         = 0x0010,
+		AutoWidthFirstLine = 0x0020,
+		AutoWidthAllLines  = 0x0040,
 	}
 }

@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	le demandent. Par exemple, en mode GraphicViewMode.VerticalFinalNode,
 			//	on donne la largeur la plus petite, qui est systématiquement dépassée,
 			//	sauf pour les tuiles finales.
-			this.PreferredWidth = (this.graphicViewMode == GraphicViewMode.VerticalFinalNode) ? GraphicViewTile.verticalFinalWidth : this.columnWidth;
+			this.PreferredWidth = this.RequiredWidth;
 			this.Margins        = new Margins (0, -1, 0, 0);
 			this.Padding        = new Margins (GraphicViewTile.margins, GraphicViewTile.margins, GraphicViewTile.margins+this.TopPadding, GraphicViewTile.margins);
 		}
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			graphics.Color = Color.FromBrightness (0.2);
 
-			if (this.graphicViewMode == GraphicViewMode.VerticalFinalNode &&
+			if ((this.graphicViewMode & GraphicViewMode.VerticalFinalNode) != 0 &&
 				this.nodeType == NodeType.Final)
 			{
 				//	Une tuile finale s'affiche verticalement (tournée de 90 degrés CCW),
@@ -91,6 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.RenderSolid (Color.FromBrightness (0.5));
 		}
 
+
 		private void PaintText(Graphics graphics, Rectangle rect, string text, double fontSize, ContentAlignment alignment)
 		{
 			//	Dessine un texte inclu dans un rectangle.
@@ -103,6 +104,53 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.textLayout.Paint (rect.BottomLeft, graphics, rect, ColorManager.TextColor, GlyphPaintStyle.Normal);
 		}
+
+
+		private double RequiredWidth
+		{
+			get
+			{
+				if ((this.graphicViewMode & GraphicViewMode.VerticalFinalNode) != 0 &&
+					this.nodeType == NodeType.Final)
+				{
+					return GraphicViewTile.verticalFinalWidth;
+				}
+				else
+				{
+					if ((this.graphicViewMode & GraphicViewMode.FixedWidth) != 0)
+					{
+						return this.columnWidth;
+					}
+					else
+					{
+						double width = 0.0;
+
+						int count;
+						if ((this.graphicViewMode & GraphicViewMode.AutoWidthFirstLine) != 0)
+						{
+							count = 1;
+						}
+						else
+						{
+							count = this.texts.Length;
+						}
+
+						for (int i=0; i<count; i++)
+						{
+							var text = this.GetText (i);
+							var size = this.GetFontSize (i);
+
+							var w = text.GetTextWidth (Font.DefaultFont, size);
+							width = System.Math.Max (width, w);
+						}
+
+						width += GraphicViewTile.margins*2;
+						return System.Math.Max (width, this.columnWidth);
+					}
+				}
+			}
+		}
+
 
 		private string RotatedText
 		{
@@ -148,14 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private string GetText(int index)
 		{
-			if (index == 0 && this.IsEntered)
-			{
-				return this.texts[index].Bold ();
-			}
-			else
-			{
-				return this.texts[index];
-			}
+			return this.texts[index];
 		}
 
 		private Rectangle GetRect(int index)
