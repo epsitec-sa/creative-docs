@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -50,6 +51,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			base.OnMouseMove (e);
 		}
 
+		protected override void OnClicked(MessageEventArgs e)
+		{
+			if (this.TreeButtonRectangle.Contains (e.Point))
+			{
+				this.OnTreeButtonClicked ();
+			}
+			else
+			{
+				base.OnClicked (e);
+			}
+		}
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			var rect = this.Client.Bounds;
@@ -89,6 +102,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
+			this.PaintTreeButton (graphics);
+
+			//	Dessine le cadre.
 			rect.Deflate (0.5);
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (Color.FromBrightness (0.5));
@@ -107,6 +123,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.textLayout.Alignment       = alignment;
 
 			this.textLayout.Paint (rect.BottomLeft, graphics, rect, Color.Empty, GlyphPaintStyle.Normal);
+		}
+
+		private void PaintTreeButton(Graphics graphics)
+		{
+			if (this.IsEntered)
+			{
+				var rect = this.TreeButtonRectangle;
+
+				if (!rect.IsEmpty)
+				{
+					graphics.AddFilledPath (this.TreeButtonPath);
+					graphics.RenderSolid (ColorManager.GlyphColor);
+				}
+			}
 		}
 
 
@@ -203,7 +233,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (index == 0 && this.IsEntered)  // titre survolé ?
 			{
-				return this.texts[index].Color (ColorManager.SelectionColor.ForceV (0.6));
+				return this.texts[index].Color (ColorManager.SelectionColor.ForceV (0.6)).Bold ();
 			}
 			else
 			{
@@ -278,6 +308,50 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private Path TreeButtonPath
+		{
+			get
+			{
+				var path = new Path ();
+				var rect = this.TreeButtonRectangle;
+				rect.Deflate (3.0, 4.0);
+
+				if (this.nodeType == NodeType.Expanded)
+				{
+					path.MoveTo (new Point (rect.Center.X, rect.Bottom));
+					path.LineTo (rect.TopLeft);
+					path.LineTo (rect.TopRight);
+					path.Close ();
+				}
+				else
+				{
+					path.MoveTo (new Point (rect.Center.X, rect.Top));
+					path.LineTo (rect.BottomLeft);
+					path.LineTo (rect.BottomRight);
+					path.Close ();
+				}
+
+				return path;
+			}
+		}
+
+		private Rectangle TreeButtonRectangle
+		{
+			get
+			{
+				if (this.nodeType == NodeType.Final)
+				{
+					return Rectangle.Empty;
+				}
+				else
+				{
+					var x = this.HorizontalOffset;
+					return new Rectangle (x, this.ActualHeight-16, 16, 16);
+				}
+			}
+		}
+
+
 		private bool IsInside
 		{
 			get
@@ -344,6 +418,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		#region Events handler
+		private void OnTreeButtonClicked()
+		{
+			this.TreeButtonClicked.Raise (this);
+		}
+
+		public event EventHandler TreeButtonClicked;
+		#endregion
+
+	
 		private const double externalMargins    = 10.0;
 		private const double internalMargins    = 10.0;
 		private const double verticalFinalWidth = 22.0;
@@ -357,5 +441,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private string[]						texts;
 		private double[]						fontFactors;
 		private bool							isInside;
+		private GlyphButton						treeButton;
 	}
 }

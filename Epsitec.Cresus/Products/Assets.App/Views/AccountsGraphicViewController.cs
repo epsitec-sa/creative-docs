@@ -27,6 +27,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public override void CompactOrExpand(Guid guid)
+		{
+			int index = this.NodeGetter.SearchBestIndex (guid);
+			this.NodeGetter.CompactOrExpand (index);
+
+			this.UpdateData ();
+		}
+
 		public override void UpdateData()
 		{
 			if (this.graphicViewState == null || this.scrollable == null)

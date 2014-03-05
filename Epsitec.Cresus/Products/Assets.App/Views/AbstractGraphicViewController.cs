@@ -71,6 +71,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.scrollable.Viewport.IsAutoFitting = true;
 		}
 
+		public virtual void CompactOrExpand(Guid guid)
+		{
+		}
+
 		public virtual void SetParams(Timestamp? timestamp, Guid rootGuid, SortingInstructions instructions)
 		{
 		}
@@ -133,6 +137,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.SelectedGuid = guid;
 				this.OnTileDoubleClicked (guid);
+			};
+
+			tile.TreeButtonClicked += delegate
+			{
+				this.CompactOrExpand (guid);
 			};
 
 			return tile;

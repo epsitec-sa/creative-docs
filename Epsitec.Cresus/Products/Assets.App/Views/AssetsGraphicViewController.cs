@@ -35,6 +35,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public override void CompactOrExpand(Guid guid)
+		{
+			int index = this.NodeGetter.SearchBestIndex (guid);
+			this.NodeGetter.CompactOrExpand (index);
+
+			this.UpdateData ();
+		}
+
 		public override void SetParams(Timestamp? timestamp, Guid rootGuid, SortingInstructions instructions)
 		{
 			this.timestamp = timestamp;
