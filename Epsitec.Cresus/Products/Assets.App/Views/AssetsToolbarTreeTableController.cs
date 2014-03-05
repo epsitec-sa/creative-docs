@@ -14,7 +14,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AssetsToolbarTreeTableController : AbstractToolbarTreeController<CumulNode>, IDirty
+	public class AssetsToolbarTreeTableController : AbstractToolbarTreeTableController<CumulNode>, IDirty
 	{
 		public AssetsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -24,12 +24,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
+			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Assets);
+
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
 			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
 			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
-			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Assets);
+			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Assets), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 		}
 
 
@@ -64,15 +66,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-	
-		public override void CreateUI(Widget parent)
+
+		protected override void CreateControllerUI(Widget parent)
 		{
-			base.CreateUI (parent);
+			base.CreateControllerUI (parent);
 
 			this.stateAtController = new StateAtController (this.accessor);
 			this.stateAtController.CreateUI (parent);
-
-			this.graphicFrame.Margins = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth);
 
 			this.stateAtController.DateChanged += delegate
 			{
@@ -82,16 +82,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetDate (Timestamp.Now.Date);
 		}
 
+		protected override void CreateGraphicControllerUI()
+		{
+			this.graphicController = new AssetsTreeGraphicController (this.accessor, this.baseType);
+		}
+
 
 		public override void UpdateData()
 		{
 			this.NodeGetter.SetParams (this.timestamp, this.rootGuid, this.sortingInstructions);
 			this.dataFiller.Timestamp = this.timestamp;
-
-			if (this.treeGraphicController != null)
-			{
-				this.treeGraphicController.SetParams (this.timestamp, this.rootGuid, this.sortingInstructions);
-			}
 
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -172,17 +172,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
 
 			this.treeTableController.AddSortedColumn (0);
-		}
-
-		protected override void CreateGraphic(Widget parent)
-		{
-			this.treeGraphicController = new AssetsTreeGraphicController (this.accessor, this.baseType, this);
-			this.treeGraphicController.CreateUI (parent);
-
-			this.treeGraphicController.TileDoubleClicked += delegate
-			{
-				this.OnRowDoubleClicked (this.selectedRow);
-			};
 		}
 
 

@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class GroupsToolbarTreeTableController : AbstractToolbarTreeController<TreeNode>, IDirty
+	public class GroupsToolbarTreeTableController : AbstractToolbarTreeTableController<TreeNode>, IDirty
 	{
 		public GroupsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -22,11 +22,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
+			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Groups);
+
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
 
-			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Groups);
+			this.sortingInstructions = SortingInstructions.Default;
 		}
 
 
@@ -43,6 +45,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			set;
 		}
 		#endregion
+
+
+		protected override void CreateGraphicControllerUI()
+		{
+			this.graphicController = new GroupsTreeGraphicController (this.accessor, this.baseType);
+		}
 
 
 		public override void UpdateData()
@@ -97,17 +105,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller);
 
 			this.treeTableController.AddSortedColumn (0);
-		}
-
-		protected override void CreateGraphic(Widget parent)
-		{
-			this.treeGraphicController = new GroupsTreeGraphicController (this.accessor, this.baseType, this);
-			this.treeGraphicController.CreateUI (parent);
-
-			this.treeGraphicController.TileDoubleClicked += delegate
-			{
-				this.OnRowDoubleClicked (this.selectedRow);
-			};
 		}
 
 

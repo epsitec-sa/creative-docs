@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class UserFieldsToolbarTreeTableController : AbstractToolbarTreeController<GuidNode>, IDirty
+	public class UserFieldsToolbarTreeTableController : AbstractToolbarTreeTableController<GuidNode>, IDirty
 	{
 		public UserFieldsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -20,8 +20,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = true;
-
-			this.nodeGetter = new UserFieldNodeGetter (this.accessor, this.baseType);
 
 			switch (this.baseType)
 			{
@@ -36,6 +34,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown BaseType {0}", this.baseType.ToString ()));
 			}
+
+			this.nodeGetter = new UserFieldNodeGetter (this.accessor, this.baseType);
 		}
 
 
@@ -76,9 +76,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void CreateUI(Widget parent)
+		protected override void CreateControllerUI(Widget parent)
 		{
-			base.CreateUI (parent);
+			base.CreateControllerUI (parent);
 
 			this.treeTableController.AllowsSorting = false;
 		}

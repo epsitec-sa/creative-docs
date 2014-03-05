@@ -23,25 +23,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public abstract class AbstractTreeGraphicController<T>
 		where T : struct
 	{
-		public AbstractTreeGraphicController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeController<T> treeTableController)
+		public AbstractTreeGraphicController(DataAccessor accessor, BaseType baseType)
 		{
-			this.accessor            = accessor;
-			this.baseType            = baseType;
-			this.treeTableController = treeTableController;
-		}
-
-
-		public Guid								SelectedGuid
-		{
-			get
-			{
-				return this.treeTableController.SelectedGuid;
-			}
-			set
-			{
-				this.treeTableController.SelectedGuid = value;
-				this.UpdateController ();
-			}
+			this.accessor = accessor;
+			this.baseType = baseType;
 		}
 
 
@@ -59,32 +44,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.scrollable.Viewport.IsAutoFitting = true;
 		}
 
-		public virtual void CompactOrExpand(Guid guid)
+		public virtual void UpdateController(AbstractNodeGetter<T> nodeGetter, Guid selectedGuid, bool crop = true)
 		{
 		}
 
-		public virtual void SetParams(Timestamp? timestamp, Guid rootGuid, SortingInstructions instructions)
+
+		protected void UpdateSelection(Guid selectedGuid, bool crop)
 		{
+			this.UpdateSelection (this.scrollable.Viewport, selectedGuid, crop);
 		}
 
-		public virtual void UpdateData()
+		private void UpdateSelection(Widget parent, Guid selectedGuid, bool crop)
 		{
-		}
-
-		public virtual void UpdateController(bool crop = true)
-		{
-			this.UpdateSelection (crop);
-		}
-
-
-		private void UpdateSelection(bool crop)
-		{
-			this.UpdateSelection (this.scrollable.Viewport, crop);
-		}
-
-		private void UpdateSelection(Widget parent, bool crop)
-		{
-			var name = this.SelectedGuid.ToString ();
+			var name = selectedGuid.ToString ();
 
 			foreach (Widget tile in parent.Children)
 			{
@@ -97,12 +69,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 					tile.ActiveState = ActiveState.No;
 				}
 
-				this.UpdateSelection (tile, crop);
+				this.UpdateSelection (tile, selectedGuid, crop);
 			}
 		}
 
 
-		protected Widget CreateNode(Widget parent, Guid guid, int level, NodeType nodeType, string[] texts, double[] fontFactors)
+		protected Widget CreateTile(Widget parent, Guid guid, int level, NodeType nodeType, string[] texts, double[] fontFactors)
 		{
 			var tile = new TreeGraphicTile (level, this.treeGraphicViewState.ColumnWidth, nodeType, this.treeGraphicViewMode)
 			{
@@ -118,18 +90,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			tile.Clicked += delegate
 			{
-				this.SelectedGuid = guid;
+				this.OnTileClicked (guid);
 			};
 
 			tile.DoubleClicked += delegate
 			{
-				this.SelectedGuid = guid;
 				this.OnTileDoubleClicked (guid);
 			};
 
 			tile.TreeButtonClicked += delegate
 			{
-				this.CompactOrExpand (guid);
+				this.OnTileCompactOrExpand (guid);
 			};
 
 			return tile;
@@ -208,22 +179,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Events handler
+		protected void OnTileClicked(Guid guid)
+		{
+			this.TileClicked.Raise (this, guid);
+		}
+
+		public event EventHandler<Guid> TileClicked;
+
+
 		protected void OnTileDoubleClicked(Guid guid)
 		{
 			this.TileDoubleClicked.Raise (this, guid);
 		}
 
 		public event EventHandler<Guid> TileDoubleClicked;
+
+
+		protected void OnTileCompactOrExpand(Guid guid)
+		{
+			this.TileCompactOrExpand.Raise (this, guid);
+		}
+
+		public event EventHandler<Guid> TileCompactOrExpand;
 		#endregion
 
 
 		protected readonly DataAccessor			accessor;
 		protected readonly BaseType				baseType;
-		protected readonly AbstractToolbarTreeController<T> treeTableController;
 
-		protected AbstractNodeGetter<T>			nodeGetter;
 		protected Scrollable					scrollable;
-		protected TreeGraphicMode			treeGraphicViewMode;
-		protected TreeGraphicState			treeGraphicViewState;
+		protected TreeGraphicMode				treeGraphicViewMode;
+		protected TreeGraphicState				treeGraphicViewState;
 	}
 }

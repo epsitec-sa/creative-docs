@@ -13,14 +13,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AssetsTreeGraphicController : AbstractTreeGraphicController<CumulNode>
 	{
-		public AssetsTreeGraphicController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeController<CumulNode> treeTableController)
-			: base (accessor, baseType, treeTableController)
+		public AssetsTreeGraphicController(DataAccessor accessor, BaseType baseType)
+			: base (accessor, baseType)
 		{
-			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
-			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
-			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
-			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
-
 			this.treeGraphicViewState = new TreeGraphicState ();
 
 			this.treeGraphicViewState.Fields.Add (this.accessor.GetMainStringField (this.baseType));
@@ -37,23 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void CompactOrExpand(Guid guid)
-		{
-			int index = this.NodeGetter.SearchBestIndex (guid);
-			this.NodeGetter.CompactOrExpand (index);
-
-			this.UpdateData ();
-		}
-
-		public override void SetParams(Timestamp? timestamp, Guid rootGuid, SortingInstructions instructions)
-		{
-			this.timestamp = timestamp;
-			this.NodeGetter.SetParams (timestamp, rootGuid, this.treeGraphicViewState.SortingInstructions);
-
-			this.UpdateData ();
-		}
-
-		public override void UpdateData()
+		public override void UpdateController(AbstractNodeGetter<CumulNode> nodeGetter, Guid selectedGuid, bool crop = true)
 		{
 			if (this.treeGraphicViewState == null || this.scrollable == null)
 			{
@@ -69,7 +48,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var groupFields = this.GroupFields;
 			var fontFactors = this.GetFontFactors ();
 
-			foreach (var node in this.NodeGetter.Nodes)
+			var ng = nodeGetter as ObjectsNodeGetter;
+			foreach (var node in ng.Nodes)
 			{
 				var level = node.Level;
 				var parent = parents[level];
@@ -84,8 +64,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					fields = assetFields;
 				}
 
-				var texts = this.GetTexts (node.BaseType, node, fields);
-				var w = this.CreateNode (parent, node.Guid, node.Level, node.Type, texts, fontFactors);
+				var texts = this.GetTexts (ng, node.BaseType, node, fields);
+				var w = this.CreateTile (parent, node.Guid, node.Level, node.Type, texts, fontFactors);
 
 				if (parents.Count <= level+1)
 				{
@@ -94,23 +74,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				parents[level+1] = w;
 			}
+
+			this.UpdateSelection (selectedGuid, crop);
 		}
 
-		private string[] GetTexts(BaseType baseType, CumulNode node, ObjectField[] fields)
+		private string[] GetTexts(ObjectsNodeGetter nodeGetter, BaseType baseType, CumulNode node, ObjectField[] fields)
 		{
 			var list = new List<string> ();
 			var obj = this.accessor.GetObject (baseType, node.Guid);
 
 			foreach (var field in fields)
 			{
-				var text = this.GetText (obj, node, field);
+				var text = this.GetText (nodeGetter, obj, node, field);
 				list.Add (text);
 			}
 
 			return list.ToArray ();
 		}
 
-		private string GetText(DataObject obj, CumulNode node, ObjectField field)
+		private string GetText(ObjectsNodeGetter nodeGetter, DataObject obj, CumulNode node, ObjectField field)
 		{
 			var type = this.accessor.GetFieldType (field);
 
@@ -118,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 				//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
-				var v = this.NodeGetter.GetValue (obj, node, field);
+				var v = nodeGetter.GetValue (obj, node, field);
 				if (v.HasValue)
 				{
 					var ca = new ComputedAmount (v);
@@ -132,7 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 				//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
-				var v = this.NodeGetter.GetValue (obj, node, field);
+				var v = nodeGetter.GetValue (obj, node, field);
 				if (v.HasValue)
 				{
 					var aa = new AmortizedAmount (v);
@@ -165,14 +147,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return AssetsLogic.GetUserFields (this.accessor);
-			}
-		}
-
-		private ObjectsNodeGetter NodeGetter
-		{
-			get
-			{
-				return this.nodeGetter as ObjectsNodeGetter;
 			}
 		}
 

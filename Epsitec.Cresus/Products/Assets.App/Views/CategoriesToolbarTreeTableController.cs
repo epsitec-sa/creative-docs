@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class CategoriesToolbarTreeTableController : AbstractToolbarTreeController<SortableNode>, IDirty
+	public class CategoriesToolbarTreeTableController : AbstractToolbarTreeTableController<SortableNode>, IDirty
 	{
 		public CategoriesToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -21,11 +21,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
+			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Categories);
+
 			var primary = this.accessor.GetNodeGetter (BaseType.Categories);
 			this.secondaryGetter = new SortableNodeGetter (primary, this.accessor, BaseType.Categories);
 			this.nodeGetter = new SorterNodeGetter (this.secondaryGetter);
 
-			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Categories);
+			this.sortingInstructions = SortingInstructions.Default;
 		}
 
 

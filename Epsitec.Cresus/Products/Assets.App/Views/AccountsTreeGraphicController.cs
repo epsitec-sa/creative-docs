@@ -11,13 +11,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AccountsTreeGraphicController : AbstractTreeGraphicController<TreeNode>
 	{
-		public AccountsTreeGraphicController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeController<TreeNode> treeTableController)
-			: base (accessor, baseType, treeTableController)
+		public AccountsTreeGraphicController(DataAccessor accessor, BaseType baseType)
+			: base (accessor, baseType)
 		{
-			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
-			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);
-
 			this.treeGraphicViewState = new TreeGraphicState ();
 			this.treeGraphicViewState.Fields.Add (ObjectField.Number);
 			this.treeGraphicViewState.Fields.Add (ObjectField.Name);
@@ -29,22 +25,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void CompactOrExpand(Guid guid)
-		{
-			int index = this.NodeGetter.SearchBestIndex (guid);
-			this.NodeGetter.CompactOrExpand (index);
-
-			this.UpdateData ();
-		}
-
-		public override void UpdateData()
+		public override void UpdateController(AbstractNodeGetter<TreeNode> nodeGetter, Guid selectedGuid, bool crop = true)
 		{
 			if (this.treeGraphicViewState == null || this.scrollable == null)
 			{
 				return;
 			}
-
-			this.NodeGetter.SetParams (null, this.treeGraphicViewState.SortingInstructions);
 
 			this.scrollable.Viewport.Children.Clear ();
 
@@ -54,13 +40,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var fields = this.GetFieds ();
 			var fontFactors = this.GetFontFactors ();
 
-			foreach (var node in this.NodeGetter.Nodes)
+			var ng = nodeGetter as GroupTreeNodeGetter;
+			foreach (var node in ng.Nodes)
 			{
 				var level = node.Level;
 				var parent = parents[level];
 
 				var texts = this.GetTexts (this.baseType, node.Guid, fields);
-				var w = this.CreateNode (parent, node.Guid, node.Level, node.Type, texts, fontFactors);
+				var w = this.CreateTile (parent, node.Guid, node.Level, node.Type, texts, fontFactors);
 
 				if (parents.Count <= level+1)
 				{
@@ -69,14 +56,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				parents[level+1] = w;
 			}
-		}
 
-		private GroupTreeNodeGetter NodeGetter
-		{
-			get
-			{
-				return this.nodeGetter as GroupTreeNodeGetter;
-			}
+			this.UpdateSelection (selectedGuid, crop);
 		}
 	}
 }
