@@ -11,6 +11,9 @@ using Epsitec.Cresus.Assets.Server.NodeGetters;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Une tuile de AbstractGraphicViewController.
+	/// </summary>
 	public class GraphicViewTile : Widget
 	{
 		public GraphicViewTile(int level, double columnWidth, NodeType nodeType, GraphicViewMode graphicViewMode)
@@ -37,7 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	sauf pour les tuiles finales.
 			this.PreferredWidth = this.RequiredWidth;
 			this.Margins        = new Margins (0, -1, 0, 0);
-			this.Padding        = new Margins (GraphicViewTile.margins, GraphicViewTile.margins, GraphicViewTile.margins+this.TopPadding, GraphicViewTile.margins);
+			this.Padding        = new Margins (GraphicViewTile.externalMargins, GraphicViewTile.externalMargins+1, GraphicViewTile.externalMargins+this.TopPadding, GraphicViewTile.externalMargins);
 		}
 
 
@@ -146,7 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 							width = System.Math.Max (width, w);
 						}
 
-						width += GraphicViewTile.margins*2;
+						width += GraphicViewTile.internalMargins*2;
 						return System.Math.Max (width, this.columnWidth);
 					}
 				}
@@ -183,7 +186,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			get
 			{
 				var rect = this.Client.Bounds;
-				rect.Deflate (0, GraphicViewTile.margins);
+				rect.Deflate (0, GraphicViewTile.internalMargins);
 				return this.Rotate (rect);
 			}
 		}
@@ -198,7 +201,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private string GetText(int index)
 		{
-			if (index == 0 && this.IsEntered)
+			if (index == 0 && this.IsEntered)  // titre survolé ?
 			{
 				return this.texts[index].Color (ColorManager.SelectionColor.ForceV (0.6));
 			}
@@ -214,7 +217,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var rect = this.Client.Bounds;
 			var offset = this.GetTopOffset (index);
 			var h = this.GetFontSize (index) * 1.5;
-			return new Rectangle (rect.Left+GraphicViewTile.margins, rect.Top-offset-h, rect.Width, h);
+			return new Rectangle (rect.Left+GraphicViewTile.internalMargins, rect.Top-offset-h, rect.Width, h);
 		}
 
 		private double TopPadding
@@ -227,7 +230,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private double GetTopOffset(int index)
 		{
-			var offset = GraphicViewTile.margins;
+			var offset = GraphicViewTile.internalMargins;
 
 			for (int i=0; i<index; i++)
 			{
@@ -341,7 +344,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private const double margins            = 10.0;
+		private const double externalMargins    = 10.0;
+		private const double internalMargins    = 10.0;
 		private const double verticalFinalWidth = 22.0;
 
 		private readonly int					level;
