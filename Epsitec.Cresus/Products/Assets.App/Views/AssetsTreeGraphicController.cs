@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			parents.Add (this.scrollable.Viewport);
 
 			var assetFields = this.GetFieds ();
-			var groupFields = this.GroupFields;
+			var groupFields = this.GroupFields.ToArray ();
 			var fontFactors = this.GetFontFactors ();
 
 			var ng = nodeGetter as ObjectsNodeGetter;
@@ -87,6 +87,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var text = this.GetText (nodeGetter, obj, node, field);
 				list.Add (text);
+			}
+
+			//	Supprime les lignes vides à la fin.
+			while (list.Count > 0 && string.IsNullOrEmpty (list.Last ()))
+			{
+				list.RemoveAt (list.Count-1);
 			}
 
 			return list.ToArray ();
@@ -134,11 +140,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private ObjectField[] GroupFields
+		private IEnumerable<ObjectField> GroupFields
 		{
 			get
 			{
-				return new ObjectField[1] { ObjectField.Name };
+				yield return ObjectField.Name;
+
+				foreach (var field in this.UserFields
+					.Where (x => x.Type == FieldType.AmortizedAmount || x.Type == FieldType.ComputedAmount)
+					.Select (x => x.Field))
+				{
+					yield return field;
+				}
 			}
 		}
 
