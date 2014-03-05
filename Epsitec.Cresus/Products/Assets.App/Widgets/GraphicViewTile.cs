@@ -98,16 +98,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.textLayout.Text            = text;
 			this.textLayout.DefaultFont     = Font.DefaultFont;
 			this.textLayout.DefaultFontSize = fontSize;
+			this.textLayout.DefaultColor    = ColorManager.TextColor;
 			this.textLayout.LayoutSize      = rect.Size;
 			this.textLayout.BreakMode       = TextBreakMode.Split | TextBreakMode.SingleLine;
 			this.textLayout.Alignment       = alignment;
 
-			this.textLayout.Paint (rect.BottomLeft, graphics, rect, ColorManager.TextColor, GlyphPaintStyle.Normal);
+			this.textLayout.Paint (rect.BottomLeft, graphics, rect, Color.Empty, GlyphPaintStyle.Normal);
 		}
 
 
 		private double RequiredWidth
 		{
+			//	Retourne la largeur requise pour la tuile.
 			get
 			{
 				if ((this.graphicViewMode & GraphicViewMode.VerticalFinalNode) != 0 &&
@@ -196,7 +198,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private string GetText(int index)
 		{
-			return this.texts[index];
+			if (index == 0 && this.IsEntered)
+			{
+				return this.texts[index].Color (ColorManager.SelectionColor.ForceV (0.6));
+			}
+			else
+			{
+				return this.texts[index];
+			}
 		}
 
 		private Rectangle GetRect(int index)
