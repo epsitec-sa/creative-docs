@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -390,7 +391,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private StaticText CreateOper(Widget parent, string text)
 		{
-			int width = Helpers.Text.GetTextWidth (text) + 10;
+			int width = text.GetTextWidth () + 10;
 
 			return new StaticText
 			{
@@ -407,7 +408,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private TextField CreateArg(Widget parent, string text)
 		{
-			int width = Helpers.Text.GetTextWidth (text) + 10;
+			int width = text.GetTextWidth () + 10;
 
 			return new TextField
 			{

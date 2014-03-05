@@ -9,12 +9,12 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 {
 	public static class Text
 	{
-		public static int GetTextWidth(string text)
+		public static int GetTextWidth(this string text)
 		{
 			return Text.GetTextWidth (text, Font.DefaultFont, Font.DefaultFontSize);
 		}
 
-		public static int GetTextWidth(string text, Font font, double fontSize)
+		public static int GetTextWidth(this string text, Font font, double fontSize)
 		{
 			if (string.IsNullOrEmpty (text))
 			{

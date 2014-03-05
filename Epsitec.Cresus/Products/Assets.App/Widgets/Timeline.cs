@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				this.labelsWidth = this.timelineRows.Max
 				(
-					row => Helpers.Text.GetTextWidth (row.Description, Font.DefaultFont, this.FontSize)
+					row => row.Description.GetTextWidth (Font.DefaultFont, this.FontSize)
 				);
 
 				if (this.labelsWidth > 0)

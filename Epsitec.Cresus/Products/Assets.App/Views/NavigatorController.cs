@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateItems(int rank)
 		{
-			int width = Text.GetTextWidth (this.items[rank]) + 20;
+			int width = this.items[rank].GetTextWidth () + 20;
 
 			var button = new ColoredButton
 			{

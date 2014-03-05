@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						break;
 					}
 
-					var width = Helpers.Text.GetTextWidth (text, font, this.FontSize);
+					var width = text.GetTextWidth (font, this.FontSize);
 					if (width <= rect.Width)
 					{
 						return text;

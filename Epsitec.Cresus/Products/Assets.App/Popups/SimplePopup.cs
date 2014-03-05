@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				return this.items.Max
 				(
-					item => Helpers.Text.GetTextWidth (SimplePopup.GetTextWithGaps (item))
+					item => SimplePopup.GetTextWithGaps (item).GetTextWidth ()
 				)
 				+ ColoredButton.horizontalMargins * 2
 				+ 3;  // visuellement, il est bon d'avoir un chouia d'espace en plus à droite
