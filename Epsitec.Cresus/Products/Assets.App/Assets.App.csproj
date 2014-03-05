@@ -131,7 +131,7 @@
     <Compile Include="Views\AmortizedAmountController.cs" />
     <Compile Include="Views\AccountsTreeGraphicController.cs" />
     <Compile Include="Views\AssetsTreeGraphicController.cs" />
-    <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
+    <Compile Include="Views\AbstractToolbarBothTreesController.cs" />
     <Compile Include="Views\TreeGraphicMode.cs" />
     <Compile Include="Views\GroupsTreeGraphicController.cs" />
     <Compile Include="Views\TreeGraphicState.cs" />

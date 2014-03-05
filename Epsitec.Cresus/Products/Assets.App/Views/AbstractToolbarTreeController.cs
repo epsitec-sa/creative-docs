@@ -12,6 +12,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
+	/// <summary>
+	/// Classe de base pour tous les contrôleurs TreeTable et/ou TreeGraphic.
+	/// </summary>
 	public abstract class AbstractToolbarTreeController<T>
 		where T : struct
 	{

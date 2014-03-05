@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	/// <summary>
 	/// Représente graphiquement le contenu d'un TreeTable, sous la forme d'une large zone
 	/// qu'on peut scroller horizontalement.
-	/// Le graphique est constitué de widgets TreeGraphicViewTile. Grace au mode DockStyle.Left,
+	/// Le graphique est constitué de widgets TreeGraphicTile. Grace au mode DockStyle.Left,
 	/// il a été très simple de réaliser cette vue.
 	/// </summary>
 	public abstract class AbstractTreeGraphicController<T>

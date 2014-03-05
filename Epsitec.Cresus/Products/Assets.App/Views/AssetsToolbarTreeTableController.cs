@@ -14,7 +14,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AssetsToolbarTreeTableController : AbstractToolbarTreeTableController<CumulNode>, IDirty
+	public class AssetsToolbarTreeTableController : AbstractToolbarBothTreesController<CumulNode>, IDirty
 	{
 		public AssetsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)

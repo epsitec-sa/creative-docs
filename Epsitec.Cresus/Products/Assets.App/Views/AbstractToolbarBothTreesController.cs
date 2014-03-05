@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -13,10 +12,14 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public abstract class AbstractToolbarTreeTableController<T> : AbstractToolbarTreeController<T>
+	/// <summary>
+	/// Classe de base pour tous les contrôleurs TreeTable et/ou TreeGraphic.
+	/// Le TreeTable est toujours présent. Gère la présence optionnelle du TreeGraphic.
+	/// </summary>
+	public abstract class AbstractToolbarBothTreesController<T> : AbstractToolbarTreeController<T>
 		where T : struct
 	{
-		public AbstractToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
+		public AbstractToolbarBothTreesController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
 		{
 		}
@@ -46,6 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateTreeTableControllerUI(Widget parent)
 		{
+			//	Crée le contrôleur TreeTable.
 			this.treeTableController = new NavigationTreeTableController ();
 
 			var frame = new FrameBox
@@ -94,9 +98,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateGraphicControllerUI(Widget parent)
 		{
-			this.CreateGraphicControllerUI();
+			//	Crée le contrôleur TreeGraphic, si nécessaire.
+			this.CreateGraphicControllerUI ();
 
-			if (this.graphicController == null)
+			if (this.graphicController == null)  // pas de TreeGraphic ?
 			{
 				return;
 			}
@@ -123,6 +128,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected virtual void CreateGraphicControllerUI()
 		{
+			//	Les classes qui ont une représentation graphique n'ont qu'à surcharger
+			//	cette méthode.
 		}
 
 
@@ -158,11 +165,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected FrameBox							treeTableFrame;
+		protected FrameBox							graphicFrame;
 
-		protected FrameBox						treeTableFrame;
-		protected FrameBox						graphicFrame;
-		protected AbstractTreeTableFiller<T>	dataFiller;
-		protected NavigationTreeTableController	treeTableController;
-		protected AbstractTreeGraphicController<T> graphicController;
+		protected AbstractTreeTableFiller<T>		dataFiller;
+		protected NavigationTreeTableController		treeTableController;
+		protected AbstractTreeGraphicController<T>	graphicController;
 	}
 }
