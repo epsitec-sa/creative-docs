@@ -114,6 +114,7 @@
     <Compile Include="Core\Databases\SubMenuItem.cs" />
     <Compile Include="Core\Databases\Sorter.cs" />
     <Compile Include="Core\Databases\SummaryNavigationContextualMenuItem.cs" />
+    <Compile Include="Core\Extraction\ReportWriter.cs" />
     <Compile Include="Core\Extraction\CsvArrayFormat.cs" />
     <Compile Include="Core\Extraction\ArrayFormat.cs" />
     <Compile Include="Core\Extraction\PaperSize.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Core\Databases\Column.cs" />
     <Compile Include="NancyModules\Constants.cs" />
     <Compile Include="Core\Databases\Database.cs" />
+    <Compile Include="NancyModules\ReportingModule.cs" />
     <Compile Include="NancyModules\FavoritesModule.cs" />
     <Compile Include="NancyModules\PrintModule.cs" />
     <Compile Include="NancyModules\ScopeModule.cs" />

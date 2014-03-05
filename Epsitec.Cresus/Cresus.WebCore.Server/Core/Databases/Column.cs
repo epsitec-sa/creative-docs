@@ -31,6 +31,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			this.metadata = metadata;
 		}
 
+		public Column(EntityColumnMetadata metadata,string columnId)
+		{
+			this.metadata = metadata;
+			this.ColumnId = columnId;
+		}
 
 		public EntityColumnMetadata MetaData
 		{
@@ -40,6 +45,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			}
 		}
 
+		public string ColumnId
+		{
+			get;
+			set;
+		}
 
 		public string Title
 		{

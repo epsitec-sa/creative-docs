@@ -88,7 +88,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			return new EntityExtractor (database, dataSetMetadata, accessor);
 		}
 
-
 		private static DataSetAccessor CreateAccessor(UserManager userManager, System.Func<Database, DataSetAccessor> dataSetAccessorGetter, Database database, IEnumerable<ColumnRef<EntityColumnSort>> sorters, EntityFilter filter, System.Action<DataContext, Request, AbstractEntity> customizer)
 		{
 			var dataSetMetadata = database.DataSetMetadata;

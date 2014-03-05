@@ -111,5 +111,15 @@ namespace Epsitec.Aider.Entities
 			office.Settings.Add (settings);
 			return settings;
 		}
+
+		public static AiderOfficeReportEntity CreateDocument(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderOfficeSettingsEntity settings, AiderContactEntity recipient, string content)
+		{
+			var document = businessContext.CreateAndRegisterEntity<AiderOfficeReportEntity> ();
+			document.ContentTemplate = content;
+			document.Recipient = recipient;
+			document.OfficeSettings = settings;
+			office.OfficeReports.Add (document);
+			return document;
+		}
 	}
 }

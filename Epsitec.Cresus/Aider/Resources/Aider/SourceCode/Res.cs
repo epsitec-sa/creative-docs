@@ -16,9 +16,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (Base.ShowAiderContact, null);
+					global::System.Object.Equals (Base.PrintOfficeReports, null);
 				}
 				
+				//	designer:cap/LVOR13
+				public static readonly global::Epsitec.Common.Widgets.Command PrintOfficeReports = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 59));
 				//	designer:cap/LVAFE
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderContact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 463));
 				//	designer:cap/LVG402
@@ -80,6 +82,8 @@ namespace Epsitec.Aider
 		{
 			public static class Base
 			{
+				//	designer:cap/LVOR13
+				public const long PrintOfficeReports = 0x3F50007800003BL;
 				//	designer:cap/LVAFE
 				public const long ShowAiderContact = 0x3F50000A0001CFL;
 				//	designer:cap/LVG402
@@ -311,6 +315,8 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderMailingParticipant = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 21));
 			//	designer:cap/LVO613
 			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeManagement = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 38));
+			//	designer:cap/LVOS13
+			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeReport = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 60));
 			//	designer:cap/LVOA13
 			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeSettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 42));
 			//	designer:cap/LVAF
@@ -2036,12 +2042,29 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVO913
 				public static readonly global::Epsitec.Common.Support.Druid OfficeName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 41);
+				//	designer:cap/LVO023
+				public static readonly global::Epsitec.Common.Support.Druid OfficeReports = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 64);
 				//	designer:cap/LVO713
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 39);
 				//	designer:cap/LVO813
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 40);
 				//	designer:cap/LVOB13
 				public static readonly global::Epsitec.Common.Support.Druid Settings = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 43);
+			}
+			
+			public static class AiderOfficeReport
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderOfficeReport.ContentTemplate, null);
+				}
+				
+				//	designer:cap/LVOV13
+				public static readonly global::Epsitec.Common.Support.Druid ContentTemplate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 63);
+				//	designer:cap/LVOT13
+				public static readonly global::Epsitec.Common.Support.Druid OfficeSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 61);
+				//	designer:cap/LVOU13
+				public static readonly global::Epsitec.Common.Support.Druid Recipient = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 62);
 			}
 			
 			public static class AiderOfficeSettings
@@ -2903,6 +2926,7 @@ namespace Epsitec.Aider
 			Fields.AiderMailingCategory._Initialize ();
 			Fields.AiderMailingParticipant._Initialize ();
 			Fields.AiderOfficeManagement._Initialize ();
+			Fields.AiderOfficeReport._Initialize ();
 			Fields.AiderOfficeSettings._Initialize ();
 			Fields.AiderPerson._Initialize ();
 			Fields.AiderPersonData._Initialize ();

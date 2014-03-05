@@ -17,36 +17,34 @@ using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (0)]
-	public sealed class ActionAiderOfficeManagementViewController0CreateSettings : ActionViewController<AiderOfficeManagementEntity>
+	[ControllerSubType (1)]
+	public sealed class ActionAiderOfficeManagementViewController1CreateDocument : ActionViewController<AiderOfficeManagementEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Ajouter un réglage");
+			return Resources.Text ("Créer un document");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderContactEntity, AiderContactEntity, AiderTownEntity> (this.Execute);
+			return ActionExecutor.Create<AiderContactEntity, string> (this.Execute);
 		}
 
-		private void Execute(AiderContactEntity officialContact, AiderContactEntity officeAddress, AiderTownEntity ppFrankingTown)
+		private void Execute(AiderContactEntity recipient,string content)
 		{
-			AiderOfficeManagementEntity.CreateSettings (this.BusinessContext, this.Entity, officialContact, officeAddress, ppFrankingTown);
+			var settings = this.Entity.Settings.Single(s => s.IsCurrentSettings == true);
+			AiderOfficeManagementEntity.CreateDocument (this.BusinessContext,this.Entity, settings, recipient, content);
 		}
 
 		protected override void GetForm(ActionBrick<AiderOfficeManagementEntity, SimpleBrick<AiderOfficeManagementEntity>> form)
 		{
 			form
-				.Title ("Réglages")
+				.Title ("Document")
 				.Field<AiderContactEntity> ()
-					.Title ("Contact officiel")
+					.Title ("Destinataire")
 				.End ()
-				.Field<AiderContactEntity> ()
-					.Title ("Adresse du secrétariat")
-				.End ()
-				.Field<AiderTownEntity> ()
-					.Title ("Envoi P.P")
+				.Field<string> ()
+					.Title ("Contenu")
 				.End ()
 			.End ();
 		}

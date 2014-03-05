@@ -353,5 +353,23 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				RemoveDuplicates = true
 			};
 		}
+
+		private static EntityWriter GetReportWriter(EntityExtractor extractor, dynamic query)
+		{
+			string rawLayout        = query.layout;
+			int    rawTextFactoryId = query.text;
+
+			var metaData = extractor.Metadata;
+			var accessor = extractor.Accessor;
+
+			var layout      = (LabelLayout) Enum.Parse (typeof (LabelLayout), rawLayout);
+			var entitytype  = metaData.EntityTableMetadata.EntityType;
+			var textFactory = LabelTextFactoryResolver.Resolve (entitytype, rawTextFactoryId);
+
+			return new LabelWriter (metaData, accessor, textFactory, layout)
+			{
+				RemoveDuplicates = true
+			};
+		}
 	}
 }

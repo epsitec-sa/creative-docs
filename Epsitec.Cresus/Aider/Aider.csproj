@@ -164,6 +164,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderOfficeManagementViewController0CreateSettings.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderOfficeSettingsViewController0ActivateSettings.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController11Derogate.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderOfficeManagementViewController1CreateDocument.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderGroupExtractionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
@@ -197,6 +198,8 @@
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController1ExcludedContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController0RecipientsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeReportViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController2Documents.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_DerogationChange.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController1Settings.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController.cs" />
@@ -286,6 +289,7 @@
     <Compile Include="Entities\AiderMailingCategoryEntity.cs" />
     <Compile Include="Entities\AiderOfficeManagementEntity.cs" />
     <Compile Include="Entities\AiderOfficeSettingsEntity.cs" />
+    <Compile Include="Entities\AiderOfficeReportEntity.cs" />
     <Compile Include="Entities\eCH_ReportedPersonEntity.cs" />
     <Compile Include="Entities\IAiderWarningExampleFactoryGetter.cs" />
     <Compile Include="Entities\ParticipationData.cs" />
