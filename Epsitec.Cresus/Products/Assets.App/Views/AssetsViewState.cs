@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public Guid								SelectedGuid;
 		public Guid								FilterTreeTableGuid;
 		public Guid								FilterTimelinesGuid;
+		public bool								ShowGraphic;
 
 
 		#region IEquatable<AbstractViewState> Members

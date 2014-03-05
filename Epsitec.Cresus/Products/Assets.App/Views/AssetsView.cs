@@ -371,6 +371,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					SelectedGuid        = this.selectedGuid,
 					FilterTreeTableGuid = this.listController.FilterGuid,
 					FilterTimelinesGuid = this.timelinesArrayController.FilterGuid,
+					ShowGraphic         = this.listController.ShowGraphic,
 				};
 			}
 			set
@@ -385,6 +386,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.listController.FilterGuid = viewState.FilterTreeTableGuid;
 				this.timelinesArrayController.FilterGuid = viewState.FilterTimelinesGuid;
+				this.listController.ShowGraphic = viewState.ShowGraphic;
 
 				if (viewState.PageType == PageType.Unknown)
 				{

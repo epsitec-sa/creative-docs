@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public BaseType							BaseType;
 		public Guid								SelectedGuid;
+		public bool								ShowGraphic;
 
 
 		#region IEquatable<AbstractViewState> Members

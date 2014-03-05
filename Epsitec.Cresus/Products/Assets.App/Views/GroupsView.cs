@@ -153,6 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ViewType     = ViewType.Groups,
 					PageType     = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
 					SelectedGuid = this.selectedGuid,
+					ShowGraphic  = this.listController.ShowGraphic,
 				};
 			}
 			set
@@ -161,6 +162,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				System.Diagnostics.Debug.Assert (viewState != null);
 
 				this.selectedGuid = viewState.SelectedGuid;
+				this.listController.ShowGraphic = viewState.ShowGraphic;
 
 				if (viewState.PageType == PageType.Unknown)
 				{

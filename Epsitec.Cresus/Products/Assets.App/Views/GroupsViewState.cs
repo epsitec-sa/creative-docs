@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public class GroupsViewState : AbstractViewState, System.IEquatable<AbstractViewState>
 	{
 		public Guid								SelectedGuid;
+		public bool								ShowGraphic;
 
 
 		#region IEquatable<AbstractViewState> Members

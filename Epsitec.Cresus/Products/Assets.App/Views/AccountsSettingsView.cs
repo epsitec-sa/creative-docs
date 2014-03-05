@@ -152,6 +152,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ViewType     = ViewType.AccountsSettings,
 				BaseType     = BaseType.Accounts,
 				SelectedGuid = accountGuid,
+				ShowGraphic  = false,
 			};
 		}
 
@@ -165,6 +166,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ViewType     = ViewType.AccountsSettings,
 					BaseType     = this.baseType,
 					SelectedGuid = this.selectedGuid,
+					ShowGraphic  = this.listController.ShowGraphic,
 				};
 			}
 			set
@@ -173,6 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				System.Diagnostics.Debug.Assert (viewState != null);
 
 				this.selectedGuid = viewState.SelectedGuid;
+				this.listController.ShowGraphic = viewState.ShowGraphic;
 
 				this.UpdateUI ();
 			}

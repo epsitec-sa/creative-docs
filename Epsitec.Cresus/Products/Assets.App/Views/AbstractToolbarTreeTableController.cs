@@ -23,6 +23,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public bool								ShowGraphic
+		{
+			get
+			{
+				return this.showGraphic;
+			}
+			set
+			{
+				if (this.showGraphic != value)
+				{
+					this.showGraphic = value;
+					this.UpdateGraphicMode ();
+				}
+			}
+		}
+
+
 		public virtual void CreateUI(Widget parent)
 		{
 			this.topTitle = new TopTitle
