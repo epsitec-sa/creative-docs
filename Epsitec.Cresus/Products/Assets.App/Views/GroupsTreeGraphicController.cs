@@ -9,23 +9,20 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AccountsTreeGraphicViewController : AbstractTreeGraphicViewController<TreeNode>
+	public class GroupsTreeGraphicController : AbstractTreeGraphicController<TreeNode>
 	{
-		public AccountsTreeGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeController<TreeNode> treeTableController)
+		public GroupsTreeGraphicController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeController<TreeNode> treeTableController)
 			: base (accessor, baseType, treeTableController)
 		{
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);
 
-			this.treeGraphicViewState = new TreeGraphicViewState ();
-			this.treeGraphicViewState.Fields.Add (ObjectField.Number);
+			this.treeGraphicViewState = new TreeGraphicState ();
 			this.treeGraphicViewState.Fields.Add (ObjectField.Name);
-			this.treeGraphicViewState.FontFactors.Add (2.0);
 			this.treeGraphicViewState.FontFactors.Add (1.0);
-			this.treeGraphicViewState.ColumnWidth = 20;
 
-			this.treeGraphicViewMode = TreeGraphicViewMode.VerticalFinalNode | TreeGraphicViewMode.AutoWidthFirstLine;
+			this.treeGraphicViewMode = TreeGraphicMode.AutoWidthAllLines;
 		}
 
 

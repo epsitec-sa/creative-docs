@@ -11,9 +11,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AssetsTreeGraphicViewController : AbstractTreeGraphicViewController<CumulNode>
+	public class AssetsTreeGraphicController : AbstractTreeGraphicController<CumulNode>
 	{
-		public AssetsTreeGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeController<CumulNode> treeTableController)
+		public AssetsTreeGraphicController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeController<CumulNode> treeTableController)
 			: base (accessor, baseType, treeTableController)
 		{
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
 			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
-			this.treeGraphicViewState = new TreeGraphicViewState ();
+			this.treeGraphicViewState = new TreeGraphicState ();
 
 			this.treeGraphicViewState.Fields.Add (this.accessor.GetMainStringField (this.baseType));
 			this.treeGraphicViewState.Fields.AddRange (this.UserFields
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.treeGraphicViewState.FontFactors.Add ((i == 0) ? 1.0 : 0.7);
 			}
 
-			this.treeGraphicViewMode = TreeGraphicViewMode.AutoWidthAllLines;
+			this.treeGraphicViewMode = TreeGraphicMode.AutoWidthAllLines;
 		}
 
 

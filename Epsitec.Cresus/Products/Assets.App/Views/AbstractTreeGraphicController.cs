@@ -20,10 +20,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 	/// Le graphique est constitué de widgets TreeGraphicViewTile. Grace au mode DockStyle.Left,
 	/// il a été très simple de réaliser cette vue.
 	/// </summary>
-	public abstract class AbstractTreeGraphicViewController<T>
+	public abstract class AbstractTreeGraphicController<T>
 		where T : struct
 	{
-		public AbstractTreeGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeController<T> treeTableController)
+		public AbstractTreeGraphicController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeController<T> treeTableController)
 		{
 			this.accessor            = accessor;
 			this.baseType            = baseType;
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected Widget CreateNode(Widget parent, Guid guid, int level, NodeType nodeType, string[] texts, double[] fontFactors)
 		{
-			var tile = new TreeGraphicViewTile (level, this.treeGraphicViewState.ColumnWidth, nodeType, this.treeGraphicViewMode)
+			var tile = new TreeGraphicTile (level, this.treeGraphicViewState.ColumnWidth, nodeType, this.treeGraphicViewMode)
 			{
 				Parent           = parent,
 				Name             = guid.ToString (),
@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected AbstractNodeGetter<T>			nodeGetter;
 		protected Scrollable					scrollable;
-		protected TreeGraphicViewMode			treeGraphicViewMode;
-		protected TreeGraphicViewState			treeGraphicViewState;
+		protected TreeGraphicMode			treeGraphicViewMode;
+		protected TreeGraphicState			treeGraphicViewState;
 	}
 }

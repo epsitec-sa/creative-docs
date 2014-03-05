@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void CreateGraphic(Widget parent)
 		{
-			this.treeGraphicController = new AssetsTreeGraphicViewController (this.accessor, this.baseType, this);
+			this.treeGraphicController = new AssetsTreeGraphicController (this.accessor, this.baseType, this);
 			this.treeGraphicController.CreateUI (parent);
 
 			this.treeGraphicController.TileDoubleClicked += delegate

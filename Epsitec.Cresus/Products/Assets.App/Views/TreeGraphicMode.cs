@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	[System.Flags]
-	public enum TreeGraphicViewMode
+	public enum TreeGraphicMode
 	{
 		None               = 0x0000,
 

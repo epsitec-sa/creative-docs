@@ -575,7 +575,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected AbstractTreeTableFiller<T>	dataFiller;
 		protected TopTitle						topTitle;
 		protected NavigationTreeTableController	treeTableController;
-		protected AbstractTreeGraphicViewController<T> treeGraphicController;
+		protected AbstractTreeGraphicController<T> treeGraphicController;
 		protected int							selectedRow;
 		protected TreeTableToolbar				toolbar;
 		protected SortingInstructions			sortingInstructions;
