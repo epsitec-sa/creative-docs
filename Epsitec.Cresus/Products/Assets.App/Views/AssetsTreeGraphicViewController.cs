@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AssetsTreeGraphicViewController : AbstractTreeGraphicViewController<CumulNode>
 	{
-		public AssetsTreeGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeTableController<CumulNode> treeTableController)
+		public AssetsTreeGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeController<CumulNode> treeTableController)
 			: base (accessor, baseType, treeTableController)
 		{
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode

@@ -17,13 +17,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 	/// <summary>
 	/// Représente graphiquement le contenu d'un TreeTable, sous la forme d'une large zone
 	/// qu'on peut scroller horizontalement.
-	/// Le graphique est constitué de widgets GraphicViewTile. Grace au mode DockStyle.Left,
+	/// Le graphique est constitué de widgets TreeGraphicViewTile. Grace au mode DockStyle.Left,
 	/// il a été très simple de réaliser cette vue.
 	/// </summary>
 	public abstract class AbstractTreeGraphicViewController<T>
 		where T : struct
 	{
-		public AbstractTreeGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeTableController<T> treeTableController)
+		public AbstractTreeGraphicViewController(DataAccessor accessor, BaseType baseType, AbstractToolbarTreeController<T> treeTableController)
 		{
 			this.accessor            = accessor;
 			this.baseType            = baseType;
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected readonly DataAccessor			accessor;
 		protected readonly BaseType				baseType;
-		protected readonly AbstractToolbarTreeTableController<T> treeTableController;
+		protected readonly AbstractToolbarTreeController<T> treeTableController;
 
 		protected AbstractNodeGetter<T>			nodeGetter;
 		protected Scrollable					scrollable;

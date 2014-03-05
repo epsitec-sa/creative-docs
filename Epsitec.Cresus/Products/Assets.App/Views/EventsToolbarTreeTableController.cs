@@ -11,7 +11,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class EventsToolbarTreeTableController : AbstractToolbarTreeTableController<SortableNode>, IDirty
+	public class EventsToolbarTreeTableController : AbstractToolbarTreeController<SortableNode>, IDirty
 	{
 		public EventsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base(accessor, baseType)

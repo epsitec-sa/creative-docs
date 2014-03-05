@@ -13,10 +13,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public abstract class AbstractToolbarTreeTableController<T>
+	public abstract class AbstractToolbarTreeController<T>
 		where T : struct
 	{
-		public AbstractToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
+		public AbstractToolbarTreeController(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
@@ -500,7 +500,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected class SaveSelectedGuid : System.IDisposable
 		{
-			public SaveSelectedGuid(AbstractToolbarTreeTableController<T> controller)
+			public SaveSelectedGuid(AbstractToolbarTreeController<T> controller)
 			{
 				this.controller = controller;
 				this.currentGuid = this.controller.SelectedGuid;
@@ -511,7 +511,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.controller.SelectedGuid = this.currentGuid;
 			}
 
-			private readonly AbstractToolbarTreeTableController<T>	controller;
+			private readonly AbstractToolbarTreeController<T>	controller;
 			private readonly Guid									currentGuid;
 		}
 

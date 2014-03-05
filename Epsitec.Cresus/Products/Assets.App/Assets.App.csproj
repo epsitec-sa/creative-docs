@@ -116,7 +116,7 @@
     <Compile Include="Views\ComputedAmountController.cs" />
     <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\AbstractEditorPage.cs" />
-    <Compile Include="Views\AbstractToolbarTreeTableController.cs" />
+    <Compile Include="Views\AbstractToolbarTreeController.cs" />
     <Compile Include="Views\CategoriesToolbarTreeTableController.cs" />
     <Compile Include="Views\CategoriesView.cs" />
     <Compile Include="Views\AbstractViewState.cs" />

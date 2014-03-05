@@ -13,7 +13,7 @@ using Epsitec.Common.Support;
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
-	/// Une tuile de AbstractGraphicViewController.
+	/// Une tuile de AbstractTreeGraphicViewController.
 	/// </summary>
 	public class TreeGraphicViewTile : Widget
 	{

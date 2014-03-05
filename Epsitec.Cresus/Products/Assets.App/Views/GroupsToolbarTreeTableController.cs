@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class GroupsToolbarTreeTableController : AbstractToolbarTreeTableController<TreeNode>, IDirty
+	public class GroupsToolbarTreeTableController : AbstractToolbarTreeController<TreeNode>, IDirty
 	{
 		public GroupsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
