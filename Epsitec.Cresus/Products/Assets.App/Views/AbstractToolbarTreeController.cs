@@ -258,36 +258,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnCompactAll()
 		{
 			//	Compacte toutes les lignes.
-			if (this.hasGraphic)
+			using (new SaveSelectedGuid (this))
 			{
-				//?this.graphicController.CompactAll ();
-			}
-			else
-			{
-				using (new SaveSelectedGuid (this))
-				{
-					this.TreeNodeGetter.CompactAll ();
-					this.UpdateController ();
-					this.UpdateToolbar ();
-				}
+				this.TreeNodeGetter.CompactAll ();
+				this.UpdateController ();
+				this.UpdateToolbar ();
 			}
 		}
 
 		private void OnExpandAll()
 		{
 			//	Etend toutes les lignes.
-			if (this.hasGraphic)
+			using (new SaveSelectedGuid (this))
 			{
-				//?this.graphicController.ExpandAll ();
-			}
-			else
-			{
-				using (new SaveSelectedGuid (this))
-				{
-					this.TreeNodeGetter.ExpandAll ();
-					this.UpdateController ();
-					this.UpdateToolbar ();
-				}
+				this.TreeNodeGetter.ExpandAll ();
+				this.UpdateController ();
+				this.UpdateToolbar ();
 			}
 		}
 

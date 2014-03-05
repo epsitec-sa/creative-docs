@@ -317,18 +317,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var rect = this.TreeButtonRectangle;
 				rect.Deflate (3.0, 4.0);
 
-				if (this.nodeType == NodeType.Expanded)
-				{
-					path.MoveTo (new Point (rect.Center.X, rect.Bottom));
-					path.LineTo (rect.TopLeft);
-					path.LineTo (rect.TopRight);
-					path.Close ();
-				}
-				else
+				if (this.nodeType == NodeType.Expanded)  // triangle ^ ?
 				{
 					path.MoveTo (new Point (rect.Center.X, rect.Top));
 					path.LineTo (rect.BottomLeft);
 					path.LineTo (rect.BottomRight);
+					path.Close ();
+				}
+				else  // triangle v ?
+				{
+					path.MoveTo (new Point (rect.Center.X, rect.Bottom));
+					path.LineTo (rect.TopLeft);
+					path.LineTo (rect.TopRight);
 					path.Close ();
 				}
 
