@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -316,7 +317,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			foreach (var type in this.DateTypes)
 			{
-				popup.Items.Add (this.GetPredefinedDescription (type));
+				var text = this.GetPredefinedDescription (type);
+
+				if (string.IsNullOrEmpty (text))
+				{
+					popup.Items.Add (null);
+				}
+				else
+				{
+					var date = this.GetPredefinedDate (type);
+					var td = TypeConverters.DateToString (date);
+
+					popup.Items.Add (string.Concat (td, " — ", text));
+				}
 			}
 
 			popup.Create (this.predefinedButton, leftOrRight: true);

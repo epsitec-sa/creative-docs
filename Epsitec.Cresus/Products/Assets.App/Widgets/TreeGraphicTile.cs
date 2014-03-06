@@ -184,8 +184,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private int GetX(Rectangle rect, decimal amount)
 		{
-			decimal factor = (amount - this.MinAmount) / (this.MaxAmount - this.MinAmount);
-			return (int) (rect.Left + rect.Width * (double) factor);
+			if (this.MaxAmount - this.MinAmount == 0.0m)
+			{
+				return (int) rect.Left;
+			}
+			else
+			{
+				decimal factor = (amount - this.MinAmount) / (this.MaxAmount - this.MinAmount);
+				return (int) (rect.Left + rect.Width * (double) factor);
+			}
 		}
 
 		private void PaintTreeButton(Graphics graphics)
