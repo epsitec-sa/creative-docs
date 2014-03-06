@@ -91,6 +91,11 @@ namespace Epsitec.Common.Pdf.Common
 			this.AddLayer (text, margins, s);
 		}
 
+		public void AddCustomLayer(FormattedText text, Margins margins, TextStyle style)
+		{
+			this.AddLayer (text, margins, style);
+		}
+
 		public void AddBottomCenterLayer(FormattedText text, double bottomMargin, TextStyle style = null)
 		{
 			var margins = new Margins (0.0, 0.0, 0.0, bottomMargin);

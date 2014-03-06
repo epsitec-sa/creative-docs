@@ -1339,7 +1339,23 @@ AiderOfficeReport = [LVOS13]
     </t>
 
     <t eid="@AiderOfficeReport" n="default">
+    <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVOV13]" title="ContentTemplate" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVOT13].[LVOI13].[LVO913]" title="OfficeName" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVOU13].[LVA5E].[LVAU]" title="Titre" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVOU13].[LVA5E].[LVGS32]" title="Prénom" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVOU13].[LVA5E].[LVAU1].[LVA2]" title="Nom" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -1347,12 +1363,8 @@ AiderOfficeReport = [LVOS13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVOV13]" title="ContentTemplate" canSort="True" canFilter="True">
-        <sort o="None" />
-        <disp m="Hidden" />
-      </col>
     </t>
-
+    
 
   </T>
   <!-- DataSets -->

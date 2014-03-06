@@ -35,7 +35,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 								.Attribute (BrickMode.HideRemoveButton)
 								.Template ()
 									.Title ("Documents")
-									.Text (x => x.GetCompactSummary ())									
+									.Text (x => "<a href='/proxy/reporting/"
+												+ Res.Commands.Base.PrintOfficeReports.CommandId + "/" 
+												+ this.DataContext.GetPersistedId (x).Substring(3).Replace(':','-')
+												+"/test' target='_blank'>Consulter</a>")									
 								.End ();
 			
 			

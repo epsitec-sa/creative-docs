@@ -182,6 +182,7 @@
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderMailingController0.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderOfficeReportViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderOfficeSettingsViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupExtractionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderMailingCategoryViewController.cs" />

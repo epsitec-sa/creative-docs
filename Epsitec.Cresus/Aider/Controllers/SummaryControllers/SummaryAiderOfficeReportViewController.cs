@@ -28,7 +28,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick ()
 					.Icon ("Data.AiderGroup.People")
 					.Title ("Template")
-					.Text (p => p.ContentTemplate);
+					.Text (p => p.ContentTemplate)
+					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 	
 		}
 	}

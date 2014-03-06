@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var layout      = LabelLayout.Sheet_A4_Simple;
 			var entitytype  = metaData.EntityTableMetadata.EntityType;
 
-			return new ReportWriter (metaData, accessor, layout);
+			return new LetterDocumentWriter (metaData, accessor, layout);
 		}
 
 		private static  DataExpression CreateCondition(AbstractEntity example,long id)
