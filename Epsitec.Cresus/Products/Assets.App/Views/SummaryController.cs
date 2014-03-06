@@ -63,13 +63,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var button = new ColoredButton
 					{
-						Parent          = columnFrame,
-						Name            = SummaryController.PutRowColumn (row, column),
-						Dock            = DockStyle.Top,
-						PreferredWidth  = width-1,
-						PreferredHeight = AbstractFieldController.lineHeight,
-						Margins         = new Margins (0, 1, 0, 1),
-						TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+						Parent            = columnFrame,
+						Name              = SummaryController.PutRowColumn (row, column),
+						Dock              = DockStyle.Top,
+						PreferredWidth    = width-1,
+						PreferredHeight   = AbstractFieldController.lineHeight,
+						Margins           = new Margins (0, 1, 0, 1),
+						TextBreakMode     = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+						HorizontalMargins = 0,
 					};
 
 					this.UpdateButton (button, this.GetTile (column, row));

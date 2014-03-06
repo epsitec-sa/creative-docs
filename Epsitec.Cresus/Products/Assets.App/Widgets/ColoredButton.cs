@@ -81,6 +81,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public int								HorizontalMargins = ColoredButton.horizontalMargins;
+
 
 		protected override void OnActiveStateChanged()
 		{
@@ -117,7 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			//	Dessine le texte.
-			rect.Deflate (ColoredButton.horizontalMargins, 0);  // en cas d'alignement à gauche, comme un TextField !
+			rect.Deflate (this.HorizontalMargins, 0);  // en cas d'alignement à gauche, comme un TextField !
 
 			this.textLayout.Text            = this.Text;
 			this.textLayout.DefaultFont     = Font.DefaultFont;
