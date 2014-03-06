@@ -57,6 +57,7 @@
     <Compile Include="BusinessLogic\CategoriesLogic.cs" />
     <Compile Include="BusinessLogic\AmortizationDetails.cs" />
     <Compile Include="BusinessLogic\AccountsLogic.cs" />
+    <Compile Include="BusinessLogic\EntriesLogic.cs" />
     <Compile Include="BusinessLogic\UserFieldsLogic.cs" />
     <Compile Include="BusinessLogic\GroupsGuidRatioLogic.cs" />
     <Compile Include="BusinessLogic\ObjectProperties.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="DataFillers\AbstractTreeTableCell.cs" />
     <Compile Include="DataFillers\CellState.cs" />
     <Compile Include="DataFillers\AccountsTreeTableFiller.cs" />
+    <Compile Include="DataFillers\EntriesTreeTableFiller.cs" />
     <Compile Include="DataFillers\TreeTableCellAmortizedAmount.cs" />
     <Compile Include="DataFillers\SingleAccountsTreeTableFiller.cs" />
     <Compile Include="DataFillers\UserFieldsTreeTableFiller.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="SimpleEngine\AccountCategory.cs" />
     <Compile Include="SimpleEngine\AccountType.cs" />
     <Compile Include="SimpleEngine\AmortizedAmount.cs" />
+    <Compile Include="SimpleEngine\DummyEntries.cs" />
     <Compile Include="SimpleEngine\DataAmortizedAmountProperty.cs" />
     <Compile Include="SimpleEngine\DummyAmortizations.cs" />
     <Compile Include="SimpleEngine\DummyGroups.cs" />

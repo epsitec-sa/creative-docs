@@ -9,12 +9,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 	[System.Flags]
 	public enum TreeGraphicMode
 	{
-		None               = 0x0000,
+		None                = 0x0000,
 
-		VerticalFinalNode  = 0x0001,
+		VerticalFinalNode   = 0x0001,
+		CompressEmptyValues = 0x0002,
 
-		FixedWidth         = 0x0010,
-		AutoWidthFirstLine = 0x0020,
-		AutoWidthAllLines  = 0x0040,
+		FixedWidth          = 0x0010,
+		AutoWidthFirstLine  = 0x0020,
+		AutoWidthAllLines   = 0x0040,
 	}
 }

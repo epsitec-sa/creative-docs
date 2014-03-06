@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		public static string GetSummary(DataAccessor accessor, Guid guid)
 		{
-			//	Retourne le nom d'un compte, du genre:
+			//	Retourne le résumé d'un compte, du genre:
 			//	"1000 Caisse"
 			var obj = accessor.GetObject (BaseType.Accounts, guid);
 			if (obj == null)
@@ -24,6 +24,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var t = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
 
 				return string.Join (" ", n, t);
+			}
+		}
+
+		public static string GetNumber(DataAccessor accessor, Guid guid)
+		{
+			//	Retourne le numéro d'un compte, du genre:
+			//	"1000"
+			var obj = accessor.GetObject (BaseType.Accounts, guid);
+			if (obj == null)
+			{
+				return "...";
+			}
+			else
+			{
+				return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Number);
 			}
 		}
 	}

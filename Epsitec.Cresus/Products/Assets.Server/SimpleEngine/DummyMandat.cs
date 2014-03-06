@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			DummyMandat.AddSettings (mandat);
 			DummyAccounts.AddAccounts (mandat);
+			DummyEntries.AddEntries (mandat);
 			DummyPersons.AddPersons (mandat);
 			DummyCategories.AddCategories (mandat);
 			DummyGroups.AddGroups (mandat);

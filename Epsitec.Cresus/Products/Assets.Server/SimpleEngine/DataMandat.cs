@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.groups     = new GuidList<DataObject> ();
 			this.persons    = new GuidList<DataObject> ();
 			this.accounts   = new GuidList<DataObject> ();
+			this.entries    = new GuidList<DataObject> ();
 		}
 
 		public Settings							Settings
@@ -59,6 +60,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case BaseType.Accounts:
 					return this.accounts;
 
+				case BaseType.Entries:
+					return this.entries;
+
 				default:
 					return null;
 			}
@@ -71,5 +75,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private readonly GuidList<DataObject>	groups;
 		private readonly GuidList<DataObject>	persons;
 		private readonly GuidList<DataObject>	accounts;
+		private readonly GuidList<DataObject>	entries;
 	}
 }

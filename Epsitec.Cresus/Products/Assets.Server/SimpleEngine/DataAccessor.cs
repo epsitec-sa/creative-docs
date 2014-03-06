@@ -268,6 +268,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.AmortizationRate:
 				case ObjectField.ResidualValue:
 				case ObjectField.Round:
+				case ObjectField.EntryAmount:
 					return FieldType.Decimal;
 
 				case ObjectField.AmortizationType:
@@ -276,6 +277,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					return FieldType.Int;
 
 				case ObjectField.OneShotDateOperation:
+				case ObjectField.EntryDate:
 					return FieldType.Date;
 
 				case ObjectField.GroupParent:
@@ -289,6 +291,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.Account6:
 				case ObjectField.Account7:
 				case ObjectField.Account8:
+				case ObjectField.EntryDebitAccount:
+				case ObjectField.EntryCreditAccount:
 					return FieldType.GuidAccount;
 
 				default:

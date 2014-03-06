@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.Amortizations:
 					return ToolbarCommand.ViewTypeAmortizations;
 
-				case ViewType.Ecritures:
+				case ViewType.Entries:
 					return ToolbarCommand.ViewTypeEcritures;
 
 				case ViewType.Categories:
@@ -294,7 +294,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				yield return ViewType.Assets;
 				yield return ViewType.Amortizations;
-				yield return ViewType.Ecritures;
+				yield return ViewType.Entries;
 				yield return ViewType.Categories;
 				yield return ViewType.Groups;
 				yield return ViewType.Persons;

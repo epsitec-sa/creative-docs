@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.Amortizations:
 					return "View.Amortizations";
 
-				case ViewType.Ecritures:
+				case ViewType.Entries:
 					return "View.Ecritures";
 
 				case ViewType.Categories:
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.Amortizations:
 					return "Amortissements";
 
-				case ViewType.Ecritures:
+				case ViewType.Entries:
 					return "Ecritures comptables";
 
 				case ViewType.Categories:
@@ -125,6 +125,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case PageType.Account:
 					return "Définitions du compte";
+
+				case PageType.Entry:
+					return "Définitions de l'écriture";
 
 				default:
 					return null;

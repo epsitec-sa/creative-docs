@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		Assets,
 		Amortizations,
-		Ecritures,
+		Entries,
 		Categories,
 		Groups,
 		Persons,

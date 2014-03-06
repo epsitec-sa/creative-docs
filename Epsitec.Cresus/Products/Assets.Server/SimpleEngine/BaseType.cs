@@ -14,5 +14,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Persons,
 		UserFields,
 		Accounts,
+		Entries,
 	}
 }

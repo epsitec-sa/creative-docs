@@ -115,6 +115,24 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.AccountType:
 					return "Type";
 
+				case ObjectField.EntryDate:
+					return "Date";
+
+				case ObjectField.EntryDebitAccount:
+					return "Débit";
+
+				case ObjectField.EntryCreditAccount:
+					return "Crédit";
+
+				case ObjectField.EntryStamp:
+					return "Pièce";
+
+				case ObjectField.EntryTitle:
+					return "Libellé";
+
+				case ObjectField.EntryAmount:
+					return "Montant";
+
 				default:
 					return null;
 			}

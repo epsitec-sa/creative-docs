@@ -44,6 +44,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		AccountCategory,
 		AccountType,
 
+		//	Définitins d'une écriture.
+		EntryDate,
+		EntryDebitAccount,
+		EntryCreditAccount,
+		EntryStamp,
+		EntryTitle,
+		EntryAmount,
+
 		EventDate,
 		EventGlyph,
 		EventType,
