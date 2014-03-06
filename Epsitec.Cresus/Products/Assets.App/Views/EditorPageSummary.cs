@@ -218,22 +218,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDocuments));
 				c1.Add (ObjectSummaryControllerTile.Empty);
 
-				c1.Add (new ObjectSummaryControllerTile ("Général"));
-				foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)
-					.Where (x => x.Type != FieldType.ComputedAmount && x.Type != FieldType.GuidPerson)
-					.Select (x => x.Field))
+				var groups = GroupsGuidRatioLogic.GetSortedFields (this.accessor);
+				if (groups.Any ())
 				{
-					c1.Add (new ObjectSummaryControllerTile (field));
-				}
-				c1.Add(ObjectSummaryControllerTile.Empty);
-
-				var persons = this.accessor.Settings.GetUserFields (BaseType.Assets)
-					.Where (x => x.Type == FieldType.GuidPerson)
-					.Select (x => x.Field);
-				if (persons.Any ())
-				{
-					c1.Add (new ObjectSummaryControllerTile ("Personnes"));
-					foreach (var field in persons)
+					c1.Add (new ObjectSummaryControllerTile ("Regroupements"));
+					foreach (var field in groups)
 					{
 						c1.Add (new ObjectSummaryControllerTile (field));
 					}
@@ -243,28 +232,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var c2 = new List<ObjectSummaryControllerTile> ();
 				list.Add (c2);
 
-				var values = this.accessor.Settings.GetUserFields (BaseType.Assets)
-					.Where (x => x.Type == FieldType.ComputedAmount)
-					.Select (x => x.Field);
-				if (values.Any ())
+				c2.Add (new ObjectSummaryControllerTile ("Général"));
+				foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)
+					.Select (x => x.Field))
 				{
-					c2.Add (new ObjectSummaryControllerTile ("Valeurs"));
-					foreach (var field in values)
-					{
-						c2.Add (new ObjectSummaryControllerTile (field));
-					}
-					c2.Add (ObjectSummaryControllerTile.Empty);
+					c2.Add (new ObjectSummaryControllerTile (field));
 				}
-
-				var groups = GroupsGuidRatioLogic.GetSortedFields (this.accessor);
-				if (groups.Any ())
-				{
-					c2.Add (new ObjectSummaryControllerTile ("Regroupements"));
-					foreach (var field in groups)
-					{
-						c2.Add (new ObjectSummaryControllerTile (field));
-					}
-				}
+				c2.Add (ObjectSummaryControllerTile.Empty);
 
 				//	Troisième colonne.
 				var c3 = new List<ObjectSummaryControllerTile> ();
