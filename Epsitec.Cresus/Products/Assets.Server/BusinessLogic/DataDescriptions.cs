@@ -134,10 +134,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return "Amort. ordinaire";
 
 				case EventType.AmortizationExtra:
-					return "Modification valeur";
+					return "Amort. extraordinaire";
 
 				case EventType.Modification:
 					return "Modification générale";
+
+				case EventType.MainValue:
+					return "Modification valeur";
 
 				case EventType.Output:
 					return "Sortie";

@@ -11,13 +11,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		Unknown,
 		Input,					// entrée dans l'inventaire, acquisition
+		Modification,			// modification de diverses informations
+		MainValue,				// modification de la valeur comptable (revalorisation, réévaluation)
 		AmortizationAuto,		// amortissement ordinaire
 		AmortizationPreview,	// aperçu d'un amortissement ordinaire
 		AmortizationExtra,		// amortissement extraordinaire
-		Modification,			// modification de diverses informations
-		//?Reorganization,			// spécificité MCH2
-		//?Increase,				// revalorisation
-		//?Decrease,				// réévaluation
 		Output,					// sortie de l'inventaire, vente, vol, destruction, etc.
 	}
 }

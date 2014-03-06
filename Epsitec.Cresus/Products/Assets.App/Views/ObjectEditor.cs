@@ -297,6 +297,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					switch (type)
 					{
 						case EventType.AmortizationExtra:
+						case EventType.MainValue:
 							yield return PageType.AmortizationValue;
 							break;
 

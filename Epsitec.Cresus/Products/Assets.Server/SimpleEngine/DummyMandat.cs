@@ -565,7 +565,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 
 				{
-					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 7, 12), 0), EventType.Modification);
+					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 7, 12), 0), EventType.MainValue);
 					o236.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataAmortizedAmountProperty (ObjectField.MainValue, new AmortizedAmount (12000.0m)));
@@ -608,10 +608,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 
 				{
-					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 12, 31), 0), EventType.AmortizationExtra);
+					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 12, 31), 0), EventType.MainValue);
 					o237.AddEvent (e);
 					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataAmortizedAmountProperty (ObjectField.MainValue, new AmortizedAmount (5200.0m, 4600.0m)));
+				}
+
+				{
+					var e = new DataEvent (new Timestamp (new System.DateTime (2012, 12, 31), 1), EventType.Modification);
+					o237.AddEvent (e);
+					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 					e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1, new ComputedAmount (3500.0m, 2400.0m)));
 				}
 
