@@ -233,10 +233,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				list.Add (c2);
 
 				c2.Add (new ObjectSummaryControllerTile ("Général"));
-				foreach (var field in this.accessor.Settings.GetUserFields (BaseType.Assets)
-					.Select (x => x.Field))
+				foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Assets))
 				{
-					c2.Add (new ObjectSummaryControllerTile (field));
+					if (userField.TopMargin >= 5)  // limite arbitraire
+					{
+						c2.Add (ObjectSummaryControllerTile.Empty);
+					}
+
+					c2.Add (new ObjectSummaryControllerTile (userField.Field));
 				}
 				c2.Add (ObjectSummaryControllerTile.Empty);
 
