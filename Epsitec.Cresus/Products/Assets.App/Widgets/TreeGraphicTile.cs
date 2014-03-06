@@ -31,6 +31,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		public decimal							MinAmount;
+		public decimal							MaxAmount;
+
+
 		public void SetContent(TreeGraphicValue[] values, double[] fontFactors)
 		{
 			this.values      = values;
@@ -90,16 +94,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				for (int i=0; i<this.values.Length; i++)
 				{
-					var r = this.GetRect (i);
+					var textRect = this.GetTextRect (i);
+					var amountRect = this.GetAmountRect (i);
 
 					var x = this.HorizontalOffset;
 					if (x != 0)
 					{
 						//	Déplace le rectangle, afin de toujours voir le début du texte.
-						r.Offset (x, 0);
+						textRect.Offset (x, 0);
 					}
 
-					this.PaintText (graphics, r, this.GetText (i), this.GetFontSize (i), ContentAlignment.TopLeft);
+					this.PaintValue (graphics, textRect, amountRect, this.GetValue (i), this.GetFontSize (i), ContentAlignment.TopLeft);
 				}
 			}
 
@@ -111,6 +116,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.RenderSolid (Color.FromBrightness (0.5));
 		}
 
+
+		private void PaintValue(Graphics graphics, Rectangle textRect, Rectangle amountRect, TreeGraphicValue value, double fontSize, ContentAlignment alignment)
+		{
+			if (value.IsAmount)
+			{
+				var r1 = new Rectangle (textRect.Left, textRect.Bottom+textRect.Height/2, textRect.Width, textRect.Height/2);
+				var r2 = new Rectangle (amountRect.Left, amountRect.Bottom, amountRect.Width, amountRect.Height/2);
+
+				this.PaintText (graphics, r1, value.Text, fontSize/2, alignment);
+				this.PaintAmount (graphics, r2, value);
+			}
+			else
+			{
+				this.PaintText (graphics, textRect, value.Text, fontSize, alignment);
+			}
+		}
 
 		private void PaintText(Graphics graphics, Rectangle rect, string text, double fontSize, ContentAlignment alignment)
 		{
@@ -124,6 +145,47 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.textLayout.Alignment       = alignment;
 
 			this.textLayout.Paint (rect.BottomLeft, graphics, rect, Color.Empty, GlyphPaintStyle.Normal);
+		}
+
+		private void PaintAmount(Graphics graphics, Rectangle rect, TreeGraphicValue value)
+		{
+			//	Dessine un montant sous la forme d'une barre graphique.
+			rect = graphics.Align (rect);
+			rect.Deflate (0.5, 1.5);
+
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (this.BackgroundColor.Delta (0.1));
+
+			var amount = value.Amount.GetValueOrDefault ();
+
+			if (amount < 0.0m)
+			{
+				int x1 = this.GetX (rect, amount);
+				int x2 = this.GetX (rect, 0.0m);
+				var r = new Rectangle (x1, rect.Bottom, x2-x1, rect.Height);
+
+				graphics.AddFilledRectangle (r);
+				graphics.RenderSolid (this.BackgroundColor.Delta (-0.1));
+			}
+
+			if (amount > 0.0m)
+			{
+				int x1 = this.GetX (rect, 0.0m);
+				int x2 = this.GetX (rect, amount);
+				var r = new Rectangle (x1, rect.Bottom, x2-x1, rect.Height);
+
+				graphics.AddFilledRectangle (r);
+				graphics.RenderSolid (this.BackgroundColor.Delta (-0.1));
+			}
+
+			graphics.AddRectangle (rect);
+			graphics.RenderSolid (ColorManager.TextColor);
+		}
+
+		private int GetX(Rectangle rect, decimal amount)
+		{
+			decimal factor = (amount - this.MinAmount) / (this.MaxAmount - this.MinAmount);
+			return (int) (rect.Left + rect.Width * (double) factor);
 		}
 
 		private void PaintTreeButton(Graphics graphics)
@@ -174,7 +236,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 						for (int i=0; i<count; i++)
 						{
-							var text = this.GetText (i);
+							var text = this.GetValue (i).Text;
 							var size = this.GetFontSize (i);
 
 							var w = text.GetTextWidth (Font.DefaultFont, size);
@@ -232,29 +294,27 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return new Rectangle (p1, p2);
 		}
 
-		private string GetText(int index)
+		private TreeGraphicValue GetValue(int index)
 		{
-#if false
-			if (index == 0 && this.IsEntered)  // titre survolé ?
-			{
-				return this.texts[index].Color (ColorManager.SelectionColor.ForceV (0.6)).Bold ();
-			}
-			else
-			{
-				return this.texts[index];
-			}
-#else
-			return this.values[index].Text;
-#endif
+			return this.values[index];
 		}
 
-		private Rectangle GetRect(int index)
+		private Rectangle GetTextRect(int index)
 		{
 			//	Retourne le rectangle pour un texte, qui déborde volontairement à droite.
 			var rect = this.Client.Bounds;
 			var offset = this.GetTopOffset (index);
 			var h = this.GetFontSize (index) * 1.5;
 			return new Rectangle (rect.Left+TreeGraphicTile.internalMargins, rect.Top-offset-h, rect.Width, h);
+		}
+
+		private Rectangle GetAmountRect(int index)
+		{
+			//	Retourne le rectangle pour un montant.
+			var rect = this.Client.Bounds;
+			var offset = this.GetTopOffset (index);
+			var h = this.GetFontSize (index) * 1.5;
+			return new Rectangle (rect.Left+TreeGraphicTile.internalMargins, rect.Top-offset-h, rect.Width-TreeGraphicTile.internalMargins*2, h);
 		}
 
 		private double TopPadding

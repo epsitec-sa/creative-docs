@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -25,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			for (int i=0; i<this.treeGraphicViewState.Fields.Count; i++)
 			{
-				this.treeGraphicViewState.FontFactors.Add ((i == 0) ? 1.0 : 0.7);
+				this.treeGraphicViewState.FontFactors.Add ((i == 0) ? 1.0 : 1.5);
 			}
 
 			this.treeGraphicViewState.ColumnWidth = 100;
@@ -52,6 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var ng = nodeGetter as ObjectsNodeGetter;
 			int deep = this.GetDeep (ng);
+			this.InitializeMinMax (ng);
 
 			foreach (var node in ng.Nodes)
 			{
@@ -90,6 +90,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return nodeGetter.Nodes.Max (x => x.Level) + 1;
 		}
 
+		private void InitializeMinMax(ObjectsNodeGetter nodeGetter)
+		{
+			this.minAmount = 0.0m;
+			this.maxAmount = 0.0m;
+
+			var assetFields = this.GetFieds ();
+			var groupFields = this.GroupFields.ToArray ();
+
+			foreach (var node in nodeGetter.Nodes)
+			{
+				ObjectField[] fields;
+				if (node.BaseType == BaseType.Groups)
+				{
+					fields = groupFields;
+				}
+				else
+				{
+					fields = assetFields;
+				}
+
+				var values = this.GetValues (nodeGetter, node.BaseType, node, fields);
+
+				foreach (var value in values)
+				{
+					if (value.IsAmount)
+					{
+						this.minAmount = System.Math.Min (this.minAmount, value.Amount.Value);
+						this.maxAmount = System.Math.Max (this.maxAmount, value.Amount.Value);
+					}
+				}
+			}
+		}
+
+
 		private TreeGraphicValue[] GetValues(ObjectsNodeGetter nodeGetter, BaseType baseType, CumulNode node, ObjectField[] fields)
 		{
 			var list = new List<TreeGraphicValue> ();
@@ -101,7 +135,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				list.Add (text);
 			}
 
-			//	Supprime les lignes vides à la fin.
+			//	Supprime les lignes vides à la fin, pour que les éventuelles tuiles filles
+			//	soient positionnées plus haut.
 			while (list.Count > 0 && list.Last ().IsEmpty)
 			{
 				list.RemoveAt (list.Count-1);
@@ -144,8 +179,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.timestamp, field);
-				var text = ObjectProperties.GetObjectPropertyString (obj, this.timestamp, field);
+				ObjectProperties.GetObjectPropertyAmortizedAmount (obj, null, field);
+				var text = ObjectProperties.GetObjectPropertyString (obj, null, field);
 				return TreeGraphicValue.CreateText (text);
 			}
 
@@ -175,8 +210,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return AssetsLogic.GetUserFields (this.accessor);
 			}
 		}
-
-
-		private Timestamp? timestamp;
 	}
 }

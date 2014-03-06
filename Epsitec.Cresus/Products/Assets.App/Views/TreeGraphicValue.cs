@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Amount = amount;
 		}
 
+
 		public bool IsEmpty
 		{
 			get
@@ -23,6 +24,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					&& !this.Amount.HasValue;
 			}
 		}
+
+		public bool IsAmount
+		{
+			get
+			{
+				return this.Amount.HasValue;
+			}
+		}
+
 
 		public static TreeGraphicValue Empty = new TreeGraphicValue (null, null);
 

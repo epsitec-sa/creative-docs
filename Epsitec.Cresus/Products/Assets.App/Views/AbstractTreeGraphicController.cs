@@ -82,11 +82,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Name             = guid.ToString (),
 				ContentAlignment = ContentAlignment.TopLeft,
 				Dock             = DockStyle.Left,
+				MinAmount        = this.minAmount,
+				MaxAmount        = this.maxAmount,
 			};
 
 			tile.SetContent (values, fontFactors);
 
-			ToolTip.Default.SetToolTip (tile, string.Join (" ", values));
+			ToolTip.Default.SetToolTip (tile, string.Join (" ", values.Select (x => x.Text)));
 
 			tile.Clicked += delegate
 			{
@@ -202,5 +204,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected Scrollable					scrollable;
 		protected TreeGraphicMode				treeGraphicViewMode;
 		protected TreeGraphicState				treeGraphicViewState;
+		protected decimal						minAmount;
+		protected decimal						maxAmount;
 	}
 }
