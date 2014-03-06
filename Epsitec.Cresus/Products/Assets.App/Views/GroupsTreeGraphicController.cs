@@ -47,8 +47,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				double fontSize = AbstractTreeGraphicController<TreeNode>.GetFontSize (deep, level);
 
-				var texts = this.GetTexts (this.baseType, node.Guid, fields);
-				var w = this.CreateTile (parent, node.Guid, level, fontSize, node.Type, texts, fontFactors);
+				var values = this.GetValues (this.baseType, node.Guid, fields);
+				var w = this.CreateTile (parent, node.Guid, level, fontSize, node.Type, values, fontFactors);
 
 				if (parents.Count <= level+1)
 				{

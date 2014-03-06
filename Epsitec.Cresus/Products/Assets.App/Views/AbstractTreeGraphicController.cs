@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected Widget CreateTile(Widget parent, Guid guid, int level, double fontSize, NodeType nodeType, string[] texts, double[] fontFactors)
+		protected Widget CreateTile(Widget parent, Guid guid, int level, double fontSize, NodeType nodeType, TreeGraphicValue[] values, double[] fontFactors)
 		{
 			var tile = new TreeGraphicTile (level, fontSize, this.treeGraphicViewState.ColumnWidth, nodeType, this.treeGraphicViewMode)
 			{
@@ -84,9 +84,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock             = DockStyle.Left,
 			};
 
-			tile.SetContent (texts, fontFactors);
+			tile.SetContent (values, fontFactors);
 
-			ToolTip.Default.SetToolTip (tile, string.Join (" ", texts));
+			ToolTip.Default.SetToolTip (tile, string.Join (" ", values));
 
 			tile.Clicked += delegate
 			{
@@ -106,32 +106,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return tile;
 		}
 
-		protected virtual string[] GetTexts(BaseType baseType, Guid guid, ObjectField[] fields)
+		protected virtual TreeGraphicValue[] GetValues(BaseType baseType, Guid guid, ObjectField[] fields)
 		{
 			var obj = this.accessor.GetObject (baseType, guid);
-			return this.GetTexts (obj, fields);
+			return this.GetValues (obj, fields);
 		}
 
-		private string[] GetTexts(DataObject obj, ObjectField[] fields)
+		private TreeGraphicValue[] GetValues(DataObject obj, ObjectField[] fields)
 		{
-			var list = new List<string> ();
+			var list = new List<TreeGraphicValue> ();
 
 			foreach (var field in fields)
 			{
 				var type = this.accessor.GetFieldType (field);
-				string text = null;
+				var value = TreeGraphicValue.Empty;
 
 				switch (type)
 				{
 					case FieldType.String:
-						text = ObjectProperties.GetObjectPropertyString (obj, null, field);
+						var text = ObjectProperties.GetObjectPropertyString (obj, null, field);
+						value = TreeGraphicValue.CreateText (text);
 						break;
 
 					case FieldType.AmortizedAmount:
 						var aa = ObjectProperties.GetObjectPropertyAmortizedAmount(obj, null, field);
 						if (aa != null)
 						{
-							text = TypeConverters.AmountToString (aa.Value.FinalAmortizedAmount);
+							value = TreeGraphicValue.CreateAmount (aa.Value.FinalAmortizedAmount);
 						}
 						break;
 
@@ -139,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var ca = ObjectProperties.GetObjectPropertyComputedAmount (obj, null, field);
 						if (ca != null)
 						{
-							text = TypeConverters.AmountToString (ca.Value.FinalAmount);
+							value = TreeGraphicValue.CreateAmount (ca.Value.FinalAmount);
 						}
 						break;
 
@@ -147,7 +148,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						throw new System.InvalidOperationException (string.Format ("Unsupported FieldType {0}", type.ToString ()));
 				}
 
-				list.Add (text);
+				list.Add (value);
 			}
 
 			return list.ToArray ();

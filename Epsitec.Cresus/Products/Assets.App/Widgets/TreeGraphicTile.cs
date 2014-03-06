@@ -31,9 +31,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public void SetContent(string[] texts, double[] fontFactors)
+		public void SetContent(TreeGraphicValue[] values, double[] fontFactors)
 		{
-			this.texts       = texts;
+			this.values      = values;
 			this.fontFactors = fontFactors;
 
 			//	La largeur donnée est automatiquement dépassée si les tuiles filles
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else
 			{
-				for (int i=0; i<this.texts.Length; i++)
+				for (int i=0; i<this.values.Length; i++)
 				{
 					var r = this.GetRect (i);
 
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						}
 						else
 						{
-							count = this.texts.Length;
+							count = this.values.Length;
 						}
 
 						for (int i=0; i<count; i++)
@@ -196,15 +196,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var list = new List<string> ();
 
-				for (int i=0; i<this.texts.Length; i++)
+				for (int i=0; i<this.values.Length; i++)
 				{
 					if (i == 0)
 					{
-						list.Add (this.texts[i].Bold ());
+						list.Add (this.values[i].Text.Bold ());
 					}
 					else
 					{
-						list.Add (this.texts[i]);
+						list.Add (this.values[i].Text);
 					}
 				}
 
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return this.texts[index];
 			}
 #else
-			return this.texts[index];
+			return this.values[index].Text;
 #endif
 		}
 
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.GetTopOffset (this.texts.Length);
+				return this.GetTopOffset (this.values.Length);
 			}
 		}
 
@@ -445,7 +445,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private readonly TreeGraphicMode		graphicViewMode;
 		private readonly TextLayout				textLayout;
 
-		private string[]						texts;
+		private TreeGraphicValue[]				values;
 		private double[]						fontFactors;
 		private bool							isInside;
 	}

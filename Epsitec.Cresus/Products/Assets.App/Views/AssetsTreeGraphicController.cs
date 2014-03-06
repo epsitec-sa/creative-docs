@@ -28,7 +28,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.treeGraphicViewState.FontFactors.Add ((i == 0) ? 1.0 : 0.7);
 			}
 
-			this.treeGraphicViewMode = TreeGraphicMode.AutoWidthAllLines;
+			this.treeGraphicViewState.ColumnWidth = 100;
+
+			this.treeGraphicViewMode = TreeGraphicMode.FixedWidth;
 		}
 
 
@@ -68,8 +70,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				double fontSize = AbstractTreeGraphicController<CumulNode>.GetFontSize (deep, level);
 
-				var texts = this.GetTexts (ng, node.BaseType, node, fields);
-				var w = this.CreateTile (parent, node.Guid, level, fontSize, node.Type, texts, fontFactors);
+				var values = this.GetValues (ng, node.BaseType, node, fields);
+				var w = this.CreateTile (parent, node.Guid, level, fontSize, node.Type, values, fontFactors);
 
 				if (parents.Count <= level+1)
 				{
@@ -88,19 +90,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return nodeGetter.Nodes.Max (x => x.Level) + 1;
 		}
 
-		private string[] GetTexts(ObjectsNodeGetter nodeGetter, BaseType baseType, CumulNode node, ObjectField[] fields)
+		private TreeGraphicValue[] GetValues(ObjectsNodeGetter nodeGetter, BaseType baseType, CumulNode node, ObjectField[] fields)
 		{
-			var list = new List<string> ();
+			var list = new List<TreeGraphicValue> ();
 			var obj = this.accessor.GetObject (baseType, node.Guid);
 
 			foreach (var field in fields)
 			{
-				var text = this.GetText (nodeGetter, obj, node, field);
+				var text = this.GetValue (nodeGetter, obj, node, field);
 				list.Add (text);
 			}
 
 			//	Supprime les lignes vides à la fin.
-			while (list.Count > 0 && string.IsNullOrEmpty (list.Last ()))
+			while (list.Count > 0 && list.Last ().IsEmpty)
 			{
 				list.RemoveAt (list.Count-1);
 			}
@@ -108,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return list.ToArray ();
 		}
 
-		private string GetText(ObjectsNodeGetter nodeGetter, DataObject obj, CumulNode node, ObjectField field)
+		private TreeGraphicValue GetValue(ObjectsNodeGetter nodeGetter, DataObject obj, CumulNode node, ObjectField field)
 		{
 			var type = this.accessor.GetFieldType (field);
 
@@ -122,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var ca = new ComputedAmount (v);
 					if (ca != null)
 					{
-						return TypeConverters.AmountToString (ca.FinalAmount);
+						return TreeGraphicValue.CreateAmount (ca.FinalAmount);
 					}
 				}
 			}
@@ -136,17 +138,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var aa = new AmortizedAmount (v);
 					if (aa != null)
 					{
-						return TypeConverters.AmountToString (aa.FinalAmortizedAmount);
+						return TreeGraphicValue.CreateAmount (aa.FinalAmortizedAmount);
 					}
 				}
 			}
 			else
 			{
 				ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.timestamp, field);
-				return ObjectProperties.GetObjectPropertyString (obj, this.timestamp, field);
+				var text = ObjectProperties.GetObjectPropertyString (obj, this.timestamp, field);
+				return TreeGraphicValue.CreateText (text);
 			}
 
-			return null;
+			return TreeGraphicValue.Empty;
 		}
 
 
