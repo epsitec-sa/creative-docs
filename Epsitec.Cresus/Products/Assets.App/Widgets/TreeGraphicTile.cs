@@ -17,9 +17,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeGraphicTile : Widget
 	{
-		public TreeGraphicTile(int level, double columnWidth, NodeType nodeType, TreeGraphicMode graphicViewMode)
+		public TreeGraphicTile(int level, double fontSize, double columnWidth, NodeType nodeType, TreeGraphicMode graphicViewMode)
 		{
 			this.level           = level;
+			this.fontSize        = fontSize;
 			this.columnWidth     = columnWidth;
 			this.nodeType        = nodeType;
 			this.graphicViewMode = graphicViewMode;
@@ -213,10 +214,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private Rectangle RotatedRect
 		{
-			//	Retourne le rectangle tourné de 90 degrés CCW.
+			//	Retourne le rectangle tourné de 90 degrés CCW, qui déborde volontairement.
 			get
 			{
-				var rect = this.Client.Bounds;
+				var b = this.Client.Bounds;
+				var rect = new Rectangle (b.Left, b.Bottom-100, b.Width, b.Height+100);
 				rect.Deflate (0, TreeGraphicTile.internalMargins);
 				return this.Rotate (rect);
 			}
@@ -232,6 +234,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private string GetText(int index)
 		{
+#if false
 			if (index == 0 && this.IsEntered)  // titre survolé ?
 			{
 				return this.texts[index].Color (ColorManager.SelectionColor.ForceV (0.6)).Bold ();
@@ -240,6 +243,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				return this.texts[index];
 			}
+#else
+			return this.texts[index];
+#endif
 		}
 
 		private Rectangle GetRect(int index)
@@ -280,8 +286,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				factor = this.fontFactors[index];
 			}
 
-			var fontSize = (18.0 - this.level * 2.0) * factor;  // 18 .. 10 (si fontFactor = 1.0)
-			return System.Math.Max (fontSize, 9.0);
+			return this.fontSize * factor;
 		}
 
 		private Color BackgroundColor
@@ -347,7 +352,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				else
 				{
 					var x = this.HorizontalOffset;
-					return new Rectangle (x, this.ActualHeight-16, 16, 16);
+					return new Rectangle (x, this.ActualHeight-14, 14, 14);
 				}
 			}
 		}
@@ -434,6 +439,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private const double verticalFinalWidth = 22.0;
 
 		private readonly int					level;
+		private readonly double					fontSize;
 		private readonly double					columnWidth;
 		private readonly NodeType				nodeType;
 		private readonly TreeGraphicMode		graphicViewMode;
@@ -442,6 +448,5 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private string[]						texts;
 		private double[]						fontFactors;
 		private bool							isInside;
-		private GlyphButton						treeButton;
 	}
 }

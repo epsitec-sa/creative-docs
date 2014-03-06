@@ -74,9 +74,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected Widget CreateTile(Widget parent, Guid guid, int level, NodeType nodeType, string[] texts, double[] fontFactors)
+		protected Widget CreateTile(Widget parent, Guid guid, int level, double fontSize, NodeType nodeType, string[] texts, double[] fontFactors)
 		{
-			var tile = new TreeGraphicTile (level, this.treeGraphicViewState.ColumnWidth, nodeType, this.treeGraphicViewMode)
+			var tile = new TreeGraphicTile (level, fontSize, this.treeGraphicViewState.ColumnWidth, nodeType, this.treeGraphicViewMode)
 			{
 				Parent           = parent,
 				Name             = guid.ToString (),
@@ -155,26 +155,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected ObjectField[] GetFieds()
 		{
-			var list = new List<ObjectField> ();
-
-			foreach (var field in this.treeGraphicViewState.Fields)
-			{
-				list.Add (field);
-			}
-
-			return list.ToArray ();
+			return this.treeGraphicViewState.Fields.ToArray ();
 		}
 
 		protected double[] GetFontFactors()
 		{
-			var list = new List<double> ();
+			return this.treeGraphicViewState.FontFactors.ToArray ();
+		}
 
-			foreach (var fontFactor in this.treeGraphicViewState.FontFactors)
-			{
-				list.Add (fontFactor);
-			}
-
-			return list.ToArray ();
+		protected static double GetFontSize(int deep, int level)
+		{
+			return 10.0 + 2.0 * (deep-level);
 		}
 
 

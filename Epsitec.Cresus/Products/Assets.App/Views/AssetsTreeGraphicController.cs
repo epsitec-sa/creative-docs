@@ -49,6 +49,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var fontFactors = this.GetFontFactors ();
 
 			var ng = nodeGetter as ObjectsNodeGetter;
+			int deep = this.GetDeep (ng);
+
 			foreach (var node in ng.Nodes)
 			{
 				var level = node.Level;
@@ -64,8 +66,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					fields = assetFields;
 				}
 
+				double fontSize = AbstractTreeGraphicController<CumulNode>.GetFontSize (deep, level);
+
 				var texts = this.GetTexts (ng, node.BaseType, node, fields);
-				var w = this.CreateTile (parent, node.Guid, node.Level, node.Type, texts, fontFactors);
+				var w = this.CreateTile (parent, node.Guid, level, fontSize, node.Type, texts, fontFactors);
 
 				if (parents.Count <= level+1)
 				{
@@ -76,6 +80,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateSelection (selectedGuid, crop);
+		}
+
+
+		private int GetDeep(ObjectsNodeGetter nodeGetter)
+		{
+			return nodeGetter.Nodes.Max (x => x.Level) + 1;
 		}
 
 		private string[] GetTexts(ObjectsNodeGetter nodeGetter, BaseType baseType, CumulNode node, ObjectField[] fields)

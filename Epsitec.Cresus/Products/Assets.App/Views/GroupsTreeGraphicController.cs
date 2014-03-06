@@ -38,13 +38,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var fontFactors = this.GetFontFactors ();
 
 			var ng = nodeGetter as GroupTreeNodeGetter;
+			int deep = this.GetDeep (ng);
+
 			foreach (var node in ng.Nodes)
 			{
 				var level = node.Level;
 				var parent = parents[level];
 
+				double fontSize = AbstractTreeGraphicController<TreeNode>.GetFontSize (deep, level);
+
 				var texts = this.GetTexts (this.baseType, node.Guid, fields);
-				var w = this.CreateTile (parent, node.Guid, node.Level, node.Type, texts, fontFactors);
+				var w = this.CreateTile (parent, node.Guid, level, fontSize, node.Type, texts, fontFactors);
 
 				if (parents.Count <= level+1)
 				{
@@ -55,6 +59,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateSelection (selectedGuid, crop);
+		}
+
+		private int GetDeep(GroupTreeNodeGetter nodeGetter)
+		{
+			return nodeGetter.Nodes.Max (x => x.Level) + 1;
 		}
 	}
 }
