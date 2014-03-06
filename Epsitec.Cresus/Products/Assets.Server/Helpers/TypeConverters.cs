@@ -48,16 +48,6 @@ namespace Epsitec.Cresus.Assets.Server.Helpers
 				if (TypeConverters.rateFracFormat == SettingsEnum.RateFloating)
 				{
 					s = (rate.Value*100).ToString (System.Globalization.CultureInfo.InvariantCulture);
-
-					while (s.Length > 1 && s.EndsWith ("0"))
-					{
-						s = s.Substring (0, s.Length-1);  // TODO: on doit pouvoir faire plus simple...
-					}
-
-					if (s.EndsWith ("."))
-					{
-						s = s.Substring (0, s.Length-1);
-					}
 				}
 				else
 				{
@@ -79,6 +69,16 @@ namespace Epsitec.Cresus.Assets.Server.Helpers
 					}
 
 					s = (rate.Value*100).ToString (format);
+				}
+
+				while (s.Length > 1 && s.EndsWith ("0"))
+				{
+					s = s.Substring (0, s.Length-1);  // TODO: on doit pouvoir faire plus simple...
+				}
+
+				if (s.EndsWith ("."))
+				{
+					s = s.Substring (0, s.Length-1);
 				}
 
 				if (TypeConverters.rateDecimalSeparator == SettingsEnum.SeparatorComma)
@@ -629,6 +629,6 @@ namespace Epsitec.Cresus.Assets.Server.Helpers
 		private static SettingsEnum dateFormatYear        = SettingsEnum.YearDigits4;
 		private static SettingsEnum dateFormatOrder       = SettingsEnum.YearDMY;
 		private static SettingsEnum rateDecimalSeparator  = SettingsEnum.SeparatorDot;
-		private static SettingsEnum rateFracFormat        = SettingsEnum.RateFrac1;
+		private static SettingsEnum rateFracFormat        = SettingsEnum.RateFrac3;
 	}
 }

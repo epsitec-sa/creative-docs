@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					return new ButtonDescription (type, "Modification générale", "Modification de diverses informations", enable);
 
 				case EventType.MainValue:
-					return new ButtonDescription (type, "Modification de la valeur", "Modification de la valeur comptable<br/>(revalorisation, réévaluation, etc.)", enable);
+					return new ButtonDescription (type, "Modification de la valeur comptable", "Revalorisation, réévaluation, etc.", enable);
 
 				case EventType.AmortizationExtra:
 					return new ButtonDescription (type, "Amortissement extraordinaire", "Amortissement de la valeur comptable", enable);

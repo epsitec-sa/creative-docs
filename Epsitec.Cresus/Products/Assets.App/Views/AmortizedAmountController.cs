@@ -242,17 +242,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateInitLine(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Valeur comptable");
-			this.finalAmountTextField = this.CreateTextField (parent, 80, "Valeur initiale", this.UpdateInitAmount);
+			this.finalAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur initiale", this.UpdateInitAmount);
 		}
 
 		private void CreateMaxLine(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Valeur comptable");
-			this.finalAmountTextField = this.CreateTextField (parent, 80, "Valeur finale amortie");
+			this.finalAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur finale amortie");
 			this.CreateOper (parent, "= Max (");
 			var x = this.CreateArg (parent, "Valeur arrondie");
 			this.CreateOper (parent, ",");
-			this.residualAmountTextField = this.CreateTextField (parent, 60, "Valeur résiduelle", this.UpdateResidualAmount);
+			this.residualAmountTextField = this.CreateTextField (parent, AmortizedAmountController.RoundWidth, "Valeur résiduelle", this.UpdateResidualAmount);
 			this.CreateOper (parent, ")");
 
 			this.CreateLink (bottomParent, x);
@@ -261,11 +261,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateRoundLine(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Valeur arrondie");
-			this.roundedAmountTextField = this.CreateTextField (parent, 80, "Valeur amortie arrondie");
+			this.roundedAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur amortie arrondie");
 			this.CreateOper (parent, "= Arrondi (");
 			var x = this.CreateArg (parent, "Valeur brute");
 			this.CreateOper (parent, ",");
-			this.roundAmountTextField = this.CreateTextField (parent, 60, "Arrondi", this.UpdateRoundAmount);
+			this.roundAmountTextField = this.CreateTextField (parent, AmortizedAmountController.RoundWidth, "Arrondi", this.UpdateRoundAmount);
 			this.CreateOper (parent, ")");
 
 			this.CreateLink (bottomParent, x);
@@ -274,11 +274,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateDegressiveLine(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Valeur brute");
-			this.brutAmountTextField = this.CreateTextField (parent, 80, "Valeur amortie non arrondie");
+			this.brutAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur amortie non arrondie");
 			this.CreateOper (parent, "=");
-			this.initialAmountTextField = this.CreateTextField (parent, 80, "Valeur précédente");
+			this.initialAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur précédente");
 			this.CreateOper (parent, "× ( 100% − (");
-			this.effectiveRateTextField = this.CreateTextField (parent, 45, "Taux adapté selon la périodicité", this.UpdateEffectiveRate);
+			this.effectiveRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, "Taux adapté selon la périodicité", this.UpdateEffectiveRate);
 			this.CreateOper (parent, "×");
 			var x = this.CreateArg (parent, "Prorata");
 			this.CreateOper (parent, ") )");
@@ -289,9 +289,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateLinearLine1(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Valeur brute");
-			this.brutAmountTextField = this.CreateTextField (parent, 80, "Valeur amortie non arrondie");
+			this.brutAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur amortie non arrondie");
 			this.CreateOper (parent, "=");
-			this.initialAmountTextField = this.CreateTextField (parent, 80, "Valeur précédente");
+			this.initialAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur précédente");
 			this.CreateOper (parent, "−");
 			var x = this.CreateArg (parent, "Amortissement");
 
@@ -301,11 +301,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateLinearLine2(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Amortissement");
-			this.amortizationAmountTextField = this.CreateTextField (parent, 80, "Amortissement");
+			this.amortizationAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Amortissement");
 			this.CreateOper (parent, "=");
-			this.baseAmountTextField = this.CreateTextField (parent, 80, "Valeur de base");
+			this.baseAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur de base");
 			this.CreateOper (parent, "×");
-			this.effectiveRateTextField = this.CreateTextField (parent, 45, "Taux adapté selon la périodicité", this.UpdateEffectiveRate);
+			this.effectiveRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, "Taux adapté selon la périodicité", this.UpdateEffectiveRate);
 			this.CreateOper (parent, "×");
 			var x = this.CreateArg (parent, "Prorata");
 
@@ -315,11 +315,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateProrataLine(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Prorata");
-			this.prorataRateTextField = this.CreateTextField (parent, 45, "Facteur correctif si \"au prorata\"");
+			this.prorataRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, "Facteur correctif si \"au prorata\"");
 			this.CreateOper (parent, "=");
-			this.prorataNumeratorTextField = this.CreateTextField (parent, 45, "Prorata, nombre effectif", this.UpdateProrataNumerator);
+			this.prorataNumeratorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, "Prorata, nombre effectif", this.UpdateProrataNumerator);
 			this.CreateOper (parent, "/");
-			this.prorataDenominatorTextField = this.CreateTextField (parent, 45, "Prorata, nombre total", this.UpdateProrataDenominator);
+			this.prorataDenominatorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, "Prorata, nombre total", this.UpdateProrataDenominator);
 		}
 
 
@@ -890,7 +890,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		protected const int LineHeight = AbstractFieldController.lineHeight;
+		private const int AmountWidth = 80;
+		private const int RoundWidth  = 60;
+		private const int RateWidth   = 60;
+		private const int IntWidth    = 45;
 
 
 		private readonly SafeCounter			ignoreChanges;
