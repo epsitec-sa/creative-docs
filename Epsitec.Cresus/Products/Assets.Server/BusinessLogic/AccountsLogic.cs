@@ -31,14 +31,28 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Retourne le numéro d'un compte, du genre:
 			//	"1000"
+			if (guid == AccountsLogic.MultiGuid)
+			{
+				return "...";
+			}
+
 			var obj = accessor.GetObject (BaseType.Accounts, guid);
 			if (obj == null)
 			{
-				return "...";
+				return null;
 			}
 			else
 			{
 				return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Number);
+			}
+		}
+
+		public static Guid MultiGuid
+		{
+			//	Retourne le Guid spécial indiquant une écriture multiple "...".
+			get
+			{
+				return Guid.NewGuid (1);
 			}
 		}
 	}

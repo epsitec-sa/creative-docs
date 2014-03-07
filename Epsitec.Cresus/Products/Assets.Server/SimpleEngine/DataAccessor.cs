@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public Guid CreateObject(BaseType baseType, System.DateTime date, string name, Guid parent)
 		{
 			var obj = new DataObject ();
-			mandat.GetData (baseType).Add (obj);
+			this.mandat.GetData (baseType).Add (obj);
 
 			var timestamp = new Timestamp (date, 0);
 			var e = new DataEvent (timestamp, EventType.Input);
@@ -137,6 +137,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				list.Remove (obj);
 			}
+		}
+
+		public void RemoveObject(BaseType baseType, DataObject obj)
+		{
+			var list = this.mandat.GetData (baseType);
+			list.Remove (obj);
 		}
 
 		public void RemoveObjectEvent(DataObject obj, Timestamp? timestamp)
@@ -294,6 +300,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.EntryDebitAccount:
 				case ObjectField.EntryCreditAccount:
 					return FieldType.GuidAccount;
+
+				case ObjectField.Entry:
+					return FieldType.GuidEntry;
 
 				default:
 					return FieldType.String;

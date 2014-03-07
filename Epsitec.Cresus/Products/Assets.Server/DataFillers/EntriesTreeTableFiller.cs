@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   60, "Crédit"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,   70, "Pièce"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,    300, "Libellé"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Decimal, 100, "Montant"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount,  100, "Montant"));
 
 				return columns.ToArray ();
 			}

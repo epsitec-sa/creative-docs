@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
@@ -10,7 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		internal static void AddEntries(DataMandat mandat)
 		{
-			var b = DummyEntries.AddEntry (mandat, Guid.Empty, new System.DateTime (2014, 1, 1), null, null, null, "Journal principal 2014", null);
+			var b = DummyEntries.AddEntry (mandat, Guid.Empty, null, null, null, null, "Journal des écritures", null);
 
 			{
 				var e = DummyEntries.AddEntry (mandat, b, new System.DateTime (2014, 1, 1), null, null, null, "Soldes à nouveau", null);
@@ -27,9 +28,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				var e = DummyEntries.AddEntry (mandat, b, new System.DateTime (2014, 3, 31), "4200", "2000", "191", "Paiement facture 15/358-2", 532.0m);
 
-				DummyEntries.AddEntry (mandat, e, new System.DateTime (2014, 3, 31), "4200", null, "191", "Montant net", 492.59m);
-				DummyEntries.AddEntry (mandat, e, new System.DateTime (2014, 3, 31), "1170", null, "191", "TVA 8% (IPM)", 39.41m);
-				DummyEntries.AddEntry (mandat, e, new System.DateTime (2014, 3, 31), null, "2000", "191", "Total", 532.0m);
+				DummyEntries.AddEntry (mandat, e, new System.DateTime (2014, 3, 31), "4200", "...", "191", "Montant net", 492.59m);
+				DummyEntries.AddEntry (mandat, e, new System.DateTime (2014, 3, 31), "1170", "...", "191", "TVA 8% (IPM)", 39.41m);
+				DummyEntries.AddEntry (mandat, e, new System.DateTime (2014, 3, 31), "...", "2000", "191", "Total", 532.0m);
 			}
 
 			DummyEntries.AddEntry (mandat, b, new System.DateTime (2014, 4, 15), "6000", "1010", "195", "Loyer avril", 2500.0m);
@@ -62,15 +63,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			if (!string.IsNullOrEmpty (debit))
 			{
-				var guid  = DummyAccounts.GetAccount (mandat, debit);
-				System.Diagnostics.Debug.Assert (!guid.IsEmpty);
+				var guid  = DummyEntries.GetAccount (mandat, debit);
 				e.AddProperty (new DataGuidProperty (ObjectField.EntryDebitAccount, guid));
 			}
 
 			if (!string.IsNullOrEmpty (credit))
 			{
-				var guid = DummyAccounts.GetAccount (mandat, credit);
-				System.Diagnostics.Debug.Assert (!guid.IsEmpty);
+				var guid = DummyEntries.GetAccount (mandat, credit);
 				e.AddProperty (new DataGuidProperty (ObjectField.EntryCreditAccount, guid));
 			}
 
@@ -83,6 +82,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			return entry.Guid;
+		}
+
+		private static Guid GetAccount(DataMandat mandat, string number)
+		{
+			if (number == "...")
+			{
+				return AccountsLogic.MultiGuid;
+			}
+			else
+			{
+				var guid  = DummyAccounts.GetAccount (mandat, number);
+				System.Diagnostics.Debug.Assert (!guid.IsEmpty);
+				return guid;
+			}
 		}
 	}
 }

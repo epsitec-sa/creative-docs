@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		GuidGroup,		// Guid d'un groupe
 		GuidPerson,		// Guid d'une personne
 		GuidAccount,	// Guid d'un compte
+		GuidEntry,		// Guid d'une écriture
 		GuidRatio,		// couple Guid + Ratio (decimal)
 	}
 }

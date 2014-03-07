@@ -98,6 +98,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public decimal FinalAmortization
+		{
+			//	Calcule l'amortissement final effectif.
+			get
+			{
+				return this.InitialAmount.GetValueOrDefault (0.0m)
+					 - this.FinalAmortizedAmount.GetValueOrDefault (0.0m);
+			}
+		}
+
 		public decimal BrutAmortization
 		{
 			//	Calcule l'amortissement brut, qu'il faudra soustraire à la valeur initiale
@@ -110,9 +120,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 				else
 				{
-					return this.BaseAmount.GetValueOrDefault (0.0m)
-						 * this.EffectiveRate.GetValueOrDefault (1.0m)
-						 * this.Prorata;
+					decimal value;
+					if (this.AmortizationType == AmortizationType.Linear)
+					{
+						value = this.BaseAmount.GetValueOrDefault (0.0m);
+					}
+					else
+					{
+						value = this.InitialAmount.GetValueOrDefault (0.0m);
+					}
+
+					return value * this.EffectiveRate.GetValueOrDefault (1.0m) * this.Prorata;
 				}
 			}
 		}

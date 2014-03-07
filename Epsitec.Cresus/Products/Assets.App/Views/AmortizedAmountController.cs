@@ -183,22 +183,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.line67.Children.Clear ();
 			this.line7.Children.Clear ();
 
-			if (this.AmortizationType == Server.BusinessLogic.AmortizationType.Linear)
+			if (this.AmortizationType == Server.BusinessLogic.AmortizationType.Linear ||
+				this.AmortizationType == Server.BusinessLogic.AmortizationType.Degressive)
 			{
-				this.CreateTypeLine (this.line1);
-				this.CreateMaxLine (this.line2, this.line23);
+				this.CreateTypeLine    (this.line1);
+				this.CreateMaxLine     (this.line2, this.line23);
 				this.CreateRoundLine   (this.line3, this.line34);
-				this.CreateLinearLine1 (this.line4, this.line45);
-				this.CreateLinearLine2 (this.line5, this.line56);
+				this.CreateLine1       (this.line4, this.line45);
+				this.CreateLine2       (this.line5, this.line56);
 				this.CreateProrataLine (this.line6, this.line67);
-			}
-			else if (this.AmortizationType == Server.BusinessLogic.AmortizationType.Degressive)
-			{
-				this.CreateTypeLine (this.line1);
-				this.CreateMaxLine (this.line2, this.line23);
-				this.CreateRoundLine      (this.line3, this.line34);
-				this.CreateDegressiveLine (this.line4, this.line45);
-				this.CreateProrataLine    (this.line5, this.line56);
 			}
 			else
 			{
@@ -271,22 +264,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateLink (bottomParent, x);
 		}
 
-		private void CreateDegressiveLine(Widget parent, Widget bottomParent)
-		{
-			this.CreateLabel (parent, 100, "Valeur brute");
-			this.brutAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur amortie non arrondie");
-			this.CreateOper (parent, "=");
-			this.initialAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur précédente");
-			this.CreateOper (parent, "× ( 100% − (");
-			this.effectiveRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, "Taux adapté selon la périodicité", this.UpdateEffectiveRate);
-			this.CreateOper (parent, "×");
-			var x = this.CreateArg (parent, "Prorata");
-			this.CreateOper (parent, ") )");
-
-			this.CreateLink (bottomParent, x);
-		}
-
-		private void CreateLinearLine1(Widget parent, Widget bottomParent)
+		private void CreateLine1(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Valeur brute");
 			this.brutAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur amortie non arrondie");
@@ -298,12 +276,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateLink (bottomParent, x);
 		}
 
-		private void CreateLinearLine2(Widget parent, Widget bottomParent)
+		private void CreateLine2(Widget parent, Widget bottomParent)
 		{
 			this.CreateLabel (parent, 100, "Amortissement");
 			this.amortizationAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Amortissement");
 			this.CreateOper (parent, "=");
-			this.baseAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur de base");
+			this.baseAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, this.AmortizationType == AmortizationType.Linear ? "Valeur de base" : "Valeur précédente");
 			this.CreateOper (parent, "×");
 			this.effectiveRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, "Taux adapté selon la périodicité", this.UpdateEffectiveRate);
 			this.CreateOper (parent, "×");
@@ -655,7 +633,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				AmortizedAmountController.SetAmount (this.initialAmountTextField, value);
+				if (this.AmortizationType == AmortizationType.Linear)
+				{
+					AmortizedAmountController.SetAmount (this.initialAmountTextField, value);
+				}
+				else
+				{
+					AmortizedAmountController.SetAmount (this.initialAmountTextField, value);
+					AmortizedAmountController.SetAmount (this.baseAmountTextField, value);
+				}
 			}
 		}
 
@@ -679,7 +665,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				AmortizedAmountController.SetAmount (this.baseAmountTextField, value);
+				if (this.AmortizationType == AmortizationType.Linear)
+				{
+					AmortizedAmountController.SetAmount (this.baseAmountTextField, value);
+				}
 			}
 		}
 

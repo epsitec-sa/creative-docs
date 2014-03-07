@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static string GetSummary(DataAccessor accessor, Guid guid)
+		public static string GetSummary(DataAccessor accessor, Guid guid, Timestamp? timestamp = null)
 		{
 			//	Retourne le nom court d'un objet, du genre:
 			//	"Toyota Yaris Verso"
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					.OrderBy (x => x.SummaryOrder)
 					.Select (x => x.Field))
 				{
-					var text = ObjectProperties.GetObjectPropertyString (obj, null, field);
+					var text = ObjectProperties.GetObjectPropertyString (obj, timestamp, field);
 
 					if (!string.IsNullOrEmpty (text))
 					{
