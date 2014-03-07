@@ -423,9 +423,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					AbstractFieldController.UpdateBackColor (this.finalTextField,    Color.Empty);
 				}
 
-				this.argumentTextField.IsReadOnly = this.propertyState == PropertyState.Readonly;
-				this.finalTextField   .IsReadOnly = this.propertyState == PropertyState.Readonly;
-
 				this.addSubButton     .Enable     = !this.isReadOnly;
 				this.rateButton       .Enable     = !this.isReadOnly;
 				this.equalText        .Enable     = !this.isReadOnly;

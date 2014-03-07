@@ -189,115 +189,129 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 
 		#region Factory
-		public static AmortizedAmount CreateType(AmortizedAmount model, AmortizationType type)
+		public static AmortizedAmount CreateType(AmortizedAmount? model, AmortizationType type)
 		{
+			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
+
 			return new AmortizedAmount
 			(
 				type,
-				model.InitialAmount,
-				model.BaseAmount,
-				model.EffectiveRate,
-				model.ProrataNumerator,
-				model.ProrataDenominator,
-				model.RoundAmount,
-				model.ResidualAmount,
-				model.EntryGuid
+				m.InitialAmount,
+				m.BaseAmount,
+				m.EffectiveRate,
+				m.ProrataNumerator,
+				m.ProrataDenominator,
+				m.RoundAmount,
+				m.ResidualAmount,
+				m.EntryGuid
 			);
 		}
 
-		public static AmortizedAmount CreateInitialBase(AmortizedAmount model, decimal? initialAmount, decimal? baseAmount)
+		public static AmortizedAmount CreateInitialBase(AmortizedAmount? model, decimal? initialAmount, decimal? baseAmount)
 		{
+			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
+
 			return new AmortizedAmount
 			(
-				model.AmortizationType,
-				initialAmount.HasValue ? initialAmount : model.InitialAmount,
-				baseAmount.HasValue    ? baseAmount    : model.BaseAmount,
-				model.EffectiveRate,
-				model.ProrataNumerator,
-				model.ProrataDenominator,
-				model.RoundAmount,
-				model.ResidualAmount,
-				model.EntryGuid
+				m.AmortizationType,
+				initialAmount.HasValue ? initialAmount : m.InitialAmount,
+				baseAmount.HasValue    ? baseAmount    : m.BaseAmount,
+				m.EffectiveRate,
+				m.ProrataNumerator,
+				m.ProrataDenominator,
+				m.RoundAmount,
+				m.ResidualAmount,
+				m.EntryGuid
 			);
 		}
 
-		public static AmortizedAmount CreateEffectiveRate(AmortizedAmount model, decimal? effectiveRate)
+		public static AmortizedAmount CreateEffectiveRate(AmortizedAmount? model, decimal? effectiveRate)
 		{
+			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
+
 			return new AmortizedAmount
 			(
-				model.AmortizationType,
-				model.InitialAmount,
-				model.BaseAmount,
+				m.AmortizationType,
+				m.InitialAmount,
+				m.BaseAmount,
 				effectiveRate,
-				model.ProrataNumerator,
-				model.ProrataDenominator,
-				model.RoundAmount,
-				model.ResidualAmount,
-				model.EntryGuid
+				m.ProrataNumerator,
+				m.ProrataDenominator,
+				m.RoundAmount,
+				m.ResidualAmount,
+				m.EntryGuid
 			);
 		}
 
-		public static AmortizedAmount CreateProrataNumerator(AmortizedAmount model, decimal? prorataNumerator)
+		public static AmortizedAmount CreateProrataNumerator(AmortizedAmount? model, decimal? prorataNumerator)
 		{
+			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
+
 			return new AmortizedAmount
 			(
-				model.AmortizationType,
-				model.InitialAmount,
-				model.BaseAmount,
-				model.EffectiveRate,
+				m.AmortizationType,
+				m.InitialAmount,
+				m.BaseAmount,
+				m.EffectiveRate,
 				prorataNumerator,
-				model.ProrataDenominator,
-				model.RoundAmount,
-				model.ResidualAmount,
-				model.EntryGuid
+				m.ProrataDenominator,
+				m.RoundAmount,
+				m.ResidualAmount,
+				m.EntryGuid
 			);
 		}
 
-		public static AmortizedAmount CreateProrataDenominator(AmortizedAmount model, decimal? prorataDenominator)
+		public static AmortizedAmount CreateProrataDenominator(AmortizedAmount? model, decimal? prorataDenominator)
 		{
+			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
+
 			return new AmortizedAmount
 			(
-				model.AmortizationType,
-				model.InitialAmount,
-				model.BaseAmount,
-				model.EffectiveRate,
-				model.ProrataNumerator,
+				m.AmortizationType,
+				m.InitialAmount,
+				m.BaseAmount,
+				m.EffectiveRate,
+				m.ProrataNumerator,
 				prorataDenominator,
-				model.RoundAmount,
-				model.ResidualAmount,
-				model.EntryGuid
+				m.RoundAmount,
+				m.ResidualAmount,
+				m.EntryGuid
 			);
 		}
 
-		public static AmortizedAmount CreateRoundAmount(AmortizedAmount model, decimal? roundAmount)
+		public static AmortizedAmount CreateRoundAmount(AmortizedAmount? model, decimal? roundAmount)
 		{
+			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
+
 			return new AmortizedAmount
 			(
-				model.AmortizationType,
-				model.InitialAmount,
-				model.BaseAmount,
-				model.EffectiveRate,
-				model.ProrataNumerator,
-				model.ProrataDenominator,
+				m.AmortizationType,
+				m.InitialAmount,
+				m.BaseAmount,
+				m.EffectiveRate,
+				m.ProrataNumerator,
+				m.ProrataDenominator,
 				roundAmount,
-				model.ResidualAmount,
-				model.EntryGuid
+				m.ResidualAmount,
+				m.EntryGuid
 			);
 		}
 
-		public static AmortizedAmount CreateResidualAmount(AmortizedAmount model, decimal? residualAmount)
+		public static AmortizedAmount CreateResidualAmount(AmortizedAmount? model, decimal? residualAmount)
 		{
+			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
+
 			return new AmortizedAmount
 			(
-				model.AmortizationType,
-				model.InitialAmount,
-				model.BaseAmount,
-				model.EffectiveRate,
-				model.ProrataNumerator,
-				model.ProrataDenominator,
-				model.RoundAmount,
+				m.AmortizationType,
+				m.InitialAmount,
+				m.BaseAmount,
+				m.EffectiveRate,
+				m.ProrataNumerator,
+				m.ProrataDenominator,
+				m.RoundAmount,
 				residualAmount,
-				model.EntryGuid
+				m.EntryGuid
 			);
 		}
 		#endregion

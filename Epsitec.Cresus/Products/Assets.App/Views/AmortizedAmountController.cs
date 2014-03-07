@@ -439,8 +439,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.value.HasValue)
 				{
-					this.radioFix.Enable = true;
-					this.radioAmo.Enable = true;
 					this.radioFix.ActiveState = (this.value.Value.AmortizationType == AmortizationType.Unknown) ? ActiveState.Yes : ActiveState.No;
 					this.radioAmo.ActiveState = (this.value.Value.AmortizationType != AmortizationType.Unknown) ? ActiveState.Yes : ActiveState.No;
 
@@ -463,8 +461,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					this.radioFix.Enable = false;
-					this.radioAmo.Enable = false;
+					this.radioFix.ActiveState = ActiveState.Yes;
+					this.radioAmo.ActiveState = ActiveState.No;
 
 					this.FinalAmount        = null;
 					this.ResidualAmount     = null;
@@ -487,26 +485,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AmortizedAmountController.UpdateType (this.typeTextFieldCombo);
 				AmortizedAmountController.SetType (this.typeTextFieldCombo, this.AmortizationType);
 
-				this.UpdateTextField (this.typeTextFieldCombo);
-				this.UpdateTextField (this.finalAmountTextField);
-				this.UpdateTextField (this.residualAmountTextField);
-				this.UpdateTextField (this.roundedAmountTextField);
-				this.UpdateTextField (this.roundAmountTextField);
-				this.UpdateTextField (this.brutAmountTextField);
-				this.UpdateTextField (this.initialAmountTextField);
-				this.UpdateTextField (this.amortizationAmountTextField);
-				this.UpdateTextField (this.baseAmountTextField);
-				this.UpdateTextField (this.effectiveRateTextField);
-				this.UpdateTextField (this.prorataRateTextField);
-				this.UpdateTextField (this.prorataNumeratorTextField);
-				this.UpdateTextField (this.prorataDenominatorTextField);
+				this.UpdateBackColor (this.typeTextFieldCombo);
+				this.UpdateBackColor (this.finalAmountTextField);
+				this.UpdateBackColor (this.residualAmountTextField);
+				this.UpdateBackColor (this.roundedAmountTextField);
+				this.UpdateBackColor (this.roundAmountTextField);
+				this.UpdateBackColor (this.brutAmountTextField);
+				this.UpdateBackColor (this.initialAmountTextField);
+				this.UpdateBackColor (this.amortizationAmountTextField);
+				this.UpdateBackColor (this.baseAmountTextField);
+				this.UpdateBackColor (this.effectiveRateTextField);
+				this.UpdateBackColor (this.prorataRateTextField);
+				this.UpdateBackColor (this.prorataNumeratorTextField);
+				this.UpdateBackColor (this.prorataDenominatorTextField);
 			}
 		}
 
 
 		private void UpdateInitAmount()
 		{
-			if (this.value.HasValue && this.ignoreChanges.IsZero)
+			if (this.ignoreChanges.IsZero)
 			{
 				this.value = new AmortizedAmount (this.FinalAmount);
 				this.UpdateUI ();
@@ -516,9 +514,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateEffectiveRate()
 		{
-			if (this.value.HasValue && this.ignoreChanges.IsZero)
+			if (this.ignoreChanges.IsZero)
 			{
-				this.value = AmortizedAmount.CreateEffectiveRate (this.value.Value, this.EffectiveRate);
+				this.value = AmortizedAmount.CreateEffectiveRate (this.value, this.EffectiveRate);
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -526,9 +524,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateProrataNumerator()
 		{
-			if (this.value.HasValue && this.ignoreChanges.IsZero)
+			if (this.ignoreChanges.IsZero)
 			{
-				this.value = AmortizedAmount.CreateProrataNumerator (this.value.Value, this.ProrataNumerator);
+				this.value = AmortizedAmount.CreateProrataNumerator (this.value, this.ProrataNumerator);
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -536,9 +534,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateProrataDenominator()
 		{
-			if (this.value.HasValue && this.ignoreChanges.IsZero)
+			if (this.ignoreChanges.IsZero)
 			{
-				this.value = AmortizedAmount.CreateProrataDenominator (this.value.Value, this.ProrataDenominator);
+				this.value = AmortizedAmount.CreateProrataDenominator (this.value, this.ProrataDenominator);
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -546,9 +544,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateRoundAmount()
 		{
-			if (this.value.HasValue && this.ignoreChanges.IsZero)
+			if (this.ignoreChanges.IsZero)
 			{
-				this.value = AmortizedAmount.CreateRoundAmount (this.value.Value, this.RoundAmount);
+				this.value = AmortizedAmount.CreateRoundAmount (this.value, this.RoundAmount);
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -556,9 +554,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateResidualAmount()
 		{
-			if (this.value.HasValue && this.ignoreChanges.IsZero)
+			if (this.ignoreChanges.IsZero)
 			{
-				this.value = AmortizedAmount.CreateResidualAmount (this.value.Value, this.ResidualAmount);
+				this.value = AmortizedAmount.CreateResidualAmount (this.value, this.ResidualAmount);
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -829,7 +827,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateTextField(AbstractTextField textField)
+		private void UpdateBackColor(AbstractTextField textField)
 		{
 			if (textField != null)
 			{
