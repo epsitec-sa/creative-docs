@@ -106,6 +106,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
+		public static string GetEntryScenarioName(EntryScenario type)
+		{
+			string s;
+			if (EnumDictionaries.DictEntryScenarios.TryGetValue ((int) type, out s))
+			{
+				return s;
+			}
+
+			return null;
+		}
+
 
 		//	Ici, il est préférable de ne pas avoir de mécanisme automatique pour
 		//	générer les dictionnaires à partir des enumérations C#. En effet, les
@@ -205,6 +216,22 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				dict.Add ((int) AccountType.Normal, "Normal");
 				dict.Add ((int) AccountType.Groupe, "Regroupement");
 				dict.Add ((int) AccountType.TVA,    "TVA");
+
+				return dict;
+			}
+		}
+
+		public static Dictionary<int, string> DictEntryScenarios
+		{
+			get
+			{
+				var dict = new Dictionary<int, string> ();
+
+				dict.Add ((int) EntryScenario.None,         "Aucune");
+				dict.Add ((int) EntryScenario.Purchase,     "Achat");
+				dict.Add ((int) EntryScenario.Sale,         "Vente");
+				dict.Add ((int) EntryScenario.Amortization, "Amortissement");
+				dict.Add ((int) EntryScenario.Revaluation,  "Réévaluation");
 
 				return dict;
 			}

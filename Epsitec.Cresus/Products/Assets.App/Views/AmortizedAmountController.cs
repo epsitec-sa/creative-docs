@@ -192,10 +192,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.CreateLine1       (this.line4, this.line45);
 				this.CreateLine2       (this.line5, this.line56);
 				this.CreateProrataLine (this.line6, this.line67);
+				this.CreateScenario    (this.line7);
 			}
 			else
 			{
 				this.CreateInitLine (this.line1, this.line23);
+				this.CreateScenario (this.line2);
 			}
 
 			this.UpdateUI ();
@@ -228,6 +230,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.CreateLines ();
 						this.OnValueEdited ();
 					}
+				}
+			};
+		}
+
+		private void CreateScenario(Widget parent)
+		{
+			this.CreateLabel (parent, 100, "Ecritures générées");
+
+			this.scenarioFieldCombo = new TextFieldCombo
+			{
+				Parent           = parent,
+				IsReadOnly       = true,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = 100,
+				PreferredHeight  = AbstractFieldController.lineHeight,
+				Margins          = new Margins (0, 10, 0, 0),
+				TabIndex         = ++this.tabIndex,
+			};
+
+			this.scenarioFieldCombo.ComboClosed += delegate
+			{
+				if (this.value.HasValue)
+				{
+					var type = AmortizedAmountController.GetScenario (this.scenarioFieldCombo);
+					//?if (this.value.Value.AmortizationType != type)
+					//?{
+					//?	this.value = AmortizedAmount.CreateType (this.value.Value, type);
+					//?	this.CreateLines ();
+					//?	this.OnValueEdited ();
+					//?}
 				}
 			};
 		}
@@ -485,6 +517,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AmortizedAmountController.UpdateType (this.typeTextFieldCombo);
 				AmortizedAmountController.SetType (this.typeTextFieldCombo, this.AmortizationType);
 
+				AmortizedAmountController.UpdateScenario (this.scenarioFieldCombo);
+				AmortizedAmountController.SetScenario (this.scenarioFieldCombo, EntryScenario.None);
+
 				this.UpdateBackColor (this.typeTextFieldCombo);
 				this.UpdateBackColor (this.finalAmountTextField);
 				this.UpdateBackColor (this.residualAmountTextField);
@@ -498,6 +533,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateBackColor (this.prorataRateTextField);
 				this.UpdateBackColor (this.prorataNumeratorTextField);
 				this.UpdateBackColor (this.prorataDenominatorTextField);
+				this.UpdateBackColor (this.scenarioFieldCombo);
 			}
 		}
 
@@ -827,6 +863,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private static EntryScenario GetScenario(TextFieldCombo combo)
+		{
+			if (combo != null)
+			{
+				foreach (var e in EnumDictionaries.DictEntryScenarios)
+				{
+					if (combo.Text == e.Value)
+					{
+						return (EntryScenario) e.Key;
+					}
+				}
+			}
+
+			return EntryScenario.None;
+		}
+
+		private static void SetScenario(TextFieldCombo combo, EntryScenario value)
+		{
+			if (combo != null)
+			{
+				combo.Text = EnumDictionaries.GetEntryScenarioName (value);
+			}
+		}
+
+		private static void UpdateScenario(TextFieldCombo combo)
+		{
+			if (combo != null)
+			{
+				combo.Items.Clear ();
+
+				foreach (var e in EnumDictionaries.DictEntryScenarios)
+				{
+					combo.Items.Add (e.Value);
+				}
+			}
+		}
+
+
 		private void UpdateBackColor(AbstractTextField textField)
 		{
 			if (textField != null)
@@ -911,6 +985,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TextField						prorataDenominatorTextField;
 
 		private TextFieldCombo					typeTextFieldCombo;
+		private TextFieldCombo					scenarioFieldCombo;
 
 		private FrameBox						line0;
 		private FrameBox						line1;
