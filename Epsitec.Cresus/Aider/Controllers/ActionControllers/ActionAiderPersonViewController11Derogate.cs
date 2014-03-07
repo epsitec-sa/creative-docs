@@ -34,19 +34,28 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(AiderGroupEntity destParish, Date date)
 		{
+			var person = this.Entity;
+			var parishGroup = person.ParishGroup;
+
+			if (destParish.IsNull ())
+			{
+				var message = "Vous n'avez pas sélectionné de paroisse.";
+				throw new BusinessRuleAttribute (message);
+			}
 			if (!destParish.IsParish ())
 			{
-				var message = "Le groupe sélectionné n'est pas une paroisse";
-
+				var message = "Le groupe sélectionné n'est pas une paroisse.";
 				throw new BusinessRuleException (message);
 			}
 
+			if (parishGroup == destParish)
+			{
+				var message = "La personne est déjà associée à cette paroisse.";
+				throw new BusinessRuleException (message);
+			}
 
-			var person = this.Entity;
-			var parishGroup = person.ParishGroup;
 			var derogationInGroup = destParish.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn);		
 			var derogationOutGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut);
-			
 
 			var contactAsList = new List<AiderContactEntity> ();
 			contactAsList.Add (person.MainContact);
@@ -68,7 +77,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 														person,
 														person.GeoParishGroupPathCache,
 														Enumerations.WarningType.ParishDeparture,
-														"Personne dérogée vers " + destParish.Name);
+														"Personne dérogée vers la\n" + destParish.Name);
 
 				//Add derogation in participation
 				derogationInGroup.AddParticipations (	this.BusinessContext,
@@ -80,7 +89,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 														person,
 														destParish.Path,
 														Enumerations.WarningType.ParishArrival,
-														"Personne dérogée en provenance de " + person.ParishGroup.Name);
+														"Personne dérogée en provenance de la\n" + person.ParishGroup.Name);
 
 				this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
 			}
@@ -102,7 +111,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					oldDerogationOutGroup.RemoveParticipations (this.BusinessContext, oldDerogationOutGroup.FindParticipations (this.BusinessContext).Where (p => p.Contact == person.MainContact));
 
 					//Warn old derogated parish
-					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache, Enumerations.WarningType.ParishDeparture, "Fin de dérogation");			
+					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache, Enumerations.WarningType.ParishDeparture, "Fin de dérogation");
 					//Warn NewParish for return
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path, Enumerations.WarningType.ParishArrival, "Fin de dérogation");
 				}
@@ -114,9 +123,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					//Warn old derogated parish
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache, Enumerations.WarningType.ParishDeparture, "Fin de dérogation");	
 					//Warn NewParish
-					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path, Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de " + person.ParishGroup.Name);
+					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path, Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de la\n" + person.ParishGroup.Name);
 					//Warn GeoParish for a Derogation Change
-					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Changement de dérogation vers " + destParish.Name);
+					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Changement de dérogation vers la\n" + destParish.Name);
 					this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
 				}
 			}

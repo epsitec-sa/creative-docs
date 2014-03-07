@@ -219,7 +219,7 @@ AiderOfficeReport = [LVOS13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVAM5]" title="Télphone 2" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVAM5]" title="Téléphone 2" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -382,7 +382,7 @@ AiderOfficeReport = [LVOS13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVAM5]" title="Télphone 2" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVAM5]" title="Téléphone 2" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -507,7 +507,7 @@ AiderOfficeReport = [LVOS13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVAM5]" title="Télphone 2" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVAM5]" title="Téléphone 2" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -779,7 +779,7 @@ AiderOfficeReport = [LVOS13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVAM5]" title="Télphone 2" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA8E].[LVAM5]" title="Téléphone 2" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -1092,7 +1092,7 @@ AiderOfficeReport = [LVOS13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVAM5]" title="Télphone 2" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVAM5]" title="Téléphone 2" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
