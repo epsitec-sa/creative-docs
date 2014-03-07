@@ -1134,23 +1134,59 @@ namespace Epsitec.Aider.Data.Job
 		private void ReassignAndWarnParish(BusinessContext businessContext, AiderPersonEntity aiderPersonEntity, List<FormattedText> changes)
 		{
 			this.LogToConsole ("Info: Reassign and warn parish");
-			var oldParishGroupPath = aiderPersonEntity.ParishGroupPathCache;
+			var oldParishGroup = aiderPersonEntity.ParishGroup;
+			var oldParishGroupPath = aiderPersonEntity.ParishGroupPathCache ?? "NOPA.";
 
 			ParishAssigner.ReassignToParish (this.parishAddressRepository, businessContext, aiderPersonEntity, this.startDate);
 
-			var newParishGroupPath = aiderPersonEntity.ParishGroupPathCache;
+			var newParishGroupPath = aiderPersonEntity.ParishGroupPathCache ?? "NOPA.";
 
+			var oldParishAlreadyNotified = false;
 			if (oldParishGroupPath != newParishGroupPath)
 			{
+				//Derogation exist?
+				if (!string.IsNullOrEmpty (aiderPersonEntity.GeoParishGroupPathCache))
+				{
+					//Yes, existing derogation in place:
+					//Remove old derogation in
+					var oldDerogationInGroup = oldParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn).First ();
+					oldDerogationInGroup.RemoveParticipations (businessContext, oldDerogationInGroup.FindParticipations (businessContext).Where (p => p.Contact == aiderPersonEntity.MainContact));
+
+					//Remove old derogation out
+					var origineParishGroup = AiderGroupEntity.FindGroups (businessContext, aiderPersonEntity.GeoParishGroupPathCache).First ();
+					var oldDerogationOutGroup = origineParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ();
+					oldDerogationOutGroup.RemoveParticipations (businessContext, oldDerogationOutGroup.FindParticipations (businessContext).Where (p => p.Contact == aiderPersonEntity.MainContact));
+
+					//Warn old derogated parish
+					AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, oldParishGroupPath, Enumerations.WarningType.ParishDeparture, "Fin de dérogation suite à un déménagement");
+					oldParishAlreadyNotified = true;
+					//Warn GeoParish for derogation end
+					AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Fin de dérogation suite à un déménagement");
+
+					//Reset state
+					aiderPersonEntity.GeoParishGroupPathCache = "";
+				}
+
 				this.LogToConsole ("Info: Parish group path is different, arrival and departure parish warned");
-				this.CreateWarning (businessContext, aiderPersonEntity, oldParishGroupPath, WarningType.ParishDeparture, this.warningTitleMessage, changes);
-				this.CreateWarning (businessContext, aiderPersonEntity, newParishGroupPath, WarningType.ParishArrival, this.warningTitleMessage, changes);
+
+				if (oldParishGroupPath != "NOPA." || !oldParishAlreadyNotified)
+				{
+					this.CreateWarning (businessContext, aiderPersonEntity, oldParishGroupPath, WarningType.ParishDeparture, this.warningTitleMessage, changes);
+				}
+				if (newParishGroupPath != "NOPA.")
+				{
+					this.CreateWarning (businessContext, aiderPersonEntity, newParishGroupPath, WarningType.ParishArrival, this.warningTitleMessage, changes);
+				}
+
 			}
 			else //if no change in parish group path, we create an simple address change warning
 			{
 				this.LogToConsole ("Info: No parish change detected, warning: EChAddressChanged added");
 				this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChAddressChanged, this.warningTitleMessage, changes);
 			}
+			
+			
+			
 		}
 
 		private void PrepareHashSetForAnalytics()

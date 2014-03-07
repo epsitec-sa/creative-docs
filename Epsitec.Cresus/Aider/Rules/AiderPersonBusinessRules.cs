@@ -243,13 +243,14 @@ namespace Epsitec.Aider.Rules
 
 			var newParish		   = person.ParishGroup;
 			var newParishName      = person.ParishGroup.Name;
-			var newParishGroupPath = person.ParishGroupPathCache;
+			var newParishGroupPath = person.ParishGroupPathCache ?? "NOPA.";
 
 			if (oldParishGroupPath == newParishGroupPath)
 			{
 				return false;
 			}
 
+			var oldParishAlreadyNotified = false;
 			//Derogation exist?
 			if (!string.IsNullOrEmpty (person.GeoParishGroupPathCache))
 			{
@@ -264,7 +265,8 @@ namespace Epsitec.Aider.Rules
 				oldDerogationOutGroup.RemoveParticipations (context, oldDerogationOutGroup.FindParticipations (context).Where (p => p.Contact == person.MainContact));
 					
 				//Warn old derogated parish
-				AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, Enumerations.WarningType.ParishDeparture, "Fin de dérogation");
+				AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, Enumerations.WarningType.ParishDeparture, "Fin de dérogation suite à un déménagement");
+				oldParishAlreadyNotified = true;
 				//Warn GeoParish for derogation end
 				AiderPersonWarningEntity.Create (context, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Fin de dérogation suite à un déménagement");
 
@@ -279,7 +281,7 @@ namespace Epsitec.Aider.Rules
 														"a été appliquée:\n \n",
 														oldParishName, "\n->\n", newParishName);
 
-			if (oldParishGroupPath != "NOPA.")
+			if (oldParishGroupPath != "NOPA." || !oldParishAlreadyNotified)
 			{
 				AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, WarningType.ParishDeparture, title, description);
 			}
