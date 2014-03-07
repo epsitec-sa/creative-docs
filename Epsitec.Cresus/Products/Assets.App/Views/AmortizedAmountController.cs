@@ -150,7 +150,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.value.HasValue)
 				{
-					this.value = AmortizedAmount.CreateType (this.value.Value, AmortizationType.Unknown);
+					var aa = this.value.Value;
+					aa.AmortizationType = AmortizationType.Unknown;
+
 					this.CreateLines ();
 					this.OnValueEdited ();
 				}
@@ -160,7 +162,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.value.HasValue)
 				{
-					this.value = AmortizedAmount.CreateType (this.value.Value, AmortizationType.Linear);
+					var aa = this.value.Value;
+					aa.AmortizationType = AmortizationType.Linear;
+
 					this.CreateLines ();
 					this.OnValueEdited ();
 				}
@@ -226,7 +230,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var type = AmortizedAmountController.GetType (this.typeTextFieldCombo);
 					if (this.value.Value.AmortizationType != type)
 					{
-						this.value = AmortizedAmount.CreateType (this.value.Value, type);
+						var aa = this.value.Value;
+						aa.AmortizationType = type;
+
 						this.CreateLines ();
 						this.OnValueEdited ();
 					}
@@ -253,13 +259,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.value.HasValue)
 				{
-					var type = AmortizedAmountController.GetScenario (this.scenarioFieldCombo);
-					//?if (this.value.Value.AmortizationType != type)
-					//?{
-					//?	this.value = AmortizedAmount.CreateType (this.value.Value, type);
-					//?	this.CreateLines ();
-					//?	this.OnValueEdited ();
-					//?}
+					var scenario = AmortizedAmountController.GetScenario (this.scenarioFieldCombo);
+					if (this.value.Value.EntryScenario != scenario)
+					{
+						var aa = this.value.Value;
+						aa.EntryScenario = scenario;
+
+						this.CreateLines ();
+						this.OnValueEdited ();
+					}
 				}
 			};
 		}
@@ -518,7 +526,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AmortizedAmountController.SetType (this.typeTextFieldCombo, this.AmortizationType);
 
 				AmortizedAmountController.UpdateScenario (this.scenarioFieldCombo);
-				AmortizedAmountController.SetScenario (this.scenarioFieldCombo, EntryScenario.None);
+				AmortizedAmountController.SetScenario (this.scenarioFieldCombo, this.EntryScenario);
 
 				this.UpdateBackColor (this.typeTextFieldCombo);
 				this.UpdateBackColor (this.finalAmountTextField);
@@ -542,7 +550,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				this.value = new AmortizedAmount (this.FinalAmount);
+				var aa = this.value.Value;
+				aa.InitialAmount = this.FinalAmount;
+
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -552,7 +562,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				this.value = AmortizedAmount.CreateEffectiveRate (this.value, this.EffectiveRate);
+				var aa = this.value.Value;
+				aa.EffectiveRate = this.EffectiveRate;
+
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -562,7 +574,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				this.value = AmortizedAmount.CreateProrataNumerator (this.value, this.ProrataNumerator);
+				var aa = this.value.Value;
+				aa.ProrataNumerator = this.ProrataNumerator;
+
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -572,7 +586,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				this.value = AmortizedAmount.CreateProrataDenominator (this.value, this.ProrataDenominator);
+				var aa = this.value.Value;
+				aa.ProrataDenominator = this.ProrataDenominator;
+
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -582,7 +598,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				this.value = AmortizedAmount.CreateRoundAmount (this.value, this.RoundAmount);
+				var aa = this.value.Value;
+				aa.RoundAmount = this.RoundAmount;
+
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -592,7 +610,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				this.value = AmortizedAmount.CreateResidualAmount (this.value, this.ResidualAmount);
+				var aa = this.value.Value;
+				aa.ResidualAmount = this.ResidualAmount;
+
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -928,6 +948,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else
 				{
 					return AmortizationType.Unknown;
+				}
+			}
+		}
+
+		private EntryScenario EntryScenario
+		{
+			get
+			{
+				if (this.value.HasValue)
+				{
+					return this.value.Value.EntryScenario;
+				}
+				else
+				{
+					return EntryScenario.None;
 				}
 			}
 		}

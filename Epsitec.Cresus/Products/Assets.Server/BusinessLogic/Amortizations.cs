@@ -277,9 +277,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var entryGuid = this.entries.CreateEntry (obj, date, details);
 
 				//	InitialAmount et BaseAmount seront calculés plus tard.
-				var aa = new AmortizedAmount (details.Def.Type, null, null, 
-					details.Def.EffectiveRate, details.Prorata.Numerator, details.Prorata.Denominator,
-					details.Def.Round, details.Def.Residual, entryGuid);
+				var aa = new AmortizedAmount (this.accessor)
+				{
+					AmortizationType   = details.Def.Type,
+					EffectiveRate      = details.Def.EffectiveRate,
+					ProrataNumerator   = details.Prorata.Numerator,
+					ProrataDenominator = details.Prorata.Denominator,
+					RoundAmount        = details.Def.Round,
+					ResidualAmount     = details.Def.Residual,
+					EntryScenario      = EntryScenario.Amortization,
+					EntryGuid          = entryGuid,
+				};
 
 				var p = new DataAmortizedAmountProperty (ObjectField.MainValue, aa);
 				e.AddProperty (p);
@@ -378,21 +386,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static void UpdateAmortizedAmount(DataAccessor accessor, DataEvent e, ObjectField field, ref decimal? lastAmount, ref decimal? lastBase)
 		{
-			var current = Amortizations.GetAmortizedAmount (e, field);
+			var p = e.GetProperty (field) as DataAmortizedAmountProperty;
 
-			if (current.HasValue)
+			if (p != null)
 			{
-				if (current.Value.AmortizationType == AmortizationType.Unknown)  // montant fixe ?
+				var aa = p.Value;
+
+				if (aa.AmortizationType == AmortizationType.Unknown)  // montant fixe ?
 				{
-					lastBase = current.Value.FinalAmortizedAmount;
+					lastBase = aa.FinalAmortizedAmount;
 				}
 				else  // amortissement ?
 				{
-					current = AmortizedAmount.CreateInitialBase(current.Value, lastAmount, lastBase);
-					Amortizations.SetAmortizedAmount (accessor, e, field, current.Value);
+					aa.InitialAmount = lastAmount;
+					aa.BaseAmount    = lastBase;
 				}
 
-				lastAmount = current.Value.FinalAmortizedAmount;
+				lastAmount = aa.FinalAmortizedAmount;
 			}
 		}
 
@@ -414,30 +424,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 		}
-
-		private static AmortizedAmount? GetAmortizedAmount(DataEvent e, ObjectField field)
-		{
-			var p = e.GetProperty (field) as DataAmortizedAmountProperty;
-			if (p == null)
-			{
-				return null;
-			}
-			else
-			{
-				return p.Value;
-			}
-		}
-
-		private static void SetAmortizedAmount(DataAccessor accessor, DataEvent e, ObjectField field, AmortizedAmount value)
-		{
-			var newProperty = new DataAmortizedAmountProperty (field, value);
-			e.AddProperty (newProperty);
-
-			using (var entries = new Entries (accessor))
-			{
-				entries.UpdateEntry (value);
-			}
- 		}
 
 		private static ComputedAmount? GetComputedAmount(DataEvent e, ObjectField field)
 		{

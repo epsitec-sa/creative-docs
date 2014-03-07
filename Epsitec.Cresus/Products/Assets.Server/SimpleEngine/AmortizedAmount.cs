@@ -9,53 +9,137 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public struct AmortizedAmount
 	{
-		public AmortizedAmount(AmortizationType amortizationType, decimal? initialAmount,
-			decimal? baseAmount, decimal? effectiveRate,
-			decimal? prorataNumerator, decimal? prorataDenominator,
-			decimal? roundAmount, decimal? residualAmount,
-			Guid entryGuid)
+		public AmortizedAmount(DataAccessor accessor)
 		{
-			this.AmortizationType   = amortizationType;
-			this.InitialAmount      = initialAmount;
-			this.BaseAmount         = baseAmount;
-			this.EffectiveRate      = effectiveRate;
-			this.ProrataNumerator   = prorataNumerator;
-			this.ProrataDenominator = prorataDenominator;
-			this.RoundAmount        = roundAmount;
-			this.ResidualAmount     = residualAmount;
-			this.EntryGuid          = entryGuid;
-		}
-
-		public AmortizedAmount(decimal? finalAmount)
-		{
-			//	Initialise un montant initial fixe.
-			this.AmortizationType   = AmortizationType.Unknown;
-			this.InitialAmount      = finalAmount;
-			this.BaseAmount         = null;
-			this.EffectiveRate      = null;
-			this.ProrataNumerator   = null;
-			this.ProrataDenominator = null;
-			this.RoundAmount        = null;
-			this.ResidualAmount     = null;
-			this.EntryGuid          = Guid.Empty;
-		}
-
-		public AmortizedAmount(decimal? initialAmount, decimal? finalAmount)
-		{
-			//	Initialise un montant amorti dégressivement.
-			this.AmortizationType   = AmortizationType.Degressive;
-			this.InitialAmount      = initialAmount;
-			this.BaseAmount         = initialAmount;
-			this.EffectiveRate      = 1.0m - (finalAmount / initialAmount);
-			this.ProrataNumerator   = null;
-			this.ProrataDenominator = null;
-			this.RoundAmount        = null;
-			this.ResidualAmount     = null;
-			this.EntryGuid          = Guid.Empty;
+			this.accessor = accessor;
+			this.values = new AmortizedAmountValues ();
 		}
 
 
-		public decimal? FinalAmortizedAmount
+		#region Facade
+		public AmortizationType AmortizationType
+		{
+			get
+			{
+				return this.values.AmortizationType;
+			}
+			set
+			{
+				this.values.AmortizationType = value;
+			}
+		}
+
+		public decimal? InitialAmount
+		{
+			get
+			{
+				return this.values.InitialAmount;
+			}
+			set
+			{
+				this.values.InitialAmount = value;
+			}
+		}
+
+		public decimal? BaseAmount
+		{
+			get
+			{
+				return this.values.BaseAmount;
+			}
+			set
+			{
+				this.values.BaseAmount = value;
+			}
+		}
+
+		public decimal? EffectiveRate
+		{
+			get
+			{
+				return this.values.EffectiveRate;
+			}
+			set
+			{
+				this.values.EffectiveRate = value;
+			}
+		}
+
+		public decimal? ProrataNumerator
+		{
+			get
+			{
+				return this.values.ProrataNumerator;
+			}
+			set
+			{
+				this.values.ProrataNumerator = value;
+			}
+		}
+
+		public decimal? ProrataDenominator
+		{
+			get
+			{
+				return this.values.ProrataDenominator;
+			}
+			set
+			{
+				this.values.ProrataDenominator = value;
+			}
+		}
+
+		public decimal? RoundAmount
+		{
+			get
+			{
+				return this.values.RoundAmount;
+			}
+			set
+			{
+				this.values.RoundAmount = value;
+			}
+		}
+
+		public decimal? ResidualAmount
+		{
+			get
+			{
+				return this.values.ResidualAmount;
+			}
+			set
+			{
+				this.values.ResidualAmount = value;
+			}
+		}
+
+		public EntryScenario EntryScenario
+		{
+			get
+			{
+				return this.values.EntryScenario;
+			}
+			set
+			{
+				this.values.EntryScenario = value;
+			}
+		}
+
+		public Guid EntryGuid
+		{
+			get
+			{
+				return this.values.EntryGuid;
+			}
+			set
+			{
+				this.values.EntryGuid = value;
+			}
+		}
+		#endregion
+
+
+		public decimal?							FinalAmortizedAmount
 		{
 			//	Calcule la valeur amortie finale, en tenant compte de l'arrondi et de la
 			//	valeur résiduelle.
@@ -74,7 +158,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal? RoundedAmortizedAmount
+		public decimal?							RoundedAmortizedAmount
 		{
 			//	Calcule la valeur amortie arrondie, sans tenir compte de la valeur résiduelle.
 			get
@@ -92,7 +176,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal? BrutAmortizedAmount
+		public decimal?							BrutAmortizedAmount
 		{
 			//	Calcule la valeur amortie, sans tenir compte de l'arrondi ni de la valeur
 			//	résiduelle.
@@ -102,7 +186,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal FinalAmortization
+		public decimal							FinalAmortization
 		{
 			//	Calcule l'amortissement final effectif.
 			get
@@ -112,7 +196,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal BrutAmortization
+		public decimal							BrutAmortization
 		{
 			//	Calcule l'amortissement brut, qu'il faudra soustraire à la valeur initiale
 			//	pour obtenir la valeur amortie.
@@ -139,7 +223,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal Prorata
+		public decimal							Prorata
 		{
 			//	Retourne le facteur multiplicateur "au prorata", compris entre 0 et 1.
 			get
@@ -188,135 +272,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		#region Factory
-		public static AmortizedAmount CreateType(AmortizedAmount? model, AmortizationType type)
-		{
-			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
-
-			return new AmortizedAmount
-			(
-				type,
-				m.InitialAmount,
-				m.BaseAmount,
-				m.EffectiveRate,
-				m.ProrataNumerator,
-				m.ProrataDenominator,
-				m.RoundAmount,
-				m.ResidualAmount,
-				m.EntryGuid
-			);
-		}
-
-		public static AmortizedAmount CreateInitialBase(AmortizedAmount? model, decimal? initialAmount, decimal? baseAmount)
-		{
-			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
-
-			return new AmortizedAmount
-			(
-				m.AmortizationType,
-				initialAmount.HasValue ? initialAmount : m.InitialAmount,
-				baseAmount.HasValue    ? baseAmount    : m.BaseAmount,
-				m.EffectiveRate,
-				m.ProrataNumerator,
-				m.ProrataDenominator,
-				m.RoundAmount,
-				m.ResidualAmount,
-				m.EntryGuid
-			);
-		}
-
-		public static AmortizedAmount CreateEffectiveRate(AmortizedAmount? model, decimal? effectiveRate)
-		{
-			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
-
-			return new AmortizedAmount
-			(
-				m.AmortizationType,
-				m.InitialAmount,
-				m.BaseAmount,
-				effectiveRate,
-				m.ProrataNumerator,
-				m.ProrataDenominator,
-				m.RoundAmount,
-				m.ResidualAmount,
-				m.EntryGuid
-			);
-		}
-
-		public static AmortizedAmount CreateProrataNumerator(AmortizedAmount? model, decimal? prorataNumerator)
-		{
-			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
-
-			return new AmortizedAmount
-			(
-				m.AmortizationType,
-				m.InitialAmount,
-				m.BaseAmount,
-				m.EffectiveRate,
-				prorataNumerator,
-				m.ProrataDenominator,
-				m.RoundAmount,
-				m.ResidualAmount,
-				m.EntryGuid
-			);
-		}
-
-		public static AmortizedAmount CreateProrataDenominator(AmortizedAmount? model, decimal? prorataDenominator)
-		{
-			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
-
-			return new AmortizedAmount
-			(
-				m.AmortizationType,
-				m.InitialAmount,
-				m.BaseAmount,
-				m.EffectiveRate,
-				m.ProrataNumerator,
-				prorataDenominator,
-				m.RoundAmount,
-				m.ResidualAmount,
-				m.EntryGuid
-			);
-		}
-
-		public static AmortizedAmount CreateRoundAmount(AmortizedAmount? model, decimal? roundAmount)
-		{
-			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
-
-			return new AmortizedAmount
-			(
-				m.AmortizationType,
-				m.InitialAmount,
-				m.BaseAmount,
-				m.EffectiveRate,
-				m.ProrataNumerator,
-				m.ProrataDenominator,
-				roundAmount,
-				m.ResidualAmount,
-				m.EntryGuid
-			);
-		}
-
-		public static AmortizedAmount CreateResidualAmount(AmortizedAmount? model, decimal? residualAmount)
-		{
-			AmortizedAmount m = model.HasValue ? model.Value : new AmortizedAmount (0.0m);
-
-			return new AmortizedAmount
-			(
-				m.AmortizationType,
-				m.InitialAmount,
-				m.BaseAmount,
-				m.EffectiveRate,
-				m.ProrataNumerator,
-				m.ProrataDenominator,
-				m.RoundAmount,
-				residualAmount,
-				m.EntryGuid
-			);
-		}
-		#endregion
-
-
 		private static decimal Round(decimal value, decimal round)
 		{
 			//	Retourne un montant arrondi.
@@ -340,14 +295,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public readonly AmortizationType		AmortizationType;
-		public readonly decimal?				InitialAmount;
-		public readonly decimal?				BaseAmount;
-		public readonly decimal?				EffectiveRate;
-		public readonly decimal?				ProrataNumerator;
-		public readonly decimal?				ProrataDenominator;
-		public readonly decimal?				RoundAmount;
-		public readonly decimal?				ResidualAmount;
-		public readonly Guid					EntryGuid;
+		private readonly DataAccessor			accessor;
+		private readonly AmortizedAmountValues	values;
 	}
 }

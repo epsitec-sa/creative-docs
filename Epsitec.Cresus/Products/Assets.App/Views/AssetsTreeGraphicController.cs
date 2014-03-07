@@ -157,10 +157,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (v.HasValue)
 				{
 					var ca = new ComputedAmount (v);
-					if (ca != null)
-					{
-						return TreeGraphicValue.CreateAmount (ca.FinalAmount);
-					}
+					return TreeGraphicValue.CreateAmount (ca.FinalAmount);
 				}
 			}
 			else if (type == FieldType.AmortizedAmount)
@@ -170,11 +167,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var v = nodeGetter.GetValue (obj, node, field);
 				if (v.HasValue)
 				{
-					var aa = new AmortizedAmount (v);
-					if (aa != null)
+					var aa = new AmortizedAmount (null)
 					{
-						return TreeGraphicValue.CreateAmount (aa.FinalAmortizedAmount);
-					}
+						InitialAmount = v,
+					};
+					return TreeGraphicValue.CreateAmount (aa.FinalAmortizedAmount);
 				}
 			}
 			else

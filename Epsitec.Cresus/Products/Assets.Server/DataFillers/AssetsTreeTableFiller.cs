@@ -118,7 +118,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							var v = this.NodeGetter.GetValue (obj, node, userField.Field);
 							if (v.HasValue)
 							{
-								var aa = new AmortizedAmount (v);
+								var aa = new AmortizedAmount (null)
+								{
+									InitialAmount = v,
+								};
 								cell = new TreeTableCellAmortizedAmount (aa, cellState2);
 							}
 							else

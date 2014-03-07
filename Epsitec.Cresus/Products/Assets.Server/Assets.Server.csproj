@@ -139,6 +139,7 @@
     <Compile Include="SimpleEngine\AccountCategory.cs" />
     <Compile Include="SimpleEngine\AccountType.cs" />
     <Compile Include="SimpleEngine\AmortizedAmount.cs" />
+    <Compile Include="SimpleEngine\AmortizedAmountValues.cs" />
     <Compile Include="SimpleEngine\DummyEntries.cs" />
     <Compile Include="SimpleEngine\DataAmortizedAmountProperty.cs" />
     <Compile Include="SimpleEngine\DummyAmortizations.cs" />
