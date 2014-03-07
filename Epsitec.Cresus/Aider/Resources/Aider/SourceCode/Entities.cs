@@ -8847,18 +8847,6 @@ namespace Epsitec.Aider.Entities
 				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity> ("[LVOB13]");
 			}
 		}
-		///	<summary>
-		///	The <c>OfficeReports</c> field.
-		///	designer:fld/LVO613/LVO023
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVO023]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> OfficeReports
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> ("[LVO023]");
-			}
-		}
 		
 		partial void OnOfficeNameChanging(string oldValue, string newValue);
 		partial void OnOfficeNameChanged(string oldValue, string newValue);
@@ -9032,28 +9020,6 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
-		///	<summary>
-		///	The <c>IsCurrentSettings</c> field.
-		///	designer:fld/LVOA13/LVOJ13
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOJ13]")]
-		public bool IsCurrentSettings
-		{
-			get
-			{
-				return this.GetField<bool> ("[LVOJ13]");
-			}
-			set
-			{
-				bool oldValue = this.IsCurrentSettings;
-				if (oldValue != value || !this.IsFieldDefined("[LVOJ13]"))
-				{
-					this.OnIsCurrentSettingsChanging (oldValue, value);
-					this.SetField<bool> ("[LVOJ13]", oldValue, value);
-					this.OnIsCurrentSettingsChanged (oldValue, value);
-				}
-			}
-		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -9067,8 +9033,6 @@ namespace Epsitec.Aider.Entities
 		partial void OnOfficialContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnOfficeLogoImagePathChanging(string oldValue, string newValue);
 		partial void OnOfficeLogoImagePathChanged(string oldValue, string newValue);
-		partial void OnIsCurrentSettingsChanging(bool oldValue, bool newValue);
-		partial void OnIsCurrentSettingsChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -9103,6 +9067,28 @@ namespace Epsitec.Aider.Entities
 	///	</summary>
 	public partial class AiderOfficeReportEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
+		///	<summary>
+		///	The <c>ReportName</c> field.
+		///	designer:fld/LVOS13/LVO423
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO423]")]
+		public string ReportName
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO423]");
+			}
+			set
+			{
+				string oldValue = this.ReportName;
+				if (oldValue != value || !this.IsFieldDefined("[LVO423]"))
+				{
+					this.OnReportNameChanging (oldValue, value);
+					this.SetField<string> ("[LVO423]", oldValue, value);
+					this.OnReportNameChanged (oldValue, value);
+				}
+			}
+		}
 		///	<summary>
 		///	The <c>OfficeSettings</c> field.
 		///	designer:fld/LVOS13/LVOT13
@@ -9169,13 +9155,87 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Parameter0</c> field.
+		///	designer:fld/LVOS13/LVO123
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO123]")]
+		public string Parameter0
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO123]");
+			}
+			set
+			{
+				string oldValue = this.Parameter0;
+				if (oldValue != value || !this.IsFieldDefined("[LVO123]"))
+				{
+					this.OnParameter0Changing (oldValue, value);
+					this.SetField<string> ("[LVO123]", oldValue, value);
+					this.OnParameter0Changed (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Parameter1</c> field.
+		///	designer:fld/LVOS13/LVO223
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO223]")]
+		public string Parameter1
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO223]");
+			}
+			set
+			{
+				string oldValue = this.Parameter1;
+				if (oldValue != value || !this.IsFieldDefined("[LVO223]"))
+				{
+					this.OnParameter1Changing (oldValue, value);
+					this.SetField<string> ("[LVO223]", oldValue, value);
+					this.OnParameter1Changed (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Parameter2</c> field.
+		///	designer:fld/LVOS13/LVO323
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO323]")]
+		public string Parameter2
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO323]");
+			}
+			set
+			{
+				string oldValue = this.Parameter2;
+				if (oldValue != value || !this.IsFieldDefined("[LVO323]"))
+				{
+					this.OnParameter2Changing (oldValue, value);
+					this.SetField<string> ("[LVO323]", oldValue, value);
+					this.OnParameter2Changed (oldValue, value);
+				}
+			}
+		}
 		
+		partial void OnReportNameChanging(string oldValue, string newValue);
+		partial void OnReportNameChanged(string oldValue, string newValue);
 		partial void OnOfficeSettingsChanging(global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity newValue);
 		partial void OnOfficeSettingsChanged(global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity newValue);
 		partial void OnRecipientChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnRecipientChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnContentTemplateChanging(string oldValue, string newValue);
 		partial void OnContentTemplateChanged(string oldValue, string newValue);
+		partial void OnParameter0Changing(string oldValue, string newValue);
+		partial void OnParameter0Changed(string oldValue, string newValue);
+		partial void OnParameter1Changing(string oldValue, string newValue);
+		partial void OnParameter1Changed(string oldValue, string newValue);
+		partial void OnParameter2Changing(string oldValue, string newValue);
+		partial void OnParameter2Changed(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

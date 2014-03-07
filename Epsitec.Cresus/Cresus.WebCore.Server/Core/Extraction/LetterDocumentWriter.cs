@@ -48,11 +48,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			var firstname		= rows[0][3];
 			var lastname		= rows[0][4];
 			var address			= rows[0][5];
+			var p0				= rows[0][6];
+			var p1				= rows[0][7];
+			var p2				= rows[0][8];
 
 			var setup			= new LetterDocumentSetup ();
 
 			var report			= this.GetReport (setup);
-
 
 			var addressBuilder = new System.Text.StringBuilder ();
 			addressBuilder.Append (rows[0][2]);
@@ -65,7 +67,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 			var contentTemplateBuilder = new System.Text.StringBuilder ();
 
-			contentTemplateBuilder.Append (string.Format (template, "paroisse a", "paroisse b"));
+			contentTemplateBuilder.Append (string.Format (template, p0, p1, p2));
 
 			report.GeneratePdf (stream, topReference, addressBuilder.ToString (), contentTemplateBuilder.ToString ());
 		}

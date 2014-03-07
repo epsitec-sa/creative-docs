@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	using Epsitec.Cresus.WebCore.Server.Core.Databases;
 	using Database = Core.Databases.Database;
 	/// <summary>
-	/// This module is used to retrieve some configuration data for the production of pdf files.
+	/// Report Builder
 	/// </summary>
 	public class ReportingModule : AbstractAuthenticatedModule
 	{
@@ -44,14 +44,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 		internal static Response CreateReport(EntityExtractor extractor)
-		{
-			
+		{			
 			var itemCount = extractor.Accessor.GetItemCount ();
-
-			if (itemCount > 10000)
-			{
-				throw new System.InvalidOperationException ("Too many items in extractor: " + itemCount.ToString ());
-			}
 
 			EntityWriter writer = ReportingModule.GetEntityWriter (extractor);
 

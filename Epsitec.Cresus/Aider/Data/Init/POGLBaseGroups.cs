@@ -21,9 +21,9 @@ using Epsitec.Cresus.Core.Entities;
 namespace Epsitec.Aider.Data.Groups
 {
 	/// <summary>
-	/// This job create missing PLA root group
+	/// This job create missing POGLE base group
 	/// </summary>
-	public static class PLAGroups
+	public static class POGLBaseGroups
 	{
 		public static void Create(CoreData coreData)
 		{

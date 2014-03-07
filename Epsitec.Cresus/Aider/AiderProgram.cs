@@ -413,7 +413,6 @@ namespace Epsitec.Aider
 			{
 				OfficeManagementEntities.CreateOfficeManagementEntities (coreData);
 				DerogationGroups.CreateIfNeeded (coreData);
-				PLAGroups.Create (coreData);
 			});
 		}
 

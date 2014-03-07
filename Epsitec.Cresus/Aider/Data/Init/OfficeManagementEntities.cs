@@ -21,7 +21,7 @@ using Epsitec.Cresus.Core.Entities;
 namespace Epsitec.Aider.Data.Groups
 {
 	/// <summary>
-	/// This job createoffice management groups
+	/// This job create office management groups
 	/// </summary>
 	public static class OfficeManagementEntities
 	{

@@ -28,18 +28,19 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
 
-			wall.AddBrick (p => p.OfficeReports)
+			/*wall.AddBrick (p => p.OfficeReports)
 								.Attribute (BrickMode.DefaultToSummarySubView)
 								.Attribute (BrickMode.AutoGroup)
 								.Attribute (BrickMode.HideAddButton)
 								.Attribute (BrickMode.HideRemoveButton)
 								.Template ()
 									.Title ("Documents")
-									.Text (x => "<a href='/proxy/reporting/"
+									.Text (x => x.ReportName
+												+ "<a href='/proxy/reporting/"
 												+ Res.Commands.Base.PrintOfficeReports.CommandId + "/" 
 												+ this.DataContext.GetPersistedId (x).Substring(3).Replace(':','-')
 												+"/test' target='_blank'>Consulter</a>")									
-								.End ();
+								.End ();*/
 			
 			
 		}

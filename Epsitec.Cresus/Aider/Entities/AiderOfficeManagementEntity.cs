@@ -36,13 +36,8 @@ namespace Epsitec.Aider.Entities
 		{
 			if(this.Settings.Count () > 0)
 			{
-				var currentSettings = this.Settings.Where (s => s.IsCurrentSettings).First ();
-				var text =		
-								"Contact officiel : " + currentSettings.OfficialContact.GetDisplayName () + "\n"
-							+	"Adresse du secrétariat :\n"
-							+	currentSettings.OfficeAddress.Address.GetDisplayAddress () + "\n"
-							+	"Adresse P.P :\n"
-							+	currentSettings.PPFrankingTown.ZipCode + " " + currentSettings.PPFrankingTown.Name;
+
+				var text =	"(" + this.Settings.Count +") disponibles";
 
 				return TextFormatter.FormatText (text);
 			}
@@ -55,16 +50,14 @@ namespace Epsitec.Aider.Entities
 			
 		}
 
-		public void ActivateSettings(AiderOfficeSettingsEntity settings)
+		public static AiderOfficeManagementEntity Find(BusinessContext businessContext, AiderGroupEntity group)
 		{
-			var newCurrent = this.Settings.Where (s => s == settings).First ();
-			newCurrent.IsCurrentSettings = true;
-
-			var oldSettings  = this.Settings.Where (s => s != settings);
-			foreach (var old in oldSettings)
+			var officeExample = new AiderOfficeManagementEntity
 			{
-				old.IsCurrentSettings = false;
-			}
+				ParishGroup = group
+			};
+
+			return businessContext.DataContext.GetByExample (officeExample).First ();
 		}
 
 		public static AiderOfficeManagementEntity Create(BusinessContext businessContext,string name,AiderGroupEntity parishGroup)
@@ -99,27 +92,10 @@ namespace Epsitec.Aider.Entities
 			{
 				settings.PPFrankingTown = ppFrankingTown;
 			}
-			if (!office.Settings.Any ())
-			{
-				settings.IsCurrentSettings = true;
-			}
-			else
-			{
-				settings.IsCurrentSettings = false;
-			}
 
 			office.Settings.Add (settings);
 			return settings;
 		}
 
-		public static AiderOfficeReportEntity CreateDocument(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderOfficeSettingsEntity settings, AiderContactEntity recipient, string content)
-		{
-			var document = businessContext.CreateAndRegisterEntity<AiderOfficeReportEntity> ();
-			document.ContentTemplate = content;
-			document.Recipient = recipient;
-			document.OfficeSettings = settings;
-			office.OfficeReports.Add (document);
-			return document;
-		}
 	}
 }

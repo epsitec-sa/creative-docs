@@ -24,15 +24,7 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetCompactSummary()
 		{
-			if (this.IsCurrentSettings)
-			{
-				return TextFormatter.FormatText (new FormattedText(this.Name).ApplyBold ());
-			}
-			else
-			{
-				return TextFormatter.FormatText (this.Name);
-			}
-			
+			return TextFormatter.FormatText (this.Name);
 		}
 
 		public override FormattedText GetSummary()

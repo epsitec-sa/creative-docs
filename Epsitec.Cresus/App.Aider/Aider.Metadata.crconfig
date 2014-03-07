@@ -1339,7 +1339,7 @@ AiderOfficeReport = [LVOS13]
     </t>
 
     <t eid="@AiderOfficeReport" n="default">
-    <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVOV13]" title="ContentTemplate" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVOV13]" title="ContentTemplate" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -1360,6 +1360,18 @@ AiderOfficeReport = [LVOS13]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVOU13].[LVA8E].[LVG242]" title="Adresse multi-lignes du destinataire" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVO123]" title="P0" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVO223]" title="P1" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeReport:[LVO323]" title="P2" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -1535,18 +1547,8 @@ AiderOfficeReport = [LVOS13]
 #[Feature:OfficeManagement]      <R><r>@user</r></R>
 #[Feature:OfficeManagement]    </d>
 
-
-#[Feature:OfficeManagement]    <d cid="[LVON13]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false"  dg="">
-#[Feature:OfficeManagement]      <R><r>@user</r></R>
-#[Feature:OfficeManagement]    </d>
-
 #[Feature:OfficeManagement]    <d cid="[LVOR13]" teid="@AiderOfficeReport" tn="default" df="false" d="false" ec="false" ed="false"  dg="">
 #[Feature:OfficeManagement]      <R><r>@user</r></R>
-#[Feature:OfficeManagement]	 <!-- Filter -->
-#[Feature:OfficeManagement]	 <f id="@AiderOfficeReport">
-#[Feature:OfficeManagement]	    <!-- Column id=IsCurrentSettings (Valeur) (Comparaison) c=(1=equals) v="false" -->
-#[Feature:OfficeManagement]	    <C><c id="[LVOT13].[LVOJ13]"><v><comp c="1" v="Btrue" /></v></c></C>
-#[Feature:OfficeManagement]	 </f>
 #[Feature:OfficeManagement]    </d>
   </D>
   <G/>

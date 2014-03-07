@@ -16,11 +16,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (Base.PrintOfficeReports, null);
+					global::System.Object.Equals (Base.ReportDatasetExample, null);
 				}
 				
 				//	designer:cap/LVOR13
-				public static readonly global::Epsitec.Common.Widgets.Command PrintOfficeReports = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 59));
+				public static readonly global::Epsitec.Common.Widgets.Command ReportDatasetExample = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 59));
 				//	designer:cap/LVAFE
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderContact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 463));
 				//	designer:cap/LVG402
@@ -83,7 +83,7 @@ namespace Epsitec.Aider
 			public static class Base
 			{
 				//	designer:cap/LVOR13
-				public const long PrintOfficeReports = 0x3F50007800003BL;
+				public const long ReportDatasetExample = 0x3F50007800003BL;
 				//	designer:cap/LVAFE
 				public const long ShowAiderContact = 0x3F50000A0001CFL;
 				//	designer:cap/LVG402
@@ -2042,8 +2042,6 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVO913
 				public static readonly global::Epsitec.Common.Support.Druid OfficeName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 41);
-				//	designer:cap/LVO023
-				public static readonly global::Epsitec.Common.Support.Druid OfficeReports = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 64);
 				//	designer:cap/LVO713
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 39);
 				//	designer:cap/LVO813
@@ -2063,19 +2061,25 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ContentTemplate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 63);
 				//	designer:cap/LVOT13
 				public static readonly global::Epsitec.Common.Support.Druid OfficeSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 61);
+				//	designer:cap/LVO123
+				public static readonly global::Epsitec.Common.Support.Druid Parameter0 = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 65);
+				//	designer:cap/LVO223
+				public static readonly global::Epsitec.Common.Support.Druid Parameter1 = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 66);
+				//	designer:cap/LVO323
+				public static readonly global::Epsitec.Common.Support.Druid Parameter2 = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 67);
 				//	designer:cap/LVOU13
 				public static readonly global::Epsitec.Common.Support.Druid Recipient = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 62);
+				//	designer:cap/LVO423
+				public static readonly global::Epsitec.Common.Support.Druid ReportName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 68);
 			}
 			
 			public static class AiderOfficeSettings
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderOfficeSettings.IsCurrentSettings, null);
+					global::System.Object.Equals (AiderOfficeSettings.Name, null);
 				}
 				
-				//	designer:cap/LVOJ13
-				public static readonly global::Epsitec.Common.Support.Druid IsCurrentSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 51);
 				//	designer:cap/LVOK13
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 52);
 				//	designer:cap/LVOI13

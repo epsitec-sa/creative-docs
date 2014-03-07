@@ -13,7 +13,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<AiderOfficeSettingsEntity> wall)
 		{
 			wall.AddBrick ()
-				.EnableActionButton<ActionAiderOfficeSettingsViewController0ActivateSettings> ()
+				//.EnableActionButton<ActionAiderOfficeSettingsViewController0ActivateSettings> ()
 				.Input ()
 					.Field (x => x.Name)
 				.End ()

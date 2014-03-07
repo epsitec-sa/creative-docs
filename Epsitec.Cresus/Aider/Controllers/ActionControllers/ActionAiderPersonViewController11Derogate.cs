@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -58,14 +59,30 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				person.GeoParishGroupPathCache = person.ParishGroupPathCache;
 
 				//Add derogation out participation
-				derogationOutGroup.AddParticipations (this.BusinessContext, contactAsList.Select (c => new ParticipationData (c)), date, new FormattedText ("Dérogation sortante"));
+				derogationOutGroup.AddParticipations (	this.BusinessContext, 
+														contactAsList.Select (c => new ParticipationData (c)),
+														date,
+														new FormattedText ("Dérogation sortante"));
 				//Warn GeoParish
-				AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache, Enumerations.WarningType.ParishDeparture, "Personne dérogée vers " + destParish.Name);
+				AiderPersonWarningEntity.Create	(		this.BusinessContext,
+														person,
+														person.GeoParishGroupPathCache,
+														Enumerations.WarningType.ParishDeparture,
+														"Personne dérogée vers " + destParish.Name);
 
 				//Add derogation in participation
-				derogationInGroup.AddParticipations (this.BusinessContext, contactAsList.Select (c => new ParticipationData (c)), date, new FormattedText ("Dérogation entrante"));
+				derogationInGroup.AddParticipations (	this.BusinessContext,
+														contactAsList.Select (c => new ParticipationData (c)),
+														date,
+														new FormattedText ("Dérogation entrante"));
 				//Warn NewParish
-				AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path, Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de " + person.ParishGroup.Name);
+				AiderPersonWarningEntity.Create (		this.BusinessContext,
+														person,
+														destParish.Path,
+														Enumerations.WarningType.ParishArrival,
+														"Personne dérogée en provenance de " + person.ParishGroup.Name);
+
+				this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
 			}
 			else
 			{
@@ -100,6 +117,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path, Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de " + person.ParishGroup.Name);
 					//Warn GeoParish for a Derogation Change
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Changement de dérogation vers " + destParish.Name);
+					this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
 				}
 			}
 
@@ -127,6 +145,48 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.End ()
 			.End ();
 		}
+
+
+		private void CreateDerogationLetter(BusinessContext businessContext, AiderGroupEntity destParish,AiderGroupEntity origineParish)
+		{
+			var office = AiderOfficeManagementEntity.Find (businessContext, destParish);
+
+			//TODO FIND AIDER USER OFFICE SETTINGS
+			/*var greetings = "";
+			if (this.Entity.eCH_Person.PersonSex == Enumerations.PersonSex.Male)
+			{
+				greetings = "Cher Monsieur,";
+			}
+			else
+			{
+				greetings = "Chère Madame,";
+			}
+
+			AiderOfficeManagementEntity.CreateDocument (
+					this.BusinessContext,
+					"Dérogation pour " + this.Entity.GetDisplayName(),
+					office,
+					settings,
+					this.Entity.MainContact,
+					this.LetterTemplate, greetings, destParish.Name, origineParish.Name);*/
+		}
+
+		private readonly string LetterTemplate = new System.Text.StringBuilder ()
+												.Append ("<b>Votre dérogation</b><br/><br/>")
+												.Append ("{0}<br/>")
+												.Append ("Votre dérogation paroissiale a été bien enregistrée. Elle entre désormais en vigueur.<br/>")
+												.Append ("Votre nouvelle paroisse officielle où vous bénéficiez du droit de vote et d'éligibilité ")
+												.Append ("(= possibilité de délibérer en assemblée paroissiable, de voter, d'élire ou d'être élu) est désormais la paroisse de<br/>")
+												.Append ("<br/><br/><b>{1}</b><br/><br/>")
+												.Append ("Vous avez perdu vos droits de vote et d'éligibilité dans la paroisse standard de votre domicile, à savoir la ")
+												.Append ("{2}.<br/><br/>")
+												.Append ("Au cas où vous viendrez à déménager, vous seriez automatiquement rattaché à la paroisse de votre <b>nouveau</b> domicile.")
+												.Append ("La dérogation actuelle perdrait son effet. Vous auriez la possibilité de demander une nouvelle dérogation si vous l'estimiez important.")
+												//.Append ("<br/><br/>Nous vous souhaitons de riches expériences et un fructueux engagement dans votre nouvelle paroisse officielle ")
+												//.Append ("et vous adressons, nos fraternelles salutations.<br/><br/>")
+												//.Append ("le secrétariat<br/><br/>signé: ...")
+												.ToString ();
+		
 	}
 }
 
