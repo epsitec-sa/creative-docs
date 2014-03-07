@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			int count = Amortizations.FixEvents (obj, DateRange.Full);
+			int count = this.FixEvents (obj, DateRange.Full);
 
 			return errors;
 		}
@@ -249,8 +249,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var prorata  = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.Prorata);
 			var round    = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.Round);
 			var residual = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ResidualValue);
-			var debit    = ObjectProperties.GetObjectPropertyGuid    (obj, timestamp, ObjectField.Account1);
-			var credit   = ObjectProperties.GetObjectPropertyGuid    (obj, timestamp, ObjectField.Account2);
+			var debit    = ObjectProperties.GetObjectPropertyGuid    (obj, timestamp, ObjectField.Account5);
+			var credit   = ObjectProperties.GetObjectPropertyGuid    (obj, timestamp, ObjectField.Account4);
 
 			if (taux.HasValue && type.HasValue && period.HasValue)
 			{
@@ -273,16 +273,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (e != null)
 			{
+				//	Crée les écritures comptables.
+				var entryGuid = this.entries.CreateEntry (obj, date, details);
+
 				//	InitialAmount et BaseAmount seront calculés plus tard.
 				var aa = new AmortizedAmount (details.Def.Type, null, null, 
 					details.Def.EffectiveRate, details.Prorata.Numerator, details.Prorata.Denominator,
-					details.Def.Round, details.Def.Residual);
+					details.Def.Round, details.Def.Residual, entryGuid);
 
 				var p = new DataAmortizedAmountProperty (ObjectField.MainValue, aa);
 				e.AddProperty (p);
-
-				//	Crée les écritures comptables.
-				this.entries.CreateEntry (obj, e, date, details);
 			}
 		}
 
@@ -311,8 +311,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				foreach (var guid in guids)
 				{
 					var e = obj.GetEvent (guid);
-					this.entries.RemoveEntry (e);
-					obj.RemoveEvent (e);
+					this.accessor.RemoveObjectEvent (obj, e);
 					count++;
 				}
 			}
@@ -320,7 +319,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return count;
 		}
 
-		private static int FixEvents(DataObject obj, DateRange range)
+		private int FixEvents(DataObject obj, DateRange range)
 		{
 			//	Transforme tous les événements d'un objet compris dans un intervalle de dates,
 			//	de AmortizationPreview en AmortizationAuto.
@@ -390,7 +389,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				else  // amortissement ?
 				{
 					current = AmortizedAmount.CreateInitialBase(current.Value, lastAmount, lastBase);
-					Amortizations.SetAmortizedAmount (accessor, e, field, current);
+					Amortizations.SetAmortizedAmount (accessor, e, field, current.Value);
 				}
 
 				lastAmount = current.Value.FinalAmortizedAmount;
@@ -429,21 +428,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private static void SetAmortizedAmount(DataAccessor accessor, DataEvent e, ObjectField field, AmortizedAmount? value)
+		private static void SetAmortizedAmount(DataAccessor accessor, DataEvent e, ObjectField field, AmortizedAmount value)
 		{
-			if (value.HasValue)
-			{
-				var newProperty = new DataAmortizedAmountProperty (field, value.Value);
-				e.AddProperty (newProperty);
-			}
-			else
-			{
-				e.RemoveProperty (field);
-			}
+			var newProperty = new DataAmortizedAmountProperty (field, value);
+			e.AddProperty (newProperty);
 
 			using (var entries = new Entries (accessor))
 			{
-				entries.UpdateEntry (e, value);
+				entries.UpdateEntry (value);
 			}
  		}
 

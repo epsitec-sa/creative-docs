@@ -152,10 +152,24 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = obj.GetEvent (timestamp.Value);
 				if (e != null)
 				{
-					obj.RemoveEvent (e);
-					Amortizations.UpdateAmounts (this, obj);
+					this.RemoveObjectEvent (obj, e);
 				}
 			}
+		}
+
+		public void RemoveObjectEvent(DataObject obj, DataEvent e)
+		{
+			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+			if (p != null)
+			{
+				using (var entries = new Entries (this))
+				{
+					entries.RemoveEntry (p.Value);
+				}
+			}
+
+			obj.RemoveEvent (e);
+			Amortizations.UpdateAmounts (this, obj);
 		}
 
 		public void CopyObject(DataObject obj, DataObject model, Timestamp? timestamp)
@@ -300,9 +314,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.EntryDebitAccount:
 				case ObjectField.EntryCreditAccount:
 					return FieldType.GuidAccount;
-
-				case ObjectField.Entry:
-					return FieldType.GuidEntry;
 
 				default:
 					return FieldType.String;

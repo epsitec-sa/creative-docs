@@ -30,14 +30,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1000.0m));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 1000.0m));
 
-				e.AddProperty (new DataGuidProperty (ObjectField.Account1, DummyAccounts.GetAccount (mandat, "1300")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account2, DummyAccounts.GetAccount (mandat, "1410")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account3, DummyAccounts.GetAccount (mandat, "1530")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account1, DummyAccounts.GetAccount (mandat, "1000")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account2, DummyAccounts.GetAccount (mandat, "1010")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account3, DummyAccounts.GetAccount (mandat, "1600")));
 				e.AddProperty (new DataGuidProperty (ObjectField.Account4, DummyAccounts.GetAccount (mandat, "1600")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account5, DummyAccounts.GetAccount (mandat, "2440")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account6, DummyAccounts.GetAccount (mandat, "1510")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account7, DummyAccounts.GetAccount (mandat, "1520")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account8, DummyAccounts.GetAccount (mandat, "1601")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account5, DummyAccounts.GetAccount (mandat, "6930")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account6, DummyAccounts.GetAccount (mandat, "6900")));
 			}
 
 			var o12 = new DataObject ();
@@ -55,14 +53,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1000.0m));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 10000.0m));
 
-				e.AddProperty (new DataGuidProperty (ObjectField.Account1, DummyAccounts.GetAccount (mandat, "1300")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account2, DummyAccounts.GetAccount (mandat, "1410")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account3, DummyAccounts.GetAccount (mandat, "1530")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account1, DummyAccounts.GetAccount (mandat, "1000")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account2, DummyAccounts.GetAccount (mandat, "1010")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account3, DummyAccounts.GetAccount (mandat, "1600")));
 				e.AddProperty (new DataGuidProperty (ObjectField.Account4, DummyAccounts.GetAccount (mandat, "1600")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account5, DummyAccounts.GetAccount (mandat, "2440")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account6, DummyAccounts.GetAccount (mandat, "1510")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account7, DummyAccounts.GetAccount (mandat, "1520")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account8, DummyAccounts.GetAccount (mandat, "1601")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account5, DummyAccounts.GetAccount (mandat, "6930")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account6, DummyAccounts.GetAccount (mandat, "6900")));
 			}
 
 			var o21 = new DataObject ();
@@ -80,14 +76,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1.0m));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 100.0m));
 
-				e.AddProperty (new DataGuidProperty (ObjectField.Account1, DummyAccounts.GetAccount (mandat, "1300")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account2, DummyAccounts.GetAccount (mandat, "1410")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account1, DummyAccounts.GetAccount (mandat, "1000")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account2, DummyAccounts.GetAccount (mandat, "1010")));
 				e.AddProperty (new DataGuidProperty (ObjectField.Account3, DummyAccounts.GetAccount (mandat, "1530")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account4, DummyAccounts.GetAccount (mandat, "1600")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account5, DummyAccounts.GetAccount (mandat, "2440")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account6, DummyAccounts.GetAccount (mandat, "1510")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account7, DummyAccounts.GetAccount (mandat, "1520")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account8, DummyAccounts.GetAccount (mandat, "1601")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account4, DummyAccounts.GetAccount (mandat, "1530")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account5, DummyAccounts.GetAccount (mandat, "6920")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account6, DummyAccounts.GetAccount (mandat, "6900")));
 			}
 
 			var o22 = new DataObject ();
@@ -105,14 +99,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1.0m));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 100.0m));
 
-				e.AddProperty (new DataGuidProperty (ObjectField.Account1, DummyAccounts.GetAccount (mandat, "1300")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account2, DummyAccounts.GetAccount (mandat, "1410")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account1, DummyAccounts.GetAccount (mandat, "1000")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account2, DummyAccounts.GetAccount (mandat, "1010")));
 				e.AddProperty (new DataGuidProperty (ObjectField.Account3, DummyAccounts.GetAccount (mandat, "1530")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account4, DummyAccounts.GetAccount (mandat, "1600")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account5, DummyAccounts.GetAccount (mandat, "2440")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account6, DummyAccounts.GetAccount (mandat, "1510")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account7, DummyAccounts.GetAccount (mandat, "1520")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account8, DummyAccounts.GetAccount (mandat, "1601")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account4, DummyAccounts.GetAccount (mandat, "1530")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account5, DummyAccounts.GetAccount (mandat, "6920")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account6, DummyAccounts.GetAccount (mandat, "6900")));
 			}
 
 			var o23 = new DataObject ();
@@ -130,14 +122,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round, 1.0m));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue, 100.0m));
 
-				e.AddProperty (new DataGuidProperty (ObjectField.Account1, DummyAccounts.GetAccount (mandat, "1300")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account2, DummyAccounts.GetAccount (mandat, "1410")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account1, DummyAccounts.GetAccount (mandat, "1000")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account2, DummyAccounts.GetAccount (mandat, "1010")));
 				e.AddProperty (new DataGuidProperty (ObjectField.Account3, DummyAccounts.GetAccount (mandat, "1530")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account4, DummyAccounts.GetAccount (mandat, "1600")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account5, DummyAccounts.GetAccount (mandat, "2440")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account6, DummyAccounts.GetAccount (mandat, "1510")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account7, DummyAccounts.GetAccount (mandat, "1520")));
-				e.AddProperty (new DataGuidProperty (ObjectField.Account8, DummyAccounts.GetAccount (mandat, "1601")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account4, DummyAccounts.GetAccount (mandat, "1530")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account5, DummyAccounts.GetAccount (mandat, "6920")));
+				e.AddProperty (new DataGuidProperty (ObjectField.Account6, DummyAccounts.GetAccount (mandat, "6900")));
 			}
 		}
 

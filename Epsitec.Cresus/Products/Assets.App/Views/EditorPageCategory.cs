@@ -39,8 +39,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateAccountGuidController (parent, ObjectField.Account4);
 			this.CreateAccountGuidController (parent, ObjectField.Account5);
 			this.CreateAccountGuidController (parent, ObjectField.Account6);
-			this.CreateAccountGuidController (parent, ObjectField.Account7);
-			this.CreateAccountGuidController (parent, ObjectField.Account8);
+			//this.CreateAccountGuidController (parent, ObjectField.Account7);
+			//this.CreateAccountGuidController (parent, ObjectField.Account8);
 		}
 	}
 }

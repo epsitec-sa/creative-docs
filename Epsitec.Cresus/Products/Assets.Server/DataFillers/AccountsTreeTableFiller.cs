@@ -34,8 +34,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   100, "Numéro"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 200, "Compte"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   120, "Numéro"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 300, "Compte"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Catégorie"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Type"));
 

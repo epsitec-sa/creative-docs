@@ -12,7 +12,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public AmortizedAmount(AmortizationType amortizationType, decimal? initialAmount,
 			decimal? baseAmount, decimal? effectiveRate,
 			decimal? prorataNumerator, decimal? prorataDenominator,
-			decimal? roundAmount, decimal? residualAmount)
+			decimal? roundAmount, decimal? residualAmount,
+			Guid entryGuid)
 		{
 			this.AmortizationType   = amortizationType;
 			this.InitialAmount      = initialAmount;
@@ -22,6 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.ProrataDenominator = prorataDenominator;
 			this.RoundAmount        = roundAmount;
 			this.ResidualAmount     = residualAmount;
+			this.EntryGuid          = entryGuid;
 		}
 
 		public AmortizedAmount(decimal? finalAmount)
@@ -35,6 +37,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.ProrataDenominator = null;
 			this.RoundAmount        = null;
 			this.ResidualAmount     = null;
+			this.EntryGuid          = Guid.Empty;
 		}
 
 		public AmortizedAmount(decimal? initialAmount, decimal? finalAmount)
@@ -48,6 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.ProrataDenominator = null;
 			this.RoundAmount        = null;
 			this.ResidualAmount     = null;
+			this.EntryGuid          = Guid.Empty;
 		}
 
 
@@ -196,7 +200,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				model.ProrataNumerator,
 				model.ProrataDenominator,
 				model.RoundAmount,
-				model.ResidualAmount
+				model.ResidualAmount,
+				model.EntryGuid
 			);
 		}
 
@@ -211,7 +216,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				model.ProrataNumerator,
 				model.ProrataDenominator,
 				model.RoundAmount,
-				model.ResidualAmount
+				model.ResidualAmount,
+				model.EntryGuid
 			);
 		}
 
@@ -226,7 +232,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				model.ProrataNumerator,
 				model.ProrataDenominator,
 				model.RoundAmount,
-				model.ResidualAmount
+				model.ResidualAmount,
+				model.EntryGuid
 			);
 		}
 
@@ -241,7 +248,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				prorataNumerator,
 				model.ProrataDenominator,
 				model.RoundAmount,
-				model.ResidualAmount
+				model.ResidualAmount,
+				model.EntryGuid
 			);
 		}
 
@@ -256,7 +264,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				model.ProrataNumerator,
 				prorataDenominator,
 				model.RoundAmount,
-				model.ResidualAmount
+				model.ResidualAmount,
+				model.EntryGuid
 			);
 		}
 
@@ -271,7 +280,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				model.ProrataNumerator,
 				model.ProrataDenominator,
 				roundAmount,
-				model.ResidualAmount
+				model.ResidualAmount,
+				model.EntryGuid
 			);
 		}
 
@@ -286,7 +296,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				model.ProrataNumerator,
 				model.ProrataDenominator,
 				model.RoundAmount,
-				residualAmount
+				residualAmount,
+				model.EntryGuid
 			);
 		}
 		#endregion
@@ -323,5 +334,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public readonly decimal?				ProrataDenominator;
 		public readonly decimal?				RoundAmount;
 		public readonly decimal?				ResidualAmount;
+		public readonly Guid					EntryGuid;
 	}
 }

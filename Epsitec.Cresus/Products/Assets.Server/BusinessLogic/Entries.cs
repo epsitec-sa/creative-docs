@@ -19,64 +19,38 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void CreateEntry(DataObject obj, DataEvent e, System.DateTime date, AmortizationDetails details)
+		public Guid CreateEntry(DataObject obj, System.DateTime date, AmortizationDetails details)
 		{
-			//	Crée l'écriture liée à un amortissement ordinaire.
+			//	Crée l'écriture liée à un amortissement ordinaire et retourne son Guid.
 			//	Le montant sera calculé plus tard.
 			var debit  = details.Def.Debit;
 			var credit = details.Def.Credit;
 			var title  = this.GetTitle (obj, date);
-			var entryGuid = this.AddEntry (this.RootEntry, date, debit, credit, null, title, null);
-
-			var p = new DataGuidProperty (ObjectField.Entry, entryGuid);
-			e.AddProperty (p);
+			return this.AddEntry (this.RootEntry, date, debit, credit, null, title, null);
 		}
 
-		public void UpdateEntry(DataEvent e, AmortizedAmount? amount)
+		public void UpdateEntry(AmortizedAmount amount)
 		{
-			//	Met à jour le montant d'une écriture d'amortissement ordinaire.
-			var entry = this.GetEntry (e);
+			//	Met à jour le montant d'une écriture liée à un AmortizedAmount.
+			var entry = this.accessor.GetObject (BaseType.Entries, amount.EntryGuid);
 
 			if (entry != null)
 			{
 				System.Diagnostics.Debug.Assert (entry.Events.Count () == 1);
 				var entryEvent = entry.GetEvent (0);
 
-				if (amount.HasValue)
-				{
-					entryEvent.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount, amount.Value.FinalAmortization));
-				}
-				else
-				{
-					entryEvent.RemoveProperty (ObjectField.EntryAmount);
-				}
+				entryEvent.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount, amount.FinalAmortization));
 			}
 		}
 
-		public void RemoveEntry(DataEvent e)
+		public void RemoveEntry(AmortizedAmount amount)
 		{
-			//	Supprime l'écriture liée à un amortissement ordinaire.
-			var entry = this.GetEntry (e);
+			//	Supprime l'écriture liée à un AmortizedAmount.
+			var entry = this.accessor.GetObject (BaseType.Entries, amount.EntryGuid);
 
 			if (entry != null)
 			{
 				this.accessor.RemoveObject (BaseType.Entries, entry);
-			}
-		}
-
-
-		private DataObject GetEntry(DataEvent e)
-		{
-			//	Retourne l'écriture d'amortissement ordinaire d'un événement.
-			var p = e.GetProperty (ObjectField.Entry) as DataGuidProperty;
-
-			if (p == null)
-			{
-				return null;
-			}
-			else
-			{
-				return this.accessor.GetObject (BaseType.Entries, p.Value);
 			}
 		}
 

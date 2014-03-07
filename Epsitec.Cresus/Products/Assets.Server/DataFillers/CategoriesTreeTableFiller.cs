@@ -36,8 +36,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.Account4;
 				yield return ObjectField.Account5;
 				yield return ObjectField.Account6;
-				yield return ObjectField.Account7;
-				yield return ObjectField.Account8;
+				//yield return ObjectField.Account7;
+				//yield return ObjectField.Account8;
 			}
 		}
 
@@ -56,14 +56,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, 100, "Arrondi"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, 120, "Valeur résiduelle"));
 
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Comnpte 1"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Comnpte 2"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Comnpte 3"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Comnpte 4"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Comnpte 5"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Comnpte 6"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Comnpte 7"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Comnpte 8"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Contrepartie achat"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Contrepartie vente"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Compte d'immob."));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Compte d'amort."));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Charge d'amort."));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Compte réévaluation"));
+				//columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Réserve 1"));
+				//columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Réserve 2"));
 
 				return columns.ToArray ();
 			}
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<8+8; i++)
+			for (int i=0; i<8+6; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -119,8 +119,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell24 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account4), cellState);
 				var cell25 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account5), cellState);
 				var cell26 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account6), cellState);
-				var cell27 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account7), cellState);
-				var cell28 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account8), cellState);
+				//var cell27 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account7), cellState);
+				//var cell28 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account8), cellState);
 
 				int columnRank = 0;
 
@@ -139,8 +139,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell24);
 				content.Columns[columnRank++].AddRow (cell25);
 				content.Columns[columnRank++].AddRow (cell26);
-				content.Columns[columnRank++].AddRow (cell27);
-				content.Columns[columnRank++].AddRow (cell28);
+				//content.Columns[columnRank++].AddRow (cell27);
+				//content.Columns[columnRank++].AddRow (cell28);
 			}
 
 			return content;

@@ -21,7 +21,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		Number,
 		Description,
 		MainValue,
-		Entry,
 
 		//	Définitions d'une catégorie.
 		CategoryName,
