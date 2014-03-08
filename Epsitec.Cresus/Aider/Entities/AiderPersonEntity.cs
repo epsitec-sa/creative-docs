@@ -223,6 +223,10 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public void ClearDerogation()
+		{
+			this.GeoParishGroupPathCache = "";
+		}
 		
 		
 		public static string GetIconName(string prefix, PersonMrMrs? personMrMrs, Language? language = null)

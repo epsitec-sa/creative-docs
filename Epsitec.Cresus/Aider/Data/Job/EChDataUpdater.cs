@@ -1141,35 +1141,20 @@ namespace Epsitec.Aider.Data.Job
 
 			var newParishGroupPath = aiderPersonEntity.ParishGroupPathCache ?? "NOPA.";
 
-			var oldParishAlreadyNotified = false;
 			if (oldParishGroupPath != newParishGroupPath)
 			{
+				var notifyOldParish = true;
+
 				//Derogation exist?
 				if (aiderPersonEntity.HasDerogation)
 				{
-					//Yes, existing derogation in place:
-					//Remove old derogation in
-					var oldDerogationInGroup = oldParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn).First ();
-					oldDerogationInGroup.RemoveParticipations (businessContext, oldDerogationInGroup.FindParticipations (businessContext).Where (p => p.Contact == aiderPersonEntity.MainContact));
-
-					//Remove old derogation out
-					var geoParishGroup = aiderPersonEntity.GetGeoParishGroup (businessContext);
-					var oldDerogationOutGroup = geoParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ();
-					oldDerogationOutGroup.RemoveParticipations (businessContext, oldDerogationOutGroup.FindParticipations (businessContext).Where (p => p.Contact == aiderPersonEntity.MainContact));
-
-					//Warn old derogated parish
-					AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, oldParishGroupPath, Enumerations.WarningType.ParishDeparture, "Fin de dérogation suite à un déménagement");
-					oldParishAlreadyNotified = true;
-					//Warn GeoParish for derogation end
-					AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Fin de dérogation suite à un déménagement");
-
-					//Reset state
-					aiderPersonEntity.GeoParishGroupPathCache = "";
+					AiderPersonBusinessRules.RemoveDerogation (businessContext, aiderPersonEntity, oldParishGroup, oldParishGroupPath);
+					notifyOldParish = false;
 				}
 
 				this.LogToConsole ("Info: Parish group path is different, arrival and departure parish warned");
 
-				if (oldParishGroupPath != "NOPA." || !oldParishAlreadyNotified)
+				if (oldParishGroupPath != "NOPA." && notifyOldParish)
 				{
 					this.CreateWarning (businessContext, aiderPersonEntity, oldParishGroupPath, WarningType.ParishDeparture, this.warningTitleMessage, changes);
 				}

@@ -254,24 +254,8 @@ namespace Epsitec.Aider.Rules
 			
 			if (person.HasDerogation)
 			{
-				//Yes, existing derogation in place:
-				//Remove old derogation in
-				var oldDerogationInGroup = oldParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn).First ();
-				oldDerogationInGroup.RemoveParticipations (context, oldDerogationInGroup.FindParticipations (context).Where (p => p.Contact == person.MainContact));
-
-				//Remove old derogation out
-				var geoParishGroup = person.GetGeoParishGroup (context);
-				var oldDerogationOutGroup = geoParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ();
-				oldDerogationOutGroup.RemoveParticipations (context, oldDerogationOutGroup.FindParticipations (context).Where (p => p.Contact == person.MainContact));
-					
-				//Warn old derogated parish
-				AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, Enumerations.WarningType.ParishDeparture, "Fin de dérogation suite à un déménagement.");
+				AiderPersonBusinessRules.RemoveDerogation (context, person, oldParishGroup, oldParishGroupPath);
 				notifyOldParish = false;
-				//Warn GeoParish for derogation end
-				AiderPersonWarningEntity.Create (context, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Fin de dérogation suite à un déménagement.");
-
-				//Reset state
-				person.GeoParishGroupPathCache = "";
 			}
 
 			var title = Resources.Text ("Nouvelle paroisse de domicile");
@@ -293,6 +277,30 @@ namespace Epsitec.Aider.Rules
 			return true;
 		}
 
+		public static void RemoveDerogation(BusinessContext context, AiderPersonEntity person, AiderGroupEntity oldParishGroup, string oldParishGroupPath)
+		{
+			//Yes, existing derogation in place:
+			//Remove old derogation in
+			var oldDerogationInGroup = oldParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn).First ();
+			oldDerogationInGroup.RemoveParticipations (context, oldDerogationInGroup.FindParticipations (context).Where (p => p.Contact == person.MainContact));
+
+			//Remove old derogation out
+			var geoParishGroup = person.GetGeoParishGroup (context);
+			var oldDerogationOutGroup = geoParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ();
+			oldDerogationOutGroup.RemoveParticipations (context, oldDerogationOutGroup.FindParticipations (context).Where (p => p.Contact == person.MainContact));
+
+			//Warn old derogated parish
+			AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, Enumerations.WarningType.ParishDeparture,
+				"Fin de dérogation suite à un déménagement.");
+
+			//Warn GeoParish for derogation end
+			AiderPersonWarningEntity.Create (context, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange,
+				"Fin de dérogation suite à un déménagement.");
+
+			person.ClearDerogation ();
+		}
+		
+		
 		private static void AssignParish(BusinessContext context, AiderPersonEntity person)
 		{
 			ParishAssigner.AssignToParish (ParishAddressRepository.Current, context, person);

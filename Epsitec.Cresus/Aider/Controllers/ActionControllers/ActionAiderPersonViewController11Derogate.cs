@@ -74,7 +74,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				if (person.GeoParishGroupPathCache == destParish.Path)
 				{
 					//Reset state
-					person.GeoParishGroupPathCache = "";
+					person.ClearDerogation ();
 
 					//Remove old derogation out
 					var oldDerogationOutGroup = destParish.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut);
