@@ -81,9 +81,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					oldDerogationOutGroup.RemoveParticipations (this.BusinessContext, oldDerogationOutGroup.FindParticipations (this.BusinessContext).Where (p => p.Contact == person.MainContact));
 
 					//Warn old derogated parish
-					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache, Enumerations.WarningType.ParishDeparture, "Fin de dérogation");
+					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache,
+						Enumerations.WarningType.ParishDeparture, "Fin de dérogation.");
 					//Warn NewParish for return
-					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path, Enumerations.WarningType.ParishArrival, "Fin de dérogation");
+					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path,
+						Enumerations.WarningType.ParishArrival, "Fin de dérogation.");
 				}
 				else
 				{
@@ -91,11 +93,17 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					derogationInGroup.AddParticipations (this.BusinessContext, contactAsList.Select (c => new ParticipationData (c)), date, new FormattedText ("Dérogation entrante"));
 
 					//Warn old derogated parish
-					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache, Enumerations.WarningType.ParishDeparture, "Fin de dérogation");
+					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache,
+						Enumerations.WarningType.ParishDeparture, "Fin de dérogation.");
+					
 					//Warn NewParish
-					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path, Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de la\n" + person.ParishGroup.Name);
+					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path,
+						Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de la\n" + person.ParishGroup.Name + ".");
+					
 					//Warn GeoParish for a Derogation Change
-					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Changement de dérogation vers la\n" + destParish.Name);
+					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache,
+						Enumerations.WarningType.DerogationChange, "Changement de dérogation vers la\n" + destParish.Name + ".");
+					
 					this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
 				}
 			}
@@ -106,28 +114,17 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				person.GeoParishGroupPathCache = person.ParishGroupPathCache;
 
 				//Add derogation out participation
-				derogationOutGroup.AddParticipations (this.BusinessContext,
-														contactAsList.Select (c => new ParticipationData (c)),
-														date,
-														new FormattedText ("Dérogation sortante"));
+				derogationOutGroup.AddParticipations (this.BusinessContext, contactAsList.Select (c => new ParticipationData (c)), date, new FormattedText ("Dérogation sortante"));
 				//Warn GeoParish
-				AiderPersonWarningEntity.Create (this.BusinessContext,
-														person,
-														person.GeoParishGroupPathCache,
-														Enumerations.WarningType.ParishDeparture,
-														"Personne dérogée vers la\n" + destParish.Name);
+				AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache,
+					Enumerations.WarningType.ParishDeparture, "Personne dérogée vers la\n" + destParish.Name + ".");
 
 				//Add derogation in participation
-				derogationInGroup.AddParticipations (this.BusinessContext,
-														contactAsList.Select (c => new ParticipationData (c)),
-														date,
-														new FormattedText ("Dérogation entrante"));
+				derogationInGroup.AddParticipations (this.BusinessContext, contactAsList.Select (c => new ParticipationData (c)), date, new FormattedText ("Dérogation entrante"));
+				
 				//Warn NewParish
-				AiderPersonWarningEntity.Create (this.BusinessContext,
-														person,
-														destParish.Path,
-														Enumerations.WarningType.ParishArrival,
-														"Personne dérogée en provenance de la\n" + person.ParishGroup.Name);
+				AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path,
+					Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de la\n" + person.ParishGroup.Name + ".");
 
 				this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
 			}
@@ -151,7 +148,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
 				.End ()
 				.Field<Date> ()
-					.Title ("Date de validité de la dérogation")
+					.Title ("Date de début de la dérogation")
 					.InitialValue (Date.Today)
 				.End ()
 			.End ();
@@ -200,4 +197,3 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		
 	}
 }
-
