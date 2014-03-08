@@ -10,6 +10,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ComputedAmountFieldController : AbstractFieldController
 	{
+		public ComputedAmountFieldController(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
+
 		public ComputedAmount?					Value
 		{
 			get

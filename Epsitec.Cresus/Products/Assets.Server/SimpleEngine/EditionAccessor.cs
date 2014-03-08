@@ -17,6 +17,23 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		public DataObject EditedObject
+		{
+			get
+			{
+				return this.obj;
+			}
+		}
+
+		public Timestamp? EditedTimestamp
+		{
+			get
+			{
+				return this.timestamp;
+			}
+		}
+
+
 		public void StartObjectEdition(BaseType baseType, Guid objectGuid, Timestamp? timestamp)
 		{
 			//	Marque le début de l'édition de l'événement d'un objet.
@@ -161,7 +178,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						//	mais on ne peut pas le retourner tel quel. On doit retourner un
 						//	montant qui a une valeur initiale égale à la valeur finale du
 						//	montant précédent trouvé.
-						return new AmortizedAmount (null)
+						return new AmortizedAmount (this.accessor)
 						{
 							InitialAmount = property.Value.FinalAmortizedAmount,
 						};

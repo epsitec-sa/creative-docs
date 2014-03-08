@@ -9,11 +9,18 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.Helpers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class DateFieldController : AbstractFieldController
 	{
+		public DateFieldController(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
+
 		public System.DateTime?					Value
 		{
 			get

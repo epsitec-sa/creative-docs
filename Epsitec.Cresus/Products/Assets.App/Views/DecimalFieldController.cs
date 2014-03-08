@@ -8,11 +8,18 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Helpers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class DecimalFieldController : AbstractFieldController
 	{
+		public DecimalFieldController(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
+
 		public DecimalFormat					DecimalFormat;
 
 		public decimal?							Value

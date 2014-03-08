@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Passe en revue les périodes.
 			foreach (var period in this.GetPeriods (processRange, obj))
 			{
-				var ad = this.GetAmortizationDetails (obj, period.ExcludeTo.AddDays (-1));
+				var ad = Amortizations.GetAmortizationDetails (obj, period.ExcludeTo.AddDays (-1));
 				if (!ad.IsEmpty)
 				{
 					//	On crée un aperçu de l'amortissement au 31.12.
@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date)
+		public static AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date)
 		{
 			//	Retourne tous les détails sur un amortissement ordinaire.
 			var def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (date, 0));

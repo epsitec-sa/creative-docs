@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreateGroupGuidController(Widget parent, ObjectField field, BaseType baseType)
 		{
-			var controller = new GroupGuidFieldController
+			var controller = new GroupGuidFieldController (this.accessor)
 			{
 				Accessor  = this.accessor,
 				BaseType  = baseType,
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreatePersonGuidController(Widget parent, ObjectField field)
 		{
-			var controller = new PersonGuidFieldController
+			var controller = new PersonGuidFieldController (this.accessor)
 			{
 				Accessor  = this.accessor,
 				Field     = field,
@@ -294,7 +294,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreateAccountGuidController(Widget parent, ObjectField field)
 		{
-			var controller = new AccountGuidFieldController
+			var controller = new AccountGuidFieldController (this.accessor)
 			{
 				Accessor  = this.accessor,
 				Field     = field,
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreateStringController(Widget parent, ObjectField field, int editWidth = AbstractFieldController.maxWidth, int lineCount = 1)
 		{
-			var controller = new StringFieldController
+			var controller = new StringFieldController (this.accessor)
 			{
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
@@ -390,7 +390,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreateEnumController(Widget parent, ObjectField field, Dictionary<int, string> enums, int editWidth = AbstractFieldController.maxWidth)
 		{
-			var controller = new EnumFieldController
+			var controller = new EnumFieldController (this.accessor)
 			{
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
@@ -426,7 +426,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreateDecimalController(Widget parent, ObjectField field, DecimalFormat format)
 		{
-			var controller = new DecimalFieldController
+			var controller = new DecimalFieldController (this.accessor)
 			{
 				Field         = field,
 				Label         = this.accessor.GetFieldName (field),
@@ -461,7 +461,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreateComputedAmountController(Widget parent, ObjectField field)
 		{
-			var controller = new ComputedAmountFieldController
+			var controller = new ComputedAmountFieldController (this.accessor)
 			{
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
@@ -495,7 +495,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreateAmortizedAmountController(Widget parent, ObjectField field)
 		{
-			var controller = new AmortizedAmountFieldController
+			var controller = new AmortizedAmountFieldController (this.accessor)
 			{
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
@@ -529,7 +529,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreateIntController(Widget parent, ObjectField field)
 		{
-			var controller = new IntFieldController
+			var controller = new IntFieldController (this.accessor)
 			{
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
@@ -563,7 +563,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void CreateDateController(Widget parent, ObjectField field)
 		{
-			var controller = new DateFieldController
+			var controller = new DateFieldController (this.accessor)
 			{
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),

@@ -16,6 +16,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class GuidRatioFieldController : AbstractFieldController
 	{
+		public GuidRatioFieldController(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
+
 		public DataAccessor						Accessor;
 
 		public GuidRatio						Value

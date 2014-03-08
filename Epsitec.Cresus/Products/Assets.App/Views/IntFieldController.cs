@@ -7,11 +7,18 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.Helpers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class IntFieldController : AbstractFieldController
 	{
+		public IntFieldController(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
+
 		public int?								Value
 		{
 			get

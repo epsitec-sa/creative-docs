@@ -16,8 +16,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AmortizedAmountController
 	{
-		public AmortizedAmountController()
+		public AmortizedAmountController(DataAccessor accessor)
 		{
+			this.accessor = accessor;
 			this.ignoreChanges = new SafeCounter ();
 		}
 
@@ -550,8 +551,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				var aa = this.value.Value;
+				var aa = this.AmortizedAmount;
 				aa.InitialAmount = this.FinalAmount;
+				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
@@ -562,8 +564,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				var aa = this.value.Value;
+				var aa = this.AmortizedAmount;
 				aa.EffectiveRate = this.EffectiveRate;
+				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
@@ -574,8 +577,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				var aa = this.value.Value;
+				var aa = this.AmortizedAmount;
 				aa.ProrataNumerator = this.ProrataNumerator;
+				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
@@ -586,8 +590,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				var aa = this.value.Value;
+				var aa = this.AmortizedAmount;
 				aa.ProrataDenominator = this.ProrataDenominator;
+				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
@@ -598,8 +603,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				var aa = this.value.Value;
+				var aa = this.AmortizedAmount;
 				aa.RoundAmount = this.RoundAmount;
+				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
@@ -610,11 +616,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				var aa = this.value.Value;
+				var aa = this.AmortizedAmount;
 				aa.ResidualAmount = this.ResidualAmount;
+				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
+			}
+		}
+
+		private AmortizedAmount AmortizedAmount
+		{
+			get
+			{
+				if (this.value == null)
+				{
+					this.value = new AmortizedAmount (this.accessor);
+				}
+
+				return this.value.Value;
+			}
+		}
+
+		private void UpdateEntry(AmortizedAmount aa)
+		{
+			if (aa.EntryGuid.IsEmpty)
+			{
+				var obj = this.accessor.EditionAccessor.EditedObject;
+				var date = this.accessor.EditionAccessor.EditedTimestamp.Value.Date;
+				var details = Amortizations.GetAmortizationDetails (obj, date);
+
+				aa.CreateEntry (obj, date, details);
+			}
+			else
+			{
+				aa.UpdateEntry ();
 			}
 		}
 
@@ -992,6 +1028,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private const int IntWidth    = 45;
 
 
+		private readonly DataAccessor			accessor;
 		private readonly SafeCounter			ignoreChanges;
 
 		private AmortizedAmount?				value;

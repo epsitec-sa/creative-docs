@@ -14,6 +14,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AccountGuidFieldController : AbstractFieldController
 	{
+		public AccountGuidFieldController(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
+
 		public DataAccessor						Accessor;
 
 		public Guid								Value

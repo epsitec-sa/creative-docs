@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.accessor = accessor;
 
-			this.dateFieldController = new DateFieldController
+			this.dateFieldController = new DateFieldController (accessor)
 			{
 				Label      = null,
 				LabelWidth = 0,

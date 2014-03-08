@@ -10,6 +10,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AmortizedAmountFieldController : AbstractFieldController
 	{
+		public AmortizedAmountFieldController(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
+
 		public AmortizedAmount?					Value
 		{
 			get
@@ -74,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.LabelWidth = 0;
 			base.CreateUI (parent);
 
-			this.controller = new AmortizedAmountController ();
+			this.controller = new AmortizedAmountController (this.accessor);
 			this.controller.CreateUI (this.frameBox);
 			this.controller.IsReadOnly = this.PropertyState == PropertyState.Readonly;
 			this.controller.Value = this.value;

@@ -14,8 +14,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractFieldController
 	{
-		public AbstractFieldController()
+		public AbstractFieldController(DataAccessor accessor)
 		{
+			this.accessor = accessor;
 			this.ignoreChanges = new SafeCounter ();
 		}
 
@@ -324,6 +325,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public const int labelWidth = 100;
 		public const int maxWidth   = 380;
 
+		protected DataAccessor					accessor;
 		protected readonly SafeCounter			ignoreChanges;
 
 		protected FrameBox						frameBox;

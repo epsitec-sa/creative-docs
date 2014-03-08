@@ -18,6 +18,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 	/// </summary>
 	public class GroupGuidFieldController : AbstractFieldController
 	{
+		public GroupGuidFieldController(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
+
 		public DataAccessor						Accessor;
 		public BaseType							BaseType;
 

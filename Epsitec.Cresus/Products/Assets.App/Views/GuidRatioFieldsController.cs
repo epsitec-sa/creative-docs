@@ -19,9 +19,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public class GuidRatioFieldsController : AbstractFieldController
 	{
 		public GuidRatioFieldsController(DataAccessor accessor)
+			: base (accessor)
 		{
 			this.accessor = accessor;
-
 			this.lines = new Dictionary<ObjectField, Line> ();
 		}
 
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight = AbstractFieldController.lineHeight,
 			};
 
-			var controller = new GuidRatioFieldController
+			var controller = new GuidRatioFieldController (this.accessor)
 			{
 				Accessor      = this.accessor,
 				LabelWidth    = 0,
@@ -227,7 +227,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 	
-		private readonly DataAccessor					accessor;
 		private readonly Dictionary<ObjectField, Line>	lines;
 
 		private ObjectField								selectedField;

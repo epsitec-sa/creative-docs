@@ -6,11 +6,18 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EnumFieldController : AbstractFieldController
 	{
+		public EnumFieldController(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
+
 		public Dictionary<int, string>			Enums
 		{
 			get
