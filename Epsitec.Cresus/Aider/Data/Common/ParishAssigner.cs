@@ -353,12 +353,9 @@ namespace Epsitec.Aider.Data.Common
 
 			var parishGroup = person.ParishGroup;
 
-			//Derogation case
-			if (! string.IsNullOrEmpty (person.GeoParishGroupPathCache))
+			if (person.HasDerogation)
 			{
-				var geoParishGroup = AiderGroupEntity.FindGroups (context, person.GeoParishGroupPathCache).First ();
-
-				return ParishAssigner.IsInValidParish (parishRepository, address, geoParishGroup);
+				parishGroup = person.GetGeoParishGroup (context);
 			}
 			
 			return ParishAssigner.IsInValidParish (parishRepository, address, parishGroup);

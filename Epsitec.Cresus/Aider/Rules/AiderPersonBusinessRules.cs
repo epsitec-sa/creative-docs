@@ -251,8 +251,8 @@ namespace Epsitec.Aider.Rules
 			}
 
 			var oldParishAlreadyNotified = false;
-			//Derogation exist?
-			if (!string.IsNullOrEmpty (person.GeoParishGroupPathCache))
+			
+			if (person.HasDerogation)
 			{
 				//Yes, existing derogation in place:
 				//Remove old derogation in
@@ -260,15 +260,15 @@ namespace Epsitec.Aider.Rules
 				oldDerogationInGroup.RemoveParticipations (context, oldDerogationInGroup.FindParticipations (context).Where (p => p.Contact == person.MainContact));
 
 				//Remove old derogation out
-				var origineParishGroup = AiderGroupEntity.FindGroups (context, person.GeoParishGroupPathCache).First ();
-				var oldDerogationOutGroup = origineParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ();
+				var geoParishGroup = person.GetGeoParishGroup (context);
+				var oldDerogationOutGroup = geoParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ();
 				oldDerogationOutGroup.RemoveParticipations (context, oldDerogationOutGroup.FindParticipations (context).Where (p => p.Contact == person.MainContact));
 					
 				//Warn old derogated parish
-				AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, Enumerations.WarningType.ParishDeparture, "Fin de dérogation suite à un déménagement");
+				AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, Enumerations.WarningType.ParishDeparture, "Fin de dérogation suite à un déménagement.");
 				oldParishAlreadyNotified = true;
 				//Warn GeoParish for derogation end
-				AiderPersonWarningEntity.Create (context, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Fin de dérogation suite à un déménagement");
+				AiderPersonWarningEntity.Create (context, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Fin de dérogation suite à un déménagement.");
 
 				//Reset state
 				person.GeoParishGroupPathCache = "";

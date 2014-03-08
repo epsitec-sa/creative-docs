@@ -76,6 +76,14 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public bool								HasDerogation
+		{
+			get
+			{
+				return string.IsNullOrEmpty (this.GeoParishGroupPathCache) == false;
+			}
+		}
+
 
 		public FormattedText GetCompactSummary(AiderHouseholdEntity household)
 		{
@@ -109,6 +117,18 @@ namespace Epsitec.Aider.Entities
 				this.eCH_Person.PersonDateOfBirth, "~ – ~", this.eCH_Person.PersonDateOfDeath, "\n",
 				this.Confession, "~\n",
 				this.Profession, "~\n");
+		}
+
+		public AiderGroupEntity GetGeoParishGroup(BusinessContext context)
+		{
+			if (this.HasDerogation)
+			{
+				return AiderGroupEntity.FindGroups (context, this.GeoParishGroupPathCache).Single ();
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		public string GetCallName()

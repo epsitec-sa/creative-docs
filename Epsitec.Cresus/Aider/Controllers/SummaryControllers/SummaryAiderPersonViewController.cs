@@ -11,6 +11,7 @@ using Epsitec.Aider.Override;
 
 using Epsitec.Cresus.Bricks;
 
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
@@ -51,28 +52,28 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (x => TextFormatter.FormatText ("Détails techniques du RCH"))
 				.Text (x => SummaryAiderPersonViewController.GetTechnicalSummary (x));
 
+			var geoParish = this.Entity.GetGeoParishGroup (this.BusinessContext);
+
 			//PAROISSE
-			if (string.IsNullOrEmpty (this.Entity.GeoParishGroupPathCache))
+			if (geoParish.IsNull ())
 			{
 				wall.AddBrick ()
-				.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
-				.Icon ("Data.AiderGroup.Parish")
-				.Title ("Paroisse")
-				.Text (p => p.ParishGroup.Name);
+					.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
+					.Icon ("Data.AiderGroup.Parish")
+					.Title ("Paroisse")
+					.Text (p => p.ParishGroup.Name);
 			}
 			else
 			{
-				var origine = AiderGroupEntity.FindGroups (this.BusinessContext, this.Entity.GeoParishGroupPathCache).First ();
-				var text =  "Paroisse d'origine:\n"
-					+		origine.Name + "\n"
-					+		"Dérogé vers:\n"
+				var text =  "Habite la " + geoParish.Name + "\n"
+					+		"Dérogation vers la "
 					+		this.Entity.ParishGroup.Name;
 
 				wall.AddBrick ()
-				.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
-				.Icon ("Data.AiderGroup.Parish")
-				.Title ("Paroisse")
-				.Text (TextFormatter.FormatText(text));
+					.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
+					.Icon ("Data.AiderGroup.Parish")
+					.Title ("Paroisse")
+					.Text (TextFormatter.FormatText(text));
 			}
 
 			wall.AddBrick ()

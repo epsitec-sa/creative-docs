@@ -1145,7 +1145,7 @@ namespace Epsitec.Aider.Data.Job
 			if (oldParishGroupPath != newParishGroupPath)
 			{
 				//Derogation exist?
-				if (!string.IsNullOrEmpty (aiderPersonEntity.GeoParishGroupPathCache))
+				if (aiderPersonEntity.HasDerogation)
 				{
 					//Yes, existing derogation in place:
 					//Remove old derogation in
@@ -1153,8 +1153,8 @@ namespace Epsitec.Aider.Data.Job
 					oldDerogationInGroup.RemoveParticipations (businessContext, oldDerogationInGroup.FindParticipations (businessContext).Where (p => p.Contact == aiderPersonEntity.MainContact));
 
 					//Remove old derogation out
-					var origineParishGroup = AiderGroupEntity.FindGroups (businessContext, aiderPersonEntity.GeoParishGroupPathCache).First ();
-					var oldDerogationOutGroup = origineParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ();
+					var geoParishGroup = aiderPersonEntity.GetGeoParishGroup (businessContext);
+					var oldDerogationOutGroup = geoParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ();
 					oldDerogationOutGroup.RemoveParticipations (businessContext, oldDerogationOutGroup.FindParticipations (businessContext).Where (p => p.Contact == aiderPersonEntity.MainContact));
 
 					//Warn old derogated parish

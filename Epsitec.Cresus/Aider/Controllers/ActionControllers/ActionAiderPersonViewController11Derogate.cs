@@ -63,39 +63,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			contactAsList.Add (person.MainContact);
 
 			//Check if a previous derogation is in place ?
-			if (string.IsNullOrEmpty (person.GeoParishGroupPathCache))
-			{			
-				//No, first derogation:
-				//Backup initial parish cache
-				person.GeoParishGroupPathCache = person.ParishGroupPathCache;
-
-				//Add derogation out participation
-				derogationOutGroup.AddParticipations (	this.BusinessContext, 
-														contactAsList.Select (c => new ParticipationData (c)),
-														date,
-														new FormattedText ("Dérogation sortante"));
-				//Warn GeoParish
-				AiderPersonWarningEntity.Create	(		this.BusinessContext,
-														person,
-														person.GeoParishGroupPathCache,
-														Enumerations.WarningType.ParishDeparture,
-														"Personne dérogée vers la\n" + destParish.Name);
-
-				//Add derogation in participation
-				derogationInGroup.AddParticipations (	this.BusinessContext,
-														contactAsList.Select (c => new ParticipationData (c)),
-														date,
-														new FormattedText ("Dérogation entrante"));
-				//Warn NewParish
-				AiderPersonWarningEntity.Create (		this.BusinessContext,
-														person,
-														destParish.Path,
-														Enumerations.WarningType.ParishArrival,
-														"Personne dérogée en provenance de la\n" + person.ParishGroup.Name);
-
-				this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
-			}
-			else
+			if (person.HasDerogation)
 			{
 				//Yes, existing derogation in place:
 				//Remove old derogation in
@@ -123,13 +91,45 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					derogationInGroup.AddParticipations (this.BusinessContext, contactAsList.Select (c => new ParticipationData (c)), date, new FormattedText ("Dérogation entrante"));
 
 					//Warn old derogated parish
-					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache, Enumerations.WarningType.ParishDeparture, "Fin de dérogation");	
+					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache, Enumerations.WarningType.ParishDeparture, "Fin de dérogation");
 					//Warn NewParish
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path, Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de la\n" + person.ParishGroup.Name);
 					//Warn GeoParish for a Derogation Change
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Changement de dérogation vers la\n" + destParish.Name);
 					this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
 				}
+			}
+			else
+			{
+				//No, first derogation:
+				//Backup initial parish cache
+				person.GeoParishGroupPathCache = person.ParishGroupPathCache;
+
+				//Add derogation out participation
+				derogationOutGroup.AddParticipations (this.BusinessContext,
+														contactAsList.Select (c => new ParticipationData (c)),
+														date,
+														new FormattedText ("Dérogation sortante"));
+				//Warn GeoParish
+				AiderPersonWarningEntity.Create (this.BusinessContext,
+														person,
+														person.GeoParishGroupPathCache,
+														Enumerations.WarningType.ParishDeparture,
+														"Personne dérogée vers la\n" + destParish.Name);
+
+				//Add derogation in participation
+				derogationInGroup.AddParticipations (this.BusinessContext,
+														contactAsList.Select (c => new ParticipationData (c)),
+														date,
+														new FormattedText ("Dérogation entrante"));
+				//Warn NewParish
+				AiderPersonWarningEntity.Create (this.BusinessContext,
+														person,
+														destParish.Path,
+														Enumerations.WarningType.ParishArrival,
+														"Personne dérogée en provenance de la\n" + person.ParishGroup.Name);
+
+				this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
 			}
 
 			//Remove parish participations
