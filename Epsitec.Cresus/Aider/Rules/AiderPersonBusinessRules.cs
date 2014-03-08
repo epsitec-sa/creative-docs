@@ -250,7 +250,7 @@ namespace Epsitec.Aider.Rules
 				return false;
 			}
 
-			var oldParishAlreadyNotified = false;
+			var notifyOldParish = true;
 			
 			if (person.HasDerogation)
 			{
@@ -266,7 +266,7 @@ namespace Epsitec.Aider.Rules
 					
 				//Warn old derogated parish
 				AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, Enumerations.WarningType.ParishDeparture, "Fin de dérogation suite à un déménagement.");
-				oldParishAlreadyNotified = true;
+				notifyOldParish = false;
 				//Warn GeoParish for derogation end
 				AiderPersonWarningEntity.Create (context, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange, "Fin de dérogation suite à un déménagement.");
 
@@ -281,7 +281,7 @@ namespace Epsitec.Aider.Rules
 														"a été appliquée:\n \n",
 														oldParishName, "\n->\n", newParishName);
 
-			if (oldParishGroupPath != "NOPA." || !oldParishAlreadyNotified)
+			if (oldParishGroupPath != "NOPA." && notifyOldParish)
 			{
 				AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, WarningType.ParishDeparture, title, description);
 			}
