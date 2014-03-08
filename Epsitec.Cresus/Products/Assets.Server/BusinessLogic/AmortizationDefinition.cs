@@ -4,13 +4,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Server.Helpers;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct AmortizationDefinition
 	{
-		public AmortizationDefinition(decimal rate, AmortizationType type, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual, Guid debit, Guid credit)
+		public AmortizationDefinition(decimal rate, AmortizationType type, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual)
 		{
 			this.Rate        = rate;
 			this.Type        = type;
@@ -18,8 +17,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.ProrataType = prorataType;
 			this.Round       = round;
 			this.Residual    = residual;
-			this.Debit       = debit;
-			this.Credit      = credit;
 		}
 
 		public decimal							EffectiveRate
@@ -140,7 +137,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDefinition Empty = new AmortizationDefinition (0.0m, AmortizationType.Unknown, 0, 0.0m, 0.0m, 0.0m, Guid.Empty, Guid.Empty);
+		public static AmortizationDefinition Empty = new AmortizationDefinition (0.0m, AmortizationType.Unknown, 0, 0.0m, 0.0m, 0.0m);
 
 		public readonly decimal					Rate;
 		public readonly AmortizationType		Type;
@@ -148,7 +145,5 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public readonly ProrataType				ProrataType;
 		public readonly decimal					Round;
 		public readonly decimal					Residual;
-		public readonly Guid					Debit;
-		public readonly Guid					Credit;
 	}
 }

@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		public AmortizationDetails(AmortizationDefinition def, ProrataDetails prorata)
 		{
-			this.Def          = def;
-			this.Prorata      = prorata;
+			this.Def     = def;
+			this.Prorata = prorata;
 		}
 
 		public bool								IsEmpty

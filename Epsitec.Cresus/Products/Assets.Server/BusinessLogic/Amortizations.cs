@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date)
+		private static AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date)
 		{
 			//	Retourne tous les détails sur un amortissement ordinaire.
 			var def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (date, 0));
@@ -249,8 +249,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var prorata  = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.Prorata);
 			var round    = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.Round);
 			var residual = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ResidualValue);
-			var debit    = ObjectProperties.GetObjectPropertyGuid    (obj, timestamp, ObjectField.Account5);
-			var credit   = ObjectProperties.GetObjectPropertyGuid    (obj, timestamp, ObjectField.Account4);
 
 			if (taux.HasValue && type.HasValue && period.HasValue)
 			{
@@ -258,7 +256,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var p = (Periodicity) period;
 				var r = (ProrataType) prorata;
 
-				return new AmortizationDefinition (taux.GetValueOrDefault (0.0m), t, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m), debit, credit);
+				return new AmortizationDefinition (taux.GetValueOrDefault (0.0m), t, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
 			}
 			else
 			{
@@ -285,12 +283,58 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					EntryScenario      = EntryScenario.Amortization,
 				};
 
+				Amortizations.UpdateEntryDefinition (aa, obj, new Timestamp (date, 0));
+
 				var p = new DataAmortizedAmountProperty (ObjectField.MainValue, aa);
 				e.AddProperty (p);
 
 				//	Crée les écritures comptables.
-				aa.CreateEntry (obj, date, details);
+				aa.CreateEntry ();
 			}
+		}
+
+		public static void UpdateEntryDefinition(AmortizedAmount aa, DataObject obj, Timestamp timestamp)
+		{
+#if false
+			//	Collecte tous les champs qui définissent comment générer l'écriture.
+			//	Ils peuvent provenir de plusieurs événements différents.
+			var def = Amortizations.GetAmortizationDefinition (obj, timestamp);
+
+			var beginDate = def.GetBeginRangeDate (timestamp.Date);
+			var endDate = beginDate.AddMonths (def.PeriodMonthCount);
+			var range = new DateRange (beginDate, endDate);
+
+			var valueDate = range.IncludeFrom;
+
+			var inputDate = AssetCalculator.GetFirstTimestamp (obj).Value.Date;
+			if (range.IsInside (inputDate))
+			{
+				//	Si l'objet est entrée durant la période, on utilise sa date d'entrée
+				//	pour calculer l'amortissement "au prorata".
+				valueDate = inputDate;
+			}
+
+			var prorata = ProrataDetails.ComputeProrata (range, valueDate, def.ProrataType);
+			
+			//aa.AmortizationType   = def.Type;
+			aa.EffectiveRate      = def.EffectiveRate;
+			aa.ProrataNumerator   = prorata.Numerator;
+			aa.ProrataDenominator = prorata.Denominator;
+			aa.RoundAmount        = def.Round;
+			aa.ResidualAmount     = def.Residual;
+#endif
+
+			aa.Date      = timestamp.Date;
+			aa.AssetGuid = obj.Guid;
+
+			aa.Account1 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account1);
+			aa.Account2 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account2);
+			aa.Account3 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account3);
+			aa.Account4 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account4);
+			aa.Account5 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account5);
+			aa.Account6 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account6);
+			aa.Account7 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account7);
+			aa.Account8 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account8);
 		}
 
 
@@ -400,7 +444,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					aa.InitialAmount = lastAmount;
 					aa.BaseAmount    = lastBase;
 
-					aa.UpdateEntry ();
+					aa.CreateEntry ();
 				}
 
 				lastAmount = aa.FinalAmortizedAmount;

@@ -19,51 +19,135 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public Guid CreateEntry(DataObject obj, System.DateTime date, AmortizationDetails details)
+		public void CreateEntry(AmortizedAmount amount)
 		{
-			//	Crée l'écriture liée à un amortissement ordinaire et retourne son Guid.
-			//	Le montant sera calculé plus tard.
-			var debit  = details.Def.Debit;
-			var credit = details.Def.Credit;
-			var title  = this.GetTitle (obj, date);
-			return this.AddEntry (this.RootEntry, date, debit, credit, null, title, null);
-		}
+			//	Crée l'écriture liée à un amortissement ordinaire.
+			this.RemoveEntry (amount);
 
-		public void UpdateEntry(AmortizedAmount amount)
-		{
-			//	Met à jour le montant d'une écriture liée à un AmortizedAmount.
-			var entry = this.accessor.GetObject (BaseType.Entries, amount.EntryGuid);
-
-			if (entry != null)
+			if (amount.EntryScenario != EntryScenario.None)
 			{
-				System.Diagnostics.Debug.Assert (entry.Events.Count () == 1);
-				var entryEvent = entry.GetEvent (0);
+				var debit  = this.GetDebit  (amount);
+				var credit = this.GetCredit (amount);
+				var title  = this.GetTitle  (amount);
+				var value  = this.GetValue  (amount);
 
-				entryEvent.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount, amount.FinalAmortization));
+				amount.EntryGuid = this.AddEntry (this.RootEntry, amount.Date, debit, credit, null, title, value);
 			}
 		}
 
 		public void RemoveEntry(AmortizedAmount amount)
 		{
 			//	Supprime l'écriture liée à un AmortizedAmount.
-			var entry = this.accessor.GetObject (BaseType.Entries, amount.EntryGuid);
+			if (amount.EntryGuid.IsEmpty)
+			{
+				return;
+			}
 
+			var entry = this.accessor.GetObject (BaseType.Entries, amount.EntryGuid);
 			if (entry != null)
 			{
 				this.accessor.RemoveObject (BaseType.Entries, entry);
 			}
+
+			amount.EntryGuid = Guid.Empty;
 		}
 
 
-		private string GetTitle(DataObject obj, System.DateTime date)
+		private Guid GetDebit(AmortizedAmount amount)
 		{
-			//	Retourne le libellé d'une écriture d'amortissement ordinaire.
-			var name = AssetsLogic.GetSummary (this.accessor, obj.Guid, new Timestamp (date, 0));
-			return "Amortissement " + name;
+			//	Retourne le compte à utiliser au débit.
+			switch (amount.EntryScenario)
+			{
+				case EntryScenario.Purchase:
+					return amount.Account1;  // compte contrepartie d'achat
+
+				case EntryScenario.Sale:
+					return amount.Account2;  // compte contrepartie de vente
+
+				case EntryScenario.Amortization:
+					return amount.Account5;  // compte de charge d'amortissement
+
+				case EntryScenario.Revaluation:
+					return amount.Account6;  // compte de réévaluation
+
+				default:
+					return Guid.Empty;
+			}
+		}
+
+		private Guid GetCredit(AmortizedAmount amount)
+		{
+			//	Retourne le compte à utiliser au crédit.
+			switch (amount.EntryScenario)
+			{
+				case EntryScenario.Purchase:
+					return amount.Account3;  // compte d'immobilisation
+
+				case EntryScenario.Sale:
+					return amount.Account3;  // compte d'immobilisation 
+
+				case EntryScenario.Amortization:
+					return amount.Account4;  // compte d'amortissement
+
+				case EntryScenario.Revaluation:
+					return amount.Account4;  // compte d'amortissement
+
+				default:
+					return Guid.Empty;
+			}
+		}
+
+		private string GetTitle(AmortizedAmount amount)
+		{
+			//	Retourne le libellé de l'écriture.
+			var guid = amount.AssetGuid;
+			var timestamp = new Timestamp (amount.Date, 0);
+
+			var name = AssetsLogic.GetSummary (this.accessor, guid, timestamp);
+
+			switch (amount.EntryScenario)
+			{
+				case EntryScenario.Purchase:
+					return "Achat " + name;
+
+				case EntryScenario.Sale:
+					return "Vente " + name;
+
+				case EntryScenario.Amortization:
+					return "Amortissement " + name;
+
+				case EntryScenario.Revaluation:
+					return "Réévaluation " + name;
+
+				default:
+					return name;
+			}
+		}
+
+		private decimal GetValue(AmortizedAmount amount)
+		{
+			//	Retourne le montant de l'écriture.
+			switch (amount.EntryScenario)
+			{
+				case EntryScenario.Purchase:
+					return amount.FinalAmortizedAmount.GetValueOrDefault ();
+
+				case EntryScenario.Sale:
+					return amount.FinalAmortizedAmount.GetValueOrDefault ();
+
+				case EntryScenario.Amortization:
+					return amount.FinalAmortization;
+
+				case EntryScenario.Revaluation:
+					return amount.FinalAmortizedAmount.GetValueOrDefault ();
+
+				default:
+					return 0.0m;
+			}
 		}
 
 
-		private Guid AddEntry(Guid guidParent, System.DateTime? date, Guid debit, Guid credit, string stamp, string title, decimal? amount)
+		private Guid AddEntry(Guid guidParent, System.DateTime date, Guid debit, Guid credit, string stamp, string title, decimal value)
 		{
 			var entry = new DataObject ();
 
@@ -79,10 +163,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, guidParent));
 			}
 
-			if (date.HasValue)
-			{
-				e.AddProperty (new DataDateProperty (ObjectField.EntryDate, date.Value));
-			}
+			e.AddProperty (new DataDateProperty (ObjectField.EntryDate, date));
 
 			if (!debit.IsEmpty)
 			{
@@ -96,11 +177,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			e.AddProperty (new DataStringProperty (ObjectField.EntryStamp, stamp));
 			e.AddProperty (new DataStringProperty (ObjectField.EntryTitle, title));
-
-			if (amount.HasValue)
-			{
-				e.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount, amount.Value));
-			}
+			e.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount, value));
 
 			return entry.Guid;
 		}

@@ -125,6 +125,126 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public System.DateTime Date
+		{
+			get
+			{
+				return this.values.Date;
+			}
+			set
+			{
+				this.values.Date = value;
+			}
+		}
+
+		public Guid AssetGuid
+		{
+			get
+			{
+				return this.values.AssetGuid;
+			}
+			set
+			{
+				this.values.AssetGuid = value;
+			}
+		}
+
+		public Guid Account1
+		{
+			get
+			{
+				return this.values.Account1;
+			}
+			set
+			{
+				this.values.Account1 = value;
+			}
+		}
+
+		public Guid Account2
+		{
+			get
+			{
+				return this.values.Account2;
+			}
+			set
+			{
+				this.values.Account2 = value;
+			}
+		}
+
+		public Guid Account3
+		{
+			get
+			{
+				return this.values.Account3;
+			}
+			set
+			{
+				this.values.Account3 = value;
+			}
+		}
+
+		public Guid Account4
+		{
+			get
+			{
+				return this.values.Account4;
+			}
+			set
+			{
+				this.values.Account4 = value;
+			}
+		}
+
+		public Guid Account5
+		{
+			get
+			{
+				return this.values.Account5;
+			}
+			set
+			{
+				this.values.Account5 = value;
+			}
+		}
+
+		public Guid Account6
+		{
+			get
+			{
+				return this.values.Account6;
+			}
+			set
+			{
+				this.values.Account6 = value;
+			}
+		}
+
+		public Guid Account7
+		{
+			get
+			{
+				return this.values.Account7;
+			}
+			set
+			{
+				this.values.Account7 = value;
+			}
+		}
+
+		public Guid Account8
+		{
+			get
+			{
+				return this.values.Account8;
+			}
+			set
+			{
+				this.values.Account8 = value;
+			}
+		}
+
 		public Guid EntryGuid
 		{
 			get
@@ -272,7 +392,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public void CreateEntry(DataObject obj, System.DateTime date, AmortizationDetails details)
+		public void CreateEntry()
 		{
 			if (this.accessor == null)
 			{
@@ -281,20 +401,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			using (var entries = new Entries (this.accessor))
 			{
-				this.EntryGuid = entries.CreateEntry (obj, date, details);
-			}
-		}
-
-		public void UpdateEntry()
-		{
-			if (this.accessor == null)
-			{
-				return;
-			}
-
-			using (var entries = new Entries (this.accessor))
-			{
-				entries.UpdateEntry (this);
+				entries.CreateEntry (this);
 			}
 		}
 

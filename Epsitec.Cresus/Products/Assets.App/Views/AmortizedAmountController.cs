@@ -231,8 +231,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var type = AmortizedAmountController.GetType (this.typeTextFieldCombo);
 					if (this.value.Value.AmortizationType != type)
 					{
-						var aa = this.value.Value;
+						var aa = this.AmortizedAmount;
 						aa.AmortizationType = type;
+						this.UpdateEntry (aa);
 
 						this.CreateLines ();
 						this.OnValueEdited ();
@@ -263,8 +264,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var scenario = AmortizedAmountController.GetScenario (this.scenarioFieldCombo);
 					if (this.value.Value.EntryScenario != scenario)
 					{
-						var aa = this.value.Value;
+						var aa = this.AmortizedAmount;
 						aa.EntryScenario = scenario;
+						this.UpdateEntry (aa);
 
 						this.CreateLines ();
 						this.OnValueEdited ();
@@ -640,18 +642,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateEntry(AmortizedAmount aa)
 		{
-			if (aa.EntryGuid.IsEmpty)
-			{
-				var obj = this.accessor.EditionAccessor.EditedObject;
-				var date = this.accessor.EditionAccessor.EditedTimestamp.Value.Date;
-				var details = Amortizations.GetAmortizationDetails (obj, date);
+			var obj = this.accessor.EditionAccessor.EditedObject;
+			var timestamp = this.accessor.EditionAccessor.EditedTimestamp.Value;
+			Amortizations.UpdateEntryDefinition (aa, obj, timestamp);
 
-				aa.CreateEntry (obj, date, details);
-			}
-			else
-			{
-				aa.UpdateEntry ();
-			}
+			aa.CreateEntry ();
 		}
 
 
