@@ -272,6 +272,46 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		public void CreateEntry(DataObject obj, System.DateTime date, AmortizationDetails details)
+		{
+			if (this.accessor == null)
+			{
+				return;
+			}
+
+			using (var entries = new Entries (this.accessor))
+			{
+				this.EntryGuid = entries.CreateEntry (obj, date, details);
+			}
+		}
+
+		public void UpdateEntry()
+		{
+			if (this.accessor == null)
+			{
+				return;
+			}
+
+			using (var entries = new Entries (this.accessor))
+			{
+				entries.UpdateEntry (this);
+			}
+		}
+
+		public void RemoveEntry()
+		{
+			if (this.accessor == null)
+			{
+				return;
+			}
+
+			using (var entries = new Entries (this.accessor))
+			{
+				entries.RemoveEntry (this);
+			}
+		}
+
+
 		private static decimal Round(decimal value, decimal round)
 		{
 			//	Retourne un montant arrondi.

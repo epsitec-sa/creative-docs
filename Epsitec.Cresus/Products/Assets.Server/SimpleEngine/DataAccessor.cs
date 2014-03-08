@@ -162,10 +162,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 			if (p != null)
 			{
-				using (var entries = new Entries (this))
-				{
-					entries.RemoveEntry (p.Value);
-				}
+				p.Value.RemoveEntry ();
 			}
 
 			obj.RemoveEvent (e);

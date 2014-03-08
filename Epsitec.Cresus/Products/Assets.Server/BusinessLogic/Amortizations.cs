@@ -273,9 +273,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (e != null)
 			{
-				//	Crée les écritures comptables.
-				var entryGuid = this.entries.CreateEntry (obj, date, details);
-
 				//	InitialAmount et BaseAmount seront calculés plus tard.
 				var aa = new AmortizedAmount (this.accessor)
 				{
@@ -286,11 +283,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					RoundAmount        = details.Def.Round,
 					ResidualAmount     = details.Def.Residual,
 					EntryScenario      = EntryScenario.Amortization,
-					EntryGuid          = entryGuid,
 				};
 
 				var p = new DataAmortizedAmountProperty (ObjectField.MainValue, aa);
 				e.AddProperty (p);
+
+				//	Crée les écritures comptables.
+				aa.CreateEntry (obj, date, details);
 			}
 		}
 
@@ -400,6 +399,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					aa.InitialAmount = lastAmount;
 					aa.BaseAmount    = lastBase;
+
+					aa.UpdateEntry ();
 				}
 
 				lastAmount = aa.FinalAmortizedAmount;
