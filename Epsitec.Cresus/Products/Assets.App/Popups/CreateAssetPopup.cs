@@ -15,9 +15,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// Popup permettant la saisir des informations nécessaires à la création d'un
 	/// nouvel objet, à savoir la date d'entrée et le nom de l'objet.
 	/// </summary>
-	public class CreateObjectPopup : AbstractPopup
+	public class CreateAssetPopup : AbstractPopup
 	{
-		public CreateObjectPopup(DataAccessor accessor)
+		public CreateAssetPopup(DataAccessor accessor)
 		{
 			this.accessor = accessor;
 
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new Size (CreateObjectPopup.popupWidth, CreateObjectPopup.popupHeight);
+				return new Size (CreateAssetPopup.popupWidth, CreateAssetPopup.popupHeight);
 			}
 		}
 
@@ -42,8 +42,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.CreateTitle ("Création d'un nouvel objet");
 
-			var line1 = this.CreateFrame (CreateObjectPopup.margin, 77, CreateObjectPopup.popupWidth-CreateObjectPopup.margin*2, DateController.controllerHeight);
-			var line2 = this.CreateFrame (CreateObjectPopup.margin, 50, CreateObjectPopup.popupWidth-CreateObjectPopup.margin*2, CreateObjectPopup.lineHeight);
+			var line1 = this.CreateFrame (CreateAssetPopup.margin, 77, CreateAssetPopup.popupWidth-CreateAssetPopup.margin*2, DateController.controllerHeight);
+			var line2 = this.CreateFrame (CreateAssetPopup.margin, 50, CreateAssetPopup.popupWidth-CreateAssetPopup.margin*2, CreateAssetPopup.lineHeight);
 
 			this.CreateDate    (line1);
 			this.CreateName    (line2);
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var dateController = new DateController (this.accessor)
 			{
 				DateDescription = "Date d'entrée",
-				DateLabelWidth  = CreateObjectPopup.indent,
+				DateLabelWidth  = CreateAssetPopup.indent,
 				TabIndex        = 1,
 				Date            = this.ObjectDate,
 			};
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Text             = "Nom",
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = CreateObjectPopup.indent,
+				PreferredWidth   = CreateAssetPopup.indent,
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int margin      = 20;
 		private const int lineHeight  = 2 + AbstractFieldController.lineHeight + 2;
 		private const int indent      = 70;
-		private const int popupWidth  = CreateObjectPopup.margin*2 + CreateObjectPopup.indent + 10 + DateController.controllerWidth;
+		private const int popupWidth  = CreateAssetPopup.margin*2 + CreateAssetPopup.indent + 10 + DateController.controllerWidth;
 		private const int popupHeight = 120 + DateController.controllerHeight;
 
 		private readonly DataAccessor			accessor;

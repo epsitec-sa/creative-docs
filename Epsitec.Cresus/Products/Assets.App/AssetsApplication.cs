@@ -193,12 +193,10 @@ namespace Epsitec.Cresus.Assets.App
 				Name      = "PopupParentFrame",
 			};
 
-			AssetsApplication.SelectedMandat = 2;
+			AssetsApplication.SelectedMandat = 1;
 
-			var accessor = new DataAccessor
-			{
-				Mandat = AssetsApplication.GetMandat (AssetsApplication.SelectedMandat),
-			};
+			var accessor = new DataAccessor();
+			AssetsApplication.InitializeMandat (accessor, AssetsApplication.SelectedMandat);
 
 			var ui = new AssetsUI (accessor);
 			ui.CreateUI (frame);
@@ -245,25 +243,49 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			get
 			{
-				return AssetsApplication.mandats.Count;
+				return 2;
 			}
 		}
 
-		public static DataMandat GetMandat(int rank)
+		public static string GetMandatName(int rank)
 		{
-			return AssetsApplication.mandats[rank];
+			if (rank == 0)
+			{
+				return "Exemple";
+			}
+			else if (rank == 1)
+			{
+				return "Vide";
+			}
+
+			return "??";
 		}
 
-		static AssetsApplication()
+		public static void InitializeMandat(DataAccessor accessor, int rank)
 		{
-			AssetsApplication.mandats.Add (EmptyMandat.GetMandat ());
-			AssetsApplication.mandats.Add (SkeletonMandat.GetMandat ());
-			AssetsApplication.mandats.Add (DummyMandat.GetMandat ());
+			if (rank == 0)
+			{
+				AssetsApplication.CreateEmptyMandat (accessor);
+			}
+			else if (rank == 1)
+			{
+				AssetsApplication.CreateDummyMandat (accessor);
+			}
+		}
+
+		public static void CreateEmptyMandat(DataAccessor accessor)
+		{
+			accessor.Mandat = EmptyMandat.GetMandat ();
+			EmptyMandat.AddDummyData (accessor);
+		}
+
+		public static void CreateDummyMandat(DataAccessor accessor)
+		{
+			accessor.Mandat = DummyMandat.GetMandat ();
+			DummyMandat.AddDummyData (accessor);
 		}
 
 
 		private BusinessContext					businessContext;
-
-		public static List<DataMandat> mandats = new List<DataMandat>();
 	}
 }

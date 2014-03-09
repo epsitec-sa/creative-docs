@@ -24,14 +24,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public EntryScenario					EntryScenario;
 		public System.DateTime					Date;
 		public Guid								AssetGuid;
-		public Guid								Account1;
-		public Guid								Account2;
-		public Guid								Account3;
-		public Guid								Account4;
-		public Guid								Account5;
-		public Guid								Account6;
-		public Guid								Account7;
-		public Guid								Account8;
 		public Guid								EntryGuid;
 	}
 }

@@ -97,7 +97,7 @@
     <Compile Include="Popups\CreateCategoryPopup.cs" />
     <Compile Include="Popups\CreateGroupPopup.cs" />
     <Compile Include="Popups\FilterPopup.cs" />
-    <Compile Include="Popups\CreateObjectPopup.cs" />
+    <Compile Include="Popups\CreateAssetPopup.cs" />
     <Compile Include="Popups\GroupsPopup.cs" />
     <Compile Include="Popups\DatePopup.cs" />
     <Compile Include="Popups\SimulationPopup.cs" />

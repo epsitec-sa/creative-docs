@@ -16,6 +16,38 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		public EntryAccounts EntryAccounts
+		{
+			//	Retourne la liste des comptes à utiliser pour passer une écriture liée
+			//	à l'événement contenant ce montant.
+			get
+			{
+				if (this.accessor != null)
+				{
+					var obj = this.accessor.GetObject (BaseType.Assets, this.AssetGuid);
+					if (obj != null)
+					{
+						var timestamp = new Timestamp (this.Date, 0);
+
+						return new EntryAccounts
+						(
+							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account1),
+							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account2),
+							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account3),
+							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account4),
+							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account5),
+							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account6),
+							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account7),
+							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account8)
+						);
+					}
+				}
+
+				return EntryAccounts.Empty;
+			}
+		}
+
+
 		#region Facade
 		public AmortizationType AmortizationType
 		{
@@ -146,102 +178,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			set
 			{
 				this.values.AssetGuid = value;
-			}
-		}
-
-		public Guid Account1
-		{
-			get
-			{
-				return this.values.Account1;
-			}
-			set
-			{
-				this.values.Account1 = value;
-			}
-		}
-
-		public Guid Account2
-		{
-			get
-			{
-				return this.values.Account2;
-			}
-			set
-			{
-				this.values.Account2 = value;
-			}
-		}
-
-		public Guid Account3
-		{
-			get
-			{
-				return this.values.Account3;
-			}
-			set
-			{
-				this.values.Account3 = value;
-			}
-		}
-
-		public Guid Account4
-		{
-			get
-			{
-				return this.values.Account4;
-			}
-			set
-			{
-				this.values.Account4 = value;
-			}
-		}
-
-		public Guid Account5
-		{
-			get
-			{
-				return this.values.Account5;
-			}
-			set
-			{
-				this.values.Account5 = value;
-			}
-		}
-
-		public Guid Account6
-		{
-			get
-			{
-				return this.values.Account6;
-			}
-			set
-			{
-				this.values.Account6 = value;
-			}
-		}
-
-		public Guid Account7
-		{
-			get
-			{
-				return this.values.Account7;
-			}
-			set
-			{
-				this.values.Account7 = value;
-			}
-		}
-
-		public Guid Account8
-		{
-			get
-			{
-				return this.values.Account8;
-			}
-			set
-			{
-				this.values.Account8 = value;
 			}
 		}
 

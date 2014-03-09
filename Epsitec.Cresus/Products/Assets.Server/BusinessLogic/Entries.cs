@@ -22,12 +22,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public void CreateEntry(AmortizedAmount amount)
 		{
 			//	Crée l'écriture liée à un amortissement ordinaire.
+			System.Diagnostics.Debug.Assert (amount.Date.Year != 1);
 			this.RemoveEntry (amount);
 
 			if (amount.EntryScenario != EntryScenario.None)
 			{
-				var debit  = this.GetDebit  (amount);
-				var credit = this.GetCredit (amount);
+				var entryAccouts = amount.EntryAccounts;
+
+				var debit  = this.GetDebit  (amount, entryAccouts);
+				var credit = this.GetCredit (amount, entryAccouts);
 				var title  = this.GetTitle  (amount);
 				var value  = this.GetValue  (amount);
 
@@ -53,44 +56,44 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private Guid GetDebit(AmortizedAmount amount)
+		private Guid GetDebit(AmortizedAmount amount, EntryAccounts entryAccouts)
 		{
 			//	Retourne le compte à utiliser au débit.
 			switch (amount.EntryScenario)
 			{
 				case EntryScenario.Purchase:
-					return amount.Account1;  // compte contrepartie d'achat
+					return entryAccouts.Account1;  // compte contrepartie d'achat
 
 				case EntryScenario.Sale:
-					return amount.Account2;  // compte contrepartie de vente
+					return entryAccouts.Account2;  // compte contrepartie de vente
 
 				case EntryScenario.Amortization:
-					return amount.Account5;  // compte de charge d'amortissement
+					return entryAccouts.Account5;  // compte de charge d'amortissement
 
 				case EntryScenario.Revaluation:
-					return amount.Account6;  // compte de réévaluation
+					return entryAccouts.Account6;  // compte de réévaluation
 
 				default:
 					return Guid.Empty;
 			}
 		}
 
-		private Guid GetCredit(AmortizedAmount amount)
+		private Guid GetCredit(AmortizedAmount amount, EntryAccounts entryAccouts)
 		{
 			//	Retourne le compte à utiliser au crédit.
 			switch (amount.EntryScenario)
 			{
 				case EntryScenario.Purchase:
-					return amount.Account3;  // compte d'immobilisation
+					return entryAccouts.Account3;  // compte d'immobilisation
 
 				case EntryScenario.Sale:
-					return amount.Account3;  // compte d'immobilisation 
+					return entryAccouts.Account3;  // compte d'immobilisation 
 
 				case EntryScenario.Amortization:
-					return amount.Account4;  // compte d'amortissement
+					return entryAccouts.Account4;  // compte d'amortissement
 
 				case EntryScenario.Revaluation:
-					return amount.Account4;  // compte d'amortissement
+					return entryAccouts.Account4;  // compte d'amortissement
 
 				default:
 					return Guid.Empty;
@@ -181,6 +184,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			return entry.Guid;
 		}
+
 
 		private Guid RootEntry
 		{

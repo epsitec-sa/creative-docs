@@ -178,10 +178,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						//	mais on ne peut pas le retourner tel quel. On doit retourner un
 						//	montant qui a une valeur initiale égale à la valeur finale du
 						//	montant précédent trouvé.
-						return new AmortizedAmount (this.accessor)
+						var aa = new AmortizedAmount (null)
 						{
 							InitialAmount = property.Value.FinalAmortizedAmount,
 						};
+
+						System.Diagnostics.Debug.Fail ("Ne devrait jamais arriver !!!");
+						return aa;
 					}
 				}
 			}

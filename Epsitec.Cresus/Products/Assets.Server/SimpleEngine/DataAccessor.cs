@@ -97,14 +97,25 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var e = new DataEvent (timestamp, EventType.Input);
 			obj.AddEvent (e);
 
+			//	Ajoute la date de l'opération.
+			this.AddDateOperation (e);
+
+			//	Ajoute l'objet parent.
 			if (!parent.IsEmpty)
 			{
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, parent));
 			}
 
+			//	Ajoute le nom de l'objet.
 			var field = this.GetMainStringField (baseType);
 			e.AddProperty (new DataStringProperty (field, name));
-		
+
+			//	Ajoute la valeur comptable.
+			if (baseType == BaseType.Assets)
+			{
+				this.AddMainValue (obj, timestamp, e);
+			}
+
 			return obj.Guid;
 		}
 
@@ -115,18 +126,70 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var position = obj.GetNewPosition (date);
 				var ts = new Timestamp (date, position);
 				var e = new DataEvent (ts, type);
-
-				//	Ajoute la date du jour comme date valeur.
-				var p = new DataDateProperty (ObjectField.OneShotDateOperation, Timestamp.Now.Date);
-				e.AddProperty (p);
-
 				obj.AddEvent (e);
+
+				this.AddDateOperation (e);
+				this.AddMainValue (obj, ts, e);
+
 				Amortizations.UpdateAmounts (this, obj);
 				return e;
 			}
 
 			return null;
 		}
+
+		private void AddDateOperation(DataEvent e)
+		{
+			//	Ajoute la date du jour comme date valeur.
+			var p = new DataDateProperty (ObjectField.OneShotDateOperation, Timestamp.Now.Date);
+			e.AddProperty (p);
+		}
+
+		private void AddMainValue(DataObject obj, Timestamp timestamp, DataEvent e)
+		{
+			//	La valeur comptable est créée une bonne fois pour toutes.
+			//	On l'initialise avec les paramètres d'amortissement.
+			if (e.Type == EventType.Modification)
+			{
+				//	Pour ce seul type, il n'y a pas et n'y aura jamais de valeur comptable.
+				return;
+			}
+
+			var aa = new AmortizedAmount (this);
+			Amortizations.InitialiseAmortizedAmount (aa, obj, timestamp);
+
+			switch (e.Type)
+			{
+				case EventType.Input:
+					aa.AmortizationType = AmortizationType.Unknown;  // montant fixe
+					aa.EntryScenario = EntryScenario.Purchase;
+					break;
+
+				case EventType.MainValue:
+				aa.AmortizationType = AmortizationType.Unknown;  // montant fixe
+				aa.EntryScenario = EntryScenario.Revaluation;
+					break;
+
+				case EventType.AmortizationAuto:
+				case EventType.AmortizationExtra:
+				case EventType.AmortizationPreview:
+				aa.AmortizationType = AmortizationType.Linear;
+				aa.EntryScenario = EntryScenario.Amortization;
+					break;
+
+				case EventType.Output:
+					aa.AmortizationType = AmortizationType.Unknown;  // montant fixe
+					aa.EntryScenario = EntryScenario.Sale;
+					break;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Unknown EventType {0}", e.Type.ToString ()));
+			}
+
+			var p = new DataAmortizedAmountProperty (ObjectField.MainValue, aa);
+			e.AddProperty (p);
+		}
+
 
 		public void RemoveObject(BaseType baseType, Guid objectGuid)
 		{
@@ -168,6 +231,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			obj.RemoveEvent (e);
 			Amortizations.UpdateAmounts (this, obj);
 		}
+
 
 		public void CopyObject(DataObject obj, DataObject model, Timestamp? timestamp)
 		{

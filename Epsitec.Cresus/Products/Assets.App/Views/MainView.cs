@@ -155,8 +155,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			for (int i=0; i<AssetsApplication.MandatCount; i++)
 			{
-				var mandat = AssetsApplication.GetMandat (i);
-				popup.Items.Add ("Ouvrir le mandat \"" + mandat.Name + "\"");
+				var mandat = AssetsApplication.GetMandatName (i);
+				popup.Items.Add ("Ouvrir le mandat \"" + mandat + "\"");
 			}
 
 			popup.Create (target, leftOrRight: false);
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OpenMandat(int rank)
 		{
 			AssetsApplication.SelectedMandat = rank;
-			this.accessor.Mandat = AssetsApplication.GetMandat (rank);
+			AssetsApplication.InitializeMandat (this.accessor, AssetsApplication.SelectedMandat);
 
 			this.CreateView (ViewType.Assets);
 		}

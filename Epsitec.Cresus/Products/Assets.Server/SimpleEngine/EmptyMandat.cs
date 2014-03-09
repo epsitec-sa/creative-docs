@@ -11,14 +11,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		public static DataMandat GetMandat()
 		{
-			var mandat = new DataMandat ("Vide", new System.DateTime (2000, 1, 1), new System.DateTime (2050, 12, 31));
-
-			EmptyMandat.AddCategories (mandat);
-			EmptyMandat.AddGroups (mandat);
-			EmptyMandat.AddObjects (mandat);
-
-			return mandat;
+			return new DataMandat ("Vide", new System.DateTime (2000, 1, 1), new System.DateTime (2050, 12, 31));
 		}
+
+		public static void AddDummyData(DataAccessor accessor)
+		{
+			EmptyMandat.AddCategories (accessor.Mandat);
+			EmptyMandat.AddGroups (accessor.Mandat);
+			EmptyMandat.AddObjects (accessor.Mandat);
+		}
+
 
 		private static void AddObjects(DataMandat mandat)
 		{

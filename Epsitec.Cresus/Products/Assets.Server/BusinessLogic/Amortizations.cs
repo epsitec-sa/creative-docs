@@ -271,31 +271,24 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (e != null)
 			{
+				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+				System.Diagnostics.Debug.Assert (p != null);
+
+				var aa = p.Value;
+
 				//	InitialAmount et BaseAmount seront calculés plus tard.
-				var aa = new AmortizedAmount (this.accessor)
-				{
-					AmortizationType   = details.Def.Type,
-					EffectiveRate      = details.Def.EffectiveRate,
-					ProrataNumerator   = details.Prorata.Numerator,
-					ProrataDenominator = details.Prorata.Denominator,
-					RoundAmount        = details.Def.Round,
-					ResidualAmount     = details.Def.Residual,
-					EntryScenario      = EntryScenario.Amortization,
-				};
-
-				Amortizations.UpdateEntryDefinition (aa, obj, new Timestamp (date, 0));
-
-				var p = new DataAmortizedAmountProperty (ObjectField.MainValue, aa);
-				e.AddProperty (p);
-
-				//	Crée les écritures comptables.
-				aa.CreateEntry ();
+				aa.AmortizationType   = details.Def.Type;
+				aa.EffectiveRate      = details.Def.EffectiveRate;
+				aa.ProrataNumerator   = details.Prorata.Numerator;
+				aa.ProrataDenominator = details.Prorata.Denominator;
+				aa.RoundAmount        = details.Def.Round;
+				aa.ResidualAmount     = details.Def.Residual;
+				aa.EntryScenario      = EntryScenario.Amortization;
 			}
 		}
 
-		public static void UpdateEntryDefinition(AmortizedAmount aa, DataObject obj, Timestamp timestamp)
+		public static void InitialiseAmortizedAmount(AmortizedAmount aa, DataObject obj, Timestamp timestamp)
 		{
-#if false
 			//	Collecte tous les champs qui définissent comment générer l'écriture.
 			//	Ils peuvent provenir de plusieurs événements différents.
 			var def = Amortizations.GetAmortizationDefinition (obj, timestamp);
@@ -316,25 +309,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			var prorata = ProrataDetails.ComputeProrata (range, valueDate, def.ProrataType);
 			
-			//aa.AmortizationType   = def.Type;
 			aa.EffectiveRate      = def.EffectiveRate;
 			aa.ProrataNumerator   = prorata.Numerator;
 			aa.ProrataDenominator = prorata.Denominator;
 			aa.RoundAmount        = def.Round;
 			aa.ResidualAmount     = def.Residual;
-#endif
 
 			aa.Date      = timestamp.Date;
 			aa.AssetGuid = obj.Guid;
 
-			aa.Account1 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account1);
-			aa.Account2 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account2);
-			aa.Account3 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account3);
-			aa.Account4 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account4);
-			aa.Account5 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account5);
-			aa.Account6 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account6);
-			aa.Account7 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account7);
-			aa.Account8 = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account8);
 		}
 
 
@@ -443,10 +426,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					aa.InitialAmount = lastAmount;
 					aa.BaseAmount    = lastBase;
-
-					aa.CreateEntry ();
 				}
 
+				aa.CreateEntry ();  // génère ou met à jour les écritures
 				lastAmount = aa.FinalAmortizedAmount;
 			}
 		}

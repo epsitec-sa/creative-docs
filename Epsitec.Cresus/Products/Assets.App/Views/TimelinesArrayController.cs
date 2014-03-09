@@ -579,7 +579,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateObjectPopup (this.accessor);
+			var popup = new CreateAssetPopup (this.accessor);
 
 			popup.Create (target, leftOrRight: true);
 
@@ -587,12 +587,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "create")
 				{
-					this.CreateObject (popup.ObjectDate.Value, popup.ObjectName);
+					this.CreateAsset (popup.ObjectDate.Value, popup.ObjectName);
 				}
 			};
 		}
 
-		private void CreateObject(System.DateTime date, string name)
+		private void CreateAsset(System.DateTime date, string name)
 		{
 			var guid = this.accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty);
 			var obj = this.accessor.GetObject (BaseType.Assets, guid);

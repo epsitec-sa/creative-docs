@@ -38,10 +38,10 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var list = new List<TreeTableColumnDescription> ();
 
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Pin,    LastViewsTreeTableFiller.TypeColumnWidth, ""));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Icon,   LastViewsTreeTableFiller.TypeColumnWidth, ""));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Icon,   LastViewsTreeTableFiller.TypeColumnWidth, "Vue"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, LastViewsTreeTableFiller.PageColumnWidth, "Page"));
 				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date,   LastViewsTreeTableFiller.DateColumnWidth, "Date"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, LastViewsTreeTableFiller.DescColumnWidth, "Nom"));
+				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, LastViewsTreeTableFiller.DescColumnWidth, "Sélection"));
 
 				return list.ToArray ();
 			}
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 
 		private const int PinColumnWidth  =  29;
-		private const int TypeColumnWidth =  29;
+		private const int TypeColumnWidth =  32;
 		private const int PageColumnWidth = 100;
 		private const int DateColumnWidth =  70;
 		private const int DescColumnWidth = 250;

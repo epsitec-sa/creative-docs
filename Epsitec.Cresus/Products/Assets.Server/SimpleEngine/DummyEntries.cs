@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		internal static void AddEntries(DataMandat mandat)
 		{
 			var b = DummyEntries.AddEntry (mandat, Guid.Empty, null, null, null, null, "Journal des écritures", null);
+			return; //?
 
 			{
 				var e = DummyEntries.AddEntry (mandat, b, new System.DateTime (2014, 1, 1), null, null, null, "Soldes à nouveau", null);

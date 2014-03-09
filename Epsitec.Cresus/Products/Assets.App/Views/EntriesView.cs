@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return new GroupsViewState
 				{
-					ViewType     = ViewType.Groups,
+					ViewType     = ViewType.Entries,
 					PageType     = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
 					SelectedGuid = this.selectedGuid,
 					ShowGraphic  = this.listController.ShowGraphic,

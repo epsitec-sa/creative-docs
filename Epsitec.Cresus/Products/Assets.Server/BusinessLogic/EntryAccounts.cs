@@ -7,12 +7,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public struct EntryDefinition
+	public struct EntryAccounts
 	{
-		public EntryDefinition(Guid obj, System.DateTime date, Guid account1, Guid account2, Guid account3, Guid account4, Guid account5, Guid account6, Guid account7, Guid account8)
+		public EntryAccounts(Guid account1, Guid account2, Guid account3, Guid account4, Guid account5, Guid account6, Guid account7, Guid account8)
 		{
-			this.Object   = obj;
-			this.Date     = date;
 			this.Account1 = account1;
 			this.Account2 = account2;
 			this.Account3 = account3;
@@ -28,8 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.Object.IsEmpty
-					&& this.Account1.IsEmpty
+				return this.Account1.IsEmpty
 					&& this.Account2.IsEmpty
 					&& this.Account3.IsEmpty
 					&& this.Account4.IsEmpty
@@ -41,10 +38,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static EntryDefinition Empty = new EntryDefinition (Guid.Empty, System.DateTime.MaxValue, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty);
+		public static EntryAccounts Empty = new EntryAccounts (Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty);
 
-		public readonly Guid					Object;
-		public readonly System.DateTime			Date;
 		public readonly Guid					Account1;
 		public readonly Guid					Account2;
 		public readonly Guid					Account3;

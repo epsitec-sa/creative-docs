@@ -233,7 +233,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						var aa = this.AmortizedAmount;
 						aa.AmortizationType = type;
-						this.UpdateEntry (aa);
 
 						this.CreateLines ();
 						this.OnValueEdited ();
@@ -266,7 +265,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						var aa = this.AmortizedAmount;
 						aa.EntryScenario = scenario;
-						this.UpdateEntry (aa);
 
 						this.CreateLines ();
 						this.OnValueEdited ();
@@ -555,7 +553,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var aa = this.AmortizedAmount;
 				aa.InitialAmount = this.FinalAmount;
-				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
@@ -568,7 +565,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var aa = this.AmortizedAmount;
 				aa.EffectiveRate = this.EffectiveRate;
-				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
@@ -581,7 +577,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var aa = this.AmortizedAmount;
 				aa.ProrataNumerator = this.ProrataNumerator;
-				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
@@ -594,7 +589,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var aa = this.AmortizedAmount;
 				aa.ProrataDenominator = this.ProrataDenominator;
-				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
@@ -607,7 +601,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var aa = this.AmortizedAmount;
 				aa.RoundAmount = this.RoundAmount;
-				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
@@ -620,7 +613,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var aa = this.AmortizedAmount;
 				aa.ResidualAmount = this.ResidualAmount;
-				this.UpdateEntry (aa);
 
 				this.UpdateUI ();
 				this.OnValueEdited ();
@@ -633,20 +625,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.value == null)
 				{
+#if false
+					//	Si la valeur n'existe pas, on la crée puis l'initialise une fois
+					//	pour toutes avec les paramètres d'amortissement.
 					this.value = new AmortizedAmount (this.accessor);
+
+					var aa = this.value.Value;
+					var obj = this.accessor.EditionAccessor.EditedObject;
+					var timestamp = this.accessor.EditionAccessor.EditedTimestamp.Value;
+
+					Amortizations.InitialiseAmortizedAmount (aa, obj, timestamp);
+					aa.EntryScenario = EntryScenario.None;
+#else
+					System.Diagnostics.Debug.Fail ("AmortizedAmount does not exist");
+#endif
 				}
 
 				return this.value.Value;
 			}
-		}
-
-		private void UpdateEntry(AmortizedAmount aa)
-		{
-			var obj = this.accessor.EditionAccessor.EditedObject;
-			var timestamp = this.accessor.EditionAccessor.EditedTimestamp.Value;
-			Amortizations.UpdateEntryDefinition (aa, obj, timestamp);
-
-			aa.CreateEntry ();
 		}
 
 
