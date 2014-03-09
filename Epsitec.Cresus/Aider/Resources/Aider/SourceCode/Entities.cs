@@ -6193,6 +6193,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>PowerLevel</c> field.
+		///	designer:fld/LVAHC/LVAKI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAKI]", IsVirtual=true)]
+		public global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel PowerLevel
+		{
+			get
+			{
+				global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel value = default (global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel);
+				this.GetPowerLevel (ref value);
+				return value;
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel oldValue = this.PowerLevel;
+				if (oldValue != value || !this.IsFieldDefined("[LVAKI]"))
+				{
+					this.OnPowerLevelChanging (oldValue, value);
+					this.SetPowerLevel (value);
+					this.OnPowerLevelChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Contact</c> field.
 		///	designer:fld/LVAHC/LVAJI
 		///	</summary>
@@ -6459,6 +6483,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnRoleChanging(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
+		partial void OnPowerLevelChanging(global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel oldValue, global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel newValue);
+		partial void OnPowerLevelChanged(global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel oldValue, global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel newValue);
 		partial void OnContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnPreferredScopeChanging(global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue, global::Epsitec.Aider.Entities.AiderUserScopeEntity newValue);
@@ -6484,6 +6510,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnLastSoftwareReleaseDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnLastSoftwareReleaseDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		
+		partial void GetPowerLevel(ref global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel value);
+		partial void SetPowerLevel(global::Epsitec.Cresus.Core.Business.UserManagement.UserPowerLevel value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

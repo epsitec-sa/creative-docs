@@ -18,26 +18,6 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderUserEntity
 	{
-		public UserPowerLevel					PowerLevel
-		{
-			get
-			{
-				UserPowerLevel level = UserPowerLevel.None;
-
-				foreach (var x in this.UserGroups.Select (x => x.UserPowerLevel).Where (x => x != UserPowerLevel.None))
-				{
-					if ((level == UserPowerLevel.None) ||
-						(level > x))
-					{
-						level = x;
-					}
-				}
-
-				return level;
-			}
-		}
-
-		
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText
@@ -152,6 +132,66 @@ namespace Epsitec.Aider.Entities
 				this.ParishGroupPathCache = path;
 			}
 		}
+		
+		partial void GetPowerLevel(ref UserPowerLevel value)
+		{
+			UserPowerLevel level = UserPowerLevel.None;
+
+			foreach (var x in this.UserGroups.Select (x => x.UserPowerLevel).Where (x => x != UserPowerLevel.None))
+			{
+				if ((level == UserPowerLevel.None) ||
+					(level > x))
+				{
+					level = x;
+				}
+			}
+
+			value = level;
+		}
+
+		partial void SetPowerLevel(UserPowerLevel value)
+		{
+			this.UserGroups.Clear ();
+
+			if (value == UserPowerLevel.None)
+			{
+				return;
+			}
+			
+			var dataContext = this.GetDataContext ();
+			
+			//	Setting the power level picks the proper user group and associates it with
+			//	the user; unless the level is more restricted than "standard", we should
+			//	always include the standard user level too.
+			
+			if (value < UserPowerLevel.Restricted)
+			{
+				var example = new SoftwareUserGroupEntity
+				{
+					UserPowerLevel = UserPowerLevel.Standard
+				};
+
+				var std = dataContext.GetByExample (example).Single ();
+				
+				this.UserGroups.Add (std);
+			}
+
+			if (value != UserPowerLevel.Standard)
+			{
+				var example = new SoftwareUserGroupEntity
+				{
+					UserPowerLevel = value
+				};
+
+				var group = dataContext.GetByExample (example).FirstOrDefault ();
+
+				if (group != null)
+				{
+					this.UserGroups.Add (group);
+				}
+			}
+		}
+		
 		
 		
 		private static SoftwareUserGroupEntity GetSoftwareUserGroup(BusinessContext businessContext, UserPowerLevel powerLevel)

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Entities
 												  System.Func<DataContext, T> functionWithDataContext,
 												  System.Func<T> defaultFunction)
 		{
-			var dataContext = DataContextPool.GetDataContext (entity);
+			var dataContext = entity.GetDataContext ();
 
 			if ((dataContext != null) &&
 				(dataContext.IsPersistent (entity)))

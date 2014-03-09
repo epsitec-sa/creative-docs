@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
@@ -43,6 +43,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.DisplayName)
 					.Field (x => x.Email)
 					.Field (x => x.Role)
+					.Field (x => x.PowerLevel)
 					.Field (x => x.Disabled)
 					.Field (x => x.EnableGroupEditionCanton)
 					.Field (x => x.EnableGroupEditionRegion)
@@ -62,6 +63,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.DisplayName).ReadOnly ()
 					.Field (x => x.Email)
 					.Field (x => x.Role).ReadOnly ()
+					.Field (x => x.PowerLevel).ReadOnly ()
 					.Field (x => x.Disabled).ReadOnly ()
 					.Field (x => x.EnableGroupEditionCanton).ReadOnly ()
 					.Field (x => x.EnableGroupEditionRegion).ReadOnly ()

@@ -129,7 +129,6 @@ namespace Epsitec.Aider.Entities
 		{
 			var path = this.Path;
 			var user = AiderUserManager.Current.AuthenticatedUser;
-			var userParishPath = user.ParishGroupPathCache;
 			var userPowerLevel = user.PowerLevel;
 
 			if ((userPowerLevel != UserPowerLevel.None) &&
@@ -153,6 +152,13 @@ namespace Epsitec.Aider.Entities
 			{
 				if (user.EnableGroupEditionParish)
 				{
+					if (userPowerLevel == UserPowerLevel.PowerUser)
+					{
+						return true;
+					}
+
+					var userParishPath = user.ParishGroupPathCache;
+					
 					if ((string.IsNullOrEmpty (userParishPath)) ||
 						(AiderGroupIds.IsSameOrWithinGroup (path, userParishPath)))
 					{
@@ -162,10 +168,16 @@ namespace Epsitec.Aider.Entities
 			}
 			else if (this.IsRegionOrRegionSubgroup ())
 			{
-				var userRegionPath = AiderGroupIds.GetParentPath (userParishPath);
-
 				if (user.EnableGroupEditionRegion)
 				{
+					if (userPowerLevel == UserPowerLevel.PowerUser)
+					{
+						return true;
+					}
+
+					var userParishPath = user.ParishGroupPathCache;
+					var userRegionPath = AiderGroupIds.GetParentPath (userParishPath);
+					
 					if ((string.IsNullOrEmpty (userRegionPath)) ||
 						(AiderGroupIds.IsSameOrWithinGroup (path, userRegionPath)))
 					{
