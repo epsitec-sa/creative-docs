@@ -56,7 +56,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
-			System.Diagnostics.Debug.WriteLine ("Derogating from " + parishGroup.Name);
+			System.Diagnostics.Trace.WriteLine ("Derogating from " + parishGroup.Name);
 
 			var derogationInGroup = destParish.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn);		
 			var derogationOutGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut);
@@ -140,7 +140,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			//!Trigg business rules!
 			person.ParishGroup = destParish;
 
-			System.Diagnostics.Debug.WriteLine ("Derogated to " + destParish.Name);
+			System.Diagnostics.Trace.WriteLine ("Derogated to " + destParish.Name);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
