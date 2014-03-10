@@ -44,7 +44,8 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA4I]", typeof (Epsitec.Aider.Entities.AiderGroupExtractionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVO613]", typeof (Epsitec.Aider.Entities.AiderOfficeManagementEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVOA13]", typeof (Epsitec.Aider.Entities.AiderOfficeSettingsEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[LVOS13]", typeof (Epsitec.Aider.Entities.AiderOfficeReportEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVOE23]", typeof (Epsitec.Aider.Entities.AiderOfficeReportEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVOI23]", typeof (Epsitec.Aider.Entities.AiderOfficeLetterReportEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -9163,179 +9164,107 @@ namespace Epsitec.Aider.Entities
 {
 	///	<summary>
 	///	The <c>AiderOfficeReport</c> entity.
-	///	designer:cap/LVOS13
+	///	designer:cap/LVOE23
 	///	</summary>
 	public partial class AiderOfficeReportEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>ReportName</c> field.
-		///	designer:fld/LVOS13/LVO423
+		///	The <c>Name</c> field.
+		///	designer:fld/LVOE23/LVOF23
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVO423]")]
-		public string ReportName
+		[global::Epsitec.Common.Support.EntityField ("[LVOF23]")]
+		public string Name
 		{
 			get
 			{
-				return this.GetField<string> ("[LVO423]");
+				return this.GetField<string> ("[LVOF23]");
 			}
 			set
 			{
-				string oldValue = this.ReportName;
-				if (oldValue != value || !this.IsFieldDefined("[LVO423]"))
+				string oldValue = this.Name;
+				if (oldValue != value || !this.IsFieldDefined("[LVOF23]"))
 				{
-					this.OnReportNameChanging (oldValue, value);
-					this.SetField<string> ("[LVO423]", oldValue, value);
-					this.OnReportNameChanged (oldValue, value);
+					this.OnNameChanging (oldValue, value);
+					this.SetField<string> ("[LVOF23]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>OfficeSettings</c> field.
-		///	designer:fld/LVOS13/LVOT13
+		///	The <c>CreationDate</c> field.
+		///	designer:fld/LVOE23/LVOG23
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOT13]")]
-		public global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity OfficeSettings
+		[global::Epsitec.Common.Support.EntityField ("[LVOG23]")]
+		public global::Epsitec.Common.Types.Date CreationDate
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity> ("[LVOT13]");
+				return this.GetField<global::Epsitec.Common.Types.Date> ("[LVOG23]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity oldValue = this.OfficeSettings;
-				if (oldValue != value || !this.IsFieldDefined("[LVOT13]"))
+				global::Epsitec.Common.Types.Date oldValue = this.CreationDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVOG23]"))
 				{
-					this.OnOfficeSettingsChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity> ("[LVOT13]", oldValue, value);
-					this.OnOfficeSettingsChanged (oldValue, value);
+					this.OnCreationDateChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date> ("[LVOG23]", oldValue, value);
+					this.OnCreationDateChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>Recipient</c> field.
-		///	designer:fld/LVOS13/LVOU13
+		///	The <c>Office</c> field.
+		///	designer:fld/LVOE23/LVOM23
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOU13]")]
-		public global::Epsitec.Aider.Entities.AiderContactEntity Recipient
+		[global::Epsitec.Common.Support.EntityField ("[LVOM23]")]
+		public global::Epsitec.Aider.Entities.AiderOfficeManagementEntity Office
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVOU13]");
+				return this.GetField<global::Epsitec.Aider.Entities.AiderOfficeManagementEntity> ("[LVOM23]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.AiderContactEntity oldValue = this.Recipient;
-				if (oldValue != value || !this.IsFieldDefined("[LVOU13]"))
+				global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue = this.Office;
+				if (oldValue != value || !this.IsFieldDefined("[LVOM23]"))
 				{
-					this.OnRecipientChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVOU13]", oldValue, value);
-					this.OnRecipientChanged (oldValue, value);
+					this.OnOfficeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderOfficeManagementEntity> ("[LVOM23]", oldValue, value);
+					this.OnOfficeChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>ContentTemplate</c> field.
-		///	designer:fld/LVOS13/LVOV13
+		///	The <c>ProcessDate</c> field.
+		///	designer:fld/LVOE23/LVON23
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOV13]")]
-		public string ContentTemplate
+		[global::Epsitec.Common.Support.EntityField ("[LVON23]")]
+		public global::System.DateTime? ProcessDate
 		{
 			get
 			{
-				return this.GetField<string> ("[LVOV13]");
+				return this.GetField<global::System.DateTime?> ("[LVON23]");
 			}
 			set
 			{
-				string oldValue = this.ContentTemplate;
-				if (oldValue != value || !this.IsFieldDefined("[LVOV13]"))
+				global::System.DateTime? oldValue = this.ProcessDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVON23]"))
 				{
-					this.OnContentTemplateChanging (oldValue, value);
-					this.SetField<string> ("[LVOV13]", oldValue, value);
-					this.OnContentTemplateChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Parameter0</c> field.
-		///	designer:fld/LVOS13/LVO123
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVO123]")]
-		public string Parameter0
-		{
-			get
-			{
-				return this.GetField<string> ("[LVO123]");
-			}
-			set
-			{
-				string oldValue = this.Parameter0;
-				if (oldValue != value || !this.IsFieldDefined("[LVO123]"))
-				{
-					this.OnParameter0Changing (oldValue, value);
-					this.SetField<string> ("[LVO123]", oldValue, value);
-					this.OnParameter0Changed (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Parameter1</c> field.
-		///	designer:fld/LVOS13/LVO223
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVO223]")]
-		public string Parameter1
-		{
-			get
-			{
-				return this.GetField<string> ("[LVO223]");
-			}
-			set
-			{
-				string oldValue = this.Parameter1;
-				if (oldValue != value || !this.IsFieldDefined("[LVO223]"))
-				{
-					this.OnParameter1Changing (oldValue, value);
-					this.SetField<string> ("[LVO223]", oldValue, value);
-					this.OnParameter1Changed (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Parameter2</c> field.
-		///	designer:fld/LVOS13/LVO323
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVO323]")]
-		public string Parameter2
-		{
-			get
-			{
-				return this.GetField<string> ("[LVO323]");
-			}
-			set
-			{
-				string oldValue = this.Parameter2;
-				if (oldValue != value || !this.IsFieldDefined("[LVO323]"))
-				{
-					this.OnParameter2Changing (oldValue, value);
-					this.SetField<string> ("[LVO323]", oldValue, value);
-					this.OnParameter2Changed (oldValue, value);
+					this.OnProcessDateChanging (oldValue, value);
+					this.SetField<global::System.DateTime?> ("[LVON23]", oldValue, value);
+					this.OnProcessDateChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnReportNameChanging(string oldValue, string newValue);
-		partial void OnReportNameChanged(string oldValue, string newValue);
-		partial void OnOfficeSettingsChanging(global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity newValue);
-		partial void OnOfficeSettingsChanged(global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity newValue);
-		partial void OnRecipientChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
-		partial void OnRecipientChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
-		partial void OnContentTemplateChanging(string oldValue, string newValue);
-		partial void OnContentTemplateChanged(string oldValue, string newValue);
-		partial void OnParameter0Changing(string oldValue, string newValue);
-		partial void OnParameter0Changed(string oldValue, string newValue);
-		partial void OnParameter1Changing(string oldValue, string newValue);
-		partial void OnParameter1Changed(string oldValue, string newValue);
-		partial void OnParameter2Changing(string oldValue, string newValue);
-		partial void OnParameter2Changed(string oldValue, string newValue);
+		partial void OnNameChanging(string oldValue, string newValue);
+		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnCreationDateChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnCreationDateChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
+		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
+		partial void OnProcessDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnProcessDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -9346,11 +9275,118 @@ namespace Epsitec.Aider.Entities
 		{
 			return global::Epsitec.Aider.Entities.AiderOfficeReportEntity.EntityStructuredTypeKey;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 120, 60);	// [LVOS13]
-		public static readonly string EntityStructuredTypeKey = "[LVOS13]";
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 120, 78);	// [LVOE23]
+		public static readonly string EntityStructuredTypeKey = "[LVOE23]";
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderOfficeReportEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderOfficeLetterReport Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderOfficeLetterReport</c> entity.
+	///	designer:cap/LVOI23
+	///	</summary>
+	public partial class AiderOfficeLetterReportEntity : global::Epsitec.Aider.Entities.AiderOfficeReportEntity
+	{
+		///	<summary>
+		///	The <c>RecipientContact</c> field.
+		///	designer:fld/LVOI23/LVOJ23
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOJ23]")]
+		public global::Epsitec.Aider.Entities.AiderContactEntity RecipientContact
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVOJ23]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderContactEntity oldValue = this.RecipientContact;
+				if (oldValue != value || !this.IsFieldDefined("[LVOJ23]"))
+				{
+					this.OnRecipientContactChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVOJ23]", oldValue, value);
+					this.OnRecipientContactChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TownAndDate</c> field.
+		///	designer:fld/LVOI23/LVOK23
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOK23]")]
+		public string TownAndDate
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOK23]");
+			}
+			set
+			{
+				string oldValue = this.TownAndDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVOK23]"))
+				{
+					this.OnTownAndDateChanging (oldValue, value);
+					this.SetField<string> ("[LVOK23]", oldValue, value);
+					this.OnTownAndDateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LetterContent</c> field.
+		///	designer:fld/LVOI23/LVOL23
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOL23]")]
+		public global::System.Byte[] LetterContent
+		{
+			get
+			{
+				return this.GetField<global::System.Byte[]> ("[LVOL23]");
+			}
+			set
+			{
+				global::System.Byte[] oldValue = this.LetterContent;
+				if (oldValue != value || !this.IsFieldDefined("[LVOL23]"))
+				{
+					this.OnLetterContentChanging (oldValue, value);
+					this.SetField<global::System.Byte[]> ("[LVOL23]", oldValue, value);
+					this.OnLetterContentChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnRecipientContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnRecipientContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnTownAndDateChanging(string oldValue, string newValue);
+		partial void OnTownAndDateChanged(string oldValue, string newValue);
+		partial void OnLetterContentChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnLetterContentChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderOfficeLetterReportEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderOfficeLetterReportEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 120, 82);	// [LVOI23]
+		public static readonly new string EntityStructuredTypeKey = "[LVOI23]";
+		
+		#region Repository Class
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderOfficeLetterReportEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
 			{

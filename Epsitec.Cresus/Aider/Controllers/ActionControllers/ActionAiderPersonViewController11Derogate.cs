@@ -18,6 +18,7 @@ using Epsitec.Aider.Override;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -162,10 +163,23 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void CreateDerogationLetter(BusinessContext businessContext, AiderGroupEntity destParish,AiderGroupEntity origineParish)
 		{
-			var office = AiderOfficeManagementEntity.Find (businessContext, destParish);
+			
+			var office			= AiderOfficeManagementEntity.Find (businessContext, destParish);
+			var recipient		= this.Entity.MainContact;
+			var documentName	= "Confirmation dérogation " + recipient.DisplayName;
 
-			//TODO FIND AIDER USER OFFICE SETTINGS
-			/*var greetings = "";
+			var userManager		= AiderUserManager.Current;
+			var aiderUser		= userManager.AuthenticatedUser;
+			var settings		= aiderUser.OfficeSettings;
+
+			if(settings.IsNull ())
+			{
+				var message = "Réglages de secrétariat manquant pour votre utilisateur, création de la dérogation annulée";
+				throw new BusinessRuleException (message);
+			}
+
+
+			var greetings = "";
 			if (this.Entity.eCH_Person.PersonSex == Enumerations.PersonSex.Male)
 			{
 				greetings = "Cher Monsieur,";
@@ -175,13 +189,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				greetings = "Chère Madame,";
 			}
 
-			AiderOfficeManagementEntity.CreateDocument (
-					this.BusinessContext,
-					"Dérogation pour " + this.Entity.GetDisplayName(),
-					office,
-					settings,
-					this.Entity.MainContact,
-					this.LetterTemplate, greetings, destParish.Name, origineParish.Name);*/
+			var content = string.Format (LetterTemplate, greetings, destParish.Name, origineParish.Name);
+
+			var letter = AiderOfficeLetterReportEntity.Create (businessContext, recipient, settings, documentName, content);
+			EntityBag.Add (letter, "Document");
+			
 		}
 
 		private readonly string LetterTemplate = new System.Text.StringBuilder ()
@@ -195,9 +207,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 												.Append ("{2}.<br/><br/>")
 												.Append ("Au cas où vous viendrez à déménager, vous seriez automatiquement rattaché à la paroisse de votre <b>nouveau</b> domicile.")
 												.Append ("La dérogation actuelle perdrait son effet. Vous auriez la possibilité de demander une nouvelle dérogation si vous l'estimiez important.")
-												//.Append ("<br/><br/>Nous vous souhaitons de riches expériences et un fructueux engagement dans votre nouvelle paroisse officielle ")
-												//.Append ("et vous adressons, nos fraternelles salutations.<br/><br/>")
-												//.Append ("le secrétariat<br/><br/>signé: ...")
+												.Append ("<br/><br/>Nous vous souhaitons de riches expériences et un fructueux engagement dans votre nouvelle paroisse officielle ")
+												.Append ("et vous adressons, nos fraternelles salutations.<br/><br/>")
 												.ToString ();
 		
 	}

@@ -181,7 +181,6 @@
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderMailingController0.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionAiderOfficeReportViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderOfficeSettingsViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupExtractionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderMailingCategoryViewController.cs" />
@@ -198,7 +197,6 @@
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController1ExcludedContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController0RecipientsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeReportViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController2Documents.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_DerogationChange.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController1Settings.cs" />
@@ -290,7 +288,7 @@
     <Compile Include="Entities\AiderMailingCategoryEntity.cs" />
     <Compile Include="Entities\AiderOfficeManagementEntity.cs" />
     <Compile Include="Entities\AiderOfficeSettingsEntity.cs" />
-    <Compile Include="Entities\AiderOfficeReportEntity.cs" />
+    <Compile Include="Entities\AiderOfficeLetterReportEntity.cs" />
     <Compile Include="Entities\eCH_ReportedPersonEntity.cs" />
     <Compile Include="Entities\IAiderWarningExampleFactoryGetter.cs" />
     <Compile Include="Entities\ParticipationData.cs" />

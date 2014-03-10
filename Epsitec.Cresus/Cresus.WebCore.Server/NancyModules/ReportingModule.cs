@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			//	https://localhost/proxy/reporting/letter/[LVOA13]-1000000001/[LVARD]-1000000001
 			
-			Get["/{processor}/{settings}/{contact}"] =
+			Get["/{processor}/{settings}/{letter}"] =
 				p => this.Execute ((wa, b) => this.ProduceReport (wa, b, p));
 		}
 

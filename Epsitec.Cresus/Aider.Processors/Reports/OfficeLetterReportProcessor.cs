@@ -13,9 +13,9 @@ using System.Linq;
 
 namespace Epsitec.Aider.Processors.Reports
 {
-	public class LetterReportProcessor : Epsitec.Cresus.WebCore.Server.Processors.IReportingProcessor
+	public class OfficeLetterReportProcessor : Epsitec.Cresus.WebCore.Server.Processors.IReportingProcessor
 	{
-		public LetterReportProcessor(CoreServer coreServer)
+		public OfficeLetterReportProcessor(CoreServer coreServer)
 		{
 			this.coreServer = coreServer;
 		}
@@ -27,7 +27,7 @@ namespace Epsitec.Aider.Processors.Reports
 		{
 			get
 			{
-				return "letter";
+				return "officeletter";
 			}
 		}
 
@@ -37,29 +37,30 @@ namespace Epsitec.Aider.Processors.Reports
 
 		public string CreateReport(System.IO.Stream stream, WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{
-			string settingsId = parameters.settings;
-			string contactId  = parameters.letter;
+			string settingsId	= parameters.settings;
+			string letterId		= parameters.letter;
 
 			var settings = EntityIO.ResolveEntity (businessContext, settingsId) as AiderOfficeSettingsEntity;
-			var contact  = EntityIO.ResolveEntity (businessContext, contactId) as AiderContactEntity;
+			var letter  = EntityIO.ResolveEntity (businessContext, letterId)	as AiderOfficeLetterReportEntity;
 
-			return this.GenerateDocument (stream, workerApp, businessContext, settings, contact);
+			return this.GenerateDocument (stream, workerApp, businessContext, settings, letter);
 		}
 
 		#endregion
 
-		private string GenerateDocument(System.IO.Stream stream, WorkerApp workerApp, BusinessContext context, AiderOfficeSettingsEntity settings, AiderContactEntity contact)
+		private string GenerateDocument(System.IO.Stream stream, WorkerApp workerApp, BusinessContext context, AiderOfficeSettingsEntity settings, AiderOfficeLetterReportEntity letter)
 		{
 			var userManager = workerApp.UserManager;
 
 			//	Do something with this entity...
 			
 			var layout = LabelLayout.Sheet_A4_Simple;
-			var doc    = new Pdf.LetterDocumentWriter (contact, layout);
+			var doc    = new Pdf.OfficeLetterDocumentWriter (letter, settings, layout);
 
 			doc.WriteStream (stream);
+			letter.ProcessDate = System.DateTime.Now;
 
-			return "letter.pdf";
+			return "office_letter.pdf";
 		}
 
 

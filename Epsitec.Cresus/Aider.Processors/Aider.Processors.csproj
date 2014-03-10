@@ -65,9 +65,11 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Pdf\OfficeLetterDocumentWriter.cs" />
     <Compile Include="Pdf\LetterDocumentWriter.cs" />
     <Compile Include="Processor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\OfficeLetterReportProcessor.cs" />
     <Compile Include="Reports\LetterReportProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
