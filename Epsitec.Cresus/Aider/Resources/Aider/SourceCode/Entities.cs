@@ -6305,6 +6305,50 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Office</c> field.
+		///	designer:fld/LVAHC/LVO523
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO523]")]
+		public global::Epsitec.Aider.Entities.AiderOfficeManagementEntity Office
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderOfficeManagementEntity> ("[LVO523]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue = this.Office;
+				if (oldValue != value || !this.IsFieldDefined("[LVO523]"))
+				{
+					this.OnOfficeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderOfficeManagementEntity> ("[LVO523]", oldValue, value);
+					this.OnOfficeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>OfficeSettings</c> field.
+		///	designer:fld/LVAHC/LVO723
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO723]")]
+		public global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity OfficeSettings
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity> ("[LVO723]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity oldValue = this.OfficeSettings;
+				if (oldValue != value || !this.IsFieldDefined("[LVO723]"))
+				{
+					this.OnOfficeSettingsChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity> ("[LVO723]", oldValue, value);
+					this.OnOfficeSettingsChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Email</c> field.
 		///	designer:fld/LVAHC/LVGF22
 		///	</summary>
@@ -6493,6 +6537,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
+		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
+		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
+		partial void OnOfficeSettingsChanging(global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity newValue);
+		partial void OnOfficeSettingsChanged(global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity newValue);
 		partial void OnEmailChanging(string oldValue, string newValue);
 		partial void OnEmailChanged(string oldValue, string newValue);
 		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
@@ -8939,6 +8987,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVOA13/LVO923
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO923]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO923]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVO923]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVO923]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Office</c> field.
 		///	designer:fld/LVOA13/LVOI13
 		///	</summary>
@@ -9051,6 +9121,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnOfficeAddressChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);

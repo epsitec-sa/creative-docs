@@ -55,6 +55,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderMailingParticipants = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 20));
 				//	designer:cap/LVOG13
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderOfficeManagement = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 48));
+				//	designer:cap/LVO823
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderOfficeSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 72));
 				//	designer:cap/LVO003
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 0));
 				//	designer:cap/LVGK32
@@ -118,6 +120,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderMailingParticipants = 0x3F500078000014L;
 				//	designer:cap/LVOG13
 				public const long ShowAiderOfficeManagement = 0x3F500078000030L;
+				//	designer:cap/LVO823
+				public const long ShowAiderOfficeSettings = 0x3F500078000048L;
 				//	designer:cap/LVO003
 				public const long ShowAiderPerson = 0x3F500078000000L;
 				//	designer:cap/LVGK32
@@ -593,6 +597,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 383));
+						}
+					}
+					//	designer:cap/LVO623
+					public static global::Epsitec.Common.Types.Caption Users
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 70));
 						}
 					}
 				}
@@ -2090,6 +2102,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid OfficeLogoImagePath = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 47);
 				//	designer:cap/LVOD13
 				public static readonly global::Epsitec.Common.Support.Druid OfficialContact = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 45);
+				//	designer:cap/LVO923
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 73);
 				//	designer:cap/LVOQ13
 				public static readonly global::Epsitec.Common.Support.Druid PPFrankingTown = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 58);
 			}
@@ -2370,6 +2384,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid LastSoftwareReleaseDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 556);
 				//	designer:cap/LVGH22
 				public static readonly global::Epsitec.Common.Support.Druid Mutability = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 81);
+				//	designer:cap/LVO523
+				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 69);
+				//	designer:cap/LVO723
+				public static readonly global::Epsitec.Common.Support.Druid OfficeSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 71);
 				//	designer:cap/LVGD22
 				public static readonly global::Epsitec.Common.Support.Druid Parish = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 77);
 				//	designer:cap/LVGE22

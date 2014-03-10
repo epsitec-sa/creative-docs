@@ -411,8 +411,9 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				OfficeManagementEntities.CreateOfficeManagementEntities (coreData);
+				OfficeManagementEntities.CreateIfNeeded (coreData);
 				DerogationGroups.CreateIfNeeded (coreData);
+				AiderUsersGroup.CreateIfNeeded (coreData);
 			});
 		}
 

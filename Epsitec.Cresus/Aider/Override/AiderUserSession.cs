@@ -177,6 +177,10 @@ namespace Epsitec.Aider.Override
 				{
 					return this.GetAiderOfficeManagementFilter ((AiderOfficeManagementEntity) example, pattern + "%");
 				}
+				else if (entityType == typeof (AiderOfficeSettingsEntity))
+				{
+					return this.GetAiderOfficeSettingsFilter ((AiderOfficeSettingsEntity) example, pattern + "%");
+				}
 			}
 
 			return null;
@@ -233,6 +237,11 @@ namespace Epsitec.Aider.Override
 		}
 
 		private IFilter GetAiderOfficeManagementFilter(AiderOfficeManagementEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+		}
+
+		private IFilter GetAiderOfficeSettingsFilter(AiderOfficeSettingsEntity example, string pattern)
 		{
 			return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
 		}

@@ -27,6 +27,11 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.OfficeName);
 		}
 
+		public override FormattedText GetCompactSummary()
+		{
+			return TextFormatter.FormatText (this.OfficeName);
+		}
+
 		public FormattedText GetSettingsTitleSummary()
 		{
 			return TextFormatter.FormatText ("Réglage du secrétariat");

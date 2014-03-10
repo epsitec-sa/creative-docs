@@ -46,14 +46,22 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
 
-			//NOT READY
-			/*wall.AddBrick ()
+
+			wall.AddBrick (p => p.ParishGroup.Subgroups.Where (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users).First ())
+					.Icon ("Data.AiderGroup.People")
+					.Title ("Utilisateurs AIDER")
+					.Text (p => p.GetParticipantsSummary ())
+					.Attribute (BrickMode.DefaultToSetSubView)
+					.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+
+
+			wall.AddBrick ()
 				.Icon ("Data.AiderGoup.Parish")
 				.Title (p => p.GetSettingsTitleSummary ())
 				.Text (p => p.GetSettingsSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController1Settings))
-				.EnableActionMenu<ActionAiderOfficeManagementViewController0CreateSettings> ();*/
+				.EnableActionMenu<ActionAiderOfficeManagementViewController0CreateSettings> ();
 			
 			//NOT READY
 			/*wall.AddBrick ()

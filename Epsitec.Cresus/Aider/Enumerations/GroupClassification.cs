@@ -20,5 +20,6 @@ namespace Epsitec.Aider.Enumerations
 		DerogationIn	= 50,
 		DerogationOut	= 60,
 		ParishOfGermanLanguage = 70,
+		Users			= 80,
 	}
 }

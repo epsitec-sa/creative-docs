@@ -163,6 +163,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupDefViewController0CreateSubGroupDef.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderOfficeManagementViewController0CreateSettings.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController11Derogate.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderUserViewController2SetOffice.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderGroupExtractionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="Data\ECh\EChDataAnalyzerReporter.cs" />
     <Compile Include="Data\ECh\EChDataComparer.cs" />
     <Compile Include="Data\Eerv\EervKind.cs" />
+    <Compile Include="Data\Init\AiderUsersGroup.cs" />
     <Compile Include="Data\Init\OfficeManagementEntities.cs" />
     <Compile Include="Data\Init\POGLBaseGroups.cs" />
     <Compile Include="Data\Init\DerogationGroups.cs" />

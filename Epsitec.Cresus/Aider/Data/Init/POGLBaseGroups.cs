@@ -25,52 +25,57 @@ namespace Epsitec.Aider.Data.Groups
 	/// </summary>
 	public static class POGLBaseGroups
 	{
-		public static void Create(CoreData coreData)
+		public static void CreateIfNeeded(CoreData coreData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				var poglRoot = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
+				var initNeeded = !AiderGroupEntity.FindGroups (businessContext, "POGL.").Any ();
 
-				poglRoot.Name = "PLA";
-				poglRoot.Number = ""; //?
-				poglRoot.Level = AiderGroupIds.TopLevel;
-				poglRoot.SubgroupsAllowed = true;
-				poglRoot.MembersAllowed = false;
-				poglRoot.PathTemplate = AiderGroupIds.CreateTopLevelPathTemplate (GroupClassification.ParishOfGermanLanguage);
+				if (initNeeded)
+				{
+					var poglRoot = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
-				poglRoot.Classification = GroupClassification.ParishOfGermanLanguage;
-				poglRoot.Mutability = Mutability.None;
+					poglRoot.Name = "PLA";
+					poglRoot.Number = ""; //?
+					poglRoot.Level = AiderGroupIds.TopLevel;
+					poglRoot.SubgroupsAllowed = true;
+					poglRoot.MembersAllowed = false;
+					poglRoot.PathTemplate = AiderGroupIds.CreateTopLevelPathTemplate (GroupClassification.ParishOfGermanLanguage);
 
-				var poglParishBase = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
+					poglRoot.Classification = GroupClassification.ParishOfGermanLanguage;
+					poglRoot.Mutability = Mutability.None;
 
-				poglParishBase.Name = "Paroisse";
-				poglParishBase.Number = ""; //?
-				poglParishBase.Level = AiderGroupIds.TopLevel + 1;
-				poglParishBase.SubgroupsAllowed = true;
-				poglParishBase.MembersAllowed = false;
-				poglParishBase.PathTemplate = AiderGroupIds.CreateParishSubgroupPath (poglRoot.PathTemplate);
-				
-				poglParishBase.Classification = GroupClassification.Parish;
-				poglParishBase.Mutability = Mutability.None;
+					var poglParishBase = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
-				//Uplink
-				poglRoot.Subgroups.Add (poglParishBase);
+					poglParishBase.Name = "Paroisse";
+					poglParishBase.Number = ""; //?
+					poglParishBase.Level = AiderGroupIds.TopLevel + 1;
+					poglParishBase.SubgroupsAllowed = true;
+					poglParishBase.MembersAllowed = false;
+					poglParishBase.PathTemplate = AiderGroupIds.CreateParishSubgroupPath (poglRoot.PathTemplate);
+
+					poglParishBase.Classification = GroupClassification.Parish;
+					poglParishBase.Mutability = Mutability.None;
+
+					//Uplink
+					poglRoot.Subgroups.Add (poglParishBase);
 
 
-				//INSTANTIATE GROUPS
-				var poglRegion = poglRoot.Instantiate (businessContext);
-				poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Broyetal", 1);
-				poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA La Côte", 2);
-				poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Nord Vaudois", 3);
-				poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Riviera Chablais", 4);
+					//INSTANTIATE GROUPS
+					var poglRegion = poglRoot.Instantiate (businessContext);
+					poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Broyetal", 1);
+					poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA La Côte", 2);
+					poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Nord Vaudois", 3);
+					poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Riviera Chablais", 4);
 
-				//Villamont exception
-				var region4 = AiderGroupEntity.FindGroups (businessContext, "R004.").First ();
-				var exempleParishGroupDef = region4.Subgroups.Where (p => p.IsParish ()).First ().GroupDef;
-				var number = AiderGroupIds.FindNextSubGroupDefNumber (region4.Subgroups.Select (g => g.Path), 'P');
-				exempleParishGroupDef.InstantiateParish (businessContext, region4, "PLA Villamont", number);
-				
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+					//Villamont exception
+					var region4 = AiderGroupEntity.FindGroups (businessContext, "R004.").First ();
+					var exempleParishGroupDef = region4.Subgroups.Where (p => p.IsParish ()).First ().GroupDef;
+					var number = AiderGroupIds.FindNextSubGroupDefNumber (region4.Subgroups.Select (g => g.Path), 'P');
+					exempleParishGroupDef.InstantiateParish (businessContext, region4, "PLA Villamont", number);
+
+					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+				}
 			}
 		}
 	}
