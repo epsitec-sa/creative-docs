@@ -1,31 +1,22 @@
 ﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Metadata;
-using Epsitec.Cresus.Core.Resolvers;
-
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Expressions;
 
 using Epsitec.Cresus.WebCore.Server.Core;
-using Epsitec.Cresus.WebCore.Server.Core.Databases;
-using Epsitec.Cresus.WebCore.Server.Core.Extraction;
-using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
+using Epsitec.Cresus.WebCore.Server.Processors;
 
 using Nancy;
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 	using Database = Core.Databases.Database;
+	using Epsitec.Common.Support;
 
 	/// <summary>
 	/// Report Builder
@@ -35,81 +26,48 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public ReportingModule(CoreServer coreServer)
 			: base (coreServer, "/reporting")
 		{
-			///TEST REPORT
-			//https://localhost/proxy/reporting/[LVOR13]/[LVOA13]-1000000001/test
-			Get["/{datasetId}/{entityId}/test"] =
-				p => this.Execute ((wa, b) => this.ProduceTestReport (wa, b, p));
+			var instances  = InterfaceImplementationResolver<IReportingProcessor>.CreateInstances (coreServer);
+			var processors = instances.Select (x => new KeyValuePair<string, IReportingProcessor> (x.Name, x));
+			
+			this.processors = new System.Collections.Concurrent.ConcurrentDictionary<string, IReportingProcessor> (processors);
+
+			//	https://localhost/proxy/reporting/letter/[LVOA13]-1000000001/[LVARD]-1000000001
+			
+			Get["/{processor}/{settings}/{contact}"] =
+				p => this.Execute ((wa, b) => this.ProduceReport (wa, b, p));
 		}
 
 		
-		private Response ProduceTestReport(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private Response ProduceReport(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{
-			using (EntityExtractor reportExtractor = this.GetReportExtractor (workerApp, businessContext, parameters.datasetId, parameters.entityId))
+			string processorName = parameters.processor;
+			
+			IReportingProcessor processor;
+
+			if (this.processors.TryGetValue (processorName, out processor))
 			{
-				return ReportingModule.CreateReport (reportExtractor);
+				var path   = System.IO.Path.GetTempFileName ();
+				
+				//	The stream will be owned by Nancy through the Response object. Ensure that when
+				//	it gets disposed, the file will be deleted.
+				
+				var stream = new System.IO.FileStream (path, System.IO.FileMode.Truncate,
+					System.IO.FileAccess.ReadWrite, System.IO.FileShare.None, 16*1024,
+					System.IO.FileOptions.DeleteOnClose);
+				
+				var reportName = processor.CreateReport (stream, workerApp, businessContext, parameters);
+
+				stream.Flush ();
+				stream.Seek (0, System.IO.SeekOrigin.Begin);
+
+				return CoreResponse.CreateStreamResponse (stream, reportName);
+			}
+			else
+			{
+				return CoreResponse.Failure ("Générateur de rapports", string.Format ("Le générateur {0} n'a pas été trouvé.", processorName));
 			}
 		}
 
-		private EntityExtractor GetReportExtractor(WorkerApp workerApp, BusinessContext businessContext, string datasetId, string entityId)
-		{
-			var caches = this.CoreServer.Caches;
-
-			var userManager = workerApp.UserManager;
-			var databaseManager = this.CoreServer.DatabaseManager;
-
-
-			System.Func<Database, DataSetAccessor> dataSetAccessorGetter = db =>
-			{
-				return db.GetDataSetAccessor (workerApp.DataSetGetter);
-			};
-
-			string rawDatabaseId = datasetId;
-			var databaseId = DataIO.ParseDruid (rawDatabaseId);
-			var database = databaseManager.GetDatabase (databaseId);
-
-			var entity = EntityIO.ResolveEntity (businessContext, (string) entityId);
-			var context = DataContextPool.GetDataContext (entity);
-			var id = context.GetNormalizedEntityKey (entity).Value.RowKey.Id.Value;
-
-			System.Action<DataContext, DataLayer.Loader.Request, AbstractEntity> customizer = (d, r, e) =>
-			{
-				r.Conditions.Add (ReportingModule.CreateCondition (e, id));
-			};
-
-			return EntityExtractor.Create
-			(
-				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
-				databaseId, "", "", customizer
-			);
-		}
-
-		
-		private static Response CreateReport(EntityExtractor extractor)
-		{
-			var itemCount = extractor.Accessor.GetItemCount ();
-
-			EntityWriter writer = ReportingModule.GetEntityWriter (extractor);
-
-			var filename = writer.GetFilename ();
-			var stream   = writer.GetStream ();
-
-			return CoreResponse.CreateStreamResponse (stream, filename);
-		}
-
-		private static EntityWriter GetEntityWriter(EntityExtractor extractor)
-		{
-			var metaData = extractor.Metadata;
-			var accessor = extractor.Accessor;
-
-			var layout      = LabelLayout.Sheet_A4_Simple;
-			var entitytype  = metaData.EntityTableMetadata.EntityType;
-
-			return new LetterDocumentWriter (metaData, accessor, layout);
-		}
-
-		private static DataExpression CreateCondition(AbstractEntity example, long id)
-		{
-			return new ValueSetComparison (InternalField.CreateId (example), SetComparator.In, new Constant[] { new Constant (id) });
-		}
+		private readonly ConcurrentDictionary<string, IReportingProcessor> processors;
 	}
 }
