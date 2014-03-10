@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -128,25 +127,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbars()
 		{
-			this.mainToolbar.SetCommandEnable (ToolbarCommand.Edit, this.IsEditingPossible);
-
-			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
-		}
-
-		private bool IsEditingPossible
-		{
-			get
-			{
-				return this.listController.SelectedRow != -1;
-			}
 		}
 
 
 		private readonly EntriesToolbarTreeTableController	listController;
 
 		private FrameBox									listFrameBox;
-
 		private Guid										selectedGuid;
 	}
 }

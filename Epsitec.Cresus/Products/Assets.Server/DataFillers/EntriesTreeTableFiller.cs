@@ -71,12 +71,33 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var cell1 = new TreeTableCellTree    (level, type, date,       cellState);
+				TreeTableCellTree cell1, cell5;
+
+				if (string.IsNullOrEmpty (date))
+				{
+					//	Si la colonne est vide, on évite de dessiner le petit bouton triangulaire.
+					cell1 = new TreeTableCellTree (0, NodeType.Final, null, cellState);
+				}
+				else
+				{
+					cell1 = new TreeTableCellTree (level, type, date, cellState);
+				}
+
 				var cell2 = new TreeTableCellString  (node.Debit,              cellState);
 				var cell3 = new TreeTableCellString  (node.Credit,             cellState);
 				var cell4 = new TreeTableCellString  (node.Stamp,              cellState);
-				var cell5 = new TreeTableCellTree    (level, type, node.Title, cellState);
-				var cell6 = new TreeTableCellDecimal (node.Value,              cellState);
+
+				if (string.IsNullOrEmpty (node.Title))
+				{
+					//	Si la colonne est vide, on évite de dessiner le petit bouton triangulaire.
+					cell5 = new TreeTableCellTree (0, NodeType.Final, null, cellState);
+				}
+				else
+				{
+					cell5 = new TreeTableCellTree (level, type, node.Title, cellState);
+				}
+
+				var cell6 = new TreeTableCellDecimal (node.Value, cellState);
 
 				int columnRank = 0;
 
