@@ -132,6 +132,7 @@
     <Compile Include="Views\AccountsTreeGraphicController.cs" />
     <Compile Include="Views\AssetsTreeGraphicController.cs" />
     <Compile Include="Views\AbstractToolbarBothTreesController.cs" />
+    <Compile Include="Views\EntriesViewState.cs" />
     <Compile Include="Views\EntriesTreeGraphicController.cs" />
     <Compile Include="Views\EntriesToolbarTreeTableController.cs" />
     <Compile Include="Views\EntriesView.cs" />

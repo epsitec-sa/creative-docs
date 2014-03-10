@@ -99,17 +99,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return new GroupsViewState
+				return new EntriesViewState
 				{
 					ViewType     = ViewType.Entries,
+					SelectedGuid = this.selectedGuid,
 					ShowGraphic  = this.listController.ShowGraphic,
 				};
 			}
 			set
 			{
-				var viewState = value as GroupsViewState;
+				var viewState = value as EntriesViewState;
 				System.Diagnostics.Debug.Assert (viewState != null);
 
+				this.selectedGuid = viewState.SelectedGuid;
 				this.listController.ShowGraphic = viewState.ShowGraphic;
 
 				this.UpdateUI ();
