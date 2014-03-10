@@ -34,25 +34,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var title  = this.GetTitle  (amount);
 				var value  = this.GetValue  (amount);
 
-				amount.EntryGuid = this.AddEntry (this.RootEntry, amount.Date, debit, credit, null, title, value);
+				this.AddEntry (amount, amount.Date, debit, credit, null, title, value);
 			}
 		}
 
 		public void RemoveEntry(AmortizedAmount amount)
 		{
 			//	Supprime l'écriture liée à un AmortizedAmount.
-			if (amount.EntryGuid.IsEmpty)
-			{
-				return;
-			}
-
-			var entry = this.accessor.GetObject (BaseType.Entries, amount.EntryGuid);
-			if (entry != null)
-			{
-				this.accessor.RemoveObject (BaseType.Entries, entry);
-			}
-
-			amount.EntryGuid = Guid.Empty;
+			amount.Entries.Clear ();
 		}
 
 
@@ -150,21 +139,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private Guid AddEntry(Guid guidParent, System.DateTime date, Guid debit, Guid credit, string stamp, string title, decimal value)
+		private Guid AddEntry(AmortizedAmount amount, System.DateTime date, Guid debit, Guid credit, string stamp, string title, decimal value)
 		{
 			var entry = new DataObject ();
-
-			var entries = this.accessor.Mandat.GetData (BaseType.Entries);
-			entries.Add (entry);
+			amount.Entries.Add (entry);
 
 			var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
 			var e = new DataEvent (start, EventType.Input);
 			entry.AddEvent (e);
-
-			if (!guidParent.IsEmpty)
-			{
-				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, guidParent));
-			}
 
 			e.AddProperty (new DataDateProperty (ObjectField.EntryDate, date));
 
@@ -185,19 +167,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return entry.Guid;
 		}
 
-
-		private Guid RootEntry
-		{
-			//	Retourne l'"écriture" racine, de laquelle toutes les écritures doivent
-			//	être parentes.
-			get
-			{
-				var entries = this.accessor.Mandat.GetData (BaseType.Entries);
-				System.Diagnostics.Debug.Assert (entries.Any ());
-				return entries[0].Guid;
-			}
-		}
-	
 
 		private readonly DataAccessor			accessor;
 	}

@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		internal static void AddEntries(DataMandat mandat)
 		{
+#if false
 			var b = DummyEntries.AddEntry (mandat, Guid.Empty, null, null, null, null, "Journal des écritures", null);
 			return; //?
 
@@ -38,9 +39,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			DummyEntries.AddEntry (mandat, b, new System.DateTime (2014, 5, 12), "6000", "1010", "202", "Loyer mai", 2500.0m);
 			DummyEntries.AddEntry (mandat, b, new System.DateTime (2014, 5, 13), "1010", "1000", "203", "Viré à poste", 500.0m);
 			DummyEntries.AddEntry (mandat, b, new System.DateTime (2014, 6, 18), "6000", "1010", "204", "Loyer juin", 2500.0m);
+#endif
 		}
 
 
+#if false
 		private static Guid AddEntry(DataMandat mandat, Guid guidParent, System.DateTime? date, string debit, string credit, string stamp, string title, decimal? amount)
 		{
 			var entry = new DataObject ();
@@ -98,5 +101,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return guid;
 			}
 		}
+#endif
 	}
 }

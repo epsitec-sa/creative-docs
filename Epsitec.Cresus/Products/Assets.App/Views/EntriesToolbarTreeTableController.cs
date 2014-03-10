@@ -3,16 +3,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class EntriesToolbarTreeTableController : AbstractToolbarBothTreesController<TreeNode>, IDirty
+	public class EntriesToolbarTreeTableController : AbstractToolbarBothTreesController<EntryNode>, IDirty
 	{
 		public EntriesToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -24,9 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Entries);
 
-			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Entries);
-			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Entries, primaryNodeGetter);
+			this.nodeGetter = new EntriesNodeGetter (this.accessor);
 
 			this.sortingInstructions = new SortingInstructions (ObjectField.EntryDate, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 		}
@@ -55,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void UpdateData()
 		{
-			this.NodeGetter.SetParams (null, this.sortingInstructions);
+			this.NodeGetter.SetParams (this.sortingInstructions);
 
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -82,7 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				int sel = this.VisibleSelectedRow;
 				if (sel != -1 && sel < this.nodeGetter.Count)
 				{
-					return this.nodeGetter[sel].Guid;
+					return this.nodeGetter[sel].EntryGuid;
 				}
 				else
 				{
@@ -102,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new EntriesTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller);
+			TreeTableFiller<EntryNode>.FillColumns (this.treeTableController, this.dataFiller);
 
 			this.treeTableController.AddSortedColumn (0);
 		}
@@ -113,81 +109,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.VisibleSelectedRow = -1;
 		}
 
-		protected override void OnNew()
-		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.New);
-			this.ShowCreatePopup (target);
-		}
-
-		protected override void OnDelete()
-		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
-
-			if (target != null)
-			{
-				var popup = new YesNoPopup
-				{
-					Question = "Voulez-vous supprimer l'écriture sélectionnée ?",
-				};
-
-				popup.Create (target, leftOrRight: true);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "yes")
-					{
-						this.accessor.RemoveObject (BaseType.Entries, this.SelectedGuid);
-						this.UpdateData ();
-						this.OnUpdateAfterDelete ();
-					}
-				};
-			}
-		}
-
-
-		private void ShowCreatePopup(Widget target)
-		{
-			var popup = new CreateGroupPopup (this.accessor, this.SelectedGuid);
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "create")
-				{
-					this.CreateObject (popup.ObjectName, popup.ObjectParent);
-				}
-			};
-		}
-
-		private void CreateObject(string name, Guid parent)
-		{
-			var date = this.accessor.Mandat.StartDate;
-			var guid = this.accessor.CreateObject (BaseType.Entries, date, name, parent);
-			var obj = this.accessor.GetObject (BaseType.Entries, guid);
-			System.Diagnostics.Debug.Assert (obj != null);
-			
-			this.UpdateData ();
-
-			this.SelectedGuid = guid;
-			this.OnUpdateAfterCreate (guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
-		}
-
 	
 		protected override void UpdateToolbar()
 		{
 			base.UpdateToolbar ();
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.NodeGetter.IsAllCompacted);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.NodeGetter.IsAllExpanded);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll, !this.NodeGetter.IsAllExpanded);
+
+			this.toolbar.SetCommandEnable (ToolbarCommand.New, false);
+			this.toolbar.SetCommandEnable (ToolbarCommand.Delete, false);
 		}
 
 
-		private GroupTreeNodeGetter NodeGetter
+		private EntriesNodeGetter NodeGetter
 		{
 			get
 			{
-				return this.nodeGetter as GroupTreeNodeGetter;
+				return this.nodeGetter as EntriesNodeGetter;
 			}
 		}
 	}

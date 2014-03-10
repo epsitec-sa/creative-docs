@@ -49,6 +49,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 
 		#region Facade
+		public List<DataObject> Entries
+		{
+			get
+			{
+				return this.values.Entries;
+			}
+		}
+
 		public AmortizationType AmortizationType
 		{
 			get
@@ -178,18 +186,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			set
 			{
 				this.values.AssetGuid = value;
-			}
-		}
-
-		public Guid EntryGuid
-		{
-			get
-			{
-				return this.values.EntryGuid;
-			}
-			set
-			{
-				this.values.EntryGuid = value;
 			}
 		}
 		#endregion

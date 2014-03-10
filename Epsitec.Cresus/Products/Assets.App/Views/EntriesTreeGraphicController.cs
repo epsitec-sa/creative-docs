@@ -4,12 +4,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class EntriesTreeGraphicController : AbstractTreeGraphicController<TreeNode>
+	public class EntriesTreeGraphicController : AbstractTreeGraphicController<EntryNode>
 	{
 		public EntriesTreeGraphicController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -18,12 +19,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.treeGraphicViewState.Fields.Add (ObjectField.EntryDate);
 			this.treeGraphicViewState.Fields.Add (ObjectField.EntryDebitAccount);
-			this.treeGraphicViewState.Fields.Add (ObjectField.EntryCreditAccount);
 			this.treeGraphicViewState.Fields.Add (ObjectField.EntryTitle);
 			this.treeGraphicViewState.Fields.Add (ObjectField.EntryAmount);
 
 			this.treeGraphicViewState.FontFactors.Add (0.8);
-			this.treeGraphicViewState.FontFactors.Add (1.2);
 			this.treeGraphicViewState.FontFactors.Add (1.2);
 			this.treeGraphicViewState.FontFactors.Add (0.8);
 			this.treeGraphicViewState.FontFactors.Add (1.2);
@@ -32,7 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void UpdateController(AbstractNodeGetter<TreeNode> nodeGetter, Guid selectedGuid, bool crop = true)
+		public override void UpdateController(AbstractNodeGetter<EntryNode> nodeGetter, Guid selectedGuid, bool crop = true)
 		{
 			if (this.treeGraphicViewState == null || this.scrollable == null)
 			{
@@ -44,10 +43,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var parents = new List<Widget> ();
 			parents.Add (this.scrollable.Viewport);
 
-			var fields = this.GetFieds ();
 			var fontFactors = this.GetFontFactors ();
 
-			var ng = nodeGetter as GroupTreeNodeGetter;
+			var ng = nodeGetter as EntriesNodeGetter;
 			int deep = this.GetDeep (ng);
 
 			foreach (var node in ng.Nodes)
@@ -55,10 +53,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var level = node.Level;
 				var parent = parents[level];
 
-				double fontSize = AbstractTreeGraphicController<TreeNode>.GetFontSize (deep, level);
+				double fontSize = AbstractTreeGraphicController<EntryNode>.GetFontSize (deep, level);
 
-				var values = this.GetValues (this.baseType, node.Guid, fields);
-				var w = this.CreateTile (parent, node.Guid, level, fontSize, node.Type, values, fontFactors);
+				var values = this.GetValues (node);
+				var w = this.CreateTile (parent, node.EntryGuid, level, fontSize, node.Type, values, fontFactors);
 
 				if (parents.Count <= level+1)
 				{
@@ -71,7 +69,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateSelection (selectedGuid, crop);
 		}
 
-		private int GetDeep(GroupTreeNodeGetter nodeGetter)
+		private TreeGraphicValue[] GetValues(EntryNode node)
+		{
+			var list = new List<TreeGraphicValue> ();
+
+			list.Add (new TreeGraphicValue (TypeConverters.DateToString (node.Date), null));
+
+			if (!string.IsNullOrEmpty (node.Debit) ||
+				!string.IsNullOrEmpty (node.Credit))
+			{
+				list.Add (new TreeGraphicValue (node.Debit + " — " + node.Credit, null));
+			}
+			
+			list.Add (new TreeGraphicValue (node.Title, null));
+			list.Add (new TreeGraphicValue (TypeConverters.AmountToString (node.Value), null));
+
+			return list.ToArray ();
+		}
+
+		private int GetDeep(EntriesNodeGetter nodeGetter)
 		{
 			return nodeGetter.Nodes.Max (x => x.Level) + 1;
 		}
