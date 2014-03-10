@@ -68,9 +68,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case BaseType.Accounts:
 						return PageType.Account;
 
-					case BaseType.Entries:
-						return PageType.Entry;
-
 					default:
 						var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
 
@@ -276,9 +273,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case BaseType.Accounts:
 					return ObjectEditor.GetAccountsAvailablePages (hasEvent, type);
 
-				case BaseType.Entries:
-					return ObjectEditor.GetEntriesAvailablePages (hasEvent, type);
-
 				default:
 					return null;
 			}
@@ -352,12 +346,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
 			yield return PageType.Account;
-		}
-
-		private static IEnumerable<PageType> GetEntriesAvailablePages(bool hasEvent, EventType type)
-		{
-			//	Retourne les pages autorisées pour un type d'événement donné.
-			yield return PageType.Entry;
 		}
 
 

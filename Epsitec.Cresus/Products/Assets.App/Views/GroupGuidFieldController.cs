@@ -142,10 +142,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return AccountsLogic.GetSummary (this.Accessor, guid);
 			}
-			else if (this.BaseType == BaseType.Entries)
-			{
-				return EntriesLogic.GetSummary (this.Accessor, guid);
-			}
 			else
 			{
 				throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.BaseType.ToString ()));

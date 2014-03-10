@@ -707,12 +707,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case PageType.Account:
 					return new EditorPageAccount (accessor, baseType, subBaseType, isTimeless: true);
 
-				case PageType.Entry:
-					return new EditorPageEntry (accessor, baseType, subBaseType, isTimeless: true);
-
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported page type {0}", page.ToString ()));
-					return null;
 			}
 		}
 

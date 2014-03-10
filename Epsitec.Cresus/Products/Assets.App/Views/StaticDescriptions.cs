@@ -126,9 +126,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case PageType.Account:
 					return "Définitions du compte";
 
-				case PageType.Entry:
-					return "Définitions de l'écriture";
-
 				default:
 					return null;
 			}
