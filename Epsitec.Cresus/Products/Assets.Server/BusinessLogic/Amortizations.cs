@@ -287,7 +287,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static void InitialiseAmortizedAmount(AmortizedAmount aa, DataObject obj, Timestamp timestamp)
+		public static void InitialiseAmortizedAmount(AmortizedAmount aa, DataObject obj, DataEvent e, Timestamp timestamp)
 		{
 			//	Collecte tous les champs qui définissent comment générer l'écriture.
 			//	Ils peuvent provenir de plusieurs événements différents.
@@ -317,7 +317,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			aa.Date      = timestamp.Date;
 			aa.AssetGuid = obj.Guid;
-
+			aa.EventGuid = e.Guid;
 		}
 
 

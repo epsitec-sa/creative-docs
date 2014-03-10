@@ -23,10 +23,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Crée l'écriture liée à un amortissement ordinaire.
 			System.Diagnostics.Debug.Assert (amount.Date.Year != 1);
-			this.RemoveEntry (amount);
 
-			if (amount.EntryScenario != EntryScenario.None)
+			if (amount.EntryScenario == EntryScenario.None)
 			{
+				this.RemoveEntry (amount);
+			}
+			else
+			{
+				var entry = this.GetEntry (amount.AssetGuid, amount.EventGuid);
+
+				if (entry == null)
+				{
+					entry = this.CreateBaseEntry (amount);
+				}
+
 				var entryAccouts = amount.EntryAccounts;
 
 				var debit  = this.GetDebit  (amount, entryAccouts);
@@ -34,14 +44,37 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var title  = this.GetTitle  (amount);
 				var value  = this.GetValue  (amount);
 
-				this.AddEntry (amount, amount.Date, debit, credit, null, title, value);
+				this.UpdateEntry (entry, amount.Date, debit, credit, null, title, value);
+
+				amount.EntryGuid = entry.Guid;
 			}
 		}
 
 		public void RemoveEntry(AmortizedAmount amount)
 		{
 			//	Supprime l'écriture liée à un AmortizedAmount.
-			amount.Entries.Clear ();
+			var entry = this.GetEntry (amount.AssetGuid, amount.EventGuid);
+			if (entry != null)
+			{
+				this.accessor.RemoveObject (BaseType.Entries, entry);
+			}
+		}
+
+
+		private DataObject GetEntry(Guid assetGuid, Guid eventGuid)
+		{
+			var entries = this.accessor.Mandat.GetData (BaseType.Entries);
+
+			foreach (var entry in entries)
+			{
+				if (assetGuid == ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryAssetGuid) &&
+					eventGuid == ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryEventGuid))
+				{
+					return entry;
+				}
+			}
+
+			return null;
 		}
 
 
@@ -145,14 +178,26 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private Guid AddEntry(AmortizedAmount amount, System.DateTime date, Guid debit, Guid credit, string stamp, string title, decimal value)
+		private DataObject CreateBaseEntry(AmortizedAmount amount)
 		{
 			var entry = new DataObject ();
-			amount.Entries.Add (entry);
+
+			var entries = this.accessor.Mandat.GetData (BaseType.Entries);
+			entries.Add (entry);
 
 			var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
 			var e = new DataEvent (start, EventType.Input);
 			entry.AddEvent (e);
+
+			e.AddProperty (new DataGuidProperty (ObjectField.EntryAssetGuid, amount.AssetGuid));
+			e.AddProperty (new DataGuidProperty (ObjectField.EntryEventGuid, amount.EventGuid));
+
+			return entry;
+		}
+
+		private Guid UpdateEntry(DataObject entry, System.DateTime date, Guid debit, Guid credit, string stamp, string title, decimal value)
+		{
+			var e = entry.GetEvent (0);
 
 			e.AddProperty (new DataDateProperty (ObjectField.EntryDate, date));
 
@@ -166,8 +211,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				e.AddProperty (new DataGuidProperty (ObjectField.EntryCreditAccount, credit));
 			}
 
-			e.AddProperty (new DataStringProperty (ObjectField.EntryStamp, stamp));
-			e.AddProperty (new DataStringProperty (ObjectField.EntryTitle, title));
+			e.AddProperty (new DataStringProperty  (ObjectField.EntryStamp,  stamp));
+			e.AddProperty (new DataStringProperty  (ObjectField.EntryTitle,  title));
 			e.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount, value));
 
 			return entry.Guid;

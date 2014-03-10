@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			var aa = new AmortizedAmount (this);
-			Amortizations.InitialiseAmortizedAmount (aa, obj, timestamp);
+			Amortizations.InitialiseAmortizedAmount (aa, obj, e, timestamp);
 
 			switch (e.Type)
 			{

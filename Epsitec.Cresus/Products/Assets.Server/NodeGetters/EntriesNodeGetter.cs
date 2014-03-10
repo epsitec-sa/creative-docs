@@ -113,39 +113,29 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private List<EntryNode> GetNodes()
 		{
 			var nodes = new List<EntryNode> ();
-			var assets = this.accessor.Mandat.GetData (BaseType.Assets);
+			var entries = this.accessor.Mandat.GetData (BaseType.Entries);
 
-			for (int i=0; i<assets.Count; i++)
+			for (int i=0; i<entries.Count; i++)
 			{
-				var asset = assets[i];
+				var entry = entries[i];
 
-				foreach (var e in asset.Events)
-				{
-					var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+				var assetGuid = ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryAssetGuid);
+				var eventGuid = ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryEventGuid);
 
-					if (p != null)
-					{
-						var aa = p.Value;
+				var name = AssetsLogic.GetSummary (this.accessor, assetGuid);
 
-						foreach (var entry in aa.Entries)
-						{
-							var name = AssetsLogic.GetSummary (this.accessor, asset.Guid);
+				var date   = ObjectProperties.GetObjectPropertyDate    (entry, null, ObjectField.EntryDate);
+				var debit  = ObjectProperties.GetObjectPropertyGuid    (entry, null, ObjectField.EntryDebitAccount);
+				var credit = ObjectProperties.GetObjectPropertyGuid    (entry, null, ObjectField.EntryCreditAccount);
+				var stamp  = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryStamp);
+				var title  = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryTitle);
+				var value  = ObjectProperties.GetObjectPropertyDecimal (entry, null, ObjectField.EntryAmount);
 
-							var date   = ObjectProperties.GetObjectPropertyDate    (entry, null, ObjectField.EntryDate);
-							var debit  = ObjectProperties.GetObjectPropertyGuid    (entry, null, ObjectField.EntryDebitAccount);
-							var credit = ObjectProperties.GetObjectPropertyGuid    (entry, null, ObjectField.EntryCreditAccount);
-							var stamp  = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryStamp);
-							var title  = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryTitle);
-							var value  = ObjectProperties.GetObjectPropertyDecimal (entry, null, ObjectField.EntryAmount);
+				var d = AccountsLogic.GetNumber (this.accessor, debit);
+				var c = AccountsLogic.GetNumber (this.accessor, credit);
 
-							var d = AccountsLogic.GetNumber (this.accessor, debit);
-							var c = AccountsLogic.GetNumber (this.accessor, credit);
-
-							var node = new EntryNode (entry.Guid, asset.Guid, name, date, d, c, stamp, title, value, 1, NodeType.Final);
-							nodes.Add (node);
-						}
-					}
-				}
+				var node = new EntryNode (entry.Guid, assetGuid, name, date, d, c, stamp, title, value, 1, NodeType.Final);
+				nodes.Add (node);
 			}
 
 			return nodes;

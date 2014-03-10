@@ -315,9 +315,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.value.HasValue)
 				{
-					if (this.value.Value.Entries.Any ())
+					if (!this.value.Value.EntryGuid.IsEmpty)
 					{
-						var viewState = EntriesView.GetViewState (this.value.Value.Entries[0].Guid);
+						var viewState = EntriesView.GetViewState (this.value.Value.EntryGuid);
 						this.OnGoto (viewState);
 					}
 				}

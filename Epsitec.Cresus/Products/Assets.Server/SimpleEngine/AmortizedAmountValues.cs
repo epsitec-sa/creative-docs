@@ -13,21 +13,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// </summary>
 	public class AmortizedAmountValues
 	{
-		public AmortizedAmountValues()
-		{
-			this.entries = new List<DataObject> ();
-		}
-
-
-		public List<DataObject> Entries
-		{
-			get
-			{
-				return this.entries;
-			}
-		}
-
-
 		public AmortizationType					AmortizationType;
 		public decimal?							InitialAmount;
 		public decimal?							BaseAmount;
@@ -39,8 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public EntryScenario					EntryScenario;
 		public System.DateTime					Date;
 		public Guid								AssetGuid;
-
-
-		private readonly List<DataObject>		entries;
+		public Guid								EventGuid;
+		public Guid								EntryGuid;
 	}
 }
