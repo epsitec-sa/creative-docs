@@ -59,36 +59,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			var objects = mandat.GetData (BaseType.Assets);
 
-			if (false)
-			{
-				var guid = DummyMandat.Accessor.CreateObject (BaseType.Assets, new System.DateTime (2000, 1, 1), "Blupi", Guid.Empty);
-				var o = DummyMandat.Accessor.GetObject (BaseType.Assets, guid);
-				{
-					var e = o.GetEvent (0);
-					e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+0, DummyGroups.GetGroup (mandat, "Immeubles")));
-					e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+1, DummyGroups.GetGroup (mandat, "Est")));
-					e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+2, DummyGroups.GetGroup (mandat, "Bureaux")));
-					e.AddProperty (new DataStringProperty (DummyMandat.fieldNumber, "1110"));
-					e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1, new ComputedAmount (2500000.0m)));
-					e.AddProperty (new DataStringProperty (DummyMandat.fieldOwner, "Paul"));
-					e.AddProperty (new DataGuidProperty (DummyMandat.fieldPerson1, DummyPersons.GetPerson (mandat, "Arnaud")));
-					e.AddProperty (new DataGuidProperty (DummyMandat.fieldPerson2, DummyPersons.GetPerson (mandat, "Schmidt")));
-					e.AddProperty (new DataGuidProperty (DummyMandat.fieldPerson4, DummyPersons.GetPerson (mandat, "Bonnard")));
-					DummyAmortizations.AddAmortization (mandat, "Bureaux", e);
-					DummyMandat.NewAmortizedAmount (o, e, 1234.0m);
-				}
-
-				{
-					var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2000, 1, 2), EventType.Modification);
-					e.AddProperty (new DataStringProperty (DummyMandat.fieldOwner, "Henri"));
-				}
-
-				{
-					var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2000, 2, 2), EventType.MainValue);
-					DummyMandat.NewAmortizedAmount (o, e, 1234.0m, 1000.0m);
-				}
-			}
-
 			{
 				var guid = DummyMandat.Accessor.CreateObject (BaseType.Assets, new System.DateTime (2000, 1, 1), "Siège social", Guid.Empty);
 				var o = DummyMandat.Accessor.GetObject (BaseType.Assets, guid);
@@ -620,7 +590,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					{
 						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2012, 12, 31), EventType.MainValue);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
-						DummyMandat.NewAmortizedAmount (o, e, 5200.0m, 4600.0m);
+						DummyMandat.NewAmortizedAmount (o, e, 4600.0m);
 					}
 
 					{

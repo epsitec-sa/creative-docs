@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				aa.ProrataDenominator = details.Prorata.Denominator;
 				aa.RoundAmount        = details.Def.Round;
 				aa.ResidualAmount     = details.Def.Residual;
-				aa.EntryScenario      = EntryScenario.Amortization;
+				aa.EntryScenario      = EntryScenario.AmortizationAuto;
 			}
 		}
 

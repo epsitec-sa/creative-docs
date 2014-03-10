@@ -108,9 +108,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
-			this.line0  = this.CreateFrame (parent);
 			this.line1  = this.CreateFrame (parent);
-			this.line12 = this.CreateInter (parent);
+			this.line12 = this.CreateInter (parent, 22);
 			this.line2  = this.CreateFrame (parent);
 			this.line23 = this.CreateInter (parent);
 			this.line3  = this.CreateFrame (parent);
@@ -123,53 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.line67 = this.CreateInter (parent);
 			this.line7  = this.CreateFrame (parent);
 
-			this.CreateRadios (this.line0);
 			this.CreateLines ();
-		}
-
-		private void CreateRadios(Widget parent)
-		{
-			this.radioFix = new RadioButton
-			{
-				Parent         = parent,
-				Text           = "Montant fixe",
-				PreferredWidth = 100,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (100+10, 0, 0, 10),
-			};
-
-			this.radioAmo = new RadioButton
-			{
-				Parent         = parent,
-				Text           = "Amortissement",
-				PreferredWidth = 100,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 0, 0, 10),
-			};
-
-			this.radioFix.Clicked += delegate
-			{
-				if (this.value.HasValue)
-				{
-					var aa = this.value.Value;
-					aa.AmortizationType = AmortizationType.Unknown;
-
-					this.CreateLines ();
-					this.OnValueEdited ();
-				}
-			};
-
-			this.radioAmo.Clicked += delegate
-			{
-				if (this.value.HasValue)
-				{
-					var aa = this.value.Value;
-					aa.AmortizationType = AmortizationType.Linear;
-
-					this.CreateLines ();
-					this.OnValueEdited ();
-				}
-			};
 		}
 
 		private void CreateLines()
@@ -188,64 +141,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.line67.Children.Clear ();
 			this.line7.Children.Clear ();
 
-			if (this.AmortizationType == Server.BusinessLogic.AmortizationType.Linear ||
-				this.AmortizationType == Server.BusinessLogic.AmortizationType.Degressive)
+			this.CreateCombos (this.line1);
+
+			if (this.IsAmortization)
 			{
-				this.CreateTypeLine    (this.line1);
 				this.CreateMaxLine     (this.line2, this.line23);
 				this.CreateRoundLine   (this.line3, this.line34);
 				this.CreateLine1       (this.line4, this.line45);
 				this.CreateLine2       (this.line5, this.line56);
 				this.CreateProrataLine (this.line6, this.line67);
-				this.CreateScenario    (this.line7);
 			}
 			else
 			{
-				this.CreateInitLine (this.line1, this.line23);
-				this.CreateScenario (this.line2);
+				this.CreateInitLine (this.line2, this.line23);
 			}
 
 			this.UpdateUI ();
 		}
 
 
-		private void CreateTypeLine(Widget parent)
+		private void CreateCombos(Widget parent)
 		{
-			this.CreateLabel (parent, 100, "Type d'amort.");
+			this.CreateLabel (parent, 100, "Opération");
 
-			this.typeTextFieldCombo = new TextFieldCombo
+			this.scenarioFieldCombo = new TextFieldCombo
 			{
 				Parent           = parent,
 				IsReadOnly       = true,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = 100,
+				PreferredWidth   = 180,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
 				TabIndex         = ++this.tabIndex,
 			};
 
-			this.typeTextFieldCombo.ComboClosed += delegate
-			{
-				if (this.value.HasValue)
-				{
-					var type = AmortizedAmountController.GetType (this.typeTextFieldCombo);
-					if (this.value.Value.AmortizationType != type)
-					{
-						var aa = this.AmortizedAmount;
-						aa.AmortizationType = type;
-
-						this.CreateLines ();
-						this.OnValueEdited ();
-					}
-				}
-			};
-		}
-
-		private void CreateScenario(Widget parent)
-		{
-			this.CreateLabel (parent, 100, "Ecritures générées");
-
-			this.scenarioFieldCombo = new TextFieldCombo
+			this.typeTextFieldCombo = new TextFieldCombo
 			{
 				Parent           = parent,
 				IsReadOnly       = true,
@@ -266,7 +196,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var aa = this.AmortizedAmount;
 						aa.EntryScenario = scenario;
 
-						this.CreateLines ();
+						this.OnValueEdited ();
+					}
+				}
+			};
+
+			this.typeTextFieldCombo.ComboClosed += delegate
+			{
+				if (this.value.HasValue)
+				{
+					var type = AmortizedAmountController.GetType (this.typeTextFieldCombo);
+					if (this.value.Value.AmortizationType != type)
+					{
+						var aa = this.AmortizedAmount;
+						aa.AmortizationType = type;
+
 						this.OnValueEdited ();
 					}
 				}
@@ -353,13 +297,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private FrameBox CreateInter(Widget parent)
+		private FrameBox CreateInter(Widget parent, int h = 13)
 		{
 			return new FrameBox
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
-				PreferredHeight = 13,
+				PreferredHeight = h,
 				Margins         = new Margins (0, 36, 0, 0),
 			};
 		}
@@ -480,8 +424,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.value.HasValue)
 				{
-					this.radioFix.ActiveState = (this.value.Value.AmortizationType == AmortizationType.Unknown) ? ActiveState.Yes : ActiveState.No;
-					this.radioAmo.ActiveState = (this.value.Value.AmortizationType != AmortizationType.Unknown) ? ActiveState.Yes : ActiveState.No;
+					this.scenarioFieldCombo.Enable = !this.IsAmortization;
+					this.typeTextFieldCombo.Visibility = this.IsAmortization;
 
 					this.FinalAmount        = this.value.Value.FinalAmortizedAmount;
 					this.ResidualAmount     = this.value.Value.ResidualAmount.GetValueOrDefault (0.0m);
@@ -502,9 +446,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					this.radioFix.ActiveState = ActiveState.Yes;
-					this.radioAmo.ActiveState = ActiveState.No;
-
 					this.FinalAmount        = null;
 					this.ResidualAmount     = null;
 
@@ -526,7 +467,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AmortizedAmountController.UpdateType (this.typeTextFieldCombo);
 				AmortizedAmountController.SetType (this.typeTextFieldCombo, this.AmortizationType);
 
-				AmortizedAmountController.UpdateScenario (this.scenarioFieldCombo);
+				this.UpdateScenario (this.scenarioFieldCombo);
 				AmortizedAmountController.SetScenario (this.scenarioFieldCombo, this.EntryScenario);
 
 				this.UpdateBackColor (this.typeTextFieldCombo);
@@ -934,7 +875,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private static void UpdateScenario(TextFieldCombo combo)
+		private void UpdateScenario(TextFieldCombo combo)
 		{
 			if (combo != null)
 			{
@@ -942,6 +883,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				foreach (var e in EnumDictionaries.DictEntryScenarios)
 				{
+					var s = (EntryScenario) e.Key;
+
+					if (this.IsAmortization)
+					{
+						if (s != Server.BusinessLogic.EntryScenario.AmortizationAuto &&
+							s != Server.BusinessLogic.EntryScenario.AmortizationExtra)
+						{
+							continue;
+						}
+					}
+					else
+					{
+						if (s == Server.BusinessLogic.EntryScenario.AmortizationAuto ||
+							s == Server.BusinessLogic.EntryScenario.AmortizationExtra)
+						{
+							continue;
+						}
+					}
+
 					combo.Items.Add (e.Value);
 				}
 			}
@@ -963,6 +923,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		private bool IsAmortization
+		{
+			get
+			{
+				return this.AmortizationType != AmortizationType.Unknown;
+			}
+		}
 
 		private AmortizationType AmortizationType
 		{
@@ -1027,9 +995,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private Color							backgroundColor;
 		private PropertyState					propertyState;
 
-		private RadioButton						radioFix;
-		private RadioButton						radioAmo;
-
 		private TextField						finalAmountTextField;
 		private TextField						residualAmountTextField;
 
@@ -1050,7 +1015,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TextFieldCombo					typeTextFieldCombo;
 		private TextFieldCombo					scenarioFieldCombo;
 
-		private FrameBox						line0;
 		private FrameBox						line1;
 		private FrameBox						line12;
 		private FrameBox						line2;

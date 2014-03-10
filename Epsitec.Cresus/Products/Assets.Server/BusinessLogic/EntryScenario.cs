@@ -10,9 +10,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		None,
 
-		Purchase,		// achat
-		Sale,			// vente
-		Amortization,
+		Purchase,			// achat
+		Sale,				// vente
+		AmortizationAuto,
+		AmortizationExtra,
 		Revaluation,
 	}
 }

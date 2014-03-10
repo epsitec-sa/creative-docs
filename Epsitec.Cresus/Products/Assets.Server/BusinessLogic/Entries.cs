@@ -56,7 +56,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EntryScenario.Sale:
 					return entryAccouts.Account2;  // compte contrepartie de vente
 
-				case EntryScenario.Amortization:
+				case EntryScenario.AmortizationAuto:
+				case EntryScenario.AmortizationExtra:
 					return entryAccouts.Account5;  // compte de charge d'amortissement
 
 				case EntryScenario.Revaluation:
@@ -78,7 +79,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EntryScenario.Sale:
 					return entryAccouts.Account3;  // compte d'immobilisation 
 
-				case EntryScenario.Amortization:
+				case EntryScenario.AmortizationAuto:
+				case EntryScenario.AmortizationExtra:
 					return entryAccouts.Account4;  // compte d'amortissement
 
 				case EntryScenario.Revaluation:
@@ -105,8 +107,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EntryScenario.Sale:
 					return "Vente " + name;
 
-				case EntryScenario.Amortization:
-					return "Amortissement " + name;
+				case EntryScenario.AmortizationAuto:
+					return "Amortissement ordinaire " + name;
+
+				case EntryScenario.AmortizationExtra:
+					return "Amortissement extraordinaire " + name;
 
 				case EntryScenario.Revaluation:
 					return "Réévaluation " + name;
@@ -127,7 +132,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EntryScenario.Sale:
 					return amount.FinalAmortizedAmount.GetValueOrDefault ();
 
-				case EntryScenario.Amortization:
+				case EntryScenario.AmortizationAuto:
+				case EntryScenario.AmortizationExtra:
 					return amount.FinalAmortization;
 
 				case EntryScenario.Revaluation:

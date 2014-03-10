@@ -83,9 +83,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					cell1 = new TreeTableCellTree (level, type, date, cellState);
 				}
 
-				var cell2 = new TreeTableCellString  (node.Debit,              cellState);
-				var cell3 = new TreeTableCellString  (node.Credit,             cellState);
-				var cell4 = new TreeTableCellString  (node.Stamp,              cellState);
+				var cell2 = new TreeTableCellString  (node.Debit,  cellState);
+				var cell3 = new TreeTableCellString  (node.Credit, cellState);
+				var cell4 = new TreeTableCellString  (node.Stamp,  cellState);
 
 				if (string.IsNullOrEmpty (node.Title))
 				{
@@ -100,7 +100,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell6 = new TreeTableCellDecimal (node.Value, cellState);
 
 				int columnRank = 0;
-
 				content.Columns[columnRank++].AddRow (cell1);
 				content.Columns[columnRank++].AddRow (cell2);
 				content.Columns[columnRank++].AddRow (cell3);

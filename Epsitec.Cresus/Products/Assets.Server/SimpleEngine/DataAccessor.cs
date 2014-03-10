@@ -171,10 +171,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					break;
 
 				case EventType.AmortizationAuto:
-				case EventType.AmortizationExtra:
 				case EventType.AmortizationPreview:
-				aa.AmortizationType = AmortizationType.Linear;
-				aa.EntryScenario = EntryScenario.Amortization;
+					aa.AmortizationType = AmortizationType.Linear;
+					aa.EntryScenario = EntryScenario.AmortizationAuto;
+					break;
+
+				case EventType.AmortizationExtra:
+					aa.AmortizationType = AmortizationType.Linear;
+					aa.EntryScenario = EntryScenario.AmortizationExtra;
 					break;
 
 				case EventType.Output:

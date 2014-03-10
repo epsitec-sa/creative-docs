@@ -227,11 +227,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var dict = new Dictionary<int, string> ();
 
-				dict.Add ((int) EntryScenario.None,         "Aucune");
-				dict.Add ((int) EntryScenario.Purchase,     "Achat");
-				dict.Add ((int) EntryScenario.Sale,         "Vente");
-				dict.Add ((int) EntryScenario.Amortization, "Amortissement");
-				dict.Add ((int) EntryScenario.Revaluation,  "Réévaluation");
+				dict.Add ((int) EntryScenario.None,              "Aucune");
+				dict.Add ((int) EntryScenario.Purchase,          "Achat");
+				dict.Add ((int) EntryScenario.Sale,              "Vente");
+				dict.Add ((int) EntryScenario.AmortizationAuto,  "Amortissement ordinaire");
+				dict.Add ((int) EntryScenario.AmortizationExtra, "Amortissement extraordinaire");
+				dict.Add ((int) EntryScenario.Revaluation,       "Réévaluation");
 
 				return dict;
 			}
