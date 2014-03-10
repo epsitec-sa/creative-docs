@@ -111,6 +111,10 @@
     <None Include="ServerConfigTest\nginx-server.conf" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Aider.Processors\Aider.Processors.csproj">
+      <Project>{8de96414-e7b3-42b6-831a-2c92e924e121}</Project>
+      <Name>Aider.Processors</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Aider\Aider.csproj">
       <Project>{0F0E9452-EFE5-4007-B634-B0198E13E3DA}</Project>
       <Name>Aider</Name>

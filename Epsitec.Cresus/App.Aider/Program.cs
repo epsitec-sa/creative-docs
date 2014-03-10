@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Aider
@@ -11,6 +11,8 @@ namespace Epsitec.Aider
 		[System.STAThread]
 		static void Main(string[] args)
 		{
+			Epsitec.Aider.Processors.Processor.Setup ();
+
 			AiderProgram.Main (args);
 		}
 	}
