@@ -1,4 +1,4 @@
-//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -37,7 +37,15 @@ namespace Epsitec.Common.Support
 		{
 			return InterfaceImplementationResolver<TInterface>.CreateInstances (new System.Type[] { typeof (T) }, new object[] { constructorArgument });
 		}
-		
+
+		public static IEnumerable<TInterface> CreateInstances<T1, T2>(T1 constructorArgument1, T2 constructorArgument2)
+		{
+			var types = new System.Type[] { typeof (T1), typeof (T2) };
+			var args  = new object[] { constructorArgument1, constructorArgument2 };
+			
+			return InterfaceImplementationResolver<TInterface>.CreateInstances (types, args);
+		}
+
 		/// <summary>
 		/// Creates one instance for every class which implements <typeparamref name="TInterface"/>.
 		/// </summary>

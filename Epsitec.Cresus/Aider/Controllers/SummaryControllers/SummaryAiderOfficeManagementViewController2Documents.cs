@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Common.Support;
@@ -36,10 +36,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 								.Template ()
 									.Title ("Documents")
 									.Text (x => x.ReportName
-												+ "<a href='/proxy/reporting/"
+												+ "<a href='/proxy/reporting/letter/"  // TODO: adapter les 2 arguments ici !!!
 												+ Res.Commands.Base.PrintOfficeReports.CommandId + "/" 
-												+ this.DataContext.GetPersistedId (x).Substring(3).Replace(':','-')
-												+"/test' target='_blank'>Consulter</a>")									
+												+ this.DataContext.GetPersistedId (x).Substring(3).Replace(':','-') + "' " +
+												+ "target='_blank'>Consulter</a>")									
 								.End ();*/
 			
 			
