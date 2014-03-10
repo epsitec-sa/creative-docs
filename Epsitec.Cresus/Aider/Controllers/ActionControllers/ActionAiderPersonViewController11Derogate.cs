@@ -56,6 +56,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
+			System.Diagnostics.Debug.WriteLine ("Derogating from " + parishGroup.Name);
+
 			var derogationInGroup = destParish.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn);		
 			var derogationOutGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut);
 
@@ -137,6 +139,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			
 			//!Trigg business rules!
 			person.ParishGroup = destParish;
+
+			System.Diagnostics.Debug.WriteLine ("Derogated to " + destParish.Name);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
@@ -146,6 +150,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Field<AiderGroupEntity> ()
 					.Title ("Paroisse")
 					.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
+					.InitialValue (this.Entity.GetGeoParishGroup (this.BusinessContext) ?? this.Entity.ParishGroup)
 				.End ()
 				.Field<Date> ()
 					.Title ("Date de début de la dérogation")
