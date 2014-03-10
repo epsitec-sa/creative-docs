@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -45,6 +46,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					if (this.ignoreChanges.IsZero)
 					{
 						this.UpdateAfterListChanged ();
+					}
+				};
+
+				this.listController.RowDoubleClicked += delegate
+				{
+					if (this.ignoreChanges.IsZero)
+					{
+						this.UpdateAfterListChanged ();
+						this.GotoAsset ();
 					}
 				};
 			}
@@ -104,6 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ViewType     = ViewType.Entries,
 				SelectedGuid = entryGuid,
 				ShowGraphic  = false,
+				SortingField = ObjectField.EntryTitle,
 			};
 		}
 
@@ -139,6 +150,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.selectedGuid = this.listController.SelectedGuid;
 
 			this.UpdateUI ();
+		}
+
+		private void GotoAsset()
+		{
+			var entry = this.accessor.GetObject (BaseType.Entries, this.selectedGuid);
+			if (entry != null)
+			{
+				var assetGuid = ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryAssetGuid);
+				var eventGuid = ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryEventGuid);
+
+				var asset = this.accessor.GetObject (BaseType.Assets, assetGuid);
+				if (asset != null)
+				{
+					var e = asset.GetEvent (eventGuid);
+					if (e != null)
+					{
+						var viewState = AssetsView.GetViewState (assetGuid, e.Timestamp);
+						this.OnGoto (viewState);
+					}
+				}
+			}
 		}
 
 

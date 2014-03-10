@@ -357,6 +357,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public static AbstractViewState GetViewState(Guid assetGuid, Timestamp timestamp)
+		{
+			//	Retourne un ViewState permettant de voir une personne donnée.
+			return new AssetsViewState
+			{
+				ViewType          = ViewType.Assets,
+				PageType          = PageType.AmortizationValue,  // pour éditer directement la valeur comptable
+				ViewMode          = ViewMode.Single,
+				SelectedGuid      = assetGuid,
+				SelectedTimestamp = timestamp,
+			};
+		}
+
+
 		public override AbstractViewState ViewState
 		{
 			get
