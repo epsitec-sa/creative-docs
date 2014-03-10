@@ -39,14 +39,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var guid  = System.Guid.NewGuid ();
 				var array = guid.ToByteArray ();
 
-				if ((array[0] != 0) &&
-					(array[1] != 0) &&
-					(array[2] != 0) &&
-					(array[3] != 0) &&
-					(array[4] != 0) &&
-					(array[5] != 0) &&
-					(array[6] != 0) &&
-					(array[7] != 0))
+				if (array[0] != 0 &&
+					array[1] != 0 &&
+					array[2] != 0 &&
+					array[3] != 0 &&
+					array[4] != 0 &&
+					array[5] != 0 &&
+					array[6] != 0 &&
+					array[7] != 0)
 				{
 					return new Guid (guid);
 				}

@@ -26,14 +26,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static bool operator ==(GuidRatio a, GuidRatio b)
 		{
-			return (a.Guid  == b.Guid)
-				&& (a.Ratio == b.Ratio);
+			return a.Guid  == b.Guid
+				&& a.Ratio == b.Ratio;
 		}
 
 		public static bool operator !=(GuidRatio a, GuidRatio b)
 		{
-			return (a.Guid  != b.Guid)
-				|| (a.Ratio != b.Ratio);
+			return a.Guid  != b.Guid
+				|| a.Ratio != b.Ratio;
 		}
 
 

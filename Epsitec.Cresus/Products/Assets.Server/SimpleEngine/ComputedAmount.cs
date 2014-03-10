@@ -235,24 +235,24 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static bool operator ==(ComputedAmount a, ComputedAmount b)
 		{
-			return (a.InitialAmount   == b.InitialAmount)
-				&& (a.ArgumentAmount  == b.ArgumentAmount)
-				&& (a.FinalAmount     == b.FinalAmount)
-				&& (a.Computed        == b.Computed)
-				&& (a.Subtract        == b.Subtract)
-				&& (a.Rate            == b.Rate)
-				&& (a.ArgumentDefined == b.ArgumentDefined);
+			return a.InitialAmount   == b.InitialAmount
+				&& a.ArgumentAmount  == b.ArgumentAmount
+				&& a.FinalAmount     == b.FinalAmount
+				&& a.Computed        == b.Computed
+				&& a.Subtract        == b.Subtract
+				&& a.Rate            == b.Rate
+				&& a.ArgumentDefined == b.ArgumentDefined;
 		}
 
 		public static bool operator !=(ComputedAmount a, ComputedAmount b)
 		{
-			return (a.InitialAmount   != b.InitialAmount)
-				|| (a.ArgumentAmount  != b.ArgumentAmount)
-				|| (a.FinalAmount     != b.FinalAmount)
-				|| (a.Computed        != b.Computed)
-				|| (a.Subtract        != b.Subtract)
-				|| (a.Rate            != b.Rate)
-				|| (a.ArgumentDefined != b.ArgumentDefined);
+			return a.InitialAmount   != b.InitialAmount
+				|| a.ArgumentAmount  != b.ArgumentAmount
+				|| a.FinalAmount     != b.FinalAmount
+				|| a.Computed        != b.Computed
+				|| a.Subtract        != b.Subtract
+				|| a.Rate            != b.Rate
+				|| a.ArgumentDefined != b.ArgumentDefined;
 		}
 
 

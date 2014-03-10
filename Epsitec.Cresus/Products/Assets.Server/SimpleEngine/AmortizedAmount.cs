@@ -331,26 +331,26 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static bool operator ==(AmortizedAmount a, AmortizedAmount b)
 		{
-			return (a.InitialAmount      == b.InitialAmount)
-				&& (a.BaseAmount         == b.BaseAmount)
-				&& (a.EffectiveRate      == b.EffectiveRate)
-				&& (a.ProrataNumerator   == b.ProrataNumerator)
-				&& (a.ProrataDenominator == b.ProrataDenominator)
-				&& (a.RoundAmount        == b.RoundAmount)
-				&& (a.ResidualAmount     == b.ResidualAmount)
-				&& (a.AmortizationType   == b.AmortizationType);
+			return a.InitialAmount      == b.InitialAmount
+				&& a.BaseAmount         == b.BaseAmount
+				&& a.EffectiveRate      == b.EffectiveRate
+				&& a.ProrataNumerator   == b.ProrataNumerator
+				&& a.ProrataDenominator == b.ProrataDenominator
+				&& a.RoundAmount        == b.RoundAmount
+				&& a.ResidualAmount     == b.ResidualAmount
+				&& a.AmortizationType   == b.AmortizationType;
 		}
 
 		public static bool operator !=(AmortizedAmount a, AmortizedAmount b)
 		{
-			return (a.InitialAmount      != b.InitialAmount)
-				|| (a.BaseAmount         != b.BaseAmount)
-				|| (a.EffectiveRate      != b.EffectiveRate)
-				|| (a.ProrataNumerator   != b.ProrataNumerator)
-				|| (a.ProrataDenominator != b.ProrataDenominator)
-				|| (a.RoundAmount        != b.RoundAmount)
-				|| (a.ResidualAmount     != b.ResidualAmount)
-				|| (a.AmortizationType   != b.AmortizationType);
+			return a.InitialAmount      != b.InitialAmount
+				|| a.BaseAmount         != b.BaseAmount
+				|| a.EffectiveRate      != b.EffectiveRate
+				|| a.ProrataNumerator   != b.ProrataNumerator
+				|| a.ProrataDenominator != b.ProrataDenominator
+				|| a.RoundAmount        != b.RoundAmount
+				|| a.ResidualAmount     != b.ResidualAmount
+				|| a.AmortizationType   != b.AmortizationType;
 		}
 
 

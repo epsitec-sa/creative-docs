@@ -31,18 +31,18 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		public static bool operator ==(SortingInstructions a, SortingInstructions b)
 		{
-			return (a.PrimaryField   == b.PrimaryField)
-				&& (a.PrimaryType    == b.PrimaryType)
-				&& (a.SecondaryField == b.SecondaryField)
-				&& (a.SecondaryType  == b.SecondaryType);
+			return a.PrimaryField   == b.PrimaryField
+				&& a.PrimaryType    == b.PrimaryType
+				&& a.SecondaryField == b.SecondaryField
+				&& a.SecondaryType  == b.SecondaryType;
 		}
 
 		public static bool operator !=(SortingInstructions a, SortingInstructions b)
 		{
-			return (a.PrimaryField   != b.PrimaryField)
-				|| (a.PrimaryType    != b.PrimaryType)
-				|| (a.SecondaryField != b.SecondaryField)
-				|| (a.SecondaryType  != b.SecondaryType);
+			return a.PrimaryField   != b.PrimaryField
+				|| a.PrimaryType    != b.PrimaryType
+				|| a.SecondaryField != b.SecondaryField
+				|| a.SecondaryType  != b.SecondaryType;
 		}
 
 	
