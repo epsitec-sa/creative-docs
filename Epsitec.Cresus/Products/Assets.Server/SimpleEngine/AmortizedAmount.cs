@@ -213,15 +213,22 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	valeur résiduelle.
 			get
 			{
-				var rounded = this.RoundedAmortizedAmount;
-
-				if (rounded.HasValue && this.ResidualAmount.HasValue)
+				if (this.AmortizationType == AmortizationType.Unknown)
 				{
-					return System.Math.Max (rounded.Value, this.ResidualAmount.Value);
+					return this.InitialAmount;
 				}
 				else
 				{
-					return rounded;
+					var rounded = this.RoundedAmortizedAmount;
+
+					if (rounded.HasValue && this.ResidualAmount.HasValue)
+					{
+						return System.Math.Max (rounded.Value, this.ResidualAmount.Value);
+					}
+					else
+					{
+						return rounded;
+					}
 				}
 			}
 		}
@@ -231,15 +238,22 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	Calcule la valeur amortie arrondie, sans tenir compte de la valeur résiduelle.
 			get
 			{
-				var brut = this.BrutAmortizedAmount;
-
-				if (brut.HasValue && this.RoundAmount.HasValue)
+				if (this.AmortizationType == AmortizationType.Unknown)
 				{
-					return AmortizedAmount.Round (brut.Value, this.RoundAmount.Value);
+					return this.InitialAmount;
 				}
 				else
 				{
-					return brut;
+					var brut = this.BrutAmortizedAmount;
+
+					if (brut.HasValue && this.RoundAmount.HasValue)
+					{
+						return AmortizedAmount.Round (brut.Value, this.RoundAmount.Value);
+					}
+					else
+					{
+						return brut;
+					}
 				}
 			}
 		}

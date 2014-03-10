@@ -41,6 +41,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public SortingInstructions				SortingInstructions
+		{
+			get
+			{
+				return this.sortingInstructions;
+			}
+			set
+			{
+				if (this.sortingInstructions != value)
+				{
+					this.sortingInstructions = value;
+					this.UpdateData ();
+				}
+			}
+		}
+
 
 		public void CreateUI(Widget parent)
 		{

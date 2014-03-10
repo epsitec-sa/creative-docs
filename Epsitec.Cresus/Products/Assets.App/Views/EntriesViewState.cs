@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public Guid								SelectedGuid;
 		public bool								ShowGraphic;
+		public ObjectField						SortingField;
 
 
 		#region IEquatable<AbstractViewState> Members
@@ -22,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return false;
 			}
 
-			var o = other as GroupsViewState;
+			var o = other as EntriesViewState;
 
 			if (o == null)
 			{
@@ -30,8 +31,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			return this.ViewType     == o.ViewType
-				&& this.PageType     == o.PageType
-				&& this.SelectedGuid == o.SelectedGuid;
+				&& this.SelectedGuid == o.SelectedGuid
+				&& this.ShowGraphic  == o.ShowGraphic
+				&& this.SortingField == o.SortingField;
 		}
 		#endregion
 

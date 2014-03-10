@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -116,6 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ViewType     = ViewType.Entries,
 					SelectedGuid = this.selectedGuid,
 					ShowGraphic  = this.listController.ShowGraphic,
+					SortingField = this.listController.SortingInstructions.PrimaryField,
 				};
 			}
 			set
@@ -125,6 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.selectedGuid = viewState.SelectedGuid;
 				this.listController.ShowGraphic = viewState.ShowGraphic;
+				this.listController.SortingInstructions = new SortingInstructions (viewState.SortingField, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 
 				this.UpdateUI ();
 			}
