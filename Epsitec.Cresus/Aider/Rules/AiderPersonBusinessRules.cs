@@ -282,12 +282,12 @@ namespace Epsitec.Aider.Rules
 			//Yes, existing derogation in place:
 			//Remove old derogation in
 			var oldDerogationInGroup = oldParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn).First ();
-			oldDerogationInGroup.RemoveParticipations (context, oldDerogationInGroup.FindParticipations (context).Where (p => p.Contact == person.MainContact));
+			oldDerogationInGroup.RemoveParticipations (context, oldDerogationInGroup.FindParticipations (context, person.MainContact));
 
 			//Remove old derogation out
 			var geoParishGroup = person.GetGeoParishGroup (context);
 			var oldDerogationOutGroup = geoParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ();
-			oldDerogationOutGroup.RemoveParticipations (context, oldDerogationOutGroup.FindParticipations (context).Where (p => p.Contact == person.MainContact));
+			oldDerogationOutGroup.RemoveParticipations (context, oldDerogationOutGroup.FindParticipations (context, person.MainContact));
 
 			//Warn old derogated parish
 			AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, Enumerations.WarningType.ParishDeparture,

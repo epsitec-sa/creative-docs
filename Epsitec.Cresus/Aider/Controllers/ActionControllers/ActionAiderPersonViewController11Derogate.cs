@@ -59,8 +59,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var derogationInGroup = destParish.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn);		
 			var derogationOutGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut);
 
-			var contactAsList = new List<AiderContactEntity> ();
-			contactAsList.Add (person.MainContact);
+			var participationData = new List<ParticipationData> ();
+			participationData.Add (new ParticipationData (person.MainContact));
 
 			//Check if a previous derogation is in place ?
 			if (person.HasDerogation)
@@ -68,7 +68,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				//Yes, existing derogation in place:
 				//Remove old derogation in
 				var oldDerogationInGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn);
-				oldDerogationInGroup.RemoveParticipations (this.BusinessContext, oldDerogationInGroup.FindParticipations (this.BusinessContext).Where (p => p.Contact == person.MainContact));
+				oldDerogationInGroup.RemoveParticipations (this.BusinessContext, oldDerogationInGroup.FindParticipations (this.BusinessContext, person.MainContact));
 
 				//Check for a "return to home"
 				if (person.GeoParishGroupPathCache == destParish.Path)
@@ -78,7 +78,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 					//Remove old derogation out
 					var oldDerogationOutGroup = destParish.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut);
-					oldDerogationOutGroup.RemoveParticipations (this.BusinessContext, oldDerogationOutGroup.FindParticipations (this.BusinessContext).Where (p => p.Contact == person.MainContact));
+					oldDerogationOutGroup.RemoveParticipations (this.BusinessContext, oldDerogationOutGroup.FindParticipations (this.BusinessContext, person.MainContact));
 
 					//Warn old derogated parish
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache,
@@ -90,7 +90,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				else
 				{
 					//Add derogation in participation
-					derogationInGroup.AddParticipations (this.BusinessContext, contactAsList.Select (c => new ParticipationData (c)), date, new FormattedText ("Dérogation entrante"));
+					derogationInGroup.AddParticipations (this.BusinessContext, participationData, date, new FormattedText ("Dérogation entrante"));
 
 					//Warn old derogated parish
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache,
@@ -114,13 +114,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				person.GeoParishGroupPathCache = person.ParishGroupPathCache;
 
 				//Add derogation out participation
-				derogationOutGroup.AddParticipations (this.BusinessContext, contactAsList.Select (c => new ParticipationData (c)), date, new FormattedText ("Dérogation sortante"));
+				derogationOutGroup.AddParticipations (this.BusinessContext, participationData, date, new FormattedText ("Dérogation sortante"));
 				//Warn GeoParish
 				AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache,
 					Enumerations.WarningType.ParishDeparture, "Personne dérogée vers la\n" + destParish.Name + ".");
 
 				//Add derogation in participation
-				derogationInGroup.AddParticipations (this.BusinessContext, contactAsList.Select (c => new ParticipationData (c)), date, new FormattedText ("Dérogation entrante"));
+				derogationInGroup.AddParticipations (this.BusinessContext, participationData, date, new FormattedText ("Dérogation entrante"));
 				
 				//Warn NewParish
 				AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path,
@@ -130,10 +130,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			//Remove parish participations
-			parishGroup.RemoveParticipations (this.BusinessContext, parishGroup.FindParticipations (this.BusinessContext).Where (p => p.Contact == person.MainContact));
+			parishGroup.RemoveParticipations (this.BusinessContext, parishGroup.FindParticipations (this.BusinessContext, person.MainContact));
 
 			//Add participation to the destination parish
-			destParish.AddParticipations(this.BusinessContext,contactAsList.Select( c => new ParticipationData(c)),date,null);
+			destParish.AddParticipations (this.BusinessContext, participationData, date, null);
 			
 			//!Trigg business rules!
 			person.ParishGroup = destParish;
