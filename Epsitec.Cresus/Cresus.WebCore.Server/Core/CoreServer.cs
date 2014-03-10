@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.IO;
@@ -11,7 +11,7 @@ using System.Globalization;
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
 	/// <summary>
-	/// This class is used to initialize all objects that will be used globally accross the server
+	/// This class is used to initialize all objects that will be used globally across the server
 	/// to access data, and to hold references on them, so that they can be used by the Nancy
 	/// modules.
 	/// </summary>
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		internal DatabaseManager				DatabaseManager
+		public DatabaseManager					DatabaseManager
 		{
 			get
 			{
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		internal Caches							Caches
+		public Caches							Caches
 		{
 			get
 			{

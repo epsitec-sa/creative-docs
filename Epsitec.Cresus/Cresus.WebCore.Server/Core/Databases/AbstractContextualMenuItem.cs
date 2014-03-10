@@ -1,20 +1,19 @@
-﻿using Epsitec.Common.Types;
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
-
-
 	/// <summary>
 	/// The AbstractContexttualMenuItem is a class that represents an entry in the contextual menu
 	/// that must be shown when the user clicks on an entity within a database.
 	/// </summary>
-	internal abstract class AbstractContextualMenuItem
+	public abstract class AbstractContextualMenuItem
 	{
-
-
 		protected AbstractContextualMenuItem(FormattedText title)
 		{
 			this.title = title;
@@ -34,10 +33,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		private readonly FormattedText title;
-
-
+		private readonly FormattedText			title;
 	}
-
-
 }

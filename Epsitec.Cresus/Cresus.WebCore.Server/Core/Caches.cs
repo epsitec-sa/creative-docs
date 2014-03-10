@@ -1,3 +1,6 @@
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator;
@@ -7,8 +10,6 @@ using System;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
-
-
 	/// <summary>
 	/// The Caches class contains all the different caches that are used to access to global data
 	/// throughout the server.
@@ -20,7 +21,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 	/// Note that all these caches are fully thread safe, and can therefore be accessed
 	/// concurrently by several threads.
 	/// </summary>
-	internal sealed class Caches : IDisposable
+	public sealed class Caches : IDisposable
 	{
 
 
@@ -93,19 +94,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		private readonly PropertyAccessorCache propertyAccessorCache;
-
-
-		private readonly AutoCreatorCache autoCreatorCache;
-
-
-		private readonly IdCache<string> columnIdCache;
-
-
-		private readonly IdCache<Type> typeCache;
-
-
+		private readonly PropertyAccessorCache	propertyAccessorCache;
+		private readonly AutoCreatorCache		autoCreatorCache;
+		private readonly IdCache<string>		columnIdCache;
+		private readonly IdCache<Type>			typeCache;
 	}
-
-
 }

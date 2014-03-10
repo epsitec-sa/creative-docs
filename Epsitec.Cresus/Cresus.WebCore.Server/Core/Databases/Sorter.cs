@@ -1,22 +1,18 @@
-﻿using Epsitec.Cresus.DataLayer.Expressions;
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
-using System;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 using System.Collections.Generic;
 
-
 namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
-
-
 	/// <summary>
 	/// A sorter represents a sort clause that can be used to sort a Database, according to the
 	/// values of a column in a give direction.
 	/// </summary>
-	internal sealed class Sorter
+	public sealed class Sorter
 	{
-
-
 		public Sorter(Column column, SortOrder sortOrder)
 		{
 			this.column = column;
@@ -24,7 +20,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public Column Column
+		public Column							Column
 		{
 			get
 			{
@@ -32,8 +28,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			}
 		}
 
-
-		public SortOrder SortOrder
+		public SortOrder						SortOrder
 		{
 			get
 			{
@@ -63,18 +58,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 					return "DESC";
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
 
-		private readonly Column column;
-
-
-		private readonly SortOrder sortOrder;
-
-
+		private readonly Column					column;
+		private readonly SortOrder				sortOrder;
 	}
-
-
 }

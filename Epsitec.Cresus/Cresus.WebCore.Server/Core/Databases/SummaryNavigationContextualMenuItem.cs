@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support;
+﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Metadata;
@@ -8,23 +11,18 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
 
 using System.Collections.Generic;
-
 using System.Linq.Expressions;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
-
-
 	/// <summary>
 	/// The SummaryNavigationContextualMenuItem class represents an entry within the contextual
 	/// menu that should be shown to the user when it clicks on an entity, that lets him navigate
 	/// to another entity (possibly in another database).
 	/// </summary>
-	internal sealed class SummaryNavigationContextualMenuItem : AbstractContextualMenuItem
+	public sealed class SummaryNavigationContextualMenuItem : AbstractContextualMenuItem
 	{
-
-
 		public SummaryNavigationContextualMenuItem(DataSetMenuItem menuItem)
 			: base (menuItem.Title)
 		{
@@ -32,7 +30,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public Druid DataSetId
+		public Druid							DataSetId
 		{
 			get
 			{
@@ -40,8 +38,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			}
 		}
 
-
-		public string ColumnName
+		public string							ColumnName
 		{
 			get
 			{
@@ -49,8 +46,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			}
 		}
 
-
-		public LambdaExpression LambdaExpression
+		public LambdaExpression					LambdaExpression
 		{
 			get
 			{
@@ -91,10 +87,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		private readonly DataSetMenuItem menuItem;
-
-
+		private readonly DataSetMenuItem		menuItem;
 	}
-
-
 }

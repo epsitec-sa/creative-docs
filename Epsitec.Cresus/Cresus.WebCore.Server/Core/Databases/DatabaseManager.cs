@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support;
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Business.UserManagement;
@@ -6,26 +9,19 @@ using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Expressions;
 
-using System;
-
 using System.Collections.Generic;
-
 using System.Linq;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
-
-
 	/// <summary>
 	/// The DatabaseManager class is used to instantiate Database instances based on the
 	/// DataSetMetadata and EntityTableMetadata definitions.
 	/// </summary>
-	internal sealed class DatabaseManager
+	public sealed class DatabaseManager
 	{
-
-
-		public DatabaseManager()
+		internal DatabaseManager()
 		{
 			this.dataStore = DataStoreMetadata.Current;
 		}
@@ -169,7 +165,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 					return SortOrder.Descending;
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -204,30 +200,26 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			{
 				var id = commandId.ToCompactString ();
 
-				throw new Exception ("The database '" + id + "' does not exist.");
+				throw new System.Exception ("The database '" + id + "' does not exist.");
 			}
 
 			return dataSet;
 		}
 
 
-		public Druid GetDatabaseCommandId(Type entityType)
+		public Druid GetDatabaseCommandId(System.Type entityType)
 		{
 			var dataSet = this.dataStore.FindDefaultDataSet (entityType);
 
 			if (dataSet == null)
 			{
-				throw new Exception ("The database '" + entityType.FullName + "' does not exist.");
+				throw new System.Exception ("The database '" + entityType.FullName + "' does not exist.");
 			}
 
 			return dataSet.Command.Caption.Id;
 		}
 
 
-		private readonly DataStoreMetadata dataStore;
-
-
+		private readonly DataStoreMetadata		dataStore;
 	}
-
-
 }

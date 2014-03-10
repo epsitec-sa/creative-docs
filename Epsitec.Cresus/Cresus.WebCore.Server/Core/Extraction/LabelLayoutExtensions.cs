@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -6,14 +6,13 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Pdf.Engine;
 using Epsitec.Common.Pdf.Labels;
 
-
 namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
 	/// <summary>
 	/// This class contains methods used to obtain objects used by the PDF export engine to export
 	/// labels to a PDF file.
 	/// </summary>
-	internal static class LabelLayoutExtensions
+	public static class LabelLayoutExtensions
 	{
 		public static LabelPageLayout GetLabelPageLayout(this LabelLayout layout)
 		{

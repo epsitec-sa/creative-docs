@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
@@ -8,28 +11,20 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.Core.IO;
 
-using System;
-
 using System.Collections.Generic;
-
 using System.Linq;
-
 using System.Reflection;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
-
-
 	/// <summary>
 	/// The Database class is the representation of a DataSet that is returned to the javascript
 	/// client. In addition, it contains methods that are used to manipulate them.
 	/// </summary>
-	internal sealed class Database
+	public sealed class Database
 	{
-
-
-		public Database
+		internal Database
 		(
 			DataSetMetadata dataSetMetadata,
 			IEnumerable<Column> columns,
@@ -133,7 +128,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			}
 		}
 
-		public Type EntityType
+		public System.Type EntityType
 		{
 			get
 			{
@@ -258,34 +253,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		private readonly DataSetMetadata dataSetMetadata;
-
-
-		private readonly List<Column> columns;
-
-
-		private readonly List<Sorter> sorters;
-
-
+		private readonly DataSetMetadata		dataSetMetadata;
+		private readonly List<Column>			columns;
+		private readonly List<Sorter>			sorters;
 		private readonly List<AbstractContextualMenuItem> menuItems;
-
-
-		private readonly List<LabelExportItem> labelExportItems;
-
-
-		private readonly bool enableCreate;
-
-
-		private readonly bool enableDelete;
-
-
-		private readonly int? creationViewId;
-
-
-		private readonly int? deletionViewId;
-
-
+		private readonly List<LabelExportItem>	labelExportItems;
+		private readonly bool					enableCreate;
+		private readonly bool					enableDelete;
+		private readonly int?					creationViewId;
+		private readonly int?					deletionViewId;
 	}
-
-
 }

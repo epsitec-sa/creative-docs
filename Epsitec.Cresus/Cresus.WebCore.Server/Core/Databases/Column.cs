@@ -1,3 +1,6 @@
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Metadata;
@@ -7,25 +10,18 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
-using System;
-
 using System.Collections.Generic;
-
 using System.Linq.Expressions;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
-
-
 	/// <summary>
 	/// The Column class is used to represent a column within a Database. It contains method used
 	/// to serialze it to the javascript client and to obtain entity values.
 	/// </summary>
-	internal sealed class Column
+	public sealed class Column
 	{
-
-
 		public Column(EntityColumnMetadata metadata)
 		{
 			this.metadata = metadata;
@@ -201,10 +197,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 				case FieldType.EntityReference:
 				case FieldType.EntityCollection:
-					throw new NotSupportedException ();
+					throw new System.NotSupportedException ();
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -227,10 +223,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		private readonly EntityColumnMetadata metadata;
-
-
+		private readonly EntityColumnMetadata	metadata;
 	}
-
-
 }

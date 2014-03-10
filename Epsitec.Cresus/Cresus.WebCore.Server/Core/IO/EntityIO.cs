@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 	/// client references to entities. This is not used to obtain entity data that will populate
 	/// entity lists, summary tiles or edition tiles.
 	/// </summary>
-	internal static class EntityIO
+	public static class EntityIO
 	{
 
 
