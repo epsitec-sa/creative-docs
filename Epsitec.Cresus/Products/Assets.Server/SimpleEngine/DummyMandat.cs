@@ -90,6 +90,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							DummyMandat.NewAmortizedAmount (o, e, a1, a2);
 						}
 					}
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -123,6 +125,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							DummyMandat.NewAmortizedAmount (o, e, a1, a2);
 						}
 					}
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -142,6 +146,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataGuidProperty (DummyMandat.fieldPerson5, DummyPersons.GetPerson (mandat, "Klein")));
 					DummyAmortizations.AddAmortization (mandat, "Bureaux", e);
 					DummyMandat.NewAmortizedAmount (o, e, 2000000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -159,6 +165,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty (DummyMandat.fieldOwner, "Ernest"));
 					DummyAmortizations.AddAmortization (mandat, "Usines", e);
 					DummyMandat.NewAmortizedAmount (o, e, 10400000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -177,6 +185,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataGuidProperty (DummyMandat.fieldPerson1, DummyPersons.GetPerson (mandat, "Arnaud")));
 					DummyAmortizations.AddAmortization (mandat, "Usines", e);
 					DummyMandat.NewAmortizedAmount (o, e, 8000000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -206,6 +216,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2011, 1, 10), EventType.Modification);
 						e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+0, DummyGroups.GetGroup (mandat, "Suisses")));
 					}
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -226,6 +238,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataGuidProperty (DummyMandat.fieldPerson4, DummyPersons.GetPerson (mandat, "André")));
 					DummyAmortizations.AddAmortization (mandat, "Usines", e);
 					DummyMandat.NewAmortizedAmount (o, e, 5320000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -257,6 +271,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+0, DummyGroups.GetGroup (mandat, "Entrepôts", 0.65m)));
 						e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+1, DummyGroups.GetGroup (mandat, "Suisses", 0.35m)));
 					}
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -276,6 +292,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataGuidProperty (DummyMandat.fieldPerson3, DummyPersons.GetPerson (mandat, "Frutiger")));
 					DummyAmortizations.AddAmortization (mandat, "Camions", e);
 					DummyMandat.NewAmortizedAmount (o, e, 150000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -295,6 +313,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataGuidProperty (DummyMandat.fieldPerson3, DummyPersons.GetPerson (mandat, "Frutiger")));
 					DummyAmortizations.AddAmortization (mandat, "Camions", e);
 					DummyMandat.NewAmortizedAmount (o, e, 180000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -321,6 +341,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 50000.0m);
 					}
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -348,6 +370,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 95000.0m);
 					}
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -365,6 +389,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty (DummyMandat.fieldSerial, "T40-72-300-PW3B"));
 					DummyAmortizations.AddAmortization (mandat, "Camions", e);
 					DummyMandat.NewAmortizedAmount (o, e, 195000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -383,6 +409,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty (DummyMandat.fieldSerial, "456-321-132-898908"));
 					DummyAmortizations.AddAmortization (mandat, "Camionnettes", e);
 					DummyMandat.NewAmortizedAmount (o, e, 25000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -400,6 +428,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty (DummyMandat.fieldColor, "Blanc"));
 					DummyAmortizations.AddAmortization (mandat, "Camionnettes", e);
 					DummyMandat.NewAmortizedAmount (o, e, 30000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -419,6 +449,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataGuidProperty (DummyMandat.fieldPerson3, DummyPersons.GetPerson (mandat, "Frutiger")));
 					DummyAmortizations.AddAmortization (mandat, "Voitures", e);
 					DummyMandat.NewAmortizedAmount (o, e, 22000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -437,6 +469,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty (DummyMandat.fieldSerial, "45-3292302-544545-8"));
 					DummyAmortizations.AddAmortization (mandat, "Voitures", e);
 					DummyMandat.NewAmortizedAmount (o, e, 9000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -454,6 +488,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataGuidProperty (DummyMandat.fieldPerson3, DummyPersons.GetPerson (mandat, "Frutiger")));
 					DummyAmortizations.AddAmortization (mandat, "Voitures", e);
 					DummyMandat.NewAmortizedAmount (o, e, 8000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -472,6 +508,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataGuidProperty (DummyMandat.fieldPerson3, DummyPersons.GetPerson (mandat, "Frutiger")));
 					DummyAmortizations.AddAmortization (mandat, "Voitures", e);
 					DummyMandat.NewAmortizedAmount (o, e, 11000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -490,6 +528,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					e.AddProperty (new DataStringProperty (DummyMandat.fieldSerial, "780004563233232"));
 					DummyAmortizations.AddAmortization (mandat, "Voitures", e);
 					DummyMandat.NewAmortizedAmount (o, e, 12000.0m);
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -552,6 +592,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 12000.0m);
 					}
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 
@@ -616,6 +658,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 4600.0m, 2100.0m);
 					}
+
+					Amortizations.UpdateAmounts (DummyMandat.Accessor, o);
 				}
 			}
 		}
