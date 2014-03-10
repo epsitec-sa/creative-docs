@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -53,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent          = parent,
 				PreferredHeight = h,
 				Dock            = DockStyle.Top,
-				Margins         = new Common.Drawing.Margins (0, 0, 20, 0),
+				Margins         = new Margins (0, 0, 20, 0),
 			};
 
 
@@ -63,9 +64,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Text          = "Importer",
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
-				PreferredSize = new Common.Drawing.Size (70, h),
+				PreferredSize = new Size (70, h),
 				Dock          = DockStyle.Left,
-				Margins       = new Common.Drawing.Margins (0, 0, 0, 0),
+				Margins       = new Margins (100+10, 0, 0, 0),
 			};
 
 #if false

@@ -101,6 +101,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.UpdateValue ();
 			};
+
+			this.controller.Goto += delegate (object sender, AbstractViewState viewState)
+			{
+				this.OnGoto (viewState);
+			};
 		}
 
 		public override void SetFocus()

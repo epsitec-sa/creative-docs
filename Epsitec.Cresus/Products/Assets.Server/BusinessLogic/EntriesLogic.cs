@@ -28,6 +28,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static DataObject GetEntry(DataAccessor accessor, Guid guid)
 		{
+			//	TODO: ci-dessous
+			//	Bof, quelle horreur de faire ainsi !
+			//	Faut-il remettre toutes les écritures dans BaseType.Entries ?
 			var assets = accessor.Mandat.GetData (BaseType.Assets);
 
 			for (int i=0; i<assets.Count; i++)

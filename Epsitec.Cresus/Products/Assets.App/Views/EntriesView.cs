@@ -94,7 +94,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnViewStateChanged (this.ViewState);
 		}
 
-	
+
+		public static AbstractViewState GetViewState(Guid entryGuid)
+		{
+			//	Retourne un ViewState permettant de voir une écriture donnée.
+			return new EntriesViewState
+			{
+				ViewType     = ViewType.Entries,
+				SelectedGuid = entryGuid,
+				ShowGraphic  = false,
+			};
+		}
+
+
 		public override AbstractViewState ViewState
 		{
 			get

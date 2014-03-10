@@ -141,19 +141,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.line67.Children.Clear ();
 			this.line7.Children.Clear ();
 
-			this.CreateCombos (this.line1);
-
 			if (this.IsAmortization)
 			{
+				this.CreateCombos      (this.line1);
 				this.CreateMaxLine     (this.line2, this.line23);
 				this.CreateRoundLine   (this.line3, this.line34);
 				this.CreateLine1       (this.line4, this.line45);
 				this.CreateLine2       (this.line5, this.line56);
 				this.CreateProrataLine (this.line6, this.line67);
+				this.CreateButton      (this.line7);
 			}
 			else
 			{
+				this.CreateCombos   (this.line1);
 				this.CreateInitLine (this.line2, this.line23);
+				this.CreateButton   (this.line3);
 			}
 
 			this.UpdateUI ();
@@ -283,6 +285,43 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.prorataNumeratorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, "Prorata, nombre effectif", this.UpdateProrataNumerator);
 			this.CreateOper (parent, "/");
 			this.prorataDenominatorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, "Prorata, nombre total", this.UpdateProrataDenominator);
+		}
+
+		private void CreateButton(Widget parent)
+		{
+			const int h = 22;
+
+			var line = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = h,
+				Dock            = DockStyle.Top,
+				Margins         = new Common.Drawing.Margins (0, 0, 20, 0),
+			};
+
+
+			var button = new Button
+			{
+				Parent        = line,
+				Text          = "Voir l'écriture",
+				ButtonStyle   = ButtonStyle.Icon,
+				AutoFocus     = false,
+				PreferredSize = new Size (100, h),
+				Dock          = DockStyle.Left,
+				Margins       = new Margins (100+10, 0, 0, 0),
+			};
+
+			button.Clicked += delegate
+			{
+				if (this.value.HasValue)
+				{
+					if (this.value.Value.Entries.Any ())
+					{
+						var viewState = EntriesView.GetViewState (this.value.Value.Entries[0].Guid);
+						this.OnGoto (viewState);
+					}
+				}
+			};
 		}
 
 
@@ -978,6 +1017,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler FocusLost;
+
+
+		private void OnGoto(AbstractViewState viewState)
+		{
+			this.Goto.Raise (this, viewState);
+		}
+
+		public event EventHandler<AbstractViewState> Goto;
 		#endregion
 
 
