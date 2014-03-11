@@ -25,7 +25,7 @@ namespace Epsitec.Aider.Processors.Pdf
 {
 	internal sealed class OfficeLetterDocumentWriter
 	{
-		public OfficeLetterDocumentWriter(AiderOfficeLetterReportEntity letter, AiderOfficeSettingsEntity settings, LabelLayout layout)
+		public OfficeLetterDocumentWriter(AiderOfficeLetterReportEntity letter, AiderOfficeSenderEntity settings, LabelLayout layout)
 		{
 			this.letter		= letter;
 			this.layout		= layout;
@@ -68,7 +68,7 @@ namespace Epsitec.Aider.Processors.Pdf
 		}
 
 		private readonly AiderOfficeLetterReportEntity		letter;
-		private readonly AiderOfficeSettingsEntity			settings;
+		private readonly AiderOfficeSenderEntity			settings;
 		private readonly LabelLayout						layout;
 	}
 }
