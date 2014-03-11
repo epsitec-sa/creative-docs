@@ -26,5 +26,43 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public Guid								AssetGuid;
 		public Guid								EventGuid;
 		public Guid								EntryGuid;
+		public int								EntrySeed;
+
+		public static bool operator ==(AmortizedAmountValues a, AmortizedAmountValues b)
+		{
+			return a.AmortizationType   == b.AmortizationType
+				&& a.InitialAmount      == b.InitialAmount
+				&& a.BaseAmount         == b.BaseAmount
+				&& a.EffectiveRate      == b.EffectiveRate
+				&& a.ProrataNumerator   == b.ProrataNumerator
+				&& a.ProrataDenominator == b.ProrataDenominator
+				&& a.RoundAmount        == b.RoundAmount
+				&& a.ResidualAmount     == b.ResidualAmount
+				&& a.EntryScenario      == b.EntryScenario
+				&& a.Date               == b.Date
+				&& a.AssetGuid          == b.AssetGuid
+				&& a.EventGuid          == b.EventGuid
+				&& a.EntryGuid          == b.EntryGuid
+				&& a.EntrySeed          == b.EntrySeed;
+		}
+
+		public static bool operator !=(AmortizedAmountValues a, AmortizedAmountValues b)
+		{
+			return a.AmortizationType   != b.AmortizationType
+				|| a.InitialAmount      != b.InitialAmount
+				|| a.BaseAmount         != b.BaseAmount
+				|| a.EffectiveRate      != b.EffectiveRate
+				|| a.ProrataNumerator   != b.ProrataNumerator
+				|| a.ProrataDenominator != b.ProrataDenominator
+				|| a.RoundAmount        != b.RoundAmount
+				|| a.ResidualAmount     != b.ResidualAmount
+				|| a.EntryScenario      != b.EntryScenario
+				|| a.Date               != b.Date
+				|| a.AssetGuid          != b.AssetGuid
+				|| a.EventGuid          != b.EventGuid
+				|| a.EntryGuid          != b.EntryGuid
+				|| a.EntrySeed          != b.EntrySeed;
+		}
+
 	}
 }

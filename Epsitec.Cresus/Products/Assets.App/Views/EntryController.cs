@@ -7,7 +7,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -18,6 +17,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.accessor = accessor;
 			this.ignoreChanges = new SafeCounter ();
+
+			this.lastEntrySeed = -1;
 		}
 
 
@@ -29,9 +30,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				if (this.value != value)
+				if (this.value != value || this.lastEntrySeed != this.CurrentEntrySeed)
 				{
 					this.value = value;
+					this.lastEntrySeed = this.CurrentEntrySeed;
+
 					this.UpdateUI ();
 				}
 			}
@@ -41,9 +44,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			set
 			{
-				if (this.value != value)
+				if (this.value != value || this.lastEntrySeed != this.CurrentEntrySeed)
 				{
 					this.value = value;
+					this.lastEntrySeed = this.CurrentEntrySeed;
+
 					this.UpdateNoEditingUI ();
 				}
 			}
@@ -291,6 +296,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private int CurrentEntrySeed
+		{
+			get
+			{
+				if (this.value.HasValue)
+				{
+					return this.value.Value.EntrySeed;
+				}
+				else
+				{
+					return -1;
+				}
+			}
+		}
+
+
 		#region Events handler
 		private void OnValueEdited()
 		{
@@ -317,6 +338,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly SafeCounter			ignoreChanges;
 
 		private AmortizedAmount?				value;
+		private int								lastEntrySeed;
 		private bool							isReadOnly;
 		private Color							backgroundColor;
 		private PropertyState					propertyState;

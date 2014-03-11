@@ -45,8 +45,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var value  = this.GetValue  (amount);
 
 				this.UpdateEntry (entry, amount.Date, debit, credit, null, title, value);
-
-				amount.EntryGuid = entry.Guid;
+				amount.EntrySeed++;
 			}
 		}
 
@@ -57,6 +56,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (entry != null)
 			{
 				this.accessor.RemoveObject (BaseType.Entries, entry);
+
+				amount.EntryGuid = Guid.Empty;
+				amount.EntrySeed++;
 			}
 		}
 
@@ -181,6 +183,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private DataObject CreateBaseEntry(AmortizedAmount amount)
 		{
 			var entry = new DataObject ();
+
+			amount.EntryGuid = entry.Guid;
+			amount.EntrySeed = 0;
 
 			var entries = this.accessor.Mandat.GetData (BaseType.Entries);
 			entries.Add (entry);

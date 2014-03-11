@@ -34,7 +34,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.value != value)
 				{
 					this.value = value;
-					this.entryController.Value = value;
 					this.CreateLines ();
 				}
 			}
@@ -47,7 +46,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.value != value)
 				{
 					this.value = value;
-					this.entryController.Value = value;
 					this.UpdateNoEditingUI ();
 				}
 			}
@@ -199,6 +197,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var aa = this.AmortizedAmount;
 						aa.EntryScenario = scenario;
 
+						this.UpdateUI ();
 						this.OnValueEdited ();
 					}
 				}
@@ -214,6 +213,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var aa = this.AmortizedAmount;
 						aa.AmortizationType = type;
 
+						this.UpdateUI ();
 						this.OnValueEdited ();
 					}
 				}
@@ -549,10 +549,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateBackColor (this.prorataDenominatorTextField);
 				this.UpdateBackColor (this.scenarioFieldCombo);
 
-				this.entryController.BackgroundColor = this.backgroundColor;
-				this.entryController.PropertyState = this.propertyState;
-				this.entryController.IsReadOnly = this.isReadOnly;
+				this.UpdateEntry ();
 			}
+		}
+
+		private void UpdateEntry()
+		{
+			if (this.value.HasValue)
+			{
+				this.value.Value.CreateEntry ();
+			}
+
+			this.entryController.Value = this.value;
+			this.entryController.BackgroundColor = this.backgroundColor;
+			this.entryController.PropertyState = this.propertyState;
+			this.entryController.IsReadOnly = this.isReadOnly;
 		}
 
 

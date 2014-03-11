@@ -204,6 +204,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				this.values.EntryGuid = value;
 			}
 		}
+
+		public int EntrySeed
+		{
+			get
+			{
+				return this.values.EntrySeed;
+			}
+			set
+			{
+				this.values.EntrySeed = value;
+			}
+		}
 		#endregion
 
 
@@ -331,26 +343,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static bool operator ==(AmortizedAmount a, AmortizedAmount b)
 		{
-			return a.InitialAmount      == b.InitialAmount
-				&& a.BaseAmount         == b.BaseAmount
-				&& a.EffectiveRate      == b.EffectiveRate
-				&& a.ProrataNumerator   == b.ProrataNumerator
-				&& a.ProrataDenominator == b.ProrataDenominator
-				&& a.RoundAmount        == b.RoundAmount
-				&& a.ResidualAmount     == b.ResidualAmount
-				&& a.AmortizationType   == b.AmortizationType;
+			return a.values == b.values;
 		}
 
 		public static bool operator !=(AmortizedAmount a, AmortizedAmount b)
 		{
-			return a.InitialAmount      != b.InitialAmount
-				|| a.BaseAmount         != b.BaseAmount
-				|| a.EffectiveRate      != b.EffectiveRate
-				|| a.ProrataNumerator   != b.ProrataNumerator
-				|| a.ProrataDenominator != b.ProrataDenominator
-				|| a.RoundAmount        != b.RoundAmount
-				|| a.ResidualAmount     != b.ResidualAmount
-				|| a.AmortizationType   != b.AmortizationType;
+			return a.values != b.values;
 		}
 
 
