@@ -1162,9 +1162,18 @@ namespace Epsitec.Cresus.Database
 
 		private void InsertIndex(DbTransaction transaction, SqlTable table, SqlIndex index)
 		{
-			transaction.SqlBuilder.CreateIndex (table.Name, index);
-
-			this.ExecuteSilent (transaction);
+			try
+			{
+				transaction.SqlBuilder.CreateIndex (table.Name, index);
+				this.ExecuteSilent (transaction);
+			}
+			catch (GenericException)
+			{
+				transaction.SqlBuilder.DropIndex (index);
+				this.ExecuteSilent (transaction);
+				transaction.SqlBuilder.CreateIndex (table.Name, index);
+				this.ExecuteSilent (transaction);
+			}
 		}
 
 		private void DropTable(DbTransaction dbTransaction, DbTable dbTable)
