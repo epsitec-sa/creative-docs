@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.value != value)
 				{
 					this.value = value;
+					this.entryController.Value = value;
 					this.CreateLines ();
 				}
 			}
@@ -46,6 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.value != value)
 				{
 					this.value = value;
+					this.entryController.Value = value;
 					this.UpdateNoEditingUI ();
 				}
 			}
@@ -122,6 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.line67 = this.CreateInter (parent);
 			this.line7  = this.CreateFrame (parent);
 
+			this.CreateEntryController (parent);
 			this.CreateLines ();
 		}
 
@@ -149,13 +152,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.CreateLine1       (this.line4, this.line45);
 				this.CreateLine2       (this.line5, this.line56);
 				this.CreateProrataLine (this.line6, this.line67);
-				this.CreateButton      (this.line7);
 			}
 			else
 			{
 				this.CreateCombos   (this.line1);
 				this.CreateInitLine (this.line2, this.line23);
-				this.CreateButton   (this.line3);
 			}
 
 			this.UpdateUI ();
@@ -438,6 +439,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
+		private void CreateEntryController(Widget parent)
+		{
+			{
+				var line = this.CreateFrame (parent);
+				line.Margins = new Margins (0, 0, 0, 10);
+
+				new StaticText
+				{
+					Parent  = line,
+					Text    = "Ecriture comptable générée",
+					Dock    = DockStyle.Fill,
+					Margins = new Margins (100+10, 0, 0, 0),
+				};
+			}
+
+			this.entryController = new EntryController (this.accessor);
+			this.entryController.CreateUI (parent);
+
+			{
+				var line = this.CreateFrame (parent);
+				this.CreateButton (line);
+			}
+		}
+
 
 		public void SetFocus()
 		{
@@ -523,6 +548,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateBackColor (this.prorataNumeratorTextField);
 				this.UpdateBackColor (this.prorataDenominatorTextField);
 				this.UpdateBackColor (this.scenarioFieldCombo);
+
+				this.entryController.BackgroundColor = this.backgroundColor;
+				this.entryController.PropertyState = this.propertyState;
+				this.entryController.IsReadOnly = this.isReadOnly;
 			}
 		}
 
@@ -1061,6 +1090,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private TextFieldCombo					typeTextFieldCombo;
 		private TextFieldCombo					scenarioFieldCombo;
+
+		private EntryController					entryController;
 
 		private FrameBox						line1;
 		private FrameBox						line12;
