@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private void UpdateDataByAssets()
 		{
-			var nodes = this.GetNodes ().OrderBy (x => x.AssetName);
+			var nodes = this.GetNodes ().OrderBy (x => x.Date).OrderBy (x => x.AssetName);
 			string lastName = null;
 
 			foreach (var node in nodes)
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private void UpdateDataByDates()
 		{
-			var nodes = this.GetNodes ().OrderBy (x => x.Date);
+			var nodes = this.GetNodes ().OrderBy (x => x.AssetName).OrderBy (x => x.Date);
 			var lastDate = System.DateTime.MinValue;
 
 			foreach (var node in nodes)
@@ -120,8 +120,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				var entry = entries[i];
 
 				var assetGuid = ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryAssetGuid);
-				var eventGuid = ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryEventGuid);
-
 				var name = AssetsLogic.GetSummary (this.accessor, assetGuid);
 
 				var date   = ObjectProperties.GetObjectPropertyDate    (entry, null, ObjectField.EntryDate);
