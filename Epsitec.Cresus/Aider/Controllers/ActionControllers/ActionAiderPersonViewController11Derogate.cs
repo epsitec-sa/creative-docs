@@ -190,11 +190,24 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				greetings = "Chère Madame,";
 			}
 
-			var content = string.Format (LetterTemplate, greetings, destParish.Name, origineParish.Name);
+			var content = string.Format (LetterTemplate, 
+								greetings,
+								destParish.Name,
+								origineParish.Name,
+								destParish.Name,
+								aiderUser.Contact.Person.GetFullName ()
+							);
 
 			var letter = AiderOfficeLetterReportEntity.Create (businessContext, recipient, sender, documentName, content);
-			EntityBag.Add (letter, "Document");
-			
+			var notificationManager = NotificationManager.GetCurrentNotificationManager ();
+			notificationManager.Notify (aiderUser.LoginName, new NotificationMessage
+			{
+				Title	= "Dérogation effectuée",
+				Body	= "La lettre à été ajoutée dans la gestion de documents de la " + destParish.Name,
+				Dataset = Res.CommandIds.Base.ShowAiderOfficeManagement,
+				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey(sender.Office).Value
+			}
+			, When.Now);
 		}
 
 		private readonly string LetterTemplate = new System.Text.StringBuilder ()
@@ -202,7 +215,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 												.Append ("{0}<br/>")
 												.Append ("Votre dérogation paroissiale a été bien enregistrée. Elle entre désormais en vigueur.<br/>")
 												.Append ("Votre nouvelle paroisse officielle où vous bénéficiez du droit de vote et d'éligibilité ")
-												.Append ("(= possibilité de délibérer en assemblée paroissiable, de voter, d'élire ou d'être élu) est désormais la paroisse de<br/>")
+												.Append ("(= possibilité de délibérer en assemblée paroissiable, de voter, d'élire ou d'être élu) est désormais la")
 												.Append ("<br/><br/><b>{1}</b><br/><br/>")
 												.Append ("Vous avez perdu vos droits de vote et d'éligibilité dans la paroisse standard de votre domicile, à savoir la ")
 												.Append ("{2}.<br/><br/>")
@@ -210,6 +223,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 												.Append ("La dérogation actuelle perdrait son effet. Vous auriez la possibilité de demander une nouvelle dérogation si vous l'estimiez important.")
 												.Append ("<br/><br/>Nous vous souhaitons de riches expériences et un fructueux engagement dans votre nouvelle paroisse officielle ")
 												.Append ("et vous adressons, nos fraternelles salutations.<br/><br/>")
+												.Append ("le secrétariat de la {3}<br/><br/>")
+												.Append ("signé : {4}")
 												.ToString ();
 		
 	}

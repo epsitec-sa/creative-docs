@@ -34,6 +34,32 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.OfficeName);
 		}
 
+
+		public FormattedText GetDocumentTitleSummary()
+		{
+			return TextFormatter.FormatText ("Documents");
+		}
+
+		public FormattedText GetDocumentsSummary()
+		{
+			var summary = TextFormatter.FormatText ("Résumé :\n");
+
+			var unProcessedReports	= this.Letters.Where(l => l.ProcessDate == null).Count();
+			var processedReports	= this.Letters.Where (l => l.ProcessDate != null).Count ();
+
+			if (unProcessedReports > 0)
+			{
+				summary.AppendLine (TextFormatter.FormatText (unProcessedReports, " documents en attentes"));
+			}
+
+			if (processedReports > 0)
+			{
+				summary.AppendLine (TextFormatter.FormatText (unProcessedReports, " documents archivés"));
+			}
+
+			return summary;
+		}
+
 		public FormattedText GetSettingsTitleSummary()
 		{
 			return TextFormatter.FormatText ("Expéditeurs");
@@ -48,7 +74,25 @@ namespace Epsitec.Aider.Entities
 				case 1:
 					return TextFormatter.FormatText ("Expéditeur actif");
 				default:
-					return TextFormatter.FormatText (this.OfficeSenders.Count, "expéditeurs actifs");
+					return TextFormatter.FormatText (this.OfficeSenders.Count, " expéditeurs actifs");
+			}
+		}
+
+		public FormattedText GetLettersTitleSummary()
+		{
+			return TextFormatter.FormatText ("Lettres");
+		}
+
+		public FormattedText GetLettersSummary()
+		{
+			switch (this.Letters.Count)
+			{
+				case 0:
+					return TextFormatter.FormatText ("Aucune");
+				case 1:
+					return TextFormatter.FormatText ("une lettre");
+				default:
+					return TextFormatter.FormatText (this.OfficeSenders.Count, " lettres");
 			}
 		}
 

@@ -51,6 +51,7 @@ namespace Epsitec.Aider.Entities
 			letter.TownAndDate		= sender.OfficeAddress.Address.Town.Name + ", le" + letter.CreationDate;
 			letter.RecipientContact = recipient;
 			letter.Office			= sender.Office;
+			sender.Office.AddLetterInternal (letter);
 			return letter;
 		}
 

@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
 using Epsitec.Cresus.Bricks;
@@ -28,20 +29,45 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
 
-			/*wall.AddBrick (p => p.OfficeReports)
-								.Attribute (BrickMode.DefaultToSummarySubView)
-								.Attribute (BrickMode.AutoGroup)
-								.Attribute (BrickMode.HideAddButton)
-								.Attribute (BrickMode.HideRemoveButton)
-								.Template ()
-									.Title ("Documents")
-									.Text (x => x.ReportName
-												+ "<a href='/proxy/reporting/letter/"  // TODO: adapter les 2 arguments ici !!!
-												+ Res.Commands.Base.PrintOfficeReports.CommandId + "/" 
-												+ this.DataContext.GetPersistedId (x).Substring(3).Replace(':','-') + "' " +
-												+ "target='_blank'>Consulter</a>")									
-								.End ();*/
-			
+			var userManager			= AiderUserManager.Current;
+			var sender				= this.BusinessContext.GetLocalEntity (userManager.AuthenticatedUser.OfficeSender);
+
+			if (userManager.AuthenticatedUser.OfficeSender.IsNotNull ()) //We can process reports
+			{
+				var senderEntityId		= this.DataContext
+												.GetPersistedId (sender)
+												.Substring (3)
+												.Replace (':', '-');
+
+				wall.AddBrick (p => p.Letters)
+									.Attribute (BrickMode.DefaultToSummarySubView)
+									.Attribute (BrickMode.AutoGroup)
+									.Attribute (BrickMode.HideAddButton)
+									.Attribute (BrickMode.HideRemoveButton)
+									.Template ()
+										.Title ("Lettres")
+										.Text (x => x.Name
+													+ "<br/><a href='/proxy/reporting/officeletter/"  
+													+  senderEntityId + "/"
+													+	this.DataContext
+																.GetPersistedId (x)
+																.Substring (3)
+																.Replace (':', '-')									
+													+ "' target='_blank'>Consulter</a>")
+									.End ();
+			}
+			else
+			{
+				wall.AddBrick (p => p.Letters)
+									.Attribute (BrickMode.DefaultToSummarySubView)
+									.Attribute (BrickMode.AutoGroup)
+									.Attribute (BrickMode.HideAddButton)
+									.Attribute (BrickMode.HideRemoveButton)
+									.Template ()
+										.Title ("Lettres")
+										.Text (x => x.Name)
+									.End ();
+			}
 			
 		}
 	}

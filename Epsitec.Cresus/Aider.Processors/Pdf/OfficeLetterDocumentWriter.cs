@@ -35,27 +35,17 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		public void WriteStream(System.IO.Stream stream)
 		{
-			var setup			= new LetterDocumentSetup ();
-
-			var report			= this.GetReport (setup);
-
-			var addressBuilder	= new System.Text.StringBuilder ();
-
-			addressBuilder
-				.Append (this.letter.RecipientContact.Address.AddressLine1 + "<br/>")
-				.Append (this.letter.RecipientContact.DisplayName + "<br/>")
-				.Append (this.letter.RecipientContact.Address.PostBox + "<br/>")
-				.Append (this.letter.RecipientContact.Address.StreetUserFriendly + "<br/>")
-				.Append (this.letter.RecipientContact.Address.GetDisplayZipCode () + " ")
-				.Append (this.letter.RecipientContact.Address.Town);
+			var setup					= new LetterDocumentSetup ();
+			var report					= this.GetReport (setup);
 
 			var contentTemplateBuilder = new System.Text.StringBuilder ();
 
 			contentTemplateBuilder.Append (this.letter.GetLetterContent ());
 
-			var topReference = TextFormatter.FormatText (this.settings.Office.OfficeName);
+			var topLogo			= "";
+			var topReference	= "<b>" + this.settings.Office.OfficeName + "</b>";
 
-			report.GeneratePdf (stream, topReference, addressBuilder.ToString (), contentTemplateBuilder.ToString ());
+			report.GeneratePdf (stream, topLogo ,topReference, this.BuildAddress (this.settings.OfficialContact, false), this.BuildAddress (this.letter.RecipientContact, true), contentTemplateBuilder.ToString ());
 		}
 
 		private LetterDocument GetReport(LetterDocumentSetup setup)
@@ -65,6 +55,40 @@ namespace Epsitec.Aider.Processors.Pdf
 			var labelRenderer   = this.layout.GetLabelRenderer ();
 
 			return new LetterDocument (exportPdfInfo, setup);
+		}
+
+		private string BuildAddress(AiderContactEntity contact, bool withAddressLine)
+		{
+			var sb = new System.Text.StringBuilder ();
+			if (withAddressLine)
+			{
+				if (!string.IsNullOrEmpty (contact.Address.AddressLine1))
+				{
+					sb.Append (contact.Address.AddressLine1 + "<br/>");
+				}			
+			}
+
+			sb.Append (contact.Person.GetFullName () + "<br/>");
+
+			if (!string.IsNullOrEmpty (contact.Address.PostBox))
+			{
+				sb.Append (contact.Address.PostBox + "<br/>");
+			}
+
+			sb.Append (contact.Address.StreetUserFriendly + "<br/>");
+
+			if(contact.Address.Town.Country.IsoCode != "CH")
+			{
+				sb.Append(contact.Address.Town.Country.IsoCode  + "-" + contact.Address.GetDisplayZipCode ()); 
+			}
+			else
+			{
+				sb.Append (contact.Address.GetDisplayZipCode ());
+				
+			}
+
+			sb.Append (" " + contact.Address.Town.Name);
+			return sb.ToString ();
 		}
 
 		private readonly AiderOfficeLetterReportEntity		letter;

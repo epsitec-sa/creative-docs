@@ -19,19 +19,20 @@ namespace Epsitec.Common.Pdf.LetterDocument
 		{
 			this.lineHeights = new List<double> ();
 			this.linePages   = new List<int> ();
-			this.Setup.TextStyle.Alignment = ContentAlignment.TopLeft;
-			this.Setup.TextStyle.FontSize = 42.0;
+			this.Setup.TextStyle.Font = Font.GetFont ("Verdana", "");
+			this.Setup.TextStyle.Alignment = ContentAlignment.None;
+			this.Setup.TextStyle.FontSize = 33.835; //9pt
 		}
 
-		public void GeneratePdf(string path, FormattedText topReference, FormattedText recipientAddress, FormattedText content)
+		public void GeneratePdf(string path, FormattedText topLogo, FormattedText topReference, FormattedText senderAddress, FormattedText recipientAddress, FormattedText content)
 		{
 			using (var stream = File.Open (path, FileMode.Create))
 			{
-				this.GeneratePdf (stream, topReference, recipientAddress, content);
+				this.GeneratePdf (stream, topLogo, topReference, senderAddress, recipientAddress, content);
 			}
 		}
 
-		public void GeneratePdf(Stream stream, FormattedText topReference, FormattedText recipientAddress, FormattedText content)
+		public void GeneratePdf(Stream stream, FormattedText topLogo, FormattedText topReference, FormattedText senderAddress, FormattedText recipientAddress, FormattedText content)
 		{
 			this.content = content;
 
@@ -39,8 +40,10 @@ namespace Epsitec.Common.Pdf.LetterDocument
 			this.VerticalJustification ();
 
 
-			this.AddTopLeftLayer (topReference, 200, 200, this.Setup.TextStyle);
-			this.AddCustomLayer (recipientAddress, new Margins (1400.0, 0.0, 500.0, 0.0), this.Setup.TextStyle);
+			this.AddCustomLayer (topReference, new Margins (1200.0, 0.0, 150.0, 0.0), this.Setup.TextStyle);
+			this.AddCustomLayer (topLogo, new Margins (150.0, 0.0, 100.0, 0.0), this.Setup.TextStyle);
+			this.AddCustomLayer (senderAddress, new Margins (450.0, 0.0, 100.0, 0.0), this.Setup.TextStyle);
+			this.AddCustomLayer (recipientAddress, new Margins (1200.0, 0.0, 400.0, 0.0), this.Setup.TextStyle);
 	
 			var export = new Export (this.info);
 			export.ExportToFile (stream, this.pageCount, this.RenderPage);

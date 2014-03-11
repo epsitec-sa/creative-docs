@@ -62,15 +62,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController1Settings))
 				.EnableActionMenu<ActionAiderOfficeManagementViewController0CreateSettings> ();
-			
-			//NOT READY
-			/*wall.AddBrick ()
+
+			wall.AddBrick ()
 				.Icon ("Data.AiderGoup.Parish")
-				.Title (p => "Derniers documents")
-				.Text (p => "...")
+				.Title (p => p.GetDocumentTitleSummary ())
+				.Text (p => p.GetDocumentsSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
-				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController2Documents))
-				.EnableActionMenu<ActionAiderOfficeManagementViewController1CreateDocument> ();*/
+				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController2Documents));
 	
 		}
 	}

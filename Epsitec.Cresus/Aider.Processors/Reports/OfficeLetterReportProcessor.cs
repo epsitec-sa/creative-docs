@@ -48,19 +48,20 @@ namespace Epsitec.Aider.Processors.Reports
 
 		#endregion
 
-		private string GenerateDocument(System.IO.Stream stream, WorkerApp workerApp, BusinessContext context, AiderOfficeSenderEntity settings, AiderOfficeLetterReportEntity letter)
+		private string GenerateDocument(System.IO.Stream stream, WorkerApp workerApp, BusinessContext context, AiderOfficeSenderEntity sender, AiderOfficeLetterReportEntity letter)
 		{
 			var userManager = workerApp.UserManager;
 
 			//	Do something with this entity...
 			
 			var layout = LabelLayout.Sheet_A4_Simple;
-			var doc    = new Pdf.OfficeLetterDocumentWriter (letter, settings, layout);
+			var doc    = new Pdf.OfficeLetterDocumentWriter (letter, sender, layout);
 
 			doc.WriteStream (stream);
 			letter.ProcessDate = System.DateTime.Now;
+			context.SaveChanges (LockingPolicy.ReleaseLock);
 
-			return "office_letter.pdf";
+			return letter.Name + ".pdf";
 		}
 
 
