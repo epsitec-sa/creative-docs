@@ -6,16 +6,13 @@ using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
-
 using Epsitec.Common.Text;
-
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -689,7 +686,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetAllEmails(string value)
 		{
-			throw new NotImplementedException ();
+			throw new System.NotImplementedException ();
 		}
 
 		partial void GetAllPhoneNumbers(ref string value)
@@ -702,7 +699,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetAllPhoneNumbers(string value)
 		{
-			throw new NotImplementedException ();
+			throw new System.NotImplementedException ();
 		}
 
 		partial void GetAddress(ref AiderAddressEntity value)
@@ -712,7 +709,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetAddress(AiderAddressEntity value)
 		{
-			throw new NotImplementedException ();
+			throw new System.NotImplementedException ();
 		}
 
 		partial void GetMainContact(ref AiderContactEntity value)
@@ -722,7 +719,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetMainContact(AiderContactEntity value)
 		{
-			throw new NotImplementedException ();
+			throw new System.NotImplementedException ();
 		}
 
 		partial void GetHouseholdContact(ref AiderContactEntity value)
@@ -732,7 +729,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetHouseholdContact(AiderContactEntity value)
 		{
-			throw new NotImplementedException ();
+			throw new System.NotImplementedException ();
 		}
 
 		partial void GetGroups(ref IList<AiderGroupParticipantEntity> value)
@@ -780,7 +777,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetCallNameDisplay(string value)
 		{
-			throw new NotSupportedException ("Do not call this method.");
+			throw new System.NotSupportedException ("Do not call this method.");
 		}
 
 

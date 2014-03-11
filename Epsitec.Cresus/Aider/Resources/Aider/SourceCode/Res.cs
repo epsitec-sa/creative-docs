@@ -324,7 +324,7 @@ namespace Epsitec.Aider
 			//	designer:cap/LVOE23
 			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeReport = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 78));
 			//	designer:cap/LVOA13
-			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeSettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 42));
+			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeSender = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 42));
 			//	designer:cap/LVAF
 			public static readonly Epsitec.Common.Types.StructuredType AiderPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
 			//	designer:cap/LVAL8
@@ -1824,6 +1824,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Level = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 80);
 				//	designer:cap/LVG822
 				public static readonly global::Epsitec.Common.Support.Druid MembersAllowed = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 72);
+				//	designer:cap/LVALI
+				public static readonly global::Epsitec.Common.Support.Druid MembersReadOnly = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 597);
 				//	designer:cap/LVA2B
 				public static readonly global::Epsitec.Common.Support.Druid Mutability = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 354);
 				//	designer:cap/LVA3A
@@ -2079,12 +2081,12 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVO913
 				public static readonly global::Epsitec.Common.Support.Druid OfficeName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 41);
+				//	designer:cap/LVOB13
+				public static readonly global::Epsitec.Common.Support.Druid OfficeSenders = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 43);
 				//	designer:cap/LVO713
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 39);
 				//	designer:cap/LVO813
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 40);
-				//	designer:cap/LVOB13
-				public static readonly global::Epsitec.Common.Support.Druid Settings = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 43);
 			}
 			
 			public static class AiderOfficeReport
@@ -2104,11 +2106,11 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ProcessDate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 87);
 			}
 			
-			public static class AiderOfficeSettings
+			public static class AiderOfficeSender
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderOfficeSettings.Name, null);
+					global::System.Object.Equals (AiderOfficeSender.Name, null);
 				}
 				
 				//	designer:cap/LVOK13
@@ -2124,7 +2126,7 @@ namespace Epsitec.Aider
 				//	designer:cap/LVO923
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 73);
 				//	designer:cap/LVOQ13
-				public static readonly global::Epsitec.Common.Support.Druid PPFrankingTown = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 58);
+				public static readonly global::Epsitec.Common.Support.Druid PostalTown = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 58);
 			}
 			
 			public static class AiderPerson
@@ -2406,7 +2408,7 @@ namespace Epsitec.Aider
 				//	designer:cap/LVO523
 				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 69);
 				//	designer:cap/LVO723
-				public static readonly global::Epsitec.Common.Support.Druid OfficeSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 71);
+				public static readonly global::Epsitec.Common.Support.Druid OfficeSender = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 71);
 				//	designer:cap/LVGD22
 				public static readonly global::Epsitec.Common.Support.Druid Parish = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 77);
 				//	designer:cap/LVGE22
@@ -2986,7 +2988,7 @@ namespace Epsitec.Aider
 			Fields.AiderOfficeLetterReport._Initialize ();
 			Fields.AiderOfficeManagement._Initialize ();
 			Fields.AiderOfficeReport._Initialize ();
-			Fields.AiderOfficeSettings._Initialize ();
+			Fields.AiderOfficeSender._Initialize ();
 			Fields.AiderPerson._Initialize ();
 			Fields.AiderPersonData._Initialize ();
 			Fields.AiderPersonRelationship._Initialize ();

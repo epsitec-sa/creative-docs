@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Processors.Reports
 			string settingsId	= parameters.settings;
 			string letterId		= parameters.letter;
 
-			var settings = EntityIO.ResolveEntity (businessContext, settingsId) as AiderOfficeSettingsEntity;
+			var settings = EntityIO.ResolveEntity (businessContext, settingsId) as AiderOfficeSenderEntity;
 			var letter  = EntityIO.ResolveEntity (businessContext, letterId)	as AiderOfficeLetterReportEntity;
 
 			return this.GenerateDocument (stream, workerApp, businessContext, settings, letter);
@@ -48,7 +48,7 @@ namespace Epsitec.Aider.Processors.Reports
 
 		#endregion
 
-		private string GenerateDocument(System.IO.Stream stream, WorkerApp workerApp, BusinessContext context, AiderOfficeSettingsEntity settings, AiderOfficeLetterReportEntity letter)
+		private string GenerateDocument(System.IO.Stream stream, WorkerApp workerApp, BusinessContext context, AiderOfficeSenderEntity settings, AiderOfficeLetterReportEntity letter)
 		{
 			var userManager = workerApp.UserManager;
 

@@ -32,9 +32,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(AiderOfficeManagementEntity newOffice)
 		{
-			var currentOffice	= this.Entity.Office;
-			var currentSettings	= this.Entity.OfficeSettings;
-			var contact			= this.Entity.Contact;
+			var currentOffice = this.Entity.Office;
+			var currentSender = this.Entity.OfficeSender;
+			var contact		  = this.Entity.Contact;
 
 			if (currentOffice.IsNotNull ())
 			{
@@ -43,10 +43,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				currentUserGroup.RemoveParticipations (this.BusinessContext, currentUserGroup.FindParticipations (this.BusinessContext, contact));
 			}
 
-			if (currentSettings.IsNotNull ())
+			if (currentSender.IsNotNull ())
 			{
 				//reset user office settings
-				currentSettings = null;
+				currentSender = null;
 			}
 
 			//Create usergroup participation

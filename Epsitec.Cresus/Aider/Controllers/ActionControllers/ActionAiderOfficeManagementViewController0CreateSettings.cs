@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -22,7 +22,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Ajouter un réglage");
+			return Resources.Text ("Ajouter un expéditeur");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -30,23 +30,23 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create<AiderContactEntity, AiderContactEntity, AiderTownEntity> (this.Execute);
 		}
 
-		private void Execute(AiderContactEntity officialContact, AiderContactEntity officeAddress, AiderTownEntity ppFrankingTown)
+		private void Execute(AiderContactEntity officialContact, AiderContactEntity officeAddress, AiderTownEntity postalTown)
 		{
-			AiderOfficeManagementEntity.CreateSettings (this.BusinessContext, this.Entity, officialContact, officeAddress, ppFrankingTown);
+			AiderOfficeSenderEntity.Create (this.BusinessContext, this.Entity, officialContact, officeAddress, postalTown);
 		}
 
 		protected override void GetForm(ActionBrick<AiderOfficeManagementEntity, SimpleBrick<AiderOfficeManagementEntity>> form)
 		{
 			form
-				.Title ("Réglages")
+				.Title ("Expéditeur")
 				.Field<AiderContactEntity> ()
-					.Title ("Contact officiel")
+					.Title ("Personne de contact")
 				.End ()
 				.Field<AiderContactEntity> ()
-					.Title ("Adresse du secrétariat")
+					.Title ("Adresse de contact du secrétariat")
 				.End ()
 				.Field<AiderTownEntity> ()
-					.Title ("Envoi P.P")
+					.Title ("Office postal pour dépôt d'envois P.P")
 				.End ()
 			.End ();
 		}

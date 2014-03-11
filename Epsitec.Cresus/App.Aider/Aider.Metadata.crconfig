@@ -28,7 +28,7 @@ AiderMailing = [LVOA03]
 AiderMailingCategory = [LVO013]
 AiderMailingParticipant = [LVOL03]
 AiderOfficeManagement = [LVO613]
-AiderOfficeSettings = [LVOA13]
+AiderOfficeSender = [LVOA13]
 
 <meta>
   <T>
@@ -1322,20 +1322,20 @@ AiderOfficeSettings = [LVOA13]
       </col>
     </t>
 
-    <t eid="@AiderOfficeSettings" n="default">
-    <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSettings:[LVOI13].[LVO913]" title="Office" canSort="True" canFilter="True">
+    <t eid="@AiderOfficeSender" n="default">
+    <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSender:[LVOI13].[LVO913]" title="Office" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-        <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSettings:[LVOK13]" title="Nom" canSort="True" canFilter="True">
+        <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSender:[LVOK13]" title="Nom" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSettings:[LVOC13].[LVA8E].[LVACG]" title="Adresse" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSender:[LVOC13].[LVA8E].[LVACG]" title="Adresse" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSettings:[LVOC13].[LVA8E].[LVACG]" title="Adresse" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSender:[LVOC13].[LVA8E].[LVACG]" title="Adresse" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -1510,7 +1510,7 @@ AiderOfficeSettings = [LVOA13]
 #[Feature:OfficeManagement]      <R><r>@user</r></R>
 #[Feature:OfficeManagement]    </d>
 
-#[Feature:OfficeManagement]    <d cid="[LVO823]" teid="@AiderOfficeSettings" tn="default" df="true" d="false" ec="false" ed="false"  dg="">
+#[Feature:OfficeManagement]    <d cid="[LVO823]" teid="@AiderOfficeSender" tn="default" df="true" d="false" ec="false" ed="false"  dg="">
 #[Feature:OfficeManagement]      <R><r>@user</r></R>
 #[Feature:OfficeManagement]    </d>
   </D>

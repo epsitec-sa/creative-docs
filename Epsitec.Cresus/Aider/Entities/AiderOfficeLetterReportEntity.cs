@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Entities
 			return new string (chars);
 		}
 
-		public static AiderOfficeLetterReportEntity Create(BusinessContext context,AiderContactEntity recipient, AiderOfficeSettingsEntity settings,string documentName,string letterContent)
+		public static AiderOfficeLetterReportEntity Create(BusinessContext context,AiderContactEntity recipient, AiderOfficeSenderEntity settings,string documentName,string letterContent)
 		{
 			var letter = context.CreateAndRegisterEntity<AiderOfficeLetterReportEntity> ();
 

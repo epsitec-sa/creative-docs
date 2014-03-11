@@ -28,17 +28,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
 
-			wall.AddBrick (p => p.Settings)
-								.Attribute (BrickMode.DefaultToCreationOrEditionSubView)
-								.Attribute (BrickMode.AutoGroup)
-								.Attribute (BrickMode.HideAddButton)
-								.Attribute (BrickMode.HideRemoveButton)
-								.Template ()
-									.Title ("Liste des réglages")
-									.Text (x => x.GetCompactSummary ())									
-								.End ();
-			
-			
+			wall.AddBrick (p => p.OfficeSenders)
+				.Attribute (BrickMode.DefaultToCreationOrEditionSubView)
+				.Attribute (BrickMode.AutoGroup)
+				.Attribute (BrickMode.HideAddButton)
+				.Attribute (BrickMode.HideRemoveButton)
+				.Template ()
+					.Title ("Liste des expéditeurs")
+//					.Text (x => x.GetCompactSummary ())									
+				.End ();
 		}
 	}
 }

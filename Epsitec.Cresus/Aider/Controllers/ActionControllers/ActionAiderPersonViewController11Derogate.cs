@@ -154,7 +154,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.InitialValue (this.Entity.GetGeoParishGroup (this.BusinessContext) ?? this.Entity.ParishGroup)
 				.End ()
 				.Field<Date> ()
-					.Title ("Date de début de la dérogation")
+					.Title ("Date de la dérogation")
 					.InitialValue (Date.Today)
 				.End ()
 			.End ();
@@ -169,12 +169,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var documentName	= "Confirmation dérogation " + recipient.DisplayName;
 
 			var userManager		= AiderUserManager.Current;
-			var aiderUser		= userManager.AuthenticatedUser;
-			var settings		= aiderUser.OfficeSettings;
+			var aiderUser       = userManager.AuthenticatedUser;
+			var sender		    = aiderUser.OfficeSender;
 
-			if(settings.IsNull ())
+			if(sender.IsNull ())
 			{
-				var message = "Réglages de secrétariat manquant pour votre utilisateur, création de la dérogation annulée";
+				var message = "Vous devez d'abord associer votre utilisateur à un secrétariat; la création de la dérogation est impossible.";
 				throw new BusinessRuleException (message);
 			}
 
@@ -191,7 +191,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			var content = string.Format (LetterTemplate, greetings, destParish.Name, origineParish.Name);
 
-			var letter = AiderOfficeLetterReportEntity.Create (businessContext, recipient, settings, documentName, content);
+			var letter = AiderOfficeLetterReportEntity.Create (businessContext, recipient, sender, documentName, content);
 			EntityBag.Add (letter, "Document");
 			
 		}

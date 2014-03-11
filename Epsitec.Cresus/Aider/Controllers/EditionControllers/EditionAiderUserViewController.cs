@@ -19,20 +19,20 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<AiderUserEntity> wall)
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
-			var settingsDefined = this.Entity.Office.IsNotNull ();
+			var senderDefined = this.Entity.Office.IsNotNull ();
 			var contactDefined = this.Entity.Contact.IsNotNull ();
 
 			if (user.HasPowerLevel (UserPowerLevel.Administrator))
 			{
-				EditionAiderUserViewController.AddUserDataBrick (wall, contactDefined, settingsDefined);
+				EditionAiderUserViewController.AddUserDataBrick (wall, contactDefined, senderDefined);
 			}
 			else
 			{
-				EditionAiderUserViewController.AddUserDataBrickReadonly (wall, settingsDefined);
+				EditionAiderUserViewController.AddUserDataBrickReadonly (wall, senderDefined);
 			}
 		}
 
-		private static void AddUserDataBrick(BrickWall<AiderUserEntity> wall, bool contactDefined, bool settingsDefined)
+		private static void AddUserDataBrick(BrickWall<AiderUserEntity> wall, bool contactDefined, bool senderDefined)
 		{
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderUserViewController0SetPassword> ()
@@ -44,7 +44,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Parish)
 						.WithSpecialField<AiderGroupSpecialField<AiderUserEntity>> ()
 					.Field (x => x.Office).ReadOnly ()
-					.Field (x => x.OfficeSettings).IfTrue(settingsDefined)
+					.Field (x => x.OfficeSender).IfTrue (senderDefined)
 					.Field (x => x.LoginName)
 					.Field (x => x.DisplayName)
 					.Field (x => x.Email)
@@ -57,7 +57,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.End ();
 		}
 
-		private static void AddUserDataBrickReadonly(BrickWall<AiderUserEntity> wall, bool settingsDefined)
+		private static void AddUserDataBrickReadonly(BrickWall<AiderUserEntity> wall, bool senderDefined)
 		{
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderUserViewController0SetPassword> ()
@@ -66,7 +66,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Contact)
 					.Field (x => x.Parish).ReadOnly ()
 					.Field (x => x.Office).ReadOnly ()
-					.Field (x => x.OfficeSettings).IfTrue (settingsDefined)
+					.Field (x => x.OfficeSender).IfTrue (senderDefined)
 					.Field (x => x.LoginName).ReadOnly ()
 					.Field (x => x.DisplayName).ReadOnly ()
 					.Field (x => x.Email)

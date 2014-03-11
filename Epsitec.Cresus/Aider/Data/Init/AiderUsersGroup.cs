@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Data.Common;
@@ -37,15 +37,12 @@ namespace Epsitec.Aider.Data.Groups
 
 					var parishGroupDef = AiderGroupEntity.FindGroups (businessContext, "R001.P001.").First ().GroupDef;
 
-					var aiderUsersDef = AiderGroupDefEntity.CreateDefinitionSubGroup (
-						businessContext,
-						parishGroupDef,
-						"Utilisateurs Aider",
-						GroupClassification.Users,
-						false,
-						true,
-						false
+					var aiderUsersDef = AiderGroupDefEntity.CreateDefinitionSubGroup (businessContext,
+						parishGroupDef, "Utilisateurs AIDER", GroupClassification.Users,
+						subgroupsAllowed: false, membersAllowed: true, mutability: Mutability.SystemDefined
 					);
+
+					aiderUsersDef.MembersReadOnly = true;
 
 					var groupToComplete = AiderGroupEntity.FindGroupsFromPathAndLevel (businessContext, parishGroupDef.Level, parishGroupDef.PathTemplate);
 					foreach (var group in groupToComplete)

@@ -90,7 +90,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 		public static AiderGroupDefEntity CreateDefinitionSubGroup(BusinessContext businessContext, AiderGroupDefEntity parent, string name, 
-			GroupClassification groupClass, bool subgroupsAllowed, bool membersAllowed, bool isMutable)
+			GroupClassification groupClass, bool subgroupsAllowed, bool membersAllowed, Mutability mutability)
 		{
 			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
@@ -112,7 +112,7 @@ namespace Epsitec.Aider.Entities
 			
 
 			aiderGroupDef.Classification = groupClass;
-			aiderGroupDef.Mutability = isMutable ? Mutability.Customizable : Mutability.None;
+			aiderGroupDef.Mutability = mutability;
 
 			//uplink
 			parent.Subgroups.Add (aiderGroupDef);

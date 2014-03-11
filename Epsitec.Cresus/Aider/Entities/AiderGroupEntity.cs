@@ -131,6 +131,11 @@ namespace Epsitec.Aider.Entities
 			var user = AiderUserManager.Current.AuthenticatedUser;
 			var userPowerLevel = user.PowerLevel;
 
+			if (this.GroupDef.MembersReadOnly)
+			{
+				return false;
+			}
+
 			if ((userPowerLevel != UserPowerLevel.None) &&
 				(userPowerLevel <= UserPowerLevel.Administrator))
 			{

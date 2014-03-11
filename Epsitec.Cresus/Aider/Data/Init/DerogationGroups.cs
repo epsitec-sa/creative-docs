@@ -44,7 +44,7 @@ namespace Epsitec.Aider.Data.Groups
 						GroupClassification.DerogationIn,
 						false,
 						true,
-						false
+						Mutability.SystemDefined
 					);
 
 					var groupToComplete = AiderGroupEntity.FindGroupsFromPathAndLevel (businessContext, parishGroupDef.Level, parishGroupDef.PathTemplate);
@@ -60,7 +60,7 @@ namespace Epsitec.Aider.Data.Groups
 						GroupClassification.DerogationOut,
 						false,
 						true,
-						false
+						Mutability.SystemDefined
 					);
 
 					groupToComplete = AiderGroupEntity.FindGroupsFromPathAndLevel (businessContext, parishGroupDef.Level, parishGroupDef.PathTemplate);

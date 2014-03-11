@@ -43,7 +43,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVO013]", typeof (Epsitec.Aider.Entities.AiderMailingCategoryEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA4I]", typeof (Epsitec.Aider.Entities.AiderGroupExtractionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVO613]", typeof (Epsitec.Aider.Entities.AiderOfficeManagementEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[LVOA13]", typeof (Epsitec.Aider.Entities.AiderOfficeSettingsEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVOA13]", typeof (Epsitec.Aider.Entities.AiderOfficeSenderEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVOE23]", typeof (Epsitec.Aider.Entities.AiderOfficeReportEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVOI23]", typeof (Epsitec.Aider.Entities.AiderOfficeLetterReportEntity))]
 #region Epsitec.Aider.eCH_Person Entity
@@ -5517,6 +5517,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>MembersReadOnly</c> field.
+		///	designer:fld/LVA2A/LVALI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVALI]")]
+		public bool MembersReadOnly
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVALI]");
+			}
+			set
+			{
+				bool oldValue = this.MembersReadOnly;
+				if (oldValue != value || !this.IsFieldDefined("[LVALI]"))
+				{
+					this.OnMembersReadOnlyChanging (oldValue, value);
+					this.SetField<bool> ("[LVALI]", oldValue, value);
+					this.OnMembersReadOnlyChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Classification</c> field.
 		///	designer:fld/LVA2A/LVA1C
 		///	</summary>
@@ -5607,6 +5629,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnSubgroupsAllowedChanged(bool oldValue, bool newValue);
 		partial void OnMembersAllowedChanging(bool oldValue, bool newValue);
 		partial void OnMembersAllowedChanged(bool oldValue, bool newValue);
+		partial void OnMembersReadOnlyChanging(bool oldValue, bool newValue);
+		partial void OnMembersReadOnlyChanged(bool oldValue, bool newValue);
 		partial void OnClassificationChanging(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
 		partial void OnClassificationChanged(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
 		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
@@ -6328,24 +6352,24 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>OfficeSettings</c> field.
+		///	The <c>OfficeSender</c> field.
 		///	designer:fld/LVAHC/LVO723
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVO723]")]
-		public global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity OfficeSettings
+		public global::Epsitec.Aider.Entities.AiderOfficeSenderEntity OfficeSender
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity> ("[LVO723]");
+				return this.GetField<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> ("[LVO723]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity oldValue = this.OfficeSettings;
+				global::Epsitec.Aider.Entities.AiderOfficeSenderEntity oldValue = this.OfficeSender;
 				if (oldValue != value || !this.IsFieldDefined("[LVO723]"))
 				{
-					this.OnOfficeSettingsChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity> ("[LVO723]", oldValue, value);
-					this.OnOfficeSettingsChanged (oldValue, value);
+					this.OnOfficeSenderChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> ("[LVO723]", oldValue, value);
+					this.OnOfficeSenderChanged (oldValue, value);
 				}
 			}
 		}
@@ -6540,8 +6564,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
-		partial void OnOfficeSettingsChanging(global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity newValue);
-		partial void OnOfficeSettingsChanged(global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity newValue);
+		partial void OnOfficeSenderChanging(global::Epsitec.Aider.Entities.AiderOfficeSenderEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeSenderEntity newValue);
+		partial void OnOfficeSenderChanged(global::Epsitec.Aider.Entities.AiderOfficeSenderEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeSenderEntity newValue);
 		partial void OnEmailChanging(string oldValue, string newValue);
 		partial void OnEmailChanged(string oldValue, string newValue);
 		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
@@ -8913,15 +8937,17 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Settings</c> field.
+		///	The <c>OfficeSenders</c> field.
 		///	designer:fld/LVO613/LVOB13
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOB13]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity> Settings
+		[global::Epsitec.Common.Support.EntityField ("[LVOB13]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> OfficeSenders
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity> ("[LVOB13]");
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity>);
+				this.GetOfficeSenders (ref value);
+				return value;
 			}
 		}
 		
@@ -8932,6 +8958,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		
+		partial void GetOfficeSenders(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -8956,14 +8983,14 @@ namespace Epsitec.Aider.Entities
 }
 #endregion
 
-#region Epsitec.Aider.AiderOfficeSettings Entity
+#region Epsitec.Aider.AiderOfficeSender Entity
 namespace Epsitec.Aider.Entities
 {
 	///	<summary>
-	///	The <c>AiderOfficeSettings</c> entity.
+	///	The <c>AiderOfficeSender</c> entity.
 	///	designer:cap/LVOA13
 	///	</summary>
-	public partial class AiderOfficeSettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class AiderOfficeSenderEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
 		///	The <c>Name</c> field.
@@ -9054,11 +9081,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>PPFrankingTown</c> field.
+		///	The <c>PostalTown</c> field.
 		///	designer:fld/LVOA13/LVOQ13
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVOQ13]")]
-		public global::Epsitec.Aider.Entities.AiderTownEntity PPFrankingTown
+		public global::Epsitec.Aider.Entities.AiderTownEntity PostalTown
 		{
 			get
 			{
@@ -9066,12 +9093,12 @@ namespace Epsitec.Aider.Entities
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.AiderTownEntity oldValue = this.PPFrankingTown;
+				global::Epsitec.Aider.Entities.AiderTownEntity oldValue = this.PostalTown;
 				if (oldValue != value || !this.IsFieldDefined("[LVOQ13]"))
 				{
-					this.OnPPFrankingTownChanging (oldValue, value);
+					this.OnPostalTownChanging (oldValue, value);
 					this.SetField<global::Epsitec.Aider.Entities.AiderTownEntity> ("[LVOQ13]", oldValue, value);
-					this.OnPPFrankingTownChanged (oldValue, value);
+					this.OnPostalTownChanged (oldValue, value);
 				}
 			}
 		}
@@ -9128,8 +9155,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnOfficeAddressChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnOfficeAddressChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
-		partial void OnPPFrankingTownChanging(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
-		partial void OnPPFrankingTownChanged(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
+		partial void OnPostalTownChanging(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
+		partial void OnPostalTownChanged(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
 		partial void OnOfficialContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnOfficialContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnOfficeLogoImagePathChanging(string oldValue, string newValue);
@@ -9138,17 +9165,17 @@ namespace Epsitec.Aider.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity.EntityStructuredTypeId;
+			return global::Epsitec.Aider.Entities.AiderOfficeSenderEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Aider.Entities.AiderOfficeSettingsEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Aider.Entities.AiderOfficeSenderEntity.EntityStructuredTypeKey;
 		}
 		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 120, 42);	// [LVOA13]
 		public static readonly string EntityStructuredTypeKey = "[LVOA13]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderOfficeSettingsEntity>
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderOfficeSenderEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

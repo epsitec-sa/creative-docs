@@ -5,15 +5,13 @@ using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
-
-using Epsitec.Data.Platform;
-
-using System;
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Linq;
 using System.Collections.Generic;
@@ -34,25 +32,20 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetSettingsTitleSummary()
 		{
-			return TextFormatter.FormatText ("Réglage du secrétariat");
+			return TextFormatter.FormatText ("Expéditeurs");
 		}
 
 		public FormattedText GetSettingsSummary()
 		{
-			if(this.Settings.Count () > 0)
+			switch (this.OfficeSenders.Count)
 			{
-
-				var text =	"(" + this.Settings.Count +") disponibles";
-
-				return TextFormatter.FormatText (text);
+				case 0:
+					return TextFormatter.FormatText ("Aucun");
+				case 1:
+					return TextFormatter.FormatText ("Expéditeur actif");
+				default:
+					return TextFormatter.FormatText (this.OfficeSenders.Count, "expéditeurs actifs");
 			}
-			else
-			{
-				var text =		"Aucun réglages";
-
-				return TextFormatter.FormatText (text);
-			}
-			
 		}
 
 		public static AiderOfficeManagementEntity Find(BusinessContext businessContext, AiderGroupEntity group)
@@ -76,31 +69,43 @@ namespace Epsitec.Aider.Entities
 			return office;
 		}
 
-		public static AiderOfficeSettingsEntity CreateSettings(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderContactEntity officialContact, AiderContactEntity officialAddress, AiderTownEntity ppFrankingTown)
+		internal void AddSettingsInternal(AiderOfficeSenderEntity settings)
 		{
-			var settings = businessContext.CreateAndRegisterEntity<AiderOfficeSettingsEntity> ();
-
-			settings.Name = "Réglage " + (office.Settings.Count () + 1);
-			settings.Office = office;
-			 
-			if(officialContact.IsNotNull ())
-			{
-				settings.OfficialContact = officialContact;
-			}
-
-			if (officialAddress.IsNotNull ())
-			{
-				settings.OfficeAddress = officialAddress;
-			}
-
-			if (ppFrankingTown.IsNotNull ())
-			{
-				settings.PPFrankingTown = ppFrankingTown;
-			}
-
-			office.Settings.Add (settings);
-			return settings;
+			this.GetOfficeSenders ().Add (settings);
 		}
 
+		internal void RemoveSettingsInternal(AiderOfficeSenderEntity settings)
+		{
+			this.GetOfficeSenders ().Remove (settings);
+		}
+
+		partial void GetOfficeSenders(ref IList<AiderOfficeSenderEntity> value)
+		{
+			value = this.GetOfficeSenders ().AsReadOnlyCollection ();
+		}
+
+		private IList<AiderOfficeSenderEntity> GetOfficeSenders()
+		{
+			if (this.settings == null)
+			{
+				this.settings = this.ExecuteWithDataContext (d => this.FindOfficeSenders (d), () => new List<AiderOfficeSenderEntity> ());
+			}
+
+			return this.settings;
+		}
+
+		private IList<AiderOfficeSenderEntity> FindOfficeSenders(DataContext dataContext)
+		{
+			var example = new AiderOfficeSenderEntity
+			{
+				Office = this
+			};
+
+			return dataContext.GetByExample (example)
+							  .OrderBy (x => x.Name)
+							  .ToList ();
+		}
+		
+		private IList<AiderOfficeSenderEntity> settings;
 	}
 }

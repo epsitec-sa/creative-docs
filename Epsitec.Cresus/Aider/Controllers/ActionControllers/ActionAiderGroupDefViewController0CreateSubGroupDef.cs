@@ -2,6 +2,7 @@
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Business;
@@ -52,9 +53,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				throw new BusinessRuleException ("Le nom ne peut pas être vide");
 			}
-			
-			
-			var groupeDef = AiderGroupDefEntity.CreateDefinitionSubGroup (this.BusinessContext, this.Entity, name, groupClass,subgroupsAllowed,membersAllowed,isMutable);
+
+
+			var groupeDef = AiderGroupDefEntity.CreateDefinitionSubGroup (this.BusinessContext, this.Entity, name, groupClass, subgroupsAllowed, membersAllowed, isMutable ? Mutability.Customizable : Mutability.None);
 
 			//Create groups at right place
 			var groupToComplete = AiderGroupEntity.FindGroupsFromPathAndLevel (this.BusinessContext, this.Entity.Level, this.Entity.PathTemplate);
