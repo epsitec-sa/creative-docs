@@ -557,7 +557,7 @@
   <data name="Fld.AiderUser.PowerLevel" id="AKI">&lt;s:data id="_0" f:Name="PowerLevel" f:Labels="{Collection {Text 'Privilège'}}" /&gt;</data>
   <data name="Fld.AiderUser.Office" id="O523">&lt;s:data id="_0" f:Name="Office" f:Labels="{Collection {Text 'Gestion associée'}}" /&gt;</data>
   <data name="Val.Enum.GroupClassification.Users" id="O623">&lt;s:data id="_0" f:Name="Users" f:Labels="{Collection {Text 'Utilisateurs AIDER'}}" /&gt;</data>
-  <data name="Fld.AiderUser.OfficeSender" id="O723">&lt;s:data id="_0" f:Name="OfficeSender" f:Labels="{Collection {Text 'Réglage secrétariat'}}" /&gt;</data>
+  <data name="Fld.AiderUser.OfficeSender" id="O723">&lt;s:data id="_0" f:Name="OfficeSender" f:Labels="{Collection {Text 'Expéditeur pour les courriers'}}" /&gt;</data>
   <data name="Cmd.Base.ShowAiderOfficeSettings" id="O823">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderOfficeSettings" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Réglages des secrétariats'}}" /&gt;</data>
   <data name="Fld.AiderOfficeSender.ParishGroupPathCache" id="O923">&lt;s:data id="_0" f:Name="ParishGroupPathCache" /&gt;</data>
   <data name="Fld.IAiderOfficeReport.Name" id="OB23">&lt;s:data id="_0" f:Name="Name" /&gt;</data>

@@ -20,6 +20,10 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderOfficeManagementEntity
 	{
+		public AiderOfficeManagementEntity()
+		{
+
+		}
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (this.OfficeName);

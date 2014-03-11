@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Enumerations;
@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Entities
 			return new string (chars);
 		}
 
-		public static AiderOfficeLetterReportEntity Create(BusinessContext context,AiderContactEntity recipient, AiderOfficeSenderEntity settings,string documentName,string letterContent)
+		public static AiderOfficeLetterReportEntity Create(BusinessContext context,AiderContactEntity recipient, AiderOfficeSenderEntity sender,string documentName,string letterContent)
 		{
 			var letter = context.CreateAndRegisterEntity<AiderOfficeLetterReportEntity> ();
 
@@ -48,9 +48,9 @@ namespace Epsitec.Aider.Entities
 			letter.CreationDate		= Date.Today;
 			letter.LetterContent	= AiderOfficeLetterReportEntity.ConvertLetterContent(letterContent);
 			//TODO 
-			letter.TownAndDate		= settings.OfficeAddress.Address.Town.Name + ", le" + letter.CreationDate;
+			letter.TownAndDate		= sender.OfficeAddress.Address.Town.Name + ", le" + letter.CreationDate;
 			letter.RecipientContact = recipient;
-			letter.Office			= settings.Office;
+			letter.Office			= sender.Office;
 			return letter;
 		}
 

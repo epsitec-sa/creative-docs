@@ -1,4 +1,4 @@
-//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
@@ -170,7 +170,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			var userManager		= AiderUserManager.Current;
 			var aiderUser       = userManager.AuthenticatedUser;
-			var sender		    = aiderUser.OfficeSender;
+			var sender		    = businessContext.GetLocalEntity (aiderUser.OfficeSender);
 
 			if(sender.IsNull ())
 			{
@@ -180,6 +180,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 
 			var greetings = "";
+			
 			if (this.Entity.eCH_Person.PersonSex == Enumerations.PersonSex.Male)
 			{
 				greetings = "Cher Monsieur,";
