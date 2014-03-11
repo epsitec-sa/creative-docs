@@ -296,7 +296,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new AccountGuidFieldController (this.accessor)
 			{
-				Accessor  = this.accessor,
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
 				EditWidth = AbstractFieldController.maxWidth,

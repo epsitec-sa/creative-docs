@@ -8,6 +8,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -121,6 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStampController (parent);
 			this.CreateTitleController (parent);
 			this.CreateAmountController (parent);
+			this.CreateWarning (parent);
 
 			this.UpdateUI ();
 		}
@@ -146,7 +148,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.debitController = new AccountGuidFieldController (this.accessor)
 			{
-				Accessor              = this.accessor,
 				Field                 = ObjectField.Unknown,
 				Label                 = "Débit",
 				EditWidth             = AbstractFieldController.maxWidth,
@@ -165,7 +166,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.creditController = new AccountGuidFieldController (this.accessor)
 			{
-				Accessor              = this.accessor,
 				Field                 = ObjectField.Unknown,
 				Label                 = "Crédit",
 				EditWidth             = AbstractFieldController.maxWidth,
@@ -233,6 +233,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.amountController.ValueEdited += delegate (object sender, ObjectField of)
 			{
+			};
+		}
+
+		private void CreateWarning (Widget parent)
+		{
+			new StaticText
+			{
+				Parent  = parent,
+				Text    = "(Ces champs ne peuvent pas être modifiés pour l'instant)".Italic (),
+				Dock    = DockStyle.Top,
+				Margins = new Margins (100+10, 0, 0, 0),
 			};
 		}
 

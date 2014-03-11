@@ -20,8 +20,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public DataAccessor						Accessor;
-
 		public Guid								Value
 		{
 			get
@@ -140,7 +138,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.button != null)
 			{
-				var text = AccountsLogic.GetSummary (this.Accessor, this.value);
+				var text = AccountsLogic.GetSummary (this.accessor, this.value);
 				ToolTip.Default.SetToolTip (this.button, text);
 			}
 
@@ -153,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowPopup()
 		{
-			var popup = new GroupsPopup (this.Accessor, BaseType.Accounts, this.Value);
+			var popup = new GroupsPopup (this.accessor, BaseType.Accounts, this.Value);
 
 			popup.Create (this.button, leftOrRight: true);
 
@@ -166,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string GuidToString(Guid guid)
 		{
-			return AccountsLogic.GetSummary (this.Accessor, guid);
+			return AccountsLogic.GetSummary (this.accessor, guid);
 		}
 
 
