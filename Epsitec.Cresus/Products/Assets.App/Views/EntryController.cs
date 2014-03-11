@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			new StaticText
 			{
 				Parent  = parent,
-				Text    = "(Ces champs ne peuvent pas être modifiés pour l'instant)".Italic (),
+				Text    = "(Les modifications de ces champs sont sans effet pour l'instant)".Italic (),
 				Dock    = DockStyle.Top,
 				Margins = new Margins (100+10, 0, 0, 0),
 			};

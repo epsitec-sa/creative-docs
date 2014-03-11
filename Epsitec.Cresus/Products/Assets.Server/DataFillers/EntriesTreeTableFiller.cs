@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -27,6 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return ObjectField.EntryStamp;
 				yield return ObjectField.EntryTitle;
 				yield return ObjectField.EntryAmount;
+				yield return ObjectField.EventType;
 			}
 		}
 
@@ -42,6 +44,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  70, "Pièce"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   300, "Libellé"));
 				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, 100, "Montant"));
+				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph ,  30, ""));
 
 				return columns.ToArray ();
 			}
@@ -51,7 +54,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<6; i++)
+			for (int i=0; i<7; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -65,9 +68,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var node  = this.nodeGetter[firstRow+i];
 				var level = node.Level;
-				var type  = node.Type;
+				var type  = node.NodeType;
 
 				var date = TypeConverters.DateToString (node.Date);
+				var glyph = TimelineData.TypeToGlyph (node.EventType);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
@@ -98,6 +102,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var cell6 = new TreeTableCellDecimal (node.Value, cellState);
+				var cell7 = new TreeTableCellGlyph (glyph, cellState);
 
 				int columnRank = 0;
 				content.Columns[columnRank++].AddRow (cell1);
@@ -106,6 +111,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell4);
 				content.Columns[columnRank++].AddRow (cell5);
 				content.Columns[columnRank++].AddRow (cell6);
+				content.Columns[columnRank++].AddRow (cell7);
 			}
 
 			return content;
