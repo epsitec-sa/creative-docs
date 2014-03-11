@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -1169,8 +1169,12 @@ namespace Epsitec.Cresus.Database
 			}
 			catch (GenericException)
 			{
+				//	We could not create the index; maybe, it did already exist. So try to
+				//	remove it, then try again to create it...
+
 				transaction.SqlBuilder.DropIndex (index);
 				this.ExecuteSilent (transaction);
+				
 				transaction.SqlBuilder.CreateIndex (table.Name, index);
 				this.ExecuteSilent (transaction);
 			}
