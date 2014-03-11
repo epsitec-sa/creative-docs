@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var e = asset.GetEvent (this.selectedTimestamp.Value);
 					if (e != null)
 					{
-						var p = e.GetProperty (ObjectField.MainValue) as DataComputedAmountProperty;
+						var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 						if (p != null)
 						{
 							//	Supprime l'amortissement ordinaire.
@@ -379,11 +379,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 							//	Crée un amortissement extraordinaire.
 							var newEvent = this.accessor.CreateObjectEvent (asset, this.selectedTimestamp.Value.Date, EventType.AmortizationExtra);
-
-							var newCA = new ComputedAmount (p.Value.InitialAmount.Value, p.Value.FinalAmount.Value, true);
-
-							var newProp = new DataComputedAmountProperty (ObjectField.MainValue, newCA);
-							newEvent.AddProperty (newProp);
+							newEvent.AddProperty (p);
 
 							Amortizations.UpdateAmounts (this.accessor, asset);
 

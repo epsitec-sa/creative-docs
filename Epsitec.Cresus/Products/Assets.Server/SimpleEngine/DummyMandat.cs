@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			{
-				var guid = DummyMandat.Accessor.CreateObject (BaseType.Assets, new System.DateTime (2001, 1, 1), "Centre d'usinage", Guid.Empty);
+				var guid = DummyMandat.Accessor.CreateObject (BaseType.Assets, new System.DateTime (2001, 3, 20), "Centre d'usinage", Guid.Empty);
 				var o = DummyMandat.Accessor.GetObject (BaseType.Assets, guid);
 				{
 					var e = o.GetEvent (0);
