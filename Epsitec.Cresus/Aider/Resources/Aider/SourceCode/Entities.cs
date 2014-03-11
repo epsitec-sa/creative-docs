@@ -8950,6 +8950,20 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>Letters</c> field.
+		///	designer:fld/LVO613/LVOO23
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOO23]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeLetterReportEntity> Letters
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeLetterReportEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeLetterReportEntity>);
+				this.GetLetters (ref value);
+				return value;
+			}
+		}
 		
 		partial void OnOfficeNameChanging(string oldValue, string newValue);
 		partial void OnOfficeNameChanged(string oldValue, string newValue);
@@ -8959,6 +8973,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		
 		partial void GetOfficeSenders(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> value);
+		partial void GetLetters(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeLetterReportEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

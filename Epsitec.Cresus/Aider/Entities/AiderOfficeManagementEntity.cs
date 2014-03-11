@@ -86,12 +86,12 @@ namespace Epsitec.Aider.Entities
 
 		private IList<AiderOfficeSenderEntity> GetOfficeSenders()
 		{
-			if (this.settings == null)
+			if (this.senders == null)
 			{
-				this.settings = this.ExecuteWithDataContext (d => this.FindOfficeSenders (d), () => new List<AiderOfficeSenderEntity> ());
+				this.senders = this.ExecuteWithDataContext (d => this.FindOfficeSenders (d), () => new List<AiderOfficeSenderEntity> ());
 			}
 
-			return this.settings;
+			return this.senders;
 		}
 
 		private IList<AiderOfficeSenderEntity> FindOfficeSenders(DataContext dataContext)
@@ -105,7 +105,46 @@ namespace Epsitec.Aider.Entities
 							  .OrderBy (x => x.Name)
 							  .ToList ();
 		}
+
+
+		internal void AddLetterInternal(AiderOfficeLetterReportEntity letter)
+		{
+			this.GetLetters ().Add (letter);
+		}
+
+		internal void RemoveLetterInternal(AiderOfficeLetterReportEntity letter)
+		{
+			this.GetLetters ().Remove (letter);
+		}
+
+		partial void GetLetters(ref IList<AiderOfficeLetterReportEntity> value)
+		{
+			value = this.GetLetters ().AsReadOnlyCollection ();
+		}
+
+		private IList<AiderOfficeLetterReportEntity> GetLetters()
+		{
+			if (this.letters == null)
+			{
+				this.letters = this.ExecuteWithDataContext (d => this.FindLetters (d), () => new List<AiderOfficeLetterReportEntity> ());
+			}
+
+			return this.letters;
+		}
+
+		private IList<AiderOfficeLetterReportEntity> FindLetters(DataContext dataContext)
+		{
+			var example = new AiderOfficeLetterReportEntity
+			{
+				Office = this
+			};
+
+			return dataContext.GetByExample (example)
+							  .OrderBy (x => x.Name)
+							  .ToList ();
+		}
 		
-		private IList<AiderOfficeSenderEntity> settings;
+		private IList<AiderOfficeSenderEntity>			senders;
+		private IList<AiderOfficeLetterReportEntity>	letters;
 	}
 }
