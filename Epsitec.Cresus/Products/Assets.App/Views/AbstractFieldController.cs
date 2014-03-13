@@ -231,15 +231,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (textField != null)
 			{
-				if (!color.IsVisible)
-				{
-					textField.BackColor = Color.Empty;
-					textField.TextDisplayMode = TextFieldDisplayMode.Default;
-				}
-				else
+				if (color.IsVisible)
 				{
 					textField.BackColor = color;
 					textField.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
+				}
+				else
+				{
+					textField.BackColor = Color.Empty;
+					textField.TextDisplayMode = TextFieldDisplayMode.Default;
 				}
 			}
 		}

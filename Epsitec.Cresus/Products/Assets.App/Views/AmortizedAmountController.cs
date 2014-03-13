@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.value != value)
 				{
 					this.value = value;
+					this.UpdateEventType ();
 					this.CreateLines ();
 				}
 			}
@@ -46,6 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.value != value)
 				{
 					this.value = value;
+					this.UpdateEventType ();
 					this.UpdateNoEditingUI ();
 				}
 			}
@@ -356,7 +358,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock             = DockStyle.Left,
 				PreferredWidth   = width,
 				PreferredHeight  = AbstractFieldController.lineHeight,
-				IsReadOnly       = action == null,
+				Name             = (action == null) ? "IsReadOnly" : "",
 				Margins          = new Margins (0, 0, 0, 0),
 				TabIndex         = ++this.tabIndex,
 			};
@@ -366,13 +368,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ToolTip.Default.SetToolTip (field, tooltip);
 			}
 
-			field.TextChanged += delegate
+			if (action != null)
 			{
-				if (this.ignoreChanges.IsZero)
+				field.TextChanged += delegate
 				{
-					action ();
-				}
-			};
+					if (this.ignoreChanges.IsZero)
+					{
+						action ();
+					}
+				};
+			}
 
 			return field;
 		}
@@ -489,6 +494,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.value.HasValue)
 				{
 					this.scenarioFieldCombo.Enable = !this.IsAmortization;
+					this.typeTextFieldCombo.Enable = true;
 					this.typeTextFieldCombo.Visibility = this.IsAmortization;
 
 					this.FinalAmount        = this.value.Value.FinalAmortizedAmount;
@@ -991,6 +997,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (textField != null)
 			{
+				textField.IsReadOnly = (textField.Name == "IsReadOnly");
+
 				if (textField.IsReadOnly && !(textField is TextFieldCombo))
 				{
 					AbstractFieldController.UpdateBackColor (textField, Color.Empty);
@@ -1042,6 +1050,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public bool IsEditionAllowed
+		{
+			get
+			{
+				return !this.isReadOnly && this.eventType == EventType.AmortizationExtra;
+			}
+		}
+
+		public void UpdateEventType()
+		{
+			if (this.value.HasValue)
+			{
+				var obj = this.accessor.GetObject (BaseType.Assets, this.value.Value.AssetGuid);
+				if (obj != null)
+				{
+					var e = obj.GetEvent (this.value.Value.EventGuid);
+					if (e != null)
+					{
+						this.eventType = e.Type;
+						return;
+					}
+				}
+			}
+
+			this.eventType = EventType.Unknown;
+		}
+
+
 		#region Events handler
 		private void OnValueEdited()
 		{
@@ -1078,6 +1114,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly SafeCounter			ignoreChanges;
 
 		private AmortizedAmount?				value;
+		private EventType						eventType;
 		private bool							isReadOnly;
 		private Color							backgroundColor;
 		private PropertyState					propertyState;

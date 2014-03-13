@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					var currentEvent = obj.GetEvent (guid);
 					obj.RemoveEvent (currentEvent);
 
-					var newEvent = new DataEvent (currentEvent.Timestamp, EventType.AmortizationAuto);
+					var newEvent = new DataEvent (currentEvent.Guid, currentEvent.Timestamp, EventType.AmortizationAuto);
 					newEvent.SetProperties (currentEvent);
 					obj.AddEvent (newEvent);
 

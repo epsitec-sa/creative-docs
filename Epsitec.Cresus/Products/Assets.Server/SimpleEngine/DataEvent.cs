@@ -18,6 +18,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.properties = new List<AbstractDataProperty> ();
 		}
 
+		public DataEvent(Guid guid, Timestamp timestamp, EventType type)
+		{
+			this.guid      = guid;
+			this.Timestamp = timestamp;
+			this.Type      = type;
+
+			this.properties = new List<AbstractDataProperty> ();
+		}
+
 		public DataEvent(DataEvent model)
 		{
 			//	Copie un événement avec toutes ses propriétés.

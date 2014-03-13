@@ -116,18 +116,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					 nextEvent != TerminalEvent.In);
 		}
 
-		public static IEnumerable<EventType> EventTypes
-		{
-			get
-			{
-				yield return EventType.Input;
-				yield return EventType.Modification;
-				yield return EventType.MainValue;
-				yield return EventType.AmortizationExtra;
-				yield return EventType.Output;
-			}
-		}
-
 		public static IEnumerable<EventType> GetPlausibleEventTypes(DataObject obj, Timestamp timestamp)
 		{
 			var prevEvent = AssetCalculator.GetPrevEvent (obj, timestamp);

@@ -371,20 +371,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var e = asset.GetEvent (this.selectedTimestamp.Value);
 					if (e != null)
 					{
-						var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-						if (p != null)
-						{
-							//	Supprime l'amortissement ordinaire.
-							this.accessor.RemoveObjectEvent (asset, this.selectedTimestamp);
+						//	Supprime l'amortissement ordinaire.
+						asset.RemoveEvent (e);
 
-							//	Crée un amortissement extraordinaire.
-							var newEvent = this.accessor.CreateObjectEvent (asset, this.selectedTimestamp.Value.Date, EventType.AmortizationExtra);
-							newEvent.AddProperty (p);
+						//	Crée un amortissement extraordinaire.
+						var newEvent = new DataEvent (e.Guid, e.Timestamp, EventType.AmortizationExtra);
+						newEvent.SetProperties (e);
+						asset.AddEvent (newEvent);
 
-							Amortizations.UpdateAmounts (this.accessor, asset);
-
-							this.DeepUpdateUI ();
-						}
+						this.DeepUpdateUI ();
 					}
 				}
 			}
