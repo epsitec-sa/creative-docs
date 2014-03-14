@@ -30,21 +30,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				var entry = this.GetEntry (amount.AssetGuid, amount.EventGuid);
+				var dataEntry = this.GetEntry (amount.AssetGuid, amount.EventGuid);
 
-				if (entry == null)
+				if (dataEntry == null)
 				{
-					entry = this.CreateBaseEntry (amount);
+					dataEntry = this.CreateDataEntry (amount);
 				}
 
-				var entryAccouts = amount.EntryAccounts;
+				var entryProperties = this.GetEntryProperties (amount, false);
 
-				var debit  = this.GetDebit  (amount, entryAccouts);
-				var credit = this.GetCredit (amount, entryAccouts);
-				var title  = this.GetTitle  (amount);
-				var value  = this.GetValue  (amount);
-
-				this.UpdateEntry (entry, amount.Date, debit, credit, null, title, value);
+				this.UpdateEntry (dataEntry, entryProperties);
 				amount.EntrySeed++;
 			}
 		}
@@ -60,6 +55,24 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				amount.EntryGuid = Guid.Empty;
 				amount.EntrySeed++;
 			}
+		}
+
+
+		public EntryProperties GetEntryProperties(AmortizedAmount amount, bool baseProperties)
+		{
+			var asset = this.accessor.GetObject (BaseType.Assets, amount.AssetGuid);
+			var assetEvent = asset.GetEvent (amount.EventGuid);
+			var entryAccouts = amount.EntryAccounts;
+
+			return new EntryProperties
+			{
+				Date   = this.GetDate   (amount, assetEvent,               baseProperties),
+				Debit  = this.GetDebit  (amount, assetEvent, entryAccouts, baseProperties),
+				Credit = this.GetCredit (amount, assetEvent, entryAccouts, baseProperties),
+				Stamp  = this.GetStamp  (amount, assetEvent,               baseProperties),
+				Title  = this.GetTitle  (amount, assetEvent,               baseProperties),
+				Amount = this.GetValue  (amount, assetEvent,               baseProperties),
+			};
 		}
 
 
@@ -80,9 +93,33 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private Guid GetDebit(AmortizedAmount amount, EntryAccounts entryAccouts)
+		private System.DateTime GetDate(AmortizedAmount amount, DataEvent assetEvent, bool baseProperties)
 		{
-			//	Retourne le compte à utiliser au débit.
+			//	Retourne la date à utiliser pour l'écriture.
+			if (!baseProperties)
+			{
+				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedStamp) as DataDateProperty;
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
+
+			return amount.Date;
+		}
+
+		private Guid GetDebit(AmortizedAmount amount, DataEvent assetEvent, EntryAccounts entryAccouts, bool baseProperties)
+		{
+			//	Retourne le compte à utiliser au débit de l'écriture.
+			if (!baseProperties)
+			{
+				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedStamp) as DataGuidProperty;
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
+
 			switch (amount.EntryScenario)
 			{
 				case EntryScenario.Purchase:
@@ -103,9 +140,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private Guid GetCredit(AmortizedAmount amount, EntryAccounts entryAccouts)
+		private Guid GetCredit(AmortizedAmount amount, DataEvent assetEvent, EntryAccounts entryAccouts, bool baseProperties)
 		{
-			//	Retourne le compte à utiliser au crédit.
+			//	Retourne le compte à utiliser au crédit de l'écriture.
+			if (!baseProperties)
+			{
+				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedStamp) as DataGuidProperty;
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
+
 			switch (amount.EntryScenario)
 			{
 				case EntryScenario.Purchase:
@@ -126,9 +172,33 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private string GetTitle(AmortizedAmount amount)
+		private string GetStamp(AmortizedAmount amount, DataEvent assetEvent, bool baseProperties)
+		{
+			//	Retourne la pièce de l'écriture.
+			if (!baseProperties)
+			{
+				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedStamp) as DataStringProperty;
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
+
+			return null;
+		}
+
+		private string GetTitle(AmortizedAmount amount, DataEvent assetEvent, bool baseProperties)
 		{
 			//	Retourne le libellé de l'écriture.
+			if (!baseProperties)
+			{
+				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedTitle) as DataStringProperty;
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
+
 			var guid = amount.AssetGuid;
 			var timestamp = new Timestamp (amount.Date, 0);
 
@@ -156,9 +226,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private decimal GetValue(AmortizedAmount amount)
+		private decimal GetValue(AmortizedAmount amount, DataEvent assetEvent, bool baseProperties)
 		{
 			//	Retourne le montant de l'écriture.
+			if (!baseProperties)
+			{
+				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedStamp) as DataDecimalProperty;
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
+
 			switch (amount.EntryScenario)
 			{
 				case EntryScenario.Purchase:
@@ -180,7 +259,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private DataObject CreateBaseEntry(AmortizedAmount amount)
+		private DataObject CreateDataEntry(AmortizedAmount amount)
 		{
 			var entry = new DataObject ();
 
@@ -200,25 +279,25 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return entry;
 		}
 
-		private Guid UpdateEntry(DataObject entry, System.DateTime date, Guid debit, Guid credit, string stamp, string title, decimal value)
+		private Guid UpdateEntry(DataObject entry, EntryProperties entryProperties)
 		{
 			var e = entry.GetEvent (0);
 
-			e.AddProperty (new DataDateProperty (ObjectField.EntryDate, date));
+			e.AddProperty (new DataDateProperty (ObjectField.EntryDate, entryProperties.Date));
 
-			if (!debit.IsEmpty)
+			if (!entryProperties.Debit.IsEmpty)
 			{
-				e.AddProperty (new DataGuidProperty (ObjectField.EntryDebitAccount, debit));
+				e.AddProperty (new DataGuidProperty (ObjectField.EntryDebitAccount, entryProperties.Debit));
 			}
 
-			if (!credit.IsEmpty)
+			if (!entryProperties.Credit.IsEmpty)
 			{
-				e.AddProperty (new DataGuidProperty (ObjectField.EntryCreditAccount, credit));
+				e.AddProperty (new DataGuidProperty (ObjectField.EntryCreditAccount, entryProperties.Credit));
 			}
 
-			e.AddProperty (new DataStringProperty  (ObjectField.EntryStamp,  stamp));
-			e.AddProperty (new DataStringProperty  (ObjectField.EntryTitle,  title));
-			e.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount, value));
+			e.AddProperty (new DataStringProperty  (ObjectField.EntryStamp,  entryProperties.Stamp));
+			e.AddProperty (new DataStringProperty  (ObjectField.EntryTitle,  entryProperties.Title));
+			e.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount, entryProperties.Amount));
 
 			return entry.Guid;
 		}

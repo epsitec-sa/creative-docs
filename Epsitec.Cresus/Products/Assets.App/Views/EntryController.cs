@@ -116,13 +116,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public void CreateUI(Widget parent)
 		{
 			this.tabIndex = 0;
-			this.CreateDateController (parent);
-			this.CreateDebitController (parent);
+
+			this.CreateDateController   (parent);
+			this.CreateDebitController  (parent);
 			this.CreateCreditController (parent);
-			this.CreateStampController (parent);
-			this.CreateTitleController (parent);
+			this.CreateStampController  (parent);
+			this.CreateTitleController  (parent);
 			this.CreateAmountController (parent);
-			this.CreateWarning (parent);
+			this.CreateWarning          (parent);
 
 			this.UpdateUI ();
 		}
@@ -276,34 +277,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.value.HasValue)
 			{
-				var entry = this.accessor.GetObject (BaseType.Entries, this.value.Value.EntryGuid);
+				EntryProperties baseProperties    = null;
+				EntryProperties currentProperties = null;
 
-				if (entry != null)
+				using (var entries = new Entries (this.accessor))
 				{
-					var date   = ObjectProperties.GetObjectPropertyDate    (entry, null, ObjectField.EntryDate);
-					var debit  = ObjectProperties.GetObjectPropertyGuid    (entry, null, ObjectField.EntryDebitAccount);
-					var credit = ObjectProperties.GetObjectPropertyGuid    (entry, null, ObjectField.EntryCreditAccount);
-					var stamp  = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryStamp);
-					var title  = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryTitle);
-					var amount = ObjectProperties.GetObjectPropertyDecimal (entry, null, ObjectField.EntryAmount);
-
-					this.dateController  .Value = date;
-					this.debitController .Value = debit;
-					this.creditController.Value = credit;
-					this.stampController .Value = stamp;
-					this.titleController .Value = title;
-					this.amountController.Value = amount;
-
-					return;
+					baseProperties    = entries.GetEntryProperties (this.value.Value, true);
+					currentProperties = entries.GetEntryProperties (this.value.Value, false);
 				}
-			}
 
-			this.dateController  .Value = null;
-			this.debitController .Value = Guid.Empty;
-			this.creditController.Value = Guid.Empty;
-			this.stampController .Value = null;
-			this.titleController .Value = null;
-			this.amountController.Value = null;
+				this.dateController  .Value = currentProperties.Date;
+				this.debitController .Value = currentProperties.Debit;
+				this.creditController.Value = currentProperties.Credit;
+				this.stampController .Value = currentProperties.Stamp;
+				this.titleController .Value = currentProperties.Title;
+				this.amountController.Value = currentProperties.Amount;
+			}
+			else
+			{
+				this.dateController  .Value = null;
+				this.debitController .Value = Guid.Empty;
+				this.creditController.Value = Guid.Empty;
+				this.stampController .Value = null;
+				this.titleController .Value = null;
+				this.amountController.Value = null;
+			}
 		}
 
 
