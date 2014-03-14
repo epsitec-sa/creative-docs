@@ -8,6 +8,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -95,24 +96,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Text            = DateFieldController.ConvDateToString (this.value),
 			};
 
-			this.minusButton = new IconButton
-			{
-				Parent        = this.frameBox,
-				IconUri       = Misc.GetResourceIconUri ("Date.Minus"),
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
-			};
+			this.minusButton      = this.CreateIconButton (this.frameBox, "Date.Minus",            false);
+			this.plusButton       = this.CreateIconButton (this.frameBox, "Date.Plus",             false);
+			this.beginButton      = this.CreateIconButton (this.frameBox, "Date.CurrentYearBegin", true);
+			this.nowButton        = this.CreateIconButton (this.frameBox, "Date.Now",              false);
+			this.endButton        = this.CreateIconButton (this.frameBox, "Date.CurrentYearEnd",   false);
+			this.predefinedButton = this.CreateIconButton (this.frameBox, "Date.Predefined",       true);
+			this.calendarButton   = this.CreateIconButton (this.frameBox, "Date.Calendar",         false);
+			this.deleteButton     = this.CreateIconButton (this.frameBox, "Field.Delete",          true);
 
-			this.plusButton = new IconButton
-			{
-				Parent        = this.frameBox,
-				IconUri       = Misc.GetResourceIconUri ("Date.Plus"),
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
-			};
+			ToolTip.Default.SetToolTip (this.beginButton,      "Début de l'année en cours");
+			ToolTip.Default.SetToolTip (this.nowButton,        "Aujourd'hui");
+			ToolTip.Default.SetToolTip (this.endButton,        "Fin de l'année en cours");
+			ToolTip.Default.SetToolTip (this.predefinedButton, "Autre date à choix...");
+			ToolTip.Default.SetToolTip (this.calendarButton,   "Calendrier...");
+			ToolTip.Default.SetToolTip (this.deleteButton,     "Efface la date");
 
+			//	Connexion des événements.
 			this.textField.TextChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
@@ -161,6 +161,48 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.AddValue (1);
 			};
+
+			this.beginButton.Clicked += delegate
+			{
+				this.Value = this.GetPredefinedDate (DateType.BeginCurrentYear);
+				this.UpdateButtons ();
+				this.SetFocus ();
+				this.OnValueEdited (this.Field);
+			};
+
+			this.nowButton.Clicked += delegate
+			{
+				this.Value = this.GetPredefinedDate (DateType.Now);
+				this.UpdateButtons ();
+				this.SetFocus ();
+				this.OnValueEdited (this.Field);
+			};
+
+			this.endButton.Clicked += delegate
+			{
+				this.Value = this.GetPredefinedDate (DateType.EndCurrentYear);
+				this.UpdateButtons ();
+				this.SetFocus ();
+				this.OnValueEdited (this.Field);
+			};
+
+			this.predefinedButton.Clicked += delegate
+			{
+				this.ShowPredefinedPopup ();
+			};
+
+			this.calendarButton.Clicked += delegate
+			{
+				this.ShowCalendarPopup ();
+			};
+
+			this.deleteButton.Clicked += delegate
+			{
+				this.textField.Text = null;
+				this.UpdateButtons ();
+				this.SetFocus ();
+				this.OnValueEdited (this.Field);
+			};
 		}
 
 		public override void SetFocus()
@@ -171,6 +213,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			base.SetFocus ();
 		}
 
+
+		private IconButton CreateIconButton(Widget parent, string icon, bool leftMargin)
+		{
+			return new IconButton
+			{
+				Parent        = parent,
+				IconUri       = Misc.GetResourceIconUri (icon),
+				AutoFocus     = false,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
+				Margins         = new Margins (leftMargin ? AbstractFieldController.lineHeight/2 : 0, 0, 0, 0),
+			};
+		}
 
 		private void UpdateButtons()
 		{
@@ -196,6 +251,295 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ToolTip.Default.SetToolTip (this.plusButton,  "Année suivante");
 					break;
 			}
+
+			this.UpdateButtonState (this.beginButton, this.Value == this.GetPredefinedDate (DateType.BeginCurrentYear));
+			this.UpdateButtonState (this.nowButton,   this.Value == this.GetPredefinedDate (DateType.Now));
+			this.UpdateButtonState (this.endButton,   this.Value == this.GetPredefinedDate (DateType.EndCurrentYear));
+
+			this.deleteButton.Enable = !string.IsNullOrEmpty (this.textField.Text);
+		}
+
+		private void UpdateButtonState(IconButton button, bool activate)
+		{
+			if (activate)
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+				button.ActiveState = ActiveState.Yes;
+			}
+			else
+			{
+				button.ButtonStyle = ButtonStyle.ToolItem;
+				button.ActiveState = ActiveState.No;
+			}
+		}
+
+
+		private void ShowPredefinedPopup()
+		{
+			var popup = new SimplePopup ()
+			{
+				SelectedItem = this.GetSelectedDate (this.value),
+			};
+
+			foreach (var type in this.DateTypes)
+			{
+				var text = this.GetPredefinedDescription (type);
+
+				if (string.IsNullOrEmpty (text))
+				{
+					popup.Items.Add (null);
+				}
+				else
+				{
+					var date = this.GetPredefinedDate (type);
+					var td = TypeConverters.DateToString (date);
+
+					popup.Items.Add (string.Concat (td, " — ", text));
+				}
+			}
+
+			popup.Create (this.predefinedButton, leftOrRight: true);
+
+			popup.ItemClicked += delegate (object sender, int rank)
+			{
+				this.Value = this.GetPredefinedDate (rank);
+				this.UpdateButtons ();
+				this.SetFocus ();
+				this.OnValueEdited (this.Field);
+			};
+		}
+
+		private void ShowCalendarPopup()
+		{
+			var popup = new CalendarPopup ()
+			{
+				Date         = this.value.HasValue ? this.value.Value : Timestamp.Now.Date,
+				SelectedDate = this.value,
+			};
+
+			popup.Create (this.calendarButton, leftOrRight: false);
+
+			popup.DateChanged += delegate (object sender, System.DateTime date)
+			{
+				this.Value = date;
+				this.UpdateButtons ();
+				this.SetFocus ();
+				this.OnValueEdited (this.Field);
+			};
+		}
+
+
+		private string GetPredefinedDescription(DateType type)
+		{
+			switch (type)
+			{
+				case DateType.BeginMandat:
+					return "Début du mandat";
+
+				case DateType.EndMandat:
+					return "Fin du mandat";
+
+				case DateType.BeginPreviousYear:
+					return "Début de l'année précédente";
+
+				case DateType.EndPreviousYear:
+					return "Fin de l'année précédente";
+
+				case DateType.BeginCurrentYear:
+					return "Début de l'année en cours";
+
+				case DateType.EndCurrentYear:
+					return "Fin de l'année en cours";
+
+				case DateType.BeginNextYear:
+					return "Début de l'année suivante";
+
+				case DateType.EndNextYear:
+					return "Fin de l'année suivante";
+
+				case DateType.BeginPreviousMonth:
+					return "Début du mois précédent";
+
+				case DateType.EndPreviousMonth:
+					return "Fin du mois précédent";
+
+				case DateType.BeginCurrentMonth:
+					return "Début du mois en cours";
+
+				case DateType.EndCurrentMonth:
+					return "Fin du mois en cours";
+
+				case DateType.BeginNextMonth:
+					return "Début du mois suivant";
+
+				case DateType.EndNextMonth:
+					return "Fin du mois suivant";
+
+				case DateType.Now:
+					return "Aujourd'hui";
+
+				default:
+					return null;
+			}
+		}
+
+		private int GetSelectedDate(System.DateTime? date)
+		{
+			int sel = 0;
+
+			if (date.HasValue)
+			{
+				foreach (var type in this.DateTypes)
+				{
+					if (this.GetPredefinedDate (type) == date.Value)
+					{
+						return sel;
+					}
+
+					sel++;
+				}
+			}
+
+			return -1;
+		}
+
+		private System.DateTime GetPredefinedDate(int rank)
+		{
+			foreach (var type in this.DateTypes)
+			{
+				if (rank-- <= 0)
+				{
+					return this.GetPredefinedDate (type);
+				}
+			}
+
+			return this.GetPredefinedDate (DateType.Now);
+		}
+
+		private System.DateTime GetPredefinedDate(DateType type)
+		{
+			var now = Timestamp.Now.Date;
+
+			switch (type)
+			{
+				case DateType.BeginMandat:
+					return this.accessor.Mandat.StartDate;
+
+				case DateType.EndMandat:
+					return this.accessor.Mandat.EndDate;
+
+				case DateType.BeginPreviousYear:
+					return new System.DateTime (now.Year-1, 1, 1);
+
+				case DateType.EndPreviousYear:
+					return new System.DateTime (now.Year-1, 12, 31);
+
+				case DateType.BeginCurrentYear:
+					return new System.DateTime (now.Year, 1, 1);
+
+				case DateType.EndCurrentYear:
+					return new System.DateTime (now.Year, 12, 31);
+
+				case DateType.BeginNextYear:
+					return new System.DateTime (now.Year+1, 1, 1);
+
+				case DateType.EndNextYear:
+					return new System.DateTime (now.Year+1, 12, 31);
+
+				case DateType.BeginPreviousMonth:
+					return new System.DateTime (now.Year, now.Month, 1).AddMonths (-1);
+
+				case DateType.EndPreviousMonth:
+					return new System.DateTime (now.Year, now.Month, 1).AddDays (-1);
+
+				case DateType.BeginCurrentMonth:
+					return new System.DateTime (now.Year, now.Month, 1);
+
+				case DateType.EndCurrentMonth:
+					return new System.DateTime (now.Year, now.Month, 1).AddMonths (1).AddDays (-1);
+
+				case DateType.BeginNextMonth:
+					return new System.DateTime (now.Year, now.Month, 1).AddMonths (1);
+
+				case DateType.EndNextMonth:
+					return new System.DateTime (now.Year, now.Month, 1).AddMonths (2).AddDays (-1);
+
+				case DateType.Now:
+					return now;
+
+				default:
+					return System.DateTime.MaxValue;
+			}
+		}
+
+		private IEnumerable<DateType> DateTypes
+		{
+			get
+			{
+				yield return DateType.BeginMandat;
+				yield return DateType.EndMandat;
+
+				yield return DateType.Separator;
+				yield return DateType.Separator;
+
+				yield return DateType.BeginPreviousYear;
+				yield return DateType.EndPreviousYear;
+
+				yield return DateType.Separator;
+
+				yield return DateType.BeginCurrentYear;
+				yield return DateType.EndCurrentYear;
+
+				yield return DateType.Separator;
+
+				yield return DateType.BeginNextYear;
+				yield return DateType.EndNextYear;
+
+				yield return DateType.Separator;
+				yield return DateType.Separator;
+
+				yield return DateType.BeginPreviousMonth;
+				yield return DateType.EndPreviousMonth;
+
+				yield return DateType.Separator;
+
+				yield return DateType.BeginCurrentMonth;
+				yield return DateType.EndCurrentMonth;
+
+				yield return DateType.Separator;
+
+				yield return DateType.BeginNextMonth;
+				yield return DateType.EndNextMonth;
+			}
+		}
+
+		private enum DateType
+		{
+			Unknown,
+			Separator,
+
+			BeginMandat,
+			EndMandat,
+
+			BeginPreviousYear,
+			EndPreviousYear,
+
+			BeginCurrentYear,
+			EndCurrentYear,
+
+			BeginNextYear,
+			EndNextYear,
+
+			BeginPreviousMonth,
+			EndPreviousMonth,
+
+			BeginCurrentMonth,
+			EndCurrentMonth,
+
+			BeginNextMonth,
+			EndNextMonth,
+
+			Now,
 		}
 
 
@@ -367,6 +711,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TextField						textField;
 		private IconButton						minusButton;
 		private IconButton						plusButton;
+		private IconButton						beginButton;
+		private IconButton						nowButton;
+		private IconButton						endButton;
+		private IconButton						predefinedButton;
+		private IconButton						calendarButton;
+		private IconButton						deleteButton;
 		private System.DateTime?				value;
 	}
 }

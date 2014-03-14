@@ -371,6 +371,7 @@
     <EmbeddedResource Include="Images\View.AssetsSettings.icon" />
     <EmbeddedResource Include="Images\View.PersonsSettings.icon" />
     <EmbeddedResource Include="Images\TreeTable.Graphic.icon" />
+    <EmbeddedResource Include="Images\Field.Delete.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
