@@ -113,6 +113,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			ToolTip.Default.SetToolTip (this.deleteButton,     "Efface la date");
 
 			//	Connexion des événements.
+			this.textField.PreProcessing += delegate (object sender, MessageEventArgs e)
+			{
+				if (e.Message.MessageType == MessageType.KeyDown)
+				{
+					if (e.Message.KeyCode == KeyCode.ArrowDown)
+					{
+						this.AddValue (-1);
+					}
+					else if (e.Message.KeyCode == KeyCode.ArrowUp)
+					{
+						this.AddValue (1);
+					}
+				}
+			};
+
 			this.textField.TextChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
