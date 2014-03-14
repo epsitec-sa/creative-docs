@@ -74,9 +74,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			dateController.DateChanged += delegate (object sender, System.DateTime? date)
 			{
-				this.Timestamp = new Timestamp (dateController.Date.Value, 0);
-				this.UpdateButtons ();
-				this.OnDateChanged (date);
+				if (dateController.Date.HasValue)
+				{
+					this.Timestamp = new Timestamp (dateController.Date.Value, 0);
+					this.UpdateButtons ();
+					this.OnDateChanged (date);
+				}
 			};
 		}
 
