@@ -8,16 +8,16 @@ using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
-	public sealed class EditionAiderOfficeSenderViewController : EditionViewController<AiderOfficeSenderEntity>
+	public sealed class EditionAiderOfficeManagementViewController : EditionViewController<AiderOfficeManagementEntity>
 	{
-		protected override void CreateBricks(BrickWall<AiderOfficeSenderEntity> wall)
+		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()
-					.Field (x => x.Name)
+					.Field (x => x.OfficeMainContact)
 				.End ()
 				.Input ()
-					.Field (x => x.OfficialContact)
+					.Field (x => x.PostalTown)
 				.End ();
 		}
 	}

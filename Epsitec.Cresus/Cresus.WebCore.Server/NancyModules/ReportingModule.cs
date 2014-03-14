@@ -30,8 +30,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var processors = instances.Select (x => new KeyValuePair<string, IReportingProcessor> (x.Name, x));
 			
 			this.processors = new System.Collections.Concurrent.ConcurrentDictionary<string, IReportingProcessor> (processors);
-
-			//	https://localhost/proxy/reporting/letter/[LVOA13]-1000000001/[LVARD]-1000000001
 			
 			Get["/{processor}/{settings}/{letter}"] =
 				p => this.Execute ((wa, b) => this.ProduceReport (wa, b, p));

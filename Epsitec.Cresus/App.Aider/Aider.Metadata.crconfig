@@ -1331,11 +1331,7 @@ AiderOfficeSender = [LVOA13]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSender:[LVOC13].[LVA8E].[LVACG]" title="Adresse" canSort="True" canFilter="True">
-        <sort o="None" />
-        <disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSender:[LVOC13].[LVA8E].[LVACG]" title="Adresse" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSender:[LVOD13].[LVA8E].[LVACG]" title="Adresse" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>

@@ -117,12 +117,15 @@ namespace Epsitec.Aider.Entities
 			return office;
 		}
 
-		internal void AddSettingsInternal(AiderOfficeSenderEntity settings)
+		internal void AddSenderInternal(AiderOfficeSenderEntity settings)
 		{
-			this.GetOfficeSenders ().Add (settings);
+			if (!this.GetOfficeSenders ().Any (s => s == settings))
+			{
+				this.GetOfficeSenders ().Add (settings);
+			}
 		}
 
-		internal void RemoveSettingsInternal(AiderOfficeSenderEntity settings)
+		internal void RemoveSenderInternal(AiderOfficeSenderEntity settings)
 		{
 			this.GetOfficeSenders ().Remove (settings);
 		}

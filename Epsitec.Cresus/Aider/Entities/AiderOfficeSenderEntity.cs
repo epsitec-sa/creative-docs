@@ -25,9 +25,18 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Name.Replace ("(", "\n("));
 		}
 
+		public static AiderOfficeSenderEntity Find(BusinessContext businessContext, AiderContactEntity contact)
+		{
+			var example = new AiderOfficeSenderEntity ()
+			{
+				OfficialContact = contact
+			};
+
+			return businessContext.DataContext.GetByExample (example).First ();
+		}
+
 		public static AiderOfficeSenderEntity Create(BusinessContext businessContext,
-			/**/									   AiderOfficeManagementEntity office, AiderContactEntity officialContact, AiderContactEntity officialAddress,
-			/**/									   AiderTownEntity postalTown)
+			/**/									   AiderOfficeManagementEntity office, AiderContactEntity officialContact)
 		{
 			var settings = businessContext.CreateAndRegisterEntity<AiderOfficeSenderEntity> ();
 
@@ -35,12 +44,6 @@ namespace Epsitec.Aider.Entities
 			settings.Office = office;
 			
 			settings.ParishGroupPathCache = office.ParishGroupPathCache;
-
-			if (officialAddress.IsNotNull ())
-			{
-				settings.Name = officialAddress.DisplayName;
-				settings.OfficeAddress = officialAddress;
-			}
 
 			if (officialContact.IsNotNull ())
 			{
@@ -60,12 +63,7 @@ namespace Epsitec.Aider.Entities
 				settings.Name = string.Format ("Expéditeur {0:00}", office.OfficeSenders.Count);
 			}
 
-			if (postalTown.IsNotNull ())
-			{
-				settings.PostalTown = postalTown;
-			}
-
-			office.AddSettingsInternal (settings);
+			office.AddSenderInternal (settings);
 
 			return settings;
 		}
@@ -74,7 +72,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var office = settings.Office;
 
-			office.RemoveSettingsInternal (settings);
+			office.RemoveSenderInternal (settings);
 
 			context.DeleteEntity (settings);
 		}

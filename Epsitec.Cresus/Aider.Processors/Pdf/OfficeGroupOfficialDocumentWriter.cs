@@ -23,38 +23,37 @@ using System.Linq;
 
 namespace Epsitec.Aider.Processors.Pdf
 {
-	internal sealed class OfficeLetterDocumentWriter
+	internal sealed class OfficeGroupOfficialDocumentWriter
 	{
-		public OfficeLetterDocumentWriter(AiderOfficeLetterReportEntity letter, AiderOfficeSenderEntity settings, LabelLayout layout)
+		public OfficeGroupOfficialDocumentWriter(AiderOfficeGroupParticipantReportEntity report, AiderOfficeSenderEntity settings, LabelLayout layout)
 		{
-			this.letter		= letter;
+			this.report		= report;
 			this.layout		= layout;
 			this.settings	= settings;
 		}
 
-
 		public void WriteStream(System.IO.Stream stream)
 		{
-			var setup					= new LetterDocumentSetup ();
+			var setup					= new TextDocumentSetup ();
 			var report					= this.GetReport (setup);
 
 			var contentTemplateBuilder = new System.Text.StringBuilder ();
 
-			contentTemplateBuilder.Append (this.letter.GetLetterContent ());
+			contentTemplateBuilder.Append (this.report.GetReportContent ());
 
 			var topLogo			= string.Format ("<img src=\"{0}\" width=\"378\" height=\"298\"/>",@"S:\Epsitec.Cresus\Aider\Images\logo.png");
 			var topReference	= "<b>" + this.settings.Office.OfficeName + "</b>";
-
-			report.GeneratePdf (stream, topLogo ,topReference, this.BuildAddress (this.settings.OfficialContact, false), this.BuildAddress (this.letter.RecipientContact, true), contentTemplateBuilder.ToString ());
+			
+			report.GeneratePdf (stream,contentTemplateBuilder.ToString ());
 		}
 
-		private LetterDocument GetReport(LetterDocumentSetup setup)
+		private TextDocument GetReport(TextDocumentSetup setup)
 		{
 			var exportPdfInfo   = this.layout.GetExportPdfInfo ();
 			var labelPageLayout = this.layout.GetLabelPageLayout ();
 			var labelRenderer   = this.layout.GetLabelRenderer ();
 
-			return new LetterDocument (exportPdfInfo, setup);
+			return new TextDocument (exportPdfInfo, setup);
 		}
 
 		private string BuildAddress(AiderContactEntity contact, bool withAddressLine)
@@ -91,8 +90,8 @@ namespace Epsitec.Aider.Processors.Pdf
 			return sb.ToString ();
 		}
 
-		private readonly AiderOfficeLetterReportEntity		letter;
-		private readonly AiderOfficeSenderEntity			settings;
-		private readonly LabelLayout						layout;
+		private readonly AiderOfficeGroupParticipantReportEntity		report;
+		private readonly AiderOfficeSenderEntity						settings;
+		private readonly LabelLayout									layout;
 	}
 }

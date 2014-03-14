@@ -25,6 +25,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
+			wall.AddBrick ()
+					.Icon ("Base.AiderGoup.Parish")
+					.Title (p => p.GetCompactSummary ())
+					.Text (p => "...")
+					.EnableActionButton<ActionAiderOfficeManagementViewController1Join> ()
+					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
+
 			wall.AddBrick (p => p.ParishGroup)
 					.Icon ("Data.AiderGroup.People")
 					.Title ("Membres de la paroisse")
@@ -37,6 +44,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Title ("Dérogations entrantes")
 					.Text (p => p.GetParticipantsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
+					.EnableActionButton<ActionAiderGroupViewController9GenerateOfficialReport> ()
 					.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
 
 			wall.AddBrick (p => p.ParishGroup.Subgroups.Where (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ())
@@ -44,6 +52,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Title ("Dérogations sortantes")
 					.Text (p => p.GetParticipantsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
+					.EnableActionButton<ActionAiderGroupViewController9GenerateOfficialReport> ()
 					.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
 
 
@@ -56,7 +65,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 
 			wall.AddBrick ()
-				.Icon ("Data.AiderGoup.Parish")
+				.Icon ("Base.AiderGoup.Parish")
 				.Title (p => p.GetSettingsTitleSummary ())
 				.Text (p => p.GetSettingsSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
@@ -64,7 +73,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionMenu<ActionAiderOfficeManagementViewController0CreateSettings> ();
 
 			wall.AddBrick ()
-				.Icon ("Data.AiderGoup.Parish")
+				.Icon ("Base.AiderGoup.Parish")
 				.Title (p => p.GetDocumentTitleSummary ())
 				.Text (p => p.GetDocumentsSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)

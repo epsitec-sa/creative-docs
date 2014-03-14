@@ -27,12 +27,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderContactEntity, AiderContactEntity, AiderTownEntity> (this.Execute);
+			return ActionExecutor.Create<AiderContactEntity> (this.Execute);
 		}
 
-		private void Execute(AiderContactEntity officialContact, AiderContactEntity officeAddress, AiderTownEntity postalTown)
+		private void Execute(AiderContactEntity officialContact)
 		{
-			AiderOfficeSenderEntity.Create (this.BusinessContext, this.Entity, officialContact, officeAddress, postalTown);
+			AiderOfficeSenderEntity.Create (this.BusinessContext, this.Entity, officialContact);
 		}
 
 		protected override void GetForm(ActionBrick<AiderOfficeManagementEntity, SimpleBrick<AiderOfficeManagementEntity>> form)
@@ -40,13 +40,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			form
 				.Title ("Expéditeur")
 				.Field<AiderContactEntity> ()
-					.Title ("Personne de contact")
-				.End ()
-				.Field<AiderContactEntity> ()
-					.Title ("Adresse de contact du secrétariat")
-				.End ()
-				.Field<AiderTownEntity> ()
-					.Title ("Office postal pour dépôt d'envois P.P")
+					.Title ("Contact de l'expéditeur")
 				.End ()
 			.End ();
 		}

@@ -199,11 +199,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 							);
 
 			var letter = AiderOfficeLetterReportEntity.Create (businessContext, recipient, sender, documentName, content);
+			
 			var notificationManager = NotificationManager.GetCurrentNotificationManager ();
 			notificationManager.Notify (aiderUser.LoginName, new NotificationMessage
 			{
 				Title	= "Dérogation effectuée",
-				Body	= "La lettre à été ajoutée dans la gestion de documents de la " + destParish.Name,
+				Body	= "La lettre à été ajoutée dans la gestion des documents de la " + destParish.Name,
 				Dataset = Res.CommandIds.Base.ShowAiderOfficeManagement,
 				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey(sender.Office).Value
 			}
