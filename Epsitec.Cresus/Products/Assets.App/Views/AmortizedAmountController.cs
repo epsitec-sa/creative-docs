@@ -462,6 +462,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.entryController = new EntryController (this.accessor);
 			this.entryController.CreateUI (parent);
 
+			this.entryController.ValueEdited += delegate
+			{
+				this.UpdateUI ();
+				this.OnValueEdited ();
+			};
+
 			{
 				var line = this.CreateFrame (parent);
 				this.CreateButton (line);

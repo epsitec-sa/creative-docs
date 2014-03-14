@@ -289,6 +289,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static void InitialiseAmortizedAmount(AmortizedAmount aa, DataObject obj, DataEvent e, Timestamp timestamp)
 		{
+			//	Initialise une fois pour toutes le AmortizedAmount d'un objet.
 			//	Collecte tous les champs qui définissent comment générer l'écriture.
 			//	Ils peuvent provenir de plusieurs événements différents.
 			var def = Amortizations.GetAmortizationDefinition (obj, timestamp);

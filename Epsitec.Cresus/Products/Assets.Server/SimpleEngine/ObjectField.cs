@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		AssetEntryForcedCredit,
 		AssetEntryForcedStamp,
 		AssetEntryForcedTitle,
-		AssetEntryForcedAmound,
+		AssetEntryForcedAmount,
 
 		//	Définitions d'un compte.
 		AccountCategory,

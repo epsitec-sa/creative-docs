@@ -192,9 +192,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return null;
 		}
 
-		public System.DateTime? GetFieldDate(ObjectField field)
+		public System.DateTime? GetFieldDate(ObjectField field, bool synthetic = true)
 		{
-			var p = this.GetProperty (field) as DataDateProperty;
+			var p = this.GetProperty (field, synthetic) as DataDateProperty;
 
 			if (p == null)
 			{
@@ -206,9 +206,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal? GetFieldDecimal(ObjectField field)
+		public decimal? GetFieldDecimal(ObjectField field, bool synthetic = true)
 		{
-			var p = this.GetProperty (field) as DataDecimalProperty;
+			var p = this.GetProperty (field, synthetic) as DataDecimalProperty;
 
 			if (p == null)
 			{
@@ -220,9 +220,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public Guid GetFieldGuid(ObjectField field)
+		public Guid GetFieldGuid(ObjectField field, bool synthetic = true)
 		{
-			var p = this.GetProperty (field) as DataGuidProperty;
+			var p = this.GetProperty (field, synthetic) as DataGuidProperty;
 
 			if (p == null)
 			{
@@ -234,9 +234,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public GuidRatio GetFieldGuidRatio(ObjectField field)
+		public GuidRatio GetFieldGuidRatio(ObjectField field, bool synthetic = true)
 		{
-			var p = this.GetProperty (field) as DataGuidRatioProperty;
+			var p = this.GetProperty (field, synthetic) as DataGuidRatioProperty;
 
 			if (p == null)
 			{
@@ -248,9 +248,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public int? GetFieldInt(ObjectField field)
+		public int? GetFieldInt(ObjectField field, bool synthetic = true)
 		{
-			var p = this.GetProperty (field) as DataIntProperty;
+			var p = this.GetProperty (field, synthetic) as DataIntProperty;
 
 			if (p == null)
 			{
@@ -262,9 +262,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public string GetFieldString(ObjectField field)
+		public string GetFieldString(ObjectField field, bool synthetic = true)
 		{
-			var p = this.GetProperty (field) as DataStringProperty;
+			var p = this.GetProperty (field, synthetic) as DataStringProperty;
 
 			if (p == null)
 			{
@@ -435,7 +435,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
-		private AbstractDataProperty GetProperty(ObjectField field)
+		private AbstractDataProperty GetProperty(ObjectField field, bool synthetic = true)
 		{
 			//	Retourne une propriété en édition. L'événement en cours d'édition
 			//	a la priorité.
@@ -447,7 +447,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					return property;
 				}
 
-				if (this.obj != null && this.timestamp.HasValue)
+				if (this.obj != null && this.timestamp.HasValue && synthetic)
 				{
 					var before = this.timestamp.Value.JustBefore;
 					return ObjectProperties.GetObjectProperty (this.obj, before, field, true);

@@ -123,7 +123,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStampController  (parent);
 			this.CreateTitleController  (parent);
 			this.CreateAmountController (parent);
-			this.CreateWarning          (parent);
 
 			this.UpdateUI ();
 		}
@@ -142,6 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.dateController.ValueEdited += delegate (object sender, ObjectField of)
 			{
+				this.SetDate (this.dateController.Value);
 			};
 		}
 
@@ -160,6 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.debitController.ValueEdited += delegate (object sender, ObjectField of)
 			{
+				this.SetDebit (this.debitController.Value);
 			};
 		}
 
@@ -178,6 +179,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.creditController.ValueEdited += delegate (object sender, ObjectField of)
 			{
+				this.SetCredit (this.creditController.Value);
 			};
 		}
 
@@ -197,6 +199,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.stampController.ValueEdited += delegate (object sender, ObjectField of)
 			{
+				this.SetStamp (this.stampController.Value);
 			};
 		}
 
@@ -216,6 +219,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.titleController.ValueEdited += delegate (object sender, ObjectField of)
 			{
+				this.SetTitle (this.titleController.Value);
 			};
 		}
 
@@ -234,17 +238,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.amountController.ValueEdited += delegate (object sender, ObjectField of)
 			{
-			};
-		}
-
-		private void CreateWarning (Widget parent)
-		{
-			new StaticText
-			{
-				Parent  = parent,
-				Text    = "(Les modifications de ces champs sont sans effet pour l'instant)".Italic (),
-				Dock    = DockStyle.Top,
-				Margins = new Margins (100+10, 0, 0, 0),
+				this.SetAmount (this.amountController.Value);
 			};
 		}
 
@@ -260,6 +254,43 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void SetDate(System.DateTime? value)
+		{
+			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedDate, value);
+			this.OnValueEdited ();
+		}
+
+		private void SetDebit(Guid value)
+		{
+			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedDebit, value);
+			this.OnValueEdited ();
+		}
+
+		private void SetCredit(Guid value)
+		{
+			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedCredit, value);
+			this.OnValueEdited ();
+		}
+
+		private void SetStamp(string value)
+		{
+			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedStamp, value);
+			this.OnValueEdited ();
+		}
+
+		private void SetTitle(string value)
+		{
+			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedTitle, value);
+			this.OnValueEdited ();
+		}
+
+		private void SetAmount(decimal? value)
+		{
+			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedAmount, value);
+			this.OnValueEdited ();
+		}
+
+
 
 		public void UpdateNoEditingUI()
 		{
@@ -268,33 +299,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateUI()
 		{
-			this.dateController  .PropertyState = this.propertyState;
-			this.debitController .PropertyState = this.propertyState;
-			this.creditController.PropertyState = this.propertyState;
-			this.stampController .PropertyState = this.propertyState;
-			this.titleController .PropertyState = this.propertyState;
-			this.amountController.PropertyState = this.propertyState;
-
 			if (this.value.HasValue)
 			{
-				EntryProperties baseProperties    = null;
-				EntryProperties currentProperties = null;
+				EntryProperties baseProperties= null;
+				EntryProperties editProperties = null;
 
 				using (var entries = new Entries (this.accessor))
 				{
-					baseProperties    = entries.GetEntryProperties (this.value.Value, true);
-					currentProperties = entries.GetEntryProperties (this.value.Value, false);
+					baseProperties = entries.GetEntryProperties (this.value.Value, Entries.GetEntryPropertiesType.Base);
+					editProperties = entries.GetEntryProperties (this.value.Value, Entries.GetEntryPropertiesType.Edited);
 				}
 
-				this.dateController  .Value = currentProperties.Date;
-				this.debitController .Value = currentProperties.Debit;
-				this.creditController.Value = currentProperties.Credit;
-				this.stampController .Value = currentProperties.Stamp;
-				this.titleController .Value = currentProperties.Title;
-				this.amountController.Value = currentProperties.Amount;
+				this.UpdatePropertyState (this.dateController,   baseProperties.Date   == editProperties.Date);
+				this.UpdatePropertyState (this.debitController,  baseProperties.Debit  == editProperties.Debit);
+				this.UpdatePropertyState (this.creditController, baseProperties.Credit == editProperties.Credit);
+				this.UpdatePropertyState (this.stampController,  baseProperties.Stamp  == editProperties.Stamp);
+				this.UpdatePropertyState (this.titleController,  baseProperties.Title  == editProperties.Title);
+				this.UpdatePropertyState (this.amountController, baseProperties.Amount == editProperties.Amount);
+
+				this.dateController  .Value = editProperties.Date;
+				this.debitController .Value = editProperties.Debit;
+				this.creditController.Value = editProperties.Credit;
+				this.stampController .Value = editProperties.Stamp;
+				this.titleController .Value = editProperties.Title;
+				this.amountController.Value = editProperties.Amount;
 			}
 			else
 			{
+				this.dateController  .PropertyState = this.propertyState;
+				this.debitController .PropertyState = this.propertyState;
+				this.creditController.PropertyState = this.propertyState;
+				this.stampController .PropertyState = this.propertyState;
+				this.titleController .PropertyState = this.propertyState;
+				this.amountController.PropertyState = this.propertyState;
+
 				this.dateController  .Value = null;
 				this.debitController .Value = Guid.Empty;
 				this.creditController.Value = Guid.Empty;
@@ -302,6 +340,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.titleController .Value = null;
 				this.amountController.Value = null;
 			}
+		}
+
+		private void UpdatePropertyState(AbstractFieldController fieldController, bool equal)
+		{
+			fieldController.PropertyState = equal ? PropertyState.Synthetic : PropertyState.Single;
 		}
 
 
