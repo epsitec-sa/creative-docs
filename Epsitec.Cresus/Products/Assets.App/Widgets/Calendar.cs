@@ -77,14 +77,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.PaintCells (graphics);
 		}
 
-		protected override void OnPressed(MessageEventArgs e)
+		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if (this.hoverDate.HasValue)
+			if (message.MessageType == MessageType.MouseDown)
 			{
-				this.OnDateChanged (this.hoverDate.Value);
+				if (this.hoverDate.HasValue)
+				{
+					this.OnDateChanged (this.hoverDate.Value);
+					message.Swallowed = true;
+				}
 			}
 
-			base.OnPressed (e);
+			base.ProcessMessage (message, pos);
 		}
 
 		protected override void OnMouseMove(MessageEventArgs e)
