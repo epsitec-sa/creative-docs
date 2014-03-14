@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Field                 = ObjectField.Unknown,
 				Label                 = "Date",
-				HideAdditionalButtons = true,
+				HideAdditionalButtons = false,
 				TabIndex              = ++this.tabIndex,
 			};
 
@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Field                 = ObjectField.Unknown,
 				Label                 = "Débit",
 				EditWidth             = AbstractFieldController.maxWidth,
-				HideAdditionalButtons = true,
+				HideAdditionalButtons = false,
 				TabIndex              = ++this.tabIndex,
 			};
 
@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Field                 = ObjectField.Unknown,
 				Label                 = "Crédit",
 				EditWidth             = AbstractFieldController.maxWidth,
-				HideAdditionalButtons = true,
+				HideAdditionalButtons = false,
 				TabIndex              = ++this.tabIndex,
 			};
 
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Label                 = "Pièce",
 				EditWidth             = 100,
 				LineCount             = 1,
-				HideAdditionalButtons = true,
+				HideAdditionalButtons = false,
 				TabIndex              = ++this.tabIndex,
 			};
 
@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Label                 = "Libellé",
 				EditWidth             = AbstractFieldController.maxWidth,
 				LineCount             = 1,
-				HideAdditionalButtons = true,
+				HideAdditionalButtons = false,
 				TabIndex              = ++this.tabIndex,
 			};
 
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Field                 = ObjectField.Unknown,
 				Label                 = "Montant",
 				DecimalFormat         = DecimalFormat.Amount,
-				HideAdditionalButtons = true,
+				HideAdditionalButtons = false,
 				TabIndex              = ++this.tabIndex,
 			};
 

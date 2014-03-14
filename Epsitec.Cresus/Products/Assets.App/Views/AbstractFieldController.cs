@@ -84,7 +84,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (!this.HideAdditionalButtons)
 			{
 				this.CreateClearButton ();
-				this.CreateHistoryButton ();
+
+				if (this.Field != ObjectField.Unknown)
+				{
+					this.CreateHistoryButton ();
+				}
 			}
 
 			this.UpdatePropertyState ();

@@ -496,9 +496,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new AmortizedAmountFieldController (this.accessor)
 			{
-				Field     = field,
-				Label     = this.accessor.GetFieldName (field),
-				TabIndex  = ++this.tabIndex,
+				Field                 = field,
+				Label                 = this.accessor.GetFieldName (field),
+				HideAdditionalButtons = true,
+				TabIndex              = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
