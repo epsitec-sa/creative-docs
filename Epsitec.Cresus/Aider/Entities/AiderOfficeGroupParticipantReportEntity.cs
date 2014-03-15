@@ -5,7 +5,7 @@ using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
@@ -18,6 +18,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+
+
 
 namespace Epsitec.Aider.Entities
 {
@@ -40,7 +42,7 @@ namespace Epsitec.Aider.Entities
 			return new string (chars);
 		}
 
-		public string GetProcessorUrl(BusinessContext context, string processorName, AiderOfficeSenderEntity sender)
+		public string BuildProcessorUrlForSender(BusinessContext context, string processorName, AiderOfficeSenderEntity sender)
 		{
 			var senderEntityId		= context.DataContext
 												.GetPersistedId (sender)
@@ -61,6 +63,22 @@ namespace Epsitec.Aider.Entities
 							.ToString ();
 		}
 
+
+		partial void GetParticipants(ref IList<AiderGroupParticipantEntity> value)
+		{
+			value = this.GetParticipants ().AsReadOnlyCollection ();
+		}
+
+		private IList<AiderGroupParticipantEntity> GetParticipants()
+		{
+			if (this.participants == null)
+			{
+				this.participants = this.ExecuteWithDataContext (d => this.Group.FindParticipants (d, this.Group.FindParticipantCount (d)), () => new List<AiderGroupParticipantEntity> ());
+			}
+
+			return this.participants;
+		}
+
 		public static AiderOfficeGroupParticipantReportEntity Create(BusinessContext context, AiderGroupEntity group, AiderOfficeSenderEntity sender, string documentName, string title, string content)
 		{
 			var report = context.CreateAndRegisterEntity<AiderOfficeGroupParticipantReportEntity> ();
@@ -79,5 +97,7 @@ namespace Epsitec.Aider.Entities
 			System.Buffer.BlockCopy (str.ToCharArray (), 0, bytes, 0, bytes.Length);
 			return bytes;
 		}
+
+		private IList<AiderGroupParticipantEntity>	participants;
 	}
 }

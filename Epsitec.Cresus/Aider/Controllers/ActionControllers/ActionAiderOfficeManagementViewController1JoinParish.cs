@@ -20,7 +20,7 @@ using Epsitec.Cresus.Core.Library;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (1)]
-	public sealed class ActionAiderOfficeManagementViewController1Join : ActionViewController<AiderOfficeManagementEntity>
+	public sealed class ActionAiderOfficeManagementViewController1JoinParish : ActionViewController<AiderOfficeManagementEntity>
 	{
 		public override FormattedText GetTitle()
 		{
@@ -91,9 +91,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			participationData.Add (new ParticipationData (contact));
 			newUserGroup.AddParticipations (this.BusinessContext, participationData, Date.Today, null);
 
-			//Join
+			//Join parish
 			user.Office = this.Entity;
-
+			user.Parish = this.Entity.ParishGroup;
 			
 			
 		}

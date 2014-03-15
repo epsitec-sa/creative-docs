@@ -2060,8 +2060,10 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVOS23
 				public static readonly global::Epsitec.Common.Support.Druid Content = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 92);
-				//	designer:cap/LVOR23
-				public static readonly global::Epsitec.Common.Support.Druid Group = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 91);
+				//	designer:cap/LVO233
+				public static readonly global::Epsitec.Common.Support.Druid Group = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 98);
+				//	designer:cap/LVO133
+				public static readonly global::Epsitec.Common.Support.Druid Participants = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 97);
 				//	designer:cap/LVOQ23
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 90);
 			}

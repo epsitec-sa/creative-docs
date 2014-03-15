@@ -165,7 +165,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController11Derogate.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderUserViewController2SetOffice.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController9GenerateOfficialReport.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderOfficeManagementViewController1Join.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderOfficeManagementViewController1JoinParish.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderGroupExtractionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />

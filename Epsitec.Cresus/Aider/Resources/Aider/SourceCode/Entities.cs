@@ -9495,24 +9495,38 @@ namespace Epsitec.Aider.Entities
 		}
 		///	<summary>
 		///	The <c>Group</c> field.
-		///	designer:fld/LVOP23/LVOR23
+		///	designer:fld/LVOP23/LVO233
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOR23]")]
+		[global::Epsitec.Common.Support.EntityField ("[LVO233]")]
 		public global::Epsitec.Aider.Entities.AiderGroupEntity Group
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVOR23]");
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVO233]");
 			}
 			set
 			{
 				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.Group;
-				if (oldValue != value || !this.IsFieldDefined("[LVOR23]"))
+				if (oldValue != value || !this.IsFieldDefined("[LVO233]"))
 				{
 					this.OnGroupChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVOR23]", oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVO233]", oldValue, value);
 					this.OnGroupChanged (oldValue, value);
 				}
+			}
+		}
+		///	<summary>
+		///	The <c>Participants</c> field.
+		///	designer:fld/LVOP23/LVO133
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO133]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> Participants
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity>);
+				this.GetParticipants (ref value);
+				return value;
 			}
 		}
 		
@@ -9523,6 +9537,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		
+		partial void GetParticipants(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

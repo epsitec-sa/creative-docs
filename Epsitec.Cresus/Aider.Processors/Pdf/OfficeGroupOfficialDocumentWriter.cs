@@ -37,14 +37,31 @@ namespace Epsitec.Aider.Processors.Pdf
 			var setup					= new TextDocumentSetup ();
 			var report					= this.GetReport (setup);
 
-			var contentTemplateBuilder = new System.Text.StringBuilder ();
+			var content = new System.Text.StringBuilder ();
 
-			contentTemplateBuilder.Append (this.report.GetReportContent ());
+			content.Append (this.report.GetReportContent ());
+
+			var no = 0;
+			foreach (var participant in this.report.Participants)
+			{
+				var contact		= participant.Contact;
+				var person		= contact.Person;
+				var address		= contact.Address;
+				var fullName	= person.GetShortFullName ();
+				var street		= address.StreetUserFriendly;
+				var zip			= address.GetDisplayZipCode();
+				var town		= address.Town.Name;
+				var bDate		= person.BirthdayDay + "." + person.BirthdayMonth + "." + person.BirthdayYear;
+				var parish		= person.ParishGroup.Name;
+
+				no++;
+				content.Append (no + "." + fullName + ", " + street + ", " + zip + " " + town + " - " + bDate + " -> " + parish + "<br/>");
+			}
 
 			var topLogo			= string.Format ("<img src=\"{0}\" width=\"378\" height=\"298\"/>",@"S:\Epsitec.Cresus\Aider\Images\logo.png");
 			var topReference	= "<b>" + this.settings.Office.OfficeName + "</b>";
 			
-			report.GeneratePdf (stream,contentTemplateBuilder.ToString ());
+			report.GeneratePdf (stream,content.ToString ());
 		}
 
 		private TextDocument GetReport(TextDocumentSetup setup)

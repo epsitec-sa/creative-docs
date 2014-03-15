@@ -24,9 +24,10 @@ namespace Epsitec.Aider.Entities
 		{
 
 		}
+
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.OfficeName);
+			return TextFormatter.FormatText (this.OfficeMainContact.GetCompactSummary ());
 		}
 
 		public override FormattedText GetCompactSummary()

@@ -46,12 +46,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 										.Append (date.ToString("d MMM yyyy"))
 										.Append (" à ")
 										.Append (place.Name)
+										.Append ("<br/><br/>")
 										.ToString ();
 
 			var report = AiderOfficeGroupParticipantReportEntity.Create (this.BusinessContext, group, sender, documentName, title, content);
 
 			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
-			report.ProcessorUrl		= report.GetProcessorUrl (this.BusinessContext, "officederogation", sender);
+			report.ProcessorUrl		= report.BuildProcessorUrlForSender (this.BusinessContext, "officegroup", sender);
 			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 
 			EntityBag.Add (report, title);
@@ -59,17 +60,21 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected override void GetForm(ActionBrick<AiderGroupEntity, SimpleBrick<AiderGroupEntity>> form)
 		{
+			var currentUser = this.BusinessContext.GetLocalEntity(AiderUserManager.Current.AuthenticatedUser);
+
 			form
 				.Title ("Production d'un extrait officiel")
 				.Field<string> ()
 					.Title ("Titre")
-					.InitialValue ("Liste des dérogations")
+					.InitialValue (this.Entity.Name)
 				.End ()
 				.Field<System.DateTime> ()
 					.Title ("Date de l'assemblée")
+					.InitialValue (System.DateTime.Now)
 				.End ()
 				.Field<AiderTownEntity> ()
 					.Title ("Lieu de l'assemblée")
+					.InitialValue (currentUser.Office.OfficeMainContact.Address.Town)
 				.End ()
 			.End ();
 		}

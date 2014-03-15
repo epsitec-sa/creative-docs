@@ -25,11 +25,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
+			var currentUser		= AiderUserManager.Current.AuthenticatedUser;
+			var currentOffice	= this.BusinessContext.GetLocalEntity (currentUser.Office);
+
 			wall.AddBrick ()
 					.Icon ("Base.AiderGoup.Parish")
 					.Title (p => p.GetCompactSummary ())
-					.Text (p => "...")
-					.EnableActionButton<ActionAiderOfficeManagementViewController1Join> ()
+					.Text (p => p.GetSummary ())
+					.EnableActionButton<ActionAiderOfficeManagementViewController1JoinParish> ().IfTrue (currentOffice != this.Entity && this.Entity.ParishGroup.IsParish ())
 					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 
 			wall.AddBrick (p => p.ParishGroup)
