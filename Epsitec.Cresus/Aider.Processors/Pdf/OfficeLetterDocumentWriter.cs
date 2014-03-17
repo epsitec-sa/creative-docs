@@ -8,6 +8,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Labels;
 using Epsitec.Cresus.Core.Metadata;
 
@@ -25,27 +26,26 @@ namespace Epsitec.Aider.Processors.Pdf
 {
 	internal sealed class OfficeLetterDocumentWriter
 	{
-		public OfficeLetterDocumentWriter(AiderOfficeLetterReportEntity letter, AiderOfficeSenderEntity settings, LabelLayout layout)
+		public OfficeLetterDocumentWriter(BusinessContext context, AiderOfficeSenderEntity settings, LabelLayout layout)
 		{
-			this.letter		= letter;
 			this.layout		= layout;
 			this.settings	= settings;
 		}
 
 
-		public void WriteStream(System.IO.Stream stream)
+		public void WriteStream(System.IO.Stream stream, AiderOfficeLetterReportEntity letter)
 		{
 			var setup					= new LetterDocumentSetup ();
 			var report					= this.GetReport (setup);
 
 			var contentTemplateBuilder = new System.Text.StringBuilder ();
 
-			contentTemplateBuilder.Append (this.letter.GetLetterContent ());
+			contentTemplateBuilder.Append (letter.GetLetterContent ());
 
 			var topLogo			= string.Format ("<img src=\"{0}\" width=\"378\" height=\"298\"/>",@"S:\Epsitec.Cresus\Aider\Images\logo.png");
 			var topReference	= "<b>" + this.settings.Office.OfficeName + "</b>";
 
-			report.GeneratePdf (stream, topLogo ,topReference, this.BuildAddress (this.settings.OfficialContact, false), this.BuildAddress (this.letter.RecipientContact, true), contentTemplateBuilder.ToString ());
+			report.GeneratePdf (stream, topLogo ,topReference, this.BuildAddress (this.settings.OfficialContact, false), this.BuildAddress (letter.RecipientContact, true), contentTemplateBuilder.ToString ());
 		}
 
 		private LetterDocument GetReport(LetterDocumentSetup setup)
@@ -91,8 +91,8 @@ namespace Epsitec.Aider.Processors.Pdf
 			return sb.ToString ();
 		}
 
-		private readonly AiderOfficeLetterReportEntity		letter;
-		private readonly AiderOfficeSenderEntity			settings;
-		private readonly LabelLayout						layout;
+		private readonly BusinessContext		 context;
+		private readonly AiderOfficeSenderEntity settings;
+		private readonly LabelLayout			 layout;
 	}
 }

@@ -55,9 +55,9 @@ namespace Epsitec.Aider.Processors.Reports
 			//	Do something with this entity...
 			
 			var layout = LabelLayout.Sheet_A4_Simple;
-			var doc    = new Pdf.OfficeLetterDocumentWriter (letter, sender, layout);
+			var doc    = new Pdf.OfficeLetterDocumentWriter (context, sender, layout);
 
-			doc.WriteStream (stream);
+			doc.WriteStream (stream, letter);
 			letter.ProcessDate = System.DateTime.Now;
 			context.SaveChanges (LockingPolicy.ReleaseLock);
 
