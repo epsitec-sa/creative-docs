@@ -29,8 +29,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			var summary = this.Name;
-			return TextFormatter.FormatText (summary);
+			return new FormattedText (this.Name + "<br/><a href='" + this.ProcessorUrl +"'>Générer</a>");	
 		}
 
 		public string GetLetterContent()
@@ -52,7 +51,8 @@ namespace Epsitec.Aider.Entities
 			letter.RecipientContact = recipient;
 			letter.Office			= sender.Office;
 
-			sender.Office.AddLetterInternal (letter);
+			//Add document to the sender office document management
+			sender.Office.AddDocumentInternal (letter);
 			return letter;
 		}
 

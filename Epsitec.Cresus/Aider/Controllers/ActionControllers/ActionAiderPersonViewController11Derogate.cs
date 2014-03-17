@@ -130,6 +130,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de la\n" + person.ParishGroup.Name + ".");
 
 				this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
+				
 			}
 
 			//Remove parish participations
@@ -199,7 +200,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 							);
 
 			var letter = AiderOfficeLetterReportEntity.Create (businessContext, recipient, sender, documentName, content);
-			
+
+			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
+			letter.ProcessorUrl		= letter.BuildProcessorUrlForSender (this.BusinessContext, "officeletter", sender);
+			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
+
 			var notificationManager = NotificationManager.GetCurrentNotificationManager ();
 			notificationManager.Notify (aiderUser.LoginName, new NotificationMessage
 			{
@@ -209,6 +214,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey(sender.Office).Value
 			}
 			, When.Now);
+
+			EntityBag.Add (letter, "Document PDF");
+
+			
 		}
 
 		private readonly string LetterTemplate = new System.Text.StringBuilder ()

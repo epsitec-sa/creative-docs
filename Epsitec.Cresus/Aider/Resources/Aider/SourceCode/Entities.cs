@@ -8996,16 +8996,16 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Letters</c> field.
+		///	The <c>Documents</c> field.
 		///	designer:fld/LVO613/LVOO23
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVOO23]", IsVirtual=true)]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeLetterReportEntity> Letters
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> Documents
 		{
 			get
 			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeLetterReportEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeLetterReportEntity>);
-				this.GetLetters (ref value);
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity>);
+				this.GetDocuments (ref value);
 				return value;
 			}
 		}
@@ -9022,7 +9022,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnPostalTownChanged(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
 		
 		partial void GetOfficeSenders(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> value);
-		partial void GetLetters(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeLetterReportEntity> value);
+		partial void GetDocuments(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

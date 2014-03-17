@@ -46,8 +46,8 @@ namespace Epsitec.Aider.Entities
 		{
 			var summary = TextFormatter.FormatText ("Résumé :\n");
 
-			var unProcessedReports	= this.Letters.Where(l => l.ProcessDate == null).Count();
-			var processedReports	= this.Letters.Where (l => l.ProcessDate != null).Count ();
+			var unProcessedReports	= this.Documents.Where(l => l.ProcessDate == null).Count();
+			var processedReports	= this.Documents.Where (l => l.ProcessDate != null).Count ();
 
 			if (unProcessedReports > 0)
 			{
@@ -87,14 +87,14 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetLettersSummary()
 		{
-			switch (this.Letters.Count)
+			switch (this.Documents.Count)
 			{
 				case 0:
 					return TextFormatter.FormatText ("Aucune");
 				case 1:
-					return TextFormatter.FormatText ("une lettre");
+					return TextFormatter.FormatText ("un document");
 				default:
-					return TextFormatter.FormatText (this.OfficeSenders.Count, " lettres");
+					return TextFormatter.FormatText (this.OfficeSenders.Count, " documents");
 			}
 		}
 
@@ -178,20 +178,36 @@ namespace Epsitec.Aider.Entities
 							  .OrderBy (x => x.Name)
 							  .ToList ();
 		}
-		
-		private IList<AiderOfficeLetterReportEntity> GetLetters()
-		{
-			if (this.letters == null)
-			{
-				this.letters = this.ExecuteWithDataContext (d => this.FindLetters (d), () => new List<AiderOfficeLetterReportEntity> ());
-			}
 
-			return this.letters;
+
+		internal void AddDocumentInternal(AiderOfficeReportEntity document)
+		{
+			this.GetDocuments ().Add (document);
 		}
 
-		private IList<AiderOfficeLetterReportEntity> FindLetters(DataContext dataContext)
+		internal void RemoveDocumentInternal(AiderOfficeReportEntity document)
 		{
-			var example = new AiderOfficeLetterReportEntity
+			this.GetDocuments ().Remove (document);
+		}
+
+		partial void GetDocuments(ref IList<AiderOfficeReportEntity> value)
+		{
+			value = this.GetDocuments ().AsReadOnlyCollection ();
+		}
+
+		private IList<AiderOfficeReportEntity> GetDocuments()
+		{
+			if (this.documents == null)
+			{
+				this.documents = this.ExecuteWithDataContext (d => this.FindDocuments (d), () => new List<AiderOfficeReportEntity> ());
+			}
+
+			return this.documents;
+		}
+
+		private IList<AiderOfficeReportEntity> FindDocuments(DataContext dataContext)
+		{
+			var example = new AiderOfficeReportEntity
 			{
 				Office = this
 			};
@@ -203,6 +219,6 @@ namespace Epsitec.Aider.Entities
 		
 		
 		private IList<AiderOfficeSenderEntity>			senders;
-		private IList<AiderOfficeLetterReportEntity>	letters;
+		private IList<AiderOfficeReportEntity>			documents;
 	}
 }

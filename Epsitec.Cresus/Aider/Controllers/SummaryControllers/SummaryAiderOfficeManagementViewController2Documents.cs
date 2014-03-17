@@ -28,46 +28,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
-
-			var userManager			= AiderUserManager.Current;
-			var sender				= this.BusinessContext.GetLocalEntity (userManager.AuthenticatedUser.OfficeSender);
-
-			if (userManager.AuthenticatedUser.OfficeSender.IsNotNull ()) //We can process reports
-			{
-				var senderEntityId		= this.DataContext
-												.GetPersistedId (sender)
-												.Substring (3)
-												.Replace (':', '-');
-
-				wall.AddBrick (p => p.Letters)
-									.Attribute (BrickMode.DefaultToSummarySubView)
-									.Attribute (BrickMode.AutoGroup)
-									.Attribute (BrickMode.HideAddButton)
-									.Attribute (BrickMode.HideRemoveButton)
-									.Template ()
-										.Title ("Lettres")
-										.Text (x => x.Name
-													+ "<br/><a href='/proxy/reporting/officeletter/"  
-													+  senderEntityId + "/"
-													+	this.DataContext
-																.GetPersistedId (x)
-																.Substring (3)
-																.Replace (':', '-')									
-													+ "' target='_blank'>Consulter</a>")
-									.End ();
-			}
-			else
-			{
-				wall.AddBrick (p => p.Letters)
-									.Attribute (BrickMode.DefaultToSummarySubView)
-									.Attribute (BrickMode.AutoGroup)
-									.Attribute (BrickMode.HideAddButton)
-									.Attribute (BrickMode.HideRemoveButton)
-									.Template ()
-										.Title ("Lettres")
-										.Text (x => x.Name)
-									.End ();
-			}
+			wall.AddBrick (p => p.Documents)
+								.Attribute (BrickMode.DefaultToCreationOrEditionSubView)
+								.Attribute (BrickMode.AutoGroup)
+								.Attribute (BrickMode.HideAddButton)
+								.Attribute (BrickMode.HideRemoveButton)
+								.Template ()
+									.Title ("Documents")
+									.Text (x => x.GetSummary ())								
+								.End ();
+								
 			
 		}
 	}

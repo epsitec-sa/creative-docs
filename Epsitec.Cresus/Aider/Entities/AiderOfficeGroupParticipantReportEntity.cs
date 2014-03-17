@@ -32,7 +32,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText ("<a href='" + this.ProcessorUrl +"'>" + this.Name + "</a>");	
+			return new FormattedText (this.Name + "<br/><a href='" + this.ProcessorUrl +"'>Générer</a>");	
 		}
 
 		public string GetReportContent()
@@ -41,28 +41,6 @@ namespace Epsitec.Aider.Entities
 			System.Buffer.BlockCopy (this.Content, 0, chars, 0, this.Content.Length);
 			return new string (chars);
 		}
-
-		public string BuildProcessorUrlForSender(BusinessContext context, string processorName, AiderOfficeSenderEntity sender)
-		{
-			var senderEntityId		= context.DataContext
-												.GetPersistedId (sender)
-												.Substring (3)
-												.Replace (':', '-');
-
-			var entityId			= context.DataContext
-												.GetPersistedId (this)
-												.Substring (3)
-												.Replace (':', '-');
-			return new StringBuilder ()
-							.Append ("/proxy/reporting/")
-							.Append (processorName)
-							.Append ("/")
-							.Append (senderEntityId)
-							.Append ("/")
-							.Append (entityId)
-							.ToString ();
-		}
-
 
 		partial void GetParticipants(ref IList<AiderGroupParticipantEntity> value)
 		{
@@ -88,6 +66,10 @@ namespace Epsitec.Aider.Entities
 			report.CreationDate		= Date.Today;
 			report.Content			= AiderOfficeGroupParticipantReportEntity.ConvertContent (content);
 			report.Group			= group;
+			report.Office			= sender.Office;
+
+			//Add document to the sender office document management
+			sender.Office.AddDocumentInternal (report);
 			return report;
 		}
 

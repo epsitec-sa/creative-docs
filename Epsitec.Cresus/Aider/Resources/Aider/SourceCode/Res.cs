@@ -2095,11 +2095,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderOfficeManagement.Letters, null);
+					global::System.Object.Equals (AiderOfficeManagement.Documents, null);
 				}
 				
 				//	designer:cap/LVOO23
-				public static readonly global::Epsitec.Common.Support.Druid Letters = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 88);
+				public static readonly global::Epsitec.Common.Support.Druid Documents = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 88);
 				//	designer:cap/LVOU23
 				public static readonly global::Epsitec.Common.Support.Druid OfficeMainContact = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 94);
 				//	designer:cap/LVO913
