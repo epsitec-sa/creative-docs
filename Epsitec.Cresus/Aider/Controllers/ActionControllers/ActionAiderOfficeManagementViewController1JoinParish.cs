@@ -43,7 +43,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				var message = new NotificationMessage ()
 				{
 					Title     = "Attention AIDER",
-					Body      = "Merci d'associer votre contact à votre profil. Cliquez sur ce message pour accéder à votre profil...",
+					Body      = "Veuillez associer votre contact à votre profil. Cliquez sur ce message pour accéder à votre profil...",
 					Dataset   = Res.CommandIds.Base.ShowAiderUser,
 					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
 
@@ -56,7 +56,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				
 				var notifManager = NotificationManager.GetCurrentNotificationManager ();
 				notifManager.WarnUser (user.LoginName, message, When.Now);
-				throw new BusinessRuleException ("Vous n'avez pas renseigner votre contact, impossible de rejoindre");
+				throw new BusinessRuleException ("Vous n'avez pas associé votre contact à votre profil. Il est impossible de rejoindre l'entité " + this.Entity.OfficeName + ".");
 			}
 
 			if (currentOffice.IsNotNull ())

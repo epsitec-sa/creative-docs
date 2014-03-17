@@ -1,8 +1,5 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
-
-using Epsitec.Common.Support;
-using Epsitec.Common.Types;
 
 using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Controllers.EditionControllers;
@@ -15,7 +12,7 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
-using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
 
@@ -32,7 +29,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Icon ("Base.AiderGoup.Parish")
 					.Title (p => p.GetCompactSummary ())
 					.Text (p => p.GetSummary ())
-					.EnableActionButton<ActionAiderOfficeManagementViewController1JoinParish> ().IfTrue (currentOffice != this.Entity && this.Entity.ParishGroup.IsParish ())
+					.EnableActionButton<ActionAiderOfficeManagementViewController1JoinParish> ().IfTrue (currentOffice.IsNull () && this.Entity.ParishGroup.IsParish ())
 					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 
 			wall.AddBrick (p => p.ParishGroup)
