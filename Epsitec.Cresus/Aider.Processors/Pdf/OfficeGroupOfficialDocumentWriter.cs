@@ -7,15 +7,10 @@ using Epsitec.Common.Pdf.TextDocument;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Labels;
-using Epsitec.Cresus.Core.Metadata;
-
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-using Epsitec.Cresus.WebCore.Server.Core.Databases;
-using Epsitec.Cresus.WebCore.Server.Core.IO;
-
 using Epsitec.Aider.Entities;
+
+using Epsitec.Cresus.Core.Business;
+
 using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 
 using System.Collections.Generic;
@@ -25,24 +20,24 @@ namespace Epsitec.Aider.Processors.Pdf
 {
 	internal sealed class OfficeGroupOfficialDocumentWriter
 	{
-		public OfficeGroupOfficialDocumentWriter(AiderOfficeGroupParticipantReportEntity report, AiderOfficeSenderEntity settings, LabelLayout layout)
+		public OfficeGroupOfficialDocumentWriter(BusinessContext context, AiderOfficeSenderEntity sender, LabelLayout layout)
 		{
-			this.report		= report;
-			this.layout		= layout;
-			this.settings	= settings;
+			this.context = context;
+			this.layout	 = layout;
+			this.sender  = sender;
 		}
 
-		public void WriteStream(System.IO.Stream stream)
+		public void WriteStream(System.IO.Stream stream, AiderOfficeGroupParticipantReportEntity officeReport)
 		{
-			var setup					= new TextDocumentSetup ();
-			var report					= this.GetReport (setup);
-
+			var setup   = new TextDocumentSetup ();
+			var report  = this.GetReport (setup);
 			var content = new System.Text.StringBuilder ();
 
-			content.Append (this.report.GetReportContent ());
+			content.Append (officeReport.GetReportContent ());
 
 			var no = 0;
-			foreach (var participant in this.report.Participants)
+
+			foreach (var participant in officeReport.Participants)
 			{
 				var contact		= participant.Contact;
 				var person		= contact.Person;
@@ -59,8 +54,9 @@ namespace Epsitec.Aider.Processors.Pdf
 			}
 
 			var topLogo			= string.Format ("<img src=\"{0}\" width=\"378\" height=\"298\"/>",@"S:\Epsitec.Cresus\Aider\Images\logo.png");
-			var topReference	= "<b>" + this.settings.Office.OfficeName + "</b>";
+			var topReference	= "<b>" + this.sender.Office.OfficeName + "</b>";
 			var bottomReference	= "Extrait d'AIDER le " + System.DateTime.Now.ToString ("d MMM yyyy");
+			
 			report.AddTopLeftLayer (topLogo + topReference, 100);
 			report.AddBottomRightLayer (bottomReference, 100);
 			report.GeneratePdf (stream,content.ToString ());
@@ -109,8 +105,8 @@ namespace Epsitec.Aider.Processors.Pdf
 			return sb.ToString ();
 		}
 
-		private readonly AiderOfficeGroupParticipantReportEntity		report;
-		private readonly AiderOfficeSenderEntity						settings;
-		private readonly LabelLayout									layout;
+		private readonly BusinessContext		 context;
+		private readonly AiderOfficeSenderEntity sender;
+		private readonly LabelLayout			 layout;
 	}
 }
