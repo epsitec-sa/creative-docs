@@ -44,20 +44,7 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetDocumentsSummary()
 		{
-			var summary = TextFormatter.FormatText ("Résumé :\n");
-
-			var unProcessedReports	= this.Documents.Where(l => l.ProcessDate == null).Count();
-			var processedReports	= this.Documents.Where (l => l.ProcessDate != null).Count ();
-
-			if (unProcessedReports > 0)
-			{
-				summary.AppendLine (TextFormatter.FormatText (unProcessedReports, " documents en attentes"));
-			}
-
-			if (processedReports > 0)
-			{
-				summary.AppendLine (TextFormatter.FormatText (unProcessedReports, " documents archivés"));
-			}
+			var summary = TextFormatter.FormatText (this.Documents.Count);
 
 			return summary;
 		}
