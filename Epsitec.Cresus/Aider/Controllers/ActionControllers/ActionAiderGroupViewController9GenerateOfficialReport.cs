@@ -42,12 +42,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var sender		    = this.BusinessContext.GetLocalEntity (aiderUser.OfficeSender);
 
 			var content			= new StringBuilder ()
+										.Append ("<br/><br/>")
 										.Append ("Assemblée paroissiale du ")
 										.Append (date.ToString("d MMM yyyy"))
 										.Append (" à ")
 										.Append (place.Name)
 										.Append ("<br/><br/>")
-										.Append ("<b>" + title + "</b>")
+										.Append ("<tab/><b>" + title + "</b>")
 										.Append ("<br/><br/>")
 										.ToString ();
 

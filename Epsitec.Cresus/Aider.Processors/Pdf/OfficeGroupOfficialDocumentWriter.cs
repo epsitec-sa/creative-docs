@@ -31,7 +31,7 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		public void WriteStream(System.IO.Stream stream, AiderOfficeGroupParticipantReportEntity officeReport)
 		{
-			var setup   = new TextDocumentSetup ();
+			var setup   = this.GetSetup ();
 			var report  = this.GetReport (setup);
 			var content = new System.Text.StringBuilder ();
 
@@ -63,14 +63,14 @@ namespace Epsitec.Aider.Processors.Pdf
 				{
 					if (sender.Office.ParishGroupPathCache == person.ParishGroupPathCache)
 					{
-						parish = person.GetGeoParishGroup (this.context).Name;
+						parish = person.GetGeoParishGroup (this.context).Name.Substring (11).Trim();
 					}
 					else
 					{
-						parish = person.ParishGroup.Name;
+						parish = person.ParishGroup.Name.Substring (11).Trim();
 					}
 
-					content.Append (no + "." + fullName + ", " + street + ", " + zip + " " + town + " - " + bDate + "<br/><tab/>" + parish + "<br/>");
+					content.Append (no + "." + fullName + ", " + street + ", " + zip + " " + town + " - " + bDate + "<tab/><tab/>" + parish + "<br/>");
 				}
 				else
 				{
@@ -78,10 +78,12 @@ namespace Epsitec.Aider.Processors.Pdf
 				}	
 			}
 
+
+			var topLogo			= string.Format ("<img src=\"{0}\" />", @"S:\Epsitec.Cresus\Aider\Images\logo.png");
 			var bottomReference	= "Extrait d'AIDER le " + System.DateTime.Now.ToString ("d MMM yyyy");
 
 			var formattedContent = new FormattedText (content.ToString ());
-			
+			report.AddTopLeftLayer (topLogo, 50);
 			report.AddBottomRightLayer (bottomReference, 100);
 			report.GeneratePdf (stream,content.ToString ());
 		}
@@ -95,38 +97,17 @@ namespace Epsitec.Aider.Processors.Pdf
 			return new TextDocument (exportPdfInfo, setup);
 		}
 
-		private string BuildAddress(AiderContactEntity contact, bool withAddressLine)
+		private TextDocumentSetup GetSetup()
 		{
-			var sb = new System.Text.StringBuilder ();
-			if (withAddressLine)
-			{
-				if (!string.IsNullOrEmpty (contact.Address.AddressLine1))
-				{
-					sb.Append (contact.Address.AddressLine1 + "<br/>");
-				}			
-			}
+			var setup = new TextDocumentSetup ();
 
-			sb.Append (contact.Person.GetFullName () + "<br/>");
+			//CenterTab
+			setup.TextStyle.TabInsert (new Common.Drawing.TextStyle.Tab (850, Common.Drawing.TextTabType.Center, Common.Drawing.TextTabLine.None));
 
-			if (!string.IsNullOrEmpty (contact.Address.PostBox))
-			{
-				sb.Append (contact.Address.PostBox + "<br/>");
-			}
+			//ParishTab
+			setup.TextStyle.TabInsert (new Common.Drawing.TextStyle.Tab (1700, Common.Drawing.TextTabType.Right, Common.Drawing.TextTabLine.None));
 
-			sb.Append (contact.Address.StreetUserFriendly + "<br/>");
-
-			if(contact.Address.Town.Country.IsoCode != "CH")
-			{
-				sb.Append(contact.Address.Town.Country.IsoCode  + "-" + contact.Address.GetDisplayZipCode ()); 
-			}
-			else
-			{
-				sb.Append (contact.Address.GetDisplayZipCode ());
-				
-			}
-
-			sb.Append (" " + contact.Address.Town.Name);
-			return sb.ToString ();
+			return setup;
 		}
 
 		private readonly BusinessContext		 context;

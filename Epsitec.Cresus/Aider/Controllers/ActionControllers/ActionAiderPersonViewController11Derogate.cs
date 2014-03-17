@@ -224,7 +224,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 												.Append ("Votre dérogation paroissiale a été bien enregistrée. Elle entre désormais en vigueur.<br/>")
 												.Append ("Votre nouvelle paroisse officielle où vous bénéficiez du droit de vote et d'éligibilité ")
 												.Append ("(= possibilité de délibérer en assemblée paroissiable, de voter, d'élire ou d'être élu) est désormais la")
-												.Append ("<br/><br/><b>{1}</b><br/><br/>")
+												.Append ("<br/><br/><tab/><b>{1}</b><br/><br/>")
 												.Append ("Vous avez perdu vos droits de vote et d'éligibilité dans la paroisse standard de votre domicile, à savoir la ")
 												.Append ("{2}.<br/><br/>")
 												.Append ("Au cas où vous viendrez à déménager, vous seriez automatiquement rattaché à la paroisse de votre <b>nouveau</b> domicile.")
@@ -232,7 +232,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 												.Append ("<br/><br/>Nous vous souhaitons de riches expériences et un fructueux engagement dans votre nouvelle paroisse officielle ")
 												.Append ("et vous adressons, nos fraternelles salutations.<br/><br/>")
 												.Append ("le secrétariat de la {3}<br/><br/>")
-												.Append ("signé : {4}")
+												.Append ("{4}")
 												.ToString ();
 		
 	}

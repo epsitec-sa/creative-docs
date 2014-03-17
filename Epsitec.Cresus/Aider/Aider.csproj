@@ -241,7 +241,7 @@
     <Compile Include="Data\Eerv\EervKind.cs" />
     <Compile Include="Data\Init\AiderUsersGroup.cs" />
     <Compile Include="Data\Init\OfficeManagementEntities.cs" />
-    <Compile Include="Data\Init\POGLBaseGroups.cs" />
+    <Compile Include="Data\Init\POGLFullInit.cs" />
     <Compile Include="Data\Init\DerogationGroups.cs" />
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />

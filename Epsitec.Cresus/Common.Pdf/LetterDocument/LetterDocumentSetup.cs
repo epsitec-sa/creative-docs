@@ -16,6 +16,7 @@ namespace Epsitec.Common.Pdf.LetterDocument
 			this.PageMargins					= new Margins (200.0);
 			this.HeaderMargins					= new Margins (0.0, 0.0, 0.0, 50.0);
 			this.FooterMargins					= new Margins (0.0, 0.0, 50.0, 0.0);
+			base.PageMargins					= new Margins (300.0, 250.0, 0, 0);
 		}
 
 		public FormattedText HeaderText

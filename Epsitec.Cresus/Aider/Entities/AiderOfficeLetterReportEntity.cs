@@ -47,7 +47,7 @@ namespace Epsitec.Aider.Entities
 			letter.CreationDate		= Date.Today;
 			letter.LetterContent	= AiderOfficeLetterReportEntity.ConvertLetterContent(letterContent);
 			//TODO 
-			letter.TownAndDate		= sender.Office.OfficeMainContact.Address.Town.Name + ", le" + letter.CreationDate;
+			letter.TownAndDate		= sender.Office.OfficeMainContact.Address.Town.Name + ", le " + letter.CreationDate.ToString("dd MMM yyyy", null);
 			letter.RecipientContact = recipient;
 			letter.Office			= sender.Office;
 

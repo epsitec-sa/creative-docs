@@ -19,6 +19,7 @@ namespace Epsitec.Common.Pdf.LetterDocument
 		{
 			this.lineHeights = new List<double> ();
 			this.linePages   = new List<int> ();
+
 			this.Setup.TextStyle.Font = Font.GetFont ("Verdana", "");
 			this.Setup.TextStyle.Alignment = ContentAlignment.None;
 			this.Setup.TextStyle.FontSize = 33.835; //9pt
@@ -41,8 +42,8 @@ namespace Epsitec.Common.Pdf.LetterDocument
 
 
 			this.AddCustomLayer (topReference, new Margins (1200.0, 0.0, 150.0, 0.0), this.Setup.TextStyle);
-			this.AddCustomLayer (topLogo, new Margins (150.0, 0.0, 100.0, 0.0), this.Setup.TextStyle);
-			this.AddCustomLayer (senderAddress, new Margins (450.0, 0.0, 100.0, 0.0), this.Setup.TextStyle);
+			this.AddCustomLayer (topLogo, new Margins (100.0, 0.0, 100.0, 0.0), this.Setup.TextStyle);
+			this.AddCustomLayer (senderAddress, new Margins (450.0, 0.0, 150.0, 0.0), this.Setup.TextStyle);
 			this.AddCustomLayer (recipientAddress, new Margins (1200.0, 0.0, 400.0, 0.0), this.Setup.TextStyle);
 	
 			var export = new Export (this.info);

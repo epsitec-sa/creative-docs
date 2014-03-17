@@ -414,7 +414,7 @@ namespace Epsitec.Aider
 				OfficeManagementEntities.CreateIfNeeded (coreData);
 				DerogationGroups.CreateIfNeeded (coreData);
 				AiderUsersGroup.CreateIfNeeded (coreData);
-				POGLBaseGroups.CreateIfNeeded (coreData);
+				POGLFullInit.CreateIfNeeded (coreData);
 			});
 		}
 

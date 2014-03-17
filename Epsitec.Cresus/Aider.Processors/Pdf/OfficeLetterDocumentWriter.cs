@@ -21,6 +21,8 @@ using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Epsitec.Aider.Processors.Helpers;
 
 namespace Epsitec.Aider.Processors.Pdf
 {
@@ -40,19 +42,16 @@ namespace Epsitec.Aider.Processors.Pdf
 			var content = new System.Text.StringBuilder ();
 
 			content.Append (letter.GetLetterContent ());
-			// width=\"378\" height=\"298\"
 			var topLogo			= string.Format ("<img src=\"{0}\" />", @"S:\Epsitec.Cresus\Aider\Images\logo.png");
 			var topReference	= "<b>" + this.settings.Office.OfficeName + "</b>";
 
-			//	Exemple: place un texte aligné sur le tabulateur correspondant...
-			//	Là aussi, idéalement, j'aimerais pouvoir accrocher le <tab/> à une marque spécifique
-			//	et forcer au besoin automatiquement le saut de ligne; mais c'est pas possible à si
-			//	brève échéance.
+			var senderAddress    = Builders.BuildAddress (letter.Office.OfficeMainContact, false);
 
-			topReference += "<br/><tab/>Coucou<br/>";
-
-			var senderAddress    = this.BuildAddress (this.settings.OfficialContact, false);
-			var recipientAddress = this.BuildAddress (letter.RecipientContact, true);
+			var recipientAddress = new StringBuilder()
+										.Append (Builders.BuildAddress (letter.RecipientContact, true))
+										.Append ("<br/><br/>")
+										.Append (letter.TownAndDate)
+										.ToString ();
 			
 			report.GeneratePdf (stream, topLogo, topReference, senderAddress, recipientAddress, content);
 		}
@@ -61,11 +60,8 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 			var setup = new LetterDocumentSetup ();
 
-			//	Exemple: place un tab à 50mm du bord (gauche) du pavé conteneur
-			//	Idéalement il faudrait refactorer le code PDF pour permettre d'avoir des styles différents
-			//	pour chaque pavé.
-
-			setup.TextStyle.TabInsert (new Common.Drawing.TextStyle.Tab (500, Common.Drawing.TextTabType.Left, Common.Drawing.TextTabLine.None));
+			//First tab for centered elements
+			setup.TextStyle.TabInsert (new Common.Drawing.TextStyle.Tab (725, Common.Drawing.TextTabType.Center, Common.Drawing.TextTabLine.None));
 
 			return setup;
 		}
@@ -77,40 +73,6 @@ namespace Epsitec.Aider.Processors.Pdf
 			var labelRenderer   = this.layout.GetLabelRenderer ();
 
 			return new LetterDocument (exportPdfInfo, setup);
-		}
-
-		private string BuildAddress(AiderContactEntity contact, bool withAddressLine)
-		{
-			var sb = new System.Text.StringBuilder ();
-			if (withAddressLine)
-			{
-				if (!string.IsNullOrEmpty (contact.Address.AddressLine1))
-				{
-					sb.Append (contact.Address.AddressLine1 + "<br/>");
-				}			
-			}
-
-			sb.Append (contact.Person.GetFullName () + "<br/>");
-
-			if (!string.IsNullOrEmpty (contact.Address.PostBox))
-			{
-				sb.Append (contact.Address.PostBox + "<br/>");
-			}
-
-			sb.Append (contact.Address.StreetUserFriendly + "<br/>");
-
-			if(contact.Address.Town.Country.IsoCode != "CH")
-			{
-				sb.Append(contact.Address.Town.Country.IsoCode  + "-" + contact.Address.GetDisplayZipCode ()); 
-			}
-			else
-			{
-				sb.Append (contact.Address.GetDisplayZipCode ());
-				
-			}
-
-			sb.Append (" " + contact.Address.Town.Name);
-			return sb.ToString ();
 		}
 
 		private readonly BusinessContext		 context;
