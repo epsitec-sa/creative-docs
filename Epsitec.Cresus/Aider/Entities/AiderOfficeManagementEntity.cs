@@ -74,9 +74,9 @@ namespace Epsitec.Aider.Entities
 				case 0:
 					return TextFormatter.FormatText ("Aucun");
 				case 1:
-					return TextFormatter.FormatText ("Expéditeur actif");
+					return TextFormatter.FormatText ("Un expéditeur");
 				default:
-					return TextFormatter.FormatText (this.OfficeSenders.Count, " expéditeurs actifs");
+					return TextFormatter.FormatText (this.OfficeSenders.Count, " expéditeurs");
 			}
 		}
 
