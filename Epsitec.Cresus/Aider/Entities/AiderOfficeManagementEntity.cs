@@ -126,12 +126,6 @@ namespace Epsitec.Aider.Entities
 			value = this.GetOfficeSenders ().AsReadOnlyCollection ();
 		}
 
-		partial void GetLetters(ref IList<AiderOfficeLetterReportEntity> value)
-		{
-			value = this.GetLetters ().AsReadOnlyCollection ();
-		}
-
-		
 		internal void AddSenderInternal(AiderOfficeSenderEntity settings)
 		{
 			if (!this.GetOfficeSenders ().Any (s => s == settings))
@@ -145,18 +139,6 @@ namespace Epsitec.Aider.Entities
 			this.GetOfficeSenders ().Remove (settings);
 		}
 
-		internal void AddLetterInternal(AiderOfficeLetterReportEntity letter)
-		{
-			this.GetLetters ().Add (letter);
-		}
-
-		internal void RemoveLetterInternal(AiderOfficeLetterReportEntity letter)
-		{
-			this.GetLetters ().Remove (letter);
-		}
-
-		
-	
 		private IList<AiderOfficeSenderEntity> GetOfficeSenders()
 		{
 			if (this.senders == null)
