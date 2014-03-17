@@ -44,6 +44,13 @@ namespace Epsitec.Aider.Processors.Pdf
 			var topLogo			= string.Format ("<img src=\"{0}\" width=\"378\" height=\"298\"/>", @"S:\Epsitec.Cresus\Aider\Images\logo.png");
 			var topReference	= "<b>" + this.settings.Office.OfficeName + "</b>";
 
+			//	Exemple: place un texte aligné sur le tabulateur correspondant...
+			//	Là aussi, idéalement, j'aimerais pouvoir accrocher le <tab/> à une marque spécifique
+			//	et forcer au besoin automatiquement le saut de ligne; mais c'est pas possible à si
+			//	brève échéance.
+
+			topReference += "<br/><tab/>Coucou<br/>";
+
 			var senderAddress    = this.BuildAddress (this.settings.OfficialContact, false);
 			var recipientAddress = this.BuildAddress (letter.RecipientContact, true);
 			
@@ -54,7 +61,11 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 			var setup = new LetterDocumentSetup ();
 
-			setup.TextStyle.TabInsert (new Common.Drawing.TextStyle.Tab (500, Common.Drawing.TextTabType.Center, Common.Drawing.TextTabLine.None));
+			//	Exemple: place un tab à 50mm du bord (gauche) du pavé conteneur
+			//	Idéalement il faudrait refactorer le code PDF pour permettre d'avoir des styles différents
+			//	pour chaque pavé.
+
+			setup.TextStyle.TabInsert (new Common.Drawing.TextStyle.Tab (500, Common.Drawing.TextTabType.Left, Common.Drawing.TextTabLine.None));
 
 			return setup;
 		}
