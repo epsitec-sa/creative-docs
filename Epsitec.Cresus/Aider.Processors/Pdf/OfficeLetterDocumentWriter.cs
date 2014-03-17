@@ -40,8 +40,8 @@ namespace Epsitec.Aider.Processors.Pdf
 			var content = new System.Text.StringBuilder ();
 
 			content.Append (letter.GetLetterContent ());
-
-			var topLogo			= string.Format ("<img src=\"{0}\" width=\"378\" height=\"298\"/>", @"S:\Epsitec.Cresus\Aider\Images\logo.png");
+			// width=\"378\" height=\"298\"
+			var topLogo			= string.Format ("<img src=\"{0}\" />", @"S:\Epsitec.Cresus\Aider\Images\logo.png");
 			var topReference	= "<b>" + this.settings.Office.OfficeName + "</b>";
 
 			//	Exemple: place un texte aligné sur le tabulateur correspondant...

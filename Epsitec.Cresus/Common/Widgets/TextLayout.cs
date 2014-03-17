@@ -1,4 +1,4 @@
-﻿//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -5189,15 +5189,16 @@ noText:
 				image = Support.ImageProvider.Instance.GetImage (imageName, this.ResourceManager);
 			}
 
-			if (image == null)
+			if ((image == null) &&
+				(System.IO.File.Exists (imageName)))
 			{
-				image = Support.ImageProvider.Instance.GetImage ("manifest:Epsitec.Common.Widgets.Images.Missing.icon", this.ResourceManager);
-				System.Diagnostics.Debug.WriteLine (string.Format ("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory ()));
+				image = Drawing.Bitmap.FromFile (imageName);
 			}
 
 			if (image == null)
 			{
-				image = Drawing.Bitmap.FromFile (imageName);
+				image = Support.ImageProvider.Instance.GetImage ("manifest:Epsitec.Common.Widgets.Images.Missing.icon", this.ResourceManager);
+				System.Diagnostics.Debug.WriteLine (string.Format ("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory ()));
 			}
 
 			return image;
