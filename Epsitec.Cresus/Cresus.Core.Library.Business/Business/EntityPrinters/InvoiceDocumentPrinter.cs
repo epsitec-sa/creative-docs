@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				}
 			}
 
-			return null;  // ok
+			return FormattedText.Null;  // ok
 		}
 
 

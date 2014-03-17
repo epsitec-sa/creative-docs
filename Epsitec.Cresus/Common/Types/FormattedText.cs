@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -41,6 +41,19 @@ namespace Epsitec.Common.Types
 			this.text = formattedTextSource;
 		}
 
+		public FormattedText(System.Text.StringBuilder formattedTextSource)
+		{
+			if (formattedTextSource == null)
+			{
+				this.text = null;
+			}
+			else
+			{
+				this.text = formattedTextSource.ToString ();
+			}
+		}
+
+
 		/// <summary>
 		/// Performs an implicit conversion from <see cref="string"/> to <see cref="FormattedText"/>.
 		/// This can be used to write <code>FormattedText t = "&lt;b&gt;bold&lt;b&gt;"</code>.
@@ -48,6 +61,11 @@ namespace Epsitec.Common.Types
 		/// <param name="formattedTextSource">The formatted text source.</param>
 		/// <returns>The result of the conversion.</returns>
 		public static implicit operator FormattedText(string formattedTextSource)
+		{
+			return new FormattedText (formattedTextSource);
+		}
+
+		public static implicit operator FormattedText(System.Text.StringBuilder formattedTextSource)
 		{
 			return new FormattedText (formattedTextSource);
 		}
@@ -550,7 +568,7 @@ namespace Epsitec.Common.Types
 
 
 		public static readonly FormattedText	Empty = new FormattedText ("");
-		public static readonly FormattedText	Null = new FormattedText (null);
+		public static readonly FormattedText	Null = new FormattedText ((string)null);
 		public const string						HtmlBreak = "<br/>";
 		
 		private readonly string					text;

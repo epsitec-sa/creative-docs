@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -915,7 +915,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.newPasswordLabel.Text = hasPassword ? "Pour changer le mot de passe :" : "Mot de passe du compte :";
 
 			var message = this.GetErrorMessage ();
-			if (message == null)
+			if (message.IsNull ())
 			{
 				this.errorMessage.Visibility = false;
 			}
@@ -926,7 +926,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.errorMessage.FormattedText = message;
 			}
 
-			this.acceptButton.Enable = message == null && this.editionStarted == false;
+			this.acceptButton.Enable = message.IsNull () && this.editionStarted == false;
 		}
 
 
@@ -979,7 +979,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				return user.People.GetCompactSummary ();
 			}
 
-			return null;
+			return FormattedText.Null;
 		}
 		#endregion
 
@@ -1179,7 +1179,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 
 			FormattedText pwm = this.GetPasswordMessage ();
-			if (pwm != null)
+			if (pwm.IsNotNull ())
 			{
 				return pwm;
 			}
@@ -1216,7 +1216,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				}
 			}
 
-			return null;
+			return FormattedText.Null;
 		}
 
 		private FormattedText GetPasswordMessage()
@@ -1241,7 +1241,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				return "Les deux mots de passe ne sont pas identiques.";
 			}
 
-			return null;
+			return FormattedText.Null;
 		}
 
 		private int AdminEternallyCount

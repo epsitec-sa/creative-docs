@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 				foreach (var verboseOption in this.verboseDocumentOptions)
 				{
-					FormattedText icon = null, iconTooltip = null, description = null, value = null, valueTooltip = null;
+					FormattedText icon = FormattedText.Null, iconTooltip = FormattedText.Null, description = FormattedText.Null, value = FormattedText.Null, valueTooltip = FormattedText.Null;
 					Color color = Color.FromBrightness (0);
 
 					if (options.Options.Contains (verboseOption.Option))
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 						}
 					}
 
-					if (icon != null)
+					if (icon != FormattedText.Null)
 					{
 						this.CreateLine (frame, icon, iconTooltip, description, value, valueTooltip, color);
 					}

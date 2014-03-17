@@ -89,7 +89,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var newUserGroup = this.Entity.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
 			var participationData = new List<ParticipationData> ();
 			participationData.Add (new ParticipationData (contact));
-			newUserGroup.AddParticipations (this.BusinessContext, participationData, Date.Today, null);
+			newUserGroup.AddParticipations (this.BusinessContext, participationData, Date.Today, FormattedText.Null);
 
 			//Join parish
 			user.Office = this.Entity;

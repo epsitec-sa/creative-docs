@@ -86,9 +86,9 @@ namespace Epsitec.Cresus.Core.V11
 		}
 
 
-		public static V11Message OK           = new V11Message (V11Error.OK,           null, null, null);
-		public static V11Message Aborted      = new V11Message (V11Error.Aborted,      null, null, null);
-		public static V11Message GenericError = new V11Message (V11Error.GenericError, null, null, null);
+		public static V11Message OK           = new V11Message (V11Error.OK,           null, null, FormattedText.Null);
+		public static V11Message Aborted      = new V11Message (V11Error.Aborted,      null, null, FormattedText.Null);
+		public static V11Message GenericError = new V11Message (V11Error.GenericError, null, null, FormattedText.Null);
 
 
 		private readonly V11Error			error;

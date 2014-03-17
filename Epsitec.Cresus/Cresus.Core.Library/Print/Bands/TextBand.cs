@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			{
 				if (value.IsNullOrEmpty ())
 				{
-					this.text = null;
+					this.text = FormattedText.Null;
 				}
 				else
 				{

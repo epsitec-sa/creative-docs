@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (!this.dataAccessor.IsCreation && !this.dataAccessor.IsModification && !this.dataAccessor.JustCreated)
 			{
-				this.bottomToolbarController.SetOperationDescription (null, hilited: false);
+				this.bottomToolbarController.SetOperationDescription (FormattedText.Null, hilited: false);
 			}
 			else if (this.arrayController.SelectedRow == -1 || this.dataAccessor.JustCreated)
 			{

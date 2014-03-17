@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 				{
 					if (this.textFieldCombo.SelectedItemIndex == -1)
 					{
-						this.businessDocument.FooterText = null;
+						this.businessDocument.FooterText = FormattedText.Null;
 					}
 					else
 					{

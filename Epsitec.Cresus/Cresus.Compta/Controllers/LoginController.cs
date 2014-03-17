@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.mainWindowController.CurrentUser == null)
 			{
 				this.currentField.FormattedText = TextFormatter.FormatText ("Aucun (déconnecté)").ApplyItalic ();
-				this.currentInfo.FormattedText = null;
+				this.currentInfo.FormattedText = FormattedText.Null;
 			}
 			else
 			{
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (utilisateur == null)
 			{
-				this.userInfo.FormattedText = null;
+				this.userInfo.FormattedText = FormattedText.Null;
 			}
 			else
 			{
@@ -394,8 +394,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.messageText.FormattedText = TextFormatter.FormatText ("Déconnexion effectuée avec succès");
 				this.mainFrame.BackColor = Color.FromBrightness (0.95);  // gris clair
 
-				this.userField.FormattedText = null;
-				this.passwordField.FormattedText = null;
+				this.userField.FormattedText = FormattedText.Null;
+				this.passwordField.FormattedText = FormattedText.Null;
 				this.userField.Focus ();
 			}
 		}

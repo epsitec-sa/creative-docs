@@ -895,8 +895,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if ((débit .IsNullOrEmpty () || débit  == JournalDataAccessor.multi) &&
 					(crédit.IsNullOrEmpty () || crédit == JournalDataAccessor.multi))
 				{
-					this.dataAccessor.EditionLine[i].SetText (ColumnType.Débit,  null);
-					this.dataAccessor.EditionLine[i].SetText (ColumnType.Crédit, null);
+					this.dataAccessor.EditionLine[i].SetText (ColumnType.Débit, FormattedText.Null);
+					this.dataAccessor.EditionLine[i].SetText (ColumnType.Crédit, FormattedText.Null);
 				}
 			}
 
@@ -1639,7 +1639,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 
 				this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, total);
-				this.dataAccessor.EditionLine[cp].SetText (ColumnType.CodeTVA, null);
+				this.dataAccessor.EditionLine[cp].SetText (ColumnType.CodeTVA, FormattedText.Null);
 
 				this.multiSubtotal = totalDébit - totalCrédit;
 			}
@@ -1998,7 +1998,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 #else
 				titre = FormattedText.Empty;
-				solde = null;
+				solde = FormattedText.Null;
 #endif
 			}
 			else
@@ -2008,7 +2008,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (compte == null)
 				{
 					titre = FormattedText.Empty;
-					solde = null;
+					solde = FormattedText.Null;
 				}
 				else
 				{

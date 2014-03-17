@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 
 			if (controller == null)
 			{
-				return new NavigatorData (controllerType, FormattedText.Empty, null, search, filter, options, permanents, null);
+				return new NavigatorData (controllerType, FormattedText.Empty, FormattedText.Null, search, filter, options, permanents, null);
 			}
 			else
 			{

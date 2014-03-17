@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -598,7 +598,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			//	Retourne les lignes décrivant des options, sans les valeurs.
 			var result = new List<FormattedText> ();
 			result.Add (fix);
-			result.Add (null);  // trait de séparation
+			result.Add (FormattedText.Null);  // trait de séparation
 
 			foreach (var verboseOption in this.verboseDocumentOptions)
 			{
@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			var result = new List<FormattedText> ();
 
 			result.Add (info.Entity.Name.ApplyFontSize (15));
-			result.Add (null);  // trait de séparation
+			result.Add (FormattedText.Null);  // trait de séparation
 			result.Add ("Résumé :");
 
 			bool hasBullet = false;
@@ -751,7 +751,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			}
 
 			//	Génère le résultat final.
-			result.Add (null);  // trait de séparation
+			result.Add (FormattedText.Null);  // trait de séparation
 			result.Add ("Options :");
 			result.AddRange (list);
 
@@ -875,7 +875,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					{
 						info.ErrorVisibility.Visibility = true;
 
-						FormattedText text = null;
+						FormattedText text = FormattedText.Null;
 
 						foreach (var option in info.Options)
 						{
@@ -909,7 +909,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 					{
 						info.UselessVisibility.Visibility = true;
 
-						FormattedText text = null;
+						FormattedText text = FormattedText.Null;
 
 						if (this.documentCategory.DocumentOptions.Contains (info.Entity))
 						{
@@ -937,9 +937,9 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				}
 			}
 
-			FormattedText errorMessage   = null;
-			FormattedText uselessMessage = null;
-			FormattedText missingMessage = null;
+			FormattedText errorMessage   = FormattedText.Null;
+			FormattedText uselessMessage = FormattedText.Null;
+			FormattedText missingMessage = FormattedText.Null;
 
 			this.errorDetails   = null;
 			this.missingDetails = null;

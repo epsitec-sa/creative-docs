@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Text;
@@ -306,7 +306,8 @@ namespace Epsitec.Common.Types
 			{
 				var text = values[i] as string;
 
-				if ((text.StartsWith (Prefix.CommandEscape)) &&
+				if ((text != null) &&
+					(text.StartsWith (Prefix.CommandEscape)) &&
 					(text.StartsWith (Command.Format)))
 				{
 					var format = text.RemoveFirstToken (":");

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 		private void UpdateError()
 		{
-			FormattedText errorMessage = null;
+			FormattedText errorMessage = FormattedText.Null;
 
 			int accepted = this.pageTypeInformations.Where (x =>  x.Match).Where (x => this.documentCategoryEntity.DocumentPrintingUnits.Contains (x.Entity)).Count ();
 			int rejected = this.pageTypeInformations.Where (x => !x.Match).Where (x => this.documentCategoryEntity.DocumentPrintingUnits.Contains (x.Entity)).Count ();

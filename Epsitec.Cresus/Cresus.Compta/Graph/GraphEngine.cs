@@ -772,7 +772,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		private void PaintPiePercent(Graphics graphics, Point center, decimal percent, decimal value, Color backColor)
 		{
 			//	Dessine le chiffre du %.
-			FormattedText text = null;
+			FormattedText text = FormattedText.Null;
 
 			if (this.options.PiePercents)
 			{

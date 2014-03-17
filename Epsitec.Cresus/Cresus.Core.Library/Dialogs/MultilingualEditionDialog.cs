@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Dialogs;
@@ -485,7 +485,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				if (this.textFields[index].FormattedText == MultilingualEditionDialog.defaultText)
 				{
-					this.multilingualText.SetText (id, null);
+					this.multilingualText.SetText (id, FormattedText.Null);
 				}
 				else
 				{

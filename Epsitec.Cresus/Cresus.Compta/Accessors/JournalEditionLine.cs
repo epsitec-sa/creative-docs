@@ -405,7 +405,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.CodeTVA,           FormattedText.Empty);
 				this.SetText (ColumnType.TauxTVA,           FormattedText.Empty);
 				this.SetText (ColumnType.CompteTVA,         FormattedText.Empty);
-				this.SetText (ColumnType.Journal,           (écriture.Journal == null) ? null : écriture.Journal.Nom);
+				this.SetText (ColumnType.Journal,           (écriture.Journal == null) ? FormattedText.Null : écriture.Journal.Nom);
 				this.TypeEcriture =                         (TypeEcriture) écriture.Type;
 			}
 			else
@@ -424,7 +424,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.CodeTVA,           JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA));
 				this.SetText (ColumnType.TauxTVA,           Converters.PercentToString (écriture.TauxTVA));
 				this.SetText (ColumnType.CompteTVA,         JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA));
-				this.SetText (ColumnType.Journal,           (écriture.Journal == null) ? null : écriture.Journal.Nom);
+				this.SetText (ColumnType.Journal,           (écriture.Journal == null) ? FormattedText.Null : écriture.Journal.Nom);
 				this.TypeEcriture =                         (TypeEcriture) écriture.Type;
 			}
 

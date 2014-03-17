@@ -450,7 +450,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			if (index < 0 || index >= this.primaryTexts.Count)
 			{
-				return null;
+				return FormattedText.Null;
 			}
 			else
 			{

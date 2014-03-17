@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
@@ -839,7 +839,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 		{
 			if (percent == null)
 			{
-				return null;
+				return FormattedText.Null;
 			}
 
 			percent = PriceCalculator.ClipTaxRateValue (percent.Value);
@@ -852,7 +852,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			//	Modifie le contenu d'une cellule.
 			text = TextFormatter.GetMonolingualText (text, this.twoLetterISOLanguageName);
 
-			if (text != null && !text.IsNullOrEmpty ())
+			if (!text.IsNullOrEmpty ())
 			{
 				var key = DocumentItemAccessor.GetKey (row, column);
 				this.content[key] = text;
@@ -955,7 +955,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					return "la quantité facturée est trop grande";
 
 				default:
-					return null;  // ok
+					return FormattedText.Null;  // ok
 			}
 		}
 

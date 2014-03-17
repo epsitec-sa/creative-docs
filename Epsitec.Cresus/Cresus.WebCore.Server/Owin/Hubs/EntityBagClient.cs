@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			{
 				using (this.cacheLock.LockWrite ())
 				{
-					this.bagEntityCache.Add (new BagEntity (userName, "REMOVE", null, null, entityId));
+					this.bagEntityCache.Add (new BagEntity (userName, "REMOVE", null, FormattedText.Null, entityId));
 				}
 
 			}

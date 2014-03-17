@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -707,7 +707,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.Text = value == null ? null : value.ToString ();
+				this.Text = value.IsNull () ? null : value.ToString ();
 			}
 		}
 		

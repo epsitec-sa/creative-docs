@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			get
 			{
-				return null;
+				return FormattedText.Null;
 			}
 		}
 

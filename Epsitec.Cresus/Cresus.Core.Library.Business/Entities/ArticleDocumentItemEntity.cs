@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			if (this.GetEntityStatus () == EntityStatus.Empty)
 			{
-				return null;
+				return FormattedText.Null;
 			}
 
 			var quantity = Helpers.ArticleDocumentItemHelper.GetArticleQuantityAndUnit (this).ToSimpleText ();

@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 			}
 
-			return null;
+			return FormattedText.Null;
 		}
 
 		public void SetText(int row, ColumnType column, string text)

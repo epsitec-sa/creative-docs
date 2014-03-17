@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			if (this.DocumentItemAccessor == null)
 			{
-				return null;
+				return FormattedText.Null;
 			}
 			else
 			{

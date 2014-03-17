@@ -137,7 +137,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			parishGroup.RemoveParticipations (this.BusinessContext, parishGroup.FindParticipations (this.BusinessContext, person.MainContact));
 
 			//Add participation to the destination parish
-			destParish.AddParticipations (this.BusinessContext, participationData, date, null);
+			destParish.AddParticipations (this.BusinessContext, participationData, date, FormattedText.Null);
 			
 			//!Trigg business rules!
 			person.ParishGroup = destParish;

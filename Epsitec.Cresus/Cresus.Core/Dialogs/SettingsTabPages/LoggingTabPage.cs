@@ -649,8 +649,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			if (sel == -1 || this.QueryShowedCount == 0)
 			{
-				this.queryField.FormattedText = null;
-				this.stackField.FormattedText = null;
+				this.queryField.FormattedText = FormattedText.Null;
+				this.stackField.FormattedText = FormattedText.Null;
 			}
 			else
 			{
@@ -658,8 +658,8 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 				if (query == null)
 				{
-					this.queryField.FormattedText = null;
-					this.stackField.FormattedText = null;
+					this.queryField.FormattedText = FormattedText.Null;
+					this.stackField.FormattedText = FormattedText.Null;
 				}
 				else
 				{

@@ -592,10 +592,10 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				item.ArticleDefinition           = article;
 				item.ArticleParameters           = null;
 				item.ArticleAccountingDefinition = null;
-				item.ArticleNameCache            = null;
-				item.ArticleDescriptionCache     = null;
-				item.ReplacementName             = null;
-				item.ReplacementDescription      = null;
+				item.ArticleNameCache            = FormattedText.Null;
+				item.ArticleDescriptionCache     = FormattedText.Null;
+				item.ReplacementName             = FormattedText.Null;
+				item.ReplacementDescription      = FormattedText.Null;
 
 				businessContext.ClearAndDeleteEntities (item.ArticleTraceabilityDetails);
 				businessContext.ClearAndDeleteEntities (item.Discounts);
@@ -697,7 +697,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				return discount.Text;
 			}
 
-			return null;
+			return FormattedText.Null;
 		}
 
 		private void SetDiscountText(FormattedText value, DiscountPolicy policy)

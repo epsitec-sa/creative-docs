@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			foreach (var data in this.dataDict.Values)
 			{
-				data.Text = null;
+				data.Text = FormattedText.Null;
 				data.Texts.Clear ();
 			}
 		}

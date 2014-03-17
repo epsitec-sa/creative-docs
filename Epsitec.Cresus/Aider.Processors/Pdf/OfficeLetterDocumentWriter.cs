@@ -35,17 +35,28 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		public void WriteStream(System.IO.Stream stream, AiderOfficeLetterReportEntity letter)
 		{
-			var setup					= new LetterDocumentSetup ();
-			var report					= this.GetReport (setup);
+			var setup	= this.GetSetup ();
+			var report	= this.GetReport (setup);
+			var content = new System.Text.StringBuilder ();
 
-			var contentTemplateBuilder = new System.Text.StringBuilder ();
+			content.Append (letter.GetLetterContent ());
 
-			contentTemplateBuilder.Append (letter.GetLetterContent ());
-
-			var topLogo			= string.Format ("<img src=\"{0}\" width=\"378\" height=\"298\"/>",@"S:\Epsitec.Cresus\Aider\Images\logo.png");
+			var topLogo			= string.Format ("<img src=\"{0}\" width=\"378\" height=\"298\"/>", @"S:\Epsitec.Cresus\Aider\Images\logo.png");
 			var topReference	= "<b>" + this.settings.Office.OfficeName + "</b>";
 
-			report.GeneratePdf (stream, topLogo ,topReference, this.BuildAddress (this.settings.OfficialContact, false), this.BuildAddress (letter.RecipientContact, true), contentTemplateBuilder.ToString ());
+			var senderAddress    = this.BuildAddress (this.settings.OfficialContact, false);
+			var recipientAddress = this.BuildAddress (letter.RecipientContact, true);
+			
+			report.GeneratePdf (stream, topLogo, topReference, senderAddress, recipientAddress, content);
+		}
+
+		private LetterDocumentSetup GetSetup()
+		{
+			var setup = new LetterDocumentSetup ();
+
+			setup.TextStyle.TabInsert (new Common.Drawing.TextStyle.Tab (500, Common.Drawing.TextTabType.Center, Common.Drawing.TextTabLine.None));
+
+			return setup;
 		}
 
 		private LetterDocument GetReport(LetterDocumentSetup setup)

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.Extensions;
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		public static FormattedText GetArticleQuantityAndUnit(ArticleDocumentItemEntity article)
 		{
 			//	Retourne la quantité d'un article et l'unité correspondante.
-			FormattedText unit;
+			FormattedText unit = FormattedText.Null;
 
 			foreach (var quantity in article.ArticleQuantities)
 			{
@@ -81,12 +81,12 @@ namespace Epsitec.Cresus.Core.Helpers
 				unit = quantity.Unit.Name;
 			}
 
-			if (unit.IsNull () == false)
+			if (unit.IsNotNull ())
 			{
 				return ArticleQuantityEntity.FormatQuantity (0, unit);
 			}
 
-			return null;
+			return FormattedText.Null;
 		}
 
 		public static string GetArticleId(ArticleDocumentItemEntity article)

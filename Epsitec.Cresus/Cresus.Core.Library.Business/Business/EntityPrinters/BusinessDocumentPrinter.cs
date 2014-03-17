@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			this.documentContainer.Clear ();
 
-			return null;  // ok
+			return FormattedText.Null;  // ok
 		}
 
 		public override void PrintBackgroundCurrentPage(IPaintPort port)
@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					var location = this.DefaultLocation;
 					var dateBand = new TextBand ();
 					dateBand.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;
-					dateBand.Text = (location == null) ? FormattedText.Concat ("Le ", date) : FormattedText.Concat (location, ", le ", date);
+					dateBand.Text = location.IsNull () ? FormattedText.Concat ("Le ", date) : FormattedText.Concat (location, ", le ", date);
 					dateBand.Font = font;
 					dateBand.FontSize = this.GetOptionValue (DocumentOption.HeaderLocDateFontSize);
 					this.documentContainer.AddAbsolute (dateBand, rect);
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					settings.Company.DefaultMailContact.IsNull () ||
 					settings.Company.DefaultMailContact.Location.IsNull ())
 				{
-					return null;
+					return FormattedText.Null;
 				}
 				else
 				{
@@ -516,7 +516,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 		private void BuildCommonLine(int row, DocumentItemAccessor accessor, DocumentAccessorContentLine line)
 		{
-			FormattedText text = null;
+			FormattedText text = FormattedText.Null;
 
 			if (this.HasOption (DocumentOption.LineNumber, "Group"))
 			{
@@ -761,7 +761,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			if (string.IsNullOrEmpty (q))
 			{
-				return null;
+				return FormattedText.Null;
 			}
 			else
 			{
@@ -788,7 +788,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			}
 			else
 			{
-				return null;
+				return FormattedText.Null;
 			}
 		}
 

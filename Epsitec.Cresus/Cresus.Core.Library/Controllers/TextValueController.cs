@@ -1,4 +1,4 @@
-//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			switch (this.widget.ActiveState)
 			{
 				case ActiveState.Maybe:
-					this.SetMarshalerText (null);
+					this.SetMarshalerText (FormattedText.Null);
 					break;
 
 				case ActiveState.Yes:

@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			object before = this.AddBeforeModulo == 0 ? null : TextFormatter.FormatText ("+", this.AddBeforeModulo, TextFormatter.FormatCommand ("#price()"), " / ");
+			object before = this.AddBeforeModulo == 0 ? FormattedText.Null : TextFormatter.FormatText ("+", this.AddBeforeModulo, TextFormatter.FormatCommand ("#price()"), " / ");
 			return TextFormatter.FormatText (this.Name, "~,", before, this.Modulo, TextFormatter.FormatCommand ("#price()"));
 		}
 

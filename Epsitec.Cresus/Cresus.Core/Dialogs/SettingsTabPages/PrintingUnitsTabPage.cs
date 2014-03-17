@@ -483,7 +483,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 			if (documentPrintingUnit == null)
 			{
-				this.pageTypesDescription.FormattedText = null;
+				this.pageTypesDescription.FormattedText = FormattedText.Null;
 			}
 			else
 			{

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Core.Print
 			this.documentContainer.PageSize    = this.RequiredPageSize;
 			this.documentContainer.PageMargins = this.GetPageMargins ();
 
-			return null;  // ok
+			return FormattedText.Null;  // ok
 		}
 
 		public virtual void PrintBackgroundCurrentPage(IPaintPort port)
@@ -360,7 +360,7 @@ namespace Epsitec.Cresus.Core.Print
 				return defaultOption.DefaultValue;
 			}
 
-			return null;
+			return FormattedText.Null;
 		}
 
 		protected bool HasOption(DocumentOption option)

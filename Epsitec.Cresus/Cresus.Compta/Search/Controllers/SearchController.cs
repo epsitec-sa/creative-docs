@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.beginnerFreeTextButton.Clicked += delegate
 			{
-				this.beginnerFreeTextField.FormattedText = null;
+				this.beginnerFreeTextField.FormattedText = FormattedText.Null;
 			};
 
 			ToolTip.Default.SetToolTip (this.beginnerFreeTextField, "Texte cherché n'importe où");

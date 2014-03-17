@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Compta.Entities
 					return "E";
 
 				default:
-					return null;
+					return FormattedText.Null;
 			}
 		}
 

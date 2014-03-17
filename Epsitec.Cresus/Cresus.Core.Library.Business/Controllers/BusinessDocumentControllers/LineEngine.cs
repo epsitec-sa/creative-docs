@@ -1007,7 +1007,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					return "On ne peut supprimer que des quantités.";
 
 				default:
-					return null;
+					return FormattedText.Null;
 			}
 		}
 
@@ -1017,7 +1017,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			if (text.IsNullOrEmpty ())
 			{
-				return null;
+				return FormattedText.Null;
 			}
 
 			string s = text.ToString ();

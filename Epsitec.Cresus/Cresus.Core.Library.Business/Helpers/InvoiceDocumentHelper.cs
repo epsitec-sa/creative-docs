@@ -95,12 +95,12 @@ namespace Epsitec.Cresus.Core.Helpers
 			//	sur le modèle "n/t", où n est le rang de la mensualité et t le nombre total.
 			if (billingDetails == null)
 			{
-				return null;
+				return FormattedText.Null;
 			}
 
 			if (billingDetails != null && billingDetails.InstalmentRank == null)
 			{
-				return null;
+				return FormattedText.Null;
 			}
 
 			var instalmentName = TextFormatter.FormatText (billingDetails.InstalmentName);

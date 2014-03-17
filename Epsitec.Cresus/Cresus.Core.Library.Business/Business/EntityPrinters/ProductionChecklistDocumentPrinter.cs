@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			this.documentContainer.Ending (firstPage);
 
-			return null;  // ok
+			return FormattedText.Null;  // ok
 		}
 
 

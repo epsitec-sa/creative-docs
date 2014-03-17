@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs;
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.table.SelectionChanged += delegate
 			{
 				this.loginErrorCounter = 0;
-				this.loginErrorMessage = null;
+				this.loginErrorMessage = FormattedText.Null;
 
 				this.UpdateWidgets ();
 
