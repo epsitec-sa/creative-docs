@@ -58,6 +58,7 @@ namespace Epsitec.Aider.Override
 			this.NotifyUserLogin (user as AiderUserEntity, notif);
 			this.NotifyMissingEMail (user as AiderUserEntity, notif);
 			this.NotifyMissingContact (user as AiderUserEntity, notif);
+			this.NotifyMissingOffice (user as AiderUserEntity, notif);
 
 			base.NotifySusccessfulLogin (user);
 		}
@@ -103,13 +104,17 @@ namespace Epsitec.Aider.Override
 
 		private void NotifyUserLogin(AiderUserEntity user, NotificationManager notif)
 		{
-			notif.Notify (user.LoginName,
+			if (user.Office.IsNotNull ())
+			{
+				notif.Notify (user.LoginName,
 				new NotificationMessage ()
 				{
-					Title = "Information AIDER",
-					Body = "Bienvenue..."
+					Title = "Information de " + user.Office.OfficeName,
+					Body = user.Office.OfficeUsersLoginMessage
 				},
 				When.OnConnect);
+			}
+			
 
 			notif.NotifyAll (
 				new NotificationMessage ()
@@ -171,6 +176,21 @@ namespace Epsitec.Aider.Override
 
 					ErrorField        = LambdaUtils.Convert ((AiderUserEntity e) => e.Contact),
 					ErrorFieldMessage = "votre contact"
+				};
+
+				notif.WarnUser (user.LoginName, message, When.OnConnect);
+			}
+		}
+
+		private void NotifyMissingOffice(AiderUserEntity user, NotificationManager notif)
+		{
+			if (user.Office.IsNull ())
+			{
+				var message = new NotificationMessage ()
+				{
+					Title     = "Attention AIDER",
+					Body      = "Merci de rejoindre votre paroisse",
+					Dataset   = Res.CommandIds.Base.ShowAiderOfficeManagement,
 				};
 
 				notif.WarnUser (user.LoginName, message, When.OnConnect);

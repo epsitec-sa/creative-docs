@@ -9009,6 +9009,28 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>OfficeUsersLoginMessage</c> field.
+		///	designer:fld/LVO613/LVO333
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO333]")]
+		public string OfficeUsersLoginMessage
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO333]");
+			}
+			set
+			{
+				string oldValue = this.OfficeUsersLoginMessage;
+				if (oldValue != value || !this.IsFieldDefined("[LVO333]"))
+				{
+					this.OnOfficeUsersLoginMessageChanging (oldValue, value);
+					this.SetField<string> ("[LVO333]", oldValue, value);
+					this.OnOfficeUsersLoginMessageChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnOfficeNameChanging(string oldValue, string newValue);
 		partial void OnOfficeNameChanged(string oldValue, string newValue);
@@ -9020,6 +9042,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnOfficeMainContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnPostalTownChanging(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
 		partial void OnPostalTownChanged(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
+		partial void OnOfficeUsersLoginMessageChanging(string oldValue, string newValue);
+		partial void OnOfficeUsersLoginMessageChanged(string oldValue, string newValue);
 		
 		partial void GetOfficeSenders(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> value);
 		partial void GetDocuments(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> value);

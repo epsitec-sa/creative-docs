@@ -15,6 +15,8 @@ using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Aider.Processors.Pdf
 {
@@ -33,31 +35,53 @@ namespace Epsitec.Aider.Processors.Pdf
 			var report  = this.GetReport (setup);
 			var content = new System.Text.StringBuilder ();
 
+			setup.TextStyle.Font = Font.GetFont ("Verdana", "");
+			setup.TextStyle.Alignment = ContentAlignment.None;
+			setup.TextStyle.FontSize = 33.835; //9pt
+
 			content.Append (officeReport.GetReportContent ());
 
 			var no = 0;
-
+			
 			foreach (var participant in officeReport.Participants)
 			{
+				no++;
+
 				var contact		= participant.Contact;
 				var person		= contact.Person;
 				var address		= contact.Address;
 				var fullName	= person.GetFullName ();
-				var street		= address.StreetUserFriendly;
-				var streetNo	= address.StreetHouseNumberAndComplement;
+				var street		= address.StreetHouseNumberAndComplement;
 				var zip			= address.GetDisplayZipCode();
 				var town		= address.Town.Name;
 				var bDate		= person.BirthdayDay + "." + person.BirthdayMonth + "." + person.BirthdayYear;
 
-				no++;
-				content.Append (no + "." + fullName + ", " + street + " " + streetNo + ", " + zip + " " + town + " - " + bDate + "<br/>");
+				var parish		= "";
+				
+				//We display derogations ?
+				if (person.HasDerogation)
+				{
+					if (sender.Office.ParishGroupPathCache == person.ParishGroupPathCache)
+					{
+						parish = person.GetGeoParishGroup (this.context).Name;
+					}
+					else
+					{
+						parish = person.ParishGroup.Name;
+					}
+
+					content.Append (no + "." + fullName + ", " + street + ", " + zip + " " + town + " - " + bDate + "<br/><tab/>" + parish + "<br/>");
+				}
+				else
+				{
+					content.Append (no + "." + fullName + ", " + street + ", " + zip + " " + town + " - " + bDate + "<br/>");
+				}	
 			}
 
-			var topLogo			= string.Format ("<img src=\"{0}\" width=\"378\" height=\"298\"/>",@"S:\Epsitec.Cresus\Aider\Images\logo.png");
-			var topReference	= "<b>" + this.sender.Office.OfficeName + "</b>";
 			var bottomReference	= "Extrait d'AIDER le " + System.DateTime.Now.ToString ("d MMM yyyy");
+
+			var formattedContent = new FormattedText (content.ToString ());
 			
-			report.AddTopLeftLayer (topLogo + topReference, 100);
 			report.AddBottomRightLayer (bottomReference, 100);
 			report.GeneratePdf (stream,content.ToString ());
 		}

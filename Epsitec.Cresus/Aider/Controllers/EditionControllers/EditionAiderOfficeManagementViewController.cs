@@ -18,6 +18,9 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.End ()
 				.Input ()
 					.Field (x => x.PostalTown)
+				.End ()
+				.Input ()
+					.Field (x => x.OfficeUsersLoginMessage)
 				.End ();
 		}
 	}

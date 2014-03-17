@@ -37,6 +37,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(AiderGroupEntity destParish, Date date)
 		{
+			var needDerogationLetter = false;
 			var person = this.Entity;
 			var parishGroup = person.ParishGroup;
 
@@ -106,8 +107,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					//Warn GeoParish for a Derogation Change
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache,
 						Enumerations.WarningType.DerogationChange, "Changement de dérogation vers la\n" + destParish.Name + ".");
-					
-					this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
+
+					needDerogationLetter = true;
 				}
 			}
 			else
@@ -129,8 +130,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path,
 					Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de la\n" + person.ParishGroup.Name + ".");
 
-				this.CreateDerogationLetter (this.BusinessContext, destParish, parishGroup);
-				
+				needDerogationLetter = true;			
 			}
 
 			//Remove parish participations
@@ -143,16 +143,36 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			person.ParishGroup = destParish;
 
 			System.Diagnostics.Trace.WriteLine ("Derogated to " + destParish.Name);
+
+			if (needDerogationLetter)
+			{
+				var userManager		= AiderUserManager.Current;
+				var aiderUser       = userManager.AuthenticatedUser;
+				var sender		    = this.BusinessContext.GetLocalEntity (aiderUser.OfficeSender);
+
+				var letter = this.CreateDerogationLetter (this.BusinessContext, sender, destParish, parishGroup);
+				//SaveChanges for ID purpose: BuildProcessorUrl need the entity ID
+				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
+				letter.ProcessorUrl		= letter.BuildProcessorUrlForSender (this.BusinessContext, "officeletter", sender);
+				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
+
+				EntityBag.Add (letter, "Document PDF");	
+			}
+
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
+			var userManager			= AiderUserManager.Current;
+			var aiderUser			= userManager.AuthenticatedUser;
+			var defaultDestParish	= this.BusinessContext.GetLocalEntity (aiderUser.Office.ParishGroup);
+
 			form
 				.Title ("Déroger vers...")
 				.Field<AiderGroupEntity> ()
 					.Title ("Paroisse")
 					.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
-					.InitialValue (this.Entity.GetGeoParishGroup (this.BusinessContext) ?? this.Entity.ParishGroup)
+					.InitialValue (this.Entity.GetGeoParishGroup (this.BusinessContext) ?? defaultDestParish)
 				.End ()
 				.Field<Date> ()
 					.Title ("Date de la dérogation")
@@ -162,16 +182,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		}
 
 
-		private void CreateDerogationLetter(BusinessContext businessContext, AiderGroupEntity destParish,AiderGroupEntity origineParish)
+		private AiderOfficeLetterReportEntity CreateDerogationLetter(BusinessContext businessContext, AiderOfficeSenderEntity sender, AiderGroupEntity destParish, AiderGroupEntity origineParish)
 		{
 			
 			var office			= AiderOfficeManagementEntity.Find (businessContext, destParish);
 			var recipient		= this.Entity.MainContact;
 			var documentName	= "Confirmation dérogation " + recipient.DisplayName;
-
-			var userManager		= AiderUserManager.Current;
-			var aiderUser       = userManager.AuthenticatedUser;
-			var sender		    = businessContext.GetLocalEntity (aiderUser.OfficeSender);
 
 			if(sender.IsNull ())
 			{
@@ -196,28 +212,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 								destParish.Name,
 								origineParish.Name,
 								destParish.Name,
-								aiderUser.Contact.Person.GetFullName ()
+								sender.OfficialContact.Person.GetFullName ()
 							);
 
-			var letter = AiderOfficeLetterReportEntity.Create (businessContext, recipient, sender, documentName, content);
-
-			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
-			letter.ProcessorUrl		= letter.BuildProcessorUrlForSender (this.BusinessContext, "officeletter", sender);
-			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
-
-			var notificationManager = NotificationManager.GetCurrentNotificationManager ();
-			notificationManager.Notify (aiderUser.LoginName, new NotificationMessage
-			{
-				Title	= "Dérogation effectuée",
-				Body	= "La lettre à été ajoutée dans la gestion des documents de la " + destParish.Name,
-				Dataset = Res.CommandIds.Base.ShowAiderOfficeManagement,
-				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey(sender.Office).Value
-			}
-			, When.Now);
-
-			EntityBag.Add (letter, "Document PDF");
-
-			
+			return AiderOfficeLetterReportEntity.Create (businessContext, recipient, sender, documentName, content);	
 		}
 
 		private readonly string LetterTemplate = new System.Text.StringBuilder ()

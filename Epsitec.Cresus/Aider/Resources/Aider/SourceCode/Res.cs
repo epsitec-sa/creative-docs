@@ -2106,6 +2106,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid OfficeName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 41);
 				//	designer:cap/LVOB13
 				public static readonly global::Epsitec.Common.Support.Druid OfficeSenders = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 43);
+				//	designer:cap/LVO333
+				public static readonly global::Epsitec.Common.Support.Druid OfficeUsersLoginMessage = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 99);
 				//	designer:cap/LVO713
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 39);
 				//	designer:cap/LVO813
