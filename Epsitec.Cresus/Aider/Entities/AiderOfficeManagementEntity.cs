@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Enumerations;
@@ -25,6 +25,7 @@ namespace Epsitec.Aider.Entities
 
 		}
 
+		
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (this.OfficeMainContact.GetCompactSummary ());
@@ -97,6 +98,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		
 		public static AiderOfficeManagementEntity Find(BusinessContext businessContext, AiderGroupEntity group)
 		{
 			var officeExample = new AiderOfficeManagementEntity
@@ -118,6 +120,18 @@ namespace Epsitec.Aider.Entities
 			return office;
 		}
 
+
+		partial void GetOfficeSenders(ref IList<AiderOfficeSenderEntity> value)
+		{
+			value = this.GetOfficeSenders ().AsReadOnlyCollection ();
+		}
+
+		partial void GetLetters(ref IList<AiderOfficeLetterReportEntity> value)
+		{
+			value = this.GetLetters ().AsReadOnlyCollection ();
+		}
+
+		
 		internal void AddSenderInternal(AiderOfficeSenderEntity settings)
 		{
 			if (!this.GetOfficeSenders ().Any (s => s == settings))
@@ -131,11 +145,18 @@ namespace Epsitec.Aider.Entities
 			this.GetOfficeSenders ().Remove (settings);
 		}
 
-		partial void GetOfficeSenders(ref IList<AiderOfficeSenderEntity> value)
+		internal void AddLetterInternal(AiderOfficeLetterReportEntity letter)
 		{
-			value = this.GetOfficeSenders ().AsReadOnlyCollection ();
+			this.GetLetters ().Add (letter);
 		}
 
+		internal void RemoveLetterInternal(AiderOfficeLetterReportEntity letter)
+		{
+			this.GetLetters ().Remove (letter);
+		}
+
+		
+	
 		private IList<AiderOfficeSenderEntity> GetOfficeSenders()
 		{
 			if (this.senders == null)
@@ -157,23 +178,7 @@ namespace Epsitec.Aider.Entities
 							  .OrderBy (x => x.Name)
 							  .ToList ();
 		}
-
-
-		internal void AddLetterInternal(AiderOfficeLetterReportEntity letter)
-		{
-			this.GetLetters ().Add (letter);
-		}
-
-		internal void RemoveLetterInternal(AiderOfficeLetterReportEntity letter)
-		{
-			this.GetLetters ().Remove (letter);
-		}
-
-		partial void GetLetters(ref IList<AiderOfficeLetterReportEntity> value)
-		{
-			value = this.GetLetters ().AsReadOnlyCollection ();
-		}
-
+		
 		private IList<AiderOfficeLetterReportEntity> GetLetters()
 		{
 			if (this.letters == null)
@@ -195,6 +200,7 @@ namespace Epsitec.Aider.Entities
 							  .OrderBy (x => x.Name)
 							  .ToList ();
 		}
+		
 		
 		private IList<AiderOfficeSenderEntity>			senders;
 		private IList<AiderOfficeLetterReportEntity>	letters;
