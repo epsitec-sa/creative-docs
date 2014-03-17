@@ -47,20 +47,22 @@ namespace Epsitec.Aider.Processors.Pdf
 				var contact		= participant.Contact;
 				var person		= contact.Person;
 				var address		= contact.Address;
-				var fullName	= person.GetShortFullName ();
+				var fullName	= person.GetFullName ();
 				var street		= address.StreetUserFriendly;
+				var streetNo	= address.StreetHouseNumberAndComplement;
 				var zip			= address.GetDisplayZipCode();
 				var town		= address.Town.Name;
 				var bDate		= person.BirthdayDay + "." + person.BirthdayMonth + "." + person.BirthdayYear;
-				var parish		= person.ParishGroup.Name;
 
 				no++;
-				content.Append (no + "." + fullName + ", " + street + ", " + zip + " " + town + " - " + bDate + " -> " + parish + "<br/>");
+				content.Append (no + "." + fullName + ", " + street + " " + streetNo + ", " + zip + " " + town + " - " + bDate + "<br/>");
 			}
 
 			var topLogo			= string.Format ("<img src=\"{0}\" width=\"378\" height=\"298\"/>",@"S:\Epsitec.Cresus\Aider\Images\logo.png");
 			var topReference	= "<b>" + this.settings.Office.OfficeName + "</b>";
-			
+			var bottomReference	= "Extrait d'AIDER le " + System.DateTime.Now.ToString ("d MMM yyyy");
+			report.AddTopLeftLayer (topLogo + topReference, 100);
+			report.AddBottomRightLayer (bottomReference, 100);
 			report.GeneratePdf (stream,content.ToString ());
 		}
 

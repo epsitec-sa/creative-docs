@@ -47,15 +47,18 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 										.Append (" à ")
 										.Append (place.Name)
 										.Append ("<br/><br/>")
+										.Append ("<b>" + title + "</b>")
+										.Append ("<br/><br/>")
 										.ToString ();
 
 			var report = AiderOfficeGroupParticipantReportEntity.Create (this.BusinessContext, group, sender, documentName, title, content);
 
+			//SaveChanges for ID purpose: BuildProcessorUrl need the entity ID
 			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 			report.ProcessorUrl		= report.BuildProcessorUrlForSender (this.BusinessContext, "officegroup", sender);
 			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 
-			EntityBag.Add (report, title);
+			EntityBag.Add (report, "Document PDF");
 		}
 
 		protected override void GetForm(ActionBrick<AiderGroupEntity, SimpleBrick<AiderGroupEntity>> form)

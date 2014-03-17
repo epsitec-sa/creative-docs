@@ -242,7 +242,7 @@ function() {
           itemSelector: 'div.entitybag-source',
           overItemCls: 'entitybag-over',
           selectedItemClass: 'entitybag-selected',
-          html: '<div class="entitybag-source">' + entity.summary + '</div>',
+          html: '<div class="entitybag-source">' + Ext.util.Format.htmlDecode(entity.summary) + '</div>',
           listeners: {
             render: this.initializeEntityDragZone,
             destroy: this.unregEntityDragZone,

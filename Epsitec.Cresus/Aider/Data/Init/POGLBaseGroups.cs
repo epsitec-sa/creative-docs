@@ -68,6 +68,9 @@ namespace Epsitec.Aider.Data.Groups
 					poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Nord Vaudois", 3);
 					poglParishBase.InstantiateParish (businessContext, poglRegion, "PLA Riviera Chablais", 4);
 
+
+					//TODO Derog In Out
+
 					//Villamont exception
 					var region4 = AiderGroupEntity.FindGroups (businessContext, "R004.").First ();
 					var exempleParishGroupDef = region4.Subgroups.Where (p => p.IsParish ()).First ().GroupDef;
