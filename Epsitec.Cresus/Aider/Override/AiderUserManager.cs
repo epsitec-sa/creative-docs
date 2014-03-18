@@ -195,7 +195,7 @@ namespace Epsitec.Aider.Override
 					Dataset   = Res.CommandIds.Base.ShowAiderOfficeManagement,
 				};
 
-				notif.WarnUser (user.LoginName, message, When.OnConnect);
+//-				notif.WarnUser (user.LoginName, message, When.OnConnect);
 			}
 		}
 

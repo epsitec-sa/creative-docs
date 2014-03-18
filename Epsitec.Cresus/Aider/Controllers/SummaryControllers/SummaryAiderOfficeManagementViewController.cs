@@ -22,14 +22,35 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
-			var currentUser		= AiderUserManager.Current.AuthenticatedUser;
-			var currentOffice	= this.BusinessContext.GetLocalEntity (currentUser.Office);
+			var currentUser	  = AiderUserManager.Current.AuthenticatedUser;
+			var currentOffice = this.BusinessContext.GetLocalEntity (currentUser.Office);
 
+			if (currentOffice.IsNull ())
+			{
+				this.CreateBricksGuestUser (wall);
+			}
+			else
+			{
+				this.CreateBricksTrustedUser (wall);
+			}
+		}
+
+		private void CreateBricksGuestUser(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			wall.AddBrick (p => p.ParishGroup)
+					.Icon ("Data.AiderGroup.People")
+					.Title ("Membres de la paroisse")
+					.Text (p => p.GetParticipantsSummary ())
+					.Attribute (BrickMode.DefaultToSetSubView)
+					.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+		}
+
+		private void CreateBricksTrustedUser(BrickWall<AiderOfficeManagementEntity> wall)
+		{
 			wall.AddBrick ()
 					.Icon ("Base.AiderGoup.Parish")
 					.Title (p => p.GetCompactSummary ())
 					.Text (p => p.GetSummary ())
-					.EnableActionButton<ActionAiderOfficeManagementViewController1JoinParish> ().IfTrue (currentOffice.IsNull () && this.Entity.ParishGroup.IsParish ())
 					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 
 			wall.AddBrick (p => p.ParishGroup)
@@ -58,7 +79,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			wall.AddBrick (p => p.ParishGroup.Subgroups.Where (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users).First ())
 					.Icon ("Data.AiderGroup.People")
-					.Title ("Utilisateurs AIDER")
+					.Title ("Gestionnaires AIDER")
 					.Text (p => p.GetParticipantsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
