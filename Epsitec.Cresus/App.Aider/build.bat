@@ -86,9 +86,12 @@ mkdir bin\Build\aider
 mkdir bin\Build\aider\client
 mkdir bin\Build\aider\maintenance
 mkdir bin\Build\aider\server
+mkdir bin\Build\aider\assets
+
 xcopy /e ..\Cresus.WebCore.Client\WebCore bin\Build\aider\client
 xcopy /e ..\Cresus.WebCore.Maintenance bin\Build\aider\maintenance
 xcopy /e bin\Release bin\Build\aider\server
+xcopy /e assets bin\Build\aider\assets
 
 @rem Copy the app.config file.
 copy %configurationDirectory%\app.config bin\Build\aider\server\App.Aider.exe.config
