@@ -51,11 +51,17 @@ function NotificationsToastr() {
       extendedTimeOut: 5000
     };
 
-    if(path.entityId!="-")
-    {
-      toastr.options.onclick = function() {
-        Epsitec.Cresus.Core.app.showEditableEntityWithError(path, error);
-      };
+    if (path.entityId != "-") {
+        toastr.options.onclick = function () {
+            Epsitec.Cresus.Core.app.showEditableEntityWithError(path, error);
+        };
+    }
+    else {
+        if (path.databaseName) {
+            toastr.options.onclick = function () {
+                Epsitec.Cresus.Core.app.showDatabase(path);
+            };
+        }
     }
 
     toastr.warning(message, title);

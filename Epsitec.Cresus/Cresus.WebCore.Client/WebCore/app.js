@@ -408,6 +408,26 @@ $.getScript('signalr/hubs', function() {
       },
 
 
+      showDatabase: function (path) {
+          if (!Ext.isDefined(path.databaseName)) {
+              return;
+          }
+
+          var database, columnManager;
+
+          // Todo complete this object. Otherwhise, the header of the list with the
+          // title and the icon won't be shown.
+          database = {
+              name: path.databaseName,
+              title: path.entityType
+          };
+
+          columnManager = this.tabManager.showEntityTab(database);
+          if (columnManager.leftList !== null) {
+              columnManager.leftList.removeAllFilters();
+          }
+      },
+
       showEntity: function(path, callback) {
         if (!Ext.isDefined(path.entityId) || !Ext.isDefined(path.databaseName)) {
           return;
