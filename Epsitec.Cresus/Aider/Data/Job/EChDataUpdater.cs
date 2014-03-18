@@ -882,9 +882,17 @@ namespace Epsitec.Aider.Data.Job
 						this.LogToConsole ("Info: Processing FAMILYKEY:{0}",eChReportedPerson.FamilyKey);
 						var existingEChReportedPerson = this.GetEchReportedPersonEntity(businessContext,eChReportedPerson);
 
-						if(existingEChReportedPerson.IsNull ())
+						if (existingEChReportedPerson.IsNull ())
 						{
 							existingEChReportedPerson = this.CreateEChReportedPerson (businessContext, eChReportedPerson, false);
+						}
+						else
+						{
+							if (existingEChReportedPerson.Adult1.IsDeceased)
+							{
+								this.LogToConsole ("Error: person {0} is dead, but still referenced from RCH", existingEChReportedPerson.Adult1.PersonId);
+								continue;
+							}
 						}
 				
 						this.LogToConsole ("Info: EChReportedPerson found");
