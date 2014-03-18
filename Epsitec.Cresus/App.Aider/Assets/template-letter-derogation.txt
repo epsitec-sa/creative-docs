@@ -8,7 +8,7 @@ Votre nouvelle paroisse officielle où vous bénéficiez du droit de vote et d'�
 (= possibilité de délibérer en assemblée paroissiable, de voter, d'élire ou d'être élu) 
 est désormais la<br/>
 <br/>
-<tab/><b>{1}</b></br>
+<tab/><b>{1}</b><br/>
 <br/>
 Par là même, vous avez perdu vos droits de vote et d'éligibilité dans la paroisse de votre 
 domicile, à savoir la {2}.<br/>
