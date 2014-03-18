@@ -202,15 +202,17 @@ Lancé le 28.02.2014
 
 SVN update > r22601
 
-// -echupdate -newechfile:S:\eerv\eerv-2014-02-20.xml -oldechfile:S:\eerv\eerv-2014-02-13.xml -output:S:\eerv\ech-diff-2014-02-20.md
-
 -echupdate -newechfile:S:\eerv\eerv-2014-02-27.xml -oldechfile:S:\eerv\eerv-2014-02-13.xml -output:S:\eerv\ech-diff-2014-02-27.md
 
 
-Lancé le 11.03.2014
+Lancé le 17.03.2014
 -------------------
 
-SVN update > r22781
+SVN update > r22822
 
 -initofficemanagement
+-echupdate -newechfile:S:\eerv\eerv-2014-03-13.xml -oldechfile:S:\eerv\eerv-2014-02-27.xml -output:s:\eerv\ech-diff-2014-03-13.md
+-fixnoparish
 
+-exportsubscriptions -output:export-2014-03-27.txt -error:error-2014-03-27.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2014-03-27.txt -publicationdate:2014-03-27 -response:tamedia-2014-03-27.log
