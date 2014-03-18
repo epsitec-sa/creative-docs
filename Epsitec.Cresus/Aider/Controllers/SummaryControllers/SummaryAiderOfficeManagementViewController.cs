@@ -25,13 +25,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var currentUser	  = AiderUserManager.Current.AuthenticatedUser;
 			var currentOffice = this.BusinessContext.GetLocalEntity (currentUser.Office);
 
-			if (currentOffice.IsNull ())
+			if ((currentOffice.IsNotNull ()) ||
+				(currentUser.CanViewOfficeDetails ()))
 			{
-				this.CreateBricksGuestUser (wall);
+				this.CreateBricksTrustedUser (wall);
 			}
 			else
 			{
-				this.CreateBricksTrustedUser (wall);
+				this.CreateBricksGuestUser (wall);
 			}
 		}
 
