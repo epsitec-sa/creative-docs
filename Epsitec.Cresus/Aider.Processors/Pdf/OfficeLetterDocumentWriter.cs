@@ -10,19 +10,20 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Labels;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Metadata;
 
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
+using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using Epsitec.Aider.Entities;
-using Epsitec.Cresus.WebCore.Server.Core.Extraction;
+using Epsitec.Aider.Processors.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Epsitec.Aider.Processors.Helpers;
 
 namespace Epsitec.Aider.Processors.Pdf
 {
