@@ -32,31 +32,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(AiderOfficeManagementEntity newOffice)
 		{
-			var currentOffice = this.Entity.Office;
-			var currentSender = this.Entity.OfficeSender;
-			var contact		  = this.Entity.Contact;
-
-			if (currentOffice.IsNotNull ())
-			{
-				//Stop old usergroup participation
-				var currentUserGroup = currentOffice.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
-				currentUserGroup.RemoveParticipations (this.BusinessContext, currentUserGroup.FindParticipations (this.BusinessContext, contact));
-			}
-
-			if (currentSender.IsNotNull ())
-			{
-				//reset user office settings
-				currentSender = null;
-			}
-
-			//Create usergroup participation
-			var newUserGroup = newOffice.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
-			var participationData = new List<ParticipationData> ();
-			participationData.Add (new ParticipationData (contact));
-			newUserGroup.AddParticipations (this.BusinessContext, participationData, Date.Today, FormattedText.Null);
-
-			//Set new office
-			this.Entity.Office = newOffice;
+			AiderOfficeManagementEntity.JoinOfficeManagement (this.BusinessContext, newOffice, this.Entity);
 		}
 
 		protected override void GetForm(ActionBrick<AiderUserEntity, SimpleBrick<AiderUserEntity>> form)

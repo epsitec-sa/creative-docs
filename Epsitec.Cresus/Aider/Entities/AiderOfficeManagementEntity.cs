@@ -69,6 +69,48 @@ namespace Epsitec.Aider.Entities
 					return TextFormatter.FormatText (this.OfficeSenders.Count, "expéditeurs");
 			}
 		}
+		public static void JoinOfficeManagement(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
+		{
+			var currentOffice = user.Office;
+			var currentSender = user.OfficeSender;
+			var contact		  = user.Contact;
+
+			if (currentOffice.IsNotNull ())
+			{
+				//Stop old usergroup participation
+				var currentUserGroup = currentOffice.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
+				currentUserGroup.RemoveParticipations (businessContext, currentUserGroup.FindParticipations (businessContext, contact));
+
+				//try to remap old sender settings
+				var oldSender = AiderOfficeSenderEntity.Find (businessContext, contact);
+				if (oldSender.IsNotNull ())
+				{
+					oldSender.Office = office;
+					user.OfficeSender = oldSender;
+					office.AddSenderInternal (oldSender);
+				}
+				else
+				{
+					//Create sender
+					user.OfficeSender = AiderOfficeSenderEntity.Create (businessContext, office, user.Contact);
+				}
+			}
+			else
+			{
+				//Create sender
+				user.OfficeSender = AiderOfficeSenderEntity.Create (businessContext, office, user.Contact);
+			}
+
+			//Create usergroup participation
+			var newUserGroup = office.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
+			var participationData = new List<ParticipationData> ();
+			participationData.Add (new ParticipationData (contact));
+			newUserGroup.AddParticipations (businessContext, participationData, Date.Today, FormattedText.Null);
+
+			//Join parish
+			user.Office = office;
+			user.Parish = office.ParishGroup;
+		}
 
 		public static AiderOfficeManagementEntity Find(BusinessContext businessContext, AiderGroupEntity group)
 		{
