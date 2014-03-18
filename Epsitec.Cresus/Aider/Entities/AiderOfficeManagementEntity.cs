@@ -69,6 +69,7 @@ namespace Epsitec.Aider.Entities
 					return TextFormatter.FormatText (this.OfficeSenders.Count, "expéditeurs");
 			}
 		}
+		
 		public static void JoinOfficeManagement(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
 		{
 			var currentOffice = user.Office;

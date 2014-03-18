@@ -61,6 +61,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderUserViewController0SetPassword> ()
+				.EnableActionMenu<ActionAiderUserViewController3SetMyOffice> ()
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
 					.Field (x => x.Contact)

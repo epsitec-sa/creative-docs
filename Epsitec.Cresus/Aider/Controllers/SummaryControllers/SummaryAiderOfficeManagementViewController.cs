@@ -44,6 +44,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (p => p.GetParticipantsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+
+			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users))
+					.Icon ("Data.AiderGroup.People")
+					.Title ("Gestionnaires AIDER")
+					.Text (p => p.GetParticipantsSummary ())
+					.Attribute (BrickMode.DefaultToSetSubView)
+					.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
 		}
 
 		private void CreateBricksTrustedUser(BrickWall<AiderOfficeManagementEntity> wall)
@@ -61,7 +68,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
 
-			wall.AddBrick (p => p.ParishGroup.Subgroups.Where(s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn).First ())
+			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn))
 					.Icon ("Data.AiderGroup.People")
 					.Title ("Dérogations entrantes")
 					.Text (p => p.GetParticipantsSummary ())
@@ -69,7 +76,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableActionButton<ActionAiderGroupViewController9GenerateOfficialReport> ()
 					.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
 
-			wall.AddBrick (p => p.ParishGroup.Subgroups.Where (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ())
+			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut))
 					.Icon ("Data.AiderGroup.People")
 					.Title ("Dérogations sortantes")
 					.Text (p => p.GetParticipantsSummary ())
@@ -78,7 +85,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
 
 
-			wall.AddBrick (p => p.ParishGroup.Subgroups.Where (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users).First ())
+			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users))
 					.Icon ("Data.AiderGroup.People")
 					.Title ("Gestionnaires AIDER")
 					.Text (p => p.GetParticipantsSummary ())
@@ -100,7 +107,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Text (p => p.GetDocumentsSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController2Documents));
-	
+
 		}
 	}
 }
