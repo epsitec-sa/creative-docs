@@ -30,8 +30,9 @@ namespace Epsitec.Aider.Processors.Pdf
 	{
 		public OfficeLetterDocumentWriter(BusinessContext context, AiderOfficeSenderEntity settings, LabelLayout layout)
 		{
-			this.layout		= layout;
-			this.settings	= settings;
+			this.layout	  = layout;
+			this.context  = context;
+			this.settings = settings;
 		}
 
 
@@ -42,8 +43,10 @@ namespace Epsitec.Aider.Processors.Pdf
 			var content = new System.Text.StringBuilder ();
 
 			content.Append (letter.GetLetterContent ());
-			var topLogo			= string.Format ("<img src=\"{0}\" />", @"S:\Epsitec.Cresus\Aider\Images\logo.png");
-			var topReference	= "<b>" + this.settings.Office.OfficeName + "</b>";
+			
+			var topLogoPath  = CoreContext.GetFileDepotPath ("assets", "eerv-logo.png");
+			var topLogo	     = string.Format ("<img src=\"{0}\" />", topLogoPath);
+			var topReference = "<b>" + this.settings.Office.OfficeName + "</b>";
 
 			var senderAddress    = Builders.BuildAddress (letter.Office.OfficeMainContact, false);
 

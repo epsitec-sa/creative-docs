@@ -1,8 +1,6 @@
 ﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
-using Epsitec.Aider.Enumerations;
-
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
@@ -12,8 +10,6 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Data.Platform;
-
-using System;
 
 using System.Linq;
 using System.Collections.Generic;
@@ -29,14 +25,12 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return new FormattedText (this.Name + "<br/><a href='" + this.ProcessorUrl +"'>Générer</a>");	
+			return new FormattedText (this.Name + "<br/><a href='" + this.ProcessorUrl +"'>Générer PDF</a>");	
 		}
 
 		public string GetLetterContent()
 		{
-			char[] chars = new char[this.LetterContent.Length / sizeof (char)];
-			System.Buffer.BlockCopy (this.LetterContent, 0, chars, 0, this.LetterContent.Length);
-			return new string (chars);
+			return System.Text.Encoding.UTF8.GetString (this.LetterContent);
 		}
 
 		public static AiderOfficeLetterReportEntity Create(BusinessContext context,AiderContactEntity recipient, AiderOfficeSenderEntity sender,string documentName,string letterContent)
@@ -58,9 +52,7 @@ namespace Epsitec.Aider.Entities
 
 		private static byte[] ConvertLetterContent(string str)
 		{
-			byte[] bytes = new byte[str.Length * sizeof (char)];
-			System.Buffer.BlockCopy (str.ToCharArray (), 0, bytes, 0, bytes.Length);
-			return bytes;
+			return System.Text.Encoding.UTF8.GetBytes (str);
 		}
 	}
 }

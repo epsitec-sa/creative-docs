@@ -4,5 +4,7 @@
 # This file defines the environment settings which configure how AIDER will run.
 #
 
+DefineFileDepot ("assets", "C:\aider\assets")
+
 # ConfigureAsTestEnvironment ();
 # ConfigureAsReadOnly ();

@@ -1,0 +1,29 @@
+﻿<b>Votre dérogation</b><br/>
+<br/>
+{0},<br/>
+<br/>
+Votre dérogation paroissiale a été enregistrée. Elle est désormais entrée en vigueur.<br/>
+<br/>
+Votre nouvelle paroisse officielle où vous bénéficiez du droit de vote et d'éligibilité 
+(= possibilité de délibérer en assemblée paroissiable, de voter, d'élire ou d'être élu) 
+est désormais la<br/>
+<br/>
+<tab/><b>{1}</b></br>
+<br/>
+Par là même, vous avez perdu vos droits de vote et d'éligibilité dans la paroisse de votre 
+domicile, à savoir la {2}.<br/>
+<br/>
+Si vous déménagez, vous serez automatiquement rattaché à la paroisse de votre <b>nouveau</b> 
+domicile. La dérogation actuelle perdrait dès lors son effet. Dans un tel cas et si vous 
+souhaitez à nouveau être au bénéfice d'une dérogation, vous devrez demander une nouvelle 
+dérogation.<br/>
+<br/>
+Nous vous souhaitons de riches expériences et un fructueux engagement dans votre nouvelle 
+paroisse officielle et vous adressons, {0}, nos fraternelles salutations.<br/>
+<br/>
+{3}<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+{4}

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -223,6 +223,42 @@ namespace Epsitec.Cresus.Core.Library
 		public static void DefineEnableSnapshotService(bool enableSnapshotService)
 		{
 			CoreContext.enableSnapshotService = enableSnapshotService;
+		}
+
+		public static void DefineFileDepot(string name, string path)
+		{
+			name = name.ToLowerInvariant ();
+
+			if (System.IO.Directory.Exists (path) == false)
+			{
+				System.IO.Directory.CreateDirectory (path);
+			}
+
+			CoreContext.fileDepotMap[name] = path;
+		}
+
+		public static string GetFileDepotPath(string name)
+		{
+			name = name.ToLowerInvariant ();
+			
+			string path;
+			CoreContext.fileDepotMap.TryGetValue (name, out path);
+			
+			return path;
+		}
+
+		public static string GetFileDepotPath(string name, string fileName)
+		{
+			var path = CoreContext.GetFileDepotPath (name);
+
+			if (path == null)
+			{
+				return null;
+			}
+			else
+			{
+				return System.IO.Path.Combine (path, fileName);
+			}
 		}
 
 		public static void ConfigureAsReadOnly()
@@ -662,6 +698,7 @@ namespace Epsitec.Cresus.Core.Library
 		static CoreContext()
 		{
 			CoreContext.metadata = new Dictionary<System.Type, CoreMetadata> ();
+			CoreContext.fileDepotMap = new Dictionary<string, string> ();
 			CoreContext.pendingSetupCode = new Queue<System.Action> ();
 			CoreContext.typeSubstitutions = new Dictionary<string, string> ();
 			CoreContext.experimentalFeatures = new HashSet<string> ();
@@ -684,6 +721,7 @@ namespace Epsitec.Cresus.Core.Library
 		private static System.Type				applicationType;
 		
 		private static readonly Dictionary<System.Type, CoreMetadata> metadata;
+		private static readonly Dictionary<string, string> fileDepotMap;
 		private static readonly Queue<System.Action> pendingSetupCode;
 		private static readonly Dictionary<string, string> typeSubstitutions;
 		private static readonly HashSet<string>	experimentalFeatures;
