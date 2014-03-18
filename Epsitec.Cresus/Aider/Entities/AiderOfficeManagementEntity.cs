@@ -1,8 +1,6 @@
 ﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
-using Epsitec.Aider.Enumerations;
-
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
@@ -11,7 +9,6 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Linq;
 using System.Collections.Generic;
@@ -22,7 +19,6 @@ namespace Epsitec.Aider.Entities
 	{
 		public AiderOfficeManagementEntity()
 		{
-
 		}
 
 		
@@ -44,9 +40,16 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetDocumentsSummary()
 		{
-			var summary = TextFormatter.FormatText (this.Documents.Count);
+			switch (this.Documents.Count)
+			{
+				case 0:
+					return TextFormatter.FormatText ("Aucun");
+				case 1:
+					return TextFormatter.FormatText ("Un document");
 
-			return summary;
+				default:
+					return TextFormatter.FormatText (this.Documents.Count, "documents");
+			}
 		}
 
 		public FormattedText GetSettingsTitleSummary()
@@ -63,29 +66,10 @@ namespace Epsitec.Aider.Entities
 				case 1:
 					return TextFormatter.FormatText ("Un expéditeur");
 				default:
-					return TextFormatter.FormatText (this.OfficeSenders.Count, " expéditeurs");
+					return TextFormatter.FormatText (this.OfficeSenders.Count, "expéditeurs");
 			}
 		}
 
-		public FormattedText GetLettersTitleSummary()
-		{
-			return TextFormatter.FormatText ("Lettres");
-		}
-
-		public FormattedText GetLettersSummary()
-		{
-			switch (this.Documents.Count)
-			{
-				case 0:
-					return TextFormatter.FormatText ("Aucune");
-				case 1:
-					return TextFormatter.FormatText ("un document");
-				default:
-					return TextFormatter.FormatText (this.OfficeSenders.Count, " documents");
-			}
-		}
-
-		
 		public static AiderOfficeManagementEntity Find(BusinessContext businessContext, AiderGroupEntity group)
 		{
 			var officeExample = new AiderOfficeManagementEntity
@@ -187,7 +171,7 @@ namespace Epsitec.Aider.Entities
 		}
 		
 		
-		private IList<AiderOfficeSenderEntity>			senders;
-		private IList<AiderOfficeReportEntity>			documents;
+		private IList<AiderOfficeSenderEntity>	senders;
+		private IList<AiderOfficeReportEntity>	documents;
 	}
 }

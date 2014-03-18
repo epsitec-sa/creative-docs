@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -109,7 +109,7 @@ namespace Epsitec.Aider.Override
 				notif.Notify (user.LoginName,
 				new NotificationMessage ()
 				{
-					Title = "Information de " + user.Office.OfficeName,
+					Title = user.Office.OfficeName + ", bienvenue...",
 					Body = user.Office.OfficeUsersLoginMessage
 				},
 				When.OnConnect);
@@ -184,12 +184,14 @@ namespace Epsitec.Aider.Override
 
 		private void NotifyMissingOffice(AiderUserEntity user, NotificationManager notif)
 		{
-			if (user.Office.IsNull ())
+			if ((user.Office.IsNull ()) &&
+				(user.EnableGroupEditionCanton == false) &&
+				(user.EnableGroupEditionRegion == false))
 			{
 				var message = new NotificationMessage ()
 				{
 					Title     = "Attention AIDER",
-					Body      = "Merci de rejoindre votre paroisse",
+					Body      = "Merci de rejoindre votre paroisse. Cliquez sur <b>Gestion</b>, sélectionnez votre paroisse, puis choisissez <b>Rejoindre</b>.",
 					Dataset   = Res.CommandIds.Base.ShowAiderOfficeManagement,
 				};
 
