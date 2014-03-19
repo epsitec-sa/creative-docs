@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Support;
@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	/// <summary>
 	/// This class represents an edition field used to edit entity references values.
 	/// </summary>
-	internal sealed class EntityReferenceField : AbstractField
+	internal sealed class EntityReferenceField : AbstractField<EntityReferenceField>
 	{
 		public string							DatabaseName
 		{
@@ -61,11 +61,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 
 			return brick;
-		}
-
-		protected override string GetEditionTilePartType()
-		{
-			return "entityReferenceField";
 		}
 
 

@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
-
-
 	/// <summary>
 	/// This is the base class of all the parts that can be contained in an edition tile, like
 	/// fields, separators, etc.
 	/// </summary>
 	internal abstract class AbstractEditionTilePart
 	{
-
-
 		protected abstract string GetEditionTilePartType();
 
 
@@ -24,8 +23,5 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			return brick;
 		}
-
 	}
-
-
 }

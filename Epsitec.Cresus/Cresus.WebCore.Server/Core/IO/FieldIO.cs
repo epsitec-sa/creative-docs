@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -13,33 +16,23 @@ using Epsitec.Cresus.WebCore.Server.NancyModules;
 
 using Nancy;
 
-using System;
-
 using System.Collections;
 using System.Collections.Generic;
-
 using System.Globalization;
-
 using System.Linq;
-
 
 namespace Epsitec.Cresus.WebCore.Server.Core.IO
 {
-
-
 	/// <summary>
 	/// This class provides methods used to process data of entity properties in order to send them
 	/// to the javascript client and then to parse the data that is coming back from the client.
 	/// </summary>
 	internal static class FieldIO
 	{
-
-
 		public static object ConvertToClientRecursive(BusinessContext businessContext, object value)
 		{
 			return FieldIO.ConvertToClientRecursive (businessContext.DataContext, value);
 		}
-
 
 		public static object ConvertToClientRecursive(DataContext dataContext, object value)
 		{
@@ -55,9 +48,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			{
 				return FieldIO.ConvertToClientRecursive (dataContext, (IList) value);
 			}
-			else if (value is Array)
+			else if (value is System.Array)
 			{
-				return FieldIO.ConvertToClientRecursive (dataContext, (Array) value);
+				return FieldIO.ConvertToClientRecursive (dataContext, (System.Array) value);
 			}
 			else
 			{
@@ -66,7 +59,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				return FieldIO.ConvertToClient (dataContext, value, fieldType);
 			}
 		}
-
 
 		public static object ConvertToClientRecursive(DataContext dataContext, IDictionary dictionary)
 		{
@@ -79,7 +71,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				);
 		}
 
-
 		public static object ConvertToClientRecursive(DataContext dataContext, IList list)
 		{
 			return list
@@ -88,8 +79,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				.ToList ();
 		}
 
-
-		public static object ConvertToClientRecursive(DataContext dataContext, Array array)
+		public static object ConvertToClientRecursive(DataContext dataContext, System.Array array)
 		{
 			return array
 				.Cast<object> ()
@@ -102,7 +92,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		{
 			return FieldIO.ConvertToClient (businessContext.DataContext, value, fieldType);
 		}
-
 
 		public static object ConvertToClient(DataContext dataContext, object value, FieldType fieldType)
 		{
@@ -139,7 +128,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 					return FieldIO.ConvertEntityReferenceToClient (dataContext, value);
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -153,7 +142,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 			return (bool) value;
 		}
-
 
 		private static object ConvertDateToClient(object value)
 		{
@@ -169,7 +157,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return date.ToString (format, culture);
 		}
 
-
 		private static object ConvertDateTimeToClient(object value)
 		{
 			if (value == null)
@@ -177,13 +164,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				return null;
 			}
 
-			var dateTime = (DateTime) value;
+			var dateTime = (System.DateTime) value;
 			var format = FieldIO.dateTimeFormat;
 			var culture = FieldIO.culture;
 
-			return dateTime.ToString (format, culture);
+			return dateTime.ToLocalTime ().ToString (format, culture);
 		}
-
 
 		private static object ConvertDecimalToClient(object value)
 		{
@@ -195,7 +181,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return (decimal) value;
 		}
 
-
 		private static object ConvertEnumerationToClient(object value)
 		{
 			if (value == null)
@@ -203,11 +188,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				return Constants.KeyForNullValue;
 			}
 
-			var intValue = EnumType.ConvertToInt ((Enum) value);
+			var intValue = EnumType.ConvertToInt ((System.Enum) value);
 
 			return InvariantConverter.ToString (intValue);
 		}
-
 
 		private static object ConvertIntegerToClient(object value)
 		{
@@ -218,7 +202,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 			return InvariantConverter.ToLong (value);
 		}
-
 
 		private static object ConvertTextToClient(object value)
 		{
@@ -247,7 +230,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			}
 		}
 
-
 		private static object ConvertTimeToClient(object value)
 		{
 			if (value == null)
@@ -262,7 +244,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return time.ToString (format, culture);
 		}
 
-
 		private static object ConvertEntityCollectionToClient(DataContext dataContext, object value)
 		{
 			var entities = (IEnumerable<AbstractEntity>) value;
@@ -272,14 +253,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				.ToList ();
 		}
 
-
 		private static object ConvertEntityReferenceToClient(DataContext dataContext, object value)
 		{
 			var entity = (AbstractEntity) value;
 
 			return FieldIO.ConvertEntityToClient (dataContext, entity);
 		}
-
 
 		private static object ConvertEntityToClient(DataContext dataContext, AbstractEntity entity)
 		{
@@ -305,13 +284,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		}
 
 
-		public static object ConvertFromClient(BusinessContext businessContext, DynamicDictionaryValue value, Type type, FieldType? fieldType = null)
+		public static object ConvertFromClient(BusinessContext businessContext, DynamicDictionaryValue value, System.Type type, FieldType? fieldType = null)
 		{
 			return FieldIO.ConvertFromClient (businessContext.DataContext, value, type, fieldType);
 		}
 
-
-		public static object ConvertFromClient(DataContext dataContext, DynamicDictionaryValue value, Type type, FieldType? fieldType = null)
+		public static object ConvertFromClient(DataContext dataContext, DynamicDictionaryValue value, System.Type type, FieldType? fieldType = null)
 		{
 			switch (fieldType ?? FieldTypeSelector.GetFieldType (type))
 			{
@@ -346,7 +324,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 					return FieldIO.ConvertEntityReferenceFromClient (dataContext, value);
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -363,7 +341,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return (bool) val;
 		}
 
-
 		private static object ConvertDateFromClient(DynamicDictionaryValue value)
 		{
 			var val = FieldIO.ConvertFromNancyValue (value, v => (string) v);
@@ -377,9 +354,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			var format = FieldIO.dateFormat;
 			var culture = FieldIO.culture;
 
-			return new Date (DateTime.ParseExact (stringValue, format, culture));
+			return new Date (System.DateTime.ParseExact (stringValue, format, culture));
 		}
-
 
 		private static object ConvertDateTimeFromClient(DynamicDictionaryValue value)
 		{
@@ -394,9 +370,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			var format = FieldIO.dateTimeFormat;
 			var culture = FieldIO.culture;
 
-			return DateTime.ParseExact (stringValue, format, culture);
+			return System.DateTime.ParseExact (stringValue, format, culture).ToUniversalTime ();
 		}
-
 
 		private static object ConvertDecimalFromClient(DynamicDictionaryValue value)
 		{
@@ -410,8 +385,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return val;
 		}
 
-
-		private static object ConvertEnumerationFromClient(DynamicDictionaryValue value, Type valueType)
+		private static object ConvertEnumerationFromClient(DynamicDictionaryValue value, System.Type valueType)
 		{
 			var val = FieldIO.ConvertFromNancyValue (value, v => (string) v);
 			var stringValue = val == null ? null : (string) val;
@@ -426,11 +400,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				valueType = valueType.GetNullableTypeUnderlyingType ();
 			}
 
-			return (Enum) Enum.Parse (valueType, stringValue);
+			return (System.Enum) System.Enum.Parse (valueType, stringValue);
 		}
 
-
-		private static object ConvertIntegerFromClient(DynamicDictionaryValue value, Type valueType)
+		private static object ConvertIntegerFromClient(DynamicDictionaryValue value, System.Type valueType)
 		{
 			var val = FieldIO.ConvertFromNancyValue (value, v => (long) v);
 
@@ -465,12 +438,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			}
 			else
 			{
-				throw new NotImplementedException ();
+				throw new System.NotImplementedException ();
 			}
 		}
 
-
-		private static object ConvertTextFromClient(DynamicDictionaryValue value, Type valueType)
+		private static object ConvertTextFromClient(DynamicDictionaryValue value, System.Type valueType)
 		{
 			var stringValue = (string) FieldIO.ConvertFromNancyValue (value, v => (string) v) ?? "";
 
@@ -490,10 +462,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			}
 			else
 			{
-				throw new NotImplementedException ();
+				throw new System.NotImplementedException ();
 			}
 		}
-
 
 		private static object ConvertTimeFromClient(DynamicDictionaryValue value)
 		{
@@ -508,17 +479,16 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			var format = FieldIO.timeFormat;
 			var culture = FieldIO.culture;
 
-			return new Time (DateTime.ParseExact (stringValue, format, culture));
+			return new Time (System.DateTime.ParseExact (stringValue, format, culture));
 		}
 
-
-		private static object ConvertEntityCollectionFromClient(DataContext dataContext, DynamicDictionaryValue value, Type valueType)
+		private static object ConvertEntityCollectionFromClient(DataContext dataContext, DynamicDictionaryValue value, System.Type valueType)
 		{
 			var listType = typeof (List<>);
 			var typeArgument = valueType.GetGenericArguments ()[0];
 			var genericListType = listType.MakeGenericType (typeArgument);
 
-			var list = (IList) Activator.CreateInstance (genericListType);
+			var list = (IList) System.Activator.CreateInstance (genericListType);
 
 			list.AddRange
 			(
@@ -530,14 +500,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return list;
 		}
 
-
 		private static object ConvertEntityReferenceFromClient(DataContext dataContext, DynamicDictionaryValue value)
 		{
 			var entityId = (string) value;
 
 			return FieldIO.ConvertEntityFromClient (dataContext, entityId);
 		}
-
 
 		private static object ConvertEntityFromClient(DataContext dataContext, string entityId)
 		{
@@ -549,8 +517,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return EntityIO.ResolveEntity (dataContext, entityId);
 		}
 
-
-		private static object ConvertFromNancyValue(DynamicDictionaryValue value, Func<DynamicDictionaryValue, object> converter)
+		private static object ConvertFromNancyValue(DynamicDictionaryValue value, System.Func<DynamicDictionaryValue, object> converter)
 		{
 			if (!value.HasValue || string.IsNullOrEmpty ((string) value))
 			{
@@ -591,13 +558,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 				case FieldType.EntityCollection:
 				case FieldType.EntityReference:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
-
 
 		private static string ConvertBooleanToString(object value)
 		{
@@ -611,7 +577,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 			return FieldIO.GetEnumString (yesOrNo);
 		}
-
 
 		private static string ConvertDateToString(object value)
 		{
@@ -627,7 +592,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return date.ToString (format, culture);
 		}
 
-
 		private static string ConvertDateTimeToString(object value)
 		{
 			if (value == null)
@@ -635,13 +599,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				return "";
 			}
 
-			var dateTime = (DateTime) value;
+			var dateTime = (System.DateTime) value;
 			var format = FieldIO.dateTimeFormat;
 			var culture = FieldIO.culture;
 
 			return dateTime.ToString (format, culture);
 		}
-
 
 		private static string ConvertDecimalToString(object value)
 		{
@@ -655,7 +618,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return InvariantConverter.ToString (number);
 		}
 
-
 		private static string ConvertEnumerationToString(object value)
 		{
 			if (value == null)
@@ -663,11 +625,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				return "";
 			}
 
-			var enumeration = (Enum) value;
+			var enumeration = (System.Enum) value;
 
 			return FieldIO.GetEnumString (enumeration);
 		}
-
 
 		private static string ConvertIntegerToString(object value)
 		{
@@ -680,7 +641,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 			return InvariantConverter.ToString (number);
 		}
-
 
 		private static string ConvertTextToString(object value)
 		{
@@ -709,7 +669,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			}
 		}
 
-
 		private static string ConvertTimeToString(object value)
 		{
 			if (value == null)
@@ -724,26 +683,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return time.ToString (format, culture);
 		}
 
-
-		private static string GetEnumString(Enum value)
+		
+		private static string GetEnumString(System.Enum value)
 		{
 			return EnumKeyValues.GetEnumKeyValue ((object) value).Values.First ().ToSimpleText ();
 		}
 
 
-		private static readonly string dateFormat = "dd.MM.yyyy";
+		private static readonly string			dateFormat     = "dd.MM.yyyy";
+		private static readonly string			dateTimeFormat = "dd.MM.yyyy HH:mm:ss";
+		private static readonly string			timeFormat     = "HH:mm:ss";
 
-
-		private static readonly string dateTimeFormat = "dd.MM.yyyy HH:mm:ss";
-
-
-		private static readonly string timeFormat = "HH:mm:ss";
-
-
-		private static readonly CultureInfo culture = CultureInfo.InvariantCulture;
-
-
+		private static readonly CultureInfo		culture = CultureInfo.InvariantCulture;
 	}
-
-
 }
