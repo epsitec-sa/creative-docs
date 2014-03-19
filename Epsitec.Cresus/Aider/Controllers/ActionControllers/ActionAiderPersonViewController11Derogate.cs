@@ -19,6 +19,7 @@ using Epsitec.Aider.Override;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Aider.Reporting;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -153,7 +154,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				var letter = this.CreateDerogationLetter (this.BusinessContext, sender, destParish, parishGroup);
 				//SaveChanges for ID purpose: BuildProcessorUrl need the entity ID
 				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
-				letter.ProcessorUrl		= letter.BuildProcessorUrlForSender (this.BusinessContext, "officeletter", sender);
+				letter.ProcessorUrl		= letter.GetProcessorUrlForSender (this.BusinessContext, "officeletter", sender);
 				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 
 				EntityBag.Add (letter, "Document PDF");	
@@ -200,28 +201,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Cette fonction n'est pas encore disponible.");
 			}
 
-			var greetings = "";
+			var greetings = (this.Entity.eCH_Person.PersonSex == Enumerations.PersonSex.Male) ? "Monsieur" : "Madame";
+			var fullName  = sender.OfficialContact.Person.GetFullName ();
+			var content   = FormattedContent.Escape (greetings, destParish.Name, origineParish.Name, destParish.Name, fullName);
 			
-			if (this.Entity.eCH_Person.PersonSex == Enumerations.PersonSex.Male)
-			{
-				greetings = "Monsieur";
-			}
-			else
-			{
-				greetings = "Madame";
-			}
-
-			string template = System.IO.File.ReadAllText (CoreContext.GetFileDepotPath ("assets", "template-letter-derogation.txt"), System.Text.Encoding.UTF8);
-
-			var content = string.Format (template, 
-								greetings,
-								destParish.Name,
-								origineParish.Name,
-								destParish.Name,
-								sender.OfficialContact.Person.GetFullName ()
-							);
-
-			return AiderOfficeLetterReportEntity.Create (businessContext, recipient, sender, documentName, content);	
+			return AiderOfficeLetterReportEntity.Create (businessContext, recipient, sender, documentName, "template-letter-derogation", content);
 		}
 	}
 }

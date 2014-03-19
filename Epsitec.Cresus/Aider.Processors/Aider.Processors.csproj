@@ -65,7 +65,6 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Helpers\Builders.cs" />
     <Compile Include="Pdf\OfficeGroupOfficialDocumentWriter.cs" />
     <Compile Include="Pdf\OfficeLetterDocumentWriter.cs" />
     <Compile Include="Processor.cs" />
@@ -114,7 +113,9 @@
       <Name>Cresus.WebCore.Server</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

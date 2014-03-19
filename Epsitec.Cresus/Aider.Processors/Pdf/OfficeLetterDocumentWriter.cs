@@ -19,11 +19,10 @@ using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using Epsitec.Aider.Entities;
-using Epsitec.Aider.Processors.Helpers;
+using Epsitec.Aider.Reporting;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Epsitec.Aider.Processors.Pdf
 {
@@ -43,21 +42,27 @@ namespace Epsitec.Aider.Processors.Pdf
 			var report	= this.GetReport (setup);
 			var content = new System.Text.StringBuilder ();
 
-			content.Append (letter.GetLetterContent ());
+			content.Append (letter.GetFormattedContent ());
 			
-			var topLogoPath  = CoreContext.GetFileDepotPath ("assets", "eerv-logo.png");
-			var topLogo	     = string.Format ("<img src=\"{0}\" />", topLogoPath);
+			var topLogo	     = string.Format ("<img src=\"{0}\" />", CoreContext.GetFileDepotPath ("assets", "eerv-logo.png"));
 			var topReference = "<b>" + this.settings.Office.OfficeName + "</b>";
 
-			var senderAddress    = Builders.BuildAddress (letter.Office.OfficeMainContact, false);
-
-			var recipientAddress = new StringBuilder()
-										.Append (Builders.BuildAddress (letter.RecipientContact, true))
-										.Append ("<br/><br/>")
-										.Append (letter.TownAndDate)
-										.ToString ();
+			var senderAddressBlock    = ReportBuilder.GetCompactAddress (letter.Office.OfficeMainContact);
+			var recipientAddressBlock = OfficeLetterDocumentWriter.GetRecipientAddress (letter);
 			
-			report.GeneratePdf (stream, topLogo, topReference, senderAddress, recipientAddress, content);
+			report.GeneratePdf (stream, topLogo, topReference, senderAddressBlock, recipientAddressBlock, content);
+		}
+
+		private static string GetRecipientAddress(AiderOfficeLetterReportEntity letter)
+		{
+			var buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append (FormattedText.Escape (ReportBuilder.GetFullAddress (letter.RecipientContact)));
+			buffer.Append ("<br/>");
+			buffer.Append ("<br/>");
+			buffer.Append (FormattedText.Escape (letter.TownAndDate));
+			
+			return buffer.ToString ();
 		}
 
 		private LetterDocumentSetup GetSetup()

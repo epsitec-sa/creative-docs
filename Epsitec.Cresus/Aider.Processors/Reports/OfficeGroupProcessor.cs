@@ -58,7 +58,7 @@ namespace Epsitec.Aider.Processors.Reports
 			var doc    = new Pdf.OfficeGroupOfficialDocumentWriter (context, sender, layout);
 
 			doc.WriteStream (stream, report);
-			report.ProcessDate = System.DateTime.Now;
+			report.ProcessingDate = System.DateTime.Now;
 			context.SaveChanges (LockingPolicy.ReleaseLock);
 
 			return report.Name + ".pdf";

@@ -56,7 +56,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			//SaveChanges for ID purpose: BuildProcessorUrl need the entity ID
 			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
-			report.ProcessorUrl		= report.BuildProcessorUrlForSender (this.BusinessContext, "officegroup", sender);
+			report.ProcessorUrl		= report.GetProcessorUrlForSender (this.BusinessContext, "officegroup", sender);
 			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 
 			EntityBag.Add (report, "Document PDF");

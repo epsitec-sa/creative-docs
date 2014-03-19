@@ -2077,8 +2077,6 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVOV13
 				public static readonly global::Epsitec.Common.Support.Druid Content = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 63);
-				//	designer:cap/LVOL23
-				public static readonly global::Epsitec.Common.Support.Druid LetterContent = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 85);
 				//	designer:cap/LVOT13
 				public static readonly global::Epsitec.Common.Support.Druid OfficeSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 61);
 				//	designer:cap/LVOU13
@@ -2125,12 +2123,18 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVOG23
 				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 80);
+				//	designer:cap/LVANI
+				public static readonly global::Epsitec.Common.Support.Druid DataBlob = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 599);
+				//	designer:cap/LVAMI
+				public static readonly global::Epsitec.Common.Support.Druid DataFormat = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 598);
+				//	designer:cap/LVAOI
+				public static readonly global::Epsitec.Common.Support.Druid DataTemplate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 600);
 				//	designer:cap/LVOF23
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 79);
 				//	designer:cap/LVOM23
 				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 86);
 				//	designer:cap/LVON23
-				public static readonly global::Epsitec.Common.Support.Druid ProcessDate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 87);
+				public static readonly global::Epsitec.Common.Support.Druid ProcessingDate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 87);
 				//	designer:cap/LVOT23
 				public static readonly global::Epsitec.Common.Support.Druid ProcessorUrl = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 93);
 			}

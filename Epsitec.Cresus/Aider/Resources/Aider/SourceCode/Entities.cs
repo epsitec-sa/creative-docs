@@ -9256,6 +9256,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>ProcessingDate</c> field.
+		///	designer:fld/LVOE23/LVON23
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVON23]")]
+		public global::System.DateTime? ProcessingDate
+		{
+			get
+			{
+				return this.GetField<global::System.DateTime?> ("[LVON23]");
+			}
+			set
+			{
+				global::System.DateTime? oldValue = this.ProcessingDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVON23]"))
+				{
+					this.OnProcessingDateChanging (oldValue, value);
+					this.SetField<global::System.DateTime?> ("[LVON23]", oldValue, value);
+					this.OnProcessingDateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Office</c> field.
 		///	designer:fld/LVOE23/LVOM23
 		///	</summary>
@@ -9274,28 +9296,6 @@ namespace Epsitec.Aider.Entities
 					this.OnOfficeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Aider.Entities.AiderOfficeManagementEntity> ("[LVOM23]", oldValue, value);
 					this.OnOfficeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>ProcessDate</c> field.
-		///	designer:fld/LVOE23/LVON23
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVON23]")]
-		public global::System.DateTime? ProcessDate
-		{
-			get
-			{
-				return this.GetField<global::System.DateTime?> ("[LVON23]");
-			}
-			set
-			{
-				global::System.DateTime? oldValue = this.ProcessDate;
-				if (oldValue != value || !this.IsFieldDefined("[LVON23]"))
-				{
-					this.OnProcessDateChanging (oldValue, value);
-					this.SetField<global::System.DateTime?> ("[LVON23]", oldValue, value);
-					this.OnProcessDateChanged (oldValue, value);
 				}
 			}
 		}
@@ -9321,17 +9321,89 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>DataFormat</c> field.
+		///	designer:fld/LVOE23/LVAMI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAMI]")]
+		public string DataFormat
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAMI]");
+			}
+			set
+			{
+				string oldValue = this.DataFormat;
+				if (oldValue != value || !this.IsFieldDefined("[LVAMI]"))
+				{
+					this.OnDataFormatChanging (oldValue, value);
+					this.SetField<string> ("[LVAMI]", oldValue, value);
+					this.OnDataFormatChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DataTemplate</c> field.
+		///	designer:fld/LVOE23/LVAOI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAOI]")]
+		public string DataTemplate
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAOI]");
+			}
+			set
+			{
+				string oldValue = this.DataTemplate;
+				if (oldValue != value || !this.IsFieldDefined("[LVAOI]"))
+				{
+					this.OnDataTemplateChanging (oldValue, value);
+					this.SetField<string> ("[LVAOI]", oldValue, value);
+					this.OnDataTemplateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DataBlob</c> field.
+		///	designer:fld/LVOE23/LVANI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVANI]")]
+		public global::System.Byte[] DataBlob
+		{
+			get
+			{
+				return this.GetField<global::System.Byte[]> ("[LVANI]");
+			}
+			set
+			{
+				global::System.Byte[] oldValue = this.DataBlob;
+				if (oldValue != value || !this.IsFieldDefined("[LVANI]"))
+				{
+					this.OnDataBlobChanging (oldValue, value);
+					this.SetField<global::System.Byte[]> ("[LVANI]", oldValue, value);
+					this.OnDataBlobChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnCreationDateChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnCreationDateChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnProcessingDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnProcessingDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
-		partial void OnProcessDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
-		partial void OnProcessDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnProcessorUrlChanging(string oldValue, string newValue);
 		partial void OnProcessorUrlChanged(string oldValue, string newValue);
+		partial void OnDataFormatChanging(string oldValue, string newValue);
+		partial void OnDataFormatChanged(string oldValue, string newValue);
+		partial void OnDataTemplateChanging(string oldValue, string newValue);
+		partial void OnDataTemplateChanged(string oldValue, string newValue);
+		partial void OnDataBlobChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnDataBlobChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -9410,35 +9482,11 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
-		///	<summary>
-		///	The <c>LetterContent</c> field.
-		///	designer:fld/LVOI23/LVOL23
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOL23]")]
-		public global::System.Byte[] LetterContent
-		{
-			get
-			{
-				return this.GetField<global::System.Byte[]> ("[LVOL23]");
-			}
-			set
-			{
-				global::System.Byte[] oldValue = this.LetterContent;
-				if (oldValue != value || !this.IsFieldDefined("[LVOL23]"))
-				{
-					this.OnLetterContentChanging (oldValue, value);
-					this.SetField<global::System.Byte[]> ("[LVOL23]", oldValue, value);
-					this.OnLetterContentChanged (oldValue, value);
-				}
-			}
-		}
 		
 		partial void OnRecipientContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnRecipientContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnTownAndDateChanging(string oldValue, string newValue);
 		partial void OnTownAndDateChanged(string oldValue, string newValue);
-		partial void OnLetterContentChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
-		partial void OnLetterContentChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

@@ -355,6 +355,9 @@
     <Compile Include="Entities\AiderUserEntity.cs" />
     <Compile Include="Entities\AiderUserRoleEntity.cs" />
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
+    <Compile Include="Reporting\FormattedContent.cs" />
+    <Compile Include="Reporting\IContent.cs" />
+    <Compile Include="Reporting\ReportBuilder.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
     <Compile Include="Rules\AiderGroupDefBusinessRules.cs" />
