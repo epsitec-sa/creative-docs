@@ -71,6 +71,15 @@ namespace Epsitec.Aider.Entities
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
 		}
 
+		public FormattedText GetShortPostalAddress()
+		{
+			return TextFormatter.FormatText (
+				this.StreetUserFriendly.CapitalizeFirstLetter (), this.HouseNumberAndComplement, "\n",
+				this.PostBox, "\n",
+				this.Town.ZipCode, this.Town.Name, "\n",
+				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
+		}
+
 		public FormattedText GetDisplayAddress()
 		{
 			return TextFormatter.FormatText (this.Town.Name, "~,~", this.StreetRoot, this.HouseNumberAndComplement);

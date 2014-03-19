@@ -37,7 +37,7 @@ namespace Epsitec.Aider.Processors.Pdf
 
 			setup.TextStyle.Font = Font.GetFont ("Verdana", "");
 			setup.TextStyle.Alignment = ContentAlignment.None;
-			setup.TextStyle.FontSize = 33.835; //9pt
+			setup.TextStyle.FontSize = 31.75; // 9pt => 9 x 25.4/72 = 3.175mm --- SL used 33.835
 
 			content.Append (officeReport.GetReportContent ());
 

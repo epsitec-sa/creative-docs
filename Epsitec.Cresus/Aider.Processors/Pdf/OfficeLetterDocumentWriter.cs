@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Pdf.Labels;
 using Epsitec.Common.Pdf.LetterDocument;
 using Epsitec.Common.Pdf.TextDocument;
@@ -71,6 +72,9 @@ namespace Epsitec.Aider.Processors.Pdf
 
 			//First tab for centered elements
 			setup.TextStyle.TabInsert (new Common.Drawing.TextStyle.Tab (725, Common.Drawing.TextTabType.Center, Common.Drawing.TextTabLine.None));
+			
+			setup.TextStyle.Font = Font.GetFont ("Verdana", "");
+			setup.TextStyle.FontSize = 31.75; // 9pt => 9 x 25.4/72 = 3.175mm --- SL used 33.835
 
 			return setup;
 		}

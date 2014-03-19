@@ -29,14 +29,6 @@ namespace Epsitec.Aider.Reporting
 		{
 			var buffer = new System.Text.StringBuilder ();
 
-			if (withAddressLine)
-			{
-				if (!string.IsNullOrEmpty (contact.Address.AddressLine1))
-				{
-					buffer.Append (FormattedText.Escape (contact.Address.AddressLine1) + "<br/>");
-				}
-			}
-
 			switch (contact.ContactType)
 			{
 				case Enumerations.ContactType.Legal:
@@ -57,25 +49,14 @@ namespace Epsitec.Aider.Reporting
 					break;
 			}
 
-			if (!string.IsNullOrEmpty (contact.Address.PostBox))
+			if (withAddressLine)
 			{
-				buffer.Append (FormattedText.Escape ("CP " + contact.Address.PostBox));
-				buffer.Append ("<br/>");
-			}
-
-			buffer.Append (FormattedText.Escape (contact.Address.StreetUserFriendly));
-			buffer.Append ("<br/>");
-
-			if (contact.Address.Town.Country.IsoCode != "CH")
-			{
-				buffer.Append (contact.Address.Town.Country.IsoCode  + "-" + contact.Address.GetDisplayZipCode ());
+				buffer.Append (contact.Address.GetPostalAddress ().ToString ());
 			}
 			else
 			{
-				buffer.Append (contact.Address.GetDisplayZipCode ());
+				buffer.Append (contact.Address.GetShortPostalAddress ().ToString ());
 			}
-
-			buffer.Append (" " + FormattedText.Escape (contact.Address.Town.Name));
 			
 			return buffer.ToString ();
 		}
