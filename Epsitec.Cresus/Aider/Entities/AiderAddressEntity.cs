@@ -59,9 +59,20 @@ namespace Epsitec.Aider.Entities
 			return link1 + link2;
 		}
 
+		public FormattedText GetPostalAddress(PostalAddressType type = PostalAddressType.Default)
+		{
+			switch (type)
+			{
+				case PostalAddressType.Default:
+					return this.GetDefaultPostalAddress ();
+				case PostalAddressType.Compact:
+					return this.GetCompactPostalAddress ();
+			}
 
+			throw new System.ArgumentException (string.Format ("Invalid type {0}", type.GetQualifiedName ()));
+		}
 
-		public FormattedText GetPostalAddress()
+		private FormattedText GetDefaultPostalAddress()
 		{
 			return TextFormatter.FormatText (
 				this.AddressLine1, "\n",
@@ -71,7 +82,7 @@ namespace Epsitec.Aider.Entities
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
 		}
 
-		public FormattedText GetShortPostalAddress()
+		private FormattedText GetCompactPostalAddress()
 		{
 			return TextFormatter.FormatText (
 				this.StreetUserFriendly.CapitalizeFirstLetter (), this.HouseNumberAndComplement, "\n",

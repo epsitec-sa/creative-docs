@@ -300,6 +300,7 @@
     <Compile Include="Entities\eCH_ReportedPersonEntity.cs" />
     <Compile Include="Entities\IAiderWarningExampleFactoryGetter.cs" />
     <Compile Include="Entities\ParticipationData.cs" />
+    <Compile Include="Entities\PostalAddressType.cs" />
     <Compile Include="Enumerations\ContactType.cs" />
     <Compile Include="Enumerations\EnumUtils.cs" />
     <Compile Include="Enumerations\GroupExtractionMatch.cs" />

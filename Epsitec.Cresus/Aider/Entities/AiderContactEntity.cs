@@ -44,9 +44,9 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.DisplayName, "\n", this.DisplayZipCode, this.DisplayAddress);
 		}
 
-		public FormattedText GetAddressLabelText()
+		public FormattedText GetAddressLabelText(PostalAddressType type = PostalAddressType.Default)
 		{
-			return this.GetAddressLabelText (this.GetAddressRecipientText ());
+			return this.GetAddressLabelText (this.GetAddressRecipientText (), type);
 		}
 
 		private string GetAddressRecipientText()
@@ -69,13 +69,13 @@ namespace Epsitec.Aider.Entities
 
 		private string GetLegalPersonRecipientText()
 		{
-			return StringUtils.Join
-			(
-				"\n",
-				this.LegalPersonContactMrMrs.GetLongText (),
-				this.LegalPersonContactFullName,
-				this.LegalPerson.Name
-			);
+			List<string> lines = new List<string> ();
+
+			lines.Add (this.LegalPersonContactMrMrs.GetLongText ());
+			lines.Add (this.LegalPersonContactFullName);
+			lines.AddRange (this.LegalPerson.GetNameLines ());
+
+			return StringUtils.Join ("\n", lines);
 		}
 
 		private string GetPersonRecipientText()
@@ -83,9 +83,9 @@ namespace Epsitec.Aider.Entities
 			return this.GetPersonRecipientText (this.Person.MrMrs.GetLongText ());
 		}
 
-		public FormattedText GetAddressOfParentsLabelText()
+		public FormattedText GetAddressOfParentsLabelText(PostalAddressType type = PostalAddressType.Default)
 		{
-			return this.GetAddressLabelText (this.GetAddressRecipientParentText ());
+			return this.GetAddressLabelText (this.GetAddressRecipientParentText (), type);
 		}
 
 		private string GetAddressRecipientParentText()
@@ -118,14 +118,9 @@ namespace Epsitec.Aider.Entities
 			return StringUtils.Join ("\n", title, this.Person.GetFullName ());
 		}
 
-		private FormattedText GetAddressLabelText(string recipient)
+		private FormattedText GetAddressLabelText(string recipient, PostalAddressType type)
 		{
-			return TextFormatter.FormatText
-			(
-				recipient,
-				"\n",
-				this.Address.GetPostalAddress ()
-			);
+			return TextFormatter.FormatText (recipient, "\n", this.Address.GetPostalAddress (type));
 		}
 
 		public override FormattedText GetCompactSummary()

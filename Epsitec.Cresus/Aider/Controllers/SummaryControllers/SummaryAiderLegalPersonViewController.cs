@@ -61,6 +61,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			wall.AddBrick ()
 				.Title ("Adresse de base")
+				.Text (x => x.Address.GetPostalAddress (PostalAddressType.Default))
 				.Icon ("Data.AiderAddress")
 				.WithSpecialController (typeof (EditionAiderLegalPersonViewController1Address));
 

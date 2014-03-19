@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Entities
 		
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.OfficeMainContact.GetCompactSummary ());
+			return TextFormatter.FormatText (this.OfficeMainContact.GetAddressLabelText ());
 		}
 
 		public override FormattedText GetCompactSummary()

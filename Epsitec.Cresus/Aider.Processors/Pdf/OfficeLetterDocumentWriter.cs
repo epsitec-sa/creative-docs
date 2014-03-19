@@ -48,7 +48,7 @@ namespace Epsitec.Aider.Processors.Pdf
 			var topLogo	     = string.Format ("<img src=\"{0}\" />", CoreContext.GetFileDepotPath ("assets", "logo-eerv.png"));
 			var topReference = "<b>" + this.settings.Office.OfficeName + "</b>";
 
-			var senderAddressBlock    = ReportBuilder.GetCompactAddress (letter.Office.OfficeMainContact);
+			var senderAddressBlock    = letter.Office.OfficeMainContact.GetAddressLabelText (PostalAddressType.Compact);
 			var recipientAddressBlock = OfficeLetterDocumentWriter.GetRecipientAddress (letter);
 			
 			report.GeneratePdf (stream, topLogo, topReference, senderAddressBlock, recipientAddressBlock, content);
@@ -56,14 +56,10 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private static string GetRecipientAddress(AiderOfficeLetterReportEntity letter)
 		{
-			var buffer = new System.Text.StringBuilder ();
-			
-			buffer.Append (ReportBuilder.GetFullAddress (letter.RecipientContact));
-			buffer.Append ("<br/>");
-			buffer.Append ("<br/>");
-			buffer.Append (FormattedText.Escape (letter.TownAndDate));
-			
-			return buffer.ToString ();
+			return TextFormatter.FormatText (
+				letter.RecipientContact.GetAddressLabelText (PostalAddressType.Default),
+				"\n \n \n",
+				letter.TownAndDate).ToString ();
 		}
 
 		private LetterDocumentSetup GetSetup()

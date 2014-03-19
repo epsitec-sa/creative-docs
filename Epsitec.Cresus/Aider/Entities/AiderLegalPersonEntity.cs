@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -12,7 +12,6 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,7 +21,7 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name, "\n", this.Type);
+			return TextFormatter.FormatText (this.GetNameMultiLine (), "\n", this.Type);
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -42,6 +41,21 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public string GetNameMultiLine()
+		{
+			return string.Join ("\n", this.GetNameLines ());
+		}
+
+		public IEnumerable<string> GetNameLines()
+		{
+			var separators = new char[]
+			{
+				'|', ';', ':'
+			};
+
+			return this.Name.Split (separators, System.StringSplitOptions.RemoveEmptyEntries)
+				.Select (x => x.Trim ());
+		}
 
 		public bool IsMemberOf(AiderGroupEntity group)
 		{
@@ -173,7 +187,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetFullAddressTextSingleLine(string value)
 		{
-			throw new NotImplementedException ("Do not use this method");
+			throw new System.NotImplementedException ("Do not use this method");
 		}
 
 
@@ -194,7 +208,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetFullAddressTextMultiLine(string value)
 		{
-			throw new NotImplementedException ("Do not use this method");
+			throw new System.NotImplementedException ("Do not use this method");
 		}
 
 		
