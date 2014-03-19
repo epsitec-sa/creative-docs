@@ -14,18 +14,18 @@ namespace Epsitec.Aider.Reporting
 {
 	public static class ReportBuilder
 	{
-		public static string GetCompactAddress(AiderContactEntity contact)
+		public static FormattedText GetCompactAddress(AiderContactEntity contact)
 		{
 			return ReportBuilder.GetAddress (contact, withAddressLine: false);
 		}
 
-		public static string GetFullAddress(AiderContactEntity contact)
+		public static FormattedText GetFullAddress(AiderContactEntity contact)
 		{
 			return ReportBuilder.GetAddress (contact, withAddressLine: true);
 		}
 
 
-		private static string GetAddress(AiderContactEntity contact, bool withAddressLine)
+		private static FormattedText GetAddress(AiderContactEntity contact, bool withAddressLine)
 		{
 			var buffer = new System.Text.StringBuilder ();
 
@@ -33,35 +33,42 @@ namespace Epsitec.Aider.Reporting
 			{
 				if (!string.IsNullOrEmpty (contact.Address.AddressLine1))
 				{
-					buffer.Append (contact.Address.AddressLine1 + "<br/>");
+					buffer.Append (FormattedText.Escape (contact.Address.AddressLine1) + "<br/>");
 				}
 			}
 
 			switch (contact.ContactType)
 			{
 				case Enumerations.ContactType.Legal:
-					buffer.Append (contact.LegalPerson.Name + "<br/>");
+					buffer.Append (FormattedText.Escape (contact.LegalPerson.Name));
+					buffer.Append ("<br/>");
 					break;
-				
+
+				case Enumerations.ContactType.Deceased:
 				case Enumerations.ContactType.PersonAddress:
-					buffer.Append (contact.Person.GetFullName () + "<br/>");
+					buffer.Append (contact.Person.MrMrs == Enumerations.PersonMrMrs.Monsieur ? "Monsieur" : "Madame");
+					buffer.Append ("<br/>");
+					buffer.Append (FormattedText.Escape (contact.Person.DisplayName));
+					buffer.Append ("<br/>");
 					break;
 				
 				case Enumerations.ContactType.PersonHousehold:
-					buffer.Append (contact.Household.DisplayName + "<br/>");
+					buffer.Append (FormattedText.Escape (contact.Household.DisplayName));
+					buffer.Append ("<br/>");
 					break;
-				
+
 				default:
-					buffer.Append (contact.Person.GetFullName () + "<br/>");
 					break;
 			}
 
 			if (!string.IsNullOrEmpty (contact.Address.PostBox))
 			{
-				buffer.Append ("CP " + contact.Address.PostBox + "<br/>");
+				buffer.Append (FormattedText.Escape ("CP " + contact.Address.PostBox));
+				buffer.Append ("<br/>");
 			}
 
-			buffer.Append (contact.Address.StreetUserFriendly + "<br/>");
+			buffer.Append (FormattedText.Escape (contact.Address.StreetUserFriendly));
+			buffer.Append ("<br/>");
 
 			if (contact.Address.Town.Country.IsoCode != "CH")
 			{
@@ -72,14 +79,15 @@ namespace Epsitec.Aider.Reporting
 				buffer.Append (contact.Address.GetDisplayZipCode ());
 			}
 
-			buffer.Append (" " + contact.Address.Town.Name);
+			buffer.Append (" " + FormattedText.Escape (contact.Address.Town.Name));
+			
 			return buffer.ToString ();
 		}
 
 
-		public static string GetTownAndDate(AiderAddressEntity address, Date date)
+		public static FormattedText GetTownAndDate(AiderAddressEntity address, Date date)
 		{
-			return address.Town.Name + ", le " + date.ToString ("dd MMM yyyy", System.Globalization.CultureInfo.CurrentCulture);
+			return FormattedText.Escape (address.Town.Name) + ", le " + date.ToString ("dd MMM yyyy", System.Globalization.CultureInfo.CurrentCulture);
 		}
 
 		public static string GetTemplate(string templateName)
@@ -113,7 +121,7 @@ namespace Epsitec.Aider.Reporting
 				return FormattedText.Null;
 			}
 
-			return content.GetContentText (template);
+			return content.GetContentText (template.Replace ("\r\n", ""));
 		}
 
 		public static FormattedText GetReport(string templateName, string format, byte[] blob)

@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Entities
 
 			letter.Name				= documentName;
 			letter.CreationDate		= Date.Today;
-			letter.TownAndDate		= ReportBuilder.GetTownAndDate (sender.Office.OfficeMainContact.Address, letter.CreationDate);
+			letter.TownAndDate		= ReportBuilder.GetTownAndDate (sender.Office.OfficeMainContact.Address, letter.CreationDate).ToSimpleText ();
 			letter.RecipientContact = recipient;
 			letter.Office			= sender.Office;
 			letter.DataTemplate     = templateName;

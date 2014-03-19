@@ -44,7 +44,7 @@ namespace Epsitec.Aider.Processors.Pdf
 
 			content.Append (letter.GetFormattedContent ());
 			
-			var topLogo	     = string.Format ("<img src=\"{0}\" />", CoreContext.GetFileDepotPath ("assets", "eerv-logo.png"));
+			var topLogo	     = string.Format ("<img src=\"{0}\" />", CoreContext.GetFileDepotPath ("assets", "logo-eerv.png"));
 			var topReference = "<b>" + this.settings.Office.OfficeName + "</b>";
 
 			var senderAddressBlock    = ReportBuilder.GetCompactAddress (letter.Office.OfficeMainContact);
@@ -57,7 +57,7 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 			var buffer = new System.Text.StringBuilder ();
 			
-			buffer.Append (FormattedText.Escape (ReportBuilder.GetFullAddress (letter.RecipientContact)));
+			buffer.Append (ReportBuilder.GetFullAddress (letter.RecipientContact));
 			buffer.Append ("<br/>");
 			buffer.Append ("<br/>");
 			buffer.Append (FormattedText.Escape (letter.TownAndDate));
