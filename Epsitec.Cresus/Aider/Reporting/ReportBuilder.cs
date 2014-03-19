@@ -44,16 +44,12 @@ namespace Epsitec.Aider.Reporting
 					buffer.Append ("<br/>");
 					break;
 
+				case Enumerations.ContactType.PersonHousehold:
 				case Enumerations.ContactType.Deceased:
 				case Enumerations.ContactType.PersonAddress:
 					buffer.Append (contact.Person.MrMrs == Enumerations.PersonMrMrs.Monsieur ? "Monsieur" : "Madame");
 					buffer.Append ("<br/>");
-					buffer.Append (FormattedText.Escape (contact.Person.DisplayName));
-					buffer.Append ("<br/>");
-					break;
-				
-				case Enumerations.ContactType.PersonHousehold:
-					buffer.Append (FormattedText.Escape (contact.Household.DisplayName));
+					buffer.Append (FormattedText.Escape (contact.Person.CallNameDisplay + " " + contact.Person.eCH_Person.PersonOfficialName));
 					buffer.Append ("<br/>");
 					break;
 

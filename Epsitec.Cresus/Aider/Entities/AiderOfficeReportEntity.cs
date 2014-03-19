@@ -27,7 +27,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name, "(<a href='" + this.ProcessorUrl +"'>PDF</a>)");
+			return TextFormatter.FormatText (this.Name, new FormattedText (" (<a href='" + this.ProcessorUrl +"'>PDF</a>)"));
 		}
 
 		public void SetContent(IContent data)
