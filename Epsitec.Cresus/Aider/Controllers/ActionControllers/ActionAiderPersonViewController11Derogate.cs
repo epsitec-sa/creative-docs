@@ -31,6 +31,18 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return Resources.Text ("Déroger vers...");
 		}
 
+		public override bool IsEnabled
+		{
+			get
+			{
+				var userManager = AiderUserManager.Current;
+				var aiderUser   = userManager.AuthenticatedUser;
+
+				return (aiderUser.Office.IsNotNull ())
+					&& (aiderUser.OfficeSender.IsNotNull ());
+			}
+		}
+
 		public override ActionExecutor GetExecutor()
 		{
 			return ActionExecutor.Create<AiderGroupEntity,Date> (this.Execute);
