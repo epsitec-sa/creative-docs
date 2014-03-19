@@ -1075,9 +1075,15 @@ namespace Epsitec.Aider.Data.Job
 				//Remove Old Contact
 				if (oldHousehold.IsNotNull ())
 				{
+					this.LogToConsole ("Info: old household detected, removing contact for {0}", aiderPerson.GetFullName ());
 					var contactToRemove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
 					businessContext.DeleteEntity (contactToRemove);
-					this.LogToConsole ("Info: old household detected, removing contact for {0}",aiderPerson.GetFullName ());
+
+					if (oldHousehold.Members.Count <= 1)
+					{
+						this.LogToConsole ("Info: old household is now empty, delete household and existing subscription");
+						this.DeleteAiderHouseholdAndSubscription (businessContext, oldHousehold);
+					}
 				}
 				else
 				{
@@ -1086,6 +1092,7 @@ namespace Epsitec.Aider.Data.Job
 
 				this.LogToConsole ("Info: Create contact for the new household");
 				AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, true);
+				
 			}
 			else
 			{
@@ -1097,12 +1104,19 @@ namespace Epsitec.Aider.Data.Job
 				this.LogToConsole ("Info: Processing Adult 2 Relocation");
 				var aiderPerson = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult2);
 				var oldHousehold = this.GetAiderHousehold (businessContext, aiderPerson);
+
 				//Remove Old Contact
 				if (oldHousehold.IsNotNull ())
 				{
 					var contactToRemove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
 					businessContext.DeleteEntity (contactToRemove);
 					this.LogToConsole ("Info: old household detected, removing contact for {0}", aiderPerson.GetFullName ());
+
+					if (oldHousehold.Members.Count <= 1)
+					{
+						this.LogToConsole ("Info: old household is now empty, delete household and existing subscription");
+						this.DeleteAiderHouseholdAndSubscription (businessContext, oldHousehold);
+					}
 				}
 				else
 				{
@@ -1200,6 +1214,19 @@ namespace Epsitec.Aider.Data.Job
 					this.eChPersonIdWithNewHousehold.Add (child.Id);
 				}
 			}
+		}
+
+		private void DeleteAiderHouseholdAndSubscription(BusinessContext businessContext, AiderHouseholdEntity household)
+		{
+			//Remove subscription if needed
+			var oldSubscription = AiderSubscriptionEntity.FindSubscription (businessContext, household);
+			if (oldSubscription.IsNotNull ())
+			{
+				businessContext.DeleteEntity (oldSubscription);
+			}
+
+			//Remove old household
+			businessContext.DeleteEntity (household);
 		}
 
 		private void UpdateAiderHouseholdAndSubscription(BusinessContext businessContext, eCH_ReportedPersonEntity family, AiderPersonEntity person)
