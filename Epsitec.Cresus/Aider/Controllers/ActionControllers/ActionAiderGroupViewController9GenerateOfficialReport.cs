@@ -43,11 +43,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var aiderUser       = userManager.AuthenticatedUser;
 			var sender		    = this.BusinessContext.GetLocalEntity (aiderUser.OfficeSender);
 
-			var text = TextFormatter.FormatText ("\n \n", 
-				/**/							 "Assemblée paroissiale du", date.ToString("d MMM yyyy"), "à", place.Name, "\n \n",
-				/**/							 new FormattedText ("<tab/><b>"), title, new FormattedText ("</b>"), "\n \n");
+			var content = FormattedContent.Escape ("Assemblée paroissiale du " + date.ToString("d MMM yyyy") + " à " + place.Name, title);
 			
-			var report = AiderOfficeGroupParticipantReportEntity.Create (this.BusinessContext, group, sender, documentName, title, new StaticContent (text));
+			var report = AiderOfficeGroupParticipantReportEntity.Create (this.BusinessContext, group, sender, documentName, title, "template-group-report", content);
 
 			//SaveChanges for ID purpose: BuildProcessorUrl need the entity ID
 			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);

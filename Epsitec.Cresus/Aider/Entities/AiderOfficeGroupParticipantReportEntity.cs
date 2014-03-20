@@ -40,11 +40,12 @@ namespace Epsitec.Aider.Entities
 			return this.Group.FindParticipants (d, this.Group.FindParticipantCount (d));
 		}
 
-		public static AiderOfficeGroupParticipantReportEntity Create(BusinessContext context, AiderGroupEntity group, AiderOfficeSenderEntity sender, string documentName, string title, StaticContent content)
+		public static AiderOfficeGroupParticipantReportEntity Create(BusinessContext context, AiderGroupEntity group, AiderOfficeSenderEntity sender, string documentName, string title, string templateName, IContent content)
 		{
 			var report = context.CreateAndRegisterEntity<AiderOfficeGroupParticipantReportEntity> ();
 
 			report.Name			= documentName;
+			report.DataTemplate = templateName;
 			report.CreationDate	= Date.Today;
 			report.Title		= title;
 			report.Group		= group;

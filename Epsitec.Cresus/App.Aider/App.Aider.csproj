@@ -81,6 +81,7 @@
     <None Include="..\Aider\Properties\Epsitec.Aider.snk">
       <Link>Properties\Epsitec.Aider.snk</Link>
     </None>
+    <Content Include="Assets\template-group-report.txt" />
     <Content Include="Assets\logo-eerv.png" />
     <Content Include="Assets\template-letter-derogation.txt" />
     <Content Include="Cresus.Core.Library.crconfig">
