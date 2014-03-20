@@ -1,9 +1,11 @@
-//	Copyright © 2004-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Epsitec.Common.Support
@@ -16,8 +18,9 @@ namespace Epsitec.Common.Support
 		static AssemblyLoader()
 		{
 			System.AppDomain.CurrentDomain.AssemblyLoad += AssemblyLoader.HandleCurrentDomainAssemblyLoad;
-		}
 
+			AssemblyLoader.Record (System.AppDomain.CurrentDomain.GetAssemblies ());
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether the loader is currently loading an assembly.
@@ -84,29 +87,8 @@ namespace Epsitec.Common.Support
 
 			using (AssemblyLoader.recursionCount.Enter ().AndFinally (AssemblyLoader.DispatchPendingEvents))
 			{
-				System.Reflection.Assembly assembly = null;
+				Assembly assembly = null;
 
-#if false
-				//	Obsolete: should not be used any longer...
-				//	See http://msdn.microsoft.com/en-us/library/1009fa28.aspx
-				assembly = Assembly.LoadWithPartialName (name);
-
-				if (assembly != null)
-				{
-					lock (AssemblyLoader.exclusion)
-					{
-						AssemblyLoader.assemblies[name] = assembly;
-					}
-
-					if (loadDependencies)
-					{
-						AssemblyLoader.LoadDependencies (assembly);
-					}
-
-					return assembly;
-				}
-#endif
-				
 				if ((string.IsNullOrEmpty (loadPath) == false) &&
 					(System.IO.Directory.Exists (loadPath)))
 				{
@@ -188,7 +170,7 @@ namespace Epsitec.Common.Support
 		/// <returns>
 		/// The assemblies which could be found.
 		/// </returns>
-		public static IList<Assembly> LoadMatching(string pattern, System.IO.SearchOption searchOption, AssemblyLoadMode loadMode = AssemblyLoadMode.LoadOnlyEpsitecSigned, string subfolder = null)
+		public static IList<Assembly> LoadMatching(string pattern, System.IO.SearchOption searchOption, AssemblyLoadMode loadMode = AssemblyLoadMode.OnlySigned, string subfolder = null)
 		{
 			string loadPath = AssemblyLoader.GetAssemblyLoadPath ();
 
@@ -218,7 +200,30 @@ namespace Epsitec.Common.Support
 			return assemblies;
 		}
 
+		/// <summary>
+		/// Finds all matching assemblies which are already loaded in memory.
+		/// </summary>
+		/// <param name="loadMode">The load mode.</param>
+		/// <returns>The list of loaded assemblies which match the load mode.</returns>
+		public static IList<Assembly> FindMatching(AssemblyLoadMode loadMode = AssemblyLoadMode.OnlySigned)
+		{
+			lock (AssemblyLoader.exclusion)
+			{
+				return AssemblyLoader.assemblies.Values.Where (x => AssemblyLoader.Match (x, loadMode)).ToArray ();
+			}
+		}
 
+		/// <summary>
+		/// Verifies that the specified assembly matches the load mode.
+		/// </summary>
+		/// <param name="assembly">The assembly.</param>
+		/// <param name="loadMode">The load mode.</param>
+		/// <returns><c>true</c> if the assembly matches the load mode, <c>false</c> otherwise</returns>
+		public static bool Match(Assembly assembly, AssemblyLoadMode loadMode)
+		{
+			return AssemblyLoader.CheckAssemblyName (assembly.GetName (), loadMode);
+		}
+		
 		/// <summary>
 		/// Gets the assembly load path based on the Common.Support assembly path.
 		/// </summary>
@@ -265,27 +270,40 @@ namespace Epsitec.Common.Support
 		private static bool CheckAssemblyName(string path, AssemblyLoadMode loadMode)
 		{
 			AssemblyName assemblyName = AssemblyName.GetAssemblyName (path);
+			
+			return AssemblyLoader.CheckAssemblyName (assemblyName, loadMode);
+		}
+
+		private static bool CheckAssemblyName(AssemblyName assemblyName, AssemblyLoadMode loadMode)
+		{
 			byte[] publicKey = assemblyName.GetPublicKey ();
 
 			switch (loadMode)
 			{
-				case AssemblyLoadMode.LoadAny:
+				case AssemblyLoadMode.Any:
 					return true;
 
-				case AssemblyLoadMode.LoadOnlySigned:
+				case AssemblyLoadMode.OnlySigned:
 					return publicKey != null;
 
-				case AssemblyLoadMode.LoadOnlyEpsitecSigned:
+				case AssemblyLoadMode.OnlyEpsitecSigned:
 					return Comparer.EqualValues (AssemblyLoader.EpsitecPublicKey, publicKey);
 
 				default:
-					throw new System.NotSupportedException (string.Format ("AssemblyLoadMode.{0} not supported", loadMode));
+					throw new System.NotSupportedException (string.Format ("{0} not supported", loadMode.GetQualifiedName ()));
 			}
 		}
-
+		
 		private static void HandleCurrentDomainAssemblyLoad(object sender, System.AssemblyLoadEventArgs args)
 		{
-			var handler = AssemblyLoader.AssemblyLoaded;
+			AssemblyLoader.Record (args.LoadedAssembly);
+
+			System.AssemblyLoadEventHandler handler;
+
+			lock (AssemblyLoader.exclusion)
+			{
+				handler = AssemblyLoader.assemblyLoaded;
+			}
 
 			if (handler != null)
 			{
@@ -300,6 +318,35 @@ namespace Epsitec.Common.Support
 				{
 					handler (sender, args);
 				}
+			}
+		}
+
+		private static void Record(IEnumerable<Assembly> assemblies)
+		{
+			foreach (var assembly in assemblies)
+			{
+				AssemblyLoader.Record (assembly);
+			}
+		}
+
+		private static void Record(Assembly assembly)
+		{
+			if ((assembly.ReflectionOnly) ||
+				(assembly.IsDynamic))
+			{
+				return;
+			}
+
+			var name = System.IO.Path.GetFileNameWithoutExtension (assembly.Location);
+			
+			lock (AssemblyLoader.exclusion)
+			{
+				if (AssemblyLoader.assemblies.ContainsKey (name))
+				{
+					throw new System.InvalidOperationException ("Duplicate assembly loaded: " + name);
+				}
+
+				AssemblyLoader.assemblies[name] = assembly;
 			}
 		}
 
@@ -331,7 +378,25 @@ namespace Epsitec.Common.Support
 		/// Occurs when an assembly has been loaded. Prefer this event to the <see cref="System.AppDomain.CurrentDomain.AssemblyLoad"/>
 		/// event, as it will fire only after all dependent assemblies were properly loaded too.
 		/// </summary>
-		public static event System.AssemblyLoadEventHandler AssemblyLoaded;
+		public static event System.AssemblyLoadEventHandler AssemblyLoaded
+		{
+			add
+			{
+				lock (AssemblyLoader.exclusion)
+				{
+					AssemblyLoader.assemblyLoaded += value;
+				}
+			}
+			remove
+			{
+				lock (AssemblyLoader.exclusion)
+				{
+					AssemblyLoader.assemblyLoaded -= value;
+				}
+			}
+		}
+
+		private static System.AssemblyLoadEventHandler assemblyLoaded;
 
 		private readonly static object							exclusion      = new object ();
 		private readonly static Dictionary<string, Assembly>	assemblies     = new Dictionary<string, Assembly> ();

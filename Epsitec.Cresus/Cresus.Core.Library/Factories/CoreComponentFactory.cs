@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.Core.Factories
 			//	The components may reside in some not yet loaded assemblies; make sure that we
 			//	load them now:
 
-			AssemblyLoader.LoadMatching ("Cresus.Core.Library.*", System.IO.SearchOption.TopDirectoryOnly, loadMode: AssemblyLoadMode.LoadOnlyEpsitecSigned);
+			AssemblyLoader.LoadMatching ("Cresus.Core.Library.*", System.IO.SearchOption.TopDirectoryOnly, loadMode: AssemblyLoadMode.OnlyEpsitecSigned);
 		}
 
 		[System.ThreadStatic]
-		protected static SafeCounter		registerRecursionCount;
+		protected static SafeCounter			registerRecursionCount;
 	}
 }

@@ -1,18 +1,17 @@
-//	Copyright © 2008-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2008-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
-using System.Linq;
-
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Support.PlugIns
 {
 	using Assembly=System.Reflection.Assembly;
-using System.Xml.Linq;
 
 	/// <summary>
 	/// The <c>PlugInFactory</c> class provides a generic implementation of
@@ -180,7 +179,7 @@ using System.Xml.Linq;
 		{
 			PlugInFactory<TClass, TAttribute, TId>.types = new Dictionary<TId, Record> ();
 
-			Assembly[] assemblies = TypeEnumerator.Instance.GetLoadedAssemblies ().ToArray ();
+			var assemblies = AssemblyLoader.FindMatching (AssemblyLoadMode.OnlySigned);
 
 			AssemblyLoader.AssemblyLoaded += PlugInFactory<TClass, TAttribute, TId>.HandleDomainAssemblyLoaded;
 
@@ -205,9 +204,17 @@ using System.Xml.Linq;
 
 		private static void HandleDomainAssemblyLoaded(object sender, System.AssemblyLoadEventArgs args)
 		{
-			if (!args.LoadedAssembly.ReflectionOnly)
+			var assembly = args.LoadedAssembly;
+
+			if ((assembly.ReflectionOnly) ||
+				(assembly.IsDynamic))
 			{
-				PlugInFactory<TClass, TAttribute, TId>.Analyze (args.LoadedAssembly);
+				return;
+			}
+
+			if (AssemblyLoader.Match (assembly, AssemblyLoadMode.OnlySigned))
+			{
+				PlugInFactory<TClass, TAttribute, TId>.Analyze (assembly);
 			}
 		}
 

@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -11,8 +11,8 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public enum AssemblyLoadMode
 	{
-		LoadAny,
-		LoadOnlySigned,
-		LoadOnlyEpsitecSigned,
+		Any,
+		OnlySigned,
+		OnlyEpsitecSigned,
 	}
 }
