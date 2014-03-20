@@ -18,8 +18,12 @@ using System.Collections.Generic;
 
 namespace Epsitec.Aider.Entities
 {
-	public partial class AiderOfficeReportEntity
+	public partial class AiderOfficeReportEntity : IContentTextProducer
 	{
+		public AiderOfficeReportEntity()
+		{
+		}
+		
 		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Name);		
@@ -44,9 +48,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public FormattedText GetFormattedContent()
+		public FormattedText GetFormattedText()
 		{
-			return ReportBuilder.GetReport (this.DataTemplate, this.DataFormat, this.DataBlob);
+			IContentTextProducer producer = this;
+
+			return producer.GetFormattedText (this.DataTemplate);
 		}
 
 		public string GetProcessorUrlForSender(BusinessContext context, string processorName, AiderOfficeSenderEntity sender)
@@ -58,6 +64,15 @@ namespace Epsitec.Aider.Entities
 			
 			return string.Format ("/proxy/reporting/{0}/{1}/{2}", processorName, senderId, reportId);
 		}
+
+		#region IContentTextProducer Members
+
+		FormattedText IContentTextProducer.GetFormattedText(string template)
+		{
+			return ReportBuilder.GenerateReport (template, this.DataFormat, this.DataBlob);
+		}
+
+		#endregion
 
 		private static string GetUrlEntityId(DataContext data, AbstractEntity entity)
 		{

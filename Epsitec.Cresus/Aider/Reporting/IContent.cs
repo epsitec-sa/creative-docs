@@ -1,18 +1,17 @@
 ﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
-
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Aider.Reporting
 {
-	public interface IContent
+	/// <summary>
+	/// The <c>IContent</c> interface is used in conjunction with
+	/// <see cref="AiderOfficeReportEntity"/> to serialize and deserialize
+	/// blobs, and to produce content for text documents, such as letters.
+	/// </summary>
+	public interface IContent : IContentStore, IContentTextProducer
 	{
-		string Format { get; }
-		byte[] GetContentBlob();
-		IContent Setup(byte[] blob);
-		FormattedText GetContentText(string template);
 	}
 }

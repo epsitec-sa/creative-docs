@@ -1,5 +1,5 @@
 ﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 
@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Reporting
 			return TextFormatter.FormatText (address.Town.Name, ", le", date.ToString ("dd MMM yyyy", System.Globalization.CultureInfo.CurrentCulture));
 		}
 
-		public static string GetTemplate(string templateName)
+		public static string ReadTemplate(string templateName)
 		{
 			if (string.IsNullOrEmpty (templateName))
 			{
@@ -36,24 +36,24 @@ namespace Epsitec.Aider.Reporting
 			return null;
 		}
 
-		public static FormattedText GetReport(string templateName, IContent content)
+		public static FormattedText GenerateReport(string templateName, IContent content)
 		{
 			if (content == null)
 			{
 				return FormattedText.Null;
 			}
 
-			var template = ReportBuilder.GetTemplate (templateName);
+			var template = ReportBuilder.ReadTemplate (templateName);
 
 			if (template == null)
 			{
 				return FormattedText.Null;
 			}
 
-			return content.GetContentText (template.Replace ("\r\n", ""));
+			return content.GetFormattedText (template.Replace ("\r\n", ""));
 		}
 
-		public static FormattedText GetReport(string templateName, string format, byte[] blob)
+		public static FormattedText GenerateReport(string templateName, string format, byte[] blob)
 		{
 			IContent content = null;
 
@@ -72,9 +72,14 @@ namespace Epsitec.Aider.Reporting
 				return FormattedText.Null;
 			}
 
-			content.Setup (blob);
+			content = content.Setup (blob) as IContent;
 
-			return ReportBuilder.GetReport (templateName, content);
+			if (content == null)
+			{
+				return FormattedText.Null;
+			}
+
+			return ReportBuilder.GenerateReport (templateName, content);
 		}
 	}
 }

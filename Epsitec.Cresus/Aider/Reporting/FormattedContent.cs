@@ -82,12 +82,12 @@ namespace Epsitec.Aider.Reporting
 			return System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
 		}
 
-		public FormattedText GetContentText(string template)
+		public FormattedText GetFormattedText(string template)
 		{
 			return new FormattedText (string.Format (template, this.arguments));
 		}
 
-		public IContent Setup(byte[] blob)
+		public IContentStore Setup(byte[] blob)
 		{
 			if ((blob == null) ||
 				(blob.Length == 0))

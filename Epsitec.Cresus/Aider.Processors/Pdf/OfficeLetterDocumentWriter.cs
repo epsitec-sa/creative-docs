@@ -43,7 +43,7 @@ namespace Epsitec.Aider.Processors.Pdf
 			var report	= this.GetReport (setup);
 			var content = new System.Text.StringBuilder ();
 
-			content.Append (letter.GetFormattedContent ());
+			content.Append (letter.GetFormattedText ());
 			
 			var topLogo	     = string.Format ("<img src=\"{0}\" />", CoreContext.GetFileDepotPath ("assets", "logo-eerv.png"));
 			var topReference = "<b>" + this.settings.Office.OfficeName + "</b>";
