@@ -49,10 +49,12 @@ namespace Epsitec.Aider.Reporting
 
 			if (template == null)
 			{
-				return FormattedText.Null;
+				return content.GetFormattedText (null);
 			}
-
-			return content.GetFormattedText (template.Replace ("\r\n", ""));
+			else
+			{
+				return content.GetFormattedText (template.Replace ("\r\n", ""));
+			}
 		}
 
 		public static FormattedText GenerateReport(string templateName, string format, byte[] blob)

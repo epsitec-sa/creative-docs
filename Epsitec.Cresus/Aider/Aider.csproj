@@ -363,6 +363,7 @@
     <Compile Include="Reporting\IContentStore.cs" />
     <Compile Include="Reporting\IContentTextProducer.cs" />
     <Compile Include="Reporting\ReportBuilder.cs" />
+    <Compile Include="Reporting\StaticContent.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
     <Compile Include="Rules\AiderGroupDefBusinessRules.cs" />

@@ -7,16 +7,18 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Library;
+
+using Epsitec.Aider.Override;
+using Epsitec.Aider.Reporting;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Entities;
-using Epsitec.Aider.Override;
-using System.Text;
-using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -41,18 +43,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var aiderUser       = userManager.AuthenticatedUser;
 			var sender		    = this.BusinessContext.GetLocalEntity (aiderUser.OfficeSender);
 
-			var content			= new StringBuilder ()
-										.Append ("<br/><br/>")
-										.Append ("Assemblée paroissiale du ")
-										.Append (date.ToString("d MMM yyyy"))
-										.Append (" à ")
-										.Append (place.Name)
-										.Append ("<br/><br/>")
-										.Append ("<tab/><b>" + title + "</b>")
-										.Append ("<br/><br/>")
-										.ToString ();
-
-			var report = AiderOfficeGroupParticipantReportEntity.Create (this.BusinessContext, group, sender, documentName, title, content);
+			var text = TextFormatter.FormatText ("\n \n", 
+				/**/							 "Assemblée paroissiale du", date.ToString("d MMM yyyy"), "à", place.Name, "\n \n",
+				/**/							 new FormattedText ("<tab/><b>"), title, new FormattedText ("</b>"), "\n \n");
+			
+			var report = AiderOfficeGroupParticipantReportEntity.Create (this.BusinessContext, group, sender, documentName, title, new StaticContent (text));
 
 			//SaveChanges for ID purpose: BuildProcessorUrl need the entity ID
 			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
