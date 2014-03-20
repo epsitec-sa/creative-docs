@@ -128,10 +128,11 @@ namespace Epsitec.Aider.Data.Job
 			this.TagAiderPersonsForMissingHousehold ();
 
 			this.CreateNewEChPersons ();
-			this.CreateNewAiderPersons ();
-
+			
 			this.RemoveOldEChReportedPersons ();
-			this.CreateNewEChReportedPersons ();			//	houseHoldsToCreate
+			this.CreateNewEChReportedPersons ();
+
+			this.CreateNewAiderPersons ();
 			this.CreateNewAiderHouseholds ();	
 
 			this.LogToConsole (time, "done");
@@ -651,9 +652,8 @@ namespace Epsitec.Aider.Data.Job
 
 							aiderPersonEntity.eCH_Person = eChPersonEntity;
 							aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
+							aiderPersonEntity.Visibility = PersonVisibilityStatus.Default;
 							aiderPersonEntity.Confession = PersonConfession.Protestant;
-							
-							ParishAssigner.AssignToParish (parishAddressRepository, businessContext, aiderPersonEntity, this.startDate);
 
 							this.CreateArrivalWarningForNewHousehold (businessContext, aiderPersonEntity);
 						}
@@ -661,9 +661,10 @@ namespace Epsitec.Aider.Data.Job
 						{
 							this.LogToConsole ("Updated: AiderPerson ECHPERSONID:{0}", eChPerson.Id);
 
-							//Update EChDATA
 							existingAiderPersonEntity.eCH_Person = eChPersonEntity;
+							existingAiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
 							existingAiderPersonEntity.Visibility = PersonVisibilityStatus.Default;
+							existingAiderPersonEntity.Confession = PersonConfession.Protestant;
 
 							this.CreateArrivalWarningForNewHousehold (businessContext, existingAiderPersonEntity);				
 						}
@@ -823,25 +824,31 @@ namespace Epsitec.Aider.Data.Job
 			var eChReportedPersonEntity   = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity> ();
 			eChReportedPersonEntity.Address = eChAddressEntity;
 
-			//create ref aiderPerson if needed (weird case)
+			
 			var refAiderPerson = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
+
+			//create ref aiderPerson if needed
 			if (refAiderPerson.IsNull ())
 			{
 				var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-				aiderPersonEntity.eCH_Person = eChReportedPersonEntity.Adult1;
-				this.LogToConsole ("Warning: Need to create the AiderPersonEntity: ECHPERSONID:{0}", eChReportedPersonEntity.Adult1.PersonId);
-
+				var eChPerson = this.GetEchPersonEntity (businessContext, eChReportedPerson.Adult1);
+				aiderPersonEntity.eCH_Person = eChPerson;
 				refAiderPerson = aiderPersonEntity;
 			}
 
-			//retreiving ref aiderHousehold
-			var refAiderHousehold = this.GetAiderHousehold (businessContext, refAiderPerson);
+			AiderHouseholdEntity refAiderHousehold = null;
+			if (processAiderHouseholdChanges)
+			{
+				//retreiving ref aiderHousehold
+				refAiderHousehold = this.GetAiderHousehold (businessContext, refAiderPerson);
+			}
 
 			eChReportedPersonEntity.Adult1 = refAiderPerson.eCH_Person;
 
-			if (processAiderHouseholdChanges)
+			if (processAiderHouseholdChanges && refAiderHousehold.IsNotNull ())
 			{
-				this.ProcessAiderHouseholdChangesForMember (businessContext, refAiderPerson.eCH_Person, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
+
+				this.ProcessAiderHouseholdChangesForMember (businessContext, refAiderPerson, refAiderPerson.eCH_Person, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold,true);
 			}
 
 			if (eChReportedPerson.Adult2 != null)
@@ -850,9 +857,17 @@ namespace Epsitec.Aider.Data.Job
 				eChReportedPersonEntity.Adult2 = eChPersonEntity;
 				eChReportedPersonEntity.RemoveDuplicates ();
 
-				if (processAiderHouseholdChanges)
+				if (processAiderHouseholdChanges && refAiderHousehold.IsNotNull ())
 				{
-					this.ProcessAiderHouseholdChangesForMember (businessContext, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
+					var aiderPerson = this.GetAiderPersonEntity (businessContext, eChPersonEntity);
+					if (aiderPerson.IsNull ())
+					{
+						var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+						aiderPersonEntity.eCH_Person = eChPersonEntity;
+						aiderPerson = aiderPersonEntity;
+					}
+
+					this.ProcessAiderHouseholdChangesForMember (businessContext, aiderPerson, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold,true);
 				}
 			}
 
@@ -862,9 +877,17 @@ namespace Epsitec.Aider.Data.Job
 				eChReportedPersonEntity.Children.Add (eChPersonEntity);
 				eChReportedPersonEntity.RemoveDuplicates ();
 
-				if (processAiderHouseholdChanges)
+				if (processAiderHouseholdChanges && refAiderHousehold.IsNotNull ())
 				{
-					this.ProcessAiderHouseholdChangesForMember (businessContext, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold);
+					var aiderPerson = this.GetAiderPersonEntity (businessContext, eChPersonEntity);
+					if (aiderPerson.IsNull ())
+					{
+						var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+						aiderPersonEntity.eCH_Person = eChPersonEntity;
+						aiderPerson = aiderPersonEntity;
+					}
+
+					this.ProcessAiderHouseholdChangesForMember (businessContext, aiderPerson, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold,false);
 				}
 			}
 
@@ -989,14 +1012,13 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void ProcessAiderHouseholdChangesForMember(BusinessContext businessContext, eCH_PersonEntity eChPersonEntity,EChAddress rchAddress, eCH_ReportedPersonEntity eChReportedPersonEntity,AiderHouseholdEntity refAiderHousehold)
+		private void ProcessAiderHouseholdChangesForMember(BusinessContext businessContext, AiderPersonEntity aiderPerson, eCH_PersonEntity eChPersonEntity,EChAddress rchAddress, eCH_ReportedPersonEntity eChReportedPersonEntity,AiderHouseholdEntity refAiderHousehold,bool isHead)
 		{
 			this.LogToConsole ("Info: Processing {0}", eChPersonEntity.PersonId);
 
 			//Assign household EChHousehold
 			eChPersonEntity.ReportedPerson1 = eChReportedPersonEntity;
 			
-			var aiderPerson = this.GetAiderPersonEntity (businessContext, eChPersonEntity);
 			//autoassign person to AiderHousehold if needed
 			if (aiderPerson.Households.IsEmpty ())
 			{
@@ -1004,7 +1026,7 @@ namespace Epsitec.Aider.Data.Job
 				
 				if (refAiderHousehold.IsNotNull ())
 				{
-					EChDataImporter.SetupHousehold (businessContext, aiderPerson, refAiderHousehold, eChReportedPersonEntity, isHead1: true);
+					EChDataImporter.SetupHousehold (businessContext, aiderPerson, refAiderHousehold, eChReportedPersonEntity, isHead);
 					this.eChPersonIdWithHouseholdSetupDone.Add (aiderPerson.eCH_Person.PersonId);
 					ParishAssigner.AssignToParish (parishAddressRepository, businessContext, aiderPerson, this.startDate);
 					this.LogToConsole ("Info: Setup done and parish assigned -> further process will skip household creation");
@@ -1124,7 +1146,7 @@ namespace Epsitec.Aider.Data.Job
 				}
 
 				this.LogToConsole ("Info: Create contact for the new household");
-				AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, false);
+				AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, true);
 
 			}
 
