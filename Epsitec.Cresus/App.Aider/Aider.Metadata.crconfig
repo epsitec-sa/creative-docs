@@ -1341,7 +1341,20 @@ AiderOfficeSender = [LVOA13]
   <!-- DataSets -->
 
   <D>
-    <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" ec="false" ed="false" dg="">
+    <d cid="[LVO433]" teid="@AiderContact" tn="default" df="true" d="true" ec="false" ed="false" dg="">
+      <R><r>@user</r></R>
+      <L>
+        <l t="Adresse normale" f="0"/>
+        <l t="Adresse aux parents de..." f="1"/>
+      </L>
+       <!-- Filter -->
+       <f id="@AiderContact">
+        <!-- Column id=AddressType (Valeur) (Comparaison) c=Equals(1) v="(e)num AddressType/n°1 (Default)" -->
+        <C><c id="[LVABE]"><v><comp c="1" v="e[LVAT5]/1" /></v></c></C>
+      </f>
+    </d>
+
+    <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="false" ec="false" ed="false" dg="">
       <R><r>@user</r></R>
       <L>
         <l t="Adresse normale" f="0"/>

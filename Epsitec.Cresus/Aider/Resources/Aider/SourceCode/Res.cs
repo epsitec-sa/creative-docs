@@ -23,6 +23,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ReportDatasetExample = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 59));
 				//	designer:cap/LVAFE
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderContact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 463));
+				//	designer:cap/LVO433
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderContactFiltered = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 100));
 				//	designer:cap/LVG402
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderCountry = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 4));
 				//	designer:cap/LVA1D
@@ -88,6 +90,8 @@ namespace Epsitec.Aider
 				public const long ReportDatasetExample = 0x3F50007800003BL;
 				//	designer:cap/LVAFE
 				public const long ShowAiderContact = 0x3F50000A0001CFL;
+				//	designer:cap/LVO433
+				public const long ShowAiderContactFiltered = 0x3F500078000064L;
 				//	designer:cap/LVG402
 				public const long ShowAiderCountry = 0x3F500050000004L;
 				//	designer:cap/LVA1D

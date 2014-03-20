@@ -292,6 +292,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.MoveAddresses (args));
 					return;
 				}
+
+				if (args.Contains ("-automergeduplicatedpersons"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.AutoMergeDuplicatedPersons (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -734,6 +740,17 @@ namespace Epsitec.Aider
 				var correctedAddressesFile = AiderProgram.GetFile (args, "-file:", true);
 
 				SwissPostAddressFixer.ApplyMoves (coreData, correctedAddressesFile);
+
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
+
+		private static void AutoMergeDuplicatedPersons(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				DuplicatedPersonAutoMerger.FindAndMerge (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
