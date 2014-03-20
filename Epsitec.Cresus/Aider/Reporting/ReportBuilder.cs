@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.PlugIns;
 using Epsitec.Common.Types;
 
 using Epsitec.Aider.Entities;
@@ -55,17 +57,7 @@ namespace Epsitec.Aider.Reporting
 
 		public static FormattedText GenerateReport(string templateName, string format, byte[] blob)
 		{
-			IContent content = null;
-
-			switch (format)
-			{
-				case "FormattedContent":
-					content = new FormattedContent ();
-					break;
-
-				default:
-					break;
-			}
+			IContent content = ContentFormatterFactory.Create (format);
 
 			if (content == null)
 			{

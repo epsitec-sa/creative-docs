@@ -3,19 +3,29 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Aider.Reporting;
+
 using System.Collections.Generic;
 using System.Linq;
+
+[assembly: ContentFormatter (typeof (FormattedContent), Id = "FormattedContent")]
 
 namespace Epsitec.Aider.Reporting
 {
 	public class FormattedContent : IContent
 	{
+		public FormattedContent()
+		{
+		}
+		
 		public FormattedContent(params string[] args)
+			: this ()
 		{
 			this.Define (args);
 		}
 
 		public FormattedContent(IEnumerable<string> args)
+			: this ()
 		{
 			this.Define (args);
 		}
@@ -55,7 +65,7 @@ namespace Epsitec.Aider.Reporting
 
 		#region IContent Members
 
-		public string Format
+		public string							Format
 		{
 			get
 			{
