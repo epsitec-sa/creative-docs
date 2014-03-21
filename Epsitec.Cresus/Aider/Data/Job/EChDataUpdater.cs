@@ -89,7 +89,7 @@ namespace Epsitec.Aider.Data.Job
 			var time = this.LogToConsole ("starting main job");
 
 			this.UpdateEChPersonEntities ();
-			this.UpdateHouseholdsAndPropagate (false);
+			this.UpdateHouseholdsAndPropagate ();
 
 			this.TagEChPersonsForDeletion ();
 			this.TagAiderPersonsForMissingHousehold ();
@@ -194,9 +194,9 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private bool UpdateHouseholdsAndPropagate(bool fixPreviousUpdate)
+		private bool UpdateHouseholdsAndPropagate()
 		{
-			this.LogToConsole ("UpdateHouseholdsAndPropagate(fixPreviousUpdate={0})", fixPreviousUpdate);
+			this.LogToConsole ("UpdateHouseholdsAndPropagate()");
 
 			bool exit = false;
 
@@ -224,20 +224,6 @@ namespace Epsitec.Aider.Data.Job
 							EChAddress newRchAddress = item.NewValue.Address;
 							EChAddress oldRchAddress = item.OldValue.Address;
 
-							if (fixPreviousUpdate)
-							{
-								//	Restore old state for the eCH family address:
-								this.LogToConsole ("Info: Restore old state for the ECh family address");
-								eChHouseholdAddress.AddressLine1      = oldRchAddress.AddressLine1;
-								eChHouseholdAddress.HouseNumber       = oldRchAddress.HouseNumber;
-								eChHouseholdAddress.Street            = oldRchAddress.Street ?? "";
-								eChHouseholdAddress.SwissZipCode      = oldRchAddress.SwissZipCode;
-								eChHouseholdAddress.SwissZipCodeAddOn = oldRchAddress.SwissZipCodeAddOn;
-								eChHouseholdAddress.SwissZipCodeId    = oldRchAddress.SwissZipCodeId;
-								eChHouseholdAddress.Town              = oldRchAddress.Town ?? "";
-								eChHouseholdAddress.Country           = oldRchAddress.CountryCode ?? "";
-							}
-
 							var changes = new List<FormattedText> ();
 
 							if (EChDataHelpers.UpdateAddress (eChHouseholdAddress, newRchAddress, changes) == false)
@@ -252,11 +238,6 @@ namespace Epsitec.Aider.Data.Job
 
 							if (potentialAiderHousehold.IsNotNull ())
 							{
-								if (fixPreviousUpdate)
-								{
-									this.LogToConsole ("Info: Restore household address and clear warnings");
-									this.RestoreHouseholdAddressAndClearWarnings (businessContext, item, eChHousehold, potentialAiderHousehold);
-								}
 								this.ReassignHousehold (businessContext, changes, eChHousehold, refAiderPerson, potentialAiderHousehold);
 							}
 							else
