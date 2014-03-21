@@ -14,6 +14,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Epsitec.Aider.Entities
 {
@@ -477,6 +478,13 @@ namespace Epsitec.Aider.Entities
 			return this.Person.GetDisplayName ();
 		}
 
+		private string GetContactCheckKey()
+		{
+			return new StringBuilder().Append (this.Person.BirthdayDay.ToString ())
+							 .Append (this.Person.BirthdayMonth.ToString ())
+							 .Append (this.Person.BirthdayYear.ToString ())
+							 .Append (this.Person.eCH_Person.PersonFirstNames.Split (",").First ()).ToString ();
+		}
 
 		private IList<AiderGroupParticipantEntity> GetParticipations()
 		{

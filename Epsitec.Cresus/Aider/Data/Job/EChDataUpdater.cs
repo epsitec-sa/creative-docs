@@ -931,26 +931,9 @@ namespace Epsitec.Aider.Data.Job
 						else
 						{
 							this.LogToConsole ("Info: Aider household creation");
-							var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-							aiderHousehold.HouseholdMrMrs = HouseholdMrMrs.Auto;
-
-							var aiderAddressEntity = aiderHousehold.Address;
-							var eChAddressEntity = this.GetEchAddressEntity (businessContext, eChReportedPerson.Address);
-
-
-							var houseNumber = StringUtils.ParseNullableInt (SwissPostStreet.StripHouseNumber (eChAddressEntity.HouseNumber));
-							var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement (eChAddressEntity.HouseNumber);
-
-							if (string.IsNullOrWhiteSpace (houseNumberComplement))
-							{
-								houseNumberComplement = null;
-							}
-
-							aiderAddressEntity.AddressLine1 = eChAddressEntity.AddressLine1;
-							aiderAddressEntity.Street = eChAddressEntity.Street;
-							aiderAddressEntity.HouseNumber = houseNumber;
-							aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
-							aiderAddressEntity.Town = this.GetAiderTownEntity (businessContext, eChReportedPerson.Address);
+												
+							var template = this.CreateAiderAddressEntityTemplate (businessContext, eChReportedPerson);
+							var aiderHousehold = AiderHouseholdEntity.Create (businessContext, template);
 
 
 							//Link household to ECh Entity
@@ -983,6 +966,40 @@ namespace Epsitec.Aider.Data.Job
 						
 					}
 				});
+		}
+
+
+		private AiderAddressEntity CreateAiderAddressEntityTemplate (BusinessContext businessContext, eCH_ReportedPersonEntity eChReportedPerson)
+		{
+			var town = this.GetAiderTownEntity (businessContext, eChReportedPerson.Address);
+			return this.CreateAiderAddressEntityTemplate (eChReportedPerson.Address, town);
+		}
+
+		private AiderAddressEntity CreateAiderAddressEntityTemplate(BusinessContext businessContext, EChReportedPerson eChReportedPerson)
+		{
+			var eChAddressEntity = this.GetEchAddressEntity (businessContext, eChReportedPerson.Address);
+			var town = this.GetAiderTownEntity (businessContext, eChReportedPerson.Address);
+			return this.CreateAiderAddressEntityTemplate (eChAddressEntity,town);
+		}
+
+		private AiderAddressEntity CreateAiderAddressEntityTemplate(eCH_AddressEntity address, AiderTownEntity town)
+		{
+			var template = new AiderAddressEntity ();
+			var houseNumber = StringUtils.ParseNullableInt (SwissPostStreet.StripHouseNumber (address.HouseNumber));
+			var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement (address.HouseNumber);
+
+			if (string.IsNullOrWhiteSpace (houseNumberComplement))
+			{
+				houseNumberComplement = null;
+			}
+
+			template.AddressLine1 = address.AddressLine1;
+			template.Street = address.Street;
+			template.HouseNumber = houseNumber;
+			template.HouseNumberComplement = houseNumberComplement;
+			template.Town = town;
+
+			return template;
 		}
 
 		private void SetupAndAiderHouseholdForMember(BusinessContext businessContext, eCH_PersonEntity eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, AiderHouseholdEntity aiderHousehold, bool isHead1, bool isHead2)
@@ -1066,26 +1083,9 @@ namespace Epsitec.Aider.Data.Job
 		private void RelocateAndCreateNewAiderHousehold(BusinessContext businessContext,eCH_ReportedPersonEntity eChReportedPerson)
 		{
 			this.LogToConsole ("Info: Relocate and create new AiderHousehold");
-			var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-			aiderHousehold.HouseholdMrMrs = HouseholdMrMrs.Auto;
-
-			var aiderAddressEntity = aiderHousehold.Address;
-			var eChAddressEntity = eChReportedPerson.Address;
-
-
-			var houseNumber = StringUtils.ParseNullableInt (SwissPostStreet.StripHouseNumber (eChAddressEntity.HouseNumber));
-			var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement (eChAddressEntity.HouseNumber);
-
-			if (string.IsNullOrWhiteSpace (houseNumberComplement))
-			{
-				houseNumberComplement = null;
-			}
-
-			aiderAddressEntity.AddressLine1 = eChAddressEntity.AddressLine1;
-			aiderAddressEntity.Street = eChAddressEntity.Street;
-			aiderAddressEntity.HouseNumber = houseNumber;
-			aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
-			aiderAddressEntity.Town = this.GetAiderTownEntity (businessContext, eChReportedPerson.Address.SwissZipCodeId);
+		
+			var template = this.CreateAiderAddressEntityTemplate (businessContext, eChReportedPerson);
+			var aiderHousehold = AiderHouseholdEntity.Create (businessContext, template);
 
 
 			//Link household to ECh Entity
@@ -1537,6 +1537,16 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 		private AiderTownEntity GetAiderTownEntity(BusinessContext businessContext, EChAddress address)
+		{
+			var townExample = new AiderTownEntity ()
+			{
+				SwissZipCodeId = address.SwissZipCodeId
+			};
+
+			return businessContext.DataContext.GetByExample<AiderTownEntity> (townExample).FirstOrDefault ();
+		}
+
+		private AiderTownEntity GetAiderTownEntity(BusinessContext businessContext, eCH_AddressEntity address)
 		{
 			var townExample = new AiderTownEntity ()
 			{
