@@ -94,12 +94,11 @@ namespace Epsitec.Aider.Data.Job
 			this.TagEChPersonsForDeletion ();
 			this.TagAiderPersonsForMissingHousehold ();
 
-			this.CreateNewEChPersons ();
+			this.CreateNewPersons ();
 
 			this.RemoveOldEChReportedPersons ();
 			this.CreateNewEChReportedPersons ();
-
-			this.CreateNewAiderPersons ();
+	
 			this.CreateNewAiderHouseholds ();
 
 			this.LogToConsole (time, "done");
@@ -334,96 +333,45 @@ namespace Epsitec.Aider.Data.Job
 				});
 		}
 
-		private void CreateNewEChPersons()
+		private void CreateNewPersons()
 		{
-			this.LogToConsole ("CreateNewEChPersons()");
+			this.LogToConsole ("CreateNewPersons()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
 					foreach (var eChPerson in this.personsToCreate)
 					{
-						var existingPersonEntity = EChDataHelpers.GetEchPersonEntity (businessContext, eChPerson);
+						var existingEChPersonEntity = EChDataHelpers.GetEchPersonEntity (businessContext, eChPerson);
+						var mrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
 
-						if (existingPersonEntity.IsNull ())
+						if (existingEChPersonEntity.IsNull ())
 						{
-							var newPersonEntity = businessContext.CreateAndRegisterEntity<eCH_PersonEntity> ();
-							newPersonEntity.PersonId = eChPerson.Id;
-							newPersonEntity.PersonOfficialName = eChPerson.OfficialName;
-							newPersonEntity.PersonFirstNames = eChPerson.FirstNames;
-							newPersonEntity.PersonDateOfBirth = eChPerson.DateOfBirth;
-							newPersonEntity.PersonSex = eChPerson.Sex;
-							newPersonEntity.NationalityStatus = eChPerson.NationalityStatus;
-							newPersonEntity.NationalityCountryCode = eChPerson.NationalCountryCode;
-							newPersonEntity.Origins = eChPerson.OriginPlaces
-								.Select (p => p.Name + " (" + p.Canton + ")")
-								.Join ("\n");
-							newPersonEntity.AdultMaritalStatus = eChPerson.MaritalStatus;
-							newPersonEntity.CreationDate = Date.Today;
-							newPersonEntity.DataSource = Enumerations.DataSource.Government;
-							newPersonEntity.DeclarationStatus = PersonDeclarationStatus.Declared;
-							newPersonEntity.RemovalReason = RemovalReason.None;
-						}
-						else
-						{
-							existingPersonEntity.PersonOfficialName = eChPerson.OfficialName;
-							existingPersonEntity.PersonFirstNames = eChPerson.FirstNames;
-							existingPersonEntity.PersonDateOfBirth = eChPerson.DateOfBirth;
-							existingPersonEntity.PersonSex = eChPerson.Sex;
-							existingPersonEntity.NationalityStatus = eChPerson.NationalityStatus;
-							existingPersonEntity.NationalityCountryCode = eChPerson.NationalCountryCode;
-							existingPersonEntity.Origins = eChPerson.OriginPlaces
-								.Select (p => p.Name + " (" + p.Canton + ")")
-								.Join ("\n");
-							existingPersonEntity.AdultMaritalStatus = eChPerson.MaritalStatus;
-							existingPersonEntity.CreationDate = Date.Today;
-							existingPersonEntity.DataSource = Enumerations.DataSource.Government;
-							existingPersonEntity.DeclarationStatus = PersonDeclarationStatus.Declared;
-							existingPersonEntity.RemovalReason = RemovalReason.None;
-						}
-					}
-				});
-		}
-
-		private void CreateNewAiderPersons()
-		{
-			this.LogToConsole ("CreateNewAiderPersons()");
-			this.ExecuteWithBusinessContext (
-				businessContext =>
-				{
-					foreach (var eChPerson in this.personsToCreate)
-					{
-						var eChPersonEntity = EChDataHelpers.GetEchPersonEntity (businessContext, eChPerson);
-						var existingAiderPersonEntity = EChDataHelpers.GetAiderPersonEntity (businessContext, eChPersonEntity);
-
-						if (existingAiderPersonEntity.IsNull ())
-						{
+							this.LogToConsole ("No previous EChPersonEntity found -> Create ECh & Aider PersonEntity");
+							var eChPersonEntity = EChDataHelpers.CreateEChPersonEntity (businessContext, eChPerson);					
 							this.LogToConsole ("New: AiderPerson ECHPERSONID:{0}", eChPerson.Id);
-							var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-
-							aiderPersonEntity.eCH_Person = eChPersonEntity;
-							aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
-							aiderPersonEntity.Visibility = PersonVisibilityStatus.Default;
-							aiderPersonEntity.Confession = PersonConfession.Protestant;
-
-							this.CreateArrivalWarningForNewHousehold (businessContext, aiderPersonEntity);
+							var aiderPerson = AiderPersonEntity.Create (businessContext, eChPersonEntity, mrMrs);
+							this.CreateArrivalWarningForNewHousehold (businessContext, aiderPerson);						
 						}
 						else
 						{
-							this.LogToConsole ("Updated: AiderPerson ECHPERSONID:{0}", eChPerson.Id);
-
-							existingAiderPersonEntity.eCH_Person = eChPersonEntity;
-							existingAiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
-							existingAiderPersonEntity.Visibility = PersonVisibilityStatus.Default;
-							existingAiderPersonEntity.Confession = PersonConfession.Protestant;
-
-							this.CreateArrivalWarningForNewHousehold (businessContext, existingAiderPersonEntity);				
-						}
-
+							this.LogToConsole ("Previous EChPersonEntityFound -> Update existing with new data");
+							EChDataHelpers.UpdateEChPersonEntity (existingEChPersonEntity, eChPerson);
+							var existingAiderPersonEntity = EChDataHelpers.GetAiderPersonEntity (businessContext, existingEChPersonEntity);
+							if (existingAiderPersonEntity.IsNull ())
+							{
+								this.LogToConsole ("New: AiderPerson ECHPERSONID:{0}", eChPerson.Id);
+								var aiderPerson = AiderPersonEntity.Create (businessContext, existingEChPersonEntity, mrMrs);
+								this.CreateArrivalWarningForNewHousehold (businessContext, aiderPerson);
+							}
+							else
+							{
+								this.LogToConsole ("Updated: AiderPerson ECHPERSONID:{0}", eChPerson.Id);
+								EChDataHelpers.UpdateAiderPersonEntity (existingAiderPersonEntity, existingEChPersonEntity, mrMrs);
+							}
+						}		
 					}
 				});
 		}
-
-		
 
 		private void RemoveOldEChReportedPersons()
 		{
@@ -634,7 +582,7 @@ namespace Epsitec.Aider.Data.Job
 			if (!this.eChPersonIdWithHouseholdSetupDone.Contains (aiderPerson.eCH_Person.PersonId))
 			{
 				this.LogToConsole ("Info: No previous setup detected, processing household setup");
-				EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1, isHead2);
+				EChDataHelpers.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1, isHead2);
 			}
 			else
 			{
@@ -642,7 +590,8 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void ProcessAiderHouseholdChangesForMember(BusinessContext businessContext, AiderPersonEntity aiderPerson, eCH_PersonEntity eChPersonEntity,EChAddress rchAddress, eCH_ReportedPersonEntity eChReportedPersonEntity,AiderHouseholdEntity refAiderHousehold,bool isHead)
+		private void ProcessAiderHouseholdChangesForMember(BusinessContext businessContext,
+			/**/										   AiderPersonEntity aiderPerson, eCH_PersonEntity eChPersonEntity,EChAddress rchAddress, eCH_ReportedPersonEntity eChReportedPersonEntity,AiderHouseholdEntity refAiderHousehold,bool isHead)
 		{
 			this.LogToConsole ("Info: Processing {0}", eChPersonEntity.PersonId);
 
@@ -656,7 +605,8 @@ namespace Epsitec.Aider.Data.Job
 				
 				if (refAiderHousehold.IsNotNull ())
 				{
-					EChDataImporter.SetupHousehold (businessContext, aiderPerson, refAiderHousehold, eChReportedPersonEntity, isHead);
+					EChDataHelpers.SetupHousehold (businessContext, aiderPerson, refAiderHousehold, eChReportedPersonEntity, isHead);
+
 					this.eChPersonIdWithHouseholdSetupDone.Add (aiderPerson.eCH_Person.PersonId);
 					ParishAssigner.AssignToParish (parishAddressRepository, businessContext, aiderPerson, this.startDate);
 					this.LogToConsole ("Info: Setup done and parish assigned -> further process will skip household creation");
@@ -913,7 +863,7 @@ namespace Epsitec.Aider.Data.Job
 		public void FixPreviousUpdate()
 		{
 			var time = this.LogToConsole ("fixing last update");
-			this.UpdateHouseholdsAndPropagate (true);
+			//this.UpdateHouseholdsAndPropagate (true);
 			this.LogToConsole (time, "done");
 		}
 

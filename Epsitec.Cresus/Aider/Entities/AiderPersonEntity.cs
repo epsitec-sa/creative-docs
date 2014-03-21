@@ -15,6 +15,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 
 namespace Epsitec.Aider.Entities
@@ -114,6 +115,26 @@ namespace Epsitec.Aider.Entities
 				this.eCH_Person.PersonDateOfBirth, "~ – ~", this.eCH_Person.PersonDateOfDeath, "\n",
 				this.Confession, "~\n",
 				this.Profession, "~\n");
+		}
+
+		public static AiderPersonEntity Create(BusinessContext businessContext, eCH_PersonEntity eChPersonEntity, PersonMrMrs mrMrs)
+		{
+			var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+
+			aiderPersonEntity.eCH_Person = eChPersonEntity;
+			aiderPersonEntity.MrMrs = mrMrs;		
+			aiderPersonEntity.Visibility = PersonVisibilityStatus.Default;
+			aiderPersonEntity.Confession = PersonConfession.Protestant;
+
+			return aiderPersonEntity;
+		}
+
+		public string GetPersonCheckKey()
+		{
+			return new StringBuilder ().Append (this.BirthdayDay.ToString ())
+							 .Append (this.BirthdayMonth.ToString ())
+							 .Append (this.BirthdayYear.ToString ())
+							 .Append (this.eCH_Person.PersonFirstNames.Split (",").First ()).ToString ();
 		}
 
 		public AiderGroupEntity GetGeoParishGroup(BusinessContext context)

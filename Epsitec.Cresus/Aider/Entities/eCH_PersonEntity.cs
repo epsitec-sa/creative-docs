@@ -11,6 +11,8 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Data.ECh;
 
 namespace Epsitec.Aider.Entities
 {

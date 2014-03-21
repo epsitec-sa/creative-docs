@@ -302,7 +302,6 @@ namespace Epsitec.Aider.Entities
 
 			return contact;
 		}
-
 		
 		public static void DeleteParticipations(BusinessContext businessContext, AiderContactEntity contact)
 		{
@@ -476,14 +475,6 @@ namespace Epsitec.Aider.Entities
 		private string GetPersonHouseholdDisplayName()
 		{
 			return this.Person.GetDisplayName ();
-		}
-
-		private string GetContactCheckKey()
-		{
-			return new StringBuilder().Append (this.Person.BirthdayDay.ToString ())
-							 .Append (this.Person.BirthdayMonth.ToString ())
-							 .Append (this.Person.BirthdayYear.ToString ())
-							 .Append (this.Person.eCH_Person.PersonFirstNames.Split (",").First ()).ToString ();
 		}
 
 		private IList<AiderGroupParticipantEntity> GetParticipations()
