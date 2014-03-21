@@ -247,6 +247,7 @@
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\ContactNameFixer.cs" />
+    <Compile Include="Data\Job\EChDataUpdater.cs" />
     <Compile Include="Data\Job\DuplicatedPersonAutoMerger.cs" />
     <Compile Include="Data\Job\MatchResponse.cs" />
     <Compile Include="Data\Job\MatchResponseFix.cs" />
@@ -263,7 +264,7 @@
     <Compile Include="Data\Job\PrillySubscriptionFixer.cs" />
     <Compile Include="Data\Job\ParishAssignationFixer.cs" />
     <Compile Include="Data\Job\ParticipationFixer.cs" />
-    <Compile Include="Data\Job\EChDataUpdater.cs" />
+    <Compile Include="Data\Job\EChDataHelpers.cs" />
     <Compile Include="Data\Job\WarningParishGroupPathFixer.cs" />
     <Compile Include="Data\Subscription\ContactFileLineSource.cs" />
     <Compile Include="Data\Subscription\ContactFileWriter.cs" />

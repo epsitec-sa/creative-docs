@@ -72,8 +72,9 @@ namespace Epsitec.Aider.Data.Job
 							try
 							{
 								var duplicatedPerson = potentialDuplicateChecker[checkKey];
-								AiderPersonEntity.MergePersons (businessContext, contact.Person, duplicatedPerson);
 								DuplicatedPersonAutoMerger.LogToConsole ("Found! {0}, try to merge with {1}", false, contact.GetDisplayName (), duplicatedPerson.GetDisplayName ());
+								AiderPersonEntity.MergePersons (businessContext, contact.Person, duplicatedPerson);
+								
 							}
 							catch
 							{
@@ -131,6 +132,12 @@ namespace Epsitec.Aider.Data.Job
 			{
 				System.Console.SetCursorPosition (0, 0);
 			}
+			else
+			{
+				System.Console.Clear ();
+				System.Console.SetCursorPosition (0, 2);
+			}
+		
 			System.Console.WriteLine ("DuplicatedPersonAutoMerger: {0}", message);
 			System.Console.ResetColor ();
 
