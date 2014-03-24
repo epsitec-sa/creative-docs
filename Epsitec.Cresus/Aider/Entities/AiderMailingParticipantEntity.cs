@@ -134,6 +134,20 @@ namespace Epsitec.Aider.Entities
 			participantExample.Contact = contact;
 
 			var results = businessContext.DataContext.GetByExample<AiderMailingParticipantEntity> (participantExample);
+			foreach (var participant in results)
+			{
+				businessContext.DeleteEntity (participant);
+			}
+		}
+
+		public static void FindAndRemove(BusinessContext businessContext, AiderMailingEntity mailing, AiderContactEntity contact,MailingParticipantType type)
+		{
+			var participantExample = new AiderMailingParticipantEntity ();
+			participantExample.Mailing = mailing;
+			participantExample.Contact = contact;
+			participantExample.ParticipantType = type;
+
+			var results = businessContext.DataContext.GetByExample<AiderMailingParticipantEntity> (participantExample);
 			foreach(var participant in results)
 			{
 				businessContext.DeleteEntity (participant);

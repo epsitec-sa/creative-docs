@@ -191,7 +191,7 @@ namespace Epsitec.Aider.Entities
 			foreach (var contact in groupToRemove.GetAllGroupAndSubGroupParticipants ().Distinct ())
 			{
 				this.Exclusions.RemoveAll (r => r == contact);
-				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact);
+				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact, MailingParticipantType.Group);
 			}			
 		}
 
@@ -203,7 +203,7 @@ namespace Epsitec.Aider.Entities
 			foreach (var contact in groupExtractionToRemove.GetAllContacts (businessContext.DataContext).Distinct ())
 			{
 				this.Exclusions.RemoveAll (r => r == contact);
-				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact);
+				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact, MailingParticipantType.GroupExtraction);
 			}
 		}
 
