@@ -20,6 +20,21 @@ namespace Epsitec.Aider.Data.Job
 {
 	internal static class EChDataHelpers
 	{
+		public static AiderPersonEntity GetOrCreateAiderPersonEntity(BusinessContext businessContext, EChPerson eChPerson)
+		{
+			AiderPersonEntity aiderPerson = new AiderPersonEntity ();
+			aiderPerson = EChDataHelpers.GetAiderPersonEntity (businessContext, eChPerson);
+			//create ref aiderPerson if needed
+			if (aiderPerson.IsNull ())
+			{
+				var eChPersonEntity = EChDataHelpers.GetEchPersonEntity (businessContext, eChPerson);
+				var mrMrs = EChDataImporter.GuessMrMrs (eChPersonEntity.PersonSex, eChPersonEntity.PersonDateOfBirth.Value, eChPersonEntity.AdultMaritalStatus);
+				aiderPerson = AiderPersonEntity.Create (businessContext, eChPersonEntity, mrMrs);
+			}
+
+			return aiderPerson;
+		}
+
 		public static eCH_PersonEntity CreateEChPersonEntity(BusinessContext businessContext, EChPerson eChPerson)
 		{
 			var personEntity = businessContext.CreateAndRegisterEntity<eCH_PersonEntity> ();

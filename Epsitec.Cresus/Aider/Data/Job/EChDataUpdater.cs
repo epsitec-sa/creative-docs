@@ -419,17 +419,7 @@ namespace Epsitec.Aider.Data.Job
 			var eChReportedPersonEntity   = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity> ();
 			eChReportedPersonEntity.Address = eChAddressEntity;
 
-
-			var refAiderPerson = EChDataHelpers.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
-
-			//create ref aiderPerson if needed
-			if (refAiderPerson.IsNull ())
-			{
-				var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-				var eChPerson = EChDataHelpers.GetEchPersonEntity (businessContext, eChReportedPerson.Adult1);
-				aiderPersonEntity.eCH_Person = eChPerson;
-				refAiderPerson = aiderPersonEntity;
-			}
+			var refAiderPerson = EChDataHelpers.GetOrCreateAiderPersonEntity(businessContext,eChReportedPerson.Adult1);
 
 			AiderHouseholdEntity refAiderHousehold = null;
 			if (processAiderHouseholdChanges)
@@ -454,14 +444,7 @@ namespace Epsitec.Aider.Data.Job
 
 				if (processAiderHouseholdChanges && refAiderHousehold.IsNotNull ())
 				{
-					var aiderPerson = EChDataHelpers.GetAiderPersonEntity (businessContext, eChPersonEntity);
-					if (aiderPerson.IsNull ())
-					{
-						var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-						aiderPersonEntity.eCH_Person = eChPersonEntity;
-						aiderPerson = aiderPersonEntity;
-					}
-
+					var aiderPerson = EChDataHelpers.GetOrCreateAiderPersonEntity (businessContext, eChReportedPerson.Adult2);
 					this.ProcessAiderHouseholdChangesForMember (businessContext, aiderPerson, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold,true);
 				}
 			}
@@ -474,14 +457,7 @@ namespace Epsitec.Aider.Data.Job
 
 				if (processAiderHouseholdChanges && refAiderHousehold.IsNotNull ())
 				{
-					var aiderPerson = EChDataHelpers.GetAiderPersonEntity (businessContext, eChPersonEntity);
-					if (aiderPerson.IsNull ())
-					{
-						var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-						aiderPersonEntity.eCH_Person = eChPersonEntity;
-						aiderPerson = aiderPersonEntity;
-					}
-
+					var aiderPerson = EChDataHelpers.GetOrCreateAiderPersonEntity (businessContext, eChChild);
 					this.ProcessAiderHouseholdChangesForMember (businessContext, aiderPerson, eChPersonEntity, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold,false);
 				}
 			}
