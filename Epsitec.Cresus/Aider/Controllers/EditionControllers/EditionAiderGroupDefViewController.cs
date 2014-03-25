@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
+using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Business.UserManagement;
@@ -44,6 +45,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 						.IfFalse (isRoot)
 					.Field (x => x.Function)
+						.WithSpecialField<AiderGroupDefSpecialField<AiderGroupDefEntity>>()
 						.ReadOnly ()
 						.IfFalse (isRoot)
 				.End ();
