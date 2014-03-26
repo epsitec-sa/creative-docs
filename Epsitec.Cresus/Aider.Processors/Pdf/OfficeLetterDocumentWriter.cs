@@ -27,17 +27,14 @@ using System.Linq;
 
 namespace Epsitec.Aider.Processors.Pdf
 {
-	internal sealed class OfficeLetterDocumentWriter
+	public sealed class OfficeLetterDocumentWriter : AbstractDocumentWriter<AiderOfficeLetterReportEntity>
 	{
-		public OfficeLetterDocumentWriter(BusinessContext context, AiderOfficeSenderEntity settings, LabelLayout layout)
+		public OfficeLetterDocumentWriter()
 		{
-			this.layout	  = layout;
-			this.context  = context;
-			this.settings = settings;
 		}
 
 
-		public void WriteStream(System.IO.Stream stream, AiderOfficeLetterReportEntity letter)
+		public override void WriteStream(System.IO.Stream stream, AiderOfficeLetterReportEntity letter)
 		{
 			var setup	= this.GetSetup ();
 			var report	= this.GetReport (setup);
@@ -46,7 +43,7 @@ namespace Epsitec.Aider.Processors.Pdf
 			content.Append (letter.GetFormattedText ());
 			
 			var topLogo	     = string.Format ("<img src=\"{0}\" />", CoreContext.GetFileDepotPath ("assets", "logo-eerv.png"));
-			var topReference = "<b>" + this.settings.Office.OfficeName + "</b>";
+			var topReference = "<b>" + this.sender.Office.OfficeName + "</b>";
 
 			var senderAddressBlock    = letter.Office.OfficeMainContact.GetAddressLabelText (PostalAddressType.Compact);
 			var recipientAddressBlock = OfficeLetterDocumentWriter.GetRecipientAddress (letter);
@@ -83,9 +80,5 @@ namespace Epsitec.Aider.Processors.Pdf
 
 			return new LetterDocument (exportPdfInfo, setup);
 		}
-
-		private readonly BusinessContext		 context;
-		private readonly AiderOfficeSenderEntity settings;
-		private readonly LabelLayout			 layout;
 	}
 }

@@ -20,16 +20,13 @@ using System.Linq;
 
 namespace Epsitec.Aider.Processors.Pdf
 {
-	internal sealed class OfficeGroupOfficialDocumentWriter
+	public sealed class OfficeGroupOfficialDocumentWriter : AbstractDocumentWriter<AiderOfficeGroupParticipantReportEntity>
 	{
-		public OfficeGroupOfficialDocumentWriter(BusinessContext context, AiderOfficeSenderEntity sender, LabelLayout layout)
+		public OfficeGroupOfficialDocumentWriter()
 		{
-			this.context = context;
-			this.layout	 = layout;
-			this.sender  = sender;
 		}
 
-		public void WriteStream(System.IO.Stream stream, AiderOfficeGroupParticipantReportEntity officeReport)
+		public override void WriteStream(System.IO.Stream stream, AiderOfficeGroupParticipantReportEntity officeReport)
 		{
 			var setup   = this.GetSetup ();
 			var report  = this.GetReport (setup);
@@ -106,9 +103,5 @@ namespace Epsitec.Aider.Processors.Pdf
 			
 			return setup;
 		}
-
-		private readonly BusinessContext		 context;
-		private readonly AiderOfficeSenderEntity sender;
-		private readonly LabelLayout			 layout;
 	}
 }

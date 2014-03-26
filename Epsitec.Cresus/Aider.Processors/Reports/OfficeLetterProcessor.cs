@@ -13,9 +13,9 @@ using System.Linq;
 
 namespace Epsitec.Aider.Processors.Reports
 {
-	public class OfficeGroupProcessor : AbstractProcessor<AiderOfficeGroupParticipantReportEntity, Pdf.OfficeGroupOfficialDocumentWriter>
+	public class OfficeLetterProcessor : AbstractProcessor<AiderOfficeLetterReportEntity, Pdf.OfficeLetterDocumentWriter>
 	{
-		public OfficeGroupProcessor(CoreServer coreServer)
+		public OfficeLetterProcessor(CoreServer coreServer)
 			: base (coreServer)
 		{
 		}

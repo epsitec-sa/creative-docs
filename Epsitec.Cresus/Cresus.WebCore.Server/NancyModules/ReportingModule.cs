@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			
 			this.processors = new System.Collections.Concurrent.ConcurrentDictionary<string, IReportingProcessor> (processors);
 			
-			Get["/{processor}/{settings}/{letter}"] =
+			Get["/{processor}/{settings}/{report}"] =
 				p => this.Execute ((wa, b) => this.ProduceReport (wa, b, p));
 		}
 
