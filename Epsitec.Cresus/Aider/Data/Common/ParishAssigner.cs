@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Entities;
@@ -391,7 +391,10 @@ namespace Epsitec.Aider.Data.Common
 
 			if (parishName == null)
 			{
-				return false;
+				//	No parish found. This is OK if the person already belongs to the "no parish"
+				//	group...
+
+				return parishGroup.IsNoParish ();
 			}
 
 			var parishGroupName = ParishAssigner.GetParishGroupName (parishRepository, parishName);

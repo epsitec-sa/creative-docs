@@ -2,6 +2,7 @@
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -81,8 +82,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			System.Diagnostics.Trace.WriteLine ("Derogating from " + parishGroup.Name);
 
-			var derogationInGroup = destParish.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn);		
-			var derogationOutGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut);
+			var derogationInGroup = destParish.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationIn);		
+			var derogationOutGroup = parishGroup.Subgroups.SingleOrDefault (g => g.GroupDef.Classification == GroupClassification.DerogationOut);
 
 			var participationData = new List<ParticipationData> ();
 			participationData.Add (new ParticipationData (person.MainContact));
@@ -92,7 +93,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				//Yes, existing derogation in place:
 				//Remove old derogation in
-				var oldDerogationInGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn);
+				var oldDerogationInGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationIn);
 				oldDerogationInGroup.RemoveParticipations (this.BusinessContext, oldDerogationInGroup.FindParticipations (this.BusinessContext, person.MainContact));
 
 				//Check for a "return to home"
@@ -102,15 +103,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					person.ClearDerogation ();
 
 					//Remove old derogation out
-					var oldDerogationOutGroup = destParish.Subgroups.Single (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut);
+					var oldDerogationOutGroup = destParish.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationOut);
 					oldDerogationOutGroup.RemoveParticipations (this.BusinessContext, oldDerogationOutGroup.FindParticipations (this.BusinessContext, person.MainContact));
 
 					//Warn old derogated parish
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache,
-						Enumerations.WarningType.ParishDeparture, "Fin de dérogation.");
+						WarningType.ParishDeparture, "Fin de dérogation.");
 					//Warn NewParish for return
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path,
-						Enumerations.WarningType.ParishArrival, "Fin de dérogation.");
+						WarningType.ParishArrival, "Fin de dérogation.");
 				}
 				else
 				{
@@ -119,15 +120,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 					//Warn old derogated parish
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.ParishGroupPathCache,
-						Enumerations.WarningType.ParishDeparture, "Fin de dérogation.");
+						WarningType.ParishDeparture, "Fin de dérogation.");
 					
-					//Warn NewParish
-					AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path,
-						Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de la\n" + person.ParishGroup.Name + ".");
-					
+					this.WarnNewParish (destParish, person);
 					//Warn GeoParish for a Derogation Change
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache,
-						Enumerations.WarningType.DerogationChange, "Changement de dérogation vers la\n" + destParish.Name + ".");
+						WarningType.DerogationChange, "Changement de dérogation vers la\n" + destParish.Name + ".");
 
 					
 					needDerogationLetter = true;
@@ -141,22 +139,24 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				//Backup initial parish cache
 				person.GeoParishGroupPathCache = person.ParishGroupPathCache;
 
-				//Add derogation out participation
-				derogationOutGroup.AddParticipations (this.BusinessContext, participationData, date, new FormattedText ("Dérogation sortante"));
-				//Warn GeoParish
-				AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache,
-					Enumerations.WarningType.ParishDeparture, "Personne dérogée vers la\n" + destParish.Name + ".");
+				//	Add derogation out participation, but not if the person was in the
+				//	'no parish' group before...
+
+				if (derogationOutGroup != null)
+				{
+					derogationOutGroup.AddParticipations (this.BusinessContext, participationData, date, new FormattedText ("Dérogation sortante"));
+					
+					//	Warn GeoParish
+					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache,
+						WarningType.ParishDeparture, "Personne dérogée vers la\n" + destParish.Name + ".");
+				}
 
 				//Add derogation in participation
 				derogationInGroup.AddParticipations (this.BusinessContext, participationData, date, new FormattedText ("Dérogation entrante"));
 				
-				//Warn NewParish
-				AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path,
-					Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de la\n" + person.ParishGroup.Name + ".");
-
+				this.WarnNewParish (destParish, person);
 
 				needDerogationLetter = true;
-			
 			}
 
 			//Remove parish participations
@@ -187,6 +187,22 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		}
 
+		private void WarnNewParish(AiderGroupEntity destParish, AiderPersonEntity person)
+		{
+			string message;
+
+			if (person.ParishGroup.IsNoParish ())
+			{
+				message = "Personne dérogée.";
+			}
+			else
+			{
+				message = "Personne dérogée en provenance de la\n" + person.ParishGroup.Name + ".";
+			}
+
+			AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path, WarningType.ParishArrival, message);
+		}
+		
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
 			var userManager			= AiderUserManager.Current;
@@ -226,7 +242,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Cette fonction n'est pas encore disponible.");
 			}
 
-			var greetings = (this.Entity.eCH_Person.PersonSex == Enumerations.PersonSex.Male) ? "Monsieur" : "Madame";
+			var greetings = (this.Entity.eCH_Person.PersonSex == PersonSex.Male) ? "Monsieur" : "Madame";
 			var fullName  = sender.OfficialContact.Person.GetFullName ();
 			var content   = FormattedContent.Escape (greetings, destParish.Name, origineParish.Name, destParish.Name, fullName);
 			

@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -50,6 +50,18 @@ namespace Epsitec.Aider.Data.Common
 		public const int TopLevel					= 0;
 		public const int ParishOfGermanLanguageLevel = 0;
 
+		
+		public static string DefaultToNoParish(string path)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				return AiderGroupIds.NoParish;
+			}
+			else
+			{
+				return path;
+			}
+		}
 
 		public static string GetRegionId(int regionCode)
 		{
@@ -143,6 +155,20 @@ namespace Epsitec.Aider.Data.Common
 		public static bool IsWithinParish(string path)
 		{
 			return AiderGroupIds.IsWithinGroup (path, AiderGroupIds.ParishLevel, AiderGroupIds.ParishPrefix);
+		}
+
+		public static bool IsWithinNoParish(string path)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				return false;
+			}
+			if (path.StartsWith (AiderGroupIds.NoParish))
+			{
+				return true;
+			}
+
+			return false;
 		}
 
 		public static bool IsWithinGlobal(string path)

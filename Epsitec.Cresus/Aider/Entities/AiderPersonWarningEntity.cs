@@ -1,6 +1,7 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.EntityEngine;
@@ -46,6 +47,17 @@ namespace Epsitec.Aider.Entities
 		public static AiderPersonWarningEntity Create(BusinessContext businessContext, AiderPersonEntity person, string parishGroupPath,
 													  WarningType warningType, FormattedText title, AiderWarningSourceEntity warningSource = null)
 		{
+			if ((string.IsNullOrEmpty (parishGroupPath)) ||
+				(AiderGroupIds.IsWithinNoParish (parishGroupPath)))
+			{
+				return null;
+			}
+
+			if (AiderGroupIds.IsWithinParish (parishGroupPath) == false)
+			{
+				throw new System.ArgumentException ("Expected parish group path, got " + parishGroupPath);
+			}
+
 			var warning = businessContext.CreateAndRegisterEntity<AiderPersonWarningEntity> ();
 
 			warning.StartDate = Date.Today;
@@ -72,17 +84,23 @@ namespace Epsitec.Aider.Entities
 		{
 			var warning = AiderPersonWarningEntity.Create (businessContext, person, parishGroupPath, warningType, title, warningSource);
 
-			warning.Description = description;
+			if (warning != null)
+			{
+				warning.Description = description;
+			}
 
 			return warning;
 		}
 
 		public static void Delete(BusinessContext businessContext, AiderPersonWarningEntity warning)
 		{
-			var person = warning.Person;
-			
-			person.RemoveWarningInternal (warning);
-			businessContext.DeleteEntity (warning);
+			if (warning.IsNotNull ())
+			{
+				var person = warning.Person;
+
+				person.RemoveWarningInternal (warning);
+				businessContext.DeleteEntity (warning);
+			}
 		}
 	}
 }

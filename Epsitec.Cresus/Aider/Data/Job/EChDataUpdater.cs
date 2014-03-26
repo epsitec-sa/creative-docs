@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Data.Common;
@@ -718,11 +718,11 @@ namespace Epsitec.Aider.Data.Job
 		{
 			this.LogToConsole ("Info: Reassign and warn parish");
 			var oldParishGroup = aiderPersonEntity.ParishGroup;
-			var oldParishGroupPath = aiderPersonEntity.ParishGroupPathCache ?? "NOPA.";
+			var oldParishGroupPath = AiderGroupIds.DefaultToNoParish (aiderPersonEntity.ParishGroupPathCache);
 
 			ParishAssigner.ReassignToParish (this.parishAddressRepository, businessContext, aiderPersonEntity, this.startDate);
 
-			var newParishGroupPath = aiderPersonEntity.ParishGroupPathCache ?? "NOPA.";
+			var newParishGroupPath = AiderGroupIds.DefaultToNoParish (aiderPersonEntity.ParishGroupPathCache);
 
 			if (oldParishGroupPath != newParishGroupPath)
 			{
@@ -737,14 +737,12 @@ namespace Epsitec.Aider.Data.Job
 
 				this.LogToConsole ("Info: Parish group path is different, arrival and departure parish warned");
 
-				if (oldParishGroupPath != "NOPA." && notifyOldParish)
+				if (notifyOldParish)
 				{
 					this.CreateWarning (businessContext, aiderPersonEntity, oldParishGroupPath, WarningType.ParishDeparture, this.warningTitleMessage, changes);
 				}
-				if (newParishGroupPath != "NOPA.")
-				{
-					this.CreateWarning (businessContext, aiderPersonEntity, newParishGroupPath, WarningType.ParishArrival, this.warningTitleMessage, changes);
-				}
+				
+				this.CreateWarning (businessContext, aiderPersonEntity, newParishGroupPath, WarningType.ParishArrival, this.warningTitleMessage, changes);
 
 			}
 			else //if no change in parish group path, we create an simple address change warning

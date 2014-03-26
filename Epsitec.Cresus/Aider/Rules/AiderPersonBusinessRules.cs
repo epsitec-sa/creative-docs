@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -237,13 +237,13 @@ namespace Epsitec.Aider.Rules
 		{
 			var oldParishGroup	   = person.ParishGroup;
 			var oldParishName      = person.ParishGroup.Name;
-			var oldParishGroupPath = person.ParishGroupPathCache ?? "NOPA.";
+			var oldParishGroupPath = AiderGroupIds.DefaultToNoParish (person.ParishGroupPathCache);
 
 			AiderPersonBusinessRules.AssignParish (context, person);
 
 			var newParish		   = person.ParishGroup;
 			var newParishName      = person.ParishGroup.Name;
-			var newParishGroupPath = person.ParishGroupPathCache ?? "NOPA.";
+			var newParishGroupPath = AiderGroupIds.DefaultToNoParish (person.ParishGroupPathCache);
 
 			if (oldParishGroupPath == newParishGroupPath)
 			{
@@ -265,14 +265,12 @@ namespace Epsitec.Aider.Rules
 														"a été appliquée:\n \n",
 														oldParishName, "\n->\n", newParishName);
 
-			if (oldParishGroupPath != "NOPA." && notifyOldParish)
+			if (notifyOldParish)
 			{
 				AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, WarningType.ParishDeparture, title, description);
 			}
-			if (newParishGroupPath != "NOPA.")
-			{
-				AiderPersonWarningEntity.Create (context, person, newParishGroupPath, WarningType.ParishArrival, title, description);
-			}
+
+			AiderPersonWarningEntity.Create (context, person, newParishGroupPath, WarningType.ParishArrival, title, description);
 
 			return true;
 		}
@@ -281,20 +279,30 @@ namespace Epsitec.Aider.Rules
 		{
 			//Yes, existing derogation in place:
 			//Remove old derogation in
-			var oldDerogationInGroup = oldParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn).First ();
-			oldDerogationInGroup.RemoveParticipations (context, oldDerogationInGroup.FindParticipations (context, person.MainContact));
+			var oldDerogationInGroup = oldParishGroup.Subgroups.Where (g => g.GroupDef.Classification == GroupClassification.DerogationIn)
+				/**/										   .FirstOrDefault ();
+			
+			if (oldDerogationInGroup != null)
+			{
+				oldDerogationInGroup.RemoveParticipations (context, oldDerogationInGroup.FindParticipations (context, person.MainContact));
+			}
 
 			//Remove old derogation out
 			var geoParishGroup = person.GetGeoParishGroup (context);
-			var oldDerogationOutGroup = geoParishGroup.Subgroups.Where (g => g.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut).First ();
-			oldDerogationOutGroup.RemoveParticipations (context, oldDerogationOutGroup.FindParticipations (context, person.MainContact));
+			var oldDerogationOutGroup = geoParishGroup.Subgroups.Where (g => g.GroupDef.Classification == GroupClassification.DerogationOut)
+				/**/											.FirstOrDefault ();
+
+			if (oldDerogationOutGroup != null)
+			{
+				oldDerogationOutGroup.RemoveParticipations (context, oldDerogationOutGroup.FindParticipations (context, person.MainContact));
+			}
 
 			//Warn old derogated parish
-			AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, Enumerations.WarningType.ParishDeparture,
+			AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, WarningType.ParishDeparture,
 				"Fin de dérogation suite à un déménagement.");
 
 			//Warn GeoParish for derogation end
-			AiderPersonWarningEntity.Create (context, person, person.GeoParishGroupPathCache, Enumerations.WarningType.DerogationChange,
+			AiderPersonWarningEntity.Create (context, person, person.GeoParishGroupPathCache, WarningType.DerogationChange,
 				"Fin de dérogation suite à un déménagement.");
 
 			person.ClearDerogation ();

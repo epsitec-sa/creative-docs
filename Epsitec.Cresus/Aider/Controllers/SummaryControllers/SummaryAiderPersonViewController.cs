@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Support;
@@ -52,29 +52,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (x => TextFormatter.FormatText ("Détails techniques du RCH"))
 				.Text (x => SummaryAiderPersonViewController.GetTechnicalSummary (x));
 
-			var geoParish = this.Entity.GetGeoParishGroup (this.BusinessContext);
-
-			//PAROISSE
-			if (geoParish.IsNull ())
-			{
-				wall.AddBrick ()
-					.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
-					.Icon ("Data.AiderGroup.Parish")
-					.Title ("Paroisse")
-					.Text (p => p.ParishGroup.Name);
-			}
-			else
-			{
-				var text =  "Habite la " + geoParish.Name + "\n"
-					+		"Dérogation vers la "
-					+		this.Entity.ParishGroup.Name;
-
-				wall.AddBrick ()
-					.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
-					.Icon ("Data.AiderGroup.Parish")
-					.Title ("Paroisse")
-					.Text (TextFormatter.FormatText(text));
-			}
+			this.CreateParishBrick (wall);
 
 			wall.AddBrick ()
 				.Icon ("Data.AiderGroup.People")
@@ -141,7 +119,44 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);
 		}
-		
+
+		private void CreateParishBrick(BrickWall<AiderPersonEntity> wall)
+		{
+			AiderGroupEntity geoParish = this.Entity.GetGeoParishGroup (this.BusinessContext);
+			
+			if (geoParish.IsNull ())
+			{
+				wall.AddBrick ()
+					.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
+					.Icon ("Data.AiderGroup.Parish")
+					.Title ("Paroisse")
+					.Text (p => p.ParishGroup.Name);
+			}
+			else
+			{
+				var buffer = new System.Text.StringBuilder ();
+
+				if (geoParish.IsNoParish ())
+				{
+					//	No need to say where the person lives...
+				}
+				else
+				{
+					buffer.Append ("Habite la ");
+					buffer.Append (geoParish.Name);
+					buffer.Append ("\n");
+				}
+
+				buffer.Append ("Dérogation vers la ");
+				buffer.Append (this.Entity.ParishGroup.Name);
+
+				wall.AddBrick ()
+					.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
+					.Icon ("Data.AiderGroup.Parish")
+					.Title ("Paroisse")
+					.Text (TextFormatter.FormatText (buffer));
+			}
+		}
 		private static FormattedText GetTechnicalSummary(AiderPersonEntity person)
 		{
 			return TextFormatter.FormatText (person.eCH_Person.GetSummary (), "~\n \n~",
