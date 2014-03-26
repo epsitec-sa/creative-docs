@@ -54,6 +54,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var person = this.Entity;
 			var parishGroup = person.ParishGroup;
 
+			if (person.Age.HasValue)
+			{
+				if (person.Age.Value <16)
+				{
+					var message = "Une personne de moins de 16 ans ne peut pas être au bénéfice d'une dérogation";
+					throw new BusinessRuleException (message);
+				}
+			}
 			if (destParish.IsNull ())
 			{
 				var message = "Vous n'avez pas sélectionné de paroisse.";
@@ -121,7 +129,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					AiderPersonWarningEntity.Create (this.BusinessContext, person, person.GeoParishGroupPathCache,
 						Enumerations.WarningType.DerogationChange, "Changement de dérogation vers la\n" + destParish.Name + ".");
 
+					
 					needDerogationLetter = true;
+
+					
 				}
 			}
 			else
@@ -143,7 +154,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				AiderPersonWarningEntity.Create (this.BusinessContext, person, destParish.Path,
 					Enumerations.WarningType.ParishArrival, "Personne dérogée en provenance de la\n" + person.ParishGroup.Name + ".");
 
-				needDerogationLetter = true;			
+
+				needDerogationLetter = true;
+			
 			}
 
 			//Remove parish participations
