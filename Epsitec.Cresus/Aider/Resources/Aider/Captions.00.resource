@@ -583,4 +583,7 @@
   <data name="Fld.AiderOfficeReport.DataBlob" id="ANI">&lt;s:data id="_0" f:Name="DataBlob" /&gt;</data>
   <data name="Fld.AiderOfficeReport.DataTemplate" id="AOI">&lt;s:data id="_0" f:Name="DataTemplate" /&gt;</data>
   <data name="Cmd.Base.ShowAiderContactFiltered" id="O433">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderContactFiltered" f:Description="Montre la base des contacts, filtrées" f:Icon="manifest:Epsitec.Aider.Images.Base.AiderContact.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Contacts'}}" /&gt;</data>
+  <data name="Fld.AiderAct.CelebrationDate" id="O633">&lt;s:data id="_0" f:Name="CelebrationDate" /&gt;</data>
+  <data name="Fld.AiderAct.CelebrationTown" id="O733">&lt;s:data id="_0" f:Name="CelebrationTown" /&gt;</data>
+  <data name="Fld.AiderAct.Office" id="O833">&lt;s:data id="_0" f:Name="Office" /&gt;</data>
 </bundle>

@@ -89,6 +89,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public static AiderGroupDefEntity CreateFunctionSubGroup(BusinessContext businessContext, AiderGroupDefEntity functionDef,AiderGroupDefEntity parent, string name,
+			 bool subgroupsAllowed, bool membersAllowed, Mutability mutability)
+		{
+			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
+
+			aiderGroupDef.Name = name;
+			aiderGroupDef.Number = ""; //?
+			aiderGroupDef.Level = parent.Level + 1;
+			aiderGroupDef.SubgroupsAllowed = subgroupsAllowed;
+			aiderGroupDef.MembersAllowed = membersAllowed;
+
+			var number = AiderGroupIds.FindNextSubGroupDefNumber (parent.Subgroups.Select (g => g.PathTemplate), 'F');
+			aiderGroupDef.PathTemplate = AiderGroupIds.CreateFunctionSubgroupPath (parent.PathTemplate,number);
+
+			aiderGroupDef.Classification = GroupClassification.Function;
+			aiderGroupDef.Mutability = mutability;
+			aiderGroupDef.Function = functionDef;
+
+			//uplink
+			parent.Subgroups.Add (aiderGroupDef);
+
+			return aiderGroupDef;
+		}
+
 		public static AiderGroupDefEntity CreateDefinitionSubGroup(BusinessContext businessContext, AiderGroupDefEntity parent, string name, 
 			GroupClassification groupClass, bool subgroupsAllowed, bool membersAllowed, Mutability mutability)
 		{

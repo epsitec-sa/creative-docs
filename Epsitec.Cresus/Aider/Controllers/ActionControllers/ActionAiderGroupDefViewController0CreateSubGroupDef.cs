@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
+using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Common.Types;
@@ -21,7 +22,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<string, Enumerations.GroupClassification,bool,bool,bool> (this.Execute);
+			return ActionExecutor.Create<string, Enumerations.GroupClassification, bool, bool, bool> (this.Execute);
 		}
 
 
@@ -54,14 +55,25 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Le nom ne peut pas être vide");
 			}
 
+			if (this.Entity.Classification == GroupClassification.Function)
+			{
+				throw new BusinessRuleException ("Impossible de créer une fonction de cette manière, veuiller assigner une fonction à ce groupe");
+			}
 
-			var groupeDef = AiderGroupDefEntity.CreateDefinitionSubGroup (this.BusinessContext, this.Entity, name, groupClass, subgroupsAllowed, membersAllowed, isMutable ? Mutability.Customizable : Mutability.None);
+			var groupDef = AiderGroupDefEntity.CreateDefinitionSubGroup (
+																			this.BusinessContext,
+																			this.Entity,
+																			name,
+																			groupClass,
+																			subgroupsAllowed,
+																			membersAllowed,
+																			isMutable ? Mutability.Customizable : Mutability.None);
 
 			//Create groups at right place
 			var groupToComplete = AiderGroupEntity.FindGroupsFromPathAndLevel (this.BusinessContext, this.Entity.Level, this.Entity.PathTemplate);
 			foreach (var group in groupToComplete)
 			{
-				group.CreateSubgroup (this.BusinessContext, groupeDef);
+				group.CreateSubgroup (this.BusinessContext, groupDef);
 			}
 
 		}

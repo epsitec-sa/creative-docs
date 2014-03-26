@@ -168,6 +168,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderOfficeManagementViewController1JoinParish.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderOfficeReportViewController0DeleteReport.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderUserViewController3SetMyOffice.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderGroupDefViewController1AssignFunctions.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderGroupExtractionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />

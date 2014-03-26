@@ -1606,6 +1606,21 @@ namespace Epsitec.Aider
 		
 		public static class Fields
 		{
+			public static class AiderAct
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderAct.CelebrationDate, null);
+				}
+				
+				//	designer:cap/LVO633
+				public static readonly global::Epsitec.Common.Support.Druid CelebrationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 102);
+				//	designer:cap/LVO733
+				public static readonly global::Epsitec.Common.Support.Druid CelebrationTown = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 103);
+				//	designer:cap/LVO833
+				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 104);
+			}
+			
 			public static class AiderAddress
 			{
 				internal static void _Initialize()
@@ -2997,6 +3012,7 @@ namespace Epsitec.Aider
 			Types._Initialize ();
 			Types.Enum._Initialize ();
 			Types.String._Initialize ();
+			Fields.AiderAct._Initialize ();
 			Fields.AiderAddress._Initialize ();
 			Fields.AiderComment._Initialize ();
 			Fields.AiderContact._Initialize ();
