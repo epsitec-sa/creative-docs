@@ -47,6 +47,96 @@ namespace Epsitec.Aider.BusinessCases
 			}
 		}
 
+		public static bool DerogatePerson(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity currentParishGroup, AiderGroupEntity derogationParishGroup, Date date)
+		{
+			var needDerogationLetter = false;
+			//Check if a previous derogation is in place ?
+			if (person.HasDerogation)
+			{
+				//Yes, existing derogation in place:
+				//Remove old derogation in
+				AiderDerogations.RemoveDerogationInParticipations (businessContext, currentParishGroup, person);
+
+				//Check for a "return to home"
+				if (person.GeoParishGroupPathCache == derogationParishGroup.Path)
+				{
+					AiderDerogations.ProcessReturnToHome (businessContext, person, derogationParishGroup);
+				}
+				else
+				{
+					AiderDerogations.ProcessDerogationChange (businessContext, person, derogationParishGroup, date);
+					needDerogationLetter = true;
+				}
+			}
+			else
+			{
+				AiderDerogations.ProcessFirstDerogation (businessContext, person, currentParishGroup, derogationParishGroup, date);
+				needDerogationLetter = true;
+			}
+
+			//Remove parish participations
+			AiderDerogations.RemoveParishGroupPartiticipations (businessContext, person, currentParishGroup);
+
+			//Add participation to the destination parish
+			AiderDerogations.AddParishGroupParticipations (businessContext, person, derogationParishGroup, date);
+
+			//!Trigg business rules!
+			person.ParishGroup = derogationParishGroup;
+
+			return needDerogationLetter;
+		}
+
+		public static void ProcessFirstDerogation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity currentParishGroup, AiderGroupEntity derogationParishGroup, Date date)
+		{
+			var derogationOutGroup	= AiderDerogations.GetDerogationOutForParishGroup (businessContext, currentParishGroup);
+			var derogationInGroup	= AiderDerogations.GetDerogationInForParishGroup (businessContext, derogationParishGroup);
+
+			//No, first derogation:
+			//Backup initial parish cache
+			person.GeoParishGroupPathCache = person.ParishGroupPathCache;
+
+			//	Add derogation out participation, but not if the person was in the
+			//	'no parish' group before...
+
+			if (derogationOutGroup != null)
+			{
+				AiderDerogations.AddParticipationToDerogationOut (businessContext, person, derogationOutGroup, date);
+
+				AiderDerogations.WarnGeoParishAboutChange (businessContext, person, derogationParishGroup);
+			}
+
+			//Add derogation in participation
+			AiderDerogations.AddParticipationToDerogationIn (businessContext, person, derogationInGroup, date);
+
+			AiderDerogations.WarnArrivalInParish (businessContext, person, derogationParishGroup);
+		}
+
+		public static void ProcessReturnToHome(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity derogationParishGroup)
+		{
+			//Reset state
+			person.ClearDerogation ();
+
+			//Remove old derogation out
+			AiderDerogations.RemoveDerogationOutParticipations (businessContext, derogationParishGroup, person);
+
+			AiderDerogations.WarnEndOfDerogation (businessContext, person, person.ParishGroupPathCache);
+			AiderDerogations.WarnReturnToOriginalParish (businessContext, person, derogationParishGroup);
+		}
+
+		public static void ProcessDerogationChange(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity derogationParishGroup, Date date)
+		{
+			var derogationInGroup	= AiderDerogations.GetDerogationInForParishGroup (businessContext, derogationParishGroup);
+
+			//Add derogation in participation
+			AiderDerogations.AddParticipationToDerogationIn (businessContext, person, derogationInGroup, date);
+
+			AiderDerogations.WarnEndOfDerogation (businessContext, person, person.ParishGroupPathCache);
+			AiderDerogations.WarnArrivalInParish (businessContext, person, derogationParishGroup);
+			//Warn GeoParish for a Derogation Change
+			AiderPersonWarningEntity.Create (businessContext, person, person.GeoParishGroupPathCache,
+				WarningType.DerogationChange, "Changement de dérogation vers la\n" + derogationParishGroup.Name + ".");
+		}
+
 		public static void AddParishGroupParticipations(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity derogationParishGroup, Date date)
 		{
 			derogationParishGroup.AddParticipations (businessContext, person.MainContact, date, FormattedText.Null);
@@ -65,7 +155,7 @@ namespace Epsitec.Aider.BusinessCases
 			}
 			else
 			{
-				var message = "Opération impossible, ce groupe n'est pas classifié : Derogations Entrantes";
+				var message = "Opération impossible, ce groupe n'est pas classifié : Dérogations Entrantes";
 				throw new BusinessRuleException (message);
 			}
 		}
@@ -78,7 +168,7 @@ namespace Epsitec.Aider.BusinessCases
 			}
 			else
 			{
-				var message = "Opération impossible, ce groupe n'est pas classifié : Derogations Sortantes";
+				var message = "Opération impossible, ce groupe n'est pas classifié : Dérogations Sortantes";
 				throw new BusinessRuleException (message);
 			}
 		}

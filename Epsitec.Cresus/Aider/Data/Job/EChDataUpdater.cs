@@ -232,8 +232,8 @@ namespace Epsitec.Aider.Data.Job
 							}
 
 							this.LogToConsole ("Info: Address change detected, gathering Aider informations about adult1 and is potential household");
-							var refAiderPerson               = EChDataHelpers.GetAiderPersonEntity (businessContext, eChHousehold.Adult1);
-							var potentialAiderHousehold = EChDataHelpers.GetAiderHousehold (businessContext, refAiderPerson);
+							var refAiderPerson              = EChDataHelpers.GetAiderPersonEntity (businessContext, eChHousehold.Adult1);
+							var potentialAiderHousehold		= EChDataHelpers.GetAiderHousehold (businessContext, refAiderPerson);
 
 							if (potentialAiderHousehold.IsNotNull ())
 							{
