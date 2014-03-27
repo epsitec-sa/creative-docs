@@ -278,21 +278,7 @@ namespace Epsitec.Aider.Rules
 
 		public static void RemoveDerogation(BusinessContext context, AiderPersonEntity person, AiderGroupEntity oldParishGroup, string oldParishGroupPath)
 		{
-			//Yes, existing derogation in place:
-			//Remove old derogation in
-			AiderDerogations.RemoveDerogationInParticipations (context, oldParishGroup, person);
-			
-			//Remove old derogation out
-			var geoParishGroup = person.GetGeoParishGroup (context);
-			AiderDerogations.RemoveDerogationOutParticipations (context, geoParishGroup, person);
-
-			//Warn old derogated parish
-			AiderDerogations.WarnEndOfDerogationForRelocation (context, person, oldParishGroupPath);
-
-			//Warn GeoParish for derogation end
-			AiderDerogations.WarnEndOfDerogationForRelocationAsChange (context, person, person.GeoParishGroupPathCache);
-	
-			person.ClearDerogation ();
+			AiderDerogations.RemoveDerogation (context, person, oldParishGroup, oldParishGroupPath);
 		}
 		
 		

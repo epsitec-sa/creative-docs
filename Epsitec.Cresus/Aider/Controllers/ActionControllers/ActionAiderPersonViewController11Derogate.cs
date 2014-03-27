@@ -72,12 +72,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		
 		private void Execute(AiderGroupEntity derogationParishGroup, Date date)
-		{
-			
+		{		
 			var person = this.Entity;
 			var currentParishGroup = person.ParishGroup;
-
-			AiderDerogations.CheckPrerequisiteBeforeDerogate (person, currentParishGroup, derogationParishGroup);
 
 			System.Diagnostics.Trace.WriteLine ("Derogating from " + currentParishGroup.Name);
 
