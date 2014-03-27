@@ -47,16 +47,19 @@ namespace Epsitec.Aider.Processors.Pdf
 
 			var senderAddressBlock    = letter.Office.OfficeMainContact.GetAddressLabelText (PostalAddressType.Compact);
 			var recipientAddressBlock = OfficeLetterDocumentWriter.GetRecipientAddress (letter);
-			
-			report.GeneratePdf (stream, topLogo, topReference, senderAddressBlock, recipientAddressBlock, content);
+			var placeAndDate		  = OfficeLetterDocumentWriter.GetPlaceAndDate (letter);
+			report.GeneratePdf (stream, topLogo, topReference, senderAddressBlock, recipientAddressBlock, placeAndDate, content);
 		}
 
 		private static string GetRecipientAddress(AiderOfficeLetterReportEntity letter)
 		{
 			return TextFormatter.FormatText (
-				letter.RecipientContact.GetAddressLabelText (PostalAddressType.Default),
-				"\n \n \n",
-				letter.TownAndDate).ToString ();
+				letter.RecipientContact.GetAddressLabelText (PostalAddressType.Default)).ToString ();
+		}
+
+		private static string GetPlaceAndDate(AiderOfficeLetterReportEntity letter)
+		{
+			return TextFormatter.FormatText (letter.TownAndDate).ToString ();
 		}
 
 		private LetterDocumentSetup GetSetup()

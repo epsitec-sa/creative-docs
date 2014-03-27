@@ -227,12 +227,22 @@ namespace Epsitec.Aider.BusinessCases
 
 		private static AiderGroupEntity GetDerogationInForParishGroup(BusinessContext businessContext, AiderGroupEntity parishGroup)
 		{
-			return parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationIn);
+			if (parishGroup.Subgroups.Any ())
+			{
+				return parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationIn);
+			}
+			else
+				return null;
 		}
 
 		private static AiderGroupEntity GetDerogationOutForParishGroup(BusinessContext businessContext, AiderGroupEntity parishGroup)
 		{
-			return parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationOut);
+			if (parishGroup.Subgroups.Any ())
+			{
+				return parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationOut);
+			}
+			else
+				return null;
 		}
 
 		private static void RemoveDerogationInParticipations(BusinessContext businessContext, AiderGroupEntity parishGroup, AiderPersonEntity person)

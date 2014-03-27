@@ -25,15 +25,15 @@ namespace Epsitec.Common.Pdf.LetterDocument
 			this.Setup.TextStyle.FontSize = 33.835; //9pt
 		}
 
-		public void GeneratePdf(string path, FormattedText topLogo, FormattedText topReference, FormattedText senderAddress, FormattedText recipientAddress, FormattedText content)
+		public void GeneratePdf(string path, FormattedText topLogo, FormattedText topReference, FormattedText senderAddress, FormattedText recipientAddress, FormattedText placeAndDate,FormattedText content)
 		{
 			using (var stream = File.Open (path, FileMode.Create))
 			{
-				this.GeneratePdf (stream, topLogo, topReference, senderAddress, recipientAddress, content);
+				this.GeneratePdf (stream, topLogo, topReference, senderAddress, recipientAddress, placeAndDate, content);
 			}
 		}
 
-		public void GeneratePdf(Stream stream, FormattedText topLogo, FormattedText topReference, FormattedText senderAddress, FormattedText recipientAddress, FormattedText content)
+		public void GeneratePdf(Stream stream, FormattedText topLogo, FormattedText topReference, FormattedText senderAddress, FormattedText recipientAddress, FormattedText placeAndDate, FormattedText content)
 		{
 			this.content = content;
 
@@ -45,6 +45,7 @@ namespace Epsitec.Common.Pdf.LetterDocument
 			this.AddCustomLayer (topLogo, new Margins (100.0, 0.0, 100.0, 0.0), this.Setup.TextStyle);
 			this.AddCustomLayer (senderAddress, new Margins (450.0, 0.0, 150.0, 0.0), this.Setup.TextStyle);
 			this.AddCustomLayer (recipientAddress, new Margins (1200.0, 0.0, 400.0, 0.0), this.Setup.TextStyle);
+			this.AddCustomLayer (placeAndDate, new Margins (1200.0, 0.0, 800.0, 0.0), this.Setup.TextStyle);
 	
 			var export = new Export (this.info);
 			export.ExportToFile (stream, this.pageCount, this.RenderPage);
