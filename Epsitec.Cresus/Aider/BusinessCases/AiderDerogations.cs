@@ -201,13 +201,12 @@ namespace Epsitec.Aider.BusinessCases
 			}
 		}
 
-		public static AiderOfficeLetterReportEntity CreateDerogationLetter(	BusinessContext businessContext,AiderPersonEntity person,
-			/**/															AiderOfficeSenderEntity sender, AiderGroupEntity destParish, AiderGroupEntity origineParish)
+		public static AiderOfficeLetterReportEntity CreateDerogationLetter(BusinessContext businessContext, AiderPersonEntity person,
+			/**/														   AiderOfficeSenderEntity sender, AiderGroupEntity newParish, AiderGroupEntity oldParish)
 		{
-
-			var office			= AiderOfficeManagementEntity.Find (businessContext, destParish);
-			var recipient		= person.MainContact;
-			var documentName	= "Confirmation dérogation " + recipient.DisplayName;
+			var office		 = AiderOfficeManagementEntity.Find (businessContext, newParish);
+			var recipient	 = person.MainContact;
+			var documentName = "Confirmation dérogation " + recipient.DisplayName;
 
 			if (sender.IsNull ())
 			{
@@ -222,9 +221,15 @@ namespace Epsitec.Aider.BusinessCases
 
 			var greetings = (person.eCH_Person.PersonSex == PersonSex.Male) ? "Monsieur" : "Madame";
 			var fullName  = sender.OfficialContact.Person.GetFullName ();
-			var content   = FormattedContent.Escape (greetings, destParish.Name, origineParish.Name, destParish.Name, fullName);
+			var content   = FormattedContent.Escape (greetings, newParish.Name, oldParish.Name, newParish.Name, fullName);
+			var template  = "template-letter-derogation";
 
-			return AiderOfficeLetterReportEntity.Create (businessContext, recipient, sender, documentName, "template-letter-derogation", content);
+			if (oldParish.IsNoParish ())
+			{
+				template += "-noparish";
+			}
+
+			return AiderOfficeLetterReportEntity.Create (businessContext, recipient, sender, documentName, template, content);
 		}
 
 		public static void WarnEndOfDerogation(BusinessContext businessContext, AiderPersonEntity person, string parishPathCache)
