@@ -575,6 +575,20 @@ namespace Epsitec.Aider.Entities
 			this.AddParticipations (businessContext, participations, startDate, comment);
 		}
 
+		public void AddParticipations(BusinessContext businessContext, AiderContactEntity contact, Date? startDate, FormattedText comment)
+		{
+			var participations = new List<ParticipationData> ();
+			participations.Add (new ParticipationData (contact));
+
+			foreach (var participation in participations)
+			{
+				if (!this.HasMember (participation))
+				{
+					AiderGroupParticipantEntity.StartParticipation (businessContext, this, participation, startDate, comment);
+				}
+			}
+		}
+
 		public void AddParticipations(BusinessContext businessContext, IEnumerable<ParticipationData> participations, Date? startDate, FormattedText comment)
 		{
 			foreach (var participation in participations)

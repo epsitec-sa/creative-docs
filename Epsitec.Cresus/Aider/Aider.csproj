@@ -85,6 +85,7 @@
     </Compile>
     <Compile Include="AiderProgram.Test.cs" />
     <Compile Include="AiderProgramTestImportMode.cs" />
+    <Compile Include="BusinessCases\AiderDerogations.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController0CreatePerson.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController4RemoveMemberFromHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController5ChangeHeadOfHousehold.cs" />

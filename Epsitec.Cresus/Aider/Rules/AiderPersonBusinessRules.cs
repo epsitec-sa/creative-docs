@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Rules
 {
@@ -279,32 +280,18 @@ namespace Epsitec.Aider.Rules
 		{
 			//Yes, existing derogation in place:
 			//Remove old derogation in
-			var oldDerogationInGroup = oldParishGroup.Subgroups.Where (g => g.GroupDef.Classification == GroupClassification.DerogationIn)
-				/**/										   .FirstOrDefault ();
+			AiderDerogations.RemoveDerogationInParticipations (context, oldParishGroup, person);
 			
-			if (oldDerogationInGroup != null)
-			{
-				oldDerogationInGroup.RemoveParticipations (context, oldDerogationInGroup.FindParticipations (context, person.MainContact));
-			}
-
 			//Remove old derogation out
 			var geoParishGroup = person.GetGeoParishGroup (context);
-			var oldDerogationOutGroup = geoParishGroup.Subgroups.Where (g => g.GroupDef.Classification == GroupClassification.DerogationOut)
-				/**/											.FirstOrDefault ();
-
-			if (oldDerogationOutGroup != null)
-			{
-				oldDerogationOutGroup.RemoveParticipations (context, oldDerogationOutGroup.FindParticipations (context, person.MainContact));
-			}
+			AiderDerogations.RemoveDerogationOutParticipations (context, geoParishGroup, person);
 
 			//Warn old derogated parish
-			AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, WarningType.ParishDeparture,
-				"Fin de dérogation suite à un déménagement.");
+			AiderDerogations.WarnEndOfDerogationForRelocation (context, person, oldParishGroupPath);
 
 			//Warn GeoParish for derogation end
-			AiderPersonWarningEntity.Create (context, person, person.GeoParishGroupPathCache, WarningType.DerogationChange,
-				"Fin de dérogation suite à un déménagement.");
-
+			AiderDerogations.WarnEndOfDerogationForRelocationAsChange (context, person, person.GeoParishGroupPathCache);
+	
 			person.ClearDerogation ();
 		}
 		
