@@ -432,6 +432,39 @@ namespace Epsitec.Aider.Entities
 			return group;
 		}
 
+		public static void Delete(BusinessContext businessContext, AiderGroupEntity group, bool forceSubgroupDeletion)
+		{
+			if (!forceSubgroupDeletion && group.Subgroups.Count > 0)
+			{
+				throw new BusinessRuleException ("Opération impossible, ce groupe possède encore des sous-groupes : " + group.Path);
+			}
+
+			if (!forceSubgroupDeletion && group.CanHaveMembers ())
+			{
+				throw new BusinessRuleException ("Opération impossible, ce groupe possède potentiellement des participants : " + group.Path);
+			}
+
+			if (forceSubgroupDeletion && group.CanHaveMembers ())
+			{
+				group.PurgeMembers (businessContext);
+			}
+
+			if (forceSubgroupDeletion && group.Subgroups.Count > 0)
+			{
+				foreach (var subgroup in group.Subgroups)
+				{
+					group.DeleteSubgroup (businessContext, subgroup);
+				}
+			}
+
+			if (group.Comment.IsNotNull ())
+			{
+				businessContext.DeleteEntity (group.Comment);
+			}
+
+			businessContext.DeleteEntity (group);
+		}
+
 		public AiderGroupEntity CreateSubgroup(BusinessContext businessContext, string name)
 		{
 			if (!this.CanHaveSubgroups ())

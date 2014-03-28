@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
+using System.Linq;
 using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
@@ -22,7 +23,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderGroupDefEntity> (this.Execute);
+			return ActionExecutor.Create<AiderGroupDefEntity,bool> (this.Execute);
 		}
 
 
@@ -34,10 +35,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Groupe fonctionnel")
 					.WithSpecialField<AiderGroupDefSpecialField<AiderGroupDefEntity>>()
 				.End ()
+				.Field<bool> ()
+					.Title ("Supprimer les fonctions et participations existantes ?")
+					.InitialValue (true)
+				.End ()
 			.End ();
 		}
 
-		private void Execute(AiderGroupDefEntity functionalGroupDef)
+		private void Execute(AiderGroupDefEntity functionalGroupDef, bool deleteExisting)
 		{
 			if (functionalGroupDef.Subgroups.Count == 0)
 			{
@@ -50,6 +55,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var groupToComplete = AiderGroupEntity.FindGroupsFromPathAndLevel (this.BusinessContext, this.Entity.Level, this.Entity.PathTemplate);
 			foreach (var group in groupToComplete)
 			{
+				if (deleteExisting)
+				{
+					var existingFunction = group.Subgroups.Where (g => g.GroupDef.Classification == GroupClassification.Function);
+
+					foreach (var function in existingFunction)
+					{
+						AiderGroupEntity.Delete (this.BusinessContext, function, true);
+					}
+				}
 				foreach (var function in functionalGroupDef.Subgroups)
 				{
 					group.CreateSubgroup (this.BusinessContext, function);

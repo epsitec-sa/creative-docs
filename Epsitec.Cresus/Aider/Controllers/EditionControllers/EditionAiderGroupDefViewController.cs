@@ -19,6 +19,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderGroupDefViewController0CreateSubGroupDef> ()
 				.EnableActionMenu<ActionAiderGroupDefViewController1AssignFunctions> ()
+				.EnableActionMenu<ActionAiderGroupDefViewController2DeleteAll> ()
 				//.IfTrue (this.Entity.SubgroupsAllowed && this.HasUserPowerLevel (UserPowerLevel.Administrator))
 				.Input ()
 					.Field (x => x.Name)
