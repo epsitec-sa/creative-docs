@@ -235,7 +235,6 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderSubscriptionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderWarningSourceViewController.cs" />
-    <Compile Include="Data\Clean\AiderRemoveOldGroups.cs" />
     <Compile Include="Data\Common\AddressChecker.cs" />
     <Compile Include="Data\Common\DataReader.cs" />
     <Compile Include="Data\ECh\Change.cs" />

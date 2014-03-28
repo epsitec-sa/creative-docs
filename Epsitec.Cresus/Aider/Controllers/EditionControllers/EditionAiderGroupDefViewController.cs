@@ -47,9 +47,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 						.IfFalse (isRoot)
 					.Field (x => x.Function)
-						.WithSpecialField<AiderGroupDefSpecialField<AiderGroupDefEntity>>()
 						.ReadOnly ()
-						.IfFalse (isRoot)
 				.End ();
 		}
 	}
