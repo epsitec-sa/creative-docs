@@ -96,6 +96,7 @@ function() {
 
           newOptions.listeners.itemcontextmenu = function(v, r, n, i, e) {
               e.stopEvent();
+              this.getSelectionModel().select(r);
               contextMenu.showAt(e.getXY());
               return false;
             };       
@@ -142,8 +143,7 @@ function() {
     },
     
     summaryNavigationMenuHandler: function(widget, event) {
-      var rec, path, app;
-
+        var rec, path, app;
       rec = this.getSelectionModel().getSelection()[0];
       if (rec) {
         path = {
