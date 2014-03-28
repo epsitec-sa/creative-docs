@@ -20,6 +20,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.EnableActionMenu<ActionAiderGroupDefViewController0CreateSubGroupDef> ()
 				.EnableActionMenu<ActionAiderGroupDefViewController1AssignFunctions> ()
 				.EnableActionMenu<ActionAiderGroupDefViewController2DeleteAll> ()
+				.EnableActionMenu<ActionAiderGroupDefViewController3Move> ()
 				//.IfTrue (this.Entity.SubgroupsAllowed && this.HasUserPowerLevel (UserPowerLevel.Administrator))
 				.Input ()
 					.Field (x => x.Name)

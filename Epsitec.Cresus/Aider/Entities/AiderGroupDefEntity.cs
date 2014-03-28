@@ -170,6 +170,17 @@ namespace Epsitec.Aider.Entities
 			return aiderGroupDef;
 		}
 
+		public static AiderGroupDefEntity FindParent(BusinessContext businessContext, AiderGroupDefEntity entity)
+		{
+			var oldParentPath = AiderGroupIds.GetParentPath (entity.PathTemplate);
+			var example = new AiderGroupDefEntity ()
+			{
+				PathTemplate = oldParentPath
+			};
+
+			return businessContext.GetByExample<AiderGroupDefEntity>(example).First ();
+		}
+
 		public bool IsRegion()
 		{
 			return this.Level == AiderGroupIds.RegionLevel
