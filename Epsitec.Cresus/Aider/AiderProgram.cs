@@ -422,8 +422,7 @@ namespace Epsitec.Aider
 			{
 				OfficeManagementEntities.CreateIfNeeded (coreData);
 				DerogationGroups.CreateIfNeeded (coreData);
-				AiderUsersGroup.CreateIfNeeded (coreData);
-				POGLFullInit.StartJob (coreData);
+				AiderUsersGroups.CreateIfNeeded (coreData);
 			});
 		}
 

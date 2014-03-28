@@ -243,7 +243,7 @@
     <Compile Include="Data\ECh\EChDataAnalyzerReporter.cs" />
     <Compile Include="Data\ECh\EChDataComparer.cs" />
     <Compile Include="Data\Eerv\EervKind.cs" />
-    <Compile Include="Data\Init\AiderUsersGroup.cs" />
+    <Compile Include="Data\Init\AiderUsersGroups.cs" />
     <Compile Include="Data\Init\OfficeManagementEntities.cs" />
     <Compile Include="Data\Init\POGLFullInit.cs" />
     <Compile Include="Data\Init\DerogationGroups.cs" />

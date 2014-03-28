@@ -11,15 +11,17 @@ namespace Epsitec.Aider.Enumerations
 	[DesignerVisible]
 	public enum GroupClassification
 	{
-		None			= 0,
+		None					= 0,
 		
-		Function		= 10,
-		Region			= 20,
-		Parish			= 30,
-		NoParish		= 40,
-		DerogationIn	= 50,
-		DerogationOut	= 60,
-		ParishOfGermanLanguage = 70,
-		Users			= 80,
+		Function				= 10,
+		Region					= 20,
+		Parish					= 30,
+		NoParish				= 40,
+		DerogationIn			= 50,
+		DerogationOut			= 60,
+		ParishOfGermanLanguage	= 70,
+		Users					= 80,
+		ActingUser				= 90,
+		ResponsibleUser			= 100,
 	}
 }

@@ -543,6 +543,14 @@ namespace Epsitec.Aider
 				
 				public static class GroupClassification
 				{
+					//	designer:cap/LVO933
+					public static global::Epsitec.Common.Types.Caption ActingUser
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 105));
+						}
+					}
 					//	designer:cap/LVOL13
 					public static global::Epsitec.Common.Types.Caption DerogationIn
 					{
@@ -605,6 +613,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 383));
+						}
+					}
+					//	designer:cap/LVOA33
+					public static global::Epsitec.Common.Types.Caption ResponsibleUser
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 106));
 						}
 					}
 					//	designer:cap/LVO623
