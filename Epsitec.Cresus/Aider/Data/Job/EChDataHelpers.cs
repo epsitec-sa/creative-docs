@@ -340,6 +340,19 @@ namespace Epsitec.Aider.Data.Job
 			{
 				subscription.RefreshCache ();
 			}
+
+
+			var refusalExample = new AiderSubscriptionRefusalEntity ()
+			{
+				Household = household
+			};
+
+			var refusal = businessContext.DataContext.GetByExample<AiderSubscriptionRefusalEntity> (refusalExample).FirstOrDefault ();
+
+			if (refusal.IsNotNull ())
+			{
+				refusal.RefreshCache ();
+			}
 		}
 
 		public static eCH_PersonEntity GetEchPersonEntity(BusinessContext businessContext, EChPerson person)

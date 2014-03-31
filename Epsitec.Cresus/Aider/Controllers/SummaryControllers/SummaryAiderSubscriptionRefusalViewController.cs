@@ -20,6 +20,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderSubscriptionRefusalEntity> wall)
 		{
 			this.Entity.RefreshCache ();
+			this.BusinessContext.SaveChanges (Cresus.Core.Business.LockingPolicy.ReleaseLock, Cresus.Core.Business.EntitySaveMode.None);
 
 			switch (this.Entity.RefusalType)
 			{
