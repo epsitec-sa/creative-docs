@@ -161,6 +161,14 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-hotfixderogations"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.HotfixDerogations (args));
+					return;
+				}
+
+				
+
 				if (args.Contains ("-fixambiguousaddresses"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixAmbiguousAddresses (args));
@@ -539,6 +547,13 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (ParticipationFixer.FixParticipations);
 		}
+
+		private static void HotfixDerogations(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData => DerogationHotfix.Hotfix (coreData));
+		}
+
+		
 
 		private static void FixAmbiguousAddresses(string[] args)
 		{

@@ -96,6 +96,13 @@ namespace Epsitec.Aider.Entities
 			return participation;
 		}
 
+		public static AiderGroupParticipantEntity RestoreParticipation(BusinessContext businessContext, AiderGroupParticipantEntity participation)
+		{
+			participation.EndDate = null;
+			AiderGroupParticipantEntity.RestoreParticipationInternal (participation);
+			return participation;
+		}
+
 		
 		public static void StopParticipation(AiderGroupParticipantEntity participation, Date endDate)
 		{
@@ -281,6 +288,22 @@ namespace Epsitec.Aider.Entities
 			if (legalPerson.IsNotNull ())
 			{
 				legalPerson.AddParticipationInternal (participation);
+			}
+		}
+
+		private static void RestoreParticipationInternal(AiderGroupParticipantEntity participation)
+		{
+			var person = participation.Person;
+			var legalPerson = participation.LegalPerson;
+
+			if (person.IsNotNull ())
+			{
+				person.RestoreParticipationInternal (participation);
+			}
+
+			if (legalPerson.IsNotNull ())
+			{
+				legalPerson.RestoreParticipationInternal (participation);
 			}
 		}
 

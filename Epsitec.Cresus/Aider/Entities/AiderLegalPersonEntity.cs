@@ -110,6 +110,17 @@ namespace Epsitec.Aider.Entities
 			this.GetParticipations ().Add (participation);
 		}
 
+		internal void RestoreParticipationInternal(AiderGroupParticipantEntity participation)
+		{
+			System.Diagnostics.Debug.Assert (participation.IsNotNull ());
+
+			var participations = this.GetParticipations ();
+			if (!participations.Contains (participation))
+			{
+				this.GetParticipations ().Add (participation);
+			}
+		}
+
 		internal void RemoveParticipationInternal(AiderGroupParticipantEntity participation)
 		{
 			this.GetParticipations ().Remove (participation);
