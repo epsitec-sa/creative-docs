@@ -127,6 +127,7 @@
     <Compile Include="Controllers\ActionControllers\Household\ActionAiderHouseholdViewController4AddHouseholdMemberOnDrop.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewControllerInteractive.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewControllerPassive.cs" />
+    <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController12Relocate.cs" />
     <Compile Include="Controllers\ActionControllers\Subscription\ActionAiderSubscriptionViewController0FlagVerificationRequired.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController8FusionOnDrop.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController31ProcessParishDeparture.cs" />

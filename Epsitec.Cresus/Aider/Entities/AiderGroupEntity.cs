@@ -863,6 +863,17 @@ namespace Epsitec.Aider.Entities
 			return businessContext.DataContext.GetByExample (example);
 		}
 
+		public IList<AiderGroupParticipantEntity> FindParticipationsByGroup(BusinessContext businessContext, AiderContactEntity contact, AiderGroupEntity group)
+		{
+			var example = new AiderGroupParticipantEntity ()
+			{
+				Contact = contact,
+				Group = group
+			};
+
+			return businessContext.DataContext.GetByExample (example);
+		}
+
 		private IList<AiderContactEntity> FindGroupAndSubGroupParticipants(DataContext dataContext, int? count)
 		{
 			if ((count.HasValue) && (count.Value < 1))

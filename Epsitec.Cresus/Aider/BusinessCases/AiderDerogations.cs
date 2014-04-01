@@ -196,7 +196,7 @@ namespace Epsitec.Aider.BusinessCases
 
 		private static void RemoveParishGroupPartiticipations(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity currentParishGroup)
 		{
-			currentParishGroup.RemoveParticipations (businessContext, currentParishGroup.FindParticipations (businessContext, person.MainContact));
+			currentParishGroup.RemoveParticipations (businessContext, currentParishGroup.FindParticipationsByGroup (businessContext, person.MainContact, currentParishGroup));
 		}
 
 		private static void AddParticipationToDerogationIn(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity derogationInGroup, Date date)
@@ -250,7 +250,7 @@ namespace Epsitec.Aider.BusinessCases
 			var oldDerogationInGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationIn);
 			if (oldDerogationInGroup != null)
 			{
-				oldDerogationInGroup.RemoveParticipations (businessContext, oldDerogationInGroup.FindParticipations (businessContext, person.MainContact));
+				oldDerogationInGroup.RemoveParticipations (businessContext, oldDerogationInGroup.FindParticipationsByGroup (businessContext, person.MainContact, oldDerogationInGroup));
 			}
 		}
 
@@ -259,7 +259,7 @@ namespace Epsitec.Aider.BusinessCases
 			var oldDerogationInGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationIn);
 			if (oldDerogationInGroup != null)
 			{
-				oldDerogationInGroup.RemoveParticipations (businessContext, oldDerogationInGroup.FindParticipations (businessContext, person.MainContact));
+				oldDerogationInGroup.RemoveParticipations (businessContext, oldDerogationInGroup.FindParticipationsByGroup (businessContext, person.MainContact, oldDerogationInGroup));
 			}
 		}
 
