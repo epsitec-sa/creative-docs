@@ -89,6 +89,8 @@ namespace Epsitec.Aider.Data.Job
 			else
 			{
 				Logger.LogToConsole ("[WARNING] no contact: " + entityKey);
+				AiderGroupParticipantEntity.StopParticipation (participation, Epsitec.Common.Types.Date.Today);
+				businessContext.DeleteEntity (participation);
 			}
 		}
 
