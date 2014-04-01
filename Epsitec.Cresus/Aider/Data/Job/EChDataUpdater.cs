@@ -671,7 +671,8 @@ namespace Epsitec.Aider.Data.Job
 				if (oldHousehold.IsNotNull ())
 				{
 					var contactToRemove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
-					businessContext.DeleteEntity (contactToRemove);
+
+					AiderContactEntity.Delete (businessContext, contactToRemove, true);
 					this.LogToConsole ("Info: old household detected, removing contact for {0}", aiderPerson.GetFullName ());
 
 					if (oldHousehold.Members.Count <= 1)
@@ -705,7 +706,6 @@ namespace Epsitec.Aider.Data.Job
 					{
 						this.LogToConsole ("Info: We keep the old contact");
 					}
-					//businessContext.DeleteEntity (contactToRemove);
 				}
 				this.LogToConsole ("Info: Create contact for the new household");
 				AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, false);
