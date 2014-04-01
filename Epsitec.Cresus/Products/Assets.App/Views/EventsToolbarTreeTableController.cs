@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.obj != null)
 			{
 				var type = EventsToolbarTreeTableController.ParseEventType (buttonName);
-				var e = this.accessor.CreateObjectEvent (this.obj, date, type);
+				var e = this.accessor.CreateAssetEvent (this.obj, date, type);
 
 				if (e != null)
 				{

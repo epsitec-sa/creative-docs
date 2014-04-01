@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (!guid.IsEmpty)
 			{
 				var type = AssetsToolbarTimelineController.ParseEventType (buttonName);
-				var e = this.accessor.CreateObjectEvent (this.obj, date, type);
+				var e = this.accessor.CreateAssetEvent (this.obj, date, type);
 
 				if (e != null)
 				{

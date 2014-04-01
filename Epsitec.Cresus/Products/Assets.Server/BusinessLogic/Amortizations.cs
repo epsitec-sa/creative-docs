@@ -129,9 +129,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.RemoveEvents (obj, EventType.AmortizationPreview, DateRange.Full);
 
 			//	Passe en revue les périodes.
-			foreach (var period in this.GetPeriods (processRange, obj))
+			foreach (var period in Amortizations.GetPeriods (processRange, obj))
 			{
-				var ad = Amortizations.GetAmortizationDetails (obj, period.ExcludeTo.AddDays (-1));
+				var ad = Amortizations.GetAmortizationDetails (obj, period.IncludeFrom);
 				if (!ad.IsEmpty)
 				{
 					//	On crée un aperçu de l'amortissement au 31.12.
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			Amortizations.UpdateAmounts (this.accessor, obj);
 		}
 
-		private IEnumerable<DateRange> GetPeriods(DateRange processRange, DataObject obj)
+		private static IEnumerable<DateRange> GetPeriods(DateRange processRange, DataObject obj)
 		{
 			//	Retourne la liste des périodes pour lesquelles il faudra tenter des amortissements.
 			if (obj.EventsCount > 0)
@@ -188,6 +188,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						else
 						{
 							var endDate = beginDate.AddMonths (def.PeriodMonthCount);
+							endDate = def.GetBeginRangeDate (endDate);
 							yield return new DateRange (beginDate, endDate);
 
 							beginDate = endDate;
@@ -267,7 +268,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private void CreateAmortizationPreview(DataObject obj, System.DateTime date, AmortizationDetails details)
 		{
 			//	Crée l'événement d'aperçu d'amortissement.
-			var e = this.accessor.CreateObjectEvent (obj, date, EventType.AmortizationPreview);
+			var e = this.accessor.CreateAssetEvent (obj, date, EventType.AmortizationPreview);
 
 			if (e != null)
 			{
@@ -292,18 +293,31 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Initialise une fois pour toutes le AmortizedAmount d'un objet.
 			//	Collecte tous les champs qui définissent comment générer l'écriture.
 			//	Ils peuvent provenir de plusieurs événements différents.
-			var def = Amortizations.GetAmortizationDefinition (obj, timestamp);
+			var inputDate = AssetCalculator.GetFirstTimestamp (obj).Value.Date;
+			var defTimestamp = timestamp;
 
-			var beginDate = def.GetBeginRangeDate (timestamp.Date);
+			//	On doit parcourir toutes les périodes, pour trouver la définition
+			//	initiatrice de la période.
+			var period = Amortizations.GetPeriods (new DateRange (inputDate, System.DateTime.MaxValue), obj)
+				.Where (x => defTimestamp.Date >= x.IncludeFrom && defTimestamp.Date < x.ExcludeTo)
+				.FirstOrDefault ();
+
+			if (!period.IsEmpty)
+			{
+				defTimestamp = new Timestamp (period.IncludeFrom, 0);
+			}
+
+			var def = Amortizations.GetAmortizationDefinition (obj, defTimestamp);
+
+			var beginDate = def.GetBeginRangeDate (defTimestamp.Date);
 			var endDate = beginDate.AddMonths (def.PeriodMonthCount);
 			var range = new DateRange (beginDate, endDate);
 
 			var valueDate = range.IncludeFrom;
 
-			var inputDate = AssetCalculator.GetFirstTimestamp (obj).Value.Date;
 			if (range.IsInside (inputDate))
 			{
-				//	Si l'objet est entrée durant la période, on utilise sa date d'entrée
+				//	Si l'objet est entré durant la période, on utilise sa date d'entrée
 				//	pour calculer l'amortissement "au prorata".
 				valueDate = inputDate;
 			}

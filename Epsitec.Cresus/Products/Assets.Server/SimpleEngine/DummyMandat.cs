@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					for (int i=1; i<13; i++)
 					{
 						{
-							var e = DummyMandat.Accessor.CreateObjectEvent(o, new System.DateTime (2000+i, 12, 31), EventType.AmortizationAuto);
+							var e = DummyMandat.Accessor.CreateAssetEvent(o, new System.DateTime (2000+i, 12, 31), EventType.AmortizationAuto);
 							e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 
 							decimal a1 = 3000000.0m-(i-1)*100000;
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					for (int i=1; i<10; i++)
 					{
 						{
-							var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2002+i, 12, 31), EventType.AmortizationAuto);
+							var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2002+i, 12, 31), EventType.AmortizationAuto);
 							e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 
 							decimal a1 = 4550000.0m-(i-1)*200000;
@@ -208,12 +208,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2010, 2, 5), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2010, 2, 5), EventType.Modification);
 						e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+0, DummyGroups.GetGroup (mandat, "Immeubles")));
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2011, 1, 10), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2011, 1, 10), EventType.Modification);
 						e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+0, DummyGroups.GetGroup (mandat, "Suisses")));
 					}
 
@@ -262,12 +262,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2012, 10, 18), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2012, 10, 18), EventType.Modification);
 						e.AddProperty (new DataStringProperty (DummyMandat.fieldOwner, "Patrick"));
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2013, 1, 1), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2013, 1, 1), EventType.Modification);
 						e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+0, DummyGroups.GetGroup (mandat, "Entrepôts", 0.65m)));
 						e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+1, DummyGroups.GetGroup (mandat, "Suisses", 0.35m)));
 					}
@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2005, 3, 20), EventType.Output);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2005, 3, 20), EventType.Output);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 50000.0m);
 					}
@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2012, 11, 5), EventType.Output);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2012, 11, 5), EventType.Output);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 95000.0m);
 					}
@@ -552,43 +552,43 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2003, 5, 1), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2003, 5, 1), EventType.Modification);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1, new ComputedAmount (12000.0m)));
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2003, 5, 1), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2003, 5, 1), EventType.Modification);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1, new ComputedAmount (12000.0m, 12500.0m)));
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2005, 12, 1), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2005, 12, 1), EventType.Modification);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						e.AddProperty (new DataStringProperty (DummyMandat.fieldOwner, "Georges"));
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2009, 8, 25), EventType.AmortizationExtra);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2009, 8, 25), EventType.AmortizationExtra);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 16000.0m, 14500.0m);
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2009, 8, 25), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2009, 8, 25), EventType.Modification);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1, new ComputedAmount (12500.0m, 11000.0m)));
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2010, 3, 1), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2010, 3, 1), EventType.Modification);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						e.AddProperty (new DataStringProperty (DummyMandat.fieldOwner, "Damien"));
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2012, 7, 12), EventType.MainValue);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2012, 7, 12), EventType.MainValue);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 12000.0m);
 					}
@@ -617,44 +617,44 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2012, 7, 1), EventType.AmortizationExtra);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2012, 7, 1), EventType.AmortizationExtra);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 5000.0m, 5200.0m);
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2012, 8, 20), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2012, 8, 20), EventType.Modification);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						e.AddProperty (new DataStringProperty (DummyMandat.fieldOwner, "Frédérique"));
 						e.AddProperty (new DataStringProperty (DummyMandat.fieldSerial, "F30T-340407-52118-40721-S"));
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2012, 12, 31), EventType.MainValue);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2012, 12, 31), EventType.MainValue);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 4600.0m);
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2012, 12, 31), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2012, 12, 31), EventType.Modification);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1, new ComputedAmount (3500.0m, 2400.0m)));
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2013, 3, 31), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2013, 3, 31), EventType.Modification);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						e.AddProperty (new DataStringProperty (DummyMandat.fieldOwner, "Daniel"));
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2013, 4, 14), EventType.Modification);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2013, 4, 14), EventType.Modification);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						e.AddProperty (new DataComputedAmountProperty (DummyMandat.fieldValue1, new ComputedAmount (2400.0m, 3000.0m, true)));
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateObjectEvent (o, new System.DateTime (2013, 6, 1), EventType.AmortizationExtra);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2013, 6, 1), EventType.AmortizationExtra);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 4600.0m, 2100.0m);
 					}

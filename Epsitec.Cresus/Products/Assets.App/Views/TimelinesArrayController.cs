@@ -762,7 +762,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (obj != null)
 			{
 				var type = TimelinesArrayController.ParseEventType (buttonName);
-				var e = this.accessor.CreateObjectEvent (obj, date, type);
+				var e = this.accessor.CreateAssetEvent (obj, date, type);
 
 				if (e != null)
 				{

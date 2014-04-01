@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return obj.Guid;
 		}
 
-		public DataEvent CreateObjectEvent(DataObject obj, System.DateTime date, EventType type)
+		public DataEvent CreateAssetEvent(DataObject obj, System.DateTime date, EventType type)
 		{
 			if (obj != null)
 			{

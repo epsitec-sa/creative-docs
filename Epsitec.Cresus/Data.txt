@@ -28,7 +28,7 @@ Evénement de modification:
 
     string		CategoryName
     decimal		AmortizationRate
-    AmortizationType    AmortizationType
+    AmortizationType	AmortizationType
     Periodicity		Periodicity
     ProrataType		Prorata
     decimal		Round
@@ -60,7 +60,7 @@ DataObject Categories
     string		Name
     string		Description
     decimal		AmortizationRate
-    AmortizationType    AmortizationType
+    AmortizationType	AmortizationType
     Periodicity		Periodicity
     ProrataType		Prorata
     decimal		Round
