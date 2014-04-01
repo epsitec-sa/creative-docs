@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
 				.EnableActionMenu<ActionAiderPersonViewController5AddHousehold> ()
-				.EnableActionMenu<ActionAiderPersonViewController12Relocate> ()
+				 //.EnableActionMenu<ActionAiderPersonViewController12Relocate> ()
 				.EnableActionOnDrop<ActionAiderPersonViewController8FusionOnDrop> ()
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
