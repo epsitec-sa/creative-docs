@@ -124,14 +124,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.ImportField (catObj, ObjectField.Prorata,          ObjectField.Prorata);
 			this.ImportField (catObj, ObjectField.Round,            ObjectField.Round);
 			this.ImportField (catObj, ObjectField.ResidualValue,    ObjectField.ResidualValue);
-			this.ImportField (catObj, ObjectField.Account1,          ObjectField.Account1);
-			this.ImportField (catObj, ObjectField.Account2,          ObjectField.Account2);
-			this.ImportField (catObj, ObjectField.Account3,          ObjectField.Account3);
-			this.ImportField (catObj, ObjectField.Account4,          ObjectField.Account4);
-			this.ImportField (catObj, ObjectField.Account5,          ObjectField.Account5);
-			this.ImportField (catObj, ObjectField.Account6,          ObjectField.Account6);
-			this.ImportField (catObj, ObjectField.Account7,          ObjectField.Account7);
-			this.ImportField (catObj, ObjectField.Account8,          ObjectField.Account8);
+			this.ImportField (catObj, ObjectField.Account1,         ObjectField.Account1);
+			this.ImportField (catObj, ObjectField.Account2,         ObjectField.Account2);
+			this.ImportField (catObj, ObjectField.Account3,         ObjectField.Account3);
+			this.ImportField (catObj, ObjectField.Account4,         ObjectField.Account4);
+			this.ImportField (catObj, ObjectField.Account5,         ObjectField.Account5);
+			this.ImportField (catObj, ObjectField.Account6,         ObjectField.Account6);
+			this.ImportField (catObj, ObjectField.Account7,         ObjectField.Account7);
+			this.ImportField (catObj, ObjectField.Account8,         ObjectField.Account8);
 
 			//	Met à jour les contrôleurs.
 			this.SetObject (this.objectGuid, this.timestamp);

@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		AmortizationType,
 		Periodicity,
 		Prorata,
-		ResidualValue,
 		Round,
+		ResidualValue,
 
 		Account1,
 		Account2,

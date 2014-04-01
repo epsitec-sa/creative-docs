@@ -1,0 +1,127 @@
+Un objet (DataObject) est composé d'événements (DataEvent), eux-mêmes composés de
+propriétés (AbstractDataProperty). Cette structure très générale ne permet pas de
+dégager le schéma des entités, puisque un événement peut contenir n'importe quelles
+propriétés. Ce document indique les propriétés réellements utilisées pour chaque
+type d'objet. Il est daté (à la fin), car rien ne garantit qu'il soit à jour !
+
+La première colonne donne le type. Les énumérations (AmortizationType, Periodicity,
+AccountCategory, etc.) sont en fait des propriétés de type 'int'.
+
+La deuxième colonne correspond à l'énumération ObjectField.
+
+En outre, seul l'objet Assets utilise la notion de temps. Tous les autres objets
+n'ont qu'un seul événement à une date quelconque.
+
+
+DataObject Assets
+-----------------
+
+Evénement de modification:
+
+    string		OneShotNumber
+    DateTime		OneShotDateOperation
+    string		OneShotComment
+    string		OneShotDocuments
+		
+    *			UserFieldFirst..UserFieldLast
+    Guid		GroupGuidRatioFirst..GroupGuidRatioLast
+
+    string		CategoryName
+    decimal		AmortizationRate
+    AmortizationType    AmortizationType
+    Periodicity		Periodicity
+    ProrataType		Prorata
+    decimal		Round
+    decimal		ResidualValue
+	
+    Guid		Account1
+    Guid		Account2
+    Guid		Account3
+    Guid		Account4
+    Guid		Account5
+    Guid		Account6
+
+Evénement d'amortissement:
+
+    AmortizedAmount	MainValue	(voir AmortizedAmount qui est très riche)
+
+    DateTime		AssetEntryForcedDate
+    Guid		AssetEntryForcedDebit
+    Guid		AssetEntryForcedCredit
+    string		AssetEntryForcedStamp
+    string		AssetEntryForcedTitle
+    decimal		AssetEntryForcedAmount
+
+
+DataObject Categories
+---------------------
+
+    string		Number
+    string		Name
+    string		Description
+    decimal		AmortizationRate
+    AmortizationType    AmortizationType
+    Periodicity		Periodicity
+    ProrataType		Prorata
+    decimal		Round
+    decimal		ResidualValue
+
+    Guid		Account1
+    Guid		Account2
+    Guid		Account3
+    Guid		Account4
+    Guid		Account5
+    Guid		Account6
+
+
+DataObject Groups
+-----------------
+
+    Guid		GroupParent
+    string		Name
+    string		Description
+
+
+DataObject Persons
+------------------
+
+    *			UserFieldFirst..UserFieldLast
+
+
+DataObject UserFields
+---------------------
+
+    string		Name
+    FieldType		UserFieldType
+    int			UserFieldColumnWidth
+    int			UserFieldLineWidth
+    int			UserFieldLineCount
+    int			UserFieldTopMargin
+    int			UserFieldSummaryOrder
+
+
+DataObject Accounts
+-------------------
+
+    Guid		GroupParent
+    string		Number
+    string		Name
+    AccountCategory	AccountCategory
+    AccountType		AccountType
+    string		Description
+
+
+DataObject Entries
+------------------
+
+    Guid		EntryAssetGuid
+    Guid		EntryEventGuid
+    DateTime		EntryDate
+    Guid		EntryDebitAccount
+    Guid		EntryCreditAccount
+    string		EntryStamp
+    string		EntryTitle
+    decimal		EntryAmount
+
+
+DR 31.03.2014

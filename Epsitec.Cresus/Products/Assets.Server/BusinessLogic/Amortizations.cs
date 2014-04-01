@@ -181,8 +181,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 						if (def.IsEmpty)
 						{
-							//	Si aucun amortissement n'est défini, on essaie de nouveaux amortissements
-							//	à partir de l'année prochaine.
+							//	Si aucune définition d'amortissement n'existe, on essaie de nouveaux
+							//	amortissements à partir de l'année prochaine.
 							beginDate = beginDate.AddYears (1);
 						}
 						else
