@@ -188,7 +188,7 @@ namespace Epsitec.Aider.Entities
 		{
 			this.UpdateLastUpdateDate ();
 			this.RecipientGroups.Remove (groupToRemove);
-			foreach (var contact in groupToRemove.GetAllGroupAndSubGroupParticipants ().Distinct ())
+			foreach (var contact in groupToRemove.GetAllGroupAndSubGroupParticipantContacts ().Distinct ())
 			{
 				this.Exclusions.RemoveAll (r => r == contact);
 				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact, MailingParticipantType.Group);
@@ -238,7 +238,7 @@ namespace Epsitec.Aider.Entities
 				this.UpdateLastUpdateDate ();
 				this.GroupExclusions.Add (groupToExclude);
 
-				foreach (var contactToExclude in groupToExclude.GetAllGroupAndSubGroupParticipants ())
+				foreach (var contactToExclude in groupToExclude.GetAllGroupAndSubGroupParticipantContacts ())
 				{
 					AiderMailingParticipantEntity.ExcludeContact (businessContext, this, contactToExclude);
 				}
@@ -273,7 +273,7 @@ namespace Epsitec.Aider.Entities
 		{
 			this.UpdateLastUpdateDate ();
 			this.GroupExclusions.RemoveAll (r => r == groupToUnExclude);
-			foreach (var contact in groupToUnExclude.GetAllGroupAndSubGroupParticipants())
+			foreach (var contact in groupToUnExclude.GetAllGroupAndSubGroupParticipantContacts())
 			{
 				AiderMailingParticipantEntity.UnExcludeContact (businessContext, this, contact);
 			}
@@ -333,12 +333,12 @@ namespace Epsitec.Aider.Entities
 				var contacts = new HashSet<AiderContactEntity> ();
 
 				contacts.UnionWith (this.RecipientContacts);
-				contacts.UnionWith (this.RecipientGroups.SelectMany (x => x.GetAllGroupAndSubGroupParticipants ()));
+				contacts.UnionWith (this.RecipientGroups.SelectMany (x => x.GetAllGroupAndSubGroupParticipantContacts ()));
 				contacts.UnionWith (this.RecipientGroupExtractions.SelectMany (x => x.GetAllContacts (context)));
 				contacts.UnionWith (this.RecipientHouseholds.Select (x => x.Contacts.First ()));
 				
 				contacts.ExceptWith (this.Exclusions);
-				contacts.ExceptWith (this.GroupExclusions.SelectMany (x => x.GetAllGroupAndSubGroupParticipants ()));
+				contacts.ExceptWith (this.GroupExclusions.SelectMany (x => x.GetAllGroupAndSubGroupParticipantContacts ()));
 
 				this.recipientsCache = contacts.OrderBy (x => x.DisplayName).ToList ();
 			}
@@ -356,7 +356,7 @@ namespace Epsitec.Aider.Entities
 			var exclusions = new HashSet<AiderContactEntity> ();
 
 			exclusions.UnionWith (this.Exclusions);
-			exclusions.UnionWith (this.GroupExclusions.SelectMany (x => x.GetAllGroupAndSubGroupParticipants ()));
+			exclusions.UnionWith (this.GroupExclusions.SelectMany (x => x.GetAllGroupAndSubGroupParticipantContacts ()));
 
 			return exclusions.OrderBy (x => x.DisplayName).ToList ();		
 		}

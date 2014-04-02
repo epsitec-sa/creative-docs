@@ -1,4 +1,4 @@
-//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
@@ -41,7 +41,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick ()
 				.IfTrue (group.CanHaveMembers ())
 				.Icon ("Data.AiderGroup.People")
-				.Title (p => p.GetParticipantsTitle ())
+				.Title ("Participants")
 				.Text (p => p.GetParticipantsSummary ())
 				.Attribute (BrickMode.DefaultToSetSubView)
 				.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant))
@@ -58,7 +58,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				wall.AddBrick ()
 					.IfTrue (group.GroupDef.Function.IsNotNull ())
 					.Icon ("Data.AiderGroup.People")
-					.Title (p => p.GetGroupAndSubGroupParticipantTitle ())
+					.Title ("Participants")
 					.Text (p => p.GetGroupAndSubGroupParticipantSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.WithSpecialController (typeof (SetAiderGroupViewController1Contact));

@@ -277,16 +277,31 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetParticipantsSummary()
 		{
-			int count = 10;
-
-			var participants = this.GetParticipants (count + 1)
-				.Select (p => p.Contact.DisplayName)
-				.CreateSummarySequence (count, "...")
-				.Select (t => FormattedText.FromSimpleText (t));
-
-			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
+			return AiderGroupEntity.CreateSummary (() => this.GetParticipantCount (), count => this.GetParticipants (count).Select (x => x.Contact));
 		}
 
+		private static FormattedText CreateSummary(System.Func<int> getCount, System.Func<int, IEnumerable<AiderContactEntity>> getParticipants)
+		{
+			int count = getCount ();
+
+			if (count == 0)
+			{
+				return "Aucun";
+			}
+			else if (count < 10)
+			{
+				var participants = getParticipants (count)
+									   .Where (p => p.IsNotNull ())
+									   .Select (p => TextFormatter.FormatText (p.DisplayName))
+									   .ToArray ();
+
+				return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
+			}
+			else
+			{
+				return TextFormatter.FormatText (count, "membres");
+			}
+		}
 		public FormattedText GetGroupAndSubGroupParticipantTitle()
 		{
 			var count = this.GetGroupAndSubGroupParticipantCount ();
@@ -303,19 +318,12 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetGroupAndSubGroupParticipantSummary()
 		{
-			int count = 10;
-
-			var participants = this.GetGroupAndSubGroupParticipants (count + 1)
-				.Select (p => p.DisplayName)
-				.CreateSummarySequence (count, "...")
-				.Select (t => FormattedText.FromSimpleText (t));
-
-			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
+			return AiderGroupEntity.CreateSummary (() => this.GetGroupAndSubGroupParticipantCount (), count => this.GetGroupAndSubGroupParticipantContacts (count));
 		}
 
-		public IList<AiderContactEntity> GetAllGroupAndSubGroupParticipants()
+		public IList<AiderContactEntity> GetAllGroupAndSubGroupParticipantContacts()
 		{
-			return this.GetGroupAndSubGroupParticipants ();
+			return this.GetGroupAndSubGroupParticipantContacts ();
 		}
 
 
@@ -783,7 +791,7 @@ namespace Epsitec.Aider.Entities
 												() => new List<AiderGroupParticipantEntity> ());
 		}
 
-		private IList<AiderContactEntity> GetGroupAndSubGroupParticipants(int? count = null)
+		private IList<AiderContactEntity> GetGroupAndSubGroupParticipantContacts(int? count = null)
 		{
 			return this.ExecuteWithDataContext (c => this.FindGroupAndSubGroupParticipants (c, count),
 												() => new List<AiderContactEntity> ());

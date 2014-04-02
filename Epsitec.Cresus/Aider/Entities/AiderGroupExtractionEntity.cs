@@ -39,7 +39,7 @@ namespace Epsitec.Aider.Entities
 		public IEnumerable<AiderContactEntity> GetAllContacts(DataContext dataContext)
 		{
 			var groups   = this.ExecuteSearch (dataContext);
-			var contacts = groups.SelectMany (g => g.GetAllGroupAndSubGroupParticipants ());
+			var contacts = groups.SelectMany (g => g.GetAllGroupAndSubGroupParticipantContacts ());
 
 			System.Diagnostics.Debug.WriteLine ("Groups found: {0}", groups.Count ());
 			System.Diagnostics.Debug.WriteLine ("Contacts found: {0}", contacts.Count ());

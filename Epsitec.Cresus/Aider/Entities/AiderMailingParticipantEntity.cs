@@ -103,7 +103,7 @@ namespace Epsitec.Aider.Entities
 
 		public static void Create(BusinessContext context, AiderMailingEntity mailing, AiderGroupEntity group)
 		{		
-			foreach (var contact in group.GetAllGroupAndSubGroupParticipants ().Distinct())
+			foreach (var contact in group.GetAllGroupAndSubGroupParticipantContacts ().Distinct())
 			{
 				var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
 
