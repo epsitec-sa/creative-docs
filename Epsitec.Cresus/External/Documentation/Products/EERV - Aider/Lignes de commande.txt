@@ -222,3 +222,19 @@ SVN update > r22861
 -initofficemanagement
 -echupdate -newechfile:S:\eerv\eerv-2014-03-20.xml -oldechfile:S:\eerv\eerv-2014-03-13.xml -output:s:\eerv\ech-diff-2014-03-20.md
 
+Lancé le 27.03.2014
+-------------------
+
+SVN update > r22877
+
+-echupdate -newechfile:S:\eerv\eerv-2014-03-27.xml -oldechfile:S:\eerv\eerv-2014-03-20.xml -output:s:\eerv\ech-diff-2014-03-27.md
+
+
+Lancé le 02.04.2014
+-------------------
+
+SVN Update > r22893
+
+-fixparticipations
+-hotfixderogations
+-fixparticipations
