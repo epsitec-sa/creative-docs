@@ -20,7 +20,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Associer à un nouveau ménage");
+			return Resources.Text ("Placer dans un nouveau ménage...");
 		}
 
 		public override ActionExecutor GetExecutor()

@@ -25,42 +25,35 @@ using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (12)]
-	public sealed class ActionAiderPersonViewController12Relocate : ActionViewController<AiderPersonEntity>
+	[ControllerSubType (13)]
+	public sealed class ActionAiderPersonViewController13DeleteContact : ActionViewController<AiderPersonEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Placer la personne dans un autre ménage...");
+			return Resources.Text ("Supprimer le contact...");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create <AiderHouseholdEntity,bool,bool>(this.Execute);
+			return ActionExecutor.Create<bool> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
 			form
-				.Title ("Changement de ménage")
-				.Field<AiderHouseholdEntity> ()
-					.Title ("Choix du nouveau ménage")
-				.End ()
+				.Title ("Supprimer le contact")
 				.Field<bool> ()
-					.Title ("En tant que chef de ménage ?")
-					.InitialValue (false)
-				.End ()
-				.Field<bool> ()
-					.Title ("Conserver la présence dans le ménage actuel ?")
+					.Title ("Confirmer la suppresion ?")
 					.InitialValue (false)
 				.End ()
 			.End ();
 		}
 
-		private void Execute(AiderHouseholdEntity newHousehold,bool isHead,bool stayInPlace)
+		private void Execute(bool confirmed)
 		{
-			var currentHousehold = this.Entity.MainContact.Household;
-			if (!stayInPlace)
+			if (confirmed)
 			{
+				var currentHousehold = this.Entity.MainContact.Household;
 				AiderContactEntity.Delete (this.BusinessContext, this.Entity.MainContact, true);
 				currentHousehold.RefreshCache ();
 				var currentSubscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, currentHousehold);
@@ -68,14 +61,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				{
 					currentSubscription.RefreshCache ();
 				}
-			}
-	
-			AiderContactEntity.Create (this.BusinessContext, this.Entity, newHousehold, isHead);			
-			newHousehold.RefreshCache ();
-			var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, newHousehold);
-			if (subscription.IsNotNull ())
-			{
-				subscription.RefreshCache ();
 			}
 		}
 	}
