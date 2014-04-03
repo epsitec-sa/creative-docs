@@ -131,6 +131,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				nextEvent != TerminalEvent.In)
 			{
 				yield return EventType.Modification;
+				yield return EventType.Revaluation;
+				yield return EventType.Revalorization;
 				yield return EventType.MainValue;
 				yield return EventType.AmortizationExtra;
 			}

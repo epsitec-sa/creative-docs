@@ -157,6 +157,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EventType.Modification:
 					return "Modification générale";
 
+				case EventType.Revaluation:
+					return "Réévaluation";
+
+				case EventType.Revalorization:
+					return "Revalorisation";
+
 				case EventType.MainValue:
 					return "Modification valeur";
 

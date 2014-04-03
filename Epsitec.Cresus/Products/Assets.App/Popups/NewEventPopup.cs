@@ -180,7 +180,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				yield return EventType.Input;
 				yield return EventType.Modification;
-				yield return EventType.MainValue;
+				yield return EventType.Revaluation;
+				yield return EventType.Revalorization;
+				//?yield return EventType.MainValue;
 				//?yield return EventType.AmortizationExtra;
 				yield return EventType.Output;
 			}
@@ -199,8 +201,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				case EventType.Modification:
 					return new ButtonDescription (type, "Modification générale", "Modification de diverses informations,<br/>sauf de la valeur comptable", enable);
 
+				case EventType.Revaluation:
+					return new ButtonDescription (type, "Réévaluation", "Réévaluation de la valeur comptable", enable);
+
+				case EventType.Revalorization:
+					return new ButtonDescription (type, "Revalorisation", "Revalorisation de la valeur comptable", enable);
+
 				case EventType.MainValue:
-					return new ButtonDescription (type, "Ajustement de la valeur comptable", "Revalorisation, réévaluation, etc.", enable);
+					return new ButtonDescription (type, "Ajustement de la valeur comptable", "Ajustement extraordinaire de la valeur comptable", enable);
 
 				case EventType.AmortizationExtra:
 					return new ButtonDescription (type, "Amortissement extraordinaire", "Amortissement de la valeur comptable", enable);

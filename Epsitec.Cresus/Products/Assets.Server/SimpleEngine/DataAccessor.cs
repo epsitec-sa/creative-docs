@@ -165,9 +165,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					aa.EntryScenario = EntryScenario.Purchase;
 					break;
 
+				case EventType.Revaluation:
+				case EventType.Revalorization:
 				case EventType.MainValue:
-				aa.AmortizationType = AmortizationType.Unknown;  // montant fixe
-				aa.EntryScenario = EntryScenario.Revaluation;
+					aa.AmortizationType = AmortizationType.Unknown;  // montant fixe
+					aa.EntryScenario = EntryScenario.Revaluation;
 					break;
 
 				case EventType.AmortizationAuto:

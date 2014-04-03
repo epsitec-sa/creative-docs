@@ -630,7 +630,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2012, 7, 12), EventType.MainValue);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2012, 7, 12), EventType.Revaluation);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 12000.0m);
 					}
@@ -674,7 +674,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 
 					{
-						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2012, 12, 31), EventType.MainValue);
+						var e = DummyMandat.Accessor.CreateAssetEvent (o, new System.DateTime (2012, 12, 31), EventType.Revaluation);
 						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyMandat.EventNumber++).ToString ()));
 						DummyMandat.NewAmortizedAmount (o, e, 4600.0m);
 					}
