@@ -109,6 +109,43 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public void SetParishOrRegion(BusinessContext businessContext, AiderGroupEntity group)
+		{
+			var currentParish = this.Parish;
+
+			if (this.Contact.IsNotNull ())
+			{
+				if (this.Office.IsNotNull ())
+				{
+					var office = AiderOfficeManagementEntity.Find (businessContext,group);
+					if(office.IsNotNull ())
+					{
+						AiderOfficeManagementEntity.JoinOfficeManagement (businessContext, office, this);
+					}
+				}
+				else
+				{
+					//Stop old usergroup participation
+					var currentUserGroup = currentParish.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
+					if (currentUserGroup.IsNotNull ())
+					{
+						currentUserGroup.RemoveParticipations (businessContext, currentUserGroup.FindParticipationsByGroup (businessContext, this.Contact, currentUserGroup));
+					}
+					//Create usergroup participation
+					var newUserGroup = group.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
+					if (newUserGroup.IsNotNull ())
+					{
+						var participationData = new List<ParticipationData> ();
+						participationData.Add (new ParticipationData (this.Contact));
+						newUserGroup.AddParticipations (businessContext, participationData, Date.Today, FormattedText.Null);
+					}
+				}
+			}
+
+			//set new parish
+			this.Parish = group;
+		}
+
 		public void Delete(BusinessContext businessContext)
 		{
 			this.CustomUISettings.Delete (businessContext);

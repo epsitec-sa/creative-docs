@@ -80,7 +80,7 @@ namespace Epsitec.Aider.Entities
 			{
 				//Stop old usergroup participation
 				var currentUserGroup = currentOffice.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
-				currentUserGroup.RemoveParticipations (businessContext, currentUserGroup.FindParticipations (businessContext, contact));
+				currentUserGroup.RemoveParticipations (businessContext, currentUserGroup.FindParticipationsByGroup (businessContext, contact, currentUserGroup));
 
 				//try to remap old sender settings
 				var oldSender = AiderOfficeSenderEntity.Find (businessContext, contact);
