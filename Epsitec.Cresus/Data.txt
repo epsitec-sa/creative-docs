@@ -80,6 +80,7 @@ DataObject Groups
 -----------------
 
     Guid		GroupParent
+    string		Number
     string		Name
     string		Description
 

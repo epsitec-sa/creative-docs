@@ -85,5 +85,37 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//-return string.Join (" → ", list);  // 2192
 			return string.Join ("  ►  ", list);  // 25BA
 		}
+
+		public static string GetSortingValue(DataAccessor accessor, Guid guid)
+		{
+			//	Retourne le numéro d'un groupe en vue du tri, du genre:
+			//	"100.30/20/400"
+			var list = new List<string> ();
+
+			while (!guid.IsEmpty)
+			{
+				var obj = accessor.GetObject (BaseType.Groups, guid);
+				if (obj == null)
+				{
+					break;
+				}
+
+				string s = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Number);
+				if (string.IsNullOrEmpty (s))
+				{
+					s = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+				}
+
+				list.Insert (0, s);
+				guid = ObjectProperties.GetObjectPropertyGuid (obj, null, ObjectField.GroupParent);
+			}
+
+			if (list.Count > 1)
+			{
+				list.RemoveAt (0);  // supprime le premier nom "Groupes"
+			}
+
+			return string.Join ("/", list);
+		}
 	}
 }

@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
 
-			this.sortingInstructions = SortingInstructions.Default;
+			this.sortingInstructions = new SortingInstructions (ObjectField.Number, SortedType.Ascending, ObjectField.Name, SortedType.Ascending);
 		}
 
 
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.treeTableController.AddSortedColumn (0);
+			this.treeTableController.AddSortedColumn (1);  // colonne "Numéro"
 		}
 
 

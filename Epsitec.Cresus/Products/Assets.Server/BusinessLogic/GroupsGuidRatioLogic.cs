@@ -14,14 +14,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Retourne la liste des champs, triés par ordre alphabétique des noms
 			//	complets des groupes.
 			return GroupsGuidRatioLogic.GetUsedFields (accessor)
-				.OrderBy (x => GroupsGuidRatioLogic.GetName (accessor, x));
+				.OrderBy (x => GroupsGuidRatioLogic.GetSortingValue (accessor, x));
 		}
 
-		private static string GetName(DataAccessor accessor, ObjectField field)
+		private static string GetSortingValue(DataAccessor accessor, ObjectField field)
 		{
-			//	Retourne le nom complet d'un groupe, en vue du tri.
+			//	Retourne le numéro d'un groupe, en vue du tri.
 			var gr = accessor.EditionAccessor.GetFieldGuidRatio (field);
-			return GroupsLogic.GetFullName (accessor, gr.Guid);
+			return GroupsLogic.GetSortingValue (accessor, gr.Guid);
 		}
 
 		private static IEnumerable<ObjectField> GetUsedFields(DataAccessor accessor)

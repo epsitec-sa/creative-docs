@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (this.baseType == BaseType.Groups)
 				{
-					return SortingInstructions.Default;
+					return new SortingInstructions (ObjectField.Number, SortedType.Ascending, ObjectField.Name, SortedType.Ascending);
 				}
 				else if (this.baseType == BaseType.Accounts)
 				{

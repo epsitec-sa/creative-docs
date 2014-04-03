@@ -27,7 +27,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
-			this.nodeGetter.SetParams (null, SortingInstructions.Default);
+			var sorting = new SortingInstructions (ObjectField.Number, SortedType.Ascending, ObjectField.Name, SortedType.Ascending);
+			this.nodeGetter.SetParams (null, sorting);
 
 			this.visibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
 			this.hasFilter = (this.visibleSelectedRow != -1);
