@@ -25,6 +25,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public bool AtLeastOneTime
+		{
+			get
+			{
+				return this.IncludeFrom < this.ExcludeTo;
+			}
+		}
+
 		public Timestamp FromTimestamp
 		{
 			get

@@ -129,13 +129,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.RemoveEvents (obj, EventType.AmortizationPreview, DateRange.Full);
 
 			//	Passe en revue les périodes.
+			System.DateTime? lastToDate = null;
+
 			foreach (var period in Amortizations.GetPeriods (processRange, obj))
 			{
-				var ad = Amortizations.GetAmortizationDetails (obj, period.IncludeFrom);
+				var ad = Amortizations.GetAmortizationDetails (obj, period.IncludeFrom, lastToDate);
 				if (!ad.IsEmpty)
 				{
 					//	On crée un aperçu de l'amortissement au 31.12.
 					this.CreateAmortizationPreview (obj, period.ExcludeTo.AddDays (-1), ad);
+
+					lastToDate = period.ExcludeTo;
 				}
 			}
 
@@ -158,47 +162,37 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var beginDate = new System.DateTime (processRange.IncludeFrom.Year, 1, 1);
 
+					if (beginDate < inputDate)
+					{
+						beginDate = inputDate;
+					}
+
 					while (beginDate < processRange.ExcludeTo)
 					{
 						var def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (beginDate, 0));
-
-						if (def.IsEmpty)
-						{
-							//	Si l'objet n'est pas entré au début de l'année, mais qu'il l'est plus
-							//	tard dans la période choisie (processRange), on démarre un amortissement
-							//	au début de l'année d'entrée, au prorata de la durée.
-							def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (inputDate, 0));
-
-							if (def.IsEmpty)
-							{
-								beginDate = new System.DateTime (inputDate.Year, 1, 1);
-							}
-							else
-							{
-								beginDate = def.GetBeginRangeDate (beginDate);
-							}
-						}
+						System.DateTime endDate;
 
 						if (def.IsEmpty)
 						{
 							//	Si aucune définition d'amortissement n'existe, on essaie de nouveaux
 							//	amortissements à partir de l'année prochaine.
-							beginDate = beginDate.AddYears (1);
+							endDate = beginDate.AddYears (1);
 						}
 						else
 						{
-							var endDate = beginDate.AddMonths (def.PeriodMonthCount);
+							endDate = beginDate.AddMonths (def.PeriodMonthCount);
 							endDate = def.GetBeginRangeDate (endDate);
-							yield return new DateRange (beginDate, endDate);
 
-							beginDate = endDate;
+							yield return new DateRange (beginDate, endDate);
 						}
+
+						beginDate = endDate;
 					}
 				}
 			}
 		}
 
-		private static AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date)
+		private static AmortizationDetails GetAmortizationDetails(DataObject obj, System.DateTime date, System.DateTime? lastToDate)
 		{
 			//	Retourne tous les détails sur un amortissement ordinaire.
 			var def = Amortizations.GetAmortizationDefinition (obj, new Timestamp (date, 0));
@@ -233,6 +227,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				//	Si l'objet est entrée durant la période, on utilise sa date d'entrée
 				//	pour calculer l'amortissement "au prorata".
 				valueDate = inputDate;
+			}
+
+			if (lastToDate.HasValue && valueDate < lastToDate.Value)
+			{
+				//	Si une partie de la période a déjà été amortie (par exemple suite à un
+				//	changement de périodicité), on utilise la dernière date amortie pour
+				//	calculer l'amortissement "au prorata".
+				valueDate = lastToDate.Value;
 			}
 
 			var pd = ProrataDetails.ComputeProrata (range, valueDate, def.ProrataType);
@@ -298,11 +300,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			//	On doit parcourir toutes les périodes, pour trouver la définition
 			//	initiatrice de la période.
-			var period = Amortizations.GetPeriods (new DateRange (inputDate, System.DateTime.MaxValue), obj)
+			var period = Amortizations.GetPeriods (new DateRange (inputDate, inputDate.AddYears (100)), obj)
 				.Where (x => defTimestamp.Date >= x.IncludeFrom && defTimestamp.Date < x.ExcludeTo)
 				.FirstOrDefault ();
 
-			if (!period.IsEmpty)
+			if (period.AtLeastOneTime)
 			{
 				defTimestamp = new Timestamp (period.IncludeFrom, 0);
 			}

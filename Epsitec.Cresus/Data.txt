@@ -1,8 +1,10 @@
 Un objet (DataObject) est composé d'événements (DataEvent), eux-mêmes composés de
 propriétés (AbstractDataProperty). Cette structure très générale ne permet pas de
-dégager le schéma des entités, puisque un événement peut contenir n'importe quelles
-propriétés. Ce document indique les propriétés réellements utilisées pour chaque
-type d'objet. Il est daté (à la fin), car rien ne garantit qu'il soit à jour !
+dégager le schéma des entités, puisque un événement peut potentiellement contenir
+n'importe quelles propriétés. Ce document indique les propriétés réellements
+persistées pour chaque type d'objet (il existe quelques propriétés supplémentaires
+qui sont utilisées temporairement, mais pas persistées, telles que EventDate,
+LastViewsPin, etc.). Il est daté (à la fin), car rien ne garantit qu'il soit à jour !
 
 La première colonne donne le type. Les énumérations (AmortizationType, Periodicity,
 AccountCategory, etc.) sont en fait des propriétés de type 'int'.
@@ -124,4 +126,4 @@ DataObject Entries
     decimal		EntryAmount
 
 
-DR 31.03.2014
+DR 03.04.2014
