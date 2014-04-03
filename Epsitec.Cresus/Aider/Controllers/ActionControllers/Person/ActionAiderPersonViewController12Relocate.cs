@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create <AiderHouseholdEntity,bool>(this.Execute);
+			return ActionExecutor.Create <AiderHouseholdEntity,bool,bool>(this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
@@ -49,22 +49,35 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("En tant que chef de ménage ?")
 					.InitialValue (false)
 				.End ()
+				.Field<bool> ()
+					.Title ("Conserver la présence dans le ménage actuel ?")
+					.InitialValue (false)
+				.End ()
 			.End ();
 		}
 
-		private void Execute(AiderHouseholdEntity newHousehold,bool isHead)
+		private void Execute(AiderHouseholdEntity newHousehold,bool isHead,bool stayInPlace)
 		{
 			var currentHousehold = this.Entity.MainContact.Household;
-			if (currentHousehold.Members.Where (m => currentHousehold.IsHead (m)).Count () > 1 && currentHousehold.IsHead (this.Entity))
+			if (!stayInPlace)
 			{
-				this.Entity.MainContact.Household.RemoveContactInternal (this.Entity.MainContact);
+				currentHousehold.RemoveContactInternal (this.Entity.MainContact);				
+				this.BusinessContext.DeleteEntity (this.Entity.MainContact);
+				currentHousehold.RefreshCache ();
+				var currentSubscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, currentHousehold);
+				if (currentSubscription.IsNotNull ())
+				{
+					currentSubscription.RefreshCache ();
+				}
 			}
-			else
+	
+			AiderContactEntity.Create (this.BusinessContext, this.Entity, newHousehold, isHead);			
+			newHousehold.RefreshCache ();
+			var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, newHousehold);
+			if (subscription.IsNotNull ())
 			{
-				throw new BusinessRuleException ("Impossible de déplacer cette persone, la configuration actuelle du ménage ne le permet pas.");
+				subscription.RefreshCache ();
 			}
-			
-			this.Entity.MainContact = AiderContactEntity.Create (this.BusinessContext, this.Entity, newHousehold, isHead);	
 		}
 	}
 }
