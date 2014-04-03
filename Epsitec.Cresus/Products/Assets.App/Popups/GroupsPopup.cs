@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -184,7 +185,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (this.baseType == BaseType.Groups)
 				{
-					return new SortingInstructions (ObjectField.Number, SortedType.Ascending, ObjectField.Name, SortedType.Ascending);
+					return GroupsLogic.DefaultSorting;
 				}
 				else if (this.baseType == BaseType.Accounts)
 				{

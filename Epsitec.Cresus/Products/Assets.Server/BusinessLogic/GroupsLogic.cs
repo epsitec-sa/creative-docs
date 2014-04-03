@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Server.Helpers;
+using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
@@ -116,6 +117,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			return string.Join ("/", list);
+		}
+
+
+		public static SortingInstructions DefaultSorting
+		{
+			//	Retourne la façon standard de trier les groupes.
+			get
+			{
+				return new SortingInstructions (ObjectField.Number, SortedType.Ascending, ObjectField.Name, SortedType.Ascending);
+			}
 		}
 	}
 }
