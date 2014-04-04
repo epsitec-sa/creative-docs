@@ -98,7 +98,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				return;
 			}
 
-			this.Entity.Move (newParent);
+			this.Entity.Move (newParent, true);
 		}
 
 		protected override void GetForm(ActionBrick<AiderGroupEntity, SimpleBrick<AiderGroupEntity>> form)

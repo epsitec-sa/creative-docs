@@ -449,6 +449,18 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByRequest (request);
 		}
 
+		public static IList<AiderGroupEntity> FindGroupsFromGroupDef(BusinessContext businessContext, AiderGroupDefEntity def)
+		{
+			var dataContext = businessContext.DataContext;
+
+			var example = new AiderGroupEntity ()
+			{
+				GroupDef  = def
+			};
+
+			return dataContext.GetByExample<AiderGroupEntity> (example);
+		}
+
 		public static IList<AiderGroupEntity> FindRootGroups(BusinessContext businessContext)
 		{
 			var dataContext = businessContext.DataContext;
@@ -538,7 +550,7 @@ namespace Epsitec.Aider.Entities
 				throw new System.InvalidOperationException ("This group cannot have subgroups");
 			}
 
-			var path = this.GetNextSubgroupPath ();
+			var path = this.GetNextSubgroupPath (true);
 
 			return this.CreateSubgroup (businessContext, name, path);
 		}
@@ -583,7 +595,7 @@ namespace Epsitec.Aider.Entities
 			businessContext.DeleteEntity (subgroup);
 		}
 
-		public void Move(AiderGroupEntity newParent)
+		public void Move(AiderGroupEntity newParent, bool isCustom)
 		{
 			if (!newParent.CanHaveSubgroups ())
 			{
@@ -606,7 +618,9 @@ namespace Epsitec.Aider.Entities
 			// of the current group. Then we update all their paths and their group level
 
 			var oldPathSize = this.Path.Length;
-			var newPath = newParent.GetNextSubgroupPath ();
+
+
+			var newPath = newParent.GetNextSubgroupPath (isCustom);
 
 			var deltaGroupLevel = newParent.GroupLevel + 1 - this.GroupLevel;
 
@@ -784,7 +798,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private string GetNextSubgroupPath()
+		private string GetNextSubgroupPath(bool isCustom)
 		{
 			// We look for a number that is not used yet in the subgroups.
 
@@ -808,7 +822,14 @@ namespace Epsitec.Aider.Entities
 				throw new System.Exception ("Too many subgroups.");
 			}
 
-			return AiderGroupIds.CreateCustomSubgroupPath (this.Path, number.Value);
+			if (isCustom)
+			{
+				return AiderGroupIds.CreateCustomSubgroupPath (this.Path, number.Value);
+			}
+			else
+			{
+				return AiderGroupIds.CreateDefinitionSubgroupPath (this.Path, number.Value);
+			}
 		}
 
 		

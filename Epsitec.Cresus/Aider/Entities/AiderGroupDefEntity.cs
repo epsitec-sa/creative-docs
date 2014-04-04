@@ -181,6 +181,12 @@ namespace Epsitec.Aider.Entities
 			return businessContext.GetByExample<AiderGroupDefEntity>(example).First ();
 		}
 
+		public bool IsChildOf(AiderGroupDefEntity groupDef)
+		{
+			return AiderGroupIds.IsSameOrWithinGroup (this.PathTemplate, groupDef.PathTemplate)
+				&& this.Level > groupDef.Level;
+		}
+
 		public bool IsRegion()
 		{
 			return this.Level == AiderGroupIds.RegionLevel

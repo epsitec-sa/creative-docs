@@ -41,26 +41,92 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			.End ();
 		}
 
-		private void Execute(AiderGroupDefEntity parent)
+		private void Execute(AiderGroupDefEntity newParentGroupDef)
 		{
-			var currentParent = AiderGroupDefEntity.FindParent(this.BusinessContext,this.Entity);
-			currentParent.Subgroups.Remove(this.Entity);
-			parent.SubgroupsAllowed = true;
-			parent.Subgroups.Add (this.Entity);
-
-			var groupsToMove = AiderGroupEntity.FindGroupsFromPathAndLevel (this.BusinessContext, this.Entity.Level, this.Entity.PathTemplate);
-			
-			
-			var number = AiderGroupIds.FindNextSubGroupDefNumber (parent.Subgroups.Select (s => s.PathTemplate), 'D');
-			this.Entity.PathTemplate = AiderGroupIds.CreateDefinitionSubgroupPath (parent.PathTemplate, number);
-			var newParent = AiderGroupEntity.FindGroups (this.BusinessContext, AiderGroupIds.GetParentPath (this.Entity.PathTemplate)).Single ();
-			
-			foreach (var group in groupsToMove)
+			if (newParentGroupDef == this.Entity)
 			{
-				group.Move (newParent);
+				var message = "Un groupe ne peut pas être déplacé dans lui-même";
+
+				throw new BusinessRuleException (message);
 			}
 
-			
+			if (newParentGroupDef.Level > AiderGroupIds.MaxGroupLevel)
+			{
+				var message = "Impossible de créer plus de " + (AiderGroupIds.MaxGroupLevel + 1) + " niveaux de groupes";
+
+				throw new BusinessRuleException (message);
+			}
+
+			if (newParentGroupDef.IsChildOf (this.Entity))
+			{
+				var message = "Un groupe ne peut pas être déplacé dans un de ses sous groupes.";
+
+				throw new BusinessRuleException (message);
+			}
+
+			var currentParent = AiderGroupDefEntity.FindParent (this.BusinessContext, this.Entity);
+
+
+			if (AiderGroupIds.IsWithinRegion (currentParent.PathTemplate.Replace('_','0')) && !AiderGroupIds.IsWithinRegion (newParentGroupDef.PathTemplate.Replace('_','0')))
+			{
+				throw new BusinessRuleException ("Opération impossible, le groupe parent ne provient pas d'une région");
+			}
+
+			if (!AiderGroupIds.IsWithinRegion (currentParent.PathTemplate.Replace ('_', '0')) && AiderGroupIds.IsWithinRegion (newParentGroupDef.PathTemplate.Replace ('_', '0')))
+			{
+				throw new BusinessRuleException ("Opération impossible, le groupe parent provient d'une région");
+			}
+
+			if (AiderGroupIds.IsWithinParish (currentParent.PathTemplate.Replace ('_', '0')) && !AiderGroupIds.IsWithinParish (newParentGroupDef.PathTemplate.Replace ('_', '0')))
+			{
+				throw new BusinessRuleException ("Opération impossible, le groupe parent ne provient pas d'une paroisse");
+			}
+
+			if (!AiderGroupIds.IsWithinParish (currentParent.PathTemplate.Replace ('_', '0')) && AiderGroupIds.IsWithinParish (newParentGroupDef.PathTemplate.Replace ('_', '0')))
+			{
+				throw new BusinessRuleException ("Opération impossible, le groupe parent provient d'une paroisse");
+			}
+
+			var groupsToMove = AiderGroupEntity.FindGroupsFromGroupDef (this.BusinessContext, this.Entity);
+
+			currentParent.Subgroups.Remove(this.Entity);
+			newParentGroupDef.SubgroupsAllowed = true;
+			newParentGroupDef.Subgroups.Add (this.Entity);
+
+		
+			var number = AiderGroupIds.FindNextSubGroupDefNumber (newParentGroupDef.Subgroups.Select (s => s.PathTemplate), 'D');
+			this.Entity.PathTemplate = AiderGroupIds.CreateDefinitionSubgroupPath (newParentGroupDef.PathTemplate, number);
+			this.Entity.Level = newParentGroupDef.Level + 1;
+
+			var newParents = AiderGroupEntity.FindGroupsFromGroupDef (this.BusinessContext, newParentGroupDef);
+
+			foreach (var newParent in newParents)
+			{
+				foreach (var group in groupsToMove)
+				{
+					if (AiderGroupIds.IsWithinRegion (group.Path))
+					{
+						if (AiderGroupIds.IsWithinSameRegion (group.Path, newParent.Path))
+						{
+							if (AiderGroupIds.IsWithinParish (group.Path))
+							{
+								if (AiderGroupIds.IsWithinSameParish (group.Path, newParent.Path))
+								{
+									group.Move (newParent, false);
+								}
+							}
+							else
+							{
+								group.Move (newParent,false);
+							}
+						}
+					}
+					else
+					{
+						group.Move (newParent,false);
+					}
+				}
+			}
 		}
 	}
 }
