@@ -17,7 +17,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return "Créer un nouvelle fonction";
+			if (this.Entity.Level == 0)
+			{
+				return "Créer une fonction générale";
+			}
+			else
+			{
+				return "Ajouter une fonction";
+			}
+			
 		}
 
 		public override ActionExecutor GetExecutor()

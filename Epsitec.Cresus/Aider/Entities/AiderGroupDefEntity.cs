@@ -151,8 +151,8 @@ namespace Epsitec.Aider.Entities
 			aiderGroupDef.Name = name;
 			aiderGroupDef.Number = ""; //?
 			aiderGroupDef.Level = parent.Level + 1;
-			aiderGroupDef.SubgroupsAllowed = true;
-			aiderGroupDef.MembersAllowed = false;
+			
+			
 			aiderGroupDef.Classification = GroupClassification.Function;
 			aiderGroupDef.Mutability = Mutability.None;
 
@@ -160,11 +160,15 @@ namespace Epsitec.Aider.Entities
 			{
 				var number = AiderGroupIds.FindNextSubGroupDefNumber (parent.Subgroups.Select (g => g.PathTemplate), 'D');
 				aiderGroupDef.PathTemplate = AiderGroupIds.CreateDefinitionSubgroupPath (parent.PathTemplate, number);
+				aiderGroupDef.MembersAllowed = false;
+				aiderGroupDef.SubgroupsAllowed = true;
 			}
 			else
 			{
 				var number = AiderGroupIds.FindNextSubGroupDefNumber (parent.Subgroups.Select (g => g.PathTemplate), 'F');
 				aiderGroupDef.PathTemplate = AiderGroupIds.CreateFunctionSubgroupPath (parent.PathTemplate, number);
+				aiderGroupDef.MembersAllowed = true;
+				aiderGroupDef.SubgroupsAllowed = false;
 			}
 			
 			//uplink
