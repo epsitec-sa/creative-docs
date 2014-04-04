@@ -56,18 +56,31 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return ProrataDetails.Empty;
 
 				case ProrataType.Prorata12:
+					System.DateTime v;
+
+					if (valueDate == range.IncludeFrom)
+					{
+						v = valueDate;
+					}
+					else
+					{
+						//	Le mois en cours n'est pas amorti. Ainsi, un objet entré le 10 mars
+						//	sera amorti à partir d'avril.
+						v = new System.DateTime (valueDate.Year, valueDate.Month, 1).AddMonths (1);
+					}
+
+					n = ProrataDetails.GetMonthsCount (v)               - ProrataDetails.GetMonthsCount (range.IncludeFrom);
 					d = ProrataDetails.GetMonthsCount (range.ExcludeTo) - ProrataDetails.GetMonthsCount (range.IncludeFrom);
-					n = ProrataDetails.GetMonthsCount (valueDate)       - ProrataDetails.GetMonthsCount (range.IncludeFrom);
 					break;
 
 				case ProrataType.Prorata360:
-					d = ProrataDetails.GetDaysCount (range.ExcludeTo) - ProrataDetails.GetDaysCount (range.IncludeFrom);
 					n = ProrataDetails.GetDaysCount (valueDate)       - ProrataDetails.GetDaysCount (range.IncludeFrom);
+					d = ProrataDetails.GetDaysCount (range.ExcludeTo) - ProrataDetails.GetDaysCount (range.IncludeFrom);
 					break;
 
 				default:
-					d = range.ExcludeTo.Subtract (range.IncludeFrom).Days;
 					n = valueDate.Subtract (range.IncludeFrom).Days;
+					d = range.ExcludeTo.Subtract (range.IncludeFrom).Days;
 					break;
 			}
 
