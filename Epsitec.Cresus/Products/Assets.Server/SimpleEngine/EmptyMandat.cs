@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		public static DataMandat GetMandat()
 		{
-			return new DataMandat ("Vide", new System.DateTime (2000, 1, 1), new System.DateTime (2050, 12, 31));
+			return new DataMandat ("Vide", new System.DateTime (2000, 1, 1));
 		}
 
 		public static void AddDummyData(DataAccessor accessor)

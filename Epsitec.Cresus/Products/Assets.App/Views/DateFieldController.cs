@@ -351,9 +351,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case DateType.BeginMandat:
 					return "Début du mandat";
 
-				case DateType.EndMandat:
-					return "Fin du mandat";
-
 				case DateType.BeginPreviousYear:
 					return "Début de l'année précédente";
 
@@ -440,9 +437,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case DateType.BeginMandat:
 					return this.accessor.Mandat.StartDate;
 
-				case DateType.EndMandat:
-					return this.accessor.Mandat.EndDate;
-
 				case DateType.BeginPreviousYear:
 					return new System.DateTime (now.Year-1, 1, 1);
 
@@ -492,13 +486,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				yield return DateType.BeginMandat;
-				yield return DateType.EndMandat;
 
 				yield return DateType.Separator;
 				yield return DateType.Separator;
 
 				yield return DateType.BeginPreviousYear;
-				yield return DateType.EndPreviousYear;
 
 				yield return DateType.Separator;
 
@@ -534,7 +526,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			Separator,
 
 			BeginMandat,
-			EndMandat,
 
 			BeginPreviousYear,
 			EndPreviousYear,

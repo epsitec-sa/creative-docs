@@ -540,7 +540,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateData(System.DateTime? forcedDate)
 		{
 			var start = this.accessor.StartDate;
-			var end   = this.accessor.EndDate;
+			var end   = this.accessor.StartDate.AddYears (100);
 
 			this.timelineData.Compute (this.objectGuid, this.timelineMode, start, end, forcedDate);
 

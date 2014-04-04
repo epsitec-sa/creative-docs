@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		public static DataMandat GetMandat()
 		{
-			return new DataMandat ("Exemple", new System.DateTime (2000, 1, 1), new System.DateTime (2050, 12, 31));
+			return new DataMandat ("Exemple", new System.DateTime (2000, 1, 1));
 		}
 
 		public static void AddDummyData(DataAccessor accessor)
@@ -24,25 +24,25 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			DummyPersons.AddPersons (accessor.Mandat);
 			DummyCategories.AddCategories (accessor.Mandat);
 			DummyGroups.AddGroups (accessor.Mandat);
-			DummyMandat.AddObjects (accessor.Mandat);
+			DummyMandat.AddAssets (accessor.Mandat);
 		}
 
 
 		private static void AddSettings(DataMandat mandat)
 		{
-			DummyMandat.fieldName        = DummyMandat.AddSettings (mandat, BaseType.Assets, "Nom",              FieldType.String,         180, 380,  1,    1,     0);
-			DummyMandat.fieldNumber      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro",           FieldType.String,          90,  90,  1,    null,  0);
-			DummyMandat.fieldOwner       = DummyMandat.AddSettings (mandat, BaseType.Assets, "Propriétaire",     FieldType.String,         120, 380,  1,    null,  0);
-			DummyMandat.fieldColor       = DummyMandat.AddSettings (mandat, BaseType.Assets, "Couleur",          FieldType.String,         100, 380,  1,    null,  0);
-			DummyMandat.fieldSerial      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro de série",  FieldType.String,         150, 380,  1,    null,  0);
-			DummyMandat.fieldPerson1     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Responsable",      FieldType.GuidPerson,     150, null, null, null, 10);
-			DummyMandat.fieldPerson2     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Fournisseur",      FieldType.GuidPerson,     150, null, null, null,  0);
-			DummyMandat.fieldPerson3     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Maintenance",      FieldType.GuidPerson,     150, null, null, null,  0);
-			DummyMandat.fieldPerson4     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Concierge",        FieldType.GuidPerson,     150, null, null, null,  0);
-			DummyMandat.fieldPerson5     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Conseiller",       FieldType.GuidPerson,     150, null, null, null,  0);
-			DummyMandat.fieldValue1      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur assurance", FieldType.ComputedAmount, 110, null, null, null, 10);
-			DummyMandat.fieldValue2      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur fiscale",   FieldType.ComputedAmount, 110, null, null, null,  0);
-			DummyMandat.fieldAssetDesc   = DummyMandat.AddSettings (mandat, BaseType.Assets, "Description",      FieldType.String,         120, 380,  5,    null, 10);
+			DummyMandat.fieldName      = DummyMandat.AddSettings (mandat, BaseType.Assets, "Nom",              FieldType.String,         180, 380,  1,    1,     0);
+			DummyMandat.fieldNumber    = DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro",           FieldType.String,          90,  90,  1,    null,  0);
+			DummyMandat.fieldOwner     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Propriétaire",     FieldType.String,         120, 380,  1,    null,  0);
+			DummyMandat.fieldColor     = DummyMandat.AddSettings (mandat, BaseType.Assets, "Couleur",          FieldType.String,         100, 380,  1,    null,  0);
+			DummyMandat.fieldSerial    = DummyMandat.AddSettings (mandat, BaseType.Assets, "Numéro de série",  FieldType.String,         150, 380,  1,    null,  0);
+			DummyMandat.fieldPerson1   = DummyMandat.AddSettings (mandat, BaseType.Assets, "Responsable",      FieldType.GuidPerson,     150, null, null, null, 10);
+			DummyMandat.fieldPerson2   = DummyMandat.AddSettings (mandat, BaseType.Assets, "Fournisseur",      FieldType.GuidPerson,     150, null, null, null,  0);
+			DummyMandat.fieldPerson3   = DummyMandat.AddSettings (mandat, BaseType.Assets, "Maintenance",      FieldType.GuidPerson,     150, null, null, null,  0);
+			DummyMandat.fieldPerson4   = DummyMandat.AddSettings (mandat, BaseType.Assets, "Concierge",        FieldType.GuidPerson,     150, null, null, null,  0);
+			DummyMandat.fieldPerson5   = DummyMandat.AddSettings (mandat, BaseType.Assets, "Conseiller",       FieldType.GuidPerson,     150, null, null, null,  0);
+			DummyMandat.fieldValue1    = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur assurance", FieldType.ComputedAmount, 110, null, null, null, 10);
+			DummyMandat.fieldValue2    = DummyMandat.AddSettings (mandat, BaseType.Assets, "Valeur fiscale",   FieldType.ComputedAmount, 110, null, null, null,  0);
+			DummyMandat.fieldAssetDesc = DummyMandat.AddSettings (mandat, BaseType.Assets, "Description",      FieldType.String,         120, 380,  5,    null, 10);
 
 			DummyPersons.AddSettings (mandat);
 		}
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		internal static void AddObjects(DataMandat mandat)
+		internal static void AddAssets(DataMandat mandat)
 		{
 			var objects = mandat.GetData (BaseType.Assets);
 
