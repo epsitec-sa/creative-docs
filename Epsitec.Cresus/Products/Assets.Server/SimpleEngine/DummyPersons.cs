@@ -11,19 +11,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		public static void AddSettings(DataMandat mandat)
 		{
-			DummyPersons.fieldLastName    = DummyPersons.AddSettings (mandat, BaseType.Persons, "Nom",            FieldType.String, 120, 380, 1, 2,     0);
-			DummyPersons.fieldFirstName   = DummyPersons.AddSettings (mandat, BaseType.Persons, "Prénom",         FieldType.String, 120, 380, 1, 1,     0);
-			DummyPersons.fieldTitle       = DummyPersons.AddSettings (mandat, BaseType.Persons, "Titre",          FieldType.String,  80, 120, 1, null,  0);
-			DummyPersons.fieldCompany     = DummyPersons.AddSettings (mandat, BaseType.Persons, "Entreprise",     FieldType.String, 120, 380, 1, 3,     0);
-			DummyPersons.fieldAddress     = DummyPersons.AddSettings (mandat, BaseType.Persons, "Adresse",        FieldType.String, 150, 380, 2, null,  0);
-			DummyPersons.fieldZip         = DummyPersons.AddSettings (mandat, BaseType.Persons, "NPA",            FieldType.String,  50,  60, 1, null,  0);
-			DummyPersons.fieldCity        = DummyPersons.AddSettings (mandat, BaseType.Persons, "Ville",          FieldType.String, 120, 380, 1, null,  0);
-			DummyPersons.fieldCountry     = DummyPersons.AddSettings (mandat, BaseType.Persons, "Pays",           FieldType.String, 120, 380, 1, null,  0);
-			DummyPersons.fieldPhone1      = DummyPersons.AddSettings (mandat, BaseType.Persons, "Tél. prof.",     FieldType.String, 100, 120, 1, null, 10);
-			DummyPersons.fieldPhone2      = DummyPersons.AddSettings (mandat, BaseType.Persons, "Tél. privé",     FieldType.String, 100, 120, 1, null,  0);
-			DummyPersons.fieldPhone3      = DummyPersons.AddSettings (mandat, BaseType.Persons, "Tél. portable",  FieldType.String, 100, 120, 1, null,  0);
-			DummyPersons.fieldMail        = DummyPersons.AddSettings (mandat, BaseType.Persons, "E-mail",         FieldType.String, 200, 380, 1, null,  0);
-			DummyPersons.fieldPersonDesc  = DummyPersons.AddSettings (mandat, BaseType.Persons, "Description",    FieldType.String, 200, 380, 5, null, 10);
+			DummyPersons.fieldLastName    = DummyPersons.AddSettings (mandat, BaseType.Persons, "Nom",           FieldType.String, 120, 380, 1, 2,     0);
+			DummyPersons.fieldFirstName   = DummyPersons.AddSettings (mandat, BaseType.Persons, "Prénom",        FieldType.String, 120, 380, 1, 1,     0);
+			DummyPersons.fieldTitle       = DummyPersons.AddSettings (mandat, BaseType.Persons, "Titre",         FieldType.String,  80, 120, 1, null,  0);
+			DummyPersons.fieldCompany     = DummyPersons.AddSettings (mandat, BaseType.Persons, "Entreprise",    FieldType.String, 120, 380, 1, 3,     0);
+			DummyPersons.fieldAddress     = DummyPersons.AddSettings (mandat, BaseType.Persons, "Adresse",       FieldType.String, 150, 380, 2, null,  0);
+			DummyPersons.fieldZip         = DummyPersons.AddSettings (mandat, BaseType.Persons, "NPA",           FieldType.String,  50,  60, 1, null,  0);
+			DummyPersons.fieldCity        = DummyPersons.AddSettings (mandat, BaseType.Persons, "Ville",         FieldType.String, 120, 380, 1, null,  0);
+			DummyPersons.fieldCountry     = DummyPersons.AddSettings (mandat, BaseType.Persons, "Pays",          FieldType.String, 120, 380, 1, null,  0);
+			DummyPersons.fieldPhone1      = DummyPersons.AddSettings (mandat, BaseType.Persons, "Tél. prof.",    FieldType.String, 100, 120, 1, null, 10);
+			DummyPersons.fieldPhone2      = DummyPersons.AddSettings (mandat, BaseType.Persons, "Tél. privé",    FieldType.String, 100, 120, 1, null,  0);
+			DummyPersons.fieldPhone3      = DummyPersons.AddSettings (mandat, BaseType.Persons, "Tél. portable", FieldType.String, 100, 120, 1, null,  0);
+			DummyPersons.fieldMail        = DummyPersons.AddSettings (mandat, BaseType.Persons, "E-mail",        FieldType.String, 200, 380, 1, null,  0);
+			DummyPersons.fieldPersonDesc  = DummyPersons.AddSettings (mandat, BaseType.Persons, "Description",   FieldType.String, 200, 380, 5, null, 10);
 		}
 
 		internal static ObjectField AddSettings(DataMandat mandat, BaseType baseType, string name, FieldType type, int columnWidth, int? lineWidth, int? lineCount, int? summaryOrder, int topMargin)

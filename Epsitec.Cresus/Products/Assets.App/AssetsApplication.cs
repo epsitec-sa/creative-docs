@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			get
 			{
-				return 2;
+				return 3;
 			}
 		}
 
@@ -251,11 +251,15 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			if (rank == 0)
 			{
-				return "Exemple";
+				return "MCH2 vide";
 			}
 			else if (rank == 1)
 			{
-				return "Vide";
+				return "MCH2 avec exemples";
+			}
+			else if (rank == 2)
+			{
+				return "Entreprise avec exemples";
 			}
 
 			return "??";
@@ -265,21 +269,27 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			if (rank == 0)
 			{
-				AssetsApplication.CreateEmptyMandat (accessor);
+				AssetsApplication.CreateMCH2Mandat (accessor, false);
 			}
 			else if (rank == 1)
+			{
+				AssetsApplication.CreateMCH2Mandat (accessor, true);
+			}
+			else if (rank == 2)
 			{
 				AssetsApplication.CreateDummyMandat (accessor);
 			}
 		}
 
-		public static void CreateEmptyMandat(DataAccessor accessor)
+		private static void CreateMCH2Mandat(DataAccessor accessor, bool withSamples)
 		{
-			accessor.Mandat = EmptyMandat.GetMandat ();
-			EmptyMandat.AddDummyData (accessor);
+			using (var factory = new MandatFactory (accessor))
+			{
+				factory.Create ("MCH2", new System.DateTime (2010, 1, 1), withSamples);
+			}
 		}
 
-		public static void CreateDummyMandat(DataAccessor accessor)
+		private static void CreateDummyMandat(DataAccessor accessor)
 		{
 			accessor.Mandat = DummyMandat.GetMandat ();
 			DummyMandat.AddDummyData (accessor);

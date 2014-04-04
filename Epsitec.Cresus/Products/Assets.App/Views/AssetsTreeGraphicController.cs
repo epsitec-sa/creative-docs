@@ -87,7 +87,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private int GetDeep(ObjectsNodeGetter nodeGetter)
 		{
-			return nodeGetter.Nodes.Max (x => x.Level) + 1;
+			if (nodeGetter.Nodes.Any ())
+			{
+				return nodeGetter.Nodes.Max (x => x.Level) + 1;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		private void InitializeMinMax(ObjectsNodeGetter nodeGetter)
