@@ -17,7 +17,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			bool isRoot = UserManager.Current.AuthenticatedUser.LoginName == "root";
 
 			wall.AddBrick ()
-				.EnableActionMenu<ActionAiderGroupDefViewController0CreateSubGroupDef> ()
+				.EnableActionMenu<ActionAiderGroupDefViewController0CreateSubGroupDef> ().IfTrue (this.Entity.Classification != Enumerations.GroupClassification.Function)
+				.EnableActionMenu<ActionAiderGroupDefViewController4CreateFunction> ().IfTrue (this.Entity.Classification == Enumerations.GroupClassification.Function)
 				.EnableActionMenu<ActionAiderGroupDefViewController1AssignFunctions> ()
 				.EnableActionMenu<ActionAiderGroupDefViewController2DeleteAll> ()
 				.EnableActionMenu<ActionAiderGroupDefViewController3Move> ()

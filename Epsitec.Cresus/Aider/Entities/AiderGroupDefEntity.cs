@@ -144,6 +144,35 @@ namespace Epsitec.Aider.Entities
 			return aiderGroupDef;
 		}
 
+		public static AiderGroupDefEntity CreateFunctionSubGroup(BusinessContext businessContext, AiderGroupDefEntity parent, string name)
+		{
+			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
+
+			aiderGroupDef.Name = name;
+			aiderGroupDef.Number = ""; //?
+			aiderGroupDef.Level = parent.Level + 1;
+			aiderGroupDef.SubgroupsAllowed = true;
+			aiderGroupDef.MembersAllowed = false;
+			aiderGroupDef.Classification = GroupClassification.Function;
+			aiderGroupDef.Mutability = Mutability.None;
+
+			if (parent.Level == 0)
+			{
+				var number = AiderGroupIds.FindNextSubGroupDefNumber (parent.Subgroups.Select (g => g.PathTemplate), 'D');
+				aiderGroupDef.PathTemplate = AiderGroupIds.CreateDefinitionSubgroupPath (parent.PathTemplate, number);
+			}
+			else
+			{
+				var number = AiderGroupIds.FindNextSubGroupDefNumber (parent.Subgroups.Select (g => g.PathTemplate), 'F');
+				aiderGroupDef.PathTemplate = AiderGroupIds.CreateFunctionSubgroupPath (parent.PathTemplate, number);
+			}
+			
+			//uplink
+			parent.Subgroups.Add (aiderGroupDef);
+
+			return aiderGroupDef;
+		}
+
 		public static AiderGroupDefEntity CreateDefinitionRootGroup(BusinessContext businessContext, string name, GroupClassification groupClass, bool isMutable)
 		{
 			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();

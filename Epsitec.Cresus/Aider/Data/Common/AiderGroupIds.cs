@@ -316,7 +316,7 @@ namespace Epsitec.Aider.Data.Common
 			var subGroupsPathFiltered = subGroupsPath.Where (g => g.ElementAt (g.Length - AiderGroupIds.PartLength) == prefixChar);
 			if (subGroupsPathFiltered.Count () == 0)
 			{
-				return 1;
+				return 0;
 			}
 
 			var subgroupsNumber = subGroupsPathFiltered.Select (g => System.Convert.ToInt32 (g.Substring (g.Length - AiderGroupIds.SuffixStart).TrimEnd ('.')));

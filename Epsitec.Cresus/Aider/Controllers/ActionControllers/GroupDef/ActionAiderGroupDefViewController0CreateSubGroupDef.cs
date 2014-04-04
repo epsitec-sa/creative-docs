@@ -17,7 +17,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return "Créer un nouvelle sous-définition et les sous-groupe";
+			return "Créer un nouvelle sous-définition et les sous-groupes";
 		}
 
 		public override ActionExecutor GetExecutor()

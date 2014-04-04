@@ -90,16 +90,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var groupsToMove = AiderGroupEntity.FindGroupsFromGroupDef (this.BusinessContext, this.Entity);
 
 			currentParent.Subgroups.Remove(this.Entity);
-			newParentGroupDef.SubgroupsAllowed = true;
-			newParentGroupDef.Subgroups.Add (this.Entity);
-
-		
+			
 			var number = AiderGroupIds.FindNextSubGroupDefNumber (newParentGroupDef.Subgroups.Select (s => s.PathTemplate), 'D');
 			this.Entity.PathTemplate = AiderGroupIds.CreateDefinitionSubgroupPath (newParentGroupDef.PathTemplate, number);
 			this.Entity.Level = newParentGroupDef.Level + 1;
 
 			var newParents = AiderGroupEntity.FindGroupsFromGroupDef (this.BusinessContext, newParentGroupDef);
 
+			newParentGroupDef.SubgroupsAllowed = true;
+			newParentGroupDef.Subgroups.Add (this.Entity);
 			foreach (var newParent in newParents)
 			{
 				foreach (var group in groupsToMove)

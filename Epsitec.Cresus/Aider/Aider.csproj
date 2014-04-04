@@ -92,6 +92,7 @@
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController6DeleteContact.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController2DeleteAll.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController3Move.cs" />
+    <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController4CreateFunction.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController0CreateSubGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController2MoveGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController3ImportGroupMembers.cs" />
