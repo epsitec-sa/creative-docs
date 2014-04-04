@@ -26,338 +26,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			///////////////
 
-			{
-				var oParent = new DataObject ();
-				categories.Add (oParent);
-				{
-					var e = new DataEvent (start, EventType.Input);
-					oParent.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-					e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oRoot.Guid));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Catégories MCH2"));
-					e.AddProperty (new DataStringProperty (ObjectField.Number, "100"));
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Terrains"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "100.10"));
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Routes"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "100.20"));
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Traitement des eaux"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "100.30"));
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Travaux de génie civil"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "100.40"));
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Immeubles"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "100.50"));
-					}
-
-					{
-						var oo = new DataObject ();
-						categories.Add (oo);
-						{
-							var e = new DataEvent (start, EventType.Input);
-							oo.AddEvent (e);
-							e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-							e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o.Guid));
-							e.AddProperty (new DataStringProperty (ObjectField.Name, "Bâtiments"));
-							e.AddProperty (new DataStringProperty (ObjectField.Number, "10"));
-						}
-					}
-
-					{
-						var oo = new DataObject ();
-						categories.Add (oo);
-						{
-							var e = new DataEvent (start, EventType.Input);
-							oo.AddEvent (e);
-							e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-							e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o.Guid));
-							e.AddProperty (new DataStringProperty (ObjectField.Name, "Usines"));
-							e.AddProperty (new DataStringProperty (ObjectField.Number, "20"));
-						}
-					}
-
-					{
-						var oo = new DataObject ();
-						categories.Add (oo);
-						{
-							var e = new DataEvent (start, EventType.Input);
-							oo.AddEvent (e);
-							e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-							e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o.Guid));
-							e.AddProperty (new DataStringProperty (ObjectField.Name, "Entrepôts"));
-							e.AddProperty (new DataStringProperty (ObjectField.Number, "21"));
-						}
-					}
-
-					{
-						var oo = new DataObject ();
-						categories.Add (oo);
-						{
-							var e = new DataEvent (start, EventType.Input);
-							oo.AddEvent (e);
-							e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-							e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o.Guid));
-							e.AddProperty (new DataStringProperty (ObjectField.Name, "Ecoles"));
-							e.AddProperty (new DataStringProperty (ObjectField.Number, "11"));
-						}
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Mobilier"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "100.60"));
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Véhicules"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "100.70"));
-					}
-
-					{
-						var oo = new DataObject ();
-						categories.Add (oo);
-						{
-							var e = new DataEvent (start, EventType.Input);
-							oo.AddEvent (e);
-							e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-							e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o.Guid));
-							e.AddProperty (new DataStringProperty (ObjectField.Name, "Camions"));
-							e.AddProperty (new DataStringProperty (ObjectField.Number, "10"));
-						}
-					}
-
-					{
-						var oo = new DataObject ();
-						categories.Add (oo);
-						{
-							var e = new DataEvent (start, EventType.Input);
-							oo.AddEvent (e);
-							e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-							e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o.Guid));
-							e.AddProperty (new DataStringProperty (ObjectField.Name, "Camionnettes"));
-							e.AddProperty (new DataStringProperty (ObjectField.Number, "20"));
-						}
-					}
-
-					{
-						var oo = new DataObject ();
-						categories.Add (oo);
-						{
-							var e = new DataEvent (start, EventType.Input);
-							oo.AddEvent (e);
-							e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-							e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o.Guid));
-							e.AddProperty (new DataStringProperty (ObjectField.Name, "Voitures"));
-							e.AddProperty (new DataStringProperty (ObjectField.Number, "30"));
-						}
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Machines"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "100.80"));
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "En construction"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "100.90"));
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Autres immobilisations"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "100.95"));
-					}
-				}
-			}
-
-			///////////////
-
-			{
-				var oParent = new DataObject ();
-				categories.Add (oParent);
-				{
-					var e = new DataEvent (start, EventType.Input);
-					oParent.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-					e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oRoot.Guid));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Types MCH2"));
-					e.AddProperty (new DataStringProperty (ObjectField.Number, "200"));
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Immobilisations corporelles"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "1"));
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Immobilisations incorporelles"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "2"));
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Immobilisations financières"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "3"));
-					}
-				}
-			}
-
-			///////////////
-
-			{
-				var oParent = new DataObject ();
-				categories.Add (oParent);
-				{
-					var e = new DataEvent (start, EventType.Input);
-					oParent.AddEvent (e);
-					e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-					e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oRoot.Guid));
-					e.AddProperty (new DataStringProperty (ObjectField.Name, "Patrimoine MCH2"));
-					e.AddProperty (new DataStringProperty (ObjectField.Number, "300"));
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Administratif"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "1"));
-					}
-				}
-
-				{
-					var o = new DataObject ();
-					categories.Add (o);
-					{
-						var e = new DataEvent (start, EventType.Input);
-						o.AddEvent (e);
-						e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
-						e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oParent.Guid));
-						e.AddProperty (new DataStringProperty (ObjectField.Name, "Financier"));
-						e.AddProperty (new DataStringProperty (ObjectField.Number, "2"));
-					}
-				}
-			}
-
-			///////////////
-
-#if false
 			var oImmob = new DataObject ();
 			categories.Add (oImmob);
 			{
@@ -366,6 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oRoot.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Name, "Immobilisations"));
+				e.AddProperty (new DataStringProperty (ObjectField.Number, "500"));
 			}
 
 			var o1 = new DataObject ();
@@ -469,7 +138,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o2.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Name, "Voitures"));
 			}
-#endif
 
 			///////////////
 
@@ -481,7 +149,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oRoot.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Name, "Secteurs"));
-				e.AddProperty (new DataStringProperty (ObjectField.Number, "500"));
+				e.AddProperty (new DataStringProperty (ObjectField.Number, "510"));
 			}
 
 			var o31 = new DataObject ();
@@ -538,7 +206,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oRoot.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Name, "Centres de frais"));
-				e.AddProperty (new DataStringProperty (ObjectField.Number, "510"));
+				e.AddProperty (new DataStringProperty (ObjectField.Number, "520"));
 			}
 
 			var o41 = new DataObject ();
@@ -602,7 +270,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oRoot.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Name, "Responsables"));
-				e.AddProperty (new DataStringProperty (ObjectField.Number, "520"));
+				e.AddProperty (new DataStringProperty (ObjectField.Number, "530"));
 			}
 
 			var o51 = new DataObject ();
@@ -694,7 +362,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (DummyGroups.GroupNumber++).ToString ()));
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, oRoot.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Name, "Placements"));
-				e.AddProperty (new DataStringProperty (ObjectField.Number, "530"));
+				e.AddProperty (new DataStringProperty (ObjectField.Number, "540"));
 			}
 
 			var o61 = new DataObject ();
