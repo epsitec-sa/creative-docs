@@ -125,6 +125,26 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.AddPath (path);
 					graphics.RenderSolid (ColorManager.TextColor);
 					break;
+
+				case TimelineGlyph.FilledStar:
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
+					path = PaintEventGlyph.GetStarPath (r);
+
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.TextColor);
+					break;
+
+				case TimelineGlyph.OutlinedStar:
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
+					r.Deflate (0.5);
+					path = PaintEventGlyph.GetStarPath (r);
+
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+					graphics.AddPath (path);
+					graphics.RenderSolid (ColorManager.TextColor);
+					break;
 			}
 		}
 
@@ -169,6 +189,34 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			path.LineTo (rect.Right, rect.Center.Y);
 			path.LineTo (rect.Center.X, rect.Bottom);
 			path.LineTo (rect.Left, rect.Center.Y);
+			path.Close ();
+
+			return path;
+		}
+
+		private static Path GetStarPath(Rectangle rect)
+		{
+			var path = new Path ();
+
+			var c = rect.Center;
+			var e = new Point (c.X, c.Y+rect.Width*0.7);
+			var f = new Point (c.X, c.Y+rect.Width*0.3);
+			const int branch = 5*2;
+
+			for (int i=0; i<branch; i++)
+			{
+				var p = Transform.RotatePointDeg (c, 360.0*i/branch, (i%2 == 0) ? e : f);
+
+				if (i == 0)
+				{
+					path.MoveTo (p);
+				}
+				else
+				{
+					path.LineTo (p);
+				}
+			}
+
 			path.Close ();
 
 			return path;

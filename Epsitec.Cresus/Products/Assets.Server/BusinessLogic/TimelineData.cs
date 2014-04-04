@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return TimelineGlyph.FilledCircle;
 
 				case EventType.Revaluation:
-					return TimelineGlyph.FilledUp;
+					return TimelineGlyph.FilledStar;
 
 				case EventType.Revalorization:
 					return TimelineGlyph.FilledUp;

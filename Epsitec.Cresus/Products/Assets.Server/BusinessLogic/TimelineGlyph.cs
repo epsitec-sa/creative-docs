@@ -24,5 +24,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		FilledUp,
 		OutlinedUp,
+
+		FilledStar,
+		OutlinedStar,
 	};
 }
