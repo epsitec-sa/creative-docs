@@ -129,7 +129,7 @@ namespace Epsitec.Aider.Entities
 					var currentUserGroup = currentParish.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
 					if (currentUserGroup.IsNotNull ())
 					{
-						currentUserGroup.RemoveParticipations (businessContext, currentUserGroup.FindParticipationsByGroup (businessContext, this.Contact, currentUserGroup));
+						AiderGroupEntity.RemoveParticipations (businessContext, currentUserGroup.FindParticipationsByGroup (businessContext, this.Contact, currentUserGroup));
 					}
 					//Create usergroup participation
 					var newUserGroup = group.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);

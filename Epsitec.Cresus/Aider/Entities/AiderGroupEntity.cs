@@ -543,6 +543,14 @@ namespace Epsitec.Aider.Entities
 			businessContext.DeleteEntity (group);
 		}
 
+		public static void RemoveParticipations(BusinessContext businessContext, IEnumerable<AiderGroupParticipantEntity> participations)
+		{
+			foreach (var participation in participations)
+			{
+				AiderGroupParticipantEntity.StopParticipation (participation, Date.Today);
+			}
+		}
+
 		public AiderGroupEntity CreateSubgroup(BusinessContext businessContext, string name)
 		{
 			if (!this.CanHaveSubgroups ())
@@ -676,7 +684,7 @@ namespace Epsitec.Aider.Entities
 		public void PurgeMembers(BusinessContext businessContext)
 		{
 			var participations = this.FindParticipations (businessContext);
-			this.RemoveParticipations (businessContext, participations);
+			AiderGroupEntity.RemoveParticipations (businessContext, participations);
 		}
 
 		public void ImportContactsMembers(BusinessContext businessContext, IEnumerable<AiderContactEntity> contactsToAdd, Date? startDate, FormattedText comment)
@@ -713,13 +721,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public void RemoveParticipations(BusinessContext businessContext, IEnumerable<AiderGroupParticipantEntity> participations)
-		{
-			foreach (var participation in participations)
-			{				
-				AiderGroupParticipantEntity.StopParticipation (participation, Date.Today);	
-			}
-		}
+		
 
 		public void Merge(BusinessContext businessContext, AiderGroupEntity other)
 		{
