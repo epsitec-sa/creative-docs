@@ -555,7 +555,7 @@ namespace Epsitec.Aider.Data.Job
 				RequestedEntity = householdExample
 			};
 
-			return businessContext.DataContext.GetByRequest<AiderHouseholdEntity> (request);
+			return businessContext.GetByRequest<AiderHouseholdEntity> (request);
 		}
 
 		public static AiderTownEntity GetAiderTownEntity(BusinessContext businessContext, EChAddress address)

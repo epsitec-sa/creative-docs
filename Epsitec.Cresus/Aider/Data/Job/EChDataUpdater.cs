@@ -630,6 +630,10 @@ namespace Epsitec.Aider.Data.Job
 			//Link household to ECh Entity
 			if (eChReportedPerson.Adult1.IsNotNull ())
 			{
+				if (eChReportedPerson.Adult1.PersonId == "819095346")
+				{
+					//	DEBUG: this is Valérie Morel...
+				}
 				this.LogToConsole ("Info: Processing Adult 1 Relocation");
 				var aiderPerson = EChDataHelpers.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
 				var oldHousehold = EChDataHelpers.GetAiderHousehold (businessContext, aiderPerson);
