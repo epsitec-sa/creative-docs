@@ -8,11 +8,11 @@ using Epsitec.Aider.Reporting;
 using System.Collections.Generic;
 using System.Linq;
 
-[assembly: ContentFormatter (typeof (StaticContent), Id = "StaticContent")]
+[assembly: ContentFormatter (typeof (StaticContent))]
 
 namespace Epsitec.Aider.Reporting
 {
-	public class StaticContent : IContent
+	public class StaticContent : AbstractContent<StaticContent>
 	{
 		public StaticContent()
 		{
@@ -26,20 +26,12 @@ namespace Epsitec.Aider.Reporting
 
 		#region IContentStore Members
 
-		public string							Format
-		{
-			get
-			{
-				return "StaticContent";
-			}
-		}
-
-		public byte[] GetContentBlob()
+		public override byte[] GetContentBlob()
 		{
 			return System.Text.Encoding.UTF8.GetBytes (this.text);
 		}
 
-		public IContentStore Setup(byte[] blob)
+		public override IContentStore Setup(byte[] blob)
 		{
 			this.text = System.Text.Encoding.UTF8.GetString (blob);
 			return this;
@@ -49,7 +41,7 @@ namespace Epsitec.Aider.Reporting
 
 		#region IContentTextProducer Members
 
-		public FormattedText GetFormattedText(string template)
+		public override FormattedText GetFormattedText(string template)
 		{
 			return new FormattedText (text);
 		}

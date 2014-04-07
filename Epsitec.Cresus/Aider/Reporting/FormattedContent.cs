@@ -8,11 +8,11 @@ using Epsitec.Aider.Reporting;
 using System.Collections.Generic;
 using System.Linq;
 
-[assembly: ContentFormatter (typeof (FormattedContent), Id = "FormattedContent")]
+[assembly: ContentFormatter (typeof (FormattedContent))]
 
 namespace Epsitec.Aider.Reporting
 {
-	public class FormattedContent : IContent
+	public class FormattedContent : AbstractContent<FormattedContent>
 	{
 		public FormattedContent()
 		{
@@ -65,15 +65,7 @@ namespace Epsitec.Aider.Reporting
 
 		#region IContent Members
 
-		public string							Format
-		{
-			get
-			{
-				return "FormattedContent";
-			}
-		}
-
-		public byte[] GetContentBlob()
+		public override byte[] GetContentBlob()
 		{
 			if ((this.arguments == null) ||
 				(this.arguments.Length == 0))
@@ -92,12 +84,7 @@ namespace Epsitec.Aider.Reporting
 			return System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
 		}
 
-		public FormattedText GetFormattedText(string template)
-		{
-			return new FormattedText (string.Format (template, this.arguments));
-		}
-
-		public IContentStore Setup(byte[] blob)
+		public override IContentStore Setup(byte[] blob)
 		{
 			if ((blob == null) ||
 				(blob.Length == 0))
@@ -117,6 +104,14 @@ namespace Epsitec.Aider.Reporting
 
 		#endregion
 
+		#region IContentTextProducer Members
+
+		public override FormattedText GetFormattedText(string template)
+		{
+			return new FormattedText (string.Format (template, this.arguments));
+		}
+
+		#endregion
 
 		public static FormattedContent Escape(params string[] args)
 		{

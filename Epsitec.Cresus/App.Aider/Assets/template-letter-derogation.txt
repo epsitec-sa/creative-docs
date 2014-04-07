@@ -21,9 +21,10 @@ dérogation.<br/>
 Nous vous souhaitons de riches expériences et un fructueux engagement dans votre nouvelle 
 paroisse officielle et vous adressons, {0}, nos fraternelles salutations.<br/>
 <br/>
-{3}<br/>
+<br/>
+<tab/><tab/>{3}<br/>
 <br/>
 <br/>
 <br/>
 <br/>
-{4}
+<tab/><tab/>{4}

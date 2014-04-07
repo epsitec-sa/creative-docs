@@ -368,6 +368,7 @@
     <Compile Include="Entities\AiderUserEntity.cs" />
     <Compile Include="Entities\AiderUserRoleEntity.cs" />
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
+    <Compile Include="Reporting\AbstractContent`1.cs" />
     <Compile Include="Reporting\ContentFormatterAttribute.cs" />
     <Compile Include="Reporting\ContentFormatterFactory.cs" />
     <Compile Include="Reporting\FormattedContent.cs" />

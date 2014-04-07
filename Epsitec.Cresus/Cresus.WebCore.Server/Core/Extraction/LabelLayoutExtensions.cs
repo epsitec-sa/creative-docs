@@ -135,5 +135,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 					throw new System.NotImplementedException ();
 			}
 		}
+
+		public static double Points(this double value)
+		{
+			return value * 25.4 / 72.0;
+		}
+
+		public static double Millimeters(this double value)
+		{
+			return value * 10;
+		}
 	}
 }

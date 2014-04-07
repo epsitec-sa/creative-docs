@@ -94,12 +94,12 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 			var setup = new TextDocumentSetup ();
 
-			setup.TextStyle.TabInsert (new TextStyle.Tab (50, TextTabType.DecimalDot, TextTabLine.None));
-			setup.TextStyle.TabInsert (new TextStyle.Tab (100, TextTabType.DecimalDot, TextTabLine.None));
-			setup.TextStyle.TabInsert (new TextStyle.Tab (1200, TextTabType.Left, TextTabLine.None));
+			setup.TextStyle.TabInsert (new TextStyle.Tab (5.0.Millimeters (), TextTabType.DecimalDot, TextTabLine.None));
+			setup.TextStyle.TabInsert (new TextStyle.Tab (10.0.Millimeters (), TextTabType.DecimalDot, TextTabLine.None));
+			setup.TextStyle.TabInsert (new TextStyle.Tab (120.0.Millimeters (), TextTabType.Left, TextTabLine.None));
 
 			setup.TextStyle.Font = Font.GetFont ("Verdana", "");
-			setup.TextStyle.FontSize = 31.75; // 9pt => 9 x 25.4/72 = 3.175mm --- SL used 33.835
+			setup.TextStyle.FontSize = 9.0.Points ();
 			
 			return setup;
 		}

@@ -65,7 +65,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Pdf\AbstractDocumentWriter.cs" />
+    <Compile Include="Pdf\AbstractDocumentWriter`1.cs" />
     <Compile Include="Pdf\OfficeGroupOfficialDocumentWriter.cs" />
     <Compile Include="Pdf\OfficeLetterDocumentWriter.cs" />
     <Compile Include="Processor.cs" />
