@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var groups = GroupsGuidRatioLogic.GetSortedFields (this.accessor);
 				if (groups.Any ())
 				{
-					c1.Add (new ObjectSummaryControllerTile ("Regroupements"));
+					c1.Add (new ObjectSummaryControllerTile ("Groupes"));
 					foreach (var field in groups)
 					{
 						c1.Add (new ObjectSummaryControllerTile (field));

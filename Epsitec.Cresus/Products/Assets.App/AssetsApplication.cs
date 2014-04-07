@@ -11,7 +11,6 @@ using Epsitec.Cresus.Core.Library;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -96,86 +95,6 @@ namespace Epsitec.Cresus.Assets.App
 
 			window.Show ();
 			window.MakeActive ();
-
-#if false
-			System.Diagnostics.Debug.WriteLine ("Ready");
-			System.Threading.Thread.Sleep (5*1000);
-
-//			this.TestWriteEntities ();
-			
-			this.TestReadEntities ("A1000");
-			System.Threading.Thread.Sleep (3*1000);
-
-			this.TestReadEntities ("A1002");
-#endif
-		}
-
-		private void TestWriteEntities()
-		{
-			var coreData = this.Data;
-
-			for (int a = 1000; a < 1100; a++)
-			{
-				using (var context = new BusinessContext (coreData, enableReload: true))
-				{
-					System.Diagnostics.Debug.Write ("Asset " + a);
-					
-					var asset = context.CreateEntity<AssetEntity> ();
-
-					asset.AssetId = string.Format ("A{0}", a);
-
-					for (int i = 0; i < 50; i++)
-					{
-						var change = context.CreateEntity<AssetChangeSetEntity> ();
-						var prop1  = context.CreateEntity<AssetObjectPropertyEntity> ();
-						var val1   = context.CreateEntity<AssetObjectValueEntity> ();
-
-						prop1.ChangeSet = change;
-						val1.ChangeSet = change;
-
-						change.DateTime = new System.DateTime (2013, 1, 1).AddDays (i * 7);
-						change.Asset = asset;
-						change.Xxx = i.ToString ();
-					}
-
-					System.Diagnostics.Debug.Write ("Saving asset " + a);
-					context.SaveChanges (LockingPolicy.ReleaseLock);
-				}
-			}
-		}
-
-		private void TestReadEntities(string assetId)
-		{
-			var coreData = this.Data;
-
-			using (var context = new BusinessContext (coreData, enableReload: true))
-			{
-				var example = new AssetChangeSetEntity ();
-				example.Asset = new AssetEntity ();
-				example.Asset.AssetId = assetId;
-
-				System.Diagnostics.Debug.WriteLine ("Querying asset " + assetId);
-				
-				var changes = context.DataContext.GetByExample (example);
-
-				System.Diagnostics.Debug.WriteLine ("Got " + changes.Count + " items");
-
-				var ex2 = new AssetObjectPropertyEntity ();
-				var ex3 = new AssetObjectValueEntity ();
-
-				ex2.ChangeSet = new AssetChangeSetEntity ();
-				ex2.ChangeSet.Asset = new AssetEntity ();
-				ex2.ChangeSet.Asset.AssetId = assetId;
-
-				ex3.ChangeSet = new AssetChangeSetEntity ();
-				ex3.ChangeSet.Asset = new AssetEntity ();
-				ex3.ChangeSet.Asset.AssetId = assetId;
-
-				var props = context.DataContext.GetByExample (ex2).Where (x => x.ChangeSet.Asset.AssetId == assetId).ToList ();
-				var vals  = context.DataContext.GetByExample (ex3).Where (x => x.ChangeSet.Asset.AssetId == assetId).ToList ();
-
-				System.Diagnostics.Debug.WriteLine ("Found " + props.Count + " properties and " + vals.Count + " values");
-			}
 		}
 
 
@@ -193,47 +112,13 @@ namespace Epsitec.Cresus.Assets.App
 				Name      = "PopupParentFrame",
 			};
 
-			AssetsApplication.SelectedMandat = 1;
+			AssetsApplication.SelectedMandat = AssetsApplication.Factories.ToList ().FindIndex (x => x.IsDefault);
 
 			var accessor = new DataAccessor();
-			AssetsApplication.InitializeMandat (accessor, AssetsApplication.SelectedMandat);
+			AssetsApplication.InitializeMandat (accessor, AssetsApplication.SelectedMandat, "Exemple", new System.DateTime (2010, 1, 1));
 
 			var ui = new AssetsUI (accessor);
 			ui.CreateUI (frame);
-
-			//?this.CreateTestTimelineProvider (frame);
-		}
-
-
-		private void CreateTestTimelineProvider(Widget parent)
-		{
-			var timeline = new Timeline ()
-			{
-				Parent     = parent,
-				Dock       = DockStyle.Fill,
-				Margins    = new Margins (10, 10, 335, 10),
-				Pivot      = 0.25,
-				ShowLabels = true,
-			};
-
-			//?timeline.SetRows (AssetsApplication.GetRows (true));
-
-			var button = new Button ()
-			{
-				Parent = parent,
-				Anchor = AnchorStyles.TopLeft,
-				Margins = new Margins (10, 0, 280, 0),
-				Text = "Coup de sac",
-				PreferredWidth = 120,
-				PreferredHeight = 25,
-			};
-
-			var provider   = new Client.MockTimelineEventClient (Date.Today);
-			var controller = new Controllers.TimelineCellController (timeline, provider);
-
-			button.Clicked += (o, e) => { provider.ChangeRandomSeed (); controller.ClearCache (); };
-
-			controller.Refresh ();
 		}
 
 
@@ -243,56 +128,81 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			get
 			{
-				return 3;
+				return AssetsApplication.Factories.Count ();
 			}
 		}
 
 		public static string GetMandatName(int rank)
 		{
-			if (rank == 0)
-			{
-				return "MCH2 vide";
-			}
-			else if (rank == 1)
-			{
-				return "MCH2 avec exemples";
-			}
-			else if (rank == 2)
-			{
-				return "Entreprise avec exemples";
-			}
-
-			return "??";
+			return AssetsApplication.Factories.ToArray ()[rank].Name;
 		}
 
-		public static void InitializeMandat(DataAccessor accessor, int rank)
+		public static void InitializeMandat(DataAccessor accessor, int rank, string name, System.DateTime startDate)
 		{
-			if (rank == 0)
+			AssetsApplication.Factories.ToArray ()[rank].Create (accessor, name, startDate);
+		}
+
+
+		private static IEnumerable<MandatFactory> Factories
+		{
+			get
 			{
-				AssetsApplication.CreateMCH2Mandat (accessor, false);
-			}
-			else if (rank == 1)
-			{
-				AssetsApplication.CreateMCH2Mandat (accessor, true);
-			}
-			else if (rank == 2)
-			{
-				AssetsApplication.CreateDummyMandat (accessor);
+				yield return new MandatFactory
+				{
+					Name = "MCH2 vide",
+					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate)
+					{
+						using (var factory = new MCH2MandatFactory (accessor))
+						{
+							factory.Create (name, startDate, false);
+						}
+					},
+				};
+
+				yield return new MandatFactory
+				{
+					Name = "MCH2 avec exemples",
+					IsDefault = true,
+					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate)
+					{
+						using (var factory = new MCH2MandatFactory (accessor))
+						{
+							factory.Create (name, startDate, true);
+						}
+					},
+				};
+
+				yield return new MandatFactory
+				{
+					Name = "Entreprise vide",
+					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate)
+					{
+						using (var factory = new CompanyMandatFactory (accessor))
+						{
+							factory.Create (name, startDate, false);
+						}
+					},
+				};
+
+				yield return new MandatFactory
+				{
+					Name = "Entreprise avec exemples",
+					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate)
+					{
+						using (var factory = new CompanyMandatFactory (accessor))
+						{
+							factory.Create (name, startDate, true);
+						}
+					},
+				};
 			}
 		}
 
-		private static void CreateMCH2Mandat(DataAccessor accessor, bool withSamples)
+		private class MandatFactory
 		{
-			using (var factory = new MandatFactory (accessor))
-			{
-				factory.Create ("MCH2", new System.DateTime (2010, 1, 1), withSamples);
-			}
-		}
-
-		private static void CreateDummyMandat(DataAccessor accessor)
-		{
-			accessor.Mandat = DummyMandat.GetMandat ();
-			DummyMandat.AddDummyData (accessor);
+			public string						Name;
+			public bool							IsDefault;
+			public System.Action<DataAccessor, string, System.DateTime> Create;
 		}
 
 

@@ -86,11 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.view != null)
 			{
 				this.SaveCurrentViewState ();
-
-				this.view.Goto -= this.HandleViewGoto;
-				this.view.ViewStateChanged -= this.HandleViewStateChanged;
-				this.view.Dispose ();
-				this.view = null;
+				this.DeleteView ();
 			}
 
 			this.view = AbstractView.CreateView (viewType, this.accessor, this.toolbar);
@@ -110,6 +106,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.toolbar.ViewType = viewType;
+		}
+
+		private void DeleteView()
+		{
+			if (this.view != null)
+			{
+				this.view.Goto -= this.HandleViewGoto;
+				this.view.ViewStateChanged -= this.HandleViewStateChanged;
+				this.view.Dispose ();
+				this.view = null;
+			}
 		}
 
 		private void HandleViewGoto(object sender, AbstractViewState viewState)
@@ -169,9 +176,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OpenMandat(int rank)
 		{
-			AssetsApplication.SelectedMandat = rank;
-			AssetsApplication.InitializeMandat (this.accessor, AssetsApplication.SelectedMandat);
+			this.currentViewStates.Clear ();
+			this.historyViewStates.Clear ();
+			this.lastViewStates.Clear ();
+			this.historyPosition = -1;
 
+			AssetsApplication.SelectedMandat = rank;
+			AssetsApplication.InitializeMandat (this.accessor, AssetsApplication.SelectedMandat, "Exemple", new System.DateTime (2010, 1, 1));
+
+			this.DeleteView ();
 			this.CreateView (ViewType.Assets);
 		}
 

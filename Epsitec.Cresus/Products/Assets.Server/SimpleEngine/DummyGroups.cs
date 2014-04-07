@@ -259,7 +259,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataStringProperty (ObjectField.Name, "Transports"));
 			}
 
-
 			///////////////
 
 			var o5 = new DataObject ();
@@ -352,6 +351,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, o5.Guid));
 				e.AddProperty (new DataStringProperty (ObjectField.Name, "Sandra"));
 			}
+
 			///////////////
 
 			var o6 = new DataObject ();
