@@ -62,26 +62,40 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 		}
 
-		protected void AddAssetsSamples(System.DateTime date, string name, string number, decimal value, string owner1, string owner2, string cat, params string[] groups)
+		protected DataObject AddAssetsSamples(System.DateTime date, string name, string number, decimal value, decimal? value1, decimal? value2, string owner1, string owner2, string cat, params string[] groups)
 		{
 			var guid = this.accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty);
 			var o = this.accessor.GetObject (BaseType.Assets, guid);
 
 			var e = o.GetEvent (0);
 
+			e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (this.eventNumber++).ToString ()));
+
 			this.AddField (e, this.fieldAssetNumber, number);
 			this.AddAssetAmortizedAmount (e, value);
+
+			this.AddAssetComputedAmount (e, this.fieldAssetValue1, value1);
+			this.AddAssetComputedAmount (e, this.fieldAssetValue2, value2);
 
 			this.AddAssetPerson (e, this.fieldAssetOwner1, owner1);
 			this.AddAssetPerson (e, this.fieldAssetOwner2, owner2);
 
-			this.AddAmortization (e, cat);
+			this.AddAssetCategory (e, cat);
 
 			int i = 0;
 			foreach (var group in groups)
 			{
 				this.AddAssetGroup (e, i++, group);
 			}
+
+			return o;
+		}
+
+		protected DataEvent AddAssetEvent(DataObject o, System.DateTime date, EventType type)
+		{
+			var e = this.accessor.CreateAssetEvent (o, date, type);
+			e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (this.eventNumber++).ToString ()));
+			return e;
 		}
 
 		protected void AddAssetAmortizedAmount(DataEvent e, decimal value)
@@ -90,6 +104,27 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var aa = p.Value;
 
 			aa.InitialAmount = value;
+		}
+
+		protected void AddAssetAmortizedAmount(DataEvent e, decimal initialAmount, decimal finalAmount)
+		{
+			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+			var aa = p.Value;
+
+			aa.AmortizationType = AmortizationType.Degressive;
+			aa.InitialAmount    = initialAmount;
+			aa.BaseAmount       = initialAmount;
+			aa.EffectiveRate    = 1.0m - (finalAmount / initialAmount);
+		}
+
+		protected void AddAssetComputedAmount(DataEvent e, ObjectField field, decimal? value)
+		{
+			if (value.HasValue)
+			{
+				var ca = new ComputedAmount (value.Value);
+				var property = new DataComputedAmountProperty (field, ca);
+				e.AddProperty (property);
+			}
 		}
 
 		protected void AddAssetPerson(DataEvent e, ObjectField field, string lastName)
@@ -119,7 +154,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		protected void AddAmortization(DataEvent e, string catNane)
+		protected void AddAssetCategory(DataEvent e, string catNane)
 		{
 			if (string.IsNullOrEmpty (catNane))
 			{
@@ -335,10 +370,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		protected readonly DataAccessor			accessor;
 
 		protected bool							withSamples;
+		protected int							eventNumber;
 
 		protected ObjectField					fieldAssetName;
 		protected ObjectField					fieldAssetNumber;
 		protected ObjectField					fieldAssetDesc;
+		protected ObjectField					fieldAssetValue1;
+		protected ObjectField					fieldAssetValue2;
 		protected ObjectField					fieldAssetOwner1;
 		protected ObjectField					fieldAssetOwner2;
 

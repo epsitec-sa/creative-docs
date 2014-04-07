@@ -147,12 +147,7 @@
     <Compile Include="SimpleEngine\AbstractMandatFactory.cs" />
     <Compile Include="SimpleEngine\CompanyMandatFactory.cs" />
     <Compile Include="SimpleEngine\MCH2MandatFactory.cs" />
-    <Compile Include="SimpleEngine\DummyEntries.cs" />
     <Compile Include="SimpleEngine\DataAmortizedAmountProperty.cs" />
-    <Compile Include="SimpleEngine\DummyAmortizations.cs" />
-    <Compile Include="SimpleEngine\DummyGroups.cs" />
-    <Compile Include="SimpleEngine\DummyCategories.cs" />
-    <Compile Include="SimpleEngine\DummyPersons.cs" />
     <Compile Include="SimpleEngine\DummyAccounts.cs" />
     <Compile Include="SimpleEngine\Settings.cs" />
     <Compile Include="SimpleEngine\UserField.cs" />
@@ -177,7 +172,6 @@
     <Compile Include="SimpleEngine\IGuid.cs" />
     <Compile Include="SimpleEngine\PropertyState.cs" />
     <Compile Include="SimpleEngine\EventType.cs" />
-    <Compile Include="SimpleEngine\DummyMandat.cs" />
     <Compile Include="SimpleEngine\Guid.cs" />
     <Compile Include="SimpleEngine\ObjectField.cs" />
     <Compile Include="SimpleEngine\DataAccessor.cs" />

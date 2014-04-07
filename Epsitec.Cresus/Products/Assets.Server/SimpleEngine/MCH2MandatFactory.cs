@@ -32,6 +32,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.AddAssetsSettings ();
 			this.AddPersonsSettings ();
 
+			if (this.withSamples)
+			{
+				DummyAccounts.AddAccounts (this.accessor.Mandat);
+			}
+
 			this.CreateGroupsSamples ();
 			this.CreateCatsSamples ();
 
@@ -51,29 +56,60 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			if (this.withSamples)
 			{
-				this.fieldAssetOwner1 = this.AddSettings (BaseType.Assets, "Responsable", FieldType.GuidPerson, 150, null, null, null, 10);
-				this.fieldAssetOwner2 = this.AddSettings (BaseType.Assets, "Remplaçant",  FieldType.GuidPerson, 150, null, null, null,  0);
+				this.fieldAssetValue1 = this.AddSettings (BaseType.Assets, "Valeur remplacement", FieldType.ComputedAmount, 150, null, null, null, 10);
+				this.fieldAssetValue2 = this.AddSettings (BaseType.Assets, "Valeur fiscale",      FieldType.ComputedAmount, 150, null, null, null,  0);
+				this.fieldAssetOwner1 = this.AddSettings (BaseType.Assets, "Responsable",         FieldType.GuidPerson,     150, null, null, null, 10);
+				this.fieldAssetOwner2 = this.AddSettings (BaseType.Assets, "Remplaçant",          FieldType.GuidPerson,     150, null, null, null,  0);
 			}
 		}
 
 
 		protected override void AddAssetsSamples()
 		{
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Bâtiment administratif",   "100.10", 2400000.0m, "Dupond",   "Nicolet",  "Immobilier", "Bâtiments",              "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Voirie",                   "100.20", 1200000.0m, "Dupond",   "Nicolet",  "Immobilier", "Décheteries",            "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Déchéterie communale",     "100.25", 3500000.0m, "Dupond",   null,       "Immobilier", "Décheteries",            "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Collège de Marcolet",      "200.10", 5100000.0m, "Dupond",   null,       "Immobilier", "Ecoles",                 "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Ecole des trois sapins",   "200.11", 3200000.0m, "Dupond",   null,       "Immobilier", "Ecoles",                 "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  2), "STEP intercommunale",      "300.20", 3200000.0m, "Dubosson", "Nicolet",  "Immobilier", "Traitement des eaux",    "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 50), "Scania X-20",              "500.10",  142000.0m, "Dupond",   "Nicolet",  "Véhicules",  "Camions",                "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 31), "Scania X-45",              "500.11",   84000.0m, "Dupond",   "Nicolet",  "Véhicules",  "Camions",                "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 31), "Volvo Truck P2",           "500.13",   90000.0m, "Nicolet",  "Zumstein", "Véhicules",  "Camions",                "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  1), "Fiat Uno",                 "520.10",    8000.0m, "Nicolet",  null,       "Véhicules",  "Voitures",               "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (100), "Citroën C4 Picasso",       "520.14",   22000.0m, "Nicolet",  null,       "Véhicules",  "Voitures",               "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Parcelle du Crêt-au-Clos", "800.10", 1000000.0m, "Dupond",   "Nicolet",  "Immobilier", "Terrains",               "Immobilisations corporelles",   "Administratif");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Participations Nestlé",    "900.10",  250000.0m, "Zumstein", null,       null,         "Autres immobilisations", "Immobilisations incorporelles", "Financier");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Participations Logitech",  "900.11",   10000.0m, "Zumstein", null,       null,         "Autres immobilisations", "Immobilisations incorporelles", "Financier");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (200), "Participations Raifeisen", "900.12",  300000.0m, "Dubosson", null,       null,         "Autres immobilisations", "Immobilisations incorporelles", "Financier");
+			var i1 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Bâtiment administratif",   "100.10", 2400000.0m, 3500000.0m, 2100000.0m, "Dupond",   "Nicolet",  "Immobilier", "Bâtiments",              "Immobilisations corporelles",   "Administratif");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Voirie",                   "100.20", 1200000.0m, 1500000.0m,  500000.0m, "Dupond",   "Nicolet",  "Immobilier", "Décheteries",            "Immobilisations corporelles",   "Administratif");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Déchéterie communale",     "100.25", 3500000.0m, 4100000.0m, 3000000.0m, "Dupond",   null,       "Immobilier", "Décheteries",            "Immobilisations corporelles",   "Administratif");
+			var i2 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Collège de Marcolet",      "200.10", 5100000.0m, 7500000.0m, 4000000.0m, "Dupond",   null,       "Immobilier", "Ecoles",                 "Immobilisations corporelles",   "Administratif");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Ecole des Trois Sapins",   "200.11", 3200000.0m, 3300000.0m, 3000000.0m, "Dupond",   null,       "Immobilier", "Ecoles",                 "Immobilisations corporelles",   "Administratif");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  2), "STEP intercommunale",      "300.20", 3200000.0m, 4000000.0m, 2500000.0m, "Dubosson", "Nicolet",  "Immobilier", "Traitement des eaux",    "Immobilisations corporelles",   "Administratif");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 50), "Scania X-20",              "500.10",  142000.0m,  160000.0m,  150000.0m, "Dupond",   "Nicolet",  "Véhicules",  "Camions",                "Immobilisations corporelles",   "Administratif");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 31), "Scania X-45",              "500.11",   84000.0m,  100000.0m,  110000.0m, "Dupond",   "Nicolet",  "Véhicules",  "Camions",                "Immobilisations corporelles",   "Administratif");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 31), "Volvo Truck P2",           "500.13",   90000.0m,  100000.0m,  100000.0m, "Nicolet",  "Zumstein", "Véhicules",  "Camions",                "Immobilisations corporelles",   "Administratif");
+			var v1 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  1), "Fiat Uno",                 "520.10",    8000.0m,   20000.0m,   10000.0m, "Nicolet",  null,       "Véhicules",  "Voitures",               "Immobilisations corporelles",   "Administratif");
+			var v2 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (100), "Citroën C4 Picasso",       "520.14",   22000.0m,  350000.0m,   35000.0m, "Nicolet",  null,       "Véhicules",  "Voitures",               "Immobilisations corporelles",   "Administratif");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Parcelle du Crêt-au-Clos", "800.10", 1000000.0m,       null,  900000.0m, "Dupond",   "Nicolet",  "Immobilier", "Terrains",               "Immobilisations corporelles",   "Administratif");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Participations Nestlé",    "900.10",  250000.0m,       null,  290000.0m, "Zumstein", null,       null,         "Autres immobilisations", "Immobilisations incorporelles", "Financier");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Participations Logitech",  "900.11",   10000.0m,       null,   15000.0m, "Zumstein", null,       null,         "Autres immobilisations", "Immobilisations incorporelles", "Financier");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (200), "Participations Raifeisen", "900.12",  300000.0m,       null,  250000.0m, "Dubosson", null,       null,         "Autres immobilisations", "Immobilisations incorporelles", "Financier");
+
+			{
+				var e = this.AddAssetEvent (i1, this.accessor.Mandat.StartDate.AddYears (1), EventType.Modification);
+				this.AddAssetComputedAmount (e, this.fieldAssetValue1, 3600000.0m);
+				this.AddAssetComputedAmount (e, this.fieldAssetValue2, 1900000.0m);
+			}
+
+			{
+				var e = this.AddAssetEvent (i1, this.accessor.Mandat.StartDate.AddYears (2), EventType.Modification);
+				this.AddAssetComputedAmount (e, this.fieldAssetValue1, 3800000.0m);
+			}
+
+			{
+				var e = this.AddAssetEvent (i2, this.accessor.Mandat.StartDate.AddYears (1).AddDays (-1), EventType.AmortizationExtra);
+				this.AddAssetAmortizedAmount (e, 4200000.0m, 3600000.0m);
+			}
+
+			{
+				var e = this.AddAssetEvent (v1, this.accessor.Mandat.StartDate.AddYears (1).AddDays (40), EventType.Modification);
+				this.AddAssetPerson (e, this.fieldAssetOwner1, "Zumstein");
+			}
+
+			{
+				var e1 = this.AddAssetEvent (v2, this.accessor.Mandat.StartDate.AddYears (1).AddDays (-1), EventType.AmortizationExtra);
+				this.AddAssetAmortizedAmount (e1, 22000.0m, 18000.0m);
+
+				var e2 = this.AddAssetEvent (v2, this.accessor.Mandat.StartDate.AddYears (2).AddDays (-1), EventType.AmortizationExtra);
+				this.AddAssetAmortizedAmount (e2, 18000.0m, 10000.0m);
+			}
 		}
 
 

@@ -32,6 +32,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.AddAssetsSettings ();
 			this.AddPersonsSettings ();
 
+			if (this.withSamples)
+			{
+				DummyAccounts.AddAccounts (this.accessor.Mandat);
+			}
+
 			this.CreateGroupsSamples ();
 			this.CreateCatsSamples ();
 
@@ -51,30 +56,67 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			if (this.withSamples)
 			{
-				this.fieldAssetOwner1 = this.AddSettings (BaseType.Assets, "Responsable", FieldType.GuidPerson, 150, null, null, null, 10);
-				this.fieldAssetOwner2 = this.AddSettings (BaseType.Assets, "Remplaçant",  FieldType.GuidPerson, 150, null, null, null,  0);
+				this.fieldAssetValue1 = this.AddSettings (BaseType.Assets, "Valeur remplacement", FieldType.ComputedAmount, 150, null, null, null, 10);
+				this.fieldAssetValue2 = this.AddSettings (BaseType.Assets, "Valeur fiscale",      FieldType.ComputedAmount, 150, null, null, null,  0);
+				this.fieldAssetOwner1 = this.AddSettings (BaseType.Assets, "Responsable",         FieldType.GuidPerson,     150, null, null, null, 10);
+				this.fieldAssetOwner2 = this.AddSettings (BaseType.Assets, "Remplaçant",          FieldType.GuidPerson,     150, null, null, null,  0);
 			}
 		}
 
 
 		protected override void AddAssetsSamples()
 		{
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Siège social",             "100.10", 2400000.0m, "Dupond",   "Nicolet",  "Immobilier", "Bâtiments", "Bureaux",                         "Nord");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Centre logistique",        "100.20", 1200000.0m, "Dupond",   "Nicolet",  "Immobilier", "Bâtiments", "Bureaux",                         "Est/0.5", "Nord/0.5");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Centre d'expédition",      "100.21", 3500000.0m, "Dupond",   null,       "Immobilier", "Bâtiments", "Bureaux/0.4", "Distribution/0.6", "Nord");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Centre d'usinage",         "100.22", 5100000.0m, "Dupond",   null,       "Immobilier", "Usines",    "Production",                      "Est");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  1), "Centre d'assemblage",      "100.23", 3200000.0m, "Dubosson", "Nicolet",  "Immobilier", "Usines",    "Production/0.8", "Stockage/0.2",  "Sud");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  2), "Centre de recyclage",      "100.25",  200000.0m, "Dubosson", "Nicolet",  "Immobilier", "Usines",    "Production",                      "Sud");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  1), "Dépôt principal",          "100.30", 3200000.0m, "Dubosson", "Nicolet",  "Immobilier", "Entrepôts", "Stockage",                        "Sud");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  3), "Dépôt secondaire",         "100.31", 1300000.0m, "Dubosson", "Nicolet",  "Immobilier", "Entrepôts", "Stockage",                        "Nord");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 50), "Scania X-20",              "500.10",  142000.0m, "Dupond",   "Nicolet",  "Véhicules",  "Camions",   "Transport");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 31), "Scania X-45",              "500.11",   84000.0m, "Dupond",   "Nicolet",  "Véhicules",  "Camions",   "Transport");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 31), "Volvo Truck P2",           "500.13",   90000.0m, "Nicolet",  "Zumstein", "Véhicules",  "Camions",   "Transport");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  1), "Fiat Uno",                 "520.10",    8000.0m, "Nicolet",  null,       "Véhicules",  "Voitures",  "Bureaux");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (100), "Citroën C4 Picasso",       "520.14",   22000.0m, "Nicolet",  null,       "Véhicules",  "Voitures",  "Production");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Participations Nestlé",    "900.10",  250000.0m, "Zumstein", null,       null,         "Investissements");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Participations Logitech",  "900.11",   10000.0m, "Zumstein", null,       null,         "Investissements");
-			this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (200), "Participations Raifeisen", "900.12",  300000.0m, "Dubosson", null,       null,         "Investissements");
+			var i1 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Siège social",             "100.10", 2400000.0m, 3500000.0m, 2100000.0m, "Dupond",   "Nicolet",  "Immobilier", "Bâtiments", "Bureaux",                         "Nord");
+			var i2 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Centre logistique",        "100.20", 1200000.0m, 2000000.0m, 1000000.0m, "Dupond",   "Nicolet",  "Immobilier", "Bâtiments", "Bureaux",                         "Est/0.5", "Nord/0.5");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Centre d'expédition",      "100.21", 3500000.0m, 4000000.0m, 3000000.0m, "Dupond",   null,       "Immobilier", "Bâtiments", "Bureaux/0.4", "Distribution/0.6", "Nord");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Centre d'usinage",         "100.22", 5100000.0m, 6000000.0m, 4000000.0m, "Dupond",   null,       "Immobilier", "Usines",    "Production",                      "Est");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  1), "Centre d'assemblage",      "100.23", 3200000.0m, 4000000.0m, 2000000.0m, "Dubosson", "Nicolet",  "Immobilier", "Usines",    "Production/0.8", "Stockage/0.2",  "Sud");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  2), "Centre de recyclage",      "100.25",  200000.0m,  400000.0m,  200000.0m, "Dubosson", "Nicolet",  "Immobilier", "Usines",    "Production",                      "Sud");
+			var i3 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  1), "Dépôt principal",          "100.30", 3200000.0m, 5000000.0m, 2800000.0m, "Dubosson", "Nicolet",  "Immobilier", "Entrepôts", "Stockage",                        "Sud");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  3), "Dépôt secondaire",         "100.31", 1300000.0m, 2000000.0m, 1100000.0m, "Dubosson", "Nicolet",  "Immobilier", "Entrepôts", "Stockage",                        "Nord");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 50), "Scania X-20",              "500.10",  142000.0m,  150000.0m,  150000.0m, "Dupond",   "Nicolet",  "Véhicules",  "Camions",   "Transport");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 31), "Scania X-45",              "500.11",   84000.0m,  100000.0m,   90000.0m, "Dupond",   "Nicolet",  "Véhicules",  "Camions",   "Transport");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  ( 31), "Volvo Truck P2",           "500.13",   90000.0m,  100000.0m,  110000.0m, "Nicolet",  "Zumstein", "Véhicules",  "Camions",   "Transport");
+			var v1 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  1), "Fiat Uno",                 "520.10",    8000.0m,  180000.0m,   10000.0m, "Nicolet",  null,       "Véhicules",  "Voitures",  "Bureaux");
+			var v2 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (100), "Citroën C4 Picasso",       "520.14",   22000.0m,  350000.0m,   35000.0m, "Nicolet",  null,       "Véhicules",  "Voitures",  "Production");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Participations Nestlé",    "900.10",  250000.0m,       null,  290000.0m, "Zumstein", null,       null,         "Investissements");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Participations Logitech",  "900.11",   10000.0m,       null,   15000.0m, "Zumstein", null,       null,         "Investissements");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (200), "Participations Raifeisen", "900.12",  300000.0m,       null,  250000.0m, "Dubosson", null,       null,         "Investissements");
+
+			{
+				var e = this.AddAssetEvent (i1, this.accessor.Mandat.StartDate.AddYears (1), EventType.Modification);
+				this.AddAssetComputedAmount (e, this.fieldAssetValue1, 3600000.0m);
+				this.AddAssetComputedAmount (e, this.fieldAssetValue2, 1900000.0m);
+			}
+
+			{
+				var e = this.AddAssetEvent (i1, this.accessor.Mandat.StartDate.AddYears (2), EventType.Modification);
+				this.AddAssetComputedAmount (e, this.fieldAssetValue1, 3900000.0m);
+			}
+
+			{
+				var e = this.AddAssetEvent (i3, this.accessor.Mandat.StartDate.AddYears (2).AddDays (-1), EventType.AmortizationExtra);
+				this.AddAssetAmortizedAmount (e, 1300000.0m, 1100000.0m);
+			}
+
+			{
+				var e = this.AddAssetEvent (i2, this.accessor.Mandat.StartDate.AddYears (1).AddDays (-1), EventType.Modification);
+				this.AddAssetGroup (e, 2, "Est/0.4");
+				this.AddAssetGroup (e, 3, "Nord/0.6");
+			}
+
+			{
+				var e = this.AddAssetEvent (v1, this.accessor.Mandat.StartDate.AddYears (1).AddDays (40), EventType.Modification);
+				this.AddAssetPerson (e, this.fieldAssetOwner1, "Zumstein");
+			}
+
+			{
+				var e1 = this.AddAssetEvent (v2, this.accessor.Mandat.StartDate.AddYears (1).AddDays (-1), EventType.AmortizationExtra);
+				this.AddAssetAmortizedAmount (e1, 22000.0m, 18000.0m);
+
+				var e2 = this.AddAssetEvent (v2, this.accessor.Mandat.StartDate.AddYears (2).AddDays (-1), EventType.AmortizationExtra);
+				this.AddAssetAmortizedAmount (e2, 18000.0m, 10000.0m);
+			}
 		}
 
 
