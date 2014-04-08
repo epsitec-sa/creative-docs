@@ -5,7 +5,7 @@
 Votre dérogation paroissiale a été enregistrée. Elle est désormais entrée en vigueur.<br/>
 <br/>
 Votre nouvelle paroisse officielle où vous bénéficiez du droit de vote et d'éligibilité 
-(= possibilité de délibérer en assemblée paroissiable, de voter, d'élire ou d'être élu) 
+(= possibilité de délibérer en assemblée paroissiale, de voter, d'élire ou d'être élu) 
 est désormais la<br/>
 <br/>
 <tab/><b>{1}</b><br/>
