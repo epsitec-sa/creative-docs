@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		protected override void AddPersonsSettings()
 		{
-			this.fieldPersonLastName  = this.AddSettings (BaseType.Persons, "Nom", FieldType.String, 120, 380, 1, 2, 0);
+			this.fieldPersonLastName = this.AddSettings (BaseType.Persons, "Nom", FieldType.String, 120, 380, 1, 1, 0);
 		}
 	}
 }
