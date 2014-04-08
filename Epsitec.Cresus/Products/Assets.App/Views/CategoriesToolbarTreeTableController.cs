@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
-			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Categories);
+			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Categories);
 
 			var primary = this.accessor.GetNodeGetter (BaseType.Categories);
 			this.secondaryGetter = new SortableNodeGetter (primary, this.accessor, BaseType.Categories);

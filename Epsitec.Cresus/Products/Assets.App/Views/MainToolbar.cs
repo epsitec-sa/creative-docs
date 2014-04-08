@@ -78,7 +78,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonOpen            = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.Open,            "Main.Open",        "Ouvrir");
+			this.buttonNew             = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NewMandat,       "Main.New",         "Nouveau mandat");
+			this.buttonOpen            = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.OpenMandat,      "Main.Open",        "Ouvrir un mandat");
+			this.buttonSave            = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.SaveMandat,      "Main.Save",        "Enregistrer le mandat");
 			this.buttonNavigateBack    = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateBack,    "Navigate.Back",    "Retourner à la vue précédente");
 			this.buttonNavigateForward = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateForward, "Navigate.Forward", "Avancer à la vue suivante");
 			this.buttonNavigateMenu    = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateMenu,    "Navigate.Menu",    "Dernières vues");
@@ -96,8 +98,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonCancel          = this.CreateCommandButton  (DockStyle.Right,   ToolbarCommand.Cancel,           "Edit.Cancel",           "Annuler les modifications");
 			this.buttonAccept          = this.CreateCommandButton  (DockStyle.Right,   ToolbarCommand.Accept,           "Edit.Accept",           "Accepter les modifications");
 
-			this.buttonOpen    .Margins = new Margins (0, 10, 0, 0);
-			this.buttonPopup.Margins = new Margins (0, 10, 0, 0);
+			this.buttonSave    .Margins = new Margins (0, 10, 0, 0);
+			this.buttonPopup   .Margins = new Margins (0, 10, 0, 0);
 			this.buttonMultiple.Margins = new Margins (0, 40, 0, 0);
 
 			this.UpdateViewTypeCommands ();
@@ -316,7 +318,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
+		private IconButton						buttonNew;
 		private IconButton						buttonOpen;
+		private IconButton						buttonSave;
 
 		private IconButton						buttonNavigateBack;
 		private IconButton						buttonNavigateForward;

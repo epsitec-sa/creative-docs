@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelinesArrayController = new TimelinesArrayController (this.accessor)
 			{
-				Title = StaticDescriptions.GetViewTypeDescription (ViewType.Assets),
+				Title = this.GetViewTitle (ViewType.Assets),
 			};
 
 			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: false);

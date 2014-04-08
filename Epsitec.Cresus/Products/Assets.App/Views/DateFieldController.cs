@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public TextField TextField
+		public TextField						TextField
 		{
 			get
 			{

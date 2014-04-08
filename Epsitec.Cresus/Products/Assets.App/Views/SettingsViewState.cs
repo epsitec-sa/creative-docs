@@ -39,36 +39,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override string GetDescription(DataAccessor accessor)
 		{
-			string name, sel;
-
 			switch (this.BaseType)
 			{
 				case BaseType.Assets:
-					name = StaticDescriptions.GetViewTypeDescription (ViewType.AssetsSettings);
-					sel = UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
-					break;
+					return UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
 
 				case BaseType.Persons:
-					name = StaticDescriptions.GetViewTypeDescription (ViewType.PersonsSettings);
-					sel = UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
-					break;
+					return UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
 
 				case BaseType.Accounts:
-					name = StaticDescriptions.GetViewTypeDescription (ViewType.AccountsSettings);
-					sel = AccountsLogic.GetSummary (accessor, this.SelectedGuid);
-					break;
+					return AccountsLogic.GetSummary (accessor, this.SelectedGuid);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.BaseType.ToString ()));
-			}
-
-			if (string.IsNullOrEmpty (sel))
-			{
-				return name;
-			}
-			else
-			{
-				return string.Concat (name, ", ", sel);
 			}
 		}
 	}

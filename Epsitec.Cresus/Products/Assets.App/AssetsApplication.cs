@@ -1,17 +1,13 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Cresus.Assets.Data.Entities;
-
-using Epsitec.Common.Widgets;
-
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Library;
-
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App
@@ -20,7 +16,6 @@ namespace Epsitec.Cresus.Assets.App
 	{
 		public AssetsApplication()
 		{
-
 		}
 
 		public override string					ShortWindowTitle
@@ -40,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App
 		}
 
 		
-		public override bool StartupLogin()
+		public override bool					StartupLogin()
 		{
 			return true;
 		}
@@ -90,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App
 
 			var window = this.Window;
 			
-			window.Root.BackColor = Common.Drawing.Color.FromName ("White");
+			window.Root.BackColor = Color.FromName ("White");
 			this.CreateUI (window);	
 
 			window.Show ();
@@ -112,97 +107,14 @@ namespace Epsitec.Cresus.Assets.App
 				Name      = "PopupParentFrame",
 			};
 
-			AssetsApplication.SelectedMandat = AssetsApplication.Factories.ToList ().FindIndex (x => x.IsDefault);
-
+			//	Crée et ouvre le mandat par défaut.
 			var accessor = new DataAccessor();
-			AssetsApplication.InitializeMandat (accessor, AssetsApplication.SelectedMandat, "Exemple", new System.DateTime (2010, 1, 1));
+			var factory = MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ();
+			System.Diagnostics.Debug.Assert (factory != null);
+			factory.Create (accessor, "Exemple", new System.DateTime (2010, 1, 1), true);
 
 			var ui = new AssetsUI (accessor);
 			ui.CreateUI (frame);
-		}
-
-
-		public static int SelectedMandat;
-
-		public static int MandatCount
-		{
-			get
-			{
-				return AssetsApplication.Factories.Count ();
-			}
-		}
-
-		public static string GetMandatName(int rank)
-		{
-			return AssetsApplication.Factories.ToArray ()[rank].Name;
-		}
-
-		public static void InitializeMandat(DataAccessor accessor, int rank, string name, System.DateTime startDate)
-		{
-			AssetsApplication.Factories.ToArray ()[rank].Create (accessor, name, startDate);
-		}
-
-
-		private static IEnumerable<MandatFactory> Factories
-		{
-			get
-			{
-				yield return new MandatFactory
-				{
-					Name = "MCH2 vide",
-					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate)
-					{
-						using (var factory = new MCH2MandatFactory (accessor))
-						{
-							factory.Create (name, startDate, false);
-						}
-					},
-				};
-
-				yield return new MandatFactory
-				{
-					Name = "MCH2 avec exemples",
-					IsDefault = true,
-					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate)
-					{
-						using (var factory = new MCH2MandatFactory (accessor))
-						{
-							factory.Create (name, startDate, true);
-						}
-					},
-				};
-
-				yield return new MandatFactory
-				{
-					Name = "Entreprise vide",
-					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate)
-					{
-						using (var factory = new CompanyMandatFactory (accessor))
-						{
-							factory.Create (name, startDate, false);
-						}
-					},
-				};
-
-				yield return new MandatFactory
-				{
-					Name = "Entreprise avec exemples",
-					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate)
-					{
-						using (var factory = new CompanyMandatFactory (accessor))
-						{
-							factory.Create (name, startDate, true);
-						}
-					},
-				};
-			}
-		}
-
-		private class MandatFactory
-		{
-			public string						Name;
-			public bool							IsDefault;
-			public System.Action<DataAccessor, string, System.DateTime> Create;
 		}
 
 

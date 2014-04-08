@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
-			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.Entries);
+			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Entries);
 
 			this.nodeGetter = new EntriesNodeGetter (this.accessor);
 

@@ -8,7 +8,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public enum ToolbarCommand
 	{
-		Open,
+		NewMandat,
+		OpenMandat,
+		SaveMandat,
+
 		New,
 		Delete,
 		Deselect,

@@ -89,6 +89,7 @@
     <Compile Include="Popups\CategoriesPopup.cs" />
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\CalendarPopup.cs" />
+    <Compile Include="Popups\CreateMandatPopup.cs" />
     <Compile Include="Popups\ViewPopup.cs" />
     <Compile Include="Popups\LastViewsPopup.cs" />
     <Compile Include="Popups\PersonsPopup.cs" />
@@ -372,6 +373,8 @@
     <EmbeddedResource Include="Images\View.PersonsSettings.icon" />
     <EmbeddedResource Include="Images\TreeTable.Graphic.icon" />
     <EmbeddedResource Include="Images\Field.Delete.icon" />
+    <EmbeddedResource Include="Images\Main.New.icon" />
+    <EmbeddedResource Include="Images\Main.Save.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

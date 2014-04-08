@@ -156,6 +156,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public string GetViewTitle(ViewType viewType)
+		{
+			return AbstractView.GetViewTitle (this.accessor, viewType);
+		}
+
+		public static string GetViewTitle(DataAccessor accessor, ViewType viewType)
+		{
+			if (string.IsNullOrEmpty (accessor.Mandat.Name))
+			{
+				return StaticDescriptions.GetViewTypeDescription (viewType);
+			}
+			else
+			{
+				return string.Concat (accessor.Mandat.Name, " — ", StaticDescriptions.GetViewTypeDescription (viewType));
+			}
+		}
+
 
 		#region Events handler
 		protected void OnGoto(AbstractViewState viewState)

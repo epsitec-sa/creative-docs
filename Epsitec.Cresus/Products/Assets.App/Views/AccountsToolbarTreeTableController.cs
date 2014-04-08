@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
-			this.title = StaticDescriptions.GetViewTypeDescription (ViewType.AccountsSettings);
+			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AccountsSettings);
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Accounts);

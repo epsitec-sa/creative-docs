@@ -49,8 +49,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				switch (command)
 				{
-					case ToolbarCommand.Open:
+					case ToolbarCommand.NewMandat:
+						this.OnNew ();
+						break;
+
+					case ToolbarCommand.OpenMandat:
 						this.OnOpen ();
+						break;
+
+					case ToolbarCommand.SaveMandat:
+						this.OnSave ();
 						break;
 
 					case ToolbarCommand.NavigateBack:
@@ -130,9 +138,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void OnNew()
+		{
+			this.ShowCreateMandatPopup ();
+		}
+
 		private void OnOpen()
 		{
-			this.ShowPopup ();
+		}
+
+		private void OnSave()
+		{
 		}
 
 		private void OnNavigateBack()
@@ -151,38 +167,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void ShowPopup()
+		private void ShowCreateMandatPopup()
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Open);
+			var target = this.toolbar.GetTarget (ToolbarCommand.NewMandat);
 
-			var popup = new SimplePopup ()
+			var popup = new CreateMandatPopup (this.accessor)
 			{
-				SelectedItem = AssetsApplication.SelectedMandat,
+				MandatFactoryName = MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ().Name,
+				MandatWithSamples = false,
+				MandatStartDate   = new System.DateTime (System.DateTime.Now.Year, 1, 1),
 			};
-
-			for (int i=0; i<AssetsApplication.MandatCount; i++)
-			{
-				var mandat = AssetsApplication.GetMandatName (i);
-				popup.Items.Add ("Ouvrir le mandat \"" + mandat + "\"");
-			}
 
 			popup.Create (target, leftOrRight: false);
 
-			popup.ItemClicked += delegate (object sender, int rank)
+			popup.ButtonClicked += delegate (object sender, string name)
 			{
-				this.OpenMandat (rank);
+				if (name == "create")
+				{
+					this.CreateMandat (popup.MandatFactoryName, popup.MandatName, popup.MandatStartDate, popup.MandatWithSamples);
+				}
 			};
 		}
 
-		private void OpenMandat(int rank)
+		private void CreateMandat(string factoryName, string name, System.DateTime startDate, bool withSamples)
 		{
 			this.currentViewStates.Clear ();
 			this.historyViewStates.Clear ();
 			this.lastViewStates.Clear ();
 			this.historyPosition = -1;
 
-			AssetsApplication.SelectedMandat = rank;
-			AssetsApplication.InitializeMandat (this.accessor, AssetsApplication.SelectedMandat, "Exemple", new System.DateTime (2010, 1, 1));
+			var factory = MandatFactory.Factories.Where (x => x.Name == factoryName).FirstOrDefault ();
+			System.Diagnostics.Debug.Assert (factory != null);
+			factory.Create (this.accessor, name, startDate, withSamples);
 
 			this.DeleteView ();
 			this.CreateView (ViewType.Assets);
@@ -191,7 +207,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbar()
 		{
-			this.toolbar.SetCommandState (ToolbarCommand.Open,             ToolbarCommandState.Enable);
+			this.toolbar.SetCommandState (ToolbarCommand.NewMandat,        ToolbarCommandState.Enable);
+			this.toolbar.SetCommandState (ToolbarCommand.OpenMandat,       ToolbarCommandState.Disable);
+			this.toolbar.SetCommandState (ToolbarCommand.SaveMandat,       ToolbarCommandState.Disable);
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateBack,    this.NavigateBackEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateMenu,    this.NavigateMenuEnable);
