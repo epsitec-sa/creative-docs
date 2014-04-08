@@ -19,6 +19,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				yield return new MandatFactory
 				{
+					Name = "Vide",
+					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate, bool withSamples)
+					{
+						using (var factory = new EmptyMandatFactory (accessor))
+						{
+							factory.Create (name, startDate, withSamples);
+						}
+					},
+				};
+
+				yield return new MandatFactory
+				{
 					Name = "Pour collectivité publique (MCH-2)",
 					IsDefault = true,
 					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate, bool withSamples)
