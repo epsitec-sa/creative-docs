@@ -11,14 +11,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// <summary>
 	/// Cette classe sait fabriquer un nouveau mandat pour une entreprise, tout beau tout propre.
 	/// </summary>
-	public class CompanyMandatFactory : AbstractMandatFactory, System.IDisposable
+	public class CompanyMandatFactory : AbstractMandatFactory
 	{
 		public CompanyMandatFactory(DataAccessor accessor)
 			: base (accessor)
-		{
-		}
-
-		public void Dispose()
 		{
 		}
 

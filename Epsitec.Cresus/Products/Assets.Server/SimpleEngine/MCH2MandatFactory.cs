@@ -11,14 +11,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// <summary>
 	/// Cette classe sait fabriquer un nouveau mandat MCH2, tout beau tout propre.
 	/// </summary>
-	public class MCH2MandatFactory : AbstractMandatFactory, System.IDisposable
+	public class MCH2MandatFactory : AbstractMandatFactory
 	{
 		public MCH2MandatFactory(DataAccessor accessor)
 			: base (accessor)
-		{
-		}
-
-		public void Dispose()
 		{
 		}
 

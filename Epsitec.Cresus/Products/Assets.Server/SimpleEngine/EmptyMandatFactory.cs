@@ -4,21 +4,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	/// <summary>
 	/// Cette classe sait fabriquer un nouveau mandat entièrement vide.
 	/// </summary>
-	public class EmptyMandatFactory : AbstractMandatFactory, System.IDisposable
+	public class EmptyMandatFactory : AbstractMandatFactory
 	{
 		public EmptyMandatFactory(DataAccessor accessor)
 			: base (accessor)
-		{
-		}
-
-		public void Dispose()
 		{
 		}
 
