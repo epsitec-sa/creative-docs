@@ -134,7 +134,6 @@ namespace Epsitec.Aider.Entities
 			return office;
 		}
 
-
 		partial void GetOfficeSenders(ref IList<AiderOfficeSenderEntity> value)
 		{
 			value = this.GetOfficeSenders ().AsReadOnlyCollection ();

@@ -55,6 +55,8 @@ namespace Epsitec.Aider.BusinessCases
 			//Add participation to the destination parish
 			AiderDerogations.AddParishGroupParticipations (businessContext, person, derogationParishGroup, date);
 
+			//Check for new subscription
+			AiderDerogations.CheckForNewSubscription (businessContext, person, derogationParishGroup);
 			//!Trigg business rules!
 			person.ParishGroup = derogationParishGroup;
 
@@ -108,6 +110,39 @@ namespace Epsitec.Aider.BusinessCases
 			}
 
 			return AiderOfficeLetterReportEntity.Create (businessContext, recipient, sender, documentName, template, content);
+		}
+
+		private static void CheckForNewSubscription(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity derogationParishGroup)
+		{
+			var currentSubscriptions = AiderSubscriptionEntity.FindSubscriptions (businessContext, person);
+			if (currentSubscriptions.Any ())
+			{
+				foreach (var subscription in currentSubscriptions)
+				{
+					var currentEdition		= subscription.RegionalEdition;
+					var derogationEdition	= AiderDerogations.GetSubscriptionEdition (businessContext, derogationParishGroup);
+					if (currentEdition != derogationEdition)
+					{
+						AiderSubscriptionEntity.Create (businessContext, person.HouseholdContact.Household, derogationEdition, 1);
+						break;
+					}
+				}
+			}
+			else
+			{
+				var derogationEdition	= AiderDerogations.GetSubscriptionEdition (businessContext, derogationParishGroup);
+				AiderSubscriptionEntity.Create (businessContext, person.HouseholdContact.Household, derogationEdition, 1);
+			}
+		}
+
+		private static AiderGroupEntity GetSubscriptionEdition(BusinessContext businessContext,AiderGroupEntity parishGroup)
+		{
+			var parishRepository = Epsitec.Aider.Data.Common.ParishAddressRepository.Current;
+
+			var regionGroup = parishGroup.Parent;
+			var regionCode	= regionGroup.GetRegionId ();
+
+			return Epsitec.Aider.Data.Common.ParishAssigner.FindRegionGroup (businessContext, regionCode);
 		}
 
 		private static void CheckPrerequisiteBeforeDerogate(AiderPersonEntity person, AiderGroupEntity currentParishGroup, AiderGroupEntity derogationParishGroup)
