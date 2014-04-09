@@ -1557,7 +1557,7 @@ restart:
 				
 				if (leadingProperty != null)
 				{
-					if ((double.IsNaN (leadingProperty.Leading)) ||
+					if ((leadingProperty.Leading.IsSafeNaN ()) ||
 						(leadingProperty.Leading == 0))
 					{
 						//	Pas d'interligne spécifié : utilise l'interligne automatique.
@@ -1577,8 +1577,8 @@ restart:
 						}
 					}
 					
-					this.lineSpaceBefore = double.IsNaN (leadingProperty.SpaceBefore) ? 0 : leadingProperty.SpaceBeforeInPoints;
-					this.lineSpaceAfter  = double.IsNaN (leadingProperty.SpaceAfter)  ? 0 : leadingProperty.SpaceAfterInPoints;
+					this.lineSpaceBefore = leadingProperty.SpaceBefore.IsSafeNaN () ? 0 : leadingProperty.SpaceBeforeInPoints;
+					this.lineSpaceAfter  = leadingProperty.SpaceAfter.IsSafeNaN ()  ? 0 : leadingProperty.SpaceAfterInPoints;
 				}
 				else
 				{

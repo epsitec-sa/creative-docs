@@ -828,8 +828,8 @@ namespace Epsitec.Common.Widgets
 			//	on désire se souvenir de la position [x] initale, de manière à
 			//	pouvoir sauter des lignes plus courtes en maintenant un déplacement
 			//	avec [x] constant.
-			
-			if (double.IsNaN (this.initialX))
+
+			if (this.initialX.IsSafeNaN ())
 			{
 				Text.ITextFrame frame;
 				double cx, cy, ascender, descender, angle;

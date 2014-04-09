@@ -19,8 +19,8 @@ namespace Epsitec.Common.Types
 			{
 				return true;
 			}
-			
-			if (double.IsNaN (a) && double.IsNaN (b))
+
+			if (a.IsSafeNaN () && b.IsSafeNaN ())
 			{
 				return true;
 			}

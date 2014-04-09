@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Epsitec.Common;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
@@ -1345,7 +1346,7 @@ namespace Epsitec.Common.Designer.Viewers
 				defaultSize = this.workingForm.DefaultSize;
 			}
 
-			if (double.IsNaN(defaultSize.Width))
+			if (defaultSize.Width.IsSafeNaN ())
 			{
 				this.miscWidthButton.ActiveState = ActiveState.No;
 				this.miscWidthButton.Enable = !this.designerApplication.IsReadonly;
@@ -1360,7 +1361,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.miscWidthField.Enable = !this.designerApplication.IsReadonly;
 			}
 
-			if (double.IsNaN(defaultSize.Height))
+			if (defaultSize.Height.IsSafeNaN ())
 			{
 				this.miscHeightButton.ActiveState = ActiveState.No;
 				this.miscHeightButton.Enable = !this.designerApplication.IsReadonly;
@@ -1385,7 +1386,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	l'utilisateur spécifie.
 			Size defaultSize = this.workingForm.DefaultSize;
 
-			if (double.IsNaN(defaultSize.Width))
+			if (defaultSize.Width.IsSafeNaN ())
 			{
 				this.panelContainer.MinWidth = 0.0;
 				this.panelContainer.MaxWidth = double.PositiveInfinity;
@@ -1398,7 +1399,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.panelContainer.HorizontalAlignment = HorizontalAlignment.Left;
 			}
 
-			if (double.IsNaN(defaultSize.Height))
+			if (defaultSize.Height.IsSafeNaN ())
 			{
 				this.panelContainer.MinHeight = 0.0;
 				this.panelContainer.MaxHeight = double.PositiveInfinity;

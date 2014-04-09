@@ -57,7 +57,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return double.IsNaN (this.scale) && double.IsNaN (this.offset);
+				return this.scale.IsSafeNaN () && this.offset.IsSafeNaN ();
 			}
 		}
 		

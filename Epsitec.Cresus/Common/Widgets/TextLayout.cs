@@ -2107,7 +2107,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			if (!double.IsNaN (this.verticalMark))  // dessine le marqueur vertical ?
+			if (!this.verticalMark.IsSafeNaN ())  // dessine le marqueur vertical ?
 			{
 				Drawing.Path path = new Drawing.Path ();
 				double x = pos.X+this.verticalMark;

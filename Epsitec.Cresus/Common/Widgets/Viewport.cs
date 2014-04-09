@@ -169,8 +169,8 @@ namespace Epsitec.Common.Widgets
 				
 				if ((measureDx != null) &&
 					(measureDy != null) &&
-					(double.IsNaN (measureDx.Min) == false) &&
-					(double.IsNaN (measureDy.Min) == false))
+					(measureDx.Min.IsSafeNaN () == false) &&
+					(measureDy.Min.IsSafeNaN () == false))
 				{
 					this.SurfaceSize = new Drawing.Size (measureDx.Min, measureDy.Min);
 				}

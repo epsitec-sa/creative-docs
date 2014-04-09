@@ -51,11 +51,11 @@ namespace Epsitec.Common.Widgets.Layouts
 				double dx = size.Width;
 				double dy = size.Height;
 
-				if (double.IsNaN (dx))
+				if (dx.IsSafeNaN ())
 				{
 					dx = child.GetCurrentBounds ().Width;		//	TODO: améliorer
 				}
-				if (double.IsNaN (dy))
+				if (dy.IsSafeNaN ())
 				{
 					dy = child.GetCurrentBounds ().Height;		//	TODO: améliorer
 				}

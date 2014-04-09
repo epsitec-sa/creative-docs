@@ -113,7 +113,7 @@ namespace Epsitec.Common.Widgets
 
 			Path path;
 
-			if ( double.IsNaN(this.hot) )
+			if (this.hot.IsSafeNaN ())
 			{
 				rect.Bottom += this.distance;
 				path = Path.FromRectangle(rect);

@@ -702,8 +702,8 @@ namespace Epsitec.Common.Text.Wrappers
 				(p_size.Units != Properties.SizeUnits.None))
 			{
 				state.DefineValue (State.UnitsProperty, p_size.Units);
-				
-				if (double.IsNaN (p_size.Size))
+
+				if (p_size.Size.IsSafeNaN ())
 				{
 					state.DefineValue (State.FontSizeProperty);
 				}
@@ -733,7 +733,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			if ((p_size != null) &&
-				(double.IsNaN (p_size.Glue) == false))
+				(p_size.Glue.IsSafeNaN () == false))
 			{
 				state.DefineValue (State.FontGlueProperty, p_size.Glue * 2);
 			}
@@ -1040,8 +1040,8 @@ namespace Epsitec.Common.Text.Wrappers
 				{
 					state.DefineValue (State.LanguageLocaleProperty, p_language.Locale);
 				}
-				
-				if (double.IsNaN (p_language.Hyphenation))
+
+				if (p_language.Hyphenation.IsSafeNaN ())
 				{
 					state.DefineValue (State.LanguageHyphenationProperty);
 				}
@@ -1943,7 +1943,7 @@ namespace Epsitec.Common.Text.Wrappers
 			{
 				get
 				{
-					return double.IsNaN (this.scale) && double.IsNaN (this.offset);
+					return this.scale.IsSafeNaN () && this.offset.IsSafeNaN ();
 				}
 			}
 			

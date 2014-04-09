@@ -1163,8 +1163,8 @@ restart_paragraph_layout:
 			int paraLineCount = elems.Length;
 			int paraLastLine  = paraLineCount - 1;
 			int paraLength    = para1.ParagraphLength;
-			
-			this.lineSkipBefore = ((lead2 == null) || (double.IsNaN (lead2.SpaceAfter))) ? 0 : lead2.SpaceAfterInPoints;
+
+			this.lineSkipBefore = ((lead2 == null) || (lead2.SpaceAfter.IsSafeNaN ())) ? 0 : lead2.SpaceAfterInPoints;
 			this.keepWithPrev   = keep1WithPrev || keep2WithNext;
 			
 			this.frameIndex = elems[0].FrameIndex;

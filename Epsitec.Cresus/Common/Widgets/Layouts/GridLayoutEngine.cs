@@ -1026,7 +1026,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						}
 					}
 
-					if (double.IsNaN (measure.Desired))
+					if (measure.Desired.IsSafeNaN ())
 					{
 						measure.UpdateDesired (0);
 					}
@@ -1057,7 +1057,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						}
 					}
 
-					if (double.IsNaN (measure.Desired))
+					if (measure.Desired.IsSafeNaN ())
 					{
 						measure.UpdateDesired (0);
 					}

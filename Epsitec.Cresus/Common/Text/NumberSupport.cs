@@ -19,7 +19,7 @@ namespace Epsitec.Common.Text
 			//	Combine deux valeurs. Si b est NaN, alors retourne a. Sinon
 			//	retourne b.
 			
-			if (double.IsNaN (b))
+			if (b.IsSafeNaN ())
 			{
 				return a;
 			}
@@ -36,8 +36,7 @@ namespace Epsitec.Common.Text
 				return true;
 			}
 			
-			if (double.IsNaN (a) &&
-				double.IsNaN (b))
+			if (a.IsSafeNaN () && b.IsSafeNaN ())
 			{
 				return true;
 			}
@@ -52,8 +51,7 @@ namespace Epsitec.Common.Text
 				return false;
 			}
 			
-			if (double.IsNaN (a) &&
-				double.IsNaN (b))
+			if (a.IsSafeNaN () && b.IsSafeNaN ())
 			{
 				return false;
 			}
@@ -68,17 +66,16 @@ namespace Epsitec.Common.Text
 				return 0;
 			}
 			
-			if (double.IsNaN (a) &&
-				double.IsNaN (b))
+			if (a.IsSafeNaN () && b.IsSafeNaN ())
 			{
 				return 0;
 			}
-			
-			if (double.IsNaN (a))
+
+			if (a.IsSafeNaN ())
 			{
 				return -1;
 			}
-			if (double.IsNaN (b))
+			if (b.IsSafeNaN ())
 			{
 				return 1;
 			}

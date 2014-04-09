@@ -268,7 +268,7 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return value;
 			}
-			if (double.IsNaN (value))
+			if (value.IsSafeNaN ())
 			{
 				return double.NaN;
 			}

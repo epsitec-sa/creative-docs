@@ -156,7 +156,7 @@ namespace Epsitec.Common.Widgets
 			{
 				PanePage page = this.items[i];
 				double abs = page.AbsoluteOrder;
-				if ( System.Double.IsNaN(abs) )  continue;
+				if (abs.IsSafeNaN ())  continue;
 
 				double delta = page.PaneRelativeSize;
 				this.SetSizeBase(i, abs);

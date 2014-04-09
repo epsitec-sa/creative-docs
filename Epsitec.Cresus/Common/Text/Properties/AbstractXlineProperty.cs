@@ -49,7 +49,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return (this.isDisabled == false) && (this.thickness != 0) && (double.IsNaN (this.thickness) == false);
+				return (this.isDisabled == false) && (this.thickness != 0) && (this.thickness.IsSafeNaN () == false);
 			}
 		}
 		

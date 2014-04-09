@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			get
 			{
-				if (double.IsNaN (this.desired))
+				if (this.desired.IsSafeNaN ())
 				{
 					return this.desired;
 				}
@@ -139,9 +139,9 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		internal void UpdateDesired(double value)
 		{
-			if (double.IsNaN (this.desired))
+			if (this.desired.IsSafeNaN ())
 			{
-				if (double.IsNaN (value))
+				if (value.IsSafeNaN ())
 				{
 					return;
 				}

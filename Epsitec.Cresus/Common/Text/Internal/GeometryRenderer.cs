@@ -44,7 +44,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				return double.IsNaN (this.tabOrigin) == false;
+				return this.tabOrigin.IsSafeNaN () == false;
 			}
 		}
 		

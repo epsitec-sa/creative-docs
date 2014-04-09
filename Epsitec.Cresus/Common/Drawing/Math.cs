@@ -1,15 +1,10 @@
-﻿//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+﻿//	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common
 {
-	public class Math
+	public static class Math
 	{
-		private Math()
-		{
-		}
-		
-		
 		public static float Clip(float value)
 		{
 			if (value < 0) return 0;
@@ -50,7 +45,20 @@ namespace Epsitec.Common
 		{
 			return angle * 180.0 / System.Math.PI;
 		}
-		
+
+		public static bool IsSafeNaN(this double value)
+		{
+			try
+			{
+				return double.IsNaN (value);
+			}
+			catch (System.ArithmeticException)
+			{
+				return true;
+			}
+
+			return false;
+		}
 		
 		public static bool Equal(double a, double b, double δ)
 		{
@@ -61,7 +69,7 @@ namespace Epsitec.Common
 				return true;
 			}
 			
-			if (double.IsNaN (a) && double.IsNaN (b))
+			if (a.IsSafeNaN () && b.IsSafeNaN ())
 			{
 				return true;
 			}

@@ -612,9 +612,9 @@ namespace Epsitec.Common.Text.Wrappers
 		private void UpdateMargins(State state, Properties.MarginsProperty margins)
 		{
 			if ((margins != null) &&
-				(double.IsNaN (margins.Disposition) == false) &&
-				(double.IsNaN (margins.JustificationBody) == false) &&
-				(double.IsNaN (margins.JustificationLastLine) == false))
+				(margins.Disposition.IsSafeNaN () == false) &&
+				(margins.JustificationBody.IsSafeNaN () == false) &&
+				(margins.JustificationLastLine.IsSafeNaN () == false))
 			{
 				if ((margins.JustificationBody == 0.0) &&
 					(margins.JustificationLastLine == 0.0))
@@ -674,8 +674,8 @@ namespace Epsitec.Common.Text.Wrappers
 				(margins.Units != Properties.SizeUnits.None))
 			{
 				state.DefineValue (State.MarginUnitsProperty, margins.Units);
-				
-				if (double.IsNaN (margins.LeftMarginFirstLine))
+
+				if (margins.LeftMarginFirstLine.IsSafeNaN ())
 				{
 					state.DefineValue (State.LeftMarginFirstProperty);
 				}
@@ -683,8 +683,8 @@ namespace Epsitec.Common.Text.Wrappers
 				{
 					state.DefineValue (State.LeftMarginFirstProperty, margins.LeftMarginFirstLine);
 				}
-				
-				if (double.IsNaN (margins.LeftMarginBody))
+
+				if (margins.LeftMarginBody.IsSafeNaN ())
 				{
 					state.DefineValue (State.LeftMarginBodyProperty);
 				}
@@ -692,8 +692,8 @@ namespace Epsitec.Common.Text.Wrappers
 				{
 					state.DefineValue (State.LeftMarginBodyProperty, margins.LeftMarginBody);
 				}
-				
-				if (double.IsNaN (margins.RightMarginFirstLine))
+
+				if (margins.RightMarginFirstLine.IsSafeNaN ())
 				{
 					state.DefineValue (State.RightMarginFirstProperty);
 				}
@@ -701,8 +701,8 @@ namespace Epsitec.Common.Text.Wrappers
 				{
 					state.DefineValue (State.RightMarginFirstProperty, margins.RightMarginFirstLine);
 				}
-				
-				if (double.IsNaN (margins.RightMarginBody))
+
+				if (margins.RightMarginBody.IsSafeNaN ())
 				{
 					state.DefineValue (State.RightMarginBodyProperty);
 				}
@@ -737,8 +737,8 @@ namespace Epsitec.Common.Text.Wrappers
 						state.DefineValue (State.HyphenationProperty, false);
 						break;
 				}
-				
-				if (double.IsNaN (margins.BreakFenceBefore))
+
+				if (margins.BreakFenceBefore.IsSafeNaN ())
 				{
 					state.DefineValue (State.BreakFenceBeforeProperty);
 				}
@@ -746,8 +746,8 @@ namespace Epsitec.Common.Text.Wrappers
 				{
 					state.DefineValue (State.BreakFenceBeforeProperty, margins.BreakFenceBefore);
 				}
-				
-				if (double.IsNaN (margins.BreakFenceAfter))
+
+				if (margins.BreakFenceAfter.IsSafeNaN ())
 				{
 					state.DefineValue (State.BreakFenceAfterProperty);
 				}
@@ -804,7 +804,7 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			if ((leading != null) &&
 				(leading.LeadingUnits != Properties.SizeUnits.None) &&
-				(double.IsNaN (leading.Leading) == false))
+				(leading.Leading.IsSafeNaN () == false))
 			{
 				Properties.SizeUnits leading_units = leading.LeadingUnits;
 				
@@ -824,7 +824,7 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			if ((leading != null) &&
 				(leading.SpaceBeforeUnits != Properties.SizeUnits.None) &&
-				(double.IsNaN (leading.SpaceBefore) == false))
+				(leading.SpaceBefore.IsSafeNaN () == false))
 			{
 				state.DefineValue (State.SpaceBeforeProperty, leading.SpaceBefore);
 				state.DefineValue (State.SpaceBeforeUnitsProperty, leading.SpaceBeforeUnits);
@@ -837,7 +837,7 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			if ((leading != null) &&
 				(leading.SpaceAfterUnits != Properties.SizeUnits.None) &&
-				(double.IsNaN (leading.SpaceAfter) == false))
+				(leading.SpaceAfter.IsSafeNaN () == false))
 			{
 				state.DefineValue (State.SpaceAfterProperty, leading.SpaceAfter);
 				state.DefineValue (State.SpaceAfterUnitsProperty, leading.SpaceAfterUnits);

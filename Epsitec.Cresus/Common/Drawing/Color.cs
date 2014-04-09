@@ -66,7 +66,10 @@ namespace Epsitec.Common.Drawing
 		
 		public bool								IsEmpty
 		{
-			get { return double.IsNaN (this.a); }
+			get
+			{
+				return this.a.IsSafeNaN ();
+			}
 		}
 		
 		public bool								IsValid

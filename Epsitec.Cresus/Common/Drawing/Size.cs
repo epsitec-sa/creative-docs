@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common;
+
 namespace Epsitec.Common.Drawing
 {
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
@@ -77,8 +79,8 @@ namespace Epsitec.Common.Drawing
 		
 		public override string ToString()
 		{
-			string arg1 = double.IsNaN (this.width) ?  "*" : this.width.ToString (System.Globalization.CultureInfo.InvariantCulture);
-			string arg2 = double.IsNaN (this.height) ? "*" : this.height.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			string arg1 = this.width.IsSafeNaN () ?  "*" : this.width.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			string arg2 = this.height.IsSafeNaN () ? "*" : this.height.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
 			if ((arg1 == "*") &&
 				(arg2 == "*"))
@@ -182,14 +184,14 @@ namespace Epsitec.Common.Drawing
 		
 		public static bool operator ==(Size a, Size b)
 		{
-			return ((double.IsNaN (a.width ) && double.IsNaN (b.width )) || (a.width  == b.width )) &&
-				   ((double.IsNaN (a.height) && double.IsNaN (b.height)) || (a.height == b.height));
+			return ((a.width.IsSafeNaN ()  && b.width.IsSafeNaN ())  || (a.width  == b.width )) &&
+				   ((a.height.IsSafeNaN () && b.height.IsSafeNaN ()) || (a.height == b.height));
 		}
 		
 		public static bool operator !=(Size a, Size b)
 		{
-			return ((!double.IsNaN (a.width ) || !double.IsNaN (b.width )) && (a.width  != b.width )) ||
-				   ((!double.IsNaN (a.height) || !double.IsNaN (b.height)) && (a.height != b.height));
+			return ((!a.width.IsSafeNaN ()  || !b.width.IsSafeNaN ())  && (a.width  != b.width )) ||
+				   ((!a.height.IsSafeNaN () || !b.height.IsSafeNaN ()) && (a.height != b.height));
 		}
 		
 		

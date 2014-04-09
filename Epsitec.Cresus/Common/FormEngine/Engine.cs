@@ -83,11 +83,11 @@ namespace Epsitec.Common.FormEngine
 
 			FormDescription formDescription = Serialization.DeserializeForm(xml);
 
-			if (!double.IsNaN(formDescription.DefaultSize.Width))
+			if (!formDescription.DefaultSize.Width.IsSafeNaN ())
 			{
 				defaultSize.Width = formDescription.DefaultSize.Width;
 			}
-			if (!double.IsNaN(formDescription.DefaultSize.Height))
+			if (!formDescription.DefaultSize.Height.IsSafeNaN ())
 			{
 				defaultSize.Height = formDescription.DefaultSize.Height;
 			}

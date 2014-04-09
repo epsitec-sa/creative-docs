@@ -653,7 +653,7 @@ namespace Epsitec.Common.Drawing
 
 		public static void DefineDefaultFontSize(double fontSize)
 		{
-			TextStyle.defaultStyle.fontSize = (double.IsNaN (fontSize) || fontSize <= 0) ? Font.DefaultFontSize : fontSize;
+			TextStyle.defaultStyle.fontSize = (fontSize.IsSafeNaN () || fontSize <= 0) ? Font.DefaultFontSize : fontSize;
 		}
 		
 		public static void DefineDefaultFontColor(Drawing.Color color)
@@ -771,7 +771,7 @@ namespace Epsitec.Common.Drawing
 			{
 				get
 				{
-					return double.IsNaN (this.Pos);
+					return this.Pos.IsSafeNaN ();
 				}
 			}
 
@@ -779,8 +779,8 @@ namespace Epsitec.Common.Drawing
 
 			public bool Equals(Tab other)
 			{
-				if ((double.IsNaN (this.Pos)) &&
-					(double.IsNaN (other.Pos)))
+				if ((this.Pos.IsSafeNaN ()) &&
+					(other.Pos.IsSafeNaN ()))
 				{
 					//	Same...
 				}

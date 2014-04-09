@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Menus
 			this.value = value;
 			this.units = units;
 
-			if ( double.IsNaN(this.value) )
+			if (this.value.IsSafeNaN ())
 			{
 				this.name = "";
 				this.text = Res.Strings.Panel.Font.None;

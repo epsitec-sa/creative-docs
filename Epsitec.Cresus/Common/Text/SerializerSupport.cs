@@ -107,7 +107,7 @@ namespace Epsitec.Common.Text
 		
 		public static string SerializeDouble(double value)
 		{
-			if (double.IsNaN (value))
+			if (value.IsSafeNaN ())
 			{
 				return "[NaN]";
 			}
