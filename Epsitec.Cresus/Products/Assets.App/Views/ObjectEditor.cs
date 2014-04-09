@@ -309,6 +309,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 							yield return PageType.AmortizationDefinition;
 							break;
 
+						case EventType.Locked:
+							break;
+
 						default:  // accès à toutes les pages
 							yield return PageType.Asset;
 							yield return PageType.Groups;

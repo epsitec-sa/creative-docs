@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.obj       = this.accessor.GetObject (this.baseType, objectGuid);
 			this.timestamp = timestamp;
 			this.hasEvent  = false;
-			this.isLocked  = true;
+			this.isOutOfBounds  = true;
 			this.eventType = EventType.Unknown;
 
 			if (!objectGuid.IsEmpty && this.obj != null)
@@ -60,13 +60,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (e == null)
 				{
-					this.isLocked = AssetCalculator.IsEventLocked (this.obj, this.timestamp.Value);
+					this.isOutOfBounds = AssetCalculator.IsOutOfBoundsEvent (this.obj, this.timestamp.Value);
 				}
 				else
 				{
 					this.eventType = e.Type;
 					this.hasEvent  = true;
-					this.isLocked  = false;
+					this.isOutOfBounds  = false;
 				}
 			}
 
@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool hilited   = this.IsHilited (tile.Field);
 			bool readOnly  = this.IsReadonly (tile.Field);
 
-			return new SummaryControllerTile (text, tooltip, alignment, hilited, readOnly, this.isLocked);
+			return new SummaryControllerTile (text, tooltip, alignment, hilited, readOnly, this.isOutOfBounds);
 		}
 
 		private bool IsHilited(ObjectField field)
@@ -446,7 +446,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private DataObject							obj;
 		private Timestamp?							timestamp;
 		private bool								hasEvent;
-		private bool								isLocked;
+		private bool								isOutOfBounds;
 		private EventType							eventType;
 	}
 }

@@ -184,6 +184,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				yield return EventType.Revalorization;
 				//?yield return EventType.MainValue;
 				//?yield return EventType.AmortizationExtra;
+				yield return EventType.Locked;
 				yield return EventType.Output;
 			}
 		}
@@ -213,9 +214,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				case EventType.AmortizationExtra:
 					return new ButtonDescription (type, "Amortissement extraordinaire", "Amortissement de la valeur comptable", enable);
 
+				case EventType.Locked:
+					return new ButtonDescription (type, "Verrou", "Verrouille tous les événements antérieurs", enable);
+
 				case EventType.Output:
 					return new ButtonDescription (type, "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.", enable);
-				
+
 				default:
 					return new ButtonDescription (type, null, null, false);
 			}

@@ -599,7 +599,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else
 				{
 					var d = new TimelineCellDate (cell.Value.Timestamp.Date, isSelected: (i == selection));
-					var g = new TimelineCellGlyph (cell.Value.Glyph, cell.Value.IsLocked, false, cell.Value.Tooltip, isSelected: (i == selection));
+					var g = new TimelineCellGlyph (cell.Value.Glyph, cell.Value.Flags, cell.Value.Tooltip, isSelected: (i == selection));
 					var v = new TimelineCellValue (i, cell.Value.Values, isSelected: (i == selection));
 
 					dates.Add (d);

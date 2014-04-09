@@ -115,6 +115,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			if (obj != null)
 			{
+				if (type == EventType.Locked)
+				{
+					//	Il ne peut y avoir qu'un seul verrou par objet.
+					AssetCalculator.RemoveLockedEvent (obj);
+				}
+
 				var position = obj.GetNewPosition (date);
 				var ts = new Timestamp (date, position);
 				var e = new DataEvent (ts, type);
@@ -141,9 +147,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			//	La valeur comptable est créée une bonne fois pour toutes.
 			//	On l'initialise avec les paramètres d'amortissement.
-			if (e.Type == EventType.Modification)
+			if (e.Type == EventType.Modification ||
+				e.Type == EventType.Locked)
 			{
-				//	Pour ce seul type, il n'y a pas et n'y aura jamais de valeur comptable.
+				//	Pour ces seuls types, il n'y a pas et n'y aura jamais de valeur comptable.
 				return;
 			}
 

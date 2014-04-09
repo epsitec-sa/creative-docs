@@ -55,14 +55,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				if (node.BaseType == BaseType.Assets)
 				{
 					var obj = this.accessor.GetObject (node.BaseType, node.Guid);
-					var lockedIntervals = AssetCalculator.GetLockedIntervals (obj);
+					var outOfBoundsIntervals = AssetCalculator.GetOutOfBoundsIntervals (obj);
+					var lockedTimestamp = AssetCalculator.GetLockedTimestamp (obj);
 
 					for (int c=0; c<dataArray.ColumnsCount; c++)
 					{
 						var column = dataArray.GetColumn (c);
-						if (AssetCalculator.IsLocked (lockedIntervals, column.Timestamp))
+						var flags = column[row].Flags;
+
+						if (column.Timestamp < lockedTimestamp)
 						{
-							column[row] = new DataCell (column[row].Glyph, true, false, column[row].Tooltip);
+							flags |= DataCellFlags.Locked;
+						}
+
+						if (AssetCalculator.IsOutOfBounds (outOfBoundsIntervals, column.Timestamp))
+						{
+							flags |= DataCellFlags.OutOfBounds;
+						}
+
+						if (column[row].Flags != flags)
+						{
+							column[row] = new DataCell (column[row].Glyph, flags, column[row].Tooltip);
 						}
 					}
 				}
@@ -71,7 +84,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					for (int c=0; c<dataArray.ColumnsCount; c++)
 					{
 						var column = dataArray.GetColumn (c);
-						column[row] = new DataCell (column[row].Glyph, false, true, null);
+						column[row] = new DataCell (column[row].Glyph, DataCellFlags.Group, null);
 					}
 				}
 			}
@@ -82,7 +95,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var glyph      = TimelineData.TypeToGlyph (e.Type);
 			string tooltip = LogicDescriptions.GetTooltip (this.accessor, obj, e.Timestamp, e.Type, 8);
 
-			return new DataCell (glyph, false, false, tooltip);
+			return new DataCell (glyph, DataCellFlags.None, tooltip);
 		}
 
 
@@ -229,12 +242,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		/// </summary>
 		public class DataCell
 		{
-			public DataCell(TimelineGlyph glyph, bool isLocked = false, bool isGroup = false, string tooltip = null)
+			public DataCell(TimelineGlyph glyph, DataCellFlags flags = DataCellFlags.None, string tooltip = null)
 			{
-				this.Glyph    = glyph;
-				this.IsLocked = isLocked;
-				this.IsGroup  = isGroup;
-				this.Tooltip  = tooltip;
+				this.Glyph   = glyph;
+				this.Flags   = flags;
+				this.Tooltip = tooltip;
 			}
 
 			public bool IsEmpty
@@ -248,8 +260,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			public static DataCell Empty = new DataCell (TimelineGlyph.Empty);
 
 			public readonly TimelineGlyph	Glyph;
-			public readonly bool			IsLocked;
-			public readonly bool			IsGroup;
+			public readonly DataCellFlags	Flags;
 			public readonly string			Tooltip;
 		}
 		#endregion

@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				yield return new MandatFactory
 				{
-					Name = "Pour collectivité publique (MCH-2)",
+					Name = "Pour collectivité publique (MCH2)",
 					IsDefault = true,
 					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate, bool withSamples)
 					{

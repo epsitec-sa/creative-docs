@@ -57,6 +57,7 @@
     <Compile Include="BusinessLogic\CategoriesLogic.cs" />
     <Compile Include="BusinessLogic\AmortizationDetails.cs" />
     <Compile Include="BusinessLogic\AccountsLogic.cs" />
+    <Compile Include="BusinessLogic\DataCellFlags.cs" />
     <Compile Include="BusinessLogic\EntryProperties.cs" />
     <Compile Include="BusinessLogic\EntryAccounts.cs" />
     <Compile Include="BusinessLogic\EntryScenario.cs" />

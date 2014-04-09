@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					var rect = this.GetCellsRect (x, rank);
 					bool isHover = (this.detectedHoverRank >= x && this.detectedHoverRank < rank);
 
-					this.PaintCellBackground (graphics, rect, lastCell, isHover, index, lastCell.IsLocked);
+					this.PaintCellBackground (graphics, rect, lastCell, isHover, index, lastCell.Flags);
 
 					//	Ajuste le rectangle pour avoir une hauteur constante.
 					double h = this.CellWidth / this.RelativeWidth;
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					this.PaintCellForeground (graphics, glyphRect, lastCell, isHover, index);
 
-					this.PaintGrid (graphics, rect, index, this.hilitedHoverRank, lastCell.IsGroup);
+					this.PaintGrid (graphics, rect, index, this.hilitedHoverRank, (lastCell.Flags & DataCellFlags.Group) != 0);
 
 					index++;
 					x = rank;
@@ -70,10 +70,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private void PaintCellBackground(Graphics graphics, Rectangle rect, TimelineCellGlyph cell, bool isHover, int index, bool isLocked)
+		private void PaintCellBackground(Graphics graphics, Rectangle rect, TimelineCellGlyph cell, bool isHover, int index, DataCellFlags flags)
 		{
 			//	Dessine le fond.
 			var color = TimelineRowGlyphs.GetCellColor (cell, isHover, index);
+
+			//?//	Les cellules antérieures à l'événement Locked (cadenas) sont plus foncées.
+			//?if ((flags & DataCellFlags.Locked) != 0)
+			//?{
+			//?	color = color.Delta (-0.05);
+			//?}
 
 			if (!color.IsBackground ())
 			{
@@ -83,7 +89,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			//	S'il s'agit d'une date bloquée (avant un événement d'entrée ou après un
 			//	événement de sortie), on dessine des hachures.
-			if (isLocked)
+			//	Idem si les cellules sont antérieures à l'événement Locked (cadenas).
+			if ((flags & DataCellFlags.OutOfBounds) != 0 ||
+				(flags & DataCellFlags.Locked     ) != 0)
 			{
 				var reference = this.MapParentToClient (Point.Zero);
 				PaintHatch.Paint (graphics, rect, reference, 0.3);

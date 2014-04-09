@@ -895,7 +895,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var cell = this.dataArray.GetCell (row, firstCell+i);
 					bool selected = (row == this.selectedRow && firstCell+i == this.selectedColumn);
 
-					var g = new TimelineCellGlyph (cell.Glyph, cell.IsLocked, cell.IsGroup, cell.Tooltip, selected);
+					var g = new TimelineCellGlyph (cell.Glyph, cell.Flags, cell.Tooltip, selected);
 					glyphs.Add (g);
 				}
 

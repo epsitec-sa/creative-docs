@@ -166,6 +166,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EventType.MainValue:
 					return "Modification valeur";
 
+				case EventType.Locked:
+					return "Verrou";
+
 				case EventType.Output:
 					return "Sortie";
 

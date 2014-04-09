@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Graph,
 		Labels,
 		Simulation,
+		Locked,
 		Accept,
 		Cancel,
 		Graphic,

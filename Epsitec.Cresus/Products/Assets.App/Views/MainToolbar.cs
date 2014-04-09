@@ -94,6 +94,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 									   											   				     
 			this.buttonEdit            = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Edit,             "Main.Edit",             "Edition");
 			this.buttonSimulation      = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Simulation,       "Main.Simulation",       "Simulation");
+			this.buttonLocked          = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Locked,           "Main.Locked",           "Gestion ds verrous");
 									  				 							   				     
 			this.buttonCancel          = this.CreateCommandButton  (DockStyle.Right,   ToolbarCommand.Cancel,           "Edit.Cancel",           "Annuler les modifications");
 			this.buttonAccept          = this.CreateCommandButton  (DockStyle.Right,   ToolbarCommand.Accept,           "Edit.Accept",           "Accepter les modifications");
@@ -334,6 +335,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IconButton						buttonEdit;
 		private IconButton						buttonSimulation;
+		private IconButton						buttonLocked;
 
 		private IconButton						buttonAccept;
 		private IconButton						buttonCancel;

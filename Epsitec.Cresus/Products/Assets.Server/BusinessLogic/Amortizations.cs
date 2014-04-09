@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var endDate = beginDate.AddMonths (def.PeriodMonthCount);
 			var range = new DateRange (beginDate, endDate);
 
-			if (AssetCalculator.IsEventLocked (obj, new Timestamp (range.ExcludeTo.AddSeconds (-1), 0)))
+			if (AssetCalculator.IsOutOfBoundsEvent (obj, new Timestamp (range.ExcludeTo.AddSeconds (-1), 0)))
 			{
 				return AmortizationDetails.Empty;
 			}

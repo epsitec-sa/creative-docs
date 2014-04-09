@@ -45,11 +45,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (objectGuid.HasValue)
 			{
 				this.AddObject (start, end, objectGuid.Value);
-
-				if ((mode & TimelineMode.Expanded) != 0)
-				{
-					this.UpdateLocked (objectGuid.Value);
-				}
+				this.UpdateFlags (objectGuid.Value);
 			}
 		}
 
@@ -223,20 +219,32 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private void UpdateLocked(Guid objectGuid)
+		private void UpdateFlags(Guid objectGuid)
 		{
 			//	Toutes les dates avant un événement d'entrée ou après un événement de
 			//	sortie sont marquées comme bloquées. Elles auront un fond hachuré.
 			var obj = this.accessor.GetObject (this.baseType, objectGuid);
-			var lockedIntervals = AssetCalculator.GetLockedIntervals (obj);
+			var outOfBoundsIntervals = AssetCalculator.GetOutOfBoundsIntervals (obj);
+			var lockedTimestamp = AssetCalculator.GetLockedTimestamp (obj);
 
 			for (int i=0; i<this.cells.Count; i++)
 			{
 				var cell = this.cells[i];
+				var flags = DataCellFlags.None;
 
-				if (AssetCalculator.IsLocked (lockedIntervals, cell.Timestamp))
+				if (cell.Timestamp < lockedTimestamp)
 				{
-					cell.IsLocked = true;
+					flags |= DataCellFlags.Locked;
+				}
+
+				if (AssetCalculator.IsOutOfBounds (outOfBoundsIntervals, cell.Timestamp))
+				{
+					flags |= DataCellFlags.OutOfBounds;
+				}
+
+				if (flags != DataCellFlags.None)
+				{
+					cell.Flags = flags;
 					this.cells[i] = cell;
 				}
 			}
@@ -276,6 +284,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				case EventType.AmortizationExtra:
 					return TimelineGlyph.FilledDiamond;
+
+				case EventType.Locked:
+					return TimelineGlyph.Locked;
 
 				default:
 					return TimelineGlyph.Undefined;
@@ -423,7 +434,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			public Timestamp		Timestamp;
 			public TimelineGlyph	Glyph;
-			public bool				IsLocked;
+			public DataCellFlags	Flags;
 			public string			Tooltip;
 			public decimal?[]		Values;
 		}

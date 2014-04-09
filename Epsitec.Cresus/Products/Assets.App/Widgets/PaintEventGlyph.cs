@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -145,6 +144,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.AddPath (path);
 					graphics.RenderSolid (ColorManager.TextColor);
 					break;
+
+				case TimelineGlyph.Locked:
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
+					path = PaintEventGlyph.GetLockedPath (r);
+
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.TextColor);
+					break;
 			}
 		}
 
@@ -159,6 +166,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private static Path GetDownPath(Rectangle rect)
 		{
+			//	Retourne le chemin d'un triangle pointé vers le bas.
 			var path = new Path ();
 
 			path.MoveTo (rect.TopLeft);
@@ -171,6 +179,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private static Path GetUpPath(Rectangle rect)
 		{
+			//	Retourne le chemin d'un triangle pointé vers le haut.
 			var path = new Path ();
 
 			path.MoveTo (rect.BottomLeft);
@@ -183,6 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private static Path GetDiamondPath(Rectangle rect)
 		{
+			//	Retourne le chemin d'un carré sur la pointe.
 			var path = new Path ();
 
 			path.MoveTo (rect.Center.X, rect.Top);
@@ -196,6 +206,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private static Path GetStarPath(Rectangle rect)
 		{
+			//	Retourne le chemin d'une étoile à 5 branches.
 			var path = new Path ();
 
 			var c = rect.Center;
@@ -222,8 +233,42 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return path;
 		}
 
+		private static Path GetLockedPath(Rectangle rect)
+		{
+			//	Retourne le chemin d'un cadenas.
+			var path = new Path ();
+
+			path.MoveTo (PaintEventGlyph.GetPoint (rect, 1, 0));
+			path.LineTo (PaintEventGlyph.GetPoint (rect, 1, 6));
+			path.LineTo (PaintEventGlyph.GetPoint (rect, 2, 6));
+			path.LineTo (PaintEventGlyph.GetPoint (rect, 2, 7));
+			path.CurveTo (PaintEventGlyph.GetPoint (rect, 2, 9), PaintEventGlyph.GetPoint (rect, 3, 10), PaintEventGlyph.GetPoint (rect, 5, 10));
+			path.CurveTo (PaintEventGlyph.GetPoint (rect, 7, 10), PaintEventGlyph.GetPoint (rect, 8, 9), PaintEventGlyph.GetPoint (rect, 8, 7));
+			path.LineTo (PaintEventGlyph.GetPoint (rect, 8, 6));
+			path.LineTo (PaintEventGlyph.GetPoint (rect, 9, 6));
+			path.LineTo (PaintEventGlyph.GetPoint (rect, 9, 0));
+			path.Close ();
+
+			path.MoveTo (PaintEventGlyph.GetPoint (rect, 3, 6));
+			path.LineTo (PaintEventGlyph.GetPoint (rect, 7, 6));
+			path.LineTo (PaintEventGlyph.GetPoint (rect, 7, 7));
+			path.CurveTo (PaintEventGlyph.GetPoint (rect, 7, 8), PaintEventGlyph.GetPoint (rect, 6, 9), PaintEventGlyph.GetPoint (rect, 5, 9));
+			path.CurveTo (PaintEventGlyph.GetPoint (rect, 4, 9), PaintEventGlyph.GetPoint (rect, 3, 8), PaintEventGlyph.GetPoint (rect, 3, 7));
+			path.Close ();
+
+			return path;
+		}
+
+		private static Point GetPoint(Rectangle rect, double x, double y)
+		{
+			//	Retourne un point inscrit dans un espace de coordonnées comprises
+			//	entre 0 et 10.
+			return new Point (rect.Left + rect.Width*x/10, rect.Bottom + rect.Height*y/10);
+		}
+
 		private static Path GetPinnedPath(Rectangle rect)
 		{
+			//	Retourne le chemin d'un petit cercle, symbolisant l'empreinte de la punaise.
 			var path = new Path ();
 
 			path.AppendCircle (rect.Center, rect.Width*0.15);

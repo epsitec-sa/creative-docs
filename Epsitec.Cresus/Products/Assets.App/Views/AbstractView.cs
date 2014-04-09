@@ -72,6 +72,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ToolbarCommand.Simulation:
 					this.OnMainSimulation ();
 					break;
+
+				case ToolbarCommand.Locked:
+					this.OnMainLocked ();
+					break;
 			}
 		}
 
@@ -101,6 +105,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 					}
 				};
+			}
+		}
+
+		private void OnMainLocked()
+		{
+			var target = this.mainToolbar.GetTarget (ToolbarCommand.Locked);
+
+			if (target != null)
+			{
 			}
 		}
 
