@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -16,6 +16,7 @@ using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
@@ -74,7 +75,10 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		{
 			var businessContext = this.BusinessContext;
 
-			AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (businessContext, receiver);
+			if (UserManager.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
+			{
+				AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (businessContext, receiver);
+			}
 			AiderSubscriptionRefusalEntity.CheckRefusalDoesNotExist (businessContext, receiver);
 
 			var edition = this.GetEdition (receiver.Address);
@@ -93,7 +97,10 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 			var businessContext = this.BusinessContext;
 
-			AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (businessContext, receiver);
+			if (UserManager.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
+			{
+				AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (businessContext, receiver);
+			}
 			AiderSubscriptionRefusalEntity.CheckRefusalDoesNotExist (businessContext, receiver);
 
 			var edition = this.GetEdition (receiver.Address);
