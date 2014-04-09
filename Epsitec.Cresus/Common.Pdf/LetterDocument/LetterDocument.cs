@@ -20,9 +20,9 @@ namespace Epsitec.Common.Pdf.LetterDocument
 			this.lineHeights = new List<double> ();
 			this.linePages   = new List<int> ();
 
-			this.Setup.TextStyle.Font = Font.GetFont ("Verdana", "");
-			this.Setup.TextStyle.Alignment = ContentAlignment.None;
-			this.Setup.TextStyle.FontSize = 33.835; //9pt
+//-			this.Setup.TextStyle.Font = Font.GetFont ("Verdana", "");
+//-			this.Setup.TextStyle.Alignment = ContentAlignment.None;
+//-			this.Setup.TextStyle.FontSize = 33.835; //9pt
 		}
 
 		public void GeneratePdf(string path, FormattedText topLogo, FormattedText topReference, FormattedText senderAddress, FormattedText recipientAddress, FormattedText placeAndDate,FormattedText content)

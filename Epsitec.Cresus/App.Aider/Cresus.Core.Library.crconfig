@@ -5,8 +5,8 @@
 # to configure the loading of the modules needed by the application.
 #
 
-DefineBuildDate ("2014-04-07 07:00");
-DefineBuildVersion ("1.3.1415.0");
+DefineBuildDate ("2014-04-08 21:15");
+DefineBuildVersion ("1.3.1415.1");
 
 DefineDatabase ("aider", "localhost");
 DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication");

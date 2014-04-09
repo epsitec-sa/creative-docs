@@ -88,7 +88,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				var aiderUser       = userManager.AuthenticatedUser;
 				var sender		    = this.BusinessContext.GetLocalEntity (aiderUser.OfficeSender);
 
-				var letter = AiderDerogations.CreateDerogationLetter (this.BusinessContext,this.Entity, sender, derogationParishGroup, currentParishGroup);
+				var letter = AiderDerogations.CreateDerogationLetter (this.BusinessContext, this.Entity, sender, aiderUser, derogationParishGroup, currentParishGroup);
 				//SaveChanges for ID purpose: BuildProcessorUrl need the entity ID
 				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 				letter.ProcessorUrl		= letter.GetProcessorUrlForSender (this.BusinessContext, "officeletter", sender);

@@ -82,7 +82,8 @@ namespace Epsitec.Aider.BusinessCases
 		}
 
 		public static AiderOfficeLetterReportEntity CreateDerogationLetter(BusinessContext businessContext, AiderPersonEntity person,
-			/**/														   AiderOfficeSenderEntity sender, AiderGroupEntity newParish, AiderGroupEntity oldParish)
+			/**/														   AiderOfficeSenderEntity sender, AiderUserEntity user,
+			/**/														   AiderGroupEntity newParish, AiderGroupEntity oldParish)
 		{
 			var office		 = AiderOfficeManagementEntity.Find (businessContext, newParish);
 			var recipient	 = person.MainContact;
@@ -101,6 +102,12 @@ namespace Epsitec.Aider.BusinessCases
 
 			var greetings = (person.eCH_Person.PersonSex == PersonSex.Male) ? "Monsieur" : "Madame";
 			var fullName  = sender.OfficialContact.Person.GetFullName ();
+
+			if (string.IsNullOrEmpty (fullName))
+			{
+				fullName = user.DisplayName;
+			}
+
 			var content   = FormattedContent.Escape (greetings, newParish.Name, oldParish.Name, newParish.Name, fullName);
 			var template  = "template-letter-derogation";
 

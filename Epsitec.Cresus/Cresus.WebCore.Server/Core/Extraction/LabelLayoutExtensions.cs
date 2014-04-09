@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 		public static double Points(this double value)
 		{
-			return value * 25.4 / 72.0;
+			return value * 254 / 72.0;
 		}
 
 		public static double Millimeters(this double value)

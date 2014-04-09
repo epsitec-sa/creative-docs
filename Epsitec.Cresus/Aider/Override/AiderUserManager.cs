@@ -57,7 +57,7 @@ namespace Epsitec.Aider.Override
 
 			this.NotifyUserLogin (user as AiderUserEntity, notif);
 			this.NotifyMissingEMail (user as AiderUserEntity, notif);
-			this.NotifyMissingContact (user as AiderUserEntity, notif);
+			this.NotifyInvalidContact (user as AiderUserEntity, notif);
 			this.NotifyMissingOffice (user as AiderUserEntity, notif);
 
 			base.NotifySusccessfulLogin (user);
@@ -161,7 +161,7 @@ namespace Epsitec.Aider.Override
 			}
 		}
 
-		private void NotifyMissingContact(AiderUserEntity user, NotificationManager notif)
+		private void NotifyInvalidContact(AiderUserEntity user, NotificationManager notif)
 		{
 			if (user.Contact.IsNull ())
 			{
@@ -179,6 +179,26 @@ namespace Epsitec.Aider.Override
 				};
 
 				notif.WarnUser (user.LoginName, message, When.OnConnect);
+				return;
+			}
+
+			if (user.Contact.Person.IsNull ())
+			{
+				var message = new NotificationMessage ()
+				{
+					Title     = "Attention AIDER",
+					Body      = "Votre contact doit être associé à votre personne physique. Cliquez sur ce message pour accéder à votre profil...",
+					Dataset   = Res.CommandIds.Base.ShowAiderUser,
+					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
+
+					HeaderErrorMessage = "Contact associé de manière incorrecte",
+
+					ErrorField        = LambdaUtils.Convert ((AiderUserEntity e) => e.Contact),
+					ErrorFieldMessage = "votre contact"
+				};
+
+				notif.WarnUser (user.LoginName, message, When.OnConnect);
+				return;
 			}
 		}
 
