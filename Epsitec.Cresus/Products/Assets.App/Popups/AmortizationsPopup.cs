@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.dateFromController = new DateController (this.accessor)
 			{
 				Date            = this.DateFrom,
-				DateLabelWidth  = 40,
+				DateLabelWidth  = AmortizationsPopup.indent,
 				DateDescription = "Depuis",
 				TabIndex        = 1,
 			};
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.dateToController = new DateController (this.accessor)
 			{
 				Date            = this.DateTo,
-				DateLabelWidth  = 40,
+				DateLabelWidth  = AmortizationsPopup.indent,
 				DateDescription = "Jusqu'à",
 				TabIndex        = 2,
 			};
@@ -201,7 +201,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private const int lineHeight = 2+AbstractFieldController.lineHeight+2;
-		private const int popupWidth = 330;
+		private const int indent     = 40;
+		private const int popupWidth = AmortizationsPopup.margin*2 + 10 + AmortizationsPopup.indent + DateController.controllerWidth;
 		private const int margin     = 20;
 
 		private readonly DataAccessor			accessor;

@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.dateController = new DateController (this.accessor)
 			{
 				Date            = this.Date,
-				DateLabelWidth  = 50,
+				DateLabelWidth  = LockedPopup.indent,
 				DateDescription = "Jusqu'au",
 				TabIndex        = 1,
 			};
@@ -208,7 +208,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private const int lineHeight = 2+AbstractFieldController.lineHeight+2;
-		private const int popupWidth = 340;
+		private const int indent     = 50;
+		private const int popupWidth = LockedPopup.margin*2 + 10 + LockedPopup.indent + DateController.controllerWidth;
 		private const int margin     = 20;
 
 		private readonly DataAccessor			accessor;
