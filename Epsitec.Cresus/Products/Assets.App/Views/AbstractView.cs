@@ -114,6 +114,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null)
 			{
+				var popup = new LockedPopup (this.accessor)
+				{
+					OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
+					Date                = System.DateTime.Now,
+				};
+
+				popup.Create (target);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "ok")
+					{
+						var guid = popup.IsAll ? Guid.Empty : this.SelectedGuid;
+						var createDate = popup.Date.GetValueOrDefault ();
+
+						AssetCalculator.Locked (this.accessor, guid, popup.IsDelete, createDate);
+						this.DeepUpdateUI ();
+					}
+				};
 			}
 		}
 

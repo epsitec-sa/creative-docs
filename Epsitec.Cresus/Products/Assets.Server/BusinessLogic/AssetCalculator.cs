@@ -209,6 +209,64 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 		#region Locked event logic
+		public static void Locked(DataAccessor accessor, Guid guid, bool isDelete, System.DateTime createDate)
+		{
+			DataObject obj = null;
+			if (!guid.IsEmpty)
+			{
+				obj = accessor.GetObject (BaseType.Assets, guid);
+			}
+
+			if (isDelete)  // déverrouille ?
+			{
+				if (guid.IsEmpty)  // tous ?
+				{
+					var getter = accessor.GetNodeGetter (BaseType.Assets);
+
+					foreach (var node in getter.Nodes)
+					{
+						obj = accessor.GetObject (BaseType.Assets, node.Guid);
+						AssetCalculator.RemoveLockedEvent (obj);
+					}
+				}
+				else  // un seul ?
+				{
+					AssetCalculator.RemoveLockedEvent (obj);
+				}
+			}
+			else  // verrouille ?
+			{
+				if (guid.IsEmpty)  // tous ?
+				{
+					var getter = accessor.GetNodeGetter (BaseType.Assets);
+
+					foreach (var node in getter.Nodes)
+					{
+						obj = accessor.GetObject (BaseType.Assets, node.Guid);
+						AssetCalculator.CreateLockedEvent (accessor, obj, createDate);
+					}
+				}
+				else  // un seul ?
+				{
+					AssetCalculator.CreateLockedEvent (accessor, obj, createDate);
+				}
+			}
+		}
+
+		private static void CreateLockedEvent(DataAccessor accessor, DataObject obj, System.DateTime date)
+		{
+			//	Crée l'événement Locked (cadenas) de l'objet, s'il est après l'événement d'entrée.
+			if (obj != null)
+			{
+				AssetCalculator.RemoveLockedEvent (obj);
+
+				if (!AssetCalculator.IsOutOfBoundsEvent (obj, new Timestamp (date, 0)))
+				{
+					accessor.CreateAssetEvent (obj, date, EventType.Locked);
+				}
+			}
+		}
+
 		public static void RemoveLockedEvent(DataObject obj)
 		{
 			//	Supprime l'événement Locked (cadenas) de l'objet, s'il existe.
