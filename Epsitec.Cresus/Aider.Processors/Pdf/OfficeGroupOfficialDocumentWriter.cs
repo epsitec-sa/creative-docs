@@ -17,6 +17,7 @@ using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Data.Common;
 
 namespace Epsitec.Aider.Processors.Pdf
 {
@@ -31,9 +32,6 @@ namespace Epsitec.Aider.Processors.Pdf
 			var setup   = this.GetSetup ();
 			var report  = this.GetReport (setup);
 			var content = new System.Text.StringBuilder ();
-
-			content.Append (officeReport.GetFormattedText ());
-
 			var no = 0;
 			
 			foreach (var participant in officeReport.Participants.OrderBy (x => x.Contact.DisplayName))
@@ -56,7 +54,14 @@ namespace Epsitec.Aider.Processors.Pdf
 				{
 					if (sender.Office.ParishGroupPathCache == person.ParishGroupPathCache)
 					{
-						parish = person.GetGeoParishGroup (this.context).Name.Substring (11).Trim();
+						if (person.GeoParishGroupPathCache == "NOPA.")
+						{
+							parish = "";
+						}
+						else
+						{
+							parish = person.GetGeoParishGroup (this.context).Name.Substring (11).Trim ();
+						}
 					}
 					else
 					{
@@ -72,27 +77,29 @@ namespace Epsitec.Aider.Processors.Pdf
 			}
 
 
-			var topLogo	     = string.Format ("<img src=\"{0}\" />", CoreContext.GetFileDepotPath ("assets", "logo-eerv.png"));
+			var topLogo	     = string.Format ("<img src=\"{0}\" />" + officeReport.GetFormattedText (), CoreContext.GetFileDepotPath ("assets", "logo-eerv.png"));
+			
 			var bottomReference	= "Extrait d'AIDER le " + System.DateTime.Now.ToString ("d MMM yyyy");
-
-			var formattedContent = new FormattedText (content);
 			report.AddTopLeftLayer (topLogo, 50);
+			report.HeaderHeight = 400.0;			
+			var formattedContent = new FormattedText (content);
 			report.AddBottomRightLayer (bottomReference, 100);
+			report.FooterHeight = 50.0;
 			report.GeneratePdf (stream, formattedContent);
 		}
 
-		private TextDocument GetReport(TextDocumentSetup setup)
+		private ListingDocument GetReport(ListingDocumentSetup setup)
 		{
 			var exportPdfInfo   = this.layout.GetExportPdfInfo ();
 			var labelPageLayout = this.layout.GetLabelPageLayout ();
 			var labelRenderer   = this.layout.GetLabelRenderer ();
 
-			return new TextDocument (exportPdfInfo, setup);
+			return new ListingDocument (exportPdfInfo, setup);
 		}
 
-		private TextDocumentSetup GetSetup()
+		private ListingDocumentSetup GetSetup()
 		{
-			var setup = new TextDocumentSetup ();
+			var setup = new ListingDocumentSetup ();
 
 			setup.TextStyle.TabInsert (new TextStyle.Tab (5.0.Millimeters (), TextTabType.DecimalDot, TextTabLine.None));
 			setup.TextStyle.TabInsert (new TextStyle.Tab (10.0.Millimeters (), TextTabType.DecimalDot, TextTabLine.None));
