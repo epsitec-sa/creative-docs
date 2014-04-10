@@ -152,41 +152,53 @@ namespace Epsitec.Aider.Data.Job
 			return true;
 		}
 
-		private void ReassignHousehold(BusinessContext businessContext, List<FormattedText> changes, eCH_ReportedPersonEntity family, AiderPersonEntity person, AiderHouseholdEntity household)
+		private void ReassignHousehold(BusinessContext businessContext, List<FormattedText> changes, eCH_ReportedPersonEntity eChHousehold, AiderPersonEntity person, AiderHouseholdEntity potentialHousehold)
 		{
 			this.LogToConsole ("Info: Reassign household");
-			var isSameHead = household.IsHead (person);
-			var isSameMemberCount = household.Members.Count (x => x.IsGovernmentDefined).Equals (family.MembersCount);
-			
+			var isSameHead = potentialHousehold.IsHead (person);
+			var isSameEChMemberCount = potentialHousehold.Members.Count (x => x.IsGovernmentDefined).Equals (eChHousehold.MembersCount);
+			var isSameMemberCount	 = potentialHousehold.Members.Count ().Equals (eChHousehold.MembersCount);
 			//	Ensure that potential family is like ECh ReportedPerson before apply a full relocate
+			if (person.eCH_Person.AdultMaritalStatus == PersonMaritalStatus.Married && isSameHead && !isSameEChMemberCount)
+			{
+				var otherHead = potentialHousehold.Members.Where (p => potentialHousehold.IsHead (p) && p != person).SingleOrDefault ();
+				if (otherHead != null)
+				{
+					if (otherHead.Confession != PersonConfession.Protestant)
+					{
+						isSameEChMemberCount = true; //force update
+					}
+				}
+			}
 			
-			if (isSameHead&&isSameMemberCount)
+			if (isSameHead&&isSameEChMemberCount)
 			{
 				this.LogToConsole ("Info: Same head and member count detected, processing full relocate");
-				var members = household.Members;
+				var members = potentialHousehold.Members;
 
 				//	First, reassign the parents, then the children. This simplifies the updating
 				//	of the children' household address in UpdateAiderHouseholdAndSubscription.
 
-				foreach (var member in members.Where (x => household.IsHead (x)))
+				foreach (var member in members.Where (x => potentialHousehold.IsHead (x)))
 				{
 
-					this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
+					this.UpdateAiderHouseholdAndSubscription (businessContext, eChHousehold, member);
 					this.ReassignAndWarnParish (businessContext, member, changes);
 
 				}
 
-				foreach (var member in members.Where (x => household.IsHead (x) == false))
+				foreach (var member in members.Where (x => potentialHousehold.IsHead (x) == false))
 				{
-					this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
+					this.UpdateAiderHouseholdAndSubscription (businessContext, eChHousehold, member);
 					this.ReassignAndWarnParish (businessContext, member, changes);
 				}
 			}
 			else //potential family is different relocate head from ECh new Data
 			{
+				
 				this.LogToConsole ("Info: Reassign only {0}", person.GetFullName ());
 				var warningMessage = FormattedText.FromSimpleText ("Cette personne a maintenant son propre ménage.");
-				this.RelocateAndCreateNewAiderHousehold (businessContext, family);
+				this.RelocateAndCreateNewAiderHousehold (businessContext, eChHousehold);
 				this.LogToConsole ("Info: warning added: EChHouseholdAdded");
 				this.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
 				this.ReassignAndWarnParish (businessContext, person, changes);
@@ -642,8 +654,10 @@ namespace Epsitec.Aider.Data.Job
 				{
 					this.LogToConsole ("Info: old household detected, removing contact for {0}", aiderPerson.GetFullName ());
 					var contactToRemove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
-
-					AiderContactEntity.Delete (businessContext,contactToRemove, true);
+					if (contactToRemove.IsNotNull ())
+					{
+						AiderContactEntity.Delete (businessContext, contactToRemove, true);
+					}
 
 					if (oldHousehold.Members.Count <= 1)
 					{
