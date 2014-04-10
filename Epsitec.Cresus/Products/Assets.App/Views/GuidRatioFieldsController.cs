@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			: base (accessor)
 		{
 			this.accessor = accessor;
+
+			this.controllers = new List<GuidRatioFieldController> ();
 			this.lines = new Dictionary<ObjectField, Line> ();
 		}
 
@@ -77,6 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateControllers(Widget parent)
 		{
 			//	On crée un contrôleur par ObjectField.GroupGuidRatio, toujours.
+			this.controllers.Clear ();
 			this.lines.Clear ();
 
 			foreach (var field in DataAccessor.GroupGuidRatioFields)
@@ -137,6 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.OnShowHistory (target, of);
 			};
 
+			this.controllers.Add (controller);
 
 			var line = new Line (frame, label, controller);
 			this.lines.Add (field, line);
@@ -226,7 +230,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			public readonly GuidRatioFieldController	Controller;
 		}
 
-	
+
+		private readonly List<GuidRatioFieldController>	controllers;
 		private readonly Dictionary<ObjectField, Line>	lines;
 
 		private ObjectField								selectedField;

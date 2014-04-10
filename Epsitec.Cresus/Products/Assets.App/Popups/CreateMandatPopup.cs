@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var button = new CheckButton
 			{
 				Parent      = parent,
-				Text        = "Avec les exemples",
+				Text        = "Avec des exemples",
 				AutoFocus   = false,
 				ActiveState = ActiveState.No,
 				Dock        = DockStyle.Top,

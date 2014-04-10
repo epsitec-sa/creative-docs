@@ -211,6 +211,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		#region Locked event logic
 		public static void Locked(DataAccessor accessor, Guid guid, bool isDelete, System.DateTime createDate)
 		{
+			//	Effectue une action initiée par LockedPopup.
 			DataObject obj = null;
 			if (!guid.IsEmpty)
 			{
@@ -258,6 +259,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Crée l'événement Locked (cadenas) de l'objet, s'il est après l'événement d'entrée.
 			if (obj != null)
 			{
+				//	On supprime l'éventuel événement Locked existant, pour garantir
+				//	qu'il n'en existe qu'un seul.
 				AssetCalculator.RemoveLockedEvent (obj);
 
 				if (!AssetCalculator.IsOutOfBoundsEvent (obj, new Timestamp (date, 0)))
@@ -270,6 +273,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static void RemoveLockedEvent(DataObject obj)
 		{
 			//	Supprime l'événement Locked (cadenas) de l'objet, s'il existe.
+			//	Rappel: Il ne doit y avoir qu'un seul événement Locked par objet !
 			if (obj != null)
 			{
 				var e = obj.Events.Where (x => x.Type == EventType.Locked).LastOrDefault ();
@@ -280,7 +284,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private static bool IsLocked(DataObject obj, Timestamp timestamp)
+		public static bool IsLocked(DataObject obj, Timestamp timestamp)
 		{
 			//	Retourne true s'il existe un événement Locked (cadenas) postérieur.
 			if (obj != null)

@@ -69,8 +69,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.controller != null)
 			{
-				this.controller.BackgroundColor = this.BackgroundColor;
+				//?this.controller.BackgroundColor = this.BackgroundColor;
 				this.controller.PropertyState = this.PropertyState;
+				this.controller.IsReadOnly = this.isReadOnly;
 			}
 		}
 
@@ -81,7 +82,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller = new ComputedAmountController ();
 			this.controller.CreateUI (this.frameBox);
-			this.controller.IsReadOnly = this.PropertyState == PropertyState.Readonly;
 			this.controller.ComputedAmount = this.value;
 
 			this.controller.ValueEdited += delegate

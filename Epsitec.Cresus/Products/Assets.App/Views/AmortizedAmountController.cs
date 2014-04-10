@@ -69,22 +69,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public Color							BackgroundColor
-		{
-			get
-			{
-				return this.backgroundColor;
-			}
-			set
-			{
-				if (this.backgroundColor != value)
-				{
-					this.backgroundColor = value;
-					this.UpdateUI ();
-				}
-			}
-		}
-
 		public PropertyState					PropertyState
 		{
 			get
@@ -499,8 +483,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.value.HasValue)
 				{
-					this.scenarioFieldCombo.Enable = !this.IsAmortization;
-					this.typeTextFieldCombo.Enable = true;
+					//?this.scenarioFieldCombo.Enable = !this.IsAmortization;
+					//?this.typeTextFieldCombo.Enable = true;
 					this.typeTextFieldCombo.Visibility = this.IsAmortization;
 
 					this.FinalAmount        = this.value.Value.FinalAmortizedAmount;
@@ -573,7 +557,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.entryController.Value = this.value;
-			this.entryController.BackgroundColor = this.backgroundColor;
+			//?this.entryController.BackgroundColor = this.backgroundColor;
 			this.entryController.PropertyState = this.propertyState;
 			this.entryController.IsReadOnly = this.isReadOnly;
 		}
@@ -1003,15 +987,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (textField != null)
 			{
-				textField.IsReadOnly = (textField.Name == "IsReadOnly");
-
-				if (textField.IsReadOnly && !(textField is TextFieldCombo))
+				//?textField.IsReadOnly = (textField.Name == "IsReadOnly") || this.isReadOnly;
+				//?
+				//?if (textField.IsReadOnly && !(textField is TextFieldCombo))
+				//?{
+				//?	AbstractFieldController.UpdateBackColor (textField, Color.Empty);
+				//?}
+				//?else
+				//?{
+				//?	AbstractFieldController.UpdateBackColor (textField, this.BackgroundColor);
+				//?}
+				if (textField is TextFieldCombo)
 				{
-					AbstractFieldController.UpdateBackColor (textField, Color.Empty);
+					AbstractFieldController.UpdateCombo (textField as TextFieldCombo, this.propertyState, this.isReadOnly);
 				}
 				else
 				{
-					AbstractFieldController.UpdateBackColor (textField, this.BackgroundColor);
+					AbstractFieldController.UpdateTextField (textField, this.propertyState, this.isReadOnly);
 				}
 			}
 		}
@@ -1121,9 +1113,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private AmortizedAmount?				value;
 		private EventType						eventType;
-		private bool							isReadOnly;
-		private Color							backgroundColor;
 		private PropertyState					propertyState;
+		private bool							isReadOnly;
 
 		private TextField						finalAmountTextField;
 		private TextField						residualAmountTextField;

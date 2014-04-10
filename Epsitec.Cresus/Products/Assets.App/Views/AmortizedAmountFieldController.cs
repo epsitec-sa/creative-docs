@@ -69,8 +69,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.controller != null)
 			{
-				this.controller.BackgroundColor = this.BackgroundColor;
+				//?this.controller.BackgroundColor = this.BackgroundColor;
+				//?this.controller.PropertyState = this.PropertyState;
 				this.controller.PropertyState = this.PropertyState;
+				this.controller.IsReadOnly = this.isReadOnly;
 			}
 		}
 

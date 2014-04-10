@@ -65,8 +65,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
-			this.UpdateTextField (this.textField);
+			//?AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
+			//?this.UpdateTextField (this.textField);
+			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly);
 		}
 
 

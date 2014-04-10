@@ -41,6 +41,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timestamp  = timestamp;
 			this.hasEvent   = false;
 			this.eventType  = EventType.Unknown;
+			this.isLocked   = AssetCalculator.IsLocked (this.obj, this.timestamp);
+
+			if (this.lockedMark != null)
+			{
+				this.lockedMark.Visibility = this.isLocked;
+				this.lockedBackground.Visibility = this.isLocked;
+			}
 
 			if (!this.objectGuid.IsEmpty && this.obj != null)
 			{
@@ -65,6 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldString (field);
 					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
 				}
 				else if (controller is EnumFieldController)
 				{
@@ -73,6 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldInt (field);
 					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
 				}
 				else if (controller is DecimalFieldController)
 				{
@@ -81,6 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldDecimal (field);
 					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
 				}
 				else if (controller is ComputedAmountFieldController)
 				{
@@ -89,6 +99,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldComputedAmount (field);
 					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
 				}
 				else if (controller is AmortizedAmountFieldController)
 				{
@@ -97,6 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldAmortizedAmount (field);
 					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
 				}
 				else if (controller is IntFieldController)
 				{
@@ -105,6 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldInt (field);
 					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
 				}
 				else if (controller is DateFieldController)
 				{
@@ -113,6 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldDate (field);
 					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
 				}
 				else if (controller is GroupGuidFieldController)
 				{
@@ -121,6 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
 					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
 				}
 				else if (controller is PersonGuidFieldController)
 				{
@@ -129,6 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
 					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
 				}
 				else if (controller is AccountGuidFieldController)
 				{
@@ -137,6 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
 					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
 				}
 				else if (controller is GuidRatioFieldController)
 				{
@@ -145,10 +162,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
 					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
 				}
 				else if (controller is GuidRatioFieldsController)
 				{
 					var c = controller as GuidRatioFieldsController;
+
+					c.IsReadOnly    = this.isLocked;
 					c.Update ();
 				}
 			}
@@ -608,6 +628,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected Widget CreateScrollable(Widget parent)
 		{
+			//	Crée le fond hachuré, visible lorsque l'événements est bloqué.
+			this.lockedBackground = new HatchFrameBox
+			{
+				Parent           = parent,
+				Anchor           = AnchorStyles.All,
+				Hatch            = true,
+				Margins          = new Margins (0, AbstractScroller.DefaultBreadth, 0, 0),
+			};
+
+			//	Crée le cadenas, visible en bas à droite lorsque l'événements est bloqué.
+			this.lockedMark = new StaticText
+			{
+				Parent           = parent,
+				Anchor           = AnchorStyles.BottomRight,
+				PreferredSize    = new Size (64, 64),
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				Text             = Misc.GetRichTextImg ("Background.Locked", verticalOffset: 0),
+				Margins          = new Margins (0, AbstractScroller.DefaultBreadth+10, 0, 10),
+			};
+
+			//	Crée la zone scrollable verticalement contenant tous les contrôleurs.
 			this.scrollable = new Scrollable
 			{
 				Parent                 = parent,
@@ -754,11 +795,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private Dictionary<ObjectField, AbstractFieldController> fieldControllers;
 
 		protected Scrollable						scrollable;
+		protected StaticText						lockedMark;
+		protected HatchFrameBox						lockedBackground;
 		protected Guid								objectGuid;
 		protected DataObject						obj;
 		protected Timestamp							timestamp;
 		protected bool								hasEvent;
 		protected EventType							eventType;
 		protected int								tabIndex;
+		protected bool								isLocked;
 	}
 }

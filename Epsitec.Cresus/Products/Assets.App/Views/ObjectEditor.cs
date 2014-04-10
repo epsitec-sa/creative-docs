@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 	
-		public override PageType PageType
+		public override PageType				PageType
 		{
 			get
 			{
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public override PageType MainPageType
+		public override PageType				MainPageType
 		{
 			get
 			{
@@ -186,10 +186,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.objectGuid = objectGuid;
-			this.obj        = this.accessor.GetObject (this.baseType, this.objectGuid);
+			this.obj        = this.accessor.EditionAccessor.EditedObject;
 			this.timestamp  = timestamp.Value;
 			this.hasEvent   = false;
 			this.eventType  = EventType.Unknown;
+			this.isLocked   = this.accessor.EditionAccessor.IsLocked;
 
 			if (this.obj != null)
 			{
@@ -410,5 +411,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private Timestamp							timestamp;
 		private bool								hasEvent;
 		private EventType							eventType;
+		private bool								isLocked;
 	}
 }

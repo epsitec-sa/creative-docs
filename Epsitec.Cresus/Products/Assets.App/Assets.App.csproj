@@ -377,6 +377,7 @@
     <EmbeddedResource Include="Images\Main.New.icon" />
     <EmbeddedResource Include="Images\Main.Save.icon" />
     <EmbeddedResource Include="Images\Main.Locked.icon" />
+    <EmbeddedResource Include="Images\Background.Locked.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

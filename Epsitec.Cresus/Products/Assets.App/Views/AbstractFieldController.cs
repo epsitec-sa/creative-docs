@@ -67,6 +67,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public bool								IsReadOnly
+		{
+			get
+			{
+				return this.isReadOnly;
+			}
+			set
+			{
+				this.isReadOnly = value;
+				this.UpdatePropertyState ();
+			}
+		}
+
 
 		public virtual void CreateUI(Widget parent)
 		{
@@ -185,68 +198,137 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.clearButton != null)
 			{
 				this.clearButton.Visibility = (this.PropertyState == PropertyState.Single);
+				this.clearButton.Enable = !this.isReadOnly;
 			}
 		}
 
-		protected void UpdateTextField(AbstractTextField textField)
+		//?protected void UpdateTextField(AbstractTextField textField)
+		//?{
+		//?	if (textField != null)
+		//?	{
+		//?		bool isReadOnly = (this.propertyState == PropertyState.Readonly || this.isReadOnly);
+		//?
+		//?		if (textField is TextFieldCombo)
+		//?		{
+		//?			if (textField.Enable != !isReadOnly)
+		//?			{
+		//?				textField.Enable = !isReadOnly;
+		//?				textField.Invalidate ();  // TODO: pour corriger un bug de Widget !
+		//?			}
+		//?		}
+		//?		else
+		//?		{
+		//?			if (textField.IsReadOnly != isReadOnly)
+		//?			{
+		//?				textField.IsReadOnly = isReadOnly;
+		//?				textField.Invalidate ();  // TODO: pour corriger un bug de Widget !
+		//?			}
+		//?		}
+		//?	}
+		//?}
+
+		//?protected Color BackgroundColor
+		//?{
+		//?	get
+		//?	{
+		//?		switch (this.propertyState)
+		//?		{
+		//?			case PropertyState.Single:
+		//?				return ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
+		//?
+		//?			case PropertyState.Inherited:
+		//?				return ColorManager.EditInheritedPropertyColor;
+		//?
+		//?			default:
+		//?				return Color.Empty;
+		//?		}
+		//?	}
+		//?}
+
+		//-new
+		public static void UpdateTextField(AbstractTextField textField, PropertyState state, bool isReadOnly)
 		{
 			if (textField != null)
 			{
-				bool isReadOnly = (this.propertyState == PropertyState.Readonly);
+				System.Diagnostics.Debug.Assert (!(textField is TextFieldCombo));
 
-				if (textField is TextFieldCombo)
+				if (textField.Name == "IsReadOnly")
 				{
-					if (textField.Enable != !isReadOnly)
-					{
-						textField.Enable = !isReadOnly;
-						textField.Invalidate ();  // TODO: pour corriger un bug de Widget !
-					}
+					isReadOnly = true;
 				}
-				else
-				{
-					if (textField.IsReadOnly != isReadOnly)
-					{
-						textField.IsReadOnly = isReadOnly;
-						textField.Invalidate ();  // TODO: pour corriger un bug de Widget !
-					}
-				}
+
+				textField.BackColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly);
+				textField.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
+				textField.IsReadOnly = isReadOnly;
 			}
 		}
 
-		protected Color BackgroundColor
+		public static void UpdateCombo(TextFieldCombo combo, PropertyState state, bool isReadOnly)
 		{
-			get
+			if (combo != null)
 			{
-				switch (this.propertyState)
-				{
-					case PropertyState.Single:
-						return ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
-
-					case PropertyState.Inherited:
-						return ColorManager.EditInheritedPropertyColor;
-
-					default:
-						return Color.Empty;
-				}
+				combo.BackColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly);
+				combo.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
+				combo.IsReadOnly = true;
+				combo.Enable = !isReadOnly;
 			}
 		}
 
-		public static void UpdateBackColor(AbstractTextField textField, Color color)
+		public static void UpdateButton(ColoredButton button, PropertyState state, bool isReadOnly)
 		{
-			if (textField != null)
+			if (button != null)
 			{
-				if (color.IsVisible)
-				{
-					textField.BackColor = color;
-					textField.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
-				}
-				else
-				{
-					textField.BackColor = Color.Empty;
-					textField.TextDisplayMode = TextFieldDisplayMode.Default;
-				}
+				button.NormalColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly);
+				button.Enable = !isReadOnly;
 			}
 		}
+
+		protected static Color GetBackgroundColor(PropertyState state, bool isReadOnly)
+		{
+			Color color;
+			double delta = -0.05;
+
+			switch (state)
+			{
+				case PropertyState.Single:
+					color = ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
+					delta = -0.1;
+					break;
+
+				case PropertyState.Inherited:
+					color = ColorManager.EditInheritedPropertyColor;
+					break;
+
+				default:
+					color = Color.FromBrightness (1.0);
+					break;
+			}
+
+			if (isReadOnly)
+			{
+				color = color.Delta (delta);
+			}
+
+			return color;
+		}
+		//-new
+
+		//?public static void UpdateBackColor(AbstractTextField textField, Color color)
+		//?{
+		//?	if (textField != null)
+		//?	{
+		//?		if (color.IsVisible)
+		//?		{
+		//?			textField.BackColor = color;
+		//?			textField.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
+		//?		}
+		//?		else
+		//?		{
+		//?			textField.BackColor = Color.Empty;
+		//?			textField.TextDisplayMode = TextFieldDisplayMode.Default;
+		//?		}
+		//?	}
+		//?}
 
 
 		private void ScrollToField()
@@ -338,5 +420,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						clearButton;
 		private int								editWidth;
 		protected PropertyState					propertyState;
+		protected bool							isReadOnly;
 	}
 }

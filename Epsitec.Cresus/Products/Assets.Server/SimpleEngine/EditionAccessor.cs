@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public DataObject EditedObject
+		public DataObject						EditedObject
 		{
 			get
 			{
@@ -25,11 +25,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public Timestamp? EditedTimestamp
+		public Timestamp?						EditedTimestamp
 		{
 			get
 			{
 				return this.timestamp;
+			}
+		}
+
+		public bool								IsLocked
+		{
+			get
+			{
+				return this.isLocked;
 			}
 		}
 
@@ -50,6 +58,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.timestamp           = timestamp;
 
 			this.obj = this.accessor.GetObject (this.baseType, this.objectGuid);
+			System.Diagnostics.Debug.Assert (this.obj != null);
+
+			this.isLocked = AssetCalculator.IsLocked (obj, timestamp.Value);
 
 			var e = this.EditionEvent;
 			if (e == null)
@@ -480,5 +491,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private DataEvent						dataEvent;
 		private bool							dirty;
 		private bool							computedAmountDirty;
+		private bool							isLocked;
 	}
 }

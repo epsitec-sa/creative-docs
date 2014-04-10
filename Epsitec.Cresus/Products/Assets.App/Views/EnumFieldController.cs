@@ -77,8 +77,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
-			this.UpdateTextField (this.textField);
+			//?AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
+			//?this.UpdateTextField (this.textField);
+			AbstractFieldController.UpdateCombo (this.textField, this.propertyState, this.isReadOnly);
 		}
 
 
@@ -89,7 +90,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.textField = new TextFieldCombo
 			{
 				Parent          = this.frameBox,
-				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
 				PreferredWidth  = this.EditWidth,
 				PreferredHeight = AbstractFieldController.lineHeight,

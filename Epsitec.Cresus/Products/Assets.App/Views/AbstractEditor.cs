@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public bool EditionDirty
+		public bool								EditionDirty
 		{
 			get
 			{
@@ -29,13 +29,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public abstract PageType PageType
+		public abstract PageType				PageType
 		{
 			get;
 			set;
 		}
 
-		public abstract PageType MainPageType
+		public abstract PageType				MainPageType
 		{
 			get;
 		}
