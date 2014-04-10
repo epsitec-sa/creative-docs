@@ -238,6 +238,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Retourne le chemin d'un cadenas.
 			var path = new Path ();
 
+			//	Forme extérieure (CW).
 			path.MoveTo (PaintEventGlyph.GetPoint (rect, 1, 0));
 			path.LineTo (PaintEventGlyph.GetPoint (rect, 1, 6));
 			path.LineTo (PaintEventGlyph.GetPoint (rect, 2, 6));
@@ -249,11 +250,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			path.LineTo (PaintEventGlyph.GetPoint (rect, 9, 0));
 			path.Close ();
 
+			//	Trou de la boucle supérieure (CCW).
 			path.MoveTo (PaintEventGlyph.GetPoint (rect, 3, 6));
 			path.LineTo (PaintEventGlyph.GetPoint (rect, 7, 6));
 			path.LineTo (PaintEventGlyph.GetPoint (rect, 7, 7));
 			path.CurveTo (PaintEventGlyph.GetPoint (rect, 7, 8), PaintEventGlyph.GetPoint (rect, 6, 9), PaintEventGlyph.GetPoint (rect, 5, 9));
 			path.CurveTo (PaintEventGlyph.GetPoint (rect, 4, 9), PaintEventGlyph.GetPoint (rect, 3, 8), PaintEventGlyph.GetPoint (rect, 3, 7));
+			path.Close ();
+
+			//	Trou pour la clé (CCW).
+			path.MoveTo (PaintEventGlyph.GetPoint (rect, 4, 2));
+			path.LineTo (PaintEventGlyph.GetPoint (rect, 6, 2));
+			path.LineTo (PaintEventGlyph.GetPoint (rect, 6, 4));
+			path.LineTo (PaintEventGlyph.GetPoint (rect, 4, 4));
 			path.Close ();
 
 			return path;
