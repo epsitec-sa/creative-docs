@@ -238,3 +238,14 @@ SVN Update > r22893
 -fixparticipations
 -hotfixderogations
 -fixparticipations
+
+
+Lancé le 11.04.2014
+-------------------
+
+SVN Update > r22932
+
+-echupdate -newechfile:S:\eerv\eerv-2014-04-03.xml -oldechfile:S:\eerv\eerv-2014-03-27.xml -output:s:\eerv\ech-diff-2014-04-03.md
+-echupdate -newechfile:S:\eerv\eerv-2014-04-10.xml -oldechfile:S:\eerv\eerv-2014-04-03.xml -output:s:\eerv\ech-diff-2014-04-10.md
+
+
