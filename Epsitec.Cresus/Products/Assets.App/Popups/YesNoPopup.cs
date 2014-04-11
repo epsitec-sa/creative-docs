@@ -111,6 +111,35 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		#region Helpers
+		public static void ShowAssetsDeleteEventQuestion(Widget target, System.Action action)
+		{
+			YesNoPopup.Show (target, "Voulez-vous supprimer l'événement sélectionné ?", action);
+		}
+
+		public static void Show(Widget target, string question, System.Action action)
+		{
+			if (target != null)
+			{
+				var popup = new YesNoPopup
+				{
+					Question = question,
+				};
+
+				popup.Create (target, leftOrRight: true);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "yes")
+					{
+						action ();
+					}
+				};
+			}
+		}
+		#endregion
+
+
 		private const int margins      = 20;
 		private const int dialogWidth  = 260;
 		private const int dialogHeight = 100;

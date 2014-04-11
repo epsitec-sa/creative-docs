@@ -153,25 +153,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
-			if (target != null)
+			YesNoPopup.Show (target, "Voulez-vous supprimer le champ sélectionné ?", delegate
 			{
-				var popup = new YesNoPopup
-				{
-					Question = "Voulez-vous supprimer le champ sélectionné ?",
-				};
-
-				popup.Create (target, leftOrRight: true);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "yes")
-					{
-						this.accessor.Settings.RemoveUserField (this.SelectedGuid);
-						this.UpdateData ();
-						this.OnUpdateAfterDelete ();
-					}
-				};
-			}
+				this.accessor.Settings.RemoveUserField (this.SelectedGuid);
+				this.UpdateData ();
+				this.OnUpdateAfterDelete ();
+			});
 		}
 
 

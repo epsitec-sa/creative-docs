@@ -155,27 +155,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (AssetCalculator.IsLocked (this.obj, this.SelectedTimestamp.GetValueOrDefault ()))
 			{
 				MessagePopup.ShowAssetsDeleteEventWarning (target);
-				return;
 			}
-
-			if (target != null)
+			else
 			{
-				var popup = new YesNoPopup
+				YesNoPopup.ShowAssetsDeleteEventQuestion (target, delegate
 				{
-					Question = "Voulez-vous supprimer l'événement sélectionné ?",
-				};
-
-				popup.Create (target, leftOrRight: true);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "yes")
-					{
-						this.accessor.RemoveObjectEvent (this.obj, this.SelectedTimestamp);
-						this.UpdateData ();
-						this.OnUpdateAfterDelete ();
-					}
-				};
+					this.accessor.RemoveObjectEvent (this.obj, this.SelectedTimestamp);
+					this.UpdateData ();
+					this.OnUpdateAfterDelete ();
+				});
 			}
 		}
 

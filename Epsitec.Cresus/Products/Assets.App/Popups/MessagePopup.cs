@@ -54,11 +54,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		#region Helpers
 		public static void ShowAssetsDeleteEventWarning(Widget target)
 		{
 			var popup = new MessagePopup ("Avertissement", "Il n'est pas possible de supprimer un événement verrouillé.");
 			popup.Create (target);
 		}
+		#endregion
 
 
 		private const int popupWidth  = 250;

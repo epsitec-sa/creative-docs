@@ -123,25 +123,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
-			if (target != null)
+			YesNoPopup.Show (target, "Voulez-vous supprimer le compte sélectionné ?", delegate
 			{
-				var popup = new YesNoPopup
-				{
-					Question = "Voulez-vous supprimer le compte sélectionné ?",
-				};
-
-				popup.Create (target, leftOrRight: true);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "yes")
-					{
-						this.accessor.RemoveObject (BaseType.Accounts, this.SelectedGuid);
-						this.UpdateData ();
-						this.OnUpdateAfterDelete ();
-					}
-				};
-			}
+				this.accessor.RemoveObject (BaseType.Accounts, this.SelectedGuid);
+				this.UpdateData ();
+				this.OnUpdateAfterDelete ();
+			});
 		}
 
 

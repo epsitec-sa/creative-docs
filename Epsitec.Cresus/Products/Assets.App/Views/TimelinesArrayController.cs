@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnObjectDelete()
 		{
 			var target = this.objectsToolbar.GetTarget (ToolbarCommand.Delete);
-			this.ShowYesNoPopup (target, "Voulez-vous supprimer l'objet sélectionné ?", this.ObjectDeleteSelection);
+			YesNoPopup.Show (target, "Voulez-vous supprimer l'objet sélectionné ?", this.ObjectDeleteSelection);
 		}
 
 		private void ObjectDeleteSelection()
@@ -702,10 +702,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (AssetCalculator.IsLocked (this.SelectedObject, this.SelectedTimestamp.GetValueOrDefault ()))
 				{
 					MessagePopup.ShowAssetsDeleteEventWarning (target);
-					return;
 				}
-
-				this.ShowYesNoPopup (target, "Voulez-vous supprimer l'événement sélectionné ?", this.TimelineDeleteSelection);
+				else
+				{
+					YesNoPopup.ShowAssetsDeleteEventQuestion (target, this.TimelineDeleteSelection);
+				}
 			}
 		}
 
@@ -739,28 +740,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetSelection (this.selectedRow, -1);
 		}
 		#endregion
-
-
-		private void ShowYesNoPopup(Widget target, string question, System.Action action)
-		{
-			if (target != null)
-			{
-				var popup = new YesNoPopup
-				{
-					Question = question,
-				};
-
-				popup.Create (target, leftOrRight: true);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "yes")
-					{
-						action ();
-					}
-				};
-			}
-		}
 
 
 		private void CreateEvent(System.DateTime date, string buttonName)
