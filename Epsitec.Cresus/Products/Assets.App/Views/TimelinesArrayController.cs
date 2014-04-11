@@ -698,6 +698,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				var target = this.timelinesToolbar.GetTarget (ToolbarCommand.Delete);
+
+				if (AssetCalculator.IsLocked (this.SelectedObject, this.SelectedTimestamp.GetValueOrDefault ()))
+				{
+					MessagePopup.ShowAssetsDeleteEventWarning (target);
+					return;
+				}
+
 				this.ShowYesNoPopup (target, "Voulez-vous supprimer l'événement sélectionné ?", this.TimelineDeleteSelection);
 			}
 		}

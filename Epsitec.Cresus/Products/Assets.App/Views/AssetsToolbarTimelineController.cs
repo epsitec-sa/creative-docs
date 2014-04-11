@@ -348,6 +348,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
+			if (AssetCalculator.IsLocked (this.obj, this.SelectedTimestamp.GetValueOrDefault ()))
+			{
+				MessagePopup.ShowAssetsDeleteEventWarning (target);
+				return;
+			}
+
 			if (target != null)
 			{
 				var popup = new YesNoPopup

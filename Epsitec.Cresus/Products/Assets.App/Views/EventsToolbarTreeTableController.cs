@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -150,6 +151,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void OnDelete()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
+
+			if (AssetCalculator.IsLocked (this.obj, this.SelectedTimestamp.GetValueOrDefault ()))
+			{
+				MessagePopup.ShowAssetsDeleteEventWarning (target);
+				return;
+			}
 
 			if (target != null)
 			{
