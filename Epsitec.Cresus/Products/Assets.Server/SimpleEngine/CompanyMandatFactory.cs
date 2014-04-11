@@ -42,6 +42,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				this.AddAssetsSamples ();
 			}
 
+			//	Recalcule tout.
+			foreach (var obj in this.accessor.Mandat.GetData (BaseType.Assets))
+			{
+				Amortizations.UpdateAmounts (this.accessor, obj);
+			}
+
 			return this.accessor.Mandat;
 		}
 

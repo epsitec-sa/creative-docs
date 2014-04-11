@@ -9,6 +9,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Affiche un dialogue oui/non avec une question suivie d'éventuels boutons radio.
+	/// </summary>
 	public class YesNoPopup : AbstractPopup
 	{
 		public YesNoPopup()

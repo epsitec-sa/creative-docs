@@ -5,18 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Views;
-using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.DataFillers;
-using Epsitec.Cresus.Assets.Server.NodeGetters;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Affiche un message.
+	/// Affiche un simple message. S'il est long, il est mise en page sur plusieurs lignes.
 	/// </summary>
 	public class MessagePopup : AbstractPopup
 	{
