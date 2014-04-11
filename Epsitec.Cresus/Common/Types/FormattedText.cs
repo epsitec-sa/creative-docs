@@ -337,6 +337,11 @@ namespace Epsitec.Common.Types
 			return new FormattedText (string.Format (format.text, escapedArgs));
 		}
 
+		public static FormattedText operator+(FormattedText a, FormattedText b)
+		{
+			return FormattedText.Concat (a, b);
+		}
+
 		#region IEquatable<FormattedText> Members
 
 		public bool Equals(FormattedText other)

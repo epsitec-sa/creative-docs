@@ -61,7 +61,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Field<AiderGroupEntity> ()
 					.Title ("Paroisse")
 					.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
-					.InitialValue (this.Entity.GetGeoParishGroup (this.BusinessContext) ?? defaultDestParish)
+					.InitialValue (this.Entity.GetDerogationGeoParishGroup (this.BusinessContext) ?? defaultDestParish)
 				.End ()
 				.Field<Date> ()
 					.Title ("Date de la dérogation")

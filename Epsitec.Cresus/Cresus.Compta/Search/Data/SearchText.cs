@@ -322,10 +322,10 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 						count++;
 
-						var r = TextFormatter.FormatText (target.Substring (i, this.preparedFromText.Length)).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ();
+						var r = TextFormatter.FormatText (target.Substring (i, this.preparedFromText.Length)).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ().ToString ();
 
 						prepared = prepared.Substring (0, i) + r + prepared.Substring (i+this.preparedFromText.Length);
-						target   =   target.Substring (0, i) + r +   target.Substring (i+this.preparedFromText.Length);
+						target   = target.Substring (0, i) + r +   target.Substring (i+this.preparedFromText.Length);
 
 						i += r.Length;
 					}

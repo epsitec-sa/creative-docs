@@ -311,6 +311,7 @@
     <Compile Include="Entities\AiderOfficeReportEntity.cs" />
     <Compile Include="Entities\eCH_ReportedPersonEntity.cs" />
     <Compile Include="Entities\IAiderWarningExampleFactoryGetter.cs" />
+    <Compile Include="Entities\ParishOrigin.cs" />
     <Compile Include="Entities\ParticipationData.cs" />
     <Compile Include="Entities\PostalAddressType.cs" />
     <Compile Include="Enumerations\ContactType.cs" />

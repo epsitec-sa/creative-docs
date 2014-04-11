@@ -69,7 +69,7 @@ namespace Epsitec.Aider.BusinessCases
 			AiderDerogations.RemoveDerogationInParticipations (businessContext, oldParishGroup, person);
 
 			//Remove old derogation out
-			var geoParishGroup = person.GetGeoParishGroup (businessContext);
+			var geoParishGroup = person.GetDerogationGeoParishGroup (businessContext);
 			AiderDerogations.RemoveDerogationOutParticipations (businessContext, geoParishGroup, person);
 
 			//Warn old derogated parish

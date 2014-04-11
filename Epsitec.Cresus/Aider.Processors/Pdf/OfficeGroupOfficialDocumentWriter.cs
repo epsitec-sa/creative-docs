@@ -31,60 +31,47 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 			var setup   = this.GetSetup ();
 			var report  = this.GetReport (setup);
-			var content = new System.Text.StringBuilder ();
-			var no = 0;
+			
+			var lines = new List<string> ();
 			
 			foreach (var participant in officeReport.Participants.OrderBy (x => x.Contact.DisplayName))
 			{
-				no++;
-
-				var contact		= participant.Contact;
-				var person		= contact.Person;
-				var address		= contact.Address;
-				var fullName	= person.GetFullName ();
-				var street		= address.StreetHouseNumberAndComplement;
-				var zip			= address.GetDisplayZipCode();
-				var town		= address.Town.Name;
-				var bDate		= person.BirthdayDay + "." + person.BirthdayMonth + "." + person.BirthdayYear;
-
-				var parish		= "";
+				var contact	= participant.Contact;
+				var person	= contact.Person;
+				var address	= contact.Address;
 				
-				//We display derogations ?
+				var fullName = FormattedText.Escape (person.GetFullName ());
+				var street	 = FormattedText.Escape (address.GetShortStreetAddress ());
+				var zip		 = address.GetDisplayZipCode();
+				var town	 = FormattedText.Escape (address.Town.Name);
+				var bDate	 = person.GetFormattedBirthdayDate ();
+				var parish	 = "";
+				
 				if (person.HasDerogation)
 				{
-					if (sender.Office.ParishGroupPathCache == person.ParishGroupPathCache)
-					{
-						if (person.GeoParishGroupPathCache == "NOPA.")
-						{
-							parish = "";
-						}
-						else
-						{
-							parish = person.GetGeoParishGroup (this.context).Name.Substring (11).Trim ();
-						}
-					}
-					else
-					{
-						parish = person.ParishGroup.Name.Substring (11).Trim();
-					}
-
-					content.Append ("<tab/>" + no + ".<tab/>" + fullName + " (" + bDate + "), " + town + ", " + street + "<tab/>" + parish + "<br/>");
+					var parishOrigin = (sender.Office.ParishGroupPathCache == person.ParishGroupPathCache) ? ParishOrigin.Geographic : ParishOrigin.Active;
+					parish = person.GetParishLocationName (context, parishOrigin) ?? "—";
 				}
-				else
-				{
-					content.Append ("<tab/>" + no + ".<tab/>" + fullName + " (" + bDate + "), " + town + ", " + street + "<br/>");
-				}	
+				
+				lines.Add (fullName + " (" + bDate + "), " + town + ", " + street + "<tab/>" + parish + "<br/>");
+			}
+
+			lines = lines.Distinct ().ToList ();
+
+			for (int i = 0; i < lines.Count; i++)
+			{
+				lines[i] = string.Format ("<tab/>{0}.<tab/>{1}", i+1, lines[i]);
 			}
 
 
-			var topLogo	     = string.Format ("<img src=\"{0}\" />" + officeReport.GetFormattedText (), CoreContext.GetFileDepotPath ("assets", "logo-eerv.png"));
+			var topLogoPath   = CoreContext.GetFileDepotPath ("assets", "logo-eerv.png");
+			var topLogo	      = string.Format (@"<img src=""{0}"" />", topLogoPath);
+			var headerContent = new FormattedText (topLogo) + officeReport.GetFormattedText ();
+			var footerContent = TextFormatter.FormatText ("Extrait d'AIDER le", Date.Today.ToShortDateString ());
 			
-			var bottomReference	= "Extrait d'AIDER le " + System.DateTime.Now.ToString ("d MMM yyyy");
-			report.AddTopLeftLayer (topLogo, 50);
-			report.HeaderHeight = 400.0;			
-			var formattedContent = new FormattedText (content);
-			report.AddBottomRightLayer (bottomReference, 100);
-			report.FooterHeight = 50.0;
+			report.AddTopLeftLayer (headerContent, 50);
+			var formattedContent = new FormattedText (string.Concat (lines));
+			report.AddBottomRightLayer (footerContent, 100);
 			report.GeneratePdf (stream, formattedContent);
 		}
 
@@ -94,7 +81,12 @@ namespace Epsitec.Aider.Processors.Pdf
 			var labelPageLayout = this.layout.GetLabelPageLayout ();
 			var labelRenderer   = this.layout.GetLabelRenderer ();
 
-			return new ListingDocument (exportPdfInfo, setup);
+			var report = new ListingDocument (exportPdfInfo, setup);
+
+			report.HeaderHeight = 40.0.Millimeters ();
+			report.FooterHeight = 5.0.Millimeters ();
+
+			return report;
 		}
 
 		private ListingDocumentSetup GetSetup()

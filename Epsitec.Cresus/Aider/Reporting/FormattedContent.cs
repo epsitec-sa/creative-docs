@@ -17,11 +17,17 @@ namespace Epsitec.Aider.Reporting
 		public FormattedContent()
 		{
 		}
-		
+
 		public FormattedContent(params string[] args)
 			: this ()
 		{
 			this.Define (args);
+		}
+
+		public FormattedContent(params FormattedText[] args)
+			: this ()
+		{
+			this.Define (args.Select (x => x.ToString ()));
 		}
 
 		public FormattedContent(IEnumerable<string> args)

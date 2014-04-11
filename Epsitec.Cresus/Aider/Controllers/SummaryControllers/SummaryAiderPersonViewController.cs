@@ -124,7 +124,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 		private void CreateParishBrick(BrickWall<AiderPersonEntity> wall)
 		{
-			AiderGroupEntity geoParish = this.Entity.GetGeoParishGroup (this.BusinessContext);
+			AiderGroupEntity geoParish = this.Entity.GetDerogationGeoParishGroup (this.BusinessContext);
 			
 			if (geoParish.IsNull ())
 			{

@@ -194,6 +194,11 @@ namespace Epsitec.Common.Types
 			return this.InternalDate;
 		}
 
+		public string ToShortDateString()
+		{
+			return this.ToDateTime ().ToShortDateString ();
+		}
+
 
 		public override bool Equals(object obj)
 		{

@@ -32,10 +32,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<string, System.DateTime, AiderTownEntity> (this.Execute);
+			return ActionExecutor.Create<string, Date, AiderTownEntity> (this.Execute);
 		}
 
-		private void Execute(string title,System.DateTime date, AiderTownEntity place)
+		private void Execute(string title, Date date, AiderTownEntity place)
 		{
 			var documentName	= title;
 			var group			= this.Entity;
@@ -43,7 +43,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var aiderUser       = userManager.AuthenticatedUser;
 			var sender		    = this.BusinessContext.GetLocalEntity (aiderUser.OfficeSender);
 
-			var content = FormattedContent.Escape ("Assemblée paroissiale du " + date.ToString("d MMM yyyy") + " à " + place.Name, title);
+			var title1 = TextFormatter.FormatText ("Assemblée paroissiale du", date.ToShortDateString (), "à~", place.IsNull () ? null : place.Name);
+			var title2 = TextFormatter.FormatText (title);
+
+			var content = new FormattedContent (title1, title2);
 			
 			var report = AiderOfficeGroupParticipantReportEntity.Create (this.BusinessContext, group, sender, documentName, title, "template-group-report", content);
 
@@ -65,9 +68,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Titre")
 					.InitialValue (this.Entity.Name)
 				.End ()
-				.Field<System.DateTime> ()
+				.Field<Date> ()
 					.Title ("Date de l'assemblée")
-					.InitialValue (System.DateTime.Now)
+					.InitialValue (Date.Today)
 				.End ()
 				.Field<AiderTownEntity> ()
 					.Title ("Lieu de l'assemblée")

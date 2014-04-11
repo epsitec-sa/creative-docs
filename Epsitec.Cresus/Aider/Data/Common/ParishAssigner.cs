@@ -351,12 +351,7 @@ namespace Epsitec.Aider.Data.Common
 			var contact = person.GetMainContact ();
 			var address = contact.IsNull () ? null : contact.Address;
 
-			var parishGroup = person.ParishGroup;
-
-			if (person.HasDerogation)
-			{
-				parishGroup = person.GetGeoParishGroup (context);
-			}
+			var parishGroup = person.GetDerogationGeoParishGroup (context) ?? person.ParishGroup;
 			
 			return ParishAssigner.IsInValidParish (parishRepository, address, parishGroup);
 		}

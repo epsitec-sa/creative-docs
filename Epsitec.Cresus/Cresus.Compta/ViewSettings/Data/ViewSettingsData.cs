@@ -128,17 +128,17 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 
 		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
 		{
-			var f = this.GetFilterSummary  (columnMappers);
-			var o = this.GetOptionsSummary (columnMappers);
+			var f = this.GetFilterSummary  (columnMappers).ToString ();
+			var o = this.GetOptionsSummary (columnMappers).ToString ();
 
 			var list = new List<string> ();
 
-			if (!f.IsNullOrEmpty ())
+			if (string.IsNullOrEmpty (f) == false)
 			{
 				list.Add ("Filtrer " + f);
 			}
 
-			if (!o.IsNullOrEmpty ())
+			if (string.IsNullOrEmpty (o) == false)
 			{
 				list.Add ("Options " + o);
 			}

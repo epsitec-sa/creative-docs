@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers;
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
@@ -137,7 +138,7 @@ namespace Epsitec.Aider.Entities
 							 .Append (this.eCH_Person.PersonFirstNames.Split (",").First ()).ToString ();
 		}
 
-		public AiderGroupEntity GetGeoParishGroup(BusinessContext context)
+		public AiderGroupEntity GetDerogationGeoParishGroup(BusinessContext context)
 		{
 			if (this.HasDerogation)
 			{
@@ -147,6 +148,53 @@ namespace Epsitec.Aider.Entities
 			{
 				return null;
 			}
+		}
+
+		public string GetFormattedBirthdayDate()
+		{
+			if (this.BirthdayYear == 0)
+			{
+				return "—";
+			}
+			if (this.BirthdayMonth == 0)
+			{
+				return string.Format ("{0:0000}", this.BirthdayYear);
+			}
+			if (this.BirthdayDay == 0)
+			{
+				return string.Format ("{0.00}.{1:0000}", this.BirthdayMonth, this.BirthdayYear);
+			}
+
+			return string.Format ("{0:00}.{1:00}.{2:0000}", this.BirthdayDay, this.BirthdayMonth, this.BirthdayYear);
+		}
+
+		public string GetParishLocationName(BusinessContext context, ParishOrigin parishOrigin)
+		{
+			AiderGroupEntity group;
+
+			switch (parishOrigin)
+			{
+				case ParishOrigin.Active:
+					group = this.ParishGroup;
+					break;
+
+				case ParishOrigin.Geographic:
+					group = this.GetDerogationGeoParishGroup (context);
+					break;
+
+				default:
+					throw new System.NotSupportedException (parishOrigin.GetQualifiedName ());
+			}
+
+			if ((group.IsNull ()) ||
+				(group.IsNoParish ()))
+			{
+				return null;
+			}
+
+			int prefixLength = "Paroisse d?".Length;
+
+			return group.Name.Substring (prefixLength).Trim ();
 		}
 
 		public string GetCallName()
