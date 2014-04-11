@@ -30,9 +30,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.scrollable.Viewport.IsAutoFitting = true;
 		}
 
-		public void SetTiles(List<List<SummaryControllerTile?>> tiles)
+		public void SetTiles(List<List<SummaryControllerTile?>> tiles, bool isReadOnly)
 		{
 			this.tiles = tiles;
+			this.isReadOnly = isReadOnly;
 
 			this.CreateTiles ();
 		}
@@ -80,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						int r, c;
 						SummaryController.GetRowColumn (button.Name, out r, out c);
 						var sct = this.GetTile (c, r);
-						if (sct.HasValue && !sct.Value.Readonly)
+						if (sct.HasValue && !sct.Value.ReadOnly)
 						{
 							this.OnTileClicked (r, c);
 						}
@@ -94,18 +95,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (tile.HasValue && !tile.Value.SimpleText)
 			{
-				if (tile.Value.Readonly)
+				if (tile.Value.ReadOnly)
 				{
 					//	Rectangle gris ou bleu sans hover.
 					button.NormalColor   = ColorManager.ReadonlyFieldColor;
-					button.SelectedColor = ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
+					button.SelectedColor = AbstractFieldController.GetBackgroundColor (PropertyState.Single, this.isReadOnly);
 					button.HoverColor    = Color.Empty;
 				}
 				else
 				{
 					//	Rectangle blanc ou bleu avec hover.
-					button.NormalColor   = ColorManager.NormalFieldColor;
-					button.SelectedColor = ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
+					button.NormalColor   = AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, this.isReadOnly);
+					button.SelectedColor = AbstractFieldController.GetBackgroundColor (PropertyState.Single,    this.isReadOnly);
 					button.HoverColor    = ColorManager.HoverColor;
 				}
 
@@ -230,5 +231,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private Scrollable							scrollable;
 		private List<List<SummaryControllerTile?>>	tiles;
+		private bool								isReadOnly;
 	}
 }

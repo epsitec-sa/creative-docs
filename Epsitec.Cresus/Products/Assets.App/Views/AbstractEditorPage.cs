@@ -43,11 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.eventType  = EventType.Unknown;
 			this.isLocked   = AssetCalculator.IsLocked (this.obj, this.timestamp);
 
-			if (this.lockedMark != null)
-			{
-				this.lockedMark.Visibility = this.isLocked;
-				this.lockedBackground.Visibility = this.isLocked;
-			}
+			this.ShowHideLockedWidgets ();
 
 			if (!this.objectGuid.IsEmpty && this.obj != null)
 			{
@@ -628,6 +624,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected Widget CreateScrollable(Widget parent)
 		{
+			this.CreateLockedWidgets (parent);
+
+			//	Crée la zone scrollable verticalement contenant tous les contrôleurs.
+			this.scrollable = new Scrollable
+			{
+				Parent                 = parent,
+				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+				VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways,
+				Dock                   = DockStyle.Fill,
+				Margins                = new Margins (10, 0, 0, 0),
+			};
+
+			this.scrollable.Viewport.IsAutoFitting = true;
+			this.scrollable.Viewport.Padding = new Margins (0, 10, 10, 10);
+
+			return this.scrollable.Viewport;
+		}
+
+		private void ShowHideLockedWidgets()
+		{
+			if (this.lockedBackground != null)
+			{
+				this.lockedMark      .Visibility = this.isLocked;
+				this.lockedBackground.Visibility = this.isLocked;
+			}
+		}
+
+		protected void CreateLockedWidgets(Widget parent)
+		{
 			//	Crée le fond hachuré, visible lorsque l'événements est bloqué.
 			this.lockedBackground = new HatchFrameBox
 			{
@@ -647,21 +672,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Text             = Misc.GetRichTextImg ("Background.Locked", verticalOffset: 0),
 				Margins          = new Margins (0, AbstractScroller.DefaultBreadth+10, 0, 10),
 			};
-
-			//	Crée la zone scrollable verticalement contenant tous les contrôleurs.
-			this.scrollable = new Scrollable
-			{
-				Parent                 = parent,
-				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
-				VerticalScrollerMode   = ScrollableScrollerMode.ShowAlways,
-				Dock                   = DockStyle.Fill,
-				Margins                = new Margins (10, 0, 0, 0),
-			};
-
-			this.scrollable.Viewport.IsAutoFitting = true;
-			this.scrollable.Viewport.Padding = new Margins (0, 10, 10, 10);
-
-			return this.scrollable.Viewport;
 		}
 
 		protected void CreateRightGrey(Widget parent)

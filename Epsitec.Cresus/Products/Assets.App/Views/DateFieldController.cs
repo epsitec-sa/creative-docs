@@ -80,6 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//?AbstractFieldController.UpdateBackColor (this.textField, this.BackgroundColor);
 			//?this.UpdateTextField (this.textField);
 			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly);
+			this.UpdateButtons ();
 		}
 
 
@@ -245,10 +246,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateButtons()
 		{
+			if (this.minusButton == null)
+			{
+				return;
+			}
+
 			var part = this.SelectedPart;
 
-			this.minusButton.Enable = part != Part.Unknown;
-			this.plusButton.Enable  = part != Part.Unknown;
+			this.minusButton.Enable = !this.IsReadOnly && part != Part.Unknown;
+			this.plusButton .Enable = !this.IsReadOnly && part != Part.Unknown;
 
 			switch (part)
 			{
@@ -272,7 +278,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateButtonState (this.nowButton,   this.Value == this.GetPredefinedDate (DateType.Now));
 			this.UpdateButtonState (this.endButton,   this.Value == this.GetPredefinedDate (DateType.EndCurrentYear));
 
-			this.deleteButton.Enable = !string.IsNullOrEmpty (this.textField.Text);
+			this.beginButton     .Enable = !this.IsReadOnly;
+			this.nowButton       .Enable = !this.IsReadOnly;
+			this.endButton       .Enable = !this.IsReadOnly;
+			this.predefinedButton.Enable = !this.IsReadOnly;
+			this.calendarButton  .Enable = !this.IsReadOnly;
+			this.deleteButton    .Enable = !this.IsReadOnly && !string.IsNullOrEmpty (this.textField.Text);
 		}
 
 		private void UpdateButtonState(IconButton button, bool activate)

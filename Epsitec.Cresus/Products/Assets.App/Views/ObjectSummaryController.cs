@@ -41,9 +41,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.CreateUI (parent);
 		}
 
-		public void SetTiles(List<List<ObjectSummaryControllerTile>> tiles)
+		public void SetTiles(List<List<ObjectSummaryControllerTile>> tiles, bool isLocked)
 		{
 			this.tiles = tiles;
+			this.isLocked = isLocked;
 		}
 
 		public void UpdateFields(Guid objectGuid, Timestamp? timestamp)
@@ -108,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			this.controller.SetTiles (cells);
+			this.controller.SetTiles (cells, this.isLocked);
 		}
 
 
@@ -322,7 +323,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			string tooltip = string.Join ("<br/>", this.accessor.GetFieldName (tile.Field), text);
 			bool hilited   = this.IsHilited (tile.Field);
-			bool readOnly  = this.IsReadonly (tile.Field);
+			bool readOnly  = this.IsReadOnly (tile.Field);
 
 			return new SummaryControllerTile (text, tooltip, alignment, hilited, readOnly, this.isOutOfBounds);
 		}
@@ -340,7 +341,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private bool IsReadonly(ObjectField field)
+		private bool IsReadOnly(ObjectField field)
 		{
 			//	Un champ est non modifiable s'il appartient à une page interdite
 			//	pour le type de l'événement en cours.
@@ -442,6 +443,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly SummaryController			controller;
 
 		private List<List<ObjectSummaryControllerTile>> tiles;
+		private bool								isLocked;
 		private StaticText							informations;
 		private DataObject							obj;
 		private Timestamp?							timestamp;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -27,6 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected internal override void CreateUI(Widget parent)
 		{
+			this.CreateLockedWidgets (parent);
 			this.CreateRightGrey (parent);
 			this.summaryController.CreateUI (parent);
 			this.CreateCommentaries (parent);
@@ -36,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.SetObject (objectGuid, timestamp);
 
-			this.summaryController.SetTiles (this.SummaryTiles);
+			this.summaryController.SetTiles (this.SummaryTiles, this.isLocked);
 			this.summaryController.UpdateFields (this.objectGuid, this.timestamp);
 
 			this.UpdateCommentaries ();
@@ -55,22 +57,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins         = new Margins (10),
 			};
 
-			new FrameBox
+			this.commentariesDefinable = new FrameBox
 			{
 				Parent        = this.commentaries,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (h, h),
-				BackColor     = ColorManager.NormalFieldColor,
 			};
 
-			new StaticText
 			{
-				Parent        = this.commentaries,
-				Text          = "Champ pouvant être défini par cet événement",
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (250, h),
-				Margins       = new Margins (10, 0, 0, 0),
-			};
+				var text = "Champ pouvant être défini par cet événement";
+				var width = text.GetTextWidth ();
+
+				new StaticText
+				{
+					Parent        = this.commentaries,
+					Text          = text,
+					Dock          = DockStyle.Left,
+					PreferredSize = new Size (width+20, h),
+					Margins       = new Margins (10, 0, 0, 0),
+				};
+			}
 
 			this.commentariesDefined = new FrameBox
 			{
@@ -79,14 +85,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredSize = new Size (h, h),
 			};
 
-			new StaticText
 			{
-				Parent        = this.commentaries,
-				Text          = "Champ défini par cet événement",
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (200, h),
-				Margins       = new Margins (10, 0, 0, 0),
-			};
+				var text = "Champ défini par cet événement";
+				var width = text.GetTextWidth ();
+
+				new StaticText
+				{
+					Parent        = this.commentaries,
+					Text          = text,
+					Dock          = DockStyle.Left,
+					PreferredSize = new Size (width+20, h),
+					Margins       = new Margins (10, 0, 0, 0),
+				};
+			}
 
 			this.UpdateCommentaries ();
 		}
@@ -94,7 +105,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateCommentaries()
 		{
 			this.commentaries.Visibility = this.hasEvent;
-			this.commentariesDefined.BackColor = ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
+
+			var c1 = AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, this.isLocked);
+			var c2 = AbstractFieldController.GetBackgroundColor (PropertyState.Single,    this.isLocked);
+
+			this.commentariesDefinable.BackColor = c1;
+			this.commentariesDefined  .BackColor = c2;
 		}
 
 
@@ -276,7 +292,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly ObjectSummaryController summaryController;
 
-		private FrameBox commentaries;
-		private FrameBox commentariesDefined;
+		private FrameBox						commentaries;
+		private FrameBox						commentariesDefinable;
+		private FrameBox						commentariesDefined;
 	}
 }

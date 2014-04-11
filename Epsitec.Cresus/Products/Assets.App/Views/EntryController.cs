@@ -333,6 +333,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.titleController .PropertyState = this.propertyState;
 				this.amountController.PropertyState = this.propertyState;
 
+				this.dateController  .IsReadOnly = this.isReadOnly;
+				this.debitController .IsReadOnly = this.isReadOnly;
+				this.creditController.IsReadOnly = this.isReadOnly;
+				this.stampController .IsReadOnly = this.isReadOnly;
+				this.titleController .IsReadOnly = this.isReadOnly;
+				this.amountController.IsReadOnly = this.isReadOnly;
+
 				this.dateController  .Value = null;
 				this.debitController .Value = Guid.Empty;
 				this.creditController.Value = Guid.Empty;
@@ -345,6 +352,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdatePropertyState(AbstractFieldController fieldController, bool equal)
 		{
 			fieldController.PropertyState = equal ? PropertyState.Synthetic : PropertyState.Single;
+			fieldController.IsReadOnly = this.isReadOnly;
 		}
 
 

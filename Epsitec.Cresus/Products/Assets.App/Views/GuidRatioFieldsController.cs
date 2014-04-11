@@ -154,6 +154,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	contrôleur en édition soit déplacé, sans que cela n'interfère en rien
 			//	sur l'édition en cours.
 
+			foreach (var controller in this.controllers)
+			{
+				controller.IsReadOnly = this.isReadOnly;
+			}
+
 			//	Cache toutes les lignes.
 			foreach (var field in DataAccessor.GroupGuidRatioFields)
 			{

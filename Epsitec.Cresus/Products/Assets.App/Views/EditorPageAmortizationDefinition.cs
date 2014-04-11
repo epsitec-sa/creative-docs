@@ -69,33 +69,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins       = new Margins (100+10, 0, 0, 0),
 			};
 
-#if false
-			var radio1 = new RadioButton
-			{
-				Parent        = line,
-				Text          = "Par copie",
-				AutoFocus     = false,
-				PreferredSize = new Common.Drawing.Size (80, h),
-				Dock          = DockStyle.Left,
-				Margins       = new Common.Drawing.Margins (20, 0, 0, 0),
-				ActiveState   = ActiveState.Yes,
-			};
-
-			var radio2 = new RadioButton
-			{
-				Parent        = line,
-				Text          = "Par référence",
-				AutoFocus     = false,
-				PreferredSize = new Common.Drawing.Size (100, h),
-				Dock          = DockStyle.Left,
-				Margins       = new Common.Drawing.Margins (0, 0, 0, 0),
-				ActiveState   = ActiveState.No,
-			};
-#endif
-
 			button.Clicked += delegate
 			{
-				this.ShowCategoriesPopup (button);
+				if (!this.isLocked)
+				{
+					this.ShowCategoriesPopup (button);
+				}
 			};
 		}
 

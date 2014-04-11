@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected static Color GetBackgroundColor(PropertyState state, bool isReadOnly)
+		public static Color GetBackgroundColor(PropertyState state, bool isReadOnly)
 		{
 			Color color;
 			double delta = -0.05;
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				default:
-					color = Color.FromBrightness (1.0);
+					color = ColorManager.NormalFieldColor;
 					break;
 			}
 

@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Tootip     = tooltip;
 			this.Alignment  = alignment;
 			this.Hilited    = hilited;
-			this.Readonly   = readOnly;
+			this.ReadOnly   = readOnly;
 			this.Hatch      = hatch;
 			this.SimpleText = simpleText;
 		}
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public readonly string				Tootip;
 		public readonly ContentAlignment	Alignment;
 		public readonly bool				Hilited;
-		public readonly bool				Readonly;
+		public readonly bool				ReadOnly;
 		public readonly bool				Hatch;
 		public readonly bool				SimpleText;
 	}
