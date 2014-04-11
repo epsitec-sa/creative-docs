@@ -75,12 +75,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Dessine le fond.
 			var color = TimelineRowGlyphs.GetCellColor (cell, isHover, index);
 
-			//?//	Les cellules antérieures à l'événement Locked (cadenas) sont plus foncées.
-			//?if ((flags & DataCellFlags.Locked) != 0)
-			//?{
-			//?	color = color.Delta (-0.05);
-			//?}
-
 			if (!color.IsBackground ())
 			{
 				graphics.AddFilledRectangle (rect);

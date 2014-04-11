@@ -389,8 +389,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.EditedFinalAmount = ca.FinalAmount;
 					}
 
-					//?AbstractFieldController.UpdateBackColor (this.argumentTextField, ca.ArgumentDefined ? this.BackgroundColor : Color.Empty);
-					//?AbstractFieldController.UpdateBackColor (this.finalTextField,   !ca.ArgumentDefined ? this.BackgroundColor : Color.Empty);
 					AbstractFieldController.UpdateTextField (this.argumentTextField, ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined, this.isReadOnly);
 					AbstractFieldController.UpdateTextField (this.finalTextField,   !ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined, this.isReadOnly);
 				}
@@ -405,8 +403,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.EditedArgumentAmount = null;
 					this.EditedFinalAmount = null;
 
-					//?AbstractFieldController.UpdateBackColor (this.argumentTextField, Color.Empty);
-					//?AbstractFieldController.UpdateBackColor (this.finalTextField,    Color.Empty);
 					AbstractFieldController.UpdateTextField (this.argumentTextField, PropertyState.Undefined, this.isReadOnly);
 					AbstractFieldController.UpdateTextField (this.finalTextField,    PropertyState.Undefined, this.isReadOnly);
 				}
@@ -414,8 +410,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.addSubButton.Enable = !this.isReadOnly;
 				this.rateButton  .Enable = !this.isReadOnly;
 				this.equalText   .Enable = !this.isReadOnly;
-				//?this.argumentTextField.IsReadOnly =  this.isReadOnly;
-				//?this.finalTextField   .IsReadOnly =  this.isReadOnly;
 			}
 		}
 

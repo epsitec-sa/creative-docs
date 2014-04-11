@@ -202,50 +202,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		//?protected void UpdateTextField(AbstractTextField textField)
-		//?{
-		//?	if (textField != null)
-		//?	{
-		//?		bool isReadOnly = (this.propertyState == PropertyState.Readonly || this.isReadOnly);
-		//?
-		//?		if (textField is TextFieldCombo)
-		//?		{
-		//?			if (textField.Enable != !isReadOnly)
-		//?			{
-		//?				textField.Enable = !isReadOnly;
-		//?				textField.Invalidate ();  // TODO: pour corriger un bug de Widget !
-		//?			}
-		//?		}
-		//?		else
-		//?		{
-		//?			if (textField.IsReadOnly != isReadOnly)
-		//?			{
-		//?				textField.IsReadOnly = isReadOnly;
-		//?				textField.Invalidate ();  // TODO: pour corriger un bug de Widget !
-		//?			}
-		//?		}
-		//?	}
-		//?}
-
-		//?protected Color BackgroundColor
-		//?{
-		//?	get
-		//?	{
-		//?		switch (this.propertyState)
-		//?		{
-		//?			case PropertyState.Single:
-		//?				return ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
-		//?
-		//?			case PropertyState.Inherited:
-		//?				return ColorManager.EditInheritedPropertyColor;
-		//?
-		//?			default:
-		//?				return Color.Empty;
-		//?		}
-		//?	}
-		//?}
-
-		//-new
 		public static void UpdateTextField(AbstractTextField textField, PropertyState state, bool isReadOnly)
 		{
 			if (textField != null)
@@ -311,24 +267,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			return color;
 		}
-		//-new
-
-		//?public static void UpdateBackColor(AbstractTextField textField, Color color)
-		//?{
-		//?	if (textField != null)
-		//?	{
-		//?		if (color.IsVisible)
-		//?		{
-		//?			textField.BackColor = color;
-		//?			textField.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
-		//?		}
-		//?		else
-		//?		{
-		//?			textField.BackColor = Color.Empty;
-		//?			textField.TextDisplayMode = TextFieldDisplayMode.Default;
-		//?		}
-		//?	}
-		//?}
 
 
 		private void ScrollToField()

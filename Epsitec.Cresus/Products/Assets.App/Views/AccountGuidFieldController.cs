@@ -54,21 +54,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.button != null)
 			{
-				//?if (this.propertyState == PropertyState.Readonly)
-				//?{
-				//?	this.button.NormalColor = ColorManager.ReadonlyFieldColor;
-				//?}
-				//?else
-				//?{
-				//?	if (this.BackgroundColor.IsVisible)
-				//?	{
-				//?		this.button.NormalColor = this.BackgroundColor;
-				//?	}
-				//?	else
-				//?	{
-				//?		this.button.NormalColor = ColorManager.NormalFieldColor;
-				//?	}
-				//?}
 				AbstractFieldController.UpdateButton (this.button, this.propertyState, this.isReadOnly);
 
 				this.UpdateButtons ();
