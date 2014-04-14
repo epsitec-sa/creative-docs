@@ -306,41 +306,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null && timestamp.HasValue)
 			{
-				System.DateTime? createDate = timestamp.Value.Date;
-
-				var popup = new NewEventPopup (this.accessor)
+				NewEventPopup.Show (target, this.accessor, this.baseType, this.obj, timestamp.Value,
+				delegate (Timestamp? t)
 				{
-					BaseType   = this.baseType,
-					DataObject = this.obj,
-					Timestamp  = timestamp.Value,
-				};
-
-				popup.Create (target);
-
-				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
+					this.SelectedTimestamp = t;
+				},
+				delegate (System.DateTime date, string name)
 				{
-					if (dateTime.HasValue)
-					{
-						this.SelectedTimestamp = new Timestamp (dateTime.Value, 0);
-					}
-					else
-					{
-						this.SelectedTimestamp = null;
-					}
-
-					if (dateTime.HasValue)
-					{
-						createDate = dateTime.Value;
-					}
-				};
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (createDate.HasValue)
-					{
-						this.CreateEvent (createDate.Value, name);
-					}
-				};
+					this.CreateEvent (date, name);
+				});
 			}
 		}
 

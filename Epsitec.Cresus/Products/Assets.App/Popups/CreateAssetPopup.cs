@@ -122,9 +122,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, System.Action<System.DateTime, string> action)
+		{
+			if (target != null)
+			{
+				var popup = new CreateAssetPopup (accessor);
+
+				popup.Create (target, leftOrRight: true);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "create")
+					{
+						action (popup.ObjectDate.Value, popup.ObjectName);
+					}
+				};
+			}
+		}
+		#endregion
+
+
 		private const int margin      = 20;
 		private const int lineHeight  = 2 + AbstractFieldController.lineHeight + 2;
-		private const int indent      = 70;
+		private const int indent      = 71;
 		private const int popupWidth  = CreateAssetPopup.margin*2 + CreateAssetPopup.indent + 10 + DateController.controllerWidth;
 		private const int popupHeight = 120 + DateController.controllerHeight;
 

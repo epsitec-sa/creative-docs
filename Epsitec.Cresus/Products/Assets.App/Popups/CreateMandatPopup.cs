@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private const int lineHeight  = 2+AbstractFieldController.lineHeight+2;
 		private const int radioHeight = 18;
-		private const int indent      = 80;
+		private const int indent      = 81;
 		private const int popupWidth  = CreateMandatPopup.margin*2 + 10 + CreateMandatPopup.indent + DateController.controllerWidth;
 		private const int margin      = 20;
 

@@ -287,15 +287,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (message.MessageType == MessageType.MouseDown)
 			{
-				this.MouseDown (pos);
+				this.PopupMouseDown (pos);
 			}
 			else if (message.MessageType == MessageType.MouseMove)
 			{
-				this.MouseMove (pos);
+				this.PopupMouseMove (pos);
 			}
 			else if (message.MessageType == MessageType.MouseUp)
 			{
-				this.MouseUp (pos);
+				this.PopupMouseUp (pos);
 			}
 			else if (message.MessageType == MessageType.KeyPress)  // TODO: ne fonctionne pas toujours !
 			{
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private void MouseDown(Point pos)
+		private void PopupMouseDown(Point pos)
 		{
 			if (this.ExternalRect.Contains (pos))
 			{
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private void MouseMove(Point pos)
+		private void PopupMouseMove(Point pos)
 		{
 			if (this.isDragging)
 			{
@@ -355,7 +355,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private void MouseUp(Point pos)
+		private void PopupMouseUp(Point pos)
 		{
 			if (this.isDragging)
 			{

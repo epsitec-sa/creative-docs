@@ -253,6 +253,54 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor,
+			BaseType baseType, DataObject obj, Timestamp timestamp,
+			System.Action<Timestamp?> selectedTimestamp,
+			System.Action<System.DateTime, string> action)
+		{
+			if (target != null)
+			{
+				System.DateTime? createDate = timestamp.Date;
+
+				var popup = new NewEventPopup (accessor)
+				{
+					BaseType   = baseType,
+					DataObject = obj,
+					Timestamp  = timestamp,
+				};
+
+				popup.Create (target);
+
+				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
+				{
+					if (dateTime.HasValue)
+					{
+						selectedTimestamp (new Timestamp (dateTime.Value, 0));
+					}
+					else
+					{
+						selectedTimestamp (null);
+					}
+
+					if (dateTime.HasValue)
+					{
+						createDate = dateTime.Value;
+					}
+				};
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (createDate.HasValue)
+					{
+						action (createDate.Value, name);
+					}
+				};
+			}
+		}
+		#endregion
+
+
 		private const int horizontalMargins = 20;
 		private const int verticalMargins   = 20;
 		private const int buttonWidth       = DateController.controllerWidth;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
@@ -50,7 +51,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#region Helpers
 		public static void ShowAssetsDeleteEventWarning(Widget target)
 		{
-			var popup = new MessagePopup ("Avertissement", "Il n'est pas possible de supprimer un événement verrouillé.");
+			var popup = new MessagePopup (
+				"Avertissement",
+				"Il n'est pas possible de supprimer un événement verrouillé.");
+
+			popup.Create (target);
+		}
+
+		public static void ShowAssetsPreviewEventWarning(Widget target)
+		{
+			var popup = new MessagePopup (
+				"Avertissement",
+				"Le verrouillage n'est pas possible, car il existe des aperçus d'amortissement.");
+
 			popup.Create (target);
 		}
 		#endregion

@@ -114,10 +114,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null)
 			{
-				var popup = new LockedPopup (this.accessor)
+				var popup = new LockedPopup (this.accessor) 
 				{
 					OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
-					Date                = System.DateTime.Now,
+					Date                = Timestamp.Now.Date,
 				};
 
 				popup.Create (target);
@@ -128,6 +128,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						var guid = popup.IsAll ? Guid.Empty : this.SelectedGuid;
 						var createDate = popup.Date.GetValueOrDefault ();
+
+						if (!popup.IsDelete)  // verrouiller ?
+						{
+							if (!AssetCalculator.IsLockable (this.accessor, guid, createDate))
+							{
+								MessagePopup.ShowAssetsPreviewEventWarning (target);
+								return;
+							}
+						}
 
 						AssetCalculator.Locked (this.accessor, guid, popup.IsDelete, createDate);
 						this.DeepUpdateUI ();

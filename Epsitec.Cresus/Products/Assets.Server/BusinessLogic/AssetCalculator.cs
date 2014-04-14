@@ -209,6 +209,37 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 		#region Locked event logic
+		public static bool IsLockable(DataAccessor accessor, Guid guid, System.DateTime createDate)
+		{
+			//	Indique si une opération de verrouillage est possible. La présence d'un
+			//	événement d'aperçu d'amortissement empêche l'opération.
+			if (guid.IsEmpty)  // tous ?
+			{
+				var getter = accessor.GetNodeGetter (BaseType.Assets);
+
+				foreach (var node in getter.Nodes)
+				{
+					var obj = accessor.GetObject (BaseType.Assets, node.Guid);
+					var timestamp = AssetCalculator.GetPreviewTimestamp (obj);
+					if (timestamp.HasValue && timestamp.Value.Date < createDate)
+					{
+						return false;
+					}
+				}
+			}
+			else  // un seul ?
+			{
+				var obj = accessor.GetObject (BaseType.Assets, guid);
+				var timestamp = AssetCalculator.GetPreviewTimestamp (obj);
+				if (timestamp.HasValue && timestamp.Value.Date < createDate)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		public static void Locked(DataAccessor accessor, Guid guid, bool isDelete, System.DateTime createDate)
 		{
 			//	Effectue une action initiée par LockedPopup.
@@ -302,9 +333,26 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static Timestamp? GetLockedTimestamp(DataObject obj)
 		{
 			//	Retourne le Timestamp de l'événement Locked (cadenas), s'il existe.
+			//	Normalement, il doit n'en exister qu'un seul par objet. Si d'aventure il en
+			//	existait plusieurs, c'est le plus récent qui fait foi !
 			if (obj != null)
 			{
 				var e = obj.Events.Where (x => x.Type == EventType.Locked).LastOrDefault ();
+				if (e != null)
+				{
+					return e.Timestamp;
+				}
+			}
+
+			return null;
+		}
+
+		private static Timestamp? GetPreviewTimestamp(DataObject obj)
+		{
+			//	Retourne le Timestamp de l'événement d'aperçu d'amortisement le plus vieux.
+			if (obj != null)
+			{
+				var e = obj.Events.Where (x => x.Type == EventType.AmortizationPreview).FirstOrDefault ();
 				if (e != null)
 				{
 					return e.Timestamp;

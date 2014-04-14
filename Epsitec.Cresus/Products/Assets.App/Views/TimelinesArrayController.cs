@@ -579,17 +579,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateAssetPopup (this.accessor);
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
+			CreateAssetPopup.Show (target, this.accessor, delegate (System.DateTime date, string name)
 			{
-				if (name == "create")
-				{
-					this.CreateAsset (popup.ObjectDate.Value, popup.ObjectName);
-				}
-			};
+				this.CreateAsset (date, name);
+			});
 		}
 
 		private void CreateAsset(System.DateTime date, string name)

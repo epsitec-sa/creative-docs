@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private const int lineHeight = 2+AbstractFieldController.lineHeight+2;
-		private const int indent     = 50;
+		private const int indent     = 51;
 		private const int popupWidth = LockedPopup.margin*2 + 10 + LockedPopup.indent + DateController.controllerWidth;
 		private const int margin     = 20;
 
