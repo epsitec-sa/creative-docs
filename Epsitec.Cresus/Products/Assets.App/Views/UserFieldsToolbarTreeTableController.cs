@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnNew()
 		{
-			var newField = this.accessor.Settings.GetNewUserField();
+			var newField = this.accessor.GlobalSettings.GetNewUserField();
 			if (newField == ObjectField.Unknown)
 			{
 				return;
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				index = this.nodeGetter.Count;  // insère à la fin
 			}
 
-			this.accessor.Settings.InsertUserField (this.baseType, index, userField);
+			this.accessor.GlobalSettings.InsertUserField (this.baseType, index, userField);
 
 			this.UpdateData ();
 			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			YesNoPopup.Show (target, "Voulez-vous supprimer le champ sélectionné ?", delegate
 			{
-				this.accessor.Settings.RemoveUserField (this.SelectedGuid);
+				this.accessor.GlobalSettings.RemoveUserField (this.SelectedGuid);
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
 			});
@@ -171,15 +171,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			var node = (this.nodeGetter as UserFieldNodeGetter)[currentRow];
-			var userField = this.accessor.Settings.GetUserField (node.Guid);
+			var userField = this.accessor.GlobalSettings.GetUserField (node.Guid);
 			System.Diagnostics.Debug.Assert (!userField.IsEmpty);
 
 			//	Supprime la rubrique à l'endroit actuel.
-			this.accessor.Settings.RemoveUserField (node.Guid);
+			this.accessor.GlobalSettings.RemoveUserField (node.Guid);
 
 			//	Insère la rubrique au nouvel endroit.
 			int index = newRow.Value;
-			this.accessor.Settings.InsertUserField (this.baseType, index, userField);
+			this.accessor.GlobalSettings.InsertUserField (this.baseType, index, userField);
 
 			//	Met à jour et sélectionne la rubrique déplacée.
 			this.UpdateData ();

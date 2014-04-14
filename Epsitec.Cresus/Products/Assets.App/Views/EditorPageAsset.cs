@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			parent = this.CreateScrollable (parent);
 
-			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+			foreach (var userField in accessor.GlobalSettings.GetUserFields (BaseType.Assets))
 			{
 				this.CreateController (parent, userField);
 			}

@@ -52,8 +52,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		protected ObjectField AddSettings(BaseType baseType, string name, FieldType type, int columnWidth, int? lineWidth, int? lineCount, int? summaryOrder, int topMargin)
 		{
-			var field = this.accessor.Mandat.Settings.GetNewUserField ();
-			this.accessor.Mandat.Settings.AddUserField (baseType, new UserField (name, field, type, columnWidth, lineWidth, lineCount, summaryOrder, topMargin));
+			var field = this.accessor.Mandat.GlobalSettings.GetNewUserField ();
+			this.accessor.Mandat.GlobalSettings.AddUserField (baseType, new UserField (name, field, type, columnWidth, lineWidth, lineCount, summaryOrder, topMargin));
 			return field;
 		}
 

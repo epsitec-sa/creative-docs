@@ -135,10 +135,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return PageType.Groups;
 			}
 
-			var userField = accessor.Settings.GetUserField (field);
+			var userField = accessor.GlobalSettings.GetUserField (field);
 			if (!userField.IsEmpty)
 			{
-				var baseType = accessor.Settings.GetBaseType (userField.Guid);
+				var baseType = accessor.GlobalSettings.GetBaseType (userField.Guid);
 
 				if (baseType == BaseType.Assets)
 				{
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				list.Add (c2);
 
 				c2.Add (new ObjectSummaryControllerTile ("Général"));
-				foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Assets))
+				foreach (var userField in this.accessor.GlobalSettings.GetUserFields (BaseType.Assets))
 				{
 					if (userField.TopMargin >= 5)  // limite arbitraire
 					{

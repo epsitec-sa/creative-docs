@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			this.Guid = Guid.NewGuid ();
 
-			this.settings = new Settings ();
+			this.globalSettings = new GlobalSettings ();
 
 			this.assets     = new GuidList<DataObject> ();
 			this.categories = new GuidList<DataObject> ();
@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.entries    = new GuidList<DataObject> ();
 		}
 
-		public Settings							Settings
+		public GlobalSettings					GlobalSettings
 		{
 			get
 			{
-				return this.settings;
+				return this.globalSettings;
 			}
 		}
 
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private readonly Settings				settings;
+		private readonly GlobalSettings			globalSettings;
 		private readonly GuidList<DataObject>	assets;
 		private readonly GuidList<DataObject>	categories;
 		private readonly GuidList<DataObject>	groups;

@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
-	public class Settings
+	public class GlobalSettings
 	{
-		public Settings()
+		public GlobalSettings()
 		{
 			this.assetsFields  = new List<UserField> ();
 			this.personsFields = new List<UserField> ();
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public BaseType GetBaseType(Guid guid)
 		{
 			//	Retourne la base d'une rubrique utilisateur.
-			foreach (var baseType in Settings.BaseTypes)
+			foreach (var baseType in GlobalSettings.BaseTypes)
 			{
 				var list = this.GetUserFieldsList (baseType);
 				var index = list.FindIndex (x => x.Guid == guid);
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public BaseType RemoveUserField(Guid guid)
 		{
 			//	Supprime une rubrique utilisateur.
-			foreach (var baseType in Settings.BaseTypes)
+			foreach (var baseType in GlobalSettings.BaseTypes)
 			{
 				var list = this.GetUserFieldsList (baseType);
 				var index = list.FindIndex (x => x.Guid == guid);

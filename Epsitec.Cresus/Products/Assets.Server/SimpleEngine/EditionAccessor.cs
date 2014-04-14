@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				if (this.baseType == BaseType.UserFields)
 				{
-					this.accessor.Settings.SetTempDataObject (this.obj);
+					this.accessor.GlobalSettings.SetTempDataObject (this.obj);
 				}
 				else
 				{

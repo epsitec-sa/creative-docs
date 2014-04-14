@@ -33,11 +33,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public Settings Settings
+		public GlobalSettings GlobalSettings
 		{
 			get
 			{
-				return this.mandat.Settings;
+				return this.mandat.GlobalSettings;
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			if (baseType == BaseType.UserFields)
 			{
-				return this.Settings.GetTempDataObject (objectGuid);
+				return this.GlobalSettings.GetTempDataObject (objectGuid);
 			}
 			else
 			{
@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (baseType == BaseType.Assets ||
 				baseType == BaseType.Persons)
 			{
-				return this.Settings.GetMainStringField (baseType);
+				return this.GlobalSettings.GetMainStringField (baseType);
 			}
 			else
 			{
@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				yield return ObjectField.MainValue;
 
-				foreach (var field in this.Settings.GetUserFields (BaseType.Assets)
+				foreach (var field in this.GlobalSettings.GetUserFields (BaseType.Assets)
 					.Where (x => x.Type == FieldType.ComputedAmount)
 					.Select (x => x.Field))
 				{
@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (objectField >= ObjectField.UserFieldFirst &&
 				objectField <= ObjectField.UserFieldLast)
 			{
-				return this.Settings.GetUserFieldName (objectField);
+				return this.GlobalSettings.GetUserFieldName (objectField);
 			}
 
 			return DataDescriptions.GetObjectFieldDescription (objectField);
@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (objectField >= ObjectField.UserFieldFirst &&
 				objectField <= ObjectField.UserFieldLast)
 			{
-				return this.Settings.GetUserFieldType (objectField);
+				return this.GlobalSettings.GetUserFieldType (objectField);
 			}
 
 			if (objectField >= ObjectField.GroupGuidRatioFirst &&

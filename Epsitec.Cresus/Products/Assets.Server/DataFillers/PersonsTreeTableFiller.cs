@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons))
+				foreach (var userField in accessor.GlobalSettings.GetUserFields (BaseType.Persons))
 				{
 					yield return userField.Field;
 				}
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				foreach (var userField in this.accessor.Settings.GetUserFields (BaseType.Persons))
+				foreach (var userField in this.accessor.GlobalSettings.GetUserFields (BaseType.Persons))
 				{
 					var type = AbstractTreeTableCell.GetColumnType (userField.Type);
 					columns.Add (new TreeTableColumnDescription (type, userField.ColumnWidth, userField.Name));
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons))
+			foreach (var userField in accessor.GlobalSettings.GetUserFields (BaseType.Persons))
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
 				int columnRank = 0;
-				foreach (var userField in accessor.Settings.GetUserFields (BaseType.Persons))
+				foreach (var userField in accessor.GlobalSettings.GetUserFields (BaseType.Persons))
 				{
 					bool inputValue = (columnRank == 0);
 					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, obj, this.Timestamp, userField, inputValue, cellState);

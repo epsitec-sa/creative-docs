@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Retourne les champs d'un objet d'immobilisation.
 			int index = 0;
 
-			foreach (var userField in accessor.Settings.GetUserFields (BaseType.Assets))
+			foreach (var userField in accessor.GlobalSettings.GetUserFields (BaseType.Assets))
 			{
 				if (index == 1)
 				{
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				//	On prend les champs de type texte ayant un SummaryOrder.
 				var list = new List<string> ();
 
-				foreach (var field in accessor.Settings.GetUserFields (BaseType.Assets)
+				foreach (var field in accessor.GlobalSettings.GetUserFields (BaseType.Assets)
 					.Where (x => x.Type == FieldType.String && x.SummaryOrder.HasValue)
 					.OrderBy (x => x.SummaryOrder)
 					.Select (x => x.Field))

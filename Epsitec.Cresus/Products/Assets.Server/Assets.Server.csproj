@@ -152,7 +152,7 @@
     <Compile Include="SimpleEngine\MCH2MandatFactory.cs" />
     <Compile Include="SimpleEngine\DataAmortizedAmountProperty.cs" />
     <Compile Include="SimpleEngine\DummyAccounts.cs" />
-    <Compile Include="SimpleEngine\Settings.cs" />
+    <Compile Include="SimpleEngine\GlobalSettings.cs" />
     <Compile Include="SimpleEngine\UserField.cs" />
     <Compile Include="SimpleEngine\DataAccessor.NodeGetter.cs" />
     <Compile Include="SimpleEngine\DataGuidRatioProperty.cs" />

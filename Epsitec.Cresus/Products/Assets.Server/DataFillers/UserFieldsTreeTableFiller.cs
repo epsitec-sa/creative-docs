@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var node  = this.nodeGetter[firstRow+i];
-				var userField = this.accessor.Settings.GetUserField (node.Guid);
+				var userField = this.accessor.GlobalSettings.GetUserField (node.Guid);
 
 				var text0  = userField.Name;
 				var text1  = EnumDictionaries.GetFieldTypeName (userField.Type);

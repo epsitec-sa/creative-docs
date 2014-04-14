@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				var userField = this.accessor.Settings.GetUserFields (BaseType.Assets)
+				var userField = this.accessor.GlobalSettings.GetUserFields (BaseType.Assets)
 					.Where (x => x.Type == FieldType.ComputedAmount)
 					.FirstOrDefault ();
 
