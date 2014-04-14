@@ -7,6 +7,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -117,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var popup = new LockedPopup (this.accessor) 
 				{
 					OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
-					Date                = Timestamp.Now.Date,
+					Date                = LocalSettings.LockedDate,
 				};
 
 				popup.Create (target);
@@ -126,6 +127,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (name == "ok")
 					{
+						if (popup.Date.HasValue)
+						{
+							LocalSettings.LockedDate = popup.Date.Value;
+						}
+
 						var guid = popup.IsAll ? Guid.Empty : this.SelectedGuid;
 						var createDate = popup.Date.GetValueOrDefault ();
 

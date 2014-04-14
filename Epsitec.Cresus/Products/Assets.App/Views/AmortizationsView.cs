@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -396,8 +397,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				DateFromAllowed     = fromAllowed,
 				DateToAllowed       = toAllowed,
 				OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
-				DateFrom            = AmortizationsView.lastDateFrom,
-				DateTo              = AmortizationsView.lastDateTo,
+				DateFrom            = LocalSettings.AmortizationDateFrom,
+				DateTo              = LocalSettings.AmortizationDateTo,
 			};
 
 			popup.Create (target);
@@ -410,8 +411,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					System.Diagnostics.Debug.Assert (popup.DateTo.HasValue);
 					var range = new DateRange (popup.DateFrom.Value, popup.DateTo.Value.AddDays (1));
 
-					AmortizationsView.lastDateFrom = popup.DateFrom.Value;
-					AmortizationsView.lastDateTo   = popup.DateTo.Value;
+					LocalSettings.AmortizationDateFrom = popup.DateFrom.Value;
+					LocalSettings.AmortizationDateTo   = popup.DateTo.Value;
 
 					action (range, popup.IsAll);
 				}
@@ -549,9 +550,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-
-		private static System.DateTime lastDateFrom = new System.DateTime (System.DateTime.Now.Year, 1, 1);
-		private static System.DateTime lastDateTo   = new System.DateTime (System.DateTime.Now.Year, 12, 31);
 
 		private readonly TimelinesArrayController			timelinesArrayController;
 		private readonly ObjectEditor						objectEditor;

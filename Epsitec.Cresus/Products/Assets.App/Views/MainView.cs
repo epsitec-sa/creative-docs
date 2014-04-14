@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -175,7 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				MandatFactoryName = MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ().Name,
 				MandatWithSamples = false,
-				MandatStartDate   = new System.DateTime (System.DateTime.Now.Year, 1, 1),
+				MandatStartDate   = LocalSettings.CreateMandatDate,
 			};
 
 			popup.Create (target, leftOrRight: false);
@@ -184,6 +185,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "create")
 				{
+					LocalSettings.CreateMandatDate = popup.MandatStartDate;
 					this.CreateMandat (popup.MandatFactoryName, popup.MandatName, popup.MandatStartDate, popup.MandatWithSamples);
 				}
 			};

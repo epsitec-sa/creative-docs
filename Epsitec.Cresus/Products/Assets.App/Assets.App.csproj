@@ -111,6 +111,7 @@
     <Compile Include="Popups\YesNoPopup.cs" />
     <Compile Include="Popups\NewEventPopup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Views\AbstractView.cs" />
     <Compile Include="Views\AbstractCommandToolbar.cs" />
     <Compile Include="Views\AbstractEditor.cs" />

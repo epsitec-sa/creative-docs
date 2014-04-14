@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -20,9 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public CreateAssetPopup(DataAccessor accessor)
 		{
 			this.accessor = accessor;
-
-			//	Met par défaut une date au premier janvier de l'année en cours.
-			this.ObjectDate = new Timestamp (new System.DateTime (System.DateTime.Now.Year, 1, 1), 0).Date;
 		}
 
 
@@ -127,7 +125,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (target != null)
 			{
-				var popup = new CreateAssetPopup (accessor);
+				var popup = new CreateAssetPopup (accessor)
+				{
+					ObjectDate = LocalSettings.CreateAssetDate,
+				};
 
 				popup.Create (target, leftOrRight: true);
 
@@ -135,6 +136,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					if (name == "create")
 					{
+						if (popup.ObjectDate.HasValue)
+						{
+							LocalSettings.CreateAssetDate = popup.ObjectDate.Value;
+						}
+
 						action (popup.ObjectDate.Value, popup.ObjectName);
 					}
 				};
