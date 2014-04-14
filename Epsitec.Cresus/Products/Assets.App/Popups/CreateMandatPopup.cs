@@ -163,6 +163,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				LabelWidth            = 0,
 				HideAdditionalButtons = false,
 				Value                 = this.MandatStartDate,
+				DateRangeCategory     = DateRangeCategory.Free,
 				TabIndex              = ++this.tabIndex,
 			};
 

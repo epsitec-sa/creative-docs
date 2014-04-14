@@ -10,15 +10,45 @@ namespace Epsitec.Cresus.Assets.App.Settings
 {
 	/// <summary>
 	/// C'est ici que sont concentrés tous les réglages liés à l'utilisateur et à la UI.
+	/// Il faudra être capable de (dé)sérialiser tout ça !
 	/// </summary>
 	public static class LocalSettings
 	{
-		public static System.DateTime CreateMandatDate     = new System.DateTime (System.DateTime.Now.Year, 1, 1);
-		public static System.DateTime CreateAssetDate      = new System.DateTime (System.DateTime.Now.Year, 1, 1);
+		static LocalSettings()
+		{
+			LocalSettings.Initialize (Timestamp.Now.Date);
+		}
 
-		public static System.DateTime AmortizationDateFrom = new System.DateTime (System.DateTime.Now.Year, 1, 1);
-		public static System.DateTime AmortizationDateTo   = new System.DateTime (System.DateTime.Now.Year, 12, 31);
+		public static void Initialize(System.DateTime defaultDate)
+		{
+			var defaultTimestamp = new Timestamp (defaultDate, 0);
 
-		public static System.DateTime LockedDate           = Timestamp.Now.Date;
+			LocalSettings.CreateMandatDate     = new System.DateTime (defaultTimestamp.Date.Year, 1, 1);
+			LocalSettings.CreateAssetDate      = new System.DateTime (defaultTimestamp.Date.Year, 1, 1);
+			LocalSettings.AmortizationDateFrom = new System.DateTime (defaultTimestamp.Date.Year, 1, 1);
+			LocalSettings.AmortizationDateTo   = new System.DateTime (defaultTimestamp.Date.Year, 12, 31);
+			LocalSettings.LockedDate           = defaultTimestamp.Date;
+			LocalSettings.DefaultMandatDate    = defaultTimestamp.Date;
+			LocalSettings.DefaultFreeDate      = defaultTimestamp.Date;
+		}
+
+		public static string Serialize()
+		{
+			return null;  // TODO:
+		}
+
+		public static void Deserialize(string data)
+		{
+			// TODO:
+		}
+
+
+		public static System.DateTime CreateMandatDate;
+		public static System.DateTime CreateAssetDate;
+		public static System.DateTime AmortizationDateFrom;
+		public static System.DateTime AmortizationDateTo;
+		public static System.DateTime LockedDate;
+		public static System.DateTime DefaultMandatDate;
+		public static System.DateTime DefaultFreeDate;
 	}
 }

@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -19,8 +20,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public DateFieldController(DataAccessor accessor)
 			: base (accessor)
 		{
+			this.DateRangeCategory = DateRangeCategory.Free;
 		}
 
+
+		public DateRangeCategory				DateRangeCategory;
 
 		public System.DateTime?					Value
 		{
@@ -40,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						{
 							using (this.ignoreChanges.Enter ())
 							{
-								this.textField.Text = DateFieldController.ConvDateToString (this.value);
+								this.textField.Text = this.ConvDateToString (this.value);
 								this.textField.SelectAll ();
 							}
 						}
@@ -61,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.textField.Text = DateFieldController.ConvDateToString (this.value);
+				this.textField.Text = this.ConvDateToString (this.value);
 				this.textField.SelectAll ();
 			}
 		}
@@ -69,6 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ClearValue()
 		{
 			this.Value = null;
+			this.AdjustHint ();
 			this.UpdateButtons ();
 			this.OnValueEdited (this.Field);
 		}
@@ -89,11 +94,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.textField = new TextField
 			{
 				Parent          = this.frameBox,
+				TextDisplayMode = TextFieldDisplayMode.ActiveHint,
 				PreferredWidth  = DateFieldController.fieldWidth,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Dock            = DockStyle.Left,
 				TabIndex        = this.TabIndex,
-				Text            = DateFieldController.ConvDateToString (this.value),
+				Text            = this.ConvDateToString (this.value),
 			};
 
 			this.minusButton      = this.CreateIconButton (this.frameBox, "Date.Minus",            false);
@@ -134,7 +140,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					using (this.ignoreChanges.Enter ())
 					{
-						this.Value = DateFieldController.ConvStringToDate (this.textField.Text);
+						this.Value = this.ConvStringToDate (this.textField.Text);
+						this.AdjustHint ();
 						this.UpdateButtons ();
 						this.OnValueEdited (this.Field);
 					}
@@ -699,14 +706,136 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private static string ConvDateToString(System.DateTime? value)
+		private void AdjustHint()
+		{
+			string hint = this.ConvDateToString (this.ConvStringToDate (this.textField.Text));
+			this.textField.HintText = DateFieldController.AdjustHintDate (this.textField.FormattedText, hint);
+		}
+
+		private static string AdjustHintDate(FormattedText entered, FormattedText hint)
+		{
+			//	Ajuste le texte 'hint' en fonction du texte entré, pour une date.
+			//
+			//	entered = "5"     hint = "05.03.2012" out = "5.03.2012"
+			//	entered = "5."    hint = "05.03.2012" out = "5.03.2012"
+			//	entered = "5.3"   hint = "05.03.2012" out = "5.3.2012"
+			//	entered = "5.3."  hint = "05.03.2012" out = "5.3.2012"
+			//	entered = "5.3.2" hint = "05.03.2012" out = "5.3.2"
+			//	entered = "5 3"   hint = "05.03.2012" out = "5 3.2012"
+
+			if (entered.IsNullOrEmpty () || hint.IsNullOrEmpty ())
+			{
+				return hint.ToSimpleText ();
+			}
+
+			//	Décompose le texte 'entered', en mots et en séparateurs.
+			var brut = entered.ToSimpleText ();
+
+			var we = new List<string> ();
+			var se = new List<string> ();
+
+			int j = 0;
+			bool n = true;
+			for (int i = 0; i <= brut.Length; i++)
+			{
+				bool isDigit;
+
+				if (i < brut.Length)
+				{
+					isDigit = brut[i] >= '0' && brut[i] <= '9';
+				}
+				else
+				{
+					isDigit = !n;
+				}
+
+				if (n && !isDigit)
+				{
+					we.Add (brut.Substring (j, i-j));
+					j = i;
+					n = false;
+				}
+
+				if (!n && isDigit)
+				{
+					se.Add (brut.Substring (j, i-j));
+					j = i;
+					n = true;
+				}
+			}
+
+			//	Décompose le texte 'hint', en mots.
+			const char sep = '.';
+			var wh = hint.ToSimpleText ().Split (sep);
+
+			int count = System.Math.Min (we.Count, wh.Length);
+			for (int i = 0; i < count; i++)
+			{
+				if (!string.IsNullOrEmpty (we[i]))
+				{
+					wh[i] = we[i];
+				}
+			}
+
+			//	Recompose la chaîne finale.
+			var builder = new System.Text.StringBuilder ();
+
+			for (int i = 0; i < wh.Length; i++)
+			{
+				builder.Append (wh[i]);
+
+				if (i < wh.Length-1)
+				{
+					if (i < se.Count)
+					{
+						builder.Append (se[i]);
+					}
+					else
+					{
+						builder.Append (sep);
+					}
+				}
+			}
+
+			return builder.ToString ();
+		}
+
+
+		private string ConvDateToString(System.DateTime? value)
 		{
 			return TypeConverters.DateToString (value);
 		}
 
-		private static System.DateTime? ConvStringToDate(string text)
+		private System.DateTime? ConvStringToDate(string text)
 		{
-			return TypeConverters.ParseDate (text);
+			System.DateTime? date;
+
+			switch (this.DateRangeCategory)
+			{
+				case Views.DateRangeCategory.Mandat:
+					date = TypeConverters.ParseDate (text, LocalSettings.DefaultMandatDate, this.accessor.Mandat.StartDate, null);
+
+					if (date.HasValue)
+					{
+						LocalSettings.DefaultMandatDate = date.Value;
+					}
+					break;
+
+				case Views.DateRangeCategory.Free:
+					date = TypeConverters.ParseDate (text, LocalSettings.DefaultFreeDate, null, null);
+
+					if (date.HasValue)
+					{
+						LocalSettings.DefaultFreeDate = date.Value;
+					}
+					break;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Unsupported DateRangeCategory {0}", this.DateRangeCategory));
+			}
+
+
+			return date;
 		}
 
 

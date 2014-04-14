@@ -324,16 +324,16 @@ namespace Epsitec.Cresus.Assets.Server.Helpers
 
 
 		#region Date
-		public static System.DateTime? ParseDate(FormattedText text)
+		public static System.DateTime? ParseDate(FormattedText text, System.DateTime defaultDate, System.DateTime? minDate, System.DateTime? maxDate)
 		{
-			return TypeConverters.ParseDate (text.ToSimpleText ());
+			return TypeConverters.ParseDate (text.ToSimpleText (), defaultDate, minDate, maxDate);
 		}
 
-		public static System.DateTime? ParseDate(string text)
+		public static System.DateTime? ParseDate(string text, System.DateTime defaultDate, System.DateTime? minDate, System.DateTime? maxDate)
 		{
 			//	Parse une date située dans n'importe quelle période.
 			System.DateTime? date;
-			TypeConverters.ParseDate (text, System.DateTime.Today, null, null, out date);
+			TypeConverters.ParseDate (text, defaultDate, minDate, maxDate, out date);
 			return date;
 		}
 

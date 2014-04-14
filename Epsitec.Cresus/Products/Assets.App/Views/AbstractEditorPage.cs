@@ -581,9 +581,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new DateFieldController (this.accessor)
 			{
-				Field     = field,
-				Label     = this.accessor.GetFieldName (field),
-				TabIndex  = ++this.tabIndex,
+				Field             = field,
+				Label             = this.accessor.GetFieldName (field),
+				DateRangeCategory = DateRangeCategory.Free,
+				TabIndex          = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);

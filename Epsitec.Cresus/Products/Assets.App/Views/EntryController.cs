@@ -134,6 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Field                 = ObjectField.Unknown,
 				Label                 = "Date",
 				HideAdditionalButtons = false,
+				DateRangeCategory     = DateRangeCategory.Mandat,
 				TabIndex              = ++this.tabIndex,
 			};
 

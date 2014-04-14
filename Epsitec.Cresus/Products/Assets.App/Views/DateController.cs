@@ -25,8 +25,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.dateFieldController = new DateFieldController (accessor)
 			{
-				Label      = null,
-				LabelWidth = 0,
+				Label             = null,
+				LabelWidth        = 0,
+				DateRangeCategory = DateRangeCategory.Mandat,
 			};
 
 			this.DateDescription = "Date";
