@@ -472,7 +472,7 @@ namespace Epsitec.Aider.Entities
 
 			var household     = officialPerson.Households.FirstOrDefault ();
 			var otherContacts = otherPerson.Contacts.ToList ();
-
+			
 			foreach (var contact in otherContacts)
 			{
 				if (contact.Household.IsNull ())

@@ -155,20 +155,16 @@ namespace Epsitec.Aider.Data.Job
 		private void ReassignHousehold(BusinessContext businessContext, List<FormattedText> changes, eCH_ReportedPersonEntity eChHousehold, AiderPersonEntity person, AiderHouseholdEntity potentialHousehold)
 		{
 			this.LogToConsole ("Info: Reassign household");
+
 			var isSameHead = potentialHousehold.IsHead (person);
 			var isSameEChMemberCount = potentialHousehold.Members.Count (x => x.IsGovernmentDefined).Equals (eChHousehold.MembersCount);
 			var isSameMemberCount	 = potentialHousehold.Members.Count ().Equals (eChHousehold.MembersCount);
 			//	Ensure that potential family is like ECh ReportedPerson before apply a full relocate
-			if (person.eCH_Person.AdultMaritalStatus == PersonMaritalStatus.Married && isSameHead && !isSameEChMemberCount)
+
+			//Move all family in this case:
+			if (person.eCH_Person.AdultMaritalStatus == PersonMaritalStatus.Married && eChHousehold.Adult2.IsNull () && !isSameEChMemberCount)
 			{
-				var otherHead = potentialHousehold.Members.Where (p => potentialHousehold.IsHead (p) && p != person).SingleOrDefault ();
-				if (otherHead != null)
-				{
-					if (otherHead.Confession != PersonConfession.Protestant)
-					{
-						isSameEChMemberCount = true; //force update
-					}
-				}
+				isSameEChMemberCount = true; //force update
 			}
 			
 			if (isSameHead&&isSameEChMemberCount)
@@ -362,7 +358,7 @@ namespace Epsitec.Aider.Data.Job
 							var eChPersonEntity = EChDataHelpers.CreateEChPersonEntity (businessContext, eChPerson);					
 							this.LogToConsole ("New: AiderPerson ECHPERSONID:{0}", eChPerson.Id);
 							var aiderPerson = AiderPersonEntity.Create (businessContext, eChPersonEntity, mrMrs);
-							this.CreateArrivalWarningForNewHousehold (businessContext, aiderPerson);						
+							this.CreateArrivalWarningForNewHousehold (businessContext, aiderPerson);
 						}
 						else
 						{
@@ -463,6 +459,9 @@ namespace Epsitec.Aider.Data.Job
 
 			foreach (var eChChild in eChReportedPerson.Children)
 			{
+				//if (eChChild.Id == "819095354")
+				//{
+				//}
 				var eChPersonEntity  = EChDataHelpers.GetEchPersonEntity (businessContext, eChChild);
 				eChReportedPersonEntity.Children.Add (eChPersonEntity);
 				eChReportedPersonEntity.RemoveDuplicates ();

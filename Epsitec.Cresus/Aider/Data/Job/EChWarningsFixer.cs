@@ -202,8 +202,10 @@ namespace Epsitec.Aider.Data.Job
 
 			foreach (var reportedPerson in allReportedPersons)
 			{
+	
 				System.Console.SetCursorPosition (0, 2);
 				EChWarningsFixer.LogToConsole ("{0}/{1}", current, total);
+	
 				current++;
 
 				foreach (var member in reportedPerson.Members)

@@ -416,7 +416,6 @@ namespace Epsitec.Aider.Data.Job
 				if (aiderHousehold.Contacts.Where (c => !c.Person.IsGovernmentDefined).Any (c => c.Person.GetPersonCheckKey () == aiderPerson.GetPersonCheckKey ()))
 				{
 					//Merge all matching non ECh AiderPerson with current AiderPerson
-					AiderPersonEntity mergedEntity = new AiderPersonEntity ();
 					foreach (var person in aiderHousehold.Members.Where (p => p.GetPersonCheckKey () == aiderPerson.GetPersonCheckKey () && !p.IsGovernmentDefined))
 					{
 						try
@@ -427,6 +426,10 @@ namespace Epsitec.Aider.Data.Job
 						{
 
 						}
+					}
+					if (aiderPerson.MainContact.IsNull ())
+					{
+						var contact = AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, isHead);
 					}
 				}
 				else

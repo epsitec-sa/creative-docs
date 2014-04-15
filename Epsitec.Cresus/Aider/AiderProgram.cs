@@ -376,7 +376,7 @@ namespace Epsitec.Aider
 					verboseLogging = true;
 				}
 				System.Console.WriteLine ("Running ECh Warning Fixer before updating...");
-				EChWarningsFixer.TryFixAll (coreData);
+				//EChWarningsFixer.TryFixAll (coreData);
 
 				var parishRepository = ParishAddressRepository.Current;
 
@@ -399,7 +399,7 @@ namespace Epsitec.Aider
 				}
 
 				System.Console.WriteLine ("Running ECh Warning Fixer after updating...");
-				EChWarningsFixer.TryFixAll (coreData);
+				//EChWarningsFixer.TryFixAll (coreData);
 
 				System.Console.WriteLine ("Fixing 'no parish' after updating...");
 				ParishAssignationFixer.FixNoParish (coreData);
