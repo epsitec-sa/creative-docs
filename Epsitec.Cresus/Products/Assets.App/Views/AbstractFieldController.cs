@@ -214,7 +214,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				textField.BackColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly);
-				textField.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
+
+				if (textField.TextDisplayMode == TextFieldDisplayMode.ActiveHint ||
+					textField.TextDisplayMode == TextFieldDisplayMode.ActiveHintAndUseBackColor)
+				{
+					textField.TextDisplayMode = TextFieldDisplayMode.ActiveHintAndUseBackColor;
+				}
+				else
+				{
+					textField.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
+				}
+
 				textField.IsReadOnly = isReadOnly;
 			}
 		}

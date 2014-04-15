@@ -49,9 +49,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 							}
 						}
 					}
-
-					this.AdjustHint ();
 				}
+
+				this.AdjustHint ();
 			}
 		}
 
@@ -75,7 +75,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ClearValue()
 		{
 			this.Value = null;
-			this.AdjustHint ();
 			this.UpdateButtons ();
 			this.OnValueEdited (this.Field);
 		}
@@ -143,7 +142,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = this.ConvStringToDate (this.textField.Text);
-						this.AdjustHint ();
 						this.UpdateButtons ();
 						this.OnValueEdited (this.Field);
 					}
@@ -168,11 +166,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (focused)  // pris le focus ?
 				{
+					this.hasFocus = true;
 					this.SetFocus ();
 					this.AdjustHint ();
 				}
 				else  // perdu le focus ?
 				{
+					this.hasFocus = false;
 					this.UpdateValue ();
 					this.ClearHint ();
 				}
@@ -719,7 +719,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void AdjustHint()
 		{
 			//	Ajuste le texte 'hint' de la date en édition.
-			if (this.textField != null)
+			if (this.textField != null && this.hasFocus)
 			{
 				string hint = this.ConvDateToString (this.ConvStringToDate (this.textField.Text));
 
@@ -900,5 +900,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						calendarButton;
 		private IconButton						deleteButton;
 		private System.DateTime?				value;
+		private bool							hasFocus;
 	}
 }

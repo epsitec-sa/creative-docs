@@ -1943,7 +1943,8 @@ namespace Epsitec.Common.Widgets
 				//	explicitement défini comme "transparent".
 			}
 			else if (!this.BackColor.IsTransparent &&
-					 this.textFieldDisplayMode == TextFieldDisplayMode.UseBackColor)
+					 (this.textFieldDisplayMode == TextFieldDisplayMode.UseBackColor ||
+					  this.textFieldDisplayMode == TextFieldDisplayMode.ActiveHintAndUseBackColor))
 			{
 				graphics.AddFilledRectangle (fill);
 				graphics.RenderSolid (this.BackColor);
@@ -2099,6 +2100,7 @@ namespace Epsitec.Common.Widgets
 				switch (this.textFieldDisplayMode)
 				{
 					case TextFieldDisplayMode.ActiveHint:
+					case TextFieldDisplayMode.ActiveHintAndUseBackColor:
 						return this.GetPaintTextLayoutForHint (original, hintText);
 					
 					case TextFieldDisplayMode.PassiveHint:

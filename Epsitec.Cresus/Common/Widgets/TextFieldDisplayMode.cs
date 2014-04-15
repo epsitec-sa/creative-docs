@@ -43,6 +43,11 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		UseBackColor,
 
+		/// <summary>
+		/// ActiveHint and UseBackColor.
+		/// </summary>
+		ActiveHintAndUseBackColor,
+
 		Transparent,
 	}
 }

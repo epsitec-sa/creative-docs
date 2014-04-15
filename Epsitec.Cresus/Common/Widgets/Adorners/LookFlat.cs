@@ -1613,7 +1613,8 @@ namespace Epsitec.Common.Widgets.Adorners
 				if ( (state&WidgetPaintState.Focused) != 0 )
 				{
 					if (mode == TextFieldDisplayMode.Default ||
-						mode == TextFieldDisplayMode.UseBackColor)
+						mode == TextFieldDisplayMode.UseBackColor ||
+						mode == TextFieldDisplayMode.ActiveHintAndUseBackColor)
 					{
 						graphics.RenderSolid(this.colorCaption);
 					}
