@@ -97,6 +97,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins       = new Margins (0, 0, TopTitle.height, 0),
 			};
 
+			ToolTip.Default.SetToolTip (this.closeButton, "Ferme le volet des événements");
+
 			this.DeepUpdateUI ();
 
 			//	Connexion des événements de la liste des objets à gauche.

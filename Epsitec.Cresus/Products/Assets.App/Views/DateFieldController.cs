@@ -49,6 +49,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 							}
 						}
 					}
+
+					this.AdjustHint ();
 				}
 			}
 		}
@@ -167,10 +169,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (focused)  // pris le focus ?
 				{
 					this.SetFocus ();
+					this.AdjustHint ();
 				}
 				else  // perdu le focus ?
 				{
 					this.UpdateValue ();
+					this.ClearHint ();
 				}
 			};
 
@@ -706,10 +710,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void ClearHint()
+		{
+			//	Supprime le texte 'hint' de la date en édition.
+			this.textField.HintText = null;
+		}
+
 		private void AdjustHint()
 		{
-			string hint = this.ConvDateToString (this.ConvStringToDate (this.textField.Text));
-			this.textField.HintText = DateFieldController.AdjustHintDate (this.textField.FormattedText, hint);
+			//	Ajuste le texte 'hint' de la date en édition.
+			if (this.textField != null)
+			{
+				string hint = this.ConvDateToString (this.ConvStringToDate (this.textField.Text));
+
+				if (string.IsNullOrEmpty (hint))
+				{
+					hint = this.ConvDateToString (this.DefaultDate);
+				}
+
+				this.textField.HintText = DateFieldController.AdjustHintDate (this.textField.FormattedText, hint);
+			}
 		}
 
 		private static string AdjustHintDate(FormattedText entered, FormattedText hint)
@@ -800,6 +820,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return builder.ToString ();
 		}
 
+		private System.DateTime? DefaultDate
+		{
+			get
+			{
+				switch (this.DateRangeCategory)
+				{
+					case DateRangeCategory.Mandat:
+						return LocalSettings.DefaultMandatDate;
+
+					case DateRangeCategory.Free:
+						return LocalSettings.DefaultFreeDate;
+
+					default:
+						throw new System.InvalidOperationException (string.Format ("Unsupported DateRangeCategory {0}", this.DateRangeCategory));
+				}
+			}
+		}
+
 
 		private string ConvDateToString(System.DateTime? value)
 		{
@@ -812,7 +850,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			switch (this.DateRangeCategory)
 			{
-				case Views.DateRangeCategory.Mandat:
+				case DateRangeCategory.Mandat:
 					date = TypeConverters.ParseDate (text, LocalSettings.DefaultMandatDate, this.accessor.Mandat.StartDate, null);
 
 					if (date.HasValue)
@@ -821,7 +859,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 					break;
 
-				case Views.DateRangeCategory.Free:
+				case DateRangeCategory.Free:
 					date = TypeConverters.ParseDate (text, LocalSettings.DefaultFreeDate, null, null);
 
 					if (date.HasValue)
@@ -833,7 +871,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported DateRangeCategory {0}", this.DateRangeCategory));
 			}
-
 
 			return date;
 		}
