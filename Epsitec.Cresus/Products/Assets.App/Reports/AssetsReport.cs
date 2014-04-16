@@ -18,9 +18,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
+		public override void Dispose()
+		{
+			this.treeTableController.RowClicked -= this.HandleRowClicked;
+			this.treeTableController.ContentChanged -= this.HandleContentChanged;
+		}
+
 		public override void Initialize()
 		{
 			this.timestamp = Timestamp.Now;
+			this.rootGuid = Guid.Empty;
 			this.visibleSelectedRow = -1;
 
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
@@ -37,16 +44,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Update ();
 
 			//	Connexion des événements.
-			this.treeTableController.RowClicked += delegate (object sender, int row, int column)
-			{
-				this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
-				this.Update ();
-			};
+			this.treeTableController.RowClicked += this.HandleRowClicked;
+			this.treeTableController.ContentChanged += this.HandleContentChanged;
+		}
 
-			this.treeTableController.ContentChanged += delegate (object sender, bool crop)
-			{
-				this.Update ();
-			};
+		private void HandleRowClicked(object sender, int row, int column)
+		{
+			this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
+			this.Update ();
+		}
+
+		private void HandleContentChanged(object sender, bool val1)
+		{
+			this.Update ();
 		}
 
 		private void Update()
@@ -55,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private AbstractTreeTableFiller<CumulNode>		dataFiller;
+		private AbstractTreeTableFiller<CumulNode> dataFiller;
 		private Timestamp					timestamp;
 		private Guid						rootGuid;
 	}

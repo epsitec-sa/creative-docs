@@ -128,6 +128,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateReport(string id)
 		{
+			if (this.report != null)
+			{
+				this.report.Dispose ();
+				this.report = null;
+			}
+
 			switch (id)
 			{
 				case "AssetsList":

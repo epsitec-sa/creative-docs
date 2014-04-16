@@ -18,6 +18,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
+		public override void Dispose()
+		{
+			this.treeTableController.RowClicked -= this.HandleRowClicked;
+			this.treeTableController.ContentChanged -= this.HandleContentChanged;
+		}
+
 		public override void Initialize()
 		{
 			this.visibleSelectedRow = -1;
@@ -36,16 +42,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Update ();
 
 			//	Connexion des événements.
-			this.treeTableController.RowClicked += delegate (object sender, int row, int column)
-			{
-				this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
-				this.Update ();
-			};
+			this.treeTableController.RowClicked += this.HandleRowClicked;
+			this.treeTableController.ContentChanged += this.HandleContentChanged;
+		}
 
-			this.treeTableController.ContentChanged += delegate (object sender, bool crop)
-			{
-				this.Update ();
-			};
+		private void HandleRowClicked(object sender, int row, int column)
+		{
+			this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
+			this.Update ();
+		}
+
+		private void HandleContentChanged(object sender, bool val1)
+		{
+			this.Update ();
 		}
 
 		private void Update()

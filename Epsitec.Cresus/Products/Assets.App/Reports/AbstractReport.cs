@@ -16,6 +16,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController = treeTableController;
 		}
 
+		public virtual void Dispose()
+		{
+		}
+
 		public virtual void Initialize()
 		{
 		}
