@@ -57,6 +57,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateScrollList (leftFrame);
 			this.CreateButtons    (leftFrame);
 
+			this.paramsFrame = new FrameBox
+			{
+				Parent = rightFrame,
+				Dock   = DockStyle.Top,
+			};
+
 			this.CreateReport (rightFrame);
 
 			this.InitializeScrollList ();
@@ -131,6 +137,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateReport(string id)
 		{
+			if (this.paramsPanel != null)
+			{
+				this.paramsPanel.ParamsChanged -= this.HandleParamsChanged;
+				this.paramsPanel = null;
+			}
+
+			this.paramsFrame.Children.Clear ();
+
 			if (this.report != null)
 			{
 				this.report.Dispose ();
@@ -142,16 +156,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case "AssetsList":
 					this.report = new AssetsReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
-					this.report.SetParams (new AssetsParams (Timestamp.Now, Guid.Empty));
+
+					this.paramsPanel = new AssetsParamsPanel (this.accessor);
+					this.report.SetParams (this.paramsPanel.ReportParams);
 					break;
 
 				case "PersonsList":
 					this.report = new PersonsReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
+
 					this.report.SetParams (null);
 					break;
 			}
+
+			if (this.paramsPanel != null)
+			{
+				this.paramsPanel.CreateUI (this.paramsFrame);
+
+				this.paramsPanel.ParamsChanged += this.HandleParamsChanged;
+			}
 		}
+
+		private void HandleParamsChanged(object sender)
+		{
+		}
+
 
 		private void UpdateButtons()
 		{
@@ -199,9 +228,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private const string indentPrefix = "  ";
 
 		private ScrollList						scrollList;
+		private FrameBox						paramsFrame;
 		private Button							showButton;
 		private Button							exportButton;
 		private NavigationTreeTableController	treeTableController;
+		private AbstractParamsPanel				paramsPanel;
 		private AbstractReport					report;
 	}
 }
