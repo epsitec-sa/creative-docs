@@ -24,45 +24,50 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.ContentChanged -= this.HandleContentChanged;
 		}
 
+
 		public override void Initialize()
 		{
 			this.visibleSelectedRow = -1;
 
 			var primary = this.accessor.GetNodeGetter (BaseType.Persons);
 			var secondary = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
-			var nodeGetter = new SorterNodeGetter (secondary);
+			this.nodeGetter = new SorterNodeGetter (secondary);
 
-			var sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Persons), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
+			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Persons), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 
-			secondary.SetParams (null, sortingInstructions);
-			nodeGetter.SetParams (sortingInstructions);
+			secondary.SetParams (null, this.sortingInstructions);
+			this.nodeGetter.SetParams (this.sortingInstructions);
 
-			this.dataFiller = new PersonsTreeTableFiller (this.accessor, nodeGetter);
+			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
-			this.Update ();
+
+			this.UpdateTreeTable ();
 
 			//	Connexion des événements.
 			this.treeTableController.RowClicked     += this.HandleRowClicked;
 			this.treeTableController.ContentChanged += this.HandleContentChanged;
 		}
 
+
 		private void HandleRowClicked(object sender, int row, int column)
 		{
 			this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
-			this.Update ();
+			this.UpdateTreeTable ();
 		}
 
-		private void HandleContentChanged(object sender, bool val1)
+		private void HandleContentChanged(object sender, bool row)
 		{
-			this.Update ();
+			this.UpdateTreeTable ();
 		}
 
-		private void Update()
+		private void UpdateTreeTable()
 		{
 			TreeTableFiller<SortableNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
 		}
 
 
+		private SortingInstructions				sortingInstructions;
+		private SorterNodeGetter				nodeGetter;
 		private PersonsTreeTableFiller			dataFiller;
 	}
 }

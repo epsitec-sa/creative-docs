@@ -20,7 +20,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
+
+		public void SetParams(AbstractParams reportParams)
+		{
+			this.reportParams = reportParams;
+			this.Update ();
+		}
+
 		public virtual void Initialize()
+		{
+		}
+
+		public virtual void Update()
 		{
 		}
 
@@ -28,6 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected readonly DataAccessor			accessor;
 		protected readonly NavigationTreeTableController treeTableController;
 
+		protected AbstractParams				reportParams;
 		protected int							visibleSelectedRow;
 	}
 }

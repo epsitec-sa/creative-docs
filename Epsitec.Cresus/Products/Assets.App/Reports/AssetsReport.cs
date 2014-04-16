@@ -24,11 +24,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.ContentChanged -= this.HandleContentChanged;
 		}
 
-		public void SetParams(Timestamp timestamp, Guid rootGuid)
-		{
-			this.timestamp = timestamp;
-			this.rootGuid = rootGuid;
-		}
 
 		public override void Initialize()
 		{
@@ -36,41 +31,57 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
 			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
-			var nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
+			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
-			var sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Assets), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
+			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Assets), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 
-			nodeGetter.SetParams (this.timestamp, this.rootGuid, sortingInstructions);
-
-			this.dataFiller = new AssetsTreeTableFiller (this.accessor, nodeGetter);
-			this.dataFiller.Timestamp = this.timestamp;
+			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
-			this.Update ();
+
+			this.UpdateTreeTable ();
 
 			//	Connexion des événements.
 			this.treeTableController.RowClicked     += this.HandleRowClicked;
 			this.treeTableController.ContentChanged += this.HandleContentChanged;
 		}
 
+		public override void Update()
+		{
+			this.nodeGetter.SetParams (this.Params.Timestamp, this.Params.RootGuid, this.sortingInstructions);
+			this.dataFiller.Timestamp = this.Params.Timestamp;
+
+			this.UpdateTreeTable ();
+		}
+
+
 		private void HandleRowClicked(object sender, int row, int column)
 		{
 			this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
-			this.Update ();
+			this.UpdateTreeTable ();
 		}
 
-		private void HandleContentChanged(object sender, bool val1)
+		private void HandleContentChanged(object sender, bool row)
 		{
-			this.Update ();
+			this.UpdateTreeTable ();
 		}
 
-		private void Update()
+		private void UpdateTreeTable()
 		{
 			TreeTableFiller<CumulNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
 		}
 
 
-		private AbstractTreeTableFiller<CumulNode> dataFiller;
-		private Timestamp					timestamp;
-		private Guid						rootGuid;
+		private AssetsParams Params
+		{
+			get
+			{
+				return this.reportParams as AssetsParams;
+			}
+		}
+
+
+		private SortingInstructions					sortingInstructions;
+		private ObjectsNodeGetter					nodeGetter;
+		private AbstractTreeTableFiller<CumulNode>	dataFiller;
 	}
 }

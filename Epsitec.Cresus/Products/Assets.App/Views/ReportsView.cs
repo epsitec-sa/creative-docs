@@ -140,22 +140,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (id)
 			{
 				case "AssetsList":
-					{
-						var report = new AssetsReport (this.accessor, this.treeTableController);
-						report.SetParams (Timestamp.Now, Guid.Empty);
-						report.Initialize ();
-
-						this.report = report;
-					}
+					this.report = new AssetsReport (this.accessor, this.treeTableController);
+					this.report.Initialize ();
+					this.report.SetParams (new AssetsParams (Timestamp.Now, Guid.Empty));
 					break;
 
 				case "PersonsList":
-					{
-						var report = new PersonsReport (this.accessor, this.treeTableController);
-						report.Initialize ();
-
-						this.report = report;
-					}
+					this.report = new PersonsReport (this.accessor, this.treeTableController);
+					this.report.Initialize ();
 					break;
 			}
 		}
