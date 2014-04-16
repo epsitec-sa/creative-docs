@@ -172,13 +172,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.paramsPanel != null)
 			{
 				this.paramsPanel.CreateUI (this.paramsFrame);
-
 				this.paramsPanel.ParamsChanged += this.HandleParamsChanged;
 			}
 		}
 
 		private void HandleParamsChanged(object sender)
 		{
+			this.report.SetParams (this.paramsPanel.ReportParams);
 		}
 
 
