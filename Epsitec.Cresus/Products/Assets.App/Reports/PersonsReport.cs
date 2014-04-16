@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.ContentChanged += this.HandleContentChanged;
 		}
 
-		public override void Update()
+		protected override void UpdateParams()
 		{
 			this.secondaryNodeGetter.SetParams (null, this.sortingInstructions);
 			this.primaryNodeGetter.SetParams (this.sortingInstructions);

@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.ContentChanged += this.HandleContentChanged;
 		}
 
-		public override void Update()
+		protected override void UpdateParams()
 		{
 			this.nodeGetter.SetParams (this.Params.Timestamp, this.Params.RootGuid, this.sortingInstructions);
 			this.dataFiller.Timestamp = this.Params.Timestamp;

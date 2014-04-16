@@ -21,17 +21,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void SetParams(AbstractParams reportParams)
-		{
-			this.reportParams = reportParams;
-			this.Update ();
-		}
-
 		public virtual void Initialize()
 		{
 		}
 
-		public virtual void Update()
+		public void SetParams(AbstractParams reportParams)
+		{
+			this.reportParams = reportParams;
+			this.UpdateParams ();
+		}
+
+		protected virtual void UpdateParams()
 		{
 		}
 
