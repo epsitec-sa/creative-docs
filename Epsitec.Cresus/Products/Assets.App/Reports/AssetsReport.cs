@@ -24,10 +24,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.ContentChanged -= this.HandleContentChanged;
 		}
 
+		public void SetParams(Timestamp timestamp, Guid rootGuid)
+		{
+			this.timestamp = timestamp;
+			this.rootGuid = rootGuid;
+		}
+
 		public override void Initialize()
 		{
-			this.timestamp = Timestamp.Now;
-			this.rootGuid = Guid.Empty;
 			this.visibleSelectedRow = -1;
 
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
