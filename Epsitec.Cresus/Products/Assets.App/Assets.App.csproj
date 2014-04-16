@@ -112,6 +112,7 @@
     <Compile Include="Popups\NewEventPopup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\AbstractReport.cs" />
+    <Compile Include="Reports\AssetsReport.cs" />
     <Compile Include="Reports\PersonsReport.cs" />
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Views\AbstractView.cs" />

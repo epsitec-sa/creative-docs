@@ -29,23 +29,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Persons), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 
 			secondary.SetParams (null, sortingInstructions);
-			(nodeGetter as SorterNodeGetter).SetParams (sortingInstructions);
+			nodeGetter.SetParams (sortingInstructions);
 
-			var dataFiller = new PersonsTreeTableFiller (this.accessor, nodeGetter);
-			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, dataFiller);
-			TreeTableFiller<SortableNode>.FillContent (this.treeTableController, dataFiller, this.visibleSelectedRow, crop: true);
+			this.dataFiller = new PersonsTreeTableFiller (this.accessor, nodeGetter);
+			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
+			this.Update ();
 
 			//	Connexion des événements.
 			this.treeTableController.RowClicked += delegate (object sender, int row, int column)
 			{
 				this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
-				TreeTableFiller<SortableNode>.FillContent (this.treeTableController, dataFiller, this.visibleSelectedRow, crop: true);
+				this.Update ();
 			};
 
 			this.treeTableController.ContentChanged += delegate (object sender, bool crop)
 			{
-				TreeTableFiller<SortableNode>.FillContent (this.treeTableController, dataFiller, this.visibleSelectedRow, crop: true);
+				this.Update ();
 			};
 		}
+
+		private void Update()
+		{
+			TreeTableFiller<SortableNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
+		}
+
+
+		private PersonsTreeTableFiller			dataFiller;
 	}
 }

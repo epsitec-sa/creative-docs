@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.scrollList.SelectedItemIndex != -1)
 				{
-					this.UpdateReport (this.scrollList.Items[this.scrollList.SelectedItemIndex]);
+					this.UpdateReport (this.scrollList.Items.Keys[this.scrollList.SelectedItemIndex]);
 				}
 
 				this.UpdateButtons ();
@@ -128,8 +128,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateReport(string id)
 		{
-			this.report = new PersonsReport (this.accessor, this.treeTableController);
-			this.report.Initialize ();
+			switch (id)
+			{
+				case "AssetsList":
+					this.report = new AssetsReport (this.accessor, this.treeTableController);
+					this.report.Initialize ();
+					break;
+
+				case "PersonsList":
+					this.report = new PersonsReport (this.accessor, this.treeTableController);
+					this.report.Initialize ();
+					break;
+			}
+
 		}
 
 		private void UpdateButtons()
