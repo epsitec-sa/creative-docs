@@ -78,6 +78,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.scrollList.SelectedItemChanged += delegate
 			{
+				if (this.scrollList.SelectedItemIndex != -1)
+				{
+					this.UpdateReport (this.scrollList.Items[this.scrollList.SelectedItemIndex]);
+				}
+
 				this.UpdateButtons ();
 			};
 		}
@@ -114,39 +119,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateReport(Widget parent)
 		{
-			this.visibleSelectedRow = -1;
-
-			var primary = this.accessor.GetNodeGetter (BaseType.Persons);
-			var secondary = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
-			this.nodeGetter = new SorterNodeGetter (secondary);
-
-			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Persons), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
-
-			secondary.SetParams (null, this.sortingInstructions);
-			(this.nodeGetter as SorterNodeGetter).SetParams (this.sortingInstructions);
-
 			this.treeTableController = new NavigationTreeTableController ();
 			this.treeTableController.CreateUI (parent, rowHeight: 18, headerHeight: 18, footerHeight: 0);
 			this.treeTableController.AllowsMovement = false;
 			this.treeTableController.AddSortedColumn (0);
-
-			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
-			this.UpdateController ();
-
-			//	Connexion des événements.
-			this.treeTableController.RowClicked += delegate (object sender, int row, int column)
-			{
-				this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
-				this.UpdateController ();
-			};
-
-			this.treeTableController.ContentChanged += delegate (object sender, bool crop)
-			{
-				this.UpdateController (crop);
-			};
 		}
 
+
+		private void UpdateReport(string id)
+		{
+			this.report = new PersonsReport (this.accessor, this.treeTableController);
+			this.report.Initialize ();
+		}
 
 		private void UpdateButtons()
 		{
@@ -165,11 +149,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.scrollList.Items.Add (report.Id, ReportsView.indentPrefix + report.Name);
 			}
-		}
-
-		private void UpdateController(bool crop = true)
-		{
-			TreeTableFiller<SortableNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
 		private IEnumerable<Report> Reports
@@ -202,9 +181,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private Button							showButton;
 		private Button							exportButton;
 		private NavigationTreeTableController	treeTableController;
-		private SortingInstructions				sortingInstructions;
-		private SorterNodeGetter				nodeGetter;
-		private PersonsTreeTableFiller			dataFiller;
-		private int								visibleSelectedRow;
+		private AbstractReport					report;
 	}
 }
