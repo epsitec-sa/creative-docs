@@ -5,10 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Server.DataFillers;
-using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -40,9 +37,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var leftFrame = new FrameBox
 			{
 				Parent         = mainFrame,
-				PreferredWidth = 300,
 				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 10, 0, 0),
+				PreferredWidth = 300,
+			};
+
+			var splitter = new VSplitter
+			{
+				Parent         = mainFrame,
+				Dock           = DockStyle.Left,
+				PreferredWidth = 10,
 			};
 
 			var rightFrame = new FrameBox
@@ -155,7 +158,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 					break;
 			}
-
 		}
 
 		private void UpdateButtons()
@@ -183,7 +185,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				yield return new Report ("AssetsArray",    "Tableau des immobilisations");
 				yield return new Report ("AssetsList",     "Liste des objets d'immobilisations");
-				yield return new Report ("CateroriesList", "Liste des catégories d'immobilisations");
+				yield return new Report ("CategoriesList", "Liste des catégories d'immobilisations");
 				yield return new Report ("PersonsList",    "Liste des personnes");
 			}
 		}

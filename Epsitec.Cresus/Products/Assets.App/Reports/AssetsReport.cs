@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void Dispose()
 		{
-			this.treeTableController.RowClicked -= this.HandleRowClicked;
+			this.treeTableController.RowClicked     -= this.HandleRowClicked;
 			this.treeTableController.ContentChanged -= this.HandleContentChanged;
 		}
 
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Update ();
 
 			//	Connexion des événements.
-			this.treeTableController.RowClicked += this.HandleRowClicked;
+			this.treeTableController.RowClicked     += this.HandleRowClicked;
 			this.treeTableController.ContentChanged += this.HandleContentChanged;
 		}
 

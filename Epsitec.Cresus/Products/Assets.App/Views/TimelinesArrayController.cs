@@ -183,8 +183,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.splitter = new VSplitter
 			{
-				Parent = box,
-				Dock   = DockStyle.Left,
+				Parent         = box,
+				Dock           = DockStyle.Left,
+				PreferredWidth = 10,
 			};
 
 			var rightBox = new FrameBox
