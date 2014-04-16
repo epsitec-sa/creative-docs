@@ -45,9 +45,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.groupButton = new Button
 			{
 				Parent         = parent,
-				Text           = "Groupe",
 				ButtonStyle    = ButtonStyle.Icon,
-				PreferredWidth = 100,
+				AutoFocus      = false,
+				PreferredWidth = 200,
 				Dock           = DockStyle.Left,
 			};
 
@@ -61,7 +61,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void UpdateUI()
 		{
 			this.timestampController.Date = this.Params.Timestamp.Date;
-			this.groupButton.Text = GroupsLogic.GetShortName (this.accessor, this.groupGuid);
+
+			if (this.groupGuid.IsEmpty)
+			{
+				this.groupButton.Text = "Sans groupement";
+			}
+			else
+			{
+				var text = GroupsLogic.GetShortName (this.accessor, this.groupGuid);
+				this.groupButton.Text = "Groupement selon " + text;
+			}
 		}
 
 

@@ -112,6 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent      = frame,
 				Text        = "Visualiser",
 				ButtonStyle = ButtonStyle.Icon,
+				AutoFocus   = false,
 				Dock        = DockStyle.Fill,
 				Margins     = new Margins (0, 5, 0, 0),
 			};
@@ -121,6 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent      = frame,
 				Text        = "Exporter",
 				ButtonStyle = ButtonStyle.Icon,
+				AutoFocus   = false,
 				Dock        = DockStyle.Fill,
 				Margins     = new Margins (5, 0, 0, 0),
 			};
