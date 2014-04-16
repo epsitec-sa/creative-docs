@@ -30,15 +30,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.visibleSelectedRow = -1;
 
 			var primary = this.accessor.GetNodeGetter (BaseType.Persons);
-			var secondary = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
-			this.nodeGetter = new SorterNodeGetter (secondary);
+			this.secondaryNodeGetter = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
+			this.primaryNodeGetter = new SorterNodeGetter (this.secondaryNodeGetter);
 
 			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Persons), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 
-			secondary.SetParams (null, this.sortingInstructions);
-			this.nodeGetter.SetParams (this.sortingInstructions);
-
-			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.primaryNodeGetter);
 			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
 
 			this.UpdateTreeTable ();
@@ -46,6 +43,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Connexion des événements.
 			this.treeTableController.RowClicked     += this.HandleRowClicked;
 			this.treeTableController.ContentChanged += this.HandleContentChanged;
+		}
+
+		public override void Update()
+		{
+			this.secondaryNodeGetter.SetParams (null, this.sortingInstructions);
+			this.primaryNodeGetter.SetParams (this.sortingInstructions);
+
+			this.UpdateTreeTable ();
 		}
 
 
@@ -67,7 +72,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private SortingInstructions				sortingInstructions;
-		private SorterNodeGetter				nodeGetter;
+		private SortableNodeGetter				secondaryNodeGetter;
+		private SorterNodeGetter				primaryNodeGetter;
 		private PersonsTreeTableFiller			dataFiller;
 	}
 }

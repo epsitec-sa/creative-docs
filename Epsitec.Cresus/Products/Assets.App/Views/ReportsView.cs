@@ -148,6 +148,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case "PersonsList":
 					this.report = new PersonsReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
+					this.report.SetParams (null);
 					break;
 			}
 		}
