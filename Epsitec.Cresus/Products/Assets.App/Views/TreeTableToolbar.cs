@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Filter,     "TreeTable.Filter",     "Filtre");
+			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Filter,     "TreeTable.Filter",     "Grouper les objets selon");
 			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Graphic,    "TreeTable.Graphic",    "Représentation graphique");
 
 			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First,      "TreeTable.First",      "Retour sur la première ligne");

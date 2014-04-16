@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Filtre");
+			this.CreateTitle ("Grouper les objets selon");
 			this.CreateCloseButton ();
 
 			this.CreateController ();
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var button = new Button
 				{
 					Parent          = this.mainFrameBox,
-					Text            = "Annuler le filtre",
+					Text            = "Annuler le groupement",
 					ButtonStyle     = ButtonStyle.Icon,
 					PreferredHeight = 30,
 					Dock            = DockStyle.Bottom,

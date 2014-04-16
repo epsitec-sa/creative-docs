@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				var text = GroupsLogic.GetShortName (this.accessor, this.groupGuid);
-				this.groupButton.Text = "Groupement selon " + text;
+				this.groupButton.Text = "Grouper selon " + text;
 			}
 		}
 
