@@ -11,9 +11,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class MCH2Report : AbstractReport
+	public class MCH2SummaryReport : AbstractReport
 	{
-		public MCH2Report(DataAccessor accessor, NavigationTreeTableController treeTableController)
+		public MCH2SummaryReport(DataAccessor accessor, NavigationTreeTableController treeTableController)
 			: base (accessor, treeTableController)
 		{
 		}
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Assets), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 
-			this.dataFiller = new MCH2TreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new MCH2SummaryTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
 
 			this.UpdateTreeTable ();
@@ -71,11 +71,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private MCH2Params Params
+		private MCH2SummaryParams Params
 		{
 			get
 			{
-				return this.reportParams as MCH2Params;
+				return this.reportParams as MCH2SummaryParams;
 			}
 		}
 

@@ -10,12 +10,12 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class MCH2ParamsPanel : AbstractParamsPanel
+	public class MCH2SummaryParamsPanel : AbstractParamsPanel
 	{
-		public MCH2ParamsPanel(DataAccessor accessor)
+		public MCH2SummaryParamsPanel(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.reportParams = new MCH2Params (Timestamp.Now, Guid.Empty);
+			this.reportParams = new MCH2SummaryParams (Timestamp.Now, Guid.Empty);
 		}
 
 
@@ -94,18 +94,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.timestampController.Date.HasValue)
 			{
 				var timestamp = new Timestamp (this.timestampController.Date.Value, 0);
-				this.reportParams = new MCH2Params (timestamp, this.groupGuid);
+				this.reportParams = new MCH2SummaryParams (timestamp, this.groupGuid);
 
 				this.OnParamsChanged ();
 			}
 		}
 
 
-		private MCH2Params Params
+		private MCH2SummaryParams Params
 		{
 			get
 			{
-				return this.reportParams as MCH2Params;
+				return this.reportParams as MCH2SummaryParams;
 			}
 		}
 

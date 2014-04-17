@@ -7,9 +7,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class MCH2Params : AbstractParams
+	public class MCH2SummaryParams : AbstractParams
 	{
-		public MCH2Params(Timestamp timestamp, Guid rootGuid)
+		public MCH2SummaryParams(Timestamp timestamp, Guid rootGuid)
 		{
 			this.Timestamp = timestamp;
 			this.RootGuid  = rootGuid;

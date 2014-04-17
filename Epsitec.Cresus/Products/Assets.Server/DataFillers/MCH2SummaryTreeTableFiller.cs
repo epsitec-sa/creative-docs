@@ -9,9 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public class MCH2TreeTableFiller : AbstractTreeTableFiller<CumulNode>
+	public class MCH2SummaryTreeTableFiller : AbstractTreeTableFiller<CumulNode>
 	{
-		public MCH2TreeTableFiller(DataAccessor accessor, AbstractNodeGetter<CumulNode> nodeGetter)
+		public MCH2SummaryTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<CumulNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private int GetColumnWidth(Column colum)
 		{
-			if (colum == MCH2TreeTableFiller.Column.Name)
+			if (colum == MCH2SummaryTreeTableFiller.Column.Name)
 			{
 				return 200;
 			}
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private TreeTableColumnType GetColumnType(Column colum)
 		{
-			if (colum == MCH2TreeTableFiller.Column.Name)
+			if (colum == MCH2SummaryTreeTableFiller.Column.Name)
 			{
 				return TreeTableColumnType.Tree;
 			}

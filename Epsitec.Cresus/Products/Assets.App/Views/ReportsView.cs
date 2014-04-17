@@ -155,11 +155,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			switch (id)
 			{
-				case "MCH2Report":
-					this.report = new MCH2Report (this.accessor, this.treeTableController);
+				case "MCH2Summary":
+					this.report = new MCH2SummaryReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
 
-					this.paramsPanel = new MCH2ParamsPanel (this.accessor);
+					this.paramsPanel = new MCH2SummaryParamsPanel (this.accessor);
 					this.report.SetParams (this.paramsPanel.ReportParams);
 					break;
 
@@ -215,9 +215,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				yield return new Report ("MCH2Report",     "Tableau des immobilisations MCH2");
-				yield return new Report ("AssetsList",     "Liste des objets d'immobilisations");
-				yield return new Report ("PersonsList",    "Liste des personnes");
+				yield return new Report ("MCH2Summary", "Tableau des immobilisations MCH2");
+				yield return new Report ("AssetsList",  "Liste des objets d'immobilisations");
+				yield return new Report ("PersonsList", "Liste des personnes");
 			}
 		}
 
