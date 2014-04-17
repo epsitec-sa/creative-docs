@@ -59,8 +59,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.paramsFrame = new FrameBox
 			{
-				Parent = rightFrame,
-				Dock   = DockStyle.Top,
+				Parent          = rightFrame,
+				PreferredHeight = 24,
+				Dock            = DockStyle.Top,
 			};
 
 			this.CreateReport (rightFrame);
@@ -71,13 +72,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateScrollList(Widget parent)
 		{
-			//?new StaticText
-			//?{
-			//?	Parent         = parent,
-			//?	Text           = ReportsView.indentPrefix + "Liste des rapports disponibles",
-			//?	Dock           = DockStyle.Top,
-			//?	Margins        = new Margins (0, 0, 0, 10),
-			//?};
+			new StaticText
+			{
+				Parent          = parent,
+				Text            = ReportsView.indentPrefix + "Liste des rapports disponibles",
+				PreferredHeight = 24,
+				Dock            = DockStyle.Top,
+			};
 
 			this.scrollList = new ScrollList
 			{

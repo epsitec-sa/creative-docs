@@ -105,68 +105,63 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private decimal? GetColumnValue(DataObject obj, Column column)
 		{
+			//	Calcule la valeur d'une colonne.
 			switch (column)
 			{
 				case Column.InitialState:
-					{
-						var p = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.InitialTimestamp, ObjectField.MainValue);
-
-						if (p != null && p.HasValue)
-						{
-							return p.Value.FinalAmortizedAmount;
-						}
-						else
-						{
-							return null;
-						}
-					}
+					return this.GetColumnInitialState (obj);
 
 				case Column.Inputs:
-					{
-						return null;
-					}
+					return null;
 
 				case Column.Reorganizations:
-					{
-						return null;
-					}
+					return null;
 
 				case Column.Outputs:
-					{
-						return null;
-					}
+					return null;
 
 				case Column.FinalState:
-					{
-						var p = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.FinalTimestamp, ObjectField.MainValue);
-
-						if (p != null && p.HasValue)
-						{
-							return p.Value.FinalAmortizedAmount;
-						}
-						else
-						{
-							return null;
-						}
-					}
+					return this.GetColumnFinalState (obj);
 
 				case Column.Amortizations:
-					{
-						return null;
-					}
+					return null;
 
 				case Column.Revaluations:
-					{
-						return null;
-					}
+					return null;
 
 				case Column.Revalorizations:
-					{
-						return null;
-					}
+					return null;
 			}
 
 			return null;
+		}
+
+		private decimal? GetColumnInitialState(DataObject obj)
+		{
+			var p = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.InitialTimestamp, ObjectField.MainValue);
+
+			if (p != null && p.HasValue)
+			{
+				return p.Value.FinalAmortizedAmount;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		private decimal? GetColumnFinalState(DataObject obj)
+		{
+			var p = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.FinalTimestamp, ObjectField.MainValue);
+
+			if (p != null && p.HasValue)
+			{
+				return p.Value.FinalAmortizedAmount;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 
