@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.initialTimestampController.DateChanged += delegate
 			{
-				this.UpdateParams ();
+				this.UpdateInitialTimestamp (new Timestamp (this.initialTimestampController.Date.Value, 0));
 			};
 		}
 
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.finalTimestampController.DateChanged += delegate
 			{
-				this.UpdateParams ();
+				this.UpdateFinalTimestamp (new Timestamp (this.finalTimestampController.Date.Value, 0));
 			};
 		}
 
@@ -106,13 +106,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.initialTimestampController.Date = this.Params.InitialTimestamp.Date;
 			this.finalTimestampController  .Date = this.Params.FinalTimestamp.Date;
 
-			if (this.groupGuid.IsEmpty)
+			if (this.Params.RootGuid.IsEmpty)
 			{
 				this.groupButton.Text = "Sans groupement";
 			}
 			else
 			{
-				var text = GroupsLogic.GetShortName (this.accessor, this.groupGuid);
+				var text = GroupsLogic.GetShortName (this.accessor, this.Params.RootGuid);
 				this.groupButton.Text = "Grouper selon " + text;
 			}
 		}
@@ -126,24 +126,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
-				this.groupGuid = guid;
-				this.UpdateParams ();
+				this.UpdateGuid (guid);
 				this.UpdateUI ();
 			};
 		}
 
 
-		private void UpdateParams()
+		private void UpdateInitialTimestamp(Timestamp initialTimestamp)
 		{
-			if (this.finalTimestampController.Date.HasValue)
-			{
-				var initialTimestamp = new Timestamp (this.initialTimestampController.Date.Value, 0);
-				var finalTimestamp   = new Timestamp (this.finalTimestampController  .Date.Value, 0);
+			this.reportParams = new MCH2SummaryParams (initialTimestamp, this.Params.FinalTimestamp, this.Params.RootGuid);
+			this.OnParamsChanged ();
+		}
 
-				this.reportParams = new MCH2SummaryParams (initialTimestamp, finalTimestamp, this.groupGuid);
+		private void UpdateFinalTimestamp(Timestamp finalTimestamp)
+		{
+			this.reportParams = new MCH2SummaryParams (this.Params.InitialTimestamp, finalTimestamp, this.Params.RootGuid);
+			this.OnParamsChanged ();
+		}
 
-				this.OnParamsChanged ();
-			}
+		private void UpdateGuid(Guid groupGuid)
+		{
+			this.reportParams = new MCH2SummaryParams (this.Params.InitialTimestamp, this.Params.FinalTimestamp, groupGuid);
+			this.OnParamsChanged ();
 		}
 
 
@@ -159,6 +163,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private StateAtController				initialTimestampController;
 		private StateAtController				finalTimestampController;
 		private Button							groupButton;
-		private Guid							groupGuid;
 	}
 }

@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timestampController.DateChanged += delegate
 			{
-				this.UpdateParams ();
+				this.UpdateTimestamp (new Timestamp (this.timestampController.Date.Value, 0));
 			};
 		}
 
@@ -62,13 +62,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.timestampController.Date = this.Params.Timestamp.Date;
 
-			if (this.groupGuid.IsEmpty)
+			if (this.Params.RootGuid.IsEmpty)
 			{
 				this.groupButton.Text = "Sans groupement";
 			}
 			else
 			{
-				var text = GroupsLogic.GetShortName (this.accessor, this.groupGuid);
+				var text = GroupsLogic.GetShortName (this.accessor, this.Params.RootGuid);
 				this.groupButton.Text = "Grouper selon " + text;
 			}
 		}
@@ -82,22 +82,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
-				this.groupGuid = guid;
-				this.UpdateParams ();
+				this.UpdateGuid (guid);
 				this.UpdateUI ();
 			};
 		}
 
 
-		private void UpdateParams()
+		private void UpdateTimestamp(Timestamp timestamp)
 		{
-			if (this.timestampController.Date.HasValue)
-			{
-				var timestamp = new Timestamp (this.timestampController.Date.Value, 0);
-				this.reportParams = new AssetsParams (timestamp, this.groupGuid);
+			this.reportParams = new AssetsParams (timestamp, this.Params.RootGuid);
+			this.OnParamsChanged ();
+		}
 
-				this.OnParamsChanged ();
-			}
+		private void UpdateGuid(Guid groupGuid)
+		{
+			this.reportParams = new AssetsParams (this.Params.Timestamp, groupGuid);
+			this.OnParamsChanged ();
 		}
 
 
@@ -112,6 +112,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private StateAtController				timestampController;
 		private Button							groupButton;
-		private Guid							groupGuid;
 	}
 }
