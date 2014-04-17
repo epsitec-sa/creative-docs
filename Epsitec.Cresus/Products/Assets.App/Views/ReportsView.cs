@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				yield return new Report ("MCH2Report",     "Tableau des immobilisations");
+				yield return new Report ("MCH2Report",     "Tableau des immobilisations MCH2");
 				yield return new Report ("AssetsList",     "Liste des objets d'immobilisations");
 				yield return new Report ("PersonsList",    "Liste des personnes");
 			}

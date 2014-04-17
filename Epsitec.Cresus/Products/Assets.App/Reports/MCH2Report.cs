@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Assets), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 
-			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new MCH2TreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
 
 			this.UpdateTreeTable ();

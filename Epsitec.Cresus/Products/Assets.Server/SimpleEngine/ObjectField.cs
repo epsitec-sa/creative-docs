@@ -85,5 +85,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		UserFieldFirst = 20000,
 		UserFieldLast  = 29999,
+
+		MCH2Report = 30000,
 	}
 }
