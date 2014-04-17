@@ -7,22 +7,15 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ReportsViewState : AbstractViewState, System.IEquatable<AbstractViewState>
+	public class ReportsViewState : AbstractViewState
 	{
 		public string							SelectedReportId;
 		public AbstractParams					ReportParams;
 
 
-		#region IEquatable<AbstractViewState> Members
-		public override bool Equals(AbstractViewState other)
+		public override bool AreApproximatelyEquals(AbstractViewState other)
 		{
-			if (!base.Equals (other))
-			{
-				return false;
-			}
-
 			var o = other as ReportsViewState;
-
 			if (o == null)
 			{
 				return false;
@@ -31,7 +24,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return this.ViewType         == o.ViewType
 				&& this.SelectedReportId == o.SelectedReportId;
 		}
-		#endregion
+
+		public override bool AreStrictlyEquals(AbstractViewState other)
+		{
+			var o = other as ReportsViewState;
+			if (o == null)
+			{
+				return false;
+			}
+
+			if (this.ViewType         != o.ViewType        ||
+				this.SelectedReportId != o.SelectedReportId)
+			{
+				return false;
+			}
+
+			if (this.ReportParams == null && o.ReportParams == null)
+			{
+				return true;
+			}
+			else if (this.ReportParams == null || o.ReportParams == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this.ReportParams.AreStrictlyEquals (o.ReportParams);
+			}
+		}
 
 
 		protected override string GetDescription(DataAccessor accessor)

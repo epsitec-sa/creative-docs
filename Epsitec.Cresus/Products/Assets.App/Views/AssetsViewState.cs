@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AssetsViewState : AbstractViewState, System.IEquatable<AbstractViewState>
+	public class AssetsViewState : AbstractViewState
 	{
 		public ViewMode							ViewMode;
 		public bool								IsShowEvents;
@@ -20,16 +20,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public bool								ShowGraphic;
 
 
-		#region IEquatable<AbstractViewState> Members
-		public override bool Equals(AbstractViewState other)
+		public override bool AreStrictlyEquals(AbstractViewState other)
 		{
-			if (!base.Equals (other))
-			{
-				return false;
-			}
-
 			var o = other as AssetsViewState;
-
 			if (o == null)
 			{
 				return false;
@@ -42,7 +35,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				&& this.SelectedTimestamp == o.SelectedTimestamp
 				&& this.SelectedGuid      == o.SelectedGuid;
 		}
-		#endregion
 
 
 		public override LastViewNode GetNavigationNode(DataAccessor accessor)

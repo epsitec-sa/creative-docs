@@ -162,8 +162,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.report = null;
 			}
 
-			AbstractParams reportParams = null;
-
 			switch (this.selectedReportId)
 			{
 				case "MCH2Summary":
@@ -172,13 +170,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					this.paramsPanel = new MCH2SummaryParamsPanel (this.accessor);
 
-					if (this.reportParams is MCH2SummaryParams)
+					if (!(this.reportParams is MCH2SummaryParams))
 					{
-						reportParams = this.reportParams;
-					}
-					else
-					{
-						reportParams = this.paramsPanel.ReportParams;
+						this.reportParams = this.paramsPanel.ReportParams;
 					}
 					break;
 
@@ -188,27 +182,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					this.paramsPanel = new AssetsParamsPanel (this.accessor);
 
-					if (this.reportParams is AssetsParams)
+					if (!(this.reportParams is AssetsParams))
 					{
-						reportParams = this.reportParams;
-					}
-					else
-					{
-						reportParams = this.paramsPanel.ReportParams;
+						this.reportParams = this.paramsPanel.ReportParams;
 					}
 					break;
 
 				case "PersonsList":
 					this.report = new PersonsReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
+
+					this.reportParams = null;
 					break;
 			}
 
-			this.report.SetParams (reportParams);
+			this.report.SetParams (this.reportParams);
 
 			if (this.paramsPanel != null)
 			{
 				this.paramsPanel.CreateUI (this.paramsFrame);
+				this.paramsPanel.ReportParams = this.reportParams;
 				this.paramsPanel.ParamsChanged += this.HandleParamsChanged;
 			}
 
@@ -220,6 +213,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.reportParams = this.paramsPanel.ReportParams;
 			this.report.SetParams (this.reportParams);
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 
@@ -260,6 +254,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				System.Diagnostics.Debug.Assert (viewState != null);
 
 				this.selectedReportId = viewState.SelectedReportId;
+				this.reportParams     = viewState.ReportParams;
+
 				this.UpdateUI ();
 			}
 		}

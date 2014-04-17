@@ -21,6 +21,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.RootGuid  = Guid.Empty;
 		}
 
+		public override bool AreStrictlyEquals(AbstractParams other)
+		{
+			if (other is AssetsParams)
+			{
+				var o = other as AssetsParams;
+
+				return this.Timestamp == o.Timestamp
+					&& this.RootGuid  == o.RootGuid;
+			}
+
+			return false;
+		}
+
 		public readonly Timestamp				Timestamp;
 		public readonly Guid					RootGuid;
 	}

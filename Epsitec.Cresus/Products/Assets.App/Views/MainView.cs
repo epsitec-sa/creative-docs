@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			//	Si le ViewState est déjà dans la liste, on le supprime.
-			int index = this.lastViewStates.FindIndex (x => x.Equals (viewState));
+			int index = this.lastViewStates.FindIndex (x => x.AreApproximatelyEquals (viewState));
 			if (index != -1)
 			{
 				viewState.Pin |= this.lastViewStates[index].Pin;  // conserve toujours la punaise
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.ignoreChanges.IsZero)
 			{
 				if (this.historyPosition >= 0 &&
-					viewState.Equals (this.historyViewStates[this.historyPosition]))
+					viewState.AreStrictlyEquals (this.historyViewStates[this.historyPosition]))
 				{
 					return;
 				}
@@ -353,7 +353,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void ShowLastViewsPopup()
 		{
 			var navigationGuid = this.lastViewStates
-				.Where (x => x.Equals (this.view.ViewState))
+				.Where (x => x.AreApproximatelyEquals (this.view.ViewState))
 				.Select (x => x.Guid)
 				.FirstOrDefault ();
 

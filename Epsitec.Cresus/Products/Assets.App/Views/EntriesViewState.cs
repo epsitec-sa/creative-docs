@@ -8,23 +8,16 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class EntriesViewState : AbstractViewState, System.IEquatable<AbstractViewState>
+	public class EntriesViewState : AbstractViewState
 	{
 		public Guid								SelectedGuid;
 		public bool								ShowGraphic;
 		public ObjectField						SortingField;
 
 
-		#region IEquatable<AbstractViewState> Members
-		public override bool Equals(AbstractViewState other)
+		public override bool AreStrictlyEquals(AbstractViewState other)
 		{
-			if (!base.Equals (other))
-			{
-				return false;
-			}
-
 			var o = other as EntriesViewState;
-
 			if (o == null)
 			{
 				return false;
@@ -35,7 +28,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				&& this.ShowGraphic  == o.ShowGraphic
 				&& this.SortingField == o.SortingField;
 		}
-		#endregion
 
 
 		protected override string GetDescription(DataAccessor accessor)

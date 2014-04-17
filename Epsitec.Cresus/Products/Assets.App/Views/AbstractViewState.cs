@@ -8,7 +8,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public abstract class AbstractViewState : System.IEquatable<AbstractViewState>, IGuid
+	public abstract class AbstractViewState : IGuid
 	{
 		public AbstractViewState()
 		{
@@ -31,18 +31,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 		#endregion
 
-		#region IEquatable<AbstractViewState> Members
-		public virtual bool Equals(AbstractViewState other)
+
+		public virtual bool AreApproximatelyEquals(AbstractViewState other)
+		{
+			return this.AreStrictlyEquals (other);
+		}
+
+		public virtual bool AreStrictlyEquals(AbstractViewState other)
 		{
 			if (other == null)
 			{
 				return false;
 			}
+			else
 			{
 				return this.ViewType == other.ViewType;
 			}
 		}
-		#endregion
 
 
 		public virtual LastViewNode GetNavigationNode(DataAccessor accessor)
