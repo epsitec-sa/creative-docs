@@ -15,6 +15,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.RootGuid  = rootGuid;
 		}
 
+		public AssetsParams()
+		{
+			this.Timestamp = Timestamp.Now;
+			this.RootGuid  = Guid.Empty;
+		}
+
 		public readonly Timestamp				Timestamp;
 		public readonly Guid					RootGuid;
 	}

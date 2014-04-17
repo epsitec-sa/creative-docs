@@ -162,6 +162,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.report = null;
 			}
 
+			AbstractParams reportParams = null;
+
 			switch (this.selectedReportId)
 			{
 				case "MCH2Summary":
@@ -169,7 +171,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.report.Initialize ();
 
 					this.paramsPanel = new MCH2SummaryParamsPanel (this.accessor);
-					this.report.SetParams (this.paramsPanel.ReportParams);
+
+					if (this.reportParams is MCH2SummaryParams)
+					{
+						reportParams = this.reportParams;
+					}
+					else
+					{
+						reportParams = this.paramsPanel.ReportParams;
+					}
 					break;
 
 				case "AssetsList":
@@ -177,16 +187,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.report.Initialize ();
 
 					this.paramsPanel = new AssetsParamsPanel (this.accessor);
-					this.report.SetParams (this.paramsPanel.ReportParams);
+
+					if (this.reportParams is AssetsParams)
+					{
+						reportParams = this.reportParams;
+					}
+					else
+					{
+						reportParams = this.paramsPanel.ReportParams;
+					}
 					break;
 
 				case "PersonsList":
 					this.report = new PersonsReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
-
-					this.report.SetParams (null);
 					break;
 			}
+
+			this.report.SetParams (reportParams);
 
 			if (this.paramsPanel != null)
 			{
@@ -200,7 +218,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void HandleParamsChanged(object sender)
 		{
-			this.report.SetParams (this.paramsPanel.ReportParams);
+			this.reportParams = this.paramsPanel.ReportParams;
+			this.report.SetParams (this.reportParams);
 		}
 
 
@@ -232,6 +251,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					ViewType         = ViewType.Reports,
 					SelectedReportId = this.selectedReportId,
+					ReportParams     = (this.paramsPanel == null) ? null : this.paramsPanel.ReportParams,
 				};
 			}
 			set
@@ -284,5 +304,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private AbstractParamsPanel				paramsPanel;
 		private AbstractReport					report;
 		private string							selectedReportId;
+		private AbstractParams					reportParams;
 	}
 }

@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public AssetsParamsPanel(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.reportParams = new AssetsParams (Timestamp.Now, Guid.Empty);
+			this.reportParams = new AssetsParams ();
 		}
 
 

@@ -17,11 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public MCH2SummaryParamsPanel(DataAccessor accessor)
 			: base (accessor)
 		{
-			var year = Timestamp.Now.Date.Year;  // année en cours
-			var it = new Timestamp (new System.DateTime (year,  1,  1), 0);  // 1 janvier
-			var ft = new Timestamp (new System.DateTime (year, 12, 31), 0);  // 31 décembre
-
-			this.reportParams = new MCH2SummaryParams (it, ft, Guid.Empty);
+			this.reportParams = new MCH2SummaryParams ();
 		}
 
 

@@ -16,6 +16,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.RootGuid         = rootGuid;
 		}
 
+		public MCH2SummaryParams()
+		{
+			var year = Timestamp.Now.Date.Year;  // année en cours
+			this.InitialTimestamp = new Timestamp (new System.DateTime (year,  1,  1), 0);  // 1 janvier
+			this.FinalTimestamp   = new Timestamp (new System.DateTime (year, 12, 31), 0);  // 31 décembre
+			this.RootGuid         = Guid.Empty;
+		}
+
 		public readonly Timestamp				InitialTimestamp;
 		public readonly Timestamp				FinalTimestamp;
 		public readonly Guid					RootGuid;

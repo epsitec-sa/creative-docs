@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	public class ReportsViewState : AbstractViewState, System.IEquatable<AbstractViewState>
 	{
 		public string							SelectedReportId;
+		public AbstractParams					ReportParams;
 
 
 		#region IEquatable<AbstractViewState> Members
