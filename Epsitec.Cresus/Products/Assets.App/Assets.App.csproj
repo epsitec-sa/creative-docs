@@ -117,6 +117,7 @@
     <Compile Include="Reports\AssetsParams.cs" />
     <Compile Include="Reports\AbstractParamsPanel.cs" />
     <Compile Include="Reports\AssetsParamsPanel.cs" />
+    <Compile Include="Reports\ReportType.cs" />
     <Compile Include="Reports\MCH2SummaryParamsPanel.cs" />
     <Compile Include="Reports\MCH2SummaryParams.cs" />
     <Compile Include="Reports\MCH2SummaryReport.cs" />

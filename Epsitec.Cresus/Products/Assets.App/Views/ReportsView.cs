@@ -97,7 +97,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.scrollList.SelectedItemIndex != -1)
 				{
-					this.selectedReportId = this.scrollList.Items.Keys[this.scrollList.SelectedItemIndex];
+					string key = this.scrollList.Items.Keys[this.scrollList.SelectedItemIndex];
+					this.selectedReportType = ReportsView.ParseReportType (key);
+
 					this.UpdateUI ();
 				}
 
@@ -162,9 +164,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.report = null;
 			}
 
-			switch (this.selectedReportId)
+			switch (this.selectedReportType)
 			{
-				case "MCH2Summary":
+				case ReportType.MCH2Summary:
 					this.report = new MCH2SummaryReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
 
@@ -176,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 					break;
 
-				case "AssetsList":
+				case ReportType.AssetsList:
 					this.report = new AssetsReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
 
@@ -188,7 +190,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 					break;
 
-				case "PersonsList":
+				case ReportType.PersonsList:
 					this.report = new PersonsReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
 
@@ -205,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.paramsPanel.ParamsChanged += this.HandleParamsChanged;
 			}
 
-			int index = this.scrollList.Items.Keys.ToList ().FindIndex (x => x == this.selectedReportId);
+			int index = this.scrollList.Items.Keys.ToList ().FindIndex (x => ReportsView.ParseReportType (x) == this.selectedReportType);
 			this.scrollList.SelectedItemIndex = index;
 		}
 
@@ -232,7 +234,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			foreach (var report in ReportsView.Reports)
 			{
-				this.scrollList.Items.Add (report.Id, ReportsView.indentPrefix + report.Name);
+				this.scrollList.Items.Add (ReportsView.ReportTypeToString (report.Type), ReportsView.indentPrefix + report.Name);
 			}
 		}
 
@@ -243,9 +245,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return new ReportsViewState
 				{
-					ViewType         = ViewType.Reports,
-					SelectedReportId = this.selectedReportId,
-					ReportParams     = (this.paramsPanel == null) ? null : this.paramsPanel.ReportParams,
+					ViewType     = ViewType.Reports,
+					ReportType   = this.selectedReportType,
+					ReportParams = (this.paramsPanel == null) ? null : this.paramsPanel.ReportParams,
 				};
 			}
 			set
@@ -253,17 +255,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var viewState = value as ReportsViewState;
 				System.Diagnostics.Debug.Assert (viewState != null);
 
-				this.selectedReportId = viewState.SelectedReportId;
-				this.reportParams     = viewState.ReportParams;
+				this.selectedReportType = viewState.ReportType;
+				this.reportParams       = viewState.ReportParams;
 
 				this.UpdateUI ();
 			}
 		}
-	
-		
-		public static string GetReportName(string id)
+
+
+		public static string GetReportName(ReportType type)
 		{
-			var report = ReportsView.Reports.Where (x => x.Id == id).FirstOrDefault ();
+			var report = ReportsView.Reports.Where (x => x.Type == type).FirstOrDefault ();
 			return report.Name;
 		}
 
@@ -271,22 +273,43 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				yield return new Report ("MCH2Summary", "Tableau des immobilisations MCH2");
-				yield return new Report ("AssetsList",  "Liste des objets d'immobilisations");
-				yield return new Report ("PersonsList", "Liste des personnes");
+				yield return new Report (ReportType.MCH2Summary, "Tableau des immobilisations MCH2");
+				yield return new Report (ReportType.AssetsList,  "Liste des objets d'immobilisations");
+				yield return new Report (ReportType.PersonsList, "Liste des personnes");
 			}
 		}
 
+
+		private static string ReportTypeToString(ReportType type)
+		{
+			return type.ToString ();
+		}
+
+		private static ReportType ParseReportType(string text)
+		{
+			ReportType type;
+
+			if (System.Enum.TryParse<ReportType> (text, out type))
+			{
+				return type;
+			}
+			else
+			{
+				return ReportType.Unknown;
+			}
+		}
+
+
 		private struct Report
 		{
-			public Report(string id, string name)
+			public Report(ReportType type, string name)
 			{
-				this.Id   = id;
+				this.Type = type;
 				this.Name = name;
 			}
 
-			public readonly string Id;
-			public readonly string Name;
+			public readonly ReportType			Type;
+			public readonly string				Name;
 		}
 
 
@@ -299,7 +322,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private NavigationTreeTableController	treeTableController;
 		private AbstractParamsPanel				paramsPanel;
 		private AbstractReport					report;
-		private string							selectedReportId;
+		private ReportType						selectedReportType;
 		private AbstractParams					reportParams;
 	}
 }
