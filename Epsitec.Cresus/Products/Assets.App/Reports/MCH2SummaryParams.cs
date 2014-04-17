@@ -9,13 +9,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MCH2SummaryParams : AbstractParams
 	{
-		public MCH2SummaryParams(Timestamp timestamp, Guid rootGuid)
+		public MCH2SummaryParams(Timestamp initialTimestamp, Timestamp finalTimestamp, Guid rootGuid)
 		{
-			this.Timestamp = timestamp;
-			this.RootGuid  = rootGuid;
+			this.InitialTimestamp = initialTimestamp;
+			this.FinalTimestamp   = finalTimestamp;
+			this.RootGuid         = rootGuid;
 		}
 
-		public readonly Timestamp				Timestamp;
+		public readonly Timestamp				InitialTimestamp;
+		public readonly Timestamp				FinalTimestamp;
 		public readonly Guid					RootGuid;
 	}
 }

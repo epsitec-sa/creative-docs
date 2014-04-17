@@ -17,6 +17,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
+		public Timestamp						InitialTimestamp;
+		public Timestamp						FinalTimestamp;
+
+
 		public override IEnumerable<ObjectField> Fields
 		{
 			get
@@ -82,12 +86,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					if (column == Column.Name)
 					{
 						var field = (baseType == BaseType.Groups) ? ObjectField.Name : this.accessor.GlobalSettings.GetMainStringField (BaseType.Assets);
-						var text = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, field, inputValue: true);
+						var text = ObjectProperties.GetObjectPropertyString (obj, this.FinalTimestamp, field, inputValue: true);
 						cell = new TreeTableCellTree (level, type, text, cellState1);
 					}
 					else
 					{
-						cell = new TreeTableCellDecimal (null, cellState2);
+						var value = this.GetColumnValue (obj, column);
+						cell = new TreeTableCellDecimal (value, cellState2);
 					}
 
 					content.Columns[columnRank++].AddRow (cell);
@@ -98,9 +103,76 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private int GetColumnWidth(Column colum)
+		private decimal? GetColumnValue(DataObject obj, Column column)
 		{
-			if (colum == MCH2SummaryTreeTableFiller.Column.Name)
+			switch (column)
+			{
+				case Column.InitialState:
+					{
+						var p = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.InitialTimestamp, ObjectField.MainValue);
+
+						if (p != null && p.HasValue)
+						{
+							return p.Value.FinalAmortizedAmount;
+						}
+						else
+						{
+							return null;
+						}
+					}
+
+				case Column.Inputs:
+					{
+						return null;
+					}
+
+				case Column.Reorganizations:
+					{
+						return null;
+					}
+
+				case Column.Outputs:
+					{
+						return null;
+					}
+
+				case Column.FinalState:
+					{
+						var p = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.FinalTimestamp, ObjectField.MainValue);
+
+						if (p != null && p.HasValue)
+						{
+							return p.Value.FinalAmortizedAmount;
+						}
+						else
+						{
+							return null;
+						}
+					}
+
+				case Column.Amortizations:
+					{
+						return null;
+					}
+
+				case Column.Revaluations:
+					{
+						return null;
+					}
+
+				case Column.Revalorizations:
+					{
+						return null;
+					}
+			}
+
+			return null;
+		}
+
+
+		private int GetColumnWidth(Column column)
+		{
+			if (column == MCH2SummaryTreeTableFiller.Column.Name)
 			{
 				return 200;
 			}
@@ -110,9 +182,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
-		private TreeTableColumnType GetColumnType(Column colum)
+		private TreeTableColumnType GetColumnType(Column column)
 		{
-			if (colum == MCH2SummaryTreeTableFiller.Column.Name)
+			if (column == MCH2SummaryTreeTableFiller.Column.Name)
 			{
 				return TreeTableColumnType.Tree;
 			}
@@ -122,9 +194,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
-		private string GetColumnName(Column colum)
+		private string GetColumnName(Column column)
 		{
-			switch (colum)
+			switch (column)
 			{
 				case Column.Name:
 					return "Catégorie";
@@ -154,7 +226,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return "Revalorisations";
 
 				default:
-					throw new System.InvalidOperationException (string.Format ("Unknown Columns {0}", colum));
+					throw new System.InvalidOperationException (string.Format ("Unknown Columns {0}", column));
 			}
 		}
 

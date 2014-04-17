@@ -3,7 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -15,26 +17,70 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public MCH2SummaryParamsPanel(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.reportParams = new MCH2SummaryParams (Timestamp.Now, Guid.Empty);
+			var now = Timestamp.Now;
+			var it = new Timestamp (new System.DateTime (now.Date.Year, 1, 1), 0);
+			var ft = new Timestamp (new System.DateTime (now.Date.Year, 12, 31), 0);
+
+			this.reportParams = new MCH2SummaryParams (it, ft, Guid.Empty);
 		}
 
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateTimestampUI (parent);
+			this.CreateInitialTimestampUI (parent);
+			this.CreateFinalTimestampUI (parent);
 			this.CreateGroupUI (parent);
 
 			this.UpdateUI ();
 		}
 
-		private void CreateTimestampUI(Widget parent)
+		private void CreateInitialTimestampUI(Widget parent)
 		{
-			this.timestampController = new StateAtController (this.accessor);
+			var text = "Initial";
+			var width = text.GetTextWidth ();
 
-			var frame = this.timestampController.CreateUI (parent);
+			new StaticText
+			{
+				Parent           = parent,
+				Text             = text,
+				PreferredWidth   = width,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				Dock             = DockStyle.Left,
+				Margins          = new Margins (0, 5, 0, 0),
+			};
+
+			this.initialTimestampController = new StateAtController (this.accessor);
+
+			var frame = this.initialTimestampController.CreateUI (parent);
 			frame.Dock = DockStyle.Left;
 
-			this.timestampController.DateChanged += delegate
+			this.initialTimestampController.DateChanged += delegate
+			{
+				this.UpdateParams ();
+			};
+		}
+
+		private void CreateFinalTimestampUI(Widget parent)
+		{
+			var text = "Final";
+			var width = text.GetTextWidth ();
+
+			new StaticText
+			{
+				Parent           = parent,
+				Text             = text,
+				PreferredWidth   = 20 + width,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				Dock             = DockStyle.Left,
+				Margins          = new Margins (0, 5, 0, 0),
+			};
+
+			this.finalTimestampController = new StateAtController (this.accessor);
+
+			var frame = this.finalTimestampController.CreateUI (parent);
+			frame.Dock = DockStyle.Left;
+
+			this.finalTimestampController.DateChanged += delegate
 			{
 				this.UpdateParams ();
 			};
@@ -49,6 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AutoFocus      = false,
 				PreferredWidth = 200,
 				Dock           = DockStyle.Left,
+				Margins        = new Margins (20, 0, 0, 0),
 			};
 
 			this.groupButton.Clicked += delegate
@@ -60,7 +107,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateUI()
 		{
-			this.timestampController.Date = this.Params.Timestamp.Date;
+			this.initialTimestampController.Date = this.Params.InitialTimestamp.Date;
+			this.finalTimestampController  .Date = this.Params.FinalTimestamp.Date;
 
 			if (this.groupGuid.IsEmpty)
 			{
@@ -91,10 +139,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateParams()
 		{
-			if (this.timestampController.Date.HasValue)
+			if (this.finalTimestampController.Date.HasValue)
 			{
-				var timestamp = new Timestamp (this.timestampController.Date.Value, 0);
-				this.reportParams = new MCH2SummaryParams (timestamp, this.groupGuid);
+				var initialTimestamp = new Timestamp (this.initialTimestampController.Date.Value, 0);
+				var finalTimestamp   = new Timestamp (this.finalTimestampController  .Date.Value, 0);
+
+				this.reportParams = new MCH2SummaryParams (initialTimestamp, finalTimestamp, this.groupGuid);
 
 				this.OnParamsChanged ();
 			}
@@ -110,7 +160,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private StateAtController				timestampController;
+		private StateAtController				initialTimestampController;
+		private StateAtController				finalTimestampController;
 		private Button							groupButton;
 		private Guid							groupGuid;
 	}

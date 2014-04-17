@@ -47,8 +47,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateParams()
 		{
-			this.nodeGetter.SetParams (this.Params.Timestamp, this.Params.RootGuid, this.sortingInstructions);
-			this.dataFiller.Timestamp = this.Params.Timestamp;
+			this.nodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions);
+
+			this.DataFiller.InitialTimestamp = this.Params.InitialTimestamp;
+			this.DataFiller.FinalTimestamp   = this.Params.FinalTimestamp;
 
 			this.UpdateTreeTable ();
 		}
@@ -76,6 +78,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return this.reportParams as MCH2SummaryParams;
+			}
+		}
+
+		private MCH2SummaryTreeTableFiller DataFiller
+		{
+			get
+			{
+				return this.dataFiller as MCH2SummaryTreeTableFiller;
 			}
 		}
 
