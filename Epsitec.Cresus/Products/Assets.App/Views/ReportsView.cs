@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredWidth = 300,
 			};
 
-			var splitter = new VSplitter
+			new VSplitter
 			{
 				Parent         = mainFrame,
 				Dock           = DockStyle.Left,
@@ -70,6 +70,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateButtons ();
 		}
 
+		public override void UpdateUI()
+		{
+			this.UpdateReport ();
+			this.OnViewStateChanged (this.ViewState);
+		}
+
+
 		private void CreateScrollList(Widget parent)
 		{
 			new StaticText
@@ -90,7 +97,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.scrollList.SelectedItemIndex != -1)
 				{
-					this.UpdateReport (this.scrollList.Items.Keys[this.scrollList.SelectedItemIndex]);
+					this.selectedReportId = this.scrollList.Items.Keys[this.scrollList.SelectedItemIndex];
+					this.UpdateUI ();
 				}
 
 				this.UpdateButtons ();
@@ -138,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateReport(string id)
+		private void UpdateReport()
 		{
 			if (this.paramsPanel != null)
 			{
@@ -154,7 +162,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.report = null;
 			}
 
-			switch (id)
+			switch (this.selectedReportId)
 			{
 				case "MCH2Summary":
 					this.report = new MCH2SummaryReport (this.accessor, this.treeTableController);
@@ -185,6 +193,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.paramsPanel.CreateUI (this.paramsFrame);
 				this.paramsPanel.ParamsChanged += this.HandleParamsChanged;
 			}
+
+			int index = this.scrollList.Items.Keys.ToList ().FindIndex (x => x == this.selectedReportId);
+			this.scrollList.SelectedItemIndex = index;
 		}
 
 		private void HandleParamsChanged(object sender)
@@ -206,13 +217,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.scrollList.Items.Clear ();
 
-			foreach (var report in this.Reports)
+			foreach (var report in ReportsView.Reports)
 			{
 				this.scrollList.Items.Add (report.Id, ReportsView.indentPrefix + report.Name);
 			}
 		}
 
-		private IEnumerable<Report> Reports
+
+		public override AbstractViewState ViewState
+		{
+			get
+			{
+				return new ReportsViewState
+				{
+					ViewType         = ViewType.Reports,
+					SelectedReportId = this.selectedReportId,
+				};
+			}
+			set
+			{
+				var viewState = value as ReportsViewState;
+				System.Diagnostics.Debug.Assert (viewState != null);
+
+				this.selectedReportId = viewState.SelectedReportId;
+				this.UpdateUI ();
+			}
+		}
+	
+		
+		public static string GetReportName(string id)
+		{
+			var report = ReportsView.Reports.Where (x => x.Id == id).FirstOrDefault ();
+			return report.Name;
+		}
+
+		private static IEnumerable<Report> Reports
 		{
 			get
 			{
@@ -244,5 +283,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private NavigationTreeTableController	treeTableController;
 		private AbstractParamsPanel				paramsPanel;
 		private AbstractReport					report;
+		private string							selectedReportId;
 	}
 }
