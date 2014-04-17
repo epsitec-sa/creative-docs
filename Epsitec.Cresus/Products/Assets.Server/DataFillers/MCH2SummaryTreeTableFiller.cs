@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					}
 					else
 					{
-						var value = this.GetColumnValue (obj, column);
+						var value = this.GetColumnValue (node, obj, column);
 						cell = new TreeTableCellDecimal (value, cellState2);
 					}
 
@@ -103,13 +103,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private decimal? GetColumnValue(DataObject obj, Column column)
+		private decimal? GetColumnValue(CumulNode node, DataObject obj, Column column)
 		{
 			//	Calcule la valeur d'une colonne.
 			switch (column)
 			{
 				case Column.InitialState:
-					return this.GetColumnInitialState (obj);
+					return this.GetColumnInitialState (node, obj);
 
 				case Column.Inputs:
 					return null;
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return null;
 
 				case Column.FinalState:
-					return this.GetColumnFinalState (obj);
+					return this.GetColumnFinalState (node, obj);
 
 				case Column.Amortizations:
 					return null;
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			return null;
 		}
 
-		private decimal? GetColumnInitialState(DataObject obj)
+		private decimal? GetColumnInitialState(CumulNode node, DataObject obj)
 		{
 			var p = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.InitialTimestamp, ObjectField.MainValue);
 
@@ -150,8 +150,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
-		private decimal? GetColumnFinalState(DataObject obj)
+		private decimal? GetColumnFinalState(CumulNode node, DataObject obj)
 		{
+			// TODO: Avec les cumuls, il y a un gros problème pour obtenir le montant à
+			// une date donnée. Il faudra probablement de gros travaux dans le NodeGetter !
+#if false
 			var p = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.FinalTimestamp, ObjectField.MainValue);
 
 			if (p != null && p.HasValue)
@@ -162,6 +165,19 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				return null;
 			}
+#else
+			//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
+			//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
+			var v = this.NodeGetter.GetValue (obj, node, ObjectField.MainValue);
+			if (v.HasValue)
+			{
+				return v.Value;
+			}
+			else
+			{
+				return null;
+			}
+#endif
 		}
 
 
