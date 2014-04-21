@@ -249,3 +249,13 @@ SVN Update > r22932
 -echupdate -newechfile:S:\eerv\eerv-2014-04-10.xml -oldechfile:S:\eerv\eerv-2014-04-03.xml -output:s:\eerv\ech-diff-2014-04-10.md
 
 
+Lancé le 21.04.2014
+-------------------
+
+SVN Update > r22975
+
+-echupdate -newechfile:S:\eerv\eerv-2014-04-17.xml -oldechfile:S:\eerv\eerv-2014-04-10.xml -output:s:\eerv\ech-diff-2014-04-17.md
+
+-exportsubscriptions -output:export-2014-05-01.txt -error:error-2014-05-01.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2014-05-01.txt -publicationdate:2014-05-01 -response:tamedia-2014-05-01.log
+
