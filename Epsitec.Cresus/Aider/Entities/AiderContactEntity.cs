@@ -317,6 +317,10 @@ namespace Epsitec.Aider.Entities
 
 		public static void Delete(BusinessContext businessContext, AiderContactEntity contact, bool deleteParticipations = true)
 		{
+			if (contact.IsNull ())
+			{
+				return;
+			}
 			if (contact.ContactType == ContactType.PersonAddress)
 			{
 				businessContext.DeleteEntity (contact.Address);
