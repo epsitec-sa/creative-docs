@@ -159,15 +159,19 @@ namespace Epsitec.Aider.Data.Job
 			var isSameHead = potentialHousehold.IsHead (person);
 			var isSameEChMemberCount = potentialHousehold.Members.Count (x => x.IsGovernmentDefined).Equals (eChHousehold.MembersCount);
 			var isSameMemberCount	 = potentialHousehold.Members.Count ().Equals (eChHousehold.MembersCount);
-			//	Ensure that potential family is like ECh ReportedPerson before apply a full relocate
+			
+			//	Ensure that potential family is like ECh ReportedPerson before we apply a full relocate
 
 			//Move all family in this case:
-			if (person.eCH_Person.AdultMaritalStatus == PersonMaritalStatus.Married && eChHousehold.Adult2.IsNull () && !isSameEChMemberCount)
+			if ((person.eCH_Person.AdultMaritalStatus == PersonMaritalStatus.Married) && 
+				(eChHousehold.Adult2.IsNull ()) && 
+				(!isSameEChMemberCount))
 			{
 				isSameEChMemberCount = true; //force update
 			}
 			
-			if (isSameHead&&isSameEChMemberCount)
+			if ((isSameHead) &&
+				(isSameEChMemberCount))
 			{
 				this.LogToConsole ("Info: Same head and member count detected, processing full relocate");
 				var members = potentialHousehold.Members;
@@ -177,10 +181,8 @@ namespace Epsitec.Aider.Data.Job
 
 				foreach (var member in members.Where (x => potentialHousehold.IsHead (x)))
 				{
-
 					this.UpdateAiderHouseholdAndSubscription (businessContext, eChHousehold, member);
 					this.ReassignAndWarnParish (businessContext, member, changes);
-
 				}
 
 				foreach (var member in members.Where (x => potentialHousehold.IsHead (x) == false))
@@ -459,9 +461,6 @@ namespace Epsitec.Aider.Data.Job
 
 			foreach (var eChChild in eChReportedPerson.Children)
 			{
-				//if (eChChild.Id == "819095354")
-				//{
-				//}
 				var eChPersonEntity  = EChDataHelpers.GetEchPersonEntity (businessContext, eChChild);
 				eChReportedPersonEntity.Children.Add (eChPersonEntity);
 				eChReportedPersonEntity.RemoveDuplicates ();
