@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			if (obj != null)
 			{
 				foreach (var e in obj.Events.Where (x =>
-					(extractionInstructions.EventType != EventType.Unknown && x.Type == extractionInstructions.EventType) &&
+					(extractionInstructions.EventType == EventType.Unknown || x.Type == extractionInstructions.EventType) &&
 					x.Timestamp >= extractionInstructions.StartTimestamp &&
 					x.Timestamp <= extractionInstructions.EndTimestamp))
 				{

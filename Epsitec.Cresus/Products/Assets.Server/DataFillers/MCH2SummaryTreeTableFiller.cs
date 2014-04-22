@@ -134,81 +134,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				return null;
 			}
-
-#if false
-			switch (column)
-			{
-				case Column.InitialState:
-					return this.GetColumnInitialState (node, obj);
-
-				case Column.Inputs:
-					return null;
-
-				case Column.Reorganizations:
-					return null;
-
-				case Column.Outputs:
-					return null;
-
-				case Column.FinalState:
-					return this.GetColumnFinalState (node, obj);
-
-				case Column.Amortizations:
-					return null;
-
-				case Column.Revaluations:
-					return null;
-
-				case Column.Revalorizations:
-					return null;
-			}
-
-			return null;
-#endif
-		}
-
-		private decimal? GetColumnInitialState(CumulNode node, DataObject obj)
-		{
-			var p = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.InitialTimestamp, ObjectField.MainValue);
-
-			if (p != null && p.HasValue)
-			{
-				return p.Value.FinalAmortizedAmount;
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		private decimal? GetColumnFinalState(CumulNode node, DataObject obj)
-		{
-			// TODO: Avec les cumuls, il y a un gros problème pour obtenir le montant à
-			// une date donnée. Il faudra probablement de gros travaux dans le NodeGetter !
-#if false
-			var p = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, this.FinalTimestamp, ObjectField.MainValue);
-
-			if (p != null && p.HasValue)
-			{
-				return p.Value.FinalAmortizedAmount;
-			}
-			else
-			{
-				return null;
-			}
-#else
-			//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
-			//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
-			var v = this.NodeGetter.GetValue (obj, node, ObjectField.MainValue);
-			if (v.HasValue)
-			{
-				return v.Value;
-			}
-			else
-			{
-				return null;
-			}
-#endif
 		}
 
 
@@ -233,8 +158,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.FinalState:
 					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.FinalTimestamp, EventType.Unknown);
 
-				case Column.Amortizations:
+				case Column.AmortizationsAuto:
 					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.AmortizationAuto);
+
+				case Column.AmortizationsExtra:
+					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.AmortizationExtra);
 
 				case Column.Revaluations:
 					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.Revaluation);
@@ -293,8 +221,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.FinalState:
 					return "Etat final";
 
-				case Column.Amortizations:
-					return "Amortissements";
+				case Column.AmortizationsAuto:
+					return "Amort. ord.";
+
+				case Column.AmortizationsExtra:
+					return "Amort. extra.";
 
 				case Column.Revaluations:
 					return "Réévaluations";
@@ -317,7 +248,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return Column.Reorganizations;
 				yield return Column.Outputs;
 				yield return Column.FinalState;
-				yield return Column.Amortizations;
+				yield return Column.AmortizationsAuto;
+				yield return Column.AmortizationsExtra;
 				yield return Column.Revaluations;
 				yield return Column.Revalorizations;
 			}
@@ -333,7 +265,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			Outputs,
 
 			FinalState,
-			Amortizations,
+			AmortizationsAuto,
+			AmortizationsExtra,
 			Revaluations,
 			Revalorizations,
 		}
