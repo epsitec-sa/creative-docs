@@ -188,45 +188,80 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private static decimal? GetExtractionInstructions(DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Calcule un montant à extraire des données, selon les instructions ExtractionInstructions.
-			decimal? sum = null;
-
 			if (obj != null)
 			{
-				//	On parcourt tous les événements, pour ne considérer que certains.
-				foreach (var e in obj.Events.Where (x =>
-					(extractionInstructions.EventType == EventType.Unknown || x.Type == extractionInstructions.EventType) &&
-					extractionInstructions.Range.IsInside (x.Timestamp.Date)))
+				switch (extractionInstructions.ExtractionAmount)
 				{
-					var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-					if (p != null)
+					case ExtractionAmount.StateAt:
+						return CumulNodeGetter.GetStateAt (obj, extractionInstructions);
+
+					case ExtractionAmount.Filtered:
+						return CumulNodeGetter.GetFiltered (obj, extractionInstructions);
+
+					case ExtractionAmount.Amortizations:
+						return CumulNodeGetter.GetAmortizations (obj, extractionInstructions);
+
+					default:
+						throw new System.InvalidOperationException (string.Format ("Unknown ExtractionAmount {0}", extractionInstructions.ExtractionAmount));
+				}
+			}
+
+			return null;
+		}
+
+		private static decimal? GetStateAt(DataObject obj, ExtractionInstructions extractionInstructions)
+		{
+			//	Retourne la valeur définie à la fin de la période, ou antérieurement.
+			var timestamp = new Timestamp(extractionInstructions.Range.ExcludeTo, 0);
+			var p = obj.GetSyntheticProperty (timestamp, ObjectField.MainValue) as DataAmortizedAmountProperty;
+
+			if (p != null)
+			{
+				return p.Value.FinalAmortizedAmount;
+			}
+
+			return null;
+		}
+
+		private static decimal? GetFiltered(DataObject obj, ExtractionInstructions extractionInstructions)
+		{
+			//	Pour une période donnée, retourne la dernière valeur définie dans un événement
+			//	d'un type donné.
+			decimal? value = null;
+
+			foreach (var e in obj.Events.Where (x =>
+				x.Type == extractionInstructions.FilteredEventType &&
+				extractionInstructions.Range.IsInside (x.Timestamp.Date)))
+			{
+				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+				if (p != null && p.Value.FinalAmortizedAmount.HasValue)
+				{
+					value = p.Value.FinalAmortizedAmount.Value;
+				}
+			}
+
+			return value;
+		}
+
+		private static decimal? GetAmortizations(DataObject obj, ExtractionInstructions extractionInstructions)
+		{
+			//	Retourne le total des amortissements effectués dans une période donnée.
+			decimal? sum = null;
+
+			foreach (var e in obj.Events.Where (x =>
+				x.Type == extractionInstructions.FilteredEventType &&
+				extractionInstructions.Range.IsInside (x.Timestamp.Date)))
+			{
+				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+				if (p != null)
+				{
+					if (sum.HasValue)
 					{
-						decimal? v;
-
-						switch (extractionInstructions.ExtractionAmount)
-						{
-							case ExtractionAmount.Final:
-								v = p.Value.FinalAmortizedAmount;
-								break;
-
-							case ExtractionAmount.Amortization:
-								v = p.Value.FinalAmortization;
-								break;
-
-							default:
-								throw new System.InvalidOperationException (string.Format ("Unknown ExtractionAmount {0}", extractionInstructions.ExtractionAmount));
-						}
-
-						if (v.HasValue)
-						{
-							if (sum.HasValue)
-							{
-								sum += v.Value;
-							}
-							else
-							{
-								sum = v.Value;
-							}
-						}
+						sum += p.Value.FinalAmortization;
+					}
+					else
+					{
+						sum = p.Value.FinalAmortization;
 					}
 				}
 			}

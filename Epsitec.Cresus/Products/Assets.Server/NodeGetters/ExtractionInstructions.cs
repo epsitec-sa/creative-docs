@@ -16,12 +16,30 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public struct ExtractionInstructions
 	{
-		public ExtractionInstructions(ObjectField resultField, DateRange range, EventType eventType, ExtractionAmount extractionAmount)
+		public ExtractionInstructions(ObjectField resultField, ExtractionAmount extractionAmount, DateRange range, EventType filteredEventType)
 		{
-			this.ResultField      = resultField;
-			this.Range            = range;
-			this.EventType        = eventType;
-			this.ExtractionAmount = extractionAmount;
+			switch (extractionAmount)
+			{
+				case ExtractionAmount.StateAt:
+					System.Diagnostics.Debug.Assert (filteredEventType == EventType.Unknown);
+					break;
+
+				case ExtractionAmount.Filtered:
+					System.Diagnostics.Debug.Assert (filteredEventType != EventType.Unknown);
+					break;
+
+				case ExtractionAmount.Amortizations:
+					System.Diagnostics.Debug.Assert (filteredEventType != EventType.Unknown);
+					break;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Unknown ExtractionAmount {0}", extractionAmount));
+			}
+
+			this.ResultField       = resultField;
+			this.ExtractionAmount  = extractionAmount;
+			this.Range             = range;
+			this.FilteredEventType = filteredEventType;
 		}
 
 		public bool IsEmpty
@@ -32,11 +50,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public static ExtractionInstructions Empty = new ExtractionInstructions (ObjectField.Unknown, DateRange.Empty, EventType.Unknown, ExtractionAmount.Final);
+		public static ExtractionInstructions Empty = new ExtractionInstructions (ObjectField.Unknown, ExtractionAmount.StateAt, DateRange.Empty, EventType.Unknown);
 
 		public readonly ObjectField				ResultField;
-		public readonly DateRange				Range;
-		public readonly EventType				EventType;
 		public readonly ExtractionAmount		ExtractionAmount;
+		public readonly DateRange				Range;
+		public readonly EventType				FilteredEventType;
 	}
 }

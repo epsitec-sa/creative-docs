@@ -8,7 +8,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	public enum ExtractionAmount
 	{
-		Final,
-		Amortization,
+		StateAt,
+		Filtered,
+		Amortizations,
 	}
 }

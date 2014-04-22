@@ -148,57 +148,57 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				case Column.InitialState:
 					return new ExtractionInstructions (field,
-						new DateRange (System.DateTime.MinValue, this.InitialTimestamp.Date),
-						EventType.Unknown,
-						ExtractionAmount.Final);
+						ExtractionAmount.StateAt,
+						new DateRange (System.DateTime.MinValue, this.InitialTimestamp.Date.AddDays (1)),
+						EventType.Unknown);
 
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
-						new DateRange (System.DateTime.MinValue, this.InitialTimestamp.Date),
-						EventType.Input,
-						ExtractionAmount.Final);
+						ExtractionAmount.Filtered,
+						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						EventType.Input);
 
 				case Column.Reorganizations:
 					return new ExtractionInstructions (field,
-						new DateRange (System.DateTime.MinValue, this.InitialTimestamp.Date),
-						EventType.Modification,
-						ExtractionAmount.Final);
+						ExtractionAmount.Filtered,
+						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						EventType.Modification);
 
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
-						new DateRange (System.DateTime.MinValue, this.InitialTimestamp.Date),
-						EventType.Output,
-						ExtractionAmount.Final);
+						ExtractionAmount.Filtered,
+						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						EventType.Output);
 
 				case Column.FinalState:
 					return new ExtractionInstructions (field,
-						new DateRange (System.DateTime.MinValue, this.FinalTimestamp.Date),
-						EventType.Unknown,
-						ExtractionAmount.Final);
+						ExtractionAmount.StateAt,
+						new DateRange (System.DateTime.MinValue, this.FinalTimestamp.Date.AddDays (1)),
+						EventType.Unknown);
 
 				case Column.AmortizationsAuto:
 					return new ExtractionInstructions (field,
-						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date),
-						EventType.AmortizationAuto,
-						ExtractionAmount.Amortization);
+						ExtractionAmount.Amortizations,
+						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						EventType.AmortizationAuto);
 
 				case Column.AmortizationsExtra:
 					return new ExtractionInstructions (field,
-						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date),
-						EventType.AmortizationExtra,
-						ExtractionAmount.Amortization);
+						ExtractionAmount.Amortizations,
+						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						EventType.AmortizationExtra);
 
 				case Column.Revaluations:
 					return new ExtractionInstructions (field,
-						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date),
-						EventType.Revaluation,
-						ExtractionAmount.Final);
+						ExtractionAmount.Filtered,
+						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						EventType.Revaluation);
 
 				case Column.Revalorizations:
 					return new ExtractionInstructions (field,
-						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date),
-						EventType.Revalorization,
-						ExtractionAmount.Final);
+						ExtractionAmount.Filtered,
+						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						EventType.Revalorization);
 
 				default:
 					return ExtractionInstructions.Empty;
