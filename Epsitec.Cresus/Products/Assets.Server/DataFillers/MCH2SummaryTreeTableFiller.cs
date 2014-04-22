@@ -144,31 +144,31 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			switch (column)
 			{
 				case Column.InitialState:
-					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Unknown);
+					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Unknown, ExtractionAmount.Final);
 
 				case Column.Inputs:
-					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Input);
+					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Input, ExtractionAmount.Final);
 
 				case Column.Reorganizations:
-					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Modification);
+					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Modification, ExtractionAmount.Final);
 
 				case Column.Outputs:
-					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Output);
+					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Output, ExtractionAmount.Final);
 
 				case Column.FinalState:
-					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.FinalTimestamp, EventType.Unknown);
+					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.FinalTimestamp, EventType.Unknown, ExtractionAmount.Final);
 
 				case Column.AmortizationsAuto:
-					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.AmortizationAuto);
+					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.AmortizationAuto, ExtractionAmount.Amortization);
 
 				case Column.AmortizationsExtra:
-					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.AmortizationExtra);
+					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.AmortizationExtra, ExtractionAmount.Amortization);
 
 				case Column.Revaluations:
-					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.Revaluation);
+					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.Revaluation, ExtractionAmount.Final);
 
 				case Column.Revalorizations:
-					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.Revalorization);
+					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.Revalorization, ExtractionAmount.Final);
 
 				default:
 					return ExtractionInstructions.Empty;

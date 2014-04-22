@@ -9,12 +9,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	public struct ExtractionInstructions
 	{
-		public ExtractionInstructions(ObjectField resultField, Timestamp startTimestamp, Timestamp endTimestamp, EventType eventType)
+		public ExtractionInstructions(ObjectField resultField, Timestamp startTimestamp, Timestamp endTimestamp, EventType eventType, ExtractionAmount extractionAmount)
 		{
-			this.ResultField    = resultField;
-			this.StartTimestamp = startTimestamp;
-			this.EndTimestamp   = endTimestamp;
-			this.EventType      = eventType;
+			this.ResultField      = resultField;
+			this.StartTimestamp   = startTimestamp;
+			this.EndTimestamp     = endTimestamp;
+			this.EventType        = eventType;
+			this.ExtractionAmount = extractionAmount;
 		}
 
 		public bool IsEmpty
@@ -25,11 +26,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public static ExtractionInstructions Empty = new ExtractionInstructions (ObjectField.Unknown, Timestamp.MaxValue, Timestamp.MaxValue, EventType.Unknown);
+		public static ExtractionInstructions Empty = new ExtractionInstructions (ObjectField.Unknown, Timestamp.MaxValue, Timestamp.MaxValue, EventType.Unknown, ExtractionAmount.Final);
 
 		public readonly ObjectField				ResultField;
 		public readonly Timestamp				StartTimestamp;
 		public readonly Timestamp				EndTimestamp;
 		public readonly EventType				EventType;
+		public readonly ExtractionAmount		ExtractionAmount;
 	}
 }

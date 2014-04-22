@@ -189,15 +189,34 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					x.Timestamp <= extractionInstructions.EndTimestamp))
 				{
 					var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-					if (p != null && p.Value.FinalAmortizedAmount.HasValue)
+					if (p != null)
 					{
-						if (sum.HasValue)
+						decimal? v;
+
+						switch (extractionInstructions.ExtractionAmount)
 						{
-							sum += p.Value.FinalAmortizedAmount.Value;
+							case ExtractionAmount.Final:
+								v = p.Value.FinalAmortizedAmount;
+								break;
+
+							case ExtractionAmount.Amortization:
+								v = p.Value.FinalAmortization;
+								break;
+
+							default:
+								throw new System.InvalidOperationException (string.Format ("Unknown ExtractionAmount {0}", extractionInstructions.ExtractionAmount));
 						}
-						else
+
+						if (v.HasValue)
 						{
-							sum = p.Value.FinalAmortizedAmount.Value;
+							if (sum.HasValue)
+							{
+								sum += v.Value;
+							}
+							else
+							{
+								sum = v.Value;
+							}
 						}
 					}
 				}

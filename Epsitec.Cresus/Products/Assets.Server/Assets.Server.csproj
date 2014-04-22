@@ -114,6 +114,7 @@
     <Compile Include="DataFillers\TreeTableContentItem.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="NodeGetters\ComparableData.cs" />
+    <Compile Include="NodeGetters\ExtractionAmount.cs" />
     <Compile Include="NodeGetters\ExtractionInstructions.cs" />
     <Compile Include="NodeGetters\EntryNode.cs" />
     <Compile Include="NodeGetters\EntriesNodeGetter.cs" />
