@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public bool								ShowGraphic;
 
 
-		public override bool AreStrictlyEquals(AbstractViewState other)
+		public override bool StrictlyEquals(AbstractViewState other)
 		{
 			var o = other as GroupsViewState;
 			if (o == null)

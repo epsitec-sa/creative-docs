@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public Guid								SelectedGuid;
 
 
-		public override bool AreStrictlyEquals(AbstractViewState other)
+		public override bool StrictlyEquals(AbstractViewState other)
 		{
 			var o = other as CategoriesViewState;
 			if (o == null)

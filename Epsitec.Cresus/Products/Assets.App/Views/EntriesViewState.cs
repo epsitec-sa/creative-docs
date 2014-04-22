@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ObjectField						SortingField;
 
 
-		public override bool AreStrictlyEquals(AbstractViewState other)
+		public override bool StrictlyEquals(AbstractViewState other)
 		{
 			var o = other as EntriesViewState;
 			if (o == null)

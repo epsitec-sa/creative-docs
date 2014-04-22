@@ -32,12 +32,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		public virtual bool AreApproximatelyEquals(AbstractViewState other)
+		public virtual bool ApproximatelyEquals(AbstractViewState other)
 		{
-			return this.AreStrictlyEquals (other);
+			return this.StrictlyEquals (other);
 		}
 
-		public virtual bool AreStrictlyEquals(AbstractViewState other)
+		public virtual bool StrictlyEquals(AbstractViewState other)
 		{
 			if (other == null)
 			{
