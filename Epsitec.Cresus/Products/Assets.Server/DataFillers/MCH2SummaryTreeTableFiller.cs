@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		public IEnumerable<ExtractionInstructions> UsedExtractionInstructions
 		{
+			//	Retourne la liste des instructions d'extraction, dans lesquelles on
+			//	retrouve InitialTimestamp et FinalTimestamp.
 			get
 			{
 				foreach (var column in this.OrderedColumns)
@@ -139,6 +141,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private ExtractionInstructions GetExtractionInstructions(Column column)
 		{
+			//	Retourne les instructions d'extraction permettant de peupler une colonne.
 			var field = ObjectField.MCH2Report + (int) column;
 
 			switch (column)

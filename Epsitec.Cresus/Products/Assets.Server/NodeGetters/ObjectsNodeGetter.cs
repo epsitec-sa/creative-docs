@@ -57,6 +57,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		public void SetParams(Timestamp? timestamp, Guid rootGuid, SortingInstructions instructions, List<ExtractionInstructions> extractionInstructions = null)
 		{
+			//	La liste des instructions d'extraction est utile pour la production de rapports.
 			this.timestamp              = timestamp;
 			this.rootGuid               = rootGuid;
 			this.sortingInstructions    = instructions;

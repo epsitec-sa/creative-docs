@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		public void SetParams(Timestamp? timestamp, List<ExtractionInstructions> extractionInstructions)
 		{
+			//	La liste des instructions d'extraction est utile pour la production de rapports.
 			this.timestamp = timestamp;
 
 			this.extractionInstructions.Clear ();
@@ -111,6 +112,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				{
 					var obj = this.accessor.GetObject (BaseType.Assets, hiddenTreeNode.Guid);
 
+					//	On prend toutes les valeurs définies pour la base des Assets (ValueFields),
+					//	ainsi que les valeurs à extraire en vue d'un rapport.
 					foreach (var field in this.accessor.ValueFields.Union (this.extractionInstructions.Select (x => x.ResultField)))
 					{
 						var v = this.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, field);
@@ -132,13 +135,14 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private decimal? GetValueAccordingToRatio(DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
 		{
-			//	Retourne la valeur d'un champ ObjectField.Valeur*, en tenant compte du ratio.
+			//	Retourne la valeur d'un champ, en tenant compte du ratio.
 			if (obj != null)
 			{
 				decimal? m = null;
 
 				if (field == ObjectField.MainValue)
 				{
+					//	Traite le cas de la valeur comptable principale.
 					var value = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, field);
 
 					if (value.HasValue && value.Value.FinalAmortizedAmount.HasValue)
@@ -148,11 +152,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 				else if (this.extractionInstructions.Select (x => x.ResultField).Contains (field))
 				{
+					//	Traite le cas des valeurs supplémentaires extraites pour les rapports
+					//	(ObjectField.MCH2Report+n).
 					var ei = this.extractionInstructions.Where (x => x.ResultField == field).FirstOrDefault ();
 					m = CumulNodeGetter.GetExtractionInstructions (obj, ei);
 				}
 				else
 				{
+					//	Traite le cas des valeurs supplémentaires définies par l'utilisateur
+					//	pour les Assets (valeur d'assurance, valeur imposable, etc.)
 					var value = ObjectProperties.GetObjectPropertyComputedAmount (obj, timestamp, field);
 
 					if (value.HasValue && value.Value.FinalAmount.HasValue)
@@ -179,10 +187,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private static decimal? GetExtractionInstructions(DataObject obj, ExtractionInstructions extractionInstructions)
 		{
+			//	Calcule un montant à extraire des données, selon les instructions ExtractionInstructions.
 			decimal? sum = null;
 
 			if (obj != null)
 			{
+				//	On parcourt tous les événements, pour ne considérer que certains.
 				foreach (var e in obj.Events.Where (x =>
 					(extractionInstructions.EventType == EventType.Unknown || x.Type == extractionInstructions.EventType) &&
 					x.Timestamp >= extractionInstructions.StartTimestamp &&
