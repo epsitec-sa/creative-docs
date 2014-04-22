@@ -118,6 +118,32 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.UpdateNodeIndexes ();
 		}
 
+		public void SetLevelAll(int level)
+		{
+			//	Impose le niveau pour toutes les lignes.
+			for (int i=0; i<this.nodes.Count; i++)
+			{
+				var node = this.nodes[i];
+
+				if (node.Level < level)
+				{
+					if (node.Type == NodeType.Compacted)
+					{
+						this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, node.Ratio, NodeType.Expanded);
+					}
+				}
+				else
+				{
+					if (node.Type == NodeType.Expanded)
+					{
+						this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, node.Ratio, NodeType.Compacted);
+					}
+				}
+			}
+
+			this.UpdateNodeIndexes ();
+		}
+
 		public void CompactAll()
 		{
 			//	Compacte toutes les lignes.

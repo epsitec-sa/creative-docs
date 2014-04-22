@@ -181,6 +181,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.UpdateNodeIndexes ();
 		}
 
+		public void SetLevelAll(int level)
+		{
+		}
+
 		public void CompactAll()
 		{
 			//	Compacte toutes les lignes.

@@ -135,6 +135,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
 		}
 
+		public void SetLevelAll(int level)
+		{
+			this.treeObjectsGetter.SetLevelAll (level);
+			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+		}
+
 		public void CompactAll()
 		{
 			this.treeObjectsGetter.CompactAll ();

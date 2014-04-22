@@ -101,6 +101,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.treeObjectsGetter.CompactOrExpand (index);
 		}
 
+		public void SetLevelAll(int level)
+		{
+			this.treeObjectsGetter.SetLevelAll (level);
+		}
+
 		public void CompactAll()
 		{
 			this.treeObjectsGetter.CompactAll ();
