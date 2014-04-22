@@ -195,8 +195,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				//	On parcourt tous les événements, pour ne considérer que certains.
 				foreach (var e in obj.Events.Where (x =>
 					(extractionInstructions.EventType == EventType.Unknown || x.Type == extractionInstructions.EventType) &&
-					x.Timestamp >= extractionInstructions.StartTimestamp &&
-					x.Timestamp <= extractionInstructions.EndTimestamp))
+					extractionInstructions.Range.IsInside (x.Timestamp.Date)))
 				{
 					var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 					if (p != null)

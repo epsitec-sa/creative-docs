@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
@@ -15,11 +16,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public struct ExtractionInstructions
 	{
-		public ExtractionInstructions(ObjectField resultField, Timestamp startTimestamp, Timestamp endTimestamp, EventType eventType, ExtractionAmount extractionAmount)
+		public ExtractionInstructions(ObjectField resultField, DateRange range, EventType eventType, ExtractionAmount extractionAmount)
 		{
 			this.ResultField      = resultField;
-			this.StartTimestamp   = startTimestamp;
-			this.EndTimestamp     = endTimestamp;
+			this.Range            = range;
 			this.EventType        = eventType;
 			this.ExtractionAmount = extractionAmount;
 		}
@@ -32,11 +32,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public static ExtractionInstructions Empty = new ExtractionInstructions (ObjectField.Unknown, Timestamp.MaxValue, Timestamp.MaxValue, EventType.Unknown, ExtractionAmount.Final);
+		public static ExtractionInstructions Empty = new ExtractionInstructions (ObjectField.Unknown, DateRange.Empty, EventType.Unknown, ExtractionAmount.Final);
 
 		public readonly ObjectField				ResultField;
-		public readonly Timestamp				StartTimestamp;
-		public readonly Timestamp				EndTimestamp;
+		public readonly DateRange				Range;
 		public readonly EventType				EventType;
 		public readonly ExtractionAmount		ExtractionAmount;
 	}

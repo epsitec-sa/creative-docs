@@ -147,31 +147,58 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			switch (column)
 			{
 				case Column.InitialState:
-					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Unknown, ExtractionAmount.Final);
+					return new ExtractionInstructions (field,
+						new DateRange (System.DateTime.MinValue, this.InitialTimestamp.Date),
+						EventType.Unknown,
+						ExtractionAmount.Final);
 
 				case Column.Inputs:
-					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Input, ExtractionAmount.Final);
+					return new ExtractionInstructions (field,
+						new DateRange (System.DateTime.MinValue, this.InitialTimestamp.Date),
+						EventType.Input,
+						ExtractionAmount.Final);
 
 				case Column.Reorganizations:
-					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Modification, ExtractionAmount.Final);
+					return new ExtractionInstructions (field,
+						new DateRange (System.DateTime.MinValue, this.InitialTimestamp.Date),
+						EventType.Modification,
+						ExtractionAmount.Final);
 
 				case Column.Outputs:
-					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Output, ExtractionAmount.Final);
+					return new ExtractionInstructions (field,
+						new DateRange (System.DateTime.MinValue, this.InitialTimestamp.Date),
+						EventType.Output,
+						ExtractionAmount.Final);
 
 				case Column.FinalState:
-					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.FinalTimestamp, EventType.Unknown, ExtractionAmount.Final);
+					return new ExtractionInstructions (field,
+						new DateRange (System.DateTime.MinValue, this.FinalTimestamp.Date),
+						EventType.Unknown,
+						ExtractionAmount.Final);
 
 				case Column.AmortizationsAuto:
-					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.AmortizationAuto, ExtractionAmount.Amortization);
+					return new ExtractionInstructions (field,
+						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date),
+						EventType.AmortizationAuto,
+						ExtractionAmount.Amortization);
 
 				case Column.AmortizationsExtra:
-					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.AmortizationExtra, ExtractionAmount.Amortization);
+					return new ExtractionInstructions (field,
+						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date),
+						EventType.AmortizationExtra,
+						ExtractionAmount.Amortization);
 
 				case Column.Revaluations:
-					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.Revaluation, ExtractionAmount.Final);
+					return new ExtractionInstructions (field,
+						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date),
+						EventType.Revaluation,
+						ExtractionAmount.Final);
 
 				case Column.Revalorizations:
-					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.Revalorization, ExtractionAmount.Final);
+					return new ExtractionInstructions (field,
+						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date),
+						EventType.Revalorization,
+						ExtractionAmount.Final);
 
 				default:
 					return ExtractionInstructions.Empty;
