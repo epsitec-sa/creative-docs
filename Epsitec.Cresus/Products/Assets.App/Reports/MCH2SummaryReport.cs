@@ -47,10 +47,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateParams()
 		{
-			this.nodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions);
-
 			this.DataFiller.InitialTimestamp = this.Params.InitialTimestamp;
 			this.DataFiller.FinalTimestamp   = this.Params.FinalTimestamp;
+
+			var e = this.DataFiller.UsedExtractionInstructions.ToList ();
+			this.nodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
 
 			this.UpdateTreeTable ();
 		}

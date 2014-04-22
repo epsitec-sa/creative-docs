@@ -20,12 +20,19 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.inputNodes = inputNodes;
 
 			this.outputNodes = new List<CumulNode> ();
+			this.extractionInstructions = new List<ExtractionInstructions> ();
 		}
 
 
-		public void SetParams(Timestamp? timestamp)
+		public void SetParams(Timestamp? timestamp, List<ExtractionInstructions> extractionInstructions)
 		{
 			this.timestamp = timestamp;
+
+			this.extractionInstructions.Clear ();
+			if (extractionInstructions != null)
+			{
+				this.extractionInstructions.AddRange (extractionInstructions);
+			}
 
 			this.Compute ();
 		}
@@ -56,7 +63,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				if (node.BaseType == BaseType.Assets)
 				{
 					//	S'il s'agit d'un objet, on retourne le montant en tenant compte du ratio.
-					return CumulNodeGetter.GetValueAccordingToRatio (obj, this.timestamp, node.Ratio, field);
+					return this.GetValueAccordingToRatio (obj, this.timestamp, node.Ratio, field);
 				}
 				else
 				{
@@ -104,9 +111,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				{
 					var obj = this.accessor.GetObject (BaseType.Assets, hiddenTreeNode.Guid);
 
-					foreach (var field in this.accessor.ValueFields)
+					foreach (var field in this.accessor.ValueFields.Union (this.extractionInstructions.Select (x => x.ResultField)))
 					{
-						var v = CumulNodeGetter.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, field);
+						var v = this.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, field);
 						if (v.HasValue)
 						{
 							if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
@@ -123,7 +130,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		private static decimal? GetValueAccordingToRatio(DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
+		private decimal? GetValueAccordingToRatio(DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
 		{
 			//	Retourne la valeur d'un champ ObjectField.Valeur*, en tenant compte du ratio.
 			if (obj != null)
@@ -138,6 +145,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					{
 						m = value.Value.FinalAmortizedAmount.Value;
 					}
+				}
+				else if (this.extractionInstructions.Select (x => x.ResultField).Contains (field))
+				{
+					var ei = this.extractionInstructions.Where (x => x.ResultField == field).FirstOrDefault ();
+					m = CumulNodeGetter.GetExtractionInstructions (obj, ei);
 				}
 				else
 				{
@@ -165,10 +177,40 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return null;
 		}
 
+		private static decimal? GetExtractionInstructions(DataObject obj, ExtractionInstructions extractionInstructions)
+		{
+			decimal? sum = null;
+
+			if (obj != null)
+			{
+				foreach (var e in obj.Events.Where (x =>
+					(extractionInstructions.EventType != EventType.Unknown && x.Type == extractionInstructions.EventType) &&
+					x.Timestamp >= extractionInstructions.StartTimestamp &&
+					x.Timestamp <= extractionInstructions.EndTimestamp))
+				{
+					var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+					if (p != null && p.Value.FinalAmortizedAmount.HasValue)
+					{
+						if (sum.HasValue)
+						{
+							sum += p.Value.FinalAmortizedAmount.Value;
+						}
+						else
+						{
+							sum = p.Value.FinalAmortizedAmount.Value;
+						}
+					}
+				}
+			}
+
+			return sum;
+		}
+
 
 		private readonly DataAccessor			accessor;
 		private readonly TreeObjectsNodeGetter	inputNodes;
 		private readonly List<CumulNode>		outputNodes;
+		private readonly List<ExtractionInstructions> extractionInstructions;
 
 		private Timestamp?						timestamp;
 	}

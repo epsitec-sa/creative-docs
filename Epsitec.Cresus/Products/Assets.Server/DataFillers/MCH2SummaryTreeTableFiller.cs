@@ -21,6 +21,21 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public Timestamp						FinalTimestamp;
 
 
+		public IEnumerable<ExtractionInstructions> UsedExtractionInstructions
+		{
+			get
+			{
+				foreach (var column in this.OrderedColumns)
+				{
+					var ei = this.GetExtractionInstructions (column);
+					if (!ei.IsEmpty)
+					{
+						yield return ei;
+					}
+				}
+			}
+		}
+
 		public override IEnumerable<ObjectField> Fields
 		{
 			get
@@ -106,6 +121,21 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		private decimal? GetColumnValue(CumulNode node, DataObject obj, Column column)
 		{
 			//	Calcule la valeur d'une colonne.
+			var field = ObjectField.MCH2Report + (int) column;
+
+			//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
+			//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
+			var v = this.NodeGetter.GetValue (obj, node, field);
+			if (v.HasValue)
+			{
+				return v.Value;
+			}
+			else
+			{
+				return null;
+			}
+
+#if false
 			switch (column)
 			{
 				case Column.InitialState:
@@ -134,6 +164,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 
 			return null;
+#endif
 		}
 
 		private decimal? GetColumnInitialState(CumulNode node, DataObject obj)
@@ -180,6 +211,41 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 #endif
 		}
 
+
+		private ExtractionInstructions GetExtractionInstructions(Column column)
+		{
+			var field = ObjectField.MCH2Report + (int) column;
+
+			switch (column)
+			{
+				case Column.InitialState:
+					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Unknown);
+
+				case Column.Inputs:
+					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Input);
+
+				case Column.Reorganizations:
+					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Modification);
+
+				case Column.Outputs:
+					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.InitialTimestamp, EventType.Output);
+
+				case Column.FinalState:
+					return new ExtractionInstructions (field, SimpleEngine.Timestamp.MinValue, this.FinalTimestamp, EventType.Unknown);
+
+				case Column.Amortizations:
+					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.AmortizationAuto);
+
+				case Column.Revaluations:
+					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.Revaluation);
+
+				case Column.Revalorizations:
+					return new ExtractionInstructions (field, this.InitialTimestamp, this.FinalTimestamp, EventType.Revalorization);
+
+				default:
+					return ExtractionInstructions.Empty;
+			}
+		}
 
 		private int GetColumnWidth(Column column)
 		{

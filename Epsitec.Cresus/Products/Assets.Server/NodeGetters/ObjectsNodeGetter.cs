@@ -55,11 +55,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public void SetParams(Timestamp? timestamp, Guid rootGuid, SortingInstructions instructions)
+		public void SetParams(Timestamp? timestamp, Guid rootGuid, SortingInstructions instructions, List<ExtractionInstructions> extractionInstructions = null)
 		{
-			this.timestamp           = timestamp;
-			this.rootGuid            = rootGuid;
-			this.sortingInstructions = instructions;
+			this.timestamp              = timestamp;
+			this.rootGuid               = rootGuid;
+			this.sortingInstructions    = instructions;
+			this.extractionInstructions = extractionInstructions;
 
 			this.UpdateData ();
 		}
@@ -106,7 +107,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			this.mergeNodeGetter.SetParams (this.timestamp);
 			this.treeObjectsGetter.SetParams (inputIsMerge: true);
-			this.cumulNodeGetter.SetParams (this.timestamp);
+			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
 		}
 
 
@@ -130,19 +131,19 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public void CompactOrExpand(int index)
 		{
 			this.treeObjectsGetter.CompactOrExpand (index);
-			this.cumulNodeGetter.SetParams (this.timestamp);
+			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
 		}
 
 		public void CompactAll()
 		{
 			this.treeObjectsGetter.CompactAll ();
-			this.cumulNodeGetter.SetParams (this.timestamp);
+			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
 		}
 
 		public void ExpandAll()
 		{
 			this.treeObjectsGetter.ExpandAll ();
-			this.cumulNodeGetter.SetParams (this.timestamp);
+			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
 		}
 
 		public int SearchBestIndex(Guid value)
@@ -163,15 +164,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 
 		private readonly SortableNodeGetter		objectNodeGetter1;
-		private readonly SorterNodeGetter			objectNodeGetter2;
-		private readonly GroupParentNodeGetter		groupNodeGetter1;
-		private readonly GroupLevelNodeGetter		groupNodeGetter2;
-		private readonly MergeNodeGetter			mergeNodeGetter;
-		private readonly TreeObjectsNodeGetter		treeObjectsGetter;
-		private readonly CumulNodeGetter			cumulNodeGetter;
+		private readonly SorterNodeGetter		objectNodeGetter2;
+		private readonly GroupParentNodeGetter	groupNodeGetter1;
+		private readonly GroupLevelNodeGetter	groupNodeGetter2;
+		private readonly MergeNodeGetter		mergeNodeGetter;
+		private readonly TreeObjectsNodeGetter	treeObjectsGetter;
+		private readonly CumulNodeGetter		cumulNodeGetter;
 
-		private Timestamp?							timestamp;
-		private Guid								rootGuid;
-		private SortingInstructions					sortingInstructions;
+		private Timestamp?						timestamp;
+		private Guid							rootGuid;
+		private SortingInstructions				sortingInstructions;
+		private List<ExtractionInstructions>	extractionInstructions;
 	}
 }
