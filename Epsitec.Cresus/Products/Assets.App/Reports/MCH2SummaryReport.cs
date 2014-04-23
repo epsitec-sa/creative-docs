@@ -20,8 +20,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void Dispose()
 		{
-			this.treeTableController.RowClicked     -= this.HandleRowClicked;
-			this.treeTableController.ContentChanged -= this.HandleContentChanged;
+			this.treeTableController.RowClicked        -= this.HandleRowClicked;
+			this.treeTableController.ContentChanged    -= this.HandleContentChanged;
+			this.treeTableController.TreeButtonClicked -= this.HandleTreeButtonClicked;
 		}
 
 
@@ -41,8 +42,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateTreeTable ();
 
 			//	Connexion des événements.
-			this.treeTableController.RowClicked     += this.HandleRowClicked;
-			this.treeTableController.ContentChanged += this.HandleContentChanged;
+			this.treeTableController.RowClicked        += this.HandleRowClicked;
+			this.treeTableController.ContentChanged    += this.HandleContentChanged;
+			this.treeTableController.TreeButtonClicked += this.HandleTreeButtonClicked;
 		}
 
 		protected override void UpdateParams()
@@ -68,6 +70,48 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.UpdateTreeTable ();
 		}
+
+		private void HandleTreeButtonClicked(object sender, int row, NodeType type)
+		{
+			this.OnCompactOrExpand (this.treeTableController.TopVisibleRow + row);
+		}
+
+
+		protected void OnCompactOrExpand(int row)
+		{
+			//	Etend ou compacte une ligne (inverse son mode actuel).
+			this.nodeGetter.CompactOrExpand (row);
+			this.UpdateTreeTable ();
+		}
+
+		private void OnCompactAll()
+		{
+			//	Compacte toutes les lignes.
+			this.nodeGetter.CompactAll ();
+			this.UpdateTreeTable ();
+		}
+
+		private void OnCompactOne()
+		{
+			//	Compacte une ligne.
+			this.nodeGetter.CompactOne ();
+			this.UpdateTreeTable ();
+		}
+
+		private void OnExpandOne()
+		{
+			//	Etend une ligne.
+			this.nodeGetter.ExpandOne ();
+			this.UpdateTreeTable ();
+		}
+
+		private void OnExpandAll()
+		{
+			//	Etend toutes les lignes.
+			this.nodeGetter.ExpandAll ();
+			this.UpdateTreeTable ();
+		}
+
 
 		private void UpdateTreeTable()
 		{
