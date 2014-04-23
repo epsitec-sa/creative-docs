@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -18,11 +19,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void Dispose()
 		{
+			this.treeTableController.RowClicked        -= this.HandleRowClicked;
+			this.treeTableController.ContentChanged    -= this.HandleContentChanged;
+			this.treeTableController.TreeButtonClicked -= this.HandleTreeButtonClicked;
 		}
 
 
 		public virtual void Initialize()
 		{
+			this.UpdateTreeTable ();
+
+			//	Connexion des événements.
+			this.treeTableController.RowClicked        += this.HandleRowClicked;
+			this.treeTableController.ContentChanged    += this.HandleContentChanged;
+			this.treeTableController.TreeButtonClicked += this.HandleTreeButtonClicked;
 		}
 
 		public void SetParams(AbstractParams reportParams)
@@ -32,6 +42,54 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		protected virtual void UpdateParams()
+		{
+		}
+
+
+		protected void HandleRowClicked(object sender, int row, int column)
+		{
+			this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
+			this.UpdateTreeTable ();
+		}
+
+		protected void HandleContentChanged(object sender, bool row)
+		{
+			this.UpdateTreeTable ();
+		}
+
+		protected void HandleTreeButtonClicked(object sender, int row, NodeType type)
+		{
+			this.OnCompactOrExpand (this.treeTableController.TopVisibleRow + row);
+		}
+
+
+		protected virtual void OnCompactOrExpand(int row)
+		{
+			//	Etend ou compacte une ligne (inverse son mode actuel).
+		}
+
+		protected virtual void OnCompactAll()
+		{
+			//	Compacte toutes les lignes.
+		}
+
+		protected virtual void OnCompactOne()
+		{
+			//	Compacte une ligne.
+		}
+
+		protected virtual void OnExpandOne()
+		{
+			//	Etend une ligne.
+		}
+
+		protected virtual void OnExpandAll()
+		{
+			//	Etend toutes les lignes.
+		}
+
+
+		protected virtual void UpdateTreeTable()
 		{
 		}
 

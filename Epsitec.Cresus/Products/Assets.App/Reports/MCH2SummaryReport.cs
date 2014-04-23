@@ -18,13 +18,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		public override void Dispose()
-		{
-			this.treeTableController.RowClicked        -= this.HandleRowClicked;
-			this.treeTableController.ContentChanged    -= this.HandleContentChanged;
-			this.treeTableController.TreeButtonClicked -= this.HandleTreeButtonClicked;
-		}
-
 
 		public override void Initialize()
 		{
@@ -39,12 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new MCH2SummaryTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.UpdateTreeTable ();
-
-			//	Connexion des événements.
-			this.treeTableController.RowClicked        += this.HandleRowClicked;
-			this.treeTableController.ContentChanged    += this.HandleContentChanged;
-			this.treeTableController.TreeButtonClicked += this.HandleTreeButtonClicked;
+			base.Initialize ();
 		}
 
 		protected override void UpdateParams()
@@ -60,52 +48,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void HandleRowClicked(object sender, int row, int column)
-		{
-			this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
-			this.UpdateTreeTable ();
-		}
-
-		private void HandleContentChanged(object sender, bool row)
-		{
-			this.UpdateTreeTable ();
-		}
-
-		private void HandleTreeButtonClicked(object sender, int row, NodeType type)
-		{
-			this.OnCompactOrExpand (this.treeTableController.TopVisibleRow + row);
-		}
-
-
-		protected void OnCompactOrExpand(int row)
+		protected override void OnCompactOrExpand(int row)
 		{
 			//	Etend ou compacte une ligne (inverse son mode actuel).
 			this.nodeGetter.CompactOrExpand (row);
 			this.UpdateTreeTable ();
 		}
 
-		private void OnCompactAll()
+		protected override void OnCompactAll()
 		{
 			//	Compacte toutes les lignes.
 			this.nodeGetter.CompactAll ();
 			this.UpdateTreeTable ();
 		}
 
-		private void OnCompactOne()
+		protected override void OnCompactOne()
 		{
 			//	Compacte une ligne.
 			this.nodeGetter.CompactOne ();
 			this.UpdateTreeTable ();
 		}
 
-		private void OnExpandOne()
+		protected override void OnExpandOne()
 		{
 			//	Etend une ligne.
 			this.nodeGetter.ExpandOne ();
 			this.UpdateTreeTable ();
 		}
 
-		private void OnExpandAll()
+		protected override void OnExpandAll()
 		{
 			//	Etend toutes les lignes.
 			this.nodeGetter.ExpandAll ();
@@ -113,7 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateTreeTable()
+		protected override void UpdateTreeTable()
 		{
 			TreeTableFiller<CumulNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
 		}

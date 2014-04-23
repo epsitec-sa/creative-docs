@@ -18,12 +18,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		public override void Dispose()
-		{
-			this.treeTableController.RowClicked     -= this.HandleRowClicked;
-			this.treeTableController.ContentChanged -= this.HandleContentChanged;
-		}
-
 
 		public override void Initialize()
 		{
@@ -38,11 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.primaryNodeGetter);
 			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.UpdateTreeTable ();
-
-			//	Connexion des événements.
-			this.treeTableController.RowClicked     += this.HandleRowClicked;
-			this.treeTableController.ContentChanged += this.HandleContentChanged;
+			base.Initialize ();
 		}
 
 		protected override void UpdateParams()
@@ -54,18 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void HandleRowClicked(object sender, int row, int column)
-		{
-			this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
-			this.UpdateTreeTable ();
-		}
-
-		private void HandleContentChanged(object sender, bool row)
-		{
-			this.UpdateTreeTable ();
-		}
-
-		private void UpdateTreeTable()
+		protected override void UpdateTreeTable()
 		{
 			TreeTableFiller<SortableNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
 		}

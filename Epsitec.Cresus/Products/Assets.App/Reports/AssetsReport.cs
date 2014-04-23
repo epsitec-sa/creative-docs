@@ -18,12 +18,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		public override void Dispose()
-		{
-			this.treeTableController.RowClicked     -= this.HandleRowClicked;
-			this.treeTableController.ContentChanged -= this.HandleContentChanged;
-		}
-
 
 		public override void Initialize()
 		{
@@ -38,11 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.UpdateTreeTable ();
-
-			//	Connexion des événements.
-			this.treeTableController.RowClicked     += this.HandleRowClicked;
-			this.treeTableController.ContentChanged += this.HandleContentChanged;
+			base.Initialize ();
 		}
 
 		protected override void UpdateParams()
@@ -54,18 +44,43 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void HandleRowClicked(object sender, int row, int column)
+		protected override void OnCompactOrExpand(int row)
 		{
-			this.visibleSelectedRow = this.treeTableController.TopVisibleRow + row;
+			//	Etend ou compacte une ligne (inverse son mode actuel).
+			this.nodeGetter.CompactOrExpand (row);
 			this.UpdateTreeTable ();
 		}
 
-		private void HandleContentChanged(object sender, bool row)
+		protected override void OnCompactAll()
 		{
+			//	Compacte toutes les lignes.
+			this.nodeGetter.CompactAll ();
 			this.UpdateTreeTable ();
 		}
 
-		private void UpdateTreeTable()
+		protected override void OnCompactOne()
+		{
+			//	Compacte une ligne.
+			this.nodeGetter.CompactOne ();
+			this.UpdateTreeTable ();
+		}
+
+		protected override void OnExpandOne()
+		{
+			//	Etend une ligne.
+			this.nodeGetter.ExpandOne ();
+			this.UpdateTreeTable ();
+		}
+
+		protected override void OnExpandAll()
+		{
+			//	Etend toutes les lignes.
+			this.nodeGetter.ExpandAll ();
+			this.UpdateTreeTable ();
+		}
+
+
+		protected override void UpdateTreeTable()
 		{
 			TreeTableFiller<CumulNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
 		}
