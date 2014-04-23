@@ -89,9 +89,14 @@
     <Compile Include="Popups\CategoriesPopup.cs" />
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\CalendarPopup.cs" />
+    <Compile Include="Popups\AbstractStackedController.cs" />
+    <Compile Include="Popups\StackedPopup.cs" />
+    <Compile Include="Popups\DateStackedController.cs" />
+    <Compile Include="Popups\StackedControllerDescription.cs" />
     <Compile Include="Popups\MessagePopup.cs" />
     <Compile Include="Popups\LockedPopup.cs" />
     <Compile Include="Popups\CreateMandatPopup.cs" />
+    <Compile Include="Popups\StackedControllerType.cs" />
     <Compile Include="Popups\ViewPopup.cs" />
     <Compile Include="Popups\LastViewsPopup.cs" />
     <Compile Include="Popups\PersonsPopup.cs" />
