@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Now,
 		Date,
 		CompactAll,
+		CompactOne,
+		ExpandOne,
 		ExpandAll,
 		Narrow,
 		Wide,

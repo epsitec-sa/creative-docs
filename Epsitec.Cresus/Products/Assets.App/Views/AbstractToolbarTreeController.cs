@@ -114,6 +114,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnCompactAll ();
 						break;
 
+					case ToolbarCommand.CompactOne:
+						this.OnCompactOne ();
+						break;
+
+					case ToolbarCommand.ExpandOne:
+						this.OnExpandOne ();
+						break;
+
 					case ToolbarCommand.ExpandAll:
 						this.OnExpandAll ();
 						break;
@@ -277,6 +285,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 			using (new SaveSelectedGuid (this))
 			{
 				this.TreeNodeGetter.CompactAll ();
+				this.UpdateController ();
+				this.UpdateToolbar ();
+			}
+		}
+
+		private void OnCompactOne()
+		{
+			//	Compacte une ligne.
+			using (new SaveSelectedGuid (this))
+			{
+				this.TreeNodeGetter.CompactOne ();
+				this.UpdateController ();
+				this.UpdateToolbar ();
+			}
+		}
+
+		private void OnExpandOne()
+		{
+			//	Etend une ligne.
+			using (new SaveSelectedGuid (this))
+			{
+				this.TreeNodeGetter.ExpandOne ();
 				this.UpdateController ();
 				this.UpdateToolbar ();
 			}

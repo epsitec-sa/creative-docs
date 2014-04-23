@@ -255,6 +255,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandActivate (ToolbarCommand.Filter, !this.rootGuid.IsEmpty);
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.NodeGetter.IsAllCompacted);
+			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne, !this.NodeGetter.IsAllCompacted);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  !this.NodeGetter.IsAllExpanded);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.NodeGetter.IsAllExpanded);
 		}
 

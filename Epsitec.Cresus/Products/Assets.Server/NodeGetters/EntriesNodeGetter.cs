@@ -201,6 +201,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.UpdateNodeIndexes ();
 		}
 
+		public void CompactOne()
+		{
+			//	Compacte d'un niveau.
+		}
+
+		public void ExpandOne()
+		{
+			//	Etend d'un niveau.
+		}
+
 		public void ExpandAll()
 		{
 			//	Etend toutes les lignes.

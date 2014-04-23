@@ -111,6 +111,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.treeObjectsGetter.CompactAll ();
 		}
 
+		public void CompactOne()
+		{
+			this.treeObjectsGetter.CompactOne ();
+		}
+
+		public void ExpandOne()
+		{
+			this.treeObjectsGetter.ExpandOne ();
+		}
+
 		public void ExpandAll()
 		{
 			this.treeObjectsGetter.ExpandAll ();

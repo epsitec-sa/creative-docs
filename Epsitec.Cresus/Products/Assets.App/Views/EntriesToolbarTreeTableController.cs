@@ -115,9 +115,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			base.UpdateToolbar ();
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.NodeGetter.IsAllCompacted);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll, !this.NodeGetter.IsAllExpanded);
+			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne, !this.NodeGetter.IsAllCompacted);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  !this.NodeGetter.IsAllExpanded);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.NodeGetter.IsAllExpanded);
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.New, false);
+			this.toolbar.SetCommandEnable (ToolbarCommand.New,    false);
 			this.toolbar.SetCommandEnable (ToolbarCommand.Delete, false);
 		}
 

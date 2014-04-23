@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		void CompactOrExpand(int index);
 		void SetLevelAll(int level);
 		void CompactAll();
+		void CompactOne();
+		void ExpandOne();
 		void ExpandAll();
 
 		int SearchBestIndex(Guid value);

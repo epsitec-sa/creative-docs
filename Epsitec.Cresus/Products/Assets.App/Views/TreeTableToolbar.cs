@@ -116,6 +116,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.separator1       = this.CreateSeparator     (DockStyle.None);
 			
 			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacte tout");
+			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactOne, "TreeTable.CompactOne", "Compacte un");
+			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandOne,  "TreeTable.ExpandOne",  "Etend un");
 			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etend tout");
 			
 			this.separator2       = this.CreateSeparator     (DockStyle.None);
@@ -232,9 +234,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.hasTreeOperations)
 			{
-				if (width > used + size*2 + AbstractCommandToolbar.separatorWidth)
+				if (width > used + size*4 + AbstractCommandToolbar.separatorWidth)
 				{
-					used += size*2 + AbstractCommandToolbar.separatorWidth;
+					used += size*4 + AbstractCommandToolbar.separatorWidth;
 					compactExpand = true;
 					sep2 = true;
 				}
@@ -252,6 +254,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			yield return new ButtonState (this.separator1, sep1);
 
 			yield return new ButtonState (this.buttonCompactAll, compactExpand);
+			yield return new ButtonState (this.buttonCompactOne, compactExpand);
+			yield return new ButtonState (this.buttonExpandOne,  compactExpand);
 			yield return new ButtonState (this.buttonExpandAll,  compactExpand);
 
 			yield return new ButtonState (this.separator2, sep2);
@@ -290,8 +294,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonLast;
 
 		private FrameBox						separator1;
-		
+
 		private IconButton						buttonCompactAll;
+		private IconButton						buttonCompactOne;
+		private IconButton						buttonExpandOne;
 		private IconButton						buttonExpandAll;
 
 		private FrameBox						separator2;

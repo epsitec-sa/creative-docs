@@ -393,6 +393,8 @@
     <EmbeddedResource Include="Images\Main.Save.icon" />
     <EmbeddedResource Include="Images\Main.Locked.icon" />
     <EmbeddedResource Include="Images\Background.Locked.icon" />
+    <EmbeddedResource Include="Images\TreeTable.ExpandOne.icon" />
+    <EmbeddedResource Include="Images\TreeTable.CompactOne.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

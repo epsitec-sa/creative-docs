@@ -147,6 +147,18 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
 		}
 
+		public void CompactOne()
+		{
+			this.treeObjectsGetter.CompactOne ();
+			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+		}
+
+		public void ExpandOne()
+		{
+			this.treeObjectsGetter.ExpandOne ();
+			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+		}
+
 		public void ExpandAll()
 		{
 			this.treeObjectsGetter.ExpandAll ();

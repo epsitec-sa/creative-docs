@@ -358,6 +358,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnCompactAll ();
 						break;
 
+					case ToolbarCommand.CompactOne:
+						this.OnCompactOne ();
+						break;
+
+					case ToolbarCommand.ExpandOne:
+						this.OnExpandOne ();
+						break;
+
 					case ToolbarCommand.ExpandAll:
 						this.OnExpandAll ();
 						break;
@@ -552,6 +560,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var timestamp = this.SelectedTimestamp;
 
 			this.nodeGetter.CompactAll ();
+			this.UpdateDataArray ();
+			this.UpdateScroller ();
+			this.UpdateController ();
+			this.UpdateToolbar ();
+
+			this.SelectedGuid = guid;
+			this.SelectedTimestamp = timestamp;
+		}
+
+		protected void OnCompactOne()
+		{
+			//	Compacte une ligne.
+			var guid = this.SelectedGuid;
+			var timestamp = this.SelectedTimestamp;
+
+			this.nodeGetter.CompactOne ();
+			this.UpdateDataArray ();
+			this.UpdateScroller ();
+			this.UpdateController ();
+			this.UpdateToolbar ();
+
+			this.SelectedGuid = guid;
+			this.SelectedTimestamp = timestamp;
+		}
+
+		protected void OnExpandOne()
+		{
+			//	Compacte une ligne.
+			var guid = this.SelectedGuid;
+			var timestamp = this.SelectedTimestamp;
+
+			this.nodeGetter.ExpandOne ();
 			this.UpdateDataArray ();
 			this.UpdateScroller ();
 			this.UpdateController ();
@@ -1088,6 +1128,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateObjectCommand (ToolbarCommand.Last,  this.selectedRow, this.LastRowIndex);
 
 			this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.nodeGetter.IsAllCompacted);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactOne, !this.nodeGetter.IsAllCompacted);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  !this.nodeGetter.IsAllExpanded);
 			this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.nodeGetter.IsAllExpanded);
 
 			this.objectsToolbar.SetCommandEnable (ToolbarCommand.New,      true);
