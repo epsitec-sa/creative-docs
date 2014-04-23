@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var e = this.DataFiller.UsedExtractionInstructions.ToList ();
 			this.nodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
-			this.nodeGetter.SetLevelAll (1);
+			this.nodeGetter.SetLevel (1);
 
 			this.UpdateTreeTable ();
 		}

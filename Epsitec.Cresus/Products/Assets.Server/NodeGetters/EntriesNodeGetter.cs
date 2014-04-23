@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
@@ -181,10 +180,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.UpdateNodeIndexes ();
 		}
 
-		public void SetLevelAll(int level)
-		{
-		}
-
 		public void CompactAll()
 		{
 			//	Compacte toutes les lignes.
@@ -225,6 +220,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			this.UpdateNodeIndexes ();
+		}
+
+		public void SetLevel(int level)
+		{
+		}
+
+		public int GetLevel()
+		{
+			return 0;
 		}
 
 		public int SearchBestIndex(Guid value)

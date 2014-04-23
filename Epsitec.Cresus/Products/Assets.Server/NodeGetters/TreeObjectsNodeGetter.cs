@@ -118,7 +118,51 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.UpdateNodeIndexes ();
 		}
 
-		public void SetLevelAll(int level)
+		public void CompactAll()
+		{
+			//	Compacte toutes les lignes.
+			for (int i=0; i<this.nodes.Count; i++)
+			{
+				var node = this.nodes[i];
+
+				if (node.Type == NodeType.Expanded)
+				{
+					this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, node.Ratio, NodeType.Compacted);
+				}
+			}
+
+			this.UpdateNodeIndexes ();
+		}
+
+		public void CompactOne()
+		{
+			//	Compacte d'un niveau.
+			this.SetLevel (this.GetLevel() - 1);
+		}
+
+		public void ExpandOne()
+		{
+			//	Etend d'un niveau.
+			this.SetLevel (this.GetLevel () + 1);
+		}
+
+		public void ExpandAll()
+		{
+			//	Etend toutes les lignes.
+			for (int i=0; i<this.nodes.Count; i++)
+			{
+				var node = this.nodes[i];
+
+				if (node.Type == NodeType.Compacted)
+				{
+					this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, node.Ratio, NodeType.Expanded);
+				}
+			}
+
+			this.UpdateNodeIndexes ();
+		}
+
+		public void SetLevel(int level)
 		{
 			//	Impose le niveau pour toutes les lignes.
 			for (int i=0; i<this.nodes.Count; i++)
@@ -144,46 +188,17 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.UpdateNodeIndexes ();
 		}
 
-		public void CompactAll()
+		public int GetLevel()
 		{
-			//	Compacte toutes les lignes.
-			for (int i=0; i<this.nodes.Count; i++)
+			//	Retourne le niveau actuel de l'ensemble des lignes.
+			int level = 0;
+			
+			foreach (var i in this.nodeIndexes)
 			{
-				var node = this.nodes[i];
-
-				if (node.Type == NodeType.Expanded)
-				{
-					this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, node.Ratio, NodeType.Compacted);
-				}
+				level = System.Math.Max (level, this.nodes[i].Level);
 			}
 
-			this.UpdateNodeIndexes ();
-		}
-
-		public void CompactOne()
-		{
-			//	Compacte d'un niveau.
-		}
-
-		public void ExpandOne()
-		{
-			//	Etend d'un niveau.
-		}
-
-		public void ExpandAll()
-		{
-			//	Etend toutes les lignes.
-			for (int i=0; i<this.nodes.Count; i++)
-			{
-				var node = this.nodes[i];
-
-				if (node.Type == NodeType.Compacted)
-				{
-					this.nodes[i] = new TreeNode (node.Guid, node.BaseType, node.Level, node.Ratio, NodeType.Expanded);
-				}
-			}
-
-			this.UpdateNodeIndexes ();
+			return level;
 		}
 
 	

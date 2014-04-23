@@ -1127,10 +1127,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateObjectCommand (ToolbarCommand.Next,  this.selectedRow, this.NextRowIndex);
 			this.UpdateObjectCommand (ToolbarCommand.Last,  this.selectedRow, this.LastRowIndex);
 
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactAll, !this.nodeGetter.IsAllCompacted);
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactOne, !this.nodeGetter.IsAllCompacted);
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  !this.nodeGetter.IsAllExpanded);
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  !this.nodeGetter.IsAllExpanded);
+			bool compactEnable = !this.nodeGetter.IsAllCompacted;
+			bool expandEnable  = !this.nodeGetter.IsAllExpanded;
+
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactAll, compactEnable);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactOne, compactEnable);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  expandEnable);
+			this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  expandEnable);
 
 			this.objectsToolbar.SetCommandEnable (ToolbarCommand.New,      true);
 			this.objectsToolbar.SetCommandEnable (ToolbarCommand.Delete,   this.SelectedObject != null);

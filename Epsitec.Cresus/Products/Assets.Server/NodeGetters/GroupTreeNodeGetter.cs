@@ -101,11 +101,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.treeObjectsGetter.CompactOrExpand (index);
 		}
 
-		public void SetLevelAll(int level)
-		{
-			this.treeObjectsGetter.SetLevelAll (level);
-		}
-
 		public void CompactAll()
 		{
 			this.treeObjectsGetter.CompactAll ();
@@ -124,6 +119,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public void ExpandAll()
 		{
 			this.treeObjectsGetter.ExpandAll ();
+		}
+
+		public void SetLevel(int level)
+		{
+			this.treeObjectsGetter.SetLevel (level);
+		}
+
+		public int GetLevel()
+		{
+			return this.treeObjectsGetter.GetLevel ();
 		}
 
 		public int SearchBestIndex(Guid value)

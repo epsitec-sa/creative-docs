@@ -135,12 +135,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
 		}
 
-		public void SetLevelAll(int level)
-		{
-			this.treeObjectsGetter.SetLevelAll (level);
-			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
-		}
-
 		public void CompactAll()
 		{
 			this.treeObjectsGetter.CompactAll ();
@@ -163,6 +157,17 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			this.treeObjectsGetter.ExpandAll ();
 			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+		}
+
+		public void SetLevel(int level)
+		{
+			this.treeObjectsGetter.SetLevel (level);
+			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+		}
+
+		public int GetLevel()
+		{
+			return this.treeObjectsGetter.GetLevel ();
 		}
 
 		public int SearchBestIndex(Guid value)
