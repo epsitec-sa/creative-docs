@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Assets), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 
-			this.dataFiller = new MCH2SummaryTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new MCH2SummaryTreeTableFiller (this.accessor, this.NodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
 
 			base.Initialize ();
@@ -41,45 +41,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.DataFiller.FinalTimestamp   = this.Params.FinalTimestamp;
 
 			var e = this.DataFiller.UsedExtractionInstructions.ToList ();
-			this.nodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
+			this.NodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
 			this.nodeGetter.SetLevel (1);
 
-			this.UpdateTreeTable ();
-		}
-
-
-		protected override void OnCompactOrExpand(int row)
-		{
-			//	Etend ou compacte une ligne (inverse son mode actuel).
-			this.nodeGetter.CompactOrExpand (row);
-			this.UpdateTreeTable ();
-		}
-
-		protected override void OnCompactAll()
-		{
-			//	Compacte toutes les lignes.
-			this.nodeGetter.CompactAll ();
-			this.UpdateTreeTable ();
-		}
-
-		protected override void OnCompactOne()
-		{
-			//	Compacte une ligne.
-			this.nodeGetter.CompactOne ();
-			this.UpdateTreeTable ();
-		}
-
-		protected override void OnExpandOne()
-		{
-			//	Etend une ligne.
-			this.nodeGetter.ExpandOne ();
-			this.UpdateTreeTable ();
-		}
-
-		protected override void OnExpandAll()
-		{
-			//	Etend toutes les lignes.
-			this.nodeGetter.ExpandAll ();
 			this.UpdateTreeTable ();
 		}
 
@@ -106,9 +70,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private ObjectsNodeGetter NodeGetter
+		{
+			get
+			{
+				return this.nodeGetter as ObjectsNodeGetter;
+			}
+		}
+
 
 		private SortingInstructions					sortingInstructions;
-		private ObjectsNodeGetter					nodeGetter;
 		private AbstractTreeTableFiller<CumulNode>	dataFiller;
 	}
 }

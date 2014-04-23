@@ -63,29 +63,39 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected virtual void OnCompactOrExpand(int row)
+		protected void OnCompactOrExpand(int row)
 		{
 			//	Etend ou compacte une ligne (inverse son mode actuel).
+			this.nodeGetter.CompactOrExpand (row);
+			this.UpdateTreeTable ();
 		}
 
-		protected virtual void OnCompactAll()
+		protected void OnCompactAll()
 		{
 			//	Compacte toutes les lignes.
+			this.nodeGetter.CompactAll ();
+			this.UpdateTreeTable ();
 		}
 
-		protected virtual void OnCompactOne()
+		protected void OnCompactOne()
 		{
 			//	Compacte une ligne.
+			this.nodeGetter.CompactOne ();
+			this.UpdateTreeTable ();
 		}
 
-		protected virtual void OnExpandOne()
+		protected void OnExpandOne()
 		{
 			//	Etend une ligne.
+			this.nodeGetter.ExpandOne ();
+			this.UpdateTreeTable ();
 		}
 
-		protected virtual void OnExpandAll()
+		protected void OnExpandAll()
 		{
 			//	Etend toutes les lignes.
+			this.nodeGetter.ExpandAll ();
+			this.UpdateTreeTable ();
 		}
 
 
@@ -97,6 +107,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected readonly DataAccessor			accessor;
 		protected readonly NavigationTreeTableController treeTableController;
 
+		protected ITreeFunctions				nodeGetter;
 		protected AbstractParams				reportParams;
 		protected int							visibleSelectedRow;
 	}
