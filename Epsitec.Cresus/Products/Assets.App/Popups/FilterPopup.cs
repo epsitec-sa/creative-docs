@@ -116,20 +116,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private void InitialCompact()
 		{
 			var guid = this.SelectedGuid;
-
-			int row = 0;
-			while (row < this.nodeGetter.Count)
-			{
-				var node = this.nodeGetter[row];
-
-				if (node.Level == 1)
-				{
-					this.nodeGetter.CompactOrExpand (row);
-				}
-
-				row++;
-			}
-
+			this.nodeGetter.SetLevel (1);
 			this.SelectedGuid = guid;
 		}
 

@@ -116,8 +116,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.separator1       = this.CreateSeparator     (DockStyle.None);
 			
 			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacte tout");
-			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactOne, "TreeTable.CompactOne", "Compacte un");
-			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandOne,  "TreeTable.ExpandOne",  "Etend un");
+			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactOne, "TreeTable.CompactOne", "Compacte un niveau");
+			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandOne,  "TreeTable.ExpandOne",  "Etend un niveau");
 			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etend tout");
 			
 			this.separator2       = this.CreateSeparator     (DockStyle.None);
