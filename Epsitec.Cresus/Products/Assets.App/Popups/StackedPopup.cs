@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -76,6 +77,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var controller = this.controllers[i];
 
 				controller.CreateUI (frame, labelsWidth, ++tabIndex, description);
+
+				controller.ValueChanged += delegate (object sender, StackedControllerDescription d)
+				{
+					this.OnValueChanged (d);
+				};
 			}
 		}
 
@@ -140,7 +146,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private const int margin     = 20;
+		#region Events handler
+		protected void OnValueChanged(StackedControllerDescription description)
+		{
+			this.ValueChanged.Raise (this, description);
+		}
+
+		public event EventHandler<StackedControllerDescription> ValueChanged;
+		#endregion
+
+
+		private const int margin = 20;
 
 		private readonly DataAccessor			accessor;
 		private readonly List<StackedControllerDescription> descriptions;
