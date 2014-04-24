@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Date            = this.Value,
 				DateLabelWidth  = labelWidth,
-				DateDescription = description.Labels.FirstOrDefault (),
+				DateDescription = description.Label,
 				TabIndex        = tabIndex,
 			};
 

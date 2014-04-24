@@ -87,6 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null)
 			{
+#if false
 				var popup = new SimulationPopup
 				{
 					Simulation = DataAccessor.Simulation,
@@ -106,6 +107,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 					}
 				};
+#else
+				var popup = new StackedTestPopup (this.accessor);
+
+				popup.Create (target);
+#endif
 			}
 		}
 

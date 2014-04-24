@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class StackedPopup : AbstractPopup
+	public abstract class StackedPopup : AbstractPopup
 	{
 		public StackedPopup(DataAccessor accessor)
 		{
@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public void SetDescriptions(List<StackedControllerDescription> descriptions)
+		protected void SetDescriptions(List<StackedControllerDescription> descriptions)
 		{
 			this.descriptions.Clear ();
 			this.descriptions.AddRange (descriptions);

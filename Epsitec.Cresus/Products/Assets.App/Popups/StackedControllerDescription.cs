@@ -20,6 +20,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public StackedControllerType			StackedControllerType;
 		public int								BottomMargin;
 
+		public string							Label
+		{
+			get
+			{
+				if (this.labels.Any ())
+				{
+					return this.labels[0];
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				this.labels.Clear ();
+				this.labels.Add (value);
+			}
+		}
+
 		public List<string>						Labels
 		{
 			get
