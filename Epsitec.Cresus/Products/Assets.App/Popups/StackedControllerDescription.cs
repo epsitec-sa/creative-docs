@@ -76,6 +76,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Radio:
 						return this.labels.Count * RadioStackedController.radioHeight;
 
+					case StackedControllerType.Bool:
+						return BoolStackedController.checkHeight;
+
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", this.StackedControllerType));
 				}
@@ -98,6 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						return DateStackedController.width;
 
 					case StackedControllerType.Radio:
+					case StackedControllerType.Bool:
 						return 20 + this.LabelsWidth;
 
 					default:
@@ -118,6 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						return this.LabelsWidth;
 
 					case StackedControllerType.Radio:
+					case StackedControllerType.Bool:
 						return 0;
 
 					default:
@@ -157,6 +162,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				case StackedControllerType.Radio:
 					return new RadioStackedController (accessor);
+
+				case StackedControllerType.Bool:
+					return new BoolStackedController (accessor);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", description.StackedControllerType));

@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					Text            = label,
 					Name            = rank.ToString (System.Globalization.CultureInfo.InvariantCulture),
 					AutoToggle      = false,
+					AutoFocus       = false,
 					PreferredHeight = RadioStackedController.radioHeight,
 					Dock            = DockStyle.Top,
 					Margins         = new Margins (labelWidth+10, 0, 0, 0),
@@ -65,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int radioHeight = 21;
+		public const int radioHeight = 17;
 
 		private readonly List<RadioButton>		radios;
 	}

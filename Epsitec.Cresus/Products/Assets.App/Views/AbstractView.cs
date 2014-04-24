@@ -113,9 +113,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					DateFrom  = new System.DateTime (2014, 3, 31),
 					DateTo    = new System.DateTime (2014, 4, 1),
 					Operation = 1,
-					Name      = "Coucou",
+					FieldName = "Coucou",
 					Quantity  = 99,
 					Color     = 0,
+					Samples   = true,
 				};
 
 				popup.Create (target);

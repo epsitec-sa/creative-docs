@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public StackedTestPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "StackedTestPopup";
+			this.title = "Ceci est le titre";
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -54,6 +54,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Radio,
 				Label = "Rouge<br/>Vert<br/>Bleu",
+				BottomMargin = 10,
+			});
+
+			list.Add (new StackedControllerDescription
+			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label = "Avec des exemples",
 			});
 
 			this.SetDescriptions (list);
@@ -108,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public string Name
+		public string FieldName
 		{
 			get
 			{
@@ -151,6 +158,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			set
 			{
 				var controller = this.GetController (5) as RadioStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		public bool Samples
+		{
+			get
+			{
+				var controller = this.GetController (6) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (6) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 			}

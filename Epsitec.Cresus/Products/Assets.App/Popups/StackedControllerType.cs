@@ -14,5 +14,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		Date,
 		Combo,
 		Radio,
+		Bool,
 	}
 }
