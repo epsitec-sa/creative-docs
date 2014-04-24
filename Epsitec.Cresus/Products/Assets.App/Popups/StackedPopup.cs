@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.descriptions = new List<StackedControllerDescription> ();
 			this.controllers = new List<AbstractStackedController> ();
 			this.controllerFrames = new List<FrameBox> ();
+			this.controllerHiddenFrames = new List<FrameBox> ();
 		}
 
 
@@ -40,8 +41,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected void SetVisibility(int rank, bool visibility)
 		{
 			System.Diagnostics.Debug.Assert (rank >= 0 && rank < this.controllerFrames.Count);
+			System.Diagnostics.Debug.Assert (rank >= 0 && rank < this.controllerHiddenFrames.Count);
 			System.Diagnostics.Debug.Assert (this.descriptions.Count == this.controllerFrames.Count);
-			this.controllerFrames[rank].Visibility = visibility;
+			System.Diagnostics.Debug.Assert (this.descriptions.Count == this.controllerHiddenFrames.Count);
+			this.controllerFrames[rank].Visibility       =  visibility;
+			this.controllerHiddenFrames[rank].Visibility = !visibility;
 		}
 
 
@@ -82,6 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private void CreateControllersUI(Widget parent)
 		{
 			this.controllerFrames.Clear ();
+			this.controllerHiddenFrames.Clear ();
 
 			var globalFrame = new FrameBox
 			{
@@ -99,22 +104,32 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var description = this.descriptions[i];
 				var controller  = this.controllers[i];
 
-				var localFrame = new FrameBox
+				var controllerFrame = new FrameBox
 				{
 					Parent          = globalFrame,
-					PreferredHeight = 1,  // sera étendu
+					PreferredHeight = description.RequiredHeight,
 					Dock            = DockStyle.Top,
 					Margins         = new Margins (0, 0, 0, description.BottomMargin + StackedPopup.verticalGap),
 				};
 
-				controller.CreateUI (localFrame, labelsWidth, ++tabIndex, description);
+				var hiddenFrame = new FrameBox
+				{
+					Parent          = globalFrame,
+					PreferredHeight = description.RequiredHeight,
+					Dock            = DockStyle.Top,
+					Margins         = new Margins (0, 0, 0, description.BottomMargin + StackedPopup.verticalGap),
+					Visibility      = false,
+				};
+
+				controller.CreateUI (controllerFrame, labelsWidth, ++tabIndex, description);
 
 				controller.ValueChanged += delegate (object sender, StackedControllerDescription d)
 				{
 					this.OnValueChanged (d);
 				};
 
-				this.controllerFrames.Add (localFrame);
+				this.controllerFrames.Add (controllerFrame);
+				this.controllerHiddenFrames.Add (hiddenFrame);
 			}
 		}
 
@@ -198,6 +213,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly List<StackedControllerDescription> descriptions;
 		private readonly List<AbstractStackedController> controllers;
 		private readonly List<FrameBox>			controllerFrames;
+		private readonly List<FrameBox>			controllerHiddenFrames;
 
 		protected string						title;
 		protected Button						okButton;
