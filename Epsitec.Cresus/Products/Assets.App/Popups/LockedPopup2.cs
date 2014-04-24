@@ -37,9 +37,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			});
 
 			this.SetDescriptions (list);
-
-			this.IsAll = true;
-			this.IsDelete = false;
 		}
 
 
@@ -97,6 +94,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected override void UpdateWidgets()
 		{
 			this.SetVisibility (1, !this.IsDelete);
+
+			{
+				var controller = this.GetController (2) as RadioStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.SetRadioEnable (0, this.OneSelectionAllowed);
+			}
 
 			if (this.IsDelete)
 			{
