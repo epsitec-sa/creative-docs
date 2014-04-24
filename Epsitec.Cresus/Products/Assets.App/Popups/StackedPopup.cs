@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.descriptions = new List<StackedControllerDescription> ();
 			this.controllers = new List<AbstractStackedController> ();
+			this.controllerFrames = new List<FrameBox> ();
 		}
 
 
@@ -32,7 +33,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected AbstractStackedController GetController(int rank)
 		{
 			System.Diagnostics.Debug.Assert (rank >= 0 && rank < this.controllers.Count);
+			System.Diagnostics.Debug.Assert (this.descriptions.Count == this.controllers.Count);
 			return this.controllers[rank];
+		}
+
+		protected void SetVisibility(int rank, bool visibility)
+		{
+			System.Diagnostics.Debug.Assert (rank >= 0 && rank < this.controllerFrames.Count);
+			System.Diagnostics.Debug.Assert (this.descriptions.Count == this.controllerFrames.Count);
+			this.controllerFrames[rank].Visibility = visibility;
 		}
 
 
@@ -72,6 +81,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateControllersUI(Widget parent)
 		{
+			this.controllerFrames.Clear ();
+
 			var globalFrame = new FrameBox
 			{
 				Parent  = parent,
@@ -102,6 +113,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					this.OnValueChanged (d);
 				};
+
+				this.controllerFrames.Add (localFrame);
 			}
 		}
 
@@ -184,6 +197,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly DataAccessor			accessor;
 		private readonly List<StackedControllerDescription> descriptions;
 		private readonly List<AbstractStackedController> controllers;
+		private readonly List<FrameBox>			controllerFrames;
 
 		protected string						title;
 		protected Button						okButton;

@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null)
 			{
-				var popup = new LockedPopup (this.accessor) 
+				var popup = new LockedPopup2 (this.accessor)
 				{
 					OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
 					Date                = LocalSettings.LockedDate,

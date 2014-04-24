@@ -91,6 +91,7 @@
     <Compile Include="Popups\CalendarPopup.cs" />
     <Compile Include="Popups\AbstractStackedController.cs" />
     <Compile Include="Popups\BoolStackedController.cs" />
+    <Compile Include="Popups\LockedPopup2.cs" />
     <Compile Include="Popups\CreateMandatPopup2.cs" />
     <Compile Include="Popups\RadioStackedController.cs" />
     <Compile Include="Popups\TextStackedController.cs" />
