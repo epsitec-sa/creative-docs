@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var controller = this.GetController (2) as RadioStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
-				return controller.Value == 1;
+				return controller.Value == 1;  // "Tous les objets" si true
 			}
 			set
 			{
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var controller = this.GetController (0) as RadioStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
-				return controller.Value == 1;
+				return controller.Value == 1;  // "Déverrouiller" si true
 			}
 			set
 			{
@@ -93,14 +93,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets()
 		{
+			//	Cache le champ date en mode "Déverrouiller".
 			this.SetVisibility (1, !this.IsDelete);
 
+			//	Grise le bouton radio "L'objet sélectionné" s'il n'y a pas de sélection.
 			{
 				var controller = this.GetController (2) as RadioStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.SetRadioEnable (0, this.OneSelectionAllowed);
 			}
 
+			//	Nomme le bouton principal, selon les boutons radio.
 			if (this.IsDelete)
 			{
 				this.okButton.Text = this.IsAll ? "Tout déverrouiller" : "Déverrouiller un";
