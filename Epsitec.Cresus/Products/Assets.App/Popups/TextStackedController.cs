@@ -10,25 +10,25 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class DateStackedController : AbstractStackedController
+	public class TextStackedController : AbstractStackedController
 	{
-		public DateStackedController(DataAccessor accessor)
+		public TextStackedController(DataAccessor accessor)
 			: base (accessor)
 		{
 		}
 
 
-		public System.DateTime?					Value;
+		public string							Value;
 
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
 		{
-			this.controller = new DateController (this.accessor)
+			this.controller = new StringFieldController (this.accessor)
 			{
-				Date            = this.Value,
-				DateLabelWidth  = labelWidth,
-				DateDescription = description.Label,
-				TabIndex        = tabIndex,
+				Value      = this.Value,
+				LabelWidth = labelWidth,
+				Label      = description.Label,
+				TabIndex   = tabIndex,
 			};
 
 			this.controller.CreateUI (parent);
@@ -43,14 +43,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				};
 			}
 
-			this.controller.DateChanged += delegate
+			this.controller.ValueEdited += delegate
 			{
-				this.Value = this.controller.Date;
+				this.Value = this.controller.Value;
 				this.UpdateWidgets ();
 			};
 		}
 
 
-		private DateController					controller;
+		private StringFieldController			controller;
 	}
 }

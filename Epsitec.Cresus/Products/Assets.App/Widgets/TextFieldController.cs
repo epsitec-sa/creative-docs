@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public class TextFieldController
 	{
-		public Color								EditColor
+		public Color							EditColor
 		{
 			get
 			{

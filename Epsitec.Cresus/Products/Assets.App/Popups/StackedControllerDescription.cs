@@ -55,6 +55,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				switch (this.StackedControllerType)
 				{
+					case StackedControllerType.Text:
+					case StackedControllerType.Int:
+						return 20;
+
 					case StackedControllerType.Date:
 						return DateController.controllerHeight;
 
@@ -70,6 +74,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				switch (this.StackedControllerType)
 				{
+					case StackedControllerType.Text:
+					case StackedControllerType.Int:
+						return 100;
+
 					case StackedControllerType.Date:
 						return DateController.controllerWidth;
 
@@ -99,6 +107,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			switch (description.StackedControllerType)
 			{
+				case StackedControllerType.Text:
+					return new TextStackedController (accessor);
+
+				case StackedControllerType.Int:
+					return new IntStackedController (accessor);
+
 				case StackedControllerType.Date:
 					return new DateStackedController (accessor);
 

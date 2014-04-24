@@ -90,6 +90,8 @@
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\CalendarPopup.cs" />
     <Compile Include="Popups\AbstractStackedController.cs" />
+    <Compile Include="Popups\TextStackedController.cs" />
+    <Compile Include="Popups\IntStackedController.cs" />
     <Compile Include="Popups\StackedTestPopup.cs" />
     <Compile Include="Popups\StackedPopup.cs" />
     <Compile Include="Popups\DateStackedController.cs" />
