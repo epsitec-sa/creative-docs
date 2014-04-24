@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				Label                 = "Verrouiller<br/>Déverrouiller",
+				MultiLabels           = "Verrouiller<br/>Déverrouiller",
 				BottomMargin          = 10,
 			});
 
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				Label                 = "L'objet sélectionné<br/>Tous les objets",
+				MultiLabels           = "L'objet sélectionné<br/>Tous les objets",
 			});
 
 			this.SetDescriptions (list);

@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				Label                 = CreateMandatPopup2.FactoryNames,
+				MultiLabels           = CreateMandatPopup2.FactoryNames,
 				BottomMargin          = 10,
 			});
 

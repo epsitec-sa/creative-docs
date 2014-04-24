@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				Label = "Ajouter<br/>Supprimer",
+				MultiLabels = "Ajouter<br/>Supprimer",
 				BottomMargin = 10,
 			});
 
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				Label = "Rouge<br/>Vert<br/>Bleu",
+				MultiLabels = "Rouge<br/>Vert<br/>Bleu",
 				BottomMargin = 10,
 			});
 
