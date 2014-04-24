@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public string							Label
 		{
+			//	Retourne le label unique (utilisé pour la plupart des contrôleurs).
 			get
 			{
 				if (this.labels.Any ())
@@ -33,12 +34,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					return null;
 				}
 			}
+			//	Spécifie le label unique (utilisé pour la plupart des contrôleurs).
+			//	On peut également donner une liste de labels, en les séparant par "<br/>".
 			set
 			{
 				this.labels.Clear ();
 
 				if (value.Contains ("<br/>"))
 				{
+					//	Ce n'est pas très propre d'avoir un getter qui ne retourne pas la
+					//	même chose qu'un setter, mais voilà, c'est bien pratique ainsi !
 					var lines = value.Split (new string[] {"<br/>"}, System.StringSplitOptions.RemoveEmptyEntries);
 					this.labels.AddRange (lines);
 				}

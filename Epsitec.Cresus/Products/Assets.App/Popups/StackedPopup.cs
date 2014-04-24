@@ -10,6 +10,11 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Classe abstraite permettant de créer facilement n'importe quel Popup contenant un
+	/// empilement de contrôleurs pour saisir divers types de valeurs (textes, dates,
+	/// booléens, énumérations, etc.).
+	/// </summary>
 	public abstract class StackedPopup : AbstractPopup
 	{
 		public StackedPopup(DataAccessor accessor)
@@ -18,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.descriptions = new List<StackedControllerDescription> ();
 			this.controllers = new List<AbstractStackedController> ();
-			this.controllerFrames = new List<FrameBox> ();
+			this.controllerVisibleFrames = new List<FrameBox> ();
 			this.controllerHiddenFrames = new List<FrameBox> ();
 		}
 
@@ -40,11 +45,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected void SetVisibility(int rank, bool visibility)
 		{
-			System.Diagnostics.Debug.Assert (rank >= 0 && rank < this.controllerFrames.Count);
+			System.Diagnostics.Debug.Assert (rank >= 0 && rank < this.controllerVisibleFrames.Count);
 			System.Diagnostics.Debug.Assert (rank >= 0 && rank < this.controllerHiddenFrames.Count);
-			System.Diagnostics.Debug.Assert (this.descriptions.Count == this.controllerFrames.Count);
+			System.Diagnostics.Debug.Assert (this.descriptions.Count == this.controllerVisibleFrames.Count);
 			System.Diagnostics.Debug.Assert (this.descriptions.Count == this.controllerHiddenFrames.Count);
-			this.controllerFrames[rank].Visibility       =  visibility;
+			this.controllerVisibleFrames[rank].Visibility = visibility;
 			this.controllerHiddenFrames[rank].Visibility = !visibility;
 		}
 
@@ -56,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				int w = StackedPopup.margin*2 + this.LabelsWidth + 10 + this.ControllersWidth;
 				w = (w+1)*2/2;  // arrondi au nombre pair supérieur
 
-				int h = AbstractPopup.titleHeight + StackedPopup.margin*2 + this.Height + StackedPopup.footerHeight;
+				int h = AbstractPopup.titleHeight + StackedPopup.margin*2 + this.ControllersHeight + StackedPopup.footerHeight;
 
 				return new Size (w, h);
 			}
@@ -85,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateControllersUI(Widget parent)
 		{
-			this.controllerFrames.Clear ();
+			this.controllerVisibleFrames.Clear ();
 			this.controllerHiddenFrames.Clear ();
 
 			var globalFrame = new FrameBox
@@ -104,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var description = this.descriptions[i];
 				var controller  = this.controllers[i];
 
-				var controllerFrame = new FrameBox
+				var visibleFrame = new FrameBox
 				{
 					Parent          = globalFrame,
 					PreferredHeight = description.RequiredHeight,
@@ -121,21 +126,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					Visibility      = false,
 				};
 
-				controller.CreateUI (controllerFrame, labelsWidth, ++tabIndex, description);
+				controller.CreateUI (visibleFrame, labelsWidth, ++tabIndex, description);
 
 				controller.ValueChanged += delegate (object sender, StackedControllerDescription d)
 				{
 					this.OnValueChanged (d);
 				};
 
-				this.controllerFrames.Add (controllerFrame);
+				this.controllerVisibleFrames.Add (visibleFrame);
 				this.controllerHiddenFrames.Add (hiddenFrame);
 			}
 		}
 
 
-		private int Height
+		private int ControllersHeight
 		{
+			//	Retourne la hauteur totale nécessaire pour les contrôleurs inclus.
 			get
 			{
 				int value = 0;
@@ -151,6 +157,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private int ControllersWidth
 		{
+			//	Retourne la largeur nécessaire pour les contrôleurs inclus.
+			//	C'est le plus large qui fait sa loi.
 			get
 			{
 				int value = 0;
@@ -166,6 +174,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private int LabelsWidth
 		{
+			//	Retourne la hauteur nécessaire pour les labels à gauche des contrôleurs inclus.
+			//	C'est le plus large qui fait sa loi.
 			get
 			{
 				int value = 0;
@@ -182,6 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateButtons()
 		{
+			//	Crée les boutons tout en bas du Popup.
 			var footer = this.CreateFooter ();
 
 			this.okButton     = this.CreateFooterButton (footer, DockStyle.Left,  "ok",     "D'accord");
@@ -191,6 +202,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected virtual void UpdateWidgets()
 		{
+			//	Met à jour les contrôleurs, après le changement d'une valeur.
 		}
 
 
@@ -212,7 +224,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly DataAccessor			accessor;
 		private readonly List<StackedControllerDescription> descriptions;
 		private readonly List<AbstractStackedController> controllers;
-		private readonly List<FrameBox>			controllerFrames;
+		private readonly List<FrameBox>			controllerVisibleFrames;
 		private readonly List<FrameBox>			controllerHiddenFrames;
 
 		protected string						title;

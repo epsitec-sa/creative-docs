@@ -8,11 +8,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public enum StackedControllerType
 	{
-		Unknown,
 		Text,
 		Int,
 		Date,
-		Combo,
 		Radio,
 		Bool,
 	}
