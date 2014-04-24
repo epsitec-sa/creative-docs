@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -13,11 +12,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	{
 		public StackedControllerDescription()
 		{
+			this.BottomMargin = 4;
+
 			this.labels = new List<string> ();
 		}
 
 
 		public StackedControllerType			StackedControllerType;
+		public int								Width;
 		public int								BottomMargin;
 
 		public string							Label
@@ -89,8 +91,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				switch (this.StackedControllerType)
 				{
 					case StackedControllerType.Text:
+						return this.Width;
+
 					case StackedControllerType.Int:
-						return 100;
+						return IntStackedController.width;
 
 					case StackedControllerType.Date:
 						return DateStackedController.width;

@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Value      = this.Value,
 				LabelWidth = labelWidth,
 				Label      = description.Label,
+				EditWidth  = IntStackedController.width,
 				TabIndex   = tabIndex,
 			};
 
@@ -51,6 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public const int width  = 50;
 		public const int height = AbstractFieldController.lineHeight;
 
 		private IntFieldController				controller;

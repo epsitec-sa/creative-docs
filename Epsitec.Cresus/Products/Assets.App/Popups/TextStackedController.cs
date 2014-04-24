@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Value      = this.Value,
 				LabelWidth = labelWidth,
 				Label      = description.Label,
+				EditWidth  = description.Width,
 				TabIndex   = tabIndex,
 			};
 
