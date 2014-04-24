@@ -39,6 +39,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
+		public override void SetFocus()
+		{
+			this.controller.SetFocus ();
+		}
+
 
 		public const int width  = DateController.controllerWidth;
 		public const int height = DateController.controllerHeight;

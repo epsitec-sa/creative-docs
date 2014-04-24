@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var footer = this.CreateFooter ();
 
-			this.createButton = this.CreateFooterButton (footer, DockStyle.Left,  "create", "Créer");
+			this.createButton = this.CreateFooterButton (footer, DockStyle.Left,  "ok",     "Créer");
 			this.cancelButton = this.CreateFooterButton (footer, DockStyle.Right, "cancel", "Annuler");
 		}
 

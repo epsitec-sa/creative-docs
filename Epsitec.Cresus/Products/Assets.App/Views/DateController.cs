@@ -65,6 +65,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateButtons ();
 		}
 
+		public void SetFocus()
+		{
+			this.dateFieldController.SetFocus ();
+		}
+
 
 		private void CreateToolbar(Widget parent)
 		{

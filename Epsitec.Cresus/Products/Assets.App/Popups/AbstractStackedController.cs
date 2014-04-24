@@ -24,6 +24,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 		}
 
+		public virtual void SetFocus()
+		{
+		}
+
+
 		protected void CreateLabel(Widget parent, int labelWidth, StackedControllerDescription description)
 		{
 			new StaticText

@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.NewMandat);
 
-			var popup = new CreateMandatPopup (this.accessor)
+			var popup = new CreateMandatPopup2 (this.accessor)
 			{
 				MandatFactoryName = MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ().Name,
 				MandatWithSamples = false,
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			popup.ButtonClicked += delegate (object sender, string name)
 			{
-				if (name == "create")
+				if (name == "ok")
 				{
 					LocalSettings.CreateMandatDate = popup.MandatStartDate;
 					this.CreateMandat (popup.MandatFactoryName, popup.MandatName, popup.MandatStartDate, popup.MandatWithSamples);

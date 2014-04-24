@@ -42,6 +42,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
+		public override void SetFocus()
+		{
+			this.controller.SetFocus ();
+		}
+
 
 		public const int height = AbstractFieldController.lineHeight;
 
