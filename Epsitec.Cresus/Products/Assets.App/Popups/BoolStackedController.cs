@@ -36,7 +36,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			button.ActiveStateChanged += delegate
 			{
 				this.Value = button.ActiveState == ActiveState.Yes;
-				this.UpdateWidgets ();
 				this.OnValueChanged (description);
 			};
 		}

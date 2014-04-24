@@ -38,7 +38,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.ValueEdited += delegate
 			{
 				this.Value = this.controller.Value;
-				this.UpdateWidgets ();
 				this.OnValueChanged (description);
 			};
 		}

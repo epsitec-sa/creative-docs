@@ -44,7 +44,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					this.Value = int.Parse (radio.Name);
 					this.UpdateRadios ();
-					this.UpdateWidgets ();
 					this.OnValueChanged (description);
 				};
 

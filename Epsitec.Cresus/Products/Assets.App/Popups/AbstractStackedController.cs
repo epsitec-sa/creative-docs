@@ -49,10 +49,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		protected virtual void UpdateWidgets()
-		{
-		}
-
 
 		#region Events handler
 		protected void OnValueChanged(StackedControllerDescription description)
