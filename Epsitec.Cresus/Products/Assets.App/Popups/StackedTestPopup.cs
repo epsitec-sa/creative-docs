@@ -61,5 +61,101 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public System.DateTime? DateFrom
+		{
+			get
+			{
+				var controller = this.GetController (0) as DateStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (0) as DateStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		public System.DateTime? DateTo
+		{
+			get
+			{
+				var controller = this.GetController (1) as DateStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (1) as DateStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		public int? Operation
+		{
+			get
+			{
+				var controller = this.GetController (2) as RadioStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (2) as RadioStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		public string Name
+		{
+			get
+			{
+				var controller = this.GetController (3) as TextStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (3) as TextStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		public int? Quantity
+		{
+			get
+			{
+				var controller = this.GetController (4) as IntStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (4) as IntStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		public int? Color
+		{
+			get
+			{
+				var controller = this.GetController (5) as RadioStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (5) as RadioStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
 	}
 }

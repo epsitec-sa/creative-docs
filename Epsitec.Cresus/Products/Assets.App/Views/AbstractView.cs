@@ -108,7 +108,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 #else
-				var popup = new StackedTestPopup (this.accessor);
+				var popup = new StackedTestPopup (this.accessor)
+				{
+					DateFrom  = new System.DateTime (2014, 3, 31),
+					DateTo    = new System.DateTime (2014, 4, 1),
+					Operation = 1,
+					Name      = "Coucou",
+					Quantity  = 99,
+					Color     = 0,
+				};
 
 				popup.Create (target);
 #endif

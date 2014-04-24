@@ -29,6 +29,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateControllers ();
 		}
 
+		protected AbstractStackedController GetController(int rank)
+		{
+			return this.controllers[rank];
+		}
+
 
 		protected override Size DialogSize
 		{
