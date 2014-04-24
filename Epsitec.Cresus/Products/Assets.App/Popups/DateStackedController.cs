@@ -51,6 +51,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public const int width  = DateController.controllerWidth;
+		public const int height = DateController.controllerHeight;
+
 		private DateController					controller;
 	}
 }

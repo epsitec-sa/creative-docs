@@ -36,7 +36,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			set
 			{
 				this.labels.Clear ();
-				this.labels.Add (value);
+
+				if (value.Contains ("<br/>"))
+				{
+					var lines = value.Split (new string[] {"<br/>"}, System.StringSplitOptions.RemoveEmptyEntries);
+					this.labels.AddRange (lines);
+				}
+				else
+				{
+					this.labels.Add (value);
+				}
 			}
 		}
 
@@ -56,11 +65,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				switch (this.StackedControllerType)
 				{
 					case StackedControllerType.Text:
+						return TextStackedController.height;
+
 					case StackedControllerType.Int:
-						return 20;
+						return IntStackedController.height;
 
 					case StackedControllerType.Date:
-						return DateController.controllerHeight;
+						return DateStackedController.height;
+
+					case StackedControllerType.Radio:
+						return this.labels.Count * RadioStackedController.radioHeight;
 
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", this.StackedControllerType));
@@ -79,7 +93,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						return 100;
 
 					case StackedControllerType.Date:
-						return DateController.controllerWidth;
+						return DateStackedController.width;
+
+					case StackedControllerType.Radio:
+						return 20 + this.LabelsWidth;
 
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", this.StackedControllerType));
@@ -88,6 +105,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 		public int								RequiredLabelsWidth
+		{
+			get
+			{
+				switch (this.StackedControllerType)
+				{
+					case StackedControllerType.Text:
+					case StackedControllerType.Int:
+					case StackedControllerType.Date:
+						return this.LabelsWidth;
+
+					case StackedControllerType.Radio:
+						return 0;
+
+					default:
+						throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", this.StackedControllerType));
+				}
+			}
+		}
+
+		private int								LabelsWidth
 		{
 			get
 			{
@@ -115,6 +152,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				case StackedControllerType.Date:
 					return new DateStackedController (accessor);
+
+				case StackedControllerType.Radio:
+					return new RadioStackedController (accessor);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", description.StackedControllerType));

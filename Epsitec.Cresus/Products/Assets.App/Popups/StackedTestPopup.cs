@@ -18,12 +18,35 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				Label = "Depuis",
+				BottomMargin = 4,
 			});
 
 			list.Add (new StackedControllerDescription
 			{
 				StackedControllerType = StackedControllerType.Date,
 				Label = "Jusqu'au",
+				BottomMargin = 4+10,
+			});
+
+			list.Add (new StackedControllerDescription
+			{
+				StackedControllerType = StackedControllerType.Text,
+				Label = "Nom",
+				BottomMargin = 4,
+			});
+
+			list.Add (new StackedControllerDescription
+			{
+				StackedControllerType = StackedControllerType.Int,
+				Label = "Quantité",
+				BottomMargin = 4+10,
+			});
+
+			list.Add (new StackedControllerDescription
+			{
+				StackedControllerType = StackedControllerType.Radio,
+				Label = "Rouge<br/>Vert<br/>Bleu",
+				BottomMargin = 4,
 			});
 
 			this.SetDescriptions (list);
