@@ -12,27 +12,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public StackedTestPopup(DataAccessor accessor)
 			: base (accessor)
 		{
+			this.title = "StackedTestPopup";
+
 			var list = new List<StackedControllerDescription> ();
 
 			list.Add (new StackedControllerDescription
 			{
 				StackedControllerType = StackedControllerType.Date,
 				Label = "Depuis",
-				BottomMargin = 4,
 			});
 
 			list.Add (new StackedControllerDescription
 			{
 				StackedControllerType = StackedControllerType.Date,
 				Label = "Jusqu'au",
-				BottomMargin = 4+10,
+				BottomMargin = 10,
 			});
 
 			list.Add (new StackedControllerDescription
 			{
 				StackedControllerType = StackedControllerType.Radio,
 				Label = "Ajouter<br/>Supprimer",
-				BottomMargin = 4+10,
+				BottomMargin = 10,
 			});
 
 			list.Add (new StackedControllerDescription
@@ -40,21 +41,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				StackedControllerType = StackedControllerType.Text,
 				Label = "Nom",
 				Width = 100,
-				BottomMargin = 4,
 			});
 
 			list.Add (new StackedControllerDescription
 			{
 				StackedControllerType = StackedControllerType.Int,
 				Label = "Quantité",
-				BottomMargin = 4+10,
+				BottomMargin = 10,
 			});
 
 			list.Add (new StackedControllerDescription
 			{
 				StackedControllerType = StackedControllerType.Radio,
 				Label = "Rouge<br/>Vert<br/>Bleu",
-				BottomMargin = 4,
 			});
 
 			this.SetDescriptions (list);

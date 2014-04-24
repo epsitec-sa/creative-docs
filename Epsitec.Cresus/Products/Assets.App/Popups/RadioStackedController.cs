@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					AutoToggle      = false,
 					PreferredHeight = RadioStackedController.radioHeight,
 					Dock            = DockStyle.Top,
-					Margins         = new Margins (labelWidth, 0, 0, 0),
+					Margins         = new Margins (labelWidth+10, 0, 0, 0),
 				};
 
 				radio.Clicked += delegate
@@ -49,16 +49,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				this.radios.Add (radio);
 				rank++;
-			}
-
-			if (description.BottomMargin > 0)
-			{
-				new FrameBox
-				{
-					Parent  = parent,
-					Dock    = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, description.BottomMargin),
-				};
 			}
 
 			this.UpdateRadios ();

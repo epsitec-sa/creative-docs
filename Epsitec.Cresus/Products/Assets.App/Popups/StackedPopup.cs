@@ -39,8 +39,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				int w = StackedPopup.margin*2 + this.LabelsWidth + this.ControllersWidth;
-				int h = StackedPopup.margin*2 + this.Height + 50;
+				int w = StackedPopup.margin*2 + this.LabelsWidth + 10 + this.ControllersWidth;
+				int h = AbstractPopup.titleHeight + StackedPopup.margin*2 + this.Height + StackedPopup.footerHeight;
 
 				return new Size (w, h);
 			}
@@ -49,6 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
+			this.CreateTitle (this.title);
 			this.CreateControllersUI (this.mainFrameBox);
 			this.CreateButtons ();
 		}
@@ -66,22 +67,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateControllersUI(Widget parent)
 		{
-			var frame = new FrameBox
+			var globalFrame = new FrameBox
 			{
 				Parent  = parent,
 				Anchor  = AnchorStyles.All,
-				Margins = new Margins (StackedPopup.margin),
+				Margins = new Margins (StackedPopup.margin, StackedPopup.margin, AbstractPopup.titleHeight + StackedPopup.margin, 0),
 			};
 
 			int labelsWidth = this.LabelsWidth;
 			int tabIndex = 0;
 
+			System.Diagnostics.Debug.Assert (this.descriptions.Count == this.controllers.Count);
 			for (int i=0; i<this.descriptions.Count; i++)
 			{
 				var description = this.descriptions[i];
-				var controller = this.controllers[i];
+				var controller  = this.controllers[i];
 
-				controller.CreateUI (frame, labelsWidth, ++tabIndex, description);
+				var localFrame = new FrameBox
+				{
+					Parent          = globalFrame,
+					PreferredHeight = 1,  // sera étendu
+					Dock            = DockStyle.Top,
+					Margins         = new Margins (0, 0, 0, description.BottomMargin + StackedPopup.verticalGap),
+				};
+
+				controller.CreateUI (localFrame, labelsWidth, ++tabIndex, description);
 
 				controller.ValueChanged += delegate (object sender, StackedControllerDescription d)
 				{
@@ -99,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				foreach (var description in this.descriptions)
 				{
-					value += description.RequiredHeight + description.BottomMargin;
+					value += description.RequiredHeight + description.BottomMargin + StackedPopup.verticalGap;
 				}
 
 				return value;
@@ -161,12 +171,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int margin = 20;
+		private const int margin       = 20;
+		private const int verticalGap  = 4;
+		private const int footerHeight = 30;
 
 		private readonly DataAccessor			accessor;
 		private readonly List<StackedControllerDescription> descriptions;
 		private readonly List<AbstractStackedController> controllers;
 
+		protected string						title;
 		private Button							okButton;
 		private Button							cancelButton;
 	}

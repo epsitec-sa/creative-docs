@@ -34,16 +34,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.controller.CreateUI (parent);
 
-			if (description.BottomMargin > 0)
-			{
-				new FrameBox
-				{
-					Parent  = parent,
-					Dock    = DockStyle.Top,
-					Margins = new Margins (0, 0, 0, description.BottomMargin),
-				};
-			}
-
 			this.controller.ValueEdited += delegate
 			{
 				this.Value = this.controller.Value;

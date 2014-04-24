@@ -12,8 +12,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	{
 		public StackedControllerDescription()
 		{
-			this.BottomMargin = 4;
-
 			this.labels = new List<string> ();
 		}
 
