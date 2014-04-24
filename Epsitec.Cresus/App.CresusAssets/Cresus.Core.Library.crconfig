@@ -5,7 +5,7 @@
 # to configure the loading of the modules needed by the application.
 #
 
-EnableEmbeddedDatabaseClient (true);
+EnableEmbeddedDatabaseClient (false);
 DefineDatabase ("assets", "localhost");
 DefineApplicationClass ("Assets.App.dll", "Epsitec.Cresus.Assets.App.AssetsApplication");
 DefineAssemblyDependency ("Assets.Data.dll");
