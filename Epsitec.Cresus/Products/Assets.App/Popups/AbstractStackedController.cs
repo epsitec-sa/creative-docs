@@ -39,14 +39,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		protected FrameBox CreateControllerFrame(Widget parent, StackedControllerDescription description)
+		protected FrameBox CreateControllerFrame(Widget parent)
 		{
 			return new FrameBox
 			{
-				Parent         = parent,
-				Dock           = DockStyle.Fill,
-				PreferredWidth = description.Width,
-				BackColor      = ColorManager.WindowBackgroundColor,
+				Parent    = parent,
+				Dock      = DockStyle.Fill,
+				BackColor = ColorManager.WindowBackgroundColor,
 			};
 		}
 

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
 		{
 			this.CreateLabel (parent, labelWidth, description);
-			var controllerFrame = this.CreateControllerFrame (parent, description);
+			var controllerFrame = this.CreateControllerFrame (parent);
 
 			this.controller = new StringFieldController (this.accessor)
 			{
