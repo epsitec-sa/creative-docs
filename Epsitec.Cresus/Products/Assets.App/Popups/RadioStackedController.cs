@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					Parent          = parent,
 					Text            = label,
 					Name            = rank.ToString (System.Globalization.CultureInfo.InvariantCulture),
-					ActiveState     = (rank == this.Value) ? ActiveState.Yes : ActiveState.No,
+					AutoToggle      = false,
 					PreferredHeight = RadioStackedController.radioHeight,
 					Dock            = DockStyle.Top,
 					Margins         = new Margins (labelWidth, 0, 0, 0),
@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				radio.Clicked += delegate
 				{
 					this.Value = int.Parse (radio.Name);
+					this.UpdateRadios ();
 					this.UpdateWidgets ();
 					this.OnValueChanged (description);
 				};
@@ -58,6 +59,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					Dock    = DockStyle.Top,
 					Margins = new Margins (0, 0, 0, description.BottomMargin),
 				};
+			}
+
+			this.UpdateRadios ();
+		}
+
+		private void UpdateRadios()
+		{
+			int rank = 0;
+			foreach (var radio in this.radios)
+			{
+				radio.ActiveState = (rank == this.Value) ? ActiveState.Yes : ActiveState.No;
+				rank++;
 			}
 		}
 

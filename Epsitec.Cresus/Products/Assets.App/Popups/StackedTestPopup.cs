@@ -30,6 +30,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription
 			{
+				StackedControllerType = StackedControllerType.Radio,
+				Label = "Ajouter<br/>Supprimer",
+				BottomMargin = 4+10,
+			});
+
+			list.Add (new StackedControllerDescription
+			{
 				StackedControllerType = StackedControllerType.Text,
 				Label = "Nom",
 				Width = 100,
