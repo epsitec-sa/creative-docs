@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public StackedControllerType			StackedControllerType;
 		public int								Width;
+		public int								Height;
 		public int								BottomMargin;
 
 		public string							MultiLabels
@@ -90,6 +91,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Bool:
 						return BoolStackedController.checkHeight;
 
+					case StackedControllerType.GroupGuid:
+						return this.Height;
+
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", this.StackedControllerType));
 				}
@@ -115,6 +119,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Bool:
 						return 20 + this.LabelsWidth;
 
+					case StackedControllerType.GroupGuid:
+						return this.Width + 4;
+
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", this.StackedControllerType));
 				}
@@ -130,6 +137,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Text:
 					case StackedControllerType.Int:
 					case StackedControllerType.Date:
+					case StackedControllerType.GroupGuid:
 						return this.LabelsWidth;
 
 					case StackedControllerType.Radio:
@@ -176,6 +184,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				case StackedControllerType.Bool:
 					return new BoolStackedController (accessor);
+
+				case StackedControllerType.GroupGuid:
+					return new GroupGuidStackedController (accessor);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", description.StackedControllerType));

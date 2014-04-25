@@ -35,12 +35,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent           = parent,
 				Text             = description.Label,
-				ContentAlignment = ContentAlignment.MiddleRight,
+				ContentAlignment = ContentAlignment.TopRight,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Dock             = DockStyle.Left,
 				PreferredWidth   = labelWidth,
 				PreferredHeight  = AbstractFieldController.lineHeight - 1,
-				Margins          = new Margins (0, 10, 0, 1),
+				Margins          = new Margins (0, 10, 3, 0),
 			};
 		}
 
