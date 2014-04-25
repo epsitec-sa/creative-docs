@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#region Reports manager
 		private static ReportType GetReportType(int? index)
 		{
-			if (index.HasValue)
+			if (index.HasValue && index.Value != -1)
 			{
 				return ReportPopup.Reports.Select (x => x.Type).ToArray ()[index.Value];
 			}

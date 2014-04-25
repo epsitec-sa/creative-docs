@@ -116,6 +116,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var popup = new ReportPopup (this.accessor)
 			{
+				ReportType = this.selectedReportType,
 			};
 
 			popup.Create (target);
@@ -124,6 +125,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "ok")
 				{
+					this.selectedReportType = popup.ReportType;
+					this.UpdateUI ();
 				}
 			};
 		}
@@ -154,13 +157,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.report.Initialize ();
 					break;
 			}
-		}
-
-		private void HandleParamsChanged(object sender)
-		{
-			//?this.reportParams = this.paramsPanel.ReportParams;
-			//?this.report.SetParams (this.reportParams);
-			this.OnViewStateChanged (this.ViewState);
 		}
 
 

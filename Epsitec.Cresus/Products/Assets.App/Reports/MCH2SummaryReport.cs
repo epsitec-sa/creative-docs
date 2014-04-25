@@ -18,6 +18,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public MCH2SummaryReport(DataAccessor accessor, NavigationTreeTableController treeTableController)
 			: base (accessor, treeTableController)
 		{
+			var year = Timestamp.Now.Date.Year;
+
+			this.reportParams = new MCH2SummaryParams
+			(
+				new Timestamp (new System.DateTime (year,  1,  1), 0),
+				new Timestamp (new System.DateTime (year, 12, 31), 0),
+				Guid.Empty
+			);
 		}
 
 

@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public AssetsReport(DataAccessor accessor, NavigationTreeTableController treeTableController)
 			: base (accessor, treeTableController)
 		{
+			this.reportParams = new AssetsParams (Timestamp.Now, Guid.Empty);
 		}
 
 

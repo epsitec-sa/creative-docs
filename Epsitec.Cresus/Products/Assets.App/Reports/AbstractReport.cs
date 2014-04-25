@@ -48,6 +48,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.RowClicked        += this.HandleRowClicked;
 			this.treeTableController.ContentChanged    += this.HandleContentChanged;
 			this.treeTableController.TreeButtonClicked += this.HandleTreeButtonClicked;
+
+			this.UpdateParams ();
 		}
 
 		public virtual void ShowParamsPopup(Widget target)
