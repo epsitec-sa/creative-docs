@@ -27,6 +27,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateFinalTimestampUI (parent);
 			this.CreateGroupUI (parent);
 
+			var button = new Button
+			{
+				Parent           = parent,
+				Text             = "Paramètres",
+				PreferredWidth   = 75,
+				Dock             = DockStyle.Left,
+				Margins          = new Margins (10, 0, 0, 0),
+			};
+
+			button.Clicked += delegate
+			{
+				this.ShowPopup (button);
+			};
+
 			this.UpdateUI ();
 		}
 
@@ -128,6 +142,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.UpdateGuid (guid);
 				this.UpdateUI ();
+			};
+		}
+
+
+		private void ShowPopup(Widget target)
+		{
+			var popup = new MCH2SummaryReportPopup (this.accessor)
+			{
+				InitialDate = this.Params.InitialTimestamp.Date,
+				FinalDate   = this.Params.FinalTimestamp.Date,
+				GroupGuid   = this.Params.RootGuid,
+			};
+
+			popup.Create (target);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+				}
 			};
 		}
 
