@@ -130,10 +130,7 @@
     <Compile Include="Reports\AssetsReport.cs" />
     <Compile Include="Reports\AbstractParams.cs" />
     <Compile Include="Reports\AssetsParams.cs" />
-    <Compile Include="Reports\AbstractParamsPanel.cs" />
-    <Compile Include="Reports\AssetsParamsPanel.cs" />
     <Compile Include="Reports\ReportType.cs" />
-    <Compile Include="Reports\MCH2SummaryParamsPanel.cs" />
     <Compile Include="Reports\MCH2SummaryParams.cs" />
     <Compile Include="Reports\MCH2SummaryReport.cs" />
     <Compile Include="Reports\PersonsReport.cs" />
