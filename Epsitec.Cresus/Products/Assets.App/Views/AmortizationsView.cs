@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowAmortizationsPopup(Widget target, bool fromAllowed, bool toAllowed, string title, string one, string all, System.Action<DateRange, bool> action)
 		{
-			var popup = new AmortizationsPopup (this.accessor)
+			var popup = new AmortizationsPopup2 (this.accessor)
 			{
 				Title               = title,
 				ActionOne           = one,
@@ -397,6 +397,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				DateFromAllowed     = fromAllowed,
 				DateToAllowed       = toAllowed,
 				OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
+				IsAll               =  this.SelectedGuid.IsEmpty,
 				DateFrom            = LocalSettings.AmortizationDateFrom,
 				DateTo              = LocalSettings.AmortizationDateTo,
 			};
