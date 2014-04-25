@@ -37,40 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			var leftFrame = new FrameBox
-			{
-				Parent         = mainFrame,
-				Dock           = DockStyle.Left,
-				PreferredWidth = 300,
-			};
-
-			new VSplitter
-			{
-				Parent         = mainFrame,
-				Dock           = DockStyle.Left,
-				PreferredWidth = 10,
-			};
-
-			var rightFrame = new FrameBox
-			{
-				Parent         = mainFrame,
-				Dock           = DockStyle.Fill,
-			};
-
-			this.CreateScrollList (leftFrame);
-			this.CreateButtons    (leftFrame);
-
-			this.paramsFrame = new FrameBox
-			{
-				Parent          = rightFrame,
-				PreferredHeight = 24,
-				Dock            = DockStyle.Top,
-			};
-
-			this.CreateReport (rightFrame);
-
-			this.InitializeScrollList ();
-			this.UpdateButtons ();
+			this.CreateReport (mainFrame);
 		}
 
 		public override void UpdateUI()
@@ -109,68 +76,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void CreateScrollList(Widget parent)
-		{
-			new StaticText
-			{
-				Parent          = parent,
-				Text            = ReportsView.indentPrefix + "Liste des rapports disponibles",
-				PreferredHeight = 24,
-				Dock            = DockStyle.Top,
-			};
-
-			this.scrollList = new ScrollList
-			{
-				Parent         = parent,
-				Dock           = DockStyle.Fill,
-			};
-
-			this.scrollList.SelectedItemChanged += delegate
-			{
-				if (this.scrollList.SelectedItemIndex != -1)
-				{
-					string key = this.scrollList.Items.Keys[this.scrollList.SelectedItemIndex];
-					this.selectedReportType = ReportsView.ParseReportType (key);
-
-					this.UpdateUI ();
-				}
-
-				this.UpdateButtons ();
-			};
-		}
-
-		private void CreateButtons(Widget parent)
-		{
-			var frame = new FrameBox
-			{
-				Parent              = parent,
-				Dock                = DockStyle.Bottom,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredHeight     = 30,
-				Margins             = new Margins (0, 0, 10, 0),
-			};
-
-			this.showButton = new Button
-			{
-				Parent      = frame,
-				Text        = "Visualiser",
-				ButtonStyle = ButtonStyle.Icon,
-				AutoFocus   = false,
-				Dock        = DockStyle.Fill,
-				Margins     = new Margins (0, 5, 0, 0),
-			};
-
-			this.exportButton = new Button
-			{
-				Parent      = frame,
-				Text        = "Exporter",
-				ButtonStyle = ButtonStyle.Icon,
-				AutoFocus   = false,
-				Dock        = DockStyle.Fill,
-				Margins     = new Margins (5, 0, 0, 0),
-			};
-		}
-
 		private void CreateReport(Widget parent)
 		{
 			this.treeTableController = new NavigationTreeTableController ();
@@ -185,6 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportSelect);
 			if (target != null)
 			{
+				this.ShowReportPopup (target);
 			}
 		}
 
@@ -206,16 +112,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void ShowReportPopup(Widget target)
+		{
+			var popup = new ReportPopup (this.accessor)
+			{
+			};
+
+			popup.Create (target);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+				}
+			};
+		}
+
+
 		private void UpdateReport()
 		{
-			if (this.paramsPanel != null)
-			{
-				this.paramsPanel.ParamsChanged -= this.HandleParamsChanged;
-				this.paramsPanel = null;
-			}
-
-			this.paramsFrame.Children.Clear ();
-
 			if (this.report != null)
 			{
 				this.report.Dispose ();
@@ -227,73 +142,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ReportType.MCH2Summary:
 					this.report = new MCH2SummaryReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
-
-					this.paramsPanel = new MCH2SummaryParamsPanel (this.accessor);
-
-					if (!(this.reportParams is MCH2SummaryParams))
-					{
-						this.reportParams = this.paramsPanel.ReportParams;
-					}
 					break;
 
 				case ReportType.AssetsList:
 					this.report = new AssetsReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
-
-					this.paramsPanel = new AssetsParamsPanel (this.accessor);
-
-					if (!(this.reportParams is AssetsParams))
-					{
-						this.reportParams = this.paramsPanel.ReportParams;
-					}
 					break;
 
 				case ReportType.PersonsList:
 					this.report = new PersonsReport (this.accessor, this.treeTableController);
 					this.report.Initialize ();
-
-					this.reportParams = null;
 					break;
 			}
-
-			this.report.SetParams (this.reportParams);
-
-			if (this.paramsPanel != null)
-			{
-				this.paramsPanel.CreateUI (this.paramsFrame);
-				this.paramsPanel.ReportParams = this.reportParams;
-				this.paramsPanel.ParamsChanged += this.HandleParamsChanged;
-			}
-
-			int index = this.scrollList.Items.Keys.ToList ().FindIndex (x => ReportsView.ParseReportType (x) == this.selectedReportType);
-			this.scrollList.SelectedItemIndex = index;
 		}
 
 		private void HandleParamsChanged(object sender)
 		{
-			this.reportParams = this.paramsPanel.ReportParams;
-			this.report.SetParams (this.reportParams);
+			//?this.reportParams = this.paramsPanel.ReportParams;
+			//?this.report.SetParams (this.reportParams);
 			this.OnViewStateChanged (this.ViewState);
-		}
-
-
-		private void UpdateButtons()
-		{
-			bool enable = this.scrollList.SelectedItemIndex != -1;
-
-			this.showButton  .Enable = enable;
-			this.exportButton.Enable = enable;
-		}
-
-
-		private void InitializeScrollList()
-		{
-			this.scrollList.Items.Clear ();
-
-			foreach (var report in ReportsView.Reports)
-			{
-				this.scrollList.Items.Add (ReportsView.ReportTypeToString (report.Type), ReportsView.indentPrefix + report.Name);
-			}
 		}
 
 
@@ -305,7 +172,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					ViewType     = ViewType.Reports,
 					ReportType   = this.selectedReportType,
-					ReportParams = (this.paramsPanel == null) ? null : this.paramsPanel.ReportParams,
+					ReportParams = (this.report == null) ? null : this.report.ReportParams,
 				};
 			}
 			set
@@ -314,74 +181,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 				System.Diagnostics.Debug.Assert (viewState != null);
 
 				this.selectedReportType = viewState.ReportType;
-				this.reportParams       = viewState.ReportParams;
+
+				if (this.report != null)
+				{
+					this.report.ReportParams = viewState.ReportParams;
+				}
 
 				this.UpdateUI ();
 			}
 		}
 
 
-		public static string GetReportName(ReportType type)
-		{
-			var report = ReportsView.Reports.Where (x => x.Type == type).FirstOrDefault ();
-			return report.Name;
-		}
-
-		private static IEnumerable<Report> Reports
-		{
-			get
-			{
-				yield return new Report (ReportType.MCH2Summary, "Tableau des immobilisations MCH2");
-				yield return new Report (ReportType.AssetsList,  "Liste des objets d'immobilisations");
-				yield return new Report (ReportType.PersonsList, "Liste des personnes");
-			}
-		}
-
-
-		private static string ReportTypeToString(ReportType type)
-		{
-			return type.ToString ();
-		}
-
-		private static ReportType ParseReportType(string text)
-		{
-			ReportType type;
-
-			if (System.Enum.TryParse<ReportType> (text, out type))
-			{
-				return type;
-			}
-			else
-			{
-				return ReportType.Unknown;
-			}
-		}
-
-
-		private struct Report
-		{
-			public Report(ReportType type, string name)
-			{
-				this.Type = type;
-				this.Name = name;
-			}
-
-			public readonly ReportType			Type;
-			public readonly string				Name;
-		}
-
-
-		private const string indentPrefix = "  ";
-
 		private ReportsToolbar					toolbar;
-		private ScrollList						scrollList;
-		private FrameBox						paramsFrame;
-		private Button							showButton;
-		private Button							exportButton;
 		private NavigationTreeTableController	treeTableController;
-		private AbstractParamsPanel				paramsPanel;
 		private AbstractReport					report;
 		private ReportType						selectedReportType;
-		private AbstractParams					reportParams;
 	}
 }

@@ -26,6 +26,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public AbstractParams ReportParams
+		{
+			get
+			{
+				return this.reportParams;
+			}
+			set
+			{
+				this.reportParams = value;
+				this.UpdateParams ();
+			}
+		}
+
+
 		public virtual void Initialize()
 		{
 			this.UpdateTreeTable ();
@@ -34,12 +48,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.RowClicked        += this.HandleRowClicked;
 			this.treeTableController.ContentChanged    += this.HandleContentChanged;
 			this.treeTableController.TreeButtonClicked += this.HandleTreeButtonClicked;
-		}
-
-		public void SetParams(AbstractParams reportParams)
-		{
-			this.reportParams = reportParams;
-			this.UpdateParams ();
 		}
 
 		public virtual void ShowParamsPopup(Widget target)

@@ -92,6 +92,7 @@
     <Compile Include="Popups\BoolStackedController.cs" />
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\CategoryGuidStackedController.cs" />
+    <Compile Include="Popups\ReportPopup.cs" />
     <Compile Include="Popups\MCH2SummaryReportPopup.cs" />
     <Compile Include="Popups\CreateCategoryPopup.cs" />
     <Compile Include="Popups\CreateGroupPopup.cs" />

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -56,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override string GetDescription(DataAccessor accessor)
 		{
-			return ReportsView.GetReportName (this.ReportType);
+			return ReportPopup.GetReportName (this.ReportType);
 		}
 	}
 }
