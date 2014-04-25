@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -39,6 +40,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.reportParams = reportParams;
 			this.UpdateParams ();
+		}
+
+		public virtual void ShowParamsPopup(Widget target)
+		{
 		}
 
 		protected virtual void UpdateParams()

@@ -42,6 +42,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Cancel,
 		Graphic,
 		Filter,
+		ReportSelect,
+		ReportParams,
+		ReportExport,
 
 		NavigateBack,
 		NavigateForward,

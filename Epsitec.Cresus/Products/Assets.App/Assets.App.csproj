@@ -160,6 +160,7 @@
     <Compile Include="Views\AccountsTreeGraphicController.cs" />
     <Compile Include="Views\AssetsTreeGraphicController.cs" />
     <Compile Include="Views\AbstractToolbarBothTreesController.cs" />
+    <Compile Include="Views\ReportsToolbar.cs" />
     <Compile Include="Views\ReportsViewState.cs" />
     <Compile Include="Views\DateRangeCategory.cs" />
     <Compile Include="Views\EntryController.cs" />
@@ -408,6 +409,9 @@
     <EmbeddedResource Include="Images\Background.Locked.icon" />
     <EmbeddedResource Include="Images\TreeTable.ExpandOne.icon" />
     <EmbeddedResource Include="Images\TreeTable.CompactOne.icon" />
+    <EmbeddedResource Include="Images\Report.Export.icon" />
+    <EmbeddedResource Include="Images\Report.Select.icon" />
+    <EmbeddedResource Include="Images\Report.Params.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

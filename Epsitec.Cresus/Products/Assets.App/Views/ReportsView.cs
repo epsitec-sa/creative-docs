@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -26,6 +27,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent = parent,
 			};
 			topTitle.SetTitle (this.GetViewTitle (ViewType.Reports));
+
+			this.CreateToolbar (parent);
 
 			var mainFrame = new FrameBox
 			{
@@ -74,6 +77,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.UpdateReport ();
 			this.OnViewStateChanged (this.ViewState);
+		}
+
+
+		private void CreateToolbar(Widget parent)
+		{
+			this.toolbar = new ReportsToolbar ();
+			this.toolbar.CreateUI (parent);
+
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportSelect, true);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams, true);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport, true);
+
+			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			{
+				switch (command)
+				{
+					case ToolbarCommand.ReportSelect:
+						this.OnSelect ();
+						break;
+
+					case ToolbarCommand.ReportParams:
+						this.OnParams ();
+						break;
+
+					case ToolbarCommand.ReportExport:
+						this.OnExport ();
+						break;
+				}
+			};
 		}
 
 
@@ -145,6 +177,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.CreateUI (parent, rowHeight: 18, headerHeight: 18, footerHeight: 0);
 			this.treeTableController.AllowsMovement = false;
 			this.treeTableController.AddSortedColumn (0);
+		}
+
+
+		private void OnSelect()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.ReportSelect);
+			if (target != null)
+			{
+			}
+		}
+
+		private void OnParams()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.ReportParams);
+			if (target != null)
+			{
+				this.report.ShowParamsPopup (target);
+			}
+		}
+
+		private void OnExport()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.ReportExport);
+			if (target != null)
+			{
+			}
 		}
 
 
@@ -315,6 +373,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private const string indentPrefix = "  ";
 
+		private ReportsToolbar					toolbar;
 		private ScrollList						scrollList;
 		private FrameBox						paramsFrame;
 		private Button							showButton;

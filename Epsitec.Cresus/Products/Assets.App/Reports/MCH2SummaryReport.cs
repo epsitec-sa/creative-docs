@@ -3,7 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
@@ -33,6 +35,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
 
 			base.Initialize ();
+		}
+
+		public override void ShowParamsPopup(Widget target)
+		{
+			var popup = new MCH2SummaryReportPopup (this.accessor)
+			{
+				InitialDate = this.Params.InitialTimestamp.Date,
+				FinalDate   = this.Params.FinalTimestamp.Date,
+				GroupGuid   = this.Params.RootGuid,
+			};
+
+			popup.Create (target);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					this.reportParams = new MCH2SummaryParams
+					(
+						new Timestamp (popup.InitialDate.GetValueOrDefault (), 0),
+						new Timestamp (popup.FinalDate.GetValueOrDefault (), 0),
+						popup.GroupGuid
+					);
+
+					this.UpdateParams ();
+				}
+			};
 		}
 
 		protected override void UpdateParams()
