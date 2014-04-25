@@ -18,14 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public MCH2SummaryReport(DataAccessor accessor, NavigationTreeTableController treeTableController)
 			: base (accessor, treeTableController)
 		{
-			var year = Timestamp.Now.Date.Year;
-
-			this.reportParams = new MCH2SummaryParams
-			(
-				new Timestamp (new System.DateTime (year,  1,  1), 0),
-				new Timestamp (new System.DateTime (year, 12, 31), 0),
-				Guid.Empty
-			);
+			this.reportParams = new MCH2SummaryParams ();  // paramètres par défaut
 		}
 
 
@@ -52,6 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				InitialDate = this.Params.InitialTimestamp.Date,
 				FinalDate   = this.Params.FinalTimestamp.Date,
 				GroupGuid   = this.Params.RootGuid,
+				Level       = this.Params.Level
 			};
 
 			popup.Create (target);
@@ -64,7 +58,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					(
 						new Timestamp (popup.InitialDate.GetValueOrDefault (), 0),
 						new Timestamp (popup.FinalDate.GetValueOrDefault (), 0),
-						popup.GroupGuid
+						popup.GroupGuid,
+						popup.Level
 					);
 
 					this.UpdateParams ();
@@ -79,7 +74,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var e = this.DataFiller.UsedExtractionInstructions.ToList ();
 			this.NodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
-			this.nodeGetter.SetLevel (1);
+
+			if (this.Params.Level.HasValue)
+			{
+				this.NodeGetter.SetLevel (this.Params.Level.Value);
+			}
 
 			this.UpdateTreeTable ();
 		}

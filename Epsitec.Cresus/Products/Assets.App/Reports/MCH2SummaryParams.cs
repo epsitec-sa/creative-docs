@@ -9,11 +9,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MCH2SummaryParams : AbstractParams
 	{
-		public MCH2SummaryParams(Timestamp initialTimestamp, Timestamp finalTimestamp, Guid rootGuid)
+		public MCH2SummaryParams(Timestamp initialTimestamp, Timestamp finalTimestamp, Guid rootGuid, int? level)
 		{
 			this.InitialTimestamp = initialTimestamp;
 			this.FinalTimestamp   = finalTimestamp;
 			this.RootGuid         = rootGuid;
+			this.Level            = level;
 		}
 
 		public MCH2SummaryParams()
@@ -22,6 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.InitialTimestamp = new Timestamp (new System.DateTime (year,  1,  1), 0);  // 1 janvier
 			this.FinalTimestamp   = new Timestamp (new System.DateTime (year, 12, 31), 0);  // 31 décembre
 			this.RootGuid         = Guid.Empty;
+			this.Level            = 1;
 		}
 
 		public override bool AreStrictlyEquals(AbstractParams other)
@@ -41,5 +43,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public readonly Timestamp				InitialTimestamp;
 		public readonly Timestamp				FinalTimestamp;
 		public readonly Guid					RootGuid;
+		public readonly int?					Level;
 	}
 }

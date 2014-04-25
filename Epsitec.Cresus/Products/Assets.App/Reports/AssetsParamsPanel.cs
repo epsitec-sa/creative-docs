@@ -90,13 +90,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateTimestamp(Timestamp timestamp)
 		{
-			this.reportParams = new AssetsParams (timestamp, this.Params.RootGuid);
+			this.reportParams = new AssetsParams (timestamp, this.Params.RootGuid, null);
 			this.OnParamsChanged ();
 		}
 
 		private void UpdateGuid(Guid groupGuid)
 		{
-			this.reportParams = new AssetsParams (this.Params.Timestamp, groupGuid);
+			this.reportParams = new AssetsParams (this.Params.Timestamp, groupGuid, null);
 			this.OnParamsChanged ();
 		}
 

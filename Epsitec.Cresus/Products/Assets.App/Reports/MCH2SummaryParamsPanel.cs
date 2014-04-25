@@ -168,19 +168,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateInitialTimestamp(Timestamp initialTimestamp)
 		{
-			this.reportParams = new MCH2SummaryParams (initialTimestamp, this.Params.FinalTimestamp, this.Params.RootGuid);
+			this.reportParams = new MCH2SummaryParams (initialTimestamp, this.Params.FinalTimestamp, this.Params.RootGuid, null);
 			this.OnParamsChanged ();
 		}
 
 		private void UpdateFinalTimestamp(Timestamp finalTimestamp)
 		{
-			this.reportParams = new MCH2SummaryParams (this.Params.InitialTimestamp, finalTimestamp, this.Params.RootGuid);
+			this.reportParams = new MCH2SummaryParams (this.Params.InitialTimestamp, finalTimestamp, this.Params.RootGuid, null);
 			this.OnParamsChanged ();
 		}
 
 		private void UpdateGuid(Guid groupGuid)
 		{
-			this.reportParams = new MCH2SummaryParams (this.Params.InitialTimestamp, this.Params.FinalTimestamp, groupGuid);
+			this.reportParams = new MCH2SummaryParams (this.Params.InitialTimestamp, this.Params.FinalTimestamp, groupGuid, null);
 			this.OnParamsChanged ();
 		}
 

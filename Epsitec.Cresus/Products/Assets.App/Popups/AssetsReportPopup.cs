@@ -37,6 +37,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Height                = 150,
 			});
 
+			list.Add (new StackedControllerDescription  // 3
+			{
+				StackedControllerType = StackedControllerType.Int,
+				Label                 = "Jusqu'au niveau",
+			});
+
 			this.SetDescriptions (list);
 		}
 
@@ -97,6 +103,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		public int?								Level
+		{
+			get
+			{
+				var controller = this.GetController (3) as IntStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (3) as IntStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
 
 		public override void CreateUI()
 		{
@@ -113,6 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected override void UpdateWidgets()
 		{
 			this.SetVisibility (2, this.GroupEnable);
+			this.SetVisibility (3, this.GroupEnable);
 
 			this.okButton.Enable = this.Date.HasValue
 								&& (!this.GroupEnable || !this.GroupGuid.IsEmpty);

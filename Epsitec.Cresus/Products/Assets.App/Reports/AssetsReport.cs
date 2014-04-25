@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public AssetsReport(DataAccessor accessor, NavigationTreeTableController treeTableController)
 			: base (accessor, treeTableController)
 		{
-			this.reportParams = new AssetsParams (Timestamp.Now, Guid.Empty);
+			this.reportParams = new AssetsParams ();  // paramètres par défaut
 		}
 
 
@@ -44,6 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Date      = this.Params.Timestamp.Date,
 				GroupGuid = this.Params.RootGuid,
+				Level     = this.Params.Level,
 			};
 
 			popup.Create (target);
@@ -55,7 +56,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.reportParams = new AssetsParams
 					(
 						new Timestamp (popup.Date.GetValueOrDefault (), 0),
-						popup.GroupGuid
+						popup.GroupGuid,
+						popup.Level
 					);
 
 					this.UpdateParams ();
@@ -65,8 +67,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void UpdateParams()
 		{
-			this.NodeGetter.SetParams (this.Params.Timestamp, this.Params.RootGuid, this.sortingInstructions);
 			this.dataFiller.Timestamp = this.Params.Timestamp;
+
+			this.NodeGetter.SetParams (this.Params.Timestamp, this.Params.RootGuid, this.sortingInstructions);
+
+			if (this.Params.Level.HasValue)
+			{
+				this.NodeGetter.SetLevel (this.Params.Level.Value);
+			}
 
 			this.UpdateTreeTable ();
 		}
