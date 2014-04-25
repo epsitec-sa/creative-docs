@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowAmortizationsPopup(Widget target, bool fromAllowed, bool toAllowed, string title, string one, string all, System.Action<DateRange, bool> action)
 		{
-			var popup = new AmortizationsPopup2 (this.accessor)
+			var popup = new AmortizationsPopup (this.accessor)
 			{
 				Title               = title,
 				ActionOne           = one,

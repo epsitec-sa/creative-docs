@@ -7,9 +7,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class AmortizationsPopup2 : StackedPopup
+	public class AmortizationsPopup : StackedPopup
 	{
-		public AmortizationsPopup2(DataAccessor accessor)
+		public AmortizationsPopup(DataAccessor accessor)
 			: base(accessor)
 		{
 			this.title = "Création d'un nouveau mandat";

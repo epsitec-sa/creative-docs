@@ -12,9 +12,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// Popup permettant la saisir des informations nécessaires à la création d'un
 	/// nouveau mandat.
 	/// </summary>
-	public class CreateMandatPopup2 : StackedPopup
+	public class CreateMandatPopup : StackedPopup
 	{
-		public CreateMandatPopup2(DataAccessor accessor)
+		public CreateMandatPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = "Création d'un nouveau mandat";
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = CreateMandatPopup2.FactoryNames,
+				MultiLabels           = CreateMandatPopup.FactoryNames,
 				BottomMargin          = 10,
 			});
 
@@ -58,13 +58,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var controller = this.GetController (0) as RadioStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
-				return CreateMandatPopup2.GetFactoryName (controller.Value);
+				return CreateMandatPopup.GetFactoryName (controller.Value);
 			}
 			set
 			{
 				var controller = this.GetController (0) as RadioStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = CreateMandatPopup2.GetFactoryIndex (value);
+				controller.Value = CreateMandatPopup.GetFactoryIndex (value);
 			}
 		}
 

@@ -9,15 +9,15 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Popup permettant la saisir des informations nécessaires à la création d'une
-	/// nouvelle catégorie, à savoir le nom de la catégorie et son éventuel modèle.
+	/// Popup permettant la saisir des informations nécessaires à la création d'un
+	/// nouveau groupe, à savoir le nom du groupe et son parent.
 	/// </summary>
-	public class CreateCategoryPopup2 : StackedPopup
+	public class CreateGroupPopup : StackedPopup
 	{
-		public CreateCategoryPopup2(DataAccessor accessor)
+		public CreateGroupPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Création d'une nouvelle catégorie";
+			this.title = "Création d'un nouveau groupe";
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -31,8 +31,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 1
 			{
-				StackedControllerType = StackedControllerType.CategoryGuid,
-				Label                 = "Modèle",
+				StackedControllerType = StackedControllerType.GroupGuid,
+				Label                 = "Dans",
 				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
 				Height                = 260,
 			});
@@ -57,17 +57,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public Guid								ObjectModel
+		public Guid								ObjectParent
 		{
 			get
 			{
-				var controller = this.GetController (1) as CategoryGuidStackedController;
+				var controller = this.GetController (1) as GroupGuidStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller.Value;
 			}
 			set
 			{
-				var controller = this.GetController (1) as CategoryGuidStackedController;
+				var controller = this.GetController (1) as GroupGuidStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 			}
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.okButton.Text = "Créer";
 
 			this.okButton.Enable = !string.IsNullOrEmpty (this.ObjectName) &&
-								   !this.ObjectModel.IsEmpty;
+								   !this.ObjectParent.IsEmpty;
 		}
 	}
 }

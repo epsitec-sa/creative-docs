@@ -7,9 +7,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class LockedPopup2 : StackedPopup
+	public class LockedPopup : StackedPopup
 	{
-		public LockedPopup2(DataAccessor accessor)
+		public LockedPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = "Gestion des verrous";

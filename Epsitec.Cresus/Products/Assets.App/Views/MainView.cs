@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.NewMandat);
 
-			var popup = new CreateMandatPopup2 (this.accessor)
+			var popup = new CreateMandatPopup (this.accessor)
 			{
 				MandatFactoryName = MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ().Name,
 				MandatWithSamples = false,

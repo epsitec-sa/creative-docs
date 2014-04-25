@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateCategoryPopup2 (this.accessor)
+			var popup = new CreateCategoryPopup (this.accessor)
 			{
 				ObjectModel = this.SelectedGuid,
 			};

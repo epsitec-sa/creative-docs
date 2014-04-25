@@ -14,9 +14,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// Popup permettant la saisir des informations nécessaires à la création d'un
 	/// nouvel objet, à savoir la date d'entrée et le nom de l'objet.
 	/// </summary>
-	public class CreateAssetPopup2 : StackedPopup
+	public class CreateAssetPopup : StackedPopup
 	{
-		public CreateAssetPopup2(DataAccessor accessor)
+		public CreateAssetPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = "Création d'un nouvel objet";
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (target != null)
 			{
-				var popup = new CreateAssetPopup2 (accessor)
+				var popup = new CreateAssetPopup (accessor)
 				{
 					ObjectDate = LocalSettings.CreateAssetDate,
 				};

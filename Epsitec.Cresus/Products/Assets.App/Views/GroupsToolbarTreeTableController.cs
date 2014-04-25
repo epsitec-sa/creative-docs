@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateGroupPopup2 (this.accessor)
+			var popup = new CreateGroupPopup (this.accessor)
 			{
 				ObjectParent = this.SelectedGuid,
 			};
