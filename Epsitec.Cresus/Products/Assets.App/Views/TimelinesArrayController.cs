@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreatePopup(Widget target)
 		{
-			CreateAssetPopup.Show (target, this.accessor, delegate (System.DateTime date, string name)
+			CreateAssetPopup2.Show (target, this.accessor, delegate (System.DateTime date, string name)
 			{
 				this.CreateAsset (date, name);
 			});

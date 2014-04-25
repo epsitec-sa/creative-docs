@@ -92,6 +92,7 @@
     <Compile Include="Popups\AbstractStackedController.cs" />
     <Compile Include="Popups\BoolStackedController.cs" />
     <Compile Include="Popups\AmortizationsPopup2.cs" />
+    <Compile Include="Popups\CreateAssetPopup2.cs" />
     <Compile Include="Popups\LockedPopup2.cs" />
     <Compile Include="Popups\CreateMandatPopup2.cs" />
     <Compile Include="Popups\RadioStackedController.cs" />
