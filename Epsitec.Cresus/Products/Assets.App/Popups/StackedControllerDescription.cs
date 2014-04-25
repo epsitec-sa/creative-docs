@@ -92,6 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						return BoolStackedController.checkHeight;
 
 					case StackedControllerType.GroupGuid:
+					case StackedControllerType.CategoryGuid:
 						return this.Height;
 
 					default:
@@ -120,6 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						return 20 + this.LabelsWidth;
 
 					case StackedControllerType.GroupGuid:
+					case StackedControllerType.CategoryGuid:
 						return this.Width + 4;
 
 					default:
@@ -138,6 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Int:
 					case StackedControllerType.Date:
 					case StackedControllerType.GroupGuid:
+					case StackedControllerType.CategoryGuid:
 						return this.LabelsWidth;
 
 					case StackedControllerType.Radio:
@@ -187,6 +190,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				case StackedControllerType.GroupGuid:
 					return new GroupGuidStackedController (accessor);
+
+				case StackedControllerType.CategoryGuid:
+					return new CategoryGuidStackedController (accessor);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", description.StackedControllerType));
