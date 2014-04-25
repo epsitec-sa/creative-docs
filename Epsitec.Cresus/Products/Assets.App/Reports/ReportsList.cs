@@ -42,14 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Reports
 			//	Retourne les noms des rapports séparés par des <br/>.
 			get
 			{
-				var list = new List<string> ();
-
-				foreach (var report in ReportsList.Reports)
-				{
-					list.Add (report.Name);
-				}
-
-				return string.Join ("<br/>", list);
+				return string.Join ("<br/>", ReportsList.Reports.Select (x => x.Name));
 			}
 		}
 

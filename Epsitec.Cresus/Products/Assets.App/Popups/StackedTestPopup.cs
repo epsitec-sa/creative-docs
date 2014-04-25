@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public StackedTestPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Ceci est le titre";
+			this.title = "StackedPopup de test";
 
 			var list = new List<StackedControllerDescription> ();
 

@@ -58,9 +58,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				int w = StackedPopup.margin*2 + this.LabelsWidth + 10 + this.ControllersWidth;
-				w = (w+1)*2/2;  // arrondi au nombre pair supérieur
+				int labelsWidth = this.LabelsWidth;
 
+				if (labelsWidth > 0)
+				{
+					labelsWidth += 10;
+				}
+
+				int w = StackedPopup.margin*2 + labelsWidth + this.ControllersWidth;
 				int h = AbstractPopup.titleHeight + StackedPopup.margin*2 + this.ControllersHeight + StackedPopup.footerHeight;
 
 				return new Size (w, h);

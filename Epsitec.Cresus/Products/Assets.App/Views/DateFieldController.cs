@@ -886,7 +886,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private const int fieldWidth      = 70;
+		private const int fieldWidth      = 71;  // pour obtenir une largeur totale paire
 		public  const int controllerWidth = DateFieldController.fieldWidth + AbstractFieldController.lineHeight*2;
 
 

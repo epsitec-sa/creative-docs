@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 					case StackedControllerType.Radio:
 					case StackedControllerType.Bool:
-						return 20 + this.LabelsWidth;
+						return 22 + this.LabelsWidth;
 
 					case StackedControllerType.GroupGuid:
 					case StackedControllerType.CategoryGuid:
@@ -157,14 +157,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				int width = 0;
-
-				foreach (var label in this.labels)
-				{
-					width = System.Math.Max (width, label.GetTextWidth ());
-				}
-
-				return width;
+				return this.labels.Select (x => x.GetTextWidth ()).Max ();
 			}
 		}
 
