@@ -32,8 +32,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 2
 			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = "Effectue un groupement",
+			});
+
+			list.Add (new StackedControllerDescription  // 3
+			{
 				StackedControllerType = StackedControllerType.GroupGuid,
-				Label                 = "Groupement",
+				Label                 = "",
 				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
 				Height                = 150,
 			});
@@ -74,19 +80,43 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public Guid								GroupGuid
+		private bool							GroupEnable
 		{
 			get
 			{
-				var controller = this.GetController (2) as GroupGuidStackedController;
+				var controller = this.GetController (2) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller.Value;
 			}
 			set
 			{
-				var controller = this.GetController (2) as GroupGuidStackedController;
+				var controller = this.GetController (2) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
+			}
+		}
+
+		public Guid								GroupGuid
+		{
+			get
+			{
+				if (this.GroupEnable)
+				{
+					var controller = this.GetController (3) as GroupGuidStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					return controller.Value;
+				}
+				else
+				{
+					return Guid.Empty;
+				}
+			}
+			set
+			{
+				var controller = this.GetController (3) as GroupGuidStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+				this.GroupEnable = !value.IsEmpty;
 			}
 		}
 
@@ -96,7 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			base.CreateUI ();
 
 			{
-				var controller = this.GetController (2) as GroupGuidStackedController;
+				var controller = this.GetController (3) as GroupGuidStackedController;
 				controller.Level = 1;
 			}
 
@@ -105,9 +135,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets()
 		{
+			this.SetVisibility (3, this.GroupEnable);
+
 			this.okButton.Enable = this.InitialDate.HasValue
 								&& this.FinalDate.HasValue
-								&& !this.GroupGuid.IsEmpty;
+								&& (!this.GroupEnable || !this.GroupGuid.IsEmpty);
 		}
 	}
 }
