@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Views;
 
-namespace Epsitec.Cresus.Assets.App.Popups
+namespace Epsitec.Cresus.Assets.App.Reports
 {
 	/// <summary>
 	/// Cette classe fourni la liste des rapports disponibles.
