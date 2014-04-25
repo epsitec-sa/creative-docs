@@ -91,14 +91,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public override void CreateUI()
+		{
+			base.CreateUI ();
+
+			{
+				var controller = this.GetController (2) as GroupGuidStackedController;
+				controller.Level = 1;
+			}
+
+			this.okButton.Text = "Voir";
+		}
+
 		protected override void UpdateWidgets()
 		{
-			this.okButton.Text = "Voir";
-
 			this.okButton.Enable = this.InitialDate.HasValue
 								&& this.FinalDate.HasValue
 								&& !this.GroupGuid.IsEmpty;
 		}
-
 	}
 }

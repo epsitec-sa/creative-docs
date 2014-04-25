@@ -51,6 +51,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		public int								Level
+		{
+			get
+			{
+				return this.nodeGetter.GetLevel ();
+			}
+			set
+			{
+				this.nodeGetter.SetLevel (value);
+			}
+		}
+
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
 		{
