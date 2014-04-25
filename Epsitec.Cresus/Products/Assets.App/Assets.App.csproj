@@ -87,7 +87,6 @@
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
     <Compile Include="Popups\CategoriesPopup.cs" />
-    <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\CalendarPopup.cs" />
     <Compile Include="Popups\AbstractStackedController.cs" />
     <Compile Include="Popups\BoolStackedController.cs" />
@@ -107,18 +106,13 @@
     <Compile Include="Popups\DateStackedController.cs" />
     <Compile Include="Popups\StackedControllerDescription.cs" />
     <Compile Include="Popups\MessagePopup.cs" />
-    <Compile Include="Popups\LockedPopup.cs" />
-    <Compile Include="Popups\CreateMandatPopup.cs" />
     <Compile Include="Popups\StackedControllerType.cs" />
     <Compile Include="Popups\ViewPopup.cs" />
     <Compile Include="Popups\LastViewsPopup.cs" />
     <Compile Include="Popups\PersonsPopup.cs" />
     <Compile Include="Popups\CreatePersonPopup.cs" />
     <Compile Include="Popups\ErrorsPopup.cs" />
-    <Compile Include="Popups\CreateCategoryPopup.cs" />
-    <Compile Include="Popups\CreateGroupPopup.cs" />
     <Compile Include="Popups\FilterPopup.cs" />
-    <Compile Include="Popups\CreateAssetPopup.cs" />
     <Compile Include="Popups\GroupsPopup.cs" />
     <Compile Include="Popups\DatePopup.cs" />
     <Compile Include="Popups\SimulationPopup.cs" />
