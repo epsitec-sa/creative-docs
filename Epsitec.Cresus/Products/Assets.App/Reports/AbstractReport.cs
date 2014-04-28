@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
@@ -12,10 +13,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractReport
 	{
-		public AbstractReport(DataAccessor accessor, NavigationTreeTableController treeTableController)
+		public AbstractReport(DataAccessor accessor, ReportsView reportView)
 		{
 			this.accessor = accessor;
-			this.treeTableController = treeTableController;
+			this.reportView = reportView;
+			this.treeTableController = reportView.TreeTableController;
 		}
 
 		public virtual void Dispose()
@@ -26,16 +28,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public AbstractParams ReportParams
+		public virtual AbstractParams DefaultParams
 		{
 			get
 			{
-				return this.reportParams;
-			}
-			set
-			{
-				this.reportParams = value;
-				this.UpdateParams ();
+				return null;
 			}
 		}
 
@@ -54,9 +51,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void ShowParamsPopup(Widget target)
 		{
+			//	Affiche le Popup pour choisir les paramètres d'un rapport.
 		}
 
-		protected virtual void UpdateParams()
+		public virtual void UpdateParams()
 		{
 		}
 
@@ -119,11 +117,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		#region Events handler
+		protected void OnParamsChanged()
+		{
+			this.ParamsChanged.Raise (this);
+		}
+
+		public event EventHandler ParamsChanged;
+		#endregion
+
+	
 		protected readonly DataAccessor			accessor;
+		protected readonly ReportsView			reportView;
 		protected readonly NavigationTreeTableController treeTableController;
 
 		protected ITreeFunctions				nodeGetter;
-		protected AbstractParams				reportParams;
 		protected int							visibleSelectedRow;
 	}
 }

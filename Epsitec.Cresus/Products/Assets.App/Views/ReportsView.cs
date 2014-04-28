@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Reports;
@@ -18,6 +17,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 			: base (accessor, toolbar)
 		{
 		}
+
+
+		public NavigationTreeTableController	TreeTableController
+		{
+			get
+			{
+				return this.treeTableController;
+			}
+		}
+
+		public AbstractParams					ReportParams
+		{
+			get
+			{
+				return this.reportParams;
+			}
+			set
+			{
+				this.reportParams = value;
+
+				if (this.report != null)
+				{
+					this.report.UpdateParams ();
+				}
+			}
+		}
+
 
 		public override void CreateUI(Widget parent)
 		{
@@ -88,6 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnSelect()
 		{
+			//	Affiche le Popup pour choisir un rapport.
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportSelect);
 			if (target != null)
 			{
@@ -97,6 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnParams()
 		{
+			//	Affiche le Popup pour choisir les paramètres d'un rapport.
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportParams);
 			if (target != null)
 			{
@@ -106,6 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnExport()
 		{
+			//	Affiche le Popup pour choisir comment exporter le rapport.
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportExport);
 			if (target != null)
 			{
@@ -115,12 +144,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowReportPopup(Widget target)
 		{
+			//	Affiche le Popup pour choisir un rapport.
 			var popup = new ReportPopup ()
 			{
 				ReportType = this.selectedReportType,
 			};
 
-			popup.Create (target);
+			popup.Create (target, leftOrRight: true);
 
 			popup.ItemClicked += delegate (object sender, int rank)
 			{
@@ -134,6 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.report != null)
 			{
+				this.report.ParamsChanged -= this.HandleParamsChanged;
 				this.report.Dispose ();
 				this.report = null;
 			}
@@ -141,20 +172,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (this.selectedReportType)
 			{
 				case ReportType.MCH2Summary:
-					this.report = new MCH2SummaryReport (this.accessor, this.treeTableController);
+					this.report = new MCH2SummaryReport (this.accessor, this);
 					this.report.Initialize ();
 					break;
 
 				case ReportType.AssetsList:
-					this.report = new AssetsReport (this.accessor, this.treeTableController);
+					this.report = new AssetsReport (this.accessor, this);
 					this.report.Initialize ();
 					break;
 
 				case ReportType.PersonsList:
-					this.report = new PersonsReport (this.accessor, this.treeTableController);
+					this.report = new PersonsReport (this.accessor, this);
 					this.report.Initialize ();
 					break;
 			}
+
+			if (this.report != null)
+			{
+				var def = this.report.DefaultParams;
+
+				if (this.reportParams == null ||
+					this.reportParams.GetType () != def.GetType ())
+				{
+					this.ReportParams = def;
+				}
+
+				this.report.ParamsChanged += this.HandleParamsChanged;
+			}
+		}
+
+		private void HandleParamsChanged(object sender)
+		{
+			this.OnViewStateChanged (this.ViewState);
 		}
 
 
@@ -166,7 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					ViewType     = ViewType.Reports,
 					ReportType   = this.selectedReportType,
-					ReportParams = (this.report == null) ? null : this.report.ReportParams,
+					ReportParams = this.reportParams,
 				};
 			}
 			set
@@ -175,11 +224,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				System.Diagnostics.Debug.Assert (viewState != null);
 
 				this.selectedReportType = viewState.ReportType;
-
-				if (this.report != null)
-				{
-					this.report.ReportParams = viewState.ReportParams;
-				}
+				this.reportParams       = viewState.ReportParams;
 
 				this.UpdateUI ();
 			}
@@ -189,6 +234,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private ReportsToolbar					toolbar;
 		private NavigationTreeTableController	treeTableController;
 		private AbstractReport					report;
+		private AbstractParams					reportParams;
 		private ReportType						selectedReportType;
 	}
 }

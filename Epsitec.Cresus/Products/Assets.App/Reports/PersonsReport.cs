@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -13,8 +12,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class PersonsReport : AbstractReport
 	{
-		public PersonsReport(DataAccessor accessor, NavigationTreeTableController treeTableController)
-			: base (accessor, treeTableController)
+		public PersonsReport(DataAccessor accessor, ReportsView reportView)
+			: base (accessor, reportView)
 		{
 		}
 
@@ -35,12 +34,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			base.Initialize ();
 		}
 
-		protected override void UpdateParams()
+		public override void UpdateParams()
 		{
 			this.secondaryNodeGetter.SetParams (null, this.sortingInstructions);
 			this.primaryNodeGetter.SetParams (this.sortingInstructions);
 
 			this.UpdateTreeTable ();
+			this.OnParamsChanged ();
 		}
 
 

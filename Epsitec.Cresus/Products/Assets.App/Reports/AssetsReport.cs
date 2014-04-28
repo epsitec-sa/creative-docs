@@ -6,7 +6,6 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -15,10 +14,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AssetsReport : AbstractReport
 	{
-		public AssetsReport(DataAccessor accessor, NavigationTreeTableController treeTableController)
-			: base (accessor, treeTableController)
+		public AssetsReport(DataAccessor accessor, ReportsView reportView)
+			: base (accessor, reportView)
 		{
-			this.reportParams = new AssetsParams ();  // paramètres par défaut
+		}
+
+
+		public override AbstractParams DefaultParams
+		{
+			get
+			{
+				return new AssetsParams ();  // paramètres par défaut
+			}
 		}
 
 
@@ -40,6 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void ShowParamsPopup(Widget target)
 		{
+			//	Affiche le Popup pour choisir les paramètres d'un rapport.
 			var popup = new AssetsReportPopup (this.accessor)
 			{
 				Date      = this.Params.Timestamp.Date,
@@ -53,20 +61,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "ok")
 				{
-					this.reportParams = new AssetsParams
+					this.reportView.ReportParams = new AssetsParams
 					(
 						new Timestamp (popup.Date.GetValueOrDefault (), 0),
 						popup.GroupGuid,
 						popup.Level
 					);
-
-					this.UpdateParams ();
 				}
 			};
 		}
 
-		protected override void UpdateParams()
+		public override void UpdateParams()
 		{
+			if (this.Params == null)
+			{
+				return;
+			}
+
 			this.dataFiller.Timestamp = this.Params.Timestamp;
 
 			this.NodeGetter.SetParams (this.Params.Timestamp, this.Params.RootGuid, this.sortingInstructions);
@@ -77,6 +88,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateTreeTable ();
+			this.OnParamsChanged ();
 		}
 
 
@@ -90,7 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.reportParams as AssetsParams;
+				return this.reportView.ReportParams as AssetsParams;
 			}
 		}
 

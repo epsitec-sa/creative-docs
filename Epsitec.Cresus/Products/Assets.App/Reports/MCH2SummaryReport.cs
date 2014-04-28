@@ -6,7 +6,6 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -15,10 +14,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MCH2SummaryReport : AbstractReport
 	{
-		public MCH2SummaryReport(DataAccessor accessor, NavigationTreeTableController treeTableController)
-			: base (accessor, treeTableController)
+		public MCH2SummaryReport(DataAccessor accessor, ReportsView reportView)
+			: base (accessor, reportView)
 		{
-			this.reportParams = new MCH2SummaryParams ();  // paramètres par défaut
+		}
+
+
+		public override AbstractParams DefaultParams
+		{
+			get
+			{
+				return new MCH2SummaryParams ();  // paramètres par défaut
+			}
 		}
 
 
@@ -40,6 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void ShowParamsPopup(Widget target)
 		{
+			//	Affiche le Popup pour choisir les paramètres d'un rapport.
 			var popup = new MCH2SummaryReportPopup (this.accessor)
 			{
 				InitialDate = this.Params.InitialTimestamp.Date,
@@ -54,21 +62,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "ok")
 				{
-					this.reportParams = new MCH2SummaryParams
+					this.reportView.ReportParams = new MCH2SummaryParams
 					(
 						new Timestamp (popup.InitialDate.GetValueOrDefault (), 0),
 						new Timestamp (popup.FinalDate.GetValueOrDefault (), 0),
 						popup.GroupGuid,
 						popup.Level
 					);
-
-					this.UpdateParams ();
 				}
 			};
 		}
 
-		protected override void UpdateParams()
+		public override void UpdateParams()
 		{
+			if (this.Params == null)
+			{
+				return;
+			}
+
 			this.DataFiller.InitialTimestamp = this.Params.InitialTimestamp;
 			this.DataFiller.FinalTimestamp   = this.Params.FinalTimestamp;
 
@@ -81,6 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateTreeTable ();
+			this.OnParamsChanged ();
 		}
 
 
@@ -94,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.reportParams as MCH2SummaryParams;
+				return this.reportView.ReportParams as MCH2SummaryParams;
 			}
 		}
 
