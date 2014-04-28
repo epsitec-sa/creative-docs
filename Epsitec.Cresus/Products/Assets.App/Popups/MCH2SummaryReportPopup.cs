@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Effectue un groupement",
+				Label                 = "Effectuer un groupement",
 			});
 
 			list.Add (new StackedControllerDescription  // 3

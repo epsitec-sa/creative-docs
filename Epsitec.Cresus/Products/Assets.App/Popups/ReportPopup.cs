@@ -5,50 +5,31 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Reports;
 using Epsitec.Cresus.Assets.App.Views;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class ReportPopup : StackedPopup
+	public class ReportPopup : SimplePopup
 	{
-		public ReportPopup(DataAccessor accessor)
-			: base (accessor)
+		public ReportPopup()
 		{
-			this.title = "Choix d'un rapport";
-
-			var list = new List<StackedControllerDescription> ();
-
-			list.Add (new StackedControllerDescription  // 0
+			foreach (var type in ReportsList.ReportTypes)
 			{
-				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = ReportsList.ReportNames,
-			});
-
-			this.SetDescriptions (list);
+				var name = ReportsList.GetReportName (type);
+				this.Items.Add (name);
+			}
 		}
 
 
-		public ReportType						ReportType
+		public ReportType ReportType
 		{
 			get
 			{
-				var controller = this.GetController (0) as RadioStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				return ReportsList.GetReportType (controller.Value);
+				return ReportsList.GetReportType (this.SelectedItem);
 			}
 			set
 			{
-				var controller = this.GetController (0) as RadioStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = ReportsList.GetReportIndex (value);
+				this.SelectedItem = ReportsList.GetReportIndex (value);
 			}
-		}
-
-
-		protected override void UpdateWidgets()
-		{
-			this.okButton.Text = "Voir";
-			this.okButton.Enable = this.ReportType != ReportType.Unknown;
 		}
 	}
 }

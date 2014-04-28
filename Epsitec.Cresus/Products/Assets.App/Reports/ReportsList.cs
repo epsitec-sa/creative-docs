@@ -12,6 +12,14 @@ namespace Epsitec.Cresus.Assets.App.Reports
 	/// </summary>
 	public static class ReportsList
 	{
+		public static IEnumerable<ReportType> ReportTypes
+		{
+			get
+			{
+				return ReportsList.Reports.Select (x => x.Type);
+			}
+		}
+
 		public static ReportType GetReportType(int? index)
 		{
 			//	Retourne le type d'un rapport.
@@ -35,15 +43,6 @@ namespace Epsitec.Cresus.Assets.App.Reports
 		{
 			//	Retourne le nom d'un rapport.
 			return ReportsList.Reports.Where (x => x.Type == type).FirstOrDefault ().Name;
-		}
-
-		public static string ReportNames
-		{
-			//	Retourne les noms des rapports séparés par des <br/>.
-			get
-			{
-				return string.Join ("<br/>", ReportsList.Reports.Select (x => x.Name));
-			}
 		}
 
 
