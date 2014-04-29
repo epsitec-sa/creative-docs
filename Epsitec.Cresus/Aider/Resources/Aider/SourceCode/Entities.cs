@@ -1249,6 +1249,54 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>MainPhone</c> field.
+		///	designer:fld/LVAF/LVOD33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOD33]", IsVirtual=true)]
+		public string MainPhone
+		{
+			get
+			{
+				string value = default (string);
+				this.GetMainPhone (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.MainPhone;
+				if (oldValue != value || !this.IsFieldDefined("[LVOD33]"))
+				{
+					this.OnMainPhoneChanging (oldValue, value);
+					this.SetMainPhone (value);
+					this.OnMainPhoneChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>SecondaryPhone</c> field.
+		///	designer:fld/LVAF/LVOE33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOE33]", IsVirtual=true)]
+		public string SecondaryPhone
+		{
+			get
+			{
+				string value = default (string);
+				this.GetSecondaryPhone (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.SecondaryPhone;
+				if (oldValue != value || !this.IsFieldDefined("[LVOE33]"))
+				{
+					this.OnSecondaryPhoneChanging (oldValue, value);
+					this.SetSecondaryPhone (value);
+					this.OnSecondaryPhoneChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1298,6 +1346,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnMainEmailChanged(string oldValue, string newValue);
 		partial void OnSecondaryEmailChanging(string oldValue, string newValue);
 		partial void OnSecondaryEmailChanged(string oldValue, string newValue);
+		partial void OnMainPhoneChanging(string oldValue, string newValue);
+		partial void OnMainPhoneChanged(string oldValue, string newValue);
+		partial void OnSecondaryPhoneChanging(string oldValue, string newValue);
+		partial void OnSecondaryPhoneChanged(string oldValue, string newValue);
 		
 		partial void GetCallNameDisplay(ref string value);
 		partial void SetCallNameDisplay(string value);
@@ -1321,6 +1373,10 @@ namespace Epsitec.Aider.Entities
 		partial void SetMainEmail(string value);
 		partial void GetSecondaryEmail(ref string value);
 		partial void SetSecondaryEmail(string value);
+		partial void GetMainPhone(ref string value);
+		partial void SetMainPhone(string value);
+		partial void GetSecondaryPhone(ref string value);
+		partial void SetSecondaryPhone(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

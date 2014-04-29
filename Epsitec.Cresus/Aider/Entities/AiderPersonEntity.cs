@@ -655,6 +655,67 @@ namespace Epsitec.Aider.Entities
 			return this.Contacts.FirstOrDefault (c => c.GetAddress () == mainAddress);
 		}
 
+		public string GetMainPhone()
+		{
+			var professionalAddress = this.Contacts.Where (c => c.AddressType == AddressType.Professional).FirstOrDefault ();
+			if (professionalAddress != null)
+			{
+				if (!professionalAddress.Address.Mobile.IsNullOrWhiteSpace ())
+				{
+					return professionalAddress.Address.Mobile;
+				}
+
+				if (!professionalAddress.Address.Phone1.IsNullOrWhiteSpace ())
+				{
+					return professionalAddress.Address.Phone1;
+				}			
+			}
+
+			var otherAddress = this.Contacts.Where (c => c.AddressType == AddressType.Other).FirstOrDefault ();
+			if (otherAddress != null)
+			{
+				if (!otherAddress.Address.Mobile.IsNullOrWhiteSpace ())
+				{
+					return otherAddress.Address.Mobile;
+				}
+
+				if (!otherAddress.Address.Phone1.IsNullOrWhiteSpace ())
+				{
+					return otherAddress.Address.Phone1;
+				}	
+			}
+
+			var secondaryAddress = this.contacts.Where (c => c.AddressType == AddressType.Secondary).FirstOrDefault ();
+			if (secondaryAddress != null)
+			{
+				if (!secondaryAddress.Address.Mobile.IsNullOrWhiteSpace ())
+				{
+					return secondaryAddress.Address.Mobile;
+				}
+
+				if (!secondaryAddress.Address.Phone1.IsNullOrWhiteSpace ())
+				{
+					return secondaryAddress.Address.Phone1;
+				}
+			}
+
+			var defaultAddress = this.contacts.Where (c => c.AddressType == AddressType.Default).FirstOrDefault ();
+			if (defaultAddress != null)
+			{
+				if (!defaultAddress.Address.Mobile.IsNullOrWhiteSpace ())
+				{
+					return defaultAddress.Address.Mobile;
+				}
+
+				if (!defaultAddress.Address.Phone1.IsNullOrWhiteSpace ())
+				{
+					return defaultAddress.Address.Phone1;
+				}
+			}
+
+			return "";
+		}
+
 		public string GetMainEmail()
 		{
 			var professionalAddress = this.Contacts.Where(c => c.AddressType == AddressType.Professional).FirstOrDefault ();
@@ -684,18 +745,152 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 
-			var privateAddress = this.contacts.Where (c => c.AddressType == AddressType.Default).FirstOrDefault ();
-			if (privateAddress != null)
+			var defaultAddress = this.contacts.Where (c => c.AddressType == AddressType.Default).FirstOrDefault ();
+			if (defaultAddress != null)
 			{
-				if (!privateAddress.Address.Email.IsNullOrWhiteSpace ())
+				if (!defaultAddress.Address.Email.IsNullOrWhiteSpace ())
 				{
-					return privateAddress.Address.Email;
+					return defaultAddress.Address.Email;
 				}
 			}
 
 			return "";
 		}
-		
+
+
+		public string GetSecondaryPhone()
+		{
+			var professionalPhones = this.Contacts.Where (c => c.AddressType == AddressType.Professional);
+			if (professionalPhones != null)
+			{
+				//reverse look in professionals phones collection
+				for (var e=professionalPhones.Count ()-1; e>=0; e--)
+				{
+					if (!professionalPhones.ElementAt (e).Address.Mobile.IsNullOrWhiteSpace ())
+					{
+						if (professionalPhones.ElementAt (e).Address.Mobile != this.GetMainPhone ())
+						{
+							return professionalPhones.ElementAt (e).Address.Mobile;
+						}
+					}
+
+					if (!professionalPhones.ElementAt (e).Address.Phone1.IsNullOrWhiteSpace ())
+					{
+						if (professionalPhones.ElementAt (e).Address.Phone1 != this.GetMainPhone ())
+						{
+							return professionalPhones.ElementAt (e).Address.Phone1;
+						}
+					}		
+				}
+
+				//second pass for phone 2 in normal order
+				for (var e=0; e<professionalPhones.Count (); e++)
+				{
+					if (!professionalPhones.ElementAt (e).Address.Phone2.IsNullOrWhiteSpace ())
+					{
+						return professionalPhones.ElementAt (e).Address.Phone2;				
+					}
+				}
+
+			}
+
+			var otherAddresses = this.Contacts.Where (c => c.AddressType == AddressType.Other);
+			if (otherAddresses.Any ())
+			{
+				//reverse look in others emails collection
+				for (var e=otherAddresses.Count ()-1; e>=0; e--)
+				{
+					if (!otherAddresses.ElementAt (e).Address.Mobile.IsNullOrWhiteSpace ())
+					{
+						if (otherAddresses.ElementAt (e).Address.Mobile != this.GetMainPhone ())
+						{
+							return otherAddresses.ElementAt (e).Address.Mobile;
+						}
+					}
+
+					if (!otherAddresses.ElementAt (e).Address.Phone1.IsNullOrWhiteSpace ())
+					{
+						if (otherAddresses.ElementAt (e).Address.Phone1 != this.GetMainPhone ())
+						{
+							return otherAddresses.ElementAt (e).Address.Phone1;
+						}
+					}
+				}
+
+				//second pass for phone 2 in normal order
+				for (var e=0; e<otherAddresses.Count (); e++)
+				{
+					if (!otherAddresses.ElementAt (e).Address.Phone2.IsNullOrWhiteSpace ())
+					{
+						return otherAddresses.ElementAt (e).Address.Phone2;
+					}
+				}
+			}
+
+			var secondaryAddress = this.contacts.Where (c => c.AddressType == AddressType.Secondary);
+			if (secondaryAddress.Any ())
+			{
+				//reverse look in secondary emails collection
+				for (var e=secondaryAddress.Count ()-1; e>=0; e--)
+				{
+					if (!secondaryAddress.ElementAt (e).Address.Mobile.IsNullOrWhiteSpace ())
+					{
+						if (secondaryAddress.ElementAt (e).Address.Mobile != this.GetMainPhone ())
+						{
+							return secondaryAddress.ElementAt (e).Address.Mobile;
+						}
+					}
+
+					if (!secondaryAddress.ElementAt (e).Address.Phone1.IsNullOrWhiteSpace ())
+					{
+						if (secondaryAddress.ElementAt (e).Address.Phone1 != this.GetMainPhone ())
+						{
+							return secondaryAddress.ElementAt (e).Address.Phone1;
+						}
+					}
+				}
+
+				//second pass for phone 2 in normal order
+				for (var e=0; e<secondaryAddress.Count (); e++)
+				{
+					if (!secondaryAddress.ElementAt (e).Address.Phone2.IsNullOrWhiteSpace ())
+					{
+						return secondaryAddress.ElementAt (e).Address.Phone2;
+					}
+				}
+			}
+
+			var defaultAddress = this.contacts.Where (c => c.AddressType == AddressType.Default).FirstOrDefault ();
+			if (defaultAddress != null)
+			{
+				if (!defaultAddress.Address.Mobile.IsNullOrWhiteSpace ())
+				{
+					if (defaultAddress.Address.Mobile != this.GetMainPhone ())
+					{
+						return defaultAddress.Address.Mobile;
+					}
+				}
+
+				if (!defaultAddress.Address.Phone1.IsNullOrWhiteSpace ())
+				{
+					if (defaultAddress.Address.Phone1 != this.GetMainPhone ())
+					{
+						return defaultAddress.Address.Phone1;
+					}
+				}
+
+				if (!defaultAddress.Address.Phone2.IsNullOrWhiteSpace ())
+				{
+					if (defaultAddress.Address.Phone2 != this.GetMainPhone ())
+					{
+						return defaultAddress.Address.Phone2;
+					}
+				}
+			}
+
+			return "";
+		}
+
 		public string GetSecondaryEmail()
 		{
 			var professionalAddresses = this.Contacts.Where (c => c.AddressType == AddressType.Professional);
@@ -746,14 +941,14 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 
-			var privateAddress = this.contacts.Where (c => c.AddressType == AddressType.Default).FirstOrDefault ();
-			if (privateAddress != null)
+			var defaultAddress = this.contacts.Where (c => c.AddressType == AddressType.Default).FirstOrDefault ();
+			if (defaultAddress != null)
 			{
-				if (!privateAddress.Address.Email.IsNullOrWhiteSpace ())
+				if (!defaultAddress.Address.Email.IsNullOrWhiteSpace ())
 				{
-					if (privateAddress.Address.Email != this.GetMainEmail ())
+					if (defaultAddress.Address.Email != this.GetMainEmail ())
 					{
-						return privateAddress.Address.Email;
+						return defaultAddress.Address.Email;
 					}
 				}
 			}
@@ -908,9 +1103,19 @@ namespace Epsitec.Aider.Entities
 			value = this.GetMainEmail ();
 		}
 
+		partial void GetMainPhone(ref string value)
+		{
+			value = this.GetMainPhone ();
+		}
+
 		partial void GetSecondaryEmail(ref string value)
 		{
 			value = this.GetSecondaryEmail ();
+		}
+
+		partial void GetSecondaryPhone(ref string value)
+		{
+			value = this.GetSecondaryPhone ();
 		}
 
 		partial void SetMainContact(AiderContactEntity value)

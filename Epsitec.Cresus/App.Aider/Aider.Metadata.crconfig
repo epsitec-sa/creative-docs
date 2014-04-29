@@ -95,6 +95,14 @@ AiderOfficeSender = [LVOA13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOD33]" title="Téléphone par déf. Primaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOE33]" title="Téléphone par déf. Secondaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAU1].[LVA8B]" title="Date de naissance" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
