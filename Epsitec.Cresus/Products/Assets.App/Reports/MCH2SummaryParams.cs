@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Level            = 1;
 		}
 
-		public override bool AreStrictlyEquals(AbstractParams other)
+		public override bool StrictlyEquals(AbstractParams other)
 		{
 			if (other is MCH2SummaryParams)
 			{

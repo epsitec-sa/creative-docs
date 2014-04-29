@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				return this.ReportParams.AreStrictlyEquals (o.ReportParams);
+				return this.ReportParams.StrictlyEquals (o.ReportParams);
 			}
 		}
 

@@ -13,9 +13,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ReportsView : AbstractView
 	{
-		public ReportsView(DataAccessor accessor, MainToolbar toolbar)
+		public ReportsView(DataAccessor accessor, MainToolbar toolbar, List<AbstractViewState> historyViewStates)
 			: base (accessor, toolbar)
 		{
+			this.historyViewStates = historyViewStates;
 		}
 
 
@@ -189,14 +190,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.report != null)
 			{
-				var def = this.report.DefaultParams;
-
-				if (this.reportParams == null ||
-					this.reportParams.GetType () != def.GetType ())
-				{
-					this.ReportParams = def;
-				}
-
+				this.ReportParams = this.GetHistoryParams (this.selectedReportType);
 				this.report.ParamsChanged += this.HandleParamsChanged;
 			}
 		}
@@ -204,6 +198,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void HandleParamsChanged(object sender)
 		{
 			this.OnViewStateChanged (this.ViewState);
+		}
+
+
+		private AbstractParams GetHistoryParams(ReportType reportType)
+		{
+			//	Retourne le dernier AbstractParams utilisé pour un type de rapport donné.
+			var vs = this.historyViewStates
+				.Where (x => x is ReportsViewState && (x as ReportsViewState).ReportType == reportType)
+				.LastOrDefault () as ReportsViewState;
+
+			if (vs == null)
+			{
+				//	Si on n'a pas trouvé, retourne les paramètres par défaut.
+				return this.report.DefaultParams;
+			}
+			else
+			{
+				return vs.ReportParams;
+			}
 		}
 
 
@@ -230,6 +243,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		private readonly List<AbstractViewState> historyViewStates;
 
 		private ReportsToolbar					toolbar;
 		private NavigationTreeTableController	treeTableController;

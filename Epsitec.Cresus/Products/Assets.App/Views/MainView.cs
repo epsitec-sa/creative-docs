@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.DeleteView ();
 			}
 
-			this.view = AbstractView.CreateView (viewType, this.accessor, this.toolbar);
+			this.view = AbstractView.CreateView (viewType, this.accessor, this.toolbar, this.historyViewStates);
 
 			if (this.view != null)
 			{
@@ -414,9 +414,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly DataAccessor			accessor;
-		private readonly List<AbstractViewState> currentViewStates;
-		private readonly List<AbstractViewState> historyViewStates;
-		private readonly List<AbstractViewState> lastViewStates;
+		private readonly List<AbstractViewState> currentViewStates;  // pour retrouver une vue à l'identique
+		private readonly List<AbstractViewState> historyViewStates;  // pour les commandes back/forward
+		private readonly List<AbstractViewState> lastViewStates;     // pour le menu des dernières vues
 		private readonly SafeCounter			ignoreChanges;
 
 		private Widget							parent;

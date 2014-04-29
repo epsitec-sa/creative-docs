@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor, MainToolbar toolbar)
+		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor, MainToolbar toolbar, List<AbstractViewState> historyViewStates)
 		{
 			switch (viewType)
 			{
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return new PersonsView (accessor, toolbar);
 
 				case ViewType.Reports:
-					return new ReportsView (accessor, toolbar);
+					return new ReportsView (accessor, toolbar, historyViewStates);
 
 				case ViewType.AssetsSettings:
 					return new UserFieldsSettingsView (accessor, toolbar, BaseType.Assets);

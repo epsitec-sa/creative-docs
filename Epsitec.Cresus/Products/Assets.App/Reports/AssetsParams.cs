@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Level     = null;
 		}
 
-		public override bool AreStrictlyEquals(AbstractParams other)
+		public override bool StrictlyEquals(AbstractParams other)
 		{
 			if (other is AssetsParams)
 			{

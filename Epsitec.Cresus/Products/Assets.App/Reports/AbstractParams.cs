@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractParams
 	{
-		public virtual bool AreStrictlyEquals(AbstractParams other)
+		public virtual bool StrictlyEquals(AbstractParams other)
 		{
 			return false;
 		}
