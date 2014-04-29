@@ -2238,6 +2238,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Language = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 248);
 				//	designer:cap/LVAEH
 				public static readonly global::Epsitec.Common.Support.Druid MainContact = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 558);
+				//	designer:cap/LVOB33
+				public static readonly global::Epsitec.Common.Support.Druid MainEmail = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 107);
 				//	designer:cap/LVAT
 				public static readonly global::Epsitec.Common.Support.Druid MrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29);
 				//	designer:cap/LVAL2
@@ -2248,6 +2250,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 534);
 				//	designer:cap/LVAP7
 				public static readonly global::Epsitec.Common.Support.Druid Profession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 249);
+				//	designer:cap/LVOC33
+				public static readonly global::Epsitec.Common.Support.Druid SecondaryEmail = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 108);
 				//	designer:cap/LVAU
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30);
 				//	designer:cap/LVAVE

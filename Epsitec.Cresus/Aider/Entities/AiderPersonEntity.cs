@@ -655,6 +655,112 @@ namespace Epsitec.Aider.Entities
 			return this.Contacts.FirstOrDefault (c => c.GetAddress () == mainAddress);
 		}
 
+		public string GetMainEmail()
+		{
+			var professionalAddress = this.Contacts.Where(c => c.AddressType == AddressType.Professional).FirstOrDefault ();
+			if (professionalAddress != null)
+			{
+				if (!professionalAddress.Address.Email.IsNullOrWhiteSpace ())
+				{
+					return professionalAddress.Address.Email;
+				}
+			}
+
+			var otherAddress = this.Contacts.Where (c => c.AddressType == AddressType.Other).FirstOrDefault();
+			if (otherAddress != null)
+			{
+				if (!otherAddress.Address.Email.IsNullOrWhiteSpace ())
+				{
+					return otherAddress.Address.Email;
+				}
+			}
+
+			var secondaryAddress = this.contacts.Where (c => c.AddressType == AddressType.Secondary).FirstOrDefault ();
+			if (secondaryAddress != null)
+			{
+				if (!secondaryAddress.Address.Email.IsNullOrWhiteSpace ())
+				{
+					return secondaryAddress.Address.Email;
+				}
+			}
+
+			var privateAddress = this.contacts.Where (c => c.AddressType == AddressType.Default).FirstOrDefault ();
+			if (privateAddress != null)
+			{
+				if (!privateAddress.Address.Email.IsNullOrWhiteSpace ())
+				{
+					return privateAddress.Address.Email;
+				}
+			}
+
+			return "";
+		}
+		
+		public string GetSecondaryEmail()
+		{
+			var professionalAddresses = this.Contacts.Where (c => c.AddressType == AddressType.Professional);
+			if (professionalAddresses != null)
+			{				
+				//reverse look in professionals emails collection
+				for (var e=professionalAddresses.Count ()-1; e>=0; e--) 
+				{
+					if (!professionalAddresses.ElementAt (e).Address.Email.IsNullOrWhiteSpace ())
+					{
+						if (professionalAddresses.ElementAt (e).Address.Email != this.GetMainEmail ())
+						{
+							return professionalAddresses.ElementAt (e).Address.Email;
+						}
+					}
+				}				
+			}
+			
+			var otherAddresses = this.Contacts.Where (c => c.AddressType == AddressType.Other);
+			if (otherAddresses.Any())
+			{		
+				//reverse look in others emails collection
+				for (var e=otherAddresses.Count ()-1; e>=0; e--) 
+				{
+					if (!otherAddresses.ElementAt (e).Address.Email.IsNullOrWhiteSpace ())
+					{
+						if (otherAddresses.ElementAt (e).Address.Email != this.GetMainEmail ())
+						{
+							return otherAddresses.ElementAt (e).Address.Email;
+						}
+					}
+				}						
+			}
+
+			var secondaryAddress = this.contacts.Where (c => c.AddressType == AddressType.Secondary);
+			if (secondaryAddress.Any ())
+			{
+				//reverse look in secondary emails collection
+				for (var e=secondaryAddress.Count ()-1; e>=0; e--)
+				{
+					if (!secondaryAddress.ElementAt (e).Address.Email.IsNullOrWhiteSpace ())
+					{
+						if (secondaryAddress.ElementAt (e).Address.Email != this.GetMainEmail ())
+						{
+							return secondaryAddress.ElementAt (e).Address.Email;
+						}
+					}
+				}
+			}
+
+			var privateAddress = this.contacts.Where (c => c.AddressType == AddressType.Default).FirstOrDefault ();
+			if (privateAddress != null)
+			{
+				if (!privateAddress.Address.Email.IsNullOrWhiteSpace ())
+				{
+					if (privateAddress.Address.Email != this.GetMainEmail ())
+					{
+						return privateAddress.Address.Email;
+					}
+				}
+			}
+
+			return "";
+		}
+		
 		public AiderContactEntity GetHouseholdContact()
 		{
 			return this.Contacts.Where (x => x.Household.IsNotNull ()).FirstOrDefault ();
@@ -795,6 +901,16 @@ namespace Epsitec.Aider.Entities
 		partial void GetMainContact(ref AiderContactEntity value)
 		{
 			value = this.GetMainContact ();
+		}
+
+		partial void GetMainEmail(ref string value)
+		{
+			value = this.GetMainEmail ();
+		}
+
+		partial void GetSecondaryEmail(ref string value)
+		{
+			value = this.GetSecondaryEmail ();
 		}
 
 		partial void SetMainContact(AiderContactEntity value)
