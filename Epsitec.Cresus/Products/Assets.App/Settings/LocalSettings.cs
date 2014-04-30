@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Settings
@@ -30,7 +31,9 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.LockedDate           = defaultTimestamp.Date;
 			LocalSettings.DefaultMandatDate    = defaultTimestamp.Date;
 			LocalSettings.DefaultFreeDate      = defaultTimestamp.Date;
-			LocalSettings.ExportFilename       = "C:\\export.csv";
+
+			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
+			LocalSettings.ExportFilename = System.IO.Path.Combine (item.FullPath, "export.csv");
 		}
 
 		public static string Serialize()

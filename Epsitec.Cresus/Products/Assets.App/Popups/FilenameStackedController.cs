@@ -84,8 +84,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				OwnerWindow          = this.parent.Window,
 			};
 
-			dialog.Filters.Add ("pdf", "Document mis en page", "*.pdf");
-			dialog.Filters.Add ("csv", "Fichier texte tabulé", "*.csv");
+			//	Initialise le différents formats d'exportation disponibles.
+			var ext = System.IO.Path.GetExtension (this.Value);
+			int index = 0;
+
+			foreach (var filter in this.Filters)
+			{
+				dialog.Filters.Add (filter);
+
+				if (string.Concat (".", filter.Name) == ext)
+				{
+					dialog.FilterIndex = index;
+				}
+
+				index++;
+			}
 
 			dialog.OpenDialog ();
 
@@ -101,6 +114,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.Value = value;
 
 			this.OnValueChanged (this.description);
+		}
+
+		private IEnumerable<Common.Dialogs.FilterItem> Filters
+		{
+			get
+			{
+				yield return new Common.Dialogs.FilterItem ("pdf", "Document mis en page", "*.pdf");
+				yield return new Common.Dialogs.FilterItem ("csv", "Fichier texte tabulé", "*.csv");
+			}
 		}
 
 
