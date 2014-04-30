@@ -58,6 +58,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
+		public virtual void Export(string filename, bool inverted)
+		{
+		}
+
 
 		protected void HandleRowClicked(object sender, int row, int column)
 		{

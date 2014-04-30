@@ -77,6 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void ShowFilenameDialog()
 		{
+			//	Affiche le dialogue Windows standard permettant de choisir un fichier à enregistrer.
 			var dialog = new FileSaveDialog
 			{
 				InitialDirectory     = System.IO.Path.GetDirectoryName (this.Value),

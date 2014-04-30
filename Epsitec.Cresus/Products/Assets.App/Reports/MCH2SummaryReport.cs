@@ -95,6 +95,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnParamsChanged ();
 		}
 
+		public override void Export(string filename, bool inverted)
+		{
+		}
+
 
 		protected override void UpdateTreeTable()
 		{

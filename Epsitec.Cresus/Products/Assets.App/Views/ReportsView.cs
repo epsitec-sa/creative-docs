@@ -68,6 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.CreateReport (mainFrame);
+			this.UpdateToolbars ();
 		}
 
 		public override void UpdateUI()
@@ -81,10 +82,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.toolbar = new ReportsToolbar ();
 			this.toolbar.CreateUI (parent);
-
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportSelect, true);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams, true);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport, true);
 
 			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
 			{
@@ -166,11 +163,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void ShowExportPopup(Widget target)
 		{
 			//	Affiche le Popup pour choisir comment exporter un rapport.
+			if (this.report == null)
+			{
+				return;
+			}
+
 			var popup = new ExportPopup (this.accessor)
 			{
 				Inverted = false,
 				Filename = LocalSettings.ExportFilename,
-				Filters  = this.ExportFilters,
+				Filters  = ReportsView.ExportFilters,
 			};
 
 			popup.Create (target, leftOrRight: true);
@@ -180,11 +182,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (name == "ok")
 				{
 					LocalSettings.ExportFilename = popup.Filename;
+					this.report.Export (popup.Filename, popup.Inverted);
 				}
 			};
 		}
 
-		private IEnumerable<FilterItem> ExportFilters
+		private static IEnumerable<FilterItem> ExportFilters
 		{
 			get
 			{
@@ -226,6 +229,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ReportParams = this.GetHistoryParams (this.selectedReportType);
 				this.report.ParamsChanged += this.HandleParamsChanged;
 			}
+
+			this.UpdateToolbars ();
 		}
 
 		private void HandleParamsChanged(object sender)
@@ -274,6 +279,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.UpdateUI ();
 			}
+		}
+
+
+		private void UpdateToolbars()
+		{
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportSelect, true);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams, this.report != null);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport, this.report != null);
 		}
 
 
