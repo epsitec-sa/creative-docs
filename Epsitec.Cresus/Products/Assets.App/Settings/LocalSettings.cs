@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.LockedDate           = defaultTimestamp.Date;
 			LocalSettings.DefaultMandatDate    = defaultTimestamp.Date;
 			LocalSettings.DefaultFreeDate      = defaultTimestamp.Date;
-			LocalSettings.ExportFilename       = "export.csv";
+			LocalSettings.ExportFilename       = "C:\\export.csv";
 		}
 
 		public static string Serialize()

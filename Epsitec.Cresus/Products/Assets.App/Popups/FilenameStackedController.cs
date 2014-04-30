@@ -23,6 +23,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
 		{
+			this.parent = parent;
+			this.description = description;
+
 			this.CreateLabel (parent, labelWidth, description);
 			var controllerFrame = this.CreateControllerFrame (parent);
 
@@ -72,11 +75,39 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void ShowFilenameDialog()
 		{
+			var dialog = new Common.Dialogs.FileSaveDialog
+			{
+				InitialDirectory     = System.IO.Path.GetDirectoryName (this.Value),
+				FileName             = System.IO.Path.GetFileName (this.Value),
+				Title                = "Nom du fichier à exporter",
+				PromptForOverwriting = true,
+				OwnerWindow          = this.parent.Window,
+			};
+
+			dialog.Filters.Add ("pdf", "Document mis en page", "*.pdf");
+			dialog.Filters.Add ("csv", "Fichier texte tabulé", "*.csv");
+
+			dialog.OpenDialog ();
+
+			if (dialog.Result == Common.Dialogs.DialogResult.Accept)
+			{
+				this.SetValue (dialog.FileName);
+			}
+		}
+
+		private void SetValue(string value)
+		{
+			this.Value = value;
+			this.controller.Value = value;
+
+			this.OnValueChanged (this.description);
 		}
 
 
 		private const int browseWidth = 75;
 
+		private Widget							parent;
+		private StackedControllerDescription	description;
 		private StringFieldController			controller;
 	}
 }

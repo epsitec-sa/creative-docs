@@ -80,7 +80,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected override void UpdateWidgets()
 		{
 			this.okButton.Text = "Exporter";
-
 			this.okButton.Enable = !string.IsNullOrEmpty (this.Filename);
 		}
 	}
