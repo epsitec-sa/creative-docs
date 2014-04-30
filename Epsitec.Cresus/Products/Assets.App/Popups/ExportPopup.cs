@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Dialogs;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -65,6 +66,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var controller = this.GetController (1) as FilenameStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
+			}
+		}
+
+
+		public IEnumerable<FilterItem>			Filters
+		{
+			set
+			{
+				var controller = this.GetController (1) as FilenameStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Filters = value;
 			}
 		}
 

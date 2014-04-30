@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
@@ -19,6 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		public string							Value;
+		public IEnumerable<FilterItem>			Filters;
 
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
@@ -75,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void ShowFilenameDialog()
 		{
-			var dialog = new Common.Dialogs.FileSaveDialog
+			var dialog = new FileSaveDialog
 			{
 				InitialDirectory     = System.IO.Path.GetDirectoryName (this.Value),
 				FileName             = System.IO.Path.GetFileName (this.Value),
@@ -102,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			dialog.OpenDialog ();
 
-			if (dialog.Result == Common.Dialogs.DialogResult.Accept)
+			if (dialog.Result == DialogResult.Accept)
 			{
 				this.SetValue (dialog.FileName);
 			}
@@ -114,15 +116,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.Value = value;
 
 			this.OnValueChanged (this.description);
-		}
-
-		private IEnumerable<Common.Dialogs.FilterItem> Filters
-		{
-			get
-			{
-				yield return new Common.Dialogs.FilterItem ("pdf", "Document mis en page", "*.pdf");
-				yield return new Common.Dialogs.FilterItem ("csv", "Fichier texte tabulé", "*.csv");
-			}
 		}
 
 

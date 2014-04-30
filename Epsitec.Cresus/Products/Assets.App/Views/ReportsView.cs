@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Reports;
@@ -164,11 +165,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowExportPopup(Widget target)
 		{
-			//	Affiche le Popup pour choisir un rapport.
+			//	Affiche le Popup pour choisir comment exporter un rapport.
 			var popup = new ExportPopup (this.accessor)
 			{
 				Inverted = false,
 				Filename = LocalSettings.ExportFilename,
+				Filters  = this.ExportFilters,
 			};
 
 			popup.Create (target, leftOrRight: true);
@@ -180,6 +182,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					LocalSettings.ExportFilename = popup.Filename;
 				}
 			};
+		}
+
+		private IEnumerable<FilterItem> ExportFilters
+		{
+			get
+			{
+				yield return new FilterItem ("pdf", "Document mis en page", "*.pdf");
+				yield return new FilterItem ("csv", "Fichier texte tabulé", "*.csv");
+			}
 		}
 
 
