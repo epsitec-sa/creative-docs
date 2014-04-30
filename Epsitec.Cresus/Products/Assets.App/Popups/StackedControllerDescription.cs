@@ -77,6 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				switch (this.StackedControllerType)
 				{
 					case StackedControllerType.Text:
+					case StackedControllerType.Filename:
 						return TextStackedController.height;
 
 					case StackedControllerType.Int:
@@ -108,6 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				switch (this.StackedControllerType)
 				{
 					case StackedControllerType.Text:
+					case StackedControllerType.Filename:
 						return this.Width;
 
 					case StackedControllerType.Int:
@@ -137,6 +139,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				switch (this.StackedControllerType)
 				{
 					case StackedControllerType.Text:
+					case StackedControllerType.Filename:
 					case StackedControllerType.Int:
 					case StackedControllerType.Date:
 					case StackedControllerType.GroupGuid:
@@ -186,6 +189,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				case StackedControllerType.CategoryGuid:
 					return new CategoryGuidStackedController (accessor);
+
+				case StackedControllerType.Filename:
+					return new FilenameStackedController (accessor);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", description.StackedControllerType));

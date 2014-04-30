@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Level       = this.Params.Level
 			};
 
-			popup.Create (target);
+			popup.Create (target, leftOrRight: true);
 
 			popup.ButtonClicked += delegate (object sender, string name)
 			{

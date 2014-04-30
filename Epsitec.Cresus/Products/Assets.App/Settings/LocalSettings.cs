@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.LockedDate           = defaultTimestamp.Date;
 			LocalSettings.DefaultMandatDate    = defaultTimestamp.Date;
 			LocalSettings.DefaultFreeDate      = defaultTimestamp.Date;
+			LocalSettings.ExportFilename       = "export.csv";
 		}
 
 		public static string Serialize()
@@ -43,12 +44,13 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		}
 
 
-		public static System.DateTime CreateMandatDate;
-		public static System.DateTime CreateAssetDate;
-		public static System.DateTime AmortizationDateFrom;
-		public static System.DateTime AmortizationDateTo;
-		public static System.DateTime LockedDate;
-		public static System.DateTime DefaultMandatDate;
-		public static System.DateTime DefaultFreeDate;
+		public static System.DateTime			CreateMandatDate;
+		public static System.DateTime			CreateAssetDate;
+		public static System.DateTime			AmortizationDateFrom;
+		public static System.DateTime			AmortizationDateTo;
+		public static System.DateTime			LockedDate;
+		public static System.DateTime			DefaultMandatDate;
+		public static System.DateTime			DefaultFreeDate;
+		public static string					ExportFilename;
 	}
 }

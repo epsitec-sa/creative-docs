@@ -93,6 +93,8 @@
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\CategoryGuidStackedController.cs" />
     <Compile Include="Popups\AssetsReportPopup.cs" />
+    <Compile Include="Popups\FilenameStackedController.cs" />
+    <Compile Include="Popups\ExportPopup.cs" />
     <Compile Include="Reports\ReportsList.cs" />
     <Compile Include="Popups\ReportPopup.cs" />
     <Compile Include="Popups\MCH2SummaryReportPopup.cs" />

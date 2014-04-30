@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Reports;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -139,6 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportExport);
 			if (target != null)
 			{
+				this.ShowExportPopup (target);
 			}
 		}
 
@@ -157,6 +159,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.selectedReportType = ReportsList.GetReportType (rank);
 				this.UpdateUI ();
+			};
+		}
+
+		private void ShowExportPopup(Widget target)
+		{
+			//	Affiche le Popup pour choisir un rapport.
+			var popup = new ExportPopup (this.accessor)
+			{
+				Inverted = false,
+				Filename = LocalSettings.ExportFilename,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					LocalSettings.ExportFilename = popup.Filename;
+				}
 			};
 		}
 
