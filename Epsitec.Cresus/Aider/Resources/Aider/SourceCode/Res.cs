@@ -1922,6 +1922,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid LegalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 529);
 				//	designer:cap/LVA94
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 137);
+				//	designer:cap/LVOF33
+				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 111);
 			}
 			
 			public static class AiderGroupPlace

@@ -325,6 +325,7 @@
     <Compile Include="Enumerations\SubscriptionType.cs" />
     <Compile Include="Enumerations\TextParser.cs" />
     <Compile Include="Enumerations\WarningTarget.cs" />
+    <Compile Include="Helpers\AiderParticipationsHelpers.cs" />
     <Compile Include="Labels\AiderContactLabelTextFactory1.cs" />
     <Compile Include="Labels\AiderGroupParticipantLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderGroupParticipantLabelTextFactory1.cs" />

@@ -3000,6 +3000,30 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Role</c> field.
+		///	designer:fld/LVA73/LVOF33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOF33]", IsVirtual=true)]
+		public string Role
+		{
+			get
+			{
+				string value = default (string);
+				this.GetRole (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.Role;
+				if (oldValue != value || !this.IsFieldDefined("[LVOF33]"))
+				{
+					this.OnRoleChanging (oldValue, value);
+					this.SetRole (value);
+					this.OnRoleChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
@@ -3009,7 +3033,11 @@ namespace Epsitec.Aider.Entities
 		partial void OnLegalPersonChanged(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
 		partial void OnContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnRoleChanging(string oldValue, string newValue);
+		partial void OnRoleChanged(string oldValue, string newValue);
 		
+		partial void GetRole(ref string value);
+		partial void SetRole(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

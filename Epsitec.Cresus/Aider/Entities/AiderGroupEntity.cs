@@ -318,6 +318,15 @@ namespace Epsitec.Aider.Entities
 				.Join (", ");
 		}
 
+		public string GetHierarchicalName(string path)
+		{
+			return this
+				.GetHierarchicalParents (path)
+				.Append (this)
+				.Select (g => g.Name)
+				.Join (", ");
+		}
+
 
 		public FormattedText GetParticipantsTitle()
 		{
@@ -434,6 +443,22 @@ namespace Epsitec.Aider.Entities
 			request.AddSortClause (ValueField.Create (example, x => x.Name));
 
 			return dataContext.GetByRequest (request);
+		}
+
+		public static AiderGroupEntity FindRegionRootGroupById(BusinessContext businessContext, int id)
+		{
+			var dataContext = businessContext.DataContext;
+
+			var example = new AiderGroupEntity ();
+			var request = Request.Create (example);
+
+			var path  = AiderGroupIds.CreateTopLevelPathTemplate (GroupClassification.Region);
+			var level = 0;
+
+			request.AddCondition (dataContext, example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path) && x.GetRegionId() == id);
+			request.AddSortClause (ValueField.Create (example, x => x.Name));
+
+			return dataContext.GetByRequest (request).First ();
 		}
 
 		public static IList<AiderGroupEntity> FindGroupsFromPathAndLevel(BusinessContext businessContext,int level,string path)

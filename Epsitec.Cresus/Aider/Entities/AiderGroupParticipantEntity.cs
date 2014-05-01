@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System;
 
 using System.Linq;
+using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Helpers;
 
 namespace Epsitec.Aider.Entities
 {
@@ -56,7 +58,6 @@ namespace Epsitec.Aider.Entities
 			
 			businessContext.DeleteEntity (this);
 		}
-
 
 		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderGroupEntity group, ParticipationData participationData)
 		{
@@ -329,6 +330,13 @@ namespace Epsitec.Aider.Entities
 			this.Person = participationData.Person;
 			this.LegalPerson = participationData.LegalPerson;
 			this.Contact = participationData.Contact;
+		}
+
+
+		partial void GetRole(ref string value)
+		{
+			var role = AiderParticipationsHelpers.GetParticipationRole (this);
+			value = role.Function + " " + role.Group + " " + role.SuperGroup;
 		}
 	}
 }
