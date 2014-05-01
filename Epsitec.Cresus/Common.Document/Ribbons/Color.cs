@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Color : Abstract
 	{
-		public Color() : base()
+        public Color(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.ColorMain;
 			this.PreferredWidth = 8 + 22*2 + this.separatorWidth + 22*2 + 5 + 50;
@@ -36,9 +37,9 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
+		public override void SetDocument(Settings.GlobalSettings gs, Document document)
 		{
-			base.SetDocument(type, install, debug, gs, document);
+			base.SetDocument(gs, document);
 
 			this.AdaptFieldColor(this.fieldColor);
 		}

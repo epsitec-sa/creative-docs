@@ -687,6 +687,7 @@
     <EmbeddedResource Include="Images\FrameSample06.icon" />
     <EmbeddedResource Include="Images\FrameSample07.icon" />
     <EmbeddedResource Include="Images\FrameSample08.icon" />
+    <EmbeddedResource Include="Images\QuickExport.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

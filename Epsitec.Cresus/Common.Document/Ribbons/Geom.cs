@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Geom : Abstract
 	{
-		public Geom() : base()
+        public Geom(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.GeometryMain;
 			this.PreferredWidth = 8 + 22*4;

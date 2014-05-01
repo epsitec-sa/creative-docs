@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Replace : Abstract
 	{
-		public Replace() : base()
+        public Replace(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.ReplaceMain;
 			this.PreferredWidth = 8 + 22*1.5*2;

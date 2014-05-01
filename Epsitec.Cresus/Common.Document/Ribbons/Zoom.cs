@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Zoom : Abstract
 	{
-		public Zoom() : base()
+        public Zoom(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.ZoomMain;
 			this.PreferredWidth = 8 + 22*4 + this.separatorWidth + 50;
@@ -37,14 +38,14 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
+		public override void SetDocument(Settings.GlobalSettings gs, Document document)
 		{
 			if ( this.document != null )
 			{
 				this.document.Notifier.ZoomChanged -= this.HandleZoomChanged;
 			}
 
-			base.SetDocument(type, install, debug, gs, document);
+			base.SetDocument(gs, document);
 
 			if ( this.document != null )
 			{

@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Clipboard : Abstract
 	{
-		public Clipboard() : base()
+        public Clipboard(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.Clipboard;
 			this.PreferredWidth = 8 + 22 + 4 + 22*1.5;

@@ -72,7 +72,8 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("Settings", "ArrowMoveMul");
 			this.CreateDefaultDouble("Settings", "ArrowMoveDiv");
 			this.CreateDefaultInteger("Settings", "ConstrainAngle");
-			this.CreateDefaultDouble("Settings", "ToLinePrecision");
+            this.CreateDefaultDouble("Settings", "ToLinePrecision");
+            this.CreateDefaultBool("Settings", "ImageAlphaCorrect");
 			this.CreateDefaultInteger("Settings", "DefaultUnit");
 			this.CreateDefaultDouble("Settings", "DimensionScale");
 			this.CreateDefaultDouble("Settings", "DimensionDecimal");

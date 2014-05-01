@@ -10,7 +10,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Paragraph : Abstract
 	{
-		public Paragraph() : base()
+        public Paragraph(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.ParagraphMain;
 			this.PreferredWidth = 123;

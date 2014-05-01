@@ -10,7 +10,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Font : Abstract
 	{
-		public Font() : base()
+        public Font(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.FontMain;
 			this.PreferredWidth = 240;
@@ -57,10 +58,10 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
+		public override void SetDocument(Settings.GlobalSettings gs, Document document)
 		{
 			//	Indique quel est le document actif, puisque les rubans sont globaux à l'application.
-			base.SetDocument(type, install, debug, gs, document);
+			base.SetDocument(gs, document);
 
 			if (this.debugMode == DebugMode.DebugCommands)
 			{

@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Move : Abstract
 	{
-		public Move() : base()
+        public Move(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.MoveMain;
 			this.PreferredWidth = 8 + 22*2 + 50;
@@ -33,9 +34,9 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
+		public override void SetDocument(Settings.GlobalSettings gs, Document document)
 		{
-			base.SetDocument(type, install, debug, gs, document);
+			base.SetDocument(gs, document);
 
 			this.AdaptFieldMove(this.fieldMoveH);
 			this.AdaptFieldMove(this.fieldMoveV);

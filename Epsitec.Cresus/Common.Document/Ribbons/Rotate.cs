@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Rotate : Abstract
 	{
-		public Rotate() : base()
+        public Rotate(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.RotateMain;
 			this.PreferredWidth = 8 + 22*2 + this.separatorWidth + 50;
@@ -34,9 +35,9 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
+		public override void SetDocument(Settings.GlobalSettings gs, Document document)
 		{
-			base.SetDocument(type, install, debug, gs, document);
+			base.SetDocument(gs, document);
 
 			this.AdaptFieldRot(this.fieldRotate);
 		}

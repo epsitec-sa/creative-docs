@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Insert : Abstract
 	{
-		public Insert() : base()
+        public Insert(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.Text.Insert;
 			this.PreferredWidth = 8 + 22*2;

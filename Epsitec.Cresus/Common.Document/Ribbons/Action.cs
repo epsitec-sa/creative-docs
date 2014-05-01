@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Action : Abstract
 	{
-		public Action() : base()
+        public Action(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.ActionMain;
 			this.PreferredWidth = 8 + 22*1.5 + 4 + 22*2;
@@ -30,11 +31,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
-		{
-			base.SetDocument(type, install, debug, gs, document);
 		}
 
 

@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Debug : Abstract
 	{
-		public Debug() : base()
+        public Debug(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = "Debug";
 			this.PreferredWidth = 8 + 40;

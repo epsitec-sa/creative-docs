@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Align : Abstract
 	{
-		public Align() : base()
+        public Align(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.AlignMain;
 			this.PreferredWidth = 8 + 22*3 + this.separatorWidth + 22*4 + this.separatorWidth + 22 + this.separatorWidth + 22;

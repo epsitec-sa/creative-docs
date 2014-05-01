@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class View : Abstract
 	{
-		public View() : base()
+        public View(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.ViewMain;
 			this.PreferredWidth = 8 + 22*5 + 5;

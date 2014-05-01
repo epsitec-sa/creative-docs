@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Bool : Abstract
 	{
-		public Bool() : base()
+        public Bool(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.BooleanMain;
 			this.PreferredWidth = 8 + 22*3;

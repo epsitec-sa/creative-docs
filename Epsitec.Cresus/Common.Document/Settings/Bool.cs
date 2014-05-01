@@ -138,10 +138,14 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Bool.ExportPDFExecute;
 					break;
 
-				case "RepeatDuplicateMove":
-					this.text = Res.Strings.Dialog.Bool.RepeatDuplicateMove;
-					break;
-			}
+                case "RepeatDuplicateMove":
+                    this.text = Res.Strings.Dialog.Bool.RepeatDuplicateMove;
+                    break;
+
+                case "ImageAlphaCorrect":
+                    this.text = Res.Strings.Dialog.Bool.AlphaCorrect;
+                    break;
+            }
 		}
 
 		public bool Value
@@ -232,9 +236,12 @@ namespace Epsitec.Common.Document.Settings
 					case "ExportPDFExecute":
 						return this.document.Settings.ExportPDFInfo.Execute;
 
-					case "RepeatDuplicateMove":
-						return this.document.Modifier.RepeatDuplicateMove;
-				}
+                    case "RepeatDuplicateMove":
+                        return this.document.Modifier.RepeatDuplicateMove;
+
+                    case "ImageAlphaCorrect":
+                        return this.document.Printer.ImageAlphaCorrect;
+                }
 
 				return false;
 			}
@@ -352,10 +359,14 @@ namespace Epsitec.Common.Document.Settings
 						this.document.Settings.ExportPDFInfo.Execute = value;
 						break;
 
-					case "RepeatDuplicateMove":
-						this.document.Modifier.RepeatDuplicateMove = value;
-						break;
-				}
+                    case "RepeatDuplicateMove":
+                        this.document.Modifier.RepeatDuplicateMove = value;
+                        break;
+
+                    case "ImageAlphaCorrect":
+                        this.document.Printer.ImageAlphaCorrect = value;
+                        break;
+                }
 			}
 		}
 

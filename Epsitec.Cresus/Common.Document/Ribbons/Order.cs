@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Order : Abstract
 	{
-		public Order() : base()
+        public Order(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.OrderMain;
 			this.PreferredWidth = 8 + 22*1.5*2 + 4 + 22*1;

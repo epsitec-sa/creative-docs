@@ -175,8 +175,99 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		static System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> lockedBitmapDataCache = new System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> ();
-		
-		public bool LockBits()
+
+
+        public static void Merge(Bitmap bitmapBlack, Bitmap bitmapWhite)
+        {
+            //	A partir de la même image, une fois sur fond noir et une fois sur
+            //	fond blanc, on calcule les composantes rgb ainsi que la transparence,
+            //	directement dans l'image blanche (pour éviter l'emploi d'un 3ème
+            //	buffer).
+            //	Ceci corrige un bug dans AntiGrain qui génère des images transparentes
+            //	toutes fauses (les dégradés transparents ont une teinte blanche incorrecte).
+            bitmapBlack.LockBits();
+            bitmapWhite.LockBits();
+
+            var sBlack = bitmapBlack.Scan0;
+            var sWhite = bitmapWhite.Scan0;
+
+            unsafe
+            {
+                int* iBlack = (int*)(bitmapBlack.Scan0.ToPointer());
+                int* iWhite = (int*)(bitmapWhite.Scan0.ToPointer());
+
+                for (int i = 0; i < bitmapBlack.Width * bitmapBlack.Height; i++)
+                {
+                    int bb = iBlack[i] & 0xff;
+                    int gb = (iBlack[i] >> 8) & 0xff;
+                    int rb = (iBlack[i] >> 16) & 0xff;
+                    int ab = (iBlack[i] >> 24) & 0xff;
+
+                    int bw = iWhite[i] & 0xff;
+                    int gw = (iWhite[i] >> 8) & 0xff;
+                    int rw = (iWhite[i] >> 16) & 0xff;
+                    int aw = (iWhite[i] >> 24) & 0xff;
+
+                    Bitmap.MergePixel(rb, gb, bb, ref rw, ref gw, ref bw, ref aw);
+
+                    iWhite[i] = bw | (gw << 8) | (rw << 16) | (aw << 24);
+                }
+            }
+
+            bitmapBlack.UnlockBits();
+            bitmapWhite.UnlockBits();
+        }
+
+        private static void MergePixel(int rb, int gb, int bb, ref int rw, ref int gw, ref int bw, ref int aw)
+        {
+            int ar = 255 - (rw - rb);
+            int ag = 255 - (gw - gb);
+            int ab = 255 - (bw - bb);
+
+            if (ar == 0)
+            {
+                rw = 0;
+            }
+            else if (ar < 128)
+            {
+                rw = 255 - (((255 - rw) * 255) / ar);
+            }
+            else
+            {
+                rw = (rb * 255) / ar;
+            }
+
+            if (ag == 0)
+            {
+                gw = 0;
+            }
+            else if (ag < 128)
+            {
+                gw = 255 - (((255 - gw) * 255) / ag);
+            }
+            else
+            {
+                gw = (gb * 255) / ag;
+            }
+
+            if (ab == 0)
+            {
+                bw = 0;
+            }
+            else if (ab < 128)
+            {
+                bw = 255 - (((255 - bw) * 255) / ab);
+            }
+            else
+            {
+                bw = (bb * 255) / ab;
+            }
+
+            aw = (ar + ag + ab) / 3;
+        }
+        
+        
+        public bool LockBits()
 		{
 			lock (this)
 			{

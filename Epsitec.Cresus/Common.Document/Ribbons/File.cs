@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class File : Abstract
 	{
-		public File() : base()
+        public File(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.FileMain;
 			this.PreferredWidth = 8 + 22*1.5*4 + 4 + 22*2;
@@ -47,7 +48,15 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonExport    = this.CreateIconButton("Export");
 			this.buttonCloseAll  = this.CreateIconButton("CloseAll");
 			this.buttonSaveAs    = this.CreateIconButton("SaveAs");
-			this.buttonSaveModel = this.CreateIconButton("SaveModel");
+
+            if (this.documentType == DocumentType.Pictogram)
+            {
+                this.buttonSaveModel = this.CreateIconButton("QuickExport");
+            }
+            else
+            {
+                this.buttonSaveModel = this.CreateIconButton("SaveModel");
+            }
 			
 //			this.UpdateClientGeometry();
 		}

@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Select : Abstract
 	{
-		public Select() : base()
+        public Select(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.SelectMain;
 			this.PreferredWidth = 8 + 22*1.5*2 + this.separatorWidth + 22*4;

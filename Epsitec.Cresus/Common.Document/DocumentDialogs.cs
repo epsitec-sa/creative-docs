@@ -167,9 +167,12 @@ namespace Epsitec.Common.Document
 
 				DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.ToLinePrecision);
 				this.CreateDouble(container, "ToLinePrecision");
-				DocumentDialogs.CreateSeparator(container);
 
-				//	Onglet Fonts:
+                DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.BitmapExport);
+                this.CreateBool(container, "ImageAlphaCorrect");
+                DocumentDialogs.CreateSeparator(container);
+
+                //	Onglet Fonts:
 				parent = book.FindChild("Fonts");
 				container = new Widget(parent);
 				container.Name = "Container";
@@ -407,13 +410,14 @@ namespace Epsitec.Common.Document
 
 			this.UpdateDialogSettings ("Export");
 			this.UpdateBool("ImageCropSelection");
-			this.UpdateBool("ImageOnlySelected");
+            this.UpdateBool("ImageOnlySelected");
 			this.UpdateDouble("ImageDpi");
 			this.UpdateCombo("ImageDepth");
 			this.UpdateCombo("ImageCompression");
 			this.UpdateDouble("ImageQuality");
 			this.UpdateCombo("ImageFilterA");
 			this.UpdateCombo("ImageFilterB");
+            this.UpdateBool("ImageAlphaCorrect");
 		}
 		#endregion
 

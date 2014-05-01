@@ -9,7 +9,8 @@ namespace Epsitec.Common.Document.Ribbons
 	/// </summary>
 	public class Group : Abstract
 	{
-		public Group() : base()
+        public Group(DocumentType type, InstallType install, DebugMode debugMode)
+            : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.GroupMain;
 			this.PreferredWidth = 8 + 22*2 + 4 + 22*1.5*2;

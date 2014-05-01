@@ -1491,4 +1491,7 @@
   <data name="Panel.Frame.Short.ShadowConvexity" id="K72">X</data>
   <data name="Panel.Frame.Tooltip.MarginConvexity" id="K82">Convexité ou concavité de la bordure</data>
   <data name="Dialog.Bool.ExportPDFExecute" id="K92">Ouvrir le document PDF produit</data>
+  <data name="Dialog.Bool.AlphaCorrect" id="KA2">Transparence linéaire</data>
+  <data name="Dialog.Settings.BitmapExport" id="KB2">Exportation des images</data>
+  <data name="Action.QuickExport" id="KC2">Exporter sans interaction une image TIFF de même nom que l'icône</data>
 </bundle>
