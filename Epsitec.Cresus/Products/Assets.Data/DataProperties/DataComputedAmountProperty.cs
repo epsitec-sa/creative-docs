@@ -4,22 +4,22 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+namespace Epsitec.Cresus.Assets.Data.DataProperties
 {
-	public class DataDecimalProperty : AbstractDataProperty
+	public class DataComputedAmountProperty : AbstractDataProperty
 	{
-		public DataDecimalProperty(ObjectField field, decimal value)
+		public DataComputedAmountProperty(ObjectField field, ComputedAmount value)
 			: base (field)
 		{
 			this.Value = value;
 		}
 
-		public DataDecimalProperty(DataDecimalProperty model)
+		public DataComputedAmountProperty(DataComputedAmountProperty model)
 			: base (model)
 		{
 			this.Value = model.Value;
 		}
 
-		public readonly decimal Value;
+		public readonly ComputedAmount Value;
 	}
 }

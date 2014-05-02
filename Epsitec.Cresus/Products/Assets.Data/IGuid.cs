@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+namespace Epsitec.Cresus.Assets.Data
 {
 	public interface IGuid
 	{

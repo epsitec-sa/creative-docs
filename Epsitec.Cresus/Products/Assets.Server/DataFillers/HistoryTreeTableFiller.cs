@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;

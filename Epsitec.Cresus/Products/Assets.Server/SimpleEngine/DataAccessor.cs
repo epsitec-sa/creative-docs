@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 
@@ -154,7 +156,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return;
 			}
 
-			var aa = new AmortizedAmount (this);
+			var aa = new AmortizedAmount (123);
 			Amortizations.InitialiseAmortizedAmount (aa, obj, e, timestamp);
 
 			switch (e.Type)
@@ -230,7 +232,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 			if (p != null)
 			{
-				p.Value.RemoveEntry ();
+				Entries.RemoveEntry(this, p.Value);
 			}
 
 			obj.RemoveEvent (e);

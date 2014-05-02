@@ -4,22 +4,22 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+namespace Epsitec.Cresus.Assets.Data.DataProperties
 {
-	public class DataDateProperty : AbstractDataProperty
+	public class DataGuidProperty : AbstractDataProperty
 	{
-		public DataDateProperty(ObjectField field, System.DateTime value)
+		public DataGuidProperty(ObjectField field, Guid value)
 			: base (field)
 		{
 			this.Value = value;
 		}
 
-		public DataDateProperty(DataDateProperty model)
+		public DataGuidProperty(DataGuidProperty model)
 			: base (model)
 		{
 			this.Value = model.Value;
 		}
 
-		public readonly System.DateTime Value;
+		public readonly Guid Value;
 	}
 }

@@ -11,6 +11,7 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Cresus.Assets.Server.Helpers;
+using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {

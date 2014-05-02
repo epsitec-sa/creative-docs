@@ -7,8 +7,8 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.Helpers;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {

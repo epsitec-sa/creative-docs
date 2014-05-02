@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
@@ -69,7 +71,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var asset = this.accessor.GetObject (BaseType.Assets, amount.AssetGuid);
 			var assetEvent = asset.GetEvent (amount.EventGuid);
-			var entryAccouts = amount.EntryAccounts;
+			var entryAccouts = this.GetEntryAccounts (amount);
 
 			return new EntryProperties
 			{
@@ -80,6 +82,35 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				Title  = this.GetTitle  (amount, assetEvent,               type),
 				Amount = this.GetValue  (amount, assetEvent,               type),
 			};
+		}
+
+
+		private EntryAccounts GetEntryAccounts(AmortizedAmount amount)
+		{
+			//	Retourne la liste des comptes à utiliser pour passer une écriture liée
+			//	à l'événement contenant ce montant.
+			if (this.accessor != null)
+			{
+				var obj = this.accessor.GetObject (BaseType.Assets, amount.AssetGuid);
+				if (obj != null)
+				{
+					var timestamp = new Timestamp (amount.Date, 0);
+
+					return new EntryAccounts
+					(
+						ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account1),
+						ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account2),
+						ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account3),
+						ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account4),
+						ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account5),
+						ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account6),
+						ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account7),
+						ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account8)
+					);
+				}
+			}
+
+			return EntryAccounts.Empty;
 		}
 
 
@@ -361,6 +392,33 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			e.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount, entryProperties.Amount));
 
 			return entry.Guid;
+		}
+
+
+		public static void CreateEntry(DataAccessor accessor, AmortizedAmount aa)
+		{
+			if (accessor == null)
+			{
+				return;
+			}
+
+			using (var entries = new Entries (accessor))
+			{
+				entries.CreateEntry (aa);
+			}
+		}
+
+		public static void RemoveEntry(DataAccessor accessor, AmortizedAmount aa)
+		{
+			if (accessor == null)
+			{
+				return;
+			}
+
+			using (var entries = new Entries (accessor))
+			{
+				entries.RemoveEntry (aa);
+			}
 		}
 
 

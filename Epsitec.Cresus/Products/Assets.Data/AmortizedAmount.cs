@@ -3,53 +3,20 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
-namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+namespace Epsitec.Cresus.Assets.Data
 {
 	public struct AmortizedAmount
 	{
-		public AmortizedAmount(DataAccessor accessor)
+		public AmortizedAmount(int x)  // TODO: comment supprimer ce paramètre ?
 		{
-			this.accessor = accessor;
+			System.Diagnostics.Debug.Assert (x == 123);
 			this.values = new AmortizedAmountValues ();
 		}
 
 
-		public EntryAccounts EntryAccounts
-		{
-			//	Retourne la liste des comptes à utiliser pour passer une écriture liée
-			//	à l'événement contenant ce montant.
-			get
-			{
-				if (this.accessor != null)
-				{
-					var obj = this.accessor.GetObject (BaseType.Assets, this.AssetGuid);
-					if (obj != null)
-					{
-						var timestamp = new Timestamp (this.Date, 0);
-
-						return new EntryAccounts
-						(
-							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account1),
-							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account2),
-							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account3),
-							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account4),
-							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account5),
-							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account6),
-							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account7),
-							ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.Account8)
-						);
-					}
-				}
-
-				return EntryAccounts.Empty;
-			}
-		}
-
-
 		#region Facade
-		public AmortizationType AmortizationType
+		public AmortizationType					AmortizationType
 		{
 			get
 			{
@@ -61,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal? InitialAmount
+		public decimal?							InitialAmount
 		{
 			get
 			{
@@ -73,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal? BaseAmount
+		public decimal?							BaseAmount
 		{
 			get
 			{
@@ -85,7 +52,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal? EffectiveRate
+		public decimal?							EffectiveRate
 		{
 			get
 			{
@@ -97,7 +64,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal? ProrataNumerator
+		public decimal?							ProrataNumerator
 		{
 			get
 			{
@@ -109,7 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal? ProrataDenominator
+		public decimal?							ProrataDenominator
 		{
 			get
 			{
@@ -121,7 +88,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal? RoundAmount
+		public decimal?							RoundAmount
 		{
 			get
 			{
@@ -133,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public decimal? ResidualAmount
+		public decimal?							ResidualAmount
 		{
 			get
 			{
@@ -145,7 +112,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public EntryScenario EntryScenario
+		public EntryScenario					EntryScenario
 		{
 			get
 			{
@@ -157,7 +124,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public System.DateTime Date
+		public System.DateTime					Date
 		{
 			get
 			{
@@ -169,7 +136,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public Guid AssetGuid
+		public Guid								AssetGuid
 		{
 			get
 			{
@@ -181,7 +148,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public Guid EventGuid
+		public Guid								EventGuid
 		{
 			get
 			{
@@ -193,7 +160,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public Guid EntryGuid
+		public Guid								EntryGuid
 		{
 			get
 			{
@@ -205,7 +172,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public int EntrySeed
+		public int								EntrySeed
 		{
 			get
 			{
@@ -351,31 +318,21 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return a.values != b.values;
 		}
 
-
-		public void CreateEntry()
+		public override bool Equals(object obj)
 		{
-			if (this.accessor == null)
+			if (obj is AmortizedAmount)
 			{
-				return;
+				return this.Equals ((AmortizedAmount) obj);
 			}
-
-			using (var entries = new Entries (this.accessor))
+			else
 			{
-				entries.CreateEntry (this);
+				return false;
 			}
 		}
 
-		public void RemoveEntry()
+		public override int GetHashCode()
 		{
-			if (this.accessor == null)
-			{
-				return;
-			}
-
-			using (var entries = new Entries (this.accessor))
-			{
-				entries.RemoveEntry (this);
-			}
+			return this.values.GetHashCode ();
 		}
 
 
@@ -402,7 +359,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private readonly DataAccessor			accessor;
 		private readonly AmortizedAmountValues	values;
 	}
 }

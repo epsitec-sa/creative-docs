@@ -11,6 +11,7 @@ using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -551,12 +552,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.value.HasValue)
 			{
-				this.value.Value.CreateEntry ();
+				Entries.CreateEntry (this.accessor, this.value.Value);
 			}
 
-			this.entryController.Value = this.value;
+			this.entryController.Value         = this.value;
 			this.entryController.PropertyState = this.propertyState;
-			this.entryController.IsReadOnly = this.isReadOnly;
+			this.entryController.IsReadOnly    = this.isReadOnly;
 		}
 
 
@@ -959,16 +960,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (this.IsAmortization)
 					{
-						if (s != Server.BusinessLogic.EntryScenario.AmortizationAuto &&
-							s != Server.BusinessLogic.EntryScenario.AmortizationExtra)
+						if (s != EntryScenario.AmortizationAuto &&
+							s != EntryScenario.AmortizationExtra)
 						{
 							continue;
 						}
 					}
 					else
 					{
-						if (s == Server.BusinessLogic.EntryScenario.AmortizationAuto ||
-							s == Server.BusinessLogic.EntryScenario.AmortizationExtra)
+						if (s == EntryScenario.AmortizationAuto ||
+							s == EntryScenario.AmortizationExtra)
 						{
 							continue;
 						}

@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
@@ -189,7 +191,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						//	mais on ne peut pas le retourner tel quel. On doit retourner un
 						//	montant qui a une valeur initiale égale à la valeur finale du
 						//	montant précédent trouvé.
-						var aa = new AmortizedAmount (null)
+						var aa = new AmortizedAmount (123)
 						{
 							InitialAmount = property.Value.FinalAmortizedAmount,
 						};

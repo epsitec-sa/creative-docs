@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
@@ -23,8 +24,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			System.Func<T, ComparableData>	getSecondaryData
 		)
 		{
-			if (instructions.PrimaryField   != SimpleEngine.ObjectField.Unknown &&
-				instructions.SecondaryField == SimpleEngine.ObjectField.Unknown)
+			if (instructions.PrimaryField   != ObjectField.Unknown &&
+				instructions.SecondaryField == ObjectField.Unknown)
 			{
 				//	Seulement un critère de tri principal.
 
@@ -37,8 +38,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					return nodes.OrderByDescending (x => getPrimaryData (x));
 				}
 			}
-			else if (instructions.PrimaryField   != SimpleEngine.ObjectField.Unknown &&
-					 instructions.SecondaryField != SimpleEngine.ObjectField.Unknown)
+			else if (instructions.PrimaryField   != ObjectField.Unknown &&
+					 instructions.SecondaryField != ObjectField.Unknown)
 			{
 				//	Un critère de tri principal et un secondaire.
 

@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
@@ -445,7 +447,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					aa.BaseAmount    = lastBase;
 				}
 
-				aa.CreateEntry ();  // génère ou met à jour les écritures
+				Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures
 				lastAmount = aa.FinalAmortizedAmount;
 			}
 		}

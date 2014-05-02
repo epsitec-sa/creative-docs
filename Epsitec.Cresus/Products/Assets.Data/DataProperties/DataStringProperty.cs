@@ -4,22 +4,22 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+namespace Epsitec.Cresus.Assets.Data.DataProperties
 {
-	public class DataGuidRatioProperty : AbstractDataProperty
+	public class DataStringProperty : AbstractDataProperty
 	{
-		public DataGuidRatioProperty(ObjectField field, GuidRatio value)
+		public DataStringProperty(ObjectField field, string value)
 			: base (field)
 		{
 			this.Value = value;
 		}
 
-		public DataGuidRatioProperty(DataGuidRatioProperty model)
+		public DataStringProperty(DataStringProperty model)
 			: base (model)
 		{
 			this.Value = model.Value;
 		}
 
-		public readonly GuidRatio Value;
+		public readonly string Value;
 	}
 }

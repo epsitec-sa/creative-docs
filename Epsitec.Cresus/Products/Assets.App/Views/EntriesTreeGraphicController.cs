@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.Helpers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;

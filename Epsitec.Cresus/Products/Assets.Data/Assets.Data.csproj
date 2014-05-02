@@ -56,7 +56,27 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="AmortizationType.cs" />
+    <Compile Include="AmortizedAmount.cs" />
+    <Compile Include="AmortizedAmountValues.cs" />
+    <Compile Include="DataProperties\AbstractDataProperty.cs" />
+    <Compile Include="ComputedAmount.cs" />
+    <Compile Include="DataProperties\DataAmortizedAmountProperty.cs" />
+    <Compile Include="DataProperties\DataComputedAmountProperty.cs" />
+    <Compile Include="DataProperties\DataDateProperty.cs" />
+    <Compile Include="DataProperties\DataDecimalProperty.cs" />
+    <Compile Include="DataProperties\DataGuidProperty.cs" />
+    <Compile Include="DataProperties\DataGuidRatioProperty.cs" />
+    <Compile Include="DataProperties\DataIntProperty.cs" />
+    <Compile Include="DataProperties\DataStringProperty.cs" />
+    <Compile Include="EntryScenario.cs" />
+    <Compile Include="Guid.cs" />
+    <Compile Include="GuidList.cs" />
+    <Compile Include="GuidRatio.cs" />
+    <Compile Include="IGuid.cs" />
+    <Compile Include="ObjectField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyState.cs" />
     <Compile Include="Resources\Assets.Data\SourceCode\Entities.cs" />
     <Compile Include="Resources\Assets.Data\SourceCode\Res.cs" />
   </ItemGroup>

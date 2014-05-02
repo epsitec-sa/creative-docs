@@ -3,9 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
-namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+namespace Epsitec.Cresus.Assets.Data
 {
 	/// <summary>
 	/// Il y a ici toute l'information permettant de calculer un amortissement,
@@ -64,5 +63,34 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				|| a.EntrySeed          != b.EntrySeed;
 		}
 
+		public override bool Equals(object obj)
+		{
+			if (obj is AmortizedAmountValues)
+			{
+				return this.Equals ((AmortizedAmountValues) obj);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override int GetHashCode()
+		{
+			return this.AmortizationType  .GetHashCode ()
+				 ^ this.InitialAmount     .GetHashCode ()
+				 ^ this.BaseAmount        .GetHashCode ()
+				 ^ this.EffectiveRate     .GetHashCode ()
+				 ^ this.ProrataNumerator  .GetHashCode ()
+				 ^ this.ProrataDenominator.GetHashCode ()
+				 ^ this.RoundAmount       .GetHashCode ()
+				 ^ this.ResidualAmount    .GetHashCode ()
+				 ^ this.EntryScenario     .GetHashCode ()
+				 ^ this.Date              .GetHashCode ()
+				 ^ this.AssetGuid         .GetHashCode ()
+				 ^ this.EventGuid         .GetHashCode ()
+				 ^ this.EntryGuid         .GetHashCode ()
+				 ^ this.EntrySeed         .GetHashCode ();
+		}
 	}
 }
