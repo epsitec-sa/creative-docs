@@ -40,7 +40,9 @@ namespace Epsitec.Aider.Helpers
 				default:
 					parish		= participation.Group.Parents.ElementAt (1).Name;				
 					function	= participation.Group.Name;
-					group		= participation.Group.Parents.Skip (1).Reverse ().Take (1).First ().Name;
+					group		= participation.Group.Parents.Skip (1).Reverse ().First ().Name == "Staff" ? 
+									participation.Group.Parents.Skip (1).Reverse ().Skip(1).First ().Name :
+									participation.Group.Parents.Skip (1).Reverse ().First ().Name;
 					sgroup		= participation.Group.Parents.ElementAt (0).Name;
 					break;
 			}
@@ -81,17 +83,36 @@ namespace Epsitec.Aider.Helpers
 			set;
 		}
 
-		public string GetRole(AiderGroupParticipantEntity participation)
+		public AiderParticipationRole ApplyFeminineForm(AiderGroupParticipantEntity participation)
 		{
 			var person				= participation.Contact.Person;
-			var groupDef			= participation.Group.GroupDef;
+			var isFemale			= person.eCH_Person.PersonSex == Enumerations.PersonSex.Female ? true : false;
 
-			var gender				= person.eCH_Person.PersonSex;
+			if (isFemale)
+			{
+				this.Function = this.Function.Replace ("Président", "Présidente");
+				this.Function = this.Function.Replace ("Vice-président", "Vice-présidente");
+				this.Function = this.Function.Replace ("Scrutateur", "Scrutatrice");
+				this.Function = this.Function.Replace ("Trésorier", "Trésorière");
+				this.Function = this.Function.Replace ("Suppléant", "Suppléante");
+				this.Function = this.Function.Replace ("Animateur", "Animatrice");
+				this.Function = this.Function.Replace ("Collaborateur", "Collaboratrice");
+				this.Function = this.Function.Replace ("Conseiller", "Conseillère");
+				this.Function = this.Function.Replace ("Chargé", "Chargée");
+				this.Function = this.Function.Replace ("Répondant", "Répondante");
+				this.Function = this.Function.Replace ("Directeur", "Directrice");
+				this.Function = this.Function.Replace ("Doyen", "Doyenne");
+			}
+
+			return this;
+		}
+
+		public string GetRole(AiderGroupParticipantEntity participation)
+		{		
+			var groupDef			= participation.Group.GroupDef;		
 			var isGroupFonctional	= groupDef.Classification == Enumerations.GroupClassification.Function ? true : false;
 			var isWithinParish		= AiderGroupIds.IsWithinParish (participation.Group.Path);
 			var isWithinRegion		= AiderGroupIds.IsWithinRegion (participation.Group.Path);
-
-			var f = this.Function;
 
 			if (isWithinParish)
 			{
@@ -103,9 +124,7 @@ namespace Epsitec.Aider.Helpers
 				return this.Function + " " + this.Group + " " + this.SuperGroup;
 			}
 
-			return this.Function + " " + this.Group;
-			
-			
+			return this.Function + " " + this.Group;		
 		}
 		
 	}
