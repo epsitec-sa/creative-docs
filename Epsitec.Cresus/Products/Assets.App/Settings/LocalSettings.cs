@@ -3,9 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Epsitec.Common.Support;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.App.Settings
 {

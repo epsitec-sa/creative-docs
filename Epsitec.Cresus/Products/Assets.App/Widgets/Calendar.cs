@@ -7,7 +7,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {

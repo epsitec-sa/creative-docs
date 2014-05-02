@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+namespace Epsitec.Cresus.Assets.Data
 {
 	public struct Timestamp : System.IEquatable<Timestamp>, System.IComparable<Timestamp>
 	{

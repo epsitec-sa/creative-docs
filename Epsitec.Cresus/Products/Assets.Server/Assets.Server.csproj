@@ -167,7 +167,6 @@
     <Compile Include="SimpleEngine\DataEvent.cs" />
     <Compile Include="SimpleEngine\DataMandat.cs" />
     <Compile Include="SimpleEngine\DataObject.cs" />
-    <Compile Include="SimpleEngine\Timestamp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NodeGetters\TreeObjectsNodeGetter.cs" />
     <Compile Include="NodeGetters\NodeType.cs" />

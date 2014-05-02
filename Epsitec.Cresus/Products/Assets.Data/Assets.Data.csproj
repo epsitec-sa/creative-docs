@@ -79,6 +79,7 @@
     <Compile Include="PropertyState.cs" />
     <Compile Include="Resources\Assets.Data\SourceCode\Entities.cs" />
     <Compile Include="Resources\Assets.Data\SourceCode\Res.cs" />
+    <Compile Include="Timestamp.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Solution Items\Epsitec.Cresus.snk">
