@@ -13,7 +13,7 @@ namespace Epsitec.Common.Document.Ribbons
             : base(type, install, debugMode)
 		{
 			this.Title = Res.Strings.Action.FileMain;
-			this.PreferredWidth = 8 + 22*1.5*4 + 4 + 22*2;
+			this.PreferredWidth = 8 + 22*1.5*4 + 4 + 22*3;
 
 			this.buttonSave  = this.CreateIconButton("Save", "Large");
 			this.buttonPrint = this.CreateIconButton("Print", "Large");
@@ -45,18 +45,11 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonOpen.Dock = DockStyle.Top;
 			this.buttonOpen.SetParent(this.groupOpen);
 
-			this.buttonExport    = this.CreateIconButton("Export");
-			this.buttonCloseAll  = this.CreateIconButton("CloseAll");
-			this.buttonSaveAs    = this.CreateIconButton("SaveAs");
-
-            if (this.documentType == DocumentType.Pictogram)
-            {
-                this.buttonSaveModel = this.CreateIconButton("QuickExport");
-            }
-            else
-            {
-                this.buttonSaveModel = this.CreateIconButton("SaveModel");
-            }
+			this.buttonExport      = this.CreateIconButton ("Export");
+			this.buttonQuickExport = this.CreateIconButton ("QuickExport");
+			this.buttonSaveAs      = this.CreateIconButton ("SaveAs");
+			this.buttonSaveModel   = this.CreateIconButton ("SaveModel");
+			this.buttonCloseAll    = this.CreateIconButton ("CloseAll");
 			
 //			this.UpdateClientGeometry();
 		}
@@ -101,7 +94,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(dx*1.5*4+4, dy+5);
 			this.buttonExport.SetManualBounds(rect);
 			rect.Offset(dx, 0);
-			this.buttonCloseAll.SetManualBounds(rect);
+			this.buttonQuickExport.SetManualBounds(rect);
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
@@ -110,6 +103,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonSaveAs.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			this.buttonSaveModel.SetManualBounds(rect);
+			rect.Offset(dx, 0);
+			this.buttonCloseAll.SetManualBounds(rect);
 		}
 
 
@@ -203,6 +198,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonSave;
 		protected IconButton				buttonPrint;
 		protected IconButton				buttonExport;
+		protected IconButton				buttonQuickExport;
 		protected IconButton				buttonCloseAll;
 		protected IconButton				buttonSaveAs;
 		protected IconButton				buttonSaveModel;

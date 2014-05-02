@@ -82,6 +82,11 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				bookQuick.TabTitle = Res.Strings.Dialog.Settings.TabPage.Quick;
 				bookGlobal.Items.Add(bookQuick);
 
+				TabPage bookExport = new TabPage ();
+				bookExport.Name = "Export";
+				bookExport.TabTitle = Res.Strings.Dialog.Settings.TabPage.QuickExport;
+				bookGlobal.Items.Add (bookExport);
+
 				bookGlobal.ActivePage = bookGeneral;
 
 				TextFieldCombo combo;
@@ -233,6 +238,26 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 				this.UpdateQuickList(-1);
 				this.UpdateQuickButtons();
+
+				//	Crée l'onglet "export".
+				Common.Document.DocumentDialogs.CreateTitle (bookExport, Res.Strings.Dialog.Settings.QuickExport);
+
+				combo = this.CreateCombo (bookExport, "QuickExportFormat", Res.Strings.Dialog.Settings.QuickExportType);
+				for (int i=0; i<GlobalSettings.QuickExportFormatCount; i++)
+				{
+					var action = GlobalSettings.QuickExportFormatType (i);
+					combo.Items.Add (GlobalSettings.QuickExportFormatString (action));
+				}
+				combo.SelectedItemIndex = GlobalSettings.QuickExportFormatRank (this.globalSettings.QuickExportFormat);
+
+				field = this.CreateField (bookExport, "QuickExportDpi", Res.Strings.Dialog.Settings.QuickExportDpi);
+				field.MinValue = 10.0M;
+				field.MaxValue = 3000.0M;
+				field.Step = 1.0M;
+				field.Resolution = 0.1M;
+				field.Value = (decimal) this.globalSettings.QuickExportDpi;
+
+				Common.Document.DocumentDialogs.CreateSeparator (bookExport);
 
 				//	Crée les onglets "document".
 				TabBook bookDoc = new TabBook(this.window.Root);
@@ -452,6 +477,11 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.globalSettings.Adorner = combo.Text;
 				Widgets.Adorners.Factory.SetActive(combo.Text);
 			}
+
+			if (combo.Name == "QuickExportFormat")
+			{
+				this.globalSettings.QuickExportFormat = GlobalSettings.QuickExportFormatType (combo.SelectedItemIndex);
+			}
 		}
 
 		private void HandleDoubleSettingsChanged(object sender)
@@ -467,9 +497,14 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				}
 			}
 
-			if ( field.Name == "DefaultZoom" )
+			if (field.Name == "DefaultZoom")
 			{
 				this.globalSettings.DefaultZoom = (double) field.Value;
+			}
+
+			if (field.Name == "QuickExportDpi")
+			{
+				this.globalSettings.QuickExportDpi = (double) field.Value;
 			}
 		}
 

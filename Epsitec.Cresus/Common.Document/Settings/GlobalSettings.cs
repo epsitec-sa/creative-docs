@@ -55,6 +55,8 @@ namespace Epsitec.Common.Document.Settings
 			this.fineCursor = false;
 			this.fineCursor = false;
 			this.quickCommands = GlobalSettings.DefaultQuickCommands();
+			this.quickExportFormat = ImageFormat.Tiff;
+			this.quickExportDpi = 254.0;
 
 			//	Suppose que le dossier des exemples est dans le même dossier
 			//	que l'application.
@@ -245,6 +247,32 @@ namespace Epsitec.Common.Document.Settings
 			set
 			{
 				this.mouseWheelAction = value;
+			}
+		}
+
+		public ImageFormat QuickExportFormat
+		{
+			get
+			{
+				return this.quickExportFormat;
+			}
+
+			set
+			{
+				this.quickExportFormat = value;
+			}
+		}
+
+		public double QuickExportDpi
+		{
+			get
+			{
+				return this.quickExportDpi;
+			}
+
+			set
+			{
+				this.quickExportDpi = value;
 			}
 		}
 
@@ -611,6 +639,63 @@ namespace Epsitec.Common.Document.Settings
 		#endregion
 
 
+		#region QuickExportFormat
+		public static int QuickExportFormatCount
+		{
+			get
+			{
+				return 5;
+			}
+		}
+
+		public static string QuickExportFormatString(ImageFormat action)
+		{
+			switch (action)
+			{
+				case ImageFormat.Jpeg:
+					return Res.Strings.Dialog.Settings.QuickExportType.JPG;
+				case ImageFormat.Gif:
+					return Res.Strings.Dialog.Settings.QuickExportType.GIF;
+				case ImageFormat.Tiff:
+					return Res.Strings.Dialog.Settings.QuickExportType.TIF;
+				case ImageFormat.Png:
+					return Res.Strings.Dialog.Settings.QuickExportType.PNG;
+				case ImageFormat.Bmp:
+					return Res.Strings.Dialog.Settings.QuickExportType.BMP;
+			}
+			return "?";
+		}
+
+		public static ImageFormat QuickExportFormatType(int rank)
+		{
+			switch (rank)
+			{
+				case 0:
+					return ImageFormat.Jpeg;
+				case 1:
+					return ImageFormat.Gif;
+				case 2:
+					return ImageFormat.Tiff;
+				case 3:
+					return ImageFormat.Png;
+				case 4:
+					return ImageFormat.Bmp;
+			}
+			return ImageFormat.Tiff;
+		}
+
+		public static int QuickExportFormatRank(ImageFormat action)
+		{
+			for (int i=0; i<GlobalSettings.QuickExportFormatCount; i++)
+			{
+				if (GlobalSettings.QuickExportFormatType (i) == action)
+					return i;
+			}
+			return -1;
+		}
+		#endregion
+
+
 		#region QuickCommands
 		public System.Collections.ArrayList QuickCommands
 		{
@@ -640,6 +725,7 @@ namespace Epsitec.Common.Document.Settings
 			list.Add("00:SaveAs");
 			list.Add("11:Print");
 			list.Add("00:Export");
+			list.Add("00:QuickExport");
 			list.Add("00:CloseAll");
 			list.Add("00:SaveModel");
 
@@ -854,7 +940,7 @@ namespace Epsitec.Common.Document.Settings
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			//	Sérialise les réglages.
-			info.AddValue("Version", 8);
+			info.AddValue("Version", 9);
 
 			info.AddValue("WindowLocation", this.windowLocation);
 			info.AddValue("WindowSize", this.windowSize);
@@ -886,6 +972,9 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("DateChecker", this.dateChecker.Ticks);
 
 			info.AddValue("QuickCommands", this.quickCommands);
+
+			info.AddValue ("QuickExportFormat", this.quickExportFormat);
+			info.AddValue ("QuickExportDpi", this.quickExportDpi);
 		}
 
 		protected GlobalSettings(SerializationInfo info, StreamingContext context) : this()
@@ -971,6 +1060,17 @@ namespace Epsitec.Common.Document.Settings
 				this.favoritesList = new Epsitec.Common.Types.Collections.ObservableList<string> ();
 				this.favoritesBig = true;
 			}
+
+			if (version >= 9)
+			{
+				this.quickExportFormat = (ImageFormat) info.GetValue ("QuickExportFormat", typeof (ImageFormat));
+				this.quickExportDpi = info.GetDouble ("QuickExportDpi");
+			}
+			else
+			{
+				this.quickExportFormat = ImageFormat.Tiff;
+				this.quickExportDpi = 254.0;
+			}
 		}
 		
 		private void CleanUpLastFiles(System.Collections.ArrayList paths)
@@ -1023,6 +1123,8 @@ namespace Epsitec.Common.Document.Settings
 		protected bool							autoChecker;
 		protected Common.Types.Date				dateChecker;
 		protected System.Collections.ArrayList	quickCommands;
+		protected ImageFormat					quickExportFormat;
+		protected double						quickExportDpi;
 
 
 		#region WindowBounds

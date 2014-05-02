@@ -1620,7 +1620,7 @@ namespace Epsitec.Common.Document
 		private Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, int layerNumber, double dpi, int depth, double AA, bool alphaCorrect, bool paintMark, bool onlySelected, ExportImageCrop crop)
 		{
             //	Retourne le bitmap contenant le dessin des objets à exporter.
-            if (alphaCorrect)
+            if (depth == 32 && alphaCorrect)
             {
                 var bBlack = this.ExportBitmap(drawingContext, pageNumber, layerNumber, dpi, 24, AA, paintMark, onlySelected, crop, 0.0);
                 var bWhite = this.ExportBitmap(drawingContext, pageNumber, layerNumber, dpi, 24, AA, paintMark, onlySelected, crop, 1.0);
@@ -1638,7 +1638,7 @@ namespace Epsitec.Common.Document
         private Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, int layerNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop, double backgroundIntensity)
         {
             Rectangle pageBox;
-            double zoom = dpi / (10.0 * 25.4);
+            double zoom = dpi / (10.0 * 25.4);  // 254 correspond à un zoom de 1
 
             if (crop == ExportImageCrop.Page)
             {
@@ -1658,17 +1658,17 @@ namespace Epsitec.Common.Document
             pageScale.Scale(zoom);
 
             //	Il faut subtilement agrandir le rectangle, afin qu'un trait antialiasé soit contenu intégralement.
-            int left = (int)System.Math.Floor(pageScale.Left);
-            int right = (int)System.Math.Ceiling(pageScale.Right);
-            int bottom = (int)System.Math.Floor(pageScale.Bottom);
-            int top = (int)System.Math.Ceiling(pageScale.Top);
+            int left   = (int) System.Math.Floor   (pageScale.Left);
+            int right  = (int) System.Math.Ceiling (pageScale.Right);
+            int bottom = (int) System.Math.Floor   (pageScale.Bottom);
+            int top    = (int) System.Math.Ceiling (pageScale.Top);
 
             int dx = right - left;
             int dy = top - bottom;
 
             Graphics gfx = new Graphics();
             gfx.SetPixmapSize(dx, dy);
-            gfx.SolidRenderer.ClearAlphaRgb((depth == 32) ? 0 : 1, backgroundIntensity, backgroundIntensity, backgroundIntensity);
+            gfx.SolidRenderer.ClearAlphaRgb((depth == 32) ? 0.0 : 1.0, backgroundIntensity, backgroundIntensity, backgroundIntensity);
             gfx.Rasterizer.Gamma = AA;
 
             gfx.TranslateTransform(-left, bottom + dy);
