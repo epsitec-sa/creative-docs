@@ -335,8 +335,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetRole(ref string value)
 		{
-			var role = AiderParticipationsHelpers.GetParticipationRole (this);
-			value = role.Function + " " + role.Group + " " + role.SuperGroup;
+			value = AiderParticipationsHelpers.BuildRoleFromParticipation (this).GetRole (this);
 		}
 	}
 }
