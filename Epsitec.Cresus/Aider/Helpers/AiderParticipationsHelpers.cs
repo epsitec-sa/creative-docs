@@ -35,13 +35,13 @@ namespace Epsitec.Aider.Helpers
 					break;
 				case 2:
 					parish		= participation.Group.Parents.ElementAt (1).Name;
-					function	= isFemale ? participation.Group.GroupDef.FunctionNameInTheFeminine : participation.Group.Name;
+					function	= isFemale && participation.Group.GroupDef.IsFunction () ? participation.Group.GroupDef.FunctionNameInTheFeminine : participation.Group.Name;
 					group		= participation.Group.Parents.ElementAt (1).Name;
 					sgroup		= participation.Group.Parents.ElementAt (0).Name;
 					break;
 				default:
 					parish		= participation.Group.Parents.ElementAt (1).Name;
-					function	= isFemale ? participation.Group.GroupDef.FunctionNameInTheFeminine : participation.Group.Name;
+					function	= isFemale && participation.Group.GroupDef.IsFunction () ? participation.Group.GroupDef.FunctionNameInTheFeminine : participation.Group.Name;
 					group		= participation.Group.Parents.Skip (1).Reverse ().First ().Name == "Staff" ? 
 									participation.Group.Parents.Skip (1).Reverse ().Skip(1).First ().Name :
 									participation.Group.Parents.Skip (1).Reverse ().First ().Name;
@@ -83,30 +83,6 @@ namespace Epsitec.Aider.Helpers
 		{
 			get;
 			set;
-		}
-
-		public AiderParticipationRole ApplyFeminineForm(AiderGroupParticipantEntity participation)
-		{
-			var person				= participation.Contact.Person;
-			var isFemale			= person.eCH_Person.PersonSex == Enumerations.PersonSex.Female ? true : false;
-
-			if (isFemale)
-			{
-				this.Function = this.Function.Replace ("Président", "Présidente");
-				this.Function = this.Function.Replace ("Vice-président", "Vice-présidente");
-				this.Function = this.Function.Replace ("Scrutateur", "Scrutatrice");
-				this.Function = this.Function.Replace ("Trésorier", "Trésorière");
-				this.Function = this.Function.Replace ("Suppléant", "Suppléante");
-				this.Function = this.Function.Replace ("Animateur", "Animatrice");
-				this.Function = this.Function.Replace ("Collaborateur", "Collaboratrice");
-				this.Function = this.Function.Replace ("Conseiller", "Conseillère");
-				this.Function = this.Function.Replace ("Chargé", "Chargée");
-				this.Function = this.Function.Replace ("Répondant", "Répondante");
-				this.Function = this.Function.Replace ("Directeur", "Directrice");
-				this.Function = this.Function.Replace ("Doyen", "Doyenne");
-			}
-
-			return this;
 		}
 
 		public string GetRole(AiderGroupParticipantEntity participation)
