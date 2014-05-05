@@ -58,7 +58,6 @@
     </Compile>
     <Compile Include="AmortizationType.cs" />
     <Compile Include="AmortizedAmount.cs" />
-    <Compile Include="AmortizedAmountValues.cs" />
     <Compile Include="DataProperties\AbstractDataProperty.cs" />
     <Compile Include="ComputedAmount.cs" />
     <Compile Include="DataProperties\DataAmortizedAmountProperty.cs" />
