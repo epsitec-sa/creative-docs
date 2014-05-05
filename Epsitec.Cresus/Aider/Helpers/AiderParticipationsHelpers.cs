@@ -35,13 +35,17 @@ namespace Epsitec.Aider.Helpers
 					break;
 				case 2:
 					parish		= participation.Group.Parents.ElementAt (1).Name;
-					function	= isFemale && participation.Group.GroupDef.IsFunction () ? participation.Group.GroupDef.FunctionNameInTheFeminine : participation.Group.Name;
+					function	= isFemale && participation.Group.GroupDef.IsFunction () ? 
+										participation.Group.GroupDef.FunctionNameInTheFeminine : 
+										participation.Group.Name;
 					group		= participation.Group.Parents.ElementAt (1).Name;
 					sgroup		= participation.Group.Parents.ElementAt (0).Name;
 					break;
 				default:
 					parish		= participation.Group.Parents.ElementAt (1).Name;
-					function	= isFemale && participation.Group.GroupDef.IsFunction () ? participation.Group.GroupDef.FunctionNameInTheFeminine : participation.Group.Name;
+					function	= isFemale && participation.Group.GroupDef.IsFunction () ?
+										participation.Group.GroupDef.FunctionNameInTheFeminine :
+										participation.Group.Name;
 					group		= participation.Group.Parents.Skip (1).Reverse ().First ().Name == "Staff" ? 
 									participation.Group.Parents.Skip (1).Reverse ().Skip(1).First ().Name :
 									participation.Group.Parents.Skip (1).Reverse ().First ().Name;

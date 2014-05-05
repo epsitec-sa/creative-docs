@@ -121,7 +121,7 @@ namespace Epsitec.Aider
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.InitFunctions (args));
 					return;
-				}
+				}			
 
 				if (args.Contains ("-generatesubscriptions"))
 				{

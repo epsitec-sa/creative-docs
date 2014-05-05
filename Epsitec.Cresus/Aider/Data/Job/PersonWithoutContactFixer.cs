@@ -68,25 +68,49 @@ namespace Epsitec.Aider.Data.Job
 					//retreive AiderPerson
 					var person = PersonWithoutContactFixer.GetAiderPersonEntity (businessContext, eChPersonId);
 
+					
+
 					if (person.IsNull ())
 					{
 						PersonWithoutContactFixer.LogToConsole ("No eCH person found for ID {0}", eChPersonId);
 						continue;
 					}
 
-					//Retreive person aider household
-					var household = PersonWithoutContactFixer.GetAiderHousehold (businessContext, person.eCH_Person.ReportedPerson1.Adult1);
-					if (household.IsNotNull ())
+					if (person.eCH_Person.DeclarationStatus == PersonDeclarationStatus.Declared)
 					{
-						AiderContactEntity.Create (businessContext, person, household, isHead: household.IsHead (person));
-						PersonWithoutContactFixer.LogToConsole ("Corrected: {0}", person.GetDisplayName ());
+
+						var isHead1 = person.eCH_Person.ReportedPerson1.Adult1 == person.eCH_Person;
+						var isHead2 = person.eCH_Person.ReportedPerson1.Adult2 == person.eCH_Person;
+						var isHead  = isHead1 || isHead2;
+
+						//Retreive person aider household
+						var household = PersonWithoutContactFixer.GetAiderHousehold (businessContext, person.eCH_Person.ReportedPerson1.Adult1);
+						if (household.IsNotNull ())
+						{
+							AiderContactEntity.Create (businessContext, person, household, isHead);
+							PersonWithoutContactFixer.LogToConsole ("Corrected: {0}", person.GetDisplayName ());
+						}
+						else 
+						{
+							//Create and setup missing household
+							var reportedPerson  = person.eCH_Person.ReportedPerson1;
+							var addressTemplate = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext,person.eCH_Person.ReportedPerson1);
+							if (addressTemplate.StreetHouseNumberAndComplement.IsNullOrWhiteSpace ())
+							{
+								PersonWithoutContactFixer.LogToConsole ("Warning address imcomplete for: {0}", person.GetDisplayName ());
+							}
+
+							var newHousehold	= AiderHouseholdEntity.Create (businessContext, addressTemplate);
+
+							EChDataHelpers.SetupHousehold (businessContext, person, newHousehold, reportedPerson, isHead1, isHead2);												
+							businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+							PersonWithoutContactFixer.LogToConsole ("Household added for: {0}", person.GetDisplayName ());
+						}
 					}
-					else //warn
+					else
 					{
-						var warningMessage = FormattedText.FromSimpleText ("Ménage a recréer (problème de qualité de données)");
-						PersonWithoutContactFixer.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.EChHouseholdAdded, warningTitleMessage, warningMessage, warningSource);
-						PersonWithoutContactFixer.LogToConsole ("Warning added for: {0}", person.GetDisplayName ());
-					}
+						PersonWithoutContactFixer.LogToConsole ("Person not Declared in ECh status: {0}", person.eCH_Person.DeclarationStatus);
+					}	
 				}
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);

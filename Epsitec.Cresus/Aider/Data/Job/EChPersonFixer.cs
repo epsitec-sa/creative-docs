@@ -21,6 +21,14 @@ namespace Epsitec.Aider.Data.Job
 {
 	internal static class EChPersonFixer
 	{
+		public static void CreateMissingContact(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				
+			}
+		}
+
 		public static void TryFixAll(CoreData coreData)
 		{
 			
