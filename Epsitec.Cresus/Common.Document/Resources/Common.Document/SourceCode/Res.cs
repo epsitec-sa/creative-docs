@@ -5672,6 +5672,50 @@ namespace Epsitec.Common.Document
 							}
 						}
 					}
+					
+					public static class QuickExportType
+					{
+						//	designer:str/20KH2
+						public static global::System.String BMP
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544401));
+							}
+						}
+						//	designer:str/20KG2
+						public static global::System.String GIF
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544400));
+							}
+						}
+						//	designer:str/20KF2
+						public static global::System.String JPG
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544399));
+							}
+						}
+						//	designer:str/20KE2
+						public static global::System.String PNG
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544398));
+							}
+						}
+						//	designer:str/20KD2
+						public static global::System.String TIF
+						{
+							get
+							{
+								return global::Epsitec.Common.Document.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544397));
+							}
+						}
+					}
 				}
 			}
 			
@@ -18700,6 +18744,50 @@ namespace Epsitec.Common.Document
 							get
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (18);
+							}
+						}
+					}
+					
+					public static class QuickExportType
+					{
+						//	designer:str/20KH2
+						public static global::Epsitec.Common.Support.Druid BMP
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544401);
+							}
+						}
+						//	designer:str/20KG2
+						public static global::Epsitec.Common.Support.Druid GIF
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544400);
+							}
+						}
+						//	designer:str/20KF2
+						public static global::Epsitec.Common.Support.Druid JPG
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544399);
+							}
+						}
+						//	designer:str/20KE2
+						public static global::Epsitec.Common.Support.Druid PNG
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544398);
+							}
+						}
+						//	designer:str/20KD2
+						public static global::Epsitec.Common.Support.Druid TIF
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544397);
 							}
 						}
 					}

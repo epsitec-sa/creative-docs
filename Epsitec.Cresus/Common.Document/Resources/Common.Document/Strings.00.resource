@@ -1493,5 +1493,10 @@
   <data name="Dialog.Bool.ExportPDFExecute" id="K92">Ouvrir le document PDF produit</data>
   <data name="Dialog.Bool.AlphaCorrect" id="KA2">Transparence linéaire</data>
   <data name="Dialog.Settings.BitmapExport" id="KB2">Exportation des images</data>
-  <data name="Action.QuickExport" id="KC2">Exporter sans interaction une image TIFF de même nom que l'icône</data>
+  <data name="Action.QuickExport" id="KC2">Exporter rapidement</data>
+  <data name="Dialog.Settings.QuickExportType.TIF" id="KD2">TIFF</data>
+  <data name="Dialog.Settings.QuickExportType.PNG" id="KE2">PNG</data>
+  <data name="Dialog.Settings.QuickExportType.JPG" id="KF2">JPEG</data>
+  <data name="Dialog.Settings.QuickExportType.GIF" id="KG2">GIF</data>
+  <data name="Dialog.Settings.QuickExportType.BMP" id="KH2">BMP</data>
 </bundle>

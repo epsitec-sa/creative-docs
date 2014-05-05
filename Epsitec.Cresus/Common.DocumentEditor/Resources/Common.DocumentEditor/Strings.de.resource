@@ -285,4 +285,6 @@
   <data id="0F8">Bitmap der aktuellen Seite; die arbtiefe einschränkende Kompression.&lt;br/&gt;&lt;br/&gt;Dieses Format eignet sich für das Internet, solange nur wenige unterschiedliche Farben dargestellt werden müsen. Für Fotos oder Farbverläufe ist es ungeeignet.</data>
   <data id="009">Exportiere PDF</data>
   <data id="019">PDF-Datei wird erzeugt...</data>
+  <data id="K">
+  </data>
 </bundle>

@@ -1892,6 +1892,30 @@ namespace Epsitec.Common.DocumentEditor
 							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (181));
 						}
 					}
+					//	designer:str/43K1
+					public static global::System.String QuickExport
+					{
+						get
+						{
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544321));
+						}
+					}
+					//	designer:str/43K2
+					public static global::System.String QuickExportDpi
+					{
+						get
+						{
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544322));
+						}
+					}
+					//	designer:str/43K3
+					public static global::System.String QuickExportType
+					{
+						get
+						{
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544323));
+						}
+					}
 					//	designer:str/430J5
 					public static global::System.String QuickFirst
 					{
@@ -2060,6 +2084,14 @@ namespace Epsitec.Common.DocumentEditor
 							get
 							{
 								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (159));
+							}
+						}
+						//	designer:str/43K
+						public static global::System.String QuickExport
+						{
+							get
+							{
+								return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544320));
 							}
 						}
 						//	designer:str/43005
@@ -4516,6 +4548,30 @@ namespace Epsitec.Common.DocumentEditor
 							return global::Epsitec.Common.Support.Druid.FromFieldId (181);
 						}
 					}
+					//	designer:str/43K1
+					public static global::Epsitec.Common.Support.Druid QuickExport
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544321);
+						}
+					}
+					//	designer:str/43K2
+					public static global::Epsitec.Common.Support.Druid QuickExportDpi
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544322);
+						}
+					}
+					//	designer:str/43K3
+					public static global::Epsitec.Common.Support.Druid QuickExportType
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544323);
+						}
+					}
 					//	designer:str/430J5
 					public static global::Epsitec.Common.Support.Druid QuickFirst
 					{
@@ -4684,6 +4740,14 @@ namespace Epsitec.Common.DocumentEditor
 							get
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (159);
+							}
+						}
+						//	designer:str/43K
+						public static global::Epsitec.Common.Support.Druid QuickExport
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544320);
 							}
 						}
 						//	designer:str/43005

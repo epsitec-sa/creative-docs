@@ -286,4 +286,5 @@
   <data id="049">Filter</data>
   <data id="039">Format</data>
   <data id="029">Geometry</data>
+  <data id="K">Quick export</data>
 </bundle>

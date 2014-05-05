@@ -285,4 +285,8 @@
   <data name="Dialog.Update.Address2" id="0G6">Epsitec SA, Ch. du Fontenay 6, 1400 Yverdon-les-Bains, Suisse</data>
   <data name="Dialog.Update.Phone1" id="0H6">Tél:</data>
   <data name="Dialog.Update.Phone2" id="0I6">0848 27 37 87</data>
+  <data name="Dialog.Settings.TabPage.QuickExport" id="K">Exportation rapide</data>
+  <data name="Dialog.Settings.QuickExport" id="K1">Réglages pour l'exportation rapide</data>
+  <data name="Dialog.Settings.QuickExportDpi" id="K2">Résolution (dpi)</data>
+  <data name="Dialog.Settings.QuickExportType" id="K3">Type de fichier</data>
 </bundle>

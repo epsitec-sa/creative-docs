@@ -1489,4 +1489,5 @@
   <data id="K72">X</data>
   <data id="K82">Margin convexity or concavity</data>
   <data id="K92">Open PDF after export</data>
+  <data id="KC2">Quick export</data>
 </bundle>

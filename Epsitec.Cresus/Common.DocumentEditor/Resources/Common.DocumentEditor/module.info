@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="100" name="Common.DocumentEditor" layer="s" textMode="String" namespace="Epsitec.Common.DocumentEditor">
   <Versions>
-    <Version id="2" build="8" date="2011-01-19T13:29:53.0154670Z" />
     <Version id="1" build="7" date="2011-02-01T14:39:47.7123021Z" />
     <Version id="8" build="2" date="2013-03-06T13:08:57.3579062Z" />
+    <Version id="2" build="15" date="2014-05-02T12:32:07.9698431Z" />
   </Versions>
 </ModuleInfo>
