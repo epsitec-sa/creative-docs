@@ -191,13 +191,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						//	mais on ne peut pas le retourner tel quel. On doit retourner un
 						//	montant qui a une valeur initiale égale à la valeur finale du
 						//	montant précédent trouvé.
-						var aa = new AmortizedAmount (123)
-						{
-							InitialAmount = property.Value.FinalAmortizedAmount,
-						};
-
-						System.Diagnostics.Debug.Fail ("Ne devrait jamais arriver !!!");
-						return aa;
+						throw new System.InvalidOperationException ("Should never happen!");
 					}
 				}
 			}
@@ -317,15 +311,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var e = this.dataEvent;
 			if (e != null)
 			{
-				if (value.HasValue)
-				{
-					var newProperty = new DataAmortizedAmountProperty (field, value.Value);
-					e.AddProperty (newProperty);
-				}
-				else
-				{
-					e.RemoveProperty (field);
-				}
+				Amortizations.SetAmortizedAmount (e, value);
 
 				this.dirty = true;
 				this.computedAmountDirty = true;

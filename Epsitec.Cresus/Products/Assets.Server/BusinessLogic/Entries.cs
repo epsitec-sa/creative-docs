@@ -21,41 +21,48 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void CreateEntry(AmortizedAmount amount)
+		public AmortizedAmount CreateEntry(AmortizedAmount amount)
 		{
 			//	Crée l'écriture liée à un amortissement ordinaire.
 			System.Diagnostics.Debug.Assert (amount.Date.Year != 1);
 
 			if (amount.EntryScenario == EntryScenario.None)
 			{
-				this.RemoveEntry (amount);
+				return this.RemoveEntry (amount);
 			}
 			else
 			{
+				var entryGuid = amount.EntryGuid;
+				var entrySeed = amount.EntrySeed;
+
 				var dataEntry = this.GetEntry (amount.AssetGuid, amount.EventGuid);
 
 				if (dataEntry == null)
 				{
-					dataEntry = this.CreateDataEntry (amount);
+					dataEntry = this.CreateDataEntry (amount, ref entryGuid, ref entrySeed);
 				}
 
 				var entryProperties = this.GetEntryProperties (amount, GetEntryPropertiesType.Current);
-
 				this.UpdateEntry (dataEntry, entryProperties);
-				amount.EntrySeed++;
+
+				return AmortizedAmount.SetEntry (amount, entryGuid, entrySeed+1);
 			}
 		}
 
-		public void RemoveEntry(AmortizedAmount amount)
+		public AmortizedAmount RemoveEntry(AmortizedAmount amount)
 		{
 			//	Supprime l'écriture liée à un AmortizedAmount.
 			var entry = this.GetEntry (amount.AssetGuid, amount.EventGuid);
-			if (entry != null)
+
+			if (entry == null)
+			{
+				return amount;
+			}
+			else
 			{
 				this.accessor.RemoveObject (BaseType.Entries, entry);
 
-				amount.EntryGuid = Guid.Empty;
-				amount.EntrySeed++;
+				return AmortizedAmount.SetEntry (amount, Guid.Empty, amount.EntrySeed+1);
 			}
 		}
 
@@ -351,12 +358,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private DataObject CreateDataEntry(AmortizedAmount amount)
+		private DataObject CreateDataEntry(AmortizedAmount amount, ref Guid entryGuid, ref int entrySeed)
 		{
 			var entry = new DataObject ();
 
-			amount.EntryGuid = entry.Guid;
-			amount.EntrySeed = 0;
+			entryGuid = entry.Guid;
+			entrySeed = 0;
 
 			var entries = this.accessor.Mandat.GetData (BaseType.Entries);
 			entries.Add (entry);
@@ -395,29 +402,29 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static void CreateEntry(DataAccessor accessor, AmortizedAmount aa)
+		public static AmortizedAmount CreateEntry(DataAccessor accessor, AmortizedAmount aa)
 		{
 			if (accessor == null)
 			{
-				return;
+				return aa;
 			}
 
 			using (var entries = new Entries (accessor))
 			{
-				entries.CreateEntry (aa);
+				return entries.CreateEntry (aa);
 			}
 		}
 
-		public static void RemoveEntry(DataAccessor accessor, AmortizedAmount aa)
+		public static AmortizedAmount RemoveEntry(DataAccessor accessor, AmortizedAmount aa)
 		{
 			if (accessor == null)
 			{
-				return;
+				return aa;
 			}
 
 			using (var entries = new Entries (accessor))
 			{
-				entries.RemoveEntry (aa);
+				return entries.RemoveEntry (aa);
 			}
 		}
 

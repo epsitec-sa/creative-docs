@@ -279,20 +279,25 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 				System.Diagnostics.Debug.Assert (p != null);
 
-				var aa = p.Value;
-
 				//	InitialAmount et BaseAmount seront calculés plus tard.
-				aa.AmortizationType   = details.Def.Type;
-				aa.EffectiveRate      = details.Def.EffectiveRate;
-				aa.ProrataNumerator   = details.Prorata.Numerator;
-				aa.ProrataDenominator = details.Prorata.Denominator;
-				aa.RoundAmount        = details.Def.Round;
-				aa.ResidualAmount     = details.Def.Residual;
-				aa.EntryScenario      = EntryScenario.AmortizationAuto;
+				var aa = AmortizedAmount.SetPreview
+				(
+					p.Value,
+					details.Def.Type,
+					details.Def.EffectiveRate,
+					details.Prorata.Numerator,
+					details.Prorata.Denominator,
+					details.Def.Round,
+					details.Def.Residual,
+					EntryScenario.AmortizationAuto
+				);
+
+				Amortizations.SetAmortizedAmount (e, aa);
 			}
 		}
 
-		public static void InitialiseAmortizedAmount(AmortizedAmount aa, DataObject obj, DataEvent e, Timestamp timestamp)
+		public static AmortizedAmount InitialiseAmortizedAmount(DataObject obj, DataEvent e, Timestamp timestamp,
+			AmortizationType amortizationType, EntryScenario entryScenario)
 		{
 			//	Initialise une fois pour toutes le AmortizedAmount d'un objet.
 			//	Collecte tous les champs qui définissent comment générer l'écriture.
@@ -327,16 +332,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			var prorata = ProrataDetails.ComputeProrata (range, valueDate, def.ProrataType);
-			
-			aa.EffectiveRate      = def.EffectiveRate;
-			aa.ProrataNumerator   = prorata.Numerator;
-			aa.ProrataDenominator = prorata.Denominator;
-			aa.RoundAmount        = def.Round;
-			aa.ResidualAmount     = def.Residual;
 
-			aa.Date      = timestamp.Date;
-			aa.AssetGuid = obj.Guid;
-			aa.EventGuid = e.Guid;
+			return new AmortizedAmount
+			(
+				amortizationType, null, null, def.EffectiveRate,
+				prorata.Numerator, prorata.Denominator, def.Round, def.Residual, entryScenario, timestamp.Date,
+				obj.Guid, e.Guid, Guid.Empty, 0
+			);
 		}
 
 
@@ -418,7 +420,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					{
 						if (field == ObjectField.MainValue)
 						{
-							Amortizations.UpdateAmortizedAmount (accessor, e, field, ref lastAmount, ref lastBase);
+							Amortizations.UpdateAmortizedAmount (accessor, e, ref lastAmount, ref lastBase);
 						}
 						else
 						{
@@ -429,9 +431,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private static void UpdateAmortizedAmount(DataAccessor accessor, DataEvent e, ObjectField field, ref decimal? lastAmount, ref decimal? lastBase)
+		private static void UpdateAmortizedAmount(DataAccessor accessor, DataEvent e, ref decimal? lastAmount, ref decimal? lastBase)
 		{
-			var p = e.GetProperty (field) as DataAmortizedAmountProperty;
+			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 
 			if (p != null)
 			{
@@ -439,16 +441,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (aa.AmortizationType == AmortizationType.Unknown)  // montant fixe ?
 				{
-					lastBase = aa.FinalAmortizedAmount;
+					lastAmount = aa.FinalAmortizedAmount;
+					lastBase   = aa.FinalAmortizedAmount;
 				}
 				else  // amortissement ?
 				{
-					aa.InitialAmount = lastAmount;
-					aa.BaseAmount    = lastBase;
+					aa = AmortizedAmount.SetAmortizedAmount (aa, lastAmount, lastBase);
+					Amortizations.SetAmortizedAmount (e, aa);
+
+					lastAmount = aa.FinalAmortizedAmount;
 				}
 
-				Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures
-				lastAmount = aa.FinalAmortizedAmount;
+				{
+					aa = Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures
+					Amortizations.SetAmortizedAmount (e, aa);
+				}
 			}
 		}
 
@@ -494,6 +501,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			else
 			{
 				e.RemoveProperty (field);
+			}
+		}
+
+		public static void SetAmortizedAmount(DataEvent e, AmortizedAmount? value)
+		{
+			if (value.HasValue)
+			{
+				var newProperty = new DataAmortizedAmountProperty (ObjectField.MainValue, value.Value);
+				e.AddProperty (newProperty);
+			}
+			else
+			{
+				e.RemoveProperty (ObjectField.MainValue);
 			}
 		}
 		#endregion

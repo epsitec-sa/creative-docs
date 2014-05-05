@@ -103,20 +103,24 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		protected void AddAssetAmortizedAmount(DataEvent e, decimal value)
 		{
 			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-			var aa = p.Value;
 
-			aa.InitialAmount = value;
+			var aa = AmortizedAmount.SetInitialAmount (p.Value, value);
+			Amortizations.SetAmortizedAmount (e, aa);
 		}
 
 		protected void AddAssetAmortizedAmount(DataEvent e, decimal initialAmount, decimal finalAmount)
 		{
 			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-			var aa = p.Value;
 
-			aa.AmortizationType = AmortizationType.Degressive;
-			aa.InitialAmount    = initialAmount;
-			aa.BaseAmount       = initialAmount;
-			aa.EffectiveRate    = 1.0m - (finalAmount / initialAmount);
+			var aa = AmortizedAmount.SetAmortizedAmount
+			(
+				p.Value,
+				AmortizationType.Degressive,
+				initialAmount,
+				initialAmount,
+				1.0m - (finalAmount / initialAmount)
+			);
+			Amortizations.SetAmortizedAmount (e, aa);
 		}
 
 		protected void AddAssetComputedAmount(DataEvent e, ObjectField field, decimal? value)

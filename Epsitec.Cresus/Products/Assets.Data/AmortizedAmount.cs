@@ -8,182 +8,54 @@ namespace Epsitec.Cresus.Assets.Data
 {
 	public struct AmortizedAmount
 	{
-		public AmortizedAmount(int x)  // TODO: comment supprimer ce paramètre ?
+		public AmortizedAmount
+		(
+			AmortizationType	amortizationType,
+			decimal?			initialAmount,
+			decimal?			baseAmount,
+			decimal?			effectiveRate,
+			decimal?			prorataNumerator,
+			decimal?			prorataDenominator,
+			decimal?			roundAmount,
+			decimal?			residualAmount,
+			EntryScenario		entryScenario,
+			System.DateTime		date,
+			Guid				assetGuid,
+			Guid				eventGuid,
+			Guid				entryGuid,
+			int					entrySeed
+		)
 		{
-			System.Diagnostics.Debug.Assert (x == 123);
-			this.values = new AmortizedAmountValues ();
+			this.AmortizationType   = amortizationType;
+			this.InitialAmount      = initialAmount;
+			this.BaseAmount         = baseAmount;
+			this.EffectiveRate      = effectiveRate;
+			this.ProrataNumerator   = prorataNumerator;
+			this.ProrataDenominator = prorataDenominator;
+			this.RoundAmount        = roundAmount;
+			this.ResidualAmount     = residualAmount;
+			this.EntryScenario      = entryScenario;
+			this.Date               = date;
+			this.AssetGuid          = assetGuid;
+			this.EventGuid          = eventGuid;
+			this.EntryGuid          = entryGuid;
+			this.EntrySeed          = entrySeed;
 		}
 
-
-		#region Facade
-		public AmortizationType					AmortizationType
-		{
-			get
-			{
-				return this.values.AmortizationType;
-			}
-			set
-			{
-				this.values.AmortizationType = value;
-			}
-		}
-
-		public decimal?							InitialAmount
-		{
-			get
-			{
-				return this.values.InitialAmount;
-			}
-			set
-			{
-				this.values.InitialAmount = value;
-			}
-		}
-
-		public decimal?							BaseAmount
-		{
-			get
-			{
-				return this.values.BaseAmount;
-			}
-			set
-			{
-				this.values.BaseAmount = value;
-			}
-		}
-
-		public decimal?							EffectiveRate
-		{
-			get
-			{
-				return this.values.EffectiveRate;
-			}
-			set
-			{
-				this.values.EffectiveRate = value;
-			}
-		}
-
-		public decimal?							ProrataNumerator
-		{
-			get
-			{
-				return this.values.ProrataNumerator;
-			}
-			set
-			{
-				this.values.ProrataNumerator = value;
-			}
-		}
-
-		public decimal?							ProrataDenominator
-		{
-			get
-			{
-				return this.values.ProrataDenominator;
-			}
-			set
-			{
-				this.values.ProrataDenominator = value;
-			}
-		}
-
-		public decimal?							RoundAmount
-		{
-			get
-			{
-				return this.values.RoundAmount;
-			}
-			set
-			{
-				this.values.RoundAmount = value;
-			}
-		}
-
-		public decimal?							ResidualAmount
-		{
-			get
-			{
-				return this.values.ResidualAmount;
-			}
-			set
-			{
-				this.values.ResidualAmount = value;
-			}
-		}
-
-		public EntryScenario					EntryScenario
-		{
-			get
-			{
-				return this.values.EntryScenario;
-			}
-			set
-			{
-				this.values.EntryScenario = value;
-			}
-		}
-
-		public System.DateTime					Date
-		{
-			get
-			{
-				return this.values.Date;
-			}
-			set
-			{
-				this.values.Date = value;
-			}
-		}
-
-		public Guid								AssetGuid
-		{
-			get
-			{
-				return this.values.AssetGuid;
-			}
-			set
-			{
-				this.values.AssetGuid = value;
-			}
-		}
-
-		public Guid								EventGuid
-		{
-			get
-			{
-				return this.values.EventGuid;
-			}
-			set
-			{
-				this.values.EventGuid = value;
-			}
-		}
-
-		public Guid								EntryGuid
-		{
-			get
-			{
-				return this.values.EntryGuid;
-			}
-			set
-			{
-				this.values.EntryGuid = value;
-			}
-		}
-
-		public int								EntrySeed
-		{
-			get
-			{
-				return this.values.EntrySeed;
-			}
-			set
-			{
-				this.values.EntrySeed = value;
-			}
-		}
-		#endregion
+		public readonly AmortizationType		AmortizationType;
+		public readonly decimal?				InitialAmount;
+		public readonly decimal?				BaseAmount;
+		public readonly decimal?				EffectiveRate;
+		public readonly decimal?				ProrataNumerator;
+		public readonly decimal?				ProrataDenominator;
+		public readonly decimal?				RoundAmount;
+		public readonly decimal?				ResidualAmount;
+		public readonly EntryScenario			EntryScenario;
+		public readonly System.DateTime			Date;
+		public readonly Guid					AssetGuid;
+		public readonly Guid					EventGuid;
+		public readonly Guid					EntryGuid;
+		public readonly int						EntrySeed;
 
 
 		public decimal?							FinalAmortizedAmount
@@ -310,12 +182,38 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public static bool operator ==(AmortizedAmount a, AmortizedAmount b)
 		{
-			return a.values == b.values;
+			return a.AmortizationType   == b.AmortizationType
+				&& a.InitialAmount      == b.InitialAmount
+				&& a.BaseAmount         == b.BaseAmount
+				&& a.EffectiveRate      == b.EffectiveRate
+				&& a.ProrataNumerator   == b.ProrataNumerator
+				&& a.ProrataDenominator == b.ProrataDenominator
+				&& a.RoundAmount        == b.RoundAmount
+				&& a.ResidualAmount     == b.ResidualAmount
+				&& a.EntryScenario      == b.EntryScenario
+				&& a.Date               == b.Date
+				&& a.AssetGuid          == b.AssetGuid
+				&& a.EventGuid          == b.EventGuid
+				&& a.EntryGuid          == b.EntryGuid
+				&& a.EntrySeed          == b.EntrySeed;
 		}
 
 		public static bool operator !=(AmortizedAmount a, AmortizedAmount b)
 		{
-			return a.values != b.values;
+			return a.AmortizationType   != b.AmortizationType
+				|| a.InitialAmount      != b.InitialAmount
+				|| a.BaseAmount         != b.BaseAmount
+				|| a.EffectiveRate      != b.EffectiveRate
+				|| a.ProrataNumerator   != b.ProrataNumerator
+				|| a.ProrataDenominator != b.ProrataDenominator
+				|| a.RoundAmount        != b.RoundAmount
+				|| a.ResidualAmount     != b.ResidualAmount
+				|| a.EntryScenario      != b.EntryScenario
+				|| a.Date               != b.Date
+				|| a.AssetGuid          != b.AssetGuid
+				|| a.EventGuid          != b.EventGuid
+				|| a.EntryGuid          != b.EntryGuid
+				|| a.EntrySeed          != b.EntrySeed;
 		}
 
 		public override bool Equals(object obj)
@@ -332,8 +230,406 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public override int GetHashCode()
 		{
-			return this.values.GetHashCode ();
+			return this.AmortizationType  .GetHashCode ()
+				 ^ this.InitialAmount     .GetHashCode ()
+				 ^ this.BaseAmount        .GetHashCode ()
+				 ^ this.EffectiveRate     .GetHashCode ()
+				 ^ this.ProrataNumerator  .GetHashCode ()
+				 ^ this.ProrataDenominator.GetHashCode ()
+				 ^ this.RoundAmount       .GetHashCode ()
+				 ^ this.ResidualAmount    .GetHashCode ()
+				 ^ this.EntryScenario     .GetHashCode ()
+				 ^ this.Date              .GetHashCode ()
+				 ^ this.AssetGuid         .GetHashCode ()
+				 ^ this.EventGuid         .GetHashCode ()
+				 ^ this.EntryGuid         .GetHashCode ()
+				 ^ this.EntrySeed         .GetHashCode ();
 		}
+
+
+		#region Constructors helpers
+		public static AmortizedAmount SetAmortizationType(AmortizedAmount model, AmortizationType value)
+		{
+			return new AmortizedAmount
+			(
+				value,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetInitialAmount(AmortizedAmount model, decimal? value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				value,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetBaseAmount(AmortizedAmount model, decimal? value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				value,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetEffectiveRate(AmortizedAmount model, decimal? value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				value,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetProrataNumerator(AmortizedAmount model, decimal? value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				value,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetProrataDenominator(AmortizedAmount model, decimal? value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				value,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetRoundAmount(AmortizedAmount model, decimal? value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				value,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetResidualAmount(AmortizedAmount model, decimal? value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				value,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetEntryScenario(AmortizedAmount model, EntryScenario value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				value,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetDate(AmortizedAmount model, System.DateTime value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				value,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetAssetGuid(AmortizedAmount model, Guid value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				value,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetEventGuid(AmortizedAmount model, Guid value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				value,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetEntryGuid(AmortizedAmount model, Guid value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				value,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetEntrySeed(AmortizedAmount model, int value)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				value
+			);
+		}
+
+		public static AmortizedAmount SetEntry(AmortizedAmount model, Guid entryGuid, int entrySeed)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				entryGuid,
+				entrySeed
+			);
+		}
+
+		public static AmortizedAmount SetPreview(AmortizedAmount model,
+			AmortizationType amortizationType, decimal? effectiveRate,
+			decimal? prorataNumerator, decimal? prorataDenominator,
+			decimal? roundAmount, decimal? residualAmount, EntryScenario entryScenario)
+		{
+			return new AmortizedAmount
+			(
+				amortizationType,
+				model.InitialAmount,
+				model.BaseAmount,
+				effectiveRate,
+				prorataNumerator,
+				prorataDenominator,
+				roundAmount,
+				residualAmount,
+				entryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetAmortizedAmount(AmortizedAmount model, decimal? initialAmount, decimal? baseAmount)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				initialAmount,
+				baseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetAmortizedAmount(AmortizedAmount model,
+			AmortizationType amortizationType, decimal? initialAmount, decimal? baseAmount, decimal? effectiveRate)
+		{
+			return new AmortizedAmount
+			(
+				amortizationType,
+				initialAmount,
+				baseAmount,
+				effectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+		#endregion
 
 
 		private static decimal Round(decimal value, decimal round)
@@ -357,8 +653,5 @@ namespace Epsitec.Cresus.Assets.Data
 				return value;
 			}
 		}
-
-
-		private readonly AmortizedAmountValues	values;
 	}
 }

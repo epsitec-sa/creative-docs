@@ -156,45 +156,45 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return;
 			}
 
-			var aa = new AmortizedAmount (123);
-			Amortizations.InitialiseAmortizedAmount (aa, obj, e, timestamp);
+			var amortizationType = AmortizationType.Unknown;
+			var entryScenario    = EntryScenario.None;
 
 			switch (e.Type)
 			{
 				case EventType.Input:
-					aa.AmortizationType = AmortizationType.Unknown;  // montant fixe
-					aa.EntryScenario = EntryScenario.Purchase;
+					amortizationType = AmortizationType.Unknown;  // montant fixe
+					entryScenario    = EntryScenario.Purchase;
 					break;
 
 				case EventType.Revaluation:
 				case EventType.Revalorization:
 				case EventType.MainValue:
-					aa.AmortizationType = AmortizationType.Unknown;  // montant fixe
-					aa.EntryScenario = EntryScenario.Revaluation;
+					amortizationType = AmortizationType.Unknown;  // montant fixe
+					entryScenario    = EntryScenario.Revaluation;
 					break;
 
 				case EventType.AmortizationAuto:
 				case EventType.AmortizationPreview:
-					aa.AmortizationType = AmortizationType.Linear;
-					aa.EntryScenario = EntryScenario.AmortizationAuto;
+					amortizationType = AmortizationType.Linear;
+					entryScenario    = EntryScenario.AmortizationAuto;
 					break;
 
 				case EventType.AmortizationExtra:
-					aa.AmortizationType = AmortizationType.Linear;
-					aa.EntryScenario = EntryScenario.AmortizationExtra;
+					amortizationType = AmortizationType.Linear;
+					entryScenario    = EntryScenario.AmortizationExtra;
 					break;
 
 				case EventType.Output:
-					aa.AmortizationType = AmortizationType.Unknown;  // montant fixe
-					aa.EntryScenario = EntryScenario.Sale;
+					amortizationType = AmortizationType.Unknown;  // montant fixe
+					entryScenario    = EntryScenario.Sale;
 					break;
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown EventType {0}", e.Type.ToString ()));
 			}
 
-			var p = new DataAmortizedAmountProperty (ObjectField.MainValue, aa);
-			e.AddProperty (p);
+			var aa = Amortizations.InitialiseAmortizedAmount (obj, e, timestamp, amortizationType, entryScenario);
+			Amortizations.SetAmortizedAmount (e, aa);
 		}
 
 
@@ -232,7 +232,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 			if (p != null)
 			{
-				Entries.RemoveEntry(this, p.Value);
+				var aa = Entries.RemoveEntry(this, p.Value);
+				Amortizations.SetAmortizedAmount (e, aa);
 			}
 
 			obj.RemoveEvent (e);
