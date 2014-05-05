@@ -44,6 +44,7 @@ namespace Epsitec.Aider.Data.Common
 		public const int MaxGroupNumber				= 1000;
 		public const int MaxGroupLevel				= 6;
 
+		public const int FunctionLevel				= 1;
 		public const int ParishLevel				= 1;
 		public const int RegionLevel				= 0;
 		public const int NoParishLevel				= 0;

@@ -214,6 +214,20 @@ namespace Epsitec.Aider.Entities
 			return businessContext.GetByExample<AiderGroupDefEntity>(example).First ();
 		}
 
+		public static IEnumerable<AiderGroupDefEntity> FindFunctions(BusinessContext businessContext)
+		{
+			var dataContext = businessContext.DataContext;
+
+			var example = new AiderGroupDefEntity ();
+			var request = Request.Create (example);
+
+			var path  = AiderGroupIds.CreateTopLevelPathTemplate (GroupClassification.Function) + "____.____.";
+
+			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.PathTemplate, path));
+
+			return dataContext.GetByRequest (request);
+		}
+
 		public bool IsChildOf(AiderGroupDefEntity groupDef)
 		{
 			return AiderGroupIds.IsSameOrWithinGroup (this.PathTemplate, groupDef.PathTemplate)
@@ -230,6 +244,11 @@ namespace Epsitec.Aider.Entities
 		{
 			return this.Level == AiderGroupIds.ParishLevel
 				&& this.Classification == GroupClassification.Parish;
+		}
+
+		public bool IsFunction()
+		{
+			return this.Level > 0 && this.Classification == GroupClassification.Function;
 		}
 
 		public bool IsParishOfGermanLanguage()

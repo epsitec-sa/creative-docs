@@ -117,6 +117,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-initfunctions"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.InitFunctions (args));
+					return;
+				}
+
 				if (args.Contains ("-generatesubscriptions"))
 				{
 					AiderProgram.RunSubscriptionGeneration (args);
@@ -431,6 +437,14 @@ namespace Epsitec.Aider
 				OfficeManagementEntities.CreateIfNeeded (coreData);
 				DerogationGroups.CreateIfNeeded (coreData);
 				AiderUsersGroups.CreateIfNeeded (coreData);
+			});
+		}
+
+		private static void InitFunctions(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				AiderGeneralFunctions.ApplyFemininForm (coreData);
 			});
 		}
 

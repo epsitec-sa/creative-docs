@@ -335,7 +335,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetRole(ref string value)
 		{
-			value = AiderParticipationsHelpers.BuildRoleFromParticipation (this).ApplyFeminineForm (this).GetRole (this);
+			value = AiderParticipationsHelpers.BuildRoleFromParticipation (this).GetRole (this);
 		}
 	}
 }

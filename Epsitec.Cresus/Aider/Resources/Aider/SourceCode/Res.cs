@@ -1857,6 +1857,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Classification = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 385);
 				//	designer:cap/LVABG
 				public static readonly global::Epsitec.Common.Support.Druid Function = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 523);
+				//	designer:cap/LVOG33
+				public static readonly global::Epsitec.Common.Support.Druid FunctionNameInTheFeminine = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 112);
 				//	designer:cap/LVGG22
 				public static readonly global::Epsitec.Common.Support.Druid Level = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 80);
 				//	designer:cap/LVG822

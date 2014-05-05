@@ -5757,6 +5757,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>FunctionNameInTheFeminine</c> field.
+		///	designer:fld/LVA2A/LVOG33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOG33]")]
+		public string FunctionNameInTheFeminine
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOG33]");
+			}
+			set
+			{
+				string oldValue = this.FunctionNameInTheFeminine;
+				if (oldValue != value || !this.IsFieldDefined("[LVOG33]"))
+				{
+					this.OnFunctionNameInTheFeminineChanging (oldValue, value);
+					this.SetField<string> ("[LVOG33]", oldValue, value);
+					this.OnFunctionNameInTheFeminineChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -5778,6 +5800,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		partial void OnFunctionChanging(global::Epsitec.Aider.Entities.AiderGroupDefEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupDefEntity newValue);
 		partial void OnFunctionChanged(global::Epsitec.Aider.Entities.AiderGroupDefEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupDefEntity newValue);
+		partial void OnFunctionNameInTheFeminineChanging(string oldValue, string newValue);
+		partial void OnFunctionNameInTheFeminineChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
