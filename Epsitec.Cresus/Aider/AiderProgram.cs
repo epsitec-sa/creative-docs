@@ -199,9 +199,9 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-warnpersonwithoutcontact"))
+				if (args.Contains ("-fixpersonswithoutcontact"))
 				{
-					ConsoleCreator.RunWithConsole (() => AiderProgram.WarnPersonWithoutContact (args));
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixPersonsWithoutContact (args));
 					return;
 				}
 
@@ -639,11 +639,11 @@ namespace Epsitec.Aider
 			);
 		}
 
-		private static void WarnPersonWithoutContact(string[] args)
+		private static void FixPersonsWithoutContact(string[] args)
 		{
 			AiderProgram.RunWithCoreData
 			(
-				coreData => PersonWithoutContactFixer.TryFixAll (coreData)
+				coreData => PersonsWithoutContactFixer.TryFixAll (coreData)
 			);
 		}
 

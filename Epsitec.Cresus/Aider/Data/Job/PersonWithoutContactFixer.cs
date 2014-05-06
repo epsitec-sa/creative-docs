@@ -19,14 +19,14 @@ using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Data.Job
 {
-	internal static class PersonWithoutContactFixer
+	internal static class PersonsWithoutContactFixer
 	{
 		public static void TryFixAll(CoreData coreData)
 		{
 			
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				PersonWithoutContactFixer.LogToConsole ("Perform DataQuality on Person without Contact");
+				PersonsWithoutContactFixer.LogToConsole ("Perform DataQuality on Person without Contact");
 				var jobDateTime    = System.DateTime.Now;
 				var jobName        = "PersonWithoutContactFixer";
 				var jobDescription = string.Format ("Qualité de données sur les personnes sans contacts");
@@ -50,66 +50,124 @@ namespace Epsitec.Aider.Data.Job
 				var command = sqlBuilder.CreateCommand (dbAbstraction.BeginReadOnlyTransaction (), sqlCommand);
 				DataSet dataSet;
 				sqlEngine.Execute (command, DbCommandType.ReturningData, 1, out dataSet);
-				PersonWithoutContactFixer.LogToConsole ("DataQuality SQL Results:");
+				PersonsWithoutContactFixer.LogToConsole ("DataQuality SQL Results:");
 				var personIdsToCorrect = new List<string> ();
 				foreach (DataRow row in dataSet.Tables[0].Rows)
 				{
 					if (!row[0].ToString ().IsNullOrWhiteSpace ())
 					{
 						personIdsToCorrect.Add (row[0].ToString ());
-						PersonWithoutContactFixer.LogToConsole (row[0] + " added");
+						PersonsWithoutContactFixer.LogToConsole (row[0] + " added");
 					}
 				}
 
-				PersonWithoutContactFixer.LogToConsole (personIdsToCorrect.Count + " persons without contacts detected");
+				PersonsWithoutContactFixer.LogToConsole (personIdsToCorrect.Count + " persons without contacts detected");
 
 				foreach (var eChPersonId in personIdsToCorrect)
 				{
 					//retreive AiderPerson
-					var person = PersonWithoutContactFixer.GetAiderPersonEntity (businessContext, eChPersonId);
+					var person = PersonsWithoutContactFixer.GetAiderPersonEntity (businessContext, eChPersonId);
 
 					
 
 					if (person.IsNull ())
 					{
-						PersonWithoutContactFixer.LogToConsole ("No eCH person found for ID {0}", eChPersonId);
+						PersonsWithoutContactFixer.LogToConsole ("No eCH person found for ID {0}", eChPersonId);
 						continue;
 					}
 
-					if (person.eCH_Person.DeclarationStatus == PersonDeclarationStatus.Declared)
+					//Preliminary check
+					if (person.eCH_Person.DeclarationStatus == PersonDeclarationStatus.Declared && person.IsGovernmentDefined)
 					{
-
-						var isHead1 = person.eCH_Person.ReportedPerson1.Adult1 == person.eCH_Person;
-						var isHead2 = person.eCH_Person.ReportedPerson1.Adult2 == person.eCH_Person;
-						var isHead  = isHead1 || isHead2;
-
-						//Retreive person aider household
-						var household = PersonWithoutContactFixer.GetAiderHousehold (businessContext, person.eCH_Person.ReportedPerson1.Adult1);
-						if (household.IsNotNull ())
+						
+						//Advanced check
+						if(person.eCH_Person.ReportedPerson1.IsNull () && person.eCH_Person.ReportedPerson2.IsNull ())
 						{
-							AiderContactEntity.Create (businessContext, person, household, isHead);
-							PersonWithoutContactFixer.LogToConsole ("Corrected: {0}", person.GetDisplayName ());
+							PersonsWithoutContactFixer.LogToConsole ("Poor Ech Data, skipping...");
+							continue;
 						}
-						else 
+
+						PersonsWithoutContactFixer.LogToConsole ("///// MISSING ECH PERSON DETECTED");
+
+
+						var hasMultiReportedPerson	= person.eCH_Person.ReportedPerson2.IsNotNull ();
+						var isSameReportedPerson	= person.eCH_Person.ReportedPerson1 == person.eCH_Person.ReportedPerson2;
+
+						if (isSameReportedPerson)
 						{
-							//Create and setup missing household
+							PersonsWithoutContactFixer.LogToConsole ("Warning: Same ReportedPersons");
+							//businessContext.DeleteEntity (person.eCH_Person.ReportedPerson2);
+						}
+
+
+						//Retreive person aider the first aider household
+						var existingHousehold1 = PersonsWithoutContactFixer.GetAiderHousehold (businessContext, person.eCH_Person.ReportedPerson1.Adult1);
+						if (existingHousehold1.IsNotNull ())
+						{
+							var isHead1					= person.eCH_Person.ReportedPerson1.Adult1 == person.eCH_Person;
+							var isHead2					= person.eCH_Person.ReportedPerson1.Adult2 == person.eCH_Person;
+							var isHead					= isHead1 || isHead2;
+
+							AiderContactEntity.Create (businessContext, person, existingHousehold1, isHead);
+							PersonsWithoutContactFixer.LogToConsole ("Corrected: {0} added to household n°1(Head:{1})", person.GetDisplayName (), existingHousehold1.GetHeadNames ().Item2.First ());
+
+							if(isSameReportedPerson || !hasMultiReportedPerson)
+							{
+								continue;
+							}
+						}
+						else
+						{
 							var reportedPerson  = person.eCH_Person.ReportedPerson1;
-							var addressTemplate = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext,person.eCH_Person.ReportedPerson1);
+
+							var addressTemplate = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext, person.eCH_Person.ReportedPerson1);
 							if (addressTemplate.StreetHouseNumberAndComplement.IsNullOrWhiteSpace ())
 							{
-								PersonWithoutContactFixer.LogToConsole ("Warning address imcomplete for: {0}", person.GetDisplayName ());
+								PersonsWithoutContactFixer.LogToConsole ("Warning address imcomplete for: {0}", person.GetDisplayName ());
 							}
 
 							var newHousehold	= AiderHouseholdEntity.Create (businessContext, addressTemplate);
+							var isHead1					= person.eCH_Person.ReportedPerson1.Adult1 == person.eCH_Person;
+							var isHead2					= person.eCH_Person.ReportedPerson1.Adult2 == person.eCH_Person;
 
-							EChDataHelpers.SetupHousehold (businessContext, person, newHousehold, reportedPerson, isHead1, isHead2);												
+							EChDataHelpers.SetupHousehold (businessContext, person, newHousehold, reportedPerson, isHead1, isHead2);
 							businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
-							PersonWithoutContactFixer.LogToConsole ("Household added for: {0}", person.GetDisplayName ());
+							PersonsWithoutContactFixer.LogToConsole ("Household n°1 created for: {0}", person.GetDisplayName ());
+						}
+
+						if (!isSameReportedPerson && hasMultiReportedPerson)
+						{
+							var isHead1		= person.eCH_Person.ReportedPerson2.Adult1 == person.eCH_Person;
+							var isHead2		= person.eCH_Person.ReportedPerson2.Adult2 == person.eCH_Person;
+							var isHead		= isHead1 || isHead2;
+
+							var existingHousehold2	= PersonsWithoutContactFixer.GetAiderHousehold (businessContext, person.eCH_Person.ReportedPerson2.Adult1);
+							if (existingHousehold2.IsNotNull ())
+							{
+								AiderContactEntity.Create (businessContext, person, existingHousehold2, isHead);
+								PersonsWithoutContactFixer.LogToConsole ("Corrected: {0} added to household n°2(Head:{1})", person.GetDisplayName (), existingHousehold2.GetHeadNames ().Item1);
+							}
+							else
+							{
+								var reportedPerson  = person.eCH_Person.ReportedPerson2;
+
+								var addressTemplate = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext, person.eCH_Person.ReportedPerson2);
+								if (addressTemplate.StreetHouseNumberAndComplement.IsNullOrWhiteSpace ())
+								{
+									PersonsWithoutContactFixer.LogToConsole ("Warning address imcomplete for: {0}", person.GetDisplayName ());
+								}
+
+								var newHousehold	= AiderHouseholdEntity.Create (businessContext, addressTemplate);
+
+								EChDataHelpers.SetupHousehold (businessContext, person, newHousehold, reportedPerson, isHead1, isHead2);
+								businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+								PersonsWithoutContactFixer.LogToConsole ("Household n°1 created for: {0}", person.GetDisplayName ());
+							}
 						}
 					}
 					else
 					{
-						PersonWithoutContactFixer.LogToConsole ("Person not Declared in ECh status: {0}", person.eCH_Person.DeclarationStatus);
+						PersonsWithoutContactFixer.LogToConsole ("Person not Declared in ECh status: {0}", person.eCH_Person.DeclarationStatus);
 					}	
 				}
 
