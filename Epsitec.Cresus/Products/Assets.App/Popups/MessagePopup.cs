@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
@@ -62,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var popup = new MessagePopup (
 				"Avertissement",
-				"Le verrouillage n'est pas possible, car il existe des aperçus d'amortissement.");
+				"Le verrouillage n'est pas possible, car il existe des préamortissements.");
 
 			popup.Create (target);
 		}

@@ -21,6 +21,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
+			this.NewIcon         = "TreeTable.New";
+			this.NewTooltip      = "Nouvelle écriture comptable";
+			this.DeleteTooltip   = "Supprime l'écriture comptable";
+			this.DeselectTooltip = "Désélectionne l'écriture comptable";
+
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Entries);
 
 			this.nodeGetter = new EntriesNodeGetter (this.accessor);

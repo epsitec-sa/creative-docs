@@ -21,8 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor = accessor;
 			this.mainToolbar = toolbar;
 
-			this.amortizations = new Amortizations (this.accessor);
-
 			this.ignoreChanges = new SafeCounter ();
 		}
 
@@ -48,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		public virtual AbstractViewState ViewState
+		public virtual AbstractViewState		ViewState
 		{
 			get
 			{
@@ -59,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected virtual Guid SelectedGuid
+		protected virtual Guid					SelectedGuid
 		{
 			get
 			{
@@ -264,7 +262,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected readonly DataAccessor			accessor;
 		protected readonly MainToolbar			mainToolbar;
-		protected readonly Amortizations		amortizations;
 		protected readonly SafeCounter			ignoreChanges;
 
 		protected BaseType						baseType;

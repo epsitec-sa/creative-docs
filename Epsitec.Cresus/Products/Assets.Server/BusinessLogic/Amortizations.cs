@@ -115,7 +115,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			int count = this.RemoveEvents (obj, EventType.AmortizationAuto, new DateRange (startDate, System.DateTime.MaxValue));
+			this.RemoveEvents (obj, EventType.AmortizationPreview, new DateRange (startDate, System.DateTime.MaxValue));
+			this.RemoveEvents (obj, EventType.AmortizationAuto,    new DateRange (startDate, System.DateTime.MaxValue));
 
 			return errors;
 		}

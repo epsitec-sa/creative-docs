@@ -24,6 +24,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
+			this.NewIcon         = "TreeTable.New.Group";
+			this.NewTooltip      = "Nouveau groupe";
+			this.DeleteTooltip   = "Supprime le groupe";
+			this.DeselectTooltip = "Désélectionne le groupe";
+
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Groups);
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode

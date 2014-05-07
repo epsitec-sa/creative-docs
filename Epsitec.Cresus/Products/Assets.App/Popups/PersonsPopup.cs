@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Choix de la personne");
+			this.CreateTitle ("Choix du contact");
 			this.CreateCloseButton ();
 
 			var frame = new FrameBox

@@ -59,8 +59,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 																				          
 			this.CreateSeparator (DockStyle.Left);
 																				          
-			this.buttonNew         = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.New,         "Timeline.New",         "Nouvel événement");
-			this.buttonDelete      = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Delete ,     "Timeline.Delete",      "Supprimer l'événement");
+			this.buttonNew         = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.New,         "TreeTable.New.Event",  "Nouvel événement");
+			this.buttonDelete      = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Delete ,     "Timeline.Delete",      "Supprime l'événement");
 			this.buttonDeselect    = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Deselect,    "Timeline.Deselect",    "Désélectionne l'événement");
 
 			this.buttonCompacted.Margins   = new Margins (5, 0, 0, 0);

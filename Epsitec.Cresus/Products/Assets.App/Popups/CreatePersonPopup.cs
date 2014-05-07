@@ -13,8 +13,8 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Popup permettant la saisir des informations nécessaires à la création d'une
-	/// nouvelle personne, à savoir son nom.
+	/// Popup permettant la saisir des informations nécessaires à la création d'un
+	/// nouveau contact, à savoir son nom.
 	/// </summary>
 	public class CreatePersonPopup : AbstractPopup
 	{
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Création d'une nouvelle personne");
+			this.CreateTitle ("Création d'un nouveau contact");
 
 			var line1 = this.CreateFrame (CreatePersonPopup.margin, 50, CreatePersonPopup.popupWidth-CreatePersonPopup.margin*2, CreatePersonPopup.lineHeight);
 

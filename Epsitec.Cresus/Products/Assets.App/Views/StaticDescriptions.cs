@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "Groupes";
 
 				case ViewType.Persons:
-					return "Personnes";
+					return "Contacts";
 
 				case ViewType.Reports:
 					return "Rapports et statistiques";
@@ -77,8 +77,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "Champs des objets d'immobilisations";
 
 				case ViewType.PersonsSettings:
-					//?return "Réglages — Champs des personnes";
-					return "Champs des personnes";
+					//?return "Réglages — Champs des contacts";
+					return "Champs des contacts";
 
 				case ViewType.AccountsSettings:
 					//?return "Réglages — Plan comptable";
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "Définitions du groupe";
 
 				case PageType.Person:
-					return "Définitions de la personne";
+					return "Définitions du contact";
 
 				case PageType.UserFields:
 					return "Définitions du champ";

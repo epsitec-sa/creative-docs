@@ -12,6 +12,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TreeTableToolbar : AbstractCommandToolbar
 	{
+		public string							NewIcon;
+		public string							NewTooltip;
+		public string							DeleteIcon;
+		public string							DeleteTooltip;
+		public string							DeselectIcon;
+		public string							DeselectTooltip;
+
 		public bool								HasGraphic
 		{
 			get
@@ -129,9 +136,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.separator3       = this.CreateSeparator     (DockStyle.None);
 			
-			this.buttonNew        = this.CreateCommandButton (DockStyle.None, ToolbarCommand.New,        "TreeTable.New",        "Nouvel ligne");
-			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
-			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect,   "TreeTable.Deselect",   "Désélectionne la ligne");
+			this.buttonNew        = this.CreateCommandButton (DockStyle.None, ToolbarCommand.New,        this.NewIcon      ?? "TreeTable.New",        this.NewTooltip      ?? "Nouvelle ligne");
+			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,     this.DeleteIcon   ?? "TreeTable.Delete",     this.DeleteTooltip   ?? "Supprime la ligne");
+			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect,   this.DeselectIcon ?? "TreeTable.Deselect",   this.DeselectTooltip ?? "Désélectionne la ligne");
 
 			this.buttonGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;

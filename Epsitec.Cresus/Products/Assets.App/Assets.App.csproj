@@ -411,6 +411,12 @@
     <EmbeddedResource Include="Images\Report.Export.icon" />
     <EmbeddedResource Include="Images\Report.Select.icon" />
     <EmbeddedResource Include="Images\Report.Params.icon" />
+    <EmbeddedResource Include="Images\TreeTable.New.Asset.icon" />
+    <EmbeddedResource Include="Images\TreeTable.New.Category.icon" />
+    <EmbeddedResource Include="Images\TreeTable.New.Group.icon" />
+    <EmbeddedResource Include="Images\TreeTable.New.Person.icon" />
+    <EmbeddedResource Include="Images\TreeTable.New.Event.icon" />
+    <EmbeddedResource Include="Images\TreeTable.New.Amortization.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

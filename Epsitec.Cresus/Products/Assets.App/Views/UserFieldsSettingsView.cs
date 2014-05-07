@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnUpdateAfterCreate(Guid guid)
 		{
-			//	Démarre une édition après avoir créé une personne.
+			//	Démarre une édition après avoir créé un contact.
 			this.isEditing = true;
 			this.selectedGuid = guid;
 			this.objectEditor.PageType = this.objectEditor.MainPageType;

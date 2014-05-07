@@ -23,6 +23,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
+			this.NewTooltip      = "Nouveau compte";
+			this.DeleteTooltip   = "Supprime le compte";
+			this.DeselectTooltip = "Désélectionne le compte";
+
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AccountsSettings);
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode

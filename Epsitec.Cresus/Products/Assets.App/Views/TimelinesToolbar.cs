@@ -46,21 +46,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonCompacted = this.CreateModeButton   (TimelinesMode.Narrow, ToolbarCommand.Narrow, "Timeline.Narrow", "Affichage étroit");
 			this.buttonExpended  = this.CreateModeButton   (TimelinesMode.Wide,   ToolbarCommand.Wide,   "Timeline.Wide",   "Affichage large");
 
-			this.buttonFirst    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First,    "Timeline.First",    "Retour sur le premier événement");
-			this.buttonPrev     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Prev,     "Timeline.Prev",     "Recule sur l'événement précédent");
-			this.buttonNext     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Next,     "Timeline.Next",     "Avance sur l'événement suivant");
-			this.buttonLast     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Last,     "Timeline.Last",     "Avance sur le dernier événement");
+			this.buttonFirst = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.First, "Timeline.First", "Retour sur le premier événement");
+			this.buttonPrev  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Prev,  "Timeline.Prev",  "Recule sur l'événement précédent");
+			this.buttonNext  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Next,  "Timeline.Next",  "Avance sur l'événement suivant");
+			this.buttonLast  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Last,  "Timeline.Last",  "Avance sur le dernier événement");
 
-			this.separator1     = this.CreateSeparator     (DockStyle.None);
+			this.separator1 = this.CreateSeparator     (DockStyle.Left);
 			
-			this.buttonNew      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.New,      "Timeline.New",      "Nouvel événement");
-			this.buttonDelete   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,   "Timeline.Delete",   "Supprimer l'événement");
-			this.buttonDeselect = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect, "Timeline.Deselect", "Désélectionne l'événement");
-
-			this.toolbar.SizeChanged += delegate
-			{
-				this.Adjust ();
-			};
+			this.buttonNew                    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.New,                    "TreeTable.New.Event",     "Nouvel événement");
+			this.buttonDelete                 = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Delete,                 "Timeline.Delete",         "Supprime l'événement");
+			this.buttonAmortizationsPreview   = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   "Générer les préamortissements");
+			this.buttonAmortizationsFix       = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       "Fixer les préamortissements");
+			this.buttonAmortizationsToExtra   = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsToExtra,   "Amortizations.ToExtra",   "Transformer en amortissement extraordinaire");
+			this.buttonAmortizationsUnpreview = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer les préamortissements");
+			this.buttonAmortizationsDelete    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements ordinaires");
+			this.buttonDeselect               = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Deselect,               "Timeline.Deselect",       "Désélectionne l'événement");
 
 			return this.toolbar;
 		}
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton CreateModeButton(TimelinesMode mode, ToolbarCommand command, string icon, string tooltip)
 		{
 			//	Utilise DockStyle.None, car le bouton est positionnée avec SetManualBounds.
-			var button = this.CreateCommandButton (DockStyle.None, command, icon, tooltip);
+			var button = this.CreateCommandButton (DockStyle.Left, command, icon, tooltip);
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
 
 			button.Clicked += delegate
@@ -108,77 +108,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void Adjust()
-		{
-			//	S'il manque de la place en largeur, on supprime des boutons avec
-			//	cette priorité:
-			//	- CompactAll/ExpandAll
-			//	- First/Last
-			//	- Prev/Next
-			if (this.toolbar == null)
-			{
-				return;
-			}
-
-			double size = this.toolbar.ActualHeight;
-			double x = 0;
-
-			foreach (var bs in this.GetButtons (this.toolbar.ActualWidth, size))
-			{
-				bs.Widget.Visibility = bs.Visibility;
-
-				if (bs.Visibility)
-				{
-					if (bs.Widget is IconButton)
-					{
-						bs.Widget.SetManualBounds (new Rectangle (x, 0, size, size));
-						x += size;
-					}
-					else if (bs.Widget is FrameBox)
-					{
-						x += AbstractCommandToolbar.separatorWidth/2;
-						bs.Widget.SetManualBounds (new Rectangle (x, 0, 1, size));
-						x += AbstractCommandToolbar.separatorWidth/2;
-					}
-				}
-			}
-		}
-
-		private IEnumerable<ButtonState> GetButtons(double width, double size)
-		{
-			bool prevNext  = width > size*7 + AbstractCommandToolbar.separatorWidth*2;
-			bool firstLast = width > size*9 + AbstractCommandToolbar.separatorWidth;
-
-			yield return new ButtonState (this.buttonCompacted);
-			yield return new ButtonState (this.buttonExpended);
-
-			yield return new ButtonState (this.separator1, firstLast || prevNext);
-
-			yield return new ButtonState (this.buttonFirst, firstLast);
-			yield return new ButtonState (this.buttonPrev,  prevNext);
-			yield return new ButtonState (this.buttonNext,  prevNext);
-			yield return new ButtonState (this.buttonLast,  firstLast);
-
-			yield return new ButtonState (this.separator1, firstLast || prevNext);
-
-			yield return new ButtonState (this.buttonNew);
-			yield return new ButtonState (this.buttonDelete);
-			yield return new ButtonState (this.buttonDeselect);
-		}
-
-		private struct ButtonState
-		{
-			public ButtonState(Widget widget, bool visibility = true)
-			{
-				this.Widget     = widget;
-				this.Visibility = visibility;
-			}
-
-			public readonly Widget		Widget;
-			public readonly bool		Visibility;
-		}
-
-
 		#region Events handler
 		private void OnModeChanged(TimelinesMode timelinesMode)
 		{
@@ -202,6 +131,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonNew;
 		private IconButton						buttonDelete;
 		private IconButton						buttonDeselect;
+
+		private IconButton						buttonAmortizationsPreview;
+		private IconButton						buttonAmortizationsFix;
+		private IconButton						buttonAmortizationsToExtra;
+		private IconButton						buttonAmortizationsUnpreview;
+		private IconButton						buttonAmortizationsDelete;
 
 		private TimelinesMode					timelinesMode;
 	}

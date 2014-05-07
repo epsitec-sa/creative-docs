@@ -147,11 +147,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public static AbstractViewState GetViewState(Guid personGuid)
 		{
-			//	Retourne un ViewState permettant de voir une personne donnée.
+			//	Retourne un ViewState permettant de voir un contact donné.
 			return new PersonsViewState
 			{
 				ViewType     = ViewType.Persons,
-				PageType     = PageType.Person,  // pour éditer directement la personne
+				PageType     = PageType.Person,  // pour éditer directement le contact
 				SelectedGuid = personGuid,
 			};
 		}
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnUpdateAfterCreate(Guid guid)
 		{
-			//	Démarre une édition après avoir créé une personne.
+			//	Démarre une édition après avoir créé un contact.
 			this.isEditing = true;
 			this.selectedGuid = guid;
 			this.objectEditor.PageType = this.objectEditor.MainPageType;

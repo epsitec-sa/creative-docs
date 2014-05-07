@@ -26,6 +26,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public string							NewIcon;
+		public string							NewTooltip;
+		public string							DeleteIcon;
+		public string							DeleteTooltip;
+		public string							DeselectIcon;
+		public string							DeselectTooltip;
+
 		public bool								ShowGraphic
 		{
 			get
@@ -74,8 +81,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.topTitle.SetTitle (this.title);
 
-			this.toolbar = new TreeTableToolbar ();
+			this.toolbar = new TreeTableToolbar
+			{
+				NewIcon         = this.NewIcon,
+				NewTooltip      = this.NewTooltip,
+				DeleteIcon      = this.DeleteIcon,
+				DeleteTooltip   = this.DeleteTooltip,
+				DeselectIcon    = this.DeselectIcon,
+				DeselectTooltip = this.DeselectTooltip,
+			};
+
 			this.toolbar.CreateUI (parent);
+
 			this.toolbar.HasGraphic        = this.hasGraphic;
 			this.toolbar.HasFilter         = this.hasFilter;
 			this.toolbar.HasTreeOperations = this.hasTreeOperations;
@@ -455,7 +472,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			private readonly AbstractToolbarTreeController<T>	controller;
-			private readonly Guid									currentGuid;
+			private readonly Guid								currentGuid;
 		}
 
 

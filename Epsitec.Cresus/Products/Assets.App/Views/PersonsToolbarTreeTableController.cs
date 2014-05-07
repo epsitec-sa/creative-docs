@@ -22,6 +22,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
+			this.NewIcon         = "TreeTable.New.Person";
+			this.NewTooltip      = "Nouveau contact";
+			this.DeleteTooltip   = "Supprime le contact";
+			this.DeselectTooltip = "Désélectionne le contact";
+
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Persons);
 
 			var primary = this.accessor.GetNodeGetter (BaseType.Persons);
@@ -104,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
-			YesNoPopup.Show (target, "Voulez-vous supprimer la personne sélectionnée ?", delegate
+			YesNoPopup.Show (target, "Voulez-vous supprimer le contact sélectionné ?", delegate
 			{
 				this.accessor.RemoveObject (BaseType.Persons, this.SelectedGuid);
 				this.UpdateData ();

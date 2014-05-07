@@ -22,9 +22,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelinesArrayController = new TimelinesArrayController (this.accessor)
 			{
-				Title                   = this.GetViewTitle (ViewType.Amortizations),
-				HasAmortizationsToolbar = true,
-				Filter                  = AmortizationsView.EventFilter,
+				Title                = this.GetViewTitle (ViewType.Amortizations),
+				HasAmortizationsOper = true,
+				Filter               = AmortizationsView.EventFilter,
 			};
 
 			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: false);
@@ -63,13 +63,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelinesArrayController.CreateUI (this.timelinesArrayFrameBox);
 
-			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsPreview,   true);
-			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsFix,       true);
-			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsToExtra,   true);
-			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsUnpreview, true);
-			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsDelete,    true);
-			this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsInfo,      true);
-
 			this.objectEditor.CreateUI (this.editFrameBox);
 
 			this.lastIsEditing = true;  // pour forcer UpdateViewModeGeometry !
@@ -93,58 +86,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.timelinesArrayController.CellDoubleClicked += delegate
 				{
 					this.OnStartEdit ();
-				};
-			}
-
-			//	Connexion des événements de la toolbar des amortissements.
-			{
-				var toolbar = this.timelinesArrayController.AmortizationsToolbar;
-				toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-				{
-					var target = toolbar.GetTarget (command);
-
-					switch (command)
-					{
-						case ToolbarCommand.AmortizationsPreview:
-							this.ShowAmortizationsPopup (target, true, true,
-								"Générer l'aperçu des amortissements ordinaires",
-								"Générer pour un",
-								"Générer pour tous",
-								this.PreviewAmortisations);
-							break;
-
-						case ToolbarCommand.AmortizationsFix:
-							this.ShowAmortizationsPopup (target, false, false,
-								"Fixer l'aperçu des amortissements ordinaires",
-								"Fixer pour un",
-								"Fixer pour tous",
-								this.FixAmortisations);
-							break;
-
-						case ToolbarCommand.AmortizationsToExtra:
-							this.TransformToExtra ();
-							break;
-
-						case ToolbarCommand.AmortizationsUnpreview:
-							this.ShowAmortizationsPopup (target, false, false,
-								"Supprimer l'aperçu des amortissements ordinaires",
-								"Supprimer pour un",
-								"Supprimer pour tous",
-								this.UnpreviewAmortisations);
-							break;
-
-						case ToolbarCommand.AmortizationsDelete:
-							this.ShowAmortizationsPopup (target, true, false,
-								"Supprimer des amortissements ordinaires",
-								"Supprimer pour un",
-								"Supprimer pour tous",
-								this.DeleteAmortisations);
-							break;
-
-						case ToolbarCommand.AmortizationsInfo:
-							this.ShowErrorPopup (target, this.errors);
-							break;
-					}
 				};
 			}
 
@@ -306,131 +247,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void PreviewAmortisations(DateRange processRange, bool allObjects)
-		{
-			if (allObjects)
-			{
-				this.errors = this.amortizations.Preview (processRange);
-			}
-			else
-			{
-				this.errors = this.amortizations.Create (processRange, this.SelectedGuid);
-			}
-
-			this.DeepUpdateUI ();
-		}
-
-		private void FixAmortisations(DateRange processRange, bool allObjects)
-		{
-			if (allObjects)
-			{
-				this.errors = this.amortizations.Fix ();
-			}
-			else
-			{
-				this.errors = this.amortizations.Fix (this.SelectedGuid);
-			}
-
-			this.DeepUpdateUI ();
-		}
-
-		private void UnpreviewAmortisations(DateRange processRange, bool allObjects)
-		{
-			if (allObjects)
-			{
-				this.errors = this.amortizations.Unpreview ();
-			}
-			else
-			{
-				this.errors = this.amortizations.Unpreview (this.SelectedGuid);
-			}
-
-			this.DeepUpdateUI ();
-		}
-
-		private void DeleteAmortisations(DateRange processRange, bool allObjects)
-		{
-			if (allObjects)
-			{
-				this.errors = this.amortizations.Delete (processRange.IncludeFrom);
-			}
-			else
-			{
-				this.errors = this.amortizations.Delete (processRange.IncludeFrom, this.SelectedGuid);
-			}
-
-			this.DeepUpdateUI ();
-		}
-
-		private void TransformToExtra()
-		{
-			//	Transforme un amortissement ordinaire en extraordinaire.
-			if (!this.selectedGuid.IsEmpty && this.selectedTimestamp.HasValue)
-			{
-				var asset = this.accessor.GetObject (BaseType.Assets, this.selectedGuid);
-				if (asset != null)
-				{
-					var e = asset.GetEvent (this.selectedTimestamp.Value);
-					if (e != null)
-					{
-						//	Supprime l'amortissement ordinaire.
-						asset.RemoveEvent (e);
-
-						//	Crée un amortissement extraordinaire.
-						var newEvent = new DataEvent (e.Guid, e.Timestamp, EventType.AmortizationExtra);
-						newEvent.SetProperties (e);
-						asset.AddEvent (newEvent);
-
-						this.DeepUpdateUI ();
-					}
-				}
-			}
-		}
-
-
-		private void ShowAmortizationsPopup(Widget target, bool fromAllowed, bool toAllowed, string title, string one, string all, System.Action<DateRange, bool> action)
-		{
-			var popup = new AmortizationsPopup (this.accessor)
-			{
-				Title               = title,
-				ActionOne           = one,
-				ActionAll           = all,
-				DateFromAllowed     = fromAllowed,
-				DateToAllowed       = toAllowed,
-				OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
-				IsAll               =  this.SelectedGuid.IsEmpty,
-				DateFrom            = LocalSettings.AmortizationDateFrom,
-				DateTo              = LocalSettings.AmortizationDateTo,
-			};
-
-			popup.Create (target);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					System.Diagnostics.Debug.Assert (popup.DateFrom.HasValue);
-					System.Diagnostics.Debug.Assert (popup.DateTo.HasValue);
-					var range = new DateRange (popup.DateFrom.Value, popup.DateTo.Value.AddDays (1));
-
-					LocalSettings.AmortizationDateFrom = popup.DateFrom.Value;
-					LocalSettings.AmortizationDateTo   = popup.DateTo.Value;
-
-					action (range, popup.IsAll);
-				}
-			};
-		}
-
-		private void ShowErrorPopup(Widget target, List<Error> errors)
-		{
-			if (errors != null)
-			{
-				var popup = new ErrorsPopup (this.accessor, errors);
-				popup.Create (target);
-			}
-		}
-
-
 		private void OnStartStopEdit()
 		{
 			if (!this.isEditing && this.selectedGuid.IsEmpty)
@@ -503,43 +319,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.isEditing)
 			{
-				this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsToExtra, false);
-
-				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
-
+				this.mainToolbar.SetCommandState  (ToolbarCommand.Edit,   ToolbarCommandState.Activate);
 				this.mainToolbar.SetCommandEnable (ToolbarCommand.Accept, this.objectEditor.EditionDirty);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+				this.mainToolbar.SetCommandState  (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
 			}
 			else
 			{
-				this.timelinesArrayController.AmortizationsToolbar.SetCommandEnable (ToolbarCommand.AmortizationsToExtra, this.IsToExtraPossible);
-
-				this.mainToolbar.SetCommandEnable (ToolbarCommand.Edit, this.IsEditingPossible);
-
-				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
-			}
-		}
-
-		private bool IsToExtraPossible
-		{
-			get
-			{
-				if (!this.selectedGuid.IsEmpty && this.selectedTimestamp.HasValue)
-				{
-					var asset = this.accessor.GetObject (BaseType.Assets, this.selectedGuid);
-					if (asset != null)
-					{
-						var e = asset.GetEvent (this.selectedTimestamp.Value);
-						if (e != null)
-						{
-							return e.Type == EventType.AmortizationPreview
-								|| e.Type == EventType.AmortizationAuto;
-						}
-					}
-				}
-
-				return false;
+				this.mainToolbar.SetCommandEnable (ToolbarCommand.Edit,   this.IsEditingPossible);
+				this.mainToolbar.SetCommandState  (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState  (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
 			}
 		}
 
@@ -562,7 +350,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private bool										isEditing;
 		private Guid										selectedGuid;
 		private Timestamp?									selectedTimestamp;
-		private List<Error>									errors;
 
 		private bool										lastIsEditing;
 	}

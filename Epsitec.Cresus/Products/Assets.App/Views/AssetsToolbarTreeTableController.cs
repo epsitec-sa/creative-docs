@@ -25,6 +25,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
+			this.NewIcon         = "TreeTable.New.Asset";
+			this.NewTooltip      = "Nouvel objet d'immobilisation";
+			this.DeleteTooltip   = "Supprime l'objet d'immobilisation";
+			this.DeselectTooltip = "Désélectionne l'objet d'immobilisation";
+
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Assets);
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode

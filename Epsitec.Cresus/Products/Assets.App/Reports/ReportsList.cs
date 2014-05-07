@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Reports
 			{
 				yield return new Report (ReportType.MCH2Summary, "Tableau des immobilisations MCH2");
 				yield return new Report (ReportType.AssetsList,  "Liste des objets d'immobilisations");
-				yield return new Report (ReportType.PersonsList, "Liste des personnes");
+				yield return new Report (ReportType.PersonsList, "Liste des contacts");
 			}
 		}
 
