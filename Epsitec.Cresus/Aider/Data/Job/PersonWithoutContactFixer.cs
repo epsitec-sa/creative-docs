@@ -95,8 +95,8 @@ namespace Epsitec.Aider.Data.Job
 
 						if (isSameReportedPerson)
 						{
-							PersonsWithoutContactFixer.LogToConsole ("Warning: Same ReportedPersons");
-							//businessContext.DeleteEntity (person.eCH_Person.ReportedPerson2);
+							PersonsWithoutContactFixer.LogToConsole ("Warning: Same ReportedPersons -> data corrected by removing second reported person");
+							businessContext.DeleteEntity (person.eCH_Person.ReportedPerson2);
 						}
 
 
@@ -131,6 +131,8 @@ namespace Epsitec.Aider.Data.Job
 							var isHead2					= person.eCH_Person.ReportedPerson1.Adult2 == person.eCH_Person;
 
 							EChDataHelpers.SetupHousehold (businessContext, person, newHousehold, reportedPerson, isHead1, isHead2);
+							AiderSubscriptionEntity.Create (businessContext, newHousehold);
+
 							businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 							PersonsWithoutContactFixer.LogToConsole ("Household n°1 created for: {0}", person.GetDisplayName ());
 						}
@@ -160,6 +162,8 @@ namespace Epsitec.Aider.Data.Job
 								var newHousehold	= AiderHouseholdEntity.Create (businessContext, addressTemplate);
 
 								EChDataHelpers.SetupHousehold (businessContext, person, newHousehold, reportedPerson, isHead1, isHead2);
+								AiderSubscriptionEntity.Create (businessContext, newHousehold);
+
 								businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 								PersonsWithoutContactFixer.LogToConsole ("Household n°1 created for: {0}", person.GetDisplayName ());
 							}
