@@ -1614,6 +1614,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				{
 					if (mode == TextFieldDisplayMode.Default ||
 						mode == TextFieldDisplayMode.UseBackColor ||
+						mode == TextFieldDisplayMode.ActiveHint ||
 						mode == TextFieldDisplayMode.ActiveHintAndUseBackColor)
 					{
 						graphics.RenderSolid(this.colorCaption);

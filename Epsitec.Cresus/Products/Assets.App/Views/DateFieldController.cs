@@ -136,6 +136,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			};
 
+			this.textField.DoubleClicked += delegate
+			{
+				this.SetFocus ();
+			};
+
 			this.textField.TextChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
@@ -635,41 +640,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					int f = System.Math.Min (this.textField.CursorFrom, this.textField.CursorTo);
 					int t = System.Math.Max (this.textField.CursorFrom, this.textField.CursorTo);
+					int i = System.Math.Max (f, t);
 
-					if (f == 0 && t == this.textField.Text.Length)
+					var list = DateFieldController.GetDatePartOffets (this.textField.Text);
+
+					if (list.Count >= 2 && i <= list[1])
 					{
-						return Part.Year;
+						return Part.Day;
 					}
 
-					text = text.Replace (' ', '.');
-					text = text.Replace ('/', '.');
-					text = text.Replace (',', '.');
-					text = text.Replace ('-', '.');
-
-					var words = text.Split ('.');
-
-					int part = 0;
-					int i = 0;
-					foreach (var word in words)
+					if (list.Count >= 4 && i <= list[3])
 					{
-						i += word.Length+1;
+						return Part.Month;
+					}
 
-						if (this.textField.Cursor < i)
-						{
-							switch (part)
-							{
-								case 0:
-									return Part.Day;
-
-								case 1:
-									return Part.Month;
-
-								case 2:
-									return Part.Year;
-							}
-						}
-
-						part++;
+					if (list.Count >= 6 && i <= list[5])
+					{
+						return Part.Year;
 					}
 				}
 
@@ -682,24 +669,142 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Sélectionne une partie du texte en édition.
 			if (this.textField.Text.Length == 10)  // jj.mm.aaaa ?
 			{
-				switch (part)
+				int start, length;
+				DateFieldController.GetDatePart (this.textField.Text, part, out start, out length);
+				if (length > 0)
 				{
-					case Part.Day:
-						this.textField.CursorFrom = 0;
-						this.textField.CursorTo   = 2;  // [31].03.2015
-						break;
-
-					case Part.Month:
-						this.textField.CursorFrom = 3;
-						this.textField.CursorTo   = 3+2;  // 31.[03].2015
-						break;
-
-					case Part.Year:
-						this.textField.CursorFrom = 6;
-						this.textField.CursorTo   = 6+4;  // 31.03.[2015]
-						break;
+					this.textField.CursorFrom = start;
+					this.textField.CursorTo   = start + length;
 				}
 			}
+		}
+
+		private static string NormalizeDate(string text)
+		{
+			var list = DateFieldController.GetDatePartOffets (text);
+
+			if (list.Count >= 6)
+			{
+				var d = text.Substring (list[0], list[1] - list[0]);
+				var m = text.Substring (list[2], list[3] - list[2]);
+				var y = text.Substring (list[4], list[5] - list[4]);
+				return string.Concat (d, ".", m, ".", y);
+			}
+
+			if (list.Count >= 4)
+			{
+				var d = text.Substring (list[0], list[1] - list[0]);
+				var m = text.Substring (list[2], list[3] - list[2]);
+				return string.Concat (d, ".", m);
+			}
+
+			if (list.Count >= 2)
+			{
+				return text.Substring (list[0], list[1] - list[0]);
+			}
+
+			return text;
+		}
+
+		public static void GetDatePart(string text, Part part, out int start, out int length)
+		{
+			var list = DateFieldController.GetDatePartOffets (text);
+
+			switch (part)
+			{
+				case Part.Day:
+					if (list.Count >= 1)
+					{
+						start  = list[0];
+						length = list[1] - list[0];
+						return;
+					}
+					break;
+
+				case Part.Month:
+					if (list.Count >= 3)
+					{
+						start  = list[2];
+						length = list[3] - list[2];
+						return;
+					}
+					break;
+
+				case Part.Year:
+					if (list.Count >= 5)
+					{
+						start  = list[4];
+						length = list[5] - list[4];
+						return;
+					}
+					break;
+			}
+
+			start = -1;
+			length = 0;
+		}
+
+		private static List<int> GetDatePartOffets(string text)
+		{
+			var list = new List<int> ();
+
+			if (!string.IsNullOrEmpty (text))
+			{
+				bool skipNum = false;
+				int partLength = 0;
+				int partIndex = -1;
+
+				for (int i=0; i<text.Length; i++)
+				{
+					var c = text[i];
+
+					if (DateFieldController.IsPartSeparator (c))
+					{
+						if (skipNum)
+						{
+							skipNum = false;
+							partLength = 0;
+							list.Add (i);
+						}
+					}
+					else
+					{
+						if (partIndex < 2 && partLength >= 2)
+						{
+							skipNum = true;
+							partLength = 0;
+							partIndex++;
+							list.Add (i);
+							list.Add (i);
+						}
+						else if (!skipNum)
+						{
+							skipNum = true;
+							partLength = 0;
+							partIndex++;
+							list.Add (i);
+						}
+
+						partLength++;
+					}
+				}
+
+				if (skipNum)
+				{
+					list.Add (text.Length);
+				}
+			}
+
+			return list;
+		}
+
+		private static bool IsPartSeparator(char c)
+		{
+			return c == ' '
+				|| c == '.'
+				|| c == ','
+				|| c == '/'
+				|| c == '-';
 		}
 
 		public enum Part
@@ -847,6 +952,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private System.DateTime? ConvStringToDate(string text)
 		{
+			text = DateFieldController.NormalizeDate (text);
 			System.DateTime? date;
 
 			switch (this.DateRangeCategory)

@@ -105,17 +105,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.dayButton.Clicked += delegate
 			{
-				this.SelectText (0, 2);  // sélectionne [31].03.2013
+				int start, length;
+				DateFieldController.GetDatePart (this.dateFieldController.TextField.Text, DateFieldController.Part.Day, out start, out length);
+				if (length > 0)
+				{
+					this.SelectText (start, length);
+				}
 			};
 
 			this.monthButton.Clicked += delegate
 			{
-				this.SelectText (3, 2);  // sélectionne 31.[03].2013
+				int start, length;
+				DateFieldController.GetDatePart (this.dateFieldController.TextField.Text, DateFieldController.Part.Month, out start, out length);
+				if (length > 0)
+				{
+					this.SelectText (start, length);
+				}
 			};
 
 			this.yearButton.Clicked += delegate
 			{
-				this.SelectText (6, 4);  // sélectionne 31.03.[2013]
+				int start, length;
+				DateFieldController.GetDatePart (this.dateFieldController.TextField.Text, DateFieldController.Part.Year, out start, out length);
+				if (length > 0)
+				{
+					this.SelectText (start, length);
+				}
 			};
 		}
 
