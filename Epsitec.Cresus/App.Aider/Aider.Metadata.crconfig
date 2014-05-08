@@ -1368,9 +1368,15 @@ AiderOfficeSender = [LVOA13]
         <l t="Adresse aux parents de..." f="1"/>
       </L>
        <!-- Filter -->
-       <f id="@AiderContact">
-        <!-- Column id=AddressType (Valeur) (Comparaison) c=Equals(1) v="(e)num AddressType/n°1 (Default)" -->
-        <C><c id="[LVABE]"><v><comp c="1" v="e[LVAT5]/1" /></v></c></C>
+       <f id="@AiderContact">     
+        <C>
+	    <!-- Column id=AddressType (Valeur) (Comparaison) c=Equals(1) v="(e)num AddressType/n°1 (Default)" -->
+	    <c id="[LVABE]"><v><comp c="1" v="e[LVAT5]/1" /></v></c>
+	    <!-- Column id=ContactType (Valeur) (Comparaison) c=(2=NotEquals) v="(e)num ContactType/valeur 4 (Deceased)" -->
+	    <c id="[LVA4E]"><v><comp c="2" v="e[LVASD]/4" /></v></c>
+	    <!-- Column id=DisplayVisibility (Valeur) (Comparaison) c=(1=Equals) v="(e)num PersonVisibiltyStatus/valeur 0 (Normal)" -->
+	    <c id="[LVA7F]"><v><comp c="1" v="e[LVAQE]/0" /></v></c>
+	</C>
       </f>
     </d>
 
