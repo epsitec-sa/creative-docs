@@ -77,7 +77,9 @@ namespace Epsitec.Aider.Data.Job
 					}
 
 					//Preliminary check
-					if (person.eCH_Person.DeclarationStatus == PersonDeclarationStatus.Declared && person.IsGovernmentDefined)
+					if (person.eCH_Person.DeclarationStatus == PersonDeclarationStatus.Declared 
+						&& person.IsGovernmentDefined
+						&& !person.IsDeceased)
 					{
 						
 						//Advanced check
@@ -171,7 +173,7 @@ namespace Epsitec.Aider.Data.Job
 					}
 					else
 					{
-						PersonsWithoutContactFixer.LogToConsole ("Person not Declared in ECh status: {0}", person.eCH_Person.DeclarationStatus);
+						PersonsWithoutContactFixer.LogToConsole ("Skipping ECh status: {0}", person.eCH_Person.DeclarationStatus);
 					}	
 				}
 
