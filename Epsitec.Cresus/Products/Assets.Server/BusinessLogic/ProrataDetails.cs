@@ -64,9 +64,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					}
 					else
 					{
-						//	Le mois en cours n'est pas amorti. Ainsi, un objet entré le 10 mars
-						//	sera amorti à partir d'avril.
-						v = new System.DateTime (valueDate.Year, valueDate.Month, 1).AddMonths (1);
+						//	Le mois en cours est amorti intégralement. Ainsi, un objet entré le 31 mars
+						//	sera amorti tout le mois de mars.
+						v = new System.DateTime (valueDate.Year, valueDate.Month, 1);
 					}
 
 					n = ProrataDetails.GetMonthsCount (v)               - ProrataDetails.GetMonthsCount (range.IncludeFrom);
