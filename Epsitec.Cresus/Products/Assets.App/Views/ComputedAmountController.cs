@@ -144,6 +144,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				TabIndex      = 2,
 			};
 
+			ToolTip.Default.SetToolTip (this.addSubButton,      "Détermine si la valeur est augmentée ou diminuée");
+			ToolTip.Default.SetToolTip (this.argumentTextField, "Valeur de la modification");
+			ToolTip.Default.SetToolTip (this.rateButton,        "Détermine si la modification est en francs ou en pourcents");
+			ToolTip.Default.SetToolTip (this.finalTextField,    "Nouvelle valeur");
+
 			//	Connexion des événements.
 			this.addSubButton.Clicked += delegate
 			{
@@ -375,6 +380,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var ca = this.computedAmount.Value;
 
+					this.addSubButton     .Visibility = ca.InitialAmount.HasValue;
+					this.rateButton       .Visibility = ca.InitialAmount.HasValue;
+					this.equalText        .Visibility = ca.InitialAmount.HasValue;
+					this.argumentTextField.Visibility = ca.InitialAmount.HasValue;
+
 					this.addSubButton.GlyphShape = ca.Subtract ? GlyphShape.Minus : GlyphShape.Plus;
 					this.rateButton.Text = ca.Rate ? "%" : "CHF";
 					this.equalText.Text = "=";
@@ -394,6 +404,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
+					this.addSubButton     .Visibility = false;
+					this.rateButton       .Visibility = false;
+					this.equalText        .Visibility = false;
+					this.argumentTextField.Visibility = false;
+
 					this.addSubButton.GlyphShape = GlyphShape.None;
 					this.rateButton.Text = null;
 					this.equalText.Text = null;
@@ -403,7 +418,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.EditedArgumentAmount = null;
 					this.EditedFinalAmount = null;
 
-					AbstractFieldController.UpdateTextField (this.argumentTextField, PropertyState.Undefined, this.isReadOnly);
+					AbstractFieldController.UpdateTextField (this.argumentTextField, PropertyState.Undefined, true);
 					AbstractFieldController.UpdateTextField (this.finalTextField,    PropertyState.Undefined, this.isReadOnly);
 				}
 

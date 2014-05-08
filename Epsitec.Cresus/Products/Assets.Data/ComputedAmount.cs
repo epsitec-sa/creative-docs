@@ -43,9 +43,9 @@ namespace Epsitec.Cresus.Assets.Data
 			this.ArgumentDefined = argumentDefined;
 		}
 
-		public ComputedAmount(decimal initial, ComputedAmount current)
+		public ComputedAmount(decimal? initial, ComputedAmount current)
 		{
-			if (current.ArgumentDefined)
+			if (initial.HasValue && current.ArgumentDefined)
 			{
 				this.InitialAmount   = initial;
 				this.ArgumentAmount  = current.ArgumentAmount;
@@ -57,22 +57,35 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 			else
 			{
-				var a = ComputedAmount.ComputeArgument (initial, current.FinalAmount, current.Subtract, current.Rate).Value;
+				var a = ComputedAmount.ComputeArgument (initial, current.FinalAmount, current.Subtract, current.Rate);
 
-				if (a < 0.0m)
+				if (a.HasValue)
 				{
-					this.InitialAmount   = initial;
-					this.ArgumentAmount  = -a;
-					this.FinalAmount     = current.FinalAmount;
-					this.Computed        = true;
-					this.Subtract        = !current.Subtract;
-					this.Rate            = current.Rate;
-					this.ArgumentDefined = false;
+					if (a < 0.0m)
+					{
+						this.InitialAmount   = initial;
+						this.ArgumentAmount  = -a;
+						this.FinalAmount     = current.FinalAmount;
+						this.Computed        = true;
+						this.Subtract        = !current.Subtract;
+						this.Rate            = current.Rate;
+						this.ArgumentDefined = false;
+					}
+					else
+					{
+						this.InitialAmount   = initial;
+						this.ArgumentAmount  = a;
+						this.FinalAmount     = current.FinalAmount;
+						this.Computed        = true;
+						this.Subtract        = current.Subtract;
+						this.Rate            = current.Rate;
+						this.ArgumentDefined = false;
+					}
 				}
 				else
 				{
 					this.InitialAmount   = initial;
-					this.ArgumentAmount  = a;
+					this.ArgumentAmount  = null;
 					this.FinalAmount     = current.FinalAmount;
 					this.Computed        = true;
 					this.Subtract        = current.Subtract;
