@@ -623,6 +623,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
+		protected void CreateSubtitle(Widget parent, string text)
+		{
+			new StaticText
+			{
+				Parent          = parent,
+				Text            = text,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (AbstractFieldController.labelWidth+10, 0, 10, 10),
+			};
+		}
+
 
 		protected Widget CreateScrollable(Widget parent)
 		{

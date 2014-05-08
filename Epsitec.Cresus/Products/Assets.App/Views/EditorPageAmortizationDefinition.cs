@@ -24,6 +24,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			parent = this.CreateScrollable (parent);
 
+			this.CreateImportButton (parent);
+
 			this.CreateStringController  (parent, ObjectField.CategoryName);
 			this.CreateDecimalController (parent, ObjectField.AmortizationRate, DecimalFormat.Rate);
 			this.CreateEnumController    (parent, ObjectField.AmortizationType, EnumDictionaries.DictAmortizationTypes, editWidth: 90);
@@ -32,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateDecimalController (parent, ObjectField.Round, DecimalFormat.Amount);
 			this.CreateDecimalController (parent, ObjectField.ResidualValue, DecimalFormat.Amount);
 
-			this.CreateSepartor (parent);
+			this.CreateSubtitle (parent, "Comptes à utiliser pour passer les écritures comptables :");
 
 			this.CreateAccountGuidController (parent, ObjectField.Account1);
 			this.CreateAccountGuidController (parent, ObjectField.Account2);
@@ -42,20 +44,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateAccountGuidController (parent, ObjectField.Account6);
 			//this.CreateAccountGuidController (parent, ObjectField.Account7);
 			//this.CreateAccountGuidController (parent, ObjectField.Account8);
-
-			this.CreateImportButton (parent);
 		}
 
 		private void CreateImportButton(Widget parent)
 		{
-			const int h = 22;
+			const int h = 30;
 
 			var line = new FrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = h,
 				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 20, 0),
+				Margins         = new Margins (0, 0, 0, 20),
 			};
 
 
@@ -67,7 +67,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AutoFocus     = false,
 				PreferredSize = new Size (70, h),
 				Dock          = DockStyle.Left,
-				Margins       = new Margins (100+10, 0, 0, 0),
+				Margins       = new Margins (AbstractFieldController.labelWidth+10, 0, 0, 0),
+			};
+
+			new StaticText
+			{
+				Parent        = line,
+				Text          = "Importez une catégorie d'immobilisation existante, puis modifiez éventuellement sa définition ci-dessous.",
+				Dock          = DockStyle.Fill,
+				Margins       = new Margins (10, 0, 0, 0),
 			};
 
 			button.Clicked += delegate

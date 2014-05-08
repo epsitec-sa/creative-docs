@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateDecimalController (parent, ObjectField.Round, DecimalFormat.Amount);
 			this.CreateDecimalController (parent, ObjectField.ResidualValue, DecimalFormat.Amount);
 
-			this.CreateSepartor (parent);
+			this.CreateSubtitle (parent, "Comptes à utiliser pour passer les écritures comptables :");
 
 			this.CreateAccountGuidController (parent, ObjectField.Account1);
 			this.CreateAccountGuidController (parent, ObjectField.Account2);
