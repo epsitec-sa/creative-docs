@@ -147,6 +147,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					using (this.ignoreChanges.Enter ())
 					{
+						DateFieldController.AutoDots (this.textField);
 						this.Value = this.ConvStringToDate (this.textField.Text);
 						this.UpdateButtons ();
 						this.OnValueEdited (this.Field);
@@ -679,35 +680,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private static string NormalizeDate(string text)
+		private static void AutoDots(TextField textField)
 		{
-			var list = DateFieldController.GetDatePartOffets (text);
-
-			if (list.Count >= 6)
+			//	Insère automatiquement les points lors de la frappe de "01022014".
+			if (!string.IsNullOrEmpty (textField.Text))
 			{
-				var d = text.Substring (list[0], list[1] - list[0]);
-				var m = text.Substring (list[2], list[3] - list[2]);
-				var y = text.Substring (list[4], list[5] - list[4]);
-				return string.Concat (d, ".", m, ".", y);
-			}
+				var text = textField.Text;
 
-			if (list.Count >= 4)
-			{
-				var d = text.Substring (list[0], list[1] - list[0]);
-				var m = text.Substring (list[2], list[3] - list[2]);
-				return string.Concat (d, ".", m);
-			}
+				if (text.Length          == 3 &&  // "123|" ?
+					textField.CursorFrom == 3 &&
+					textField.CursorTo   == 3 &&
+					DateFieldController.IsDigit (text[1]) &&
+					DateFieldController.IsDigit (text[2]))
+				{
+					textField.Text = string.Concat (text.Substring (0, 2), ".", text.Substring (2, 1));  // "12.3|"
+					textField.Cursor = 4;
+				}
 
-			if (list.Count >= 2)
-			{
-				return text.Substring (list[0], list[1] - list[0]);
+				if (text.Length          == 6 &&  // "25.012|" ?
+					textField.CursorFrom == 6 &&
+					textField.CursorTo   == 6 &&
+					DateFieldController.IsDigit (text[4]) &&
+					DateFieldController.IsDigit (text[5]))
+				{
+					textField.Text = string.Concat (text.Substring (0, 5), ".", text.Substring (5, 1));  // "25.01.2|"
+					textField.Cursor = 7;
+				}
 			}
-
-			return text;
 		}
 
 		public static void GetDatePart(string text, Part part, out int start, out int length)
 		{
+			//	Retourne de quoi extraire d'une date dans un format libre le jour, le mois ou l'année.
 			var list = DateFieldController.GetDatePartOffets (text);
 
 			switch (part)
@@ -746,13 +750,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private static List<int> GetDatePartOffets(string text)
 		{
+			//	Retourne les index des différentes parties d'une date.
+			//	"12.3.2014" retourne 0, 2, 3, 4, 5, 9.
+			//	"12...3"    retourne 0, 2, 5, 6
 			var list = new List<int> ();
 
 			if (!string.IsNullOrEmpty (text))
 			{
 				bool skipNum = false;
-				int partLength = 0;
-				int partIndex = -1;
 
 				for (int i=0; i<text.Length; i++)
 				{
@@ -763,29 +768,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 						if (skipNum)
 						{
 							skipNum = false;
-							partLength = 0;
 							list.Add (i);
 						}
 					}
 					else
 					{
-						if (partIndex < 2 && partLength >= 2)
+						if (!skipNum)
 						{
 							skipNum = true;
-							partLength = 0;
-							partIndex++;
-							list.Add (i);
 							list.Add (i);
 						}
-						else if (!skipNum)
-						{
-							skipNum = true;
-							partLength = 0;
-							partIndex++;
-							list.Add (i);
-						}
-
-						partLength++;
 					}
 				}
 
@@ -805,6 +797,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				|| c == ','
 				|| c == '/'
 				|| c == '-';
+		}
+
+		private static bool IsDigit(char c)
+		{
+			return c >= '0'
+				&& c <= '9';
 		}
 
 		public enum Part
@@ -952,7 +950,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private System.DateTime? ConvStringToDate(string text)
 		{
-			text = DateFieldController.NormalizeDate (text);
 			System.DateTime? date;
 
 			switch (this.DateRangeCategory)
