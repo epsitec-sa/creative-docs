@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
-using System.Linq;
-using System.Text;
+
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
-using Epsitec.Cresus.Core.Business;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Aider.Helpers
 {
@@ -36,7 +39,7 @@ namespace Epsitec.Aider.Helpers
 				case 2:
 					parish		= participation.Group.Parents.ElementAt (1).Name;
 					function	= isFemale && participation.Group.GroupDef.IsFunction () ? 
-										participation.Group.GroupDef.FunctionNameInTheFeminine : 
+										participation.Group.GroupDef.NameFeminine : 
 										participation.Group.Name;
 					group		= participation.Group.Parents.ElementAt (1).Name;
 					sgroup		= participation.Group.Parents.ElementAt (0).Name;
@@ -44,7 +47,7 @@ namespace Epsitec.Aider.Helpers
 				default:
 					parish		= participation.Group.Parents.ElementAt (1).Name;
 					function	= isFemale && participation.Group.GroupDef.IsFunction () ?
-										participation.Group.GroupDef.FunctionNameInTheFeminine :
+										participation.Group.GroupDef.NameFeminine :
 										participation.Group.Name;
 					group		= participation.Group.Parents.Skip (1).Reverse ().First ().Name == "Staff" ? 
 									participation.Group.Parents.Skip (1).Reverse ().Skip(1).First ().Name :
@@ -61,53 +64,5 @@ namespace Epsitec.Aider.Helpers
 				Parish		= parish
 			};
 		}
-	}
-
-	public class AiderParticipationRole
-	{
-		public string Function
-		{
-			get;
-			set;
-		}
-
-		public string Group
-		{
-			get;
-			set;
-		}
-
-		public string SuperGroup
-		{
-			get;
-			set;
-		}
-
-		public string Parish
-		{
-			get;
-			set;
-		}
-
-		public string GetRole(AiderGroupParticipantEntity participation)
-		{		
-			var groupDef			= participation.Group.GroupDef;		
-			var isGroupFonctional	= groupDef.Classification == Enumerations.GroupClassification.Function ? true : false;
-			var isWithinParish		= AiderGroupIds.IsWithinParish (participation.Group.Path);
-			var isWithinRegion		= AiderGroupIds.IsWithinRegion (participation.Group.Path);
-
-			if (isWithinParish)
-			{
-				return this.Function + " " + this.Group + " de la " + this.Parish;
-			}
-
-			if (!isWithinParish && isWithinRegion)
-			{
-				return this.Function + " " + this.Group + " " + this.SuperGroup;
-			}
-
-			return this.Function + " " + this.Group;		
-		}
-		
 	}
 }

@@ -222,6 +222,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType EventParticipantRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 110));
 				//	designer:cap/LVAT3
 				public static readonly Epsitec.Common.Types.EnumType EventType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 125));
+				//	designer:cap/LVAPI
+				public static readonly Epsitec.Common.Types.EnumType FrenchArticle = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 601));
 				//	designer:cap/LVATB
 				public static readonly Epsitec.Common.Types.EnumType GroupClassification = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 381));
 				//	designer:cap/LVA8I
@@ -537,6 +539,66 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 126));
+						}
+					}
+				}
+				
+				public static class FrenchArticle
+				{
+					//	designer:cap/LVA0J
+					public static global::Epsitec.Common.Types.Caption PluralFeminine
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 608));
+						}
+					}
+					//	designer:cap/LVAVI
+					public static global::Epsitec.Common.Types.Caption PluralMasculine
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 607));
+						}
+					}
+					//	designer:cap/LVASI
+					public static global::Epsitec.Common.Types.Caption SingularFeminineBeforeConsonant
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 604));
+						}
+					}
+					//	designer:cap/LVAUI
+					public static global::Epsitec.Common.Types.Caption SingularFeminineBeforeVowelOrMute
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 606));
+						}
+					}
+					//	designer:cap/LVARI
+					public static global::Epsitec.Common.Types.Caption SingularMasculineBeforeConsonant
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 603));
+						}
+					}
+					//	designer:cap/LVATI
+					public static global::Epsitec.Common.Types.Caption SingularMasculineBeforeVowelOrMute
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 605));
+						}
+					}
+					//	designer:cap/LVAQI
+					public static global::Epsitec.Common.Types.Caption Undefined
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 602));
 						}
 					}
 				}
@@ -1857,8 +1919,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Classification = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 385);
 				//	designer:cap/LVABG
 				public static readonly global::Epsitec.Common.Support.Druid Function = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 523);
-				//	designer:cap/LVOG33
-				public static readonly global::Epsitec.Common.Support.Druid FunctionNameInTheFeminine = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 112);
 				//	designer:cap/LVGG22
 				public static readonly global::Epsitec.Common.Support.Druid Level = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 80);
 				//	designer:cap/LVG822
@@ -1869,6 +1929,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Mutability = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 354);
 				//	designer:cap/LVA3A
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 323);
+				//	designer:cap/LVA1J
+				public static readonly global::Epsitec.Common.Support.Druid NameArticle = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 609);
+				//	designer:cap/LVOG33
+				public static readonly global::Epsitec.Common.Support.Druid NameFeminine = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 112);
 				//	designer:cap/LVG622
 				public static readonly global::Epsitec.Common.Support.Druid Number = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 70);
 				//	designer:cap/LVARC

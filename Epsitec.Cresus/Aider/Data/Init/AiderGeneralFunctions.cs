@@ -38,40 +38,61 @@ namespace Epsitec.Aider.Data.Groups
 						switch (groupDef.Name)
 						{
 							case "Président" :
-							groupDef.FunctionNameInTheFeminine = "Présidente";
-							break;
+								groupDef.NameFeminine = "Présidente";
+								groupDef.NameArticle  = FrenchArticle.SingularMasculineBeforeConsonant;
+								break;
+							
 							case "Vice-président" :
-							groupDef.FunctionNameInTheFeminine = "Vice-présidente";
-							break;
+								groupDef.NameFeminine = "Vice-présidente";
+								groupDef.NameArticle  = FrenchArticle.SingularMasculineBeforeConsonant;
+								break;
+							
 							case "Scrutateur" :
-							groupDef.FunctionNameInTheFeminine = "Scrutatrice";
-							break;
+								groupDef.NameFeminine = "Scrutatrice";
+								groupDef.NameArticle  = FrenchArticle.SingularMasculineBeforeConsonant;
+								break;
+							
 							case "Trésorier" :
-							groupDef.FunctionNameInTheFeminine = "Trésorière";
-							break;
+								groupDef.NameFeminine = "Trésorière";
+								groupDef.NameArticle  = FrenchArticle.SingularMasculineBeforeConsonant;
+								break;
+							
 							case "Suppléant" :
-							groupDef.FunctionNameInTheFeminine = "Suppléante";
-							break;
+								groupDef.NameFeminine = "Suppléante";
+								groupDef.NameArticle  = FrenchArticle.SingularMasculineBeforeConsonant;
+								break;
+							
 							case "Animateur" :
-							groupDef.FunctionNameInTheFeminine = "Animatrice";
-							break;
+								groupDef.NameFeminine = "Animatrice";
+								groupDef.NameArticle  = FrenchArticle.SingularMasculineBeforeVowelOrMute;
+								break;
+							
 							case "Collaborateur" :
-							groupDef.FunctionNameInTheFeminine = "Collaboratrice";
-							break;
+								groupDef.NameFeminine = "Collaboratrice";
+								groupDef.NameArticle  = FrenchArticle.SingularMasculineBeforeConsonant;
+								break;
+							
 							case "Conseiller":
-							groupDef.FunctionNameInTheFeminine = "Conseillère";
-							break;
+								groupDef.NameFeminine = "Conseillère";
+								groupDef.NameArticle  = FrenchArticle.SingularMasculineBeforeConsonant;
+								break;
+							
 							case "Directeur":
-							groupDef.FunctionNameInTheFeminine = "Directrice";
-							break;
+								groupDef.NameFeminine = "Directrice";
+								groupDef.NameArticle  = FrenchArticle.SingularMasculineBeforeConsonant;
+								break;
+							
 							case "Doyen":
-							groupDef.FunctionNameInTheFeminine = "Doyenne";
-							break;
+								groupDef.NameFeminine = "Doyenne";
+								groupDef.NameArticle  = FrenchArticle.SingularMasculineBeforeConsonant;
+								break;
+							
 							default:
-								groupDef.FunctionNameInTheFeminine = groupDef.Name;
-							break;
+								groupDef.NameFeminine = groupDef.Name;
+								break;
 						}
-						Console.WriteLine ("{0} applyed", groupDef.FunctionNameInTheFeminine);
+						
+						Console.WriteLine ("{0} applyed", groupDef.NameFeminine);
 					}
 					
 				}
