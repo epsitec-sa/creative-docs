@@ -59,7 +59,7 @@ namespace Epsitec.Aider.Helpers
 				case FrenchArticle.PluralMasculine:
 					return "les ";
 				case FrenchArticle.SingularFeminineBeforeConsonant:
-					return "la "
+					return "la ";
 				case FrenchArticle.SingularMasculineBeforeConsonant:
 					return "le ";
 				case FrenchArticle.SingularFeminineBeforeVowelOrMute:
@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Helpers
 					return "des ";
 				case FrenchArticle.SingularFeminineBeforeConsonant:
 				case FrenchArticle.SingularFeminineBeforeVowelOrMute:
-					return "une "
+					return "une ";
 				case FrenchArticle.SingularMasculineBeforeConsonant:
 				case FrenchArticle.SingularMasculineBeforeVowelOrMute:
 					return "un ";
@@ -96,7 +96,7 @@ namespace Epsitec.Aider.Helpers
 				case FrenchArticle.PluralMasculine:
 					return "des ";
 				case FrenchArticle.SingularFeminineBeforeConsonant:
-					return "de la "
+					return "de la ";
 				case FrenchArticle.SingularMasculineBeforeConsonant:
 					return "du ";
 				case FrenchArticle.SingularFeminineBeforeVowelOrMute:
