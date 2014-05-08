@@ -417,6 +417,9 @@
     <EmbeddedResource Include="Images\TreeTable.New.Person.icon" />
     <EmbeddedResource Include="Images\TreeTable.New.Event.icon" />
     <EmbeddedResource Include="Images\TreeTable.New.Amortization.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Paste.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Copy.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Export.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

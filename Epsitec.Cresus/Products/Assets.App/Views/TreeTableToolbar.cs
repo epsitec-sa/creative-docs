@@ -140,6 +140,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,     this.DeleteIcon   ?? "TreeTable.Delete",     this.DeleteTooltip   ?? "Supprime la ligne");
 			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect,   this.DeselectIcon ?? "TreeTable.Deselect",   this.DeselectTooltip ?? "Désélectionne la ligne");
 
+			this.separator4       = this.CreateSeparator     (DockStyle.None);
+
+			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy,       "TreeTable.Copy",       "Copie");
+			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste,      "TreeTable.Paste",      "Colle");
+			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export,     "TreeTable.Export",     "Exporte");
+
 			this.buttonGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
 
@@ -195,9 +201,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool compactExpand = false;
 			bool moveLimit     = false;
 			bool moveStep      = false;
+			bool copyPaste     = false;
 			bool sep1          = false;
 			bool sep2          = false;
 			bool sep3          = false;
+			bool sep4          = false;
 
 			double used = size*3;  // place pour New/Delete/Deselect
 
@@ -249,6 +257,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
+			if (width > used + size*3 + AbstractCommandToolbar.separatorWidth)
+			{
+				used += size*3 + AbstractCommandToolbar.separatorWidth;
+				copyPaste = true;
+				sep4 = true;
+			}
+
 			yield return new ButtonState (this.buttonFilter,  this.hasFilter);
 			yield return new ButtonState (this.buttonGraphic, this.hasGraphic);
 			yield return new ButtonState (this.separator1,    this.hasGraphic | this.hasFilter);
@@ -277,6 +292,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			yield return new ButtonState (this.buttonNew);
 			yield return new ButtonState (this.buttonDelete);
 			yield return new ButtonState (this.buttonDeselect);
+
+			yield return new ButtonState (this.separator4, sep4);
+
+			yield return new ButtonState (this.buttonCopy,   copyPaste);
+			yield return new ButtonState (this.buttonPaste,  copyPaste);
+			yield return new ButtonState (this.buttonExport, copyPaste);
 		}
 
 		private struct ButtonState
@@ -319,6 +340,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonNew;
 		private IconButton						buttonDelete;
 		private IconButton						buttonDeselect;
+
+		private FrameBox						separator4;
+
+		private IconButton						buttonCopy;
+		private IconButton						buttonPaste;
+		private IconButton						buttonExport;
 
 		private bool							hasGraphic;
 		private bool							hasFilter;
