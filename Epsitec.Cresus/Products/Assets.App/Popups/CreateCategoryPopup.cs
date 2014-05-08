@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public CreateCategoryPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Création d'une nouvelle catégorie";
+			this.title = "Création d'une nouvelle catégorie d'immobilisation";
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -32,10 +32,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 1
 			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = "Selon un modèle",
+			});
+
+			list.Add (new StackedControllerDescription  // 2
+			{
 				StackedControllerType = StackedControllerType.CategoryGuid,
-				Label                 = "Modèle",
+				Label                 = "",
 				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
-				Height                = 260,
+				Height                = 180,
 			});
 
 			this.SetDescriptions (list);
@@ -58,19 +64,43 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public Guid								ObjectModel
+		private bool							UseModel
 		{
 			get
 			{
-				var controller = this.GetController (1) as CategoryGuidStackedController;
+				var controller = this.GetController (1) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller.Value;
 			}
 			set
 			{
-				var controller = this.GetController (1) as CategoryGuidStackedController;
+				var controller = this.GetController (1) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
+			}
+		}
+
+		public Guid								ObjectModel
+		{
+			get
+			{
+				if (this.UseModel)
+				{
+					var controller = this.GetController (2) as CategoryGuidStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					return controller.Value;
+				}
+				else
+				{
+					return Guid.Empty;
+				}
+			}
+			set
+			{
+				var controller = this.GetController (2) as CategoryGuidStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+				this.UseModel = !value.IsEmpty;
 			}
 		}
 
@@ -81,14 +111,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var controller = this.GetController (0);
 			controller.SetFocus ();
+
+			this.okButton.Text = "Créer";
 		}
 
 		protected override void UpdateWidgets()
 		{
-			this.okButton.Text = "Créer";
+			this.SetVisibility (2, this.UseModel);
 
-			this.okButton.Enable = !string.IsNullOrEmpty (this.ObjectName) &&
-								   !this.ObjectModel.IsEmpty;
+			this.okButton.Enable = !string.IsNullOrEmpty (this.ObjectName);
 		}
 	}
 }

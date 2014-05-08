@@ -466,16 +466,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (current.HasValue)
 			{
-				//?if (lastAmount.HasValue == false)
-				//?{
-				//?	lastAmount = current.Value.FinalAmount;
-				//?}
-				//?else
-				{
-					current = new ComputedAmount (lastAmount, current.Value);
-					lastAmount = current.Value.FinalAmount;
-					Amortizations.SetComputedAmount (e, field, current);
-				}
+				current = new ComputedAmount (lastAmount, current.Value);
+				lastAmount = current.Value.FinalAmount;
+				Amortizations.SetComputedAmount (e, field, current);
 			}
 		}
 
