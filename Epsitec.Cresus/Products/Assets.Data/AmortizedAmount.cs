@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.Data
 			//	résiduelle.
 			get
 			{
-				return this.InitialAmount.GetValueOrDefault (0.0m) - this.BrutAmortization;
+				return System.Math.Max (this.InitialAmount.GetValueOrDefault (0.0m) - this.BrutAmortization, 0.0m);
 			}
 		}
 
