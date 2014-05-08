@@ -86,6 +86,12 @@ namespace Epsitec.Aider.Data.Groups
 								groupDef.NameFeminine = "Doyenne";
 								groupDef.NameArticle  = FrenchArticle.SingularMasculineBeforeConsonant;
 								break;
+
+							case "Membre":
+							case "Membre du Bureau":
+							case "Secrétaire":
+								groupDef.NameArticle = FrenchArticle.SingularMasculineBeforeConsonant;
+								break;
 							
 							default:
 								groupDef.NameFeminine = groupDef.Name;

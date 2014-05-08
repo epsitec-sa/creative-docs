@@ -313,11 +313,12 @@ namespace Epsitec.Aider.Data.Subscription
 		public static readonly int				SwissDistrictNumberMin     = 1;
 		public static readonly int				SwissDistrictNumberMax     = 999;
 		public static readonly int				SwissDistrictNumberPostbox = 999;
-		public static readonly Regex			SwissHouseNumberRegex      = new Regex (@"(^[1-9]\d{0,2}[a-zA-Z]{0,3}$)|(^[1-9]\d{0,2}\-[1-9]\d{0,2}$)|(^[a-zA-Z][1-9]\d{0,2}$)|(^[1-9]\d{0,2}[a-zA-Z][1-9]\d{0,2}$)");
-																					//	23, 23a, 23bis
-																					//	10-12
-																					//	A2
-																					//	2D3
+		public static readonly Regex			SwissHouseNumberRegex      = new Regex (@"(^[1-9]\d{0,2}[a-zA-Z]{0,3}$)"			//	23, 23a, 23bis
+																					 + @"|(^[a-ZA-Z]{0,1}$)"						//	A
+																					 + @"|(^[1-9]\d{0,2}\-[1-9]\d{0,2}$)"			//	10-12
+																					 + @"|(^[a-zA-Z][1-9]\d{0,2}[a-zA-Z]{0,1}$)"	//	A2, C1A
+																					 + @"|(^[1-9]\d{0,2}[a-zA-Z][1-9]\d{0,2}$)"		//	2D3
+																					 );
 																				
 		public static readonly int				ForeignDistrictNumber      = 0;
 		

@@ -5,6 +5,11 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Enumerations
 {
+	/// <summary>
+	/// The <c>FrenchArticle</c> enumeration defines the various article types
+	/// which can appear; http://en.wikipedia.org/wiki/French_articles_and_determiners
+	/// explains how this works.
+	/// </summary>
 	[DesignerVisible]
 	public enum FrenchArticle
 	{
