@@ -94,6 +94,9 @@ namespace Epsitec.Aider.Entities
 				throw new System.NotSupportedException ();
 			}
 
+			if (this.Name == "PLA")
+				return 12;
+
 			return int.Parse (this.Name.SubstringEnd (2));
 		}
 

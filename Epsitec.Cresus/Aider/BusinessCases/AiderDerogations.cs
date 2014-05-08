@@ -149,7 +149,10 @@ namespace Epsitec.Aider.BusinessCases
 			var regionGroup = parishGroup.Parent;
 			var regionCode	= regionGroup.GetRegionId ();
 
-			return Epsitec.Aider.Data.Common.ParishAssigner.FindRegionGroup (businessContext, regionCode);
+			if(regionCode == 12)
+				return Epsitec.Aider.Data.Common.ParishAssigner.FindGroup (businessContext, "PLA", GroupClassification.Region);
+			else
+				return Epsitec.Aider.Data.Common.ParishAssigner.FindRegionGroup (businessContext, regionCode);
 		}
 
 		private static void CheckPrerequisiteBeforeDerogate(AiderPersonEntity person, AiderGroupEntity currentParishGroup, AiderGroupEntity derogationParishGroup)

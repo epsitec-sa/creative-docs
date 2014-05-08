@@ -413,7 +413,7 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 		
-		private static AiderGroupEntity FindGroup(BusinessContext businessContext, string name, GroupClassification classification)
+		public static AiderGroupEntity FindGroup(BusinessContext businessContext, string name, GroupClassification classification)
 		{
 			var dataContext = businessContext.DataContext;
 
