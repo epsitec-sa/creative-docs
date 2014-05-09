@@ -126,9 +126,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			popup.ButtonClicked += delegate (object sender, string name)
 			{
-				if (name == "create")
+				if (name == "ok")
 				{
-					this.CreateObject (popup.ObjectName, popup.ObjectModel);
+					this.CreateObject (popup.ObjectName, Guid.Empty);
 				}
 			};
 		}

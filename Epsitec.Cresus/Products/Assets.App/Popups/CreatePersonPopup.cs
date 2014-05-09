@@ -3,11 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Views;
-using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -16,97 +12,56 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// Popup permettant la saisir des informations nécessaires à la création d'un
 	/// nouveau contact, à savoir son nom.
 	/// </summary>
-	public class CreatePersonPopup : AbstractPopup
+	public class CreatePersonPopup : StackedPopup
 	{
 		public CreatePersonPopup(DataAccessor accessor)
+			: base (accessor)
 		{
-			this.accessor = accessor;
+			this.title = "Création d'un nouveau contact";
+
+			var list = new List<StackedControllerDescription> ();
+
+			list.Add (new StackedControllerDescription  // 0
+			{
+				StackedControllerType = StackedControllerType.Text,
+				Label                 = "Nom",
+				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
+				BottomMargin          = 10,
+			});
+
+			this.SetDescriptions (list);
 		}
 
 
-		public string							ObjectName;
-		public Guid								ObjectModel;
-
-
-		protected override Size DialogSize
+		public string							ObjectName
 		{
 			get
 			{
-				return new Size (CreatePersonPopup.popupWidth, CreatePersonPopup.popupHeight);
+				var controller = this.GetController (0) as TextStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (0) as TextStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
 			}
 		}
 
+
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Création d'un nouveau contact");
+			base.CreateUI ();
 
-			var line1 = this.CreateFrame (CreatePersonPopup.margin, 50, CreatePersonPopup.popupWidth-CreatePersonPopup.margin*2, CreatePersonPopup.lineHeight);
-
-			this.CreateName    (line1);
-			this.CreateButtons ();
-
-			this.UpdateButtons ();
-			this.textField.Focus ();
+			var controller = this.GetController (0);
+			controller.SetFocus ();
 		}
 
-		private void CreateName(Widget parent)
+		protected override void UpdateWidgets()
 		{
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = "Nom",
-				ContentAlignment = ContentAlignment.MiddleRight,
-				Dock             = DockStyle.Left,
-				PreferredWidth   = CreatePersonPopup.indent,
-				Margins          = new Margins (0, 10, 0, 0),
-			};
-
-			var frame = new FrameBox
-			{
-				Parent           = parent,
-				Dock             = DockStyle.Fill,
-				BackColor        = ColorManager.WindowBackgroundColor,
-				Padding          = new Margins (2),
-			};
-
-			this.textField = new TextField
-			{
-				Parent           = frame,
-				Dock             = DockStyle.Fill,
-			};
-
-			this.textField.TextChanged += delegate
-			{
-				this.ObjectName = this.textField.Text;
-				this.UpdateButtons ();
-			};
+			this.okButton.Text = "Créer";
+			this.okButton.Enable = !string.IsNullOrEmpty (this.ObjectName);
 		}
-
-		private void CreateButtons()
-		{
-			var footer = this.CreateFooter ();
-
-			this.createButton = this.CreateFooterButton (footer, DockStyle.Left,  "create", "Créer");
-			this.cancelButton = this.CreateFooterButton (footer, DockStyle.Right, "cancel", "Annuler");
-		}
-
-
-		private void UpdateButtons()
-		{
-			this.createButton.Enable = !string.IsNullOrEmpty (this.ObjectName);
-		}
-
-
-		private const int lineHeight  = 2+AbstractFieldController.lineHeight+2;
-		private const int indent      = 40;
-		private const int popupWidth  = 310;
-		private const int popupHeight = 120;
-		private const int margin      = 20;
-
-		private readonly DataAccessor						accessor;
-
-		private TextField									textField;
-		private Button										createButton;
-		private Button										cancelButton;
 	}
 }

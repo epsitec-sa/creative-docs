@@ -33,9 +33,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.typeController = this.CreateEnumController (parent, ObjectField.AmortizationType, EnumDictionaries.DictAmortizationTypes, editWidth: 90);
 
-			this.CreateEnumController    (parent, ObjectField.Periodicity, EnumDictionaries.DictPeriodicities, editWidth: 90);
-			this.CreateEnumController    (parent, ObjectField.Prorata, EnumDictionaries.DictProrataTypes, editWidth: 90);
-			this.CreateDecimalController (parent, ObjectField.Round, DecimalFormat.Amount);
+			this.CreateEnumController    (parent, ObjectField.Periodicity,   EnumDictionaries.DictPeriodicities, editWidth: 90);
+			this.CreateEnumController    (parent, ObjectField.Prorata,       EnumDictionaries.DictProrataTypes,  editWidth: 90);
+			this.CreateDecimalController (parent, ObjectField.Round,         DecimalFormat.Amount);
 			this.CreateDecimalController (parent, ObjectField.ResidualValue, DecimalFormat.Amount);
 
 
