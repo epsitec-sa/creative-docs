@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.NewIcon         = "TreeTable.New.Event";
 			this.NewTooltip      = "Nouvel événement";
-			this.DeleteTooltip   = "Supprime l'événement";
-			this.DeselectTooltip = "Désélectionne l'événement";
+			this.DeleteTooltip   = "Supprimer l'événement";
+			this.DeselectTooltip = "Désélectionner l'événement";
 
 			this.eventsNodeGetter = new ObjectEventsNodeGetter ();
 			this.nodeGetter = new SorterNodeGetter (this.eventsNodeGetter);

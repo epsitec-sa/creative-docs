@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.gotoButton = this.CreateGotoButton ();
 
-			ToolTip.Default.SetToolTip (this.gotoButton, "Montre les détails du contact");
+			ToolTip.Default.SetToolTip (this.gotoButton, "Montrer les détails du contact");
 
 			this.gotoButton.Clicked += delegate
 			{

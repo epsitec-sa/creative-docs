@@ -46,21 +46,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonCompacted = this.CreateModeButton   (TimelinesMode.Narrow, ToolbarCommand.Narrow, "Timeline.Narrow", "Affichage étroit");
 			this.buttonExpended  = this.CreateModeButton   (TimelinesMode.Wide,   ToolbarCommand.Wide,   "Timeline.Wide",   "Affichage large");
 
-			this.buttonFirst = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.First, "Timeline.First", "Retour sur le premier événement");
-			this.buttonPrev  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Prev,  "Timeline.Prev",  "Recule sur l'événement précédent");
-			this.buttonNext  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Next,  "Timeline.Next",  "Avance sur l'événement suivant");
-			this.buttonLast  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Last,  "Timeline.Last",  "Avance sur le dernier événement");
+			this.buttonFirst = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.First, "Timeline.First", "Retourner sur le premier événement");
+			this.buttonPrev  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Prev,  "Timeline.Prev",  "Reculer sur l'événement précédent");
+			this.buttonNext  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Next,  "Timeline.Next",  "Avancer sur l'événement suivant");
+			this.buttonLast  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Last,  "Timeline.Last",  "Avancer sur le dernier événement");
 
 			this.separator1 = this.CreateSeparator     (DockStyle.Left);
 			
 			this.buttonNew                    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.New,                    "TreeTable.New.Event",     "Nouvel événement");
-			this.buttonDelete                 = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Delete,                 "Timeline.Delete",         "Supprime l'événement");
+			this.buttonDelete                 = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Delete,                 "Timeline.Delete",         "Supprimer l'événement");
 			this.buttonAmortizationsPreview   = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   "Générer les préamortissements");
 			this.buttonAmortizationsFix       = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       "Fixer les préamortissements");
 			this.buttonAmortizationsToExtra   = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsToExtra,   "Amortizations.ToExtra",   "Transformer en amortissement extraordinaire");
 			this.buttonAmortizationsUnpreview = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer les préamortissements");
 			this.buttonAmortizationsDelete    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements ordinaires");
-			this.buttonDeselect               = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Deselect,               "Timeline.Deselect",       "Désélectionne l'événement");
+			this.buttonDeselect               = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Deselect,               "Timeline.Deselect",       "Désélectionner l'événement");
 
 			return this.toolbar;
 		}

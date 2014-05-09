@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsToExtra,   "Amortizations.ToExtra",   "Transformer l'amortissement ordinaire en extraordinaire");
 				this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer les préamortissements");
 				this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements ordinaires");
-				this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsInfo,      "Amortizations.Info",      "Montre le résultat de la dernière opération d'amortissement");
+				this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsInfo,      "Amortizations.Info",      "Montrer le résultat de la dernière opération d'amortissement");
 
 			return this.toolbar;
 		}

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportSelect, "Report.Select", "Choix d'un rapport");
 			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportParams, "Report.Params", "Paramètres du rapport");
-			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportExport, "Report.Export", "Exporte le rapport");
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportExport, "Report.Export", "Exporter le rapport");
 
 			return this.toolbar;
 		}

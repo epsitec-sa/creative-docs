@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			ToolTip.Default.SetToolTip (this.endButton,        "Fin de l'année en cours");
 			ToolTip.Default.SetToolTip (this.predefinedButton, "Autre date à choix...");
 			ToolTip.Default.SetToolTip (this.calendarButton,   "Calendrier...");
-			ToolTip.Default.SetToolTip (this.deleteButton,     "Efface la date");
+			ToolTip.Default.SetToolTip (this.deleteButton,     "Effacer la date");
 
 			//	Connexion des événements.
 			this.textField.PreProcessing += delegate (object sender, MessageEventArgs e)

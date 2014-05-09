@@ -89,9 +89,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.monthButton = this.CreatePartButton (line, 19, 13);
 			this.yearButton  = this.CreatePartButton (line, 33, 23);
 
-			ToolTip.Default.SetToolTip (this.dayButton,   "Sélectionne le jour");
-			ToolTip.Default.SetToolTip (this.monthButton, "Sélectionne le mois");
-			ToolTip.Default.SetToolTip (this.yearButton,  "Sélectionne l'année");
+			ToolTip.Default.SetToolTip (this.dayButton,   "Sélectionner le jour");
+			ToolTip.Default.SetToolTip (this.monthButton, "Sélectionner le mois");
+			ToolTip.Default.SetToolTip (this.yearButton,  "Sélectionner l'année");
 
 			this.info = new StaticText
 			{

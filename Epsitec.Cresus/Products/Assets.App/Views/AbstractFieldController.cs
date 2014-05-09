@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins       = new Margins (0, AbstractFieldController.lineHeight, 0, 0),
 			};
 
-			ToolTip.Default.SetToolTip (this.historyButton, "Montre l'historique des modifications");
+			ToolTip.Default.SetToolTip (this.historyButton, "Montrer l'historique des modifications");
 
 			this.historyButton.Clicked += delegate
 			{
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
 
-			ToolTip.Default.SetToolTip (this.clearButton, "Supprime cette modification de l'événement");
+			ToolTip.Default.SetToolTip (this.clearButton, "Supprimer cette modification de l'événement");
 
 			this.clearButton.Clicked += delegate
 			{

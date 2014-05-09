@@ -41,27 +41,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonLabels      = this.CreateModeButton    (TimelineMode.Labels,      ToolbarCommand.Labels,      "Timeline.Labels",      "Affiche les noms des lignes");
+			this.buttonLabels      = this.CreateModeButton    (TimelineMode.Labels,      ToolbarCommand.Labels,      "Timeline.Labels",      "Afficher les noms des lignes");
 								   							   					   
 			this.buttonCompacted   = this.CreateModeButton    (TimelineMode.Compacted,   ToolbarCommand.CompactAll,  "Timeline.Compacted",   "Affichage compact");
 			this.buttonExpanded    = this.CreateModeButton    (TimelineMode.Expanded,    ToolbarCommand.ExpandAll,   "Timeline.Expanded",    "Affichage étendu");
 														      
-			this.buttonWeeksOfYear = this.CreateModeButton    (TimelineMode.WeeksOfYear, ToolbarCommand.WeeksOfYear, "Timeline.WeeksOfYear", "Affiche les numéros des semaines");
-			this.buttonDaysOfWeek  = this.CreateModeButton    (TimelineMode.DaysOfWeek,  ToolbarCommand.DaysOfWeek,  "Timeline.DaysOfWeek",  "Affiche les jours de la semaine");
-			this.buttonGraph       = this.CreateModeButton    (TimelineMode.Graph,       ToolbarCommand.Graph,       "Timeline.Graph",       "Affiche les graphique des valeurs");
+			this.buttonWeeksOfYear = this.CreateModeButton    (TimelineMode.WeeksOfYear, ToolbarCommand.WeeksOfYear, "Timeline.WeeksOfYear", "Afficher les numéros des semaines");
+			this.buttonDaysOfWeek  = this.CreateModeButton    (TimelineMode.DaysOfWeek,  ToolbarCommand.DaysOfWeek,  "Timeline.DaysOfWeek",  "Afficher les jours de la semaine");
+			this.buttonGraph       = this.CreateModeButton    (TimelineMode.Graph,       ToolbarCommand.Graph,       "Timeline.Graph",       "Afficher les graphique des valeurs");
 
-			this.buttonFirst       = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.First,       "Timeline.First",       "Retour sur le premier événement");
-			this.buttonPrev        = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Prev,        "Timeline.Prev",        "Recule sur l'événement précédent");
-			this.buttonNext        = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Next,        "Timeline.Next",        "Avance sur l'événement suivant");
-			this.buttonLast        = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Last,        "Timeline.Last",        "Avance sur le dernier événement");
-			this.buttonNow         = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Now,         "Timeline.Now",         "Va à la date du jour");
-			this.buttonDate        = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Date,        "Timeline.Date",        "Va à une date à choix");
+			this.buttonFirst       = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.First,       "Timeline.First",       "Retourner sur le premier événement");
+			this.buttonPrev        = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Prev,        "Timeline.Prev",        "Reculer sur l'événement précédent");
+			this.buttonNext        = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Next,        "Timeline.Next",        "Avancer sur l'événement suivant");
+			this.buttonLast        = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Last,        "Timeline.Last",        "Avancer sur le dernier événement");
+			this.buttonNow         = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Now,         "Timeline.Now",         "Aller à la date du jour");
+			this.buttonDate        = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Date,        "Timeline.Date",        "Aller à une date à choix");
 																				          
 			this.CreateSeparator (DockStyle.Left);
 																				          
 			this.buttonNew         = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.New,         "TreeTable.New.Event",  "Nouvel événement");
-			this.buttonDelete      = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Delete ,     "Timeline.Delete",      "Supprime l'événement");
-			this.buttonDeselect    = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Deselect,    "Timeline.Deselect",    "Désélectionne l'événement");
+			this.buttonDelete      = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Delete ,     "Timeline.Delete",      "Supprimer l'événement");
+			this.buttonDeselect    = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Deselect,    "Timeline.Deselect",    "Désélectionner l'événement");
 
 			this.buttonCompacted.Margins   = new Margins (5, 0, 0, 0);
 			this.buttonWeeksOfYear.Margins = new Margins (5, 0, 0, 0);

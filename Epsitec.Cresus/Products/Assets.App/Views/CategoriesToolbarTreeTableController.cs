@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.NewIcon         = "TreeTable.New.Category";
 			this.NewTooltip      = "Nouvelle catégorie d'immobilisation";
-			this.DeleteTooltip   = "Supprime la catégorie d'immobilisation";
-			this.DeselectTooltip = "Désélectionne la catégorie d'immobilisation";
+			this.DeleteTooltip   = "Supprimer la catégorie d'immobilisation";
+			this.DeselectTooltip = "Désélectionner la catégorie d'immobilisation";
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Categories);
 

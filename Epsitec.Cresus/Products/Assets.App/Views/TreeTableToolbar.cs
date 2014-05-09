@@ -115,36 +115,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Filter,     "TreeTable.Filter",     "Grouper les objets selon");
 			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Graphic,    "TreeTable.Graphic",    "Représentation graphique");
 
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First,      "TreeTable.First",      "Retour sur la première ligne");
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Prev,       "TreeTable.Prev",       "Recule sur la ligne précédente");
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Next,       "TreeTable.Next",       "Avance sur la ligne suivante");
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Last,       "TreeTable.Last",       "Avance sur la dernière ligne");
+			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First,      "TreeTable.First",      "Retourner sur la première ligne");
+			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Prev,       "TreeTable.Prev",       "Reculer sur la ligne précédente");
+			this.buttonNext       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Next,       "TreeTable.Next",       "Avancer sur la ligne suivante");
+			this.buttonLast       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Last,       "TreeTable.Last",       "Avancer sur la dernière ligne");
 
 			this.separator1       = this.CreateSeparator     (DockStyle.None);
 			
-			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacte tout");
-			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactOne, "TreeTable.CompactOne", "Compacte un niveau");
-			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandOne,  "TreeTable.ExpandOne",  "Etend un niveau");
-			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etend tout");
+			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacter tout");
+			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactOne, "TreeTable.CompactOne", "Compacter un niveau");
+			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandOne,  "TreeTable.ExpandOne",  "Etendre un niveau");
+			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etendre tout");
 			
 			this.separator2       = this.CreateSeparator     (DockStyle.None);
 			
-			this.buttonMoveTop    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveTop,    "TreeTable.MoveTop",    "Déplace la ligne au sommet");
-			this.buttonMoveUp     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveUp,     "TreeTable.MoveUp",     "Monte la ligne");
-			this.buttonMoveDown   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveDown,   "TreeTable.MoveDown",   "Descend la ligne");
-			this.buttonMoveBottom = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveBottom, "TreeTable.MoveBottom", "Déplace la ligne à la fin");
+			this.buttonMoveTop    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveTop,    "TreeTable.MoveTop",    "Déplacer la ligne au sommet");
+			this.buttonMoveUp     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveUp,     "TreeTable.MoveUp",     "Monter la ligne");
+			this.buttonMoveDown   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveDown,   "TreeTable.MoveDown",   "Descendre la ligne");
+			this.buttonMoveBottom = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveBottom, "TreeTable.MoveBottom", "Déplacer la ligne à la fin");
 
 			this.separator3       = this.CreateSeparator     (DockStyle.None);
 			
 			this.buttonNew        = this.CreateCommandButton (DockStyle.None, ToolbarCommand.New,        this.NewIcon      ?? "TreeTable.New",        this.NewTooltip      ?? "Nouvelle ligne");
-			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,     this.DeleteIcon   ?? "TreeTable.Delete",     this.DeleteTooltip   ?? "Supprime la ligne");
-			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect,   this.DeselectIcon ?? "TreeTable.Deselect",   this.DeselectTooltip ?? "Désélectionne la ligne");
+			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,     this.DeleteIcon   ?? "TreeTable.Delete",     this.DeleteTooltip   ?? "Supprimer la ligne");
+			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect,   this.DeselectIcon ?? "TreeTable.Deselect",   this.DeselectTooltip ?? "Désélectionner la ligne");
 
 			this.separator4       = this.CreateSeparator     (DockStyle.None);
 
-			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy,       "TreeTable.Copy",       "Copie");
-			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste,      "TreeTable.Paste",      "Colle");
-			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export,     "TreeTable.Export",     "Exporte");
+			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy,       "TreeTable.Copy",       "Copier");
+			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste,      "TreeTable.Paste",      "Coller");
+			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export,     "TreeTable.Export",     "Exporter");
 
 			this.buttonGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;

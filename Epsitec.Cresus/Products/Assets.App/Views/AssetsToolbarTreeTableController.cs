@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.NewIcon         = "TreeTable.New.Asset";
 			this.NewTooltip      = "Nouvel objet d'immobilisation";
-			this.DeleteTooltip   = "Supprime l'objet d'immobilisation";
-			this.DeselectTooltip = "Désélectionne l'objet d'immobilisation";
+			this.DeleteTooltip   = "Supprimer l'objet d'immobilisation";
+			this.DeselectTooltip = "Désélectionner l'objet d'immobilisation";
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Assets);
 

@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.NewIcon         = "TreeTable.New.Person";
 			this.NewTooltip      = "Nouveau contact";
-			this.DeleteTooltip   = "Supprime le contact";
-			this.DeselectTooltip = "Désélectionne le contact";
+			this.DeleteTooltip   = "Supprimer le contact";
+			this.DeselectTooltip = "Désélectionner le contact";
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Persons);
 

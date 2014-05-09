@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Margins       = new Margins (0, 0, 0, 0),
 			};
 
-			ToolTip.Default.SetToolTip (button, "Ferme la fenêtre");
+			ToolTip.Default.SetToolTip (button, "Fermer la fenêtre");
 
 			button.Clicked += delegate
 			{
