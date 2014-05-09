@@ -286,4 +286,4 @@ SVN Update > r23077
 -echupdate -newechfile:S:\eerv\eerv-2014-05-08.xml -oldechfile:S:\eerv\eerv-2014-05-01.xml -output:s:\eerv\ech-diff-2014-05-08.md
 -fixzombies
 
--exportsubscriptions -output:export-2014-05-xx.txt -error:error-2014-05-xx.txt -exclude-district-error:false
+(-exportsubscriptions -output:export-2014-05-xx.txt -error:error-2014-05-xx.txt -exclude-district-error:false)
