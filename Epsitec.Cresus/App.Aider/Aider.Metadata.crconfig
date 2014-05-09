@@ -83,11 +83,11 @@ AiderOfficeSender = [LVOA13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOB33]" title="E-mail par déf. Primaire" canSort="False" canFilter="False">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOB33]" title="E-mail primaire" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOC33]" title="E-mail par déf. Secondaire" canSort="False" canFilter="False">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOC33]" title="E-mail secondaire" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -95,11 +95,11 @@ AiderOfficeSender = [LVOA13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOD33]" title="Téléphone par déf. Primaire" canSort="False" canFilter="False">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOD33]" title="Téléphone primaire" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOE33]" title="Téléphone par déf. Secondaire" canSort="False" canFilter="False">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOE33]" title="Téléphone secondaire" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -611,7 +611,7 @@ AiderOfficeSender = [LVOA13]
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVOG03].[AVA9]" title="Créé par" canSort="True" canFilter="True">
         <sort o="Ascending" />
-        <disp m="Visible" />
+        <disp m="Visible" />c
       </col>
     </t>
 
@@ -639,7 +639,7 @@ AiderOfficeSender = [LVOA13]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVG342]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVG342]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -651,7 +651,23 @@ AiderOfficeSender = [LVOA13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVOB33]" title="E-mail primaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVOC33]" title="E-mail secondaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAHH]" title="Téléphones" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVOD33]" title="Téléphone primaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVOE33]" title="Téléphone secondaire" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -958,7 +974,23 @@ AiderOfficeSender = [LVOA13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVOB33]" title="E-mail primaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVOC33]" title="E-mail secondaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVAHH]" title="Téléphones" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVOD33]" title="Téléphone primaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVOE33]" title="Téléphone secondaire" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -1370,13 +1402,13 @@ AiderOfficeSender = [LVOA13]
        <!-- Filter -->
        <f id="@AiderContact">     
         <C>
-	    <!-- Column id=AddressType (Valeur) (Comparaison) c=Equals(1) v="(e)num AddressType/n°1 (Default)" -->
-	    <c id="[LVABE]"><v><comp c="1" v="e[LVAT5]/1" /></v></c>
-	    <!-- Column id=ContactType (Valeur) (Comparaison) c=(2=NotEquals) v="(e)num ContactType/valeur 4 (Deceased)" -->
-	    <c id="[LVA4E]"><v><comp c="2" v="e[LVASD]/4" /></v></c>
-	    <!-- Column id=DisplayVisibility (Valeur) (Comparaison) c=(1=Equals) v="(e)num PersonVisibiltyStatus/valeur 0 (Normal)" -->
-	    <c id="[LVA7F]"><v><comp c="1" v="e[LVAQE]/0" /></v></c>
-	</C>
+            <!-- Column id=AddressType (Valeur) (Comparaison) c=Equals(1) v="(e)num AddressType/n°1 (Default)" -->
+            <c id="[LVABE]"><v><comp c="1" v="e[LVAT5]/1" /></v></c>
+            <!-- Column id=ContactType (Valeur) (Comparaison) c=(2=NotEquals) v="(e)num ContactType/valeur 4 (Deceased)" -->
+            <c id="[LVA4E]"><v><comp c="2" v="e[LVASD]/4" /></v></c>
+            <!-- Column id=DisplayVisibility (Valeur) (Comparaison) c=(1=Equals) v="(e)num PersonVisibiltyStatus/valeur 0 (Normal)" -->
+            <c id="[LVA7F]"><v><comp c="1" v="e[LVAQE]/0" /></v></c>
+        </C>
       </f>
     </d>
 
