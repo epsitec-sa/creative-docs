@@ -84,6 +84,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = this.obj.GetEvent (this.timestamp.Value);
 				e.SetProperties (this.dataEvent);
 
+				if (this.baseType == BaseType.Assets)
+				{
+					//	On regarde si l'utilisateur a changé la date de l'événement. Si oui, il faut
+					//	modifier l'événement en conséquence.
+					var p = this.dataEvent.GetProperty (ObjectField.OneShotDateEvent) as DataDateProperty;
+					if (p != null && p.Value != e.Timestamp.Date)  // date changée ?
+					{
+						this.accessor.ChangeAssetEventTimestamp (obj, e, new Timestamp (p.Value, 0));
+					}
+				}
+
 				if (this.baseType == BaseType.UserFields)
 				{
 					this.accessor.GlobalSettings.SetTempDataObject (this.obj);

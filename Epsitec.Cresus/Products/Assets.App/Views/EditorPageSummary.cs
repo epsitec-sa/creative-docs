@@ -169,6 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (field)
 			{
 				case ObjectField.OneShotNumber:
+				case ObjectField.OneShotDateEvent:
 				case ObjectField.OneShotDateOperation:
 				case ObjectField.OneShotComment:
 				case ObjectField.OneShotDocuments:
@@ -230,6 +231,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				c1.Add (new ObjectSummaryControllerTile ("Evénement"));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotNumber));
+				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDateEvent));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDateOperation));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotComment));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDocuments));

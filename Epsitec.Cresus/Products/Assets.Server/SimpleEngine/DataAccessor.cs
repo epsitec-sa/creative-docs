@@ -113,6 +113,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return obj.Guid;
 		}
 
+		public void ChangeAssetEventTimestamp(DataObject obj, DataEvent e, Timestamp timestamp)
+		{
+			//	Change la date d'un événement, sans aucun grade-fou "métier". Par exemple, on
+			//	peut déplacer l'événement d'entrée après le premier amortissement !
+			//	La modification de la date nécessite de créer une copie de l'événement, dont
+			//	on ne changera que la date.
+			obj.RemoveEvent (e);
+
+			var newEvent = new DataEvent (timestamp, e.Type);
+			newEvent.SetProperties (e);
+			obj.AddEvent (newEvent);
+		}
+
 		public DataEvent CreateAssetEvent(DataObject obj, System.DateTime date, EventType type)
 		{
 			if (obj != null)
@@ -262,6 +275,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			switch (objectField)
 			{
 				case ObjectField.OneShotNumber:
+				case ObjectField.OneShotDateEvent:
 				case ObjectField.OneShotDateOperation:
 				case ObjectField.OneShotComment:
 				case ObjectField.OneShotDocuments:
@@ -356,6 +370,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					return FieldType.Int;
 
 				case ObjectField.OneShotDateOperation:
+				case ObjectField.OneShotDateEvent:
 				case ObjectField.EntryDate:
 					return FieldType.Date;
 

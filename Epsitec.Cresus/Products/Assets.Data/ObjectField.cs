@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -12,6 +11,7 @@ namespace Epsitec.Cresus.Assets.Data
 		Unknown,
 
 		OneShotNumber,
+		OneShotDateEvent,
 		OneShotDateOperation,
 		OneShotComment,
 		OneShotDocuments,

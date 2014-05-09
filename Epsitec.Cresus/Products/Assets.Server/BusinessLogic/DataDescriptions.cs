@@ -23,6 +23,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.OneShotNumber:
 					return "Evénement numéro";
 
+				case ObjectField.OneShotDateEvent:
+					return "Date événement";
+
 				case ObjectField.OneShotDateOperation:
 					return "Date opération";
 

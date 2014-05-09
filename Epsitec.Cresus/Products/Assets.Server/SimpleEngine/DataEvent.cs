@@ -68,12 +68,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	que ce dernier ne les aient pas encore.
 			foreach (var property in model.properties)
 			{
-				var p = this.GetProperty (property.Field);
-				if (p == null)
+				if (property.Field != ObjectField.OneShotDateEvent)
 				{
-					var copy = AbstractDataProperty.Copy (property);
-					System.Diagnostics.Debug.Assert (copy != null);
-					this.properties.Add (copy);
+					var p = this.GetProperty (property.Field);
+					if (p == null)
+					{
+						var copy = AbstractDataProperty.Copy (property);
+						System.Diagnostics.Debug.Assert (copy != null);
+						this.properties.Add (copy);
+					}
 				}
 			}
 		}
@@ -85,9 +88,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			foreach (var property in model.properties)
 			{
-				var copy = AbstractDataProperty.Copy (property);
-				System.Diagnostics.Debug.Assert (copy != null);
-				this.properties.Add (copy);
+				if (property.Field != ObjectField.OneShotDateEvent)
+				{
+					var copy = AbstractDataProperty.Copy (property);
+					System.Diagnostics.Debug.Assert (copy != null);
+					this.properties.Add (copy);
+				}
 			}
 		}
 
@@ -125,6 +131,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	de tri.
 			switch (field)
 			{
+				case ObjectField.OneShotDateEvent:
+					var p = this.properties.Where (x => x.Field == field).FirstOrDefault ();
+					if (p == null)
+					{
+						//	Si la propriété n'existe pas, elle est créé à la volée.
+						return new DataDateProperty (field, this.Timestamp.Date);
+					}
+					else
+					{
+						//	Si la propriété existe, on la retourne comme n'importe quelle autre propriété.
+						return p;
+					}
+
 				case ObjectField.EventDate:
 					return new DataDateProperty (field, this.Timestamp.Date);
 
