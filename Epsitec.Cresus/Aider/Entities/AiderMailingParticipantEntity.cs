@@ -13,6 +13,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Helpers;
 
 
 namespace Epsitec.Aider.Entities
@@ -74,23 +75,25 @@ namespace Epsitec.Aider.Entities
 			participant.Mailing = mailing;
 
 			participant.ParticipantType = MailingParticipantType.Contact;
+			
 
 			return participant;
 		}
 
-		public static AiderMailingParticipantEntity CreateForGroup(BusinessContext context, AiderMailingEntity mailing, AiderContactEntity contact)
+		public static AiderMailingParticipantEntity CreateForGroup(BusinessContext context, AiderMailingEntity mailing, AiderContactEntity contact, string role)
 		{
 			var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
 
 			participant.Mailing = mailing;
 			participant.Contact = contact;
-			
+			participant.Role	= role;
 			participant.ParticipantType = MailingParticipantType.Group;
+			
 
 			return participant;
 		}
 
-		public static void Create(BusinessContext context, AiderMailingEntity mailing, AiderHouseholdEntity household)
+		public static AiderMailingParticipantEntity Create(BusinessContext context, AiderMailingEntity mailing, AiderHouseholdEntity household)
 		{
 			var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
 
@@ -99,32 +102,61 @@ namespace Epsitec.Aider.Entities
 			participant.Houshold = household;
 				
 			participant.ParticipantType = MailingParticipantType.Household;
+
+			return participant;
 		}
 
-		public static void Create(BusinessContext context, AiderMailingEntity mailing, AiderGroupEntity group)
-		{		
+		public static IEnumerable<AiderMailingParticipantEntity> Create(BusinessContext context, AiderMailingEntity mailing, AiderGroupEntity group)
+		{
+			var created = new List<AiderMailingParticipantEntity> ();
 			foreach (var contact in group.GetAllGroupAndSubGroupParticipantContacts ().Distinct())
 			{
 				var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
+				
+				var groupParticipations = group.FindParticipationsByGroup (context, contact, group);
+				if(groupParticipations.Any ())
+				{
+					var groupParticipation = groupParticipations.First ();
+					participant.Role	= AiderParticipationsHelpers.BuildRoleFromParticipation (groupParticipation).GetRole (groupParticipation);
+				}
 
 				participant.Mailing = mailing;
 				participant.Contact = contact;
 				
 				participant.ParticipantType = MailingParticipantType.Group;
+
+				created.Add (participant);
 			}
+
+
+			return created;
 		}
 
-		public static void Create(BusinessContext context, AiderMailingEntity mailing, AiderGroupExtractionEntity group)
+		public static IEnumerable<AiderMailingParticipantEntity> Create(BusinessContext context, AiderMailingEntity mailing, AiderGroupExtractionEntity group)
 		{
+			var created = new List<AiderMailingParticipantEntity> ();
 			foreach (var contact in group.GetAllContacts (context.DataContext).Distinct ())
 			{
 				var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
 
 				participant.Mailing = mailing;
 				participant.Contact = contact;
-
+				participant.Role	= group.Name;
 				participant.ParticipantType = MailingParticipantType.GroupExtraction;
+				created.Add (participant);
 			}
+
+			return created;
+		}
+
+		public static IEnumerable<AiderMailingParticipantEntity> FindGroupsByContact(BusinessContext businessContext, AiderMailingEntity mailing, AiderContactEntity contact)
+		{
+			var participantExample = new AiderMailingParticipantEntity ();
+			participantExample.Mailing = mailing;
+			participantExample.Contact = contact;
+			participantExample.ParticipantType = MailingParticipantType.Group;
+
+			return businessContext.DataContext.GetByExample<AiderMailingParticipantEntity> (participantExample);
 		}
 
 		public static void FindAndRemove(BusinessContext businessContext, AiderMailingEntity mailing, AiderContactEntity contact)

@@ -15,6 +15,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Helpers;
 
 
 namespace Epsitec.Aider.Entities
@@ -69,25 +70,51 @@ namespace Epsitec.Aider.Entities
 
 			this.UpdateLastUpdateDate ();
 
-			var participants = new HashSet<AiderContactEntity> (AiderMailingParticipantEntity.GetAllUnExcludedParticipants (dataContext, this).Select (p => p.Contact));
-			var contacts     = new HashSet<AiderContactEntity> (this.GetRecipients (dataContext));
-			
-			//	Remove participants which no longer belong to the current contacts:
-			foreach (var contact in participants)
+			AiderMailingParticipantEntity.DeleteByMailing (businessContext, this);
+
+			foreach(var contact in this.RecipientContacts)
 			{
-				if (!contacts.Contains (contact))
+				var participation = AiderMailingParticipantEntity.Create (businessContext, this, contact);
+				if(this.Exclusions.Contains(contact))
 				{
-					AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact);
+					participation.IsExcluded = true;
 				}
 			}
 
-			//	Add participants which are not yet defined for the current contacts:
-			foreach (var contact in contacts)
+			foreach (var group in this.RecipientGroups)
 			{
-				if (!participants.Contains (contact))
+				var participations = AiderMailingParticipantEntity.Create (businessContext,this,group);
+
+				foreach(var participation in participations)
 				{
-					AiderMailingParticipantEntity.CreateForGroup (businessContext, this, contact);
+					if (this.Exclusions.Contains (participation.Contact))
+					{
+						participation.IsExcluded = true;
+					}
 				}
+			}
+
+			foreach (var group in this.RecipientGroupExtractions)
+			{
+				var participations = AiderMailingParticipantEntity.Create (businessContext, this, group);
+
+				foreach (var participation in participations)
+				{
+					if (this.Exclusions.Contains (participation.Contact))
+					{
+						participation.IsExcluded = true;
+					}
+				}
+			}
+
+			foreach (var household in this.RecipientHouseholds)
+			{
+				var participation = AiderMailingParticipantEntity.Create (businessContext, this, household);	
+
+				if (this.Exclusions.Contains (household.Contacts[0]))
+				{
+					participation.IsExcluded = true;
+				}				
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock);

@@ -2152,6 +2152,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Mailing = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 22);
 				//	designer:cap/LVASH
 				public static readonly global::Epsitec.Common.Support.Druid ParticipantType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 572);
+				//	designer:cap/LVOI33
+				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 114);
 			}
 			
 			public static class AiderOfficeGroupParticipantReport

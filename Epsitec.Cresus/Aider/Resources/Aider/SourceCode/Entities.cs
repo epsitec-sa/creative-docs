@@ -8734,6 +8734,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Role</c> field.
+		///	designer:fld/LVOL03/LVOI33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOI33]")]
+		public string Role
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOI33]");
+			}
+			set
+			{
+				string oldValue = this.Role;
+				if (oldValue != value || !this.IsFieldDefined("[LVOI33]"))
+				{
+					this.OnRoleChanging (oldValue, value);
+					this.SetField<string> ("[LVOI33]", oldValue, value);
+					this.OnRoleChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnMailingChanging(global::Epsitec.Aider.Entities.AiderMailingEntity oldValue, global::Epsitec.Aider.Entities.AiderMailingEntity newValue);
 		partial void OnMailingChanged(global::Epsitec.Aider.Entities.AiderMailingEntity oldValue, global::Epsitec.Aider.Entities.AiderMailingEntity newValue);
@@ -8745,6 +8767,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnParticipantTypeChanged(global::Epsitec.Aider.Enumerations.MailingParticipantType oldValue, global::Epsitec.Aider.Enumerations.MailingParticipantType newValue);
 		partial void OnIsExcludedChanging(bool oldValue, bool newValue);
 		partial void OnIsExcludedChanged(bool oldValue, bool newValue);
+		partial void OnRoleChanging(string oldValue, string newValue);
+		partial void OnRoleChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

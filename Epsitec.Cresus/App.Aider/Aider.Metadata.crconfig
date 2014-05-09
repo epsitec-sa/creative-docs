@@ -639,6 +639,10 @@ AiderOfficeSender = [LVOA13]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVOI33]" title="Rôle" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVG342]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
@@ -891,7 +895,7 @@ AiderOfficeSender = [LVOA13]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVALC].[LVAMC]" title="Role" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVALC].[LVAMC]" title="Rôle" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -958,7 +962,7 @@ AiderOfficeSender = [LVOA13]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVOF33]" title="Role" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVOF33]" title="Rôle" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
