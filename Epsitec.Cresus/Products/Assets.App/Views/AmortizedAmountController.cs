@@ -434,7 +434,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				new StaticText
 				{
 					Parent  = line,
-					Text    = "Ecriture comptable générée",
+					Text    = "Ecriture comptable générée :",
 					Dock    = DockStyle.Fill,
 					Margins = new Margins (100+10, 0, 0, 0),
 				};

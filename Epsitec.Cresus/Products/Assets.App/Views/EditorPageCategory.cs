@@ -31,7 +31,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.rateController = this.CreateDecimalController (parent, ObjectField.AmortizationRate, DecimalFormat.Rate);
 			this.CreateCalculatorButton ();
 
-			this.CreateEnumController    (parent, ObjectField.AmortizationType, EnumDictionaries.DictAmortizationTypes, editWidth: 90);
+			this.typeController = this.CreateEnumController (parent, ObjectField.AmortizationType, EnumDictionaries.DictAmortizationTypes, editWidth: 90);
+
 			this.CreateEnumController    (parent, ObjectField.Periodicity, EnumDictionaries.DictPeriodicities, editWidth: 90);
 			this.CreateEnumController    (parent, ObjectField.Prorata, EnumDictionaries.DictProrataTypes, editWidth: 90);
 			this.CreateDecimalController (parent, ObjectField.Round, DecimalFormat.Amount);
@@ -86,14 +87,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "ok")
 				{
-					this.accessor.EditionAccessor.SetField (ObjectField.AmortizationRate, popup.Rate);
-					this.rateController.Value = popup.Rate;
-					this.OnValueEdited (ObjectField.AmortizationRate);
+					this.SetRate (popup.Rate);
+					this.SetType (AmortizationType.Linear);
 				}
 			};
 		}
 
+		private void SetRate(decimal? value)
+		{
+			this.accessor.EditionAccessor.SetField (ObjectField.AmortizationRate, value);
+			this.rateController.Value = value;
+
+			this.OnValueEdited (ObjectField.AmortizationRate);
+		}
+
+		private void SetType(AmortizationType value)
+		{
+			this.accessor.EditionAccessor.SetField (ObjectField.AmortizationType, (int) value);
+			this.typeController.Value = (int) value;
+
+			this.OnValueEdited (ObjectField.AmortizationType);
+		}
+
 
 		private DecimalFieldController			rateController;
+		private EnumFieldController				typeController;
 	}
 }
