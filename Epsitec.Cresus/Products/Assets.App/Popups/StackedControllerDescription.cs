@@ -94,6 +94,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 					case StackedControllerType.GroupGuid:
 					case StackedControllerType.CategoryGuid:
+					case StackedControllerType.PersonGuid:
 						return this.Height;
 
 					default:
@@ -124,6 +125,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 					case StackedControllerType.GroupGuid:
 					case StackedControllerType.CategoryGuid:
+					case StackedControllerType.PersonGuid:
 						return this.Width + 4;
 
 					default:
@@ -144,6 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Date:
 					case StackedControllerType.GroupGuid:
 					case StackedControllerType.CategoryGuid:
+					case StackedControllerType.PersonGuid:
 						return this.LabelsWidth;
 
 					case StackedControllerType.Radio:
@@ -189,6 +192,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				case StackedControllerType.CategoryGuid:
 					return new CategoryGuidStackedController (accessor);
+
+				case StackedControllerType.PersonGuid:
+					return new PersonGuidStackedController (accessor);
 
 				case StackedControllerType.Filename:
 					return new FilenameStackedController (accessor);

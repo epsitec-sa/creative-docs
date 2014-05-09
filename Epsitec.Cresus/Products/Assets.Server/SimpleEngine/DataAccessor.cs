@@ -241,28 +241,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public void CopyObject(DataObject obj, DataObject model, Timestamp? timestamp)
+		public void CopyObject(DataObject obj, DataObject model)
 		{
 			//	Copie dans 'obj' toutes les propriétés de 'model' que 'obj' n'a pas déjà.
-			if (!timestamp.HasValue)
-			{
-				timestamp = Timestamp.MaxValue;
-			}
+			//	Ne fonctionne que pour les objets sans timeline (donc tous sauf les Assets),
+			//	c'est-à-dire les objets qui n'ont qu'un seul événement.
+			System.Diagnostics.Debug.Assert (  obj.EventsCount == 1);
+			System.Diagnostics.Debug.Assert (model.EventsCount == 1);
 
-			var e = obj.GetEvent (obj.EventsCount-1);  // dernier événement
+			var dstEvent =   obj.GetEvent (0);  // événement unique de l'objet
+			var srcEvent = model.GetEvent (0);  // événement unique de l'objet
 
-			foreach (ObjectField field in System.Enum.GetValues (typeof (ObjectField)))
-			{
-				var op = obj.GetSyntheticProperty (timestamp.Value, field);
-				if (op == null)  // propriété pas encore connue ?
-				{
-					var p = model.GetSyntheticProperty (timestamp.Value, field);
-					if (p != null)
-					{
-						e.AddProperty (p);
-					}
-				}
-			}
+			dstEvent.SetUndefinedProperties (srcEvent);
 		}
 		#endregion
 

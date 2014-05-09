@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "ok")
 				{
-					this.CreateObject (popup.ObjectName, Guid.Empty);
+					this.CreateObject (popup.PersonName, popup.PersonModel);
 				}
 			};
 		}
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (!model.IsEmpty)
 			{
 				var objModel = this.accessor.GetObject (BaseType.Persons, model);
-				this.accessor.CopyObject (obj, objModel, null);
+				this.accessor.CopyObject (obj, objModel);
 			}
 
 			this.UpdateData ();

@@ -87,6 +87,7 @@
     <Compile Include="DataFillers\AccountsTreeTableFiller.cs" />
     <Compile Include="DataFillers\MCH2SummaryTreeTableFiller.cs" />
     <Compile Include="DataFillers\EntriesTreeTableFiller.cs" />
+    <Compile Include="DataFillers\SinglePersonsTreeTableFiller.cs" />
     <Compile Include="DataFillers\TreeTableCellAmortizedAmount.cs" />
     <Compile Include="DataFillers\SingleAccountsTreeTableFiller.cs" />
     <Compile Include="DataFillers\UserFieldsTreeTableFiller.cs" />

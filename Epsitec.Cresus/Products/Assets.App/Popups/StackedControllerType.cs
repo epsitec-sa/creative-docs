@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		Bool,
 		GroupGuid,
 		CategoryGuid,
+		PersonGuid,
 		Filename,
 	}
 }

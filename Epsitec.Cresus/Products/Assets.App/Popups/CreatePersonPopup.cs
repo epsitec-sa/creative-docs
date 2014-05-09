@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -29,11 +30,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				BottomMargin          = 10,
 			});
 
+			list.Add (new StackedControllerDescription  // 1
+			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = "Selon un modèle",
+			});
+
+			list.Add (new StackedControllerDescription  // 2
+			{
+				StackedControllerType = StackedControllerType.PersonGuid,
+				Label                 = "",
+				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
+				Height                = 300,
+			});
+
 			this.SetDescriptions (list);
 		}
 
 
-		public string							ObjectName
+		public string							PersonName
 		{
 			get
 			{
@@ -49,6 +64,47 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private bool							UseModel
+		{
+			get
+			{
+				var controller = this.GetController (1) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (1) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		public Guid								PersonModel
+		{
+			get
+			{
+				if (this.UseModel)
+				{
+					var controller = this.GetController (2) as PersonGuidStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					return controller.Value;
+				}
+				else
+				{
+					return Guid.Empty;
+				}
+			}
+			set
+			{
+				var controller = this.GetController (2) as PersonGuidStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+				this.UseModel = !value.IsEmpty;
+			}
+		}
+
+
 
 		public override void CreateUI()
 		{
@@ -56,12 +112,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var controller = this.GetController (0);
 			controller.SetFocus ();
+
+			this.okButton.Text = "Créer";
 		}
 
 		protected override void UpdateWidgets()
 		{
-			this.okButton.Text = "Créer";
-			this.okButton.Enable = !string.IsNullOrEmpty (this.ObjectName);
+			this.SetVisibility (2, this.UseModel);
+
+			this.okButton.Enable = !string.IsNullOrEmpty (this.PersonName);
 		}
 	}
 }

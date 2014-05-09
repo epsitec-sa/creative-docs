@@ -62,8 +62,25 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public void SetUndefinedProperties(DataEvent model)
+		{
+			//	Ajoute toutes les propriétés de model à l'événement courant, pour autant
+			//	que ce dernier ne les aient pas encore.
+			foreach (var property in model.properties)
+			{
+				var p = this.GetProperty (property.Field);
+				if (p == null)
+				{
+					var copy = AbstractDataProperty.Copy (property);
+					System.Diagnostics.Debug.Assert (copy != null);
+					this.properties.Add (copy);
+				}
+			}
+		}
+
 		public void SetProperties(DataEvent model)
 		{
+			//	Ajoute toutes les propriétés de model à l'événement courant.
 			this.properties.Clear ();
 
 			foreach (var property in model.properties)

@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (!model.IsEmpty)
 			{
 				var objModel = this.accessor.GetObject (BaseType.Categories, model);
-				this.accessor.CopyObject (obj, objModel, null);
+				this.accessor.CopyObject (obj, objModel);
 			}
 			
 			this.UpdateData ();
