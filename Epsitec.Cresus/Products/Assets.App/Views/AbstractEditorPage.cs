@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void CreateGroupGuidController(Widget parent, ObjectField field, BaseType baseType)
+		protected GroupGuidFieldController CreateGroupGuidController(Widget parent, ObjectField field, BaseType baseType)
 		{
 			var controller = new GroupGuidFieldController (this.accessor)
 			{
@@ -271,9 +271,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (field, controller);
+
+			return controller;
 		}
 
-		protected void CreatePersonGuidController(Widget parent, ObjectField field)
+		protected PersonGuidFieldController CreatePersonGuidController(Widget parent, ObjectField field)
 		{
 			var controller = new PersonGuidFieldController (this.accessor)
 			{
@@ -307,9 +309,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (field, controller);
+
+			return controller;
 		}
 
-		protected void CreateAccountGuidController(Widget parent, ObjectField field)
+		protected AccountGuidFieldController CreateAccountGuidController(Widget parent, ObjectField field)
 		{
 			var controller = new AccountGuidFieldController (this.accessor)
 			{
@@ -342,9 +346,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (field, controller);
+
+			return controller;
 		}
 
-		protected void CreateGuidRatiosController(Widget parent)
+		protected GuidRatioFieldsController CreateGuidRatiosController(Widget parent)
 		{
 			var controller = new GuidRatioFieldsController (this.accessor);
 
@@ -366,9 +372,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (ObjectField.GroupGuidRatioFirst, controller);
+
+			return controller;
 		}
 
-		protected void CreateStringController(Widget parent, ObjectField field, int editWidth = AbstractFieldController.maxWidth, int lineCount = 1)
+		protected StringFieldController CreateStringController(Widget parent, ObjectField field, int editWidth = AbstractFieldController.maxWidth, int lineCount = 1)
 		{
 			var controller = new StringFieldController (this.accessor)
 			{
@@ -402,9 +410,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (field, controller);
+
+			return controller;
 		}
 
-		protected void CreateEnumController(Widget parent, ObjectField field, Dictionary<int, string> enums, int editWidth = AbstractFieldController.maxWidth)
+		protected EnumFieldController CreateEnumController(Widget parent, ObjectField field, Dictionary<int, string> enums, int editWidth = AbstractFieldController.maxWidth)
 		{
 			var controller = new EnumFieldController (this.accessor)
 			{
@@ -438,9 +448,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (field, controller);
+
+			return controller;
 		}
 
-		protected void CreateDecimalController(Widget parent, ObjectField field, DecimalFormat format)
+		protected DecimalFieldController CreateDecimalController(Widget parent, ObjectField field, DecimalFormat format)
 		{
 			var controller = new DecimalFieldController (this.accessor)
 			{
@@ -473,9 +485,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (field, controller);
+
+			return controller;
 		}
 
-		protected void CreateComputedAmountController(Widget parent, ObjectField field)
+		protected ComputedAmountFieldController CreateComputedAmountController(Widget parent, ObjectField field)
 		{
 			var controller = new ComputedAmountFieldController (this.accessor)
 			{
@@ -507,9 +521,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (field, controller);
+
+			return controller;
 		}
 
-		protected void CreateAmortizedAmountController(Widget parent, ObjectField field)
+		protected AmortizedAmountFieldController CreateAmortizedAmountController(Widget parent, ObjectField field)
 		{
 			var controller = new AmortizedAmountFieldController (this.accessor)
 			{
@@ -542,9 +558,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (field, controller);
+
+			return controller;
 		}
 
-		protected void CreateIntController(Widget parent, ObjectField field)
+		protected IntFieldController CreateIntController(Widget parent, ObjectField field)
 		{
 			var controller = new IntFieldController (this.accessor)
 			{
@@ -576,9 +594,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (field, controller);
+
+			return controller;
 		}
 
-		protected void CreateDateController(Widget parent, ObjectField field)
+		protected DateFieldController CreateDateController(Widget parent, ObjectField field)
 		{
 			var controller = new DateFieldController (this.accessor)
 			{
@@ -611,6 +631,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.fieldControllers.Add (field, controller);
+
+			return controller;
 		}
 
 		protected void CreateSepartor(Widget parent, int margin = 10)

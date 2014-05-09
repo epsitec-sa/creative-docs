@@ -81,6 +81,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public FrameBox							FrameBox
+		{
+			get
+			{
+				return this.frameBox;
+			}
+		}
+
 
 		public virtual void CreateUI(Widget parent)
 		{

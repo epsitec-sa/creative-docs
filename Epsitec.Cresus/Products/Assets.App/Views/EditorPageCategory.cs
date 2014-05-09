@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -25,12 +27,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStringController  (parent, ObjectField.Number, editWidth: 90);
 			this.CreateStringController  (parent, ObjectField.Name);
 			this.CreateStringController  (parent, ObjectField.Description, lineCount: 5);
-			this.CreateDecimalController (parent, ObjectField.AmortizationRate, DecimalFormat.Rate);
+
+			this.rateController = this.CreateDecimalController (parent, ObjectField.AmortizationRate, DecimalFormat.Rate);
+			this.CreateCalculatorButton ();
+
 			this.CreateEnumController    (parent, ObjectField.AmortizationType, EnumDictionaries.DictAmortizationTypes, editWidth: 90);
 			this.CreateEnumController    (parent, ObjectField.Periodicity, EnumDictionaries.DictPeriodicities, editWidth: 90);
 			this.CreateEnumController    (parent, ObjectField.Prorata, EnumDictionaries.DictProrataTypes, editWidth: 90);
 			this.CreateDecimalController (parent, ObjectField.Round, DecimalFormat.Amount);
 			this.CreateDecimalController (parent, ObjectField.ResidualValue, DecimalFormat.Amount);
+
 
 			this.CreateSubtitle (parent, "Comptes à utiliser pour passer les écritures comptables :");
 
@@ -43,5 +49,51 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//this.CreateAccountGuidController (parent, ObjectField.Account7);
 			//this.CreateAccountGuidController (parent, ObjectField.Account8);
 		}
+
+		private void CreateCalculatorButton()
+		{
+			//	Crée le bouton qui ouvre le Popup de calculation du taux.
+			var text = "Calculer d'après le nombre d'années";
+			var width = text.GetTextWidth ();
+
+			var button = new Button
+			{
+				Parent         = this.rateController.FrameBox,
+				Text           = text,
+				PreferredWidth = width + 20,
+				ButtonStyle    = ButtonStyle.Icon,
+				AutoFocus      = false,
+				Dock           = DockStyle.Left,
+			};
+
+			button.Clicked += delegate
+			{
+				this.ShowCalculatorPopup (button);
+			};
+		}
+
+		private void ShowCalculatorPopup(Widget target)
+		{
+			//	Affiche le Popup de calculation du taux.
+			var popup = new RateCalculatorPopup (accessor)
+			{
+				Rate = this.accessor.EditionAccessor.GetFieldDecimal (ObjectField.AmortizationRate),
+			};
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					this.accessor.EditionAccessor.SetField (ObjectField.AmortizationRate, popup.Rate);
+					this.rateController.Value = popup.Rate;
+					this.OnValueEdited (ObjectField.AmortizationRate);
+				}
+			};
+		}
+
+
+		private DecimalFieldController			rateController;
 	}
 }

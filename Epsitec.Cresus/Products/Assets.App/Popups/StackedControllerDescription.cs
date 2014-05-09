@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						return this.Width;
 
 					case StackedControllerType.Int:
-						return IntStackedController.width;
+						return IntStackedController.width + 38;  // 38 -> place pour les boutons -/+
 
 					case StackedControllerType.Date:
 						return DateStackedController.width;
