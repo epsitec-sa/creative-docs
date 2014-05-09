@@ -268,3 +268,22 @@ SVN Update > r23031
 
 -echupdate -newechfile:S:\eerv\eerv-2014-04-24.xml -oldechfile:S:\eerv\eerv-2014-04-17.xml -output:s:\eerv\ech-diff-2014-04-24.md
 
+
+Lancé le 05.05.2014
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2014-05-01.xml -oldechfile:S:\eerv\eerv-2014-04-24.xml -output:s:\eerv\ech-diff-2014-05-01.md
+
+
+Lancé le 08.05.2014
+-------------------
+
+SVN Update > r23077
+
+-initfunctions
+-fixpersonswithoutcontact
+
+-echupdate -newechfile:S:\eerv\eerv-2014-05-08.xml -oldechfile:S:\eerv\eerv-2014-05-01.xml -output:s:\eerv\ech-diff-2014-05-08.md
+-fixzombies
+
+-exportsubscriptions -output:export-2014-05-xx.txt -error:error-2014-05-xx.txt -exclude-district-error:false
