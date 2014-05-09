@@ -327,7 +327,7 @@ namespace Epsitec.Aider.Data.Job
 			aiderHousehold.RefreshCache ();
 		}
 
-		public static void UpdateAiderSubscription(BusinessContext businessContext, AiderHouseholdEntity household)
+		public static void CreateOrUpdateAiderSubscription(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
 			var subscriptionExample = new AiderSubscriptionEntity ()
 			{
@@ -339,6 +339,10 @@ namespace Epsitec.Aider.Data.Job
 			if (subscription.IsNotNull ())
 			{
 				subscription.RefreshCache ();
+			}
+			else
+			{
+				AiderSubscriptionEntity.Create (businessContext, household);
 			}
 
 

@@ -195,11 +195,9 @@ namespace Epsitec.Aider.Data.Job
 			{
 				
 				this.LogToConsole ("Info: Reassign only {0}", person.GetFullName ());
-				var warningMessage = FormattedText.FromSimpleText ("Cette personne a maintenant son propre ménage.");
-				this.RelocateAndCreateNewAiderHousehold (businessContext, eChHousehold);
-				this.LogToConsole ("Info: warning added: EChHouseholdAdded");
-				this.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
+				var newHousehold = this.RelocateAndCreateNewAiderHousehold (businessContext, eChHousehold);
 				this.ReassignAndWarnParish (businessContext, person, changes);
+				EChDataHelpers.CreateOrUpdateAiderSubscription (businessContext, newHousehold);
 			}
 		}
 
@@ -629,7 +627,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void RelocateAndCreateNewAiderHousehold(BusinessContext businessContext,eCH_ReportedPersonEntity eChReportedPerson)
+		private AiderHouseholdEntity RelocateAndCreateNewAiderHousehold(BusinessContext businessContext,eCH_ReportedPersonEntity eChReportedPerson)
 		{
 			this.LogToConsole ("Info: Relocate and create new AiderHousehold");
 
@@ -640,10 +638,6 @@ namespace Epsitec.Aider.Data.Job
 			//Link household to ECh Entity
 			if (eChReportedPerson.Adult1.IsNotNull ())
 			{
-				if (eChReportedPerson.Adult1.PersonId == "819095346")
-				{
-					//	DEBUG: this is Valérie Morel...
-				}
 				this.LogToConsole ("Info: Processing Adult 1 Relocation");
 				var aiderPerson = EChDataHelpers.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
 				var oldHousehold = EChDataHelpers.GetAiderHousehold (businessContext, aiderPerson);
@@ -727,7 +721,8 @@ namespace Epsitec.Aider.Data.Job
 				AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, false);
 
 			}
-			
+
+			return aiderHousehold;
 		}
 		
 
@@ -787,7 +782,7 @@ namespace Epsitec.Aider.Data.Job
 					{
 						this.LogToConsole ("Info: Household and subscription updated", person.GetFullName ());
 						EChDataHelpers.UpdateAiderHouseholdAddress (businessContext, household, family);
-						EChDataHelpers.UpdateAiderSubscription (businessContext, household);
+						EChDataHelpers.CreateOrUpdateAiderSubscription (businessContext, household);
 					}
 					else
 					{

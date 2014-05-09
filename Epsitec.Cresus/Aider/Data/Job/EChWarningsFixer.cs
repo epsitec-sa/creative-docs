@@ -103,6 +103,8 @@ namespace Epsitec.Aider.Data.Job
 
 				EChWarningsFixer.LogToConsole ("Delete old Ech Warnings: EChHouseholdAdded ");
 
+				EChWarningsFixer.ApplyNewHouseholdActionsAndDeleteWarnings (businessContext);
+
 				EChWarningsFixer.DeleteWarnings (businessContext, WarningType.EChHouseholdAdded);
 
 				EChWarningsFixer.LogToConsole ("Delete warnings mismatch in time");
@@ -121,6 +123,26 @@ namespace Epsitec.Aider.Data.Job
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
+		}
+
+		private static void ApplyNewHouseholdActionsAndDeleteWarnings (BusinessContext businessContext)
+		{
+			var example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.EChHouseholdAdded
+			};
+
+			var warnings = businessContext.GetByExample<AiderPersonWarningEntity> (example).ToArray ();
+
+			foreach (var warning in warnings)
+			{
+				foreach(var household in warning.Person.Households)
+				{
+					EChDataHelpers.CreateOrUpdateAiderSubscription (businessContext, household);
+				}
+
+				AiderPersonWarningEntity.Delete (businessContext, warning);
+			}		
 		}
 
 		private static void FixDepartureWarnings(BusinessContext businessContext)
