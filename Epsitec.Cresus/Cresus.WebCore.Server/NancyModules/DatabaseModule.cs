@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            integer value.
 			Get["/export/{name}"] = (p =>
 			{
-				var jobId = string.Format ("JOB-{0}", Guid.NewGuid ());
+				var jobId = string.Format ("JOB-{0}",DateTime.Now.Ticks);
 				this.Execute (wa => this.NotifyUIForExportWaiting (wa, jobId));
 				this.Enqueue ((wa, b) => this.ExportViaQueue (wa, b, p,jobId),jobId);			
 				return new Response ()
