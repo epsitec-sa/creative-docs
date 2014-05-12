@@ -218,6 +218,16 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType ContactType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 444));
 				//	designer:cap/LVAV1
 				public static readonly Epsitec.Common.Types.EnumType DataSource = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 63));
+				//	designer:cap/LVAKJ
+				public static readonly Epsitec.Common.Types.EnumType EmployeeActivity = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 628));
+				//	designer:cap/LVAPJ
+				public static readonly Epsitec.Common.Types.EnumType EmployeeEmployer = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 633));
+				//	designer:cap/LVATJ
+				public static readonly Epsitec.Common.Types.EnumType EmployeeJobFunction = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 637));
+				//	designer:cap/LVA5K
+				public static readonly Epsitec.Common.Types.EnumType EmployeeReferenceType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 645));
+				//	designer:cap/LVADK
+				public static readonly Epsitec.Common.Types.EnumType EmployeeType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 653));
 				//	designer:cap/LVAE3
 				public static readonly Epsitec.Common.Types.EnumType EventParticipantRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 110));
 				//	designer:cap/LVAT3
@@ -297,6 +307,10 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderData = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 258));
 			//	designer:cap/LVATF
 			public static readonly Epsitec.Common.Types.StructuredType AiderDataManagers = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 509));
+			//	designer:cap/LVA2J
+			public static readonly Epsitec.Common.Types.StructuredType AiderEmployee = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 610));
+			//	designer:cap/LVA7J
+			public static readonly Epsitec.Common.Types.StructuredType AiderEmployeeJob = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 615));
 			//	designer:cap/LVA93
 			public static readonly Epsitec.Common.Types.StructuredType AiderEvent = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 105));
 			//	designer:cap/LVAA3
@@ -347,6 +361,8 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderPlace = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 127));
 			//	designer:cap/LVAQ5
 			public static readonly Epsitec.Common.Types.StructuredType AiderPlacePerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 186));
+			//	designer:cap/LVADJ
+			public static readonly Epsitec.Common.Types.StructuredType AiderReferee = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 621));
 			//	designer:cap/LVGP22
 			public static readonly Epsitec.Common.Types.StructuredType AiderSubscription = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 89));
 			//	designer:cap/LVGC32
@@ -515,6 +531,250 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 64));
+						}
+					}
+				}
+				
+				public static class EmployeeActivity
+				{
+					//	designer:cap/LVAMJ
+					public static global::Epsitec.Common.Types.Caption Active
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 630));
+						}
+					}
+					//	designer:cap/LVALJ
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 629));
+						}
+					}
+					//	designer:cap/LVAOJ
+					public static global::Epsitec.Common.Types.Caption PartiallyRetired
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 632));
+						}
+					}
+					//	designer:cap/LVANJ
+					public static global::Epsitec.Common.Types.Caption Retired
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 631));
+						}
+					}
+				}
+				
+				public static class EmployeeEmployer
+				{
+					//	designer:cap/LVARJ
+					public static global::Epsitec.Common.Types.Caption CS
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 635));
+						}
+					}
+					//	designer:cap/LVAQJ
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 634));
+						}
+					}
+					//	designer:cap/LVASJ
+					public static global::Epsitec.Common.Types.Caption Parish
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 636));
+						}
+					}
+				}
+				
+				public static class EmployeeJobFunction
+				{
+					//	designer:cap/LVA4K
+					public static global::Epsitec.Common.Types.Caption Auxiliaire
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 644));
+						}
+					}
+					//	designer:cap/LVAUJ
+					public static global::Epsitec.Common.Types.Caption Other
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 638));
+						}
+					}
+					//	designer:cap/LVA3K
+					public static global::Epsitec.Common.Types.Caption Remplaçant
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 643));
+						}
+					}
+					//	designer:cap/LVA1K
+					public static global::Epsitec.Common.Types.Caption Stagiaire
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 641));
+						}
+					}
+					//	designer:cap/LVA0K
+					public static global::Epsitec.Common.Types.Caption Suffragant
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 640));
+						}
+					}
+					//	designer:cap/LVAVJ
+					public static global::Epsitec.Common.Types.Caption Titulaire
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 639));
+						}
+					}
+					//	designer:cap/LVA2K
+					public static global::Epsitec.Common.Types.Caption Vicaire
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 642));
+						}
+					}
+				}
+				
+				public static class EmployeeReferenceType
+				{
+					//	designer:cap/LVA9K
+					public static global::Epsitec.Common.Types.Caption Adults
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 649));
+						}
+					}
+					//	designer:cap/LVA7K
+					public static global::Epsitec.Common.Types.Caption Childhood
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 647));
+						}
+					}
+					//	designer:cap/LVACK
+					public static global::Epsitec.Common.Types.Caption Coordinator
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 652));
+						}
+					}
+					//	designer:cap/LVABK
+					public static global::Epsitec.Common.Types.Caption InfoCom
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 651));
+						}
+					}
+					//	designer:cap/LVA6K
+					public static global::Epsitec.Common.Types.Caption Other
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 646));
+						}
+					}
+					//	designer:cap/LVAAK
+					public static global::Epsitec.Common.Types.Caption TerreNouvelle
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 650));
+						}
+					}
+					//	designer:cap/LVA8K
+					public static global::Epsitec.Common.Types.Caption Youth
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 648));
+						}
+					}
+				}
+				
+				public static class EmployeeType
+				{
+					//	designer:cap/LVAIK
+					public static global::Epsitec.Common.Types.Caption AnimateurEglise
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 658));
+						}
+					}
+					//	designer:cap/LVAJK
+					public static global::Epsitec.Common.Types.Caption AnimateurParoisse
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 659));
+						}
+					}
+					//	designer:cap/LVAGK
+					public static global::Epsitec.Common.Types.Caption Diacre
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 656));
+						}
+					}
+					//	designer:cap/LVAHK
+					public static global::Epsitec.Common.Types.Caption Employee
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 657));
+						}
+					}
+					//	designer:cap/LVAEK
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 654));
+						}
+					}
+					//	designer:cap/LVAKK
+					public static global::Epsitec.Common.Types.Caption Other
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 660));
+						}
+					}
+					//	designer:cap/LVAFK
+					public static global::Epsitec.Common.Types.Caption Pasteur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 655));
 						}
 					}
 				}
@@ -1851,6 +2111,46 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Users = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 510);
 			}
 			
+			public static class AiderEmployee
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderEmployee.Description, null);
+				}
+				
+				//	designer:cap/LVA6J
+				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 614);
+				//	designer:cap/LVA5J
+				public static readonly global::Epsitec.Common.Support.Druid EmployeeActivity = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 613);
+				//	designer:cap/LVAGJ
+				public static readonly global::Epsitec.Common.Support.Druid EmployeeJobs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 624);
+				//	designer:cap/LVA4J
+				public static readonly global::Epsitec.Common.Support.Druid EmployeeType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 612);
+				//	designer:cap/LVA3J
+				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 611);
+				//	designer:cap/LVAHJ
+				public static readonly global::Epsitec.Common.Support.Druid RefereeEntries = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 625);
+			}
+			
+			public static class AiderEmployeeJob
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderEmployeeJob.Description, null);
+				}
+				
+				//	designer:cap/LVA8J
+				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 616);
+				//	designer:cap/LVA9J
+				public static readonly global::Epsitec.Common.Support.Druid Employee = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 617);
+				//	designer:cap/LVABJ
+				public static readonly global::Epsitec.Common.Support.Druid EmployeeJobFunction = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 619);
+				//	designer:cap/LVACJ
+				public static readonly global::Epsitec.Common.Support.Druid Employer = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 620);
+				//	designer:cap/LVAAJ
+				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 618);
+			}
+			
 			public static class AiderEvent
 			{
 				internal static void _Initialize()
@@ -2416,6 +2716,23 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 188);
 				//	designer:cap/LVAR5
 				public static readonly global::Epsitec.Common.Support.Druid Place = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 187);
+			}
+			
+			public static class AiderReferee
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderReferee.Employee, null);
+				}
+				
+				//	designer:cap/LVAEJ
+				public static readonly global::Epsitec.Common.Support.Druid Employee = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 622);
+				//	designer:cap/LVAJJ
+				public static readonly global::Epsitec.Common.Support.Druid Group = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 627);
+				//	designer:cap/LVAIJ
+				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 626);
+				//	designer:cap/LVAFJ
+				public static readonly global::Epsitec.Common.Support.Druid ReferenceType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 623);
 			}
 			
 			public static class AiderRelationshipType
@@ -3113,6 +3430,8 @@ namespace Epsitec.Aider
 			Fields.AiderCountry._Initialize ();
 			Fields.AiderData._Initialize ();
 			Fields.AiderDataManagers._Initialize ();
+			Fields.AiderEmployee._Initialize ();
+			Fields.AiderEmployeeJob._Initialize ();
 			Fields.AiderEvent._Initialize ();
 			Fields.AiderEventParticipant._Initialize ();
 			Fields.AiderGroup._Initialize ();
@@ -3138,6 +3457,7 @@ namespace Epsitec.Aider
 			Fields.AiderPersonWarningSource._Initialize ();
 			Fields.AiderPlace._Initialize ();
 			Fields.AiderPlacePerson._Initialize ();
+			Fields.AiderReferee._Initialize ();
 			Fields.AiderRelationshipType._Initialize ();
 			Fields.AiderSubscription._Initialize ();
 			Fields.AiderSubscriptionRefusal._Initialize ();

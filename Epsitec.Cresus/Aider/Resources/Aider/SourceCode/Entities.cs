@@ -47,6 +47,9 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVOE23]", typeof (Epsitec.Aider.Entities.AiderOfficeReportEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVOI23]", typeof (Epsitec.Aider.Entities.AiderOfficeLetterReportEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVOP23]", typeof (Epsitec.Aider.Entities.AiderOfficeGroupParticipantReportEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVA2J]", typeof (Epsitec.Aider.Entities.AiderEmployeeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVA7J]", typeof (Epsitec.Aider.Entities.AiderEmployeeJobEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVADJ]", typeof (Epsitec.Aider.Entities.AiderRefereeEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -9838,6 +9841,453 @@ namespace Epsitec.Aider.Entities
 		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderOfficeGroupParticipantReportEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Volatile)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderEmployee Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderEmployee</c> entity.
+	///	designer:cap/LVA2J
+	///	</summary>
+	public partial class AiderEmployeeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Person</c> field.
+		///	designer:fld/LVA2J/LVA3J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA3J]")]
+		public global::Epsitec.Aider.Entities.AiderPersonEntity Person
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVA3J]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderPersonEntity oldValue = this.Person;
+				if (oldValue != value || !this.IsFieldDefined("[LVA3J]"))
+				{
+					this.OnPersonChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVA3J]", oldValue, value);
+					this.OnPersonChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>EmployeeType</c> field.
+		///	designer:fld/LVA2J/LVA4J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA4J]")]
+		public global::Epsitec.Aider.Enumerations.EmployeeType EmployeeType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.EmployeeType> ("[LVA4J]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.EmployeeType oldValue = this.EmployeeType;
+				if (oldValue != value || !this.IsFieldDefined("[LVA4J]"))
+				{
+					this.OnEmployeeTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.EmployeeType> ("[LVA4J]", oldValue, value);
+					this.OnEmployeeTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>EmployeeActivity</c> field.
+		///	designer:fld/LVA2J/LVA5J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA5J]")]
+		public global::Epsitec.Aider.Enumerations.EmployeeActivity EmployeeActivity
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.EmployeeActivity> ("[LVA5J]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.EmployeeActivity oldValue = this.EmployeeActivity;
+				if (oldValue != value || !this.IsFieldDefined("[LVA5J]"))
+				{
+					this.OnEmployeeActivityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.EmployeeActivity> ("[LVA5J]", oldValue, value);
+					this.OnEmployeeActivityChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/LVA2J/LVA6J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA6J]")]
+		public string Description
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA6J]");
+			}
+			set
+			{
+				string oldValue = this.Description;
+				if (oldValue != value || !this.IsFieldDefined("[LVA6J]"))
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<string> ("[LVA6J]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>EmployeeJobs</c> field.
+		///	designer:fld/LVA2J/LVAGJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAGJ]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> EmployeeJobs
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity>);
+				this.GetEmployeeJobs (ref value);
+				return value;
+			}
+		}
+		///	<summary>
+		///	The <c>RefereeEntries</c> field.
+		///	designer:fld/LVA2J/LVAHJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAHJ]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity> RefereeEntries
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity>);
+				this.GetRefereeEntries (ref value);
+				return value;
+			}
+		}
+		
+		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
+		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
+		partial void OnEmployeeTypeChanging(global::Epsitec.Aider.Enumerations.EmployeeType oldValue, global::Epsitec.Aider.Enumerations.EmployeeType newValue);
+		partial void OnEmployeeTypeChanged(global::Epsitec.Aider.Enumerations.EmployeeType oldValue, global::Epsitec.Aider.Enumerations.EmployeeType newValue);
+		partial void OnEmployeeActivityChanging(global::Epsitec.Aider.Enumerations.EmployeeActivity oldValue, global::Epsitec.Aider.Enumerations.EmployeeActivity newValue);
+		partial void OnEmployeeActivityChanged(global::Epsitec.Aider.Enumerations.EmployeeActivity oldValue, global::Epsitec.Aider.Enumerations.EmployeeActivity newValue);
+		partial void OnDescriptionChanging(string oldValue, string newValue);
+		partial void OnDescriptionChanged(string oldValue, string newValue);
+		
+		partial void GetEmployeeJobs(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> value);
+		partial void GetRefereeEntries(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity> value);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderEmployeeEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderEmployeeEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 610);	// [LVA2J]
+		public static readonly string EntityStructuredTypeKey = "[LVA2J]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderEmployeeEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderEmployeeJob Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderEmployeeJob</c> entity.
+	///	designer:cap/LVA7J
+	///	</summary>
+	public partial class AiderEmployeeJobEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Employee</c> field.
+		///	designer:fld/LVA7J/LVA9J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA9J]")]
+		public global::Epsitec.Aider.Entities.AiderEmployeeEntity Employee
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderEmployeeEntity> ("[LVA9J]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue = this.Employee;
+				if (oldValue != value || !this.IsFieldDefined("[LVA9J]"))
+				{
+					this.OnEmployeeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderEmployeeEntity> ("[LVA9J]", oldValue, value);
+					this.OnEmployeeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>EmployeeJobFunction</c> field.
+		///	designer:fld/LVA7J/LVABJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVABJ]")]
+		public global::Epsitec.Aider.Enumerations.EmployeeJobFunction EmployeeJobFunction
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.EmployeeJobFunction> ("[LVABJ]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.EmployeeJobFunction oldValue = this.EmployeeJobFunction;
+				if (oldValue != value || !this.IsFieldDefined("[LVABJ]"))
+				{
+					this.OnEmployeeJobFunctionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.EmployeeJobFunction> ("[LVABJ]", oldValue, value);
+					this.OnEmployeeJobFunctionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Employer</c> field.
+		///	designer:fld/LVA7J/LVACJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVACJ]")]
+		public global::Epsitec.Aider.Enumerations.EmployeeEmployer Employer
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.EmployeeEmployer> ("[LVACJ]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.EmployeeEmployer oldValue = this.Employer;
+				if (oldValue != value || !this.IsFieldDefined("[LVACJ]"))
+				{
+					this.OnEmployerChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.EmployeeEmployer> ("[LVACJ]", oldValue, value);
+					this.OnEmployerChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Office</c> field.
+		///	designer:fld/LVA7J/LVAAJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAAJ]")]
+		public global::Epsitec.Aider.Entities.AiderOfficeManagementEntity Office
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderOfficeManagementEntity> ("[LVAAJ]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue = this.Office;
+				if (oldValue != value || !this.IsFieldDefined("[LVAAJ]"))
+				{
+					this.OnOfficeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderOfficeManagementEntity> ("[LVAAJ]", oldValue, value);
+					this.OnOfficeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/LVA7J/LVA8J
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA8J]")]
+		public string Description
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA8J]");
+			}
+			set
+			{
+				string oldValue = this.Description;
+				if (oldValue != value || !this.IsFieldDefined("[LVA8J]"))
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<string> ("[LVA8J]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnEmployeeChanging(global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue, global::Epsitec.Aider.Entities.AiderEmployeeEntity newValue);
+		partial void OnEmployeeChanged(global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue, global::Epsitec.Aider.Entities.AiderEmployeeEntity newValue);
+		partial void OnEmployeeJobFunctionChanging(global::Epsitec.Aider.Enumerations.EmployeeJobFunction oldValue, global::Epsitec.Aider.Enumerations.EmployeeJobFunction newValue);
+		partial void OnEmployeeJobFunctionChanged(global::Epsitec.Aider.Enumerations.EmployeeJobFunction oldValue, global::Epsitec.Aider.Enumerations.EmployeeJobFunction newValue);
+		partial void OnEmployerChanging(global::Epsitec.Aider.Enumerations.EmployeeEmployer oldValue, global::Epsitec.Aider.Enumerations.EmployeeEmployer newValue);
+		partial void OnEmployerChanged(global::Epsitec.Aider.Enumerations.EmployeeEmployer oldValue, global::Epsitec.Aider.Enumerations.EmployeeEmployer newValue);
+		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
+		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
+		partial void OnDescriptionChanging(string oldValue, string newValue);
+		partial void OnDescriptionChanged(string oldValue, string newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderEmployeeJobEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderEmployeeJobEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 615);	// [LVA7J]
+		public static readonly string EntityStructuredTypeKey = "[LVA7J]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderEmployeeJobEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderReferee Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderReferee</c> entity.
+	///	designer:cap/LVADJ
+	///	</summary>
+	public partial class AiderRefereeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Employee</c> field.
+		///	designer:fld/LVADJ/LVAEJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAEJ]")]
+		public global::Epsitec.Aider.Entities.AiderEmployeeEntity Employee
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderEmployeeEntity> ("[LVAEJ]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue = this.Employee;
+				if (oldValue != value || !this.IsFieldDefined("[LVAEJ]"))
+				{
+					this.OnEmployeeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderEmployeeEntity> ("[LVAEJ]", oldValue, value);
+					this.OnEmployeeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ReferenceType</c> field.
+		///	designer:fld/LVADJ/LVAFJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAFJ]")]
+		public global::Epsitec.Aider.Enumerations.EmployeeReferenceType ReferenceType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.EmployeeReferenceType> ("[LVAFJ]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.EmployeeReferenceType oldValue = this.ReferenceType;
+				if (oldValue != value || !this.IsFieldDefined("[LVAFJ]"))
+				{
+					this.OnReferenceTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.EmployeeReferenceType> ("[LVAFJ]", oldValue, value);
+					this.OnReferenceTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Office</c> field.
+		///	designer:fld/LVADJ/LVAIJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAIJ]")]
+		public global::Epsitec.Aider.Entities.AiderOfficeManagementEntity Office
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderOfficeManagementEntity> ("[LVAIJ]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue = this.Office;
+				if (oldValue != value || !this.IsFieldDefined("[LVAIJ]"))
+				{
+					this.OnOfficeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderOfficeManagementEntity> ("[LVAIJ]", oldValue, value);
+					this.OnOfficeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Group</c> field.
+		///	designer:fld/LVADJ/LVAJJ
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAJJ]")]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity Group
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVAJJ]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.Group;
+				if (oldValue != value || !this.IsFieldDefined("[LVAJJ]"))
+				{
+					this.OnGroupChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVAJJ]", oldValue, value);
+					this.OnGroupChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnEmployeeChanging(global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue, global::Epsitec.Aider.Entities.AiderEmployeeEntity newValue);
+		partial void OnEmployeeChanged(global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue, global::Epsitec.Aider.Entities.AiderEmployeeEntity newValue);
+		partial void OnReferenceTypeChanging(global::Epsitec.Aider.Enumerations.EmployeeReferenceType oldValue, global::Epsitec.Aider.Enumerations.EmployeeReferenceType newValue);
+		partial void OnReferenceTypeChanged(global::Epsitec.Aider.Enumerations.EmployeeReferenceType oldValue, global::Epsitec.Aider.Enumerations.EmployeeReferenceType newValue);
+		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
+		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
+		partial void OnGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderRefereeEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderRefereeEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 621);	// [LVADJ]
+		public static readonly string EntityStructuredTypeKey = "[LVADJ]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderRefereeEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
 			}
 		}
