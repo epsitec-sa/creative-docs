@@ -94,6 +94,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight  = AbstractFieldController.lineHeight,
 			};
 
+			this.UpdatePropertyState ();
+
 			this.button.Clicked += delegate
 			{
 				this.ShowPopup ();

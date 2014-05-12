@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.CreateControllers (controllersFrame);
+			this.UpdatePropertyState ();
 		}
 
 

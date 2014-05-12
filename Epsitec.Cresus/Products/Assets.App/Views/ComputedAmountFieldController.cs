@@ -84,6 +84,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.CreateUI (this.frameBox);
 			this.controller.ComputedAmount = this.value;
 
+			this.UpdatePropertyState ();
+
 			this.controller.ValueEdited += delegate
 			{
 				if (this.ignoreChanges.IsZero)

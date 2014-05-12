@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly);
 			}
 
-			AbstractFieldController.UpdateTextField (this.textField, this.PropertyState, this.isReadOnly);
+			AbstractFieldController.UpdateTextField (this.textField, this.PropertyState, this.isReadOnly, this.isError);
 		}
 
 
@@ -124,6 +124,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				TabIndex        = this.TabIndex,
 				Text            = this.ConvDecimalToString (this.value.Ratio),
 			};
+
+			this.UpdatePropertyState ();
 
 			//	Connexion des événements.
 			this.button.Clicked += delegate

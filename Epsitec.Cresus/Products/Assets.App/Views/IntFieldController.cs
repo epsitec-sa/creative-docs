@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly);
+			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, this.isError);
 		}
 
 
@@ -100,6 +100,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
+
+			this.UpdatePropertyState ();
 
 			this.textField.TextChanged += delegate
 			{

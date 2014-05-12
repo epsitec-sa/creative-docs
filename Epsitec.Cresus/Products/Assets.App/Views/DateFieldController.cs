@@ -27,6 +27,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public DateRangeCategory				DateRangeCategory;
 
+		public System.DateTime?					MinValue;
+		public System.DateTime?					MaxValue;
+
 		public System.DateTime?					Value
 		{
 			get
@@ -84,7 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly);
+			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, this.isError);
 			this.UpdateButtons ();
 		}
 
@@ -119,6 +122,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			ToolTip.Default.SetToolTip (this.predefinedButton, "Autre date à choix...");
 			ToolTip.Default.SetToolTip (this.calendarButton,   "Calendrier...");
 			ToolTip.Default.SetToolTip (this.deleteButton,     "Effacer la date");
+
+			this.UpdatePropertyState ();
 
 			//	Connexion des événements.
 			this.textField.PreProcessing += delegate (object sender, MessageEventArgs e)
@@ -952,28 +957,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			System.DateTime? date;
 
+			var min = this.MinValue;
+			var max = this.MaxValue;
+
 			switch (this.DateRangeCategory)
 			{
 				case DateRangeCategory.Mandat:
-					date = TypeConverters.ParseDate (text, LocalSettings.DefaultMandatDate, this.accessor.Mandat.StartDate, null);
-
-					if (date.HasValue)
+					if (min.HasValue)
 					{
-						LocalSettings.DefaultMandatDate = date.Value;
+						min = new System.DateTime (System.Math.Max (min.Value.Ticks, this.accessor.Mandat.StartDate.Ticks));
+					}
+					else
+					{
+						min = this.accessor.Mandat.StartDate;
 					}
 					break;
 
 				case DateRangeCategory.Free:
-					date = TypeConverters.ParseDate (text, LocalSettings.DefaultFreeDate, null, null);
-
-					if (date.HasValue)
-					{
-						LocalSettings.DefaultFreeDate = date.Value;
-					}
 					break;
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported DateRangeCategory {0}", this.DateRangeCategory));
+			}
+
+			this.IsError = !TypeConverters.ParseDate (text, LocalSettings.DefaultMandatDate, min, max, out date);
+
+			if (date.HasValue)
+			{
+				LocalSettings.DefaultMandatDate = date.Value;
 			}
 
 			return date;

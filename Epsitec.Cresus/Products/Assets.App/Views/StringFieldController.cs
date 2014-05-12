@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly);
+			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, this.isError);
 		}
 
 
@@ -98,6 +98,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					Text            = this.value,
 				};
 			}
+
+			this.UpdatePropertyState ();
 
 			this.textField.TextChanged += delegate
 			{

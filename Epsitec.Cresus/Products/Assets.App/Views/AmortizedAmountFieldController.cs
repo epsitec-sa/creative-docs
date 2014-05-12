@@ -86,6 +86,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.IsReadOnly = this.PropertyState == PropertyState.Readonly;
 			this.controller.Value = this.value;
 
+			this.UpdatePropertyState ();
+
 			this.controller.ValueEdited += delegate
 			{
 				if (this.ignoreChanges.IsZero)

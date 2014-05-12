@@ -92,6 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.CreateGotoAccountButton ();
+			this.UpdatePropertyState ();
 
 			//	Connexion des événements.
 			this.button.Clicked += delegate

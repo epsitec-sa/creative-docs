@@ -81,6 +81,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public bool								IsError
+		{
+			get
+			{
+				return this.isError;
+			}
+			set
+			{
+				this.isError = value;
+				this.UpdatePropertyState ();
+			}
+		}
+
 		public FrameBox							FrameBox
 		{
 			get
@@ -211,7 +224,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public static void UpdateTextField(AbstractTextField textField, PropertyState state, bool isReadOnly)
+		public static void UpdateTextField(AbstractTextField textField, PropertyState state, bool isReadOnly, bool isError = false)
 		{
 			if (textField != null)
 			{
@@ -222,7 +235,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					isReadOnly = true;
 				}
 
-				textField.BackColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly);
+				textField.BackColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly, isError);
 
 				if (textField.TextDisplayMode == TextFieldDisplayMode.ActiveHint ||
 					textField.TextDisplayMode == TextFieldDisplayMode.ActiveHintAndUseBackColor)
@@ -258,25 +271,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public static Color GetBackgroundColor(PropertyState state, bool isReadOnly)
+		public static Color GetBackgroundColor(PropertyState state, bool isReadOnly, bool isError = false)
 		{
 			Color color;
 			double delta = -0.05;
 
-			switch (state)
+			if (isError)
 			{
-				case PropertyState.Single:
-					color = ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
-					delta = -0.1;
-					break;
+				color = ColorManager.ErrorFieldColor;
+			}
+			else
+			{
+				switch (state)
+				{
+					case PropertyState.Single:
+						color = ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
+						delta = -0.1;
+						break;
 
-				case PropertyState.Inherited:
-					color = ColorManager.EditInheritedPropertyColor;
-					break;
+					case PropertyState.Inherited:
+						color = ColorManager.EditInheritedPropertyColor;
+						break;
 
-				default:
-					color = ColorManager.NormalFieldColor;
-					break;
+					default:
+						color = ColorManager.NormalFieldColor;
+						break;
+				}
 			}
 
 			if (isReadOnly)
@@ -378,5 +398,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private int								editWidth;
 		protected PropertyState					propertyState;
 		protected bool							isReadOnly;
+		protected bool							isError;
 	}
 }

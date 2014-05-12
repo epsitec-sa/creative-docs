@@ -97,6 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.UpdateCombo ();
+			this.UpdatePropertyState ();
 
 			this.textField.TextChanged += delegate
 			{
