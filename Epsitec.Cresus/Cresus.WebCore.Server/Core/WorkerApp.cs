@@ -122,7 +122,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.Execute (username, sessionId, w => w.Execute (action));
 		}
 
-
 		public T Execute<T>(string username, string sessionId, Func<WorkerApp, T> action)
 		{
 			return this.Execute (() =>
@@ -212,6 +211,28 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
+		public void Enqueue(Action<BusinessContext> action)
+		{
+			using (var businessContext = new BusinessContext (this.CoreData, false))
+			{
+				try
+				{
+					action (businessContext);
+				}
+				finally
+				{
+					if (businessContext != null)
+					{
+						// We discard the BusinessContext so any unsaved changes won't be
+						// persisted to the database. Such changes could happen if an exception
+						// is thrown after some entities have been modified. In such a case, we
+						// want to make sure that the changed are not persisted to the database.
+
+						businessContext.Discard ();
+					}
+				}
+			}
+		}
 
 		private T Execute<T>(Func<T> action)
 		{

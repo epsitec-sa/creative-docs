@@ -60,19 +60,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return this.Execute (wa => wa.Execute (b => function (wa, b)));
 		}
 
-		protected Response Enqueue(Action<BusinessContext> action)
-		{
-			var userName	= LoginModule.GetUserName (this);
-			var sessionId	= LoginModule.GetSessionId (this);
-			var queue		= this.CoreServer.CoreWorkerQueue;
-			queue.Enqueue ("job", userName, sessionId, action);
-
-			return new Response ()
-			{
-				StatusCode = HttpStatusCode.Accepted
-			};
-		}
-
 		private Response Execute(Func<CoreWorkerPool, string, string, Response> function)
 		{
 			try
@@ -98,6 +85,38 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				}
 
 				throw;
+			}
+		}
+
+		protected void Enqueue(Action<BusinessContext> action)
+		{
+			this.Enqueue ((wq, t, n, id) => wq.Enqueue (t, n, id, action));
+		}
+
+		protected void Enqueue(Action<WorkerApp> action)
+		{
+			this.Enqueue ((wq, t, n, id) => wq.Enqueue (t, n, id, action));
+		}
+
+		protected Response Enqueue(Action<WorkerApp, BusinessContext> function)
+		{
+			this.Enqueue (wa => wa.Enqueue (b => function (wa, b)));
+			return null;
+		}
+
+		private void Enqueue(Action<CoreWorkerQueue, string, string, string> action)
+		{
+			try
+			{
+				var userName = LoginModule.GetUserName (this);
+				var sessionId = LoginModule.GetSessionId (this);
+				var itemName = string.Format ("job-{0}", new Guid ("dd"));
+				var workerQueue = this.CoreServer.CoreWorkerQueue;
+
+				action (workerQueue, itemName, userName, sessionId);
+			}
+			catch
+			{
 			}
 		}
 	}

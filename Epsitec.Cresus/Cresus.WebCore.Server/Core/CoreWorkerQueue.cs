@@ -36,11 +36,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		public void Enqueue(string workItemName, string username, string sessionId, System.Action<BusinessContext> action)
 		{
 			this.workItems.Enqueue (new WorkItemBusinessContext (workItemName, username, sessionId, action));
+			this.wakeUpEvent.Set ();
 		}
 
 		public void Enqueue(string workItemName, string username, string sessionId, System.Action<WorkerApp> action)
 		{
 			this.workItems.Enqueue (new WorkItemWorkerApp (workItemName, username, sessionId, action));
+			this.wakeUpEvent.Set ();
 		}
 
 
@@ -70,6 +72,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				this.wakeUpEvent.WaitOne ();
 				this.wakeUpEvent.Reset ();
 
+				
 				while ((this.killRequest == false)
 					&& (this.ExecuteWorkItem ()))
 				{

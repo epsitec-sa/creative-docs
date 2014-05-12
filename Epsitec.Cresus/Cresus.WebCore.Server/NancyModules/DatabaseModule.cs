@@ -22,6 +22,7 @@ using System.Linq;
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 	using Database = Core.Databases.Database;
+	using Epsitec.Cresus.Core.Library;
 
 	/// <summary>
 	/// This module is used to retrieve data about the databases, such as the list of defined
@@ -90,7 +91,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// - text:    The id of the LabelTextFactory used to generate the label text, as an
 			//            integer value.
 			Get["/export/{name}"] = p =>
-				this.Execute ((wa, b) => this.Export (wa, b, p));
+				this.Enqueue ((wa, b) => this.ExportViaQueue (wa, b, p));
+
 
 			// Deletes some enties.
 			// POST arguments:
@@ -156,6 +158,20 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.CreateStreamResponse (stream, filename);
 		}
 
+		internal static void ExportToDisk(Caches caches, EntityExtractor extractor, dynamic query)
+		{
+			var itemCount = extractor.Accessor.GetItemCount ();
+
+			EntityWriter writer = DatabaseModule.GetEntityWriter (caches, extractor, query);
+
+			var filename = writer.GetFilename ();
+			var stream   = writer.GetStream ();
+
+			using (var fileStream = System.IO.File.Create ("C:\\export.csv"))
+			{
+				stream.CopyTo (fileStream);
+			}
+		}
 
 		private Response GetDatabaseList(WorkerApp workerApp)
 		{
@@ -229,6 +245,19 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				return DatabaseModule.Export (caches, extractor, this.Request.Query);
 			}
+		}
+
+		private void ExportViaQueue(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		{
+			var caches = this.CoreServer.Caches;
+
+			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
+			{
+				DatabaseModule.ExportToDisk (caches, extractor, this.Request.Query);
+			}
+
+			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
+			entityBag.AddToBag (LoginModule.GetUserName (this), "export", "...", "", When.Now);
 		}
 
 		private EntityExtractor GetEntityExtractor(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)

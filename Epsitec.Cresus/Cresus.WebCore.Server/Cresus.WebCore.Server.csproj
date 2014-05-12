@@ -159,7 +159,6 @@
     <Compile Include="Core\Databases\Column.cs" />
     <Compile Include="NancyModules\Constants.cs" />
     <Compile Include="Core\Databases\Database.cs" />
-    <Compile Include="NancyModules\TaskModule.cs" />
     <Compile Include="Processors\IReportingProcessor.cs" />
     <Compile Include="NancyModules\ReportingModule.cs" />
     <Compile Include="NancyModules\FavoritesModule.cs" />
