@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var filename = writer.GetFilename ();
 			var stream   = writer.GetStream ();
 
-			using (var fileStream = System.IO.File.Create ("C:\\export.csv"))
+			using (var fileStream = System.IO.File.Create ("S:\\exportAIDER.csv"))
 			{
 				stream.CopyTo (fileStream);
 			}

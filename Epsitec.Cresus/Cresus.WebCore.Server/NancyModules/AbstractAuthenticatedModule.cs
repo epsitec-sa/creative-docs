@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var userName = LoginModule.GetUserName (this);
 				var sessionId = LoginModule.GetSessionId (this);
-				var itemName = string.Format ("job-{0}", new Guid ("dd"));
+				var itemName = string.Format ("job-{0}", Guid.NewGuid());
 				var workerQueue = this.CoreServer.CoreWorkerQueue;
 
 				action (workerQueue, itemName, userName, sessionId);
