@@ -726,12 +726,6 @@ function() {
             Epsitec.Texts.getExportImpossibleEmpty()
         );
       }
-      else if (count > 10000) {
-        Epsitec.ErrorHandler.showError(
-            Epsitec.Texts.getExportImpossibleTitle(),
-            Epsitec.Texts.getExportImpossibleTooMany()
-        );
-      }
       else {
         this.doExport(type);
       }

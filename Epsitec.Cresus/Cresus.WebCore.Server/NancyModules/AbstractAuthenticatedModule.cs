@@ -9,6 +9,7 @@ using Nancy;
 
 using System;
 using System.Collections.Generic;
+using Epsitec.Cresus.Core.Library;
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
@@ -88,32 +89,30 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 		}
 
-		protected void Enqueue(Action<BusinessContext> action)
+		protected void Enqueue(Action<BusinessContext> action,string jobId)
 		{
-			this.Enqueue ((wq, t, n, id) => wq.Enqueue (t, n, id, action));
+			this.Enqueue ((wq, t, n, id) => wq.Enqueue (t, n, id, action),jobId);
 		}
 
-		protected void Enqueue(Action<WorkerApp> action)
+		protected void Enqueue(Action<WorkerApp> action,string jobId)
 		{
-			this.Enqueue ((wq, t, n, id) => wq.Enqueue (t, n, id, action));
+			this.Enqueue ((wq, t, n, id) => wq.Enqueue (t, n, id, action),jobId);
 		}
 
-		protected Response Enqueue(Action<WorkerApp, BusinessContext> function)
+		protected Response Enqueue(Action<WorkerApp, BusinessContext> function,string jobId)
 		{
-			this.Enqueue (wa => wa.Enqueue (b => function (wa, b)));
+			this.Enqueue (wa => wa.Enqueue (b => function (wa, b)),jobId);
 			return null;
 		}
 
-		private void Enqueue(Action<CoreWorkerQueue, string, string, string> action)
+		private void Enqueue(Action<CoreWorkerQueue, string, string, string> action,string jobId)
 		{
 			try
 			{
 				var userName = LoginModule.GetUserName (this);
 				var sessionId = LoginModule.GetSessionId (this);
-				var itemName = string.Format ("job-{0}", Guid.NewGuid());
 				var workerQueue = this.CoreServer.CoreWorkerQueue;
-
-				action (workerQueue, itemName, userName, sessionId);
+				action (workerQueue, jobId, userName, sessionId);
 			}
 			catch
 			{

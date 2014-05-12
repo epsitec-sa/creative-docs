@@ -90,8 +90,17 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            used by the Enum.Parse(...) method.
 			// - text:    The id of the LabelTextFactory used to generate the label text, as an
 			//            integer value.
-			Get["/export/{name}"] = p =>
-				this.Enqueue ((wa, b) => this.ExportViaQueue (wa, b, p));
+			Get["/export/{name}"] = (p =>
+			{
+				var jobId = string.Format ("JOB-{0}", Guid.NewGuid ());
+				this.Execute (wa => this.NotifyUIForExportWaiting (wa, jobId));
+				this.Enqueue ((wa, b) => this.ExportViaQueue (wa, b, p,jobId),jobId);			
+				return new Response ()
+				{
+					StatusCode = HttpStatusCode.Accepted
+				};
+			});
+				
 
 
 			// Deletes some enties.
@@ -247,17 +256,41 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 		}
 
-		private void ExportViaQueue(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private Response NotifyUIForExportWaiting(WorkerApp workerApp, string jobId)
 		{
+			var user			= LoginModule.GetUserName (this);
+			var notification	= NotificationManager.GetCurrentNotificationManager ();
+			notification.Notify (user, new NotificationMessage ()
+			{
+				Title	=	"Exportation en cours...",
+				Body	=	"Merci de patienter"
+			}, When.Now);
+
+			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
+			entityBag.AddToBag (user, "Exportation", "en attente", jobId, When.Now);
+
+			return new Response ()
+			{
+				StatusCode = HttpStatusCode.Accepted
+			};
+		}
+
+		private void ExportViaQueue(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters, string bagJobId)
+		{
+			var user			= LoginModule.GetUserName (this);
+			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();	
 			var caches = this.CoreServer.Caches;
+
+			entityBag.RemoveFromBag (user, bagJobId, When.Now);
+			entityBag.AddToBag (user, "Exportation", "en cours", bagJobId, When.Now);
 
 			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
 			{
 				DatabaseModule.ExportToDisk (caches, extractor, this.Request.Query);
 			}
 
-			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
-			entityBag.AddToBag (LoginModule.GetUserName (this), "export", "...", "", When.Now);
+			entityBag.RemoveFromBag (user, bagJobId, When.Now);
+			entityBag.AddToBag (user, "Exportation terminée!", "<a href='/downloads/xxxx.csv'>Télécharger</a>", bagJobId, When.Now);
 		}
 
 		private EntityExtractor GetEntityExtractor(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)

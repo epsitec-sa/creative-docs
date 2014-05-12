@@ -163,7 +163,14 @@ function() {
       url = Epsitec.Tools.addParameterToUrl(url, 'type', 'array');
       url = Epsitec.Tools.addParameterToUrl(url, 'columns', columnIds);
 
-      window.open(url);
+        //window.open(url);
+      Ext.Ajax.request({
+          url: url,
+          success: function (response) {
+              //TODO
+          }
+      });
+
       this.close();
     },
 

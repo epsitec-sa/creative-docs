@@ -13,6 +13,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
@@ -50,8 +51,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{
 			System.Diagnostics.Trace.WriteLine (string.Join ("\r\n", this.workItems.Select (x => x.ToString ())));
 		}
-
-
 		#region IDisposable Members
 
 		public void Dispose()
@@ -87,6 +86,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 			if (this.workItems.TryDequeue (out item))
 			{
+				//this.NotifyUIForStarted (item.UserName, item.WorkItemName);
 				item.Execute (this.worker);
 				return true;
 			}
@@ -111,6 +111,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				get
 				{
 					return this.workItemName;
+				}
+			}
+
+			public string UserName
+			{
+				get
+				{
+					return this.username;
 				}
 			}
 
