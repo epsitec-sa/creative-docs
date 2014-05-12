@@ -117,6 +117,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			return this.Execute (username, sessionId, w => w.Execute (action));
 		}
 
+		public void Execute(string username, string sessionId, Action<BusinessContext> action)
+		{
+			this.Execute (username, sessionId, w => w.Execute (action));
+		}
+
 
 		public T Execute<T>(string username, string sessionId, Func<WorkerApp, T> action)
 		{
@@ -130,6 +135,27 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 					this.userManager.SetActiveSessionId (sessionId);
 
 					return action (this);
+				}
+				finally
+				{
+					this.userManager.SetAuthenticatedUser ((SoftwareUserEntity) null);
+					this.userManager.SetActiveSessionId (null);
+				}
+			});
+		}
+
+		public void Execute(string username, string sessionId, Action<WorkerApp> action)
+		{
+			this.Execute (() =>
+			{
+				try
+				{
+					var user = this.userManager.FindUser (username);
+
+					this.userManager.SetAuthenticatedUser (user);
+					this.userManager.SetActiveSessionId (sessionId);
+
+					action (this);
 				}
 				finally
 				{
@@ -163,6 +189,29 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
+		public void Execute(Action<BusinessContext> action)
+		{
+			using (var businessContext = new BusinessContext (this.CoreData, false))
+			{
+				try
+				{
+					action (businessContext);
+				}
+				finally
+				{
+					if (businessContext != null)
+					{
+						// We discard the BusinessContext so any unsaved changes won't be
+						// persisted to the database. Such changes could happen if an exception
+						// is thrown after some entities have been modified. In such a case, we
+						// want to make sure that the changed are not persisted to the database.
+
+						businessContext.Discard ();
+					}
+				}
+			}
+		}
+
 
 		private T Execute<T>(Func<T> action)
 		{
@@ -173,6 +222,27 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				CoreApp.current = this;
 
 				return action ();
+			}
+			finally
+			{
+				CoreApp.current = null;
+
+				// We flush the user manager so that it does not hold any reference to an entity
+				// anymore. This way, we are sure that the next time it is used, there is no
+				// outdated cached data within it.
+				this.userManager.Flush ();
+			}
+		}
+
+		private void Execute(Action action)
+		{
+			Debug.Assert (CoreApp.current == null);
+
+			try
+			{
+				CoreApp.current = this;
+
+				action ();
 			}
 			finally
 			{

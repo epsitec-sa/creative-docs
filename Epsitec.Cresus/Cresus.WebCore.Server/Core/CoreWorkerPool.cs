@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Globalization;
 using System.Threading.Tasks;
 

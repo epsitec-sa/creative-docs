@@ -60,6 +60,18 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return this.Execute (wa => wa.Execute (b => function (wa, b)));
 		}
 
+		protected Response Enqueue(Action<BusinessContext> action)
+		{
+			var userName	= LoginModule.GetUserName (this);
+			var sessionId	= LoginModule.GetSessionId (this);
+			var queue		= this.CoreServer.CoreWorkerQueue;
+			queue.Enqueue ("job", userName, sessionId, action);
+
+			return new Response ()
+			{
+				StatusCode = HttpStatusCode.Accepted
+			};
+		}
 
 		private Response Execute(Func<CoreWorkerPool, string, string, Response> function)
 		{
@@ -88,8 +100,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				throw;
 			}
 		}
-
-
 	}
 
 

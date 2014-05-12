@@ -25,11 +25,20 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.authenticationManager = new AuthenticationManager (coreWorkerPool);
 			this.databaseManager = new DatabaseManager ();
 			this.caches = new Caches ();
+			this.coreWorkerQueue = new Core.CoreWorkerQueue (uiCulture);
 
 			Logger.LogToConsole ("Core server started");
 		}
 
 
+		public CoreWorkerQueue					CoreWorkerQueue
+		{
+			get
+			{
+				return this.coreWorkerQueue;
+			}
+		}
+		
 		public CoreWorkerPool					CoreWorkerPool
 		{
 			get
@@ -66,6 +75,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public void Dispose()
 		{
+			this.coreWorkerQueue.Dispose ();
 			this.coreWorkerPool.Dispose ();
 			this.caches.Dispose ();
 		}
@@ -73,6 +83,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		#endregion
 
 		private readonly CoreWorkerPool			coreWorkerPool;
+		private readonly CoreWorkerQueue		coreWorkerQueue;
 		private readonly AuthenticationManager	authenticationManager;
 		private readonly DatabaseManager		databaseManager;
 		private readonly Caches					caches;

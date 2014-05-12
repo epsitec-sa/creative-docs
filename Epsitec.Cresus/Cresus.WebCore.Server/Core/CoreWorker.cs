@@ -82,6 +82,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			return this.Execute (coreWorkerApp => coreWorkerApp.Execute (username, sessionId, function));
 		}
 
+		public void Execute(string username, string sessionId, Action<BusinessContext> action)
+		{
+			this.Execute (coreWorkerApp => coreWorkerApp.Execute (username, sessionId, action));
+		}
 
 		/// <summary>
 		/// Synchronously executes the given function, using the <c>WorkerApp</c> owned by this
@@ -100,6 +104,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			return this.Execute (coreWorkerApp => coreWorkerApp.Execute (username, sessionId, function));
 		}
 
+		public void Execute(string username, string sessionId, Action<WorkerApp> action)
+		{
+			this.Execute (coreWorkerApp => coreWorkerApp.Execute (username, sessionId, action));
+		}
 
 		/// <summary>
 		/// Synchronously executes the given function, using the <c>UserManager</c> of the
@@ -142,6 +150,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				this.workerThread.ExecuteSynchronously (() => value = function (this.workerApp));
 
 				return value;
+			}
+		}
+
+		private void Execute(Action<WorkerApp> action)
+		{
+			using (this.safeSectionManager.Create ())
+			{
+				this.workerThread.ExecuteSynchronously (() => action (this.workerApp));
 			}
 		}
 
