@@ -324,11 +324,12 @@ namespace Epsitec.Aider.Entities
 		public void AssignNewHousehold(BusinessContext context, bool move)
 		{
 			var newHousehold = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+			var mainContact  = this.MainContact;
 
-			if ((this.MainContact.IsNotNull ()) &&
-				(this.MainContact.Address.IsNotNull ()))
+			if ((mainContact.IsNotNull ()) &&
+				(mainContact.Address.IsNotNull ()))
 			{
-				var oldAddress = this.MainContact.Address;
+				var oldAddress = mainContact.Address;
 				var newAddress = newHousehold.Address;
 
 				newAddress.Town = oldAddress.Town;
@@ -1181,6 +1182,15 @@ namespace Epsitec.Aider.Entities
 			throw new System.NotSupportedException ("Do not call this method.");
 		}
 
+		partial void GetEmployee(ref AiderEmployeeEntity value)
+		{
+			value = this.GetEmployees ().FirstOrDefault ();
+		}
+
+		partial void SetEmployee(AiderEmployeeEntity value)
+		{
+			throw new System.NotImplementedException ();
+		}
 
 
 		private AiderAddressEntity GetAddress()
@@ -1228,11 +1238,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.contacts == null)
 			{
-				this.contacts = this.ExecuteWithDataContext
-				(
-					d => this.FindContacts (d).ToSet (),
-					() => new HashSet<AiderContactEntity> ()
-				);
+				this.contacts = this.ExecuteWithDataContext (d => this.FindContacts (d).ToSet (), () => new HashSet<AiderContactEntity> ());
 			}
 
 			return this.contacts;
@@ -1242,14 +1248,20 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.warnings == null)
 			{
-				this.warnings = this.ExecuteWithDataContext
-				(
-					d => this.FindWarnings (d),
-					() => new List<AiderPersonWarningEntity> ()
-				);
+				this.warnings = this.ExecuteWithDataContext (d => this.FindWarnings (d), () => new List<AiderPersonWarningEntity> ());
 			}
 
 			return this.warnings;
+		}
+
+		private ISet<AiderEmployeeEntity> GetEmployees()
+		{
+			if (this.employees == null)
+			{
+				this.employees = this.ExecuteWithDataContext (d => this.FindEmployees (d).ToSet (), () => new HashSet<AiderEmployeeEntity> ());
+			}
+
+			return this.employees;
 		}
 
 
@@ -1282,6 +1294,15 @@ namespace Epsitec.Aider.Entities
 				.ToList ();
 		}
 
+		private IList<AiderEmployeeEntity> FindEmployees(DataContext dataContext)
+		{
+			var example = new AiderEmployeeEntity ()
+			{
+				Person = this
+			};
+
+			return dataContext.GetByExample (example);
+		}
 
 		private void RefreshDisplayName()
 		{
@@ -1372,6 +1393,7 @@ namespace Epsitec.Aider.Entities
 
 		private IList<AiderGroupParticipantEntity>	participations;
 		private IList<AiderPersonWarningEntity>		warnings;
+		private ISet<AiderEmployeeEntity>			employees;
 		private ISet<AiderHouseholdEntity>			households;
 		private ISet<AiderContactEntity>			contacts;
 	}

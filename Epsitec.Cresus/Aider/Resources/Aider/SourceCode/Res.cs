@@ -2128,6 +2128,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid EmployeeType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 612);
 				//	designer:cap/LVA3J
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 611);
+				//	designer:cap/LVALK
+				public static readonly global::Epsitec.Common.Support.Druid PersonContact = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 661);
 				//	designer:cap/LVAHJ
 				public static readonly global::Epsitec.Common.Support.Druid RefereeEntries = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 625);
 			}
@@ -2596,6 +2598,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 146);
 				//	designer:cap/LVAU1
 				public static readonly global::Epsitec.Common.Support.Druid eCH_Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62);
+				//	designer:cap/LVAMK
+				public static readonly global::Epsitec.Common.Support.Druid Employee = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 662);
 				//	designer:cap/LVOH13
 				public static readonly global::Epsitec.Common.Support.Druid GeoParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 49);
 				//	designer:cap/LVAR8

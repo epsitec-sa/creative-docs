@@ -1,5 +1,5 @@
 ﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -32,15 +32,25 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
 
+			bool showEmployeeTile   = this.Entity.Employee.IsNotNull ();
+			bool showEmployeeAction = (showEmployeeTile == false) && this.HasUserPowerLevel (UserPowerLevel.Administrator);
+
+
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
 				.EnableActionMenu<ActionAiderPersonViewController5AddHousehold> ()
 				.EnableActionMenu<ActionAiderPersonViewController12Relocate> ()
 				.EnableActionMenu<ActionAiderPersonViewController13DeleteContact> ()
+				.EnableActionMenu<ActionAiderPersonViewController14DefineEmployee> ().IfTrue (showEmployeeAction)
 				.EnableActionOnDrop<ActionAiderPersonViewController8FusionOnDrop> ()
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
 				.Text (x => x.GetPersonalDataSummary ());
+
+			if (showEmployeeTile)
+			{
+				wall.AddBrick (x => x.Employee);
+			}
 
 			wall.AddBrick ()
 				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator))

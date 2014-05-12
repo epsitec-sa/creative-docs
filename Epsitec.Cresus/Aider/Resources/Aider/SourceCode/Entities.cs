@@ -1109,6 +1109,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Employee</c> field.
+		///	designer:fld/LVAF/LVAMK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAMK]", IsVirtual=true)]
+		public global::Epsitec.Aider.Entities.AiderEmployeeEntity Employee
+		{
+			get
+			{
+				global::Epsitec.Aider.Entities.AiderEmployeeEntity value = default (global::Epsitec.Aider.Entities.AiderEmployeeEntity);
+				this.GetEmployee (ref value);
+				return value;
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue = this.Employee;
+				if (oldValue != value || !this.IsFieldDefined("[LVAMK]"))
+				{
+					this.OnEmployeeChanging (oldValue, value);
+					this.SetEmployee (value);
+					this.OnEmployeeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>MainContact</c> field.
 		///	designer:fld/LVAF/LVAEH
 		///	</summary>
@@ -1337,6 +1361,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnGeoParishGroupPathCacheChanged(string oldValue, string newValue);
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
+		partial void OnEmployeeChanging(global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue, global::Epsitec.Aider.Entities.AiderEmployeeEntity newValue);
+		partial void OnEmployeeChanged(global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue, global::Epsitec.Aider.Entities.AiderEmployeeEntity newValue);
 		partial void OnMainContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnMainContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnHouseholdContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
@@ -1364,6 +1390,8 @@ namespace Epsitec.Aider.Entities
 		partial void SetAddress(global::Epsitec.Aider.Entities.AiderAddressEntity value);
 		partial void GetAdditionalAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
 		partial void GetConfidentialAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
+		partial void GetEmployee(ref global::Epsitec.Aider.Entities.AiderEmployeeEntity value);
+		partial void SetEmployee(global::Epsitec.Aider.Entities.AiderEmployeeEntity value);
 		partial void GetMainContact(ref global::Epsitec.Aider.Entities.AiderContactEntity value);
 		partial void SetMainContact(global::Epsitec.Aider.Entities.AiderContactEntity value);
 		partial void GetHouseholdContact(ref global::Epsitec.Aider.Entities.AiderContactEntity value);
@@ -9881,6 +9909,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>PersonContact</c> field.
+		///	designer:fld/LVA2J/LVALK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVALK]")]
+		public global::Epsitec.Aider.Entities.AiderContactEntity PersonContact
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVALK]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderContactEntity oldValue = this.PersonContact;
+				if (oldValue != value || !this.IsFieldDefined("[LVALK]"))
+				{
+					this.OnPersonContactChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVALK]", oldValue, value);
+					this.OnPersonContactChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>EmployeeType</c> field.
 		///	designer:fld/LVA2J/LVA4J
 		///	</summary>
@@ -9977,6 +10027,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
+		partial void OnPersonContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnPersonContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnEmployeeTypeChanging(global::Epsitec.Aider.Enumerations.EmployeeType oldValue, global::Epsitec.Aider.Enumerations.EmployeeType newValue);
 		partial void OnEmployeeTypeChanged(global::Epsitec.Aider.Enumerations.EmployeeType oldValue, global::Epsitec.Aider.Enumerations.EmployeeType newValue);
 		partial void OnEmployeeActivityChanging(global::Epsitec.Aider.Enumerations.EmployeeActivity oldValue, global::Epsitec.Aider.Enumerations.EmployeeActivity newValue);

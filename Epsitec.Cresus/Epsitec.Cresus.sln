@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -1651,9 +1651,6 @@ Global
 		{AC24F63B-3F4E-4E48-A40F-4D6AFB3D8074} = {A254E420-166A-488D-9687-0268BF6FFEE5}
 		{71F55467-5296-4781-A1D5-494D88E662F6} = {DCB8291C-531A-4D42-BC27-645205D72081}
 		{011FDF61-329C-4835-BA0B-B5DB7DF8AB4D} = {DCB8291C-531A-4D42-BC27-645205D72081}
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Epsitec.Cresus1.vsmdi

@@ -100,6 +100,7 @@
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController5MergeGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController12AddGroupExtraction.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController13RemoveGroupExtraction.cs" />
+    <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController14DefineEmployee.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController6RemoveAlternateAddress.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController3RemoveFromGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController2AddToGroup.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderLegalPersonViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderLegalPersonViewController1Address.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderSubscriptionViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderEmployeeViewController.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController2DerogationsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController1ExcludedContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController0RecipientsContact.cs" />
@@ -239,6 +241,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderContactViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderSubscriptionViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderWarningSourceViewController.cs" />
     <Compile Include="Data\Common\AddressChecker.cs" />
     <Compile Include="Data\Common\DataReader.cs" />
