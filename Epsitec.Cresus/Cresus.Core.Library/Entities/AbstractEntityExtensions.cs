@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -30,6 +31,38 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return DataContextPool.GetDataContext (entity);
 		}
+
+
+		public static IList<T> GetVirtualCollection<T>(this AbstractEntity entity, ref IList<T> cache, System.Action<T> exampleSetter)
+			where T : AbstractEntity, new ()
+		{
+			if (cache == null)
+			{
+				cache = entity.ExecuteWithDataContext<IList<T>> (d => entity.FindVirtualCollection<T> (d, exampleSetter), () => new List<T> ());
+			}
+
+			return cache;
+		}
+
+		public static ISet<T> GetVirtualCollection<T>(this AbstractEntity entity, ref ISet<T> cache, System.Action<T> exampleSetter)
+			where T : AbstractEntity, new ()
+		{
+			if (cache == null)
+			{
+				cache = entity.ExecuteWithDataContext<IList<T>> (d => entity.FindVirtualCollection<T> (d, exampleSetter), () => new List<T> ()).ToSet ();
+			}
+
+			return cache;
+		}
+
+		public static IList<T> FindVirtualCollection<T>(this AbstractEntity entity, DataContext dataContext, System.Action<T> exampleSetter)
+			where T : AbstractEntity, new ()
+		{
+			T example = new T ();
+			exampleSetter (example);
+			return dataContext.GetByExample (example);
+		}
+	
 
 		public static T ExecuteWithDataContext<T>(this AbstractEntity entity,
 												  System.Func<DataContext, T> functionWithDataContext,

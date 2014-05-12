@@ -49,7 +49,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			if (showEmployeeTile)
 			{
-				wall.AddBrick (x => x.Employee);
+				wall.AddBrick (x => x.Employee)
+					.Title ("Emploi")
+					.Text (x => x.GetEmployeeSummary ())
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					;
 			}
 
 			wall.AddBrick ()

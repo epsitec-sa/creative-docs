@@ -2505,6 +2505,10 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVOO23
 				public static readonly global::Epsitec.Common.Support.Druid Documents = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 88);
+				//	designer:cap/LVAOK
+				public static readonly global::Epsitec.Common.Support.Druid EmployeeJobs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 664);
+				//	designer:cap/LVANK
+				public static readonly global::Epsitec.Common.Support.Druid Employees = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 663);
 				//	designer:cap/LVOU23
 				public static readonly global::Epsitec.Common.Support.Druid OfficeMainContact = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 94);
 				//	designer:cap/LVO913

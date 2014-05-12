@@ -9253,6 +9253,34 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Employees</c> field.
+		///	designer:fld/LVO613/LVANK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVANK]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeEntity> Employees
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeEntity>);
+				this.GetEmployees (ref value);
+				return value;
+			}
+		}
+		///	<summary>
+		///	The <c>EmployeeJobs</c> field.
+		///	designer:fld/LVO613/LVAOK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAOK]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> EmployeeJobs
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity>);
+				this.GetEmployeeJobs (ref value);
+				return value;
+			}
+		}
+		///	<summary>
 		///	The <c>OfficeUsersLoginMessage</c> field.
 		///	designer:fld/LVO613/LVO333
 		///	</summary>
@@ -9290,6 +9318,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void GetOfficeSenders(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> value);
 		partial void GetDocuments(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> value);
+		partial void GetEmployees(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeEntity> value);
+		partial void GetEmployeeJobs(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

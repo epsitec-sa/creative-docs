@@ -1184,7 +1184,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetEmployee(ref AiderEmployeeEntity value)
 		{
-			value = this.GetEmployees ().FirstOrDefault ();
+			value = this.GetVirtualCollection (ref this.employees, x => x.Person = this).FirstOrDefault ();
 		}
 
 		partial void SetEmployee(AiderEmployeeEntity value)
@@ -1211,11 +1211,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.participations == null)
 			{
-				this.participations = this.ExecuteWithDataContext
-				(
-					d => this.FindParticipations (d),
-					() => new List<AiderGroupParticipantEntity> ()
-				);
+				this.participations = this.ExecuteWithDataContext (d => this.FindParticipations (d), () => new List<AiderGroupParticipantEntity> ());
 			}
 
 			return this.participations;
@@ -1254,17 +1250,6 @@ namespace Epsitec.Aider.Entities
 			return this.warnings;
 		}
 
-		private ISet<AiderEmployeeEntity> GetEmployees()
-		{
-			if (this.employees == null)
-			{
-				this.employees = this.ExecuteWithDataContext (d => this.FindEmployees (d).ToSet (), () => new HashSet<AiderEmployeeEntity> ());
-			}
-
-			return this.employees;
-		}
-
-
 		private IList<AiderGroupParticipantEntity> FindParticipations(DataContext dataContext)
 		{
 			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true);
@@ -1292,16 +1277,6 @@ namespace Epsitec.Aider.Entities
 			return controller
 				.GetWarnings<AiderPersonWarningEntity> (this)
 				.ToList ();
-		}
-
-		private IList<AiderEmployeeEntity> FindEmployees(DataContext dataContext)
-		{
-			var example = new AiderEmployeeEntity ()
-			{
-				Person = this
-			};
-
-			return dataContext.GetByExample (example);
 		}
 
 		private void RefreshDisplayName()

@@ -139,6 +139,17 @@ namespace Epsitec.Aider.Entities
 			value = this.GetOfficeSenders ().AsReadOnlyCollection ();
 		}
 
+		partial void GetEmployees(ref IList<AiderEmployeeEntity> value)
+		{
+			value = this.EmployeeJobs.Select (x => x.Employee).Distinct ().OrderBy (x => x.Person.DisplayName).AsReadOnlyCollection ();
+		}
+
+		partial void GetEmployeeJobs(ref IList<AiderEmployeeJobEntity> value)
+		{
+			value = this.GetVirtualCollection (ref this.employeeJobs, x => x.Office = this).AsReadOnlyCollection ();
+		}
+
+
 		internal void AddSenderInternal(AiderOfficeSenderEntity settings)
 		{
 			if (!this.GetOfficeSenders ().Any (s => s == settings))
@@ -215,5 +226,6 @@ namespace Epsitec.Aider.Entities
 		
 		private IList<AiderOfficeSenderEntity>	senders;
 		private IList<AiderOfficeReportEntity>	documents;
+		private IList<AiderEmployeeJobEntity>	employeeJobs;
 	}
 }

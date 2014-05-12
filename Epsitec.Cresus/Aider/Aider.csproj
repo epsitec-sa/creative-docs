@@ -90,6 +90,8 @@
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController4RemoveMemberFromHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController5ChangeHeadOfHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController6DeleteContact.cs" />
+    <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController02AddRefereey.cs" />
+    <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController01AddJob.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController2DeleteAll.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController3Move.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController4CreateFunction.cs" />
@@ -302,6 +304,7 @@
     <Compile Include="Entities\AiderPersonWarningSourceEntity1.cs" />
     <Compile Include="Entities\AiderSubscriptionEntity.cs" />
     <Compile Include="Entities\AiderSubscriptionRefusalEntity.cs" />
+    <Compile Include="Entities\AiderEmployeeEntity.cs" />
     <Compile Include="Entities\AiderWarningExampleFactory.cs" />
     <Compile Include="Entities\AiderWarningExampleFactory`2.cs" />
     <Compile Include="Entities\AiderWarningSourceEntity.cs" />
