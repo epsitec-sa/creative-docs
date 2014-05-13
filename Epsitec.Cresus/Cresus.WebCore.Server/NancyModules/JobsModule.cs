@@ -26,8 +26,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var job = this.GetJob (p.job);
 				this.CancelJob (job);
-				this.Execute (wa => this.UpdateTaskStatusInBag (wa, job));
-				return this.RemoveJob (job);
+				return this.Execute (wa => this.UpdateTaskStatusInBag (wa, job));
 			});
 		}
 

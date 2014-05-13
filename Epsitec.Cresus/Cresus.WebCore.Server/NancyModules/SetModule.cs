@@ -86,12 +86,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            used by the Enum.Parse(...) method.
 			// - text:    The id of the LabelTextFactory used to generate the label text, as an
 			//            integer value.
-			//Get["/{viewId}/{entityId}/export/{dataset}"] = p =>
-			//	this.Execute (context => this.Export (context, p));
-
 			Get["/{viewId}/{entityId}/export/{dataset}"] = (p =>
 			{
-				var exportTask = this.CreateJob ("Export CSV");
+				var type		= this.Request.Query.type == "label" ? "PDF" : "CSV";
+				var exportTask = this.CreateJob ("Export "+ type);
 				this.Execute (wa => this.NotifyUIForExportWaiting (wa, exportTask));
 				this.Enqueue (exportTask, context => this.LongRunningExport (context, exportTask, p));
 
@@ -170,7 +168,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 
 
-			job.Metadata = "<a href='/proxy/downloads/get/"+ filename +"'>Télécharger</a>";
+			job.Metadata = "<a href='/proxy/downloads/get/"+ filename +"'>Télécharger le fichier</a>";
 			job.Finish ();
 			this.UpdateTaskStatusInBag (job);
 		}

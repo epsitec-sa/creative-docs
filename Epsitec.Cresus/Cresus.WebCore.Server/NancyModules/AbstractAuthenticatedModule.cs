@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		protected CoreJob CreateJob(string title)
 		{
-			var job = new CoreJob (this.CreateJobId (), "Export CSV");
+			var job = new CoreJob (this.CreateJobId (), title);
 			this.CoreServer.Jobs.Add (job.Id, job);
 			return job;
 		}
@@ -81,8 +81,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		protected void CancelJob(CoreJob job)
 		{
-			job.Cancel ();
+			job.Cancel ();			
 			this.CoreServer.CoreWorkerQueue.Cancel (job.Id);
+			this.RemoveJob (job.Id);
 		}
 
 		private Response Execute(System.Func<CoreWorkerPool, string, string, Response> function)

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Nancy.Helpers;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
@@ -23,9 +24,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			{
 				var desc = this.Id;
 
-				if(this.Status == CoreJobStatus.Waiting)
+				if ((this.Status == CoreJobStatus.Ordered) || (this.Status == CoreJobStatus.Waiting))
 				{
-					desc = desc + "<br><a href='/proxy/jobs/cancel/"+ this.Id +"'>Annuler</a>";
+					desc = desc + "<br><input type='button' onclick='Epsitec.Cresus.Core.app.cancelJob(\"" + this.Id + "\");' value='Annuler' />";
 				}
 				if (this.Status == CoreJobStatus.Ended)
 				{
@@ -37,7 +38,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				}
 
 				desc = desc + "<br>" + this.Metadata;
-				return desc;
+
+				return HttpUtility.HtmlEncode(desc);
 			}
 		}
 
@@ -85,7 +87,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{
 			var now = System.DateTime.Now;
 			this.title = title;
-			this.Status = CoreJobStatus.Started;
+			this.Status = CoreJobStatus.Ordered;
 			this.taskId = taskId;
 			this.createdAt = now;
 		}
@@ -132,7 +134,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 	public sealed class CoreJobStatus
 	{
-		public static readonly CoreJobStatus Started = new CoreJobStatus ("En attente");
+		public static readonly CoreJobStatus Ordered = new CoreJobStatus ("En attente");
 		public static readonly CoreJobStatus Waiting = new CoreJobStatus ("En attente");
 		public static readonly CoreJobStatus Running = new CoreJobStatus ("En cours");
 		public static readonly CoreJobStatus Ended = new CoreJobStatus ("Terminée");

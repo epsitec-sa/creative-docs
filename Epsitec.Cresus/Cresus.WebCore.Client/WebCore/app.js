@@ -506,6 +506,15 @@ $.getScript('signalr/hubs', function() {
         alert(message);
       },
 
+      cancelJob: function (jobId) {
+          var url = "/proxy/jobs/cancel/" + jobId;
+          Ext.Ajax.request({
+              url: url,
+              success: function (response) {
+                  //TODO
+              }
+          });
+      },
       createBanner: function(region, cls) {
         return Ext.create('Ext.Panel', {
           region: region,

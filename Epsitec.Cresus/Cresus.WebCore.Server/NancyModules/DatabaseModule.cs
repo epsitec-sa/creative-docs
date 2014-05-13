@@ -92,7 +92,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            integer value.
 			Get["/export/{name}"] = (p =>
 			{
-				var exportTask = this.CreateJob ("Export CSV");
+				var type		= this.Request.Query.type == "label" ? "PDF" : "CSV";
+				var exportTask = this.CreateJob ("Export " + type);
 				this.Execute (wa => this.NotifyUIForExportWaiting (wa, exportTask));
 				this.Enqueue (exportTask, context => this.LongRunningExport (context, exportTask, p));
 
@@ -279,7 +280,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			this.UpdateTaskStatusInBag (job);
 
 			var user		= LoginModule.GetUserName (this);
-			var filename	= job.Id + ".csv";
+			var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
+			var filename	= job.Id + fileExt;
 			var caches		= this.CoreServer.Caches;
 			
 
@@ -289,7 +291,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 
 			
-			job.Metadata = "<a href='/proxy/downloads/get/"+ filename +"'>Télécharger</a>";
+			job.Metadata = "<a href='/proxy/downloads/get/"+ filename +"'>Télécharger le fichier</a>";
 			job.Finish ();
 			this.UpdateTaskStatusInBag (job);
 		}
