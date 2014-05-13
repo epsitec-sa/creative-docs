@@ -1,4 +1,6 @@
-﻿using System;
+﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -67,7 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			set;
 		}
 
-		public DateTime QueuedAt
+		public System.DateTime QueuedAt
 		{
 			get
 			{
@@ -77,7 +79,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public CoreTask(string taskId, string title)
 		{
-			var now = DateTime.Now;
+			var now = System.DateTime.Now;
 			this.title = title;
 			this.Status = CoreTaskStatus.Started;
 			this.taskId = taskId;
@@ -86,33 +88,33 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public void Enqueue()
 		{
-			this.queuedAt = DateTime.Now;
+			this.queuedAt = System.DateTime.Now;
 			this.Status = CoreTaskStatus.Waiting;
 		}
 
 		public void Start()
 		{
-			this.startedAt = DateTime.Now;
+			this.startedAt = System.DateTime.Now;
 			this.Status = CoreTaskStatus.Running;
 		}
 
 		public void Finish()
 		{
-			this.finisedAt = DateTime.Now;
+			this.finisedAt = System.DateTime.Now;
 			this.Status = CoreTaskStatus.Ended;
 		}
 
-		public TimeSpan GetRunningTime ()
+		public System.TimeSpan GetRunningTime()
 		{
 			return this.finisedAt.Subtract (this.startedAt);
 		}
 
-		protected readonly string taskId;
-		
-		protected DateTime createdAt;
-		protected DateTime queuedAt;
-		protected DateTime startedAt;
-		protected DateTime finisedAt;
+		private readonly string taskId;
+
+		private System.DateTime createdAt;
+		private System.DateTime queuedAt;
+		private System.DateTime startedAt;
+		private System.DateTime finisedAt;
 
 		private string title;
 		
