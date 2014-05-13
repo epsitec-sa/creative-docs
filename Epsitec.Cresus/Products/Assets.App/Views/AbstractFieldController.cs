@@ -81,15 +81,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public bool								IsError
+		public bool								HasError
 		{
 			get
 			{
-				return this.isError;
+				return this.hasError;
 			}
 			set
 			{
-				this.isError = value;
+				this.hasError = value;
 				this.UpdatePropertyState ();
 			}
 		}
@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public static void UpdateTextField(AbstractTextField textField, PropertyState state, bool isReadOnly, bool isError = false)
+		public static void UpdateTextField(AbstractTextField textField, PropertyState state, bool isReadOnly, bool hasError = false)
 		{
 			if (textField != null)
 			{
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					isReadOnly = true;
 				}
 
-				textField.BackColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly, isError);
+				textField.BackColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly, hasError);
 
 				if (textField.TextDisplayMode == TextFieldDisplayMode.ActiveHint ||
 					textField.TextDisplayMode == TextFieldDisplayMode.ActiveHintAndUseBackColor)
@@ -278,7 +278,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (isError)
 			{
-				color = ColorManager.ErrorFieldColor;
+				color = ColorManager.ErrorColor;
 			}
 			else
 			{
@@ -398,6 +398,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private int								editWidth;
 		protected PropertyState					propertyState;
 		protected bool							isReadOnly;
-		protected bool							isError;
+		protected bool							hasError;
 	}
 }

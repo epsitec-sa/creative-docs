@@ -31,6 +31,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public bool								HasError
+		{
+			get
+			{
+				return this.fieldControllers.Values.Where (x => x.HasError).Any ();
+			}
+		}
+
+
 		protected internal virtual void CreateUI(Widget parent)
 		{
 		}
@@ -121,6 +130,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as DateFieldController;
 
 					c.EventType     = this.eventType;
+					c.MinValue      = this.accessor.EditionAccessor.GetFieldDateMin (field);
+					c.MaxValue      = this.accessor.EditionAccessor.GetFieldDateMax (field);
 					c.Value         = this.accessor.EditionAccessor.GetFieldDate (field);
 					c.PropertyState = this.GetPropertyState (field);
 					c.IsReadOnly    = this.isLocked;
@@ -598,13 +609,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return controller;
 		}
 
-		protected DateFieldController CreateDateController(Widget parent, ObjectField field)
+		protected DateFieldController CreateDateController(Widget parent, ObjectField field, DateRangeCategory rangeCategory = DateRangeCategory.Free)
 		{
 			var controller = new DateFieldController (this.accessor)
 			{
 				Field             = field,
 				Label             = this.accessor.GetFieldName (field),
-				DateRangeCategory = DateRangeCategory.Free,
+				DateRangeCategory = rangeCategory,
 				TabIndex          = ++this.tabIndex,
 			};
 
@@ -614,6 +625,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
+				controller.MinValue      = this.accessor.EditionAccessor.GetFieldDateMin (of);
+				controller.MaxValue      = this.accessor.EditionAccessor.GetFieldDateMax (of);
 				controller.Value         = this.accessor.EditionAccessor.GetFieldDate (of);
 				controller.PropertyState = this.GetPropertyState (of);
 

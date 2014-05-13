@@ -20,6 +20,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public virtual bool						HasError
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+
 		public virtual void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
 		{
 		}

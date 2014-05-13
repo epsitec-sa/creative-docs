@@ -28,6 +28,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		protected bool							HasError
+		{
+			get
+			{
+				return this.controllers.Where (x => x.HasError).Any ();
+			}
+		}
+
 		protected void SetDescriptions(List<StackedControllerDescription> descriptions)
 		{
 			this.descriptions.Clear ();

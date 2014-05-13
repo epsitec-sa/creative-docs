@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -26,6 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Date,
+				DateRangeCategory     = DateRangeCategory.Mandat,
 				Label                 = "Jusqu'au",
 				BottomMargin          = 10,
 			});
@@ -113,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.okButton.Text = this.IsAll ? "Tout verrouiller" : "Verrouiller un";
 			}
 
-			this.okButton.Enable = this.IsDelete || this.Date.HasValue;
+			this.okButton.Enable = this.IsDelete || (this.Date.HasValue && !this.HasError);
 		}
 
 	}

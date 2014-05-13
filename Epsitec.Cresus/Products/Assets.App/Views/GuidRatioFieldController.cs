@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly);
 			}
 
-			AbstractFieldController.UpdateTextField (this.textField, this.PropertyState, this.isReadOnly, this.isError);
+			AbstractFieldController.UpdateTextField (this.textField, this.PropertyState, this.isReadOnly, this.hasError);
 		}
 
 

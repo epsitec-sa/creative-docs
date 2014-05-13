@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Date,
+				DateRangeCategory     = DateRangeCategory.Free,
 				Label                 = "Date de début",
 			});
 
@@ -128,7 +129,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected override void UpdateWidgets()
 		{
 			this.okButton.Text = "Créer";
-			this.okButton.Enable = !string.IsNullOrEmpty (this.MandatName);
+			this.okButton.Enable = !string.IsNullOrEmpty (this.MandatName)
+								&& !this.HasError;
 		}
 
 

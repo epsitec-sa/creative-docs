@@ -64,10 +64,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var dateController = new DateController (this.accessor)
 			{
-				DateLabelWidth  = 0,
-				DateDescription = null,
-				TabIndex        = 1,
-				Date            = this.Timestamp.Date,
+				DateRangeCategory = DateRangeCategory.Mandat,
+				DateLabelWidth    = 0,
+				DateDescription   = null,
+				TabIndex          = 1,
+				Date              = this.Timestamp.Date,
 			};
 
 			dateController.CreateUI (parent);

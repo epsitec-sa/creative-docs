@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -21,6 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Date,
+				DateRangeCategory     = DateRangeCategory.Mandat,
 				Label                 = "Etat au",
 			});
 
@@ -139,7 +141,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.SetVisibility (3, this.GroupEnable);
 
 			this.okButton.Enable = this.Date.HasValue
-								&& (!this.GroupEnable || !this.GroupGuid.IsEmpty);
+								&& (!this.GroupEnable || !this.GroupGuid.IsEmpty)
+								&& !this.HasError;
 		}
 	}
 }

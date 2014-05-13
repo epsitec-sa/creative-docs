@@ -30,7 +30,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public abstract PageType				PageType
+		public virtual bool						HasError
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public abstract PageType PageType
 		{
 			get;
 			set;
@@ -48,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void StartEdition(Guid objectGuid, Timestamp? timestamp)
 		{
-			if (this.accessor.EditionAccessor.SaveObjectEdition ())
+			if (!this.HasError && this.accessor.EditionAccessor.SaveObjectEdition ())
 			{
 				this.OnDataChanged ();
 			}
@@ -62,13 +70,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		protected void SetEditionDirty(ObjectField field)
+		protected void ValueEdited(ObjectField field)
 		{
-			if (!this.editionDirty)
-			{
-				this.editionDirty = true;
-				this.OnValueChanged (field);
-			}
+			this.editionDirty = true;
+			this.OnValueChanged (field);
 		}
 
 

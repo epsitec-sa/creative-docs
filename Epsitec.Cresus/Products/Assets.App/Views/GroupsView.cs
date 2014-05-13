@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void UpdateUI()
 		{
-			if (this.accessor.EditionAccessor.SaveObjectEdition ())
+			if (!this.objectEditor.HasError && this.accessor.EditionAccessor.SaveObjectEdition ())
 			{
 				this.DataChanged ();
 			}
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
 
-				this.mainToolbar.SetCommandEnable (ToolbarCommand.Accept, this.objectEditor.EditionDirty);
+				this.mainToolbar.SetCommandEnable (ToolbarCommand.Accept, this.objectEditor.EditionDirty && !this.objectEditor.HasError);
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
 			}
 			else

@@ -210,6 +210,34 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return null;
 		}
 
+		public System.DateTime? GetFieldDateMin(ObjectField field)
+		{
+			if (field == ObjectField.OneShotDateEvent && this.timestamp.HasValue)
+			{
+				var e = this.obj.GetPrevEvent (this.timestamp.Value);
+				if (e != null)
+				{
+					return e.Timestamp.Date.AddDays (1);
+				}
+			}
+
+			return null;
+		}
+
+		public System.DateTime? GetFieldDateMax(ObjectField field)
+		{
+			if (field == ObjectField.OneShotDateEvent && this.timestamp.HasValue)
+			{
+				var e = this.obj.GetNextEvent (this.timestamp.Value);
+				if (e != null)
+				{
+					return e.Timestamp.Date.AddDays (-1);
+				}
+			}
+
+			return null;
+		}
+
 		public System.DateTime? GetFieldDate(ObjectField field, bool synthetic = true)
 		{
 			var p = this.GetProperty (field, synthetic) as DataDateProperty;

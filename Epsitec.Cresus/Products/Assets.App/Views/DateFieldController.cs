@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, this.isError);
+			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, this.hasError);
 			this.UpdateButtons ();
 		}
 
@@ -980,7 +980,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					throw new System.InvalidOperationException (string.Format ("Unsupported DateRangeCategory {0}", this.DateRangeCategory));
 			}
 
-			this.IsError = !TypeConverters.ParseDate (text, LocalSettings.DefaultMandatDate, min, max, out date);
+			this.HasError = !TypeConverters.ParseDate (text, LocalSettings.DefaultMandatDate, min, max, out date);
 
 			if (date.HasValue)
 			{

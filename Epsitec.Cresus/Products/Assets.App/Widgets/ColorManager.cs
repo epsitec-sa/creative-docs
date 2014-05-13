@@ -56,14 +56,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color ErrorFieldColor
-		{
-			get
-			{
-				return Color.FromHexa ("ffb3b3");  // rose
-			}
-		}
-
 		public static Color ReadonlyFieldColor
 		{
 			get

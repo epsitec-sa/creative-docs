@@ -85,6 +85,34 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return this.events.Where (x => x.Timestamp == timestamp).FirstOrDefault ();
 		}
 
+		public DataEvent GetPrevEvent(Timestamp timestamp)
+		{
+			int i = this.events.Select (x => x.Timestamp).ToList ().IndexOf (timestamp);
+
+			if (i > 0)
+			{
+				return this.events[i-1];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public DataEvent GetNextEvent(Timestamp timestamp)
+		{
+			int i = this.events.Select (x => x.Timestamp).ToList ().IndexOf (timestamp);
+
+			if (i >= 0 && i < this.events.Count-1)
+			{
+				return this.events[i+1];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 
 		public AbstractDataProperty GetSingleProperty(Timestamp timestamp, ObjectField field)
 		{

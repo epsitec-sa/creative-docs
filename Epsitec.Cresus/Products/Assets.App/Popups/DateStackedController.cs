@@ -19,15 +19,24 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public System.DateTime?					Value;
 
+		public override bool					HasError
+		{
+			get
+			{
+				return this.controller.HasError;
+			}
+		}
+
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
 		{
 			this.controller = new DateController (this.accessor)
 			{
-				Date            = this.Value,
-				DateLabelWidth  = labelWidth,
-				DateDescription = description.Label,
-				TabIndex        = tabIndex,
+				DateRangeCategory = description.DateRangeCategory,
+				Date              = this.Value,
+				DateLabelWidth    = labelWidth,
+				DateDescription   = description.Label,
+				TabIndex          = tabIndex,
 			};
 
 			this.controller.CreateUI (parent);

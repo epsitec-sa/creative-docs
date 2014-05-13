@@ -39,6 +39,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public int								DateLabelWidth;
 		public int								TabIndex;
 
+		public DateRangeCategory				DateRangeCategory
+		{
+			get
+			{
+				return this.dateFieldController.DateRangeCategory;
+			}
+			set
+			{
+				this.dateFieldController.DateRangeCategory = value;
+			}
+		}
+
+		public bool								HasError
+		{
+			get
+			{
+				return this.dateFieldController.HasError;
+			}
+		}
+
 		public System.DateTime?					Date
 		{
 			get

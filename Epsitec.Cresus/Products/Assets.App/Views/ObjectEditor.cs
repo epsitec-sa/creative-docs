@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -35,7 +34,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 		#endregion
 
-	
+
+		public override bool					HasError
+		{
+			get
+			{
+				if (this.currentPage == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.currentPage.HasError;
+				}
+			}
+		}
+
 		public override PageType				PageType
 		{
 			get
@@ -149,7 +163,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.currentPage.ValueEdited += delegate (object sender, ObjectField field)
 			{
-				this.SetEditionDirty (field);
+				this.ValueEdited (field);
 			};
 
 			this.currentPage.Navigate += delegate (object sender, Timestamp timestamp)
