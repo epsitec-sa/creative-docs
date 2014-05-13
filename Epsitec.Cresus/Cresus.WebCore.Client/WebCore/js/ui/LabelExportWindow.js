@@ -130,7 +130,13 @@ function() {
       url = Epsitec.Tools.addParameterToUrl(url, 'layout', layoutId);
       url = Epsitec.Tools.addParameterToUrl(url, 'text', textId);
 
-      window.open(url);
+      //window.open(url);
+      Ext.Ajax.request({
+          url: url,
+          success: function (response) {
+              //TODO
+          }
+      });
       this.close();
     }
   });

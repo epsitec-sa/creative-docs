@@ -16,8 +16,7 @@ using Nancy;
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 	/// <summary>
-	/// This module is used to retrieve data from the favorites cache, in a similar way as it is
-	/// done in the DatabaseModule.
+	/// 
 	/// </summary>
 	public class DownloadsModule : AbstractAuthenticatedModule
 	{

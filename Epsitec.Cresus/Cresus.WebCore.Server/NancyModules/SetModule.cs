@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 
 	using Database = Core.Databases.Database;
+	using Epsitec.Cresus.Core.Library;
 
 
 	/// <summary>
@@ -85,8 +86,20 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            used by the Enum.Parse(...) method.
 			// - text:    The id of the LabelTextFactory used to generate the label text, as an
 			//            integer value.
-			Get["/{viewId}/{entityId}/export/{dataset}"] = p =>
-				this.Execute (context => this.Export (context, p));
+			//Get["/{viewId}/{entityId}/export/{dataset}"] = p =>
+			//	this.Execute (context => this.Export (context, p));
+
+			Get["/{viewId}/{entityId}/export/{dataset}"] = (p =>
+			{
+				var exportTask = this.CreateJob ("Export CSV");
+				this.Execute (wa => this.NotifyUIForExportWaiting (wa, exportTask));
+				this.Enqueue (exportTask, context => this.LongRunningExport (context, exportTask, p));
+
+				return new Response ()
+				{
+					StatusCode = HttpStatusCode.Accepted
+				};
+			});
 
 			// Adds entities to the set DataSet
 			// URL arguments:
@@ -140,6 +153,54 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 		}
 
+		private void LongRunningExport(BusinessContext businessContext, CoreJob job, dynamic parameters)
+		{
+			job.Start ();
+			this.UpdateTaskStatusInBag (job);
+
+			var user		= LoginModule.GetUserName (this);
+			var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
+			var filename	= job.Id + fileExt;
+			var caches = this.CoreServer.Caches;
+
+			using (ISetViewController controller = this.GetController (businessContext, parameters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, controller, parameters))
+			{
+				DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
+			}
+
+
+			job.Metadata = "<a href='/proxy/downloads/get/"+ filename +"'>Télécharger</a>";
+			job.Finish ();
+			this.UpdateTaskStatusInBag (job);
+		}
+
+		private Response NotifyUIForExportWaiting(WorkerApp workerApp, CoreJob task)
+		{
+			var user			= LoginModule.GetUserName (this);
+			var notification	= NotificationManager.GetCurrentNotificationManager ();
+			notification.Notify (user, new NotificationMessage ()
+			{
+				Title	=	task.Title,
+				Body	=	task.HtmlView
+			}, When.Now);
+
+			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
+			entityBag.AddToBag (user, task.Title, task.HtmlView, task.Id, When.Now);
+
+			return new Response ()
+			{
+				StatusCode = HttpStatusCode.Accepted
+			};
+		}
+
+		private void UpdateTaskStatusInBag(CoreJob task)
+		{
+			var user = LoginModule.GetUserName (this);
+			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
+			entityBag.RemoveFromBag (user, task.Id, When.Now);
+			entityBag.AddToBag (user, task.Title, task.HtmlView, task.Id, When.Now);
+		}
 
 		private EntityExtractor GetEntityExtractor(BusinessContext businessContext, ISetViewController controller, dynamic parameters)
 		{
