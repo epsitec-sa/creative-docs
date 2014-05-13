@@ -46,27 +46,22 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		protected Response Execute(Func<BusinessContext, Response> function)
 		{
-			return this.Execute ((wp, n, id) => wp.Execute (n, id, function));
+			return this.Execute ((pool, username, sessionId) => pool.Execute (username, sessionId, function));
 		}
 
-
+		
 		protected Response Execute(Func<WorkerApp, Response> function)
 		{
-			return this.Execute ((wp, n, id) => wp.Execute (n, id, function));
+			return this.Execute ((pool, username, sessionId) => pool.Execute (username, sessionId, function));
 		}
 
-
-		protected Response Execute(Func<WorkerApp, BusinessContext, Response> function)
-		{
-			return this.Execute (wa => wa.Execute (b => function (wa, b)));
-		}
 
 		private Response Execute(Func<CoreWorkerPool, string, string, Response> function)
 		{
 			try
 			{
-				var userName = LoginModule.GetUserName (this);
-				var sessionId = LoginModule.GetSessionId (this);
+				var userName   = LoginModule.GetUserName (this);
+				var sessionId  = LoginModule.GetSessionId (this);
 				var workerPool = this.CoreServer.CoreWorkerPool;
 
 				return function (workerPool, userName, sessionId);
@@ -89,30 +84,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 		}
 
-		protected void Enqueue(Action<BusinessContext> action,string jobId)
-		{
-			this.Enqueue ((wq, t, n, id) => wq.Enqueue (t, n, id, action),jobId);
-		}
-
-		protected void Enqueue(Action<WorkerApp> action,string jobId)
-		{
-			this.Enqueue ((wq, t, n, id) => wq.Enqueue (t, n, id, action),jobId);
-		}
-
-		protected Response Enqueue(Action<WorkerApp, BusinessContext> function,string jobId)
-		{
-			this.Enqueue (wa => wa.Enqueue (b => function (wa, b)),jobId);
-			return null;
-		}
-
-		private void Enqueue(Action<CoreWorkerQueue, string, string, string> action,string jobId)
+		
+		protected void Enqueue(Action<BusinessContext> action, string jobId)
 		{
 			try
 			{
-				var userName = LoginModule.GetUserName (this);
-				var sessionId = LoginModule.GetSessionId (this);
+				var userName    = LoginModule.GetUserName (this);
+				var sessionId   = LoginModule.GetSessionId (this);
 				var workerQueue = this.CoreServer.CoreWorkerQueue;
-				action (workerQueue, jobId, userName, sessionId);
+				
+				workerQueue.Enqueue (jobId, userName, sessionId, action);
 			}
 			catch
 			{

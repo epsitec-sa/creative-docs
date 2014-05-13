@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.WebCore.Server.Core;
@@ -15,7 +18,7 @@ namespace Epsitec.Aider.Processors.Reports
 
 		#region IReportingProcessor Members
 
-		public abstract string CreateReport(System.IO.Stream stream, Cresus.WebCore.Server.Core.WorkerApp workerApp, Cresus.Core.Business.BusinessContext businessContext, dynamic parameters);
+		public abstract string CreateReport(System.IO.Stream stream, Cresus.Core.Business.BusinessContext businessContext, dynamic parameters);
 
 		#endregion
 

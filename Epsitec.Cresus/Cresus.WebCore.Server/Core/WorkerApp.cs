@@ -1,7 +1,6 @@
 ﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Marc BETTEX
 
-
 using Epsitec.Cresus.Core;
 
 using Epsitec.Cresus.Core.Business;
@@ -16,15 +15,8 @@ using Epsitec.Cresus.Core.Library.UI;
 
 using Epsitec.Cresus.Core.Metadata;
 
-using System;
-
-using System.Diagnostics;
-
-
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
-
-
 	/// <summary>
 	/// This class is the basic component that is used by WebCore to access to the resources
 	/// provided by the application, such as BusinessContexts, UserManager, etc.
@@ -37,10 +29,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 	/// </remarks>
 	public class WorkerApp : CoreApp
 	{
-
-
-		public WorkerApp()
+		public WorkerApp(CoreWorker coreWorker)
 		{
+			this.coreWorker = coreWorker;
 			this.coreData = this.GetComponent<CoreData> ();
 			this.userManager = this.coreData.GetComponent<UserManager> ();
 			this.dataStoreMetadata = CoreContext.GetMetadata<DataStoreMetadata> ();
@@ -52,7 +43,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public override string ApplicationIdentifier
+		public override string					ApplicationIdentifier
 		{
 			get
 			{
@@ -60,8 +51,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-
-		public override string ShortWindowTitle
+		public override string					ShortWindowTitle
 		{
 			get
 			{
@@ -69,8 +59,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
+		public CoreWorker						CoreWorker
+		{
+			get
+			{
+				return this.coreWorker;
+			}
+		}
 
-		public CoreData CoreData
+		public CoreData							CoreData
 		{
 			get
 			{
@@ -78,8 +75,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-
-		public UserManager UserManager
+		public UserManager						UserManager
 		{
 			get
 			{
@@ -87,8 +83,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-
-		public DataStoreMetadata DataStoreMetaData
+		public DataStoreMetadata				DataStoreMetaData
 		{
 			get
 			{
@@ -96,8 +91,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-
-		public DataSetGetter DataSetGetter
+		public DataSetGetter					DataSetGetter
 		{
 			get
 			{
@@ -105,90 +99,67 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-
-		public T Execute<T>(Func<UserManager, T> action)
+		
+		public static WorkerApp					Current
 		{
-			return this.Execute (() => action (this.userManager));
-		}
-
-
-		public T Execute<T>(string username, string sessionId, Func<BusinessContext, T> action)
-		{
-			return this.Execute (username, sessionId, w => w.Execute (action));
-		}
-
-		public void Execute(string username, string sessionId, Action<BusinessContext> action)
-		{
-			this.Execute (username, sessionId, w => w.Execute (action));
-		}
-
-		public T Execute<T>(string username, string sessionId, Func<WorkerApp, T> action)
-		{
-			return this.Execute (() =>
+			get
 			{
-				try
-				{
-					var user = this.userManager.FindUser (username);
-
-					this.userManager.SetAuthenticatedUser (user);
-					this.userManager.SetActiveSessionId (sessionId);
-
-					return action (this);
-				}
-				finally
-				{
-					this.userManager.SetAuthenticatedUser ((SoftwareUserEntity) null);
-					this.userManager.SetActiveSessionId (null);
-				}
-			});
-		}
-
-		public void Execute(string username, string sessionId, Action<WorkerApp> action)
-		{
-			this.Execute (() =>
-			{
-				try
-				{
-					var user = this.userManager.FindUser (username);
-
-					this.userManager.SetAuthenticatedUser (user);
-					this.userManager.SetActiveSessionId (sessionId);
-
-					action (this);
-				}
-				finally
-				{
-					this.userManager.SetAuthenticatedUser ((SoftwareUserEntity) null);
-					this.userManager.SetActiveSessionId (null);
-				}
-			});
-		}
-
-
-		public T Execute<T>(Func<BusinessContext, T> action)
-		{
-			using (var businessContext = new BusinessContext (this.CoreData, false))
-			{
-				try
-				{
-					return action (businessContext);
-				}
-				finally
-				{
-					if (businessContext != null)
-					{
-						// We discard the BusinessContext so any unsaved changes won't be
-						// persisted to the database. Such changes could happen if an exception
-						// is thrown after some entities have been modified. In such a case, we
-						// want to make sure that the changed are not persisted to the database.
-
-						businessContext.Discard ();
-					}
-				}
+				return CoreApp.current as WorkerApp;
 			}
 		}
 
-		public void Execute(Action<BusinessContext> action)
+
+		public T Execute<T>(System.Func<UserManager, T> action)
+		{
+			T result = default (T);
+			this.ConfigureCurrentCoreAppAndExecute (() => { result = action (this.userManager); });
+			return result;
+		}
+
+
+		public T Execute<T>(string username, string sessionId, System.Func<BusinessContext, T> action)
+		{
+			T result = default (T);
+			this.Execute (username, sessionId, context => { result = action (context); });
+			return result;
+		}
+
+		public T Execute<T>(string username, string sessionId, System.Func<WorkerApp, T> function)
+		{
+			T result = default (T);
+			this.Execute (username, sessionId, app => { result = function (app); });
+			return result;
+		}
+
+		public void Execute(string username, string sessionId, System.Action<BusinessContext> action)
+		{
+			this.Execute (username, sessionId, app => app.ExecuteWithBusinessContext (action));
+		}
+
+		public void Execute(string username, string sessionId, System.Action<WorkerApp> action)
+		{
+			this.ConfigureCurrentCoreAppAndExecute (
+				() =>
+				{
+					try
+					{
+						var user = this.userManager.FindUser (username);
+
+						this.userManager.SetAuthenticatedUser (user);
+						this.userManager.SetActiveSessionId (sessionId);
+
+						action (this);
+					}
+					finally
+					{
+						this.userManager.SetAuthenticatedUser ((SoftwareUserEntity) null);
+						this.userManager.SetActiveSessionId (null);
+					}
+				});
+		}
+
+
+		private void ExecuteWithBusinessContext(System.Action<BusinessContext> action)
 		{
 			using (var businessContext = new BusinessContext (this.CoreData, false))
 			{
@@ -211,53 +182,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public void Enqueue(Action<BusinessContext> action)
+		private void ConfigureCurrentCoreAppAndExecute(System.Action action)
 		{
-			using (var businessContext = new BusinessContext (this.CoreData, false))
-			{
-				try
-				{
-					action (businessContext);
-				}
-				finally
-				{
-					if (businessContext != null)
-					{
-						// We discard the BusinessContext so any unsaved changes won't be
-						// persisted to the database. Such changes could happen if an exception
-						// is thrown after some entities have been modified. In such a case, we
-						// want to make sure that the changed are not persisted to the database.
-
-						businessContext.Discard ();
-					}
-				}
-			}
-		}
-
-		private T Execute<T>(Func<T> action)
-		{
-			Debug.Assert (CoreApp.current == null);
-
-			try
-			{
-				CoreApp.current = this;
-
-				return action ();
-			}
-			finally
-			{
-				CoreApp.current = null;
-
-				// We flush the user manager so that it does not hold any reference to an entity
-				// anymore. This way, we are sure that the next time it is used, there is no
-				// outdated cached data within it.
-				this.userManager.Flush ();
-			}
-		}
-
-		private void Execute(Action action)
-		{
-			Debug.Assert (CoreApp.current == null);
+			System.Diagnostics.Debug.Assert (WorkerApp.Current == null);
 
 			try
 			{
@@ -267,23 +194,23 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 			finally
 			{
+				System.Diagnostics.Debug.Assert (WorkerApp.Current == this);
+
 				CoreApp.current = null;
 
 				// We flush the user manager so that it does not hold any reference to an entity
 				// anymore. This way, we are sure that the next time it is used, there is no
 				// outdated cached data within it.
+
 				this.userManager.Flush ();
 			}
 		}
 
 
-		private readonly CoreData coreData;
-		private readonly UserManager userManager;
-		private readonly DataStoreMetadata dataStoreMetadata;
-		private readonly DataSetGetter dataSetGetter;
-
-
+		private readonly CoreWorker				coreWorker;
+		private readonly CoreData				coreData;
+		private readonly UserManager			userManager;
+		private readonly DataStoreMetadata		dataStoreMetadata;
+		private readonly DataSetGetter			dataSetGetter;
 	}
-
-
 }

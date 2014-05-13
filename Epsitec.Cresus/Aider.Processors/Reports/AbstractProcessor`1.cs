@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Entities;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
@@ -15,7 +18,7 @@ namespace Epsitec.Aider.Processors.Reports
 		{
 
 		}
-		public override string CreateReport(System.IO.Stream stream, WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		public override string CreateReport(System.IO.Stream stream, BusinessContext businessContext, dynamic parameters)
 		{
 			string settingsId	= parameters.settings;
 			string reportId		= parameters.report;
@@ -23,10 +26,10 @@ namespace Epsitec.Aider.Processors.Reports
 			var settings = EntityIO.ResolveEntity (businessContext, settingsId) as AiderOfficeSenderEntity;
 			var letter  = EntityIO.ResolveEntity (businessContext, reportId) as T;
 
-			return this.GenerateDocument (stream, workerApp, businessContext, settings, letter);
+			return this.GenerateDocument (stream, businessContext, settings, letter);
 			
 		}
 
-		protected abstract string GenerateDocument(System.IO.Stream stream, WorkerApp workerApp, BusinessContext businessContext, AiderOfficeSenderEntity settings, T letter);
+		protected abstract string GenerateDocument(System.IO.Stream stream, BusinessContext businessContext, AiderOfficeSenderEntity settings, T letter);
 	}
 }

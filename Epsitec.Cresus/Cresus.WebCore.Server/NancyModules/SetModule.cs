@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// - sort:    The sort clauses, in the format used by SorterIO class.
 			// - filter:  The filters, in the format used by FilterIO class.
 			Get["/{viewId}/{entityId}/get/{dataset}"] = p =>
-				this.Execute ((wa, b) => this.GetEntities (wa, b, p));
+				this.Execute (context => this.GetEntities (context, p));
 
 			// Exports the data of the entities that are in a set DataSet.
 			// URL arguments:
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// - text:    The id of the LabelTextFactory used to generate the label text, as an
 			//            integer value.
 			Get["/{viewId}/{entityId}/export/{dataset}"] = p =>
-				this.Execute ((wa, b) => this.Export (wa, b, p));
+				this.Execute (context => this.Export (context, p));
 
 			// Adds entities to the set DataSet
 			// URL arguments:
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				this.Execute (b => this.Remove (b, p));
 		}
 
-		private Response GetEntities(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private Response GetEntities(BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
 
@@ -122,27 +122,28 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			int limit = Request.Query.limit;
 
 			using (ISetViewController controller = this.GetController (businessContext, parameters))
-			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, controller, parameters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, controller, parameters))
 			{
 				return DatabaseModule.GetEntities (caches, extractor, rawColumns, start, limit);
 			}
 		}
 
 
-		private Response Export(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private Response Export(BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
 
 			using (ISetViewController controller = this.GetController (businessContext, parameters))
-			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, controller, parameters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, controller, parameters))
 			{
 				return DatabaseModule.Export (caches, extractor, this.Request.Query);
 			}
 		}
 
 
-		private EntityExtractor GetEntityExtractor(WorkerApp workerApp, BusinessContext businessContext, ISetViewController controller, dynamic parameters)
+		private EntityExtractor GetEntityExtractor(BusinessContext businessContext, ISetViewController controller, dynamic parameters)
 		{
+			var workerApp = WorkerApp.Current;
 			var caches = this.CoreServer.Caches;
 			var userManager = workerApp.UserManager;
 			var databaseManager = this.CoreServer.DatabaseManager;

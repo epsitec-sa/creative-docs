@@ -23,8 +23,9 @@ namespace Epsitec.Aider.Processors.Reports
 
 		}
 
-		protected override string GenerateDocument(System.IO.Stream stream, WorkerApp workerApp, BusinessContext context, AiderOfficeSenderEntity sender, T1 report)
+		protected override string GenerateDocument(System.IO.Stream stream, BusinessContext context, AiderOfficeSenderEntity sender, T1 report)
 		{
+			var workerApp = WorkerApp.Current;
 			var userManager = workerApp.UserManager;
 
 			//	Do something with this entity...

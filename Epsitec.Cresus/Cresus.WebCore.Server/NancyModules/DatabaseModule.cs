@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// - sort:    The sort clauses, in the format used by SorterIO class.
 			// - filter:  The filters, in the format used by FilterIO class.
 			Get["/get/{name}"] = p =>
-				this.Execute ((wa, b) => this.GetEntities (wa, b, p));
+				this.Execute (context => this.GetEntities (context, p));
 
 			// Gets the index of an entity within a database.
 			// URL arguments:
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// - sort:    The sort clauses, in the format used by SorterIO class.
 			// - filter:  The filters, in the format used by FilterIO class.
 			Get["/getindex/{name}/{id}"] = p =>
-				this.Execute ((wa, b) => this.GetEntityIndex (wa, b, p));
+				this.Execute (context => this.GetEntityIndex (context, p));
 
 			// Exports the entities of a database to a file.
 			// URL arguments:
@@ -93,8 +93,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Get["/export/{name}"] = (p =>
 			{
 				var jobId = string.Format ("JOB-{0}",DateTime.Now.Ticks);
+
 				this.Execute (wa => this.NotifyUIForExportWaiting (wa, jobId));
-				this.Enqueue ((wa, b) => this.ExportViaQueue (wa, b, p,jobId),jobId);			
+				this.Enqueue (context => this.LongRunningExport (context, p, jobId), jobId);
+				
 				return new Response ()
 				{
 					StatusCode = HttpStatusCode.Accepted
@@ -208,7 +210,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.Success (content);
 		}
 
-		private Response GetEntities(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private Response GetEntities(BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
 
@@ -216,19 +218,19 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
 
-			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
 				return DatabaseModule.GetEntities (caches, extractor, rawColumns, start, limit);
 			}
 		}
 
 
-		private Response GetEntityIndex(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private Response GetEntityIndex(BusinessContext businessContext, dynamic parameters)
 		{
 			string rawEntityKey = parameters.id;
 			var entityKey = EntityIO.ParseEntityId (rawEntityKey);
 
-			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
 				int? index = extractor.Accessor.IndexOf (entityKey);
 
@@ -246,11 +248,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 		}
 
-		private Response Export(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private Response Export(BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
 
-			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
 				return DatabaseModule.Export (caches, extractor, this.Request.Query);
 			}
@@ -275,16 +277,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			};
 		}
 
-		private void ExportViaQueue(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters, string bagJobId)
+		private void LongRunningExport(BusinessContext businessContext, dynamic parameters, string bagJobId)
 		{
-			var user			= LoginModule.GetUserName (this);
+			var user = LoginModule.GetUserName (this);
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();	
 			var caches = this.CoreServer.Caches;
 
 			entityBag.RemoveFromBag (user, bagJobId, When.Now);
 			entityBag.AddToBag (user, "Exportation", "en cours", bagJobId, When.Now);
 
-			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
 				DatabaseModule.ExportToDisk (caches, extractor, this.Request.Query);
 			}
@@ -293,8 +295,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			entityBag.AddToBag (user, "Exportation terminée!", "<a href='/downloads/xxxx.csv'>Télécharger</a>", bagJobId, When.Now);
 		}
 
-		private EntityExtractor GetEntityExtractor(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private EntityExtractor GetEntityExtractor(BusinessContext businessContext, dynamic parameters)
 		{
+			var workerApp = WorkerApp.Current;
 			var caches = this.CoreServer.Caches;
 			var userManager = workerApp.UserManager;
 			var databaseManager = this.CoreServer.DatabaseManager;

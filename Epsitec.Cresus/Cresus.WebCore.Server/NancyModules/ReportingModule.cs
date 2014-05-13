@@ -32,11 +32,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			this.processors = new System.Collections.Concurrent.ConcurrentDictionary<string, IReportingProcessor> (processors);
 			
 			Get["/{processor}/{settings}/{report}"] =
-				p => this.Execute ((wa, b) => this.ProduceReport (wa, b, p));
+				p => this.Execute (context => this.ProduceReport (context, p));
 		}
 
 		
-		private Response ProduceReport(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private Response ProduceReport(BusinessContext businessContext, dynamic parameters)
 		{
 			string processorName = parameters.processor;
 			
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					System.IO.FileAccess.ReadWrite, System.IO.FileShare.None, 16*1024,
 					System.IO.FileOptions.DeleteOnClose);
 				
-				var reportName = processor.CreateReport (stream, workerApp, businessContext, parameters);
+				var reportName = processor.CreateReport (stream, businessContext, parameters);
 
 				stream.Flush ();
 				stream.Seek (0, System.IO.SeekOrigin.Begin);

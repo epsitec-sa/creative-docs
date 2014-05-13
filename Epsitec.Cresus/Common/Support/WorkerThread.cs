@@ -1,5 +1,5 @@
-﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types.Collections.Concurrent;
 
@@ -44,17 +44,9 @@ namespace Epsitec.Common.Support
 			{
 				System.Exception innerException = null;
 
-				System.Action<System.Exception> onException = e =>
-				{
-					innerException = e;
-				};
-
-				System.Action onFinish = () =>
-				{
-					actionWaitHandle.Set ();
-				};
-
-				this.ExecuteAsynchronously (action, onException, onFinish);
+				this.ExecuteAsynchronously (action,
+											onException: e => innerException = e,
+											onFinish: () => actionWaitHandle.Set ());
 
 				actionWaitHandle.WaitOne ();
 
@@ -162,6 +154,7 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
+
 		/// <summary>
 		/// The method that is executed by the worker thread.
 		/// </summary>
@@ -190,6 +183,7 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		private readonly Thread					thread;
 		private readonly PendingActionsQueue	pendingActionsQueue;
-		private bool							isDisposing;
+		
+		private volatile bool					isDisposing;
 	}
 }

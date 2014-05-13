@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// - sort:    The sort clauses, in the format used by SorterIO class.
 			// - filter:  The filters, in the format used by FilterIO class.
 			Get["/get/{name}"] = p =>
-				this.Execute ((wa, b) => this.GetEntities (wa, b, p));
+				this.Execute (context => this.GetEntities (context, p));
 
 			// Exports the entities of a favorite cache entry to a file.
 			// URL arguments:
@@ -61,11 +61,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// - text:    The id of the LabelTextFactory used to generate the label text, as an
 			//            integer value.
 			Get["/export/{name}"] = p =>
-				this.Execute ((wa, b) => this.Export (wa, b, p));
+				this.Execute (context => this.Export (context, p));
 		}
 
 
-		private Response GetEntities(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private Response GetEntities(BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
 
@@ -73,26 +73,27 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
 
-			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
 				return DatabaseModule.GetEntities (caches, extractor, rawColumns, start, limit);
 			}
 		}
 
 
-		private Response Export(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private Response Export(BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
 
-			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
 				return DatabaseModule.Export (caches, extractor, this.Request.Query);
 			}
 		}
 
 
-		private EntityExtractor GetEntityExtractor(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		private EntityExtractor GetEntityExtractor(BusinessContext businessContext, dynamic parameters)
 		{
+			var workerApp = WorkerApp.Current;
 			var caches = this.CoreServer.Caches;
 			var userManager = workerApp.UserManager;
 			var databaseManager = this.CoreServer.DatabaseManager;

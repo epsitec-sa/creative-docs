@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.WebCore.Server.Processors
 {
 	public interface IReportingProcessor : IName
 	{
-		string CreateReport(System.IO.Stream stream, WorkerApp workerApp, BusinessContext businessContext, dynamic parameters);
+		string CreateReport(System.IO.Stream stream, BusinessContext businessContext, dynamic parameters);
 	}
 }
 
