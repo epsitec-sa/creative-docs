@@ -52,6 +52,26 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
+		/// <summary>
+		/// Creates a unique job ID, even if called within a very tiny interval of time.
+		/// Every ID generated is greater than the previous one, which ensures that sorting
+		/// will produce coherent results.
+		/// </summary>
+		/// <returns>The unique job ID.</returns>
+		protected string CreateJobId()
+		{
+			while (true)
+			{
+				var oldId = AbstractAuthenticatedModule.lastJobId;
+				var jobId = System.Math.Max (System.DateTime.Now.Ticks, oldId+1);
+
+				if (System.Threading.Interlocked.CompareExchange (ref AbstractAuthenticatedModule.lastJobId, jobId, oldId) == oldId)
+				{
+					return string.Format ("JOB-{0:X16}", jobId);
+				}
+			}
+		}
+
 		
 		protected void Enqueue(string jobId, System.Action<BusinessContext> action)
 		{
@@ -99,5 +119,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			return CoreResponse.Failure (errors);
 		}
+
+
+		private static long						lastJobId;
 	}
 }
