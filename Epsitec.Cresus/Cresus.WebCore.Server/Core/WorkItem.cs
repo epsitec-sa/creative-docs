@@ -15,6 +15,10 @@ using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
+	/// <summary>
+	/// The <c>WorkItem</c> class represents a work item queued in the <see cref="CoreWorkerQueue"/>.
+	/// The work items will get executed sequentially.
+	/// </summary>
 	public abstract class WorkItem
 	{
 		protected WorkItem(string workItemId, string userName, string sessionId)
@@ -40,6 +44,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			get
 			{
 				return this.userName;
+			}
+		}
+
+		public string							SessionId
+		{
+			get
+			{
+				return this.sessionId;
 			}
 		}
 
