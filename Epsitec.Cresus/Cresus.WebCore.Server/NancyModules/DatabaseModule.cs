@@ -92,10 +92,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            integer value.
 			Get["/export/{name}"] = (p =>
 			{
-				var jobId = this.CreateJobId ();
-
-				this.Execute (wa => this.NotifyUIForExportWaiting (wa, jobId));
-				this.Enqueue (jobId, context => this.LongRunningExport (context, p, jobId));
+				var exportTask = new CoreTask (this.CreateJobId (),"Export CSV");
+				this.Execute (wa => this.NotifyUIForExportWaiting (wa, exportTask));
+				this.Enqueue (exportTask, context => this.LongRunningExport (context, exportTask, p));
 
 				return new Response ()
 				{
@@ -258,18 +257,18 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 		}
 
-		private Response NotifyUIForExportWaiting(WorkerApp workerApp, string jobId)
+		private Response NotifyUIForExportWaiting(WorkerApp workerApp, CoreTask task)
 		{
 			var user			= LoginModule.GetUserName (this);
 			var notification	= NotificationManager.GetCurrentNotificationManager ();
 			notification.Notify (user, new NotificationMessage ()
 			{
-				Title	=	"Exportation en cours...",
-				Body	=	"Merci de patienter"
+				Title	=	task.Title,
+				Body	=	task.HtmlView
 			}, When.Now);
 
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
-			entityBag.AddToBag (user, "Exportation", "en attente", jobId, When.Now);
+			entityBag.AddToBag (user, task.Title, task.HtmlView, task.Id, When.Now);
 
 			return new Response ()
 			{
@@ -277,22 +276,32 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			};
 		}
 
-		private void LongRunningExport(BusinessContext businessContext, dynamic parameters, string bagJobId)
+		private void LongRunningExport(BusinessContext businessContext, CoreTask task, dynamic parameters)
 		{
-			var user = LoginModule.GetUserName (this);
-			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();	
-			var caches = this.CoreServer.Caches;
+			task.Start ();
+			this.UpdateTaskStatusInBag (task);
 
-			entityBag.RemoveFromBag (user, bagJobId, When.Now);
-			entityBag.AddToBag (user, "Exportation", "en cours", bagJobId, When.Now);
+			var user = LoginModule.GetUserName (this);
+			
+			var caches = this.CoreServer.Caches;
+			
 
 			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
 				DatabaseModule.ExportToDisk (caches, extractor, this.Request.Query);
 			}
 
-			entityBag.RemoveFromBag (user, bagJobId, When.Now);
-			entityBag.AddToBag (user, "Exportation terminée!", "<a href='/downloads/xxxx.csv'>Télécharger</a>", bagJobId, When.Now);
+			task.Metadata = "<a href='/downloads/xxxx.csv'>Télécharger</a>";
+			task.Finish ();
+			this.UpdateTaskStatusInBag (task);
+		}
+
+		private void UpdateTaskStatusInBag(CoreTask task)
+		{
+			var user = LoginModule.GetUserName (this);
+			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();	
+			entityBag.RemoveFromBag (user, task.Id, When.Now);
+			entityBag.AddToBag (user, task.Title, task.HtmlView, task.Id, When.Now);
 		}
 
 		private EntityExtractor GetEntityExtractor(BusinessContext businessContext, dynamic parameters)
