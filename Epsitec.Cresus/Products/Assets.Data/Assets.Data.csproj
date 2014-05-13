@@ -47,9 +47,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -99,21 +97,9 @@
       <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
-      <Project>{e70c6f16-a0bf-439b-845d-87b164510aa0}</Project>
-      <Name>Cresus.Core.Library.Business</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91da0241-f084-40c5-b76e-0240884d1841}</Project>
       <Name>Cresus.Core.Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Core\Cresus.Core.csproj">
-      <Project>{543293d0-cafb-4431-8202-6c6d5ff5403a}</Project>
-      <Name>Cresus.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Cresus.Database\Cresus.Database.csproj">
-      <Project>{bbbfcdff-5a53-4b82-80cb-b98b2ec1b349}</Project>
-      <Name>Cresus.Database</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Cresus.DataLayer\Cresus.DataLayer.csproj">
       <Project>{ba604f89-53c1-4228-ac76-5d5e68205029}</Project>
