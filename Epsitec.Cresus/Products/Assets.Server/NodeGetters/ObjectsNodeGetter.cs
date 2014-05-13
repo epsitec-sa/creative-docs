@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///     V
 	/// 
 	/// </summary>
-	public class ObjectsNodeGetter : AbstractNodeGetter<CumulNode>, ITreeFunctions  // outputNodes
+	public class ObjectsNodeGetter : AbstractNodeGetter<CumulNode>, ITreeFunctions, IObjectsNodeGetter  // outputNodes
 	{
 		public ObjectsNodeGetter(DataAccessor accessor, AbstractNodeGetter<GuidNode> groupNodes, AbstractNodeGetter<GuidNode> objectNodes)
 		{
