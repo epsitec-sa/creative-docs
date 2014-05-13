@@ -137,6 +137,7 @@
     <Compile Include="Core\PropertyAccessor\FieldTypeSelector.cs" />
     <Compile Include="Core\PropertyAccessor\FieldType.cs" />
     <Compile Include="Core\IO\FieldIO.cs" />
+    <Compile Include="Core\WorkItem.cs" />
     <Compile Include="Layout\AbstractActionTile.cs" />
     <Compile Include="Layout\AbstractEntityTile.cs" />
     <Compile Include="Layout\ActionItem.cs" />

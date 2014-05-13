@@ -3,6 +3,7 @@
 
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types.Collections.Concurrent;
 
 using Epsitec.Cresus.Core.Business;
@@ -25,32 +26,40 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 	{
 		public CoreWorkerQueue(CultureInfo uiCulture)
 		{
-			this.worker = new CoreWorker ("CoreWorkerQueue", uiCulture);
-			this.workItems = new ConcurrentQueue<WorkItem> ();
-			this.wakeUpEvent = new System.Threading.ManualResetEvent (false);
+			this.worker         = new CoreWorker ("CoreWorkerQueue", uiCulture);
+			this.workItems      = new ConcurrentQueue<WorkItem> ();
+			this.wakeUpEvent    = new System.Threading.ManualResetEvent (false);
 			this.executerThread = new System.Threading.Thread (this.ThreadMainLoop);
+			
 			this.executerThread.Name = "CoreWorkerQueue.MainLoop";
 			this.executerThread.Start ();
 		}
 
 		
-		public void Enqueue(string workItemName, string username, string sessionId, System.Action<BusinessContext> action)
+		public void Enqueue(string workItemId, string username, string sessionId, System.Action<BusinessContext> action)
 		{
-			this.workItems.Enqueue (new WorkItemBusinessContext (workItemName, username, sessionId, action));
+			this.workItems.Enqueue (new WorkItemBusinessContext (workItemId, username, sessionId, action));
 			this.wakeUpEvent.Set ();
 		}
 
-		public void Enqueue(string workItemName, string username, string sessionId, System.Action<WorkerApp> action)
+		public void Enqueue(string workItemId, string username, string sessionId, System.Action<WorkerApp> action)
 		{
-			this.workItems.Enqueue (new WorkItemWorkerApp (workItemName, username, sessionId, action));
+			this.workItems.Enqueue (new WorkItemWorkerApp (workItemId, username, sessionId, action));
 			this.wakeUpEvent.Set ();
 		}
 
+		public void Cancel(string workItemId)
+		{
+			this.workItems.Where (x => x.WorkItemId == workItemId).ForEach (x => x.Cancel ());
+			this.wakeUpEvent.Set ();
+		}
 
 		public void DebugDumpQueue()
 		{
-			System.Diagnostics.Trace.WriteLine (string.Join ("\r\n", this.workItems.Select (x => x.ToString ())));
+			System.Diagnostics.Trace.WriteLine (string.Join ("\r\n", this.workItems.Where (x => !x.Cancelled).Select (x => x.ToString ())));
 		}
+
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -64,6 +73,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		#endregion
 
+		
 		private void ThreadMainLoop()
 		{
 			while (this.killRequest == false)
@@ -71,7 +81,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				this.wakeUpEvent.WaitOne ();
 				this.wakeUpEvent.Reset ();
 
-				
 				while ((this.killRequest == false)
 					&& (this.ExecuteWorkItem ()))
 				{
@@ -86,74 +95,40 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 			if (this.workItems.TryDequeue (out item))
 			{
-				//this.NotifyUIForStarted (item.UserName, item.WorkItemName);
-				item.Execute (this.worker);
+				if (!item.Cancelled)
+				{
+					try
+					{
+						item.Execute (this.worker);
+					}
+					catch (System.Exception ex)
+					{
+						System.Diagnostics.Trace.WriteLine ("CoreWorkerQueue: execution of work item crashed.");
+						System.Diagnostics.Trace.WriteLine (ex.Message);
+						System.Diagnostics.Trace.WriteLine (ex.StackTrace);
+					}
+				}
+
 				return true;
 			}
 
 			return false;
 		}
 
+
 		#region WorkItem Classes
-
-		private abstract class WorkItem
-		{
-			public WorkItem(string workItemName, string username, string sessionId)
-			{
-				this.enqueueDateTime = System.DateTime.Now;
-				this.workItemName    = workItemName;
-				this.username        = username;
-				this.sessionId       = sessionId;
-			}
-
-			public string					WorkItemName
-			{
-				get
-				{
-					return this.workItemName;
-				}
-			}
-
-			public string UserName
-			{
-				get
-				{
-					return this.username;
-				}
-			}
-
-			public System.DateTime			EnqueueDateTime
-			{
-				get
-				{
-					return this.enqueueDateTime;
-				}
-			}
-
-			public abstract void Execute(CoreWorker worker);
-
-			public override string ToString()
-			{
-				return string.Format ("{0}: {1} queued by {2} on session {3}", this.enqueueDateTime, this.workItemName, this.username, this.sessionId);
-			}
-
-			protected readonly System.DateTime enqueueDateTime;
-			protected readonly string workItemName;
-			protected readonly string username;
-			protected readonly string sessionId;
-		}
 
 		private class WorkItemBusinessContext : WorkItem
 		{
-			public WorkItemBusinessContext(string workItemName, string username, string sessionId, System.Action<BusinessContext> action)
-				: base (workItemName, username, sessionId)
+			public WorkItemBusinessContext(string workItemId, string username, string sessionId, System.Action<BusinessContext> action)
+				: base (workItemId, username, sessionId)
 			{
 				this.action = action;
 			}
 
 			public override void Execute(CoreWorker worker)
 			{
-				worker.Execute (username, sessionId, action);
+				worker.Execute (userName, sessionId, action);
 			}
 
 			private readonly System.Action<BusinessContext> action;
@@ -161,21 +136,22 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		
 		private class WorkItemWorkerApp : WorkItem
 		{
-			public WorkItemWorkerApp(string workItemName, string username, string sessionId, System.Action<WorkerApp> action)
-				: base (workItemName, username, sessionId)
+			public WorkItemWorkerApp(string workItemId, string username, string sessionId, System.Action<WorkerApp> action)
+				: base (workItemId, username, sessionId)
 			{
 				this.action = action;
 			}
 
 			public override void Execute(CoreWorker worker)
 			{
-				worker.Execute (username, sessionId, action);
+				worker.Execute (userName, sessionId, action);
 			}
 
 			private readonly System.Action<WorkerApp> action;
 		}
 
 		#endregion
+
 
 		private readonly CoreWorker					worker;
 		private readonly ConcurrentQueue<WorkItem>	workItems;
