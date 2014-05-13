@@ -99,6 +99,9 @@
     <Content Include="Aider.Metadata.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Downloads\dummy.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="ServerConfigProduction\Aider.Environment.crconfig" />
     <Content Include="ServerConfigProduction\Aider.Features.crconfig" />
     <None Include="ServerConfigProduction\app.config" />

@@ -173,8 +173,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			EntityWriter writer = DatabaseModule.GetEntityWriter (caches, extractor, query);
 
 			var stream   = writer.GetStream ();
-
-			using (var fileStream = System.IO.File.Create ("C:\\aider\\client\\downloads\\" + filename))
+			var depotPath = CoreContext.GetFileDepotPath ("downloads");
+			using (var fileStream = System.IO.File.Create (depotPath + "\\" + filename))
 			{
 				stream.CopyTo (fileStream);
 			}
@@ -288,7 +288,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
 			}
 
-			job.Metadata = "<a href='/downloads/"+ filename +"'>Télécharger</a>";
+			
+			job.Metadata = "<a href='/proxy/downloads/get/"+ filename +"'>Télécharger</a>";
 			job.Finish ();
 			this.UpdateTaskStatusInBag (job);
 		}

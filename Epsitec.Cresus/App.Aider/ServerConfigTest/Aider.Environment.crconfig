@@ -5,6 +5,7 @@
 #
 
 DefineFileDepot ("assets", "C:\aider\assets")
+DefineFileDepot ("downloads", "S:\Epsitec.Cresus\App.Aider\Downloads")
 
 ConfigureAsTestEnvironment ();
 # ConfigureAsReadOnly ();
