@@ -2126,6 +2126,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid EmployeeJobs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 624);
 				//	designer:cap/LVA4J
 				public static readonly global::Epsitec.Common.Support.Druid EmployeeType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 612);
+				//	designer:cap/LVAPK
+				public static readonly global::Epsitec.Common.Support.Druid Navs13 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 665);
 				//	designer:cap/LVA3J
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 611);
 				//	designer:cap/LVALK

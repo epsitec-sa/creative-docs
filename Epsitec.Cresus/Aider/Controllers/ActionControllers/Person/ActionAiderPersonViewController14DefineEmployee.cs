@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<EmployeeType, string, EmployeeActivity> (this.Execute);
+			return ActionExecutor.Create<EmployeeType, string, EmployeeActivity, string> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
@@ -53,10 +53,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Degré d'activité")
 					.InitialValue (EmployeeActivity.Active)
 				.End ()
+				.Field<string> ()
+					.Title ("Numéro AVS")
+					.InitialValue ("756.")
+				.End ()
 			.End ();
 		}
 
-		private void Execute(EmployeeType employeeType, string function, EmployeeActivity employeeActivity)
+		private void Execute(EmployeeType employeeType, string function, EmployeeActivity employeeActivity, string navs13)
 		{
 			var mainContact = this.Entity.MainContact;
 			var employee    = this.BusinessContext.CreateAndRegisterEntity<AiderEmployeeEntity> ();
@@ -66,6 +70,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			employee.EmployeeType     = employeeType;
 			employee.EmployeeActivity = employeeActivity;
 			employee.Description      = function;
+			employee.Navs13           = navs13;
 		}
 	}
 }

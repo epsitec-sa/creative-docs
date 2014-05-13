@@ -402,6 +402,7 @@
     <Compile Include="Reporting\StaticContent.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
+    <Compile Include="Rules\AiderEmployeeBusinessRules.cs" />
     <Compile Include="Rules\AiderGroupDefBusinessRules.cs" />
     <Compile Include="Rules\AiderGroupExtractionBusinessRules.cs" />
     <Compile Include="Rules\AiderGroupParticipantBusinessRules.cs" />

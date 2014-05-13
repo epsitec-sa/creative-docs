@@ -9961,6 +9961,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Navs13</c> field.
+		///	designer:fld/LVA2J/LVAPK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAPK]")]
+		public string Navs13
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAPK]");
+			}
+			set
+			{
+				string oldValue = this.Navs13;
+				if (oldValue != value || !this.IsFieldDefined("[LVAPK]"))
+				{
+					this.OnNavs13Changing (oldValue, value);
+					this.SetField<string> ("[LVAPK]", oldValue, value);
+					this.OnNavs13Changed (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>EmployeeType</c> field.
 		///	designer:fld/LVA2J/LVA4J
 		///	</summary>
@@ -10059,6 +10081,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnPersonContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnNavs13Changing(string oldValue, string newValue);
+		partial void OnNavs13Changed(string oldValue, string newValue);
 		partial void OnEmployeeTypeChanging(global::Epsitec.Aider.Enumerations.EmployeeType oldValue, global::Epsitec.Aider.Enumerations.EmployeeType newValue);
 		partial void OnEmployeeTypeChanged(global::Epsitec.Aider.Enumerations.EmployeeType oldValue, global::Epsitec.Aider.Enumerations.EmployeeType newValue);
 		partial void OnEmployeeActivityChanging(global::Epsitec.Aider.Enumerations.EmployeeActivity oldValue, global::Epsitec.Aider.Enumerations.EmployeeActivity newValue);

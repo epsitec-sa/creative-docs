@@ -23,6 +23,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.EmployeeType)
 					.Field (x => x.EmployeeActivity)
 					.Field (x => x.Description)
+					.Field (x => x.Navs13)
 				.End ();
 		}
 	}
