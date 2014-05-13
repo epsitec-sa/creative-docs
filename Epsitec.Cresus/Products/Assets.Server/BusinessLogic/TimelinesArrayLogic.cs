@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void Update(DataArray dataArray, ObjectsNodeGetter nodeGetter, System.Func<DataEvent, bool> filter = null)
+		public void Update(DataArray dataArray, IObjectsNodeGetter nodeGetter, System.Func<DataEvent, bool> filter = null)
 		{
 			//	Met à jour this.dataArray en fonction de l'ensemble des événements de
 			//	tous les objets. Cela nécessite d'accéder à l'ensemble des données, ce
