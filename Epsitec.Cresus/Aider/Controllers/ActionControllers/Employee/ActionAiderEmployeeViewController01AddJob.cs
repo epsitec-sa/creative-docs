@@ -14,14 +14,8 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Aider.Controllers.SpecialFieldControllers;
-using Epsitec.Aider.Override;
-
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Library;
-using Epsitec.Aider.Reporting;
-using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {

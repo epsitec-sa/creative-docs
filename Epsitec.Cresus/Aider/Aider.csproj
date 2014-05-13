@@ -92,6 +92,8 @@
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController6DeleteContact.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController02AddRefereey.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController01AddJob.cs" />
+    <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController03RemoveJob.cs" />
+    <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController04RemoveReferee.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController2DeleteAll.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController3Move.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController4CreateFunction.cs" />
@@ -196,6 +198,7 @@
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderMailingController0.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderEmployeeJobViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderOfficeReportViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderOfficeManagementViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderOfficeSettingsViewController.cs" />
@@ -209,6 +212,7 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderHouseholdViewController1Address.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderLegalPersonViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderLegalPersonViewController1Address.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderRefereeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderSubscriptionViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderEmployeeViewController.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController2DerogationsContact.cs" />
@@ -298,10 +302,12 @@
     <Compile Include="Data\Subscription\SubscriptionDataReader.cs" />
     <Compile Include="Data\Subscription\SubscriptionUploader.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
+    <Compile Include="Entities\AiderEmployeeJobEntity.cs" />
     <Compile Include="Entities\AiderGroupExtractionEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity1.cs" />
+    <Compile Include="Entities\AiderRefereeEntity.cs" />
     <Compile Include="Entities\AiderSubscriptionEntity.cs" />
     <Compile Include="Entities\AiderSubscriptionRefusalEntity.cs" />
     <Compile Include="Entities\AiderEmployeeEntity.cs" />

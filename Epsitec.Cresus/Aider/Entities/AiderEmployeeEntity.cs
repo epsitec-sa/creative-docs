@@ -18,14 +18,14 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.EmployeeType, "\n", this.Description, "~\n", this.EmployeeActivity);
+			return TextFormatter.FormatText (this.EmployeeType, "(~", this.Description, "~)", "\n", this.EmployeeActivity);
 		}
 
 		public FormattedText GetEmployeeSummary()
 		{
-			var offices = this.EmployeeJobs.Select (x => x.Office.OfficeName);
+			var offices = string.Join ("\n", this.EmployeeJobs.Select (x => x.Office.OfficeName));
 
-			return TextFormatter.FormatText (this.EmployeeType, "\n", offices);
+			return TextFormatter.FormatText (this.GetCompactSummary (), "\n", offices);
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -43,8 +43,8 @@ namespace Epsitec.Aider.Entities
 		{
 			value = this.GetVirtualCollection (ref this.refereeEntries, x => x.Employee = this).AsReadOnlyCollection ();
 		}
-		
-		
+
+
 		private IList<AiderEmployeeJobEntity>		jobs;
 		private IList<AiderRefereeEntity>			refereeEntries;
 	}

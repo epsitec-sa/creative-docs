@@ -22,15 +22,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.AutoGroup)
 				.EnableActionMenu<ActionAiderEmployeeViewController01AddJob> ()
+				.EnableActionMenu<ActionAiderEmployeeViewController03RemoveJob> ()
 				.Template ()
-				.End ()
-				.Attribute (BrickMode.DefaultToSummarySubView);
+				.End ();
 			
 			wall.AddBrick (x => x.RefereeEntries)
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.AutoGroup)
 				.EnableActionMenu<ActionAiderEmployeeViewController02AddReferee> ()
+				.EnableActionMenu<ActionAiderEmployeeViewController04RemoveReferee> ()
 				.Template ()
 				.End ();
 		}
