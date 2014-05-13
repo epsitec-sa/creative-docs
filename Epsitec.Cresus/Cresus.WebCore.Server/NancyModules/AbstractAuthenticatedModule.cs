@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support;
+﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core.Business;
 
@@ -7,10 +10,7 @@ using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
 
-using System;
 using System.Collections.Generic;
-using Epsitec.Cresus.Core.Library;
-
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
@@ -28,14 +28,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// </summary>
 	public abstract class AbstractAuthenticatedModule : AbstractCoreModule
 	{
-
-
 		protected AbstractAuthenticatedModule(CoreServer coreServer)
 			: base (coreServer)
 		{
 			LoginModule.CheckIsLoggedIn (this);
 		}
-
 
 		protected AbstractAuthenticatedModule(CoreServer coreServer, string modulePath)
 			: base (coreServer, modulePath)
@@ -44,19 +41,33 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		protected Response Execute(Func<BusinessContext, Response> function)
+		protected Response Execute(System.Func<BusinessContext, Response> function)
 		{
 			return this.Execute ((pool, username, sessionId) => pool.Execute (username, sessionId, function));
+		}
+
+		protected Response Execute(System.Func<WorkerApp, Response> function)
+		{
+			return this.Execute ((pool, username, sessionId) => pool.Execute (username, sessionId, function));
+		}
+
+
+		
+		protected void Enqueue(string jobId, System.Action<BusinessContext> action)
+		{
+			var userName  = LoginModule.GetUserName (this);
+			var sessionId = LoginModule.GetSessionId (this);
+
+			this.CoreServer.CoreWorkerQueue.Enqueue (jobId, userName, sessionId, action);
+		}
+
+		protected void Cancel(string jobId)
+		{
+			this.CoreServer.CoreWorkerQueue.Cancel (jobId);
 		}
 
 		
-		protected Response Execute(Func<WorkerApp, Response> function)
-		{
-			return this.Execute ((pool, username, sessionId) => pool.Execute (username, sessionId, function));
-		}
-
-
-		private Response Execute(Func<CoreWorkerPool, string, string, Response> function)
+		private Response Execute(System.Func<CoreWorkerPool, string, string, Response> function)
 		{
 			try
 			{
@@ -72,34 +83,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				if (businessRuleException != null)
 				{
-					var errors = new Dictionary<string, object> ()
-					{
-						{ "businesserror", businessRuleException.Message }
-					};
-
-					return CoreResponse.Failure (errors);
+					return AbstractAuthenticatedModule.CreateResponse (businessRuleException);
 				}
-
+				
 				throw;
 			}
 		}
 
-		
-		protected void Enqueue(Action<BusinessContext> action, string jobId)
+		private static Response CreateResponse(BusinessRuleException businessRuleException)
 		{
-			try
+			var errors = new Dictionary<string, object> ()
 			{
-				var userName    = LoginModule.GetUserName (this);
-				var sessionId   = LoginModule.GetSessionId (this);
-				var workerQueue = this.CoreServer.CoreWorkerQueue;
-				
-				workerQueue.Enqueue (jobId, userName, sessionId, action);
-			}
-			catch
-			{
-			}
+				{ "businesserror", businessRuleException.Message }
+			};
+
+			return CoreResponse.Failure (errors);
 		}
 	}
-
-
 }

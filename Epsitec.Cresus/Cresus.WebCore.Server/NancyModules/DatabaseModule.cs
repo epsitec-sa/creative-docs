@@ -92,17 +92,17 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            integer value.
 			Get["/export/{name}"] = (p =>
 			{
-				var jobId = string.Format ("JOB-{0}",DateTime.Now.Ticks);
+				var jobId = string.Format ("JOB-{0}", DateTime.Now.Ticks);
 
 				this.Execute (wa => this.NotifyUIForExportWaiting (wa, jobId));
-				this.Enqueue (context => this.LongRunningExport (context, p, jobId), jobId);
-				
+				this.Enqueue (jobId, context => this.LongRunningExport (context, p, jobId));
+
 				return new Response ()
 				{
 					StatusCode = HttpStatusCode.Accepted
 				};
 			});
-				
+
 
 
 			// Deletes some enties.

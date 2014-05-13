@@ -1,5 +1,5 @@
-﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
@@ -9,10 +9,8 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Globalization;
 using System.Threading.Tasks;
-
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
@@ -52,15 +50,16 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			return this.Execute (coreWorker => coreWorker.Execute (function));
 		}
 
+		
 		private static IList<CoreWorker> StartCoreWorkers(int coreWorkerCount, CultureInfo uiCulture)
 		{
 			var workers = new List<CoreWorker> ();
 
 			if (coreWorkerCount > 0)
 			{
-				// Here we start the first core worker alone. So we are sure that any code that must be
-				// run to initialize global stuff that is not yet initialized is initialized on a single
-				// thread and so that we don't have race conditions or other threading problems.
+				//	Here we start the first core worker alone. So we are sure that any code that must be
+				//	run to initialize global stuff that is not yet initialized is initialized on a single
+				//	thread and so that we don't have race conditions or other threading problems.
 
 				CoreWorkerPool.CreateCoreWorker (workers, uiCulture, 0);
 
@@ -124,8 +123,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		#endregion
 
-		private readonly List<CoreWorker>			workers;
-		private readonly BlockingBag<CoreWorker>	idleWorkers;
-		private readonly SafeSectionManager			safeSectionManager;
+		private readonly List<CoreWorker>		 workers;
+		private readonly BlockingBag<CoreWorker> idleWorkers;
+		private readonly SafeSectionManager		 safeSectionManager;
 	}
 }
