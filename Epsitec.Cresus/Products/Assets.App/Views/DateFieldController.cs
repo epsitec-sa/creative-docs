@@ -50,6 +50,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 							{
 								this.textField.Text = this.ConvDateToString (this.value);
 								this.textField.SelectAll ();
+
+								this.HasError = false;
 							}
 						}
 					}
