@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
-	public sealed class CoreTask
+	public sealed class CoreJob
 	{
 		public string Id
 		{
@@ -23,13 +23,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			{
 				var desc = this.Id;
 
-				if((this.Status == CoreTaskStatus.Waiting) || (this.Status == CoreTaskStatus.Running))
+				if(this.Status == CoreJobStatus.Waiting)
 				{
-					desc = desc + "<br><a href=''>Annuler</a>";
+					desc = desc + "<br><a href='/proxy/jobs/cancel/"+ this.Id +"'>Annuler</a>";
 				}
-				if (this.Status == CoreTaskStatus.Ended)
+				if (this.Status == CoreJobStatus.Ended)
 				{
 					desc = desc + string.Format("<br>Durée: {0}",this.GetRunningTime());
+				}
+				if (this.Status == CoreJobStatus.Canceled)
+				{
+					desc = desc + string.Format ("<br><b>Annulée</b><br>Durée: {0}", this.GetRunningTime ());
 				}
 
 				desc = desc + "<br>" + this.Metadata;
@@ -45,7 +49,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public CoreTaskStatus Status
+		public CoreJobStatus Status
 		{
 			get;
 			set;
@@ -77,11 +81,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public CoreTask(string taskId, string title)
+		public CoreJob(string taskId, string title)
 		{
 			var now = System.DateTime.Now;
 			this.title = title;
-			this.Status = CoreTaskStatus.Started;
+			this.Status = CoreJobStatus.Started;
 			this.taskId = taskId;
 			this.createdAt = now;
 		}
@@ -89,19 +93,25 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		public void Enqueue()
 		{
 			this.queuedAt = System.DateTime.Now;
-			this.Status = CoreTaskStatus.Waiting;
+			this.Status = CoreJobStatus.Waiting;
 		}
 
 		public void Start()
 		{
 			this.startedAt = System.DateTime.Now;
-			this.Status = CoreTaskStatus.Running;
+			this.Status = CoreJobStatus.Running;
 		}
 
 		public void Finish()
 		{
 			this.finisedAt = System.DateTime.Now;
-			this.Status = CoreTaskStatus.Ended;
+			this.Status = CoreJobStatus.Ended;
+		}
+
+		public void Cancel()
+		{
+			this.finisedAt = System.DateTime.Now;
+			this.Status = CoreJobStatus.Canceled;
 		}
 
 		public System.TimeSpan GetRunningTime()
@@ -120,14 +130,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		
 	}
 
-	public sealed class CoreTaskStatus
+	public sealed class CoreJobStatus
 	{
-		public static readonly CoreTaskStatus Started = new CoreTaskStatus ("En attente");
-		public static readonly CoreTaskStatus Waiting = new CoreTaskStatus ("En attente");
-		public static readonly CoreTaskStatus Running = new CoreTaskStatus ("En cours");
-		public static readonly CoreTaskStatus Ended = new CoreTaskStatus ("Terminée");
+		public static readonly CoreJobStatus Started = new CoreJobStatus ("En attente");
+		public static readonly CoreJobStatus Waiting = new CoreJobStatus ("En attente");
+		public static readonly CoreJobStatus Running = new CoreJobStatus ("En cours");
+		public static readonly CoreJobStatus Ended = new CoreJobStatus ("Terminée");
+		public static readonly CoreJobStatus Canceled = new CoreJobStatus ("Annulée");
 
-		private CoreTaskStatus(string value)
+		private CoreJobStatus(string value)
 		{
 			Value = value;
 		}

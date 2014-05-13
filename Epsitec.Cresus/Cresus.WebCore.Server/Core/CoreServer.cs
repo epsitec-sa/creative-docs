@@ -7,6 +7,7 @@ using Epsitec.Cresus.WebCore.Server.Core.Databases;
 
 using System.Globalization;
 using Epsitec.Cresus.Core.Library;
+using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core
@@ -27,10 +28,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.databaseManager = new DatabaseManager ();
 			this.caches = new Caches ();
 			this.coreWorkerQueue = new Core.CoreWorkerQueue (uiCulture);
-
+			this.jobs = new Dictionary<string, CoreJob> ();
 			Logger.LogToConsole ("Core server started");
 		}
 
+		public Dictionary<string, CoreJob> Jobs
+		{
+			get 
+			{
+				return this.jobs;
+			}
+		}
 
 		public CoreWorkerQueue					CoreWorkerQueue
 		{
@@ -82,11 +90,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 		#endregion
-
+		private	Dictionary<string, CoreJob>		jobs;
 		private readonly CoreWorkerPool			coreWorkerPool;
 		private readonly CoreWorkerQueue		coreWorkerQueue;
 		private readonly AuthenticationManager	authenticationManager;
 		private readonly DatabaseManager		databaseManager;
 		private readonly Caches					caches;
+		
 	}
 }

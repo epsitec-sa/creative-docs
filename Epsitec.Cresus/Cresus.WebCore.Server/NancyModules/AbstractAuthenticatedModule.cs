@@ -51,29 +51,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return this.Execute ((pool, username, sessionId) => pool.Execute (username, sessionId, function));
 		}
 
-
-		/// <summary>
-		/// Creates a unique job ID, even if called within a very tiny interval of time.
-		/// Every ID generated is greater than the previous one, which ensures that sorting
-		/// will produce coherent results.
-		/// </summary>
-		/// <returns>The unique job ID.</returns>
-		protected string CreateJobId()
-		{
-			while (true)
-			{
-				var oldId = AbstractAuthenticatedModule.lastJobId;
-				var jobId = System.Math.Max (System.DateTime.Now.Ticks, oldId+1);
-
-				if (System.Threading.Interlocked.CompareExchange (ref AbstractAuthenticatedModule.lastJobId, jobId, oldId) == oldId)
-				{
-					return string.Format ("JOB-{0:X16}", jobId);
-				}
-			}
-		}
-
-		
-		protected void Enqueue(CoreTask task, System.Action<BusinessContext> action)
+		protected void Enqueue(CoreJob task, System.Action<BusinessContext> action)
 		{
 			var userName  = LoginModule.GetUserName (this);
 			var sessionId = LoginModule.GetSessionId (this);
@@ -85,12 +63,28 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			this.CoreServer.CoreWorkerQueue.Enqueue (task.Id, userName, sessionId, action);
 		}
 
-		protected void Cancel(string jobId)
+		protected CoreJob CreateJob(string title)
 		{
-			this.CoreServer.CoreWorkerQueue.Cancel (jobId);
+			var job = new CoreJob (this.CreateJobId (), "Export CSV");
+			this.CoreServer.Jobs.Add (job.Id, job);
+			return job;
+		}
+		protected CoreJob GetJob(string jobId)
+		{
+			return this.CoreServer.Jobs[jobId];
 		}
 
-		
+		protected bool RemoveJob(string jobId)
+		{
+			return this.CoreServer.Jobs.Remove (jobId);
+		}
+
+		protected void CancelJob(CoreJob job)
+		{
+			job.Cancel ();
+			this.CoreServer.CoreWorkerQueue.Cancel (job.Id);
+		}
+
 		private Response Execute(System.Func<CoreWorkerPool, string, string, Response> function)
 		{
 			try
@@ -111,6 +105,26 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				}
 				
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// Creates a unique job ID, even if called within a very tiny interval of time.
+		/// Every ID generated is greater than the previous one, which ensures that sorting
+		/// will produce coherent results.
+		/// </summary>
+		/// <returns>The unique job ID.</returns>
+		private string CreateJobId()
+		{
+			while (true)
+			{
+				var oldId = AbstractAuthenticatedModule.lastJobId;
+				var jobId = System.Math.Max (System.DateTime.Now.Ticks, oldId+1);
+
+				if (System.Threading.Interlocked.CompareExchange (ref AbstractAuthenticatedModule.lastJobId, jobId, oldId) == oldId)
+				{
+					return string.Format ("JOB-{0:X16}", jobId);
+				}
 			}
 		}
 

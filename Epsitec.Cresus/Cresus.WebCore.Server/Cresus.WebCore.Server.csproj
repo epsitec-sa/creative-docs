@@ -108,7 +108,7 @@
     <Compile Include="Core\BackupManager.cs" />
     <Compile Include="Core\Caches.cs" />
     <Compile Include="Core\ConfigurationFileGenerator.cs" />
-    <Compile Include="Core\CoreTask.cs" />
+    <Compile Include="Core\CoreJob.cs" />
     <Compile Include="Core\CoreWorkerQueue.cs" />
     <Compile Include="Core\CoreWorkerPool.cs" />
     <Compile Include="Core\Databases\AbstractContextualMenuItem.cs" />
@@ -161,6 +161,7 @@
     <Compile Include="Core\Databases\Column.cs" />
     <Compile Include="NancyModules\Constants.cs" />
     <Compile Include="Core\Databases\Database.cs" />
+    <Compile Include="NancyModules\JobsModule.cs" />
     <Compile Include="Processors\IReportingProcessor.cs" />
     <Compile Include="NancyModules\ReportingModule.cs" />
     <Compile Include="NancyModules\FavoritesModule.cs" />

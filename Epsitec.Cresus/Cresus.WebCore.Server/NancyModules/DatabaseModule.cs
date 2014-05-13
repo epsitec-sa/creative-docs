@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            integer value.
 			Get["/export/{name}"] = (p =>
 			{
-				var exportTask = new CoreTask (this.CreateJobId (),"Export CSV");
+				var exportTask = this.CreateJob ("Export CSV");
 				this.Execute (wa => this.NotifyUIForExportWaiting (wa, exportTask));
 				this.Enqueue (exportTask, context => this.LongRunningExport (context, exportTask, p));
 
@@ -101,8 +101,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					StatusCode = HttpStatusCode.Accepted
 				};
 			});
-
-
 
 			// Deletes some enties.
 			// POST arguments:
@@ -168,16 +166,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.CreateStreamResponse (stream, filename);
 		}
 
-		internal static void ExportToDisk(Caches caches, EntityExtractor extractor, dynamic query)
+		internal static void ExportToDisk(string filename, Caches caches, EntityExtractor extractor, dynamic query)
 		{
 			var itemCount = extractor.Accessor.GetItemCount ();
 
 			EntityWriter writer = DatabaseModule.GetEntityWriter (caches, extractor, query);
 
-			var filename = writer.GetFilename ();
 			var stream   = writer.GetStream ();
 
-			using (var fileStream = System.IO.File.Create ("S:\\exportAIDER.csv"))
+			using (var fileStream = System.IO.File.Create ("C:\\aider\\client\\downloads\\" + filename))
 			{
 				stream.CopyTo (fileStream);
 			}
@@ -257,7 +254,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 		}
 
-		private Response NotifyUIForExportWaiting(WorkerApp workerApp, CoreTask task)
+		private Response NotifyUIForExportWaiting(WorkerApp workerApp, CoreJob task)
 		{
 			var user			= LoginModule.GetUserName (this);
 			var notification	= NotificationManager.GetCurrentNotificationManager ();
@@ -276,33 +273,34 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			};
 		}
 
-		private void LongRunningExport(BusinessContext businessContext, CoreTask task, dynamic parameters)
+		private void LongRunningExport(BusinessContext businessContext, CoreJob job, dynamic parameters)
 		{
-			task.Start ();
-			this.UpdateTaskStatusInBag (task);
+			job.Start ();
+			this.UpdateTaskStatusInBag (job);
 
-			var user = LoginModule.GetUserName (this);
-			
-			var caches = this.CoreServer.Caches;
+			var user		= LoginModule.GetUserName (this);
+			var filename	= job.Id + ".csv";
+			var caches		= this.CoreServer.Caches;
 			
 
 			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
-				DatabaseModule.ExportToDisk (caches, extractor, this.Request.Query);
+				DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
 			}
 
-			task.Metadata = "<a href='/downloads/xxxx.csv'>Télécharger</a>";
-			task.Finish ();
-			this.UpdateTaskStatusInBag (task);
+			job.Metadata = "<a href='/downloads/"+ filename +"'>Télécharger</a>";
+			job.Finish ();
+			this.UpdateTaskStatusInBag (job);
 		}
 
-		private void UpdateTaskStatusInBag(CoreTask task)
+		private void UpdateTaskStatusInBag(CoreJob task)
 		{
 			var user = LoginModule.GetUserName (this);
-			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();	
+			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
 			entityBag.RemoveFromBag (user, task.Id, When.Now);
 			entityBag.AddToBag (user, task.Title, task.HtmlView, task.Id, When.Now);
 		}
+
 
 		private EntityExtractor GetEntityExtractor(BusinessContext businessContext, dynamic parameters)
 		{
