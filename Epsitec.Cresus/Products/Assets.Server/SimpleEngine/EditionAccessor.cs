@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					var p = this.dataEvent.GetProperty (ObjectField.OneShotDateEvent) as DataDateProperty;
 					if (p != null && p.Value != e.Timestamp.Date)  // date changée ?
 					{
-						this.accessor.ChangeAssetEventTimestamp (obj, e, new Timestamp (p.Value, 0));
+						this.accessor.ChangeAssetEventTimestamp (obj, e, p.Value);
 					}
 				}
 
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = this.obj.GetPrevEvent (this.timestamp.Value);
 				if (e != null)
 				{
-					return e.Timestamp.Date.AddDays (1);
+					return e.Timestamp.Date;
 				}
 			}
 
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = this.obj.GetNextEvent (this.timestamp.Value);
 				if (e != null)
 				{
-					return e.Timestamp.Date.AddDays (-1);
+					return e.Timestamp.Date;
 				}
 			}
 

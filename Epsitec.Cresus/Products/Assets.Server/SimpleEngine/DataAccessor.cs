@@ -113,17 +113,83 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return obj.Guid;
 		}
 
-		public void ChangeAssetEventTimestamp(DataObject obj, DataEvent e, Timestamp timestamp)
+		public void ChangeAssetEventTimestamp(DataObject obj, DataEvent e, System.DateTime date)
 		{
-			//	Change la date d'un événement, sans aucun grade-fou "métier". Par exemple, on
-			//	peut déplacer l'événement d'entrée après le premier amortissement !
-			//	La modification de la date nécessite de créer une copie de l'événement, dont
-			//	on ne changera que la date.
-			obj.RemoveEvent (e);
+			//	Déplace un événement à une autre date, mais sans jamais modifier l'ordre des événements.
+			//	Exemple:
+			//	01.01.2011.0
+			//	01.01.2012.0
+			//	01.01.2013.0 -> événement à déplacer
+			//	01.01.2014.0
+			//	01.01.2015.0
+			//	L'événement à déplacer doit être compris entre le 01.01.2012 et le 01.01.2014. En
+			//	d'autres termes, il doit rester le troisième dans la liste !
+			int i = obj.GetIndex (e);
+			System.Diagnostics.Debug.Assert (i != -1);
 
+			int position = 0;
+
+			//	Si on recule l'événement à une date contenant déjà d'autres événements,
+			//	il devra venir après le dernier.
+			//	Exemple:
+			//	01.01.2014.0
+			//	01.01.2014.1
+			//	01.03.2014.0 -> à déplacer le 01.01.2014
+			//	Résultat:
+			//	01.01.2014.0
+			//	01.01.2014.1
+			//	01.03.2014.2 <- déplacé après le dernier événement du 01.01.2014
+			if (i > 0)
+			{
+				var prev = obj.GetEvent (i-1);  // événement précédent
+				if (prev.Timestamp.Date == date)
+				{
+					position = prev.Timestamp.Position + 1;
+				}
+			}
+
+			//	Si on avance l'événement à une date contenant déjà d'autres événements,
+			//	il faut "pousser" la position de ceux-ci.
+			//	Exemple:
+			//	01.01.2014.0 -> à déplacer le 01.03.2014
+			//	01.03.2014.0
+			//	01.03.2014.1
+			//	01.04.2014.0
+			//	Résultat:
+			//	01.03.2014.0 <- déplacé avant le premier événement du 01.03.2014
+			//	01.03.2014.1 <- position passée de 0 à 1
+			//	01.03.2014.2 <- position passée de 1 à 2
+			//	01.04.2014.0 <- inchangé
+			int j = i + 1;
+			while (j < obj.EventsCount)
+			{
+				var next = obj.GetEvent (j);  // événement suivant
+				if (next.Timestamp.Date == date)
+				{
+					//	Pendant le processus de changement, il peut y avoir le même timestamp pour 2
+					//	événements. C'est normal et temporaire.
+					var t = new Timestamp (next.Timestamp.Date, next.Timestamp.Position+1);
+					this.ChangeAssetEventTimestamp (obj, j, next, t);
+					j++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			var timestamp = new Timestamp (date, position);
+			this.ChangeAssetEventTimestamp (obj, i, e, timestamp);
+		}
+
+		private void ChangeAssetEventTimestamp(DataObject obj, int index, DataEvent e, Timestamp timestamp)
+		{
+			//	La modification du timestamp nécessite de créer une copie de l'événement, dont
+			//	on ne changera que le timestamp.
 			var newEvent = new DataEvent (timestamp, e.Type);
 			newEvent.SetProperties (e);
-			obj.AddEvent (newEvent);
+
+			obj.ReplaceEvent (index, newEvent);
 		}
 
 		public DataEvent CreateAssetEvent(DataObject obj, System.DateTime date, EventType type)

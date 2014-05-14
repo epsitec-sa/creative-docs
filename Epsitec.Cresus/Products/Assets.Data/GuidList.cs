@@ -70,6 +70,11 @@ namespace Epsitec.Cresus.Assets.Data
 			this.list.RemoveAt (index);
 		}
 
+		public int IndexOf(T item)
+		{
+			return this.list.IndexOf (item);
+		}
+
 
 		public T this[Guid key]
 		{
@@ -98,6 +103,12 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					return null;
 				}
+			}
+			set
+			{
+				this.dict.Remove (this.list[index].Guid);
+				this.list[index] = value;
+				this.dict[value.Guid] = value;
 			}
 		}
 

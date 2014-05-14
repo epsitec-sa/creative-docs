@@ -65,6 +65,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.events.Insert (i, e);
 		}
 
+		public void ReplaceEvent(int index, DataEvent e)
+		{
+			this.events[index] = e;
+		}
+
 		public void RemoveEvent(DataEvent e)
 		{
 			this.events.Remove (e);
@@ -83,6 +88,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public DataEvent GetEvent(Timestamp timestamp)
 		{
 			return this.events.Where (x => x.Timestamp == timestamp).FirstOrDefault ();
+		}
+
+		public int GetIndex(DataEvent e)
+		{
+			return this.events.IndexOf (e);
 		}
 
 		public DataEvent GetPrevEvent(Timestamp timestamp)
