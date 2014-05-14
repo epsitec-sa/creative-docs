@@ -250,9 +250,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets.Obsolete", "Assets.O
 		Products\Assets.Obsolete\Converters\TimelineCellConverter.cs = Products\Assets.Obsolete\Converters\TimelineCellConverter.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.DataFillers", "Products\Assets.DataFillers\Assets.Server.DataFillers.csproj", "{061C8EB2-F3F6-419C-84C1-A667FFBEA60F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.DataFillers", "Products\Assets.Server.DataFillers\Assets.Server.DataFillers.csproj", "{061C8EB2-F3F6-419C-84C1-A667FFBEA60F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.NodeGetters", "Products\Assets.NodeGetters\Assets.NodeGetters.csproj", "{4D38B63F-E835-4436-8946-6AF7C88F67E5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.NodeGetters", "Products\Assets.Server.NodeGetters\Assets.Server.NodeGetters.csproj", "{4D38B63F-E835-4436-8946-6AF7C88F67E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
