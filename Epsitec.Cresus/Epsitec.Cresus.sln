@@ -254,6 +254,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.DataFillers",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.NodeGetters", "Products\Assets.Server.NodeGetters\Assets.Server.NodeGetters.csproj", "{4D38B63F-E835-4436-8946-6AF7C88F67E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.BusinessLogic", "Products\Assets.Server.BusinessLogic\Assets.Server.BusinessLogic.csproj", "{89AC127A-46D0-4337-83BE-262E0133968C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug .NET 2.0|Any CPU = Debug .NET 2.0|Any CPU
@@ -1624,6 +1626,21 @@ Global
 		{4D38B63F-E835-4436-8946-6AF7C88F67E5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4D38B63F-E835-4436-8946-6AF7C88F67E5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{4D38B63F-E835-4436-8946-6AF7C88F67E5}.Release|x86.ActiveCfg = Release|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Debug .NET 2.0|x86.ActiveCfg = Debug|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{89AC127A-46D0-4337-83BE-262E0133968C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1687,6 +1704,7 @@ Global
 		{AC24F63B-3F4E-4E48-A40F-4D6AFB3D8074} = {A254E420-166A-488D-9687-0268BF6FFEE5}
 		{061C8EB2-F3F6-419C-84C1-A667FFBEA60F} = {A254E420-166A-488D-9687-0268BF6FFEE5}
 		{4D38B63F-E835-4436-8946-6AF7C88F67E5} = {A254E420-166A-488D-9687-0268BF6FFEE5}
+		{89AC127A-46D0-4337-83BE-262E0133968C} = {A254E420-166A-488D-9687-0268BF6FFEE5}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Epsitec.Cresus1.vsmdi

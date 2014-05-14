@@ -449,6 +449,10 @@
       <Project>{ba604f89-53c1-4228-ac76-5d5e68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Assets.Core\Assets.Core.csproj">
+      <Project>{2478a0bb-db2e-4272-b7d9-cff51a5a0cc9}</Project>
+      <Name>Assets.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Assets.Server.DataFillers\Assets.Server.DataFillers.csproj">
       <Project>{061c8eb2-f3f6-419c-84c1-a667ffbea60f}</Project>
       <Name>Assets.Server.DataFillers</Name>

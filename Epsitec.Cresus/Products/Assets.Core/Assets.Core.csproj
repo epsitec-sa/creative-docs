@@ -59,9 +59,7 @@
       <HintPath>..\..\packages\Rx-PlatformServices.2.1.30214.0\lib\Net45\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +72,7 @@
     <Compile Include="Collections\CollectionItemExtensions.cs" />
     <Compile Include="Collections\IAsyncEnumerator.cs" />
     <Compile Include="Collections\IAsyncEnumerable.cs" />
+    <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Collections\InfiniteCollection.cs" />
   </ItemGroup>
@@ -96,6 +95,10 @@
     <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Assets.Data\Assets.Data.csproj">
+      <Project>{873e478a-d8a9-40af-abf9-96af6aeda126}</Project>
+      <Name>Assets.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

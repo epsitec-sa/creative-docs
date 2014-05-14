@@ -53,46 +53,41 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="BusinessLogic\Amortizations.cs" />
     <Compile Include="BusinessLogic\CategoriesLogic.cs" />
-    <Compile Include="BusinessLogic\AmortizationDetails.cs" />
-    <Compile Include="BusinessLogic\AccountsLogic.cs" />
-    <Compile Include="BusinessLogic\DataCellFlags.cs" />
-    <Compile Include="BusinessLogic\EntryProperties.cs" />
-    <Compile Include="BusinessLogic\EntryAccounts.cs" />
-    <Compile Include="BusinessLogic\Entries.cs" />
-    <Compile Include="BusinessLogic\EntriesLogic.cs" />
-    <Compile Include="BusinessLogic\UserFieldsLogic.cs" />
-    <Compile Include="BusinessLogic\GroupsGuidRatioLogic.cs" />
-    <Compile Include="BusinessLogic\ObjectProperties.cs" />
-    <Compile Include="BusinessLogic\TimelinesMode.cs" />
-    <Compile Include="BusinessLogic\ProrataDetails.cs" />
-    <Compile Include="BusinessLogic\ProrataType.cs" />
-    <Compile Include="BusinessLogic\AssetsLogic.cs" />
-    <Compile Include="BusinessLogic\EnumDictionaries.cs" />
-    <Compile Include="BusinessLogic\Periodicity.cs" />
-    <Compile Include="BusinessLogic\PersonsLogic.cs" />
-    <Compile Include="BusinessLogic\DateRange.cs" />
-    <Compile Include="BusinessLogic\ErrorType.cs" />
-    <Compile Include="BusinessLogic\Error.cs" />
-    <Compile Include="BusinessLogic\ErrorDescription.cs" />
-    <Compile Include="BusinessLogic\AmortizationDefinition.cs" />
     <Compile Include="BusinessLogic\GroupsLogic.cs" />
     <Compile Include="BusinessLogic\LogicDescriptions.cs" />
-    <Compile Include="BusinessLogic\TimelinesArrayLogic.cs" />
-    <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="NodeGetters\AbstractNodeGetter.cs" />
+    <Compile Include="BusinessLogic\AccountsLogic.cs" />
+    <Compile Include="BusinessLogic\AmortizationDefinition.cs" />
+    <Compile Include="BusinessLogic\AmortizationDetails.cs" />
+    <Compile Include="BusinessLogic\Amortizations.cs" />
+    <Compile Include="BusinessLogic\AssetCalculator.cs" />
+    <Compile Include="BusinessLogic\AssetsLogic.cs" />
     <Compile Include="NodeGetters\BypassNodeGetter.cs" />
     <Compile Include="NodeGetters\ComparableData.cs" />
     <Compile Include="NodeGetters\CumulNode.cs" />
     <Compile Include="NodeGetters\CumulNodeGetter.cs" />
+    <Compile Include="BusinessLogic\DataCellFlags.cs" />
+    <Compile Include="BusinessLogic\DataDescriptions.cs" />
+    <Compile Include="BusinessLogic\DateRange.cs" />
+    <Compile Include="BusinessLogic\DecimalFormat.cs" />
+    <Compile Include="BusinessLogic\Entries.cs" />
+    <Compile Include="BusinessLogic\EntriesLogic.cs" />
     <Compile Include="NodeGetters\EntriesNodeGetter.cs" />
+    <Compile Include="BusinessLogic\EntryAccounts.cs" />
     <Compile Include="NodeGetters\EntryNode.cs" />
+    <Compile Include="BusinessLogic\EntryProperties.cs" />
+    <Compile Include="BusinessLogic\EnumDictionaries.cs" />
+    <Compile Include="BusinessLogic\Error.cs" />
+    <Compile Include="BusinessLogic\ErrorDescription.cs" />
     <Compile Include="NodeGetters\ErrorNodeGetter.cs" />
+    <Compile Include="BusinessLogic\ErrorType.cs" />
     <Compile Include="NodeGetters\ExtractionAmount.cs" />
     <Compile Include="NodeGetters\ExtractionInstructions.cs" />
+    <Compile Include="BusinessLogic\Format.cs" />
     <Compile Include="NodeGetters\GroupLevelNodeGetter.cs" />
     <Compile Include="NodeGetters\GroupParentNodeGetter.cs" />
+    <Compile Include="BusinessLogic\GroupsGuidRatioLogic.cs" />
     <Compile Include="NodeGetters\GroupTreeNodeGetter.cs" />
     <Compile Include="NodeGetters\GuidNode.cs" />
     <Compile Include="NodeGetters\HistoryNodeGetter.cs" />
@@ -102,24 +97,29 @@
     <Compile Include="NodeGetters\MergeNodeGetter.cs" />
     <Compile Include="NodeGetters\NodeType.cs" />
     <Compile Include="NodeGetters\ObjectEventsNodeGetter.cs" />
+    <Compile Include="BusinessLogic\ObjectProperties.cs" />
     <Compile Include="NodeGetters\ObjectsNodeGetter.cs" />
     <Compile Include="NodeGetters\ParentNode.cs" />
+    <Compile Include="BusinessLogic\Periodicity.cs" />
+    <Compile Include="BusinessLogic\PersonsLogic.cs" />
+    <Compile Include="BusinessLogic\ProrataDetails.cs" />
+    <Compile Include="BusinessLogic\ProrataType.cs" />
     <Compile Include="NodeGetters\SortableNode.cs" />
     <Compile Include="NodeGetters\SortableNodeGetter.cs" />
     <Compile Include="NodeGetters\SortedType.cs" />
     <Compile Include="NodeGetters\SorterNodeGetter.cs" />
     <Compile Include="NodeGetters\SortingInstructions.cs" />
     <Compile Include="NodeGetters\SortingMachine.cs" />
-    <Compile Include="NodeGetters\TreeNode.cs" />
-    <Compile Include="NodeGetters\TreeObjectsNodeGetter.cs" />
-    <Compile Include="NodeGetters\UserFieldNodeGetter.cs" />
-    <Compile Include="SimpleEngine\BaseType.cs" />
-    <Compile Include="BusinessLogic\DataDescriptions.cs" />
-    <Compile Include="BusinessLogic\DecimalFormat.cs" />
-    <Compile Include="BusinessLogic\Format.cs" />
     <Compile Include="BusinessLogic\TimelineData.cs" />
     <Compile Include="BusinessLogic\TimelineGlyph.cs" />
     <Compile Include="BusinessLogic\TimelineMode.cs" />
+    <Compile Include="BusinessLogic\TimelinesArrayLogic.cs" />
+    <Compile Include="BusinessLogic\TimelinesMode.cs" />
+    <Compile Include="NodeGetters\TreeNode.cs" />
+    <Compile Include="NodeGetters\TreeObjectsNodeGetter.cs" />
+    <Compile Include="NodeGetters\UserFieldNodeGetter.cs" />
+    <Compile Include="BusinessLogic\UserFieldsLogic.cs" />
+    <Compile Include="SimpleEngine\BaseType.cs" />
     <Compile Include="SimpleEngine\AccountCategory.cs" />
     <Compile Include="SimpleEngine\AccountType.cs" />
     <Compile Include="SimpleEngine\AbstractMandatFactory.cs" />
@@ -133,7 +133,6 @@
     <Compile Include="SimpleEngine\DataAccessor.NodeGetter.cs" />
     <Compile Include="SimpleEngine\EmptyMandat.cs" />
     <Compile Include="SimpleEngine\EditionAccessor.cs" />
-    <Compile Include="BusinessLogic\AssetCalculator.cs" />
     <Compile Include="SimpleEngine\FieldType.cs" />
     <Compile Include="SimpleEngine\EventType.cs" />
     <Compile Include="SimpleEngine\DataAccessor.cs" />
@@ -161,12 +160,17 @@
       <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Assets.Core\Assets.Core.csproj">
+      <Project>{2478a0bb-db2e-4272-b7d9-cff51a5a0cc9}</Project>
+      <Name>Assets.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Assets.Data\Assets.Data.csproj">
       <Project>{873e478a-d8a9-40af-abf9-96af6aeda126}</Project>
       <Name>Assets.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Helpers\" />
     <Folder Include="Resources\Assets.Server\SourceCode\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
