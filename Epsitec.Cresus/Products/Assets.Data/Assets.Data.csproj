@@ -56,6 +56,7 @@
     </Compile>
     <Compile Include="AmortizationType.cs" />
     <Compile Include="AmortizedAmount.cs" />
+    <Compile Include="ComparableData.cs" />
     <Compile Include="DataProperties\AbstractDataProperty.cs" />
     <Compile Include="ComputedAmount.cs" />
     <Compile Include="DataProperties\DataAmortizedAmountProperty.cs" />
@@ -69,13 +70,17 @@
     <Compile Include="EntryScenario.cs" />
     <Compile Include="Guid.cs" />
     <Compile Include="GuidList.cs" />
+    <Compile Include="GuidNode.cs" />
     <Compile Include="GuidRatio.cs" />
     <Compile Include="IGuid.cs" />
+    <Compile Include="NodeType.cs" />
     <Compile Include="ObjectField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyState.cs" />
     <Compile Include="Resources\Assets.Data\SourceCode\Entities.cs" />
     <Compile Include="Resources\Assets.Data\SourceCode\Res.cs" />
+    <Compile Include="SortedType.cs" />
+    <Compile Include="SortingInstructions.cs" />
     <Compile Include="Timestamp.cs" />
   </ItemGroup>
   <ItemGroup>

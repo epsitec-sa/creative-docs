@@ -45,6 +45,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="BypassNodeGetter.cs" />
+    <Compile Include="CumulNode.cs" />
     <Compile Include="CumulNodeGetter.cs" />
     <Compile Include="EntriesNodeGetter.cs" />
     <Compile Include="EntryNode.cs" />
@@ -55,6 +56,8 @@
     <Compile Include="GroupParentNodeGetter.cs" />
     <Compile Include="GroupTreeNodeGetter.cs" />
     <Compile Include="HistoryNodeGetter.cs" />
+    <Compile Include="IObjectsNodeGetter.cs" />
+    <Compile Include="ITreeFunctions.cs" />
     <Compile Include="LevelNode.cs" />
     <Compile Include="MergeNodeGetter.cs" />
     <Compile Include="ObjectEventsNodeGetter.cs" />

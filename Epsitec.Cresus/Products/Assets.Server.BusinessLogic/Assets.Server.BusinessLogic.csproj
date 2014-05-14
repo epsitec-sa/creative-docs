@@ -49,6 +49,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimelinesArrayLogic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Solution Items\Epsitec.Cresus.snk">
@@ -64,10 +65,17 @@
       <Project>{873e478a-d8a9-40af-abf9-96af6aeda126}</Project>
       <Name>Assets.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Assets.Server.NodeGetters\Assets.Server.NodeGetters.csproj">
+      <Project>{4d38b63f-e835-4436-8946-6af7c88f67e5}</Project>
+      <Name>Assets.Server.NodeGetters</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Assets.Server\Assets.Server.csproj">
       <Project>{3e4f5e64-20fc-49fb-98e3-e30f5ae81877}</Project>
       <Name>Assets.Server</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
