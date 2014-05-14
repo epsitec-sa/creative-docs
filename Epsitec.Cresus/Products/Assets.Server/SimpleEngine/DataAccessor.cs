@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public AbstractNodeGetter<GuidNode> GetNodeGetter(BaseType baseType)
+		public INodeGetter<GuidNode> GetNodeGetter(BaseType baseType)
 		{
 			//	Retourne un moyen standardisé d'accès en lecture aux données d'une base.
 			return new GuidNodeGetter (this.mandat, baseType);

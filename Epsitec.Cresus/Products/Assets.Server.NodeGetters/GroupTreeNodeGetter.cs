@@ -31,11 +31,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public class GroupTreeNodeGetter : AbstractNodeGetter<TreeNode>, ITreeFunctions  // outputNodes
 	{
-		public GroupTreeNodeGetter(DataAccessor accessor, BaseType baseType, AbstractNodeGetter<GuidNode> inputNodes)
+		public GroupTreeNodeGetter(DataAccessor accessor, BaseType baseType, INodeGetter<GuidNode> inputNodes)
 		{
 			this.inputNodes        = inputNodes;
-			this.parentNodeGetter = new GroupParentNodeGetter (inputNodes, accessor, baseType);
-			this.levelNodeGetter  = new GroupLevelNodeGetter (this.parentNodeGetter, accessor, baseType);
+			this.parentNodeGetter  = new GroupParentNodeGetter (inputNodes, accessor, baseType);
+			this.levelNodeGetter   = new GroupLevelNodeGetter (this.parentNodeGetter, accessor, baseType);
 			this.treeObjectsGetter = new TreeObjectsNodeGetter (this.levelNodeGetter);
 		}
 
@@ -149,12 +149,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		#endregion
 
 
-		private readonly AbstractNodeGetter<GuidNode>	inputNodes;
-		private readonly GroupParentNodeGetter			parentNodeGetter;
-		private readonly GroupLevelNodeGetter			levelNodeGetter;
-		private readonly TreeObjectsNodeGetter			treeObjectsGetter;
+		private readonly INodeGetter<GuidNode>	inputNodes;
+		private readonly GroupParentNodeGetter	parentNodeGetter;
+		private readonly GroupLevelNodeGetter	levelNodeGetter;
+		private readonly TreeObjectsNodeGetter	treeObjectsGetter;
 
-		private Timestamp?								timestamp;
-		private SortingInstructions						sortingInstructions;
+		private Timestamp?						timestamp;
+		private SortingInstructions				sortingInstructions;
 	}
 }

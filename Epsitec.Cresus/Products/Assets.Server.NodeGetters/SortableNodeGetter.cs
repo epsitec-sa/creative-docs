@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public class SortableNodeGetter : AbstractNodeGetter<SortableNode>  // outputNodes
 	{
-		public SortableNodeGetter(AbstractNodeGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public SortableNodeGetter(INodeGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
@@ -55,11 +55,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly AbstractNodeGetter<GuidNode>	inputNodes;
-		private readonly DataAccessor					accessor;
-		private readonly BaseType						baseType;
+		private readonly INodeGetter<GuidNode> inputNodes;
+		private readonly DataAccessor			accessor;
+		private readonly BaseType				baseType;
 
-		private Timestamp?								timestamp;
-		private SortingInstructions						sortingInstructions;
+		private Timestamp?						timestamp;
+		private SortingInstructions				sortingInstructions;
 	}
 }

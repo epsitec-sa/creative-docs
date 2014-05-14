@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public class GroupParentNodeGetter : AbstractNodeGetter<ParentNode>  // outputNodes
 	{
-		public GroupParentNodeGetter(AbstractNodeGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public GroupParentNodeGetter(INodeGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
@@ -72,11 +72,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly AbstractNodeGetter<GuidNode>	inputNodes;
-		private readonly DataAccessor					accessor;
-		private readonly BaseType						baseType;
+		private readonly INodeGetter<GuidNode>	inputNodes;
+		private readonly DataAccessor			accessor;
+		private readonly BaseType				baseType;
 
-		private Timestamp?								timestamp;
-		private SortingInstructions						sortingInstructions;
+		private Timestamp?						timestamp;
+		private SortingInstructions				sortingInstructions;
 	}
 }

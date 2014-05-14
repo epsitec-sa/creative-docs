@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public class GroupLevelNodeGetter : AbstractNodeGetter<LevelNode>  // outputNodes
 	{
-		public GroupLevelNodeGetter(AbstractNodeGetter<ParentNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public GroupLevelNodeGetter(INodeGetter<ParentNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			if (this.rootGuid.IsEmpty)
 			{
-				root = this.inputNodes.Nodes.Where (x => x.Parent.IsEmpty).FirstOrDefault ();
+				root = this.inputNodes.GetNodes ().Where (x => x.Parent.IsEmpty).FirstOrDefault ();
 			}
 			else
 			{
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private void Insert(TreeNode tree)
 		{
 			//	Insertion récursive des noeuds dans l'arbre.
-			var childrens = this.Sort (this.inputNodes.Nodes.Where (x => x.Parent == tree.Node.Guid));
+			var childrens = this.Sort (this.inputNodes.GetNodes ().Where (x => x.Parent == tree.Node.Guid));
 
 			foreach (var children in childrens)
 			{
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly AbstractNodeGetter<ParentNode> inputNodes;
+		private readonly INodeGetter<ParentNode> inputNodes;
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
 		private readonly List<LevelNode>				levelNodes;

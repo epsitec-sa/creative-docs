@@ -73,6 +73,8 @@
     <Compile Include="GuidNode.cs" />
     <Compile Include="GuidRatio.cs" />
     <Compile Include="IGuid.cs" />
+    <Compile Include="INodeGetter.cs" />
+    <Compile Include="NodeGetterExtensions.cs" />
     <Compile Include="NodeType.cs" />
     <Compile Include="ObjectField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

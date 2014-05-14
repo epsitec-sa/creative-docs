@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var getter = accessor.GetNodeGetter (BaseType.Assets);
 
-				foreach (var node in getter.Nodes)
+				foreach (var node in getter.GetNodes ())
 				{
 					var obj = accessor.GetObject (BaseType.Assets, node.Guid);
 					var timestamp = AssetCalculator.GetPreviewTimestamp (obj);
@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var getter = accessor.GetNodeGetter (BaseType.Assets);
 
-					foreach (var node in getter.Nodes)
+					foreach (var node in getter.GetNodes ())
 					{
 						obj = accessor.GetObject (BaseType.Assets, node.Guid);
 						AssetCalculator.RemoveLockedEvent (obj);
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var getter = accessor.GetNodeGetter (BaseType.Assets);
 
-					foreach (var node in getter.Nodes)
+					foreach (var node in getter.GetNodes ())
 					{
 						obj = accessor.GetObject (BaseType.Assets, node.Guid);
 						AssetCalculator.CreateLockedEvent (accessor, obj, createDate);

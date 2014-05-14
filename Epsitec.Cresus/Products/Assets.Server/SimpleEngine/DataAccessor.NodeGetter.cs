@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public partial class DataAccessor
 	{
-		private class GuidNodeGetter : AbstractNodeGetter<GuidNode>
+		private class GuidNodeGetter : INodeGetter<GuidNode>
 		{
 			public GuidNodeGetter(DataMandat mandat, BaseType baseType)
 			{
@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				this.baseType = baseType;
 			}
 
-			public override int					Count
+			public int							Count
 			{
 				get
 				{
@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
-			public override GuidNode			this[int index]
+			public GuidNode						this[int index]
 			{
 				get
 				{

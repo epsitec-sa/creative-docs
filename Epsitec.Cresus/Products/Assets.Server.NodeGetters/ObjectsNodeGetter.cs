@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public class ObjectsNodeGetter : AbstractNodeGetter<CumulNode>, ITreeFunctions, IObjectsNodeGetter  // outputNodes
 	{
-		public ObjectsNodeGetter(DataAccessor accessor, AbstractNodeGetter<GuidNode> groupNodes, AbstractNodeGetter<GuidNode> objectNodes)
+		public ObjectsNodeGetter(DataAccessor accessor, INodeGetter<GuidNode> groupNodes, INodeGetter<GuidNode> objectNodes)
 		{
 			this.objectNodeGetter1 = new SortableNodeGetter (objectNodes, accessor, BaseType.Assets);
 			this.objectNodeGetter2 = new SorterNodeGetter (this.objectNodeGetter1);

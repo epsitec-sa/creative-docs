@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// <summary>
 	/// Accès en lecture à des données quelconques constituées de GuidNode/LevelNode/TreeNode.
 	/// </summary>
-	public abstract class AbstractNodeGetter<T>  // outputNodes
+	public abstract class AbstractNodeGetter<T> : INodeGetter<T>  // outputNodes
 		where T : struct
 	{
 		public IEnumerable<T> Nodes
