@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="webCoreAdmin">
+<head>
+    <meta charset="utf-8" />
+    <title>WebCore Admin Console</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js" ></script>   
+    <script src="/proxy/content/WebCoreAdmin.js"></script>
+</head>
+<body>
+    <h1>Web Core Admin</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <div ng-controller="CoreJobs">
+                <h1>Core Jobs <small>(...)</small></h1>
+                
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Titre</th>
+                            <th></th>
+                            <th><input type="button" value="Mise à jour" ng-click="getJobs()" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="job in jobs">
+                            <td>{{ $index }}</td>
+                            <td>{{ job.Title }}</td>
+                            <td><button type="button" class="btn btn-default" ng-click="cancel(job.Id)">Annuler</button></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div ng-controller="Downloads">
+                <h1>Downloads <small>(...)</small></h1>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Fichier</th>
+                            <th>Taille (KBytes)</th>
+                            <th><input type="button" value="Mise à jour" ng-click="getDownloads()" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="file in downloads">
+                            <td>{{ $index }}</td>
+                            <td>{{ file.Item1}}</td>
+                            <td>{{ file.Item2 }}</td>
+                            <td><button type="button" class="btn btn-default" ng-click="deleteDownload(file.Item1)">Supprimer</button></td>
+                        </tr>
+                    </tbody>
+                </table>             
+            </div>
+        </div>
+        <div class="col-md-4">
+            
+        </div>
+    </div>
+    
+</body>
+</html>

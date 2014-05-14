@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public JobsModule(CoreServer coreServer)
 			: base (coreServer, "/jobs")
 		{
+			Get["/list"] = p => Response.AsJson (this.GetJobs ());
+
 			Get["/cancel/{job}"] = (p =>
 			{
 				var job = this.GetJob (p.job);
@@ -34,8 +36,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var user = LoginModule.GetUserName (this);
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
-			entityBag.RemoveFromBag (user, task.Id, When.Now);
-			entityBag.AddToBag (user, task.Title, task.HtmlView, task.Id, When.Now);
+			entityBag.RemoveFromBag (task.Username, task.Id, When.Now);
+			entityBag.AddToBag (task.Username, task.Title, task.HtmlView, task.Id, When.Now);
 
 			return new Response ()
 			{

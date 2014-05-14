@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
+using System.Linq;
 using Nancy;
 
 using System.Collections.Generic;
@@ -72,6 +73,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		protected CoreJob GetJob(string jobId)
 		{
 			return this.CoreServer.Jobs[jobId];
+		}
+
+		protected IEnumerable<CoreJob> GetJobs()
+		{
+			return this.CoreServer.Jobs.Select (j => j.Value);
 		}
 
 		protected bool RemoveJob(string jobId)
