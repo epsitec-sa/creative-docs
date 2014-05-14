@@ -56,7 +56,6 @@
     <Compile Include="BusinessLogic\CategoriesLogic.cs" />
     <Compile Include="BusinessLogic\GroupsLogic.cs" />
     <Compile Include="BusinessLogic\LogicDescriptions.cs" />
-    <Compile Include="NodeGetters\AbstractNodeGetter.cs" />
     <Compile Include="BusinessLogic\AccountsLogic.cs" />
     <Compile Include="BusinessLogic\AmortizationDefinition.cs" />
     <Compile Include="BusinessLogic\AmortizationDetails.cs" />
