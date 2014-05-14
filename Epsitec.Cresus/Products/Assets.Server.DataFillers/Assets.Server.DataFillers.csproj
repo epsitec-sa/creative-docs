@@ -93,6 +93,10 @@
       <Project>{873e478a-d8a9-40af-abf9-96af6aeda126}</Project>
       <Name>Assets.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Assets.Server.NodeGetters\Assets.Server.NodeGetters.csproj">
+      <Project>{4d38b63f-e835-4436-8946-6af7c88f67e5}</Project>
+      <Name>Assets.Server.NodeGetters</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Assets.Server\Assets.Server.csproj">
       <Project>{3e4f5e64-20fc-49fb-98e3-e30f5ae81877}</Project>
       <Name>Assets.Server</Name>

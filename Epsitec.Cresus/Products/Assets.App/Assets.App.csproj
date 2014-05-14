@@ -453,6 +453,10 @@
       <Project>{2478a0bb-db2e-4272-b7d9-cff51a5a0cc9}</Project>
       <Name>Assets.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Assets.Server.BusinessLogic\Assets.Server.BusinessLogic.csproj">
+      <Project>{89ac127a-46d0-4337-83be-262e0133968c}</Project>
+      <Name>Assets.Server.BusinessLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Assets.Server.DataFillers\Assets.Server.DataFillers.csproj">
       <Project>{061c8eb2-f3f6-419c-84c1-a667ffbea60f}</Project>
       <Name>Assets.Server.DataFillers</Name>
@@ -461,6 +465,14 @@
       <Project>{873e478a-d8a9-40af-abf9-96af6aeda126}</Project>
       <Name>Assets.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Assets.Server.Engine\Assets.Server.Engine.csproj">
+      <Project>{d8611b9f-e48b-4fd8-aaba-9a83597d9a82}</Project>
+      <Name>Assets.Server.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Assets.Server.NodeGetters\Assets.Server.NodeGetters.csproj">
+      <Project>{4d38b63f-e835-4436-8946-6af7c88f67e5}</Project>
+      <Name>Assets.Server.NodeGetters</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Assets.Server\Assets.Server.csproj">
       <Project>{3e4f5e64-20fc-49fb-98e3-e30f5ae81877}</Project>
       <Name>Assets.Server</Name>
@@ -468,6 +480,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Assets.App\SourceCode\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
