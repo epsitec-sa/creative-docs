@@ -63,6 +63,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			int i = this.events.Where (x => x.Timestamp < e.Timestamp).Count ();
 			this.events.Insert (i, e);
+
+			this.CheckEvents ();
 		}
 
 		public void ReplaceEvent(int index, DataEvent e)
@@ -73,6 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public void RemoveEvent(DataEvent e)
 		{
 			this.events.Remove (e);
+			this.CheckEvents ();
 		}
 
 		public DataEvent GetEvent(int index)
@@ -120,6 +123,28 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			else
 			{
 				return null;
+			}
+		}
+
+		public void CheckEvents()
+		{
+			Timestamp? lastTimestamp = null;
+			int index = 0;
+
+			foreach (var e in this.events)
+			{
+				if (lastTimestamp.HasValue)
+				{
+					//?System.Diagnostics.Debug.Assert (lastTimestamp.Value < e.Timestamp);
+
+					if (lastTimestamp.Value >= e.Timestamp)
+					{
+						throw new System.InvalidOperationException (string.Format ("Event list corrupted, index={0} prev={1} current={2}", index, lastTimestamp.Value, e.Timestamp));
+					}
+				}
+
+				lastTimestamp = e.Timestamp;
+				index++;
 			}
 		}
 

@@ -77,7 +77,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public EntryProperties GetEntryProperties(AmortizedAmount amount, GetEntryPropertiesType type)
 		{
 			var asset = this.accessor.GetObject (BaseType.Assets, amount.AssetGuid);
+			System.Diagnostics.Debug.Assert (asset != null);
 			var assetEvent = asset.GetEvent (amount.EventGuid);
+			System.Diagnostics.Debug.Assert (assetEvent != null);
 			var entryAccouts = this.GetEntryAccounts (amount);
 
 			return new EntryProperties
