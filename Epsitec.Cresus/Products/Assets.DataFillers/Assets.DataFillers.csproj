@@ -46,7 +46,38 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="AbstractTreeTableCell.cs" />
+    <Compile Include="AbstractTreeTableFiller.cs" />
+    <Compile Include="AccountsTreeTableFiller.cs" />
+    <Compile Include="AssetsTreeTableFiller.cs" />
+    <Compile Include="CategoriesTreeTableFiller.cs" />
+    <Compile Include="CellState.cs" />
+    <Compile Include="EntriesTreeTableFiller.cs" />
+    <Compile Include="ErrorsTreeTableFiller.cs" />
+    <Compile Include="EventsAssetsTreeTableFiller.cs" />
+    <Compile Include="GroupsTreeTableFiller.cs" />
+    <Compile Include="HistoryTreeTableFiller.cs" />
+    <Compile Include="MCH2SummaryTreeTableFiller.cs" />
+    <Compile Include="PersonsTreeTableFiller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleAccountsTreeTableFiller.cs" />
+    <Compile Include="SingleCategoriesTreeTableFiller.cs" />
+    <Compile Include="SingleGroupsTreeTableFiller.cs" />
+    <Compile Include="SingleObjectsTreeTableFiller.cs" />
+    <Compile Include="SinglePersonsTreeTableFiller.cs" />
+    <Compile Include="TreeTableCellAmortizedAmount.cs" />
+    <Compile Include="TreeTableCellComputedAmount.cs" />
+    <Compile Include="TreeTableCellDate.cs" />
+    <Compile Include="TreeTableCellDecimal.cs" />
+    <Compile Include="TreeTableCellGlyph.cs" />
+    <Compile Include="TreeTableCellInt.cs" />
+    <Compile Include="TreeTableCellString.cs" />
+    <Compile Include="TreeTableCellTree.cs" />
+    <Compile Include="TreeTableColumnDescription.cs" />
+    <Compile Include="TreeTableColumnItem.cs" />
+    <Compile Include="TreeTableColumnType.cs" />
+    <Compile Include="TreeTableContentItem.cs" />
+    <Compile Include="UserFieldsTreeTableFiller.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Solution Items\Epsitec.Cresus.snk">

@@ -80,37 +80,6 @@
     <Compile Include="BusinessLogic\GroupsLogic.cs" />
     <Compile Include="BusinessLogic\LogicDescriptions.cs" />
     <Compile Include="BusinessLogic\TimelinesArrayLogic.cs" />
-    <Compile Include="DataFillers\AbstractTreeTableCell.cs" />
-    <Compile Include="DataFillers\AbstractTreeTableFiller.cs" />
-    <Compile Include="DataFillers\AccountsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\AssetsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\CategoriesTreeTableFiller.cs" />
-    <Compile Include="DataFillers\CellState.cs" />
-    <Compile Include="DataFillers\EntriesTreeTableFiller.cs" />
-    <Compile Include="DataFillers\ErrorsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\EventsAssetsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\GroupsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\HistoryTreeTableFiller.cs" />
-    <Compile Include="DataFillers\MCH2SummaryTreeTableFiller.cs" />
-    <Compile Include="DataFillers\PersonsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\SingleAccountsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\SingleCategoriesTreeTableFiller.cs" />
-    <Compile Include="DataFillers\SingleGroupsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\SingleObjectsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\SinglePersonsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\TreeTableCellAmortizedAmount.cs" />
-    <Compile Include="DataFillers\TreeTableCellComputedAmount.cs" />
-    <Compile Include="DataFillers\TreeTableCellDate.cs" />
-    <Compile Include="DataFillers\TreeTableCellDecimal.cs" />
-    <Compile Include="DataFillers\TreeTableCellGlyph.cs" />
-    <Compile Include="DataFillers\TreeTableCellInt.cs" />
-    <Compile Include="DataFillers\TreeTableCellString.cs" />
-    <Compile Include="DataFillers\TreeTableCellTree.cs" />
-    <Compile Include="DataFillers\TreeTableColumnDescription.cs" />
-    <Compile Include="DataFillers\TreeTableColumnItem.cs" />
-    <Compile Include="DataFillers\TreeTableColumnType.cs" />
-    <Compile Include="DataFillers\TreeTableContentItem.cs" />
-    <Compile Include="DataFillers\UserFieldsTreeTableFiller.cs" />
     <Compile Include="Helpers\TypeConverters.cs" />
     <Compile Include="NodeGetters\AbstractNodeGetter.cs" />
     <Compile Include="NodeGetters\BypassNodeGetter.cs" />
@@ -198,6 +167,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="DataFillers\" />
     <Folder Include="Resources\Assets.Server\SourceCode\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
