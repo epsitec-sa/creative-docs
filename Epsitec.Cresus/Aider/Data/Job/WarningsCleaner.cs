@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Data.Job
 				foreach (var type in cleanable)
 				{
 					WarningsCleaner.LogToConsole ("Cleaning {0}",type.ToString ());
-					DeleteWarningsBefore (businessContext, date, type);
+					WarningsCleaner.DeleteWarningsBefore (businessContext, date, type);
 					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 				}
 			}

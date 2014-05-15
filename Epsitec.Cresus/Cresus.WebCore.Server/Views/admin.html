@@ -10,24 +10,29 @@
     <script src="/proxy/content/WebCoreServices.js"></script>
     <script src="/proxy/content/modules/Downloads/module.js"></script>
     <script src="/proxy/content/modules/Jobs/module.js"></script>
+    <style>
+        body {
+            padding-top: 50px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Web Core Admin</h1>
-    <div class="row">
-        <div class="col-md-4">
-            <div ng-controller="CoreJobs">
-                <jobs-view></jobs-view>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">WebCore - Console d'administration</a>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div ng-controller="CoreDownloads">
-                <downloads-view></downloads-view>             
-            </div>
-        </div>
-        <div class="col-md-4">
-            
         </div>
     </div>
-    
+
+    <div class="container-fluid">
+        <h1 class="page-header">Dashboard</h1>
+        <div ng-controller="CoreJobs">
+            <jobs-view></jobs-view>
+        </div>
+        <div ng-controller="CoreDownloads">
+            <downloads-view></downloads-view>
+        </div>
+    </div>
 </body>
 </html>

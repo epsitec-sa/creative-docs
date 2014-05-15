@@ -1,4 +1,4 @@
-﻿<h1>Core Downloads <small>(...)</small></h1>
+﻿<h2 class="sub-header">Downloads</h2>
 <table class="table table-hover">
     <thead>
         <tr>
@@ -11,7 +11,7 @@
     <tbody>
         <tr ng-repeat="file in downloads">
             <td>{{ $index }}</td>
-            <td>{{ file.Item1}}</td>
+            <td>{{ file.Item1 }}</td>
             <td>{{ file.Item2 }}</td>
             <td><button type="button" class="btn btn-default" ng-click="deleteDownload(file.Item1)">Supprimer</button></td>
         </tr>

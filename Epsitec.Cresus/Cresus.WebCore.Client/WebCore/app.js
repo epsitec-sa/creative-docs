@@ -515,6 +515,18 @@ $.getScript('signalr/hubs', function() {
                   {
                       window.location = "/proxy/downloads/get/" + filename;
                   }
+                  else
+                  {                   
+                    toastr.options = null;
+                    toastr.options = {
+                        debug: false,
+                        positionClass: 'toast-top-right',
+                        fadeOut: 1000,
+                        timeOut: 5000,
+                        extendedTimeOut: 1000
+                    };
+                    toastr.warning("", "Le fichier n'existe plus");
+                  }
               }
           });
       },

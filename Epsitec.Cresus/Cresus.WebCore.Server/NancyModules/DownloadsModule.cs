@@ -49,13 +49,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var filePath = CoreContext.GetFileDepotPath ("downloads", parameters.filename);
 			if (!System.IO.File.Exists (filePath))
 			{
-				var user = LoginModule.GetUserName (this);
-				var notificationManager = NotificationManager.GetCurrentNotificationManager ();
-				notificationManager.WarnUser (user, new NotificationMessage ()
-				{
-					Title = "Le fichier n'existe plus",
-					Body = "Le fichier désiré n'est plus disponible en téléchargement."
-				}, When.Now);
 				return Response.AsJson (false);
 			}
 			else
