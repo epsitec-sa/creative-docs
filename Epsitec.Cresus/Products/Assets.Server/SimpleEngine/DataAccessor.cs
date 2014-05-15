@@ -164,13 +164,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			int p = 1;
 			while (j < obj.EventsCount)
 			{
-				var next = obj.GetEvent (j);  // événement suivant
+				var next = obj.GetEvent (j++);  // événement suivant
 				if (next.Timestamp.Date == date)
 				{
 					//	Pendant le processus de changement, il peut y avoir le même timestamp pour 2
 					//	événements. C'est normal et temporaire.
 					var t = new Timestamp (date, p++);
-					this.ChangeAssetEventTimestamp (obj, j++, next, t);
+					obj.ChangeEventTimestamp (next, t);
 				}
 				else
 				{
@@ -179,18 +179,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			var timestamp = new Timestamp (date, position);
-			this.ChangeAssetEventTimestamp (obj, i, e, timestamp);
+			obj.ChangeEventTimestamp (e, timestamp);
 			obj.CheckEvents ();
-		}
-
-		private void ChangeAssetEventTimestamp(DataObject obj, int index, DataEvent e, Timestamp timestamp)
-		{
-			//	La modification du timestamp nécessite de créer une copie de l'événement, dont
-			//	on ne changera que le timestamp.
-			var newEvent = new DataEvent (e.Guid, timestamp, e.Type);
-			newEvent.SetProperties (e);
-
-			obj.ReplaceEvent (index, newEvent);
 		}
 
 		public DataEvent CreateAssetEvent(DataObject obj, System.DateTime date, EventType type)

@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return Color.FromHexa ("fff096");  // jaune
+				return Color.FromHexa ("ffa200");  // orange
 			}
 		}
 

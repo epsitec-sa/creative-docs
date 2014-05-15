@@ -59,23 +59,28 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public void ChangeEventTimestamp(DataEvent e, Timestamp timestamp)
+		{
+			//	Change le timestamp d'un événement. Ici, rien n'empêche les bêtises, telles
+			//	que déplacer un événement d'entrée après celui de sortie.
+			//	La modification du timestamp nécessite de créer une copie de l'événement, dont
+			//	on ne changera que le timestamp.
+			var newEvent = new DataEvent (e.Guid, timestamp, e.Type);
+			newEvent.SetProperties (e);
+
+			this.RemoveEvent (e);
+			this.AddEvent (newEvent);
+		}
+
 		public void AddEvent(DataEvent e)
 		{
 			int i = this.events.Where (x => x.Timestamp < e.Timestamp).Count ();
 			this.events.Insert (i, e);
-
-			this.CheckEvents ();
-		}
-
-		public void ReplaceEvent(int index, DataEvent e)
-		{
-			this.events[index] = e;
 		}
 
 		public void RemoveEvent(DataEvent e)
 		{
 			this.events.Remove (e);
-			this.CheckEvents ();
 		}
 
 		public DataEvent GetEvent(int index)

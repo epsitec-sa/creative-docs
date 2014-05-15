@@ -104,12 +104,6 @@ namespace Epsitec.Cresus.Assets.Data
 					return null;
 				}
 			}
-			set
-			{
-				this.dict.Remove (this.list[index].Guid);
-				this.list[index] = value;
-				this.dict[value.Guid] = value;
-			}
 		}
 
 
