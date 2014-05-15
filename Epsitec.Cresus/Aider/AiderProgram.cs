@@ -161,6 +161,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-cleanwarnings"))				//	-cleanwarnings -beforedate:2013-06-27
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.CleanWarnings (args));
+					return;
+				}
+
 				if (args.Contains ("-fixparticipations"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixParticipations (args));
@@ -324,6 +330,15 @@ namespace Epsitec.Aider
 			var date = AiderProgram.GetDate (args, "-publicationdate:");
 
 			SubscriptionUploader.FtpUploadFile (outputFile, responseFile, date);
+		}
+
+		private static void CleanWarnings(string[] args)
+		{
+			var date = AiderProgram.GetDate (args, "-beforedate:");
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				WarningsCleaner.Before (coreData, date);
+			});			
 		}
 
 		private static void DownloadEchData(string[] args)
