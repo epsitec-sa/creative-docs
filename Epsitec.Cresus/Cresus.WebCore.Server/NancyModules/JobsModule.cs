@@ -28,16 +28,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var job = this.GetJob (p.job);
 				this.CancelJob (job);
-				return this.Execute (wa => this.UpdateTaskStatusInBag (wa, job));
+				return this.Execute (wa => this.RemoveJobFromBag (wa, job));
 			});
 		}
 
-		private Response UpdateTaskStatusInBag(WorkerApp app, CoreJob task)
+		private Response RemoveJobFromBag(WorkerApp app, CoreJob task)
 		{
-			var user = LoginModule.GetUserName (this);
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
 			entityBag.RemoveFromBag (task.Username, task.Id, When.Now);
-			entityBag.AddToBag (task.Username, task.Title, task.HtmlView, task.Id, When.Now);
 
 			return new Response ()
 			{

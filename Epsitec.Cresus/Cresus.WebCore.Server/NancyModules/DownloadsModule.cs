@@ -27,6 +27,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Get["/get/{filename}"] = p =>
 				this.Execute (wa => this.DownloadFile (wa, p));
 
+			Get["/test/{filename}"] = p =>
+				this.Execute (wa => this.TestDownload (wa, p));
+
 			Get["/delete/{filename}"] = p =>
 				this.Execute (wa => this.DeleteFile (wa, p));
 
@@ -40,6 +43,27 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var stream = System.IO.File.OpenRead (filePath);
 			return CoreResponse.CreateStreamResponse (stream, parameters.filename);
 		}
+
+		private Response TestDownload(WorkerApp app, dynamic parameters)
+		{
+			var filePath = CoreContext.GetFileDepotPath ("downloads", parameters.filename);
+			if (!System.IO.File.Exists (filePath))
+			{
+				var user = LoginModule.GetUserName (this);
+				var notificationManager = NotificationManager.GetCurrentNotificationManager ();
+				notificationManager.WarnUser (user, new NotificationMessage ()
+				{
+					Title = "Le fichier n'existe plus",
+					Body = "Le fichier désiré n'est plus disponible en téléchargement."
+				}, When.Now);
+				return Response.AsJson (false);
+			}
+			else
+			{
+				return Response.AsJson (true);
+			}
+		}
+
 		private Response DeleteFile(WorkerApp app, dynamic parameters)
 		{
 			var filePath = CoreContext.GetFileDepotPath ("downloads", parameters.filename);

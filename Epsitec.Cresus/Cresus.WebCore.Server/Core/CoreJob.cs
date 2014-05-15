@@ -83,9 +83,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public CoreJob(string taskId, string title)
+		public CoreJob(string username, string sessionId, string taskId, string title)
 		{
 			var now = System.DateTime.Now;
+			this.Username = username;
+			this.SessionId = sessionId;
 			this.title = title;
 			this.Status = CoreJobStatus.Ordered;
 			this.taskId = taskId;

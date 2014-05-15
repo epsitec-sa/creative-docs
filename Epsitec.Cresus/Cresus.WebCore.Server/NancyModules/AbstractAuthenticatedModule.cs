@@ -54,19 +54,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		protected void Enqueue(CoreJob task, System.Action<BusinessContext> action)
 		{
-			var userName  = LoginModule.GetUserName (this);
-			var sessionId = LoginModule.GetSessionId (this);
-
-			task.Username = userName;
-			task.SessionId = sessionId;
 			task.Enqueue ();
 
-			this.CoreServer.CoreWorkerQueue.Enqueue (task.Id, userName, sessionId, action);
+			this.CoreServer.CoreWorkerQueue.Enqueue (task.Id, task.Username, task.SessionId, action);
 		}
 
 		protected CoreJob CreateJob(string title)
 		{
-			var job = new CoreJob (this.CreateJobId (), title);
+			var userName  = LoginModule.GetUserName (this);
+			var sessionId = LoginModule.GetSessionId (this);
+			var job = new CoreJob (userName, sessionId, this.CreateJobId (), title);
 			this.CoreServer.Jobs.Add (job.Id, job);
 			return job;
 		}

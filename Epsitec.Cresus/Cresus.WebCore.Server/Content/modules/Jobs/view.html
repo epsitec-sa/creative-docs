@@ -12,7 +12,7 @@
         <tr ng-repeat="job in jobs">
             <td>{{ $index }}</td>
             <td>{{ job.Title }}</td>
-            <td><button type="button" class="btn btn-default" ng-click="cancel(job.Id)">Annuler</button></td>
+            <td><button type="button" class="btn btn-default" ng-click="cancelJob(job.Id)">Annuler</button></td>
             <td></td>
         </tr>
     </tbody>

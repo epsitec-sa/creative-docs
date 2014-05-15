@@ -9,7 +9,7 @@ mod.controller("CoreJobs", ['$scope', 'webCoreServices', function ($scope, webCo
     }
 
     $scope.cancelJob = function (id) {
-        webCoreServices.cancel(id).success(function (data, status, headers) {
+        webCoreServices.cancelJob(id).success(function (data, status, headers) {
             $scope.getJobs();
         });
     }

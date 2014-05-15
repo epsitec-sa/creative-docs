@@ -506,6 +506,19 @@ $.getScript('signalr/hubs', function() {
         alert(message);
       },
 
+      downloadFile: function (filename) {
+          var url = "/proxy/downloads/test/" + filename;
+          Ext.Ajax.request({
+              url: url,
+              success: function (data) {
+                  if(data.responseText == "true")
+                  {
+                      window.location = "/proxy/downloads/get/" + filename;
+                  }
+              }
+          });
+      },
+
       cancelJob: function (jobId) {
           var url = "/proxy/jobs/cancel/" + jobId;
           Ext.Ajax.request({

@@ -257,16 +257,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response NotifyUIForExportWaiting(WorkerApp workerApp, CoreJob task)
 		{
-			var user			= LoginModule.GetUserName (this);
-			var notification	= NotificationManager.GetCurrentNotificationManager ();
-			notification.Notify (user, new NotificationMessage ()
-			{
-				Title	=	task.Title,
-				Body	=	task.HtmlView
-			}, When.Now);
-
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
-			entityBag.AddToBag (user, task.Title, task.HtmlView, task.Id, When.Now);
+			entityBag.AddToBag (task.Username, task.Title, task.HtmlView, task.Id, When.Now);
 
 			return new Response ()
 			{
@@ -290,8 +282,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
 			}
 
-			
-			job.Metadata = "<a href='/proxy/downloads/get/"+ filename +"'>Télécharger le fichier</a>";
+
+			job.Metadata = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
 			job.Finish ();
 			this.UpdateTaskStatusInBag (job);
 		}
