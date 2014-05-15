@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.baseType = BaseType.Assets;
 
-			this.listController     = new AssetsToolbarTreeTableController (this.accessor, BaseType.Assets);
-			this.timelineController = new AssetsToolbarTimelineController (this.accessor, this.baseType);
-			this.eventsController   = new EventsToolbarTreeTableController (this.accessor, BaseType.Assets);
+			this.listController     = new AssetsToolbarTreeTableController (this.accessor, this.baseType);
+			this.timelineController = new AssetsToolbarTimelineController  (this.accessor, this.baseType);
+			this.eventsController   = new EventsToolbarTreeTableController (this.accessor, this.baseType);
 
 			this.timelinesArrayController = new TimelinesArrayController (this.accessor)
 			{
@@ -253,9 +253,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void UpdateUI()
 		{
-			if (!this.objectEditor.HasError && this.accessor.EditionAccessor.SaveObjectEdition ())
+			Timestamp? curTimestamp = this.accessor.EditionAccessor.EditedTimestamp;
+			Timestamp? newTimestamp;
+
+			if (!this.objectEditor.HasError && this.accessor.EditionAccessor.SaveObjectEdition (out newTimestamp))
 			{
 				this.DataChanged ();
+
+				if (curTimestamp != newTimestamp)  // événement déplacé dans le temps ?
+				{
+					this.selectedTimestamp = newTimestamp;  // sélectionne l'événement à sa nouvelle position
+				}
 			}
 
 			//	Met à jour la géométrie des différents contrôleurs.

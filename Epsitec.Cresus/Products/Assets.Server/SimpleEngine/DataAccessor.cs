@@ -113,9 +113,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return obj.Guid;
 		}
 
-		public void ChangeAssetEventTimestamp(DataObject obj, DataEvent e, System.DateTime date)
+		public Timestamp ChangeAssetEventTimestamp(DataObject obj, DataEvent e, System.DateTime date)
 		{
 			//	Déplace un événement à une autre date, mais sans jamais modifier l'ordre des événements.
+			//	Retourne le nouveau timestamp de l'événement.
 			//	Exemple:
 			//	01.01.2011.0
 			//	01.01.2012.0
@@ -181,6 +182,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var timestamp = new Timestamp (date, position);
 			obj.ChangeEventTimestamp (e, timestamp);
 			obj.CheckEvents ();
+
+			return timestamp;
 		}
 
 		public DataEvent CreateAssetEvent(DataObject obj, System.DateTime date, EventType type)

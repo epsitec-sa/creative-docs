@@ -79,6 +79,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			//	Marque la fin de l'édition de l'événement d'un objet.
 			//	Retourne true si les données ont été mises à jour.
+			Timestamp? newTimestamp;
+			return this.SaveObjectEdition (out newTimestamp);
+		}
+
+		public bool SaveObjectEdition(out Timestamp? newTimestamp)
+		{
+			//	Marque la fin de l'édition de l'événement d'un objet.
+			//	Si l'événement a été déplacé dans le temps, newTimestamp donne sa nouvelle position.
+			//	Retourne true si les données ont été mises à jour.
+			newTimestamp = null;
+
 			if (this.dirty)
 			{
 				var e = this.obj.GetEvent (this.timestamp.Value);
@@ -91,7 +102,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					var p = this.dataEvent.GetProperty (ObjectField.OneShotDateEvent) as DataDateProperty;
 					if (p != null && p.Value != e.Timestamp.Date)  // date changée ?
 					{
-						this.accessor.ChangeAssetEventTimestamp (obj, e, p.Value);
+						newTimestamp = this.accessor.ChangeAssetEventTimestamp (obj, e, p.Value);
 					}
 				}
 
