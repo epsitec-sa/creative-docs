@@ -1,0 +1,19 @@
+﻿<h1>Core Jobs <small>(...)</small></h1>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Titre</th>
+            <th></th>
+            <th><input type="button" value="Mise à jour" ng-click="getJobs()" /></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="job in jobs">
+            <td>{{ $index }}</td>
+            <td>{{ job.Title }}</td>
+            <td><button type="button" class="btn btn-default" ng-click="cancel(job.Id)">Annuler</button></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
