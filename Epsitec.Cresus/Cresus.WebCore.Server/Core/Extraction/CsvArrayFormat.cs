@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 				FieldSeparator = ';',
 				LineSeparator = '\n',
 				QuoteChar = '"',
-				Encoding = Encoding.UTF8,
+				Encoding = Encoding.GetEncoding (1252),		//	CSV must be in WINDOWS-1252 to make Office on Mac happy
 				ColumnNames = headers.ToArray ()
 			};
 
