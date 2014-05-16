@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 
 
-			job.Metadata = "<a href='/proxy/downloads/get/"+ filename +"'>Télécharger le fichier</a>";
+			job.Metadata = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
 			job.Finish ();
 			this.UpdateTaskStatusInBag (job);
 		}

@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{
 			get
 			{
-				var desc = this.Id;
+				var desc = "";
 
 				if ((this.Status == CoreJobStatus.Ordered) || (this.Status == CoreJobStatus.Waiting))
 				{
