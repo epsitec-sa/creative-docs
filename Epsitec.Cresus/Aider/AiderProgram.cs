@@ -161,9 +161,9 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-cleanwarnings"))				//	-cleanwarnings -beforedate:2014-01-01 -killpersons:true -createsubscriptions:true
+				if (args.Contains ("-clearwarnings"))				//	-clearwarnings -beforedate:2014-01-01 -killpersons:true -createsubscriptions:true
 				{
-					ConsoleCreator.RunWithConsole (() => AiderProgram.CleanWarnings (args));
+					ConsoleCreator.RunWithConsole (() => AiderProgram.ClearWarnings (args));
 					return;
 				}
 
@@ -332,14 +332,14 @@ namespace Epsitec.Aider
 			SubscriptionUploader.FtpUploadFile (outputFile, responseFile, date);
 		}
 
-		private static void CleanWarnings(string[] args)
+		private static void ClearWarnings(string[] args)
 		{
 			var date		= AiderProgram.GetDate (args, "-beforedate:");
 			var killer		= AiderProgram.GetBool (args, "-killpersons:", true ,false);
 			var subscriber	= AiderProgram.GetBool (args, "-createsubscriptions:", true, false);
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				WarningsCleaner.Before (coreData, date, killer, subscriber);
+				WarningCleaner.Before (coreData, date, killer, subscriber);
 			});			
 		}
 

@@ -130,6 +130,7 @@ namespace Epsitec.Aider.Entities
 			office.OfficeName = name;
 			office.ParishGroup = parishGroup;
 			office.ParishGroupPathCache = parishGroup.Path;
+			office.RefreshOfficeShortName ();
 
 			return office;
 		}
@@ -147,6 +148,24 @@ namespace Epsitec.Aider.Entities
 		partial void GetEmployeeJobs(ref IList<AiderEmployeeJobEntity> value)
 		{
 			value = this.GetVirtualCollection (ref this.employeeJobs, x => x.Office = this).AsReadOnlyCollection ();
+		}
+
+		public void RefreshOfficeShortName()
+		{
+			var name = this.OfficeName;
+			var text = name.ToLowerInvariant ();
+			
+			var parishPrefixes = new string[] { "paroisse d'", "paroisse de", "pla" };
+			var parishMatch    = parishPrefixes.FirstOrDefault (x => text.StartsWith (x));
+
+			if (parishMatch != null)
+			{
+				name = name.Substring (parishMatch.Length);
+				
+				this.OfficeType = Enumerations.OfficeType.Parish;
+			}
+
+			this.OfficeShortName = name.Trim ();
 		}
 
 

@@ -29,7 +29,13 @@ namespace Epsitec.Aider.Data.Groups
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				if (businessContext.GetAllEntities<AiderOfficeManagementEntity> ().Count () == 0)
+				var offices = businessContext.GetAllEntities<AiderOfficeManagementEntity> ().ToList ();
+
+				if (offices.Any ())
+				{
+					offices.ForEach (x => x.RefreshOfficeShortName ());
+				}
+				else
 				{
 					var parishGroupDef = AiderGroupEntity.FindGroups (businessContext, "R001.P001.").First ().GroupDef;
 
@@ -38,9 +44,9 @@ namespace Epsitec.Aider.Data.Groups
 					{
 						AiderOfficeManagementEntity.Create (businessContext, group.Name, group);
 					}
-
-					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 				}
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
 		}
 	}

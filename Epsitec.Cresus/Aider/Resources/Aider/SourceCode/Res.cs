@@ -250,6 +250,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType MailingParticipantType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 566));
 				//	designer:cap/LVATA
 				public static readonly Epsitec.Common.Types.EnumType Mutability = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 349));
+				//	designer:cap/LVASK
+				public static readonly Epsitec.Common.Types.EnumType OfficeType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 668));
 				//	designer:cap/LVAJ5
 				public static readonly Epsitec.Common.Types.EnumType PersonConfession = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 179));
 				//	designer:cap/LVAN2
@@ -1211,6 +1213,58 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 351));
+						}
+					}
+				}
+				
+				public static class OfficeType
+				{
+					//	designer:cap/LVA0L
+					public static global::Epsitec.Common.Types.Caption Canton
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 672));
+						}
+					}
+					//	designer:cap/LVA2L
+					public static global::Epsitec.Common.Types.Caption CantonalGroup
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 674));
+						}
+					}
+					//	designer:cap/LVATK
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 669));
+						}
+					}
+					//	designer:cap/LVAUK
+					public static global::Epsitec.Common.Types.Caption Parish
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 670));
+						}
+					}
+					//	designer:cap/LVAVK
+					public static global::Epsitec.Common.Types.Caption Region
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 671));
+						}
+					}
+					//	designer:cap/LVA1L
+					public static global::Epsitec.Common.Types.Caption RegionalGroup
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 673));
 						}
 					}
 				}
@@ -2517,6 +2571,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid OfficeName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 41);
 				//	designer:cap/LVOB13
 				public static readonly global::Epsitec.Common.Support.Druid OfficeSenders = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 43);
+				//	designer:cap/LVARK
+				public static readonly global::Epsitec.Common.Support.Druid OfficeShortName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 667);
+				//	designer:cap/LVA3L
+				public static readonly global::Epsitec.Common.Support.Druid OfficeType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 675);
 				//	designer:cap/LVO333
 				public static readonly global::Epsitec.Common.Support.Druid OfficeUsersLoginMessage = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 99);
 				//	designer:cap/LVO713

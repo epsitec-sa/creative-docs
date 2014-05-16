@@ -1372,18 +1372,26 @@ AiderOfficeSender = [LVOA13]
 
 
     <t eid="@AiderOfficeManagement" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeManagement:[LVO913]" title="Paroisse" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeManagement:[LVO913]" title="Nom" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeManagement:[LVARK]" title="Nom court" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeManagement:[LVA3L]" title="Type" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
     </t>
 
     <t eid="@AiderOfficeSender" n="default">
-    <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSender:[LVOI13].[LVO913]" title="Office" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSender:[LVOI13].[LVO913]" title="Office" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-        <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSender:[LVOK13]" title="Nom" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeSender:[LVOK13]" title="Nom" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>

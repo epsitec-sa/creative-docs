@@ -9137,6 +9137,50 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>OfficeShortName</c> field.
+		///	designer:fld/LVO613/LVARK
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVARK]")]
+		public string OfficeShortName
+		{
+			get
+			{
+				return this.GetField<string> ("[LVARK]");
+			}
+			set
+			{
+				string oldValue = this.OfficeShortName;
+				if (oldValue != value || !this.IsFieldDefined("[LVARK]"))
+				{
+					this.OnOfficeShortNameChanging (oldValue, value);
+					this.SetField<string> ("[LVARK]", oldValue, value);
+					this.OnOfficeShortNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>OfficeType</c> field.
+		///	designer:fld/LVO613/LVA3L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA3L]")]
+		public global::Epsitec.Aider.Enumerations.OfficeType OfficeType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.OfficeType> ("[LVA3L]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.OfficeType oldValue = this.OfficeType;
+				if (oldValue != value || !this.IsFieldDefined("[LVA3L]"))
+				{
+					this.OnOfficeTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.OfficeType> ("[LVA3L]", oldValue, value);
+					this.OnOfficeTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>ParishGroup</c> field.
 		///	designer:fld/LVO613/LVO713
 		///	</summary>
@@ -9305,6 +9349,10 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnOfficeNameChanging(string oldValue, string newValue);
 		partial void OnOfficeNameChanged(string oldValue, string newValue);
+		partial void OnOfficeShortNameChanging(string oldValue, string newValue);
+		partial void OnOfficeShortNameChanged(string oldValue, string newValue);
+		partial void OnOfficeTypeChanging(global::Epsitec.Aider.Enumerations.OfficeType oldValue, global::Epsitec.Aider.Enumerations.OfficeType newValue);
+		partial void OnOfficeTypeChanged(global::Epsitec.Aider.Enumerations.OfficeType oldValue, global::Epsitec.Aider.Enumerations.OfficeType newValue);
 		partial void OnParishGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);

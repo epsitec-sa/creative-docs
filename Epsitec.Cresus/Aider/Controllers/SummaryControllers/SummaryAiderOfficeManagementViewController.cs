@@ -38,19 +38,22 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 		private void CreateBricksGuestUser(BrickWall<AiderOfficeManagementEntity> wall)
 		{
-			wall.AddBrick (p => p.ParishGroup)
-					.Icon ("Data.AiderGroup.People")
-					.Title ("Membres de la paroisse")
-					.Text (p => p.GetParticipantsSummary ())
-					.Attribute (BrickMode.DefaultToSetSubView)
-					.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+			if (this.Entity.ParishGroup.IsNotNull ())
+			{
+				wall.AddBrick (p => p.ParishGroup)
+						.Icon ("Data.AiderGroup.People")
+						.Title ("Membres de la paroisse")
+						.Text ("Voir tous les paroissiens")
+						.Attribute (BrickMode.DefaultToSetSubView)
+						.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
 
-			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users))
-					.Icon ("Data.AiderGroup.People")
-					.Title ("Gestionnaires AIDER")
-					.Text (p => p.GetParticipantsSummary ())
-					.Attribute (BrickMode.DefaultToSetSubView)
-					.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+				wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users))
+						.Icon ("Data.AiderGroup.People")
+						.Title ("Gestionnaires AIDER")
+						.Text (p => p.GetParticipantsSummary ())
+						.Attribute (BrickMode.DefaultToSetSubView)
+						.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+			}
 		}
 
 		private void CreateBricksTrustedUser(BrickWall<AiderOfficeManagementEntity> wall)
@@ -61,37 +64,39 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (p => p.GetSummary ())
 					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 
-			wall.AddBrick (p => p.ParishGroup)
-					.Icon ("Data.AiderGroup.People")
-					.Title ("Membres de la paroisse")
-					.Text (p => p.GetParticipantsSummary ())
-					.Attribute (BrickMode.DefaultToSetSubView)
-					.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+			if (this.Entity.ParishGroup.IsNotNull ())
+			{
+				wall.AddBrick (p => p.ParishGroup)
+						.Icon ("Data.AiderGroup.People")
+						.Title ("Membres de la paroisse")
+							.Text ("Voir tous les paroissiens")
+						.Attribute (BrickMode.DefaultToSetSubView)
+						.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
 
-			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn))
-					.Icon ("Data.AiderGroup.People")
-					.Title ("Dérogations entrantes")
-					.Text (p => p.GetParticipantsSummary ())
-					.Attribute (BrickMode.DefaultToSetSubView)
-					.EnableActionButton<ActionAiderGroupViewController9GenerateOfficialReport> ()
-					.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
+				wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn))
+						.Icon ("Data.AiderGroup.People")
+						.Title ("Dérogations entrantes")
+						.Text (p => p.GetParticipantsSummary ())
+						.Attribute (BrickMode.DefaultToSetSubView)
+						.EnableActionButton<ActionAiderGroupViewController9GenerateOfficialReport> ()
+						.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
 
-			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut))
-					.Icon ("Data.AiderGroup.People")
-					.Title ("Dérogations sortantes")
-					.Text (p => p.GetParticipantsSummary ())
-					.Attribute (BrickMode.DefaultToSetSubView)
-					.EnableActionButton<ActionAiderGroupViewController9GenerateOfficialReport> ()
-					.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
+				wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut))
+						.Icon ("Data.AiderGroup.People")
+						.Title ("Dérogations sortantes")
+						.Text (p => p.GetParticipantsSummary ())
+						.Attribute (BrickMode.DefaultToSetSubView)
+						.EnableActionButton<ActionAiderGroupViewController9GenerateOfficialReport> ()
+						.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
 
 
-			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users))
-					.Icon ("Data.AiderGroup.People")
-					.Title ("Gestionnaires AIDER")
-					.Text (p => p.GetParticipantsSummary ())
-					.Attribute (BrickMode.DefaultToSetSubView)
-					.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
-
+				wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users))
+						.Icon ("Data.AiderGroup.People")
+						.Title ("Gestionnaires AIDER")
+						.Text (p => p.GetParticipantsSummary ())
+						.Attribute (BrickMode.DefaultToSetSubView)
+						.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+			}
 
 			wall.AddBrick ()
 				.Icon ("Base.AiderGoup.Parish")

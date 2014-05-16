@@ -19,7 +19,7 @@ using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Data.Job
 {
-	internal static class WarningsCleaner
+	internal static class WarningCleaner
 	{
 		public static void Before(CoreData coreData, Epsitec.Common.Types.Date date, bool canKillPersons, bool canCreateSubscriptions)
 		{
@@ -39,8 +39,8 @@ namespace Epsitec.Aider.Data.Job
 			{
 				foreach (var type in cleanable)
 				{
-					WarningsCleaner.LogToConsole ("Cleaning {0}",type.ToString ());
-					WarningsCleaner.DeleteWarningsBefore (businessContext, date, type);
+					WarningCleaner.LogToConsole ("Cleaning {0}",type.ToString ());
+					WarningCleaner.DeleteWarningsBefore (businessContext, date, type);
 					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 				}
 
@@ -68,7 +68,7 @@ namespace Epsitec.Aider.Data.Job
 			var warningsToDelete = dataContext.GetByRequest (request);
 
 			var total = warningsToDelete.Count ();
-			WarningsCleaner.LogToConsole ("{0} departure warnings to process", total);
+			WarningCleaner.LogToConsole ("{0} departure warnings to process", total);
 
 			var current = 1;
 			foreach (var warn in warningsToDelete)
@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Data.Job
 				{
 					//hide person
 					person.HidePerson (businessContext);
-					WarningsCleaner.ClearWarningAndRefreshCaches (businessContext, warn);
+					WarningCleaner.ClearWarningAndRefreshCaches (businessContext, warn);
 				}
 				else
 				{
@@ -88,12 +88,12 @@ namespace Epsitec.Aider.Data.Job
 						//kill person at with an uncertain warning start date
 						var deceaseDate = warn.StartDate.HasValue ? warn.StartDate.Value : date;
 						person.KillPerson (businessContext, deceaseDate, true);
-						WarningsCleaner.ClearWarningAndRefreshCaches (businessContext, warn);
+						WarningCleaner.ClearWarningAndRefreshCaches (businessContext, warn);
 					}				
 				}
 					
 				System.Console.SetCursorPosition (0, 2);
-				WarningsCleaner.LogToConsole ("{0}/{1}", current, total);
+				WarningCleaner.LogToConsole ("{0}/{1}", current, total);
 				current++;
 			}
 			System.Console.Clear ();
@@ -115,7 +115,7 @@ namespace Epsitec.Aider.Data.Job
 			var warningsToDelete = dataContext.GetByRequest (request);
 
 			var total = warningsToDelete.Count ();
-			WarningsCleaner.LogToConsole ("{0} arrivals warnings to process", total);
+			WarningCleaner.LogToConsole ("{0} arrivals warnings to process", total);
 
 			var current = 1;
 			foreach (var warn in warningsToDelete)
@@ -138,9 +138,9 @@ namespace Epsitec.Aider.Data.Job
 					}
 				}
 
-				WarningsCleaner.ClearWarningAndRefreshCaches (businessContext, warn);
+				WarningCleaner.ClearWarningAndRefreshCaches (businessContext, warn);
 				System.Console.SetCursorPosition (0, 2);
-				WarningsCleaner.LogToConsole ("{0}/{1}", current, total);
+				WarningCleaner.LogToConsole ("{0}/{1}", current, total);
 				current++;
 			}
 			System.Console.Clear ();
@@ -162,14 +162,14 @@ namespace Epsitec.Aider.Data.Job
 			var warningsToDelete = dataContext.GetByRequest (request);
 
 			var total = warningsToDelete.Count ();
-			WarningsCleaner.LogToConsole ("{0} warnings to delete", total);
+			WarningCleaner.LogToConsole ("{0} warnings to delete", total);
 
 			var current = 1;
 			foreach (var warn in warningsToDelete)
 			{
-				WarningsCleaner.ClearWarningAndRefreshCaches (businessContext, warn);
+				WarningCleaner.ClearWarningAndRefreshCaches (businessContext, warn);
 				System.Console.SetCursorPosition (0, 2);
-				WarningsCleaner.LogToConsole ("{0}/{1}", current, total);
+				WarningCleaner.LogToConsole ("{0}/{1}", current, total);
 				current++;
 			}
 			System.Console.Clear ();

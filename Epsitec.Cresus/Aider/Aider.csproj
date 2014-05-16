@@ -269,7 +269,7 @@
     <Compile Include="Data\Job\DerogationHotfix.cs" />
     <Compile Include="Data\Job\EChDataUpdater.cs" />
     <Compile Include="Data\Job\DuplicatedPersonAutoMerger.cs" />
-    <Compile Include="Data\Job\WarningsCleaner.cs" />
+    <Compile Include="Data\Job\WarningCleaner.cs" />
     <Compile Include="Data\Job\MatchResponse.cs" />
     <Compile Include="Data\Job\MatchResponseFix.cs" />
     <Compile Include="Data\Job\MatchResponseMove.cs" />
@@ -339,6 +339,7 @@
     <Compile Include="Enumerations\HouseholdRole.cs" />
     <Compile Include="Enumerations\MailingParticipantType.cs" />
     <Compile Include="Enumerations\FrenchArticle.cs" />
+    <Compile Include="Enumerations\OfficeType.cs" />
     <Compile Include="Enumerations\PersonVisibilityStatus.cs" />
     <Compile Include="Enumerations\SharingType.cs" />
     <Compile Include="Enumerations\SubscriptionFlag.cs" />
