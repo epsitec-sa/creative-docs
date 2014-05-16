@@ -20,7 +20,7 @@ mod.controller("CoreJobs", ['$scope', 'webCoreServices', function ($scope, webCo
 mod.directive("jobsView", function () {
     return {
         restrict: "E",
-        templateUrl: "/proxy/content/modules/Jobs/view.html"
+        templateUrl: "/content/modules/Jobs/view.html"
     };
 });
 

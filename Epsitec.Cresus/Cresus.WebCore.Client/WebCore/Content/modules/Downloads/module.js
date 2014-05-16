@@ -20,7 +20,7 @@ mod.controller("CoreDownloads", ['$scope', 'webCoreServices', function ($scope, 
 mod.directive("downloadsView", function () {
     return {
         restrict: "E",
-        templateUrl: "/proxy/content/modules/Downloads/view.html"
+        templateUrl: "/content/modules/Downloads/view.html"
     };
 });
 
