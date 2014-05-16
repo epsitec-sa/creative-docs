@@ -8,6 +8,7 @@ using Epsitec.Cresus.WebCore.Server.Core.Databases;
 using System.Globalization;
 using Epsitec.Cresus.Core.Library;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core
@@ -21,18 +22,18 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 	{
 		public CoreServer(int nbCoreWorkers, CultureInfo uiCulture)
 		{
-			var coreWorkerPool = new CoreWorkerPool (nbCoreWorkers, uiCulture);
+			var coreWorkerPool			= new CoreWorkerPool (nbCoreWorkers, uiCulture);
+			this.coreWorkerPool			= coreWorkerPool;
+			this.authenticationManager	= new AuthenticationManager (coreWorkerPool);
+			this.databaseManager		= new DatabaseManager ();
+			this.caches					= new Caches ();
+			this.coreWorkerQueue		= new Core.CoreWorkerQueue (uiCulture);
+			this.jobs					= new ConcurrentDictionary<string, CoreJob> ();
 
-			this.coreWorkerPool = coreWorkerPool;
-			this.authenticationManager = new AuthenticationManager (coreWorkerPool);
-			this.databaseManager = new DatabaseManager ();
-			this.caches = new Caches ();
-			this.coreWorkerQueue = new Core.CoreWorkerQueue (uiCulture);
-			this.jobs = new Dictionary<string, CoreJob> ();
 			Logger.LogToConsole ("Core server started");
 		}
 
-		public Dictionary<string, CoreJob> Jobs
+		public ConcurrentDictionary<string, CoreJob>	Jobs
 		{
 			get 
 			{
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public CoreWorkerQueue					CoreWorkerQueue
+		public CoreWorkerQueue							CoreWorkerQueue
 		{
 			get
 			{
@@ -48,7 +49,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 		
-		public CoreWorkerPool					CoreWorkerPool
+		public CoreWorkerPool							CoreWorkerPool
 		{
 			get
 			{
@@ -56,7 +57,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public AuthenticationManager			AuthenticationManager
+		public AuthenticationManager					AuthenticationManager
 		{
 			get
 			{
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public DatabaseManager					DatabaseManager
+		public DatabaseManager							DatabaseManager
 		{
 			get
 			{
@@ -72,7 +73,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public Caches							Caches
+		public Caches									Caches
 		{
 			get
 			{
@@ -90,12 +91,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 		#endregion
-		private	Dictionary<string, CoreJob>		jobs;
-		private readonly CoreWorkerPool			coreWorkerPool;
-		private readonly CoreWorkerQueue		coreWorkerQueue;
-		private readonly AuthenticationManager	authenticationManager;
-		private readonly DatabaseManager		databaseManager;
-		private readonly Caches					caches;
+		private	ConcurrentDictionary<string, CoreJob>		jobs;
+		private readonly CoreWorkerPool						coreWorkerPool;
+		private readonly CoreWorkerQueue					coreWorkerQueue;
+		private readonly AuthenticationManager				authenticationManager;
+		private readonly DatabaseManager					databaseManager;
+		private readonly Caches								caches;
 		
 	}
 }

@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var userName  = LoginModule.GetUserName (this);
 			var sessionId = LoginModule.GetSessionId (this);
 			var job = new CoreJob (userName, sessionId, this.CreateJobId (), title);
-			this.CoreServer.Jobs.Add (job.Id, job);
+			this.CoreServer.Jobs.TryAdd (job.Id, job);
 			return job;
 		}
 		protected CoreJob GetJob(string jobId)
@@ -79,7 +79,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		protected bool RemoveJob(string jobId)
 		{
-			return this.CoreServer.Jobs.Remove (jobId);
+			CoreJob removedJob;
+			return this.CoreServer.Jobs.TryRemove (jobId, out removedJob);
 		}
 
 		protected void CancelJob(CoreJob job)
