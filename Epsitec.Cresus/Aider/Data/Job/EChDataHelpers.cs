@@ -329,33 +329,41 @@ namespace Epsitec.Aider.Data.Job
 
 		public static void CreateOrUpdateAiderSubscription(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
-			var subscriptionExample = new AiderSubscriptionEntity ()
-			{
-				Household = household
-			};
+			var dataContext = businessContext.DataContext;
+			var hasSubscription = false;
 
-			var subscription = businessContext.DataContext.GetByExample<AiderSubscriptionEntity> (subscriptionExample).FirstOrDefault ();
-
-			if (subscription.IsNotNull ())
+			if (dataContext.IsPersistent (household))
 			{
-				subscription.RefreshCache ();
+				var subscriptionExample = new AiderSubscriptionEntity ()
+				{
+					Household = household
+				};
+
+				var subscription = businessContext.DataContext.GetByExample<AiderSubscriptionEntity> (subscriptionExample).FirstOrDefault ();
+
+				if (subscription.IsNotNull ())
+				{
+					subscription.RefreshCache ();
+					hasSubscription = true;
+				}
+
+				var refusalExample = new AiderSubscriptionRefusalEntity ()
+				{
+					Household = household
+				};
+
+				var refusal = businessContext.DataContext.GetByExample<AiderSubscriptionRefusalEntity> (refusalExample).FirstOrDefault ();
+
+				if (refusal.IsNotNull ())
+				{
+					refusal.RefreshCache ();
+					hasSubscription = true;
+				}
 			}
-			else
+
+			if (hasSubscription == false)
 			{
 				AiderSubscriptionEntity.Create (businessContext, household);
-			}
-
-
-			var refusalExample = new AiderSubscriptionRefusalEntity ()
-			{
-				Household = household
-			};
-
-			var refusal = businessContext.DataContext.GetByExample<AiderSubscriptionRefusalEntity> (refusalExample).FirstOrDefault ();
-
-			if (refusal.IsNotNull ())
-			{
-				refusal.RefreshCache ();
 			}
 		}
 
