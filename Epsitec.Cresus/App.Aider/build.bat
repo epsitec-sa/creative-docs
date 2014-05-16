@@ -77,7 +77,7 @@ if %cleanup%==1 (
 ..\.nuget\nuget.exe restore ..\Epsitec.Cresus.2013.sln
 
 @rem Build the solution.
-msbuild /verbosity:minimal /property:Configuration=Release;Platform="x86" /target:Build ..\Epsitec.Cresus.2013.sln
+msbuild /verbosity:minimal /property:Configuration=Release /target:Build ..\Epsitec.Cresus.2013.sln
 if %ERRORLEVEL% neq 0 exit /B 1
 
 @rem Copy the client, maintenance and server directories to the output folder.
