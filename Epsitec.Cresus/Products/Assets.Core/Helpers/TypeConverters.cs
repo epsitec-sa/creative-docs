@@ -6,7 +6,7 @@ using System.Linq;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.Data;
 
-namespace Epsitec.Cresus.Assets.Server.Helpers
+namespace Epsitec.Cresus.Assets.Core
 {
 	public static class TypeConverters
 	{

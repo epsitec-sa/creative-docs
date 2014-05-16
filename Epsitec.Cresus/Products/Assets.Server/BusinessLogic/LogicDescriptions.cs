@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Core;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -33,15 +34,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 							switch (Format.GetFieldFormat (field))
 							{
 								case DecimalFormat.Rate:
-									line = Helpers.TypeConverters.RateToString (d);
+									line = TypeConverters.RateToString (d);
 									break;
 
 								case DecimalFormat.Amount:
-									line = Helpers.TypeConverters.AmountToString (d);
+									line = TypeConverters.AmountToString (d);
 									break;
 
 								case DecimalFormat.Real:
-									line = Helpers.TypeConverters.DecimalToString (d);
+									line = TypeConverters.DecimalToString (d);
 									break;
 							}
 						}
@@ -51,7 +52,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var ca = ObjectProperties.GetObjectPropertyComputedAmount (obj, timestamp, field, false);
 						if (ca.HasValue)
 						{
-							line = Helpers.TypeConverters.AmountToString (ca.Value.FinalAmount);
+							line = TypeConverters.AmountToString (ca.Value.FinalAmount);
 						}
 						break;
 
@@ -59,7 +60,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var aa = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, field, false);
 						if (aa.HasValue)
 						{
-							line = Helpers.TypeConverters.AmountToString (aa.Value.FinalAmortizedAmount);
+							line = TypeConverters.AmountToString (aa.Value.FinalAmortizedAmount);
 						}
 						break;
 
@@ -67,7 +68,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var i = ObjectProperties.GetObjectPropertyInt (obj, timestamp, field, false);
 						if (i.HasValue)
 						{
-							line = Helpers.TypeConverters.IntToString (i);
+							line = TypeConverters.IntToString (i);
 						}
 						break;
 
@@ -75,7 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var da = ObjectProperties.GetObjectPropertyDate (obj, timestamp, field, false);
 						if (da.HasValue)
 						{
-							line = Helpers.TypeConverters.DateToString (da);
+							line = TypeConverters.DateToString (da);
 						}
 						break;
 
@@ -154,7 +155,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				var d = Helpers.TypeConverters.DateToString (timestamp.Date);
+				var d = TypeConverters.DateToString (timestamp.Date);
 
 				if (eventType == EventType.Unknown)
 				{
