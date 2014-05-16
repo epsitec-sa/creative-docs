@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.Server.Engine;
 
 namespace Epsitec.Cresus.Assets.App
 {

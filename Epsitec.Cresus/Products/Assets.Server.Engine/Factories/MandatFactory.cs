@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+namespace Epsitec.Cresus.Assets.Server.Engine
 {
 	public class MandatFactory
 	{

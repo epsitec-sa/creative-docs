@@ -3,12 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+namespace Epsitec.Cresus.Assets.Server.Engine
 {
 	/// <summary>
 	/// Classe de base pour fabriquer un nouveau mandat tout beau tout propre.

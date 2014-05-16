@@ -3,11 +3,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+namespace Epsitec.Cresus.Assets.Server.Engine
 {
 	/// <summary>
 	/// Cette classe sait fabriquer un nouveau mandat MCH2, tout beau tout propre.
