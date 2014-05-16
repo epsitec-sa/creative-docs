@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Server.NodeGetters
+namespace Epsitec.Cresus.Assets.Data
 {
 	public interface INodeGetter<T>
 			where T : struct

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
 
-namespace Epsitec.Cresus.Assets.Server.NodeGetters
+namespace Epsitec.Cresus.Assets.Data
 {
 	public struct GuidNode
 	{

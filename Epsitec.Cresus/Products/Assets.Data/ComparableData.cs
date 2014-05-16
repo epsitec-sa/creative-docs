@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Server.NodeGetters
+namespace Epsitec.Cresus.Assets.Data
 {
 	/// <summary>
 	/// Structure contenant une valeur quelconque pouvant être comparée en vue du tri.
