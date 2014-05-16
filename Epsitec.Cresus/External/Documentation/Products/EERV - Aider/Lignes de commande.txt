@@ -287,3 +287,11 @@ SVN Update > r23077
 -fixzombies
 
 (-exportsubscriptions -output:export-2014-05-xx.txt -error:error-2014-05-xx.txt -exclude-district-error:false)
+
+
+Lancé le 15.05.2014
+-------------------
+
+SVN Update > r23152
+
+-echupdate -newechfile:S:\eerv\eerv-2014-05-15.xml -oldechfile:S:\eerv\eerv-2014-05-08.xml -output:s:\eerv\ech-diff-2014-05-15.md
