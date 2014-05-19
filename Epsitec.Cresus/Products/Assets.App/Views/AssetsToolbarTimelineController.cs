@@ -353,15 +353,50 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnCopy()
 		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Copy);
+
 			if (this.obj != null && this.selectedTimestamp.HasValue)
 			{
 				var e = this.obj.GetEvent (this.selectedTimestamp.Value);
+				this.accessor.Clipboard.CopyEvent (this.accessor, e);
 
+				//?MessagePopup.ShowMessage (target, "L'événement a été copié dans le bloc-notes.");
+			}
+			else
+			{
+				MessagePopup.ShowError (target, "La copie est impossible, car aucun événement n'est sélectionné.");
 			}
 		}
 
 		private void OnPaste()
 		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+
+			if (this.obj != null && this.accessor.Clipboard.HasEvent)
+			{
+				EventPastePopup.Show (target, this.accessor, this.accessor.Clipboard.EventType, this.accessor.Clipboard.EventTimestamp.Value.Date, this.DoPaste);
+			}
+			else
+			{
+				MessagePopup.ShowError (target, "Aucun événement ne peut être collé, car le bloc-notes est vide.");
+			}
+		}
+
+		private void DoPaste(System.DateTime date)
+		{
+			var e = this.accessor.Clipboard.PasteEvent (this.accessor, this.obj, date);
+
+			if (e == null)
+			{
+				var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+				MessagePopup.ShowError (target, "Les données sont incompatibles.");
+				return;
+			}
+
+			this.UpdateData ();
+			this.SelectedTimestamp = e.Timestamp;
+			this.OnStartEditing (e.Type, e.Timestamp);
+			this.OnDeepUpdate ();
 		}
 
 

@@ -782,10 +782,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnTimelineCopy()
 		{
+			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.Copy);
+			MessagePopup.ShowTodo (target);
 		}
 
 		private void OnTimelinePaste()
 		{
+			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.Paste);
+			MessagePopup.ShowTodo (target);
 		}
 
 		private void OnAmortizationPreview()

@@ -108,8 +108,11 @@ namespace Epsitec.Cresus.Assets.App
 				Name      = "PopupParentFrame",
 			};
 
+			//	Crée le clipboard unique à l'application.
+			var cb = new DataClipboard ();
+
 			//	Crée et ouvre le mandat par défaut.
-			var accessor = new DataAccessor();
+			var accessor = new DataAccessor(cb);
 			var factory = MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ();
 			System.Diagnostics.Debug.Assert (factory != null);
 			factory.Create (accessor, "Exemple", new System.DateTime (2010, 1, 1), true);

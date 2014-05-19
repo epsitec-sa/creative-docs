@@ -89,6 +89,7 @@
     <Compile Include="SimpleEngine\BaseType.cs" />
     <Compile Include="SimpleEngine\AccountCategory.cs" />
     <Compile Include="SimpleEngine\AccountType.cs" />
+    <Compile Include="SimpleEngine\DataClipboard.cs" />
     <Compile Include="SimpleEngine\DummyAccounts.cs" />
     <Compile Include="SimpleEngine\GlobalSettings.cs" />
     <Compile Include="SimpleEngine\UserField.cs" />

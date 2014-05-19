@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
@@ -182,6 +183,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case ToolbarCommand.Deselect:
 						this.OnDeselect ();
+						break;
+
+					case ToolbarCommand.Copy:
+						this.OnCopy ();
+						break;
+
+					case ToolbarCommand.Paste:
+						this.OnPaste ();
+						break;
+
+					case ToolbarCommand.Export:
+						this.OnExport ();
 						break;
 				}
 			};
@@ -379,6 +392,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected virtual void OnDelete()
 		{
+		}
+
+		protected virtual void OnCopy()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Copy);
+			MessagePopup.ShowTodo (target);
+		}
+
+		protected virtual void OnPaste()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+			MessagePopup.ShowTodo (target);
+		}
+
+		protected virtual void OnExport()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Export);
+			MessagePopup.ShowTodo (target);
 		}
 
 

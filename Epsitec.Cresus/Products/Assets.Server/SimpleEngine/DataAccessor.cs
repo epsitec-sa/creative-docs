@@ -11,12 +11,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public partial class DataAccessor
 	{
-		public DataAccessor()
+		public DataAccessor(DataClipboard clipboard)
 		{
+			this.clipboard = clipboard;
 			this.editionAccessor = new EditionAccessor (this);
 		}
 
-		public DataMandat Mandat
+		public DataMandat						Mandat
 		{
 			get
 			{
@@ -34,7 +35,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public GlobalSettings GlobalSettings
+		public static int						Simulation;
+
+		public DataClipboard					Clipboard
+		{
+			get
+			{
+				return this.clipboard;
+			}
+		}
+
+		public GlobalSettings					GlobalSettings
 		{
 			get
 			{
@@ -42,10 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public static int Simulation;
-
-
-		public System.DateTime StartDate
+		public System.DateTime					StartDate
 		{
 			get
 			{
@@ -53,7 +61,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public EditionAccessor EditionAccessor
+		public EditionAccessor					EditionAccessor
 		{
 			get
 			{
@@ -454,7 +462,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		private readonly DataClipboard			clipboard;
 		private readonly EditionAccessor		editionAccessor;
+
 		private DataMandat						mandat;
 	}
 }

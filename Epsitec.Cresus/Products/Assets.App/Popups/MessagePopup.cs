@@ -65,6 +65,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			popup.Create (target);
 		}
+
+		public static void ShowTodo(Widget target)
+		{
+			var popup = new MessagePopup ("Erreur", "Cette fonction n'est pas encore implémentée...");
+
+			popup.Create (target);
+		}
+
+		public static void ShowError(Widget target, string message)
+		{
+			var popup = new MessagePopup ("Erreur", message);
+
+			popup.Create (target);
+		}
+
+		public static void ShowMessage(Widget target, string message)
+		{
+			var popup = new MessagePopup ("Message", message);
+
+			popup.Create (target);
+		}
 		#endregion
 
 
