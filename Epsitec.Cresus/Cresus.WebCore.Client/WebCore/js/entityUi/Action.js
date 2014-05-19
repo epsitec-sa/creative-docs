@@ -24,7 +24,7 @@ function() {
     form: null,
     callback: null,
     errorField: null,
-
+    isDisplayed: false,
     /* Constructor */
 
     constructor: function(options) {
@@ -147,17 +147,22 @@ function() {
       }
     },
 
-    showError: function(error) {
-      if (this.errorField === null)
-      {
-        this.errorField = Ext.create('Ext.form.field.Display', {
-          baseBodyCls: 'business-error',
-          fieldCls: null,
-          fieldLabel: Epsitec.Texts.getErrorTitle()
-        }),
-        this.form.insert(0, this.errorField);
-      }
-      this.errorField.setValue(error);
+    showError: function (error) {
+        if (this.isDisplayed) {
+            if (this.errorField === null) {
+                this.errorField = Ext.create('Ext.form.field.Display', {
+                    baseBodyCls: 'business-error',
+                    fieldCls: null,
+                    fieldLabel: Epsitec.Texts.getErrorTitle()
+                }),
+                this.form.insert(0, this.errorField);
+            }
+            this.errorField.setValue(error);
+        }
+        else {
+            Epsitec.ErrorHandler.showError(this.title, error);
+        }
+      
     },
 
     hideError: function() {
@@ -186,6 +191,7 @@ function() {
 
         json = Epsitec.Tools.processResponse(success, response);
         if (json === null) {
+          console.warn('ActionCall : json is empty');
           return;
         }
         
@@ -193,14 +199,15 @@ function() {
         options.callback = callback;
         dialog = Ext.create(actionType, options);
 
-        if(json.content.tiles[0].fields.length > 0)
+        if(json.content.tiles[0].fields.length > 0 || json.content.tiles[0].text != null)
         {
-          dialog.show(); 
+            dialog.show();
+            dialog.isDisplayed = true;
         }    
         else
         {
           dialog.onSaveClick();
-        }  
+        }
       }
     }
   });

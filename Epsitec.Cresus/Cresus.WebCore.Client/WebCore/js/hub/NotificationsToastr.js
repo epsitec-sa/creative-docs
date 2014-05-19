@@ -15,11 +15,14 @@ function NotificationsToastr() {
   this.hub.client.Toast = function(title, message) {
       toastr.options = null;
       toastr.options = {
-        'debug': false,
-        'positionClass': 'toast-bottom-full-width',
-        'fadeOut': 1000,
-        'timeOut': 5000,
-        'extendedTimeOut': 1000
+        closeButton: true,
+        closeHtml: "<button>&times;</button>",
+        containerId: "toast-container",
+        debug: false,
+        positionClass: "toast-top-right",
+        hideDuration: 1000,
+        timeOut: 5000,
+        extendedTimeOut: 1000
       };
       toastr.info(message, title);
   };
@@ -43,12 +46,15 @@ function NotificationsToastr() {
     toastr.options = null;
 
     toastr.options = {
-      debug: false,
-      positionClass: 'toast-bottom-full-width',
-      fadeIn: 300,
-      fadeOut: 1000,
-      timeOut: 0,
-      extendedTimeOut: 5000
+        closeButton: true,
+        closeHtml: "<button>&times;</button>",
+        containerId: "toast-container",
+        debug: false,
+        positionClass: "toast-top-right",
+        showDuration: 300,
+        hideDuration: 1000,
+        timeOut: 0,
+        extendedTimeOut: 5000
     };
 
     if (path.entityId != "-") {

@@ -74,9 +74,12 @@ function() {
       showWarning: function(title, message) {
         toastr.options = null;
         toastr.options = {
+          closeButton: true,
+          closeHtml: "<button>&times;</button>",
+          containerId: "toast-container",
           debug: false,
-          positionClass: 'toast-top-right',
-          fadeOut: 1000,
+          positionClass: "toast-top-right",
+          hideDuration: 1000,
           timeOut: 5000,
           extendedTimeOut: 1000
         };
@@ -92,9 +95,12 @@ function() {
         });*/
         toastr.options = null;
         toastr.options = {
+          closeButton: true,
+          closeHtml: "<button>&times;</button>",
+          containerId: "toast-container",
           debug: false,
-          positionClass: 'toast-top-right',
-          fadeOut: 1000,
+          positionClass: "toast-top-right",
+          hideDuration: 1000,
           timeOut: 5000,
           extendedTimeOut: 1000
         };

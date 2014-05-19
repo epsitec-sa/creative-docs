@@ -15,7 +15,7 @@ module.exports = function(grunt) {
           'WebCore/webcore.css': [
             'WebCore/css/style.css',
             'WebCore/css/icons.css',
-            'WebCore/css/toastr.min.css',
+            'WebCore/css/toastr.css',
             'WebCore/css/entitybag.css',
             'WebCore/css/chatjs.css',
             'WebCore/css/jquery.sidr.custom.css'
