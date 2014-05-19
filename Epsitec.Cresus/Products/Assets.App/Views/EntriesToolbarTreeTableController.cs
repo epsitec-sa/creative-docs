@@ -25,6 +25,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.NewTooltip      = "Nouvelle écriture comptable";
 			this.DeleteTooltip   = "Supprimer l'écriture comptable";
 			this.DeselectTooltip = "Désélectionner l'écriture comptable";
+			this.CopyTooltip     = "Copier l'écriture comptable";
+			this.PasteTooltip    = "Coller l'écriture comptable";
+			this.ExportTooltip   = "Exporter les écriture comptables";
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Entries);
 

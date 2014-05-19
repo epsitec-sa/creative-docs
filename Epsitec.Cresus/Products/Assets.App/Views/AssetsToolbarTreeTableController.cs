@@ -28,6 +28,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.NewTooltip      = "Nouvel objet d'immobilisation";
 			this.DeleteTooltip   = "Supprimer l'objet d'immobilisation";
 			this.DeselectTooltip = "Désélectionner l'objet d'immobilisation";
+			this.CopyTooltip     = "Copier l'objet d'immobilisation";
+			this.PasteTooltip    = "Coller l'objet d'immobilisation";
+			this.ExportTooltip   = "Exporter les objets d'immobilisations";
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Assets);
 

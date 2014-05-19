@@ -18,6 +18,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public string							DeleteTooltip;
 		public string							DeselectIcon;
 		public string							DeselectTooltip;
+		public string							CopyTooltip;
+		public string							PasteTooltip;
+		public string							ExportTooltip;
 
 		public bool								HasGraphic
 		{
@@ -142,9 +145,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.separator4       = this.CreateSeparator     (DockStyle.None);
 
-			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy,       "TreeTable.Copy",       "Copier");
-			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste,      "TreeTable.Paste",      "Coller");
-			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export,     "TreeTable.Export",     "Exporter");
+			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy,       "TreeTable.Copy",       this.CopyTooltip   ?? "Copier");
+			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste,      "TreeTable.Paste",      this.PasteTooltip  ?? "Coller");
+			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export,     "TreeTable.Export",     this.ExportTooltip ?? "Exporter");
 
 			this.buttonGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;

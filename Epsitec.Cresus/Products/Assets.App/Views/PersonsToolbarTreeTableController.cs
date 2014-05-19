@@ -26,6 +26,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.NewTooltip      = "Nouveau contact";
 			this.DeleteTooltip   = "Supprimer le contact";
 			this.DeselectTooltip = "Désélectionner le contact";
+			this.CopyTooltip     = "Copier le contact";
+			this.PasteTooltip    = "Coller le contact";
+			this.ExportTooltip   = "Exporter les contact";
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Persons);
 

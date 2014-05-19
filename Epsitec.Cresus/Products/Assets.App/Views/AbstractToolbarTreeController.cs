@@ -32,6 +32,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public string							DeleteTooltip;
 		public string							DeselectIcon;
 		public string							DeselectTooltip;
+		public string							CopyTooltip;
+		public string							PasteTooltip;
+		public string							ExportTooltip;
 
 		public bool								ShowGraphic
 		{
@@ -89,6 +92,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				DeleteTooltip   = this.DeleteTooltip,
 				DeselectIcon    = this.DeselectIcon,
 				DeselectTooltip = this.DeselectTooltip,
+				CopyTooltip     = this.CopyTooltip,
+				PasteTooltip    = this.PasteTooltip,
+				ExportTooltip   = this.ExportTooltip,
 			};
 
 			this.toolbar.CreateUI (parent);

@@ -89,6 +89,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case ToolbarCommand.Deselect:
 						this.OnDeselect ();
 						break;
+
+					case ToolbarCommand.Copy:
+						this.OnCopy ();
+						break;
+
+					case ToolbarCommand.Paste:
+						this.OnPaste ();
+						break;
 				}
 			};
 
@@ -341,6 +349,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnDeselect()
 		{
 			this.SelectedTimestamp = null;
+		}
+
+		private void OnCopy()
+		{
+			if (this.obj != null && this.selectedTimestamp.HasValue)
+			{
+				var e = this.obj.GetEvent (this.selectedTimestamp.Value);
+
+			}
+		}
+
+		private void OnPaste()
+		{
 		}
 
 
@@ -633,6 +654,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandEnable (ToolbarCommand.Delete, this.HasSelectedEvent);
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.Deselect, sel != -1);
+			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,     sel != -1);
+			this.toolbar.SetCommandEnable (ToolbarCommand.Paste,    true);
 		}
 
 		private void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)

@@ -63,9 +63,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonDelete      = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Delete ,     "Timeline.Delete",      "Supprimer l'événement");
 			this.buttonDeselect    = this.CreateCommandButton (DockStyle.Left,           ToolbarCommand.Deselect,    "Timeline.Deselect",    "Désélectionner l'événement");
 
-			this.buttonCompacted.Margins   = new Margins (5, 0, 0, 0);
-			this.buttonWeeksOfYear.Margins = new Margins (5, 0, 0, 0);
-			this.buttonFirst.Margins       = new Margins (10, 0, 0, 0);
+			this.CreateSeparator (DockStyle.Left);
+																				          
+			this.buttonCopy       = this.CreateCommandButton (DockStyle.Left,            ToolbarCommand.Copy,        "TreeTable.Copy",       "Copier l'événement");
+			this.buttonPaste      = this.CreateCommandButton (DockStyle.Left,            ToolbarCommand.Paste,       "TreeTable.Paste",      "Coller l'événement");
+
+			this.buttonCompacted  .Margins = new Margins ( 5, 0, 0, 0);
+			this.buttonWeeksOfYear.Margins = new Margins ( 5, 0, 0, 0);
+			this.buttonFirst      .Margins = new Margins (10, 0, 0, 0);
 
 			this.UpdateModeButtons ();
 
@@ -144,6 +149,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonNew;
 		private IconButton						buttonDelete;
 		private IconButton						buttonDeselect;
+		private IconButton						buttonCopy;
+		private IconButton						buttonPaste;
 
 		private TimelineMode					timelineMode;
 	}

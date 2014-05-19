@@ -28,6 +28,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.NewTooltip      = "Nouveau groupe";
 			this.DeleteTooltip   = "Supprimer le groupe";
 			this.DeselectTooltip = "Désélectionner le groupe";
+			this.CopyTooltip     = "Copier le groupe";
+			this.PasteTooltip    = "Coller le groupe";
+			this.ExportTooltip   = "Exporter les groupe";
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Groups);
 

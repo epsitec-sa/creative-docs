@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -51,7 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonNext  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Next,  "Timeline.Next",  "Avancer sur l'événement suivant");
 			this.buttonLast  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Last,  "Timeline.Last",  "Avancer sur le dernier événement");
 
-			this.separator1 = this.CreateSeparator     (DockStyle.Left);
+			this.separator1 = this.CreateSeparator (DockStyle.Left);
 			
 			this.buttonNew                    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.New,                    "TreeTable.New.Event",     "Nouvel événement");
 			this.buttonDelete                 = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Delete,                 "Timeline.Delete",         "Supprimer l'événement");
@@ -61,6 +60,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonAmortizationsUnpreview = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer les préamortissements");
 			this.buttonAmortizationsDelete    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements ordinaires");
 			this.buttonDeselect               = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Deselect,               "Timeline.Deselect",       "Désélectionner l'événement");
+
+			this.separator2 = this.CreateSeparator (DockStyle.Left);
+			
+			this.buttonCopy  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Copy,  "TreeTable.Copy",  "Copier l'événement");
+			this.buttonPaste = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Paste, "TreeTable.Paste", "Coller l'événement");
 
 			return this.toolbar;
 		}
@@ -104,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateModeButtons()
 		{
 			this.SetCommandActivate (ToolbarCommand.Narrow, (this.timelinesMode & TimelinesMode.Narrow) != 0);
-			this.SetCommandActivate (ToolbarCommand.Wide,   (this.timelinesMode & TimelinesMode.Wide )  != 0);
+			this.SetCommandActivate (ToolbarCommand.Wide,   (this.timelinesMode & TimelinesMode.Wide  ) != 0);
 		}
 
 
@@ -137,6 +141,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonAmortizationsToExtra;
 		private IconButton						buttonAmortizationsUnpreview;
 		private IconButton						buttonAmortizationsDelete;
+
+		private FrameBox						separator2;
+
+		private IconButton						buttonCopy;
+		private IconButton						buttonPaste;
 
 		private TimelinesMode					timelinesMode;
 	}

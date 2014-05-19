@@ -26,6 +26,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.NewTooltip      = "Nouvelle catégorie d'immobilisation";
 			this.DeleteTooltip   = "Supprimer la catégorie d'immobilisation";
 			this.DeselectTooltip = "Désélectionner la catégorie d'immobilisation";
+			this.CopyTooltip     = "Copier la catégorie d'immobilisation";
+			this.PasteTooltip    = "Coller la catégorie d'immobilisation";
+			this.ExportTooltip   = "Exporter les catégories d'immobilisations";
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Categories);
 

@@ -26,6 +26,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.NewTooltip      = "Nouveau compte";
 			this.DeleteTooltip   = "Supprimer le compte";
 			this.DeselectTooltip = "Désélectionner le compte";
+			this.CopyTooltip     = "Copier le compte";
+			this.PasteTooltip    = "Coller le compte";
+			this.ExportTooltip   = "Exporter les comptes";
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AccountsSettings);
 

@@ -197,6 +197,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				NewTooltip      = "Nouvel objet d'immobilisation",
 				DeleteTooltip   = "Supprimer l'objet d'immobilisation",
 				DeselectTooltip = "Désélectionner l'objet d'immobilisation",
+				CopyTooltip     = "Copier l'objet d'immobilisation",
+				PasteTooltip    = "Coller l'objet d'immobilisation",
+				ExportTooltip   = "Exporter les objets d'immobilisations",
 			};
 
 			this.objectsToolbar.CreateUI (leftBox);
@@ -409,6 +412,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case ToolbarCommand.Deselect:
 						this.OnTimelineDeselect ();
+						break;
+
+					case ToolbarCommand.Copy:
+						this.OnTimelineCopy ();
+						break;
+
+					case ToolbarCommand.Paste:
+						this.OnTimelinePaste ();
 						break;
 				}
 			};
@@ -767,6 +778,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnTimelineDeselect()
 		{
 			this.SetSelection (this.selectedRow, -1);
+		}
+
+		private void OnTimelineCopy()
+		{
+		}
+
+		private void OnTimelinePaste()
+		{
 		}
 
 		private void OnAmortizationPreview()
@@ -1319,6 +1338,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsDelete,    ToolbarCommandState.Hide);
 				this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Deselect,               this.selectedColumn != -1);
 			}
+
+			this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Copy,  this.HasSelectedEvent);
+			this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Paste, true);
 		}
 
 		private void UpdateObjectCommand(ToolbarCommand command, int currentSelection, int? newSelection)
