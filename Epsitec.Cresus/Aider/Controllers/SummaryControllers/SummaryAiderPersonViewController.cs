@@ -53,6 +53,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Title ("Emploi")
 					.Text (x => x.GetEmployeeSummary ())
 					.Attribute (BrickMode.DefaultToSummarySubView)
+					.WithSpecialController (typeof (SummaryAiderEmployeeViewController1WithPersonDetails)).IfFalse (this.HasUserPowerLevel (UserPowerLevel.Administrator))
 					;
 			}
 

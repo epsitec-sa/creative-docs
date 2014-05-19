@@ -90,7 +90,7 @@
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController4RemoveMemberFromHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController5ChangeHeadOfHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController6DeleteContact.cs" />
-    <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController02AddRefereey.cs" />
+    <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController02AddReferee.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController01AddJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController03RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController04RemoveReferee.cs" />
@@ -98,6 +98,7 @@
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController3Move.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController4CreateFunction.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController0CreateSubGroup.cs" />
+    <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController10CreateOfficeManagement.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController2MoveGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController3ImportGroupMembers.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController4ExportGroupMembers.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController0RecipientsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\AiderGroupDefSpecialField.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController1WithPersonDetails.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController2Documents.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_DerogationChange.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController1Settings.cs" />
@@ -243,6 +245,8 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2Warnings.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningSourceViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningViewController1Details.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderRefereeViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderRefereeViewController1WithPersonDetails.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderSubscriptionRefusalViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderContactViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderLegalPersonViewController.cs" />

@@ -1,10 +1,11 @@
 ﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
+using Epsitec.Common.Types;
+
 using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Controllers.EditionControllers;
 using Epsitec.Aider.Controllers.SetControllers;
-
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Override;
 
@@ -34,11 +35,38 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				this.CreateBricksGuestUser (wall);
 			}
+
+			wall.AddBrick (p => p.Employees)
+				.Attribute (BrickMode.HideAddButton)
+				.Attribute (BrickMode.HideRemoveButton)
+				.Attribute (BrickMode.AutoGroup)
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.WithSpecialController (typeof (SummaryAiderEmployeeViewController1WithPersonDetails))
+				.Template ()
+					.Title ("Employés et ministres")
+					.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
+				.End ();
+
+			if ((this.Entity.ParishGroup.IsNotNull ()) &&
+				(this.Entity.ParishGroup.IsRegion ()))
+			{
+				wall.AddBrick (p => p.RegionalReferees)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+				.WithSpecialController (typeof (SummaryAiderRefereeViewController1WithPersonDetails))
+					.Template ()
+						.Title ("Répondants régionaux")
+						.Text (x => TextFormatter.FormatText (x.Employee.Person.DisplayName, ":", x.ReferenceType))
+					.End ();
+			}
 		}
 
 		private void CreateBricksGuestUser(BrickWall<AiderOfficeManagementEntity> wall)
 		{
-			if (this.Entity.ParishGroup.IsNotNull ())
+			if ((this.Entity.ParishGroup.IsNotNull ()) &&
+				(this.Entity.ParishGroup.IsParish ()))
 			{
 				wall.AddBrick (p => p.ParishGroup)
 						.Icon ("Data.AiderGroup.People")
@@ -64,7 +92,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (p => p.GetSummary ())
 					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 
-			if (this.Entity.ParishGroup.IsNotNull ())
+			if ((this.Entity.ParishGroup.IsNotNull ()) &&
+				(this.Entity.ParishGroup.IsParish ()))
 			{
 				wall.AddBrick (p => p.ParishGroup)
 						.Icon ("Data.AiderGroup.People")
@@ -112,7 +141,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Text (p => p.GetDocumentsSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController2Documents));
-
 		}
 	}
 }

@@ -66,7 +66,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			referee.Employee = this.Entity;
 			referee.ReferenceType = referenceType;
-//			referee.Office = TODO
 			referee.Group = group;
 		}
 	}

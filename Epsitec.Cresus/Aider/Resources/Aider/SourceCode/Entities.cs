@@ -9325,6 +9325,20 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>RegionalReferees</c> field.
+		///	designer:fld/LVO613/LVA4L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA4L]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity> RegionalReferees
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity>);
+				this.GetRegionalReferees (ref value);
+				return value;
+			}
+		}
+		///	<summary>
 		///	The <c>OfficeUsersLoginMessage</c> field.
 		///	designer:fld/LVO613/LVO333
 		///	</summary>
@@ -9368,6 +9382,7 @@ namespace Epsitec.Aider.Entities
 		partial void GetDocuments(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> value);
 		partial void GetEmployees(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeEntity> value);
 		partial void GetEmployeeJobs(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> value);
+		partial void GetRegionalReferees(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

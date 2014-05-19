@@ -155,14 +155,21 @@ namespace Epsitec.Aider.Entities
 			var name = this.OfficeName;
 			var text = name.ToLowerInvariant ();
 			
-			var parishPrefixes = new string[] { "paroisse d'", "paroisse de", "pla" };
+			var parishPrefixes = new string[] { "paroisse d'", "paroisse de ", "paroisse du ", "paroisse des ", "pla " };
 			var parishMatch    = parishPrefixes.FirstOrDefault (x => text.StartsWith (x));
 
 			if (parishMatch != null)
 			{
 				name = name.Substring (parishMatch.Length);
-				
+
 				this.OfficeType = Enumerations.OfficeType.Parish;
+			}
+			else
+			{
+				if (this.ParishGroup.IsRegion ())
+				{
+					this.OfficeType = Enumerations.OfficeType.Region;
+				}
 			}
 
 			this.OfficeShortName = name.Trim ();
@@ -220,6 +227,11 @@ namespace Epsitec.Aider.Entities
 			value = this.GetDocuments ().AsReadOnlyCollection ();
 		}
 
+		partial void GetRegionalReferees(ref IList<AiderRefereeEntity> value)
+		{
+			value = this.GetVirtualCollection (ref this.regionalReferees, x => x.Group = this.ParishGroup).AsReadOnlyCollection ();
+		}
+
 		private IList<AiderOfficeReportEntity> GetDocuments()
 		{
 			if (this.documents == null)
@@ -246,5 +258,6 @@ namespace Epsitec.Aider.Entities
 		private IList<AiderOfficeSenderEntity>	senders;
 		private IList<AiderOfficeReportEntity>	documents;
 		private IList<AiderEmployeeJobEntity>	employeeJobs;
+		private IList<AiderRefereeEntity>		regionalReferees;
 	}
 }

@@ -6,6 +6,7 @@ using Epsitec.Aider.Controllers.SetControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
+using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Entities;
 
@@ -27,7 +28,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				wall.AddBrick ()
 					.EnableActionMenu<ActionAiderGroupViewController6AddToBag> ()
 					.EnableActionMenu<ActionAiderGroupViewController2MoveGroup> ().IfTrue (canGroupBeEditedByCurrentUser)
-					.EnableActionMenu<ActionAiderGroupViewController5MergeGroup> ().IfTrue (canGroupBeEditedByCurrentUser && group.Subgroups.Count == 0);
+					.EnableActionMenu<ActionAiderGroupViewController5MergeGroup> ().IfTrue (canGroupBeEditedByCurrentUser && group.Subgroups.Count == 0)
+					.EnableActionMenu<ActionAiderGroupViewController10CreateOfficeManagement> ().IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator));
 
 				wall.AddBrick (x => x.Subgroups)
 					.IfTrue (group.CanHaveSubgroups ())
