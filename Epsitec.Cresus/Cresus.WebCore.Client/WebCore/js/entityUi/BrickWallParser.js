@@ -24,7 +24,8 @@ function() {
     /* Static methods */
 
     statics: {
-      parseColumn: function(column) {
+      parseColumn: function (column) {
+        console.log(column.type);
         switch (column.type) {
           case 'entityaction':
             return this.parseEntityActionColumn(column);
@@ -92,7 +93,7 @@ function() {
         return tiles.map(this.parseTile, this);
       },
 
-      parseTile: function(tile) {
+      parseTile: function (tile) {
         switch (tile.type) {
           case 'summary':
             return this.parseSummaryTile(tile);

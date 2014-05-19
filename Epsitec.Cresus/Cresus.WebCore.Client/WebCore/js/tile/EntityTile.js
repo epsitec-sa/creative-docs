@@ -33,7 +33,14 @@ function() {
       if (this.isSelected() !== selected) {
         this.setSelected(selected);
         if (selected) {
-          this.addCls(this.selectedClass);
+            if (Ext.isDefined(this.subViewId)) { 
+                if(this.subViewId != null || this.subViewMode !== '0') {
+                  this.addCls(this.selectedClass);
+                }
+            }
+            else {
+              this.addCls(this.selectedClass);
+            }
         }
         else {
           this.removeCls(this.selectedClass);

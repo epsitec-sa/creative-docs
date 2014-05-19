@@ -57,7 +57,10 @@ function() {
       if (this.selected !== selected) {
         this.selected = selected;
         if (selected) {
-          this.addCls(this.selectedClass);
+            if (this.groupedSummaryTile.subViewId != null
+            ||  this.groupedSummaryTile.subViewMode !== '0') {
+                this.addCls(this.selectedClass);
+            }
         }
         else {
           this.removeCls(this.selectedClass);
