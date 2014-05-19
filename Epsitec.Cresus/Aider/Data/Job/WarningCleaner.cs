@@ -49,7 +49,46 @@ namespace Epsitec.Aider.Data.Job
 
 				//Process old EChProcessArrival
 				ProcessArrivalWarningsBefore (businessContext, date, canCreateSubscriptions);
+
+				//Process old missing subscription
+				ProcessMissingSubscriptionsWarningsBefore (businessContext, date);
 			}
+		}
+
+		private static void ProcessMissingSubscriptionsWarningsBefore(BusinessContext businessContext, Epsitec.Common.Types.Date date)
+		{
+			var dataContext = businessContext.DataContext;
+
+			var example = new AiderPersonWarningEntity ()
+			{
+				WarningType = WarningType.SubscriptionMissing
+			};
+
+			var request = Request.Create (example);
+
+			request.AddCondition (dataContext, example, x => x.StartDate < date);
+
+			var warningsToDelete = dataContext.GetByRequest (request);
+
+			var total = warningsToDelete.Count ();
+			WarningCleaner.LogToConsole ("{0} subscriptions missing warnings to process", total);
+
+			var current = 1;
+			foreach (var warn in warningsToDelete)
+			{
+				var contact = warn.Person.MainContact;
+				if(contact.IsNotNull ())
+				{
+					var household = contact.Household;
+					EChDataHelpers.CreateOrUpdateAiderSubscription (businessContext, household);
+				}
+
+				WarningCleaner.ClearWarningAndRefreshCaches (businessContext, warn);
+				System.Console.SetCursorPosition (0, 2);
+				WarningCleaner.LogToConsole ("{0}/{1}", current, total);
+				current++;
+			}
+			System.Console.Clear ();
 		}
 
 		private static void ProcessDepartureWarningsBefore(BusinessContext businessContext, Epsitec.Common.Types.Date date, bool canKillPersons)
