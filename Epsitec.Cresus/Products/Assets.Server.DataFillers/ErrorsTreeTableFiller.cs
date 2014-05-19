@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 	/// </summary>
 	public class ErrorsTreeTableFiller : AbstractTreeTableFiller<Error>
 	{
-		public ErrorsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<Error> nodeGetter)
+		public ErrorsTreeTableFiller(DataAccessor accessor, INodeGetter<Error> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}

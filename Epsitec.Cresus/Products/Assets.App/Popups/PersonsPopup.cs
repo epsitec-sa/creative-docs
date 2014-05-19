@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			secondary.SetParams (null, SortingInstructions.Default);
 			this.nodeGetter.SetParams (SortingInstructions.Default);
 
-			this.visibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
+			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == selectedGuid);
 
 			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.nodeGetter);
 		}

@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class MCH2SummaryTreeTableFiller : AbstractTreeTableFiller<CumulNode>
 	{
-		public MCH2SummaryTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<CumulNode> nodeGetter)
+		public MCH2SummaryTreeTableFiller(DataAccessor accessor, INodeGetter<CumulNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}

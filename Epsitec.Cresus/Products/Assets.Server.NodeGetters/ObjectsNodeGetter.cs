@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///     V
 	/// 
 	/// </summary>
-	public class ObjectsNodeGetter : AbstractNodeGetter<CumulNode>, ITreeFunctions, IObjectsNodeGetter  // outputNodes
+	public class ObjectsNodeGetter : INodeGetter<CumulNode>, ITreeFunctions, IObjectsNodeGetter  // outputNodes
 	{
 		public ObjectsNodeGetter(DataAccessor accessor, INodeGetter<GuidNode> groupNodes, INodeGetter<GuidNode> objectNodes)
 		{
@@ -48,9 +48,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.groupNodeGetter1 = new GroupParentNodeGetter (groupNodes, accessor, BaseType.Groups);
 			this.groupNodeGetter2 = new GroupLevelNodeGetter (this.groupNodeGetter1, accessor, BaseType.Groups);
 
-			this.mergeNodeGetter  = new MergeNodeGetter (accessor, this.groupNodeGetter2, this.objectNodeGetter2);
+			this.mergeNodeGetter   = new MergeNodeGetter (accessor, this.groupNodeGetter2, this.objectNodeGetter2);
 			this.treeObjectsGetter = new TreeObjectsNodeGetter (this.mergeNodeGetter);
-			this.cumulNodeGetter  = new CumulNodeGetter (accessor, this.treeObjectsGetter);
+			this.cumulNodeGetter   = new CumulNodeGetter (accessor, this.treeObjectsGetter);
 
 			this.sortingInstructions = SortingInstructions.Empty;
 		}
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override CumulNode this[int index]
+		public CumulNode this[int index]
 		{
 			get
 			{

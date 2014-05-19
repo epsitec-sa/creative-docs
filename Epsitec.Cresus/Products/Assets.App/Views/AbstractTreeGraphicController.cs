@@ -8,7 +8,6 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Core.Helpers;
@@ -45,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.scrollable.Viewport.IsAutoFitting = true;
 		}
 
-		public virtual void UpdateController(AbstractNodeGetter<T> nodeGetter, Guid selectedGuid, bool crop = true)
+		public virtual void UpdateController(INodeGetter<T> nodeGetter, Guid selectedGuid, bool crop = true)
 		{
 		}
 

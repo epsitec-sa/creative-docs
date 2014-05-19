@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void UpdateController(AbstractNodeGetter<TreeNode> nodeGetter, Guid selectedGuid, bool crop = true)
+		public override void UpdateController(INodeGetter<TreeNode> nodeGetter, Guid selectedGuid, bool crop = true)
 		{
 			if (this.treeGraphicViewState == null || this.scrollable == null)
 			{
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var ng = nodeGetter as GroupTreeNodeGetter;
 			int deep = this.GetDeep (ng);
 
-			foreach (var node in ng.Nodes)
+			foreach (var node in ng.GetNodes ())
 			{
 				var level = node.Level;
 				var parent = parents[level];
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private int GetDeep(GroupTreeNodeGetter nodeGetter)
 		{
-			return nodeGetter.Nodes.Max (x => x.Level) + 1;
+			return nodeGetter.GetNodes ().Max (x => x.Level) + 1;
 		}
 	}
 }

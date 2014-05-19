@@ -14,9 +14,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// est visible, en compactant/étendant des noeuds.
 	/// LevelNode -> TreeNode
 	/// </summary>
-	public class TreeObjectsNodeGetter : AbstractNodeGetter<TreeNode>, ITreeFunctions  // outputNodes
+	public class TreeObjectsNodeGetter : INodeGetter<TreeNode>, ITreeFunctions  // outputNodes
 	{
-		public TreeObjectsNodeGetter(AbstractNodeGetter<LevelNode> inputNodes)
+		public TreeObjectsNodeGetter(INodeGetter<LevelNode> inputNodes)
 		{
 			this.inputNodes = inputNodes;
 
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override TreeNode this[int index]
+		public TreeNode this[int index]
 		{
 			get
 			{
@@ -321,10 +321,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly AbstractNodeGetter<LevelNode>	inputNodes;
-		private readonly List<TreeNode>					nodes;
-		private readonly List<int>						nodeIndexes;
+		private readonly INodeGetter<LevelNode>	inputNodes;
+		private readonly List<TreeNode>			nodes;
+		private readonly List<int>				nodeIndexes;
 
-		public bool										inputIsMerge;
+		public bool								inputIsMerge;
 	}
 }

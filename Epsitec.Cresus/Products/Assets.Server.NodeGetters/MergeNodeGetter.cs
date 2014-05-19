@@ -29,9 +29,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///    >  Object
 	/// 
 	/// </summary>
-	public class MergeNodeGetter : AbstractNodeGetter<LevelNode>  // outputNodes
+	public class MergeNodeGetter : INodeGetter<LevelNode>  // outputNodes
 	{
-		public MergeNodeGetter(DataAccessor accessor, AbstractNodeGetter<LevelNode> groupNodes, AbstractNodeGetter<SortableNode> objectNodes)
+		public MergeNodeGetter(DataAccessor accessor, INodeGetter<LevelNode> groupNodes, INodeGetter<SortableNode> objectNodes)
 		{
 			this.accessor    = accessor;
 			this.groupNodes  = groupNodes;
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override LevelNode this[int index]
+		public LevelNode this[int index]
 		{
 			get
 			{
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private void AddObjects()
 		{
-			foreach (var objectNode in this.objectNodes.Nodes)
+			foreach (var objectNode in this.objectNodes.GetNodes ())
 			{
 				this.outputNodes.Add (new LevelNode (objectNode.Guid, BaseType.Assets, 0, null));
 			}
@@ -95,12 +95,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private void MergeObjects()
 		{
-			foreach (var inputNode in this.groupNodes.Nodes)
+			foreach (var inputNode in this.groupNodes.GetNodes ())
 			{
 				var node = new LevelNode (inputNode.Guid, BaseType.Groups, inputNode.Level, null);
 				this.outputNodes.Add (node);
 
-				foreach (var objectNode in this.objectNodes.Nodes)
+				foreach (var objectNode in this.objectNodes.GetNodes ())
 				{
 					var obj = this.accessor.GetObject (BaseType.Assets, objectNode.Guid);
 
@@ -125,11 +125,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly DataAccessor						accessor;
-		private readonly AbstractNodeGetter<LevelNode>		groupNodes;
-		private readonly AbstractNodeGetter<SortableNode>	objectNodes;
-		private readonly List<LevelNode>					outputNodes;
+		private readonly DataAccessor				accessor;
+		private readonly INodeGetter<LevelNode>		groupNodes;
+		private readonly INodeGetter<SortableNode>	objectNodes;
+		private readonly List<LevelNode>			outputNodes;
 
-		private Timestamp?									timestamp;
+		private Timestamp?							timestamp;
 	}
 }

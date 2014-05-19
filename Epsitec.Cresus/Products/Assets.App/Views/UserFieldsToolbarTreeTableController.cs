@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				this.VisibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == value);
+				this.VisibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == value);
 			}
 		}
 

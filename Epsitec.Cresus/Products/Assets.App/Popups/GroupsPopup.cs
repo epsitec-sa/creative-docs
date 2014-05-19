@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);
 			this.nodeGetter.SetParams (null, this.SortingInstructions);
 
-			this.visibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
+			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == selectedGuid);
 
 			if (this.baseType == BaseType.Groups)
 			{

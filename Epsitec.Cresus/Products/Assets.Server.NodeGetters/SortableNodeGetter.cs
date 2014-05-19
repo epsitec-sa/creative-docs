@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// triable (ComparableData).
 	/// GuidNode -> SortableNode
 	/// </summary>
-	public class SortableNodeGetter : AbstractNodeGetter<SortableNode>  // outputNodes
+	public class SortableNodeGetter : INodeGetter<SortableNode>  // outputNodes
 	{
 		public SortableNodeGetter(INodeGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override SortableNode this[int index]
+		public SortableNode this[int index]
 		{
 			get
 			{

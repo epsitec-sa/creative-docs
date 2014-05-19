@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void UpdateController(AbstractNodeGetter<CumulNode> nodeGetter, Guid selectedGuid, bool crop = true)
+		public override void UpdateController(INodeGetter<CumulNode> nodeGetter, Guid selectedGuid, bool crop = true)
 		{
 			if (this.treeGraphicViewState == null || this.scrollable == null)
 			{
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			int deep = this.GetDeep (ng);
 			this.InitializeMinMax (ng);
 
-			foreach (var node in ng.Nodes)
+			foreach (var node in ng.GetNodes ())
 			{
 				var level = node.Level;
 				var parent = parents[level];
@@ -88,9 +88,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private int GetDeep(ObjectsNodeGetter nodeGetter)
 		{
-			if (nodeGetter.Nodes.Any ())
+			if (nodeGetter.GetNodes ().Any ())
 			{
-				return nodeGetter.Nodes.Max (x => x.Level) + 1;
+				return nodeGetter.GetNodes ().Max (x => x.Level) + 1;
 			}
 			else
 			{
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var assetFields = this.GetFieds ();
 			var groupFields = this.GroupFields.ToArray ();
 
-			foreach (var node in nodeGetter.Nodes)
+			foreach (var node in nodeGetter.GetNodes ())
 			{
 				ObjectField[] fields;
 				if (node.BaseType == BaseType.Groups)

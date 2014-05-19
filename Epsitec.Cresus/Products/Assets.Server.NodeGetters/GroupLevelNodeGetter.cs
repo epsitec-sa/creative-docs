@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// ordonnées avec une indication du level.
 	/// ParentNode -> LevelNode
 	/// </summary>
-	public class GroupLevelNodeGetter : AbstractNodeGetter<LevelNode>  // outputNodes
+	public class GroupLevelNodeGetter : INodeGetter<LevelNode>  // outputNodes
 	{
 		public GroupLevelNodeGetter(INodeGetter<ParentNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override LevelNode this[int index]
+		public LevelNode this[int index]
 		{
 			get
 			{

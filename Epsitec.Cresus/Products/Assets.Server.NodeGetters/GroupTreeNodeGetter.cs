@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///     V
 	/// 
 	/// </summary>
-	public class GroupTreeNodeGetter : AbstractNodeGetter<TreeNode>, ITreeFunctions  // outputNodes
+	public class GroupTreeNodeGetter : INodeGetter<TreeNode>, ITreeFunctions  // outputNodes
 	{
 		public GroupTreeNodeGetter(DataAccessor accessor, BaseType baseType, INodeGetter<GuidNode> inputNodes)
 		{
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override TreeNode this[int index]
+		public TreeNode this[int index]
 		{
 			get
 			{

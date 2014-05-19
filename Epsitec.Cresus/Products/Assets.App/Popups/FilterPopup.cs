@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
 			this.nodeGetter.SetParams (null, GroupsLogic.DefaultSorting);
 
-			this.visibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == selectedGuid);
+			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == selectedGuid);
 			this.hasFilter = (this.visibleSelectedRow != -1);
 
 			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter);

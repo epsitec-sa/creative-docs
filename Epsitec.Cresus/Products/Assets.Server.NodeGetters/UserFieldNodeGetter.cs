@@ -8,7 +8,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
-	public class UserFieldNodeGetter : AbstractNodeGetter<GuidNode>  // outputNodes
+	public class UserFieldNodeGetter : INodeGetter<GuidNode>  // outputNodes
 	{
 		public UserFieldNodeGetter(DataAccessor accessor, BaseType baseType)
 		{
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override GuidNode this[int index]
+		public GuidNode this[int index]
 		{
 			get
 			{

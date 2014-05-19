@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// et des valeurs pour le tri (ComparableData).
 	/// GuidNode -> ParentNode
 	/// </summary>
-	public class GroupParentNodeGetter : AbstractNodeGetter<ParentNode>  // outputNodes
+	public class GroupParentNodeGetter : INodeGetter<ParentNode>  // outputNodes
 	{
 		public GroupParentNodeGetter(INodeGetter<GuidNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override ParentNode this[int index]
+		public ParentNode this[int index]
 		{
 			get
 			{

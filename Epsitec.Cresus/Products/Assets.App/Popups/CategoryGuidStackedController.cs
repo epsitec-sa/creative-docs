@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	visible, vers le haut.
 			set
 			{
-				this.visibleSelectedRow = this.nodeGetter.Nodes.Select (x => x.Guid).ToList ().IndexOf (value);
+				this.visibleSelectedRow = this.nodeGetter.GetNodes ().Select (x => x.Guid).ToList ().IndexOf (value);
 				this.UpdateController ();
 			}
 		}

@@ -44,7 +44,6 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="AbstractNodeGetter.cs" />
     <Compile Include="BypassNodeGetter.cs" />
     <Compile Include="CumulNode.cs" />
     <Compile Include="CumulNodeGetter.cs" />

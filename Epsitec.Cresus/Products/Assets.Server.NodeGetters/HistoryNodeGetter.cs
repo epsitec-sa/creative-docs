@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// plus de celui placé à ForcedTimestamp.
 	/// événements d'un objet -> GuidNode
 	/// </summary>
-	public class HistoryNodeGetter : AbstractNodeGetter<GuidNode>  // outputNodes
+	public class HistoryNodeGetter : INodeGetter<GuidNode>  // outputNodes
 	{
 		public HistoryNodeGetter()
 		{
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override GuidNode this[int index]
+		public GuidNode this[int index]
 		{
 			get
 			{

@@ -534,7 +534,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected FrameBox						controllerFrame;
 
-		protected AbstractNodeGetter<T>			nodeGetter;
+		protected INodeGetter<T>				nodeGetter;
 		protected TopTitle						topTitle;
 		protected TreeTableToolbar				toolbar;
 		protected SortingInstructions			sortingInstructions;

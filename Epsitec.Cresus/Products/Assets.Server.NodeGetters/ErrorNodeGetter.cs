@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
@@ -11,7 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// Donne un accès en lecture à une liste d'erreurs ou de messages,
 	/// sans tri ni filtre.
 	/// </summary>
-	public class ErrorNodeGetter : AbstractNodeGetter<Error>  // outputNodes
+	public class ErrorNodeGetter : INodeGetter<Error>  // outputNodes
 	{
 		public ErrorNodeGetter(List<Error> errors)
 		{
@@ -19,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -27,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override Error this[int index]
+		public Error this[int index]
 		{
 			get
 			{

@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
-	public class EntriesNodeGetter : AbstractNodeGetter<EntryNode>, ITreeFunctions  // outputNodes
+	public class EntriesNodeGetter : INodeGetter<EntryNode>, ITreeFunctions  // outputNodes
 	{
 		public EntriesNodeGetter(DataAccessor accessor)
 		{
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override EntryNode this[int index]
+		public EntryNode this[int index]
 		{
 			get
 			{

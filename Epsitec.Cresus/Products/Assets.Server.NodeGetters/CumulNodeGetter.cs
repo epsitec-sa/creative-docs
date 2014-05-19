@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// Gère l'accès en lecture "en arbre" à des objets. Les groupes compactés sont
 	/// vu avec des valeurs égales au total des sous-objets cachés.
 	/// </summary>
-	public class CumulNodeGetter : AbstractNodeGetter<CumulNode>  // outputNodes
+	public class CumulNodeGetter : INodeGetter<CumulNode>  // outputNodes
 	{
 		public CumulNodeGetter(DataAccessor accessor, TreeObjectsNodeGetter inputNodes)
 		{
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override CumulNode this[int index]
+		public CumulNode this[int index]
 		{
 			get
 			{

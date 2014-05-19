@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Sélectionne l'objet ayant un Guid donné.
 			set
 			{
-				this.VisibleSelectedRow = this.nodeGetter.Nodes.ToList ().FindIndex (x => x.Guid == value);
+				this.VisibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == value);
 			}
 		}
 

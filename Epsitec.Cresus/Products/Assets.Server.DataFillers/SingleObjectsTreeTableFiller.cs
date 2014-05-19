@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class SingleObjectsTreeTableFiller : AbstractTreeTableFiller<CumulNode>
 	{
-		public SingleObjectsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<CumulNode> nodeGetter)
+		public SingleObjectsTreeTableFiller(DataAccessor accessor, INodeGetter<CumulNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}

@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class EventsAssetsTreeTableFiller : AbstractTreeTableFiller<SortableNode>
 	{
-		public EventsAssetsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<SortableNode> nodeGetter)
+		public EventsAssetsTreeTableFiller(DataAccessor accessor, INodeGetter<SortableNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}

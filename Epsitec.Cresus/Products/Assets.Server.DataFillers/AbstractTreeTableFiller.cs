@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
@@ -12,9 +11,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 	public abstract class AbstractTreeTableFiller<T>
 		where T : struct
 	{
-		public AbstractTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<T> nodeGetter)
+		public AbstractTreeTableFiller(DataAccessor accessor, INodeGetter<T> nodeGetter)
 		{
-			this.accessor    = accessor;
+			this.accessor   = accessor;
 			this.nodeGetter = nodeGetter;
 		}
 
@@ -43,7 +42,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public abstract TreeTableContentItem GetContent(int firstRow, int count, int selection);
 
 
-		protected readonly DataAccessor				accessor;
-		protected readonly AbstractNodeGetter<T>	nodeGetter;
+		protected readonly DataAccessor			accessor;
+		protected readonly INodeGetter<T>		nodeGetter;
 	}
 }

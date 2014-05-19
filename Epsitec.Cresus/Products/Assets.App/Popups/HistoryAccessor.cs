@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				int sel = 0;
 
-				foreach (var node in this.getter.Nodes)
+				foreach (var node in this.getter.GetNodes ())
 				{
 					var e = this.obj.GetEvent (node.Guid);
 					if (e.Timestamp == this.timestamp)

@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class UserFieldsTreeTableFiller : AbstractTreeTableFiller<GuidNode>
 	{
-		public UserFieldsTreeTableFiller(DataAccessor accessor, AbstractNodeGetter<GuidNode> nodeGetter)
+		public UserFieldsTreeTableFiller(DataAccessor accessor, INodeGetter<GuidNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}

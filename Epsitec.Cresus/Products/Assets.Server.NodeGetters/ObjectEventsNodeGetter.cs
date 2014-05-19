@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// Accès en lecture aux événements triables d'un objet.
 	/// événements d'un objet -> SortableNode
 	/// </summary>
-	public class ObjectEventsNodeGetter : AbstractNodeGetter<SortableNode>  // outputNodes
+	public class ObjectEventsNodeGetter : INodeGetter<SortableNode>  // outputNodes
 	{
 		public void SetParams(DataObject dataObject, SortingInstructions sortingInstructions)
 		{
@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public override SortableNode this[int index]
+		public SortableNode this[int index]
 		{
 			get
 			{

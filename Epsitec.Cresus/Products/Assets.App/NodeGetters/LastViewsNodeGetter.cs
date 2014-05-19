@@ -4,12 +4,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.NodeGetters;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.NodeGetters
 {
-	public class LastViewsNodeGetter : AbstractNodeGetter<LastViewNode>  // outputNodes
+	public class LastViewsNodeGetter : INodeGetter<LastViewNode>  // outputNodes
 	{
 		public void SetParams(List<LastViewNode> viewStates)
 		{
@@ -17,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 		}
 
 
-		public override int Count
+		public int Count
 		{
 			get
 			{
@@ -38,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 			return -1;
 		}
 
-		public override LastViewNode this[int index]
+		public LastViewNode this[int index]
 		{
 			get
 			{
