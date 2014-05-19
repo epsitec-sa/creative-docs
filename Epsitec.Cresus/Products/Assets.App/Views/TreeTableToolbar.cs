@@ -18,8 +18,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public string							DeleteTooltip;
 		public string							DeselectIcon;
 		public string							DeselectTooltip;
+		public string							CopyIcon;
 		public string							CopyTooltip;
+		public string							PasteIcon;
 		public string							PasteTooltip;
+		public string							ExportIcon;
 		public string							ExportTooltip;
 
 		public bool								HasGraphic
@@ -139,15 +142,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.separator3       = this.CreateSeparator     (DockStyle.None);
 			
-			this.buttonNew        = this.CreateCommandButton (DockStyle.None, ToolbarCommand.New,        this.NewIcon      ?? "TreeTable.New",        this.NewTooltip      ?? "Nouvelle ligne");
-			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,     this.DeleteIcon   ?? "TreeTable.Delete",     this.DeleteTooltip   ?? "Supprimer la ligne");
-			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect,   this.DeselectIcon ?? "TreeTable.Deselect",   this.DeselectTooltip ?? "Désélectionner la ligne");
+			this.buttonNew        = this.CreateCommandButton (DockStyle.None, ToolbarCommand.New,        this.NewIcon      ?? "TreeTable.New",      this.NewTooltip      ?? "Nouvelle ligne");
+			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,     this.DeleteIcon   ?? "TreeTable.Delete",   this.DeleteTooltip   ?? "Supprimer la ligne");
+			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect,   this.DeselectIcon ?? "TreeTable.Deselect", this.DeselectTooltip ?? "Désélectionner la ligne");
 
 			this.separator4       = this.CreateSeparator     (DockStyle.None);
 
-			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy,       "TreeTable.Copy",       this.CopyTooltip   ?? "Copier");
-			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste,      "TreeTable.Paste",      this.PasteTooltip  ?? "Coller");
-			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export,     "TreeTable.Export",     this.ExportTooltip ?? "Exporter");
+			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy,       this.CopyIcon     ?? "TreeTable.Copy",     this.CopyTooltip   ?? "Copier");
+			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste,      this.PasteIcon    ?? "TreeTable.Paste",    this.PasteTooltip  ?? "Coller");
+			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export,     this.ExportIcon   ?? "TreeTable.Export",   this.ExportTooltip ?? "Exporter");
 
 			this.buttonGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
