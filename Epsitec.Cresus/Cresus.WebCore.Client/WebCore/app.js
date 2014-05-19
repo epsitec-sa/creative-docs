@@ -237,20 +237,21 @@ $.getScript('signalr/hubs', function() {
           application: this,
           region: 'center',
           border: false,
-          margin: '0 0 0 1'
+          margin: '0 0 0 1',
+          bbar: this.createStatusBar()
         });
 
         if (epsitecConfig.displayBannerMessage) {
           items = [
             this.menu,
             this.createBanner('north', 'test-banner-top'),
-            this.tabManager
+            this.tabManager,
           ];
         }
         else {
           items = [
             this.menu,
-            this.tabManager
+            this.tabManager,
           ];
         }
         
@@ -275,6 +276,10 @@ $.getScript('signalr/hubs', function() {
 
         if(epsitecConfig.featureEntityBag) {
           this.hubs.registerHub("entitybag",EntityBagHub);
+        }
+
+        if (epsitecConfig.featureStatusBar) {
+            this.hubs.registerHub("statusbar", StatusBarHub);
         }
 
         this.hubs.start();
@@ -381,7 +386,7 @@ $.getScript('signalr/hubs', function() {
         else
           return "type inconnu";
       },
-
+        
       addEntityToBag: function(summary,entityId) {
         var title = this.getCurrentDatabaseEntityType();
         this.entityBag.addEntityToBag(title,summary,entityId);      
@@ -540,13 +545,38 @@ $.getScript('signalr/hubs', function() {
               }
           });
       },
+
       createBanner: function(region, cls) {
         return Ext.create('Ext.Panel', {
           region: region,
           bodyCls: ['test-banner', cls],
           html: epsitecConfig.bannerMessage
         });
-      }
+      },
+
+      addEntityToStatusBar: function (entity) {
+          var sb = this.tabManager.dockedItems.items[0];
+          sb.remove(entity.id, true);
+          var item = new Ext.Toolbar.TextItem({ id: entity.id, text: entity.entityType });     
+          sb.add (item);
+      },
+
+      removeEntityFromStatusBar: function (entity) {
+          var sb = this.tabManager.dockedItems.items[0];
+          sb.remove(entity.id, true);
+      },
+
+      createStatusBar : function () {
+        return Ext.create('Ext.ux.StatusBar', {
+            id: 'job-statusbar',
+            defaultText: 'Travaux',
+            //defaultIconCls: 'default-icon',
+            text: 'Travaux',
+            width: '80%',
+            iconCls: 'x-status-valid',
+            items: []
+        });
+    }
     });
   });
 });

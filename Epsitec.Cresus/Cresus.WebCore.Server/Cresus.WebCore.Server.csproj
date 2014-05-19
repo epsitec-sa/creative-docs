@@ -163,6 +163,8 @@
     <Compile Include="Core\Databases\Database.cs" />
     <Compile Include="NancyModules\DownloadsModule.cs" />
     <Compile Include="NancyModules\JobsModule.cs" />
+    <Compile Include="Owin\Hubs\StatusBarClient.cs" />
+    <Compile Include="Owin\Hubs\StatusBarHub.cs" />
     <Compile Include="Processors\IReportingProcessor.cs" />
     <Compile Include="NancyModules\ReportingModule.cs" />
     <Compile Include="NancyModules\FavoritesModule.cs" />

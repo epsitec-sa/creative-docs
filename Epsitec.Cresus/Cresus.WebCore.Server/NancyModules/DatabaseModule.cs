@@ -260,6 +260,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
 			entityBag.AddToBag (task.Username, task.Title, task.HtmlView, task.Id, When.Now);
 
+			var statusBar = StatusBarManager.GetCurrentStatusBarManager ();
+			statusBar.AddToBar (task.Username, task.Title, task.HtmlView, task.Id, When.Now);
+
 			return new Response ()
 			{
 				StatusCode = HttpStatusCode.Accepted
@@ -270,6 +273,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			job.Start ();
 			this.UpdateTaskStatusInBag (job);
+			this.UpdateTaskStatus (job);
 
 			var user		= LoginModule.GetUserName (this);
 			var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
@@ -286,14 +290,32 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			job.Metadata = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
 			job.Finish ();
 			this.UpdateTaskStatusInBag (job);
+			this.RemoveTaskStatus (job);
 		}
 
 		private void UpdateTaskStatusInBag(CoreJob task)
 		{
 			var user = LoginModule.GetUserName (this);
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
+
 			entityBag.RemoveFromBag (user, task.Id, When.Now);
 			entityBag.AddToBag (user, task.Title, task.HtmlView, task.Id, When.Now);
+		}
+
+		private void UpdateTaskStatus(CoreJob task)
+		{
+			var user = LoginModule.GetUserName (this);
+			var statusBar = StatusBarManager.GetCurrentStatusBarManager ();
+
+			statusBar.RemoveFromBar (user, task.Id, When.Now);
+			statusBar.AddToBar (user, task.Title, task.HtmlView, task.Id, When.Now);
+		}
+
+		private void RemoveTaskStatus(CoreJob task)
+		{
+			var user = LoginModule.GetUserName (this);
+			var statusBar = StatusBarManager.GetCurrentStatusBarManager ();
+			statusBar.RemoveFromBar (user, task.Id, When.Now);
 		}
 
 

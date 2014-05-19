@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin
 			this.owin = WebApplication.Start<Startup> (uri.AbsoluteUri);
 			this.notificationHubClient = NotificationClient.Create (server);
 			this.entityBagHubClient = EntityBagClient.Create (server);
-
+			this.statusBarHubClient = StatusBarClient.Create (server);
 			OwinServer.CleanTraceListeners ();
 
 			Logger.LogToConsole ("Owin Server started");
@@ -61,5 +61,6 @@ namespace Epsitec.Cresus.WebCore.Server.Owin
 		private readonly System.IDisposable		owin;
 		private readonly NotificationClient		notificationHubClient;
 		private readonly EntityBagClient		entityBagHubClient;
+		private readonly StatusBarClient		statusBarHubClient;
 	}
 }

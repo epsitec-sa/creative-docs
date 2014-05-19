@@ -24,6 +24,7 @@ function() {
     entityTabs: null,
     pageTabs: null,
     currentTab: null,
+    statusBar: null,
     /* Constructor */
 
     constructor: function() {
@@ -35,7 +36,6 @@ function() {
     },
 
     /* Methods */
-
     showEntityTab: function(database) {
       var key, entityTab;
 
