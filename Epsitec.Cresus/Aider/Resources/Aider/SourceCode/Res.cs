@@ -583,6 +583,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 635));
 						}
 					}
+					//	designer:cap/LVA5L
+					public static global::Epsitec.Common.Types.Caption ECVD
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 677));
+						}
+					}
 					//	designer:cap/LVAQJ
 					public static global::Epsitec.Common.Types.Caption None
 					{

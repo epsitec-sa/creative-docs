@@ -12,5 +12,6 @@ namespace Epsitec.Aider.Enumerations
 
 		CS			= 1,
 		Parish		= 2,
+		ECVD		= 3,
 	}
 }

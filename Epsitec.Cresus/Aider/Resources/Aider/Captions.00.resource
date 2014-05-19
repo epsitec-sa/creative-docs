@@ -630,7 +630,7 @@
   <data name="Val.Enum.EmployeeEmployer.None" id="AQJ">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeEmployer.CS" id="ARJ">&lt;s:data id="_0" f:Name="CS" f:Labels="{Collection {Text 'CS'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeEmployer.Parish" id="ASJ">&lt;s:data id="_0" f:Name="Parish" f:Labels="{Collection {Text 'Paroisse'}}" /&gt;</data>
-  <data name="Typ.Enum.EmployeeEmployer" id="APJ">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.EmployeeEmployer" f:_1.SystemType="E:Epsitec.Aider.Enumerations.EmployeeEmployer, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAQJ]'}, {Text '1 [LVARJ]'}, {Text '2 [LVASJ]'}}" f:Labels="{Collection {Text 'Employeur'}}" /&gt;</data>
+  <data name="Typ.Enum.EmployeeEmployer" id="APJ">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.EmployeeEmployer" f:_1.SystemType="E:Epsitec.Aider.Enumerations.EmployeeEmployer, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAQJ]'}, {Text '1 [LVARJ]'}, {Text '2 [LVASJ]'}, {Text '3 [LVA5L]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.EmployeeEmployer, Aider/None" f:Labels="{Collection {Text 'Employeur'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeJobFunction.Other" id="AUJ">&lt;s:data id="_0" f:Name="Other" f:Labels="{Collection {Text 'Autre'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeJobFunction.Titulaire" id="AVJ">&lt;s:data id="_0" f:Name="Titulaire" f:Labels="{Collection {Text 'Titulaire'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeJobFunction.Suffragant" id="A0K">&lt;s:data id="_0" f:Name="Suffragant" f:Labels="{Collection {Text 'Suffragant'}}" /&gt;</data>
@@ -670,4 +670,5 @@
   <data name="Typ.Enum.OfficeType" id="ASK">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.OfficeType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.OfficeType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVATK]'}, {Text '1 [LVAUK]'}, {Text '2 [LVAVK]'}, {Text '3 [LVA0L]'}, {Text '4 [LVA1L]'}, {Text '5 [LVA2L]'}}" f:Labels="{Collection {Text 'Type de gestion'}}" /&gt;</data>
   <data name="Fld.AiderOfficeManagement.OfficeType" id="A3L">&lt;s:data id="_0" f:Name="OfficeType" f:Labels="{Collection {Text 'Type de gestion'}}" /&gt;</data>
   <data name="Fld.AiderOfficeManagement.RegionalReferees" id="A4L">&lt;s:data id="_0" f:Name="RegionalReferees" f:Labels="{Collection {Text 'Répondances régionales'}}" /&gt;</data>
+  <data name="Val.Enum.EmployeeEmployer.ECVD" id="A5L">&lt;s:data id="_0" f:Name="ECVD" f:Labels="{Collection {Text 'Eglise catholique VD'}}" /&gt;</data>
 </bundle>
