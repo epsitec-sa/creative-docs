@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
 			entityBag.RemoveFromBag (task.Username, task.Id, When.Now);
 			var statusbar = StatusBarManager.GetCurrentStatusBarManager ();
-			statusbar.RemoveFromBar (task.Username, task.Id, When.Now);
+			statusbar.RemoveFromBar (task.Id, When.Now);
 			return new Response ()
 			{
 				StatusCode = HttpStatusCode.Accepted

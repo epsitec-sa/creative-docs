@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public string HtmlView
+		public string SummaryView
 		{
 			get
 			{
@@ -48,6 +48,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			get
 			{
 				return this.title + " (" + this.Status.Value + ")";
+			}
+		}
+
+		public string StatusView
+		{
+			get
+			{
+				var desc = this.Username + " (" + this.Status.Value + ")";
+				return desc;
 			}
 		}
 

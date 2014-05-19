@@ -18,27 +18,19 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
-		public void AddToBar(string userName, string title, FormattedText summary, string entityId,When when)
+		public void AddToBar(string type, string text, string iconClass, string statusId, When when)
 		{
 			if (StatusBarManager.hub != null)
 			{
-				StatusBarManager.hub.AddToBar (userName, title, summary, entityId, when);
+				StatusBarManager.hub.AddToBar (type, text, iconClass, statusId, when);
 			}
 		}
 
-		public void RemoveFromBar(string userName, string entityId, When when)
+		public void RemoveFromBar(string statusId, When when)
 		{
 			if (StatusBarManager.hub != null)
 			{
-				StatusBarManager.hub.RemoveFromBar (userName, entityId, when);
-			}
-		}
-
-		public void SetLoading(string userName, bool state)
-		{
-			if (StatusBarManager.hub != null)
-			{
-				StatusBarManager.hub.SetLoading (userName, state);
+				StatusBarManager.hub.RemoveFromBar (statusId, when);
 			}
 		}
 

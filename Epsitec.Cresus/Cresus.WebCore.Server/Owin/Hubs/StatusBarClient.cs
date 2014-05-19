@@ -38,8 +38,6 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 				//Register Hub Listener
 				this.hub.On ("SetUserConnectionId", (string u, string c) => this.SetUserConnectionId (u, c));
 				this.hub.On ("FlushConnectionId", c => RemoveUserConnectionIdWithLock (c));
-				this.hub.On ("RemoveFromMyBar", (string u, string id) => RemoveFromAllBar (u,id));
-				this.hub.On ("AddToMyBar", (string u, string t,string s, string id) => AddToAllBar (u,t,s,id));
 
 				this.hubConnection.Start ().Wait ();
 
@@ -68,13 +66,13 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		#region IEntityBagHub Members
 
-		void IStatusBarHub.AddToBar(string userName, string title, FormattedText summary, string entityId, When when)
+		void IStatusBarHub.AddToBar(string type, string text,string iconClass, string statusId, When when)
 		{
 			if (when == When.OnConnect)
 			{
 				using (this.cacheLock.LockWrite ())
 				{
-					this.statusEntityCache.Add (new StatusEntity (userName, "ADD", title, summary, entityId));
+					this.statusEntityCache.Add (new StatusEntity ("ADD", type, text,iconClass, statusId));
 				}
 
 			}
@@ -82,44 +80,38 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			{
 
 				var context = GlobalHost.ConnectionManager.GetHubContext<StatusBarHub> ();
-				context.Clients.All.AddToBar (title, summary, entityId);
+				context.Clients.All.AddToBar (type,text,iconClass,statusId);
 				using (this.cacheLock.LockWrite ())
 				{
-					this.statusEntityCache.Add (new StatusEntity (userName, "ADD", title, summary, entityId));
+					this.statusEntityCache.Add (new StatusEntity ("ADD", type, text, iconClass, statusId));
 				}
 			}
 		}
 
-		void IStatusBarHub.RemoveFromBar(string userName, string entityId, When when)
+		void IStatusBarHub.RemoveFromBar(string statusId, When when)
 		{
 			if (when == When.OnConnect)
 			{
 				using (this.cacheLock.LockWrite ())
 				{
-					this.statusEntityCache.Add (new StatusEntity (userName, "REMOVE", null, FormattedText.Null, entityId));
+					this.statusEntityCache.Add (new StatusEntity ("REMOVE", "","","", statusId));
 				}
 
 			}
 			else
 			{
 				var context = GlobalHost.ConnectionManager.GetHubContext<StatusBarHub> ();
-				context.Clients.All.RemoveFromBar (entityId);
+				context.Clients.All.RemoveFromBar (statusId);
 				using (this.cacheLock.LockWrite ())
 				{
-					this.statusEntityCache.RemoveAll(e => e.EntityId == entityId);
+					this.statusEntityCache.RemoveAll(e => e.StatusId == statusId);
 				}
 			}
-		}
-
-		void IStatusBarHub.SetLoading(string userName, bool state)
-		{			
-			var context = GlobalHost.ConnectionManager.GetHubContext<EntityBagHub> ();
-			context.Clients.Group (userName).SetLoading (state);			
 		}
 
 		IEnumerable<string> IStatusBarHub.GetStatusEntitiesId()
 		{
-			return this.statusEntityCache.Select(b => "db:" + b.EntityId.Replace('-',':'));
+			return this.statusEntityCache.Select(s => s.StatusId);
 		}
 
 		#endregion
@@ -154,15 +146,15 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 						//send and flush pending user notification from queue
 						using (this.cacheLock.LockRead ())
 						{
-							foreach (var bagEntity in this.statusEntityCache)
+							foreach (var status in this.statusEntityCache)
 							{
-								switch (bagEntity.Action)
+								switch (status.Action)
 								{
 									case "ADD":
-										context.Clients.All.AddToBar (bagEntity.Title,bagEntity.Summary,bagEntity.EntityId);
+										context.Clients.All.AddToBar (status.Type,status.Text,status.IconClass, status.StatusId);
 										break;
 									case "REMOVE":
-										context.Clients.All.RemoveFromBar (bagEntity.EntityId);
+										context.Clients.All.RemoveFromBar (status.StatusId);
 										break;
 								}							
 							}
@@ -182,43 +174,26 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			}
 		}
 
-		private void RemoveFromAllBar(string userName,string entityId)
+		private void RemoveFromAllBar(string statusId)
 		{
 			using (this.cacheLock.LockWrite ())
 			{
-				this.statusEntityCache.RemoveAll (e => e.EntityId == entityId);
+				this.statusEntityCache.RemoveAll (e => e.StatusId == statusId);
 			}
 
 			var context = GlobalHost.ConnectionManager.GetHubContext<StatusBarHub> ();
-			context.Clients.All.RemoveFromBag (entityId);
+			context.Clients.All.RemoveFromBag (statusId);
 		}
 
-		private void AddToAllBar(string userName, string title,string clientSummary, string entityId)
+		private void AddToAllBar(string type,string text, string iconClass, string statusId)
 		{
-			var entity = this.server.CoreWorkerPool.Execute (userName, null, (b) => EntityIO.ResolveEntity (b, entityId));
-			if (entity.IsNotNull ())
+			var context = GlobalHost.ConnectionManager.GetHubContext<StatusBarHub> ();			
+			context.Clients.All.AddToBag (type, text,iconClass, statusId);
+			using (this.cacheLock.LockWrite ())
 			{
-				var context = GlobalHost.ConnectionManager.GetHubContext<StatusBarHub> ();
-
-				try //with GetSummary() on from AbstractEntity
-				{
-					var summary = entity.GetSummary ();
-
-					context.Clients.All.AddToBag (title, summary, entityId);
-					using (this.cacheLock.LockWrite ())
-					{
-						this.statusEntityCache.Add (new StatusEntity (userName, "ADD", title, summary, entityId));
-					}
-				}
-				catch //use client summary instead
-				{
-					context.Clients.All.AddToBag (title, clientSummary, entityId);
-					using (this.cacheLock.LockWrite ())
-					{
-						this.statusEntityCache.Add (new StatusEntity (userName, "ADD", title, clientSummary, entityId));
-					}
-				}			
+				this.statusEntityCache.Add (new StatusEntity ("ADD", type, text,iconClass, statusId));
 			}
+			
 		}
 
 		private void RemoveUserConnectionIdWithLock(string connectionId)
@@ -238,18 +213,20 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		private sealed class StatusEntity
 		{
-			public StatusEntity(string userName, string action, string title, FormattedText summary, string entityId)
+			public StatusEntity(string action, string type, string text, string iconClass, string statusId)
 			{
 				this.Action = action;
-				this.Title = title;
-				this.Summary = summary;
-				this.EntityId = entityId;
+				this.Type = type;
+				this.Text = text;
+				this.IconClass = iconClass;
+				this.StatusId = statusId;
 			}
 
 			public string						Action;
-			public string						Title;
-			public FormattedText				Summary;
-			public string						EntityId;
+			public string						Type;
+			public string						Text;
+			public string						IconClass;
+			public string						StatusId;
 		}
 
 		

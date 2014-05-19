@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response NotifyUIForExportWaiting(WorkerApp workerApp, CoreJob task)
 		{
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
-			entityBag.AddToBag (task.Username, task.Title, task.HtmlView, task.Id, When.Now);
+			entityBag.AddToBag (task.Username, task.Title, task.SummaryView, task.Id, When.Now);
 
 			return new Response ()
 			{
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var user = LoginModule.GetUserName (this);
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
 			entityBag.RemoveFromBag (user, task.Id, When.Now);
-			entityBag.AddToBag (user, task.Title, task.HtmlView, task.Id, When.Now);
+			entityBag.AddToBag (user, task.Title, task.SummaryView, task.Id, When.Now);
 		}
 
 		private EntityExtractor GetEntityExtractor(BusinessContext businessContext, ISetViewController controller, dynamic parameters)

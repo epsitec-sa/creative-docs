@@ -32,17 +32,5 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			var backendClient = StatusBarClient.Instance;
 			Clients.Client (backendClient.GetConnectionId ()).SetUserConnectionId (Clients.Caller.userName, Clients.Caller.connectionId);
 		}
-
-		public void RemoveFromMyBar(string entityId)
-		{
-			var backendClient = StatusBarClient.Instance;
-			Clients.Client (backendClient.GetConnectionId ()).RemoveFromMyBag (Clients.Caller.userName, entityId);
-		}
-
-		public void AddToMyBar(string title, string customSummary,string entityId)
-		{
-			var backendClient = StatusBarClient.Instance;
-			Clients.Client (backendClient.GetConnectionId ()).AddToMyBag (Clients.Caller.userName, title, customSummary, entityId);
-		}
 	}
 }

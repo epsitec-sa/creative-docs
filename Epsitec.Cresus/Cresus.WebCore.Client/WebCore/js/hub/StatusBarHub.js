@@ -13,38 +13,26 @@ function StatusBarHub() {
 
 
   //Entry points for calling hub
-  this.RemoveFromMyBar = function(entityId) {
-    this.hub.server.removeFromMyBar(entityId);
-
-  };
-
-  this.AddToMyBar = function(title,summary,entityId) {
-    this.hub.server.addToMyBar(title,summary,entityId);
-  };
 
   //Entry points for hub call
-  this.hub.client.AddToBar = function(title, summary, entityId) {
+  this.hub.client.AddToBar = function(type, text,iconClass, statusId) {
     var app = Epsitec.Cresus.Core.getApplication();
-    var entity = {
-          summary: summary,
-          entityType: title,
-          id: entityId
+    var status = {
+          type: type,
+          text: text,
+          icon: iconClass,
+          id: statusId
         };
 
-    app.addEntityToStatusBar(entity);
+    app.addEntityToStatusBar(status);
   };
 
-  this.hub.client.RemoveFromBar = function(entityId) {
+  this.hub.client.RemoveFromBar = function(statusId) {
     var app = Epsitec.Cresus.Core.getApplication();
-    var entity = {
-          id: entityId
+    var status = {
+          id: statusId
         };
 
-    app.removeEntityFromStatusBar(entity);
-  };
-
-  this.hub.client.SetLoading = function(state) {
-    var app = Epsitec.Cresus.Core.getApplication();
-    app.viewport.setLoading(state);
+    app.removeEntityFromStatusBar(status);
   };
 }

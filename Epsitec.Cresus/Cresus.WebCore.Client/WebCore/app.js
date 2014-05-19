@@ -554,16 +554,25 @@ $.getScript('signalr/hubs', function() {
         });
       },
 
-      addEntityToStatusBar: function (entity) {
+      addEntityToStatusBar: function (status) {
           var sb = this.tabManager.dockedItems.items[0];
-          sb.remove(entity.id, true);
-          var item = new Ext.Toolbar.TextItem({ id: entity.id, text: entity.entityType });     
+          sb.remove(status.id, true);
+
+          if (status.type == "text")
+          {
+              var item = new Ext.Toolbar.TextItem({ id: status.id, text: status.text });
+          }
+
+          if (status.type == "button") {
+              var item = new Ext.Toolbar.TextItem({ id: status.id, text: status.text });
+          }
+              
           sb.add (item);
       },
 
-      removeEntityFromStatusBar: function (entity) {
+      removeEntityFromStatusBar: function (status) {
           var sb = this.tabManager.dockedItems.items[0];
-          sb.remove(entity.id, true);
+          sb.remove(status.id, true);
       },
 
       createStatusBar : function () {

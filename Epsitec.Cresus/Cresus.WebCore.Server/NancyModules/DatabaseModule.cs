@@ -258,10 +258,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response NotifyUIForExportWaiting(WorkerApp workerApp, CoreJob task)
 		{
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
-			entityBag.AddToBag (task.Username, task.Title, task.HtmlView, task.Id, When.Now);
+			entityBag.AddToBag (task.Username, task.Title, task.SummaryView, task.Id, When.Now);
 
 			var statusBar = StatusBarManager.GetCurrentStatusBarManager ();
-			statusBar.AddToBar (task.Username, task.Title, task.HtmlView, task.Id, When.Now);
+			statusBar.AddToBar ("text", task.StatusView, "", task.Id, When.Now);
 
 			return new Response ()
 			{
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
 
 			entityBag.RemoveFromBag (user, task.Id, When.Now);
-			entityBag.AddToBag (user, task.Title, task.HtmlView, task.Id, When.Now);
+			entityBag.AddToBag (user, task.Title, task.SummaryView, task.Id, When.Now);
 		}
 
 		private void UpdateTaskStatus(CoreJob task)
@@ -307,15 +307,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var user = LoginModule.GetUserName (this);
 			var statusBar = StatusBarManager.GetCurrentStatusBarManager ();
 
-			statusBar.RemoveFromBar (user, task.Id, When.Now);
-			statusBar.AddToBar (user, task.Title, task.HtmlView, task.Id, When.Now);
+			statusBar.RemoveFromBar (task.Id, When.Now);
+			statusBar.AddToBar ("text", task.StatusView, "", task.Id, When.Now);
 		}
 
 		private void RemoveTaskStatus(CoreJob task)
 		{
 			var user = LoginModule.GetUserName (this);
 			var statusBar = StatusBarManager.GetCurrentStatusBarManager ();
-			statusBar.RemoveFromBar (user, task.Id, When.Now);
+			statusBar.RemoveFromBar (task.Id, When.Now);
 		}
 
 

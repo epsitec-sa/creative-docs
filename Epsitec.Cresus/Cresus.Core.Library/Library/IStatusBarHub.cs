@@ -9,9 +9,8 @@ namespace Epsitec.Cresus.Core.Library
 {
 	public interface IStatusBarHub
 	{
-		void AddToBar(string userName, string title, FormattedText summary, string entityId, When when);
-		void RemoveFromBar(string userName, string entityId, When when);
-		void SetLoading(string userName,bool state);
+		void AddToBar(string type, string text, string iconClass, string statusId, When when);
+		void RemoveFromBar(string statusId, When when);
 		IEnumerable<string> GetStatusEntitiesId();
 	}
 }
