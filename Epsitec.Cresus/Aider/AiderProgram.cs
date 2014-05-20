@@ -313,7 +313,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-automergeduplicatedpersons"))
+				if (args.Contains ("-automergeduplicatedpersons")) //-automergeduplicatedpersons
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.AutoMergeDuplicatedPersons (args));
 					return;

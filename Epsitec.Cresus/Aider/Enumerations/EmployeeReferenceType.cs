@@ -18,5 +18,8 @@ namespace Epsitec.Aider.Enumerations
 
 		InfoCom			= 20,
 		Coordinator		= 21,
+
+		[Hidden]
+		PublicReferee   = 99,
 	}
 }

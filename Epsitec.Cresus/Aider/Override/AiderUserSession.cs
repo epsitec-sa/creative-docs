@@ -53,6 +53,18 @@ namespace Epsitec.Aider.Override
 			{
 				return this.GetAiderMailingAdditionalFilter ((AiderMailingEntity) example);
 			}
+			else if (entityType == typeof (AiderEmployeeEntity))
+			{
+				return this.GetAiderEmployeeEntityFilter ((AiderEmployeeEntity) example);
+			}
+			else if (entityType == typeof (AiderRefereeEntity))
+			{
+				return this.GetAiderRefereeEntityFilter ((AiderRefereeEntity) example);
+			}
+			else if (entityType == typeof (AiderEmployeeJobEntity))
+			{
+				return this.GetAiderEmployeeJobEntityFilter ((AiderEmployeeJobEntity) example);
+			}
 
 			return null;
 		}
@@ -64,6 +76,42 @@ namespace Epsitec.Aider.Override
 			if (!user.HasPowerLevel (UserPowerLevel.Administrator))
 			{
 				return new LambdaFilter<AiderUserEntity> (x => x.LoginName == user.LoginName);
+			}
+
+			return null;
+		}
+
+		private IFilter GetAiderRefereeEntityFilter(AiderRefereeEntity example)
+		{
+			var user = this.UserManager.AuthenticatedUser;
+
+			if (!user.EnableGroupEditionCanton || !user.HasPowerLevel (UserPowerLevel.Administrator))
+			{
+				return new LambdaFilter<AiderRefereeEntity> (x => x.ReferenceType == Enumerations.EmployeeReferenceType.PublicReferee);
+			}
+
+			return null;
+		}
+
+		private IFilter GetAiderEmployeeEntityFilter(AiderEmployeeEntity example)
+		{
+			var user = this.UserManager.AuthenticatedUser;
+
+			if (!user.EnableGroupEditionCanton || !user.HasPowerLevel (UserPowerLevel.Administrator))
+			{
+				return new LambdaFilter<AiderEmployeeEntity> (x => x.EmployeeType == Enumerations.EmployeeType.PublicEmployee);
+			}
+
+			return null;
+		}
+
+		private IFilter GetAiderEmployeeJobEntityFilter(AiderEmployeeJobEntity example)
+		{
+			var user = this.UserManager.AuthenticatedUser;
+
+			if (!user.EnableGroupEditionCanton || !user.HasPowerLevel (UserPowerLevel.Administrator))
+			{
+				return new LambdaFilter<AiderEmployeeJobEntity> (x => x.EmployeeJobFunction == Enumerations.EmployeeJobFunction.PublicJob);			
 			}
 
 			return null;

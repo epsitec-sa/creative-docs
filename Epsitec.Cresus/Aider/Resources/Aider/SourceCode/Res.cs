@@ -27,6 +27,12 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderContactFiltered = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 100));
 				//	designer:cap/LVG402
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderCountry = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 4));
+				//	designer:cap/LVOL33
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployee = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 117));
+				//	designer:cap/LVOJ33
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeJob = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 115));
+				//	designer:cap/LVOM33
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeMenu = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 118));
 				//	designer:cap/LVA1D
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 417));
 				//	designer:cap/LVGI22
@@ -63,6 +69,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 0));
 				//	designer:cap/LVGK32
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPersonWarning = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 116));
+				//	designer:cap/LVOK33
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderReferee = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 116));
 				//	designer:cap/LVG232
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscription = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 98));
 				//	designer:cap/LVGJ32
@@ -94,6 +102,12 @@ namespace Epsitec.Aider
 				public const long ShowAiderContactFiltered = 0x3F500078000064L;
 				//	designer:cap/LVG402
 				public const long ShowAiderCountry = 0x3F500050000004L;
+				//	designer:cap/LVOL33
+				public const long ShowAiderEmployee = 0x3F500078000075L;
+				//	designer:cap/LVOJ33
+				public const long ShowAiderEmployeeJob = 0x3F500078000073L;
+				//	designer:cap/LVOM33
+				public const long ShowAiderEmployeeMenu = 0x3F500078000076L;
 				//	designer:cap/LVA1D
 				public const long ShowAiderGroup = 0x3F50000A0001A1L;
 				//	designer:cap/LVGI22
@@ -130,6 +144,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderPerson = 0x3F500078000000L;
 				//	designer:cap/LVGK32
 				public const long ShowAiderPersonWarning = 0x3F500050000074L;
+				//	designer:cap/LVOK33
+				public const long ShowAiderReferee = 0x3F500078000074L;
 				//	designer:cap/LVG232
 				public const long ShowAiderSubscription = 0x3F500050000062L;
 				//	designer:cap/LVGJ32

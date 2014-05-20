@@ -18,5 +18,8 @@ namespace Epsitec.Aider.Enumerations
 		AnimateurParoisse	= 5,
 
 		Other				= 99,
+		
+		[Hidden]
+		PublicEmployee		= 999,
 	}
 }

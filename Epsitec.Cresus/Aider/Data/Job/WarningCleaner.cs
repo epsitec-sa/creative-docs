@@ -14,6 +14,7 @@ using System.Data;
 using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Common.Support.EntityEngine;
 
 
 
@@ -80,7 +81,10 @@ namespace Epsitec.Aider.Data.Job
 				if(contact.IsNotNull ())
 				{
 					var household = contact.Household;
-					EChDataHelpers.CreateOrUpdateAiderSubscription (businessContext, household);
+					if(household.Address.GetEntityStatus () == EntityStatus.Valid)
+					{
+						EChDataHelpers.CreateOrUpdateAiderSubscription (businessContext, household);
+					}					
 				}
 
 				WarningCleaner.ClearWarningAndRefreshCaches (businessContext, warn);
