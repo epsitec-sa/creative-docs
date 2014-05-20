@@ -412,7 +412,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Les montants des écritures sont également mis à jour.
 			if (obj != null)
 			{
-				foreach (var field in accessor.ValueFields)
+				foreach (var field in accessor.AssetValueFields)
 				{
 					decimal? lastAmount = null;
 					decimal? lastBase   = null;

@@ -82,12 +82,14 @@
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
+    <Compile Include="Popups\AssetPastePopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />
     <Compile Include="Popups\CategoriesPopup.cs" />
     <Compile Include="Popups\CalendarPopup.cs" />
     <Compile Include="Popups\AbstractStackedController.cs" />
     <Compile Include="Popups\BoolStackedController.cs" />
     <Compile Include="Popups\AmortizationsPopup.cs" />
+    <Compile Include="Popups\AssetCopyPopup.cs" />
     <Compile Include="Popups\EventPastePopup.cs" />
     <Compile Include="Popups\PersonGuidStackedController.cs" />
     <Compile Include="Popups\CategoryGuidStackedController.cs" />

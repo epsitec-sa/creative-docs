@@ -396,14 +396,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected virtual void OnCopy()
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Copy);
-			MessagePopup.ShowTodo (target);
+			var obj = this.accessor.GetObject(this.baseType, this.SelectedGuid);
+			this.accessor.Clipboard.CopyObject (this.accessor, this.baseType, obj);
+
+			this.UpdateToolbar ();
 		}
 
 		protected virtual void OnPaste()
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
-			MessagePopup.ShowTodo (target);
+			var obj = this.accessor.Clipboard.PasteObject (this.accessor, this.baseType);
+
+			this.UpdateData ();
+
+			this.SelectedGuid = obj.Guid;
+			this.OnUpdateAfterCreate (obj.Guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
 		}
 
 		protected virtual void OnExport()
@@ -435,7 +441,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandEnable (ToolbarCommand.Deselect, row != -1);
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,   row != -1);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Paste,  true);
+			this.toolbar.SetCommandEnable (ToolbarCommand.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
 			this.toolbar.SetCommandEnable (ToolbarCommand.Export, true);
 		}
 

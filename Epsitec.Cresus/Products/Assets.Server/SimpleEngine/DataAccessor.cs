@@ -379,7 +379,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public IEnumerable<ObjectField> ValueFields
+		public IEnumerable<ObjectField> AssetValueFields
 		{
 			get
 			{

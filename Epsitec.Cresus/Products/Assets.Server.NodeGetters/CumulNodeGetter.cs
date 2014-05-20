@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 					//	On prend toutes les valeurs définies pour la base des Assets (ValueFields),
 					//	ainsi que les valeurs à extraire en vue d'un rapport.
-					foreach (var field in this.accessor.ValueFields.Union (this.extractionInstructions.Select (x => x.ResultField)))
+					foreach (var field in this.accessor.AssetValueFields.Union (this.extractionInstructions.Select (x => x.ResultField)))
 					{
 						var v = this.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, field);
 						if (v.HasValue)

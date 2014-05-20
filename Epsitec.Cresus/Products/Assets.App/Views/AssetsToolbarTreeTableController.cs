@@ -232,12 +232,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 			});
 		}
 
+		protected override void OnCopy()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Copy);
+			var obj = this.accessor.GetObject (this.baseType, this.SelectedGuid);
+
+			AssetCopyPopup.Show (target, this.accessor, obj, delegate (System.DateTime date)
+			{
+				var timestamp = new Timestamp (date, 0);
+				this.accessor.Clipboard.CopyObject (this.accessor, this.baseType, obj, timestamp);
+				this.UpdateToolbar ();
+			});
+		}
+
+		protected override void OnPaste()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+
+			AssetPastePopup.Show (target, this.accessor, delegate (System.DateTime date)
+			{
+				var obj = this.accessor.Clipboard.PasteObject (this.accessor, this.baseType, date);
+				this.UpdateData ();
+				this.SelectedGuid = obj.Guid;
+				this.OnUpdateAfterCreate (obj.Guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
+			});
+		}
+
 
 		private void ShowCreatePopup(Widget target)
 		{
 			CreateAssetPopup.Show (target, this.accessor, delegate (System.DateTime date, string name)
 			{
-					this.CreateAsset (date, name);
+				this.CreateAsset (date, name);
 			});
 		}
 

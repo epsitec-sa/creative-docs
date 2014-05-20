@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 	
-		public static SortingInstructions Default = new SortingInstructions (ObjectField.Name, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
+		public static SortingInstructions Default = new SortingInstructions (ObjectField.Name,    SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 		public static SortingInstructions Empty   = new SortingInstructions (ObjectField.Unknown, SortedType.None,      ObjectField.Unknown, SortedType.None);
 
 		public readonly ObjectField			PrimaryField;

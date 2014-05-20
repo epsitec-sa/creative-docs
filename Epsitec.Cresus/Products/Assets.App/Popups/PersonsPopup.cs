@@ -26,8 +26,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var secondary    = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
 			this.nodeGetter = new SorterNodeGetter (secondary);
 
-			secondary.SetParams (null, SortingInstructions.Default);
-			this.nodeGetter.SetParams (SortingInstructions.Default);
+			var field = this.accessor.GetMainStringField (BaseType.Persons);
+			var si = new SortingInstructions (field, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
+
+			secondary.SetParams (null, si);
+			this.nodeGetter.SetParams (si);
 
 			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == selectedGuid);
 
