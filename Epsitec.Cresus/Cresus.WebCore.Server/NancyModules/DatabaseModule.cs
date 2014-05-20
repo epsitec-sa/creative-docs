@@ -93,9 +93,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Get["/export/{name}"] = (p =>
 			{
 				var type		= this.Request.Query.type == "label" ? "PDF" : "CSV";
-				var exportTask = this.CreateJob ("Export " + type);
-				this.Execute (wa => this.NotifyUIForExportWaiting (wa, exportTask));
-				this.Enqueue (exportTask, context => this.LongRunningExport (context, exportTask, p));
+				CoreJob job = null;
+				this.Execute (b => this.CreateJob (b, "Export " + type, out job));
+				this.Enqueue (job, context => this.LongRunningExport (context, job, p));
 
 				return new Response ()
 				{
@@ -220,7 +220,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				return DatabaseModule.GetEntities (caches, extractor, rawColumns, start, limit);
 			}
 		}
-
 
 		private Response GetEntityIndex(BusinessContext businessContext, dynamic parameters)
 		{

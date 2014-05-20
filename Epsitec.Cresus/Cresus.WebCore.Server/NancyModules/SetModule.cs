@@ -89,9 +89,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Get["/{viewId}/{entityId}/export/{dataset}"] = (p =>
 			{
 				var type		= this.Request.Query.type == "label" ? "PDF" : "CSV";
-				var exportTask = this.CreateJob ("Export "+ type);
-				this.Execute (wa => this.NotifyUIForExportWaiting (wa, exportTask));
-				this.Enqueue (exportTask, context => this.LongRunningExport (context, exportTask, p));
+				CoreJob job = null;
+				this.Execute (b => this.CreateJob (b, "Export " + type, out job));
+				this.Enqueue (job, context => this.LongRunningExport (context, job, p));
 
 				return new Response ()
 				{
@@ -154,7 +154,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private void LongRunningExport(BusinessContext businessContext, CoreJob job, dynamic parameters)
 		{
 			job.Start ();
-			this.UpdateTaskStatusInBag (job);
 
 			var user		= LoginModule.GetUserName (this);
 			var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
@@ -170,27 +169,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			job.Metadata = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
 			job.Finish ();
-			this.UpdateTaskStatusInBag (job);
-		}
-
-		private Response NotifyUIForExportWaiting(WorkerApp workerApp, CoreJob task)
-		{
-			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
-			entityBag.AddToBag (task.Username, task.Title, task.SummaryView, task.Id, When.Now);
-
-			return new Response ()
-			{
-				StatusCode = HttpStatusCode.Accepted
-			};
-		}
-
-		private void UpdateTaskStatusInBag(CoreJob task)
-		{
-			var user = LoginModule.GetUserName (this);
-			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
-			entityBag.RemoveFromBag (user, task.Id, When.Now);
-			entityBag.AddToBag (user, task.Title, task.SummaryView, task.Id, When.Now);
-		}
+		}	
 
 		private EntityExtractor GetEntityExtractor(BusinessContext businessContext, ISetViewController controller, dynamic parameters)
 		{

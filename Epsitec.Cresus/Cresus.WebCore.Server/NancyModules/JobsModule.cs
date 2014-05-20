@@ -28,20 +28,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var job = this.GetJob (p.job);
 				this.CancelJob (job);
-				return this.Execute (wa => this.RemoveJobFromBag (wa, job));
+				return new Response ()
+				{
+					StatusCode = HttpStatusCode.Accepted
+				};
 			});
-		}
-
-		private Response RemoveJobFromBag(WorkerApp app, CoreJob task)
-		{
-			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
-			entityBag.RemoveFromBag (task.Username, task.Id, When.Now);
-			var statusbar = StatusBarManager.GetCurrentStatusBarManager ();
-			statusbar.RemoveFromBar (task.Id, When.Now);
-			return new Response ()
-			{
-				StatusCode = HttpStatusCode.Accepted
-			};
 		}
 	}
 }

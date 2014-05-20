@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Cresus.Core.Library;
 using Nancy.Helpers;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
@@ -92,7 +93,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public CoreJob(string username, string sessionId, string taskId, string title)
+		public CoreJob(string username, string sessionId, string taskId, string title,EntityBagManager bag, StatusBarManager bar)
 		{
 			var now = System.DateTime.Now;
 			this.Username = username;
@@ -101,35 +102,77 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.Status = CoreJobStatus.Ordered;
 			this.taskId = taskId;
 			this.createdAt = now;
+			this.entityBag = bag;
+			this.statusBar = bar;
 		}
 
 		public void Enqueue()
 		{
 			this.queuedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Waiting;
+			this.AddTaskStatus ();
+			this.AddTaskStatusInBag ();
 		}
 
 		public void Start()
 		{
 			this.startedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Running;
+			this.UpdateTaskStatus ();
+			this.UpdateTaskStatusInBag ();
 		}
 
 		public void Finish()
 		{
 			this.finisedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Ended;
+			this.UpdateTaskStatusInBag ();
+			this.RemoveTaskStatus ();
 		}
 
 		public void Cancel()
 		{
 			this.finisedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Canceled;
+			this.RemoveTaskStatus ();
+			this.RemoveTaskInStatusInBag ();
 		}
 
 		public System.TimeSpan GetRunningTime()
 		{
 			return this.finisedAt.Subtract (this.startedAt);
+		}
+
+		private void AddTaskStatusInBag()
+		{
+			this.entityBag.AddToBag (this.Username, this.Title, this.SummaryView, this.Id, When.Now);
+		}
+
+		private void AddTaskStatus()
+		{
+			this.statusBar.AddToBar ("text", this.StatusView, "", this.Id, When.Now);
+		}
+
+
+		private void UpdateTaskStatusInBag()
+		{
+			this.entityBag.RemoveFromBag (this.Username, this.Id, When.Now);
+			this.entityBag.AddToBag (this.Username, this.Title, this.SummaryView, this.Id, When.Now);
+		}
+
+		private void UpdateTaskStatus()
+		{
+			this.statusBar.RemoveFromBar (this.Id, When.Now);
+			this.statusBar.AddToBar ("text", this.StatusView, "", this.Id, When.Now);
+		}
+
+		private void RemoveTaskInStatusInBag()
+		{
+			this.entityBag.RemoveFromBag (this.Username, this.Id, When.Now);
+		}
+		private void RemoveTaskStatus()
+		{
+			this.statusBar.RemoveFromBar (this.Id, When.Now);
 		}
 
 		private readonly string taskId;
@@ -140,6 +183,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		private System.DateTime finisedAt;
 
 		private string title;
+		private StatusBarManager statusBar;
+		private EntityBagManager entityBag;
 		
 	}
 

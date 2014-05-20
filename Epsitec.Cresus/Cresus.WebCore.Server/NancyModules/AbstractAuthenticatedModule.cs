@@ -12,6 +12,7 @@ using System.Linq;
 using Nancy;
 
 using System.Collections.Generic;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
@@ -41,7 +42,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			LoginModule.CheckIsLoggedIn (this);
 		}
 
-
 		protected Response Execute(System.Func<BusinessContext, Response> function)
 		{
 			return this.Execute ((pool, username, sessionId) => pool.Execute (username, sessionId, function));
@@ -59,14 +59,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			this.CoreServer.CoreWorkerQueue.Enqueue (task.Id, task.Username, task.SessionId, action);
 		}
 
-		protected CoreJob CreateJob(string title)
-		{
-			var userName  = LoginModule.GetUserName (this);
-			var sessionId = LoginModule.GetSessionId (this);
-			var job = new CoreJob (userName, sessionId, this.CreateJobId (), title);
-			this.CoreServer.Jobs.TryAdd (job.Id, job);
-			return job;
-		}
 		protected CoreJob GetJob(string jobId)
 		{
 			return this.CoreServer.Jobs[jobId];
@@ -141,6 +133,20 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			};
 
 			return CoreResponse.Failure (errors);
+		}
+
+		public Response CreateJob(BusinessContext businessContext, string title, out CoreJob job)
+		{
+			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
+			var statusBar = StatusBarManager.GetCurrentStatusBarManager ();
+			var userName   = LoginModule.GetUserName (this);
+			var sessionId  = LoginModule.GetSessionId (this);
+			job = new CoreJob (userName, sessionId, this.CreateJobId (), title, entityBag, statusBar);
+			this.CoreServer.Jobs.TryAdd (job.Id, job);
+			return new Response ()
+			{
+				StatusCode = HttpStatusCode.Accepted
+			};
 		}
 
 
