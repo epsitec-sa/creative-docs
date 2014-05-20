@@ -199,7 +199,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			//	Déplacement interactif de la largeur d'une colonne. On se contente donc
 			//	de modifier le widget, sans rien mémoriser.
-			this.GetColumn (rank).PreferredWidth = width;
+			var column = this.GetColumn (rank);
+
+			if (column != null)
+			{
+				column.PreferredWidth = width;
+			}
 		}
 
 		protected void SetColumnWidth(int rank, int? width)
@@ -219,7 +224,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected AbstractTreeTableColumn GetColumn(int rank)
 		{
-			return this.treeTable.TreeTableColumns[rank];
+			if (rank >= 0 && rank < this.treeTable.TreeTableColumns.Count)
+			{
+				return this.treeTable.TreeTableColumns[rank];
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		protected void AddSortedColumn(int rank)

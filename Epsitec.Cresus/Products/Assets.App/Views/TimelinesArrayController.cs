@@ -696,35 +696,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (target != null && timestamp.HasValue)
 			{
-				System.DateTime? createDate = timestamp.Value.Date;
+				var obj = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid);
 
-				var popup = new NewEventPopup (this.accessor)
+				NewEventPopup.Show (target, this.accessor, BaseType.Assets, obj, timestamp.Value,
+				timestampChanged: delegate (Timestamp? t)
 				{
-					BaseType   = BaseType.Assets,
-					DataObject = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid),
-					Timestamp  = timestamp.Value,
-				};
-
-				popup.Create (target);
-
-				popup.DateChanged += delegate (object sender, System.DateTime? dateTime)
+					this.SelectedTimestamp = t;
+				},
+				action: delegate (System.DateTime date, string name)
 				{
-					if (dateTime.HasValue)
-					{
-						createDate = dateTime.Value;
-
-						int column = this.dataArray.FindColumnIndex (new Timestamp (dateTime.Value, 0));
-						this.SetSelection (this.selectedRow, column);
-					}
-				};
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (createDate.HasValue)
-					{
-						this.CreateEvent (createDate.Value, name);
-					}
-				};
+					this.CreateEvent (date, name);
+				});
 			}
 		}
 
@@ -783,13 +765,65 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnTimelineCopy()
 		{
 			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.Copy);
-			MessagePopup.ShowTodo (target);
+			var obj = this.SelectedObject;
+
+			if (obj != null && this.SelectedTimestamp.HasValue)
+			{
+				var e = obj.GetEvent (this.SelectedTimestamp.Value);
+				this.accessor.Clipboard.CopyEvent (this.accessor, e);
+
+				this.UpdateToolbar ();
+			}
+			else
+			{
+				MessagePopup.ShowError (target, "La copie est impossible, car aucun événement n'est sélectionné.");
+			}
 		}
 
 		private void OnTimelinePaste()
 		{
 			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.Paste);
-			MessagePopup.ShowTodo (target);
+			var obj = this.SelectedObject;
+
+			if (obj != null && this.accessor.Clipboard.HasEvent)
+			{
+				EventPastePopup.Show (target, this.accessor, obj,
+				this.accessor.Clipboard.EventType,
+				this.accessor.Clipboard.EventTimestamp.Value.Date,
+				dateChanged: delegate (System.DateTime? date)
+				{
+					if (date.HasValue)
+					{
+						this.SelectedTimestamp = new Timestamp (date.Value, 0);
+					}
+					else
+					{
+						this.SelectedTimestamp = null;
+					}
+				},
+				action: delegate (System.DateTime date)
+				{
+					var e = this.accessor.Clipboard.PasteEvent (this.accessor, obj, date);
+
+					if (e == null)
+					{
+						MessagePopup.ShowError (target, "Les données sont incompatibles.");
+					}
+					else
+					{
+						this.UpdateDataArray ();
+						this.UpdateScroller ();
+						this.UpdateController ();
+						this.UpdateToolbar ();
+						this.SetSelection (this.selectedRow, this.dataArray.FindColumnIndex (e.Timestamp));
+						//?this.OnStartEditing (e.Type, e.Timestamp);
+					}
+				});
+			}
+			else
+			{
+				MessagePopup.ShowError (target, "Aucun événement ne peut être collé, car le bloc-notes est vide.");
+			}
 		}
 
 		private void OnAmortizationPreview()
@@ -1344,7 +1378,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Copy,  this.HasSelectedEvent);
-			this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Paste, true);
+			this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Paste, this.accessor.Clipboard.HasEvent);
 		}
 
 		private void UpdateObjectCommand(ToolbarCommand command, int currentSelection, int? newSelection)

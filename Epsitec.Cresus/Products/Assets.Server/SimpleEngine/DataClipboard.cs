@@ -10,11 +10,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public class DataClipboard
 	{
-		public DataClipboard()
-		{
-		}
-
-
 		public bool								HasEvent
 		{
 			get

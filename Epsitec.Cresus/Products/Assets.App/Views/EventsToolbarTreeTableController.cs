@@ -153,6 +153,63 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		protected override void OnCopy()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Copy);
+
+			if (this.obj != null && this.SelectedTimestamp.HasValue)
+			{
+				var e = this.obj.GetEvent (this.SelectedTimestamp.Value);
+				this.accessor.Clipboard.CopyEvent (this.accessor, e);
+
+				this.UpdateToolbar ();
+			}
+			else
+			{
+				MessagePopup.ShowError (target, "La copie est impossible, car aucun événement n'est sélectionné.");
+			}
+		}
+
+		protected override void OnPaste()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+
+			if (this.obj != null && this.accessor.Clipboard.HasEvent)
+			{
+				EventPastePopup.Show (target, this.accessor, this.obj,
+				this.accessor.Clipboard.EventType,
+				this.accessor.Clipboard.EventTimestamp.Value.Date,
+				dateChanged: delegate (System.DateTime? date)
+				{
+					// Ne surtout pas mettre à jour this.SelectedTimestamp !
+				},
+				action: delegate (System.DateTime date)
+				{
+					var e = this.accessor.Clipboard.PasteEvent (this.accessor, this.obj, date);
+
+					if (e == null)
+					{
+						MessagePopup.ShowError (target, "Les données sont incompatibles.");
+					}
+					else
+					{
+						this.UpdateData ();
+						this.SelectedTimestamp = e.Timestamp;
+						this.OnUpdateAfterCreate (e.Guid, e.Type, e.Timestamp);
+					}
+				});
+			}
+			else
+			{
+				MessagePopup.ShowError (target, "Aucun événement ne peut être collé, car le bloc-notes est vide.");
+			}
+		}
+
+		protected override void UpdateToolbar()
+		{
+			base.UpdateToolbar ();
+			this.toolbar.SetCommandEnable (ToolbarCommand.Paste, this.accessor.Clipboard.HasEvent);
+		}
 
 		private void CreateEvent(System.DateTime date, string buttonName)
 		{
@@ -222,7 +279,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly ObjectEventsNodeGetter	eventsNodeGetter;
+		private readonly ObjectEventsNodeGetter		eventsNodeGetter;
 
 		private Guid								objectGuid;
 		private DataObject							obj;
