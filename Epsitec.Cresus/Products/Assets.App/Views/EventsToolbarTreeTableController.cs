@@ -123,11 +123,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (target != null)
 			{
 				NewEventPopup.Show (target, this.accessor, this.baseType, this.obj, timestamp.Value,
-				delegate (Timestamp? t)
+				timestampChanged: delegate (Timestamp? t)
 				{
 					this.SelectedTimestamp = t;
 				},
-				delegate (System.DateTime date, string name)
+				action: delegate (System.DateTime date, string name)
 				{
 					this.CreateEvent (date, name);
 				});

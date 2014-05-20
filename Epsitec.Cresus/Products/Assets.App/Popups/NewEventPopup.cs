@@ -13,6 +13,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Choix du type d'un nouvel événement à créer, et de sa date.
+	/// </summary>
 	public class NewEventPopup : AbstractPopup
 	{
 		public NewEventPopup(DataAccessor accessor)
@@ -257,7 +260,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#region Helpers
 		public static void Show(Widget target, DataAccessor accessor,
 			BaseType baseType, DataObject obj, Timestamp timestamp,
-			System.Action<Timestamp?> selectedTimestamp,
+			System.Action<Timestamp?> timestampChanged,
 			System.Action<System.DateTime, string> action)
 		{
 			if (target != null)
@@ -277,16 +280,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					if (dateTime.HasValue)
 					{
-						selectedTimestamp (new Timestamp (dateTime.Value, 0));
+						timestampChanged (new Timestamp (dateTime.Value, 0));
+						createDate = dateTime.Value;
 					}
 					else
 					{
-						selectedTimestamp (null);
-					}
-
-					if (dateTime.HasValue)
-					{
-						createDate = dateTime.Value;
+						timestampChanged (null);
 					}
 				};
 

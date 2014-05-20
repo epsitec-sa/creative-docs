@@ -316,11 +316,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (target != null && timestamp.HasValue)
 			{
 				NewEventPopup.Show (target, this.accessor, this.baseType, this.obj, timestamp.Value,
-				delegate (Timestamp? t)
+				timestampChanged: delegate (Timestamp? t)
 				{
 					this.SelectedTimestamp = t;
 				},
-				delegate (System.DateTime date, string name)
+				action: delegate (System.DateTime date, string name)
 				{
 					this.CreateEvent (date, name);
 				});
@@ -360,7 +360,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var e = this.obj.GetEvent (this.selectedTimestamp.Value);
 				this.accessor.Clipboard.CopyEvent (this.accessor, e);
 
-				//?MessagePopup.ShowMessage (target, "L'événement a été copié dans le bloc-notes.");
+				this.UpdateToolbar ();
 			}
 			else
 			{
@@ -374,29 +374,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.obj != null && this.accessor.Clipboard.HasEvent)
 			{
-				EventPastePopup.Show (target, this.accessor, this.accessor.Clipboard.EventType, this.accessor.Clipboard.EventTimestamp.Value.Date, this.DoPaste);
+				EventPastePopup.Show (target, this.accessor, this.obj,
+				this.accessor.Clipboard.EventType,
+				this.accessor.Clipboard.EventTimestamp.Value.Date,
+				dateChanged: delegate (System.DateTime? date)
+				{
+					if (date.HasValue)
+					{
+						this.SelectedTimestamp = new Timestamp (date.Value, 0);
+					}
+					else
+					{
+						this.SelectedTimestamp = null;
+					}
+				},
+				action: delegate (System.DateTime date)
+				{
+					var e = this.accessor.Clipboard.PasteEvent (this.accessor, this.obj, date);
+
+					if (e == null)
+					{
+						MessagePopup.ShowError (target, "Les données sont incompatibles.");
+					}
+					else
+					{
+						this.UpdateData ();
+						this.SelectedTimestamp = e.Timestamp;
+						this.OnStartEditing (e.Type, e.Timestamp);
+						this.OnDeepUpdate ();
+					}
+				});
 			}
 			else
 			{
 				MessagePopup.ShowError (target, "Aucun événement ne peut être collé, car le bloc-notes est vide.");
 			}
-		}
-
-		private void DoPaste(System.DateTime date)
-		{
-			var e = this.accessor.Clipboard.PasteEvent (this.accessor, this.obj, date);
-
-			if (e == null)
-			{
-				var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
-				MessagePopup.ShowError (target, "Les données sont incompatibles.");
-				return;
-			}
-
-			this.UpdateData ();
-			this.SelectedTimestamp = e.Timestamp;
-			this.OnStartEditing (e.Type, e.Timestamp);
-			this.OnDeepUpdate ();
 		}
 
 
@@ -690,7 +702,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.Deselect, sel != -1);
 			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,     sel != -1);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Paste,    true);
+			this.toolbar.SetCommandEnable (ToolbarCommand.Paste,    this.accessor.Clipboard.HasEvent);
 		}
 
 		private void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
