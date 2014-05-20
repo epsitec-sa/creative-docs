@@ -567,7 +567,16 @@ $.getScript('signalr/hubs', function() {
               var item = new Ext.Toolbar.TextItem({ id: status.id, text: status.text });
           }
               
-          sb.add (item);
+          sb.add(item);
+          sb.setStatus({
+              text: 'Travaux en cours',
+              iconCls: 'x-status-busy',
+              clear: {
+                  wait: 8000,
+                  anim: true,
+                  useDefaults: true
+              }
+          });
       },
 
       removeEntityFromStatusBar: function (status) {
@@ -578,10 +587,9 @@ $.getScript('signalr/hubs', function() {
       createStatusBar : function () {
         return Ext.create('Ext.ux.StatusBar', {
             id: 'job-statusbar',
-            defaultText: 'Travaux',
+            defaultText: 'Aucun travaux',
             //defaultIconCls: 'default-icon',
-            text: 'Travaux',
-            width: '80%',
+            text: 'Aucun travaux',
             iconCls: 'x-status-valid',
             items: []
         });

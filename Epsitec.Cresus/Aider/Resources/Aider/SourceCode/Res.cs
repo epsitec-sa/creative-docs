@@ -31,8 +31,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployee = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 117));
 				//	designer:cap/LVOJ33
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeJob = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 115));
-				//	designer:cap/LVOM33
-				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeMenu = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 118));
 				//	designer:cap/LVA1D
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 417));
 				//	designer:cap/LVGI22
@@ -106,8 +104,6 @@ namespace Epsitec.Aider
 				public const long ShowAiderEmployee = 0x3F500078000075L;
 				//	designer:cap/LVOJ33
 				public const long ShowAiderEmployeeJob = 0x3F500078000073L;
-				//	designer:cap/LVOM33
-				public const long ShowAiderEmployeeMenu = 0x3F500078000076L;
 				//	designer:cap/LVA1D
 				public const long ShowAiderGroup = 0x3F50000A0001A1L;
 				//	designer:cap/LVGI22
@@ -2607,6 +2603,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 40);
 				//	designer:cap/LVOV23
 				public static readonly global::Epsitec.Common.Support.Druid PostalTown = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 95);
+				//	designer:cap/LVON33
+				public static readonly global::Epsitec.Common.Support.Druid Region = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 119);
 				//	designer:cap/LVA4L
 				public static readonly global::Epsitec.Common.Support.Druid RegionalReferees = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 676);
 			}

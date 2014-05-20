@@ -8,7 +8,6 @@ user = [AVAK]
 submenuBonneNouvelle = [LVG732]
 submenuDefs = [LVA4D]
 submenuMisc = [LVA5D]
-submenuEmployee = [LVOM33]
 AiderContact = [LVARD]
 AiderPerson = [LVAF]
 AiderGroup = [LVA54]
@@ -908,6 +907,10 @@ AiderReferee = [LVADJ]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVAAJ].[LVON33]" title="Région de travail" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col> 
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVAAJ].[LVO913]" title="Lieu de travail" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
@@ -1151,6 +1154,10 @@ AiderReferee = [LVADJ]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAIJ].[LVON33]" title="Région de travail" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col> 
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAIJ].[LVO913]" title="Lieu de travail" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
@@ -2159,7 +2166,7 @@ AiderReferee = [LVADJ]
       <R><r>@user</r></R>
     </d>
 
-    <d cid="[LVOJ33]" teid="@AiderEmployeeJob" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuEmployee">
+    <d cid="[LVOJ33]" teid="@AiderEmployeeJob" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuMisc">
       <R><r>@user</r></R>
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderEmployeeJob:[LVA9J].[LVALK]" /></M>
       <L>
@@ -2167,7 +2174,7 @@ AiderReferee = [LVADJ]
       </L>
     </d>
 
-    <d cid="[LVOK33]" teid="@AiderReferee" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuEmployee">
+    <d cid="[LVOK33]" teid="@AiderReferee" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuMisc">
       <R><r>@user</r></R>
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderReferee:[LVAEJ].[LVALK]" /></M>
       <L>
@@ -2175,7 +2182,7 @@ AiderReferee = [LVADJ]
       </L>
     </d>
 
-    <d cid="[LVOL33]" teid="@AiderEmployee" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuEmployee">
+    <d cid="[LVOL33]" teid="@AiderEmployee" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuMisc">
       <R><r>@user</r></R>
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderEmployee:[LVALK]" /></M>
       <L>

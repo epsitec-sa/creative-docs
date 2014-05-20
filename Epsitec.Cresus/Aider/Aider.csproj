@@ -332,6 +332,7 @@
     <Compile Include="Entities\ParishOrigin.cs" />
     <Compile Include="Entities\ParticipationData.cs" />
     <Compile Include="Entities\PostalAddressType.cs" />
+    <Compile Include="Enumerations\Region.cs" />
     <Compile Include="Enumerations\EmployeeType.cs" />
     <Compile Include="Enumerations\EmployeeActivity.cs" />
     <Compile Include="Enumerations\EmployeeEmployer.cs" />

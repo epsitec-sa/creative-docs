@@ -12,6 +12,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Linq;
 using System.Collections.Generic;
+using Epsitec.Aider.Data.Common;
 
 namespace Epsitec.Aider.Entities
 {
@@ -230,6 +231,19 @@ namespace Epsitec.Aider.Entities
 		partial void GetRegionalReferees(ref IList<AiderRefereeEntity> value)
 		{
 			value = this.GetVirtualCollection (ref this.regionalReferees, x => x.Group = this.ParishGroup).AsReadOnlyCollection ();
+		}
+
+		partial void GetRegion(ref string value)
+		{
+			if(this.ParishGroup.Parents.Any ())
+			{
+				value = this.ParishGroup.Parents.Last ().Name;
+			}
+			else
+			{
+				value = this.ParishGroup.Name;
+			}
+			
 		}
 
 		private IList<AiderOfficeReportEntity> GetDocuments()

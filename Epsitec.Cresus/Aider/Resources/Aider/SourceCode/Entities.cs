@@ -9360,6 +9360,30 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Region</c> field.
+		///	designer:fld/LVO613/LVON33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVON33]", IsVirtual=true)]
+		public string Region
+		{
+			get
+			{
+				string value = default (string);
+				this.GetRegion (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.Region;
+				if (oldValue != value || !this.IsFieldDefined("[LVON33]"))
+				{
+					this.OnRegionChanging (oldValue, value);
+					this.SetRegion (value);
+					this.OnRegionChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnOfficeNameChanging(string oldValue, string newValue);
 		partial void OnOfficeNameChanged(string oldValue, string newValue);
@@ -9377,12 +9401,16 @@ namespace Epsitec.Aider.Entities
 		partial void OnPostalTownChanged(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
 		partial void OnOfficeUsersLoginMessageChanging(string oldValue, string newValue);
 		partial void OnOfficeUsersLoginMessageChanged(string oldValue, string newValue);
+		partial void OnRegionChanging(string oldValue, string newValue);
+		partial void OnRegionChanged(string oldValue, string newValue);
 		
 		partial void GetOfficeSenders(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> value);
 		partial void GetDocuments(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> value);
 		partial void GetEmployees(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeEntity> value);
 		partial void GetEmployeeJobs(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> value);
 		partial void GetRegionalReferees(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity> value);
+		partial void GetRegion(ref string value);
+		partial void SetRegion(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
