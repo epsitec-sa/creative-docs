@@ -92,8 +92,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            integer value.
 			Get["/export/{name}"] = (p =>
 			{
-				var type		= this.Request.Query.type == "label" ? "PDF" : "CSV";
-				CoreJob job = null;
+				var		type = this.Request.Query.type == "label" ? "PDF" : "CSV";
+				CoreJob job	 = null;
 				this.Execute (b => this.CreateJob (b, "Export " + type, out job));
 				this.Enqueue (job, context => this.LongRunningExport (context, job, p));
 
@@ -271,8 +271,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private void LongRunningExport(BusinessContext businessContext, CoreJob job, dynamic parameters)
 		{
 			job.Start ();
-			this.UpdateTaskStatusInBag (job);
-			this.UpdateTaskStatus (job);
 
 			var user		= LoginModule.GetUserName (this);
 			var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
@@ -288,8 +286,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			job.Metadata = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
 			job.Finish ();
-			this.UpdateTaskStatusInBag (job);
-			this.RemoveTaskStatus (job);
 		}
 
 		private void UpdateTaskStatusInBag(CoreJob task)

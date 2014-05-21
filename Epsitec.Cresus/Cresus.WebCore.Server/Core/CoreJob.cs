@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public void Finish()
 		{
-			this.finisedAt = System.DateTime.Now;
+			this.finishedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Ended;
 			this.UpdateTaskStatusInBag ();
 			this.RemoveTaskStatus ();
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public void Cancel()
 		{
-			this.finisedAt = System.DateTime.Now;
+			this.finishedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Canceled;
 			this.RemoveTaskStatus ();
 			this.RemoveTaskInStatusInBag ();
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public System.TimeSpan GetRunningTime()
 		{
-			return this.finisedAt.Subtract (this.startedAt);
+			return this.finishedAt.Subtract (this.startedAt);
 		}
 
 		private void AddTaskStatusInBag()
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		private System.DateTime createdAt;
 		private System.DateTime queuedAt;
 		private System.DateTime startedAt;
-		private System.DateTime finisedAt;
+		private System.DateTime finishedAt;
 
 		private string title;
 		private StatusBarManager statusBar;
