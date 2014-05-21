@@ -196,8 +196,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				NewCustomization      = new CommandCustomization ("TreeTable.New.Asset", "Nouvel objet d'immobilisation"),
 				DeleteCustomization   = new CommandCustomization (null, "Supprimer l'objet d'immobilisation"),
 				DeselectCustomization = new CommandCustomization (null, "Désélectionner l'objet d'immobilisation"),
-				CopyCustomization     = new CommandCustomization (null, "Copier l'objet d'immobilisation"),
-				PasteCustomization    = new CommandCustomization (null, "Coller l'objet d'immobilisation"),
+				CopyCustomization     = new CommandCustomization ("TreeTable.Copy.Asset", "Copier l'objet d'immobilisation"),
+				PasteCustomization    = new CommandCustomization ("TreeTable.Paste.Asset", "Coller l'objet d'immobilisation"),
 				ExportCustomization   = new CommandCustomization (null, "Exporter les objets d'immobilisations"),
 			};
 

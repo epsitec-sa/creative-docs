@@ -65,8 +65,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.CreateSeparator (DockStyle.Left);
 																				          
-			this.buttonCopy       = this.CreateCommandButton (DockStyle.Left,            ToolbarCommand.Copy,        "TreeTable.Copy",       "Copier l'événement");
-			this.buttonPaste      = this.CreateCommandButton (DockStyle.Left,            ToolbarCommand.Paste,       "TreeTable.Paste",      "Coller l'événement");
+			this.buttonCopy       = this.CreateCommandButton (DockStyle.Left,            ToolbarCommand.Copy,        "TreeTable.Copy.Event",  "Copier l'événement");
+			this.buttonPaste      = this.CreateCommandButton (DockStyle.Left,            ToolbarCommand.Paste,       "TreeTable.Paste.Event", "Coller l'événement");
 
 			this.buttonCompacted  .Margins = new Margins ( 5, 0, 0, 0);
 			this.buttonWeeksOfYear.Margins = new Margins ( 5, 0, 0, 0);

@@ -25,8 +25,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Event", "Nouvel événement");
 			this.DeleteCustomization   = new CommandCustomization (null, "Supprimer l'événement");
 			this.DeselectCustomization = new CommandCustomization (null, "Désélectionner l'événement");
-			this.CopyCustomization     = new CommandCustomization (null, "Copier l'événement");
-			this.PasteCustomization    = new CommandCustomization (null, "Coller l'événement");
+			this.CopyCustomization     = new CommandCustomization ("TreeTable.Copy.Event", "Copier l'événement");
+			this.PasteCustomization    = new CommandCustomization ("TreeTable.Paste.Event", "Coller l'événement");
 			this.ExportCustomization   = new CommandCustomization (null, "Exporter les événements");
 
 			this.eventsNodeGetter = new ObjectEventsNodeGetter ();

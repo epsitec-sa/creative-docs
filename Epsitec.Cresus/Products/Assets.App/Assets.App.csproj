@@ -426,6 +426,10 @@
     <EmbeddedResource Include="Images\TreeTable.Paste.icon" />
     <EmbeddedResource Include="Images\TreeTable.Copy.icon" />
     <EmbeddedResource Include="Images\TreeTable.Export.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Copy.Asset.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Copy.Event.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Paste.Asset.icon" />
+    <EmbeddedResource Include="Images\TreeTable.Paste.Event.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
