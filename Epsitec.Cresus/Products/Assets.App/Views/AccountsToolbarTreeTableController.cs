@@ -23,12 +23,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
-			this.NewTooltip      = "Nouveau compte";
-			this.DeleteTooltip   = "Supprimer le compte";
-			this.DeselectTooltip = "Désélectionner le compte";
-			this.CopyTooltip     = "Copier le compte";
-			this.PasteTooltip    = "Coller le compte";
-			this.ExportTooltip   = "Exporter les comptes";
+			this.NewCustomization      = new CommandCustomization (null, "Nouveau compte");
+			this.DeleteCustomization   = new CommandCustomization (null, "Supprimer le compte");
+			this.DeselectCustomization = new CommandCustomization (null, "Désélectionner le compte");
+			this.CopyCustomization     = new CommandCustomization (null, "Copier le compte");
+			this.PasteCustomization    = new CommandCustomization (null, "Coller le compte");
+			this.ExportCustomization   = new CommandCustomization (null, "Exporter les comptes");
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AccountsSettings);
 

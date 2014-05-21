@@ -27,18 +27,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public string							NewIcon;
-		public string							NewTooltip;
-		public string							DeleteIcon;
-		public string							DeleteTooltip;
-		public string							DeselectIcon;
-		public string							DeselectTooltip;
-		public string							CopyIcon;
-		public string							CopyTooltip;
-		public string							PasteIcon;
-		public string							PasteTooltip;
-		public string							ExportIcon;
-		public string							ExportTooltip;
+		public CommandCustomization				NewCustomization;
+		public CommandCustomization				DeleteCustomization;
+		public CommandCustomization				DeselectCustomization;
+		public CommandCustomization				CopyCustomization;
+		public CommandCustomization				PasteCustomization;
+		public CommandCustomization				ExportCustomization;
 
 		public bool								ShowGraphic
 		{
@@ -90,18 +84,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.toolbar = new TreeTableToolbar
 			{
-				NewIcon         = this.NewIcon,
-				NewTooltip      = this.NewTooltip,
-				DeleteIcon      = this.DeleteIcon,
-				DeleteTooltip   = this.DeleteTooltip,
-				DeselectIcon    = this.DeselectIcon,
-				DeselectTooltip = this.DeselectTooltip,
-				CopyIcon        = this.CopyIcon,
-				CopyTooltip     = this.CopyTooltip,
-				PasteIcon       = this.PasteIcon,
-				PasteTooltip    = this.PasteTooltip,
-				ExportIcon      = this.ExportIcon,
-				ExportTooltip   = this.ExportTooltip,
+				NewCustomization      = this.NewCustomization,
+				DeleteCustomization   = this.DeleteCustomization,
+				DeselectCustomization = this.DeselectCustomization,
+				CopyCustomization     = this.CopyCustomization,
+				PasteCustomization    = this.PasteCustomization,
+				ExportCustomization   = this.ExportCustomization,
 			};
 
 			this.toolbar.CreateUI (parent);

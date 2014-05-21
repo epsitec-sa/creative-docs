@@ -22,13 +22,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
-			this.NewIcon         = "TreeTable.New.Event";
-			this.NewTooltip      = "Nouvel événement";
-			this.DeleteTooltip   = "Supprimer l'événement";
-			this.DeselectTooltip = "Désélectionner l'événement";
-			this.CopyTooltip     = "Copier l'événement";
-			this.PasteTooltip    = "Coller l'événement";
-			this.ExportTooltip   = "Exporter les événements";
+			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Event", "Nouvel événement");
+			this.DeleteCustomization   = new CommandCustomization (null, "Supprimer l'événement");
+			this.DeselectCustomization = new CommandCustomization (null, "Désélectionner l'événement");
+			this.CopyCustomization     = new CommandCustomization (null, "Copier l'événement");
+			this.PasteCustomization    = new CommandCustomization (null, "Coller l'événement");
+			this.ExportCustomization   = new CommandCustomization (null, "Exporter les événements");
 
 			this.eventsNodeGetter = new ObjectEventsNodeGetter ();
 			this.nodeGetter = new SorterNodeGetter (this.eventsNodeGetter);

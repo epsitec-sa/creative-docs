@@ -180,6 +180,7 @@
     <Compile Include="Views\EditorPageAccount.cs" />
     <Compile Include="Views\EcrituresView.cs" />
     <Compile Include="Views\EditorPageUserField.cs" />
+    <Compile Include="Views\CommandCustomization.cs" />
     <Compile Include="Views\UserFieldsToolbarTreeTableController.cs" />
     <Compile Include="Views\UserFieldsSettingsView.cs" />
     <Compile Include="Views\SettingsViewState.cs" />

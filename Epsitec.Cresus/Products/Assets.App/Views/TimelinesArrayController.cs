@@ -193,13 +193,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Partie gauche.
 			this.objectsToolbar = new TreeTableToolbar
 			{
-				NewIcon         = "TreeTable.New.Asset",
-				NewTooltip      = "Nouvel objet d'immobilisation",
-				DeleteTooltip   = "Supprimer l'objet d'immobilisation",
-				DeselectTooltip = "Désélectionner l'objet d'immobilisation",
-				CopyTooltip     = "Copier l'objet d'immobilisation",
-				PasteTooltip    = "Coller l'objet d'immobilisation",
-				ExportTooltip   = "Exporter les objets d'immobilisations",
+				NewCustomization      = new CommandCustomization ("TreeTable.New.Asset", "Nouvel objet d'immobilisation"),
+				DeleteCustomization   = new CommandCustomization (null, "Supprimer l'objet d'immobilisation"),
+				DeselectCustomization = new CommandCustomization (null, "Désélectionner l'objet d'immobilisation"),
+				CopyCustomization     = new CommandCustomization (null, "Copier l'objet d'immobilisation"),
+				PasteCustomization    = new CommandCustomization (null, "Coller l'objet d'immobilisation"),
+				ExportCustomization   = new CommandCustomization (null, "Exporter les objets d'immobilisations"),
 			};
 
 			this.objectsToolbar.CreateUI (leftBox);
