@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -69,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return this.Date.HasValue;
+				return this.Date.HasValue && !this.HasError;
 			}
 		}
 

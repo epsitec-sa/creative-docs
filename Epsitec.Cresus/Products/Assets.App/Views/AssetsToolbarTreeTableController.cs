@@ -234,6 +234,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnCopy()
 		{
+			//	Copier un objet d'immobilisation requiert un popup pour choisir la date à considérer.
 			var target = this.toolbar.GetTarget (ToolbarCommand.Copy);
 			var obj = this.accessor.GetObject (this.baseType, this.SelectedGuid);
 
@@ -247,15 +248,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnPaste()
 		{
+			//	Coller un objet d'immobilisation requiert un popup pour choisir la date d'entrée.
 			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
 			var summary = this.accessor.Clipboard.GetObjectSummary (this.baseType);
 
-			AssetPastePopup.Show (target, this.accessor, summary, delegate (System.DateTime date)
+			AssetPastePopup.Show (target, this.accessor, summary, delegate (System.DateTime inputDate)
 			{
-				var obj = this.accessor.Clipboard.PasteObject (this.accessor, this.baseType, date);
+				var obj = this.accessor.Clipboard.PasteObject (this.accessor, this.baseType, inputDate);
 				this.UpdateData ();
 				this.SelectedGuid = obj.Guid;
-				this.OnUpdateAfterCreate (obj.Guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
+				this.OnUpdateAfterCreate (obj.Guid, EventType.Input, new Timestamp (inputDate, 0));
 			});
 		}
 
