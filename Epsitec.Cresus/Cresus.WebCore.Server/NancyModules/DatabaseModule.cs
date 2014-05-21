@@ -275,17 +275,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var user		= LoginModule.GetUserName (this);
 			var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
 			var filename	= job.Id + fileExt;
+			var finishMetaData = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
 			var caches		= this.CoreServer.Caches;
 			
-
 			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
+				job.Progress ("Exportation...");
 				DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
 			}
 
-
-			job.Metadata = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
-			job.Finish ();
+			job.Finish (finishMetaData);
 		}
 
 		private void UpdateTaskStatusInBag(CoreJob task)

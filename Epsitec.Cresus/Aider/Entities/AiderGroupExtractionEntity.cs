@@ -35,6 +35,17 @@ namespace Epsitec.Aider.Entities
 			yield return TextFormatter.FormatText (this.Name);
 		}
 
+
+		public IEnumerable<AiderGroupParticipantEntity> GetAllParticipations(DataContext dataContext)
+		{
+			var groups   = this.ExecuteSearch (dataContext);
+			var participations = groups.SelectMany (g => g.GetAllGroupAndSubGroupParticipations ());
+
+			System.Diagnostics.Debug.WriteLine ("Groups found: {0}", groups.Count ());
+			System.Diagnostics.Debug.WriteLine ("Participations found: {0}", participations.Count ());
+
+			return participations;
+		}
 		
 		public IEnumerable<AiderContactEntity> GetAllContacts(DataContext dataContext)
 		{

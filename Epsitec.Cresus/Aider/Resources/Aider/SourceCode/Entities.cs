@@ -3032,26 +3032,46 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Role</c> field.
-		///	designer:fld/LVA73/LVOF33
+		///	The <c>RoleCache</c> field.
+		///	designer:fld/LVA73/LVOO33
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOF33]", IsVirtual=true)]
-		public string Role
+		[global::Epsitec.Common.Support.EntityField ("[LVOO33]")]
+		public string RoleCache
 		{
 			get
 			{
-				string value = default (string);
-				this.GetRole (ref value);
-				return value;
+				return this.GetField<string> ("[LVOO33]");
 			}
 			set
 			{
-				string oldValue = this.Role;
-				if (oldValue != value || !this.IsFieldDefined("[LVOF33]"))
+				string oldValue = this.RoleCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVOO33]"))
 				{
-					this.OnRoleChanging (oldValue, value);
-					this.SetRole (value);
-					this.OnRoleChanged (oldValue, value);
+					this.OnRoleCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVOO33]", oldValue, value);
+					this.OnRoleCacheChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>RoleCacheDisabled</c> field.
+		///	designer:fld/LVA73/LVOP33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOP33]")]
+		public bool RoleCacheDisabled
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVOP33]");
+			}
+			set
+			{
+				bool oldValue = this.RoleCacheDisabled;
+				if (oldValue != value || !this.IsFieldDefined("[LVOP33]"))
+				{
+					this.OnRoleCacheDisabledChanging (oldValue, value);
+					this.SetField<bool> ("[LVOP33]", oldValue, value);
+					this.OnRoleCacheDisabledChanged (oldValue, value);
 				}
 			}
 		}
@@ -3064,11 +3084,11 @@ namespace Epsitec.Aider.Entities
 		partial void OnLegalPersonChanged(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
 		partial void OnContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
-		partial void OnRoleChanging(string oldValue, string newValue);
-		partial void OnRoleChanged(string oldValue, string newValue);
+		partial void OnRoleCacheChanging(string oldValue, string newValue);
+		partial void OnRoleCacheChanged(string oldValue, string newValue);
+		partial void OnRoleCacheDisabledChanging(bool oldValue, bool newValue);
+		partial void OnRoleCacheDisabledChanged(bool oldValue, bool newValue);
 		
-		partial void GetRole(ref string value);
-		partial void SetRole(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -5832,6 +5852,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>RoleCacheDisabled</c> field.
+		///	designer:fld/LVA2A/LVOR33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOR33]")]
+		public bool RoleCacheDisabled
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVOR33]");
+			}
+			set
+			{
+				bool oldValue = this.RoleCacheDisabled;
+				if (oldValue != value || !this.IsFieldDefined("[LVOR33]"))
+				{
+					this.OnRoleCacheDisabledChanging (oldValue, value);
+					this.SetField<bool> ("[LVOR33]", oldValue, value);
+					this.OnRoleCacheDisabledChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -5857,6 +5899,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		partial void OnFunctionChanging(global::Epsitec.Aider.Entities.AiderGroupDefEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupDefEntity newValue);
 		partial void OnFunctionChanged(global::Epsitec.Aider.Entities.AiderGroupDefEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupDefEntity newValue);
+		partial void OnRoleCacheDisabledChanging(bool oldValue, bool newValue);
+		partial void OnRoleCacheDisabledChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -8766,24 +8810,24 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Role</c> field.
-		///	designer:fld/LVOL03/LVOI33
+		///	The <c>GroupParticipation</c> field.
+		///	designer:fld/LVOL03/LVOS33
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOI33]")]
-		public string Role
+		[global::Epsitec.Common.Support.EntityField ("[LVOS33]")]
+		public global::Epsitec.Aider.Entities.AiderGroupParticipantEntity GroupParticipation
 		{
 			get
 			{
-				return this.GetField<string> ("[LVOI33]");
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> ("[LVOS33]");
 			}
 			set
 			{
-				string oldValue = this.Role;
-				if (oldValue != value || !this.IsFieldDefined("[LVOI33]"))
+				global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue = this.GroupParticipation;
+				if (oldValue != value || !this.IsFieldDefined("[LVOS33]"))
 				{
-					this.OnRoleChanging (oldValue, value);
-					this.SetField<string> ("[LVOI33]", oldValue, value);
-					this.OnRoleChanged (oldValue, value);
+					this.OnGroupParticipationChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> ("[LVOS33]", oldValue, value);
+					this.OnGroupParticipationChanged (oldValue, value);
 				}
 			}
 		}
@@ -8798,8 +8842,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnParticipantTypeChanged(global::Epsitec.Aider.Enumerations.MailingParticipantType oldValue, global::Epsitec.Aider.Enumerations.MailingParticipantType newValue);
 		partial void OnIsExcludedChanging(bool oldValue, bool newValue);
 		partial void OnIsExcludedChanged(bool oldValue, bool newValue);
-		partial void OnRoleChanging(string oldValue, string newValue);
-		partial void OnRoleChanged(string oldValue, string newValue);
+		partial void OnGroupParticipationChanging(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
+		partial void OnGroupParticipationChanged(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

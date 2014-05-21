@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{
 			get
 			{
-				var desc = this.Username + " (" + this.Status.Value + ")";
+				var desc = "[" + this.Username + "] (" + this.Status.Value + ")" + this.Metadata;
 				return desc;
 			}
 		}
@@ -122,10 +122,20 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.UpdateTaskStatusInBag ();
 		}
 
-		public void Finish()
+		public void Progress(string metaData)
+		{
+			this.startedAt = System.DateTime.Now;
+			this.Status = CoreJobStatus.Running;
+			this.Metadata = metaData;
+			this.UpdateTaskStatus ();
+			this.UpdateTaskStatusInBag ();
+		}
+
+		public void Finish(string metaData)
 		{
 			this.finishedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Ended;
+			this.Metadata = metaData;
 			this.UpdateTaskStatusInBag ();
 			this.RemoveTaskStatus ();
 		}

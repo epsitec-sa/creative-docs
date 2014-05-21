@@ -391,6 +391,12 @@ namespace Epsitec.Aider.Entities
 			return AiderGroupEntity.CreateSummary (() => this.GetGroupAndSubGroupParticipantCount (), count => this.GetGroupAndSubGroupParticipantContacts (count));
 		}
 
+
+		public IList<AiderGroupParticipantEntity> GetAllGroupAndSubGroupParticipations()
+		{
+			return this.GetGroupAndSubGroupParticipations ();
+		}
+
 		public IList<AiderContactEntity> GetAllGroupAndSubGroupParticipantContacts()
 		{
 			return this.GetGroupAndSubGroupParticipantContacts ();
@@ -900,6 +906,12 @@ namespace Epsitec.Aider.Entities
 												() => new List<AiderGroupParticipantEntity> ());
 		}
 
+		private IList<AiderGroupParticipantEntity> GetGroupAndSubGroupParticipations(int? count = null)
+		{
+			return this.ExecuteWithDataContext (c => this.FindGroupAndSubGroupParticipations (c, count),
+												() => new List<AiderGroupParticipantEntity> ());
+		}
+
 		private IList<AiderContactEntity> GetGroupAndSubGroupParticipantContacts(int? count = null)
 		{
 			return this.ExecuteWithDataContext (c => this.FindGroupAndSubGroupParticipants (c, count),
@@ -989,6 +1001,21 @@ namespace Epsitec.Aider.Entities
 			};
 
 			return businessContext.DataContext.GetByExample (example);
+		}
+
+		private IList<AiderGroupParticipantEntity> FindGroupAndSubGroupParticipations(DataContext dataContext, int? count)
+		{
+			if ((count.HasValue) && (count.Value < 1))
+			{
+				return Common.Types.Collections.EmptyList<AiderGroupParticipantEntity>.Instance;
+			}
+
+			var request = AiderGroupParticipantEntity.CreateGroupAndSubGroupParticipantRequest (dataContext, this, true);
+
+			request.Skip = 0;
+			request.Take = count;
+
+			return dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
 		}
 
 		private IList<AiderContactEntity> FindGroupAndSubGroupParticipants(DataContext dataContext, int? count)

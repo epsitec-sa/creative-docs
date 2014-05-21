@@ -273,6 +273,8 @@
     <Compile Include="Data\Job\DerogationHotfix.cs" />
     <Compile Include="Data\Job\EChDataUpdater.cs" />
     <Compile Include="Data\Job\DuplicatedPersonAutoMerger.cs" />
+    <Compile Include="Data\Job\BuildRoleCache.cs" />
+    <Compile Include="Data\Job\PurgeRoleCache.cs" />
     <Compile Include="Data\Job\WarningCleaner.cs" />
     <Compile Include="Data\Job\MatchResponse.cs" />
     <Compile Include="Data\Job\MatchResponseFix.cs" />

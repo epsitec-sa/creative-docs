@@ -318,6 +318,18 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.AutoMergeDuplicatedPersons (args));
 					return;
 				}
+
+				if (args.Contains ("-buildrolecache")) //-buildrolecache
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.RoleCacheBuilder (args));
+					return;
+				}
+
+				if (args.Contains ("-purgerolecache")) //-purgerolecache
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.RoleCachePurger (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -802,7 +814,27 @@ namespace Epsitec.Aider
 			});
 		}
 
+		private static void RoleCacheBuilder(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				BuildRoleCache.Build (coreData);
 
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
+
+		private static void RoleCachePurger(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				PurgeRoleCache.Purge (coreData);
+
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
 
 		private static void RunWithCoreData(Action<CoreData> action)
 		{

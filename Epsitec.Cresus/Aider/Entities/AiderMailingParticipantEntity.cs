@@ -80,14 +80,14 @@ namespace Epsitec.Aider.Entities
 			return participant;
 		}
 
-		public static AiderMailingParticipantEntity CreateForGroup(BusinessContext context, AiderMailingEntity mailing, AiderContactEntity contact, string role)
+		public static AiderMailingParticipantEntity CreateForGroup(BusinessContext context, AiderMailingEntity mailing, AiderGroupParticipantEntity participation, string role)
 		{
 			var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
 
-			participant.Mailing = mailing;
-			participant.Contact = contact;
-			participant.Role	= role;
-			participant.ParticipantType = MailingParticipantType.Group;
+			participant.Mailing            = mailing;
+			participant.Contact			   = participation.Contact;
+			participant.GroupParticipation = participation;
+			participant.ParticipantType    = MailingParticipantType.Group;
 			
 
 			return participant;
@@ -109,20 +109,12 @@ namespace Epsitec.Aider.Entities
 		public static IEnumerable<AiderMailingParticipantEntity> Create(BusinessContext context, AiderMailingEntity mailing, AiderGroupEntity group)
 		{
 			var created = new List<AiderMailingParticipantEntity> ();
-			foreach (var contact in group.GetAllGroupAndSubGroupParticipantContacts ().Distinct())
+			foreach (var participation in group.GetAllGroupAndSubGroupParticipations ().Distinct())
 			{
 				var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
-				
-				var groupParticipations = group.FindParticipationsByGroup (context, contact, group);
-				if(groupParticipations.Any ())
-				{
-					var groupParticipation = groupParticipations.First ();
-					participant.Role	= AiderParticipationsHelpers.BuildRoleFromParticipation (groupParticipation).GetRole (groupParticipation);
-				}
-
 				participant.Mailing = mailing;
-				participant.Contact = contact;
-				
+				participant.Contact = participation.Contact;
+				participant.GroupParticipation = participation;
 				participant.ParticipantType = MailingParticipantType.Group;
 
 				created.Add (participant);
@@ -135,14 +127,14 @@ namespace Epsitec.Aider.Entities
 		public static IEnumerable<AiderMailingParticipantEntity> Create(BusinessContext context, AiderMailingEntity mailing, AiderGroupExtractionEntity group)
 		{
 			var created = new List<AiderMailingParticipantEntity> ();
-			foreach (var contact in group.GetAllContacts (context.DataContext).Distinct ())
+			foreach (var participation in group.GetAllParticipations (context.DataContext).Distinct ())
 			{
 				var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
 
-				participant.Mailing = mailing;
-				participant.Contact = contact;
-				participant.Role	= group.Name;
-				participant.ParticipantType = MailingParticipantType.GroupExtraction;
+				participant.Mailing			   = mailing;
+				participant.Contact			   = participation.Contact;
+				participant.GroupParticipation = participation;
+				participant.ParticipantType    = MailingParticipantType.GroupExtraction;
 				created.Add (participant);
 			}
 

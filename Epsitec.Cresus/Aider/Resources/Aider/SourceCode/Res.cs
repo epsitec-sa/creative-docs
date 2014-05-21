@@ -2315,6 +2315,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Number = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 70);
 				//	designer:cap/LVARC
 				public static readonly global::Epsitec.Common.Support.Druid PathTemplate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 411);
+				//	designer:cap/LVOR33
+				public static readonly global::Epsitec.Common.Support.Druid RoleCacheDisabled = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 123);
 				//	designer:cap/LVA4A
 				public static readonly global::Epsitec.Common.Support.Druid Subgroups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 324);
 				//	designer:cap/LVG722
@@ -2366,8 +2368,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid LegalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 529);
 				//	designer:cap/LVA94
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 137);
-				//	designer:cap/LVOF33
-				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 111);
+				//	designer:cap/LVOO33
+				public static readonly global::Epsitec.Common.Support.Druid RoleCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 120);
+				//	designer:cap/LVOP33
+				public static readonly global::Epsitec.Common.Support.Druid RoleCacheDisabled = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 121);
 			}
 			
 			public static class AiderGroupPlace
@@ -2522,6 +2526,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVON03
 				public static readonly global::Epsitec.Common.Support.Druid Contact = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 23);
+				//	designer:cap/LVOS33
+				public static readonly global::Epsitec.Common.Support.Druid GroupParticipation = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 124);
 				//	designer:cap/LVOS03
 				public static readonly global::Epsitec.Common.Support.Druid Houshold = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 28);
 				//	designer:cap/LVATH
@@ -2530,8 +2536,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Mailing = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 22);
 				//	designer:cap/LVASH
 				public static readonly global::Epsitec.Common.Support.Druid ParticipantType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 572);
-				//	designer:cap/LVOI33
-				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 114);
 			}
 			
 			public static class AiderOfficeGroupParticipantReport

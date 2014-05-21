@@ -56,6 +56,11 @@ namespace Epsitec.Aider.Data.Common
 			AiderEnumerator.Execute (coreData, AiderEnumerator.GetParticipantBatch, action);
 		}
 
+		public static void ParticipationRoleCache(CoreData coreData, Action<BusinessContext, IEnumerable<AiderGroupParticipantEntity>> action)
+		{
+			AiderEnumerator.Execute (coreData, AiderEnumerator.GetParticipantRoleCacheBatch, action);
+		}
+
 
 		public static void Execute(CoreData coreData, Action<BusinessContext, IEnumerable<AiderPersonEntity>> action)
 		{
@@ -151,6 +156,19 @@ namespace Epsitec.Aider.Data.Common
 			return aiderSubscriptionsRefusals;
 		}
 
+		private static IList<AiderGroupParticipantEntity> GetParticipantRoleCacheBatch(DataContext dataContext, int skip, int take)
+		{
+			var example = new AiderGroupParticipantEntity ()
+			{
+				RoleCacheDisabled = false
+			};
+			var request = AiderEnumerator.CreateParticipationRoleCacheBatchRequest (example, skip, take);
+			request.AddCondition (dataContext, example, e => e.EndDate == null);
+
+			var aiderSubscriptions = dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
+
+			return aiderSubscriptions;
+		}
 
 		private static IList<AiderGroupParticipantEntity> GetParticipantBatch(DataContext dataContext, int skip, int take)
 		{
@@ -181,6 +199,19 @@ namespace Epsitec.Aider.Data.Common
 			var request = AiderEnumerator.CreateBatchRequest<AiderAddressEntity> (skip, take);
 
 			return dataContext.GetByRequest<AiderAddressEntity> (request);
+		}
+
+
+		private static Request CreateParticipationRoleCacheBatchRequest (AiderGroupParticipantEntity example, int skip, int take)
+		{
+			var request = new Request ()
+			{
+				RootEntity = example,
+				Skip = skip,
+				Take = take,
+			};
+
+			return request;
 		}
 
 		private static Request CreateBatchRequest<T>(int skip, int take)

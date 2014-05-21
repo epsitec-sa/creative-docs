@@ -155,20 +155,20 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			job.Start ();
 
-			var user		= LoginModule.GetUserName (this);
-			var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
-			var filename	= job.Id + fileExt;
-			var caches = this.CoreServer.Caches;
+			var user	 = LoginModule.GetUserName (this);
+			var fileExt	 = this.Request.Query.type == "label" ? ".pdf" : ".csv";
+			var filename = job.Id + fileExt;
+			var result	 = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
+			var caches   = this.CoreServer.Caches;
 
 			using (ISetViewController controller = this.GetController (businessContext, parameters))
 			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, controller, parameters))
 			{
+				job.Progress ("Exportation...");
 				DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
 			}
 
-
-			job.Metadata = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
-			job.Finish ();
+			job.Finish (result);
 		}	
 
 		private EntityExtractor GetEntityExtractor(BusinessContext businessContext, ISetViewController controller, dynamic parameters)

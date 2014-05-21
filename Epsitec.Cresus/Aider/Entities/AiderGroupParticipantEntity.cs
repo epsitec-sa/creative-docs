@@ -82,6 +82,16 @@ namespace Epsitec.Aider.Entities
 				AiderGroupParticipantEntity.StartParticipationInternal (participation);
 			}
 
+			if (!group.GroupDef.RoleCacheDisabled)
+			{
+				participation.RoleCacheDisabled = true;
+				participation.RoleCache = AiderParticipationsHelpers.BuildRoleFromParticipation (participation).GetRole (participation);
+			}
+			else
+			{
+				participation.RoleCacheDisabled = false;
+			}
+
 			return participation;
 		}
 
@@ -254,6 +264,27 @@ namespace Epsitec.Aider.Entities
 			return request;
 		}
 
+		public static Request CreateGroupAndSubGroupParticipantRequest(DataContext dataContext, AiderGroupEntity group, bool current)
+		{
+			var participation = new AiderGroupParticipantEntity ();
+
+			var request = new Request ()
+			{
+				RootEntity = participation,
+				RequestedEntity = participation,
+				Distinct = true,
+			};
+
+			AiderGroupParticipantEntity.AddGroupAndSubGroupMemberCondition (dataContext, request, participation, group);
+
+			if (current)
+			{
+				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
+			}
+
+			return request;
+		}
+
 
 		public static void AddCurrentCondition(DataContext dataContext, Request request, AiderGroupParticipantEntity participation)
 		{
@@ -330,12 +361,6 @@ namespace Epsitec.Aider.Entities
 			this.Person = participationData.Person;
 			this.LegalPerson = participationData.LegalPerson;
 			this.Contact = participationData.Contact;
-		}
-
-
-		partial void GetRole(ref string value)
-		{
-			value = AiderParticipationsHelpers.BuildRoleFromParticipation (this).GetRole (this);
 		}
 	}
 }
