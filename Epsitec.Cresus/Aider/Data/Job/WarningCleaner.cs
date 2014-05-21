@@ -81,7 +81,7 @@ namespace Epsitec.Aider.Data.Job
 				if(contact.IsNotNull ())
 				{
 					var household = contact.Household;
-					if(household.Address.GetEntityStatus () == EntityStatus.Valid)
+					if(household.Address.Town.IsNotNull ())
 					{
 						EChDataHelpers.CreateOrUpdateAiderSubscription (businessContext, household);
 					}					
