@@ -14,7 +14,7 @@ namespace Epsitec.Common.Pdf.Common
 			this.TextStyle   = new TextStyle
 			{
 				Font     = Font.GetFont ("Arial", "Regular"),
-				FontSize = 30.0,
+				FontSize = 33.5,	//	was 30.0 (slightly larger font)
 			};
 		}
 

@@ -16,14 +16,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 	{
 		public static LabelPageLayout GetLabelPageLayout(this LabelLayout layout)
 		{
-			var labelSetup = new LabelPageLayout ()
-			{
-				TextStyle = new TextStyle ()
-				{
-					Font = Font.GetFont ("Arial", "Regular"),
-					FontSize = 35.0,
-				}
-			};
+			LabelPageLayout labelSetup;
 
 			switch (layout)
 			{
