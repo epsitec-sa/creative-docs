@@ -22,9 +22,10 @@ namespace Epsitec.Aider.Data.Job
 {
 	internal static class WarningCleaner
 	{
-		public static void Before(CoreData coreData, Epsitec.Common.Types.Date date, bool canKillPersons, bool canCreateSubscriptions)
+		public static void ClearWarningsBeforeDate(CoreData coreData, Epsitec.Common.Types.Date date, bool canKillPersons, bool canCreateSubscriptions)
 		{
 			var cleanable = new List<WarningType> ();
+
 			cleanable.Add (WarningType.EChPersonDataChanged);
 			cleanable.Add (WarningType.EChHouseholdChanged);
 			cleanable.Add (WarningType.EChHouseholdMissing);
@@ -45,14 +46,14 @@ namespace Epsitec.Aider.Data.Job
 					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 				}
 
-				//Process old EChProcessDeparture
-				ProcessDepartureWarningsBefore (businessContext, date, canKillPersons);
+				//	Process old EChProcessDeparture
+				WarningCleaner.ProcessDepartureWarningsBefore (businessContext, date, canKillPersons);
 
-				//Process old EChProcessArrival
-				ProcessArrivalWarningsBefore (businessContext, date, canCreateSubscriptions);
+				//	Process old EChProcessArrival
+				WarningCleaner.ProcessArrivalWarningsBefore (businessContext, date, canCreateSubscriptions);
 
-				//Process old missing subscription
-				ProcessMissingSubscriptionsWarningsBefore (businessContext, date);
+				//	Process old missing subscription
+				WarningCleaner.ProcessMissingSubscriptionsWarningsBefore (businessContext, date);
 			}
 		}
 
@@ -70,8 +71,8 @@ namespace Epsitec.Aider.Data.Job
 			request.AddCondition (dataContext, example, x => x.StartDate < date);
 
 			var warningsToDelete = dataContext.GetByRequest (request);
+			var total            = warningsToDelete.Count ();
 
-			var total = warningsToDelete.Count ();
 			WarningCleaner.LogToConsole ("{0} subscriptions missing warnings to process", total);
 
 			var current = 1;
@@ -166,8 +167,8 @@ namespace Epsitec.Aider.Data.Job
 				var person  = warn.Person;
 				if(person.MainContact.IsNull ())
 				{
-					//Skip, PersonWithoutContact job, may resolve this before
-					continue;
+					//	Skip, PersonWithoutContact job, may resolve this before ?
+					//	continue; -- never mind, no contact means probably that the event is stale
 				}
 
 				if (person.HouseholdContact.IsNotNull () && canCreateSubscriptions)

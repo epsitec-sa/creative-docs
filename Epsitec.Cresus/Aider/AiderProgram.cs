@@ -351,7 +351,7 @@ namespace Epsitec.Aider
 			var subscriber	= AiderProgram.GetBool (args, "-createsubscriptions:", true, false);
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				WarningCleaner.Before (coreData, date, killer, subscriber);
+				WarningCleaner.ClearWarningsBeforeDate (coreData, date, killer, subscriber);
 			});			
 		}
 
