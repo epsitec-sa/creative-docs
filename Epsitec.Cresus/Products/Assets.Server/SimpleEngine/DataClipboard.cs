@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			var field = accessor.GetMainStringField (baseType);
 			var name = ObjectProperties.GetObjectPropertyString(data.Object, null, field);
-			name = DataClipboard.GetCopyName (name);
+			name = DataClipboard.GetCopyName (name, accessor.GlobalSettings.CopyNameStrategy);
 
 			if (!inputDate.HasValue)
 			{
@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			//	On insère le UserField Collé.
 			var field = accessor.GlobalSettings.GetNewUserField ();
-			var name = DataClipboard.GetCopyName (data.UserField.Name);
+			var name = DataClipboard.GetCopyName (data.UserField.Name, accessor.GlobalSettings.CopyNameStrategy);
 			var userField = new UserField (data.UserField, field, name);
 			accessor.GlobalSettings.InsertUserField (baseType, index, userField);
 
@@ -294,7 +294,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
-		private static string GetCopyName(string name, int strategy = 2)
+		private static string GetCopyName(string name, CopyNameStrategy strategy)
 		{
 			//	A partir de "Toto", retourne "Copie de Toto".
 			if (string.IsNullOrEmpty (name))
@@ -305,10 +305,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				switch (strategy)
 				{
-					case 1:
+					case CopyNameStrategy.NameDashCopy:
 						return string.Format ("{0} - copie", name);
 
-					case 2:
+					case CopyNameStrategy.NameBracketCopy:
 						return string.Format ("{0} (copie)", name);
 
 					default:

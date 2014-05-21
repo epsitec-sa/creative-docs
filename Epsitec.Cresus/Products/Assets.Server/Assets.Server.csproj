@@ -86,6 +86,7 @@
     <Compile Include="BusinessLogic\TimelineMode.cs" />
     <Compile Include="BusinessLogic\TimelinesMode.cs" />
     <Compile Include="BusinessLogic\UserFieldsLogic.cs" />
+    <Compile Include="SimpleEngine\CopyNameStrategy.cs" />
     <Compile Include="SimpleEngine\BaseType.cs" />
     <Compile Include="SimpleEngine\AccountCategory.cs" />
     <Compile Include="SimpleEngine\AccountType.cs" />

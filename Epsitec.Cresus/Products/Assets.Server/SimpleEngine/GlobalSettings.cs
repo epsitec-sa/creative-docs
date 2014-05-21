@@ -17,7 +17,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			this.objectFieldDict = new Dictionary<ObjectField, UserField> ();
 			this.guidDict        = new Dictionary<Guid, UserField> ();
+
+			this.CopyNameStrategy = CopyNameStrategy.NameBracketCopy;
 		}
+
+
+		public CopyNameStrategy					CopyNameStrategy;
 
 
 		public DataObject GetTempDataObject(Guid guid)
