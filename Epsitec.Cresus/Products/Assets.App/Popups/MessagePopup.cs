@@ -73,6 +73,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			popup.Create (target);
 		}
 
+		public static void ShowPasteError(Widget target)
+		{
+			var popup = new MessagePopup ("Erreur", "Les données sont incompatibles.");
+
+			popup.Create (target);
+		}
+
 		public static void ShowError(Widget target, string message)
 		{
 			var popup = new MessagePopup ("Erreur", message);

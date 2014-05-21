@@ -394,10 +394,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var obj = this.accessor.Clipboard.PasteObject (this.accessor, this.baseType);
 
-			this.UpdateData ();
+			if (obj == null)
+			{
+				var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+				MessagePopup.ShowPasteError (target);
+			}
+			else
+			{
+				this.UpdateData ();
 
-			this.SelectedGuid = obj.Guid;
-			this.OnUpdateAfterCreate (obj.Guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
+				this.SelectedGuid = obj.Guid;
+				this.OnUpdateAfterCreate (obj.Guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
+			}
 		}
 
 		protected virtual void OnExport()

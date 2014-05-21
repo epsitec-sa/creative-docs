@@ -254,9 +254,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			AssetPastePopup.Show (target, this.accessor, summary, delegate (System.DateTime inputDate)
 			{
 				var obj = this.accessor.Clipboard.PasteObject (this.accessor, this.baseType, inputDate);
-				this.UpdateData ();
-				this.SelectedGuid = obj.Guid;
-				this.OnUpdateAfterCreate (obj.Guid, EventType.Input, new Timestamp (inputDate, 0));
+				if (obj == null)
+				{
+					MessagePopup.ShowPasteError (target);
+				}
+				else
+				{
+					this.UpdateData ();
+					this.SelectedGuid = obj.Guid;
+					this.OnUpdateAfterCreate (obj.Guid, EventType.Input, new Timestamp (inputDate, 0));
+				}
 			});
 		}
 

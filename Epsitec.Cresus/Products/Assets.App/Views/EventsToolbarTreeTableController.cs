@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (e == null)
 					{
-						MessagePopup.ShowError (target, "Les données sont incompatibles.");
+						MessagePopup.ShowPasteError (target);
 					}
 					else
 					{

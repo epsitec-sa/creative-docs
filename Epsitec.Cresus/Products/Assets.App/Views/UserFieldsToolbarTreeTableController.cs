@@ -182,6 +182,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (userField.IsEmpty)
 			{
+				var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+				MessagePopup.ShowPasteError (target);
 			}
 			else
 			{
