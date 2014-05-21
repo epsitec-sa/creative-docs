@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -14,10 +15,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class AssetPastePopup : StackedPopup
 	{
-		public AssetPastePopup(DataAccessor accessor)
+		public AssetPastePopup(DataAccessor accessor, string summary)
 			: base (accessor)
 		{
-			this.title = "Coller l'objet d'immobilisation";
+			this.title = string.Format ("Coller l'objet d'immobilisation \"{0}\"", summary);
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -74,12 +75,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Helpers
-		public static void Show(Widget target, DataAccessor accessor,
+		public static void Show(Widget target, DataAccessor accessor, string summary,
 			System.Action<System.DateTime> action)
 		{
 			if (target != null)
 			{
-				var popup = new AssetPastePopup (accessor)
+				var popup = new AssetPastePopup (accessor, summary)
 				{
 					Date = accessor.Mandat.StartDate,
 				};

@@ -379,8 +379,45 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public IEnumerable<ObjectField> AssetFields
+		{
+			//	Retourne tous les champs pouvant potentiellement faire partie d'un objet d'immobilisation.
+			get
+			{
+				yield return ObjectField.MainValue;
+
+				foreach (var field in this.GlobalSettings.GetUserFields (BaseType.Assets).Select (x => x.Field))
+				{
+					yield return field;
+				}
+
+				for (var field = ObjectField.GroupGuidRatioFirst; field <= ObjectField.GroupGuidRatioLast; field++)
+				{
+					yield return field;
+				}
+
+				yield return ObjectField.CategoryName;
+				yield return ObjectField.AmortizationRate;
+				yield return ObjectField.AmortizationType;
+				yield return ObjectField.Periodicity;
+				yield return ObjectField.Prorata;
+				yield return ObjectField.Round;
+				yield return ObjectField.ResidualValue;
+
+				yield return ObjectField.Account1;
+				yield return ObjectField.Account2;
+				yield return ObjectField.Account3;
+				yield return ObjectField.Account4;
+				yield return ObjectField.Account5;
+				yield return ObjectField.Account6;
+				yield return ObjectField.Account7;
+				yield return ObjectField.Account8;
+			}
+		}
+
 		public IEnumerable<ObjectField> AssetValueFields
 		{
+			//	Retourne tous les champs d'un objet d'immobilisation contenant un montant.
 			get
 			{
 				yield return ObjectField.MainValue;

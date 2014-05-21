@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					return this.personsFields;
 
 				default:
-					throw new System.InvalidOperationException (string.Format ("Unknown BaseType {0}", baseType.ToString ()));
+					throw new System.InvalidOperationException (string.Format ("Unknown BaseType {0}", baseType));
 			}
 		}
 

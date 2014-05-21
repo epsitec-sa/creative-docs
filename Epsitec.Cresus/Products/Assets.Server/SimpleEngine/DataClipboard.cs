@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
@@ -23,9 +24,24 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return this.objects.ContainsKey (baseType);
 		}
 
+		public string GetObjectSummary(BaseType baseType)
+		{
+			//	Retourne le résumé de l'objet copié dans le clipboard.
+			Data data;
+			if (this.objects.TryGetValue (baseType, out data))
+			{
+				return data.Summary;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		public void CopyObject(DataAccessor accessor, BaseType baseType, DataObject obj, Timestamp? timestamp = null)
 		{
-			//	Copie un objet dans le clipboard.
+			//	Copie un objet dans le clipboard. Pour un objet d'immobilisation, on indique le
+			//	timestamp de l'état à copier.
 			if (obj == null)
 			{
 				return;
@@ -39,21 +55,39 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 			else
 			{
-				objCopy = this.CopyBaseObject (accessor, baseType, obj);
+				objCopy = this.CopyBaseObject (obj);
 			}
 
-			this.objects[baseType] = new Data (accessor.Mandat.Guid, objCopy);
+			var summary = this.GetObjectSummary (accessor, baseType, obj, timestamp);
+
+			this.objects[baseType] = new Data (accessor.Mandat.Guid, objCopy, summary);
+		}
+
+		private string GetObjectSummary(DataAccessor accessor, BaseType baseType, DataObject obj, Timestamp? timestamp)
+		{
+			switch (baseType)
+			{
+				case BaseType.Assets:
+					return AssetsLogic.GetSummary (accessor, obj.Guid, timestamp);
+
+				case BaseType.Persons:
+					return PersonsLogic.GetSummary (accessor, obj.Guid);
+
+				default:
+					return ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.Name);
+			}
 		}
 
 		private DataObject CopyAssetObject(DataAccessor accessor, DataObject obj, Timestamp? timestamp)
 		{
-			var e = obj.GetEvent (0);
+			//	Copie un object d'immobilisation.
+			System.Diagnostics.Debug.Assert (timestamp.HasValue);
 
 			var objCopy = new DataObject ();
-			var eventCopy = new DataEvent (e.Timestamp, e.Type);
+			var eventCopy = new DataEvent (timestamp.Value, EventType.Input);
 			objCopy.AddEvent (eventCopy);
 
-			foreach (var field in accessor.AssetValueFields)
+			foreach (var field in accessor.AssetFields)
 			{
 				var p = ObjectProperties.GetObjectSyntheticProperty (obj, timestamp, field);
 
@@ -66,8 +100,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return objCopy;
 		}
 
-		private DataObject CopyBaseObject(DataAccessor accessor, BaseType baseType, DataObject obj)
+		private DataObject CopyBaseObject(DataObject obj)
 		{
+			//	Copie un objet sans timeline, c'est-à-dire tous les objets sauf ceux d'immobilisation.
 			var e = obj.GetEvent (0);
 
 			//	On conserve une copie de l'objet.
@@ -78,10 +113,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return objCopy;
 		}
 
-		public DataObject PasteObject(DataAccessor accessor, BaseType baseType, System.DateTime? date = null)
+		public DataObject PasteObject(DataAccessor accessor, BaseType baseType, System.DateTime? inputDate = null)
 		{
-			//	Colle l'objet contenu dans le clipboard.
-			if (!this.objects.ContainsKey (baseType))
+			//	Colle l'objet contenu dans le clipboard. Pour un object d'immobilisation, on
+			//	indique sa date d'entrée.
+			if (!this.objects.ContainsKey (baseType))  // clipboard vide ?
 			{
 				return null;
 			}
@@ -97,17 +133,42 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var name = ObjectProperties.GetObjectPropertyString(data.Object, null, field);
 			name = DataClipboard.GetCopyName (name);
 
-			if (!date.HasValue)
+			if (!inputDate.HasValue)
 			{
-				date = accessor.Mandat.StartDate;
+				inputDate = accessor.Mandat.StartDate;
 			}
 
-			var guid = accessor.CreateObject (baseType, date.Value, name, Guid.Empty);
+			var guid = accessor.CreateObject (baseType, inputDate.Value, name, Guid.Empty);
 			var objPaste = accessor.GetObject (baseType, guid);
 			var eventPaste = objPaste.GetEvent (0);
 			eventPaste.SetUndefinedProperties (data.Object.GetEvent (0));
 
+			if (baseType == BaseType.Assets)
+			{
+				this.SetMainValue (accessor, data.Object.GetEvent (0), objPaste, inputDate.Value);
+			}
+
 			return objPaste;
+		}
+
+		private void SetMainValue(DataAccessor accessor, DataEvent modelEvent, DataObject objPaste, System.DateTime inputDate)
+		{
+			//	Copie la valeur comptable. Elle ne doit pas du tout être copiée telle qu'elle.
+			//	Par exemple, il peut s'agit d'un amortissement dans la source, qui sera une
+			//	valeur fixe (achat) dans la destination.
+			var modelProperty = modelEvent.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+
+			if (modelProperty != null)
+			{
+				var eventPaste = objPaste.GetEvent (0);
+
+				var aa = new AmortizedAmount (AmortizationType.Unknown, modelProperty.Value.FinalAmortizedAmount.Value,
+					null, null, null, null, null, null, EntryScenario.Purchase, inputDate,
+					objPaste.Guid, eventPaste.Guid, Guid.Empty, 0);
+
+				aa = Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures
+				Amortizations.SetAmortizedAmount (eventPaste, aa);
+			}
 		}
 		#endregion
 
@@ -169,6 +230,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public DataEvent PasteEvent(DataAccessor accessor, DataObject obj, System.DateTime date)
 		{
 			//	Colle l'événement du clipboard à l'objet donné.
+			if (this.dataEvent == null)  // clipboard vide ?
+			{
+				return null;
+			}
+
 			if (accessor.Mandat.Guid != this.eventGuidMandat)  // colle dans un autre mandat ?
 			{
 				return null;
@@ -200,14 +266,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private struct Data
 		{
-			public Data(Guid guid, DataObject obj)
+			public Data(Guid guid, DataObject obj, string summary)
 			{
-				this.Guid   = guid;
-				this.Object = obj;
+				this.Guid    = guid;
+				this.Object  = obj;
+				this.Summary = summary;
 			}
 
 			public readonly Guid					Guid;
 			public readonly DataObject				Object;
+			public readonly string					Summary;
 		}
 
 

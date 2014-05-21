@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = "Etat d'entrée<br/>Etat au :",
+				MultiLabels           = "Etat lors de l'entrée<br/>Etat en date du :",
 			});
 
 			list.Add (new StackedControllerDescription  // 1

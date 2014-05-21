@@ -248,8 +248,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void OnPaste()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+			var summary = this.accessor.Clipboard.GetObjectSummary (this.baseType);
 
-			AssetPastePopup.Show (target, this.accessor, delegate (System.DateTime date)
+			AssetPastePopup.Show (target, this.accessor, summary, delegate (System.DateTime date)
 			{
 				var obj = this.accessor.Clipboard.PasteObject (this.accessor, this.baseType, date);
 				this.UpdateData ();
