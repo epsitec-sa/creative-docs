@@ -13,7 +13,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		public DataClipboard()
 		{
-			this.objects = new Dictionary<BaseType, Data> ();
+			this.objects = new Dictionary<BaseType, ClipboardObject> ();
+			this.userFields = new Dictionary<BaseType, ClipboardUserField> ();
 		}
 
 
@@ -27,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public string GetObjectSummary(BaseType baseType)
 		{
 			//	Retourne le résumé de l'objet copié dans le clipboard.
-			Data data;
+			ClipboardObject data;
 			if (this.objects.TryGetValue (baseType, out data))
 			{
 				return data.Summary;
@@ -60,7 +61,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			var summary = this.GetObjectSummary (accessor, baseType, obj, timestamp);
 
-			this.objects[baseType] = new Data (accessor.Mandat.Guid, objCopy, summary);
+			this.objects[baseType] = new ClipboardObject (accessor.Mandat.Guid, objCopy, summary);
 		}
 
 		private string GetObjectSummary(DataAccessor accessor, BaseType baseType, DataObject obj, Timestamp? timestamp)
@@ -124,7 +125,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			var data = this.objects[baseType];
 
-			if (accessor.Mandat.Guid != data.Guid)  // colle dans un autre mandat ?
+			if (accessor.Mandat.Guid != data.MandatGuid)  // colle dans un autre mandat ?
 			{
 				return null;
 			}
@@ -138,6 +139,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				inputDate = accessor.Mandat.StartDate;
 			}
 
+			//	On insère l'objet collé.
 			var guid = accessor.CreateObject (baseType, inputDate.Value, name, Guid.Empty);
 			var objPaste = accessor.GetObject (baseType, guid);
 			var eventPaste = objPaste.GetEvent (0);
@@ -250,7 +252,49 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
-		private static string GetCopyName(string name)
+		#region UserFields
+		public bool HasUserField(BaseType baseType)
+		{
+			//	Indique s'il existe un UserField dans le clipboard.
+			return this.userFields.ContainsKey (baseType);
+		}
+
+		public void CopyUserField(DataAccessor accessor, BaseType baseType, UserField userField)
+		{
+			//	Copie un UserField dans le clipboard.
+			var copy = new UserField (userField);
+			var data = new ClipboardUserField (accessor.Mandat.Guid, copy);
+
+			this.userFields[baseType] = data;
+		}
+
+		public UserField PasteUserField(DataAccessor accessor, BaseType baseType, int index)
+		{
+			//	Colle le UserField contenu dans le clipboard.
+			if (!this.userFields.ContainsKey (baseType))  // clipboard vide ?
+			{
+				return UserField.Empty;
+			}
+
+			var data = this.userFields[baseType];
+
+			if (accessor.Mandat.Guid != data.MandatGuid)  // colle dans un autre mandat ?
+			{
+				return UserField.Empty;
+			}
+
+			//	On insère le UserField Collé.
+			var field = accessor.GlobalSettings.GetNewUserField ();
+			var name = DataClipboard.GetCopyName (data.UserField.Name);
+			var userField = new UserField (data.UserField, field, name);
+			accessor.GlobalSettings.InsertUserField (baseType, index, userField);
+
+			return userField;
+		}
+		#endregion
+
+
+		private static string GetCopyName(string name, int strategy = 2)
 		{
 			//	A partir de "Toto", retourne "Copie de Toto".
 			if (string.IsNullOrEmpty (name))
@@ -259,27 +303,50 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 			else
 			{
-				return string.Format ("Copie de {0}", name);
+				switch (strategy)
+				{
+					case 1:
+						return string.Format ("{0} - copie", name);
+
+					case 2:
+						return string.Format ("{0} (copie)", name);
+
+					default:
+						return string.Format ("Copie de {0}", name);
+				}
 			}
 		}
 
 
-		private struct Data
+		private struct ClipboardObject
 		{
-			public Data(Guid guid, DataObject obj, string summary)
+			public ClipboardObject(Guid mandatGuid, DataObject obj, string summary)
 			{
-				this.Guid    = guid;
-				this.Object  = obj;
-				this.Summary = summary;
+				this.MandatGuid = mandatGuid;
+				this.Object     = obj;
+				this.Summary    = summary;
 			}
 
-			public readonly Guid					Guid;
+			public readonly Guid					MandatGuid;
 			public readonly DataObject				Object;
 			public readonly string					Summary;
 		}
 
+		private struct ClipboardUserField
+		{
+			public ClipboardUserField(Guid mandatGuid, UserField userField)
+			{
+				this.MandatGuid = mandatGuid;
+				this.UserField  = userField;
+			}
 
-		private readonly Dictionary<BaseType, Data>	objects;
+			public readonly Guid					MandatGuid;
+			public readonly UserField				UserField;
+		}
+
+
+		private readonly Dictionary<BaseType, ClipboardObject>		objects;
+		private readonly Dictionary<BaseType, ClipboardUserField>	userFields;
 
 		private Guid								eventGuidMandat;
 		private DataEvent							dataEvent;

@@ -47,6 +47,33 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.TopMargin    = topMargin;
 		}
 
+		public UserField(UserField model)
+		{
+			this.Guid         = model.Guid;
+			this.Name         = model.Name;
+			this.Field        = model.Field;
+			this.Type         = model.Type;
+			this.ColumnWidth  = model.ColumnWidth;
+			this.LineWidth    = model.LineWidth;
+			this.LineCount    = model.LineCount;
+			this.SummaryOrder = model.SummaryOrder;
+			this.TopMargin    = model.TopMargin;
+		}
+
+		public UserField(UserField model, ObjectField field, string name)
+		{
+			this.Guid         = Guid.NewGuid ();
+			this.Name         = name;
+			this.Field        = field;
+			this.Type         = model.Type;
+			this.ColumnWidth  = model.ColumnWidth;
+			this.LineWidth    = model.LineWidth;
+			this.LineCount    = model.LineCount;
+			this.SummaryOrder = model.SummaryOrder;
+			this.TopMargin    = model.TopMargin;
+		}
+
+
 		public bool IsEmpty
 		{
 			get

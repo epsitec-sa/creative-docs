@@ -162,6 +162,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 			});
 		}
 
+		protected override void OnCopy()
+		{
+			var userField = this.accessor.GlobalSettings.GetUserField (this.SelectedGuid);
+			this.accessor.Clipboard.CopyUserField (this.accessor, this.baseType, userField);
+
+			this.UpdateToolbar ();
+		}
+
+		protected override void OnPaste()
+		{
+			int index = this.VisibleSelectedRow;
+			if (index == -1)  // pas de sélection ?
+			{
+				index = this.nodeGetter.Count;  // insère à la fin
+			}
+
+			var userField = this.accessor.Clipboard.PasteUserField (this.accessor, this.baseType, index);
+
+			if (userField.IsEmpty)
+			{
+			}
+			else
+			{
+				this.UpdateData ();
+				this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
+			}
+		}
+
 
 		private void MoveUserField(int currentRow, int? newRow)
 		{
@@ -185,6 +213,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Met à jour et sélectionne la rubrique déplacée.
 			this.UpdateData ();
 			this.VisibleSelectedRow = index;
+		}
+
+
+		protected override void UpdateToolbar()
+		{
+			base.UpdateToolbar ();
+
+			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,  true);
+			this.toolbar.SetCommandEnable (ToolbarCommand.Paste, this.accessor.Clipboard.HasUserField (this.baseType));
 		}
 	}
 }

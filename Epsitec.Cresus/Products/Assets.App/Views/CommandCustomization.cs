@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public static CommandCustomization Empty = new CommandCustomization (null, null);
 
-		public readonly string Icon;
-		public readonly string Tooltip;
+		public readonly string					Icon;
+		public readonly string					Tooltip;
 	}
 }
