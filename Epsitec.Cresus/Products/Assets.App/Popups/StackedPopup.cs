@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public int								MininalWidth;
+
 		protected bool							HasError
 		{
 			get
@@ -174,7 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	C'est le plus large qui fait sa loi.
 			get
 			{
-				int value = 0;
+				int value = this.MininalWidth;
 
 				foreach (var description in this.descriptions)
 				{

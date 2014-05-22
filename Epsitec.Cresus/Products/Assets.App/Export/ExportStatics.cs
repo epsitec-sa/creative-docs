@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 						return;
 					}
 
-					MessagePopup.ShowMessage (target, "Exportation effectée avec succès.");
+					ExportStatics<T>.ShowOpenPopup (target, accessor, popup.ExportInstructions);
 				}
 			};
 		}
@@ -93,5 +93,41 @@ namespace Epsitec.Cresus.Assets.App.Export
 			}
 		}
 
+
+		private static void ShowOpenPopup(Widget target, DataAccessor accessor, ExportInstructions instructions)
+		{
+			var popup = new ExportOpenPopup (accessor)
+			{
+				OpenLocation = false,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					if (popup.OpenLocation)
+					{
+						ExportStatics<T>.OpenLocation (instructions);
+					}
+					else
+					{
+						ExportStatics<T>.OpenFile (instructions);
+					}
+				}
+			};
+		}
+
+		private static void OpenFile(ExportInstructions instructions)
+		{
+			System.Diagnostics.Process.Start (instructions.Filename);
+		}
+
+		private static void OpenLocation(ExportInstructions instructions)
+		{
+			//	Voir http://stackoverflow.com/questions/9646114/open-file-location
+			System.Diagnostics.Process.Start ("explorer.exe", "/select," + instructions.Filename);
+		}
 	}
 }
