@@ -14,6 +14,20 @@ namespace Epsitec.Aider.Helpers
 {
 	public sealed class AiderParticipationsHelpers
 	{
+		public static void PurgeAndRebuildRoleCache ()
+		{
+			//TODO 
+			//Enqueue purge and build RoleCache
+		}
+
+		public static void RebuildRoleCache(IEnumerable<AiderGroupParticipantEntity> participations)
+		{
+			foreach (var participant in participations)
+			{
+				participant.RoleCache = AiderParticipationsHelpers.BuildRoleFromParticipation (participant).GetRole (participant);
+			}
+		}
+
 		public static AiderParticipationRole BuildRoleFromParticipation(AiderGroupParticipantEntity participation)
 		{
 			var level				= participation.Group.GroupLevel;

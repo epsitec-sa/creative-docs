@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
+using Epsitec.Aider.Helpers;
 
 namespace Epsitec.Aider.Rules
 {
@@ -47,6 +48,11 @@ namespace Epsitec.Aider.Rules
 			foreach (var group in groups)
 			{
 				group.Name = name;
+			}
+
+			if(!groupDef.RoleCacheDisabled)
+			{
+				AiderParticipationsHelpers.PurgeAndRebuildRoleCache ();
 			}
 		}
 	}

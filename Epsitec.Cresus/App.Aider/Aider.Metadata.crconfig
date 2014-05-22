@@ -907,7 +907,7 @@ AiderReferee = [LVADJ]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVAAJ].[LVON33]" title="Région de travail" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVAAJ].[LVON33]" title="Région de travail" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Visible" />
       </col> 
@@ -1154,7 +1154,7 @@ AiderReferee = [LVADJ]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAIJ].[LVON33]" title="Région de travail" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAIJ].[LVON33]" title="Région de travail" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Visible" />
       </col> 

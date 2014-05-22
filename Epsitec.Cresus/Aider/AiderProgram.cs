@@ -319,15 +319,21 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-initrolecache")) //-initrolecache
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.InitRoleCache (args));
+					return;
+				}
+
 				if (args.Contains ("-buildrolecache")) //-buildrolecache
 				{
-					ConsoleCreator.RunWithConsole (() => AiderProgram.RoleCacheBuilder (args));
+					ConsoleCreator.RunWithConsole (() => AiderProgram.BuildRoleCache (args));
 					return;
 				}
 
 				if (args.Contains ("-purgerolecache")) //-purgerolecache
 				{
-					ConsoleCreator.RunWithConsole (() => AiderProgram.RoleCachePurger (args));
+					ConsoleCreator.RunWithConsole (() => AiderProgram.PurgeRoleCache (args));
 					return;
 				}
 			}
@@ -814,22 +820,33 @@ namespace Epsitec.Aider
 			});
 		}
 
-		private static void RoleCacheBuilder(string[] args)
+		private static void InitRoleCache(string[] args)
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				BuildRoleCache.Build (coreData);
+				RoleCache.InitBaseSet (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});
 		}
 
-		private static void RoleCachePurger(string[] args)
+		private static void BuildRoleCache(string[] args)
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				PurgeRoleCache.Purge (coreData);
+				RoleCache.Build (coreData);
+
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
+
+		private static void PurgeRoleCache(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				RoleCache.Purge (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();

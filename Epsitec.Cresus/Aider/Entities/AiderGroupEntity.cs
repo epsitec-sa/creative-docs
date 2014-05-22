@@ -20,6 +20,7 @@ using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Helpers;
 
 
 namespace Epsitec.Aider.Entities
@@ -680,6 +681,11 @@ namespace Epsitec.Aider.Entities
 
 				group.Path = path;
 				group.GroupLevel += deltaGroupLevel;
+
+				if(group.GroupDef.MembersAllowed && !group.GroupDef.RoleCacheDisabled)
+				{
+					AiderParticipationsHelpers.RebuildRoleCache (group.GetParticipants (group.GetParticipantCount ()));
+				}
 			}
 
 			// Finaly, we update the in memory cache of the parents of this group and of all its
