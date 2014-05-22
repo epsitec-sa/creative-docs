@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private static IEnumerable<FilterItem> ExportFilters
+		public static IEnumerable<FilterItem> ExportFilters
 		{
 			get
 			{

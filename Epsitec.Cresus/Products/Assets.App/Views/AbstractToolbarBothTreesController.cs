@@ -4,7 +4,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -170,6 +173,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.graphicController.UpdateController (this.nodeGetter, this.SelectedGuid, crop);
 			}
+		}
+
+
+		protected override void OnExport()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Export);
+			this.ShowExportPopup (target);
+		}
+
+		private void ShowExportPopup(Widget target)
+		{
+			var popup = new ExportPopup (this.accessor)
+			{
+				Inverted = false,
+				Filename = LocalSettings.ExportFilename,
+				Filters  = ReportsView.ExportFilters,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					LocalSettings.ExportFilename = popup.Filename;
+					this.Export (popup.Filename);
+				}
+			};
+		}
+
+		protected void Export(string filename)
+		{
+			var engine = new ExportToText<T> ()
+			{
+				ExportTextProfile = ExportTextProfile.CsvProfile,
+			};
+
+			engine.Export (this.dataFiller, filename);
 		}
 
 
