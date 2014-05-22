@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public enum CopyNameStrategy
 	{
-		CopyOf,					// Copie de Toto
+		CopyOfName,				// Copie de Toto
 		NameDashCopy,			// Toto - copie
 		NameBracketCopy,		// Toto (copie)
 	}
