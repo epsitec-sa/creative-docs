@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Popup permettant d'ouvrir le fichier résultant d'une exportation.
+	/// Popup permettant d'ouvrir le fichier ou l'emplacement résultant d'une exportation.
 	/// </summary>
 	public class ExportOpenPopup : StackedPopup
 	{

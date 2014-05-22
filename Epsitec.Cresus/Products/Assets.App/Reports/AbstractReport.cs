@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
@@ -61,6 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void ShowExportPopup(Widget target)
 		{
+			MessagePopup.ShowTodo (target);
 		}
 
 

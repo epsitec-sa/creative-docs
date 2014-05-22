@@ -84,87 +84,81 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.mainToolbar.GetTarget (ToolbarCommand.Simulation);
 
-			if (target != null)
-			{
 #if false
-				var popup = new SimulationPopup
-				{
-					Simulation = DataAccessor.Simulation,
-				};
+			var popup = new SimulationPopup
+			{
+				Simulation = DataAccessor.Simulation,
+			};
 
-				popup.Create (target);
+			popup.Create (target);
 
-				popup.ButtonClicked += delegate (object sender, string name)
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name.StartsWith ("use-"))
 				{
-					if (name.StartsWith ("use-"))
-					{
-						DataAccessor.Simulation = popup.Simulation;
-						this.mainToolbar.Simulation = popup.Simulation;
-						this.OnCommand (ToolbarCommand.Accept);
-					}
-					else if (name.StartsWith ("clear-"))
-					{
-					}
-				};
+					DataAccessor.Simulation = popup.Simulation;
+					this.mainToolbar.Simulation = popup.Simulation;
+					this.OnCommand (ToolbarCommand.Accept);
+				}
+				else if (name.StartsWith ("clear-"))
+				{
+				}
+			};
 #else
-				var popup = new StackedTestPopup (this.accessor)
-				{
-					DateFrom  = new System.DateTime (2014, 3, 31),
-					DateTo    = new System.DateTime (2014, 4, 1),
-					Operation = 1,
-					FieldName = "Coucou",
-					Quantity  = 99,
-					Color     = 0,
-					Samples   = true,
-				};
+			var popup = new StackedTestPopup (this.accessor)
+			{
+				DateFrom  = new System.DateTime (2014, 3, 31),
+				DateTo    = new System.DateTime (2014, 4, 1),
+				Operation = 1,
+				FieldName = "Coucou",
+				Quantity  = 99,
+				Color     = 0,
+				Samples   = true,
+			};
 
-				popup.Create (target);
+			popup.Create (target);
 #endif
-			}
 		}
 
 		private void OnMainLocked()
 		{
 			var target = this.mainToolbar.GetTarget (ToolbarCommand.Locked);
 
-			if (target != null)
+			var popup = new LockedPopup (this.accessor)
 			{
-				var popup = new LockedPopup (this.accessor)
-				{
-					IsDelete            = false,
-					IsAll               =  this.SelectedGuid.IsEmpty,
-					OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
-					Date                = LocalSettings.LockedDate,
-				};
+				IsDelete            = false,
+				IsAll               =  this.SelectedGuid.IsEmpty,
+				OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
+				Date                = LocalSettings.LockedDate,
+			};
 
-				popup.Create (target);
+			popup.Create (target);
 
-				popup.ButtonClicked += delegate (object sender, string name)
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
 				{
-					if (name == "ok")
+					if (popup.Date.HasValue)
 					{
-						if (popup.Date.HasValue)
-						{
-							LocalSettings.LockedDate = popup.Date.Value;
-						}
-
-						var guid = popup.IsAll ? Guid.Empty : this.SelectedGuid;
-						var createDate = popup.Date.GetValueOrDefault ();
-
-						if (!popup.IsDelete)  // verrouiller ?
-						{
-							if (!AssetCalculator.IsLockable (this.accessor, guid, createDate))
-							{
-								MessagePopup.ShowAssetsPreviewEventWarning (target);
-								return;
-							}
-						}
-
-						AssetCalculator.Locked (this.accessor, guid, popup.IsDelete, createDate);
-						this.DeepUpdateUI ();
+						LocalSettings.LockedDate = popup.Date.Value;
 					}
-				};
-			}
+
+					var guid = popup.IsAll ? Guid.Empty : this.SelectedGuid;
+					var createDate = popup.Date.GetValueOrDefault ();
+
+					if (!popup.IsDelete)  // verrouiller ?
+					{
+						if (!AssetCalculator.IsLockable (this.accessor, guid, createDate))
+						{
+							MessagePopup.ShowAssetsPreviewEventWarning (target);
+							return;
+						}
+					}
+
+					AssetCalculator.Locked (this.accessor, guid, popup.IsDelete, createDate);
+					this.DeepUpdateUI ();
+				}
+			};
 		}
 
 

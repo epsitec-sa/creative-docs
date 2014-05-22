@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				return null;
+				throw new System.InvalidOperationException (string.Format ("Target not found for command {0}", command));
 			}
 		}
 

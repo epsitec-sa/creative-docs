@@ -114,30 +114,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Affiche le Popup pour choisir un rapport.
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportSelect);
-			if (target != null)
-			{
-				this.ShowReportPopup (target);
-			}
+			this.ShowReportPopup (target);
 		}
 
 		private void OnParams()
 		{
 			//	Affiche le Popup pour choisir les paramètres d'un rapport.
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportParams);
-			if (target != null)
-			{
-				this.report.ShowParamsPopup (target);
-			}
+			this.report.ShowParamsPopup (target);
 		}
 
 		private void OnExport()
 		{
 			//	Affiche le Popup pour choisir comment exporter le rapport.
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportExport);
-			if (target != null)
-			{
-				this.report.ShowExportPopup (target);
-			}
+			System.Diagnostics.Debug.Assert (target != null);
+			this.report.ShowExportPopup (target);
 		}
 
 

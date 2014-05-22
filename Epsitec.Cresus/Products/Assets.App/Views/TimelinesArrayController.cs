@@ -690,11 +690,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnTimelineNew()
 		{
-			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.New);
 			var timestamp = this.SelectedTimestamp;
 
-			if (target != null && timestamp.HasValue)
+			if (timestamp.HasValue)
 			{
+				var target = this.timelinesToolbar.GetTarget (ToolbarCommand.New);
 				var obj = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid);
 
 				NewEventPopup.Show (target, this.accessor, BaseType.Assets, obj, timestamp.Value,
