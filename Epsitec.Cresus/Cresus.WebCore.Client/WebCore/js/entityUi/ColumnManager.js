@@ -335,9 +335,9 @@ function() {
       }
     },
 
-    showAction: function(viewMode, viewId, entityId, aEntityId, callback) {
+    showAction: function(viewMode, viewId, entityId, aEntityId, inQueue, callback) {
       Epsitec.EntityAction.showDialog(
-          viewMode, viewId, entityId, aEntityId, callback
+          viewMode, viewId, entityId, aEntityId, inQueue, callback
       );
     },
 

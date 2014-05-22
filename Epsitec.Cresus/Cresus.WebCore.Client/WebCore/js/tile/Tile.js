@@ -87,10 +87,10 @@ function() {
           button.cls = 'tile-button';
           button.overCls = 'tile-button-over';
           button.textAlign = 'left';
-          
-          button.requiresAdditionalEntity = a.requiresAdditionalEntity;
+          button.executeInQueue = a.executeInQueue;
+          button.requiresAdditionalEntity = a.requiresAdditionalEntity; //needed?
           button.handler = function() { 
-            this.handleDirectAction(a.viewId); 
+              this.handleDirectAction(a.viewId, a.executeInQueue);
           };
           button.scope = tile;
 
@@ -111,6 +111,7 @@ function() {
                 this.handleTemplateAction(a.viewId, data.id);
               }, tile);
 
+            dropZone.executeInQueue = a.executeInQueue;
             dropZone.requiresAdditionalEntity = a.requiresAdditionalEntity;
             Epsitec.Cresus.Core.app.entityBag.registerDropZone(dropZone);
             toolbars.unshift(dropZone);
@@ -161,8 +162,9 @@ function() {
       {
         return {
           text: action.title,
+          executeInQueue: action.executeInQueue,
           requiresAdditionalEntity: action.requiresAdditionalEntity,
-          handler: function() { this.handleAction(action.viewId); },
+          handler: function () { this.handleAction(action.viewId, action.executeInQueue); },
           scope: this
         };
       }
@@ -170,14 +172,14 @@ function() {
         return null;
     },
 
-    handleAction: function(viewId) {
+    handleAction: function(viewId, inQueue) {
       var callback = Epsitec.Callback.create(this.handleActionCallback, this);
-      this.showAction(viewId, callback);
+      this.showAction(viewId, inQueue, callback);
     },
 
-    handleDirectAction: function(viewId) {
+    handleDirectAction: function(viewId, inQueue) {
       var callback = Epsitec.Callback.create(this.handleDirectActionCallback, this);
-      this.showAction(viewId, callback);
+      this.showAction(viewId, inQueue, callback);
     },
 
     handleTemplateAction: function(viewId, aEntityId) {
@@ -189,7 +191,7 @@ function() {
       // This method is supposed to be overriden in derived classes.
     },
 
-    showAction: function(viewId, callback) {
+    showAction: function(viewId, executeInQueue, callback) {
       // This method is supposed to be overriden in derived classes.
     },
 

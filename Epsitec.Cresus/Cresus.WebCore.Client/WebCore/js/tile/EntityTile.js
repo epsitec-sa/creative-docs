@@ -21,8 +21,8 @@ function() {
       return this.entityId;
     },
 
-    showAction: function(viewId, callback) {
-      this.column.showAction(viewId, this.entityId, callback);
+    showAction: function(viewId, inQueue, callback) {
+      this.column.showAction(viewId, this.entityId, inQueue, callback);
     },
 
     showTemplateAction: function(viewId, aEntityId,callback) {

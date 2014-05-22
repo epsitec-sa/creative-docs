@@ -74,7 +74,6 @@ function() {
         return c;
       },
 
-
       parseActionColumn: function(column) {
         var c = this.parseTileColumn(column);
         delete c.typeName;
@@ -209,7 +208,8 @@ function() {
           title: action.title,
           viewId: action.viewId,
           requiresAdditionalEntity: action.requiresAdditionalEntity,
-          displayMode: action.displayMode
+          displayMode: action.displayMode,
+          executeInQueue: action.executeInQueue
         };
       },
 

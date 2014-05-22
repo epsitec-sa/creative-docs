@@ -30,6 +30,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			set;
 		}
 
+		public bool								ExecuteInQueue
+		{
+			get;
+			set;
+		}
+
 		public ActionItemDisplayMode			DisplayMode
 		{
 			get;
@@ -45,6 +51,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				{ "title", this.Title },
 				{ "requiresAdditionalEntity", this.RequiresAdditionalEntity },
 				{ "displayMode", this.DisplayMode.ToString () },
+				{ "executeInQueue", this.ExecuteInQueue },
 			};
 		}
 	}

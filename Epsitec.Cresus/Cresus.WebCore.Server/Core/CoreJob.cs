@@ -119,6 +119,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.startedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Running;
 			this.UpdateTaskStatus ();
+		}
+
+		public void Start(string metaData)
+		{
+			this.startedAt = System.DateTime.Now;
+			this.Status = CoreJobStatus.Running;
+			this.Metadata = metaData;
+			this.UpdateTaskStatus ();
 			this.UpdateTaskStatusInBag ();
 		}
 
@@ -129,6 +137,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.Metadata = metaData;
 			this.UpdateTaskStatus ();
 			this.UpdateTaskStatusInBag ();
+		}
+
+		public void Finish()
+		{
+			this.finishedAt = System.DateTime.Now;
+			this.Status = CoreJobStatus.Ended;
+			this.RemoveTaskStatus ();
 		}
 
 		public void Finish(string metaData)

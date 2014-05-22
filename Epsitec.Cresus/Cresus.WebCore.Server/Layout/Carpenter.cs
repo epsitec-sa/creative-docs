@@ -875,7 +875,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					ViewId                   = InvariantConverter.ToString (viewId),
 					Title                    = controller.GetTitle ().ToString (),
 					RequiresAdditionalEntity = templateController != null && templateController.RequiresAdditionalEntity,
-					DisplayMode              = Carpenter.GetDisplayMode (propertyKey)
+					DisplayMode              = Carpenter.GetDisplayMode (propertyKey),
+					ExecuteInQueue			 = controller.ExecuteInQueue
 				};
 			}
 		}

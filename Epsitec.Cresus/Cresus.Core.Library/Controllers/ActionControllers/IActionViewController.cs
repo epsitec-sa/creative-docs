@@ -15,5 +15,10 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		{
 			get;
 		}
+
+		bool ExecuteInQueue
+		{
+			get;
+		}
 	}
 }

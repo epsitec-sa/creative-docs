@@ -73,9 +73,9 @@ function() {
       this.columnManager.removeRightColumns(this);
     },
 
-    showAction: function(viewId, entityId, callback) {
+    showAction: function(viewId, entityId, inQueue, callback) {
       this.columnManager.showAction(
-          Epsitec.ViewMode.action, viewId, entityId, null, callback
+          Epsitec.ViewMode.action, viewId, entityId, null, inQueue, callback
       );
     },
 

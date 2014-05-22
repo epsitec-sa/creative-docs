@@ -71,6 +71,26 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Post["/action/entity/{viewMode}/{viewId}/{entityId}"] = p =>
 				this.Execute (b => this.ExecuteEntityAction (b, p));
 
+			// Executes an action in job queue on an entity.
+			// URL arguments:
+			// - viewMode:   The view mode of the EntityViewController to use, as used by the
+			//               DataIO class.
+			// - viewId:     The view id of the EntityViewController to use, as used by the DataIO
+			//               class.
+			// - entityId:   The entity key of the entity on which the EntityViewController will be
+			//               used, in the format used by the EntityIO class.
+			// POST arguments:
+			// The post arguments are dynamic. The are the ids of the edition values of the form
+			// that will be passed to the callback that executes the action. Their name is the id
+			// of the edition fields and their values are the value of these edition fields.
+			Post["/actionqueue/entity/{viewMode}/{viewId}/{entityId}"] = (p =>
+			{
+				CoreJob job	 = null;
+				this.Execute (b => this.CreateJob (b, "action", out job));
+				this.Enqueue (job, b => this.ExecuteEntityActionInQueue (b,job, p));
+				return CoreResponse.Success ();
+			});
+
 			// Executes an action on an entity, with an additional entity. This is used for
 			// instance in actions on an entity list.
 			// URL arguments:
@@ -240,6 +260,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return this.ExecuteAction (businessContext, entity, additionalEntity, parameters);
 		}
 
+		private void ExecuteEntityActionInQueue(BusinessContext businessContext,CoreJob job, dynamic parameters)
+		{
+			var entity = EntityIO.ResolveEntity (businessContext, (string) parameters.entityId);
+			var additionalEntity = EntityIO.ResolveEntity (businessContext, (string) parameters.additionalEntityId);
+
+			this.ExecuteActionInQueue (businessContext,job, entity, additionalEntity, parameters);
+		}
+
 		private Response ExecuteActionForEntityList(BusinessContext businessContext, dynamic parameters)
 		{
 			var entity = EntityIO.ResolveEntity (businessContext, (string) parameters.entityId);
@@ -273,6 +301,27 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 		}
 
+		private void ExecuteActionInQueue(BusinessContext businessContext,CoreJob job, AbstractEntity entity, AbstractEntity additionalEntity, dynamic parameters)
+		{
+			var viewMode = DataIO.ParseViewMode ((string) parameters.viewMode);
+			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
+
+			using (var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId))
+			{
+				var actionProvider = controller as IActionExecutorProvider;
+				var functionProvider = controller as IFunctionExecutorProvider;
+
+				if (actionProvider != null)
+				{
+					this.ExecuteActionInQueue (businessContext,job, actionProvider, entity, additionalEntity);
+				}
+				else
+				{
+					job.Finish ("erreur");
+				}
+			}
+		}
+
 
 		private Response ExecuteAction(BusinessContext businessContext, IActionExecutorProvider actionProvider, AbstractEntity entity, AbstractEntity additionalEntity)
 		{
@@ -290,6 +339,24 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 
 			return CoreResponse.Success ();
+		}
+
+		private void ExecuteActionInQueue(BusinessContext businessContext,CoreJob job, IActionExecutorProvider actionProvider, AbstractEntity entity, AbstractEntity additionalEntity)
+		{
+			var executor = actionProvider.GetExecutor ();
+
+			DynamicDictionary form = Request.Form;
+			var arguments = this.GetArguments (executor, form, businessContext);
+
+			using (businessContext.Bind (entity))
+			using (businessContext.Bind (additionalEntity))
+			{
+				job.Start ();
+				executor.Call (arguments);
+
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
+				job.Finish ();
+			}
 		}
 
 

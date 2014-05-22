@@ -46,6 +46,14 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
+		public virtual bool						ExecuteInQueue
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 		public abstract FormattedText GetTitle();
 
 		#endregion

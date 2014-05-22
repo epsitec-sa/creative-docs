@@ -16,11 +16,20 @@ function() {
     getFormUrl: function(options) {
       var prefix, viewMode, viewId, entityId, additionalEntityId;
 
-      prefix = 'proxy/entity/action/entity';
+      if (options.executeInQueue == true)
+      {
+          prefix = 'proxy/entity/actionqueue/entity';
+      }
+      else
+      {
+          prefix = 'proxy/entity/action/entity';
+      }
+
       viewMode = options.viewMode;
       viewId = options.viewId;
       entityId = options.entityId;
       additionalEntityId = options.additionalEntityId;
+      
 
       return Epsitec.EntityAction.getUrl(
           prefix, viewMode, viewId, entityId, additionalEntityId
@@ -34,13 +43,13 @@ function() {
     /* Static methods */
 
     statics: {
-      showDialog: function(viewMode, viewId, entityId, aEntityId, callback) {
+      showDialog: function(viewMode, viewId, entityId, aEntityId, inQueue, callback) {
         var prefix, url;
 
         prefix = 'proxy/layout/entity';
         url = this.getUrl(prefix, viewMode, viewId, entityId, aEntityId);
 
-        Epsitec.Action.showDialog(url, 'Epsitec.EntityAction', callback);
+        Epsitec.Action.showDialog(url, 'Epsitec.EntityAction', inQueue, callback);
       },
 
       getUrl: function(prefix, viewMode, viewId, entityId, additionalEntityId) {

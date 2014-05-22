@@ -176,17 +176,17 @@ function() {
     /* Static methods */
 
     statics: {
-      showDialog: function(url, actionType, callback) {
+      showDialog: function(url, actionType, inQueue, callback) {
         Ext.Ajax.request({
           url: url,
           callback: function(options, success, response) {
-            this.showDialogCallback(success, response, actionType, callback);
+            this.showDialogCallback(success, response, actionType, inQueue, callback);
           },
           scope: this
         });
       },
 
-      showDialogCallback: function(success, response, actionType, callback) {
+      showDialogCallback: function(success, response, actionType, inQueue, callback) {
         var json, options, dialog;
 
         json = Epsitec.Tools.processResponse(success, response);
@@ -197,6 +197,7 @@ function() {
         
         options = Epsitec.BrickWallParser.parseColumn(json.content);
         options.callback = callback;
+        options.executeInQueue = inQueue;
         dialog = Ext.create(actionType, options);
 
         if(json.content.tiles[0].fields.length > 0 || json.content.tiles[0].text != null)

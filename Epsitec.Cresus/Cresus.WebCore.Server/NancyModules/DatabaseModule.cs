@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private void LongRunningExport(BusinessContext businessContext, CoreJob job, dynamic parameters)
 		{
-			job.Start ();
+			job.Start ("Exportation démarrée");
 
 			var user		= LoginModule.GetUserName (this);
 			var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
@@ -280,7 +280,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			
 			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
-				job.Progress ("Exportation...");
 				DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
 			}
 
