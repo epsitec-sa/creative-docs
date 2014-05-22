@@ -73,6 +73,7 @@
     <Compile Include="AssetsApplication.cs" />
     <Compile Include="AssetsUI.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
+    <Compile Include="Export\ExportInstructions.cs" />
     <Compile Include="Export\ExportTextProfile.cs" />
     <Compile Include="Export\ExportStatics.cs" />
     <Compile Include="Export\AbstractExport.cs" />
@@ -100,7 +101,7 @@
     <Compile Include="Popups\AssetsReportPopup.cs" />
     <Compile Include="Popups\RateCalculatorPopup.cs" />
     <Compile Include="Popups\FilenameStackedController.cs" />
-    <Compile Include="Popups\ExportPopup.cs" />
+    <Compile Include="Popups\ExportInstructionsPopup.cs" />
     <Compile Include="Reports\ReportsList.cs" />
     <Compile Include="Popups\ReportPopup.cs" />
     <Compile Include="Popups\MCH2SummaryReportPopup.cs" />

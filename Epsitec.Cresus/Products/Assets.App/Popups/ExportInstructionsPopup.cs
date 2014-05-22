@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Dialogs;
+using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -11,9 +12,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Popup permettant la saisir des informations nécessaires à l'exportation d'un TreeTable.
 	/// </summary>
-	public class ExportPopup : StackedPopup
+	public class ExportInstructionsPopup : StackedPopup
 	{
-		public ExportPopup(DataAccessor accessor)
+		public ExportInstructionsPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = "Exportation des données";
@@ -37,38 +38,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public bool								Inverted
+		public ExportInstructions				ExportInstructions
 		{
 			get
 			{
-				var controller = this.GetController (0) as BoolStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				return controller.Value;
+				var c0 = this.GetController (0) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (c0 != null);
+				var inverted = c0.Value;
+
+				var c1 = this.GetController (1) as FilenameStackedController;
+				System.Diagnostics.Debug.Assert (c1 != null);
+				var filename = c1.Value;
+
+				return new ExportInstructions (filename, inverted);
 			}
 			set
 			{
-				var controller = this.GetController (0) as BoolStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = value;
+				var c0 = this.GetController (0) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (c0 != null);
+				c0.Value = value.Inverted;
+
+				var c1 = this.GetController (1) as FilenameStackedController;
+				System.Diagnostics.Debug.Assert (c1 != null);
+				c1.Value = value.Filename;
 			}
 		}
-
-		public string							Filename
-		{
-			get
-			{
-				var controller = this.GetController (1) as FilenameStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				return controller.Value;
-			}
-			set
-			{
-				var controller = this.GetController (1) as FilenameStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = value;
-			}
-		}
-
 
 		public IEnumerable<FilterItem>			Filters
 		{
@@ -92,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected override void UpdateWidgets()
 		{
 			this.okButton.Text = "Exporter";
-			this.okButton.Enable = !string.IsNullOrEmpty (this.Filename);
+			this.okButton.Enable = !string.IsNullOrEmpty (this.ExportInstructions.Filename);
 		}
 	}
 }

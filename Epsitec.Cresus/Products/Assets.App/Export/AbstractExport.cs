@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 	public abstract class AbstractExport<T>
 		where T : struct
 	{
-		public virtual void Export(AbstractTreeTableFiller<T> filler, string filename, bool inverted)
+		public virtual void Export(AbstractTreeTableFiller<T> filler, ExportInstructions instructions)
 		{
 		}
 	}

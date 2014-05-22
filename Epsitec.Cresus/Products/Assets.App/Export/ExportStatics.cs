@@ -17,11 +17,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 	{
 		public static void ShowExportPopup(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller)
 		{
-			var popup = new ExportPopup (accessor)
+			var popup = new ExportInstructionsPopup (accessor)
 			{
-				Inverted = false,
-				Filename = LocalSettings.ExportFilename,
-				Filters  = ExportStatics<T>.ExportFilters,
+				ExportInstructions = new ExportInstructions (LocalSettings.ExportFilename, false),
+				Filters            = ExportStatics<T>.ExportFilters,
 			};
 
 			popup.Create (target, leftOrRight: true);
@@ -30,11 +29,11 @@ namespace Epsitec.Cresus.Assets.App.Export
 			{
 				if (name == "ok")
 				{
-					LocalSettings.ExportFilename = popup.Filename;
+					LocalSettings.ExportFilename = popup.ExportInstructions.Filename;
 
 					try
 					{
-						ExportStatics<T>.Export (dataFiller, popup.Filename, popup.Inverted);
+						ExportStatics<T>.Export (dataFiller, popup.ExportInstructions);
 					}
 					catch (System.Exception ex)
 					{
@@ -47,40 +46,40 @@ namespace Epsitec.Cresus.Assets.App.Export
 			};
 		}
 
-		private static void Export(AbstractTreeTableFiller<T> dataFiller, string filename, bool inverted)
+		private static void Export(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
 		{
-			var ext = System.IO.Path.GetExtension (filename);
+			var ext = System.IO.Path.GetExtension (instructions.Filename);
 
 			switch (ext)
 			{
 				case ".txt":
-					ExportStatics<T>.TxtExport (dataFiller, filename, inverted);
+					ExportStatics<T>.TxtExport (dataFiller, instructions);
 					break;
 
 				case ".csv":
-					ExportStatics<T>.CsvExport (dataFiller, filename, inverted);
+					ExportStatics<T>.CsvExport (dataFiller, instructions);
 					break;
 			}
 		}
 
-		private static void TxtExport(AbstractTreeTableFiller<T> dataFiller, string filename, bool inverted)
+		private static void TxtExport(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
 		{
 			var engine = new TextExport<T> ()
 			{
 				ExportTextProfile = ExportTextProfile.TxtProfile,
 			};
 
-			engine.Export (dataFiller, filename, inverted);
+			engine.Export (dataFiller, instructions);
 		}
 
-		private static void CsvExport(AbstractTreeTableFiller<T> dataFiller, string filename, bool inverted)
+		private static void CsvExport(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
 		{
 			var engine = new TextExport<T> ()
 			{
 				ExportTextProfile = ExportTextProfile.CsvProfile,
 			};
 
-			engine.Export (dataFiller, filename, inverted);
+			engine.Export (dataFiller, instructions);
 		}
 
 

@@ -20,10 +20,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 		public ExportTextProfile				ExportTextProfile;
 
 
-		public override void Export(AbstractTreeTableFiller<T> filler, string filename, bool inverted)
+		public override void Export(AbstractTreeTableFiller<T> filler, ExportInstructions instructions)
 		{
-			var data = this.GetData (filler, inverted);
-			this.WriteData (filename, data);
+			var data = this.GetData (filler, instructions.Inverted);
+			this.WriteData (instructions.Filename, data);
 		}
 
 
