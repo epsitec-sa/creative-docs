@@ -106,12 +106,16 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.statusBar = bar;
 		}
 
-		public void Enqueue()
+		public void Enqueue(bool addCancelationNotificationToBag)
 		{
 			this.queuedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Waiting;
 			this.AddTaskStatus ();
-			this.AddTaskStatusInBag ();
+			if(addCancelationNotificationToBag)
+			{
+				this.AddTaskStatusInBag ();
+			}
+			
 		}
 
 		public void Start()

@@ -52,9 +52,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return this.Execute ((pool, username, sessionId) => pool.Execute (username, sessionId, function));
 		}
 
-		protected void Enqueue(CoreJob task, System.Action<BusinessContext> action)
+		protected void Enqueue(CoreJob task, System.Action<BusinessContext> action, bool addCancelationNotificationToBag)
 		{
-			task.Enqueue ();
+			task.Enqueue (addCancelationNotificationToBag);
 
 			this.CoreServer.CoreWorkerQueue.Enqueue (task.Id, task.Username, task.SessionId, action);
 		}

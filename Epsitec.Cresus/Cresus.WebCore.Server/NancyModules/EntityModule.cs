@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				CoreJob job	 = null;
 				this.Execute (b => this.CreateJob (b, "action", out job));
-				this.Enqueue (job, b => this.ExecuteEntityActionInQueue (b,job, p));
+				this.Enqueue (job, b => this.ExecuteEntityActionInQueue (b,job, p), false);
 				return CoreResponse.Success ();
 			});
 

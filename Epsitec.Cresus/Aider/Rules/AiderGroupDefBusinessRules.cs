@@ -52,7 +52,7 @@ namespace Epsitec.Aider.Rules
 
 			if(!groupDef.RoleCacheDisabled)
 			{
-				AiderParticipationsHelpers.PurgeAndRebuildRoleCache ();
+				AiderParticipationsHelpers.PurgeAndRebuildRoleCache (context);
 			}
 		}
 	}

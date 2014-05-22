@@ -9,15 +9,15 @@ using Epsitec.Aider.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Aider.Helpers
 {
 	public sealed class AiderParticipationsHelpers
 	{
-		public static void PurgeAndRebuildRoleCache ()
+		public static void PurgeAndRebuildRoleCache (BusinessContext context)
 		{
-			//TODO 
-			//Enqueue purge and build RoleCache
+			//TODO TRIGG JOB
 		}
 
 		public static void RebuildRoleCache(IEnumerable<AiderGroupParticipantEntity> participations)
