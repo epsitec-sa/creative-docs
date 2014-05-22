@@ -128,7 +128,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Affiche le Popup pour choisir comment exporter le rapport.
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportExport);
-			System.Diagnostics.Debug.Assert (target != null);
 			this.report.ShowExportPopup (target);
 		}
 

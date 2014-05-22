@@ -8,19 +8,17 @@ namespace Epsitec.Cresus.Assets.App.Export
 {
 	public struct ExportTextProfile
 	{
-		public ExportTextProfile(bool hasHeader, string columnSeparator, string columnBracket, string escape, string endOfLine)
+		public ExportTextProfile(string columnSeparator, string columnBracket, string escape, string endOfLine)
 		{
-			this.HasHeader       = hasHeader;
 			this.ColumnSeparator = columnSeparator;
 			this.ColumnBracket   = columnBracket;
 			this.Escape          = escape;
 			this.EndOfLine       = endOfLine;
 		}
 
-		public static ExportTextProfile CsvProfile = new ExportTextProfile (true, ",", "\"", "\"", "\r\n");
-		public static ExportTextProfile TxtProfile = new ExportTextProfile (true, "\t", null, "\\", "\r\n");
+		public static ExportTextProfile CsvProfile = new ExportTextProfile (",", "\"", "\"", "\r\n");
+		public static ExportTextProfile TxtProfile = new ExportTextProfile ("\t", null, "\\", "\r\n");
 
-		public readonly bool					HasHeader;
 		public readonly string					ColumnSeparator;
 		public readonly string					ColumnBracket;
 		public readonly string					Escape;

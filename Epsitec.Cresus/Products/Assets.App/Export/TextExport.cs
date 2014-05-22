@@ -22,12 +22,14 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		public override void Export(AbstractTreeTableFiller<T> filler, ExportInstructions instructions)
 		{
-			var data = this.GetData (filler, instructions.Inverted);
-			this.WriteData (instructions.Filename, data);
+			this.instructions = instructions;
+
+			var data = this.GetData (filler);
+			this.WriteData (data);
 		}
 
 
-		private string GetData(AbstractTreeTableFiller<T> filler, bool inverted)
+		private string GetData(AbstractTreeTableFiller<T> filler)
 		{
 			var columnDescriptions = filler.Columns;
 
@@ -37,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			var array = new string[columnCount, this.RowOffet+rowCount];
 
 			//	Génère la première ligne d'en-tête.
-			if (this.ExportTextProfile.HasHeader)
+			if (this.instructions.HasHeader)
 			{
 				for (int column=0; column<columnCount; column++)
 				{
@@ -63,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Transforme le contenu du tableau en une string.
 			var builder = new System.Text.StringBuilder ();
 
-			if (inverted)
+			if (this.instructions.Inverted)
 			{
 				for (int column=0; column<columnCount; column++)
 				{
@@ -105,14 +107,14 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			get
 			{
-				return this.ExportTextProfile.HasHeader ? 1 : 0;
+				return this.instructions.HasHeader ? 1 : 0;
 			}
 		}
 
 
-		private void WriteData(string filename, string data)
+		private void WriteData(string data)
 		{
-			System.IO.File.WriteAllText (filename, data);
+			System.IO.File.WriteAllText (this.instructions.Filename, data);
 		}
 
 
@@ -233,5 +235,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			return cell.Value;
 		}
+
+
+		private ExportInstructions instructions;
 	}
 }

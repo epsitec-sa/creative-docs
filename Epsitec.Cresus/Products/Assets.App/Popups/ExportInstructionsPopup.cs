@@ -24,10 +24,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Inverser les lignes avec les colonnes",
+				Label                 = "Exporter les noms des colonnes",
 			});
 
 			list.Add (new StackedControllerDescription  // 1
+			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = "Inverser les lignes avec les colonnes",
+			});
+
+			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Filename,
 				Label                 = "Fichier",
@@ -44,23 +50,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var c0 = this.GetController (0) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (c0 != null);
-				var inverted = c0.Value;
+				var hasHeader = c0.Value;
 
-				var c1 = this.GetController (1) as FilenameStackedController;
+				var c1 = this.GetController (1) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (c1 != null);
-				var filename = c1.Value;
+				var inverted = c1.Value;
 
-				return new ExportInstructions (filename, inverted);
+				var c2 = this.GetController (2) as FilenameStackedController;
+				System.Diagnostics.Debug.Assert (c2 != null);
+				var filename = c2.Value;
+
+				return new ExportInstructions (filename, hasHeader, inverted);
 			}
 			set
 			{
 				var c0 = this.GetController (0) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (c0 != null);
-				c0.Value = value.Inverted;
+				c0.Value = value.HasHeader;
 
-				var c1 = this.GetController (1) as FilenameStackedController;
+				var c1 = this.GetController (1) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (c1 != null);
-				c1.Value = value.Filename;
+				c1.Value = value.Inverted;
+
+				var c2 = this.GetController (2) as FilenameStackedController;
+				System.Diagnostics.Debug.Assert (c2 != null);
+				c2.Value = value.Filename;
 			}
 		}
 
@@ -68,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			set
 			{
-				var controller = this.GetController (1) as FilenameStackedController;
+				var controller = this.GetController (2) as FilenameStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Filters = value;
 			}
@@ -79,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			base.CreateUI ();
 
-			var controller = this.GetController (1);
+			var controller = this.GetController (2);
 			controller.SetFocus ();
 		}
 

@@ -8,10 +8,11 @@ namespace Epsitec.Cresus.Assets.App.Export
 {
 	public struct ExportInstructions
 	{
-		public ExportInstructions(string filename, bool inverted)
+		public ExportInstructions(string filename, bool hasHeader, bool inverted)
 		{
-			this.Filename = filename;
-			this.Inverted = inverted;
+			this.Filename  = filename;
+			this.HasHeader = hasHeader;
+			this.Inverted  = inverted;
 		}
 
 		public bool IsEmpty
@@ -22,9 +23,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 			}
 		}
 
-		public static ExportInstructions Empty = new ExportInstructions (null, false);
+		public static ExportInstructions Empty = new ExportInstructions (null, false, false);
 
 		public readonly string					Filename;
+		public readonly bool					HasHeader;
 		public readonly bool					Inverted;
 	}
 }

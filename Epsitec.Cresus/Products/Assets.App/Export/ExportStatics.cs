@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	puis continue le processus initié jusqu'à son terme.
 			var popup = new ExportInstructionsPopup (accessor)
 			{
-				ExportInstructions = new ExportInstructions (LocalSettings.ExportFilename, false),
+				ExportInstructions = new ExportInstructions (LocalSettings.ExportFilename, hasHeader: true, inverted: false),
 				Filters            = ExportStatics<T>.ExportFilters,
 			};
 
