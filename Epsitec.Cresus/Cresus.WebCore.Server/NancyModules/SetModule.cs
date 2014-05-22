@@ -90,8 +90,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var type		= this.Request.Query.type == "label" ? "PDF" : "CSV";
 				CoreJob job = null;
-				this.Execute (b => this.CreateJob (b, "Export " + type, out job));
-				this.Enqueue (job, context => this.LongRunningExport (context, job, p), true);
+				this.Execute (b => this.CreateJob (b, "Export " + type, true, out job));
+				this.Enqueue (job, context => this.LongRunningExport (context, job, p));
 
 				return new Response ()
 				{

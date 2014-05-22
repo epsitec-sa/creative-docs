@@ -86,8 +86,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Post["/actionqueue/entity/{viewMode}/{viewId}/{entityId}"] = (p =>
 			{
 				CoreJob job	 = null;
-				this.Execute (b => this.CreateJob (b, "action", out job));
-				this.Enqueue (job, b => this.ExecuteEntityActionInQueue (b,job, p), false);
+				this.Execute (b => this.CreateJob (b, "action", false, out job));
+				this.Enqueue (job, b => this.ExecuteEntityActionInQueue (b,job, p));
 				return CoreResponse.Success ();
 			});
 

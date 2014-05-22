@@ -52,9 +52,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return this.Execute ((pool, username, sessionId) => pool.Execute (username, sessionId, function));
 		}
 
-		protected void Enqueue(CoreJob task, System.Action<BusinessContext> action, bool addCancelationNotificationToBag)
+		protected void Enqueue(CoreJob task, System.Action<BusinessContext> action)
 		{
-			task.Enqueue (addCancelationNotificationToBag);
+			task.Enqueue ();
 
 			this.CoreServer.CoreWorkerQueue.Enqueue (task.Id, task.Username, task.SessionId, action);
 		}
@@ -71,8 +71,19 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		protected bool RemoveJob(string jobId)
 		{
-			CoreJob removedJob;
-			return this.CoreServer.Jobs.TryRemove (jobId, out removedJob);
+			var job = this.GetJob (jobId);
+			if (job.Status == CoreJobStatus.Waiting)
+			{
+				this.CancelJob (job);
+				return true;
+			}
+
+			if(job.Status != CoreJobStatus.Running) 
+			{
+				CoreJob removedJob;
+				return this.CoreServer.Jobs.TryRemove (jobId, out removedJob);
+			}
+			return false;
 		}
 
 		protected void CancelJob(CoreJob job)
@@ -135,13 +146,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.Failure (errors);
 		}
 
-		public Response CreateJob(BusinessContext businessContext, string title, out CoreJob job)
+		public Response CreateJob(BusinessContext businessContext, string title,bool enableCancelation, out CoreJob job)
 		{
 			var entityBag = EntityBagManager.GetCurrentEntityBagManager ();
 			var statusBar = StatusBarManager.GetCurrentStatusBarManager ();
 			var userName   = LoginModule.GetUserName (this);
 			var sessionId  = LoginModule.GetSessionId (this);
-			job = new CoreJob (userName, sessionId, this.CreateJobId (), title, entityBag, statusBar);
+			job = new CoreJob (userName, sessionId, this.CreateJobId (), title, entityBag, statusBar, enableCancelation);
 			this.CoreServer.Jobs.TryAdd (job.Id, job);
 			return new Response ()
 			{

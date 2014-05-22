@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public CoreJob(string username, string sessionId, string taskId, string title,EntityBagManager bag, StatusBarManager bar)
+		public CoreJob(string username, string sessionId, string taskId, string title,EntityBagManager bag, StatusBarManager bar, bool enableCancelation)
 		{
 			var now = System.DateTime.Now;
 			this.Username = username;
@@ -104,14 +104,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.createdAt = now;
 			this.entityBag = bag;
 			this.statusBar = bar;
+			this.cancelationEnabled = enableCancelation;
 		}
 
-		public void Enqueue(bool addCancelationNotificationToBag)
+		public void Enqueue()
 		{
 			this.queuedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Waiting;
 			this.AddTaskStatus ();
-			if(addCancelationNotificationToBag)
+			if (this.cancelationEnabled)
 			{
 				this.AddTaskStatusInBag ();
 			}
@@ -119,9 +120,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 		public void Start()
-		{
+		{		
 			this.startedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Running;
+			if (this.cancelationEnabled)
+			{
+				this.RemoveTaskInStatusInBag ();
+			}			
 			this.UpdateTaskStatus ();
 		}
 
@@ -214,7 +219,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		private string title;
 		private StatusBarManager statusBar;
 		private EntityBagManager entityBag;
-		
+
+		private bool cancelationEnabled;
 	}
 
 	public sealed class CoreJobStatus

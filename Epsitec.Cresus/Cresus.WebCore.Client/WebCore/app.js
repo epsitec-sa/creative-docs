@@ -536,6 +536,23 @@ $.getScript('signalr/hubs', function() {
           });
       },
 
+      deleteJobAndFile: function (jobId) {
+          var url = "/proxy/jobs/delete/" + jobId;
+          Ext.Ajax.request({
+              url: url,
+              success: function (response) {
+                  console.log('job deleted');
+                  var url = "/proxy/downloads/delete/jobfile/" + jobId;
+                  Ext.Ajax.request({
+                      url: url,
+                      success: function (response) {
+                          console.log('jobfile removed');
+                      }
+                  });
+              }
+          });
+      },
+
       cancelJob: function (jobId) {
           var url = "/proxy/jobs/cancel/" + jobId;
           Ext.Ajax.request({

@@ -179,6 +179,10 @@ function() {
     removeEntityFromBag: function(entity) {
       var record = this.bagStore.getById(entity.id);
       var hub = Epsitec.Cresus.Core.app.hubs.getHubByName('entitybag');
+      if (entity.id.substring(0, 3) === "JOB")
+      {
+          Epsitec.Cresus.Core.app.deleteJobAndFile(entity.id);
+      }
 
       hub.RemoveFromMyBag(entity.id);
     },
@@ -194,7 +198,6 @@ function() {
             if(item.entityId == entity.id)
             {
               item.close();
-              
             }
           }         
       });

@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Extraction;
+using Epsitec.Cresus.WebCore.Server.NancyHosting;
 using Nancy;
 
 
@@ -32,6 +33,26 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				{
 					StatusCode = HttpStatusCode.Accepted
 				};
+			});
+
+			Get["/delete/{job}"] = (p =>
+			{
+				var job = this.GetJob (p.job);
+				if (this.RemoveJob (job.Id))
+				{
+					return new Response ()
+					{
+						StatusCode = HttpStatusCode.Accepted
+					};
+				}
+				else
+				{
+					return new Response ()
+					{
+						StatusCode = HttpStatusCode.InternalServerError
+					};
+				}
+				
 			});
 		}
 	}

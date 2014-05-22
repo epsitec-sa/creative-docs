@@ -33,6 +33,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Get["/delete/{filename}"] = p =>
 				this.Execute (wa => this.DeleteFile (wa, p));
 
+			Get["/delete/jobfile/{jobid}"] = p =>
+				this.Execute (wa => this.DeleteJobFile (wa, p));
+
 			Get["/list/"] = p => this.ListFiles ();
 				
 		}
@@ -60,6 +63,17 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response DeleteFile(WorkerApp app, dynamic parameters)
 		{
 			var filePath = CoreContext.GetFileDepotPath ("downloads", parameters.filename);
+			System.IO.File.Delete (filePath);
+			return Response.AsJson ("deleted");
+		}
+
+		private Response DeleteJobFile(WorkerApp app, dynamic parameters)
+		{
+			var path = CoreContext.GetFileDepotPath ("downloads");
+			var filesInfo = System.IO.Directory.EnumerateFiles (path).Select (f => new System.IO.FileInfo (f));
+			var filename = filesInfo.Single (f => f.Name.StartsWith (parameters.jobid)).Name;
+
+			var filePath = CoreContext.GetFileDepotPath ("downloads", filename);
 			System.IO.File.Delete (filePath);
 			return Response.AsJson ("deleted");
 		}
