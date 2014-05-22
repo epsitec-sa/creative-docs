@@ -17,6 +17,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 	{
 		public static void ShowExportPopup(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller)
 		{
+			//	Débute le processus d'exportation en ouvrant le popup pour choisir les instructions,
+			//	puis continue le processus initié jusqu'à son terme.
 			var popup = new ExportInstructionsPopup (accessor)
 			{
 				ExportInstructions = new ExportInstructions (LocalSettings.ExportFilename, false),
@@ -37,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 					}
 					catch (System.Exception ex)
 					{
-						MessagePopup.ShowError (target, ex.Message);
+						MessagePopup.ShowMessage (target, "Exportation impossible", ex.Message);
 						return;
 					}
 
@@ -48,21 +50,25 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private static void Export(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
 		{
-			var ext = System.IO.Path.GetExtension (instructions.Filename);
+			//	Effectue l'exportation sans aucune interaction.
+			var ext = System.IO.Path.GetExtension (instructions.Filename);  // extrait l'extension avec le point
 
 			switch (ext)
 			{
 				case ".txt":
-					ExportStatics<T>.TxtExport (dataFiller, instructions);
+					ExportStatics<T>.ExportTxt (dataFiller, instructions);
 					break;
 
 				case ".csv":
-					ExportStatics<T>.CsvExport (dataFiller, instructions);
+					ExportStatics<T>.ExportCsv (dataFiller, instructions);
 					break;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("L'extension \"{0}\" n'est pas supportée.", ext));
 			}
 		}
 
-		private static void TxtExport(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
+		private static void ExportTxt(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
 		{
 			var engine = new TextExport<T> ()
 			{
@@ -72,7 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			engine.Export (dataFiller, instructions);
 		}
 
-		private static void CsvExport(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
+		private static void ExportCsv(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
 		{
 			var engine = new TextExport<T> ()
 			{
@@ -85,6 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private static IEnumerable<FilterItem> ExportFilters
 		{
+			//	Retourne la liste des formats supportés, pour le dialogue OpenFile standard.
 			get
 			{
 				yield return new FilterItem ("pdf", "Document mis en page", "*.pdf");
@@ -96,6 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private static void ShowOpenPopup(Widget target, DataAccessor accessor, ExportInstructions instructions)
 		{
+			//	Affiche le popup permettant d'ouvrir le fichier ou l'emplacement.
 			var popup = new ExportOpenPopup (accessor)
 			{
 				OpenLocation = false,
@@ -121,11 +129,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private static void OpenFile(ExportInstructions instructions)
 		{
+			//	Ouvre le fichier, en lançant l'application par défaut selon l'extension.
 			System.Diagnostics.Process.Start (instructions.Filename);
 		}
 
 		private static void OpenLocation(ExportInstructions instructions)
 		{
+			//	Ouvre l'explorateur de fichier et sélectionne le fichier exporté.
 			//	Voir http://stackoverflow.com/questions/9646114/open-file-location
 			System.Diagnostics.Process.Start ("explorer.exe", "/select," + instructions.Filename);
 		}

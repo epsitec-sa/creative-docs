@@ -87,6 +87,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			popup.Create (target);
 		}
 
+		public static void ShowMessage(Widget target, string title, string message)
+		{
+			var popup = new MessagePopup (title, message);
+
+			popup.Create (target);
+		}
+
 		public static void ShowMessage(Widget target, string message)
 		{
 			var popup = new MessagePopup ("Message", message);
