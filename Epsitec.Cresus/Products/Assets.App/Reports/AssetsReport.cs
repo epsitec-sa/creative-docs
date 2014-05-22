@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Data;
@@ -92,8 +93,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnParamsChanged ();
 		}
 
-		public override void Export(string filename, bool inverted)
+		public override void ShowExportPopup(Widget target)
 		{
+			ExportStatics<CumulNode>.ShowExportPopup (target, this.accessor, this.dataFiller);
 		}
 
 

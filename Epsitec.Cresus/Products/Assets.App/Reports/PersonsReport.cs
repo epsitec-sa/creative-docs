@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -44,8 +46,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnParamsChanged ();
 		}
 
-		public override void Export(string filename, bool inverted)
+		public override void ShowExportPopup(Widget target)
 		{
+			ExportStatics<SortableNode>.ShowExportPopup (target, this.accessor, this.dataFiller);
 		}
 
 

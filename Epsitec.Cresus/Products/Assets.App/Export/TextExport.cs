@@ -8,10 +8,10 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.App.Export
 {
-	public class ExportToText<T>
+	public class TextExport<T> : AbstractExport<T>
 		where T : struct
 	{
-		public ExportToText()
+		public TextExport()
 		{
 			this.ExportTextProfile = ExportTextProfile.TxtProfile;
 		}
@@ -20,14 +20,14 @@ namespace Epsitec.Cresus.Assets.App.Export
 		public ExportTextProfile				ExportTextProfile;
 
 
-		public void Export(AbstractTreeTableFiller<T> filler, string filename)
+		public override void Export(AbstractTreeTableFiller<T> filler, string filename, bool inverted)
 		{
-			var data = this.GetData (filler);
+			var data = this.GetData (filler, inverted);
 			this.WriteData (filename, data);
 		}
 
 
-		private string GetData(AbstractTreeTableFiller<T> filler)
+		private string GetData(AbstractTreeTableFiller<T> filler, bool inverted)
 		{
 			var columnDescriptions = filler.Columns;
 
@@ -63,19 +63,39 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Transforme le contenu du tableau en une string.
 			var builder = new System.Text.StringBuilder ();
 
-			for (int row=0; row<this.RowOffet+rowCount; row++)
+			if (inverted)
 			{
 				for (int column=0; column<columnCount; column++)
 				{
-					builder.Append (this.GetOutputString (array[column, row]));
-
-					if (column < columnCount-1)
+					for (int row=0; row<this.RowOffet+rowCount; row++)
 					{
-						builder.Append (this.ExportTextProfile.ColumnSeparator);
-					}
-				}
+						builder.Append (this.GetOutputString (array[column, row]));
 
-				builder.Append (this.ExportTextProfile.EndOfLine);
+						if (row < rowCount-1)
+						{
+							builder.Append (this.ExportTextProfile.ColumnSeparator);
+						}
+					}
+
+					builder.Append (this.ExportTextProfile.EndOfLine);
+				}
+			}
+			else
+			{
+				for (int row=0; row<this.RowOffet+rowCount; row++)
+				{
+					for (int column=0; column<columnCount; column++)
+					{
+						builder.Append (this.GetOutputString (array[column, row]));
+
+						if (column < columnCount-1)
+						{
+							builder.Append (this.ExportTextProfile.ColumnSeparator);
+						}
+					}
+
+					builder.Append (this.ExportTextProfile.EndOfLine);
+				}
 			}
 
 			return builder.ToString ();

@@ -3,11 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Dialogs;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Reports;
-using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -138,7 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportExport);
 			if (target != null)
 			{
-				this.ShowExportPopup (target);
+				this.report.ShowExportPopup (target);
 			}
 		}
 
@@ -158,42 +156,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.selectedReportType = ReportsList.GetReportType (rank);
 				this.UpdateUI ();
 			};
-		}
-
-		private void ShowExportPopup(Widget target)
-		{
-			//	Affiche le Popup pour choisir comment exporter un rapport.
-			if (this.report == null)
-			{
-				return;
-			}
-
-			var popup = new ExportPopup (this.accessor)
-			{
-				Inverted = false,
-				Filename = LocalSettings.ExportFilename,
-				Filters  = ReportsView.ExportFilters,
-			};
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					LocalSettings.ExportFilename = popup.Filename;
-					this.report.Export (popup.Filename, popup.Inverted);
-				}
-			};
-		}
-
-		public static IEnumerable<FilterItem> ExportFilters
-		{
-			get
-			{
-				yield return new FilterItem ("pdf", "Document mis en page", "*.pdf");
-				yield return new FilterItem ("csv", "Fichier texte tabulé", "*.csv");
-			}
 		}
 
 

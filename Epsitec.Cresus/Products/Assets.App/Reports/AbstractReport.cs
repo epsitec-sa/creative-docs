@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		public virtual void Export(string filename, bool inverted)
+		public virtual void ShowExportPopup(Widget target)
 		{
 		}
 
