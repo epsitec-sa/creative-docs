@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Balise pour les enregistrements",
+				Label                 = "Balises pour les enregistrements",
 				Width                 = 200,
 			});
 

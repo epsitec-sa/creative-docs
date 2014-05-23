@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				ExportFormat format;
-				string filename;
+				ExportFormat	format;
+				string			filename;
 
 				{
 					var controller = this.GetController (0) as RadioStackedController;
