@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private void Export(ExportInstructions instructions)
 		{
-			//	Effectue l'exportation sans aucune interaction.
+			//	Effectue l'exportation selon les instructions (format et filename).
 			switch (instructions.Format)
 			{
 				case ExportFormat.Text:
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private void ShowTxtPopup(ExportInstructions instructions)
 		{
-			//	Ouvre le popup (2) pour choisir le profile d'exportation.
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
 			var popup = new ExportTextPopup (this.accessor)
 			{
 				Profile = LocalSettings.ExportTxtProfile,
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private void ShowCsvPopup(ExportInstructions instructions)
 		{
-			//	Ouvre le popup (2) pour choisir le profile d'exportation.
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
 			var popup = new ExportTextPopup (this.accessor)
 			{
 				Profile = LocalSettings.ExportCsvProfile,
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private void ShowHtmlPopup(ExportInstructions instructions)
 		{
-			//	Ouvre le popup (2) pour choisir le profile d'exportation.
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
 			var popup = new ExportHtmlPopup (this.accessor)
 			{
 				Profile = LocalSettings.ExportHtmlProfile,
@@ -170,6 +170,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private void ExportText(ExportInstructions instructions, TextExportProfile profile)
 		{
+			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			var engine = new TextExport<T> ()
 			{
 				Instructions = instructions,
@@ -181,6 +182,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private void ExportHtml(ExportInstructions instructions, HtmlExportProfile profile)
 		{
+			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			var engine = new HtmlExport<T> ()
 			{
 				Instructions = instructions,
@@ -208,23 +210,23 @@ namespace Epsitec.Cresus.Assets.App.Export
 				{
 					if (popup.OpenLocation)
 					{
-						this.OpenLocation (instructions);
+						ExportEngine<T>.OpenLocation (instructions);
 					}
 					else
 					{
-						this.OpenFile (instructions);
+						ExportEngine<T>.OpenFile (instructions);
 					}
 				}
 			};
 		}
 
-		private void OpenFile(ExportInstructions instructions)
+		private static void OpenFile(ExportInstructions instructions)
 		{
 			//	Ouvre le fichier, en lançant l'application par défaut selon l'extension.
 			System.Diagnostics.Process.Start (instructions.Filename);
 		}
 
-		private void OpenLocation(ExportInstructions instructions)
+		private static void OpenLocation(ExportInstructions instructions)
 		{
 			//	Ouvre l'explorateur de fichier et sélectionne le fichier exporté.
 			//	Voir http://stackoverflow.com/questions/9646114/open-file-location
@@ -232,9 +234,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 		}
 
 
-		private void ShowErrorPopup(string error)
+		private void ShowErrorPopup(string message)
 		{
-			MessagePopup.ShowMessage (this.target, "Exportation impossible", error);
+			//	Affiche une erreur.
+			MessagePopup.ShowMessage (this.target, "Exportation impossible", message);
 		}
 
 
