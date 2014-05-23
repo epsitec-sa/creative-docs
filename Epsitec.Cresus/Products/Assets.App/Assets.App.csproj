@@ -73,6 +73,7 @@
     <Compile Include="AssetsApplication.cs" />
     <Compile Include="AssetsUI.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
+    <Compile Include="Export\Converters.cs" />
     <Compile Include="Export\ExportStatics.cs" />
     <Compile Include="Helpers\String.cs" />
     <Compile Include="Helpers\Misc.cs" />
@@ -92,6 +93,8 @@
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\AssetCopyPopup.cs" />
     <Compile Include="Popups\EventPastePopup.cs" />
+    <Compile Include="Popups\ExportHtmlPopup.cs" />
+    <Compile Include="Popups\ExportTextPopup.cs" />
     <Compile Include="Popups\ExportOpenPopup.cs" />
     <Compile Include="Popups\PersonGuidStackedController.cs" />
     <Compile Include="Popups\CategoryGuidStackedController.cs" />

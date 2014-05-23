@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Dialogs;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
@@ -22,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	puis continue le processus initié jusqu'à son terme.
 			var popup = new ExportInstructionsPopup (accessor)
 			{
-				ExportInstructions = new ExportInstructions (ExportFormat.Text, LocalSettings.ExportFilename),
+				ExportInstructions = LocalSettings.ExportInstructions,
 			};
 
 			popup.Create (target, leftOrRight: true);
@@ -31,11 +30,56 @@ namespace Epsitec.Cresus.Assets.App.Export
 			{
 				if (name == "ok")
 				{
-					LocalSettings.ExportFilename = popup.ExportInstructions.Filename;
+					LocalSettings.ExportInstructions = popup.ExportInstructions;
+					ExportStatics<T>.Export (target, accessor, dataFiller, popup.ExportInstructions);
+				}
+			};
+		}
+
+		private static void Export(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
+		{
+			//	Effectue l'exportation sans aucune interaction.
+			switch (instructions.Format)
+			{
+				case ExportFormat.Text:
+					ExportStatics<T>.ShowTxtPopup (target, accessor, dataFiller, instructions);
+					break;
+
+				case ExportFormat.Csv:
+					ExportStatics<T>.ShowCsvPopup (target, accessor, dataFiller, instructions);
+					break;
+
+				case ExportFormat.Html:
+					ExportStatics<T>.ShowHtmlPopup (target, accessor, dataFiller, instructions);
+					break;
+
+				default:
+					var ext = ExportInstructionsPopup.GetFormatExt (instructions.Format);
+					var message = string.Format ("L'extension \"{0}\" n'est pas supportée.", ext);
+					MessagePopup.ShowMessage (target, "Exportation impossible", message);
+					break;
+			}
+		}
+
+
+		private static void ShowTxtPopup(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
+		{
+			var popup = new ExportTextPopup (accessor)
+			{
+				Profile = LocalSettings.ExportTxtProfile,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					LocalSettings.ExportTxtProfile = popup.Profile;
 
 					try
 					{
-						ExportStatics<T>.Export (dataFiller, popup.ExportInstructions);
+						ExportStatics<T>.ExportText (target, dataFiller, instructions, popup.Profile);
 					}
 					catch (System.Exception ex)
 					{
@@ -43,78 +87,92 @@ namespace Epsitec.Cresus.Assets.App.Export
 						return;
 					}
 
-					ExportStatics<T>.ShowOpenPopup (target, accessor, popup.ExportInstructions);
+					ExportStatics<T>.ShowOpenPopup (target, accessor, instructions);
 				}
 			};
 		}
 
-		private static void Export(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
+		private static void ShowCsvPopup(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
 		{
-			//	Effectue l'exportation sans aucune interaction.
-			switch (instructions.Format)
+			var popup = new ExportTextPopup (accessor)
 			{
-				case ExportFormat.Text:
-					ExportStatics<T>.ExportTxt (dataFiller, instructions);
-					break;
+				Profile = LocalSettings.ExportCsvProfile,
+			};
 
-				case ExportFormat.Csv:
-					ExportStatics<T>.ExportCsv (dataFiller, instructions);
-					break;
+			popup.Create (target, leftOrRight: true);
 
-				case ExportFormat.Html:
-					ExportStatics<T>.ExportHtml (dataFiller, instructions);
-					break;
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					LocalSettings.ExportCsvProfile = popup.Profile;
 
-				default:
-					var ext = ExportInstructionsPopup.GetFormatExt (instructions.Format);
-					throw new System.InvalidOperationException (string.Format ("L'extension \"{0}\" n'est pas supportée.", ext));
-			}
+					try
+					{
+						ExportStatics<T>.ExportText (target, dataFiller, instructions, popup.Profile);
+					}
+					catch (System.Exception ex)
+					{
+						MessagePopup.ShowMessage (target, "Exportation impossible", ex.Message);
+						return;
+					}
+
+					ExportStatics<T>.ShowOpenPopup (target, accessor, instructions);
+				}
+			};
 		}
 
-		private static void ExportTxt(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
+		private static void ShowHtmlPopup(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
+		{
+			var popup = new ExportHtmlPopup (accessor)
+			{
+				Profile = LocalSettings.ExportHtmlProfile,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					LocalSettings.ExportHtmlProfile = popup.Profile;
+
+					try
+					{
+						ExportStatics<T>.ExportHtml (target, dataFiller, instructions, popup.Profile);
+					}
+					catch (System.Exception ex)
+					{
+						MessagePopup.ShowMessage (target, "Exportation impossible", ex.Message);
+						return;
+					}
+
+					ExportStatics<T>.ShowOpenPopup (target, accessor, instructions);
+				}
+			};
+		}
+
+
+		private static void ExportText(Widget target, AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions, TextExportProfile profile)
 		{
 			var engine = new TextExport<T> ()
 			{
 				Instructions = instructions,
-				Profile      = TextExportProfile.TxtProfile,
+				Profile      = profile,
 			};
 
 			engine.Export (dataFiller);
 		}
 
-		private static void ExportCsv(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
-		{
-			var engine = new TextExport<T> ()
-			{
-				Instructions = instructions,
-				Profile      = TextExportProfile.CsvProfile,
-			};
-
-			engine.Export (dataFiller);
-		}
-
-		private static void ExportHtml(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
+		private static void ExportHtml(Widget target, AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions, HtmlExportProfile profile)
 		{
 			var engine = new HtmlExport<T> ()
 			{
 				Instructions = instructions,
-				Profile      = HtmlExportProfile.Default,
+				Profile      = profile,
 			};
 
 			engine.Export (dataFiller);
-		}
-
-
-		private static IEnumerable<FilterItem> ExportFilters
-		{
-			//	Retourne la liste des formats supportés, pour le dialogue OpenFile standard.
-			get
-			{
-				yield return new FilterItem ("pdf",  "Document mis en page", "*.pdf");
-				yield return new FilterItem ("txt",  "Fichier texte tabulé", "*.txt");
-				yield return new FilterItem ("csv",  "Fichier texte csv",    "*.csv");
-				yield return new FilterItem ("html", "Fichier html",         "*.html");
-			}
 		}
 
 

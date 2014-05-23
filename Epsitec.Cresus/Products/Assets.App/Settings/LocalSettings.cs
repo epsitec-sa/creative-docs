@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.Export;
 
 namespace Epsitec.Cresus.Assets.App.Settings
 {
@@ -32,7 +33,12 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.DefaultFreeDate      = defaultTimestamp.Date;
 
 			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
-			LocalSettings.ExportFilename = System.IO.Path.Combine (item.FullPath, "export.csv");
+			var filename = System.IO.Path.Combine (item.FullPath, "export.txt");
+			LocalSettings.ExportInstructions = new ExportInstructions (ExportFormat.Text, filename);
+
+			LocalSettings.ExportTxtProfile = TextExportProfile.TxtProfile;
+			LocalSettings.ExportCsvProfile = TextExportProfile.CsvProfile;
+			LocalSettings.ExportHtmlProfile = HtmlExportProfile.Default;
 		}
 
 		public static string Serialize()
@@ -53,6 +59,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public static System.DateTime			LockedDate;
 		public static System.DateTime			DefaultMandatDate;
 		public static System.DateTime			DefaultFreeDate;
-		public static string					ExportFilename;
+
+		public static ExportInstructions		ExportInstructions;
+		public static TextExportProfile			ExportTxtProfile;
+		public static TextExportProfile			ExportCsvProfile;
+		public static HtmlExportProfile			ExportHtmlProfile;
 	}
 }
