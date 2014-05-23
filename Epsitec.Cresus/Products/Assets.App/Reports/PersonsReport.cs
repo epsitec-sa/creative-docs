@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void ShowExportPopup(Widget target)
 		{
-			ExportStatics<SortableNode>.ShowExportPopup (target, this.accessor, this.dataFiller);
+			ExportHelpers<SortableNode>.StartExportProcess (target, this.accessor, this.dataFiller);
 		}
 
 

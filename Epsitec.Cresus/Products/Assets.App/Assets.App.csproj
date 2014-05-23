@@ -74,7 +74,8 @@
     <Compile Include="AssetsUI.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
     <Compile Include="Export\Converters.cs" />
-    <Compile Include="Export\ExportStatics.cs" />
+    <Compile Include="Export\ExportEngine.cs" />
+    <Compile Include="Export\ExportHelpers.cs" />
     <Compile Include="Helpers\String.cs" />
     <Compile Include="Helpers\Misc.cs" />
     <Compile Include="Helpers\DateTime.cs" />

@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void ShowExportPopup(Widget target)
 		{
-			ExportStatics<CumulNode>.ShowExportPopup (target, this.accessor, this.dataFiller);
+			ExportHelpers<CumulNode>.StartExportProcess (target, this.accessor, this.dataFiller);
 		}
 
 
