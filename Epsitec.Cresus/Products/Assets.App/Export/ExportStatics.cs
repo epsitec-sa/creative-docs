@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			var engine = new TextExport<T> ()
 			{
-				ExportTextProfile = ExportTextProfile.TxtProfile,
+				Profile = TextExportProfile.TxtProfile,
 			};
 
 			engine.Export (dataFiller, instructions);
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			var engine = new TextExport<T> ()
 			{
-				ExportTextProfile = ExportTextProfile.CsvProfile,
+				Profile = TextExportProfile.CsvProfile,
 			};
 
 			engine.Export (dataFiller, instructions);

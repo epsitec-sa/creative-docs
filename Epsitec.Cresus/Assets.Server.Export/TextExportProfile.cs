@@ -6,9 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
-	public struct ExportTextProfile
+	/// <summary>
+	/// Paramètres pour TextExport.
+	/// </summary>
+	public struct TextExportProfile
 	{
-		public ExportTextProfile(string columnSeparator, string columnBracket, string escape, string endOfLine)
+		public TextExportProfile(string columnSeparator, string columnBracket, string escape, string endOfLine)
 		{
 			this.ColumnSeparator = columnSeparator;
 			this.ColumnBracket   = columnBracket;
@@ -16,8 +19,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.EndOfLine       = endOfLine;
 		}
 
-		public static ExportTextProfile CsvProfile = new ExportTextProfile (",", "\"", "\"", "\r\n");
-		public static ExportTextProfile TxtProfile = new ExportTextProfile ("\t", null, "\\", "\r\n");
+		public static TextExportProfile CsvProfile = new TextExportProfile (",", "\"", "\"", "\r\n");
+		public static TextExportProfile TxtProfile = new TextExportProfile ("\t", null, "\\", "\r\n");
 
 		public readonly string					ColumnSeparator;
 		public readonly string					ColumnBracket;

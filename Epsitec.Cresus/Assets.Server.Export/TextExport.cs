@@ -16,11 +16,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	{
 		public TextExport()
 		{
-			this.ExportTextProfile = ExportTextProfile.TxtProfile;
+			this.Profile = TextExportProfile.TxtProfile;
 		}
 
 
-		public ExportTextProfile				ExportTextProfile;
+		public TextExportProfile				Profile;
 
 
 		public override void Export(AbstractTreeTableFiller<T> filler, ExportInstructions instructions)
@@ -78,11 +78,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 						if (row < rowCount-1)
 						{
-							builder.Append (this.ExportTextProfile.ColumnSeparator);
+							builder.Append (this.Profile.ColumnSeparator);
 						}
 					}
 
-					builder.Append (this.ExportTextProfile.EndOfLine);
+					builder.Append (this.Profile.EndOfLine);
 				}
 			}
 			else
@@ -95,11 +95,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 						if (column < columnCount-1)
 						{
-							builder.Append (this.ExportTextProfile.ColumnSeparator);
+							builder.Append (this.Profile.ColumnSeparator);
 						}
 					}
 
-					builder.Append (this.ExportTextProfile.EndOfLine);
+					builder.Append (this.Profile.EndOfLine);
 				}
 			}
 
@@ -123,8 +123,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string GetOutputString(string text)
 		{
-			// TODO: Résoudre un texte qui contient des guillements par exemple !
-			if (string.IsNullOrEmpty (this.ExportTextProfile.ColumnBracket))
+			if (string.IsNullOrEmpty (this.Profile.ColumnBracket))
 			{
 				if (string.IsNullOrEmpty (text))
 				{
@@ -132,7 +131,14 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				}
 				else
 				{
-					return text;
+					if (this.Profile.ColumnSeparator.Length == 1)
+					{
+						return TextExport<T>.GetEscaped (text, this.Profile.ColumnSeparator[0], this.Profile.Escape);
+					}
+					else
+					{
+						return text;
+					}
 				}
 			}
 			else
@@ -143,9 +149,30 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				}
 				else
 				{
-					return string.Concat (this.ExportTextProfile.ColumnBracket, text, this.ExportTextProfile.ColumnBracket);
+					//	Remplace " par "".
+					text = text.Replace (this.Profile.ColumnBracket, this.Profile.ColumnBracket+this.Profile.ColumnBracket);
+
+					//	A partir de Toto, retourne "Toto".
+					return string.Concat (this.Profile.ColumnBracket, text, this.Profile.ColumnBracket);
 				}
 			}
+		}
+
+		private static string GetEscaped(string text, char separator, string escape)
+		{
+			var builder = new System.Text.StringBuilder ();
+
+			foreach (char c in text)
+			{
+				if (c == separator)
+				{
+					builder.Append (escape);
+				}
+
+				builder.Append (c);
+			}
+
+			return builder.ToString ();
 		}
 
 
