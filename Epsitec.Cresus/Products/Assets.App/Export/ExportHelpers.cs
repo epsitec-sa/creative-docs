@@ -14,10 +14,11 @@ namespace Epsitec.Cresus.Assets.App.Export
 	{
 		public static void StartExportProcess(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller)
 		{
-			//	Débute le processus d'exportation qui ouvrira plusieurs popups.
-
-			var engine = new ExportEngine<T> (target, accessor, dataFiller);
-			engine.StartExportProcess ();
+			//	Débute le processus d'exportation qui ouvrira plusieurs popups successifs.
+			using (var engine = new ExportEngine<T> (target, accessor, dataFiller))
+			{
+				engine.StartExportProcess ();
+			}
 		}
 	}
 }

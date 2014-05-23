@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Export
 {
-	public class ExportEngine<T>
+	public class ExportEngine<T> : System.IDisposable
 		where T : struct
 	{
 		public ExportEngine(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller)
@@ -22,10 +22,14 @@ namespace Epsitec.Cresus.Assets.App.Export
 			this.dataFiller = dataFiller;
 		}
 
+		public void Dispose()
+		{
+		}
+
 
 		public void StartExportProcess()
 		{
-			//	Débute le processus d'exportation qui ouvrira plusieurs popups.
+			//	Débute le processus d'exportation qui ouvrira plusieurs popups successifs:
 			//	(1) ExportInstructionsPopup pour choisir le format et le fichier.
 			//	(2) ExportXxxPopup pour choisir le profile (selon le format).
 			//	(3) ExportOpenPopup pour ouvrir le fichier exporté ou l'emplacement.
@@ -66,7 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 					break;
 
 				default:
-					var ext = ExportInstructionsPopup.GetFormatExt (instructions.Format);
+					var ext = ExportInstructionsPopup.GetFormatExt (instructions.Format).Replace (".", "").ToUpper ();
 					var message = string.Format ("L'extension \"{0}\" n'est pas supportée.", ext);
 					this.ShowErrorPopup (message);
 					break;
