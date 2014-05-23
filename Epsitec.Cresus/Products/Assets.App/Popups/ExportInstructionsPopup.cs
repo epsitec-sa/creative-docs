@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Dialogs;
-using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -24,17 +23,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 0
 			{
-				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Exporter les noms des colonnes",
+				StackedControllerType = StackedControllerType.Radio,
+				MultiLabels           = ExportInstructionsPopup.MultiLabels,
+				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 1
-			{
-				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Inverser les lignes avec les colonnes",
-			});
-
-			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Filename,
 				Label                 = "Fichier",
@@ -49,43 +43,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var c0 = this.GetController (0) as BoolStackedController;
+				var c0 = this.GetController (0) as RadioStackedController;
 				System.Diagnostics.Debug.Assert (c0 != null);
-				var hasHeader = c0.Value;
+				var format = ExportInstructionsPopup.GetFormat (c0.Value.GetValueOrDefault ());
 
-				var c1 = this.GetController (1) as BoolStackedController;
+				var c1 = this.GetController (1) as FilenameStackedController;
 				System.Diagnostics.Debug.Assert (c1 != null);
-				var inverted = c1.Value;
+				var filename = c1.Value;
 
-				var c2 = this.GetController (2) as FilenameStackedController;
-				System.Diagnostics.Debug.Assert (c2 != null);
-				var filename = c2.Value;
-
-				return new ExportInstructions (filename, hasHeader, inverted);
+				return new ExportInstructions (format, filename);
 			}
 			set
 			{
-				var c0 = this.GetController (0) as BoolStackedController;
+				var c0 = this.GetController (0) as RadioStackedController;
 				System.Diagnostics.Debug.Assert (c0 != null);
-				c0.Value = value.HasHeader;
+				c0.Value = ExportInstructionsPopup.GetRank (value.Format);
 
-				var c1 = this.GetController (1) as BoolStackedController;
+				var c1 = this.GetController (1) as FilenameStackedController;
 				System.Diagnostics.Debug.Assert (c1 != null);
-				c1.Value = value.Inverted;
-
-				var c2 = this.GetController (2) as FilenameStackedController;
-				System.Diagnostics.Debug.Assert (c2 != null);
-				c2.Value = value.Filename;
-			}
-		}
-
-		public IEnumerable<FilterItem>			Filters
-		{
-			set
-			{
-				var controller = this.GetController (2) as FilenameStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Filters = value;
+				c1.Value = value.Filename;
 			}
 		}
 
@@ -94,14 +70,104 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			base.CreateUI ();
 
-			var controller = this.GetController (2);
+			var controller = this.GetController (1);
 			controller.SetFocus ();
 		}
 
 		protected override void UpdateWidgets()
 		{
+			var controller = this.GetController (1) as FilenameStackedController;
+			System.Diagnostics.Debug.Assert (controller != null);
+			controller.Format = this.ExportInstructions.Format;
+			controller.Value = System.IO.Path.Combine (
+				System.IO.Path.GetDirectoryName (controller.Value),
+				System.IO.Path.GetFileNameWithoutExtension (controller.Value) + ExportInstructionsPopup.GetFormatExt (this.ExportInstructions.Format));
+			controller.Update ();
+
 			this.okButton.Text = "Exporter";
 			this.okButton.Enable = !string.IsNullOrEmpty (this.ExportInstructions.Filename);
+		}
+
+
+		private static ExportFormat GetFormat(int rank)
+		{
+			var list = ExportInstructionsPopup.Formats.ToArray ();
+
+			if (rank >= 0 && rank < list.Length)
+			{
+				return list[rank];
+			}
+			else
+			{
+				return ExportFormat.Unknown;
+			}
+		}
+
+		private static int GetRank(ExportFormat format)
+		{
+			var list = ExportInstructionsPopup.Formats.ToList ();
+			return list.IndexOf (format);
+		}
+
+		private static string MultiLabels
+		{
+			get
+			{
+				return string.Join ("<br/>", ExportInstructionsPopup.Formats.Select (x => ExportInstructionsPopup.GetFormatName (x)));
+			}
+		}
+
+		public static string GetFormatName(ExportFormat format)
+		{
+			switch (format)
+			{
+				case ExportFormat.Text:
+					return "Fichier texte tabulé";
+
+				case ExportFormat.Csv:
+					return "Fichier csv";
+
+				case ExportFormat.Html:
+					return "Fichier html";
+
+				case ExportFormat.Pdf:
+					return "Document pdf mis en pages";
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Invalid format", format));
+			}
+		}
+
+		public static string GetFormatExt(ExportFormat format)
+		{
+			switch (format)
+			{
+				case ExportFormat.Text:
+					return ".txt";
+
+				case ExportFormat.Csv:
+					return ".csv";
+
+				case ExportFormat.Html:
+					return ".html";
+
+				case ExportFormat.Pdf:
+					return ".pdf";
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Invalid format", format));
+			}
+		}
+
+		private static IEnumerable<ExportFormat> Formats
+		{
+			get
+			{
+				yield return ExportFormat.Text;
+				yield return ExportFormat.Csv;
+				yield return ExportFormat.Html;
+				yield return ExportFormat.Pdf;
+			}
 		}
 	}
 }

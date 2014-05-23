@@ -19,17 +19,18 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		public ExportInstructions				Instructions;
 
 
-		protected void FillArray(AbstractTreeTableFiller<T> filler)
+		protected void FillArray(AbstractTreeTableFiller<T> filler, bool hasHeader)
 		{
 			var columnDescriptions = filler.Columns;
+			int rowOffset = hasHeader ? 1 : 0;
 
 			this.columnCount = columnDescriptions.Count ();
-			this.rowCount = this.RowOffet + filler.Count;
+			this.rowCount = rowOffset + filler.Count;
 
 			this.array = new string[columnCount, this.rowCount];
 
 			//	Génère la première ligne d'en-tête.
-			if (this.Instructions.HasHeader)
+			if (hasHeader)
 			{
 				for (int column=0; column<columnCount; column++)
 				{
@@ -39,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 
 			//	Génère tout le contenu.
-			for (int row=0; row<this.rowCount-this.RowOffet; row++)
+			for (int row=0; row<this.rowCount-rowOffset; row++)
 			{
 				var contentItem = filler.GetContent (row, 1, -1);  // toutes les colonnes d'une ligne
 
@@ -48,16 +49,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					var columnItem = contentItem.Columns[column];
 					var cell = columnItem.Cells.First ();
 					var description = columnDescriptions[column];
-					this.array[column, this.RowOffet+row] = this.ConvertToString (cell, description);
+					this.array[column, rowOffset+row] = this.ConvertToString (cell, description);
 				}
-			}
-		}
-
-		private int RowOffet
-		{
-			get
-			{
-				return this.Instructions.HasHeader ? 1 : 0;
 			}
 		}
 

@@ -22,8 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	puis continue le processus initié jusqu'à son terme.
 			var popup = new ExportInstructionsPopup (accessor)
 			{
-				ExportInstructions = new ExportInstructions (LocalSettings.ExportFilename, hasHeader: true, inverted: false),
-				Filters            = ExportStatics<T>.ExportFilters,
+				ExportInstructions = new ExportInstructions (ExportFormat.Text, LocalSettings.ExportFilename),
 			};
 
 			popup.Create (target, leftOrRight: true);
@@ -52,25 +51,22 @@ namespace Epsitec.Cresus.Assets.App.Export
 		private static void Export(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
 		{
 			//	Effectue l'exportation sans aucune interaction.
-			var ext = System.IO.Path.GetExtension (instructions.Filename);  // extrait l'extension avec le point
-
-			switch (ext)
+			switch (instructions.Format)
 			{
-				case ".txt":
-				case ".text":
+				case ExportFormat.Text:
 					ExportStatics<T>.ExportTxt (dataFiller, instructions);
 					break;
 
-				case ".csv":
+				case ExportFormat.Csv:
 					ExportStatics<T>.ExportCsv (dataFiller, instructions);
 					break;
 
-				case ".html":
-				case ".htm":
+				case ExportFormat.Html:
 					ExportStatics<T>.ExportHtml (dataFiller, instructions);
 					break;
 
 				default:
+					var ext = ExportInstructionsPopup.GetFormatExt (instructions.Format);
 					throw new System.InvalidOperationException (string.Format ("L'extension \"{0}\" n'est pas supportée.", ext));
 			}
 		}

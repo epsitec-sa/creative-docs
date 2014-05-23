@@ -7,6 +7,7 @@ using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -20,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		public string							Value;
-		public IEnumerable<FilterItem>			Filters;
+		public ExportFormat						Format;
 
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
@@ -47,6 +48,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.Value = this.controller.Value;
 				this.OnValueChanged (description);
 			};
+		}
+
+		public void Update()
+		{
+			this.controller.Value = this.Value;
 		}
 
 		public override void SetFocus()
@@ -78,30 +84,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private void ShowFilenameDialog()
 		{
 			//	Affiche le dialogue Windows standard permettant de choisir un fichier à enregistrer.
+			var ext  = ExportInstructionsPopup.GetFormatExt  (this.Format);
+			var name = ExportInstructionsPopup.GetFormatName (this.Format);
+
 			var dialog = new FileSaveDialog
 			{
 				InitialDirectory     = System.IO.Path.GetDirectoryName (this.Value),
 				FileName             = System.IO.Path.GetFileName (this.Value),
+				DefaultExt           = ext,
 				Title                = "Nom du fichier à exporter",
 				PromptForOverwriting = true,
 				OwnerWindow          = this.parent.Window,
 			};
 
-			//	Initialise le différents formats d'exportation disponibles.
-			var ext = System.IO.Path.GetExtension (this.Value);
-			int index = 0;
-
-			foreach (var filter in this.Filters)
-			{
-				dialog.Filters.Add (filter);
-
-				if (string.Concat (".", filter.Name) == ext)
-				{
-					dialog.FilterIndex = index;
-				}
-
-				index++;
-			}
+			var filter = new FilterItem (ext, name, ext);
+			dialog.Filters.Add (filter);
+			dialog.FilterIndex = 0;
 
 			dialog.OpenDialog ();
 

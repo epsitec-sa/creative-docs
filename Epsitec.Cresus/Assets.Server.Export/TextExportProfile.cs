@@ -11,20 +11,24 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	/// </summary>
 	public struct TextExportProfile
 	{
-		public TextExportProfile(string columnSeparator, string columnBracket, string escape, string endOfLine)
+		public TextExportProfile(string columnSeparator, string columnBracket, string escape, string endOfLine, bool hasHeader, bool inverted)
 		{
 			this.ColumnSeparator = columnSeparator;
 			this.ColumnBracket   = columnBracket;
 			this.Escape          = escape;
 			this.EndOfLine       = endOfLine;
+			this.HasHeader       = hasHeader;
+			this.Inverted        = inverted;
 		}
 
-		public static TextExportProfile CsvProfile = new TextExportProfile (",", "\"", "\"", "\r\n");
-		public static TextExportProfile TxtProfile = new TextExportProfile ("\t", null, "\\", "\r\n");
+		public static TextExportProfile CsvProfile = new TextExportProfile (",", "\"", "\"", "\r\n", true, false);
+		public static TextExportProfile TxtProfile = new TextExportProfile ("\t", null, "\\", "\r\n", true, false);
 
 		public readonly string					ColumnSeparator;
 		public readonly string					ColumnBracket;
 		public readonly string					Escape;
 		public readonly string					EndOfLine;
+		public readonly bool					HasHeader;
+		public readonly bool					Inverted;
 	}
 }

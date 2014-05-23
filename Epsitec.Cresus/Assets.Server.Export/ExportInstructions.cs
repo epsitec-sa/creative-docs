@@ -8,25 +8,24 @@ namespace Epsitec.Cresus.Assets.Server.Export
 {
 	public struct ExportInstructions
 	{
-		public ExportInstructions(string filename, bool hasHeader, bool inverted)
+		public ExportInstructions(ExportFormat format, string filename)
 		{
+			this.Format    = format;
 			this.Filename  = filename;
-			this.HasHeader = hasHeader;
-			this.Inverted  = inverted;
 		}
 
 		public bool IsEmpty
 		{
 			get
 			{
-				return string.IsNullOrEmpty (this.Filename);
+				return this.Format == ExportFormat.Unknown
+					&& string.IsNullOrEmpty (this.Filename);
 			}
 		}
 
-		public static ExportInstructions Empty = new ExportInstructions (null, false, false);
+		public static ExportInstructions Empty = new ExportInstructions (ExportFormat.Unknown, null);
 
+		public readonly ExportFormat			Format;
 		public readonly string					Filename;
-		public readonly bool					HasHeader;
-		public readonly bool					Inverted;
 	}
 }

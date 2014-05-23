@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public override void Export(AbstractTreeTableFiller<T> filler)
 		{
-			this.FillArray (filler);
+			this.FillArray (filler, hasHeader: false);
 			var data = this.GetData (filler);
 			this.WriteData (data);
 		}
@@ -31,7 +31,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string GetData(AbstractTreeTableFiller<T> filler)
 		{
+			//	Transforme le contenu du tableau en une string.
 			var columnDescriptions = filler.Columns;
+			System.Diagnostics.Debug.Assert (this.columnCount == columnDescriptions.Count ());
 
 			var builder = new System.Text.StringBuilder ();
 
