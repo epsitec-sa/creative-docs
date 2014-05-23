@@ -71,11 +71,17 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var path = CoreContext.GetFileDepotPath ("downloads");
 			var filesInfo = System.IO.Directory.EnumerateFiles (path).Select (f => new System.IO.FileInfo (f));
-			var filename = filesInfo.Single (f => f.Name.StartsWith (parameters.jobid)).Name;
-
-			var filePath = CoreContext.GetFileDepotPath ("downloads", filename);
-			System.IO.File.Delete (filePath);
-			return Response.AsJson ("deleted");
+			var file = filesInfo.SingleOrDefault (f => f.Name.StartsWith (parameters.jobid));
+			if(file != null)
+			{
+				var filePath = CoreContext.GetFileDepotPath ("downloads", file.Name);
+				System.IO.File.Delete (filePath);
+				return Response.AsJson ("deleted");
+			}
+			else
+			{
+				return Response.AsJson ("nothing to delete");
+			}			
 		}
 
 
