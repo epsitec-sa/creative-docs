@@ -575,28 +575,36 @@ $.getScript('signalr/hubs', function() {
       addEntityToStatusBar: function (status) {
           var sb = this.tabManager.dockedItems.items[0];
           var item;
-          sb.remove(status.id, true);
+          var changeStatus = false;  
+          var oldItem = sb.getComponent(status.id);
 
-          if (status.type == "text")
-          {
+          if (Ext.isDefined(oldItem)) {
+              sb.remove(status.id, true);
+          }
+
+          if (status.type == "text") {           
               item = new Ext.Toolbar.TextItem({ id: status.id, text: status.text });
               sb.add(item);
+              changeStatus = true;
           }
 
           if (status.type == "button") {
               item = new Ext.Toolbar.TextItem({ id: status.id, text: status.text });
               sb.add(item);
+              changeStatus = true;
           }
-             
-          sb.setStatus({
-              text: 'Travaux en cours',
-              iconCls: 'x-status-busy',
-              clear: {
-                  wait: 8000,
-                  anim: true,
-                  useDefaults: true
-              }
-          });
+           
+          if (changeStatus) {
+              sb.setStatus({
+                  text: 'Travaux en cours',
+                  iconCls: 'x-status-busy',
+                  clear: {
+                      wait: 8000,
+                      anim: true,
+                      useDefaults: true
+                  }
+              });
+          }        
       },
 
       removeEntityFromStatusBar: function (status) {

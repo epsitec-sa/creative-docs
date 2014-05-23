@@ -190,8 +190,11 @@ function() {
     removeEntityFromClientBag: function(entity) {
       var record = this.bagStore.getById(entity.id);
       var entityBag = this;
-      this.bagStore.remove(record);
 
+      if (record !== null) {
+          this.bagStore.remove(record);
+      }
+      
       Ext.Array.each(this.items.items[0].items.items, function(item) {
           if(Ext.isDefined(item))
           {
