@@ -48,7 +48,7 @@ module.exports = function(grunt) {
       }
     },
     jshint: {
-        all: ['Gruntfile.js', 'WebCore/js/**/*.js']
+        all: ['Gruntfile.js','WebCore/app.js', 'WebCore/js/**/*.js']
     }
   });
  

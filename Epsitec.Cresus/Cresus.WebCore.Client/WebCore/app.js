@@ -186,21 +186,21 @@ $.getScript('signalr/hubs', function() {
       fixDragAndDropManager: function () {
         Ext.dd.DragDropMgr.getLocation = function (i) {
           if (!this.isTypeOfDD(i)) { 
-            return null 
+              return null;
           }
           if (i.getRegion){ 
-            return i.getRegion() 
+              return i.getRegion();
           }
           var g = i.getEl(), m, d, c, o, n, p, a, k, h;
 
-          if(g!=null) {
+          if(g!==null) {
             try { 
-              m = Ext.Element.getXY(g) 
+                m = Ext.Element.getXY(g);
             }
             catch (j) { }
 
             if (!m) { 
-              return null 
+                return null;
             }
 
             d = m[0];
@@ -211,7 +211,7 @@ $.getScript('signalr/hubs', function() {
             a = c + i.padding[1];
             k = n + i.padding[2];
             h = d - i.padding[3];       
-            return new Ext.util.Region(p, a, k, h)
+            return new Ext.util.Region(p, a, k, h);
           }
         };
       },
@@ -574,18 +574,20 @@ $.getScript('signalr/hubs', function() {
 
       addEntityToStatusBar: function (status) {
           var sb = this.tabManager.dockedItems.items[0];
+          var item;
           sb.remove(status.id, true);
 
           if (status.type == "text")
           {
-              var item = new Ext.Toolbar.TextItem({ id: status.id, text: status.text });
+              item = new Ext.Toolbar.TextItem({ id: status.id, text: status.text });
+              sb.add(item);
           }
 
           if (status.type == "button") {
-              var item = new Ext.Toolbar.TextItem({ id: status.id, text: status.text });
+              item = new Ext.Toolbar.TextItem({ id: status.id, text: status.text });
+              sb.add(item);
           }
-              
-          sb.add(item);
+             
           sb.setStatus({
               text: 'Travaux en cours',
               iconCls: 'x-status-busy',
