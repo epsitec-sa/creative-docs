@@ -175,15 +175,19 @@ namespace Epsitec.Cresus.Assets.App.Export
 		private void ExportText(ExportInstructions instructions, TextExportProfile profile)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
-			var engine = new TextExport<T> ();
-			engine.Export (instructions, profile, this.dataFiller);
+			using (var engine = new TextExport<T> ())
+			{
+				engine.Export (instructions, profile, this.dataFiller);
+			}
 		}
 
 		private void ExportHtml(ExportInstructions instructions, HtmlExportProfile profile)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
-			var engine = new HtmlExport<T> ();
-			engine.Export (instructions, profile, this.dataFiller);
+			using (var engine = new HtmlExport<T> ())
+			{
+				engine.Export (instructions, profile, this.dataFiller);
+			}
 		}
 
 

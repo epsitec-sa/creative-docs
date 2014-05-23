@@ -8,7 +8,7 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
-	public abstract class AbstractExport<T>
+	public abstract class AbstractExport<T> : System.IDisposable
 		where T : struct
 	{
 		public virtual void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler)
@@ -16,6 +16,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.instructions = instructions;
 			this.profile      = profile;
 			this.filler       = filler;
+		}
+
+		public void Dispose()
+		{
 		}
 
 
