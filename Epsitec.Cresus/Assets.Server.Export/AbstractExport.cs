@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 
-namespace Epsitec.Cresus.Assets.App.Export
+namespace Epsitec.Cresus.Assets.Server.Export
 {
 	public abstract class AbstractExport<T>
 		where T : struct

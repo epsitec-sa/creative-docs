@@ -73,11 +73,7 @@
     <Compile Include="AssetsApplication.cs" />
     <Compile Include="AssetsUI.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
-    <Compile Include="Export\ExportInstructions.cs" />
-    <Compile Include="Export\ExportTextProfile.cs" />
     <Compile Include="Export\ExportStatics.cs" />
-    <Compile Include="Export\AbstractExport.cs" />
-    <Compile Include="Export\TextExport.cs" />
     <Compile Include="Helpers\String.cs" />
     <Compile Include="Helpers\Misc.cs" />
     <Compile Include="Helpers\DateTime.cs" />
@@ -439,6 +435,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Assets.Server.Export\Assets.Server.Export.csproj">
+      <Project>{764df1c5-f9bb-4f8d-9987-5639823b8757}</Project>
+      <Name>Assets.Server.Export</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
       <Name>Common</Name>

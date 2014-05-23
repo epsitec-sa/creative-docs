@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.App.Export
+namespace Epsitec.Cresus.Assets.Server.Export
 {
 	public struct ExportInstructions
 	{

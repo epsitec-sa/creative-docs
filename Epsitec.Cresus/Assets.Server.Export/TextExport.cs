@@ -6,8 +6,11 @@ using System.Linq;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 
-namespace Epsitec.Cresus.Assets.App.Export
+namespace Epsitec.Cresus.Assets.Server.Export
 {
+	/// <summary>
+	/// Exportation au format txt ou csv.
+	/// </summary>
 	public class TextExport<T> : AbstractExport<T>
 		where T : struct
 	{
