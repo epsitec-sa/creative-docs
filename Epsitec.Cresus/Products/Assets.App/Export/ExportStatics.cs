@@ -102,6 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			var engine = new HtmlExport<T> ()
 			{
 				Instructions = instructions,
+				Profile      = HtmlExportProfile.Default,
 			};
 
 			engine.Export (dataFiller);

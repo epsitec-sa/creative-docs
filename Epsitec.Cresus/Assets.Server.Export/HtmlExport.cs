@@ -18,6 +18,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
+		public HtmlExportProfile				Profile;
+
+
 		public override void Export(AbstractTreeTableFiller<T> filler)
 		{
 			this.FillArray (filler);
@@ -34,7 +37,12 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			for (int row=0; row<this.rowCount; row++)
 			{
-				builder.Append (string.Concat ("<record>", HtmlExport<T>.eol));
+				builder.Append (string.Concat ("<", this.Profile.RecordTag, ">"));
+
+				if (!this.Profile.IsCompact)
+				{
+					builder.Append (HtmlExport<T>.eol);
+				}
 
 				for (int column=0; column<this.columnCount; column++)
 				{
@@ -43,13 +51,23 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					var content = this.GetOutputString (array[column, row]);
 					if (!string.IsNullOrEmpty (content))
 					{
-						builder.Append (string.Concat ("\t<", description.Header, ">"));
+						if (!this.Profile.IsCompact)
+						{
+							builder.Append ("\t");
+						}
+
+						builder.Append (string.Concat ("<", description.Header, ">"));
 						builder.Append (content);
-						builder.Append (string.Concat ("</", description.Header, ">", HtmlExport<T>.eol));
+						builder.Append (string.Concat ("</", description.Header, ">"));
+
+						if (!this.Profile.IsCompact)
+						{
+							builder.Append (HtmlExport<T>.eol);
+						}
 					}
 				}
 
-				builder.Append (string.Concat ("</record>", HtmlExport<T>.eol));
+				builder.Append (string.Concat ("</", this.Profile.RecordTag, ">", HtmlExport<T>.eol));
 			}
 
 			return builder.ToString ();
