@@ -79,13 +79,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var controller = this.GetController (1) as FilenameStackedController;
 			System.Diagnostics.Debug.Assert (controller != null);
 			controller.Format = this.ExportInstructions.Format;
-			controller.Value = System.IO.Path.Combine (
-				System.IO.Path.GetDirectoryName (controller.Value),
-				System.IO.Path.GetFileNameWithoutExtension (controller.Value) + ExportInstructionsPopup.GetFormatExt (this.ExportInstructions.Format));
+			controller.Value = ExportInstructionsPopup.ForceExt (controller.Value, ExportInstructionsPopup.GetFormatExt (this.ExportInstructions.Format));
 			controller.Update ();
 
 			this.okButton.Text = "Exporter";
 			this.okButton.Enable = !string.IsNullOrEmpty (this.ExportInstructions.Filename);
+		}
+
+
+		private static string ForceExt(string filename, string ext)
+		{
+			return System.IO.Path.Combine (
+				System.IO.Path.GetDirectoryName (filename),
+				System.IO.Path.GetFileNameWithoutExtension (filename) + ext);
 		}
 
 
