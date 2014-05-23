@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 				default:
 					var ext = ExportInstructionsPopup.GetFormatExt (instructions.Format);
 					var message = string.Format ("L'extension \"{0}\" n'est pas supportée.", ext);
-					MessagePopup.ShowMessage (this.target, "Exportation impossible", message);
+					this.ShowErrorPopup (message);
 					break;
 			}
 		}
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 					}
 					catch (System.Exception ex)
 					{
-						MessagePopup.ShowMessage (this.target, "Exportation impossible", ex.Message);
+						this.ShowErrorPopup (ex.Message);
 						return;
 					}
 
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 					}
 					catch (System.Exception ex)
 					{
-						MessagePopup.ShowMessage (this.target, "Exportation impossible", ex.Message);
+						this.ShowErrorPopup (ex.Message);
 						return;
 					}
 
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 					}
 					catch (System.Exception ex)
 					{
-						MessagePopup.ShowMessage (this.target, "Exportation impossible", ex.Message);
+						this.ShowErrorPopup (ex.Message);
 						return;
 					}
 
@@ -229,6 +229,12 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Ouvre l'explorateur de fichier et sélectionne le fichier exporté.
 			//	Voir http://stackoverflow.com/questions/9646114/open-file-location
 			System.Diagnostics.Process.Start ("explorer.exe", "/select," + instructions.Filename);
+		}
+
+
+		private void ShowErrorPopup(string error)
+		{
+			MessagePopup.ShowMessage (this.target, "Exportation impossible", error);
 		}
 
 
