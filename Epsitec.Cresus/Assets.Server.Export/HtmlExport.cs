@@ -13,26 +13,20 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	public class HtmlExport<T> : AbstractExport<T>
 		where T : struct
 	{
-		public HtmlExport()
+		public override void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler)
 		{
-		}
+			base.Export (instructions, profile, filler);
 
-
-		public HtmlExportProfile				Profile;
-
-
-		public override void Export(AbstractTreeTableFiller<T> filler)
-		{
-			this.FillArray (filler, hasHeader: false);
-			var data = this.GetData (filler);
+			this.FillArray (hasHeader: false);
+			var data = this.GetData ();
 			this.WriteData (data);
 		}
 
 
-		private string GetData(AbstractTreeTableFiller<T> filler)
+		private string GetData()
 		{
 			//	Transforme le contenu du tableau en une string.
-			var columnDescriptions = filler.Columns;
+			var columnDescriptions = this.filler.Columns;
 			System.Diagnostics.Debug.Assert (this.columnCount == columnDescriptions.Count ());
 
 			var builder = new System.Text.StringBuilder ();
@@ -79,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private void WriteData(string data)
 		{
-			System.IO.File.WriteAllText (this.Instructions.Filename, data);
+			System.IO.File.WriteAllText (this.instructions.Filename, data);
 		}
 
 
@@ -152,6 +146,14 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				text = text.Replace ("<", "&lt;");
 				text = text.Replace (">", "&gt;");
 				return text;
+			}
+		}
+
+		private HtmlExportProfile Profile
+		{
+			get
+			{
+				return this.profile as HtmlExportProfile;
 			}
 		}
 	}

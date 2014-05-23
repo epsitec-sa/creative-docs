@@ -6,12 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
-	public enum ExportFormat
+	public abstract class AbstractExportProfile
 	{
-		Unknown,
-		Txt,
-		Csv,
-		Html,
-		Pdf,
 	}
 }

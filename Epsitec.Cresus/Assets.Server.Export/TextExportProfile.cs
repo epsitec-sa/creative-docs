@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	/// <summary>
 	/// Paramètres pour TextExport.
 	/// </summary>
-	public struct TextExportProfile
+	public class TextExportProfile : AbstractExportProfile
 	{
 		public TextExportProfile(string columnSeparator, string columnBracket, string escape, string endOfLine, bool hasHeader, bool inverted)
 		{

@@ -11,21 +11,22 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	public abstract class AbstractExport<T>
 		where T : struct
 	{
-		public virtual void Export(AbstractTreeTableFiller<T> filler)
+		public virtual void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler)
 		{
+			this.instructions = instructions;
+			this.profile      = profile;
+			this.filler       = filler;
 		}
 
 
-		public ExportInstructions				Instructions;
-
-
-		protected void FillArray(AbstractTreeTableFiller<T> filler, bool hasHeader)
+		protected void FillArray(bool hasHeader)
 		{
-			var columnDescriptions = filler.Columns;
+			//	Génère le contenu de this.array.
+			var columnDescriptions = this.filler.Columns;
 			int rowOffset = hasHeader ? 1 : 0;
 
 			this.columnCount = columnDescriptions.Count ();
-			this.rowCount = rowOffset + filler.Count;
+			this.rowCount = rowOffset + this.filler.Count;
 
 			this.array = new string[columnCount, this.rowCount];
 
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			//	Génère tout le contenu.
 			for (int row=0; row<this.rowCount-rowOffset; row++)
 			{
-				var contentItem = filler.GetContent (row, 1, -1);  // toutes les colonnes d'une ligne
+				var contentItem = this.filler.GetContent (row, 1, -1);  // toutes les colonnes d'une ligne
 
 				for (int column=0; column<columnCount; column++)
 				{
@@ -148,6 +149,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		#endregion
 
 
+		protected ExportInstructions			instructions;
+		protected AbstractExportProfile			profile;
+		protected AbstractTreeTableFiller<T>	filler;
 		protected string[,]						array;
 		protected int							rowCount;
 		protected int							columnCount;

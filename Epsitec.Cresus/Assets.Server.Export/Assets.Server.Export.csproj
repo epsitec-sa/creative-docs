@@ -51,6 +51,7 @@
     <Compile Include="AbstractExport.cs" />
     <Compile Include="ExportInstructions.cs" />
     <Compile Include="HtmlExport.cs" />
+    <Compile Include="AbstractExportProfile.cs" />
     <Compile Include="HtmlExportProfile.cs" />
     <Compile Include="ExportFormat.cs" />
     <Compile Include="TextExportProfile.cs" />

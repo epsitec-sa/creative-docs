@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Retourne le nom en clair d'un format.
 			switch (format)
 			{
-				case ExportFormat.Text:
+				case ExportFormat.Txt:
 					return "TXT — Fichier texte tabulé";
 
 				case ExportFormat.Csv:
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Retourne l'extension pour un format.
 			switch (format)
 			{
-				case ExportFormat.Text:
+				case ExportFormat.Txt:
 					return ".txt";
 
 				case ExportFormat.Csv:
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Enumère tous les formats disponibles, par ordre d'importance.
 			get
 			{
-				yield return ExportFormat.Text;
+				yield return ExportFormat.Txt;
 				yield return ExportFormat.Csv;
 				yield return ExportFormat.Html;
 				yield return ExportFormat.Pdf;

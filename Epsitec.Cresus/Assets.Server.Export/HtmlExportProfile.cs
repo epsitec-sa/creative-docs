@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	/// <summary>
 	/// Paramètres pour HtmlExport.
 	/// </summary>
-	public struct HtmlExportProfile
+	public class HtmlExportProfile : AbstractExportProfile
 	{
 		public HtmlExportProfile(string recordTag, string endOfLine, bool camelCase, bool compact)
 		{

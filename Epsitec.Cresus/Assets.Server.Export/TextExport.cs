@@ -13,18 +13,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	public class TextExport<T> : AbstractExport<T>
 		where T : struct
 	{
-		public TextExport()
+		public override void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler)
 		{
-			this.Profile = TextExportProfile.TxtProfile;
-		}
+			base.Export (instructions, profile, filler);
 
-
-		public TextExportProfile				Profile;
-
-
-		public override void Export(AbstractTreeTableFiller<T> filler)
-		{
-			this.FillArray (filler, this.Profile.HasHeader);
+			this.FillArray (this.Profile.HasHeader);
 			var data = this.GetData ();
 			this.WriteData (data);
 		}
@@ -76,7 +69,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private void WriteData(string data)
 		{
-			System.IO.File.WriteAllText (this.Instructions.Filename, data);
+			System.IO.File.WriteAllText (this.instructions.Filename, data);
 		}
 
 
@@ -132,6 +125,14 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 
 			return builder.ToString ();
+		}
+
+		private TextExportProfile Profile
+		{
+			get
+			{
+				return this.profile as TextExportProfile;
+			}
 		}
 	}
 }

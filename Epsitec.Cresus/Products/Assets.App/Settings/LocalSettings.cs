@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
 			var filename = System.IO.Path.Combine (item.FullPath, "export.txt");
-			LocalSettings.ExportInstructions = new ExportInstructions (ExportFormat.Text, filename);
+			LocalSettings.ExportInstructions = new ExportInstructions (ExportFormat.Txt, filename);
 
 			LocalSettings.ExportTxtProfile = TextExportProfile.TxtProfile;
 			LocalSettings.ExportCsvProfile = TextExportProfile.CsvProfile;

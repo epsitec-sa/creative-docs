@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Effectue l'exportation selon les instructions (format et filename).
 			switch (instructions.Format)
 			{
-				case ExportFormat.Text:
+				case ExportFormat.Txt:
 					this.ShowTxtPopup (instructions);
 					break;
 
@@ -175,25 +175,15 @@ namespace Epsitec.Cresus.Assets.App.Export
 		private void ExportText(ExportInstructions instructions, TextExportProfile profile)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
-			var engine = new TextExport<T> ()
-			{
-				Instructions = instructions,
-				Profile      = profile,
-			};
-
-			engine.Export (this.dataFiller);
+			var engine = new TextExport<T> ();
+			engine.Export (instructions, profile, this.dataFiller);
 		}
 
 		private void ExportHtml(ExportInstructions instructions, HtmlExportProfile profile)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
-			var engine = new HtmlExport<T> ()
-			{
-				Instructions = instructions,
-				Profile      = profile,
-			};
-
-			engine.Export (this.dataFiller);
+			var engine = new HtmlExport<T> ();
+			engine.Export (instructions, profile, this.dataFiller);
 		}
 
 
