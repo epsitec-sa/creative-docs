@@ -16,7 +16,7 @@ function() {
     getFormUrl: function(options) {
       var prefix, viewMode, viewId, entityId, additionalEntityId;
 
-      if (options.executeInQueue == true)
+      if (options.executeInQueue === true)
       {
           prefix = 'proxy/entity/actionqueue/entity';
       }

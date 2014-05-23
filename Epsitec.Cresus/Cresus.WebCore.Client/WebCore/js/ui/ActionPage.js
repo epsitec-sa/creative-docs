@@ -68,7 +68,7 @@ function() {
     },
 
     addTargetEntity: function(entity) {
-      var store = this.actionStores['target'];
+      var store = this.actionStores.target;
       var index = 0;
       store.removeAt(index);
       store.insert(index,entity);    
@@ -156,7 +156,7 @@ function() {
     },
 
     addEntityActionButtons: function() {
-      var store = this.actionStores['target'];
+      var store = this.actionStores.target;
       var target = store.getAt(0);
       var storeKey = this.getEntityStoreKey(target.data);
 
@@ -175,10 +175,8 @@ function() {
                           };
           button.scope = this;
 
-
+          return button;
       }
-
-      return button;
     },
 
     loadEntityBagContent: function () {

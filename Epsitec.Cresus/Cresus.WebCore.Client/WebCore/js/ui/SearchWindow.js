@@ -135,7 +135,7 @@ function() {
       var exist;
       if(Ext.isDefined(item.lastValue))
       {
-        if(item.lastValue != "") {
+        if(item.lastValue !== "") {
           return true;
         }
         else {
@@ -213,10 +213,8 @@ function() {
                 }      
               }
             });
+            return values;
 
-            return values; 
-            
-          break;
           case 'numeric':
             values = {}; 
             values.eq = null;
@@ -242,11 +240,9 @@ function() {
 
           
             return values; 
-            
-          break;
+
           default:
               return null;
-          break;
         }
       }
     },

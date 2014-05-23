@@ -26,7 +26,8 @@ $.getScript('signalr/hubs', function() {
     'Epsitec.cresus.webcore.ui.EntityBag',
     'Epsitec.cresus.webcore.ui.FaqWindow',
     'Epsitec.cresus.webcore.tools.Texts',
-    'Epsitec.cresus.webcore.tools.ViewMode'
+    'Epsitec.cresus.webcore.tools.ViewMode',
+    'Ext.ux.StatusBar',
   ],
   function() {
     Ext.application({

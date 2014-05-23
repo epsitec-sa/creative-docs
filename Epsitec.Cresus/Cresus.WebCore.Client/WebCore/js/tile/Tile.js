@@ -41,14 +41,14 @@ function() {
 
       if(Ext.isDefined(options.isRoot))
       {
-        if(column.columnId != 0 && options.isRoot==true)
+        if(column.columnId !== 0 && options.isRoot === true)
         {
           newOptions.closable = true;
         }
       }
       else
       {
-        if(column.columnId != 0)
+        if(column.columnId !== 0)
         {
           newOptions.closable = true;
         }

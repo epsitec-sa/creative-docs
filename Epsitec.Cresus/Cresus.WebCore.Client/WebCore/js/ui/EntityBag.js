@@ -84,14 +84,14 @@ function() {
     },
 
     showRegistredDropZone: function (){
-      for(d in this.dropZones)
+      for(var d in this.dropZones)
       {
         this.dropZones[d].show();
       }       
     },
 
     hideRegistredDropZone: function (){
-      for(d in this.dropZones)
+      for(var d in this.dropZones)
       {
         this.dropZones[d].hide();
       }  
@@ -204,7 +204,7 @@ function() {
 
       this.setSizeAndPosition();
 
-      if(this.bagStore.count()==0)
+      if(this.bagStore.count()===0)
       {
         this.hide();
       }

@@ -125,12 +125,12 @@ function() {
     showError: function(error) {
       if (this.errorField === null)
       {
-        this.errorField = Ext.create('Ext.form.field.Display', {
-          baseBodyCls: 'business-error',
-          fieldCls: null,
-          fieldLabel: Epsitec.Texts.getErrorTitle()
-        }),
-        this.insert(0, this.errorField);
+          this.errorField = Ext.create('Ext.form.field.Display', {
+              baseBodyCls: 'business-error',
+              fieldCls: null,
+              fieldLabel: Epsitec.Texts.getErrorTitle()
+          });
+          this.insert(0, this.errorField);
       }
       this.errorField.setValue(error);
     },

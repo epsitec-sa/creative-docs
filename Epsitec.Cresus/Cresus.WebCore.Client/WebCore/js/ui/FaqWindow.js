@@ -26,7 +26,6 @@ function() {
           },
           frame: false,
           border: false,
-          closable: false,
           dockedItems: this.createToolbar(),
           items : [{
               xtype : "component",

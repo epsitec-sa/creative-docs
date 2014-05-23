@@ -46,6 +46,9 @@ module.exports = function(grunt) {
         src: '<%= concat.dist.dest %>',
         dest: 'WebCore/webcore.min.js'
       }
+    },
+    jshint: {
+        all: ['Gruntfile.js', 'WebCore/js/**/*.js']
     }
   });
  
@@ -62,6 +65,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
- 
-  grunt.registerTask('default', ['clean', 'cssmin', 'concat', 'uglify']);
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.registerTask('default', ['clean', 'cssmin', 'concat', 'uglify','jshint']);
 };

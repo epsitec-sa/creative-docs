@@ -136,7 +136,7 @@ function() {
       else {
         Epsitec.ErrorHandler.handleFormError(action);
         
-        if(json!=null)
+        if(json!==null)
         {
           businessError = json.content.businesserror;     
           if (Ext.isDefined(businessError))
@@ -151,10 +151,10 @@ function() {
         if (this.isDisplayed) {
             if (this.errorField === null) {
                 this.errorField = Ext.create('Ext.form.field.Display', {
-                    baseBodyCls: 'business-error',
-                    fieldCls: null,
-                    fieldLabel: Epsitec.Texts.getErrorTitle()
-                }),
+                        baseBodyCls: 'business-error',
+                        fieldCls: null,
+                        fieldLabel: Epsitec.Texts.getErrorTitle()
+                });
                 this.form.insert(0, this.errorField);
             }
             this.errorField.setValue(error);
@@ -200,7 +200,7 @@ function() {
         options.executeInQueue = inQueue;
         dialog = Ext.create(actionType, options);
 
-        if(json.content.tiles[0].fields.length > 0 || json.content.tiles[0].text != null)
+        if(json.content.tiles[0].fields.length > 0 || json.content.tiles[0].text !== null)
         {
             dialog.show();
             dialog.isDisplayed = true;

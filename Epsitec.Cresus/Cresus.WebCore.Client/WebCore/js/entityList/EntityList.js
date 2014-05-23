@@ -809,7 +809,7 @@ function() {
       for (j=01; j<=this.store.data.length; j++) {
         var data = this.store.data.map[j].value;
         for (i=0; i<data.length; i++) {
-           if(menuItemId != null)
+           if(menuItemId !== null)
            {
               Epsitec.Cresus.Core.app.addCustomEntityToBag('Contact',data[i].data.summary,data[i].raw[menuItemId]);
            }
@@ -833,7 +833,7 @@ function() {
       
         var data = this.getSelectionModel().getSelection();
         for (i=0; i<data.length; i++) {
-           if(menuItemId != null)
+           if(menuItemId !== null)
            {
               Epsitec.Cresus.Core.app.addCustomEntityToBag('Contact',data[i].data.summary,data[i].raw[menuItemId]);
            }
