@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
@@ -23,56 +22,24 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		public TextExportProfile				Profile;
 
 
-		public override void Export(AbstractTreeTableFiller<T> filler, ExportInstructions instructions)
+		public override void Export(AbstractTreeTableFiller<T> filler)
 		{
-			this.instructions = instructions;
-
-			var data = this.GetData (filler);
+			this.FillArray (filler);
+			var data = this.GetData ();
 			this.WriteData (data);
 		}
 
 
-		private string GetData(AbstractTreeTableFiller<T> filler)
+		private string GetData()
 		{
-			var columnDescriptions = filler.Columns;
-
-			int columnCount = columnDescriptions.Count ();
-			int rowCount = filler.Count;
-
-			var array = new string[columnCount, this.RowOffet+rowCount];
-
-			//	Génère la première ligne d'en-tête.
-			if (this.instructions.HasHeader)
-			{
-				for (int column=0; column<columnCount; column++)
-				{
-					var description = columnDescriptions[column];
-					array[column, 0] = description.Header;
-				}
-			}
-
-			//	Génère tout le contenu.
-			for (int row=0; row<rowCount; row++)
-			{
-				var contentItem = filler.GetContent (row, 1, -1);  // toutes les colonnes d'une ligne
-
-				for (int column=0; column<columnCount; column++)
-				{
-					var columnItem = contentItem.Columns[column];
-					var cell = columnItem.Cells.First ();
-					var description = columnDescriptions[column];
-					array[column, this.RowOffet+row] = this.ConvertToString (cell, description);
-				}
-			}
-
 			//	Transforme le contenu du tableau en une string.
 			var builder = new System.Text.StringBuilder ();
 
-			if (this.instructions.Inverted)
+			if (this.Instructions.Inverted)
 			{
-				for (int column=0; column<columnCount; column++)
+				for (int column=0; column<this.columnCount; column++)
 				{
-					for (int row=0; row<this.RowOffet+rowCount; row++)
+					for (int row=0; row<this.rowCount; row++)
 					{
 						builder.Append (this.GetOutputString (array[column, row]));
 
@@ -87,13 +54,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 			else
 			{
-				for (int row=0; row<this.RowOffet+rowCount; row++)
+				for (int row=0; row<this.rowCount; row++)
 				{
-					for (int column=0; column<columnCount; column++)
+					for (int column=0; column<this.columnCount; column++)
 					{
 						builder.Append (this.GetOutputString (array[column, row]));
 
-						if (column < columnCount-1)
+						if (column < this.columnCount-1)
 						{
 							builder.Append (this.Profile.ColumnSeparator);
 						}
@@ -106,18 +73,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			return builder.ToString ();
 		}
 
-		private int RowOffet
-		{
-			get
-			{
-				return this.instructions.HasHeader ? 1 : 0;
-			}
-		}
-
 
 		private void WriteData(string data)
 		{
-			System.IO.File.WriteAllText (this.instructions.Filename, data);
+			System.IO.File.WriteAllText (this.Instructions.Filename, data);
 		}
 
 
@@ -174,99 +133,5 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			return builder.ToString ();
 		}
-
-
-		private string ConvertToString(AbstractTreeTableCell cell, TreeTableColumnDescription description)
-		{
-			if (cell is TreeTableCellAmortizedAmount)
-			{
-				return this.BaseConvertToString (cell as TreeTableCellAmortizedAmount, description);
-			}
-			else if (cell is TreeTableCellComputedAmount)
-			{
-				return this.BaseConvertToString (cell as TreeTableCellComputedAmount, description);
-			}
-			else if (cell is TreeTableCellDate)
-			{
-				return this.BaseConvertToString (cell as TreeTableCellDate, description);
-			}
-			else if (cell is TreeTableCellDecimal)
-			{
-				return this.BaseConvertToString (cell as TreeTableCellDecimal, description);
-			}
-			else if (cell is TreeTableCellInt)
-			{
-				return this.BaseConvertToString (cell as TreeTableCellInt, description);
-			}
-			else if (cell is TreeTableCellString)
-			{
-				return (cell as TreeTableCellString).Value;
-			}
-			else if (cell is TreeTableCellTree)
-			{
-				return this.BaseConvertToString (cell as TreeTableCellTree, description);
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		private string BaseConvertToString(TreeTableCellAmortizedAmount cell, TreeTableColumnDescription description)
-		{
-			if (cell.Value.HasValue)
-			{
-				return TypeConverters.AmountToString (cell.Value.Value.FinalAmortizedAmount);
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		private string BaseConvertToString(TreeTableCellComputedAmount cell, TreeTableColumnDescription description)
-		{
-			if (cell.Value.HasValue)
-			{
-				return TypeConverters.AmountToString (cell.Value.Value.FinalAmount);
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-		private string BaseConvertToString(TreeTableCellDate cell, TreeTableColumnDescription description)
-		{
-			return TypeConverters.DateToString (cell.Value);
-		}
-
-		private string BaseConvertToString(TreeTableCellDecimal cell, TreeTableColumnDescription description)
-		{
-			switch (description.Type)
-			{
-				case TreeTableColumnType.Rate:
-					return TypeConverters.RateToString (cell.Value);
-
-				case TreeTableColumnType.Amount:
-					return TypeConverters.AmountToString (cell.Value);
-
-				default:
-					return TypeConverters.DecimalToString (cell.Value);
-			}
-		}
-
-		private string BaseConvertToString(TreeTableCellInt cell, TreeTableColumnDescription description)
-		{
-			return TypeConverters.IntToString (cell.Value);
-		}
-
-		private string BaseConvertToString(TreeTableCellTree cell, TreeTableColumnDescription description)
-		{
-			return cell.Value;
-		}
-
-
-		private ExportInstructions instructions;
 	}
 }

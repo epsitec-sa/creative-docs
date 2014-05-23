@@ -50,6 +50,7 @@
     </Compile>
     <Compile Include="AbstractExport.cs" />
     <Compile Include="ExportInstructions.cs" />
+    <Compile Include="HtmlExport.cs" />
     <Compile Include="TextExportProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextExport.cs" />

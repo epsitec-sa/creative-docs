@@ -57,11 +57,17 @@ namespace Epsitec.Cresus.Assets.App.Export
 			switch (ext)
 			{
 				case ".txt":
+				case ".text":
 					ExportStatics<T>.ExportTxt (dataFiller, instructions);
 					break;
 
 				case ".csv":
 					ExportStatics<T>.ExportCsv (dataFiller, instructions);
+					break;
+
+				case ".html":
+				case ".htm":
+					ExportStatics<T>.ExportHtml (dataFiller, instructions);
 					break;
 
 				default:
@@ -73,20 +79,32 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			var engine = new TextExport<T> ()
 			{
-				Profile = TextExportProfile.TxtProfile,
+				Instructions = instructions,
+				Profile      = TextExportProfile.TxtProfile,
 			};
 
-			engine.Export (dataFiller, instructions);
+			engine.Export (dataFiller);
 		}
 
 		private static void ExportCsv(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
 		{
 			var engine = new TextExport<T> ()
 			{
-				Profile = TextExportProfile.CsvProfile,
+				Instructions = instructions,
+				Profile      = TextExportProfile.CsvProfile,
 			};
 
-			engine.Export (dataFiller, instructions);
+			engine.Export (dataFiller);
+		}
+
+		private static void ExportHtml(AbstractTreeTableFiller<T> dataFiller, ExportInstructions instructions)
+		{
+			var engine = new HtmlExport<T> ()
+			{
+				Instructions = instructions,
+			};
+
+			engine.Export (dataFiller);
 		}
 
 
@@ -95,9 +113,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Retourne la liste des formats supportés, pour le dialogue OpenFile standard.
 			get
 			{
-				yield return new FilterItem ("pdf", "Document mis en page", "*.pdf");
-				yield return new FilterItem ("txt", "Fichier texte tabulé", "*.txt");
-				yield return new FilterItem ("csv", "Fichier texte csv",    "*.csv");
+				yield return new FilterItem ("pdf",  "Document mis en page", "*.pdf");
+				yield return new FilterItem ("txt",  "Fichier texte tabulé", "*.txt");
+				yield return new FilterItem ("csv",  "Fichier texte csv",    "*.csv");
+				yield return new FilterItem ("html", "Fichier html",         "*.html");
 			}
 		}
 
