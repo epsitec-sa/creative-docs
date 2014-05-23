@@ -113,7 +113,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					case StackedControllerType.Text:
 					case StackedControllerType.Filename:
-						return this.Width;
+					case StackedControllerType.GroupGuid:
+					case StackedControllerType.CategoryGuid:
+					case StackedControllerType.PersonGuid:
+						return this.Width + 4;
 
 					case StackedControllerType.Int:
 						return IntStackedController.width + 38;  // 38 -> place pour les boutons -/+
@@ -124,11 +127,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Radio:
 					case StackedControllerType.Bool:
 						return 22 + this.LabelsWidth;
-
-					case StackedControllerType.GroupGuid:
-					case StackedControllerType.CategoryGuid:
-					case StackedControllerType.PersonGuid:
-						return this.Width + 4;
 
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", this.StackedControllerType));
