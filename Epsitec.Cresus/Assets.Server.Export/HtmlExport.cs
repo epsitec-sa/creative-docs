@@ -37,11 +37,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			for (int row=0; row<this.rowCount; row++)
 			{
-				builder.Append (string.Concat ("<", this.Profile.RecordTag, ">"));
+				builder.Append (this.GetOpenTag (this.Profile.RecordTag));
 
-				if (!this.Profile.IsCompact)
+				if (!this.Profile.Compact)
 				{
-					builder.Append (HtmlExport<T>.eol);
+					builder.Append (this.Profile.EndOfLine);
 				}
 
 				for (int column=0; column<this.columnCount; column++)
@@ -51,23 +51,24 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					var content = this.GetOutputString (array[column, row]);
 					if (!string.IsNullOrEmpty (content))
 					{
-						if (!this.Profile.IsCompact)
+						if (!this.Profile.Compact)
 						{
 							builder.Append ("\t");
 						}
 
-						builder.Append (string.Concat ("<", description.Header, ">"));
+						builder.Append (this.GetOpenTag (description.Header));
 						builder.Append (content);
-						builder.Append (string.Concat ("</", description.Header, ">"));
+						builder.Append (this.GetCloseTag (description.Header));
 
-						if (!this.Profile.IsCompact)
+						if (!this.Profile.Compact)
 						{
-							builder.Append (HtmlExport<T>.eol);
+							builder.Append (this.Profile.EndOfLine);
 						}
 					}
 				}
 
-				builder.Append (string.Concat ("</", this.Profile.RecordTag, ">", HtmlExport<T>.eol));
+				builder.Append (this.GetCloseTag (this.Profile.RecordTag));
+				builder.Append (this.Profile.EndOfLine);
 			}
 
 			return builder.ToString ();
@@ -79,6 +80,64 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			System.IO.File.WriteAllText (this.Instructions.Filename, data);
 		}
 
+
+		private string GetOpenTag(string tag)
+		{
+			return string.Concat ("<", this.GetTag (tag), ">");
+		}
+
+		private string GetCloseTag(string tag)
+		{
+			return string.Concat ("</", this.GetTag (tag), ">");
+		}
+
+		private string GetTag(string tag)
+		{
+			if (this.Profile.CamelCase)
+			{
+				return HtmlExport<T>.ToCamelCase (tag);
+			}
+			else
+			{
+				return tag;
+			}
+		}
+
+		private static string ToCamelCase(string text)
+		{
+			//	Transforme "valeur comptable" en "ValeurComptable".
+			if (string.IsNullOrEmpty (text))
+			{
+				return null;
+			}
+			else
+			{
+				var builder = new System.Text.StringBuilder ();
+				bool upper = true;
+
+				foreach (char c in text)
+				{
+					if (c == ' ')
+					{
+						upper = true;
+					}
+					else
+					{
+						if (upper)
+						{
+							builder.Append (c.ToString ().ToUpper ());
+							upper = false;
+						}
+						else
+						{
+							builder.Append (c);
+						}
+					}
+				}
+
+				return builder.ToString ();
+			}
+		}
 
 		private string GetOutputString(string text)
 		{
@@ -93,8 +152,5 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				return text;
 			}
 		}
-
-
-		private static string eol = "\r\n";
 	}
 }

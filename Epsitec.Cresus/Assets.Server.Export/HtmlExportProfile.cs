@@ -11,15 +11,19 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	/// </summary>
 	public struct HtmlExportProfile
 	{
-		public HtmlExportProfile(string recordTag, bool isCompact)
+		public HtmlExportProfile(string recordTag, string endOfLine, bool camelCase, bool compact)
 		{
 			this.RecordTag = recordTag;
-			this.IsCompact = isCompact;
+			this.EndOfLine = endOfLine;
+			this.CamelCase = camelCase;
+			this.Compact   = compact;
 		}
 
-		public static HtmlExportProfile Default = new HtmlExportProfile ("record", false);
+		public static HtmlExportProfile Default = new HtmlExportProfile ("record", "\r\n", true, false);
 
 		public readonly string					RecordTag;
-		public readonly bool					IsCompact;
+		public readonly string					EndOfLine;
+		public readonly bool					CamelCase;
+		public readonly bool					Compact;
 	}
 }
