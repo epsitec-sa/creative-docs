@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -29,18 +29,23 @@ namespace Epsitec.Aider.Data.Subscription
 			this.SubscriptionNumber = subscriptionNumber;
 			this.CopiesCount        = copiesCount;
 			this.EditionId          = editionId;
-			this.Title              = title;
-			this.Lastname           = lastname;
-			this.Firstname          = firstname;
-			this.AddressComplement  = addressComplement;
-			this.Street             = street;
-			this.HouseNumber        = houseNumber;
+			this.Title              = SubscriptionFileLine.GetCleanText (title);
+			this.Lastname           = SubscriptionFileLine.GetCleanText (lastname);
+			this.Firstname          = SubscriptionFileLine.GetCleanText (firstname);
+			this.AddressComplement  = SubscriptionFileLine.GetCleanText (addressComplement);
+			this.Street             = SubscriptionFileLine.GetCleanText (street);
+			this.HouseNumber        = SubscriptionFileLine.GetCleanText (houseNumber);
 			this.DistrictNumber     = districtNumber;
-			this.ZipCode            = zipCode;
-			this.Town               = town;
-			this.Country            = country;
+			this.ZipCode            = SubscriptionFileLine.GetCleanText (zipCode);
+			this.Town               = SubscriptionFileLine.GetCleanText (town);
+			this.Country            = SubscriptionFileLine.GetCleanText (country);
 			this.DistributionMode   = distributionMode;
-			this.Canton             = canton;
+			this.Canton             = SubscriptionFileLine.GetCleanText (canton);
+		}
+
+		private static string GetCleanText(string text)
+		{
+			return text.Replace ('\t', ' ');
 		}
 
 
