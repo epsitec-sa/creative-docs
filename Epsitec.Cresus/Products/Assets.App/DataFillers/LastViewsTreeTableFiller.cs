@@ -19,29 +19,17 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		}
 
 
-		public override IEnumerable<ObjectField> Fields
-		{
-			get
-			{
-				yield return ObjectField.LastViewsPin;
-				yield return ObjectField.LastViewsType;
-				yield return ObjectField.LastViewsPage;
-				yield return ObjectField.LastViewsDate;
-				yield return ObjectField.LastViewsDescription;
-			}
-		}
-
 		public override TreeTableColumnDescription[] Columns
 		{
 			get
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Pin,    LastViewsTreeTableFiller.TypeColumnWidth, ""));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Icon,   LastViewsTreeTableFiller.TypeColumnWidth, "Vue"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, LastViewsTreeTableFiller.PageColumnWidth, "Page"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.Date,   LastViewsTreeTableFiller.DateColumnWidth, "Date"));
-				list.Add (new TreeTableColumnDescription (TreeTableColumnType.String, LastViewsTreeTableFiller.DescColumnWidth, "Sélection"));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsPin,         TreeTableColumnType.Pin,    LastViewsTreeTableFiller.TypeColumnWidth, ""));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsType,        TreeTableColumnType.Icon,   LastViewsTreeTableFiller.TypeColumnWidth, "Vue"));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsPage,        TreeTableColumnType.String, LastViewsTreeTableFiller.PageColumnWidth, "Page"));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsDate,        TreeTableColumnType.Date,   LastViewsTreeTableFiller.DateColumnWidth, "Date"));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsDescription, TreeTableColumnType.String, LastViewsTreeTableFiller.DescColumnWidth, "Sélection"));
 
 				return list.ToArray ();
 			}

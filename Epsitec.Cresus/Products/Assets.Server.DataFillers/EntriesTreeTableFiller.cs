@@ -19,33 +19,19 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public override IEnumerable<ObjectField> Fields
-		{
-			get
-			{
-				yield return ObjectField.EntryDate;
-				yield return ObjectField.EntryDebitAccount;
-				yield return ObjectField.EntryCreditAccount;
-				yield return ObjectField.EntryStamp;
-				yield return ObjectField.EntryTitle;
-				yield return ObjectField.EntryAmount;
-				yield return ObjectField.EventType;
-			}
-		}
-
 		public override TreeTableColumnDescription[] Columns
 		{
 			get
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   100, "Date"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  60, "Débit"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  60, "Crédit"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  70, "Pièce"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   300, "Libellé"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, 100, "Montant"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Glyph ,  30, ""));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryDate,          TreeTableColumnType.Tree,   100, "Date"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryDebitAccount,  TreeTableColumnType.String,  60, "Débit"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryCreditAccount, TreeTableColumnType.String,  60, "Crédit"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryStamp,         TreeTableColumnType.String,  70, "Pièce"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryTitle,         TreeTableColumnType.Tree,   300, "Libellé"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryAmount,        TreeTableColumnType.Amount, 100, "Montant"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EventType,          TreeTableColumnType.Glyph ,  30, ""));
 
 				return columns.ToArray ();
 			}

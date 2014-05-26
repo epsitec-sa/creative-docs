@@ -6,8 +6,6 @@ using System.Linq;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
-using Epsitec.Cresus.Assets.Server.NodeGetters;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Helpers
 {
@@ -27,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			var secondaryType  = SortedType.None;
 
 			var sortedColumns = controller.SortedColumns.ToArray ();
-			var fields = filler.Fields.ToArray ();
+			var fields = filler.Columns.Select (x => x.Field).ToArray ();
 
 			if (sortedColumns.Length >= 1)
 			{

@@ -47,6 +47,10 @@ namespace Epsitec.Cresus.Assets.Data
 		AssetEntryForcedTitle,
 		AssetEntryForcedAmount,
 
+		HistoryDate,
+		HistoryGlyph,
+		HistoryValue,
+
 		//	Définitions d'un compte.
 		AccountCategory,
 		AccountType,

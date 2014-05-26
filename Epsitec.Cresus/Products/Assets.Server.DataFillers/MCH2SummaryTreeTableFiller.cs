@@ -39,17 +39,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
-		public override IEnumerable<ObjectField> Fields
-		{
-			get
-			{
-				foreach (var column in this.OrderedColumns)
-				{
-					yield return ObjectField.MCH2Report + (int) column;
-				}
-			}
-		}
-
 		public override TreeTableColumnDescription[] Columns
 		{
 			get
@@ -58,11 +47,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				foreach (var column in this.OrderedColumns)
 				{
-					var type  = this.GetColumnType  (column);
+					var field = ObjectField.MCH2Report + (int) column;
+					var type  = this.GetColumnType (column);
 					var width = this.GetColumnWidth (column);
 					var name  = this.GetColumnName  (column);
 
-					columns.Add (new TreeTableColumnDescription (type, width, name));
+					columns.Add (new TreeTableColumnDescription (field, type, width, name));
 				}
 
 				return columns.ToArray ();

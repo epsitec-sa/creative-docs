@@ -18,27 +18,16 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public override IEnumerable<ObjectField> Fields
-		{
-			get
-			{
-				yield return ObjectField.Number;
-				yield return ObjectField.Name;
-				yield return ObjectField.AccountCategory;
-				yield return ObjectField.AccountType;
-			}
-		}
-
 		public override TreeTableColumnDescription[] Columns
 		{
 			get
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Tree,   120, "Numéro"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 300, "Compte"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Catégorie"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Type"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Number,          TreeTableColumnType.Tree,   120, "Numéro"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,            TreeTableColumnType.String, 300, "Compte"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountCategory, TreeTableColumnType.String, 100, "Catégorie"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountType,     TreeTableColumnType.String, 100, "Type"));
 
 				return columns.ToArray ();
 			}

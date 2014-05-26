@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
@@ -18,33 +17,19 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public override IEnumerable<ObjectField> Fields
-		{
-			get
-			{
-				yield return ObjectField.Name;
-				yield return ObjectField.UserFieldType;
-				yield return ObjectField.UserFieldColumnWidth;
-				yield return ObjectField.UserFieldLineWidth;
-				yield return ObjectField.UserFieldLineCount;
-				yield return ObjectField.UserFieldTopMargin;
-				yield return ObjectField.UserFieldSummaryOrder;
-			}
-		}
-
 		public override TreeTableColumnDescription[] Columns
 		{
 			get
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Nom"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Type"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     70, "Lg colonne"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     70, "Lg ligne"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     70, "Nb lignes"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     70, "Marge sup."));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Int,     70, "Ds résumé"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,                  TreeTableColumnType.String, 150, "Nom"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldType,         TreeTableColumnType.String, 100, "Type"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldColumnWidth,  TreeTableColumnType.Int,     70, "Lg colonne"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldLineWidth,    TreeTableColumnType.Int,     70, "Lg ligne"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldLineCount,    TreeTableColumnType.Int,     70, "Nb lignes"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldTopMargin,    TreeTableColumnType.Int,     70, "Marge sup."));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldSummaryOrder, TreeTableColumnType.Int,     70, "Ds résumé"));
 
 				return columns.ToArray ();
 			}

@@ -18,53 +18,27 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public override IEnumerable<ObjectField> Fields
-		{
-			get
-			{
-				yield return ObjectField.Name;
-				yield return ObjectField.Number;
-				yield return ObjectField.AmortizationRate;
-				yield return ObjectField.AmortizationType;
-				yield return ObjectField.Periodicity;
-				yield return ObjectField.Prorata;
-				yield return ObjectField.Round;
-				yield return ObjectField.ResidualValue;
-
-				yield return ObjectField.Account1;
-				yield return ObjectField.Account2;
-				yield return ObjectField.Account3;
-				yield return ObjectField.Account4;
-				yield return ObjectField.Account5;
-				yield return ObjectField.Account6;
-				//yield return ObjectField.Account7;
-				//yield return ObjectField.Account8;
-			}
-		}
-
 		public override TreeTableColumnDescription[] Columns
 		{
 			get
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 180, "Catégorie"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  50, "N°"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Rate,    80, "Taux"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String,  80, "Type"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Périodicité"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 100, "Prorata"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, 100, "Arrondi"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.Amount, 120, "Valeur résiduelle"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,             TreeTableColumnType.String, 180, "Catégorie"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Number,           TreeTableColumnType.String,  50, "N°"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationRate, TreeTableColumnType.Rate,    80, "Taux"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationType, TreeTableColumnType.String,  80, "Type"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Periodicity,      TreeTableColumnType.String, 100, "Périodicité"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Prorata,          TreeTableColumnType.String, 100, "Prorata"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Round,            TreeTableColumnType.Amount, 100, "Arrondi"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.ResidualValue,    TreeTableColumnType.Amount, 120, "Valeur résiduelle"));
 
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Contrepartie achat"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Contrepartie vente"));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Compte d'immob."));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Compte d'amort."));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Charge d'amort."));
-				columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Compte réévaluation"));
-				//columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Réserve 1"));
-				//columns.Add (new TreeTableColumnDescription (TreeTableColumnType.String, 150, "Réserve 2"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account1,         TreeTableColumnType.String, 150, "Contrepartie achat"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account2,         TreeTableColumnType.String, 150, "Contrepartie vente"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account3,         TreeTableColumnType.String, 150, "Compte d'immob."));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account4,         TreeTableColumnType.String, 150, "Compte d'amort."));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account5,         TreeTableColumnType.String, 150, "Charge d'amort."));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account6,         TreeTableColumnType.String, 150, "Compte réévaluation"));
 
 				return columns.ToArray ();
 			}

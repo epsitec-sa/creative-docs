@@ -17,17 +17,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public override IEnumerable<ObjectField> Fields
-		{
-			get
-			{
-				foreach (var userField in accessor.GlobalSettings.GetUserFields (BaseType.Persons))
-				{
-					yield return userField.Field;
-				}
-			}
-		}
-
 		public override TreeTableColumnDescription[] Columns
 		{
 			get
@@ -37,7 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				foreach (var userField in this.accessor.GlobalSettings.GetUserFields (BaseType.Persons))
 				{
 					var type = AbstractTreeTableCell.GetColumnType (userField.Type);
-					columns.Add (new TreeTableColumnDescription (type, userField.ColumnWidth, userField.Name));
+					columns.Add (new TreeTableColumnDescription (userField.Field, type, userField.ColumnWidth, userField.Name));
 				}
 
 				return columns.ToArray ();

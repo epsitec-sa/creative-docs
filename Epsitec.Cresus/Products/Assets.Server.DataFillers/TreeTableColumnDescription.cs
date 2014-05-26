@@ -3,13 +3,15 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public struct TreeTableColumnDescription
 	{
-		public TreeTableColumnDescription(TreeTableColumnType type = TreeTableColumnType.String, int width = 100, string header = null, string footer = null)
+		public TreeTableColumnDescription(ObjectField field, TreeTableColumnType type = TreeTableColumnType.String, int width = 100, string header = null, string footer = null)
 		{
+			this.Field  = field;
 			this.Type   = type;
 			this.Width  = width;
 			this.Header = header;
@@ -17,6 +19,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
+		public readonly ObjectField				Field;
 		public readonly TreeTableColumnType		Type;
 		public readonly int						Width;
 		public readonly string					Header;
