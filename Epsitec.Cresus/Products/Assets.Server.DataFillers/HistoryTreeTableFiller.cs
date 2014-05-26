@@ -19,6 +19,22 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
+		public override ObjectField				DefaultSortedField
+		{
+			get
+			{
+				return ObjectField.HistoryDate;
+			}
+		}
+
+		public override int						DefaultDockToLeftCount
+		{
+			get
+			{
+				return 1;
+			}
+		}
+
 		public override TreeTableColumnDescription[] Columns
 		{
 			//	Retourne les 3 colonnes d'un historique, à savoir:

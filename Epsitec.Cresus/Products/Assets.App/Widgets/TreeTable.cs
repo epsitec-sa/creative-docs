@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.dockToLeftCount;
+				return this.columnsState.DockToLeftCount;
 			}
 		}
 
@@ -186,14 +186,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.columnsState = value;
 				this.CreateColumns ();
 			}
-		}
-
-		public void ClearSortedColumns()
-		{
-			this.columnsState = new ColumnsState (this.columnsState.Mapper, this.columnsState.Columns, new SortedColumn[0]);
-
-			this.UpdateSortedColumns ();
-			this.OnSortingChanged ();
 		}
 
 		public void AddSortedColumn(ObjectField field)
@@ -229,7 +221,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
-			this.columnsState = new ColumnsState (this.columnsState.Mapper, this.columnsState.Columns, list.ToArray ());
+			this.columnsState = new ColumnsState (this.columnsState.Mapper, this.columnsState.Columns, list.ToArray (), this.columnsState.DockToLeftCount);
 
 			this.UpdateSortedColumns ();
 			this.OnSortingChanged ();
@@ -261,12 +253,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
+		public void SetColumns(TreeTableColumnDescription[] descriptions, ObjectField defaultSortedField, int defaultDockToLeftCount)
 		{
 			//	Spécifie les colonnes à afficher, et réinitialise le mapping ainsi
 			//	que les largeurs courantes.
 			this.columnDescriptions = descriptions;
-			this.dockToLeftCount = dockToLeftCount;
 
 			var mapper = new int[this.columnDescriptions.Length];
 			var columnState = new ColumnState[this.columnDescriptions.Length];
@@ -277,7 +268,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				mapper[i] = i;
 				columnState[i] = new ColumnState (columnDescription.Field, columnDescription.Width, false);
 			}
-			this.columnsState = new ColumnsState (mapper, columnState, new SortedColumn[0]);
+
+			var sorted = new SortedColumn[1];
+			sorted[0] = new SortedColumn (defaultSortedField, SortedType.Ascending);
+
+			this.columnsState = new ColumnsState (mapper, columnState, sorted, defaultDockToLeftCount);
 
 			this.CreateColumns ();
 		}
@@ -322,8 +317,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Change l'ordre des colonnes en déplaçant une colonne vers la gauche
 			//	ou vers la droite. On modifie simplement le 'mapping', puis on
 			//	reconstruit le tableau.
-			bool srcDockToLeft = (columnSrc < this.dockToLeftCount);
-			bool dstDockToLeft = (separatorDst.Rank < this.dockToLeftCount);
+			var dockToLeftCount = this.columnsState.DockToLeftCount;
+
+			bool srcDockToLeft = (columnSrc < dockToLeftCount);
+			bool dstDockToLeft = (separatorDst.Rank < dockToLeftCount);
 
 			//	Si on est sur la frontière des conteneurs left|scrollable, on force
 			//	la destination dans la bonne direction.
@@ -347,7 +344,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				if (!srcDockToLeft && dstDockToLeft)
 				{
-					this.dockToLeftCount++;
+					dockToLeftCount++;
 				}
 			}
 			else  // déplacement vers la droite ?
@@ -358,12 +355,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				if (srcDockToLeft && !dstDockToLeft)
 				{
-					System.Diagnostics.Debug.Assert (this.dockToLeftCount > 0);
-					this.dockToLeftCount--;
+					System.Diagnostics.Debug.Assert (dockToLeftCount > 0);
+					dockToLeftCount--;
 				}
 			}
 
-			this.columnsState = new ColumnsState (mapper.ToArray (), this.columnsState.Columns, this.columnsState.Sorted);
+			this.columnsState = new ColumnsState (mapper.ToArray (), this.columnsState.Columns, this.columnsState.Sorted, dockToLeftCount);
 
 			this.CreateColumns ();
 			this.OnContentChanged (true);  // on demande de mettre à jour le contenu
@@ -388,7 +385,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				this.treeTableColumns.Add (column);
 
-				if (index < this.dockToLeftCount)  // dans le conteneur fixe de gauche ?
+				if (index < this.columnsState.DockToLeftCount)  // dans le conteneur fixe de gauche ?
 				{
 					column.DockToLeft = true;
 					column.Dock = DockStyle.Left;
@@ -750,7 +747,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private TreeTableColumnDescription[]			columnDescriptions;
 		private ColumnsState							columnsState;
-		private int										dockToLeftCount;
 		private int										headerHeight;
 		private int										footerHeight;
 		private int										rowHeight;

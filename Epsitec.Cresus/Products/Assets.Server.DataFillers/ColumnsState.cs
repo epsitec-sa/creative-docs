@@ -12,12 +12,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 	/// </summary>
 	public struct ColumnsState
 	{
-		public ColumnsState(int[] mapper, ColumnState[] columns, SortedColumn[] sorted)
+		public ColumnsState(int[] mapper, ColumnState[] columns, SortedColumn[] sorted, int dockToLeftCount)
 		{
 			System.Diagnostics.Debug.Assert (mapper.Length == columns.Length);
-			this.Mapper  = mapper;
-			this.Columns = columns;
-			this.Sorted  = sorted;
+			this.Mapper          = mapper;
+			this.Columns         = columns;
+			this.Sorted          = sorted;
+			this.DockToLeftCount = dockToLeftCount;
 		}
 
 		public IEnumerable<ColumnState> MappedColumns
@@ -45,5 +46,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public readonly int[]					Mapper;
 		public readonly ColumnState[]			Columns;
 		public readonly SortedColumn[]			Sorted;
+		public readonly int						DockToLeftCount;
 	}
 }

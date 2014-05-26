@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.CreateUI (frame, rowHeight: LastViewsPopup.rowHeight, headerHeight: LastViewsPopup.headerHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			TreeTableFiller<LastViewNode>.FillColumns (this.controller, this.dataFiller, 0);
+			TreeTableFiller<LastViewNode>.FillColumns (this.controller, this.dataFiller);
 		}
 
 

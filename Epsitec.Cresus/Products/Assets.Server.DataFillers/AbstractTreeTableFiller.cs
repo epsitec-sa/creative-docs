@@ -21,12 +21,22 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public Timestamp?						Timestamp;
 		public DataObject						DataObject;
 
+		public abstract ObjectField				DefaultSortedField
+		{
+			get;
+		}
+
+		public abstract int						DefaultDockToLeftCount
+		{
+			get;
+		}
+
 		public abstract TreeTableColumnDescription[] Columns
 		{
 			get;
 		}
 
-		public int Count
+		public int								Count
 		{
 			get
 			{

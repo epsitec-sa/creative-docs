@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.CreateUI (frame, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller, 0);
+			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller);
 
 			this.InitialCompact ();
 		}

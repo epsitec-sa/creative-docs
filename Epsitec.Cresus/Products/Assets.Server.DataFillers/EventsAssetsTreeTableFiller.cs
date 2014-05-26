@@ -19,6 +19,29 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
+		public override ObjectField				DefaultSortedField
+		{
+			get
+			{
+				if (this.UserFields.Any ())
+				{
+					return this.UserFields.First ().Field;
+				}
+				else
+				{
+					return ObjectField.Unknown;
+				}
+			}
+		}
+
+		public override int						DefaultDockToLeftCount
+		{
+			get
+			{
+				return 1;
+			}
+		}
+
 		public override TreeTableColumnDescription[] Columns
 		{
 			get

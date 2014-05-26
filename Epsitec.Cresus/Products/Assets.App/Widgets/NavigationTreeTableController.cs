@@ -155,19 +155,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public void ClearSortedColumns()
-		{
-			this.treeTable.ClearSortedColumns ();
-		}
-
 		public void AddSortedColumn(ObjectField field)
 		{
 			this.treeTable.AddSortedColumn (field);
 		}
 
-		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)
+		public void SetColumns(TreeTableColumnDescription[] descriptions, ObjectField defaultSortedField, int defaultDockToLeftCount)
 		{
-			this.treeTable.SetColumns (descriptions, dockToLeftCount);
+			this.treeTable.SetColumns (descriptions, defaultSortedField, defaultDockToLeftCount);
 		}
 
 		public void SetColumnCells(int rank, TreeTableColumnItem columnItem)

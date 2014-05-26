@@ -22,6 +22,22 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public Timestamp						FinalTimestamp;
 
 
+		public override ObjectField				DefaultSortedField
+		{
+			get
+			{
+				return ObjectField.MCH2Report;
+			}
+		}
+
+		public override int						DefaultDockToLeftCount
+		{
+			get
+			{
+				return 1;
+			}
+		}
+
 		public IEnumerable<ExtractionInstructions> UsedExtractionInstructions
 		{
 			//	Retourne la liste des instructions d'extraction, dans lesquelles on
