@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				return 0;
+				return 1;
 			}
 		}
 

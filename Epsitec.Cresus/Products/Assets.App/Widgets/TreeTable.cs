@@ -425,6 +425,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.UpdateHoverMode ();
 			this.UpdateChildrensGeometry ();
+			this.UpdateSortedColumns ();
 		}
 
 		public void SetColumnCells(int rank, TreeTableColumnItem columnItem)
