@@ -17,4 +17,4 @@ ConfigureExperimentalFeature ("EntityBag");
 ConfigureExperimentalFeature ("DropZones");
 ConfigureExperimentalFeature ("Chat");
 ConfigureExperimentalFeature ("Faq");
-# ConfigureExperimentalFeature ("StatusBar");
+ConfigureExperimentalFeature ("StatusBar");
