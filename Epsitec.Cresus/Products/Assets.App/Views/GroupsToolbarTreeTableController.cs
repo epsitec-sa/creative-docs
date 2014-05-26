@@ -7,7 +7,6 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -36,8 +35,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
-
-			this.sortingInstructions = GroupsLogic.DefaultSorting;
 		}
 
 
@@ -113,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.treeTableController.AddSortedColumn (ObjectField.Number);
+			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}
 
 

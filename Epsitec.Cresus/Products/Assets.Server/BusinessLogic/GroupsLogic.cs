@@ -118,15 +118,5 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			return string.Join ("/", list);
 		}
-
-
-		public static SortingInstructions DefaultSorting
-		{
-			//	Retourne la façon standard de trier les groupes.
-			get
-			{
-				return new SortingInstructions (ObjectField.Number, SortedType.Ascending, ObjectField.Name, SortedType.Ascending);
-			}
-		}
 	}
 }

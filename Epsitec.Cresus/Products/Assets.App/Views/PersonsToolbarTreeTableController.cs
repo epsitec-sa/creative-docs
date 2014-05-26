@@ -34,8 +34,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var primary = this.accessor.GetNodeGetter (BaseType.Persons);
 			this.secondaryGetter = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
 			this.nodeGetter = new SorterNodeGetter (this.secondaryGetter);
-
-			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Persons), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 		}
 
 
@@ -92,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.treeTableController.AddSortedColumn (this.dataFiller.Columns.First ().Field);
+			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}
 
 

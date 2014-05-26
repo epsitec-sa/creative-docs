@@ -35,8 +35,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Accounts);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Accounts, primaryNodeGetter);
-
-			this.sortingInstructions = new SortingInstructions (ObjectField.Number, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 		}
 
 
@@ -112,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new AccountsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.treeTableController.AddSortedColumn (ObjectField.Number);
+			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}
 
 

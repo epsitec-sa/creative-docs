@@ -18,11 +18,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public override ObjectField				DefaultSortedField
+		public override SortingInstructions		DefaultSorting
 		{
 			get
 			{
-				return ObjectField.Name;
+				return new SortingInstructions (ObjectField.Number, SortedType.Ascending, ObjectField.Name, SortedType.Ascending);
 			}
 		}
 

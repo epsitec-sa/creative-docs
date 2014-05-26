@@ -31,8 +31,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Entries);
 
 			this.nodeGetter = new EntriesNodeGetter (this.accessor);
-
-			this.sortingInstructions = new SortingInstructions (ObjectField.EntryDate, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 		}
 
 
@@ -108,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new EntriesTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<EntryNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.treeTableController.AddSortedColumn (ObjectField.EntryDate);
+			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}
 
 

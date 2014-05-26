@@ -37,8 +37,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
 			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
 			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
-
-			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Assets), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 		}
 
 
@@ -186,7 +184,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.treeTableController.AddSortedColumn (this.dataFiller.Columns.First ().Field);
+			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}
 
 

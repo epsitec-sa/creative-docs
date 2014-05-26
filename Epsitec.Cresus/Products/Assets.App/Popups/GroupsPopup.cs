@@ -31,7 +31,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);
-			this.nodeGetter.SetParams (null, this.SortingInstructions);
 
 			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == selectedGuid);
 
@@ -47,6 +46,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.baseType.ToString ()));
 			}
+
+			this.nodeGetter.SetParams (null, this.dataFiller.DefaultSorting);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -172,25 +173,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				else if (this.baseType == BaseType.Accounts)
 				{
 					return 100 + 300;  // colonnes numéro et compte
-				}
-				else
-				{
-					throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.baseType.ToString ()));
-				}
-			}
-		}
-
-		private SortingInstructions SortingInstructions
-		{
-			get
-			{
-				if (this.baseType == BaseType.Groups)
-				{
-					return GroupsLogic.DefaultSorting;
-				}
-				else if (this.baseType == BaseType.Accounts)
-				{
-					return new SortingInstructions (ObjectField.Number, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 				}
 				else
 				{

@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 		public static void FillColumns(NavigationTreeTableController controller, AbstractTreeTableFiller<T> filler)
 		{
 			//	Met à jour les colonnes du contrôleur TreeTable.
-			controller.SetColumns (filler.Columns, filler.DefaultSortedField, filler.DefaultDockToLeftCount);
+			controller.SetColumns (filler.Columns, filler.DefaultSorting, filler.DefaultDockToLeftCount);
 		}
 
 

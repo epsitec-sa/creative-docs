@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public void SetColumns(TreeTableColumnDescription[] descriptions, ObjectField defaultSortedField, int defaultDockToLeftCount)
+		public void SetColumns(TreeTableColumnDescription[] descriptions, SortingInstructions defaultSorting, int defaultDockToLeftCount)
 		{
 			//	Spécifie les colonnes à afficher, et réinitialise le mapping ainsi
 			//	que les largeurs courantes.
@@ -269,10 +269,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				columnState[i] = new ColumnState (columnDescription.Field, columnDescription.Width, false);
 			}
 
-			var sorted = new SortedColumn[1];
-			sorted[0] = new SortedColumn (defaultSortedField, SortedType.Ascending);
+			var sorted = new List<SortedColumn> ();
+			if (defaultSorting.PrimaryField != ObjectField.Unknown)
+			{
+				sorted.Add (new SortedColumn (defaultSorting.PrimaryField, defaultSorting.PrimaryType));
+			}
+			if (defaultSorting.SecondaryField != ObjectField.Unknown)
+			{
+				sorted.Add (new SortedColumn (defaultSorting.SecondaryField, defaultSorting.SecondaryType));
+			}
 
-			this.columnsState = new ColumnsState (mapper, columnState, sorted, defaultDockToLeftCount);
+			this.columnsState = new ColumnsState (mapper, columnState, sorted.ToArray (), defaultDockToLeftCount);
 
 			this.CreateColumns ();
 		}

@@ -22,11 +22,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public Timestamp						FinalTimestamp;
 
 
-		public override ObjectField				DefaultSortedField
+		public override SortingInstructions		DefaultSorting
 		{
 			get
 			{
-				return ObjectField.MCH2Report;
+				return new SortingInstructions (ObjectField.MCH2Report, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 			}
 		}
 

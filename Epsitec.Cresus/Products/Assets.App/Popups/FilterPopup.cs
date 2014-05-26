@@ -29,12 +29,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
-			this.nodeGetter.SetParams (null, GroupsLogic.DefaultSorting);
 
 			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == selectedGuid);
 			this.hasFilter = (this.visibleSelectedRow != -1);
 
 			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.nodeGetter.SetParams (null, this.dataFiller.DefaultSorting);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)

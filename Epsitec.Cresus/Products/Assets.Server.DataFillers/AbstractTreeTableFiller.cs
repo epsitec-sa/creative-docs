@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public Timestamp?						Timestamp;
 		public DataObject						DataObject;
 
-		public abstract ObjectField				DefaultSortedField
+		public abstract SortingInstructions		DefaultSorting
 		{
 			get;
 		}
