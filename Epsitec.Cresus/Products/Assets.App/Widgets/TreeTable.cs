@@ -30,9 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.hoverMode = TreeTableHoverMode.VerticalGradient;
 
-			this.columnsMapper    = new List<int> ();
 			this.treeTableColumns = new List<AbstractTreeTableColumn> ();
-			this.sortedColumns    = new List<SortedColumn> ();
 
 			//	Crée le conteneur de gauche, qui contiendra toutes les colonnes
 			//	en mode DockToLeft (habituellement la seule TreeTableColumnTree).
@@ -173,47 +171,65 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.sortedColumns;
+				return this.columnsState.Sorted;
+			}
+		}
+
+		public ColumnsState						ColumnsState
+		{
+			get
+			{
+				return this.columnsState;
+			}
+			set
+			{
+				this.columnsState = value;
+				this.CreateColumns ();
 			}
 		}
 
 		public void ClearSortedColumns()
 		{
-			this.sortedColumns.Clear ();
+			this.columnsState = new ColumnsState (this.columnsState.Mapper, this.columnsState.Columns, new SortedColumn[0]);
+
 			this.UpdateSortedColumns ();
 			this.OnSortingChanged ();
 		}
 
-		public void AddSortedColumn(int rank)
+		public void AddSortedColumn(ObjectField field)
 		{
-			if (this.sortedColumns.Count == 0)
+			var list = this.columnsState.Sorted.ToList ();
+
+			if (list.Count == 0)
 			{
-				this.sortedColumns.Add (new SortedColumn (rank, SortedType.Ascending));
+				list.Add (new SortedColumn (field, SortedType.Ascending));
 			}
 			else
 			{
-				if (rank == this.sortedColumns[0].Column)
+				if (field == list[0].Field)
 				{
-					if (this.sortedColumns[0].Type == SortedType.Ascending)
+					if (list[0].Type == SortedType.Ascending)
 					{
-						this.sortedColumns[0] = new SortedColumn (rank, SortedType.Descending);
+						list[0] = new SortedColumn (field, SortedType.Descending);
 					}
 					else
 					{
-						this.sortedColumns[0] = new SortedColumn (rank, SortedType.Ascending);
+						list[0] = new SortedColumn (field, SortedType.Ascending);
 					}
 				}
 				else
 				{
-					this.sortedColumns.Insert (0, new SortedColumn (rank, SortedType.Ascending));
+					list.Insert (0, new SortedColumn (field, SortedType.Ascending));
 
-					//	Jamais plus de 2.
-					while (this.sortedColumns.Count > 2)
+					//	Jamais plus de 2 (un tri primaire et un tri secondaire).
+					while (list.Count > 2)
 					{
-						this.sortedColumns.RemoveAt (2);
+						list.RemoveAt (2);
 					}
 				}
 			}
+
+			this.columnsState = new ColumnsState (this.columnsState.Mapper, this.columnsState.Columns, list.ToArray ());
 
 			this.UpdateSortedColumns ();
 			this.OnSortingChanged ();
@@ -221,10 +237,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void UpdateSortedColumns()
 		{
+			if (this.columnsState.Sorted == null)  // garde-fou
+			{
+				return;
+			}
+
+			var sorted = this.columnsState.Sorted.ToList();
+
 			for (int i=0; i<this.treeTableColumns.Count; i++)
 			{
 				var column = this.treeTableColumns[i];
-				int j = this.sortedColumns.FindIndex (x => x.Column == i);
+				int j = sorted.FindIndex (x => x.Field == column.Field);
 
 				if (j == -1 || !this.AllowsSorting)
 				{
@@ -232,7 +255,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 				else
 				{
-					column.SetSortedColumn (this.sortedColumns[j].Type, j == 0);
+					column.SetSortedColumn (sorted[j].Type, j == 0);
 				}
 			}
 		}
@@ -245,36 +268,53 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.columnDescriptions = descriptions;
 			this.dockToLeftCount = dockToLeftCount;
 
-			this.columnWidths = new ColumnWidth[this.columnDescriptions.Length];
+			var mapper = new int[this.columnDescriptions.Length];
+			var columnState = new ColumnState[this.columnDescriptions.Length];
+
 			for (int i=0; i<this.columnDescriptions.Length; i++)
 			{
-				this.columnWidths[i].SetWidth (this.columnDescriptions[i].Width);
+				var columnDescription = this.columnDescriptions[i];
+				mapper[i] = i;
+				columnState[i] = new ColumnState (columnDescription.Field, columnDescription.Width, false);
 			}
-
-			this.columnsMapper.Clear ();
-
-			for (int i=0; i<descriptions.Length; i++)
-			{
-				this.columnsMapper.Add (i);
-			}
+			this.columnsState = new ColumnsState (mapper, columnState, new SortedColumn[0]);
 
 			this.CreateColumns ();
 		}
 
 		public void SetColumnWidth(int rank, int? width)
 		{
-			//	Modifie la largeur d'une colonne. Si la largeur n'est pas précisée (null),
-			//	on restitue la largeur originale.
-			rank = this.MapRelativeToAbsolute (rank);
+			//	Modifie la largeur d'une colonne.
+			//	Si width == 0		->	cache la colonne
+			//	Si width == null	->	restitue la largeur originale
+			rank = this.columnsState.MappedToAbsolute (rank);
 
-			if (!width.HasValue)
+			var field = this.columnsState.Columns[rank].Field;
+			int newWidth;
+			bool hide;
+
+			if (width.HasValue)
 			{
-				width = this.columnWidths[rank].OriginalWidth;
+				if (width == 0)  // cache la colonne ?
+				{
+					newWidth = this.columnsState.Columns[rank].OriginalWidth;
+					hide = true;
+				}
+				else  // modifie la largeur ?
+				{
+					newWidth = width.Value;
+					hide = false;
+				}
+			}
+			else  // restitue la largeur originale ?
+			{
+				newWidth = this.columnsState.Columns[rank].OriginalWidth;
+				hide = false;
 			}
 
-			this.columnWidths[rank].SetWidth (width.Value);
+			this.columnsState.Columns[rank] = new ColumnState (field, newWidth, hide);
 
-			this.GetColumn (rank).PreferredWidth = this.columnWidths[rank].FinalWidth;
+			this.GetColumn (rank).PreferredWidth = this.columnsState.Columns[rank].FinalWidth;
 		}
 
 		public void ChangeColumnOrder(int columnSrc, TreeTableColumnSeparator separatorDst)
@@ -297,11 +337,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				dstDockToLeft = false;
 			}
 
+			var mapper = this.columnsState.Mapper.ToList ();
+
 			if (separatorDst.Rank <= columnSrc)  // déplacement vers la gauche ?
 			{
-				int x = this.columnsMapper[columnSrc];
-				this.columnsMapper.RemoveAt (columnSrc);
-				this.columnsMapper.Insert (separatorDst.Rank, x);
+				int x = mapper[columnSrc];
+				mapper.RemoveAt (columnSrc);
+				mapper.Insert (separatorDst.Rank, x);
 
 				if (!srcDockToLeft && dstDockToLeft)
 				{
@@ -310,9 +352,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else  // déplacement vers la droite ?
 			{
-				int x = this.columnsMapper[columnSrc];
-				this.columnsMapper.RemoveAt (columnSrc);
-				this.columnsMapper.Insert (separatorDst.Rank-1, x);
+				int x = mapper[columnSrc];
+				mapper.RemoveAt (columnSrc);
+				mapper.Insert (separatorDst.Rank-1, x);
 
 				if (srcDockToLeft && !dstDockToLeft)
 				{
@@ -320,6 +362,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.dockToLeftCount--;
 				}
 			}
+
+			this.columnsState = new ColumnsState (mapper.ToArray (), this.columnsState.Columns, this.columnsState.Sorted);
 
 			this.CreateColumns ();
 			this.OnContentChanged (true);  // on demande de mettre à jour le contenu
@@ -334,18 +378,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			int index = 0;
 
-			for (int i=0; i<this.columnsMapper.Count; i++)
+			foreach (var columnState in this.columnsState.MappedColumns)
 			{
-				var ii = this.MapRelativeToAbsolute (i);
-				var description = this.columnDescriptions[ii];
+				var description = this.columnDescriptions.Where (x => x.Field == columnState.Field).FirstOrDefault ();
 
 				var column = TreeTableColumnHelper.Create (description);
-				column.PreferredWidth = this.columnWidths[ii].FinalWidth;
-				column.Index = index++;
+				column.PreferredWidth = columnState.FinalWidth;
+				column.Index = index;
 
 				this.treeTableColumns.Add (column);
 
-				if (i < this.dockToLeftCount)  // dans le conteneur fixe de gauche ?
+				if (index < this.dockToLeftCount)  // dans le conteneur fixe de gauche ?
 				{
 					column.DockToLeft = true;
 					column.Dock = DockStyle.Left;
@@ -372,6 +415,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						this.OnTreeButtonClicked (row, type);
 					};
 				}
+
+				index++;
 			}
 
 			this.UpdateHoverMode ();
@@ -382,17 +427,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			var columnWidget = this.GetColumn (rank);
 			columnWidget.SetCells (columnItem);
-		}
-
-
-		public string Serialize()
-		{
-			return null;  // TODO:
-		}
-
-		public void Deserialize(string data)
-		{
-			// TODO: 
 		}
 
 
@@ -580,7 +614,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else
 			{
-				return this.columnsMapper[rank];
+				return this.columnsState.MappedToAbsolute (rank);
 			}
 		}
 
@@ -653,7 +687,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private AbstractTreeTableColumn GetColumn(int absRank)
 		{
 			System.Diagnostics.Debug.Assert (absRank >= 0 && absRank < this.treeTableColumns.Count);
-			int rank = this.MapAbsoluteToRelative (absRank);
+			int rank = this.columnsState.AbsoluteToMapped (absRank);
 			return this.treeTableColumns[rank];
 		}
 
@@ -664,63 +698,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				return this.interactiveLayers.Where (x => x.IsDragging).FirstOrDefault ();
 			}
-		}
-
-
-		private int MapAbsoluteToRelative(int absRank)
-		{
-			return this.columnsMapper.IndexOf (absRank);
-		}
-
-		private int MapRelativeToAbsolute(int relRank)
-		{
-			return this.columnsMapper[relRank];
-		}
-
-
-		private struct ColumnWidth
-		{
-			public void SetWidth(int width)
-			{
-				if (width == 0)
-				{
-					this.hide = true;
-				}
-				else
-				{
-					this.width = width;
-					this.hide  = false;
-				}
-			}
-
-			public int OriginalWidth
-			{
-				get
-				{
-					return this.width;
-				}
-			}
-
-			public int FinalWidth
-			{
-				get
-				{
-					return this.hide ? 0 : this.width;
-				}
-			}
-
-			public string Serialize()
-			{
-				return null;  // TODO:
-			}
-
-			public void Deserialize(string data)
-			{
-				// TODO:
-			}
-
-			private int  width;
-			private bool hide;
 		}
 
 
@@ -766,15 +743,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		private readonly List<int>						columnsMapper;
 		private readonly List<AbstractTreeTableColumn>	treeTableColumns;
 		private readonly FrameBox						leftContainer;
 		private readonly Scrollable						columnsContainer;
 		private readonly List<AbstractInteractiveLayer>	interactiveLayers;
-		private readonly List<SortedColumn>				sortedColumns;
 
 		private TreeTableColumnDescription[]			columnDescriptions;
-		private ColumnWidth[]							columnWidths;
+		private ColumnsState							columnsState;
 		private int										dockToLeftCount;
 		private int										headerHeight;
 		private int										footerHeight;

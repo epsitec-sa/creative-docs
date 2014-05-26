@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController = new NavigationTreeTableController ();
 			this.treeTableController.CreateUI (parent, rowHeight: 18, headerHeight: 18, footerHeight: 0);
 			this.treeTableController.AllowsMovement = false;
-			this.treeTableController.AddSortedColumn (0);
+			//?this.treeTableController.AddSortedColumn (0);  // TODO!!!
 		}
 
 

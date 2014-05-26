@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new UserFieldsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<GuidNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.treeTableController.AddSortedColumn (0);
+			this.treeTableController.AddSortedColumn (ObjectField.Name);
 		}
 
 

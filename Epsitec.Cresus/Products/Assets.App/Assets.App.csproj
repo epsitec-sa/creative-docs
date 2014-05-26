@@ -250,7 +250,6 @@
     <Compile Include="Widgets\TreeTableColumnAmortizedAmount.cs" />
     <Compile Include="Widgets\TreeTableColumnPin.cs" />
     <Compile Include="Widgets\TreeTableColumnIcon.cs" />
-    <Compile Include="Widgets\SortedColumn.cs" />
     <Compile Include="Widgets\TreeTableColumnHelper.cs" />
     <Compile Include="Widgets\HatchFrameBox.cs" />
     <Compile Include="Widgets\TextFieldController.cs" />

@@ -160,9 +160,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.treeTable.ClearSortedColumns ();
 		}
 
-		public void AddSortedColumn(int rank)
+		public void AddSortedColumn(ObjectField field)
 		{
-			this.treeTable.AddSortedColumn (rank);
+			this.treeTable.AddSortedColumn (field);
 		}
 
 		public void SetColumns(TreeTableColumnDescription[] descriptions, int dockToLeftCount)

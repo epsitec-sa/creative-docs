@@ -46,6 +46,8 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="ColumnState.cs" />
+    <Compile Include="ColumnsState.cs" />
     <Compile Include="AbstractTreeTableCell.cs" />
     <Compile Include="AbstractTreeTableFiller.cs" />
     <Compile Include="AccountsTreeTableFiller.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="SingleGroupsTreeTableFiller.cs" />
     <Compile Include="SingleObjectsTreeTableFiller.cs" />
     <Compile Include="SinglePersonsTreeTableFiller.cs" />
+    <Compile Include="SortedColumn.cs" />
     <Compile Include="TreeTableCellAmortizedAmount.cs" />
     <Compile Include="TreeTableCellComputedAmount.cs" />
     <Compile Include="TreeTableCellDate.cs" />

@@ -109,7 +109,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				else
 				{
 					int rank = this.DetectColumnSrc (pos);
-					this.AddSortedColumn (rank);
+					var column = this.GetColumn (rank);
+					if (column != null)
+					{
+						this.AddSortedColumn (column.Field);
+					}
 				}
 
 				this.SetHoverMode (TreeTableHoverMode.VerticalGradient);

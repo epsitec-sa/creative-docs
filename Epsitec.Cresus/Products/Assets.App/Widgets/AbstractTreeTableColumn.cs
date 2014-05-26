@@ -23,6 +23,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		public ObjectField						Field
+		{
+			get;
+			set;
+		}
+
 		public bool								DockToLeft
 		{
 			get;

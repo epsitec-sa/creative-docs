@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new EntriesTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<EntryNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.treeTableController.AddSortedColumn (0);
+			this.treeTableController.AddSortedColumn (ObjectField.EntryDate);
 		}
 
 

@@ -6,6 +6,7 @@ using System.Linq;
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -234,9 +235,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		protected void AddSortedColumn(int rank)
+		protected void AddSortedColumn(ObjectField field)
 		{
-			this.treeTable.AddSortedColumn (rank);
+			this.treeTable.AddSortedColumn (field);
 		}
 
 

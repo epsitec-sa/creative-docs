@@ -25,30 +25,21 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			var secondaryType  = SortedType.None;
 
 			var sortedColumns = controller.SortedColumns.ToArray ();
-			var fields = filler.Columns.Select (x => x.Field).ToArray ();
 
 			if (sortedColumns.Length >= 1)
 			{
 				var sortedColumn = sortedColumns[0];
 
-				if (sortedColumn.Column < fields.Length)
-				{
-					primaryField = fields[sortedColumn.Column];
-				}
-
-				primaryType = sortedColumn.Type;
+				primaryField = sortedColumn.Field;
+				primaryType  = sortedColumn.Type;
 			}
 
 			if (sortedColumns.Length >= 2)
 			{
 				var sortedColumn = sortedColumns[1];
 
-				if (sortedColumn.Column < fields.Length)
-				{
-					secondaryField = fields[sortedColumn.Column];
-				}
-
-				secondaryType = sortedColumn.Type;
+				secondaryField = sortedColumn.Field;
+				secondaryType  = sortedColumn.Type;
 			}
 
 			return new SortingInstructions (primaryField, primaryType, secondaryField, secondaryType);

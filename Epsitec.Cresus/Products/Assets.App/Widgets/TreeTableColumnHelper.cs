@@ -75,6 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			System.Diagnostics.Debug.Assert (column != null);
 
+			column.Field             = description.Field;
 			column.HeaderDescription = description.Header;
 			column.FooterDescription = description.Footer;
 

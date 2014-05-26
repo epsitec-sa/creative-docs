@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
 
-			this.treeTableController.AddSortedColumn (0);
+			this.treeTableController.AddSortedColumn (this.dataFiller.Columns.First ().Field);
 		}
 
 

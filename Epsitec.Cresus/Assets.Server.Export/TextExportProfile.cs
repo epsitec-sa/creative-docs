@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.Inverted        = inverted;
 		}
 
-		public static TextExportProfile CsvProfile = new TextExportProfile (",", "\"", "\"", "\r\n", true, false);
+		public static TextExportProfile CsvProfile = new TextExportProfile (";", "\"", "\"", "\r\n", true, false);
 		public static TextExportProfile TxtProfile = new TextExportProfile ("\t", null, "\\", "\r\n", true, false);
 
 		public readonly string					ColumnSeparator;
