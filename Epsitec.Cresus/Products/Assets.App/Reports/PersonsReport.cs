@@ -21,15 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override string					TreeTableName
-		{
-			get
-			{
-				return "View.Report.Persons";
-			}
-		}
-
-
 		public override void Initialize()
 		{
 			this.visibleSelectedRow = -1;
@@ -38,10 +29,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.secondaryNodeGetter = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
 			this.primaryNodeGetter = new SorterNodeGetter (this.secondaryNodeGetter);
 
-			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Persons), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
-
 			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.primaryNodeGetter);
-			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "Report.Persons");
+			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.Persons");
+
+			this.sortingInstructions = this.dataFiller.DefaultSorting;
 
 			base.Initialize ();
 		}

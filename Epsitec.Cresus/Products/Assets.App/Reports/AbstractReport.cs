@@ -38,14 +38,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public virtual string					TreeTableName
-		{
-			get
-			{
-				return null;
-			}
-		}
-
 
 		public virtual void Initialize()
 		{

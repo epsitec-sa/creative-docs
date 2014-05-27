@@ -257,10 +257,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public void SetColumns(TreeTableColumnDescription[] descriptions, SortingInstructions defaultSorting, int defaultDockToLeftCount, string treeTableName)
 		{
-			//	Spécifie les colonnes à afficher, et réinitialise le mapping ainsi
-			//	que les largeurs courantes.
+			//	Spécifie les colonnes affichables, puis restaure les réglages enregistrés. S'ils
+			//	n'existent pas, on initialise des réglages par défaut (toutes les colonnes visibles,
+			//	sans mapping).
 			this.columnDescriptions = descriptions;
 			this.treeTableName = treeTableName;
+
+			this.columnsState = ColumnsState.Empty;
 
 			//	Si le TreeTable a un nom, on essaie de restaurer ses réglages de colonnes.
 			if (!string.IsNullOrEmpty (this.treeTableName))
@@ -292,6 +295,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 
 				this.columnsState = new ColumnsState (mapper, columnState, sorted.ToArray (), defaultDockToLeftCount);
+				//	Il n'est pas nécessaire de sauvegarder ces réglages (avec SaveSettings),
+				//	puisqu'ils peuvent être générés à nouveau exactement à l'identique.
 			}
 
 			this.CreateColumns ();

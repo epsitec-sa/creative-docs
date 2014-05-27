@@ -30,14 +30,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public override string					TreeTableName
-		{
-			get
-			{
-				return "View.Report.Persons";
-			}
-		}
-
 
 		public override void Initialize()
 		{
@@ -47,10 +39,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
 			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
-			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Assets), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
-
 			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.NodeGetter);
-			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller, "Report.Assets");
+			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.Assets");
+
+			this.sortingInstructions = this.dataFiller.DefaultSorting;
 
 			base.Initialize ();
 		}
