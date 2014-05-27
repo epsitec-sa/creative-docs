@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock   = DockStyle.Fill,
 			};
 
-			this.controller.CreateUI (frame, rowHeight: ErrorsPopup.lineHeight, headerHeight: 0, footerHeight: 0);
+			this.controller.CreateUI (frame, rowHeight: ErrorsPopup.lineHeight, headerHeight: 0, footerHeight: 0, name: "Popup.Errors");
 			this.controller.AllowsMovement = false;
 
 			TreeTableFiller<Error>.FillColumns (this.controller, this.dataFiller);

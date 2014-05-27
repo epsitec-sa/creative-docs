@@ -22,12 +22,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
+			this.treeTableName = "View.Categories";
+
 			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Category", "Nouvelle catégorie d'immobilisation");
-			this.DeleteCustomization   = new CommandCustomization (null, "Supprimer la catégorie d'immobilisation");
-			this.DeselectCustomization = new CommandCustomization (null, "Désélectionner la catégorie d'immobilisation");
-			this.CopyCustomization     = new CommandCustomization (null, "Copier la catégorie d'immobilisation");
-			this.PasteCustomization    = new CommandCustomization (null, "Coller la catégorie d'immobilisation");
-			this.ExportCustomization   = new CommandCustomization (null, "Exporter les catégories d'immobilisations");
+			this.DeleteCustomization   = new CommandCustomization (null,                     "Supprimer la catégorie d'immobilisation");
+			this.DeselectCustomization = new CommandCustomization (null,                     "Désélectionner la catégorie d'immobilisation");
+			this.CopyCustomization     = new CommandCustomization (null,                     "Copier la catégorie d'immobilisation");
+			this.PasteCustomization    = new CommandCustomization (null,                     "Coller la catégorie d'immobilisation");
+			this.ExportCustomization   = new CommandCustomization (null,                     "Exporter les catégories d'immobilisations");
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Categories);
 

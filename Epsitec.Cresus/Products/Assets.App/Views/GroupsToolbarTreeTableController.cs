@@ -23,12 +23,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
+			this.treeTableName = "View.Groups";
+
 			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Group", "Nouveau groupe");
-			this.DeleteCustomization   = new CommandCustomization (null, "Supprimer le groupe");
-			this.DeselectCustomization = new CommandCustomization (null, "Désélectionner le groupe");
-			this.CopyCustomization     = new CommandCustomization (null, "Copier le groupe");
-			this.PasteCustomization    = new CommandCustomization (null, "Coller le groupe");
-			this.ExportCustomization   = new CommandCustomization (null, "Exporter les groupe");
+			this.DeleteCustomization   = new CommandCustomization (null,                  "Supprimer le groupe");
+			this.DeselectCustomization = new CommandCustomization (null,                  "Désélectionner le groupe");
+			this.CopyCustomization     = new CommandCustomization (null,                  "Copier le groupe");
+			this.PasteCustomization    = new CommandCustomization (null,                  "Coller le groupe");
+			this.ExportCustomization   = new CommandCustomization (null,                  "Exporter les groupe");
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Groups);
 

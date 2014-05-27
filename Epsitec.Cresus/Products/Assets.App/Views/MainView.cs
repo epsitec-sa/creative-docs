@@ -9,6 +9,7 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.Engine;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -23,7 +24,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.currentViewStates = new List<AbstractViewState> ();
 			this.historyViewStates = new List<AbstractViewState> ();
 			this.lastViewStates    = new List<AbstractViewState> ();
-			this.historyPosition = -1;
+			this.columnsStates     = new List<ColumnsState> ();
+			this.historyPosition   = -1;
 
 			this.ignoreChanges = new SafeCounter ();
 		}
@@ -415,16 +417,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private const int maxLastViewState = 100;
 
 
-		private readonly DataAccessor			accessor;
-		private readonly List<AbstractViewState> currentViewStates;  // pour retrouver une vue à l'identique
-		private readonly List<AbstractViewState> historyViewStates;  // pour les commandes back/forward
-		private readonly List<AbstractViewState> lastViewStates;     // pour le menu des dernières vues
-		private readonly SafeCounter			ignoreChanges;
+		private readonly DataAccessor				accessor;
+		private readonly List<AbstractViewState>	currentViewStates;  // pour retrouver une vue à l'identique
+		private readonly List<AbstractViewState>	historyViewStates;  // pour les commandes back/forward
+		private readonly List<AbstractViewState>	lastViewStates;     // pour le menu des dernières vues
+		private readonly List<ColumnsState>			columnsStates;
+		private readonly SafeCounter				ignoreChanges;
 
-		private Widget							parent;
-		private MainToolbar						toolbar;
-		private FrameBox						viewBox;
-		private AbstractView					view;
-		private int								historyPosition;
+		private Widget								parent;
+		private MainToolbar							toolbar;
+		private FrameBox							viewBox;
+		private AbstractView						view;
+		private int									historyPosition;
 	}
 }

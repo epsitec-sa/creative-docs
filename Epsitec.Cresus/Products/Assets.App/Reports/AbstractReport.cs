@@ -30,7 +30,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public virtual AbstractParams DefaultParams
+		public virtual AbstractParams			DefaultParams
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		public virtual string					TreeTableName
 		{
 			get
 			{

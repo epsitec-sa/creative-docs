@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = true;
 
+			this.treeTableName = "View.UserFields";
+
 			switch (this.baseType)
 			{
 				case BaseType.Assets:

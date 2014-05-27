@@ -22,11 +22,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override AbstractParams DefaultParams
+		public override AbstractParams			DefaultParams
 		{
 			get
 			{
 				return new AssetsParams ();  // paramètres par défaut
+			}
+		}
+
+		public override string					TreeTableName
+		{
+			get
+			{
+				return "View.Report.Persons";
 			}
 		}
 

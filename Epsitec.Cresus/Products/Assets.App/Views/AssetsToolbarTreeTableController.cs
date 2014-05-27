@@ -24,12 +24,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
+			this.treeTableName = "View.Assets";
+
 			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Asset", "Nouvel objet d'immobilisation");
-			this.DeleteCustomization   = new CommandCustomization (null, "Supprimer l'objet d'immobilisation");
-			this.DeselectCustomization = new CommandCustomization (null, "Désélectionner l'objet d'immobilisation");
-			this.CopyCustomization     = new CommandCustomization ("TreeTable.Copy.Asset", "Copier l'objet d'immobilisation");
+			this.DeleteCustomization   = new CommandCustomization (null,                    "Supprimer l'objet d'immobilisation");
+			this.DeselectCustomization = new CommandCustomization (null,                    "Désélectionner l'objet d'immobilisation");
+			this.CopyCustomization     = new CommandCustomization ("TreeTable.Copy.Asset",  "Copier l'objet d'immobilisation");
 			this.PasteCustomization    = new CommandCustomization ("TreeTable.Paste.Asset", "Coller l'objet d'immobilisation");
-			this.ExportCustomization   = new CommandCustomization (null, "Exporter les objets d'immobilisations");
+			this.ExportCustomization   = new CommandCustomization (null,                    "Exporter les objets d'immobilisations");
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Assets);
 

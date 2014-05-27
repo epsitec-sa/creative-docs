@@ -21,6 +21,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public override string					TreeTableName
+		{
+			get
+			{
+				return "View.Report.Persons";
+			}
+		}
+
+
 		public override void Initialize()
 		{
 			this.visibleSelectedRow = -1;

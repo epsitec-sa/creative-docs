@@ -22,12 +22,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
+			this.treeTableName = "View.Persons";
+
 			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Person", "Nouveau contact");
-			this.DeleteCustomization   = new CommandCustomization (null, "Supprimer le contact");
-			this.DeselectCustomization = new CommandCustomization (null, "Désélectionner le contact");
-			this.CopyCustomization     = new CommandCustomization (null, "Copier le contact");
-			this.PasteCustomization    = new CommandCustomization (null, "Coller le contact");
-			this.ExportCustomization   = new CommandCustomization (null, "Exporter les contact");
+			this.DeleteCustomization   = new CommandCustomization (null,                   "Supprimer le contact");
+			this.DeselectCustomization = new CommandCustomization (null,                   "Désélectionner le contact");
+			this.CopyCustomization     = new CommandCustomization (null,                   "Copier le contact");
+			this.PasteCustomization    = new CommandCustomization (null,                   "Coller le contact");
+			this.ExportCustomization   = new CommandCustomization (null,                   "Exporter les contact");
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Persons);
 

@@ -12,9 +12,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 	/// </summary>
 	public struct ColumnsState
 	{
-		public ColumnsState(int[] mapper, ColumnState[] columns, SortedColumn[] sorted, int dockToLeftCount)
+		public ColumnsState(string name, int[] mapper, ColumnState[] columns, SortedColumn[] sorted, int dockToLeftCount)
 		{
 			System.Diagnostics.Debug.Assert (mapper.Length == columns.Length);
+
+			this.Name            = name;
 			this.Mapper          = mapper;
 			this.Columns         = columns;
 			this.Sorted          = sorted;
@@ -43,6 +45,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			return this.Mapper[mappedRank];
 		}
 
+		public readonly string					Name;
 		public readonly int[]					Mapper;
 		public readonly ColumnState[]			Columns;
 		public readonly SortedColumn[]			Sorted;

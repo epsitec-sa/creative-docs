@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
-			this.columnsState = new ColumnsState (this.columnsState.Mapper, this.columnsState.Columns, list.ToArray (), this.columnsState.DockToLeftCount);
+			this.columnsState = new ColumnsState (this.Name, this.columnsState.Mapper, this.columnsState.Columns, list.ToArray (), this.columnsState.DockToLeftCount);
 
 			this.UpdateSortedColumns ();
 			this.OnSortingChanged ();
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				sorted.Add (new SortedColumn (defaultSorting.SecondaryField, defaultSorting.SecondaryType));
 			}
 
-			this.columnsState = new ColumnsState (mapper, columnState, sorted.ToArray (), defaultDockToLeftCount);
+			this.columnsState = new ColumnsState (this.Name, mapper, columnState, sorted.ToArray (), defaultDockToLeftCount);
 
 			this.CreateColumns ();
 		}
@@ -367,7 +367,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
-			this.columnsState = new ColumnsState (mapper.ToArray (), this.columnsState.Columns, this.columnsState.Sorted, dockToLeftCount);
+			this.columnsState = new ColumnsState (this.Name, mapper.ToArray (), this.columnsState.Columns, this.columnsState.Sorted, dockToLeftCount);
 
 			this.CreateColumns ();
 			this.OnContentChanged (true);  // on demande de mettre à jour le contenu

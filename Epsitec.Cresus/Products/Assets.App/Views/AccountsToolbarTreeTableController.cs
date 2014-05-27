@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
+			this.treeTableName = "View.Accounts";
+
 			this.NewCustomization      = new CommandCustomization (null, "Nouveau compte");
 			this.DeleteCustomization   = new CommandCustomization (null, "Supprimer le compte");
 			this.DeselectCustomization = new CommandCustomization (null, "Désélectionner le compte");
