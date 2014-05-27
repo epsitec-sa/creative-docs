@@ -15,8 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 	public static class TreeTableFiller<T>
 		where T : struct
 	{
-		public static SortingInstructions GetSortingInstructions(NavigationTreeTableController controller,
-			AbstractTreeTableFiller<T> filler)
+		public static SortingInstructions GetSortingInstructions(NavigationTreeTableController controller)
 		{
 			//	Retourne les instructions de tri choisies dans le contrôleur TreeTable.
 			var primaryField   = ObjectField.Unknown;

@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Groups");
 
-			this.sortingInstructions = this.dataFiller.DefaultSorting;
+			this.sortingInstructions = TreeTableFiller<TreeNode>.GetSortingInstructions (this.treeTableController);
 		}
 
 

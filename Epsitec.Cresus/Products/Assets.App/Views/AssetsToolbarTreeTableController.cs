@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
-			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Asset", "Nouvel objet d'immobilisation");
+			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Asset",   "Nouvel objet d'immobilisation");
 			this.DeleteCustomization   = new CommandCustomization (null,                    "Supprimer l'objet d'immobilisation");
 			this.DeselectCustomization = new CommandCustomization (null,                    "Désélectionner l'objet d'immobilisation");
 			this.CopyCustomization     = new CommandCustomization ("TreeTable.Copy.Asset",  "Copier l'objet d'immobilisation");
@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Assets");
 
-			this.sortingInstructions = this.dataFiller.DefaultSorting;
+			this.sortingInstructions = TreeTableFiller<CumulNode>.GetSortingInstructions (this.treeTableController);
 		}
 
 

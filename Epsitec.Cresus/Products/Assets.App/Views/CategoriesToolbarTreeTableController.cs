@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodeGetter);
 			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Categories");
 
-			this.sortingInstructions = this.dataFiller.DefaultSorting;
+			this.sortingInstructions = TreeTableFiller<SortableNode>.GetSortingInstructions (this.treeTableController);
 		}
 
 

@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Met à jour les instructions de tri des getters en fonction des choix
 			//	effectués dans le TreeTable.
-			this.sortingInstructions = TreeTableFiller<T>.GetSortingInstructions (this.treeTableController, this.dataFiller);
+			this.sortingInstructions = TreeTableFiller<T>.GetSortingInstructions (this.treeTableController);
 			this.UpdateData ();
 		}
 
