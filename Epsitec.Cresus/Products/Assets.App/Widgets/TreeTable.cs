@@ -9,6 +9,7 @@ using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.App.Settings;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -175,18 +176,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public ColumnsState						ColumnsState
-		{
-			get
-			{
-				return this.columnsState;
-			}
-			set
-			{
-				this.columnsState = value;
-				this.CreateColumns ();
-			}
-		}
+		//-public ColumnsState						ColumnsState
+		//-{
+		//-	get
+		//-	{
+		//-		return this.columnsState;
+		//-	}
+		//-	set
+		//-	{
+		//-		this.columnsState = value;
+		//-		this.CreateColumns ();
+		//-	}
+		//-}
 
 		public void AddSortedColumn(ObjectField field)
 		{
@@ -221,7 +222,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
-			this.columnsState = new ColumnsState (this.Name, this.columnsState.Mapper, this.columnsState.Columns, list.ToArray (), this.columnsState.DockToLeftCount);
+			this.columnsState = new ColumnsState (this.columnsState.Mapper, this.columnsState.Columns, list.ToArray (), this.columnsState.DockToLeftCount);
+			this.SaveSettings ();
 
 			this.UpdateSortedColumns ();
 			this.OnSortingChanged ();
@@ -253,33 +255,44 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public void SetColumns(TreeTableColumnDescription[] descriptions, SortingInstructions defaultSorting, int defaultDockToLeftCount)
+		public void SetColumns(TreeTableColumnDescription[] descriptions, SortingInstructions defaultSorting, int defaultDockToLeftCount, string treeTableName)
 		{
 			//	Spécifie les colonnes à afficher, et réinitialise le mapping ainsi
 			//	que les largeurs courantes.
 			this.columnDescriptions = descriptions;
+			this.treeTableName = treeTableName;
 
-			var mapper = new int[this.columnDescriptions.Length];
-			var columnState = new ColumnState[this.columnDescriptions.Length];
-
-			for (int i=0; i<this.columnDescriptions.Length; i++)
+			//	Si le TreeTable a un nom, on essaie de restaurer ses réglages de colonnes.
+			if (!string.IsNullOrEmpty (this.treeTableName))
 			{
-				var columnDescription = this.columnDescriptions[i];
-				mapper[i] = i;
-				columnState[i] = new ColumnState (columnDescription.Field, columnDescription.Width, false);
+				this.RestoreSettings ();
 			}
 
-			var sorted = new List<SortedColumn> ();
-			if (defaultSorting.PrimaryField != ObjectField.Unknown)
+			//	Si le TreeTable n'a pas de réglages de colonnes spécifiques, on crée les réglages par défaut.
+			if (this.columnsState.IsEmpty)
 			{
-				sorted.Add (new SortedColumn (defaultSorting.PrimaryField, defaultSorting.PrimaryType));
-			}
-			if (defaultSorting.SecondaryField != ObjectField.Unknown)
-			{
-				sorted.Add (new SortedColumn (defaultSorting.SecondaryField, defaultSorting.SecondaryType));
-			}
+				var mapper = new int[this.columnDescriptions.Length];
+				var columnState = new ColumnState[this.columnDescriptions.Length];
 
-			this.columnsState = new ColumnsState (this.Name, mapper, columnState, sorted.ToArray (), defaultDockToLeftCount);
+				for (int i=0; i<this.columnDescriptions.Length; i++)
+				{
+					var columnDescription = this.columnDescriptions[i];
+					mapper[i] = i;
+					columnState[i] = new ColumnState (columnDescription.Field, columnDescription.Width, false);
+				}
+
+				var sorted = new List<SortedColumn> ();
+				if (defaultSorting.PrimaryField != ObjectField.Unknown)
+				{
+					sorted.Add (new SortedColumn (defaultSorting.PrimaryField, defaultSorting.PrimaryType));
+				}
+				if (defaultSorting.SecondaryField != ObjectField.Unknown)
+				{
+					sorted.Add (new SortedColumn (defaultSorting.SecondaryField, defaultSorting.SecondaryType));
+				}
+
+				this.columnsState = new ColumnsState (mapper, columnState, sorted.ToArray (), defaultDockToLeftCount);
+			}
 
 			this.CreateColumns ();
 		}
@@ -315,6 +328,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			this.columnsState.Columns[rank] = new ColumnState (field, newWidth, hide);
+			this.SaveSettings ();
 
 			this.GetColumn (rank).PreferredWidth = this.columnsState.Columns[rank].FinalWidth;
 		}
@@ -367,7 +381,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
-			this.columnsState = new ColumnsState (this.Name, mapper.ToArray (), this.columnsState.Columns, this.columnsState.Sorted, dockToLeftCount);
+			this.columnsState = new ColumnsState (mapper.ToArray (), this.columnsState.Columns, this.columnsState.Sorted, dockToLeftCount);
+			this.SaveSettings ();
 
 			this.CreateColumns ();
 			this.OnContentChanged (true);  // on demande de mettre à jour le contenu
@@ -706,6 +721,31 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private void SaveSettings()
+		{
+			if (string.IsNullOrEmpty (this.treeTableName))
+			{
+				return;
+			}
+
+			LocalSettings.SetColumnsState (this.treeTableName, this.columnsState);
+		}
+
+		private void RestoreSettings()
+		{
+			if (string.IsNullOrEmpty (this.treeTableName))
+			{
+				return;
+			}
+
+			var cs = LocalSettings.GetColumnsState (this.treeTableName);
+			if (!cs.IsEmpty)
+			{
+				this.columnsState = cs;
+			}
+		}
+
+
 		#region Events handler
 		private void OnRowClicked(int row, int column)
 		{
@@ -760,5 +800,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private int										rowHeight;
 		private TreeTableHoverMode						hoverMode;
 		private bool									allowsSorting;
+		private string									treeTableName;
 	}
 }

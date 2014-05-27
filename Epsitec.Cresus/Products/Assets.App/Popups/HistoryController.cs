@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var treeTable = new SimpleTreeTableController (this.accessor.Filler);
 
-				treeTable.CreateUI (parent, rowHeight: HistoryController.rowHeight, headerHeight: HistoryController.headerHeight, footerHeight: 0, name: "Popup.History");
+				treeTable.CreateUI (parent, rowHeight: HistoryController.rowHeight, headerHeight: HistoryController.headerHeight, footerHeight: 0, treeTableName: "Popup.History");
 				treeTable.AllowsMovement = false;
 
 				//	Il faut forcer le calcul du layout pour pouvoir calculer la

@@ -79,10 +79,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock   = DockStyle.Fill,
 			};
 
-			this.controller.CreateUI (frame, rowHeight: LastViewsPopup.rowHeight, headerHeight: LastViewsPopup.headerHeight, footerHeight: 0, name: "Popup.LastViews");
+			this.controller.CreateUI (frame, rowHeight: LastViewsPopup.rowHeight, headerHeight: LastViewsPopup.headerHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			TreeTableFiller<LastViewNode>.FillColumns (this.controller, this.dataFiller);
+			TreeTableFiller<LastViewNode>.FillColumns (this.controller, this.dataFiller, "Popup.LastViews");
 		}
 
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.Export;
 
 namespace Epsitec.Cresus.Assets.App.Settings
@@ -17,6 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 	{
 		static LocalSettings()
 		{
+			LocalSettings.columnsStates = new Dictionary<string, ColumnsState> ();
+
 			LocalSettings.Initialize (Timestamp.Now.Date);
 		}
 
@@ -41,6 +44,26 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.ExportHtmlProfile = HtmlExportProfile.Default;
 		}
 
+
+		public static ColumnsState GetColumnsState(string name)
+		{
+			ColumnsState columnsState;
+			if (LocalSettings.columnsStates.TryGetValue (name, out columnsState))
+			{
+				return columnsState;
+			}
+			else
+			{
+				return ColumnsState.Empty;
+			}
+		}
+
+		public static void SetColumnsState(string name, ColumnsState columnsState)
+		{
+			LocalSettings.columnsStates[name] = columnsState;
+		}
+
+
 		public static string Serialize()
 		{
 			return null;  // TODO:
@@ -64,5 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public static TextExportProfile			ExportTxtProfile;
 		public static TextExportProfile			ExportCsvProfile;
 		public static HtmlExportProfile			ExportHtmlProfile;
+
+		private static readonly Dictionary<string, ColumnsState> columnsStates;
 	}
 }

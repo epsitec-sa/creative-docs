@@ -22,8 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
-			this.treeTableName = "View.Events";
-
 			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Event", "Nouvel événement");
 			this.DeleteCustomization   = new CommandCustomization (null,                    "Supprimer l'événement");
 			this.DeselectCustomization = new CommandCustomization (null,                    "Désélectionner l'événement");
@@ -100,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.dataFiller = new EventsAssetsTreeTableFiller (this.accessor, this.nodeGetter);
 			//?this.dataFiller = new AmortizationsObjectsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
+			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Events");
 
 			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}

@@ -24,7 +24,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.currentViewStates = new List<AbstractViewState> ();
 			this.historyViewStates = new List<AbstractViewState> ();
 			this.lastViewStates    = new List<AbstractViewState> ();
-			this.columnsStates     = new List<ColumnsState> ();
 			this.historyPosition   = -1;
 
 			this.ignoreChanges = new SafeCounter ();
@@ -421,7 +420,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly List<AbstractViewState>	currentViewStates;  // pour retrouver une vue à l'identique
 		private readonly List<AbstractViewState>	historyViewStates;  // pour les commandes back/forward
 		private readonly List<AbstractViewState>	lastViewStates;     // pour le menu des dernières vues
-		private readonly List<ColumnsState>			columnsStates;
 		private readonly SafeCounter				ignoreChanges;
 
 		private Widget								parent;

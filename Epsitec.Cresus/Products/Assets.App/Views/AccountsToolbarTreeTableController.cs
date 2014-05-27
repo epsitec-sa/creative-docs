@@ -23,8 +23,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
-			this.treeTableName = "View.Accounts";
-
 			this.NewCustomization      = new CommandCustomization (null, "Nouveau compte");
 			this.DeleteCustomization   = new CommandCustomization (null, "Supprimer le compte");
 			this.DeselectCustomization = new CommandCustomization (null, "Désélectionner le compte");
@@ -110,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new AccountsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller);
+			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Accounts");
 
 			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}

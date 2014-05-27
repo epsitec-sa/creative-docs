@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock   = DockStyle.Fill,
 			};
 
-			this.treeTableController.CreateUI (frame, footerHeight: 0, name: this.treeTableName);
+			this.treeTableController.CreateUI (frame, footerHeight: 0);
 			this.CreateNodeFiller ();
 			this.UpdateController ();
 

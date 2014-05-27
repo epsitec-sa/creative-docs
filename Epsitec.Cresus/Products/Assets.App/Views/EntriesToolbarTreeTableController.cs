@@ -21,8 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
-			this.treeTableName = "View.Entries";
-
 			this.NewCustomization      = new CommandCustomization ("TreeTable.New", "Nouvelle écriture comptable");
 			this.DeleteCustomization   = new CommandCustomization (null,            "Supprimer l'écriture comptable");
 			this.DeselectCustomization = new CommandCustomization (null,            "Désélectionner l'écriture comptable");
@@ -106,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new EntriesTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<EntryNode>.FillColumns (this.treeTableController, this.dataFiller);
+			TreeTableFiller<EntryNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Entries");
 
 			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}

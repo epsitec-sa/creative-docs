@@ -22,8 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
-			this.treeTableName = "View.Persons";
-
 			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Person", "Nouveau contact");
 			this.DeleteCustomization   = new CommandCustomization (null,                   "Supprimer le contact");
 			this.DeselectCustomization = new CommandCustomization (null,                   "Désélectionner le contact");
@@ -90,7 +88,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
+			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Persons");
 
 			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}

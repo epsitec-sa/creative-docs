@@ -23,8 +23,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
-			this.treeTableName = "View.Groups";
-
 			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Group", "Nouveau groupe");
 			this.DeleteCustomization   = new CommandCustomization (null,                  "Supprimer le groupe");
 			this.DeselectCustomization = new CommandCustomization (null,                  "Désélectionner le groupe");
@@ -110,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new GroupsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller);
+			TreeTableFiller<TreeNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Groups");
 
 			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}

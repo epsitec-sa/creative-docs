@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Persons), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 
 			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.primaryNodeGetter);
-			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
+			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "Report.Persons");
 
 			base.Initialize ();
 		}

@@ -19,14 +19,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class NavigationTreeTableController
 	{
-		public void CreateUI(Widget parent, int rowHeight = 18, int headerHeight = 22, int footerHeight = 22, string name = null)
+		public void CreateUI(Widget parent, int rowHeight = 18, int headerHeight = 22, int footerHeight = 22)
 		{
 			parent.BackColor = ColorManager.TreeTableOutColor;
 
 			this.treeTable = new TreeTable (rowHeight, headerHeight, footerHeight)
 			{
 				Parent = parent,
-				Name   = name,
 				Dock   = DockStyle.Fill,
 			};
 
@@ -74,18 +73,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			};
 		}
 
-
-		public string							Name
-		{
-			get
-			{
-				return this.treeTable.Name;
-			}
-			set
-			{
-				this.treeTable.Name = value;
-			}
-		}
 
 		public int								RowsCount
 		{
@@ -168,9 +155,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public void SetColumns(TreeTableColumnDescription[] descriptions, SortingInstructions defaultSorting, int defaultDockToLeftCount)
+		public void SetColumns(TreeTableColumnDescription[] descriptions, SortingInstructions defaultSorting, int defaultDockToLeftCount, string treeTableName)
 		{
-			this.treeTable.SetColumns (descriptions, defaultSorting, defaultDockToLeftCount);
+			this.treeTable.SetColumns (descriptions, defaultSorting, defaultDockToLeftCount, treeTableName);
 		}
 
 		public void SetColumnCells(int rank, TreeTableColumnItem columnItem)

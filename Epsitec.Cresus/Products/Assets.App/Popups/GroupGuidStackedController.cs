@@ -71,10 +71,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var controllerFrame = this.CreateControllerFrame (parent);
 
 			this.controller = new NavigationTreeTableController ();
-			this.controller.CreateUI (controllerFrame, headerHeight: 0, footerHeight: 0, name: "Coontroller.Stacked.Groups");
+			this.controller.CreateUI (controllerFrame, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller);
+			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller, "Coontroller.Stacked.Groups");
 			this.UpdateController ();
 
 			//	Connexion des événements.

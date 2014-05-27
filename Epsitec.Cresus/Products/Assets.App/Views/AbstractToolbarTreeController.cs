@@ -576,7 +576,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected bool							hasFilter;
 		protected bool							hasTreeOperations;
 		protected bool							hasMoveOperations;
-		protected string						treeTableName;
 
 		protected FrameBox						controllerFrame;
 

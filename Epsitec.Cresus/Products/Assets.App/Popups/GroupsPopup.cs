@@ -91,10 +91,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock   = DockStyle.Fill,
 			};
 
-			this.controller.CreateUI (frame, headerHeight: 0, footerHeight: 0, name: "Popup.Groups");
+			this.controller.CreateUI (frame, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
-			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller);
+			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller, "Popup.Groups");
 			this.UpdateController ();
 		}
 

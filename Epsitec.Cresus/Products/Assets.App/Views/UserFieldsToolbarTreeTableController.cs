@@ -22,8 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = true;
 
-			this.treeTableName = "View.UserFields";
-
 			switch (this.baseType)
 			{
 				case BaseType.Assets:
@@ -99,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new UserFieldsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<GuidNode>.FillColumns (this.treeTableController, this.dataFiller);
+			TreeTableFiller<GuidNode>.FillColumns (this.treeTableController, this.dataFiller, "View.UserFields");
 
 			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}

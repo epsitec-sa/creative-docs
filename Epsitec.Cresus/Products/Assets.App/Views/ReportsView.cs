@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.treeTableController = new NavigationTreeTableController ();
 			this.treeTableController.CreateUI (parent, rowHeight: 18, headerHeight: 18, footerHeight: 0);
-			this.treeTableController.AllowsMovement = false;
+			//?this.treeTableController.AllowsMovement = false;
 		}
 
 
@@ -162,23 +162,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				case ReportType.MCH2Summary:
 					this.report = new MCH2SummaryReport (this.accessor, this);
-					this.report.Initialize ();
 					break;
 
 				case ReportType.AssetsList:
 					this.report = new AssetsReport (this.accessor, this);
-					this.report.Initialize ();
 					break;
 
 				case ReportType.PersonsList:
 					this.report = new PersonsReport (this.accessor, this);
-					this.report.Initialize ();
 					break;
 			}
 
 			if (this.report != null)
 			{
-				this.treeTableController.Name = this.report.TreeTableName;
+				this.report.Initialize ();
 				this.ReportParams = this.GetHistoryParams (this.selectedReportType);
 				this.report.ParamsChanged += this.HandleParamsChanged;
 			}

@@ -22,8 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
-			this.treeTableName = "View.Categories";
-
 			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Category", "Nouvelle catégorie d'immobilisation");
 			this.DeleteCustomization   = new CommandCustomization (null,                     "Supprimer la catégorie d'immobilisation");
 			this.DeselectCustomization = new CommandCustomization (null,                     "Désélectionner la catégorie d'immobilisation");
@@ -90,7 +88,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller);
+			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Categories");
 
 			this.sortingInstructions = this.dataFiller.DefaultSorting;
 		}

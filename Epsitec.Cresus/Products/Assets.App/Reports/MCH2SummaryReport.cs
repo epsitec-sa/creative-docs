@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Assets), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 
 			this.dataFiller = new MCH2SummaryTreeTableFiller (this.accessor, this.NodeGetter);
-			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller);
+			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller, "Report.MCH2Summary");
 
 			base.Initialize ();
 		}
