@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void ShowExportPopup(Widget target)
 		{
-			ExportHelpers<SortableNode>.StartExportProcess (target, this.accessor, this.dataFiller);
+			ExportHelpers<SortableNode>.StartExportProcess (target, this.accessor, this.dataFiller, this.treeTableController.ColumnsState);
 		}
 
 

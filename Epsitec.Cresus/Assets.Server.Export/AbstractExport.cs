@@ -11,11 +11,12 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	public abstract class AbstractExport<T> : System.IDisposable
 		where T : struct
 	{
-		public virtual void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler)
+		public virtual void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
 		{
 			this.instructions = instructions;
 			this.profile      = profile;
 			this.filler       = filler;
+			this.columnsState = columnsState;
 		}
 
 		public void Dispose()
@@ -26,10 +27,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		protected void FillArray(bool hasHeader)
 		{
 			//	Génère le contenu de this.array.
+			var columnsState = this.columnsState.Columns.ToArray ();
 			var columnDescriptions = this.filler.Columns;
-			int rowOffset = hasHeader ? 1 : 0;
 
-			this.columnCount = columnDescriptions.Count ();
+			int rowOffset = hasHeader ? 1 : 0;
+			this.columnCount = columnsState.Where (x => !x.Hide).Count ();
 			this.rowCount = rowOffset + this.filler.Count;
 
 			this.array = new string[columnCount, this.rowCount];
@@ -37,10 +39,16 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			//	Génère la première ligne d'en-tête.
 			if (hasHeader)
 			{
-				for (int column=0; column<columnCount; column++)
+				int c = 0;
+				for (int abs=0; abs<columnsState.Length; abs++)
 				{
-					var description = columnDescriptions[column];
-					this.array[column, 0] = description.Header;
+					var mapped = this.columnsState.AbsoluteToMapped (abs);
+					var columnState = columnsState[mapped];
+					if (!columnState.Hide)
+					{
+						var description = columnDescriptions.Where (x => x.Field == columnState.Field).FirstOrDefault ();
+						this.array[c++, 0] = description.Header;
+					}
 				}
 			}
 
@@ -49,12 +57,18 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				var contentItem = this.filler.GetContent (row, 1, -1);  // toutes les colonnes d'une ligne
 
-				for (int column=0; column<columnCount; column++)
+				int c = 0;
+				for (int abs=0; abs<columnsState.Length; abs++)
 				{
-					var columnItem = contentItem.Columns[column];
-					var cell = columnItem.Cells.First ();
-					var description = columnDescriptions[column];
-					this.array[column, rowOffset+row] = this.ConvertToString (cell, description);
+					var mapped = this.columnsState.AbsoluteToMapped (abs);
+					var columnState = columnsState[mapped];
+					if (!columnState.Hide)
+					{
+						var description = columnDescriptions.Where (x => x.Field == columnState.Field).FirstOrDefault ();
+						var columnItem = contentItem.Columns[mapped];
+						var cell = columnItem.Cells.First ();
+						this.array[c++, rowOffset+row] = this.ConvertToString (cell, description);
+					}
 				}
 			}
 		}
@@ -156,6 +170,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		protected ExportInstructions			instructions;
 		protected AbstractExportProfile			profile;
 		protected AbstractTreeTableFiller<T>	filler;
+		protected ColumnsState					columnsState;
 		protected string[,]						array;
 		protected int							rowCount;
 		protected int							columnCount;

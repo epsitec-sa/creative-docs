@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	public class TextExport<T> : AbstractExport<T>
 		where T : struct
 	{
-		public override void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler)
+		public override void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
 		{
-			base.Export (instructions, profile, filler);
+			base.Export (instructions, profile, filler, columnsState);
 
 			this.FillArray (this.Profile.HasHeader);
 			var data = this.GetData ();

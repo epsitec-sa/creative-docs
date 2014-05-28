@@ -168,26 +168,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public IEnumerable<SortedColumn>		SortedColumns
+		public ColumnsState						ColumnsState
 		{
 			get
 			{
-				return this.columnsState.Sorted;
+				return this.columnsState;
 			}
 		}
-
-		//-public ColumnsState						ColumnsState
-		//-{
-		//-	get
-		//-	{
-		//-		return this.columnsState;
-		//-	}
-		//-	set
-		//-	{
-		//-		this.columnsState = value;
-		//-		this.CreateColumns ();
-		//-	}
-		//-}
 
 		public void AddSortedColumn(ObjectField field)
 		{

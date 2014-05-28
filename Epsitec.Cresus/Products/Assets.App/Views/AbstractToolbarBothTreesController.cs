@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void OnExport()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Export);
-			ExportHelpers<T>.StartExportProcess (target, this.accessor, this.dataFiller);
+			ExportHelpers<T>.StartExportProcess (target, this.accessor, this.dataFiller, this.treeTableController.ColumnsState);
 		}
 
 

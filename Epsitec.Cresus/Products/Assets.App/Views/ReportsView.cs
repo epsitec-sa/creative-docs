@@ -105,7 +105,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.treeTableController = new NavigationTreeTableController ();
 			this.treeTableController.CreateUI (parent, footerHeight: 0);
-			//?this.treeTableController.AllowsMovement = false;
 		}
 
 

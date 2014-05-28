@@ -147,11 +147,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public IEnumerable<SortedColumn>		SortedColumns
+		public ColumnsState						ColumnsState
 		{
 			get
 			{
-				return this.treeTable.SortedColumns;
+				return this.treeTable.ColumnsState;
 			}
 		}
 

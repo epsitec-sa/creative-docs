@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			var secondaryField = ObjectField.Unknown;
 			var secondaryType  = SortedType.None;
 
-			var sortedColumns = controller.SortedColumns.ToArray ();
+			var sortedColumns = controller.ColumnsState.Sorted.ToArray ();
 
 			if (sortedColumns.Length >= 1)
 			{

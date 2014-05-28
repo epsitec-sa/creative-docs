@@ -15,11 +15,12 @@ namespace Epsitec.Cresus.Assets.App.Export
 	public class ExportEngine<T> : System.IDisposable
 		where T : struct
 	{
-		public ExportEngine(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller)
+		public ExportEngine(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller, ColumnsState columnsState)
 		{
-			this.target     = target;
-			this.accessor   = accessor;
-			this.dataFiller = dataFiller;
+			this.target       = target;
+			this.accessor     = accessor;
+			this.dataFiller   = dataFiller;
+			this.columnsState = columnsState;
 		}
 
 		public void Dispose()
@@ -177,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new TextExport<T> ())
 			{
-				engine.Export (instructions, profile, this.dataFiller);
+				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
 			}
 		}
 
@@ -186,7 +187,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new HtmlExport<T> ())
 			{
-				engine.Export (instructions, profile, this.dataFiller);
+				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
 			}
 		}
 
@@ -242,5 +243,6 @@ namespace Epsitec.Cresus.Assets.App.Export
 		private readonly Widget							target;
 		private readonly DataAccessor					accessor;
 		private readonly AbstractTreeTableFiller<T>		dataFiller;
+		private readonly ColumnsState					columnsState;
 	}
 }

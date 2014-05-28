@@ -12,10 +12,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 	public static class ExportHelpers<T>
 		where T : struct
 	{
-		public static void StartExportProcess(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller)
+		public static void StartExportProcess(Widget target, DataAccessor accessor, AbstractTreeTableFiller<T> dataFiller, ColumnsState columnsState)
 		{
 			//	Débute le processus d'exportation qui ouvrira plusieurs popups successifs.
-			using (var engine = new ExportEngine<T> (target, accessor, dataFiller))
+			using (var engine = new ExportEngine<T> (target, accessor, dataFiller, columnsState))
 			{
 				engine.StartExportProcess ();
 			}
