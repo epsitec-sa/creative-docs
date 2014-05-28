@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new MCH2SummaryTreeTableFiller (this.accessor, this.NodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
 
-			this.sortingInstructions = this.dataFiller.DefaultSorting;
+			this.sortingInstructions = TreeTableFiller<CumulNode>.GetSortingInstructions (this.treeTableController);
 
 			base.Initialize ();
 		}
@@ -86,7 +86,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.DataFiller.FinalTimestamp   = this.Params.FinalTimestamp;
 
 			var e = this.DataFiller.UsedExtractionInstructions.ToList ();
-			this.NodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
+			//?this.NodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
+			this.NodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions);
 
 			if (this.Params.Level.HasValue)
 			{
@@ -100,6 +101,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void ShowExportPopup(Widget target)
 		{
 			ExportHelpers<CumulNode>.StartExportProcess (target, this.accessor, this.dataFiller);
+		}
+
+
+		protected override void HandleSortingChanged(object sender)
+		{
+			this.sortingInstructions = TreeTableFiller<CumulNode>.GetSortingInstructions (this.treeTableController);
+			this.UpdateParams ();
 		}
 
 

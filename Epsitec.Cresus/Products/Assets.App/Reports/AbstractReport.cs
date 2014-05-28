@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.RowClicked        -= this.HandleRowClicked;
 			this.treeTableController.ContentChanged    -= this.HandleContentChanged;
 			this.treeTableController.TreeButtonClicked -= this.HandleTreeButtonClicked;
+			this.treeTableController.SortingChanged    -= this.HandleSortingChanged;
 		}
 
 
@@ -47,6 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.treeTableController.RowClicked        += this.HandleRowClicked;
 			this.treeTableController.ContentChanged    += this.HandleContentChanged;
 			this.treeTableController.TreeButtonClicked += this.HandleTreeButtonClicked;
+			this.treeTableController.SortingChanged    += this.HandleSortingChanged;
 
 			this.UpdateParams ();
 		}
@@ -80,6 +82,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected void HandleTreeButtonClicked(object sender, int row, NodeType type)
 		{
 			this.OnCompactOrExpand (this.treeTableController.TopVisibleRow + row);
+		}
+
+		protected virtual void HandleSortingChanged(object sender)
+		{
 		}
 
 

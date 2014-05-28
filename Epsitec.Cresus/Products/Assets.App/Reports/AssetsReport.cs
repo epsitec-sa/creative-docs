@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.NodeGetter);
 			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.Assets");
 
-			this.sortingInstructions = this.dataFiller.DefaultSorting;
+			this.sortingInstructions = TreeTableFiller<CumulNode>.GetSortingInstructions (this.treeTableController);
 
 			base.Initialize ();
 		}
@@ -96,6 +96,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void ShowExportPopup(Widget target)
 		{
 			ExportHelpers<CumulNode>.StartExportProcess (target, this.accessor, this.dataFiller);
+		}
+
+
+		protected override void HandleSortingChanged(object sender)
+		{
+			this.sortingInstructions = TreeTableFiller<CumulNode>.GetSortingInstructions (this.treeTableController);
+			this.UpdateParams ();
 		}
 
 

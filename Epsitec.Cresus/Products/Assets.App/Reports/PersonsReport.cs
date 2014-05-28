@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new PersonsTreeTableFiller (this.accessor, this.primaryNodeGetter);
 			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.Persons");
 
-			this.sortingInstructions = this.dataFiller.DefaultSorting;
+			this.sortingInstructions = TreeTableFiller<SortableNode>.GetSortingInstructions (this.treeTableController);
 
 			base.Initialize ();
 		}
@@ -49,6 +49,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void ShowExportPopup(Widget target)
 		{
 			ExportHelpers<SortableNode>.StartExportProcess (target, this.accessor, this.dataFiller);
+		}
+
+
+		protected override void HandleSortingChanged(object sender)
+		{
+			this.sortingInstructions = TreeTableFiller<SortableNode>.GetSortingInstructions (this.treeTableController);
+			this.UpdateParams ();
 		}
 
 
