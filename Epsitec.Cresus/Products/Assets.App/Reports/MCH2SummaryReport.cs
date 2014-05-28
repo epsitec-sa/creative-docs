@@ -86,8 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.DataFiller.FinalTimestamp   = this.Params.FinalTimestamp;
 
 			var e = this.DataFiller.UsedExtractionInstructions.ToList ();
-			//?this.NodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
-			this.NodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions);
+			this.NodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
 
 			if (this.Params.Level.HasValue)
 			{

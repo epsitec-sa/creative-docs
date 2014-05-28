@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				foreach (var column in this.OrderedColumns)
 				{
 					var field = ObjectField.MCH2Report + (int) column;
-					var type  = this.GetColumnType (column);
+					var type  = this.GetColumnType  (column);
 					var width = this.GetColumnWidth (column);
 					var name  = this.GetColumnName  (column);
 
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			switch (column)
 			{
 				case Column.Name:
-					return "Catégorie";
+					return "Catégorie";  // nom de l'objet d'immobilisation, selon MCH2
 
 				case Column.InitialState:
 					return "Etat initial";

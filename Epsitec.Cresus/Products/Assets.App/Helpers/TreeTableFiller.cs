@@ -52,8 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 		}
 
 
-		public static void FillContent(NavigationTreeTableController controller,
-			AbstractTreeTableFiller<T> filler, int selection, bool crop)
+		public static void FillContent(NavigationTreeTableController controller, AbstractTreeTableFiller<T> filler, int selection, bool crop)
 		{
 			//	Met à jour le contenu du contrôleur TreeTable. Si crop = true, on s'arrange
 			//	pour rendre visible la sélection.
@@ -86,8 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			TreeTableFiller<T>.FillContent (controller, filler, firstRow, count, selection);
 		}
 
-		private static void FillContent(NavigationTreeTableController controller,
-			AbstractTreeTableFiller<T> filler, int firstRow, int count, int selection)
+		private static void FillContent(NavigationTreeTableController controller, AbstractTreeTableFiller<T> filler, int firstRow, int count, int selection)
 		{
 			var contentItem = filler.GetContent (firstRow, count, selection);
 

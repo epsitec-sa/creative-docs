@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateReport(Widget parent)
 		{
 			this.treeTableController = new NavigationTreeTableController ();
-			this.treeTableController.CreateUI (parent, rowHeight: 18, headerHeight: 18, footerHeight: 0);
+			this.treeTableController.CreateUI (parent, footerHeight: 0);
 			//?this.treeTableController.AllowsMovement = false;
 		}
 
