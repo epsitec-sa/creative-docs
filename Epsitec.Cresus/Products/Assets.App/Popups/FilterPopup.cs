@@ -87,7 +87,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.AllowsMovement = false;
 
 			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller, "Popup.Filter");
-
 			this.InitialCompact ();
 		}
 
@@ -194,7 +193,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly NavigationTreeTableController	controller;
 		private readonly GroupTreeNodeGetter			nodeGetter;
 		private readonly SingleGroupsTreeTableFiller	dataFiller;
-		private readonly bool							hasFilter;
+		private  bool							hasFilter;
 
 		private int										visibleSelectedRow;
 	}

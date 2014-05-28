@@ -32,8 +32,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);
 
-			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == selectedGuid);
-
 			if (this.baseType == BaseType.Groups)
 			{
 				this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter);
@@ -48,6 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 
 			this.nodeGetter.SetParams (null, this.dataFiller.DefaultSorting);
+			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == selectedGuid);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -95,6 +94,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.AllowsMovement = false;
 
 			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller, "Popup.Groups");
+			//?this.nodeGetter.SetParams (null, TreeTableFiller<TreeNode>.GetSortingInstructions (this.controller));
+
 			this.UpdateController ();
 		}
 
