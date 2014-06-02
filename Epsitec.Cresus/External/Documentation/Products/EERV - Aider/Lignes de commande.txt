@@ -315,3 +315,9 @@ SVN Update > r23204
 -uploadsubscriptions -input:export-2014-06-05.txt -publicationdate:2014-06-05 -response:tamedia-2014-06-05.log
 
 
+Lancé le 02.06.2014
+-------------------
+
+SVN Update > r23242
+
+-echupdate -newechfile:S:\eerv\eerv-2014-05-29.xml -oldechfile:S:\eerv\eerv-2014-05-22.xml -output:s:\eerv\ech-diff-2014-05-29.md
