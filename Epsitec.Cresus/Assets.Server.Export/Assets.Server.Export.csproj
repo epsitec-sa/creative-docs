@@ -50,6 +50,8 @@
     </Compile>
     <Compile Include="AbstractExport.cs" />
     <Compile Include="ExportInstructions.cs" />
+    <Compile Include="JsonExport.cs" />
+    <Compile Include="YamlExport.cs" />
     <Compile Include="XmlExport.cs" />
     <Compile Include="AbstractExportProfile.cs" />
     <Compile Include="XmlExportProfile.cs" />

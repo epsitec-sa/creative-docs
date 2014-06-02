@@ -150,7 +150,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					return "CSV — Fichier texte pour tableur";
 
 				case ExportFormat.Xml:
-					return "XML — Fichier texte avec balises";
+					return "XML — Fichier texte \"Extensible Markup Language\"";
+
+				case ExportFormat.Yaml:
+					return "YAML — Fichier texte \"YAML Ain't Markup Language\"";
+
+				case ExportFormat.Json:
+					return "JSON — Fichier texte \"JavaScript Object Notation\"";
 
 				case ExportFormat.Pdf:
 					return "PDF — Document mis en pages";
@@ -174,6 +180,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				case ExportFormat.Xml:
 					return ".xml";
 
+				case ExportFormat.Yaml:
+					return ".yml";
+
+				case ExportFormat.Json:
+					return ".json";
+
 				case ExportFormat.Pdf:
 					return ".pdf";
 
@@ -190,6 +202,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				yield return ExportFormat.Txt;
 				yield return ExportFormat.Csv;
 				yield return ExportFormat.Xml;
+				yield return ExportFormat.Yaml;
+				yield return ExportFormat.Json;
 				yield return ExportFormat.Pdf;
 			}
 		}

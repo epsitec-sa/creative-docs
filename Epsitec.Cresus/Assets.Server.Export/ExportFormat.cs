@@ -12,6 +12,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		Txt,
 		Csv,
 		Xml,
+		Yaml,
+		Json,
 		Pdf,
 	}
 }

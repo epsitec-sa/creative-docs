@@ -70,6 +70,14 @@ namespace Epsitec.Cresus.Assets.App.Export
 					this.ShowXmlPopup (instructions);
 					break;
 
+				case ExportFormat.Yaml:
+					this.ShowYamlPopup (instructions);
+					break;
+
+				case ExportFormat.Json:
+					this.ShowJsonPopup (instructions);
+					break;
+
 				default:
 					var ext = ExportInstructionsPopup.GetFormatExt (instructions.Format).Replace (".", "").ToUpper ();
 					var message = string.Format ("L'extension \"{0}\" n'est pas supportée.", ext);
@@ -172,6 +180,38 @@ namespace Epsitec.Cresus.Assets.App.Export
 			};
 		}
 
+		private void ShowYamlPopup(ExportInstructions instructions)
+		{
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
+			try
+			{
+				this.ExportYaml (instructions);
+			}
+			catch (System.Exception ex)
+			{
+				this.ShowErrorPopup (ex.Message);
+				return;
+			}
+
+			this.ShowOpenPopup (instructions);
+		}
+
+		private void ShowJsonPopup(ExportInstructions instructions)
+		{
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
+			try
+			{
+				this.ExportJson (instructions);
+			}
+			catch (System.Exception ex)
+			{
+				this.ShowErrorPopup (ex.Message);
+				return;
+			}
+
+			this.ShowOpenPopup (instructions);
+		}
+
 
 		private void ExportText(ExportInstructions instructions, TextExportProfile profile)
 		{
@@ -188,6 +228,24 @@ namespace Epsitec.Cresus.Assets.App.Export
 			using (var engine = new XmlExport<T> ())
 			{
 				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
+			}
+		}
+
+		private void ExportYaml(ExportInstructions instructions)
+		{
+			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
+			using (var engine = new YamlExport<T> ())
+			{
+				engine.Export (instructions, null, this.dataFiller, this.columnsState);
+			}
+		}
+
+		private void ExportJson(ExportInstructions instructions)
+		{
+			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
+			using (var engine = new JsonExport<T> ())
+			{
+				engine.Export (instructions, null, this.dataFiller, this.columnsState);
 			}
 		}
 
