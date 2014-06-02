@@ -32,11 +32,15 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			var builder = new System.Text.StringBuilder ();
 
-			builder.Append ("/**\r\n");
-			builder.Append (" Export to JSON\r\n");
-			builder.Append (" @version 0.1\r\n");
-			builder.Append (" */\r\n");
-			builder.Append ("\r\n");
+			builder.Append ("/**");
+			builder.Append (this.Profile.EndOfLine);
+			builder.Append (" Export to JSON");
+			builder.Append (this.Profile.EndOfLine);
+			builder.Append (" @version 0.1");
+			builder.Append (this.Profile.EndOfLine);
+			builder.Append (" */");
+			builder.Append (this.Profile.EndOfLine);
+			builder.Append (this.Profile.EndOfLine);
 
 			builder.Append ("[");
 
@@ -84,7 +88,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string GetTag(string text)
 		{
-			text = text.ToCamelCase ();
+			if (this.Profile.CamelCase)
+			{
+				text = text.ToCamelCase ();
+			}
 
 			if (string.IsNullOrEmpty (text))
 			{
@@ -109,6 +116,14 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				text = text.Replace ("\\", "\\\\");  // \ -> \\
 				text = text.Replace ("\"", "\\\"");  // " -> \"
 				return string.Concat ("\"", text, "\"");
+			}
+		}
+
+		private JsonExportProfile Profile
+		{
+			get
+			{
+				return this.profile as JsonExportProfile;
 			}
 		}
 	}

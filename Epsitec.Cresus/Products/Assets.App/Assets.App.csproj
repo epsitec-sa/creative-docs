@@ -94,6 +94,8 @@
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\AssetCopyPopup.cs" />
     <Compile Include="Popups\EventPastePopup.cs" />
+    <Compile Include="Popups\ExportJsonPopup.cs" />
+    <Compile Include="Popups\ExportYamlPopup.cs" />
     <Compile Include="Popups\ExportXmlPopup.cs" />
     <Compile Include="Popups\ExportTextPopup.cs" />
     <Compile Include="Popups\ExportOpenPopup.cs" />

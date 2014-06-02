@@ -39,9 +39,11 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			var filename = System.IO.Path.Combine (item.FullPath, "export.txt");
 			LocalSettings.ExportInstructions = new ExportInstructions (ExportFormat.Txt, filename);
 
-			LocalSettings.ExportTxtProfile = TextExportProfile.TxtProfile;
-			LocalSettings.ExportCsvProfile = TextExportProfile.CsvProfile;
-			LocalSettings.ExportXmlProfile = XmlExportProfile.Default;
+			LocalSettings.ExportTxtProfile  = TextExportProfile.TxtProfile;
+			LocalSettings.ExportCsvProfile  = TextExportProfile.CsvProfile;
+			LocalSettings.ExportXmlProfile  = XmlExportProfile.Default;
+			LocalSettings.ExportYamlProfile = YamlExportProfile.Default;
+			LocalSettings.ExportJsonProfile = JsonExportProfile.Default;
 		}
 
 
@@ -87,6 +89,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public static TextExportProfile			ExportTxtProfile;
 		public static TextExportProfile			ExportCsvProfile;
 		public static XmlExportProfile			ExportXmlProfile;
+		public static YamlExportProfile			ExportYamlProfile;
+		public static JsonExportProfile			ExportJsonProfile;
 
 		private static readonly Dictionary<string, ColumnsState> columnsStates;
 	}

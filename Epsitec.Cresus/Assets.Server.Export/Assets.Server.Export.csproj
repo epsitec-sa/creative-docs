@@ -52,6 +52,8 @@
     <Compile Include="ExportInstructions.cs" />
     <Compile Include="Helpers\String.cs" />
     <Compile Include="JsonExport.cs" />
+    <Compile Include="YamlExportProfile.cs" />
+    <Compile Include="JsonExportProfile.cs" />
     <Compile Include="YamlExport.cs" />
     <Compile Include="XmlExport.cs" />
     <Compile Include="AbstractExportProfile.cs" />

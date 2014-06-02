@@ -183,33 +183,63 @@ namespace Epsitec.Cresus.Assets.App.Export
 		private void ShowYamlPopup(ExportInstructions instructions)
 		{
 			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
-			try
+			var popup = new ExportYamlPopup (this.accessor)
 			{
-				this.ExportYaml (instructions);
-			}
-			catch (System.Exception ex)
-			{
-				this.ShowErrorPopup (ex.Message);
-				return;
-			}
+				Profile = LocalSettings.ExportYamlProfile,
+			};
 
-			this.ShowOpenPopup (instructions);
+			popup.Create (this.target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					LocalSettings.ExportYamlProfile = popup.Profile;  // enregistre dans les réglages
+
+					try
+					{
+						this.ExportYaml (instructions, popup.Profile);
+					}
+					catch (System.Exception ex)
+					{
+						this.ShowErrorPopup (ex.Message);
+						return;
+					}
+
+					this.ShowOpenPopup (instructions);
+				}
+			};
 		}
 
 		private void ShowJsonPopup(ExportInstructions instructions)
 		{
 			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
-			try
+			var popup = new ExportJsonPopup (this.accessor)
 			{
-				this.ExportJson (instructions);
-			}
-			catch (System.Exception ex)
-			{
-				this.ShowErrorPopup (ex.Message);
-				return;
-			}
+				Profile = LocalSettings.ExportJsonProfile,
+			};
 
-			this.ShowOpenPopup (instructions);
+			popup.Create (this.target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					LocalSettings.ExportJsonProfile = popup.Profile;  // enregistre dans les réglages
+
+					try
+					{
+						this.ExportJson (instructions, popup.Profile);
+					}
+					catch (System.Exception ex)
+					{
+						this.ShowErrorPopup (ex.Message);
+						return;
+					}
+
+					this.ShowOpenPopup (instructions);
+				}
+			};
 		}
 
 
@@ -231,21 +261,21 @@ namespace Epsitec.Cresus.Assets.App.Export
 			}
 		}
 
-		private void ExportYaml(ExportInstructions instructions)
+		private void ExportYaml(ExportInstructions instructions, YamlExportProfile profile)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new YamlExport<T> ())
 			{
-				engine.Export (instructions, null, this.dataFiller, this.columnsState);
+				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
 			}
 		}
 
-		private void ExportJson(ExportInstructions instructions)
+		private void ExportJson(ExportInstructions instructions, JsonExportProfile profile)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new JsonExport<T> ())
 			{
-				engine.Export (instructions, null, this.dataFiller, this.columnsState);
+				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
 			}
 		}
 

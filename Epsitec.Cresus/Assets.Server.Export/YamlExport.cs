@@ -32,13 +32,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			var builder = new System.Text.StringBuilder ();
 
-			builder.Append ("%YAML 1.1\r\n");
-			builder.Append ("---\r\n");
-			builder.Append ("# Assets export\r\n");
+			builder.Append ("%YAML 1.1");
+			builder.Append (this.Profile.EndOfLine);
+			builder.Append ("---");
+			builder.Append (this.Profile.EndOfLine);
+			builder.Append ("# Assets export");
+			builder.Append (this.Profile.EndOfLine);
 
 			for (int row=0; row<this.rowCount; row++)
 			{
-				builder.Append ("-\r\n");
+				builder.Append ("-");
+				builder.Append (this.Profile.EndOfLine);
 
 				for (int column=0; column<this.columnCount; column++)
 				{
@@ -47,16 +51,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					var content = this.GetOutputString (array[column, row]);
 					if (!string.IsNullOrEmpty (content))
 					{
-						builder.Append ("  ");
+						builder.Append (this.Profile.Indent);
 						builder.Append (this.GetTag (description.Header));
 						builder.Append (": ");
 						builder.Append (content);
-						builder.Append ("\r\n");
+						builder.Append (this.Profile.EndOfLine);
 					}
 				}
 			}
 
-			builder.Append ("...\r\n");
+			builder.Append ("...");
+			builder.Append (this.Profile.EndOfLine);
 
 			return builder.ToString ();
 		}
@@ -70,7 +75,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string GetTag(string text)
 		{
-			text = text.ToCamelCase ();
+			if (this.Profile.CamelCase)
+			{
+				text = text.ToCamelCase ();
+			}
 
 			if (string.IsNullOrEmpty (text))
 			{
@@ -96,6 +104,14 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				text = text.Replace ("\\", "\\\\");  // \ -> \\
 				text = text.Replace ("\"", "\\\"");  // " -> \"
 				return string.Concat ("\"", text, "\"");
+			}
+		}
+
+		private YamlExportProfile Profile
+		{
+			get
+			{
+				return this.profile as YamlExportProfile;
 			}
 		}
 	}
