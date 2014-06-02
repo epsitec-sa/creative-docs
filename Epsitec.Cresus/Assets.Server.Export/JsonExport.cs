@@ -92,7 +92,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 			else
 			{
-				text = text.Replace ("\"", "&quot;");
+				text = text.Replace ("\\", "\\\\");  // \ -> \\
+				text = text.Replace ("\"", "\\\"");  // " -> \"
 				return string.Concat ("\"", text, "\"");
 			}
 		}
@@ -105,7 +106,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 			else
 			{
-				text = text.Replace ("\"", "&quot;");
+				text = text.Replace ("\\", "\\\\");  // \ -> \\
+				text = text.Replace ("\"", "\\\"");  // " -> \"
 				return string.Concat ("\"", text, "\"");
 			}
 		}

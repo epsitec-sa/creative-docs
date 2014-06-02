@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			builder.Append ("%YAML 1.1\r\n");
 			builder.Append ("---\r\n");
-			builder.Append ("# Assets\r\n");
+			builder.Append ("# Assets export\r\n");
 
 			for (int row=0; row<this.rowCount; row++)
 			{
@@ -78,7 +78,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 			else
 			{
-				text = text.Replace (":", "::");  // juste ???
+				text = text.Replace (" ", "_");
+				text = text.Replace (":", "_");
 				return text;
 			}
 		}
@@ -92,7 +93,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 			else
 			{
-				text = text.Replace ("\"", "&quot;");
+				text = text.Replace ("\\", "\\\\");  // \ -> \\
+				text = text.Replace ("\"", "\\\"");  // " -> \"
 				return string.Concat ("\"", text, "\"");
 			}
 		}

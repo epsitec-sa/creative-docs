@@ -122,8 +122,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 			else
 			{
+				text = text.Replace ("&", "&amp;");
 				text = text.Replace ("<", "&lt;");
-				text = text.Replace (">", "&gt;");
+				text = text.Replace ("<", "&lt;");
+				text = text.Replace ("'", "&apos;");
+				text = text.Replace ("\"", "&quot;");
 				return text;
 			}
 		}
