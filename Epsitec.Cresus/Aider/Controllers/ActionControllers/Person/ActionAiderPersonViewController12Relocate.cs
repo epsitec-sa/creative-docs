@@ -56,23 +56,33 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			.End ();
 		}
 
-		private void Execute(AiderHouseholdEntity newHousehold,bool isHead,bool stayInPlace)
+		private void Execute(AiderHouseholdEntity newHousehold, bool isHead, bool stayInPlace)
 		{
-			var currentHousehold = this.Entity.MainContact.Household;
 			if (!stayInPlace)
 			{
-				AiderContactEntity.Delete (this.BusinessContext, this.Entity.MainContact, true);
-				currentHousehold.RefreshCache ();
-				var currentSubscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, currentHousehold);
-				if (currentSubscription.IsNotNull ())
+				var mainContact = this.Entity.MainContact;
+
+				if (mainContact.IsNotNull ())
 				{
-					currentSubscription.RefreshCache ();
+					var currentHousehold = mainContact.Household;
+				
+					AiderContactEntity.Delete (this.BusinessContext, this.Entity.MainContact, true);
+					currentHousehold.RefreshCache ();
+					
+					var currentSubscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, currentHousehold);
+					
+					if (currentSubscription.IsNotNull ())
+					{
+						currentSubscription.RefreshCache ();
+					}
 				}
 			}
 	
 			AiderContactEntity.Create (this.BusinessContext, this.Entity, newHousehold, isHead);			
 			newHousehold.RefreshCache ();
+			
 			var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, newHousehold);
+			
 			if (subscription.IsNotNull ())
 			{
 				subscription.RefreshCache ();
