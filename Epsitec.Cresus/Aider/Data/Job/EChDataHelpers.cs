@@ -603,7 +603,12 @@ namespace Epsitec.Aider.Data.Job
 			return businessContext.DataContext.GetByExample<AiderTownEntity>(townExample).FirstOrDefault();
 		}
 
-
+		/// <summary>
+		/// Return true when same address is detected
+		/// </summary>
+		/// <param name="householdAddress"></param>
+		/// <param name="rchAddress"></param>
+		/// <returns></returns>
 		public static bool AddressComparator(AiderAddressEntity householdAddress, EChAddress rchAddress)
 		{
 			if (householdAddress.Street.IsNullOrWhiteSpace () || householdAddress.Town.IsNull ())

@@ -244,13 +244,20 @@ namespace Epsitec.Aider.Data.Job
 							var potentialAiderHousehold		= EChDataHelpers.GetAiderHousehold (businessContext, refAiderPerson);
 
 							if (potentialAiderHousehold.IsNotNull ())
-							{
-								this.ReassignHousehold (businessContext, changes, eChHousehold, refAiderPerson, potentialAiderHousehold);
+							{		
+								//if Ech address is different from Aider household address
+								if(!EChDataHelpers.AddressComparator (potentialAiderHousehold.Address,newRchAddress))
+								{
+									this.ReassignHousehold (businessContext, changes, eChHousehold, refAiderPerson, potentialAiderHousehold);
+								}
+								else
+								{
+									this.LogToConsole ("Info: Nothing to do, Aider household address is similar to the new Ech Address");
+								}
 							}
 							else
 							{
 								//	Found a person without any contact/household...
-
 								this.LogToConsole ("N'a pas encore été corrigé; pas de ménage pour {0}", refAiderPerson.GetDisplayName ());
 							}
 						}
