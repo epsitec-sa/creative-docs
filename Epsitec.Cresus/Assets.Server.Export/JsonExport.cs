@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Export.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
@@ -83,7 +84,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string GetTag(string text)
 		{
-			text = JsonExport<T>.ToCamelCase (text);
+			text = text.ToCamelCase ();
 
 			if (string.IsNullOrEmpty (text))
 			{
@@ -106,42 +107,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				text = text.Replace ("\"", "&quot;");
 				return string.Concat ("\"", text, "\"");
-			}
-		}
-
-		private static string ToCamelCase(string text)
-		{
-			//	Transforme "valeur comptable" en "ValeurComptable".
-			if (string.IsNullOrEmpty (text))
-			{
-				return null;
-			}
-			else
-			{
-				var builder = new System.Text.StringBuilder ();
-				bool upper = true;
-
-				foreach (char c in text)
-				{
-					if (c == ' ')
-					{
-						upper = true;
-					}
-					else
-					{
-						if (upper)
-						{
-							builder.Append (c.ToString ().ToUpper ());
-							upper = false;
-						}
-						else
-						{
-							builder.Append (c);
-						}
-					}
-				}
-
-				return builder.ToString ();
 			}
 		}
 	}

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Export.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
@@ -105,47 +106,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			if (this.Profile.CamelCase)
 			{
-				return XmlExport<T>.ToCamelCase (tag);
+				return tag.ToCamelCase ();
 			}
 			else
 			{
 				return tag;
-			}
-		}
-
-		private static string ToCamelCase(string text)
-		{
-			//	Transforme "valeur comptable" en "ValeurComptable".
-			if (string.IsNullOrEmpty (text))
-			{
-				return null;
-			}
-			else
-			{
-				var builder = new System.Text.StringBuilder ();
-				bool upper = true;
-
-				foreach (char c in text)
-				{
-					if (c == ' ')
-					{
-						upper = true;
-					}
-					else
-					{
-						if (upper)
-						{
-							builder.Append (c.ToString ().ToUpper ());
-							upper = false;
-						}
-						else
-						{
-							builder.Append (c);
-						}
-					}
-				}
-
-				return builder.ToString ();
 			}
 		}
 
