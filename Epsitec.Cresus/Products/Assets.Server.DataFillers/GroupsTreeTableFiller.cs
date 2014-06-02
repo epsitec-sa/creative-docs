@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var obj   = this.accessor.GetObject (BaseType.Groups, node.Guid);
 
 				var name        = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
-				var number      = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number);
+				var number      = GroupsLogic.GetFullNumber (this.accessor, node.Guid);
 				var description = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Description);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;

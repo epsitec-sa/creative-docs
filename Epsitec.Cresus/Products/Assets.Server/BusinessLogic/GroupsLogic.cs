@@ -87,10 +87,22 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return string.Join ("  ►  ", list);  // 25BA
 		}
 
+		public static string GetFullNumber(DataAccessor accessor, Guid guid)
+		{
+			//	Retourne le numéro complet d'un groupe, du genre:
+			//	"100.20-a.400"
+			return GroupsLogic.GetFullNumber (accessor, guid, ".");
+		}
+
 		public static string GetSortingValue(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le numéro d'un groupe en vue du tri, du genre:
-			//	"100.30/20/400"
+			//	"100>20-a>400"
+			return GroupsLogic.GetFullNumber (accessor, guid, ">");
+		}
+
+		private static string GetFullNumber(DataAccessor accessor, Guid guid, string separator)
+		{
 			var list = new List<string> ();
 
 			while (!guid.IsEmpty)
@@ -116,7 +128,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				list.RemoveAt (0);  // supprime le premier nom "Groupes"
 			}
 
-			return string.Join ("/", list);
+			return string.Join (separator, list);
 		}
 	}
 }
