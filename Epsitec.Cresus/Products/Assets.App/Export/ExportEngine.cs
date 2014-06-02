@@ -66,8 +66,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 					this.ShowCsvPopup (instructions);
 					break;
 
-				case ExportFormat.Html:
-					this.ShowHtmlPopup (instructions);
+				case ExportFormat.Xml:
+					this.ShowXmlPopup (instructions);
 					break;
 
 				default:
@@ -141,12 +141,12 @@ namespace Epsitec.Cresus.Assets.App.Export
 			};
 		}
 
-		private void ShowHtmlPopup(ExportInstructions instructions)
+		private void ShowXmlPopup(ExportInstructions instructions)
 		{
 			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
-			var popup = new ExportHtmlPopup (this.accessor)
+			var popup = new ExportXmlPopup (this.accessor)
 			{
-				Profile = LocalSettings.ExportHtmlProfile,
+				Profile = LocalSettings.ExportXmlProfile,
 			};
 
 			popup.Create (this.target, leftOrRight: true);
@@ -155,11 +155,11 @@ namespace Epsitec.Cresus.Assets.App.Export
 			{
 				if (name == "ok")
 				{
-					LocalSettings.ExportHtmlProfile = popup.Profile;  // enregistre dans les réglages
+					LocalSettings.ExportXmlProfile = popup.Profile;  // enregistre dans les réglages
 
 					try
 					{
-						this.ExportHtml (instructions, popup.Profile);
+						this.ExportXml (instructions, popup.Profile);
 					}
 					catch (System.Exception ex)
 					{
@@ -182,10 +182,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 			}
 		}
 
-		private void ExportHtml(ExportInstructions instructions, HtmlExportProfile profile)
+		private void ExportXml(ExportInstructions instructions, XmlExportProfile profile)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
-			using (var engine = new HtmlExport<T> ())
+			using (var engine = new XmlExport<T> ())
 			{
 				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
 			}

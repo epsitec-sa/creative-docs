@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			//	Retourne un texte éditable. S'il contient des caractères de contrôles (du genre tab "\t"),
 			//	ils sont convertis (du genre <TAB>). Les majuscules évitent de les confondre avec les tags
-			//	html du genre <br/>.
+			//	xml du genre <br/>.
 			if (!string.IsNullOrEmpty (text))
 			{
 				foreach (var pair in Converters.dict)

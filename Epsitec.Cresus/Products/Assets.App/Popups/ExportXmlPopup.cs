@@ -10,14 +10,14 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Popup permettant de choisir les paramètres pour l'exportation au format html.
+	/// Popup permettant de choisir les paramètres pour l'exportation au format xml.
 	/// </summary>
-	public class ExportHtmlPopup : StackedPopup
+	public class ExportXmlPopup : StackedPopup
 	{
-		public ExportHtmlPopup(DataAccessor accessor)
+		public ExportXmlPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Exportation des données au format html";
+			this.title = "Exportation des données au format xml";
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -37,11 +37,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Balises pour les enregistrements",
+				Label                 = "Balise globale",
 				Width                 = 200,
 			});
 
 			list.Add (new StackedControllerDescription  // 3
+			{
+				StackedControllerType = StackedControllerType.Text,
+				Label                 = "Balises pour les enregistrements",
+				Width                 = 200,
+			});
+
+			list.Add (new StackedControllerDescription  // 4
+			{
+				StackedControllerType = StackedControllerType.Text,
+				Label                 = "Indentation avec",
+				Width                 = 200,
+			});
+
+			list.Add (new StackedControllerDescription  // 5
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "Lignes terminées par",
@@ -52,11 +66,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public HtmlExportProfile				Profile
+		public XmlExportProfile				Profile
 		{
 			get
 			{
+				string	bodyTag;
 				string	recordTag;
+				string	indent;
 				string	endOfLine;
 				bool	camelCase;
 				bool	compact;
@@ -76,16 +92,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (2) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					recordTag = Converters.EditableToInternal (controller.Value);
+					bodyTag = Converters.EditableToInternal (controller.Value);
 				}
 
 				{
 					var controller = this.GetController (3) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
+					recordTag = Converters.EditableToInternal (controller.Value);
+				}
+
+				{
+					var controller = this.GetController (4) as TextStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					indent = Converters.EditableToInternal (controller.Value);
+				}
+
+				{
+					var controller = this.GetController (5) as TextStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
 					endOfLine = Converters.EditableToInternal (controller.Value);
 				}
 
-				return new HtmlExportProfile (recordTag, endOfLine, camelCase, compact);
+				return new XmlExportProfile (bodyTag, recordTag, indent, endOfLine, camelCase, compact);
 			}
 			set
 			{
@@ -104,11 +132,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (2) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.RecordTag);
+					controller.Value = Converters.InternalToEditable (value.BodyTag);
 				}
 
 				{
 					var controller = this.GetController (3) as TextStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = Converters.InternalToEditable (value.RecordTag);
+				}
+
+				{
+					var controller = this.GetController (4) as TextStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = Converters.InternalToEditable (value.Indent);
+				}
+
+				{
+					var controller = this.GetController (5) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = Converters.InternalToEditable (value.EndOfLine);
 				}

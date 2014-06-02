@@ -94,7 +94,7 @@
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\AssetCopyPopup.cs" />
     <Compile Include="Popups\EventPastePopup.cs" />
-    <Compile Include="Popups\ExportHtmlPopup.cs" />
+    <Compile Include="Popups\ExportXmlPopup.cs" />
     <Compile Include="Popups\ExportTextPopup.cs" />
     <Compile Include="Popups\ExportOpenPopup.cs" />
     <Compile Include="Popups\PersonGuidStackedController.cs" />

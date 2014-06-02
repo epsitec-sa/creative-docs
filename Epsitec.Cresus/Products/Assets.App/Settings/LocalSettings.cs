@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			LocalSettings.ExportTxtProfile = TextExportProfile.TxtProfile;
 			LocalSettings.ExportCsvProfile = TextExportProfile.CsvProfile;
-			LocalSettings.ExportHtmlProfile = HtmlExportProfile.Default;
+			LocalSettings.ExportXmlProfile = XmlExportProfile.Default;
 		}
 
 
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public static ExportInstructions		ExportInstructions;
 		public static TextExportProfile			ExportTxtProfile;
 		public static TextExportProfile			ExportCsvProfile;
-		public static HtmlExportProfile			ExportHtmlProfile;
+		public static XmlExportProfile			ExportXmlProfile;
 
 		private static readonly Dictionary<string, ColumnsState> columnsStates;
 	}

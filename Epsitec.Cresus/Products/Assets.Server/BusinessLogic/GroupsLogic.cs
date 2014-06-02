@@ -90,15 +90,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static string GetFullNumber(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le numéro complet d'un groupe, du genre:
-			//	"100.20-a.400"
+			//	"100.20/a.400"
 			return GroupsLogic.GetFullNumber (accessor, guid, ".");
 		}
 
 		public static string GetSortingValue(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le numéro d'un groupe en vue du tri, du genre:
-			//	"100>20-a>400"
-			return GroupsLogic.GetFullNumber (accessor, guid, ">");
+			//	"100→20/a→400"
+			//	On utilise comme séparateur un caractère qui ne sera à priori pas
+			//	utilisé lors de la saisie par l'utilisateur.
+			return GroupsLogic.GetFullNumber (accessor, guid, "→");
 		}
 
 		private static string GetFullNumber(DataAccessor accessor, Guid guid, string separator)

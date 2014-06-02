@@ -192,13 +192,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly INodeGetter<ParentNode> inputNodes;
-		private readonly DataAccessor					accessor;
-		private readonly BaseType						baseType;
-		private readonly List<LevelNode>				levelNodes;
+		private readonly INodeGetter<ParentNode>	inputNodes;
+		private readonly DataAccessor				accessor;
+		private readonly BaseType					baseType;
+		private readonly List<LevelNode>			levelNodes;
 
-		private Guid									rootGuid;
-		private SortingInstructions						sortingInstructions;
-		private bool									forceEmpty;
+		private Guid								rootGuid;
+		private SortingInstructions					sortingInstructions;
+		private bool								forceEmpty;
 	}
 }

@@ -7,21 +7,25 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.Server.Export
 {
 	/// <summary>
-	/// Paramètres pour HtmlExport.
+	/// Paramètres pour XmlExport.
 	/// </summary>
-	public class HtmlExportProfile : AbstractExportProfile
+	public class XmlExportProfile : AbstractExportProfile
 	{
-		public HtmlExportProfile(string recordTag, string endOfLine, bool camelCase, bool compact)
+		public XmlExportProfile(string bodyTag, string recordTag, string indent, string endOfLine, bool camelCase, bool compact)
 		{
+			this.BodyTag   = bodyTag;
 			this.RecordTag = recordTag;
+			this.Indent    = indent;
 			this.EndOfLine = endOfLine;
 			this.CamelCase = camelCase;
 			this.Compact   = compact;
 		}
 
-		public static HtmlExportProfile Default = new HtmlExportProfile ("record", "\r\n", true, false);
+		public static XmlExportProfile Default = new XmlExportProfile ("data", "record", "\t", "\r\n", true, false);
 
+		public readonly string					BodyTag;
 		public readonly string					RecordTag;
+		public readonly string					Indent;
 		public readonly string					EndOfLine;
 		public readonly bool					CamelCase;
 		public readonly bool					Compact;

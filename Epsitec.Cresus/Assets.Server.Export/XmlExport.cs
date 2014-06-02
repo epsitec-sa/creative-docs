@@ -8,9 +8,9 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 namespace Epsitec.Cresus.Assets.Server.Export
 {
 	/// <summary>
-	/// Exportation au format html.
+	/// Exportation au format xml.
 	/// </summary>
-	public class HtmlExport<T> : AbstractExport<T>
+	public class XmlExport<T> : AbstractExport<T>
 		where T : struct
 	{
 		public override void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
@@ -31,8 +31,15 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			var builder = new System.Text.StringBuilder ();
 
+			builder.Append (this.GetOpenTag (this.Profile.BodyTag));
+			builder.Append (this.Profile.EndOfLine);
+
 			for (int row=0; row<this.rowCount; row++)
 			{
+				if (!this.Profile.Compact)
+				{
+					builder.Append (this.Profile.Indent);
+				}
 				builder.Append (this.GetOpenTag (this.Profile.RecordTag));
 
 				if (!this.Profile.Compact)
@@ -49,9 +56,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					{
 						if (!this.Profile.Compact)
 						{
-							builder.Append ("\t");
+							builder.Append (this.Profile.Indent);
+							builder.Append (this.Profile.Indent);
 						}
-
 						builder.Append (this.GetOpenTag (description.Header));
 						builder.Append (content);
 						builder.Append (this.GetCloseTag (description.Header));
@@ -63,9 +70,16 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					}
 				}
 
+				if (!this.Profile.Compact)
+				{
+					builder.Append ("\t");
+				}
 				builder.Append (this.GetCloseTag (this.Profile.RecordTag));
 				builder.Append (this.Profile.EndOfLine);
 			}
+
+			builder.Append (this.GetCloseTag (this.Profile.BodyTag));
+			builder.Append (this.Profile.EndOfLine);
 
 			return builder.ToString ();
 		}
@@ -91,7 +105,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			if (this.Profile.CamelCase)
 			{
-				return HtmlExport<T>.ToCamelCase (tag);
+				return XmlExport<T>.ToCamelCase (tag);
 			}
 			else
 			{
@@ -149,11 +163,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 		}
 
-		private HtmlExportProfile Profile
+		private XmlExportProfile Profile
 		{
 			get
 			{
-				return this.profile as HtmlExportProfile;
+				return this.profile as XmlExportProfile;
 			}
 		}
 	}
