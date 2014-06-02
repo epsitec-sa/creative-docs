@@ -983,21 +983,40 @@ namespace Epsitec.Aider.Entities
 			return businessContext.DataContext.GetByExample (example);
 		}
 
-		public IList<AiderGroupParticipantEntity> FindParticipations(BusinessContext businessContext, AiderContactEntity contact)
+		public IList<AiderGroupParticipantEntity> FindParticipationsByGroup(BusinessContext businessContext, AiderContactEntity contact, AiderGroupEntity group)
+		{
+			var person = contact.Person;
+			var legal  = contact.LegalPerson;
+
+			if (person.IsNotNull ())
+			{
+				return this.FindParticipationsByGroup (businessContext, person, group);
+			}
+			if (legal.IsNotNull ())
+			{
+				return this.FindParticipationsByGroup (businessContext, legal, group);
+			}
+
+			throw new System.InvalidOperationException ("Cannot find participations from contact which does not map to person nor legal person");
+		}
+
+		public IList<AiderGroupParticipantEntity> FindParticipationsByGroup(BusinessContext businessContext, AiderLegalPersonEntity person, AiderGroupEntity group)
 		{
 			var example = new AiderGroupParticipantEntity ()
 			{
-				Contact = contact
+				LegalPerson = person,
+				Group = group
 			};
 
 			return businessContext.DataContext.GetByExample (example);
 		}
 
-		public IList<AiderGroupParticipantEntity> FindParticipationsByGroup(BusinessContext businessContext, AiderContactEntity contact, AiderGroupEntity group)
+
+		public IList<AiderGroupParticipantEntity> FindParticipationsByGroup(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity group)
 		{
 			var example = new AiderGroupParticipantEntity ()
 			{
-				Contact = contact,
+				Person = person,
 				Group = group
 			};
 
