@@ -98,9 +98,9 @@ namespace Epsitec.Aider.Entities
 			var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
 
 			participant.Mailing  = mailing;
-			participant.Contact  = household.Contacts[0];
+			participant.Contact  = household.Contacts.First ();
 			participant.Houshold = household;
-				
+
 			participant.ParticipantType = MailingParticipantType.Household;
 
 			return participant;

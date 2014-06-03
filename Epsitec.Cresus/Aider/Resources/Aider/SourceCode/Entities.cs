@@ -8648,6 +8648,28 @@ namespace Epsitec.Aider.Entities
 				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderHouseholdEntity> ("[LVOR03]");
 			}
 		}
+		///	<summary>
+		///	The <c>IsGroupedByHousehold</c> field.
+		///	designer:fld/LVOA03/LVOT33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOT33]")]
+		public bool IsGroupedByHousehold
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVOT33]");
+			}
+			set
+			{
+				bool oldValue = this.IsGroupedByHousehold;
+				if (oldValue != value || !this.IsFieldDefined("[LVOT33]"))
+				{
+					this.OnIsGroupedByHouseholdChanging (oldValue, value);
+					this.SetField<bool> ("[LVOT33]", oldValue, value);
+					this.OnIsGroupedByHouseholdChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -8665,6 +8687,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnIsReadyChanged(bool oldValue, bool newValue);
 		partial void OnSharingChanging(global::Epsitec.Aider.Enumerations.SharingType oldValue, global::Epsitec.Aider.Enumerations.SharingType newValue);
 		partial void OnSharingChanged(global::Epsitec.Aider.Enumerations.SharingType oldValue, global::Epsitec.Aider.Enumerations.SharingType newValue);
+		partial void OnIsGroupedByHouseholdChanging(bool oldValue, bool newValue);
+		partial void OnIsGroupedByHouseholdChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

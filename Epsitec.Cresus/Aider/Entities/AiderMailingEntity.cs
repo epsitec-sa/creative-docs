@@ -72,49 +72,91 @@ namespace Epsitec.Aider.Entities
 
 			AiderMailingParticipantEntity.DeleteByMailing (businessContext, this);
 
-			foreach(var contact in this.RecipientContacts)
+
+			if(this.IsGroupedByHousehold)
 			{
-				var participation = AiderMailingParticipantEntity.Create (businessContext, this, contact);
-				if(this.Exclusions.Contains(contact))
+				var contactsHouseholds	 = this.RecipientContacts.Select (c => c.Household);
+
+				var groupsHouseholds	 = this.RecipientGroups
+												.SelectMany (g => g.GetAllGroupAndSubGroupParticipations ().Distinct ()
+													.Select (p => p.Contact)
+													.Select (c => c.Household)
+												);
+
+				var extractionsHouseholds = this.RecipientGroupExtractions.SelectMany (t => t.GetAllParticipations (businessContext.DataContext)
+													.Select (p => p.Contact)
+													.Select (c => c.Household)
+												);
+
+				var households			 = this.RecipientHouseholds
+											.Union (extractionsHouseholds)
+											.Union (groupsHouseholds)
+											.Union (contactsHouseholds)
+											.Distinct ();
+
+				foreach(var household in households)
 				{
-					participation.IsExcluded = true;
+					if(household.Contacts.Any ())
+					{
+					
+						var participation = AiderMailingParticipantEntity.Create (businessContext, this, household);
+
+						if (this.Exclusions.Contains (household.Contacts[0]))
+						{
+							participation.IsExcluded = true;
+						}
+					}
 				}
 			}
-
-			foreach (var group in this.RecipientGroups)
+			else
 			{
-				var participations = AiderMailingParticipantEntity.Create (businessContext,this,group);
-
-				foreach(var participation in participations)
+				foreach (var contact in this.RecipientContacts)
 				{
-					if (this.Exclusions.Contains (participation.Contact))
+					var participation = AiderMailingParticipantEntity.Create (businessContext, this, contact);
+					if (this.Exclusions.Contains (contact))
 					{
 						participation.IsExcluded = true;
 					}
 				}
-			}
 
-			foreach (var group in this.RecipientGroupExtractions)
-			{
-				var participations = AiderMailingParticipantEntity.Create (businessContext, this, group);
-
-				foreach (var participation in participations)
+				foreach (var group in this.RecipientGroups)
 				{
-					if (this.Exclusions.Contains (participation.Contact))
+					var participations = AiderMailingParticipantEntity.Create (businessContext, this, group);
+
+					foreach (var participation in participations)
 					{
-						participation.IsExcluded = true;
+						if (this.Exclusions.Contains (participation.Contact))
+						{
+							participation.IsExcluded = true;
+						}
 					}
 				}
-			}
 
-			foreach (var household in this.RecipientHouseholds)
-			{
-				var participation = AiderMailingParticipantEntity.Create (businessContext, this, household);	
-
-				if (this.Exclusions.Contains (household.Contacts[0]))
+				foreach (var group in this.RecipientGroupExtractions)
 				{
-					participation.IsExcluded = true;
-				}				
+					var participations = AiderMailingParticipantEntity.Create (businessContext, this, group);
+
+					foreach (var participation in participations)
+					{
+						if (this.Exclusions.Contains (participation.Contact))
+						{
+							participation.IsExcluded = true;
+						}
+					}
+				}
+
+				foreach (var household in this.RecipientHouseholds)
+				{
+					if(household.Contacts.Any ())
+					{
+						var participation = AiderMailingParticipantEntity.Create (businessContext, this, household);
+
+						if (this.Exclusions.Contains (household.Contacts[0]))
+						{
+							participation.IsExcluded = true;
+						}
+					}			
+				}
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
