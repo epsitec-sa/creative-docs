@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -11,7 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	/// </summary>
 	public class TextExportProfile : AbstractExportProfile
 	{
-		public TextExportProfile(string columnSeparator, string columnBracket, string escape, string endOfLine, bool hasHeader, bool inverted)
+		public TextExportProfile(string columnSeparator, string columnBracket, string escape, string endOfLine, bool hasHeader, bool inverted, Encoding encoding)
 		{
 			this.ColumnSeparator = columnSeparator;
 			this.ColumnBracket   = columnBracket;
@@ -19,10 +20,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.EndOfLine       = endOfLine;
 			this.HasHeader       = hasHeader;
 			this.Inverted        = inverted;
+			this.Encoding        = encoding;
 		}
 
-		public static TextExportProfile CsvProfile = new TextExportProfile (";", "\"", "\"", "\r\n", true, false);
-		public static TextExportProfile TxtProfile = new TextExportProfile ("\t", null, "\\", "\r\n", true, false);
+		public static TextExportProfile CsvProfile = new TextExportProfile (";", "\"",  "\"", "\r\n", true, false, Encoding.UTF8);
+		public static TextExportProfile TxtProfile = new TextExportProfile ("\t", null, "\\", "\r\n", true, false, Encoding.UTF8);
 
 		public readonly string					ColumnSeparator;
 		public readonly string					ColumnBracket;
@@ -30,5 +32,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		public readonly string					EndOfLine;
 		public readonly bool					HasHeader;
 		public readonly bool					Inverted;
+		public readonly Encoding				Encoding;
 	}
 }

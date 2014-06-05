@@ -9,15 +9,15 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class TextStackedController : AbstractStackedController
+	public class ComboStackedController : AbstractStackedController
 	{
-		public TextStackedController(DataAccessor accessor)
+		public ComboStackedController(DataAccessor accessor)
 			: base (accessor)
 		{
 		}
 
 
-		public string							Value;
+		public int?								Value;
 
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateLabel (parent, labelWidth, description);
 			var controllerFrame = this.CreateControllerFrame (parent);
 
-			this.controller = new StringFieldController (this.accessor)
+			this.controller = new EnumFieldController (this.accessor)
 			{
 				Value      = this.Value,
 				LabelWidth = 0,
@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				TabIndex   = tabIndex,
 			};
 
+			this.InitializeEnums (description);
 			this.controller.CreateUI (controllerFrame);
 
 			this.controller.ValueEdited += delegate
@@ -48,8 +49,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int height = AbstractFieldController.lineHeight + 4;
+		private void InitializeEnums(StackedControllerDescription description)
+		{
+			var enums = new Dictionary<int, string> ();
+			int index = 0;
 
-		private StringFieldController			controller;
+			foreach (var label in description.Labels)
+			{
+				enums.Add (index++, label);
+			}
+
+			this.controller.Enums = enums;
+		}
+
+
+		private EnumFieldController				controller;
 	}
 }

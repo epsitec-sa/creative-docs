@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -11,7 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	/// </summary>
 	public class XmlExportProfile : AbstractExportProfile
 	{
-		public XmlExportProfile(string bodyTag, string recordTag, string indent, string endOfLine, bool camelCase, bool compact)
+		public XmlExportProfile(string bodyTag, string recordTag, string indent, string endOfLine, bool camelCase, bool compact, Encoding encoding)
 		{
 			this.BodyTag   = bodyTag;
 			this.RecordTag = recordTag;
@@ -19,9 +20,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.EndOfLine = endOfLine;
 			this.CamelCase = camelCase;
 			this.Compact   = compact;
+			this.Encoding  = encoding;
 		}
 
-		public static XmlExportProfile Default = new XmlExportProfile ("data", "record", "\t", "\r\n", true, false);
+		public static XmlExportProfile Default = new XmlExportProfile ("data", "record", "\t", "\r\n", true, false, Encoding.UTF8);
 
 		public readonly string					BodyTag;
 		public readonly string					RecordTag;
@@ -29,5 +31,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		public readonly string					EndOfLine;
 		public readonly bool					CamelCase;
 		public readonly bool					Compact;
+		public readonly Encoding				Encoding;
 	}
 }

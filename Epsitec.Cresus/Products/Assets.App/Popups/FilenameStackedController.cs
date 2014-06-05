@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Value      = this.Value,
 				LabelWidth = 0,
-				EditWidth  = description.Width - FilenameStackedController.browseWidth - 4,
+				EditWidth  = description.Width - FilenameStackedController.browseWidth,
 				TabIndex   = tabIndex,
 			};
 

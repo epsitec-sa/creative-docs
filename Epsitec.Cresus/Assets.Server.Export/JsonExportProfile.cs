@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -11,15 +12,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	/// </summary>
 	public class JsonExportProfile : AbstractExportProfile
 	{
-		public JsonExportProfile(string endOfLine, bool camelCase)
+		public JsonExportProfile(string endOfLine, bool camelCase, Encoding encoding)
 		{
 			this.EndOfLine = endOfLine;
 			this.CamelCase = camelCase;
+			this.Encoding  = encoding;
 		}
 
-		public static JsonExportProfile Default = new JsonExportProfile ("\r\n", true);
+		public static JsonExportProfile Default = new JsonExportProfile ("\r\n", true, Encoding.UTF8);
 
 		public readonly string					EndOfLine;
 		public readonly bool					CamelCase;		public readonly bool					Compact;
+		public readonly Encoding				Encoding;
 	}
 }

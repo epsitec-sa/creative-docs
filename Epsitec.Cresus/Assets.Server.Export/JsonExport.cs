@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private void WriteData(string data)
 		{
-			System.IO.File.WriteAllText (this.instructions.Filename, data, System.Text.Encoding.UTF8);
+			System.IO.File.WriteAllText (this.instructions.Filename, data, this.Profile.Encoding);
 		}
 
 

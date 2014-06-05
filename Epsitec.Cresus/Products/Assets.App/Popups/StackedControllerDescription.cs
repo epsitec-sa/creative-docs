@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public string							Label;
 		public StackedControllerType			StackedControllerType;
 		public DateRangeCategory				DateRangeCategory;
 		public int								Width;
@@ -42,27 +43,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public string							Label
-		{
-			//	Label unique (utilisé pour la plupart des contrôleurs).
-			get
-			{
-				if (this.labels.Any ())
-				{
-					return this.labels[0];
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				this.labels.Clear ();
-				this.labels.Add (value);
-			}
-		}
-
 		public List<string>						Labels
 		{
 			get
@@ -80,6 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					case StackedControllerType.Text:
 					case StackedControllerType.Filename:
+					case StackedControllerType.Combo:
 						return TextStackedController.height;
 
 					case StackedControllerType.Int:
@@ -116,6 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.GroupGuid:
 					case StackedControllerType.CategoryGuid:
 					case StackedControllerType.PersonGuid:
+					case StackedControllerType.Combo:
 						return this.Width + 4;
 
 					case StackedControllerType.Int:
@@ -125,8 +107,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						return DateStackedController.width;
 
 					case StackedControllerType.Radio:
-					case StackedControllerType.Bool:
 						return 22 + this.LabelsWidth;
+
+					case StackedControllerType.Bool:
+						return 22 + this.Label.GetTextWidth ();
 
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", this.StackedControllerType));
@@ -147,7 +131,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.GroupGuid:
 					case StackedControllerType.CategoryGuid:
 					case StackedControllerType.PersonGuid:
-						return this.LabelsWidth;
+					case StackedControllerType.Combo:
+						return this.Label.GetTextWidth ();
 
 					case StackedControllerType.Radio:
 					case StackedControllerType.Bool:
@@ -183,6 +168,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				case StackedControllerType.Radio:
 					return new RadioStackedController (accessor);
+
+				case StackedControllerType.Combo:
+					return new ComboStackedController (accessor);
 
 				case StackedControllerType.Bool:
 					return new BoolStackedController (accessor);

@@ -75,6 +75,7 @@
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
     <Compile Include="Export\Converters.cs" />
     <Compile Include="Export\ExportEngine.cs" />
+    <Compile Include="Export\EncodingHelpers.cs" />
     <Compile Include="Export\ExportHelpers.cs" />
     <Compile Include="Helpers\String.cs" />
     <Compile Include="Helpers\Misc.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Popups\RateCalculatorPopup.cs" />
     <Compile Include="Popups\FilenameStackedController.cs" />
     <Compile Include="Popups\ExportInstructionsPopup.cs" />
+    <Compile Include="Popups\ComboStackedController.cs" />
     <Compile Include="Reports\ReportsList.cs" />
     <Compile Include="Popups\ReportPopup.cs" />
     <Compile Include="Popups\MCH2SummaryReportPopup.cs" />

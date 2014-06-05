@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -30,7 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Inverser les lignes et les colonnes",
+				Label                 = "Transposer les lignes et les colonnes",
 				BottomMargin          = 10,
 			});
 
@@ -62,6 +63,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Width                 = 200,
 			});
 
+			list.Add (new StackedControllerDescription  // 6
+			{
+				StackedControllerType = StackedControllerType.Combo,
+				Label                 = "Encodage",
+				MultiLabels           = EncodingHelpers.Labels,
+				Width                 = 200,
+			});
+
 			this.SetDescriptions (list);
 		}
 
@@ -70,12 +79,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				string	columnSeparator;
-				string	columnBracket;
-				string	escape;
-				string	endOfLine;
-				bool	hasHeader;
-				bool	inverted;
+				string		columnSeparator;
+				string		columnBracket;
+				string		escape;
+				string		endOfLine;
+				bool		hasHeader;
+				bool		inverted;
+				Encoding	encoding;
 
 				{
 					var controller = this.GetController (0) as BoolStackedController;
@@ -113,7 +123,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					endOfLine = Converters.EditableToInternal (controller.Value);
 				}
 
-				return new TextExportProfile (columnSeparator, columnBracket, escape, endOfLine, hasHeader, inverted);
+				{
+					var controller = this.GetController (6) as ComboStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					encoding = EncodingHelpers.IntToEncoding (controller.Value);
+				}
+
+				return new TextExportProfile (columnSeparator, columnBracket, escape, endOfLine, hasHeader, inverted, encoding);
 			}
 			set
 			{
@@ -151,6 +167,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					var controller = this.GetController (5) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = Converters.InternalToEditable (value.EndOfLine);
+				}
+
+				{
+					var controller = this.GetController (6) as ComboStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = EncodingHelpers.EncodingToInt (value.Encoding);
 				}
 			}
 		}

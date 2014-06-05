@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -17,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public ExportXmlPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Exportation des données au format xml";
+			this.title = "Exportation des données au format XML";
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -62,6 +63,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Width                 = 200,
 			});
 
+			list.Add (new StackedControllerDescription  // 6
+			{
+				StackedControllerType = StackedControllerType.Combo,
+				Label                 = "Encodage",
+				MultiLabels           = EncodingHelpers.Labels,
+				Width                 = 200,
+			});
+
 			this.SetDescriptions (list);
 		}
 
@@ -70,12 +79,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				string	bodyTag;
-				string	recordTag;
-				string	indent;
-				string	endOfLine;
-				bool	camelCase;
-				bool	compact;
+				string		bodyTag;
+				string		recordTag;
+				string		indent;
+				string		endOfLine;
+				bool		camelCase;
+				bool		compact;
+				Encoding	encoding;
 
 				{
 					var controller = this.GetController (0) as BoolStackedController;
@@ -113,7 +123,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					endOfLine = Converters.EditableToInternal (controller.Value);
 				}
 
-				return new XmlExportProfile (bodyTag, recordTag, indent, endOfLine, camelCase, compact);
+				{
+					var controller = this.GetController (6) as ComboStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					encoding = EncodingHelpers.IntToEncoding (controller.Value);
+				}
+
+				return new XmlExportProfile (bodyTag, recordTag, indent, endOfLine, camelCase, compact, encoding);
 			}
 			set
 			{
@@ -151,6 +167,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					var controller = this.GetController (5) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = Converters.InternalToEditable (value.EndOfLine);
+				}
+
+				{
+					var controller = this.GetController (6) as ComboStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = EncodingHelpers.EncodingToInt (value.Encoding);
 				}
 			}
 		}

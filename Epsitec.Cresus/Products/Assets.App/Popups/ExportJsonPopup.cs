@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -17,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public ExportJsonPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Exportation des données au format json";
+			this.title = "Exportation des données au format JSON";
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -25,12 +26,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Bool,
 				Label                 = "Balises en mode CamelCase",
+				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "Lignes terminées par",
+				Width                 = 200,
+			});
+
+			list.Add (new StackedControllerDescription  // 2
+			{
+				StackedControllerType = StackedControllerType.Combo,
+				Label                 = "Encodage",
+				MultiLabels           = EncodingHelpers.Labels,
 				Width                 = 200,
 			});
 
@@ -42,8 +52,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				string	endOfLine;
-				bool	camelCase;
+				string		endOfLine;
+				bool		camelCase;
+				Encoding	encoding;
 
 				{
 					var controller = this.GetController (0) as BoolStackedController;
@@ -57,7 +68,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					endOfLine = Converters.EditableToInternal (controller.Value);
 				}
 
-				return new JsonExportProfile (endOfLine, camelCase);
+				{
+					var controller = this.GetController (2) as ComboStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					encoding = EncodingHelpers.IntToEncoding (controller.Value);
+				}
+
+				return new JsonExportProfile (endOfLine, camelCase, encoding);
 			}
 			set
 			{
@@ -71,6 +88,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					var controller = this.GetController (1) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = Converters.InternalToEditable (value.EndOfLine);
+				}
+
+				{
+					var controller = this.GetController (2) as ComboStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = EncodingHelpers.EncodingToInt (value.Encoding);
 				}
 			}
 		}

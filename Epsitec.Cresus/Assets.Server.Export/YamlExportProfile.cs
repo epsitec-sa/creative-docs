@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -11,17 +12,19 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	/// </summary>
 	public class YamlExportProfile : AbstractExportProfile
 	{
-		public YamlExportProfile(string indent, string endOfLine, bool camelCase)
+		public YamlExportProfile(string indent, string endOfLine, bool camelCase, Encoding encoding)
 		{
 			this.Indent    = indent;
 			this.EndOfLine = endOfLine;
 			this.CamelCase = camelCase;
+			this.Encoding  = encoding;
 		}
 
-		public static YamlExportProfile Default = new YamlExportProfile ("  ", "\r\n", true);
+		public static YamlExportProfile Default = new YamlExportProfile ("  ", "\r\n", true, Encoding.UTF8);
 
 		public readonly string					Indent;
 		public readonly string					EndOfLine;
 		public readonly bool					CamelCase;
+		public readonly Encoding				Encoding;
 	}
 }
