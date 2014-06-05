@@ -43,22 +43,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 				//	On ne ferme la balise que si le niveau précédent est égal ou plus grand que
 				//	le niveau actuel.
-				if (lastLevel >= level)
-				{
-					for (int l=lastLevel; l>=level; l--)
-					{
-						if (!this.Profile.Compact)
-						{
-							this.AppendIdent(builder, l+1);
-						}
-						builder.Append (this.GetCloseTag (this.Profile.RecordTag));
-						builder.Append (this.Profile.EndOfLine);
-					}
-				}
+				this.AppendCloseTag (builder, lastLevel, level);
 
 				if (!this.Profile.Compact)
 				{
-					this.AppendIdent (builder, level+1);
+					this.AppendIndent (builder, level+1);
 				}
 				builder.Append (this.GetOpenTag (this.Profile.RecordTag));
 
@@ -76,7 +65,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					{
 						if (!this.Profile.Compact)
 						{
-							this.AppendIdent (builder, level+2);
+							this.AppendIndent (builder, level+2);
 						}
 						builder.Append (this.GetOpenTag (description.Header));
 						builder.Append (content);
@@ -92,18 +81,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				lastLevel = level;
 			}
 
-			if (lastLevel >= 0)
-			{
-				for (int l=lastLevel; l>=0; l--)
-				{
-					if (!this.Profile.Compact)
-					{
-						this.AppendIdent (builder, l+1);
-					}
-					builder.Append (this.GetCloseTag (this.Profile.RecordTag));
-					builder.Append (this.Profile.EndOfLine);
-				}
-			}
+			//	Ferme jusqu'au niveau zéro.
+			this.AppendCloseTag (builder, lastLevel, 0);
 
 			builder.Append (this.GetCloseTag (this.Profile.BodyTag));
 			builder.Append (this.Profile.EndOfLine);
@@ -111,7 +90,24 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			return builder.ToString ();
 		}
 
-		private void AppendIdent(System.Text.StringBuilder builder, int level)
+		private void AppendCloseTag(System.Text.StringBuilder builder, int lastLevel, int level)
+		{
+			//	Ferme plusieurs niveaux, depuis le niveau précédent, jusqu'au niveau actuel.
+			if (lastLevel >= level)
+			{
+				for (int i=lastLevel; i>=level; i--)
+				{
+					if (!this.Profile.Compact)
+					{
+						this.AppendIndent (builder, i+1);
+					}
+					builder.Append (this.GetCloseTag (this.Profile.RecordTag));
+					builder.Append (this.Profile.EndOfLine);
+				}
+			}
+		}
+
+		private void AppendIndent(System.Text.StringBuilder builder, int level)
 		{
 			for (int i=0; i<level; i++)
 			{
