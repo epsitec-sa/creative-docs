@@ -436,9 +436,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandEnable (ToolbarCommand.Delete,   row != -1);
 			this.toolbar.SetCommandEnable (ToolbarCommand.Deselect, row != -1);
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,   row != -1);
+			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,   this.IsCopyEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
 			this.toolbar.SetCommandEnable (ToolbarCommand.Export, true);
+		}
+
+		protected virtual bool IsCopyEnable
+		{
+			get
+			{
+				return this.VisibleSelectedRow != -1;
+			}
 		}
 
 		private void UpdateSelCommand(ToolbarCommand command, int selectedCell, int? newSelection)

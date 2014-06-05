@@ -304,6 +304,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  expandEnable);
 		}
 
+		protected override bool IsCopyEnable
+		{
+			get
+			{
+				var obj = this.accessor.GetObject (this.baseType, this.SelectedGuid);
+				return obj != null;
+			}
+		}
+
 
 		private ObjectsNodeGetter NodeGetter
 		{
