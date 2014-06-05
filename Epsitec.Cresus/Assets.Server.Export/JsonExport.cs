@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				{
 					var description = columnDescriptions[column];
 
-					var content = this.GetOutputString (array[column, row]);
+					var content = this.GetOutputString (this.array[column, row]);
 					if (!string.IsNullOrEmpty (content))
 					{
 						if (column > 0)

@@ -34,7 +34,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.columnCount = columnsState.Where (x => !x.Hide).Count ();
 			this.rowCount = rowOffset + this.filler.Count;
 
-			this.array = new string[columnCount, this.rowCount];
+			this.array = new string[this.columnCount, this.rowCount];
+			this.levels = new int[this.rowCount];
 
 			//	Génère la première ligne d'en-tête.
 			if (hasHeader)
@@ -48,6 +49,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					{
 						var description = columnDescriptions.Where (x => x.Field == columnState.Field).FirstOrDefault ();
 						this.array[c++, 0] = description.Header;
+						this.levels[0] = 0;
 					}
 				}
 			}
@@ -58,6 +60,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				var contentItem = this.filler.GetContent (row, 1, -1);  // toutes les colonnes d'une ligne
 
 				int c = 0;
+				int level = 0;
+
 				for (int abs=0; abs<columnsState.Length; abs++)
 				{
 					var mapped = this.columnsState.AbsoluteToMapped (abs);
@@ -68,8 +72,15 @@ namespace Epsitec.Cresus.Assets.Server.Export
 						var columnItem = contentItem.Columns[mapped];
 						var cell = columnItem.Cells.First ();
 						this.array[c++, rowOffset+row] = this.ConvertToString (cell, description);
+
+						if (cell is TreeTableCellTree)
+						{
+							level = System.Math.Max (level, (cell as TreeTableCellTree).Level);
+						}
 					}
 				}
+
+				this.levels[rowOffset+row] = level;
 			}
 		}
 
@@ -172,6 +183,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		protected AbstractTreeTableFiller<T>	filler;
 		protected ColumnsState					columnsState;
 		protected string[,]						array;
+		protected int[]							levels;
 		protected int							rowCount;
 		protected int							columnCount;
 	}

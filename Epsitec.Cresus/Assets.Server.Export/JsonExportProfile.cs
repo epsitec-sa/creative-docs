@@ -8,7 +8,7 @@ using System.Text;
 namespace Epsitec.Cresus.Assets.Server.Export
 {
 	/// <summary>
-	/// Paramètres pour XmlExport.
+	/// Paramètres pour JsonExport.
 	/// </summary>
 	public class JsonExportProfile : AbstractExportProfile
 	{

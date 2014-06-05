@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				{
 					for (int row=0; row<this.rowCount; row++)
 					{
-						builder.Append (this.GetOutputString (array[column, row]));
+						builder.Append (this.GetOutputString (this.array[column, row]));
 
 						if (row < rowCount-1)
 						{
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				{
 					for (int column=0; column<this.columnCount; column++)
 					{
-						builder.Append (this.GetOutputString (array[column, row]));
+						builder.Append (this.GetOutputString (this.array[column, row]));
 
 						if (column < this.columnCount-1)
 						{

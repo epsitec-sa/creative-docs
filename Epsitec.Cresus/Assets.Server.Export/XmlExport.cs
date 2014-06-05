@@ -35,11 +35,30 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			builder.Append (this.GetOpenTag (this.Profile.BodyTag));
 			builder.Append (this.Profile.EndOfLine);
 
+			int lastLevel = -1;
+
 			for (int row=0; row<this.rowCount; row++)
 			{
+				int level = this.levels[row];
+
+				//	On ne ferme la balise que si le niveau précédent est égal ou plus grand que
+				//	le niveau actuel.
+				if (lastLevel >= level)
+				{
+					for (int l=lastLevel; l>=level; l--)
+					{
+						if (!this.Profile.Compact)
+						{
+							this.AppendIdent(builder, l+1);
+						}
+						builder.Append (this.GetCloseTag (this.Profile.RecordTag));
+						builder.Append (this.Profile.EndOfLine);
+					}
+				}
+
 				if (!this.Profile.Compact)
 				{
-					builder.Append (this.Profile.Indent);
+					this.AppendIdent (builder, level+1);
 				}
 				builder.Append (this.GetOpenTag (this.Profile.RecordTag));
 
@@ -52,13 +71,12 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				{
 					var description = columnDescriptions[column];
 
-					var content = this.GetOutputString (array[column, row]);
+					var content = this.GetOutputString (this.array[column, row]);
 					if (!string.IsNullOrEmpty (content))
 					{
 						if (!this.Profile.Compact)
 						{
-							builder.Append (this.Profile.Indent);
-							builder.Append (this.Profile.Indent);
+							this.AppendIdent (builder, level+2);
 						}
 						builder.Append (this.GetOpenTag (description.Header));
 						builder.Append (content);
@@ -71,18 +89,34 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					}
 				}
 
-				if (!this.Profile.Compact)
+				lastLevel = level;
+			}
+
+			if (lastLevel >= 0)
+			{
+				for (int l=lastLevel; l>=0; l--)
 				{
-					builder.Append ("\t");
+					if (!this.Profile.Compact)
+					{
+						this.AppendIdent (builder, l+1);
+					}
+					builder.Append (this.GetCloseTag (this.Profile.RecordTag));
+					builder.Append (this.Profile.EndOfLine);
 				}
-				builder.Append (this.GetCloseTag (this.Profile.RecordTag));
-				builder.Append (this.Profile.EndOfLine);
 			}
 
 			builder.Append (this.GetCloseTag (this.Profile.BodyTag));
 			builder.Append (this.Profile.EndOfLine);
 
 			return builder.ToString ();
+		}
+
+		private void AppendIdent(System.Text.StringBuilder builder, int level)
+		{
+			for (int i=0; i<level; i++)
+			{
+				builder.Append (this.Profile.Indent);
+			}
 		}
 
 
