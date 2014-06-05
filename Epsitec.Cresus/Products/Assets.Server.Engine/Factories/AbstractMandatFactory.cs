@@ -30,9 +30,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected virtual void AddAssetsSettings()
 		{
-			this.fieldAssetName   = this.AddSettings (BaseType.Assets, "Nom",         FieldType.String, 180, 380, 1,    1,  0);
-			this.fieldAssetNumber = this.AddSettings (BaseType.Assets, "Numéro",      FieldType.String,  90,  90, 1, null,  0);
-			this.fieldAssetDesc   = this.AddSettings (BaseType.Assets, "Description", FieldType.String, 120, 380, 5, null, 10);
+			this.fieldAssetName   = this.AddSettings (BaseType.Assets, "Nom",    FieldType.String, 200, 380, 1,    1,  0);
+			this.fieldAssetNumber = this.AddSettings (BaseType.Assets, "Numéro", FieldType.String,  70,  90, 1, null,  0);
 		}
 
 		protected virtual void AddPersonsSettings()

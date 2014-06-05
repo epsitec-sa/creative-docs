@@ -103,6 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private string Labels
 		{
+			//	Retourne le texte pour les boutons radio.
 			get
 			{
 				var date = this.InputDate;
@@ -123,6 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private string InputDate
 		{
+			//	Retourne la date d'entrée de l'objet.
 			get
 			{
 				if (this.obj.EventsCount > 0)

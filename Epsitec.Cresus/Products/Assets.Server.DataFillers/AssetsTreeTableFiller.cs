@@ -102,10 +102,22 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				{
 					AbstractTreeTableCell cell;
 
-					if (columnRank == 0)
+					if (columnRank == 0)  // nom ?
 					{
-						var field = (baseType == BaseType.Groups) ? ObjectField.Name : userField.Field;
-						var text = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, field, inputValue: true);
+						string text;
+
+						if (baseType == BaseType.Groups)
+						{
+							var name = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+							var number = GroupsLogic.GetFullNumber (this.accessor, node.Guid);
+							text = string.Format ("{0} ({1})", name, number);
+							//?text = string.Format ("{0} — {1}", name, number);
+						}
+						else
+						{
+							text = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, userField.Field, inputValue: true);
+						}
+
 						cell = new TreeTableCellTree (level, type, text, cellState1);
 					}
 					else
