@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -23,10 +24,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var list = new List<StackedControllerDescription> ();
 
+
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = "Etat lors de l'entrée<br/>Etat en date du :",
+				MultiLabels           = this.Labels,
 			});
 
 			list.Add (new StackedControllerDescription  // 1
@@ -95,6 +97,42 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			get
 			{
 				return this.InputState || this.Date.HasValue;
+			}
+		}
+
+
+		private string Labels
+		{
+			get
+			{
+				var date = this.InputDate;
+				string label;
+
+				if (string.IsNullOrEmpty (date))
+				{
+					label = "Etat lors de l'entrée";
+				}
+				else
+				{
+					label = string.Format ("Etat lors de l'entrée au {0}", date);
+				}
+
+				return string.Join ("<br/>", label, "Etat en date du :");
+			}
+		}
+
+		private string InputDate
+		{
+			get
+			{
+				if (this.obj.EventsCount > 0)
+				{
+					var e = this.obj.GetEvent (0);
+					var date = e.Timestamp.Date;
+					return TypeConverters.DateToString (date);
+				}
+
+				return null;
 			}
 		}
 
