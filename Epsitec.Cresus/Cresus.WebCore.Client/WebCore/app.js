@@ -596,7 +596,7 @@ $.getScript('signalr/hubs', function() {
            
           if (changeStatus) {
               sb.setStatus({
-                  text: 'Travaux en cours',
+                  text: 'Travail en cours',
                   iconCls: 'x-status-busy',
                   clear: {
                       wait: 8000,
@@ -615,9 +615,9 @@ $.getScript('signalr/hubs', function() {
       createStatusBar : function () {
         return Ext.create('Ext.ux.StatusBar', {
             id: 'job-statusbar',
-            defaultText: 'Aucun travaux',
+            defaultText: 'Aucun travail',
             //defaultIconCls: 'default-icon',
-            text: 'Aucun travaux',
+            text: 'Aucun travail',
             iconCls: 'x-status-valid',
             items: []
         });
