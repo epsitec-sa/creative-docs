@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	/// </summary>
 	public class PdfExportProfile : AbstractExportProfile
 	{
-		public PdfExportProfile(decimal pageWidth, decimal pageHeight, decimal leftMargin, decimal rightMargin, decimal topMargin, decimal bottomMargin, decimal fontSize, decimal cellMargins, bool evenOddGrey)
+		public PdfExportProfile(decimal pageWidth, decimal pageHeight, decimal leftMargin, decimal rightMargin, decimal topMargin, decimal bottomMargin, decimal fontSize, decimal cellMargins, bool evenOddGrey, string indent, string watermark)
 		{
 			this.PageWidth    = pageWidth;
 			this.PageHeight   = pageHeight;
@@ -23,9 +23,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.FontSize     = fontSize;
 			this.CellMargins  = cellMargins;
 			this.EvenOddGrey  = evenOddGrey;
+			this.Indent       = indent;
+			this.Watermark    = watermark;
 		}
 
-		public static PdfExportProfile Default = new PdfExportProfile (297.0m, 210.0m, 10.0m, 10.0m, 10.0m, 10.0m, 10.0m, 1.0m, false);
+		public static PdfExportProfile Default = new PdfExportProfile (297.0m, 210.0m, 10.0m, 10.0m, 10.0m, 10.0m, 10.0m, 1.0m, false, ".   ", "SPECIMEN");
 
 		public readonly decimal					PageWidth;
 		public readonly decimal					PageHeight;
@@ -36,5 +38,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		public readonly decimal					FontSize;
 		public readonly decimal					CellMargins;
 		public readonly bool					EvenOddGrey;
+		public readonly string					Indent;
+		public readonly string					Watermark;
 	}
 }

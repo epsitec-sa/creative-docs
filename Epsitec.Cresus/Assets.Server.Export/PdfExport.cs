@@ -36,12 +36,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				PageMargins          = this.PageMargins,
 				CellMargins          = this.CellMargins,
-				LabelBackgroundColor = Color.FromBrightness (0.95),
+				LabelBackgroundColor = Color.FromBrightness (0.9),
 				EvenBackgroundColor  = this.EvenBackgroundColor, 
 				OddBackgroundColor   = this.OddBackgroundColor,
 			};
 
 			var array = new Array (info, setup);
+
+			if (!string.IsNullOrEmpty (this.Profile.Watermark))
+			{
+				array.AddWatermark (this.Profile.Watermark);
+			}
 
 			var columns = new List<ColumnDefinition> ();
 			columns.AddRange (this.ColumnDefinitions);
@@ -52,8 +57,18 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private CellContent GetCellContent(int row, int column)
 		{
-			var content = this.GetSizedText (this.array[column, row]);
-			return new CellContent (content);
+			var content = this.array[column, row];
+
+			if (column == 0)
+			{
+				int level = this.levels[row];
+				if (level > 0)
+				{
+					content = this.GetLeveledText (content, level);
+				}
+			}
+
+			return new CellContent (this.GetSizedText (content));
 		}
 
 		private IEnumerable<ColumnDefinition> ColumnDefinitions
@@ -145,7 +160,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				}
 				else
 				{
-					return Color.FromBrightness (1.0);
+					return Color.Empty;
 				}
 			}
 		}
@@ -156,11 +171,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				if (this.Profile.EvenOddGrey)
 				{
-					return Color.FromBrightness (1.0);
+					return Color.Empty;
 				}
 				else
 				{
-					return Color.FromBrightness (1.0);
+					return Color.Empty;
 				}
 			}
 		}
@@ -176,6 +191,20 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 		}
 
+
+		private string GetLeveledText(string text, int level)
+		{
+			var builder = new System.Text.StringBuilder ();
+
+			for (int i=0; i<level; i++)
+			{
+				builder.Append (this.Profile.Indent);
+			}
+
+			builder.Append (text);
+
+			return builder.ToString ();
+		}
 
 		private string GetSizedText(string text)
 		{

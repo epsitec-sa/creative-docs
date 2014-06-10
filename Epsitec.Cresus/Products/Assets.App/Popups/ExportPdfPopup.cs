@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -86,6 +87,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Label                 = "Une ligne sur deux en gris",
 			});
 
+			list.Add (new StackedControllerDescription  // 9
+			{
+				StackedControllerType = StackedControllerType.Text,
+				Label                 = "Indentation",
+				Width                 = 200,
+			});
+
+			list.Add (new StackedControllerDescription  // 10
+			{
+				StackedControllerType = StackedControllerType.Text,
+				Label                 = "Filigrane",
+				Width                 = 200,
+			});
+
 			this.SetDescriptions (list);
 		}
 
@@ -103,6 +118,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				decimal		fontSize;
 				decimal		cellMargins;
 				bool		evenOddGrey;
+				string		indent;
+				string		watermark;
 
 				{
 					var controller = this.GetController (0) as DecimalStackedController;
@@ -158,7 +175,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					evenOddGrey = controller.Value;
 				}
 
-				return new PdfExportProfile (pageWidth, pageHeight, leftMargin, rightMargin, topMargin, bottomMargin, fontSize, cellMargins, evenOddGrey);
+				{
+					var controller = this.GetController (9) as TextStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					indent = Converters.EditableToInternal (controller.Value);
+				}
+
+				{
+					var controller = this.GetController (10) as TextStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					watermark = controller.Value;
+				}
+
+				return new PdfExportProfile (pageWidth, pageHeight, leftMargin, rightMargin, topMargin, bottomMargin, fontSize, cellMargins, evenOddGrey, indent, watermark);
 			}
 			set
 			{
@@ -214,6 +243,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					var controller = this.GetController (8) as BoolStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.EvenOddGrey;
+				}
+
+				{
+					var controller = this.GetController (9) as TextStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = Converters.InternalToEditable (value.Indent);
+				}
+
+				{
+					var controller = this.GetController (10) as TextStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = value.Watermark;
 				}
 			}
 		}
