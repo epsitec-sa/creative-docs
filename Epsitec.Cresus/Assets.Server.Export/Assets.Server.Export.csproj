@@ -52,6 +52,8 @@
     <Compile Include="ExportInstructions.cs" />
     <Compile Include="Helpers\String.cs" />
     <Compile Include="JsonExport.cs" />
+    <Compile Include="PdfExportProfile.cs" />
+    <Compile Include="PdfExport.cs" />
     <Compile Include="YamlExportProfile.cs" />
     <Compile Include="JsonExportProfile.cs" />
     <Compile Include="YamlExport.cs" />
@@ -69,6 +71,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Pdf\Common.Pdf.csproj">
+      <Project>{0c93255b-4d0c-4af6-9244-d835427e42e0}</Project>
+      <Name>Common.Pdf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Products\Assets.Core\Assets.Core.csproj">
       <Project>{2478a0bb-db2e-4272-b7d9-cff51a5a0cc9}</Project>
       <Name>Assets.Core</Name>

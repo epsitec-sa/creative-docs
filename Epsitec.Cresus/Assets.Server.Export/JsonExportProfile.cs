@@ -22,7 +22,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		public static JsonExportProfile Default = new JsonExportProfile ("\r\n", true, Encoding.UTF8);
 
 		public readonly string					EndOfLine;
-		public readonly bool					CamelCase;		public readonly bool					Compact;
+		public readonly bool					CamelCase;
+		public readonly bool					Compact;
 		public readonly Encoding				Encoding;
 	}
 }

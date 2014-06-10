@@ -78,6 +78,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 					this.ShowJsonPopup (instructions);
 					break;
 
+				case ExportFormat.Pdf:
+					this.ShowPdfPopup (instructions);
+					break;
+
 				default:
 					var ext = ExportInstructionsPopup.GetFormatExt (instructions.Format).Replace (".", "").ToUpper ();
 					var message = string.Format ("L'extension \"{0}\" n'est pas supportée.", ext);
@@ -242,6 +246,37 @@ namespace Epsitec.Cresus.Assets.App.Export
 			};
 		}
 
+		private void ShowPdfPopup(ExportInstructions instructions)
+		{
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
+			var popup = new ExportPdfPopup (this.accessor)
+			{
+				Profile = LocalSettings.ExportPdfProfile,
+			};
+
+			popup.Create (this.target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					LocalSettings.ExportPdfProfile = popup.Profile;  // enregistre dans les réglages
+
+					try
+					{
+						this.ExportPdf (instructions, popup.Profile);
+					}
+					catch (System.Exception ex)
+					{
+						this.ShowErrorPopup (ex.Message);
+						return;
+					}
+
+					this.ShowOpenPopup (instructions);
+				}
+			};
+		}
+
 
 		private void ExportText(ExportInstructions instructions, TextExportProfile profile)
 		{
@@ -274,6 +309,15 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new JsonExport<T> ())
+			{
+				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
+			}
+		}
+
+		private void ExportPdf(ExportInstructions instructions, PdfExportProfile profile)
+		{
+			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
+			using (var engine = new PdfExport<T> ())
 			{
 				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
 			}
