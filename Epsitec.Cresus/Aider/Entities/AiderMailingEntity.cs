@@ -83,7 +83,8 @@ namespace Epsitec.Aider.Entities
 													.Select (c => c.Household)
 												);
 
-				var extractionsHouseholds = this.RecipientGroupExtractions.SelectMany (t => t.GetAllParticipations (businessContext.DataContext)
+				var extractionsHouseholds = this.RecipientGroupExtractions
+												.SelectMany (t => t.GetAllParticipations (businessContext.DataContext)
 													.Select (p => p.Contact)
 													.Select (c => c.Household)
 												);

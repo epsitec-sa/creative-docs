@@ -81,8 +81,14 @@ namespace Epsitec.Aider.Data.Job
 							AiderPersonWarningEntity.Create (businessContext, contact.Person, contact.Person.ParishGroupPathCache, WarningType.PersonProbablyDuplicated, warningTitleMessage, warningSource);
 						}
 					}
-				}
 
+					if(current % 10000 == 0)
+					{
+						PotentialDuplicatedPersonFinder.LogToConsole ("Saving...", false);
+						businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+					}
+
+				}
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 
 				

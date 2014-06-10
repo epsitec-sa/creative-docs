@@ -42,6 +42,10 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Path)
 						.IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
 						.ReadOnly ()
+					.Field (x => x.GroupDef.GloballyVisibleToParishes)
+						.IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
+					.Field (x => x.GroupDef.GloballyVisibleToRegions)
+						.IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
 				.End ();
 		}
 

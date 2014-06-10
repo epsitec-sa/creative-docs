@@ -2297,6 +2297,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Classification = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 385);
 				//	designer:cap/LVABG
 				public static readonly global::Epsitec.Common.Support.Druid Function = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 523);
+				//	designer:cap/LVOU33
+				public static readonly global::Epsitec.Common.Support.Druid GloballyVisibleToParishes = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 126);
+				//	designer:cap/LVOV33
+				public static readonly global::Epsitec.Common.Support.Druid GloballyVisibleToRegions = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 127);
 				//	designer:cap/LVGG22
 				public static readonly global::Epsitec.Common.Support.Druid Level = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 80);
 				//	designer:cap/LVG822
@@ -2582,9 +2586,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderOfficeManagement.Documents, null);
+					global::System.Object.Equals (AiderOfficeManagement.AssociatedGroups, null);
 				}
 				
+				//	designer:cap/LVO043
+				public static readonly global::Epsitec.Common.Support.Druid AssociatedGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 128);
 				//	designer:cap/LVOO23
 				public static readonly global::Epsitec.Common.Support.Druid Documents = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 88);
 				//	designer:cap/LVAOK

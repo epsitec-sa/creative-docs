@@ -5874,6 +5874,50 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>GloballyVisibleToParishes</c> field.
+		///	designer:fld/LVA2A/LVOU33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOU33]")]
+		public bool GloballyVisibleToParishes
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVOU33]");
+			}
+			set
+			{
+				bool oldValue = this.GloballyVisibleToParishes;
+				if (oldValue != value || !this.IsFieldDefined("[LVOU33]"))
+				{
+					this.OnGloballyVisibleToParishesChanging (oldValue, value);
+					this.SetField<bool> ("[LVOU33]", oldValue, value);
+					this.OnGloballyVisibleToParishesChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>GloballyVisibleToRegions</c> field.
+		///	designer:fld/LVA2A/LVOV33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOV33]")]
+		public bool GloballyVisibleToRegions
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVOV33]");
+			}
+			set
+			{
+				bool oldValue = this.GloballyVisibleToRegions;
+				if (oldValue != value || !this.IsFieldDefined("[LVOV33]"))
+				{
+					this.OnGloballyVisibleToRegionsChanging (oldValue, value);
+					this.SetField<bool> ("[LVOV33]", oldValue, value);
+					this.OnGloballyVisibleToRegionsChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -5901,6 +5945,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnFunctionChanged(global::Epsitec.Aider.Entities.AiderGroupDefEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupDefEntity newValue);
 		partial void OnRoleCacheDisabledChanging(bool oldValue, bool newValue);
 		partial void OnRoleCacheDisabledChanged(bool oldValue, bool newValue);
+		partial void OnGloballyVisibleToParishesChanging(bool oldValue, bool newValue);
+		partial void OnGloballyVisibleToParishesChanged(bool oldValue, bool newValue);
+		partial void OnGloballyVisibleToRegionsChanging(bool oldValue, bool newValue);
+		partial void OnGloballyVisibleToRegionsChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -9452,6 +9500,20 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>AssociatedGroups</c> field.
+		///	designer:fld/LVO613/LVO043
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO043]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity> AssociatedGroups
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity>);
+				this.GetAssociatedGroups (ref value);
+				return value;
+			}
+		}
 		
 		partial void OnOfficeNameChanging(string oldValue, string newValue);
 		partial void OnOfficeNameChanged(string oldValue, string newValue);
@@ -9479,6 +9541,7 @@ namespace Epsitec.Aider.Entities
 		partial void GetRegionalReferees(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity> value);
 		partial void GetRegion(ref string value);
 		partial void SetRegion(string value);
+		partial void GetAssociatedGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

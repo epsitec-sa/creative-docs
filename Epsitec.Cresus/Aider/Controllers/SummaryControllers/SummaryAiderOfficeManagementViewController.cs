@@ -125,7 +125,19 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Text (p => p.GetParticipantsSummary ())
 						.Attribute (BrickMode.DefaultToSetSubView)
 						.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+				
 			}
+
+			wall.AddBrick (p => p.AssociatedGroups)
+						.Icon ("Data.AiderGroup.People")
+						.Title ("Groupes associés")
+						.Attribute (BrickMode.DefaultToSummarySubView)
+						.Attribute (BrickMode.AutoGroup)
+						.Attribute (BrickMode.HideAddButton)
+						.Attribute (BrickMode.HideRemoveButton)
+						.Template ()
+							.Text (x => x.GetNameWithRegion ())
+						.End ();
 
 			wall.AddBrick ()
 				.Icon ("Base.AiderGoup.Parish")

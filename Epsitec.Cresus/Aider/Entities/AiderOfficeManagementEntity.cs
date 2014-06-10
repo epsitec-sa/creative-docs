@@ -233,6 +233,37 @@ namespace Epsitec.Aider.Entities
 			value = this.GetVirtualCollection (ref this.regionalReferees, x => x.Group = this.ParishGroup).AsReadOnlyCollection ();
 		}
 
+		partial void GetAssociatedGroups(ref IList<AiderGroupEntity> value)
+		{
+			value = this.ExecuteWithDataContext (c => this.GetAssociatedGroups (c), null);
+		}
+
+		public IList<AiderGroupEntity> GetAssociatedGroups(DataContext context = null)
+		{
+			if (this.associatedGroups == null)
+			{
+				if (context == null)
+				{
+					context = DataContextPool.GetDataContext (this);
+				}
+
+				var groups = new HashSet<AiderGroupEntity> ();
+				if (this.OfficeType == Enumerations.OfficeType.Parish)
+				{
+					groups.UnionWith (AiderGroupEntity.FindRegionalGroupsGloballyVisibleToParishes (context, this.ParishGroupPathCache));
+					groups.UnionWith (AiderGroupEntity.FindGroupsGloballyVisibleToParishes (context));				
+				}
+				if (this.OfficeType == Enumerations.OfficeType.Region)
+				{
+					groups.UnionWith (AiderGroupEntity.FindAllGroupsGloballyVisibleToRegions (context));	
+				}
+
+				this.associatedGroups = groups.ToList();
+			}
+
+			return this.associatedGroups;
+		}
+
 		partial void GetRegion(ref string value)
 		{
 			if(this.ParishGroup.Parents.Any ())
@@ -273,5 +304,6 @@ namespace Epsitec.Aider.Entities
 		private IList<AiderOfficeReportEntity>	documents;
 		private IList<AiderEmployeeJobEntity>	employeeJobs;
 		private IList<AiderRefereeEntity>		regionalReferees;
+		private IList<AiderGroupEntity>			associatedGroups;
 	}
 }

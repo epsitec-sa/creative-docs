@@ -101,6 +101,11 @@ namespace Epsitec.Aider.Entities
 			return int.Parse (this.Name.SubstringEnd (2));
 		}
 
+		public string GetRootName()
+		{
+			return this.Parents.First ().Name;
+		}
+
 		public bool CanHaveSubgroups()
 		{
 			var definition = this.GroupDef;
@@ -300,6 +305,11 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Name);
 		}
 
+		public FormattedText GetNameWithRegion()
+		{
+			return TextFormatter.FormatText (this.Name + " (" + this.GetRootName() + ")");
+		}
+
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
 			yield return this.Name;
@@ -482,6 +492,78 @@ namespace Epsitec.Aider.Entities
 			request.AddSortClause (ValueField.Create (example, x => x.Name));
 
 			return dataContext.GetByRequest (request);
+		}
+
+		public static IList<AiderGroupEntity> FindGroupsGloballyVisibleToParishes(DataContext dataContext)
+		{
+			var example		 = new AiderGroupEntity ();
+			var defExample	 = new AiderGroupDefEntity ();
+			var request		 = Request.Create (example);
+			var subRequest	 = Request.Create (defExample);
+
+
+			request.AddCondition (dataContext, example, x => !SqlMethods.Like (x.Path, "R___%"));
+			subRequest.AddCondition (dataContext, defExample, x => x.GloballyVisibleToParishes == true);
+			request.Conditions.Add (
+					new SubQuerySetComparison (
+						ReferenceField.Create (example, x => x.GroupDef),
+						SetComparator.In,
+						new SubQuery (subRequest)
+					)
+				);
+
+			return dataContext.GetByRequest (request);
+		}
+
+		public static IList<AiderGroupEntity> FindRegionalGroupsGloballyVisibleToParishes(DataContext dataContext, string parishGroupPath)
+		{
+			var path = AiderGroupIds.GetParentPath (parishGroupPath);
+
+			var example		 = new AiderGroupEntity ();
+			var defExample	 = new AiderGroupDefEntity ();
+			var request		 = Request.Create (example);
+			var subRequest	 = Request.Create (defExample);
+			
+	
+			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, path + '%'));
+			subRequest.AddCondition (dataContext, defExample, x => x.GloballyVisibleToParishes == true);
+			request.Conditions.Add (
+					new SubQuerySetComparison (
+						ReferenceField.Create (example, x => x.GroupDef),
+						SetComparator.In,
+						new SubQuery (subRequest)
+					)
+				);
+
+			return dataContext.GetByRequest (request);
+		}
+
+		public static IList<AiderGroupEntity> FindAllGroupsGloballyVisibleToRegions(DataContext dataContext)
+		{
+			var defExample = new AiderGroupDefEntity ()
+			{
+				GloballyVisibleToRegions = true
+			};
+
+			var example = new AiderGroupEntity ()
+			{
+				GroupDef = defExample
+			};
+
+			var request = Request.Create (example);
+			request.AddSortClause (ValueField.Create (example, x => x.Name));
+
+			return dataContext.GetByRequest (request);
+		}
+
+		public static IList<AiderGroupEntity> FindGroupsFromGroupDef(DataContext dataContext, AiderGroupDefEntity def)
+		{
+			var example = new AiderGroupEntity ()
+			{
+				GroupDef  = def
+			};
+
+			return dataContext.GetByExample<AiderGroupEntity> (example);
 		}
 
 		public static IList<AiderGroupEntity> FindGroupsFromGroupDef(BusinessContext businessContext, AiderGroupDefEntity def)
