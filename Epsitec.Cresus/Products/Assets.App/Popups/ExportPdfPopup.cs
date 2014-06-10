@@ -33,6 +33,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				BottomMargin          = 10,
 			});
 
+			list.Add (new StackedControllerDescription  // 2
+			{
+				StackedControllerType = StackedControllerType.Int,
+				Label                 = "Marge gauche",
+			});
+
+			list.Add (new StackedControllerDescription  // 3
+			{
+				StackedControllerType = StackedControllerType.Int,
+				Label                 = "Marge droite",
+			});
+
+			list.Add (new StackedControllerDescription  // 4
+			{
+				StackedControllerType = StackedControllerType.Int,
+				Label                 = "Marge supérieure",
+			});
+
+			list.Add (new StackedControllerDescription  // 5
+			{
+				StackedControllerType = StackedControllerType.Int,
+				Label                 = "Marge inférieure",
+			});
+
 			this.SetDescriptions (list);
 		}
 
@@ -43,6 +67,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				bool		landscape;
 				bool		evenOddGrey;
+				int			leftMargin;
+				int			rightMargin;
+				int			topMargin;
+				int			bottomMargin;
 
 				{
 					var controller = this.GetController (0) as BoolStackedController;
@@ -56,7 +84,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					evenOddGrey = controller.Value;
 				}
 
-				return new PdfExportProfile (landscape, evenOddGrey);
+				{
+					var controller = this.GetController (2) as IntStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					leftMargin = controller.Value.GetValueOrDefault ();
+				}
+
+				{
+					var controller = this.GetController (3) as IntStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					rightMargin = controller.Value.GetValueOrDefault ();
+				}
+
+				{
+					var controller = this.GetController (4) as IntStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					topMargin = controller.Value.GetValueOrDefault ();
+				}
+
+				{
+					var controller = this.GetController (5) as IntStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					bottomMargin = controller.Value.GetValueOrDefault ();
+				}
+
+				return new PdfExportProfile (landscape, evenOddGrey, leftMargin, rightMargin, topMargin, bottomMargin);
 			}
 			set
 			{
@@ -70,6 +122,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					var controller = this.GetController (1) as BoolStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.EvenOddGrey;
+				}
+
+				{
+					var controller = this.GetController (2) as IntStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = value.LeftMargin;
+				}
+
+				{
+					var controller = this.GetController (3) as IntStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = value.RightMargin;
+				}
+
+				{
+					var controller = this.GetController (4) as IntStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = value.TopMargin;
+				}
+
+				{
+					var controller = this.GetController (5) as IntStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = value.BottomMargin;
 				}
 			}
 		}

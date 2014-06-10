@@ -107,10 +107,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						return DateStackedController.width;
 
 					case StackedControllerType.Radio:
-						return 22 + this.LabelsWidth;
+						return 30 + this.LabelsWidth;
 
 					case StackedControllerType.Bool:
-						return 22 + this.Label.GetTextWidth ();
+						return 30 + this.Label.GetTextWidth ();
 
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", this.StackedControllerType));

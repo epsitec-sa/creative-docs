@@ -13,7 +13,7 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 namespace Epsitec.Cresus.Assets.Server.Export
 {
 	/// <summary>
-	/// Exportation au format txt ou csv.
+	/// Exportation au format pdf.
 	/// </summary>
 	public class PdfExport<T> : AbstractExport<T>
 		where T : struct
@@ -38,8 +38,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			var setup = new ArraySetup ()
 			{
-				EvenBackgroundColor = this.EvenBackgroundColor, 
-				OddBackgroundColor  = this.OddBackgroundColor,
+				PageMargins          = this.PageMargins,
+				LabelBackgroundColor = Color.FromBrightness (0.95),
+				EvenBackgroundColor  = this.EvenBackgroundColor, 
+				OddBackgroundColor   = this.OddBackgroundColor,
 			};
 
 			var array = new Array (info, setup);
@@ -108,6 +110,20 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 		}
 
+		private Margins PageMargins
+		{
+			get
+			{
+				return new Margins
+				(
+					this.Profile.LeftMargin   * 10,
+					this.Profile.RightMargin  * 10,
+					this.Profile.TopMargin    * 10,
+					this.Profile.BottomMargin * 10
+				);
+			}
+		}
+
 		private Color EvenBackgroundColor
 		{
 			get
@@ -154,6 +170,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
+#if false
 		private static void Test3(string filename)
 		{
 			//	Génération d'un tableau.
@@ -294,6 +311,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private static string logo = "S:\\Epsitec.Cresus\\External\\epsitec.png";
 		private static string warning = "S:\\Epsitec.Cresus\\External\\warning.tif";
 		private static string histoire = "Midi, l'heure du crime ! Un jeune vieillard assis-debout sur une pierre en bois lisait son journal plié en quatre dans sa poche à la lueur d'une bougie éteinte. Le tonnerre grondait en silence et les éclairs brillaient sombres dans la nuit claire. Il monta quatre à quatre les trois marches qui descendaient au grenier et vit par le trou de la serrure bouchée un nègre blanc qui déterrait un mort pour le manger vivant. N'écoutant que son courage de pleutre mal léché, il sortit son épée de fils de fer barbelés et leur coupa la tête au ras des pieds.";
+#endif
 
 
 		private PdfExportProfile Profile
