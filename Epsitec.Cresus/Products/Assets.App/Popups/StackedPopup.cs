@@ -159,14 +159,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Retourne la hauteur totale nécessaire pour les contrôleurs inclus.
 			get
 			{
-				int value = 0;
-
-				foreach (var description in this.descriptions)
-				{
-					value += description.RequiredHeight + description.BottomMargin + StackedPopup.verticalGap;
-				}
-
-				return value;
+				return this.descriptions.Select (x => x.RequiredHeight + x.BottomMargin + StackedPopup.verticalGap).Sum ();
 			}
 		}
 
@@ -176,14 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	C'est le plus large qui fait sa loi.
 			get
 			{
-				int value = this.MininalWidth;
-
-				foreach (var description in this.descriptions)
-				{
-					value = System.Math.Max (value, description.RequiredControllerWidth);
-				}
-
-				return value;
+				return this.descriptions.Select (x => x.RequiredControllerWidth).Max ();
 			}
 		}
 
@@ -193,14 +179,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	C'est le plus large qui fait sa loi.
 			get
 			{
-				int value = 0;
-
-				foreach (var description in this.descriptions)
-				{
-					value = System.Math.Max (value, description.RequiredLabelsWidth);
-				}
-
-				return value;
+				return this.descriptions.Select (x => x.RequiredLabelsWidth).Max ();
 			}
 		}
 

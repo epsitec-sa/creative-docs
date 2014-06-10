@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -20,6 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public string							Label;
 		public StackedControllerType			StackedControllerType;
 		public DateRangeCategory				DateRangeCategory;
+		public DecimalFormat					DecimalFormat;
 		public int								Width;
 		public int								Height;
 		public int								BottomMargin;
@@ -66,6 +68,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Int:
 						return IntStackedController.height;
 
+					case StackedControllerType.Decimal:
+						return DecimalStackedController.height;
+
 					case StackedControllerType.Date:
 						return DateStackedController.height;
 
@@ -103,7 +108,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Int:
 						return IntStackedController.width + 38;  // 38 -> place pour les boutons -/+
 
-					case StackedControllerType.Date:
+					case StackedControllerType.Decimal:
+						return DecimalStackedController.width + 10 + 50;  // 10 + 50 -> place pour les unités
+
+ 					case StackedControllerType.Date:
 						return DateStackedController.width;
 
 					case StackedControllerType.Radio:
@@ -127,6 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Text:
 					case StackedControllerType.Filename:
 					case StackedControllerType.Int:
+					case StackedControllerType.Decimal:
 					case StackedControllerType.Date:
 					case StackedControllerType.GroupGuid:
 					case StackedControllerType.CategoryGuid:
@@ -162,6 +171,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				case StackedControllerType.Int:
 					return new IntStackedController (accessor);
+
+				case StackedControllerType.Decimal:
+					return new DecimalStackedController (accessor);
 
 				case StackedControllerType.Date:
 					return new DateStackedController (accessor);

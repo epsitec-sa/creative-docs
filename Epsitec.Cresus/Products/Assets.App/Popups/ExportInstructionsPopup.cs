@@ -199,12 +199,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Enumère tous les formats disponibles, par ordre d'importance.
 			get
 			{
+				yield return ExportFormat.Pdf;
 				yield return ExportFormat.Txt;
 				yield return ExportFormat.Csv;
 				yield return ExportFormat.Xml;
 				yield return ExportFormat.Yaml;
 				yield return ExportFormat.Json;
-				yield return ExportFormat.Pdf;
 			}
 		}
 	}

@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	{
 		Text,
 		Int,
+		Decimal,
 		Date,
 		Radio,
 		Combo,

@@ -82,21 +82,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock            = DockStyle.Left,
 				PreferredWidth  = this.Width,
 				PreferredHeight = AbstractFieldController.lineHeight,
-				Margins         = new Margins (0, 10, 0, 0),
 				TabIndex        = this.TabIndex,
 				Text            = this.ConvDecimalToString (this.value),
 			};
 
-			new StaticText
+			if (!string.IsNullOrEmpty (this.Unit))
 			{
-				Parent           = this.frameBox,
-				Dock             = DockStyle.Left,
-				PreferredWidth   = 50,
-				PreferredHeight  = AbstractFieldController.lineHeight - 1,
-				Margins          = new Margins (0, 10, 1, 0),
-				Text             = this.Unit,
-				ContentAlignment = ContentAlignment.TopLeft,
-			};
+				new StaticText
+				{
+					Parent           = this.frameBox,
+					Dock             = DockStyle.Left,
+					PreferredWidth   = 50,
+					PreferredHeight  = AbstractFieldController.lineHeight - 1,
+					Margins          = new Margins (10, 0, 1, 0),
+					Text             = this.Unit,
+					ContentAlignment = ContentAlignment.TopLeft,
+				};
+			}
 
 			this.UpdatePropertyState ();
 
@@ -160,6 +162,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case DecimalFormat.Amount:
 						return "CHF";
 
+					case DecimalFormat.Millimeters:
+						return "mm";
+
 					default:
 						return "";
 				}
@@ -178,6 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return TypeConverters.AmountToString (value);
 
 				case DecimalFormat.Real:
+				case DecimalFormat.Millimeters:
 					return TypeConverters.DecimalToString (value);
 
 				default:
@@ -196,6 +202,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return TypeConverters.ParseAmount (text);
 
 				case DecimalFormat.Real:
+				case DecimalFormat.Millimeters:
 					return TypeConverters.ParseDecimal (text);
 
 				default:

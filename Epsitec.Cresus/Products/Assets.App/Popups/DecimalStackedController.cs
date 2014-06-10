@@ -5,19 +5,20 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class IntStackedController : AbstractStackedController
+	public class DecimalStackedController : AbstractStackedController
 	{
-		public IntStackedController(DataAccessor accessor)
+		public DecimalStackedController(DataAccessor accessor)
 			: base (accessor)
 		{
 		}
 
 
-		public int?								Value;
+		public decimal?							Value;
 
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
@@ -25,12 +26,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateLabel (parent, labelWidth, description);
 			var controllerFrame = this.CreateControllerFrame (parent);
 
-			this.controller = new IntFieldController (this.accessor)
+			this.controller = new DecimalFieldController (this.accessor)
 			{
-				Value      = this.Value,
-				LabelWidth = 0,
-				EditWidth  = IntStackedController.width,
-				TabIndex   = tabIndex,
+				Value         = this.Value,
+				DecimalFormat = description.DecimalFormat,
+				LabelWidth    = 0,
+				EditWidth     = DecimalStackedController.width,
+				TabIndex      = tabIndex,
 			};
 
 			this.controller.CreateUI (controllerFrame);
@@ -48,9 +50,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int width  = 50;
+		public const int width  = 90;
 		public const int height = AbstractFieldController.lineHeight + 4;
 
-		private IntFieldController				controller;
+		private DecimalFieldController			controller;
 	}
 }

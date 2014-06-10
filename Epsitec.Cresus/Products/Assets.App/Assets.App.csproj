@@ -101,6 +101,7 @@
     <Compile Include="Popups\ExportXmlPopup.cs" />
     <Compile Include="Popups\ExportTextPopup.cs" />
     <Compile Include="Popups\ExportOpenPopup.cs" />
+    <Compile Include="Popups\DecimalStackedController.cs" />
     <Compile Include="Popups\PersonGuidStackedController.cs" />
     <Compile Include="Popups\CategoryGuidStackedController.cs" />
     <Compile Include="Popups\AssetsReportPopup.cs" />

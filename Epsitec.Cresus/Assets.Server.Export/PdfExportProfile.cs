@@ -12,23 +12,29 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	/// </summary>
 	public class PdfExportProfile : AbstractExportProfile
 	{
-		public PdfExportProfile(bool landscape, bool evenOddGrey, int leftMargin, int rightMargin, int topMargin, int bottomMargin)
+		public PdfExportProfile(decimal pageWidth, decimal pageHeight, decimal leftMargin, decimal rightMargin, decimal topMargin, decimal bottomMargin, decimal fontSize, decimal cellMargins, bool evenOddGrey)
 		{
-			this.Landscape    = landscape;
-			this.EvenOddGrey  = evenOddGrey;
+			this.PageWidth    = pageWidth;
+			this.PageHeight   = pageHeight;
 			this.LeftMargin   = leftMargin;
 			this.RightMargin  = rightMargin;
 			this.TopMargin    = topMargin;
 			this.BottomMargin = bottomMargin;
+			this.FontSize     = fontSize;
+			this.CellMargins  = cellMargins;
+			this.EvenOddGrey  = evenOddGrey;
 		}
 
-		public static PdfExportProfile Default = new PdfExportProfile (true, false, 10, 10, 10, 10);
+		public static PdfExportProfile Default = new PdfExportProfile (297.0m, 210.0m, 10.0m, 10.0m, 10.0m, 10.0m, 10.0m, 1.0m, false);
 
-		public readonly bool					Landscape;
+		public readonly decimal					PageWidth;
+		public readonly decimal					PageHeight;
+		public readonly decimal					LeftMargin;
+		public readonly decimal					RightMargin;
+		public readonly decimal					TopMargin;
+		public readonly decimal					BottomMargin;
+		public readonly decimal					FontSize;
+		public readonly decimal					CellMargins;
 		public readonly bool					EvenOddGrey;
-		public readonly int						LeftMargin;
-		public readonly int						RightMargin;
-		public readonly int						TopMargin;
-		public readonly int						BottomMargin;
 	}
 }

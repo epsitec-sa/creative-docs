@@ -36,8 +36,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.DefaultFreeDate      = defaultTimestamp.Date;
 
 			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
-			var filename = System.IO.Path.Combine (item.FullPath, "export.txt");
-			LocalSettings.ExportInstructions = new ExportInstructions (ExportFormat.Txt, filename);
+			var filename = System.IO.Path.Combine (item.FullPath, "export.pdf");
+			LocalSettings.ExportInstructions = new ExportInstructions (ExportFormat.Pdf, filename);
 
 			LocalSettings.ExportTxtProfile  = TextExportProfile.TxtProfile;
 			LocalSettings.ExportCsvProfile  = TextExportProfile.CsvProfile;

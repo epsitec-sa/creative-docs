@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Pdf.Array;
-using Epsitec.Common.Pdf.Common;
 using Epsitec.Common.Pdf.Engine;
-using Epsitec.Common.Pdf.TextDocument;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
@@ -24,8 +22,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			this.FillArray (false);
 			this.ExportPdf ();
-
-			//?PdfExport<T>.Test3 (this.instructions.Filename);
 		}
 
 
@@ -39,6 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			var setup = new ArraySetup ()
 			{
 				PageMargins          = this.PageMargins,
+				CellMargins          = this.CellMargins,
 				LabelBackgroundColor = Color.FromBrightness (0.95),
 				EvenBackgroundColor  = this.EvenBackgroundColor, 
 				OddBackgroundColor   = this.OddBackgroundColor,
@@ -55,7 +52,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private CellContent GetCellContent(int row, int column)
 		{
-			var content = this.array[column, row];
+			var content = this.GetSizedText (this.array[column, row]);
 			return new CellContent (content);
 		}
 
@@ -83,7 +80,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			var columnType = this.GetColumnType (description);
 			var alignment = this.GetContentAlignment (description);
-			return new ColumnDefinition (description.Header, columnType, alignment: alignment);
+			return new ColumnDefinition (this.GetSizedText (description.Header), columnType, alignment: alignment);
 		}
 
 		private ColumnType GetColumnType(TreeTableColumnDescription description)
@@ -116,10 +113,24 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				return new Margins
 				(
-					this.Profile.LeftMargin   * 10,
-					this.Profile.RightMargin  * 10,
-					this.Profile.TopMargin    * 10,
-					this.Profile.BottomMargin * 10
+					(double) this.Profile.LeftMargin   * 10.0,
+					(double) this.Profile.RightMargin  * 10.0,
+					(double) this.Profile.TopMargin    * 10.0,
+					(double) this.Profile.BottomMargin * 10.0
+				);
+			}
+		}
+
+		private Margins CellMargins
+		{
+			get
+			{
+				return new Margins
+				(
+					(double) this.Profile.CellMargins * 10.0,
+					(double) this.Profile.CellMargins * 10.0,
+					(double) this.Profile.CellMargins * 10.0,
+					(double) this.Profile.CellMargins * 10.0
 				);
 			}
 		}
@@ -158,15 +169,19 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			get
 			{
-				if (this.Profile.Landscape)
-				{
-					return new Size (2970.0, 2100.0);  // A4 horizontal
-				}
-				else
-				{
-					return new Size (2100.0, 2970.0);  // A4 vertical
-				}
+				var w = (double) this.Profile.PageWidth  * 10.0;
+				var h = (double) this.Profile.PageHeight * 10.0;
+
+				return new Size (w, h);
 			}
+		}
+
+
+		private string GetSizedText(string text)
+		{
+			var fontSize = this.Profile.FontSize * 3.2m;  // facteur empyrique, pour matcher sur les tailles usuelles dans Word
+			var size = fontSize.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			return string.Format ("<font size=\"{0}\">{1}</font>", size, text);
 		}
 
 
