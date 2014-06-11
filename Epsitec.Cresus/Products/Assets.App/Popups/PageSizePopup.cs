@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			int rank = this.GetRankDescription (description);
 
-			if (rank == 0)
+			if (rank == 0)  // modification du format ?
 			{
 				var controller = this.GetController (0) as ComboStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
@@ -116,29 +116,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var format = PageSizePopup.RankToFormat (controller.Value.GetValueOrDefault (-1));
 				this.Value = new Size (format.Width, format.Height);
 			}
-			else if (rank == 1)
+			else if (rank == 1)  // modification de l'orientation ?
 			{
 				var controller = this.GetController (1) as RadioStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 
 				int o = controller.Value.GetValueOrDefault (-1);
 
-				if (o == 0)
+				if (o == 0)  // portait ?
 				{
 					this.Value = new Size (System.Math.Min (this.Value.Width, this.Value.Height),
 										   System.Math.Max (this.Value.Width, this.Value.Height));
 				}
-				else if (o == 1)
+				else if (o == 1)  // paysage ?
 				{
 					this.Value = new Size (System.Math.Max (this.Value.Width, this.Value.Height),
 										   System.Math.Min (this.Value.Width, this.Value.Height));
 				}
 			}
-			else
+			else  // modification d'une dimension (largeur ou hauteur) ?
 			{
 				this.Value = this.Value;
 			}
 
+			//	Met à jour tous les contrôleurs.
 			{
 				var controller = this.GetController (0) as ComboStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
@@ -173,6 +174,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#region Formats
 		public static string GetDescription(Size size)
 		{
+			//	Retourne un description claire d'un format de page, par exemple "A4 paysage",
+			//	ou null si les dimensions ne correspondent à aucun format connu.
 			var rankFormat      = PageSizePopup.GetFormat      (size);
 			var rankOrientation = PageSizePopup.GetOrientation (size);
 
@@ -219,33 +222,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (size.Width < size.Height)
 			{
-				return 0;
+				return 0;  // portrait
 			}
 			else if (size.Width > size.Height)
 			{
-				return 1;
+				return 1;  // paysage
 			}
 			else
 			{
 				return -1;
 			}
-		}
-
-		private static int FormatToRank(FormatType format)
-		{
-			int rank = 0;
-
-			foreach (var f in PageSizePopup.Formats)
-			{
-				if (f.Type == format)
-				{
-					return rank;
-				}
-
-				rank++;
-			}
-
-			return -1;
 		}
 
 		private static Format RankToFormat(int rank)
