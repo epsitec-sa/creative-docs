@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	aux autres.
 			this.interactiveLayers = new List<AbstractInteractiveLayer> ();
 
-			this.interactiveLayers.Add (new InteractiveLayerColumnOrder (this));
+			this.interactiveLayers.Add (new InteractiveLayerColumnOrder     (this));
 			this.interactiveLayers.Add (new InteractiveLayerColumnSeparator (this));
 			this.interactiveLayers.Add (new InteractiveLayerColumnResurrect (this));
 

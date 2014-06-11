@@ -85,17 +85,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 8
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Une ligne sur deux en gris",
+				Label                 = "Largeurs des colonnes selon le contenu",
 			});
 
 			list.Add (new StackedControllerDescription  // 9
+			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = "Une ligne sur deux en gris",
+			});
+
+			list.Add (new StackedControllerDescription  // 10
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "Indentation",
 				Width                 = 200,
 			});
 
-			list.Add (new StackedControllerDescription  // 10
+			list.Add (new StackedControllerDescription  // 11
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "Filigrane",
@@ -118,6 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				double		bottomMargin;
 				double		fontSize;
 				double		cellMargins;
+				bool		automaticColumnWidths;
 				bool		evenOddGrey;
 				string		indent;
 				string		watermark;
@@ -173,22 +180,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (8) as BoolStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					evenOddGrey = controller.Value;
+					automaticColumnWidths = controller.Value;
 				}
 
 				{
-					var controller = this.GetController (9) as TextStackedController;
+					var controller = this.GetController (9) as BoolStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					indent = Converters.EditableToInternal (controller.Value);
+					evenOddGrey = controller.Value;
 				}
 
 				{
 					var controller = this.GetController (10) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
+					indent = Converters.EditableToInternal (controller.Value);
+				}
+
+				{
+					var controller = this.GetController (11) as TextStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
 					watermark = controller.Value;
 				}
 
-				return new PdfExportProfile (new Size (pageWidth, pageHeight), new Margins (leftMargin, rightMargin, topMargin, bottomMargin), new Margins(cellMargins), fontSize, evenOddGrey, indent, watermark);
+				return new PdfExportProfile (new Size (pageWidth, pageHeight), new Margins (leftMargin, rightMargin, topMargin, bottomMargin), new Margins(cellMargins), fontSize, automaticColumnWidths, evenOddGrey, indent, watermark);
 			}
 			set
 			{
@@ -243,17 +256,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (8) as BoolStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = value.AutomaticColumnWidths;
+				}
+
+				{
+					var controller = this.GetController (9) as BoolStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.EvenOddGrey;
 				}
 
 				{
-					var controller = this.GetController (9) as TextStackedController;
+					var controller = this.GetController (10) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = Converters.InternalToEditable (value.Indent);
 				}
 
 				{
-					var controller = this.GetController (10) as TextStackedController;
+					var controller = this.GetController (11) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.Watermark;
 				}

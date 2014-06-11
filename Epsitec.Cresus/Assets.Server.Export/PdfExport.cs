@@ -48,6 +48,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				array.AddWatermark (this.Profile.Watermark);
 			}
 
+			this.totalColumnWidths = this.TotalColumnWidths;
+
 			var columns = new List<ColumnDefinition> ();
 			columns.AddRange (this.ColumnDefinitions);
 
@@ -71,6 +73,14 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			return new CellContent (this.GetSizedText (content));
 		}
 
+		private int TotalColumnWidths
+		{
+			get
+			{
+				return this.columnsState.Columns.Select (x => x.FinalWidth).Sum ();
+			}
+		}
+
 		private IEnumerable<ColumnDefinition> ColumnDefinitions
 		{
 			get
@@ -85,17 +95,28 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					if (!columnState.Hide)
 					{
 						var description = columnDescriptions.Where (x => x.Field == columnState.Field).FirstOrDefault ();
-						yield return this.GetColumnDefinition (description);
+						yield return this.GetColumnDefinition (description, columnState.FinalWidth);
 					}
 				}
 			}
 		}
 
-		private ColumnDefinition GetColumnDefinition(TreeTableColumnDescription description)
+		private ColumnDefinition GetColumnDefinition(TreeTableColumnDescription description, int width)
 		{
-			var columnType = this.GetColumnType (description);
 			var alignment = this.GetContentAlignment (description);
-			return new ColumnDefinition (this.GetSizedText (description.Header), columnType, alignment: alignment);
+
+			if (this.Profile.AutomaticColumnWidths)
+			{
+				var columnType = this.GetColumnType (description);
+				return new ColumnDefinition (this.GetSizedText (description.Header), columnType, alignment: alignment);
+			}
+			else
+			{
+				double pageWidth = this.Profile.PageSize.Width - this.Profile.PageMargins.Width;
+
+				double absoluteWidth = width * 10.0 * pageWidth / this.totalColumnWidths;
+				return new ColumnDefinition (this.GetSizedText (description.Header), ColumnType.Absolute, absoluteWidth, alignment: alignment);
+			}
 		}
 
 		private ColumnType GetColumnType(TreeTableColumnDescription description)
@@ -184,10 +205,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			get
 			{
-				var w = this.Profile.PageSize.Width  * 10.0;
-				var h = this.Profile.PageSize.Height * 10.0;
-
-				return new Size (w, h);
+				return new Size
+				(
+					this.Profile.PageSize.Width  * 10.0,
+					this.Profile.PageSize.Height * 10.0
+				);
 			}
 		}
 
@@ -214,150 +236,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-#if false
-		private static void Test3(string filename)
-		{
-			//	Génération d'un tableau.
-			var info = new ExportPdfInfo ()
-			{
-				PageSize = new Size (2970.0, 2100.0),  // A4 horizontal
-			};
-
-			var setup = new ArraySetup ()
-			{
-				EvenBackgroundColor = Color.FromAlphaColor (0.1, Color.FromHexa ("ffff00")),  // jaune 
-				OddBackgroundColor  = Color.FromAlphaColor (0.1, Color.FromHexa ("00aaff")),  // bleu
-			};
-			PdfExport<T>.AddHeaderAndFooter (setup);
-
-			var array = new Epsitec.Common.Pdf.Array.Array (info, setup);
-			//?PdfExport<T>.AddFixElements (array, setup);
-
-			var columns = new List<ColumnDefinition> ();
-			columns.Add (new ColumnDefinition ("N°", ColumnType.Absolute, absoluteWidth: 100.0, alignment: ContentAlignment.TopRight));
-			columns.Add (new ColumnDefinition ("Titre", ColumnType.Automatic));
-			columns.Add (new ColumnDefinition ("Nom", ColumnType.Automatic));
-			columns.Add (new ColumnDefinition ("Prénom", ColumnType.Automatic));
-			columns.Add (new ColumnDefinition ("Adresse", ColumnType.Automatic));
-			columns.Add (new ColumnDefinition ("NPA", ColumnType.Automatic, alignment: ContentAlignment.TopRight));
-			columns.Add (new ColumnDefinition ("Ville", ColumnType.Automatic));
-			columns.Add (new ColumnDefinition ("Remarque", ColumnType.Stretch, fontSize: 20.0));
-
-			array.GeneratePdf (filename, 100, columns, PdfExport<T>.TestArrayDataAccessor);
-		}
-
-		private static CellContent TestArrayDataAccessor(int row, int column)
-		{
-			if (row == 5 && column == 3)
-			{
-				return new CellContent ("<font size=\"50\"><b>Grand !</b></font>");
-			}
-
-			if (row == 55 && column == 5)
-			{
-				return new CellContent ("<font color=\"White\">F-75001</font>", Color.FromName ("Blue"));
-			}
-
-			if (row >= 20 && row <= 50)
-			{
-				switch (column)
-				{
-					case 1:
-						return new CellContent ("Madame");
-					case 2:
-						return new CellContent ("Julie", Color.FromAlphaColor (0.2, Color.FromName ("Red")));
-					case 3:
-						return new CellContent ("<i>Dubosson</i>");
-					case 4:
-						return new CellContent ("Av. de la Gare 12<br/>Case postale 1234");
-				}
-			}
-
-			if (column == 7)
-			{
-				if (row == 10)
-				{
-					return new CellContent (PdfExport<T>.histoire);
-				}
-
-				if (row == 2 || row == 12 || row == 99)
-				{
-					return new CellContent ("À modifier...");
-				}
-
-				if ((row >= 14 && row <= 20) || row == 52 || row == 98)
-				{
-					//?return new CellContent (string.Format ("<img src=\"{0}\" width=\"50\" height=\"50\"/> Changement d'adresse", PdfExport<T>.warning));
-				}
-			}
-
-			switch (column)
-			{
-				case 0:
-					return new CellContent ((row+1).ToString ());
-				case 1:
-					return new CellContent ("Monsieur");
-				case 2:
-					return new CellContent ("Jean-Paul");
-				case 3:
-					return new CellContent ("<b>Dupond</b>");
-				case 4:
-					return new CellContent ("Place du Marché 45");
-				case 5:
-					return new CellContent ((1000+row).ToString ());
-				case 6:
-					return new CellContent ("Lausanne");
-			}
-
-			return null;
-		}
-
-		private static void AddFixElements(CommonPdf common, CommonSetup setup)
-		{
-			common.AddWatermark ("SPECIMEN");
-
-			var style = new TextStyle (setup.TextStyle)
-			{
-				FontSize = 20.0,
-			};
-
-			//?var tagImage = string.Format ("<img src=\"{0}\" width=\"200.0\" height=\"28.8\"/>", PdfExport<T>.logo);
-			//?common.AddTopLeftLayer (tagImage, 50.0, style: style);
-			common.AddTopCenterLayer ("<font color=\"Blue\">— Document test —</font>", 50.0, style: style);
-			common.AddTopRightLayer ("<font color=\"Blue\">Crésus</font>", 50.0, style: style);
-
-			common.AddBottomLeftLayer ("<font color=\"Blue\"><i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i></font>", 50.0, style: style);
-			common.AddBottomRightLayer ("<font color=\"Blue\">Page {0}</font>", 50.0, style: style);
-		}
-
-		private static void AddHeaderAndFooter(CommonSetup setup)
-		{
-			const string headerText = "<font color=\"Red\"><font size=\"80\">En-tête</font><br/>Deuxième ligne de l'en-tête</font>";
-			const string footerText = "<font color=\"Red\"><font size=\"80\">Pied de page</font><br/>Deuxième ligne du pied de page</font>";
-
-			if (setup is ArraySetup)
-			{
-				var s = setup as ArraySetup;
-
-				s.HeaderText = headerText;
-				s.FooterText = footerText;
-			}
-
-			if (setup is TextDocumentSetup)
-			{
-				var s = setup as TextDocumentSetup;
-
-				s.HeaderText = headerText;
-				s.FooterText = footerText;
-			}
-		}
-
-		private static string logo = "S:\\Epsitec.Cresus\\External\\epsitec.png";
-		private static string warning = "S:\\Epsitec.Cresus\\External\\warning.tif";
-		private static string histoire = "Midi, l'heure du crime ! Un jeune vieillard assis-debout sur une pierre en bois lisait son journal plié en quatre dans sa poche à la lueur d'une bougie éteinte. Le tonnerre grondait en silence et les éclairs brillaient sombres dans la nuit claire. Il monta quatre à quatre les trois marches qui descendaient au grenier et vit par le trou de la serrure bouchée un nègre blanc qui déterrait un mort pour le manger vivant. N'écoutant que son courage de pleutre mal léché, il sortit son épée de fils de fer barbelés et leur coupa la tête au ras des pieds.";
-#endif
-
-
 		private PdfExportProfile Profile
 		{
 			get
@@ -365,5 +243,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				return this.profile as PdfExportProfile;
 			}
 		}
+
+
+		private int								totalColumnWidths;
 	}
 }

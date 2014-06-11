@@ -12,23 +12,25 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	/// </summary>
 	public class PdfExportProfile : AbstractExportProfile
 	{
-		public PdfExportProfile(Size pageSize, Margins pageMargins, Margins cellMargins, double fontSize, bool evenOddGrey, string indent, string watermark)
+		public PdfExportProfile(Size pageSize, Margins pageMargins, Margins cellMargins, double fontSize, bool automaticColumnWidths, bool evenOddGrey, string indent, string watermark)
 		{
-			this.PageSize    = pageSize;
-			this.PageMargins = pageMargins;
-			this.CellMargins = cellMargins;
-			this.FontSize    = fontSize;
-			this.EvenOddGrey = evenOddGrey;
-			this.Indent      = indent;
-			this.Watermark   = watermark;
+			this.PageSize              = pageSize;
+			this.PageMargins           = pageMargins;
+			this.CellMargins           = cellMargins;
+			this.FontSize              = fontSize;
+			this.AutomaticColumnWidths = automaticColumnWidths;
+			this.EvenOddGrey           = evenOddGrey;
+			this.Indent                = indent;
+			this.Watermark             = watermark;
 		}
 
-		public static PdfExportProfile Default = new PdfExportProfile (new Size (297.0, 210.0), new Margins (10.0), new Margins (1.0), 10.0, false, ".   ", "SPECIMEN");
+		public static PdfExportProfile Default = new PdfExportProfile (new Size (297.0, 210.0), new Margins (10.0), new Margins (1.0), 10.0, false, false, ".   ", "SPECIMEN");
 
 		public readonly Size					PageSize;
 		public readonly Margins					PageMargins;
 		public readonly Margins					CellMargins;
 		public readonly double					FontSize;
+		public readonly bool					AutomaticColumnWidths;
 		public readonly bool					EvenOddGrey;
 		public readonly string					Indent;
 		public readonly string					Watermark;
