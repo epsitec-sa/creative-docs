@@ -48,7 +48,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				array.AddWatermark (this.Profile.Watermark);
 			}
 
-			this.totalColumnWidths = this.TotalColumnWidths;
+			if (!this.Profile.AutomaticColumnWidths)
+			{
+				this.totalColumnWidths = this.TotalColumnWidths;
+			}
 
 			var columns = new List<ColumnDefinition> ();
 			columns.AddRange (this.ColumnDefinitions);
@@ -59,9 +62,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private CellContent GetCellContent(int row, int column)
 		{
+			//	Appelé par la génération du pdf (en callback) pour obtenir le contenu d'une cellule.
 			var content = this.array[column, row];
 
-			if (column == 0)
+			if (column == 0)  // seule la première colonne peut être en mode 'tree'
 			{
 				int level = this.levels[row];
 				if (level > 0)
@@ -75,6 +79,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private int TotalColumnWidths
 		{
+			//	Retourne la somme de toutes les largeurs de colonnes définies par l'utilisateur dans
+			//	le TreeTable, utile en mode AutomaticColumnWidths == false.
 			get
 			{
 				return this.columnsState.Columns.Select (x => x.FinalWidth).Sum ();
@@ -83,6 +89,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private IEnumerable<ColumnDefinition> ColumnDefinitions
 		{
+			//	Retourne toutes les définitions de colonnes.
 			get
 			{
 				var columnsState = this.columnsState.Columns.ToArray ();
@@ -126,6 +133,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private ContentAlignment GetContentAlignment(TreeTableColumnDescription description)
 		{
+			//	Retourne le mode d'alignement d'une colonne. Les nombres sont alignés à droite.
 			switch (description.Type)
 			{
 				case TreeTableColumnType.AmortizedAmount:
@@ -145,6 +153,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private Margins PageMargins
 		{
+			//	Retourne les marges de la page en dixièmes de millimètres.
 			get
 			{
 				return new Margins
@@ -159,6 +168,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private Margins CellMargins
 		{
+			//	Retourne les marges d'une cellule en dixièmes de millimètres.
 			get
 			{
 				return new Margins
@@ -173,6 +183,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private Color EvenBackgroundColor
 		{
+			//	Retourne la couleur pour les lignes paires.
 			get
 			{
 				if (this.Profile.EvenOddGrey)
@@ -188,6 +199,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private Color OddBackgroundColor
 		{
+			//	Retourne la couleur pour les lignes impaires.
 			get
 			{
 				if (this.Profile.EvenOddGrey)
@@ -203,6 +215,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private Size PageSize
 		{
+			//	Retourne les dimensions d'une page en dixièmes de millimètres.
 			get
 			{
 				return new Size
@@ -216,6 +229,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string GetLeveledText(string text, int level)
 		{
+			//	Retourne un texte précédé 'level' fois du motif d'indentation.
 			var builder = new System.Text.StringBuilder ();
 
 			for (int i=0; i<level; i++)
@@ -230,6 +244,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string GetSizedText(string text)
 		{
+			//	Retourne un texte enrichi de tags pour déterminer la taille de la police.
 			var fontSize = this.Profile.FontSize * 3.2;  // facteur empyrique, pour matcher sur les tailles usuelles dans Word
 			var size = fontSize.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			return string.Format ("<font size=\"{0}\">{1}</font>", size, text);
