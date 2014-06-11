@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				if (rate.HasValue)
 				{
-					return rate.Value.ToString (System.Globalization.CultureInfo.InvariantCulture) + "%";
+					return (rate.Value*100).ToString (System.Globalization.CultureInfo.InvariantCulture) + "%";
 				}
 				else
 				{
