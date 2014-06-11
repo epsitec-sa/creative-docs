@@ -756,7 +756,12 @@ namespace Epsitec.Common.Pdf.Engine
 			{
 				FormattedText = formattedText,
 				LayoutSize    = boxSize,
+				BreakMode     = TextBreakMode.None,  // voir (*)
 			};
+
+			//	(*)	Il faut à tout prix éviter le mode Ellipsis, qui provoque des plantées
+			//		dans TextLayout lorsque la surface est trop petite pour accueillir le
+			//		texte !
 		}
 
 

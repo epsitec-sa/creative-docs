@@ -144,10 +144,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				case TreeTableColumnType.DetailedComputedAmount:
 				case TreeTableColumnType.Int:
 				case TreeTableColumnType.Rate:
-					return ContentAlignment.MiddleRight;
+					return ContentAlignment.TopRight;
 
 				default:
-					return ContentAlignment.MiddleLeft;
+					return ContentAlignment.TopLeft;
 			}
 		}
 
