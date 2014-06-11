@@ -43,6 +43,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
+		public void Update()
+		{
+			this.controller.Value = this.Value;
+		}
+
 		public override void SetFocus()
 		{
 			this.controller.SetFocus ();

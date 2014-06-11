@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			controller.SetFocus ();
 		}
 
-		protected override void UpdateWidgets()
+		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
 			this.okButton.Text = "Coller";
 			this.okButton.Enable = this.IsEnable;

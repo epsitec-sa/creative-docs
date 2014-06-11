@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected override void UpdateWidgets()
+		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
 			this.okButton.Text = "Ouvrir";
 			this.cancelButton.Text = "Fermer";

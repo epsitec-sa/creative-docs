@@ -94,7 +94,11 @@
     <Compile Include="Popups\BoolStackedController.cs" />
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\AssetCopyPopup.cs" />
+    <Compile Include="Popups\PageSizeStackedController.cs" />
+    <Compile Include="Popups\PageSizePopup.cs" />
+    <Compile Include="Popups\MarginsStackedController.cs" />
     <Compile Include="Popups\EventPastePopup.cs" />
+    <Compile Include="Popups\MarginsPopup.cs" />
     <Compile Include="Popups\ExportPdfPopup.cs" />
     <Compile Include="Popups\ExportJsonPopup.cs" />
     <Compile Include="Popups\ExportYamlPopup.cs" />

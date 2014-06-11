@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateControllersUI (this.mainFrameBox);
 			this.CreateButtons ();
 
-			this.UpdateWidgets ();
+			this.UpdateWidgets (null);
 		}
 
 		private void CreateControllers()
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected virtual void UpdateWidgets()
+		protected virtual void UpdateWidgets(StackedControllerDescription description)
 		{
 			//	Met à jour les contrôleurs, après le changement d'une valeur.
 		}
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#region Events handler
 		protected void OnValueChanged(StackedControllerDescription description)
 		{
-			this.UpdateWidgets ();
+			this.UpdateWidgets (description);
 			this.ValueChanged.Raise (this, description);
 		}
 

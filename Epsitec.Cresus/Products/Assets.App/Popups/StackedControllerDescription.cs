@@ -85,6 +85,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.PersonGuid:
 						return this.Height;
 
+					case StackedControllerType.Margins:
+						return MarginsStackedController.height;
+
+					case StackedControllerType.PageSize:
+						return PageSizeStackedController.height;
+
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", this.StackedControllerType));
 				}
@@ -103,13 +109,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.CategoryGuid:
 					case StackedControllerType.PersonGuid:
 					case StackedControllerType.Combo:
+					case StackedControllerType.Margins:
+					case StackedControllerType.PageSize:
 						return this.Width + 4;
 
 					case StackedControllerType.Int:
 						return IntStackedController.width + 38;  // 38 -> place pour les boutons -/+
 
 					case StackedControllerType.Decimal:
-						return DecimalStackedController.width + 10 + 50;  // 10 + 50 -> place pour les unités
+						return DecimalStackedController.width + 10 + 50 + 4;  // place pour les unités
 
  					case StackedControllerType.Date:
 						return DateStackedController.width;
@@ -141,6 +149,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.CategoryGuid:
 					case StackedControllerType.PersonGuid:
 					case StackedControllerType.Combo:
+					case StackedControllerType.Margins:
+					case StackedControllerType.PageSize:
 						return this.Label.GetTextWidth ();
 
 					case StackedControllerType.Radio:
@@ -198,6 +208,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				case StackedControllerType.Filename:
 					return new FilenameStackedController (accessor);
+
+				case StackedControllerType.Margins:
+					return new MarginsStackedController (accessor);
+
+				case StackedControllerType.PageSize:
+					return new PageSizeStackedController (accessor);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", description.StackedControllerType));

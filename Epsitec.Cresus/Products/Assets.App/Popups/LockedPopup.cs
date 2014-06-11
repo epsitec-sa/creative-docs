@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected override void UpdateWidgets()
+		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
 			//	Cache le champ date en mode "Déverrouiller".
 			this.SetVisibility (1, !this.IsDelete);

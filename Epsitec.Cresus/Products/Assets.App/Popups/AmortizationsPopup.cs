@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected override void UpdateWidgets()
+		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
 			this.SetVisibility (0, this.DateFromAllowed);
 			this.SetVisibility (1, this.DateToAllowed);

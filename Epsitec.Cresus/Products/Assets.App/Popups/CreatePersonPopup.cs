@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.okButton.Text = "Créer";
 		}
 
-		protected override void UpdateWidgets()
+		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
 			this.SetVisibility (2, this.UseModel);
 

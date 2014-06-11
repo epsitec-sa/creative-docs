@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.okButton.Text = "Voir";
 		}
 
-		protected override void UpdateWidgets()
+		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
 			this.SetVisibility (3, this.GroupEnable);
 			this.SetVisibility (4, this.GroupEnable);

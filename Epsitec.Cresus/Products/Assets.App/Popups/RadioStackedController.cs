@@ -65,6 +65,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.radios[index].Enable = enable;
 		}
 
+		public void Update()
+		{
+			this.UpdateRadios ();
+		}
+
 
 		private void UpdateRadios()
 		{
