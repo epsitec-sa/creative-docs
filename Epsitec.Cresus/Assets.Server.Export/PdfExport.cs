@@ -43,6 +43,18 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				OddBackgroundColor   = this.OddBackgroundColor,
 			};
 
+			if (!string.IsNullOrEmpty (this.Profile.Header))
+			{
+				setup.HeaderText    = this.GetSizedText (this.Profile.Header, 1.5);
+				setup.HeaderMargins = this.HeaderMargins;
+			}
+
+			if (!string.IsNullOrEmpty (this.Profile.Footer))
+			{
+				setup.FooterText    = this.GetSizedText (this.Profile.Footer, 1.5);
+				setup.FooterMargins = this.FooterMargins;
+			}
+
 			var array = new Array (info, setup);
 
 			if (!string.IsNullOrEmpty (this.Profile.Watermark))
@@ -183,6 +195,22 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 		}
 
+		private Margins HeaderMargins
+		{
+			get
+			{
+				return new Margins (0, 0, 0, this.Profile.FontSize*2.0);
+			}
+		}
+
+		private Margins FooterMargins
+		{
+			get
+			{
+				return new Margins (0, 0, this.Profile.FontSize*2.0, 0);
+			}
+		}
+
 		private Color EvenBackgroundColor
 		{
 			//	Retourne la couleur pour les lignes paires.
@@ -244,10 +272,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			return builder.ToString ();
 		}
 
-		private string GetSizedText(string text)
+		private string GetSizedText(string text, double scale = 1.0)
 		{
 			//	Retourne un texte enrichi de tags pour déterminer la taille de la police.
-			var fontSize = this.Profile.FontSize * 3.2;  // facteur empyrique, pour matcher sur les tailles usuelles dans Word
+			var fontSize = this.Profile.FontSize * scale * 3.2;  // 3.2 -> facteur empyrique, pour matcher sur les tailles usuelles dans Word
 			var size = fontSize.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			return string.Format ("<font size=\"{0}\">{1}</font>", size, text);
 		}
