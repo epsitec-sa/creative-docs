@@ -7,7 +7,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -65,29 +64,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		private string Summary
-		{
-			get
-			{
-				var desc = PageSizePopup.GetDescription (this.Value);
-
-				if (string.IsNullOrEmpty (desc))
-				{
-					var w = TypeConverters.DecimalToString ((decimal) this.Value.Width);
-					var h = TypeConverters.DecimalToString ((decimal) this.Value.Height);
-
-					return string.Format (" {0} mm, {1} mm", w, h);
-				}
-				else
-				{
-					return string.Concat (" ", desc);
-				}
-			}
-		}
-
 		private void UpdateButton()
 		{
-			this.button.Text = this.Summary;
+			this.button.Text = " " + PageSizePopup.GetDescription (this.Value);
 		}
 
 

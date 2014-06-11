@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		protected void SetDescriptions(List<StackedControllerDescription> descriptions)
+		protected void SetDescriptions(IEnumerable<StackedControllerDescription> descriptions)
 		{
 			this.descriptions.Clear ();
 			this.descriptions.AddRange (descriptions);
@@ -199,6 +199,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Met à jour les contrôleurs, après le changement d'une valeur.
 		}
 
+		protected int GetRankDescription(StackedControllerDescription description)
+		{
+			return this.descriptions.IndexOf (description);
+		}
+
 
 		#region Events handler
 		protected void OnValueChanged(StackedControllerDescription description)
@@ -216,7 +221,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int footerHeight = 30;
 
 		private readonly DataAccessor			accessor;
-		private readonly List<StackedControllerDescription> descriptions;
+		protected readonly List<StackedControllerDescription> descriptions;
 		private readonly List<AbstractStackedController> controllers;
 		private readonly List<FrameBox>			controllerVisibleFrames;
 		private readonly List<FrameBox>			controllerHiddenFrames;

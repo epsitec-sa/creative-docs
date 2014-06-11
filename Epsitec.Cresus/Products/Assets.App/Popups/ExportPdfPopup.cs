@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Margins,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Marges",
+				Label                 = "Marges des pages",
 			});
 
 			list.Add (new StackedControllerDescription  // 2
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 3
 			{
-				StackedControllerType = StackedControllerType.Decimal,
+				StackedControllerType = StackedControllerType.Margins,
 				DecimalFormat         = DecimalFormat.Millimeters,
 				Label                 = "Marges des cellules",
 				BottomMargin          = 10,
@@ -62,6 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Bool,
 				Label                 = "Une ligne sur deux en gris",
+				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 6
@@ -103,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Size		pageSize;
 				Margins		pageMargins;
 				double		fontSize;
-				double		cellMargins;
+				Margins		cellMargins;
 				bool		automaticColumnWidths;
 				bool		evenOddGrey;
 				string		header;
@@ -130,9 +131,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 
 				{
-					var controller = this.GetController (3) as DecimalStackedController;
+					var controller = this.GetController (3) as MarginsStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					cellMargins = (double) controller.Value.GetValueOrDefault ();
+					cellMargins = controller.Value;
 				}
 
 				{
@@ -171,7 +172,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					watermark = controller.Value;
 				}
 
-				return new PdfExportProfile (pageSize, pageMargins, new Margins (cellMargins), fontSize, automaticColumnWidths, evenOddGrey, header, footer, indent, watermark);
+				return new PdfExportProfile (pageSize, pageMargins, cellMargins, fontSize, automaticColumnWidths, evenOddGrey, header, footer, indent, watermark);
 			}
 			set
 			{
@@ -194,9 +195,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 
 				{
-					var controller = this.GetController (3) as DecimalStackedController;
+					var controller = this.GetController (3) as MarginsStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = (decimal) value.CellMargins.Left;
+					controller.Value = value.CellMargins;
 				}
 
 				{

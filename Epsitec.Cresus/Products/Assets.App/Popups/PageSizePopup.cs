@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -51,7 +52,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			});
 
 			this.SetDescriptions (list);
-			this.descriptions = list;
 		}
 
 
@@ -165,11 +165,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private int GetRankDescription(StackedControllerDescription description)
-		{
-			return this.descriptions.IndexOf (description);
-		}
-
 
 		#region Formats
 		public static string GetDescription(Size size)
@@ -188,8 +183,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				return string.Format ("{0} {1}", name, orientation);
 			}
+			else
+			{
+				var w = TypeConverters.DecimalToString ((decimal) size.Width);
+				var h = TypeConverters.DecimalToString ((decimal) size.Height);
 
-			return null;
+				return string.Format ("{0} × {1} mm", w, h);
+			}
 		}
 
 		private static string Labels
@@ -321,8 +321,5 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			Legal,
 		}
 		#endregion
-
-
-		private readonly List<StackedControllerDescription> descriptions;
 	}
 }

@@ -7,7 +7,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -41,14 +40,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.button.Clicked += delegate
 			{
-				this.ShowMarginsPopup ();
+				this.ShowMarginsPopup (description.Label);
 			};
 		}
 
 
-		private void ShowMarginsPopup()
+		private void ShowMarginsPopup(string title)
 		{
-			var popup = new MarginsPopup (this.accessor, "Marges dans la page")
+			var popup = new MarginsPopup (this.accessor, title)
 			{
 				Value = this.Value,
 			};
@@ -65,33 +64,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		private string Summary
-		{
-			get
-			{
-				if (this.Value.Left == this.Value.Right &&
-					this.Value.Left == this.Value.Top   &&
-					this.Value.Left == this.Value.Bottom)
-				{
-					var l = TypeConverters.DecimalToString ((decimal) this.Value.Left);
-
-					return string.Format (" {0} mm", l);
-				}
-				else
-				{
-					var l = TypeConverters.DecimalToString ((decimal) this.Value.Left);
-					var r = TypeConverters.DecimalToString ((decimal) this.Value.Right);
-					var t = TypeConverters.DecimalToString ((decimal) this.Value.Top);
-					var b = TypeConverters.DecimalToString ((decimal) this.Value.Bottom);
-
-					return string.Format (" {0} mm, {1} mm, {2} mm, {3} mm", l, r, t, b);
-				}
-			}
-		}
-
 		private void UpdateButton()
 		{
-			this.button.Text = this.Summary;
+			this.button.Text = " " + MarginsPopup.GetDescription (this.Value);
 		}
 
 
