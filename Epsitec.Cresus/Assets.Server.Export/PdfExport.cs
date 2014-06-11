@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	{
 		public override void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
 		{
+			this.humanFormat = true;
+
 			base.Export (instructions, profile, filler, columnsState);
 
 			this.FillArray (false);

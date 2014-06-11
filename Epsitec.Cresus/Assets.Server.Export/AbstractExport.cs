@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			if (cell.Value.HasValue)
 			{
-				return TypeConverters.AmountToString (cell.Value.Value.FinalAmortizedAmount);
+				return this.AmountToString (cell.Value.Value.FinalAmortizedAmount);
 			}
 			else
 			{
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			if (cell.Value.HasValue)
 			{
-				return TypeConverters.AmountToString (cell.Value.Value.FinalAmount);
+				return this.AmountToString (cell.Value.Value.FinalAmount);
 			}
 			else
 			{
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string BaseConvertToString(TreeTableCellDate cell, TreeTableColumnDescription description)
 		{
-			return TypeConverters.DateToString (cell.Value);
+			return this.DateToString (cell.Value);
 		}
 
 		private string BaseConvertToString(TreeTableCellDecimal cell, TreeTableColumnDescription description)
@@ -156,24 +156,125 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			switch (description.Type)
 			{
 				case TreeTableColumnType.Rate:
-					return TypeConverters.RateToString (cell.Value);
+					return this.RateToString (cell.Value);
 
 				case TreeTableColumnType.Amount:
-					return TypeConverters.AmountToString (cell.Value);
+					return this.AmountToString (cell.Value);
 
 				default:
-					return TypeConverters.DecimalToString (cell.Value);
+					return this.DecimalToString (cell.Value);
 			}
 		}
 
 		private string BaseConvertToString(TreeTableCellInt cell, TreeTableColumnDescription description)
 		{
-			return TypeConverters.IntToString (cell.Value);
+			return this.IntToString (cell.Value);
 		}
 
 		private string BaseConvertToString(TreeTableCellTree cell, TreeTableColumnDescription description)
 		{
 			return cell.Value;
+		}
+		#endregion
+
+
+		#region Universal converters
+		//	Si humanFormat == false, on utilise un format universel, qui ne met pas d'espace
+		//	pour séparer les milliers par exemple.
+
+		private string AmountToString(decimal? amount)
+		{
+			if (this.humanFormat)
+			{
+				return TypeConverters.AmountToString (amount);
+			}
+			else
+			{
+				if (amount.HasValue)
+				{
+					return amount.Value.ToString ("0.00");  // toujours 2 décimales
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+		private string RateToString(decimal? rate)
+		{
+			if (this.humanFormat)
+			{
+				return TypeConverters.RateToString (rate);
+			}
+			else
+			{
+				if (rate.HasValue)
+				{
+					return rate.Value.ToString (System.Globalization.CultureInfo.InvariantCulture) + "%";
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+		private string DecimalToString(decimal? value)
+		{
+			if (this.humanFormat)
+			{
+				return TypeConverters.DecimalToString (value);
+			}
+			else
+			{
+				if (value.HasValue)
+				{
+					return value.Value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+		private string IntToString(int? value)
+		{
+			if (this.humanFormat)
+			{
+				return TypeConverters.IntToString (value);
+			}
+			else
+			{
+				if (value.HasValue)
+				{
+					return value.Value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+		private string DateToString(System.DateTime? date)
+		{
+			if (this.humanFormat)
+			{
+				return TypeConverters.DateToString (date);
+			}
+			else
+			{
+				if (date.HasValue)
+				{
+					return date.Value.ToString ("dd.MM.yyyy");
+				}
+				else
+				{
+					return null;
+				}
+			}
 		}
 		#endregion
 
@@ -186,5 +287,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		protected int[]							levels;
 		protected int							rowCount;
 		protected int							columnCount;
+		protected bool							humanFormat;
 	}
 }
