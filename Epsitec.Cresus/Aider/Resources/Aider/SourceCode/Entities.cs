@@ -7457,6 +7457,30 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>DebugIds</c> field.
+		///	designer:fld/LVARD/LVA6L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA6L]", IsVirtual=true)]
+		public string DebugIds
+		{
+			get
+			{
+				string value = default (string);
+				this.GetDebugIds (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.DebugIds;
+				if (oldValue != value || !this.IsFieldDefined("[LVA6L]"))
+				{
+					this.OnDebugIdsChanging (oldValue, value);
+					this.SetDebugIds (value);
+					this.OnDebugIdsChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnContactTypeChanging(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
 		partial void OnContactTypeChanged(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
@@ -7494,12 +7518,16 @@ namespace Epsitec.Aider.Entities
 		partial void OnFullAddressTextSingleLineChanged(string oldValue, string newValue);
 		partial void OnFullAddressTextMultiLineChanging(string oldValue, string newValue);
 		partial void OnFullAddressTextMultiLineChanged(string oldValue, string newValue);
+		partial void OnDebugIdsChanging(string oldValue, string newValue);
+		partial void OnDebugIdsChanged(string oldValue, string newValue);
 		
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
 		partial void GetFullAddressTextSingleLine(ref string value);
 		partial void SetFullAddressTextSingleLine(string value);
 		partial void GetFullAddressTextMultiLine(ref string value);
 		partial void SetFullAddressTextMultiLine(string value);
+		partial void GetDebugIds(ref string value);
+		partial void SetDebugIds(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

@@ -209,6 +209,46 @@ namespace Epsitec.Aider.Entities
 			value = this.GetParticipations ().AsReadOnlyCollection ();
 		}
 
+		partial void GetDebugIds(ref string value)
+		{
+			EntityKey? keyPerson    = null;
+			EntityKey? keyHousehold = null;
+
+			var person    = this.Person;
+			var household = this.Household;
+
+			this.ExecuteWithDataContext (
+				context =>
+				{
+					keyPerson    = person.IsNull () ? null : context.GetNormalizedEntityKey (person);
+					keyHousehold = household.IsNull () ? null : context.GetNormalizedEntityKey (household);
+				});
+
+			var buffer = new System.Text.StringBuilder ();
+
+			if (keyPerson.HasValue)
+			{
+				buffer.Append (keyPerson.Value.ToString ());
+			}
+			else
+			{
+				buffer.Append ("<null>");
+			}
+
+			buffer.Append (":");
+
+			if (keyHousehold.HasValue)
+			{
+				buffer.Append (keyHousehold.Value.ToString ());
+			}
+			else
+			{
+				buffer.Append ("<null>");
+			}
+
+			value = buffer.ToString ();
+		}
+
 
 		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, bool isHead)
 		{

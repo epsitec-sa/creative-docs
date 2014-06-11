@@ -2102,6 +2102,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid AddressType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 459);
 				//	designer:cap/LVA4E
 				public static readonly global::Epsitec.Common.Support.Druid ContactType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 452);
+				//	designer:cap/LVA6L
+				public static readonly global::Epsitec.Common.Support.Druid DebugIds = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 678);
 				//	designer:cap/LVADE
 				public static readonly global::Epsitec.Common.Support.Druid DisplayAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 461);
 				//	designer:cap/LVACE

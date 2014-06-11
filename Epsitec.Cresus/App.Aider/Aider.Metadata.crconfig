@@ -299,6 +299,13 @@ AiderReferee = [LVADJ]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <!--
+        Debug et infos techniques
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA6L]" title="Clés internes (technique)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
     </t>
 
     <t eid="@AiderLegalPerson" n="default">
@@ -876,6 +883,13 @@ AiderReferee = [LVADJ]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVAFG]" title="Nom de la personne de contact" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <!--
+        Debug et infos techniques
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA6L]" title="Clés internes (technique)" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -1925,6 +1939,13 @@ AiderReferee = [LVADJ]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVAFG]" title="Nom de la personne de contact" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <!--
+        Debug et infos techniques
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA6L]" title="Clés internes (technique)" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>

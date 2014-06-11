@@ -81,6 +81,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		public static void ExecuteWithDataContext(this AbstractEntity entity,
+												  System.Action<DataContext> functionWithDataContext)
+		{
+			var dataContext = entity.GetDataContext ();
+
+			if ((dataContext != null) &&
+				(dataContext.IsPersistent (entity)))
+			{
+				functionWithDataContext (dataContext);
+			}
+		}
+
 		/// <summary>
 		/// Compares two entities and returns <c>true</c> if they refer to the same database key
 		/// or if they are the same memory instance.
