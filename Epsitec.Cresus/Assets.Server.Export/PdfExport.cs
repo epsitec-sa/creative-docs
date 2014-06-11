@@ -128,10 +128,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				return new Margins
 				(
-					(double) this.Profile.LeftMargin   * 10.0,
-					(double) this.Profile.RightMargin  * 10.0,
-					(double) this.Profile.TopMargin    * 10.0,
-					(double) this.Profile.BottomMargin * 10.0
+					this.Profile.PageMargins.Left   * 10.0,
+					this.Profile.PageMargins.Right  * 10.0,
+					this.Profile.PageMargins.Top    * 10.0,
+					this.Profile.PageMargins.Bottom * 10.0
 				);
 			}
 		}
@@ -142,10 +142,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				return new Margins
 				(
-					(double) this.Profile.CellMargins * 10.0,
-					(double) this.Profile.CellMargins * 10.0,
-					(double) this.Profile.CellMargins * 10.0,
-					(double) this.Profile.CellMargins * 10.0
+					this.Profile.CellMargins.Left   * 10.0,
+					this.Profile.CellMargins.Right  * 10.0,
+					this.Profile.CellMargins.Top    * 10.0,
+					this.Profile.CellMargins.Bottom * 10.0
 				);
 			}
 		}
@@ -184,8 +184,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			get
 			{
-				var w = (double) this.Profile.PageWidth  * 10.0;
-				var h = (double) this.Profile.PageHeight * 10.0;
+				var w = this.Profile.PageSize.Width  * 10.0;
+				var h = this.Profile.PageSize.Height * 10.0;
 
 				return new Size (w, h);
 			}
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string GetSizedText(string text)
 		{
-			var fontSize = this.Profile.FontSize * 3.2m;  // facteur empyrique, pour matcher sur les tailles usuelles dans Word
+			var fontSize = this.Profile.FontSize * 3.2;  // facteur empyrique, pour matcher sur les tailles usuelles dans Word
 			var size = fontSize.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			return string.Format ("<font size=\"{0}\">{1}</font>", size, text);
 		}

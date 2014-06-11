@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Export;
@@ -109,14 +110,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				decimal		pageWidth;
-				decimal		pageHeight;
-				decimal		leftMargin;
-				decimal		rightMargin;
-				decimal		topMargin;
-				decimal		bottomMargin;
-				decimal		fontSize;
-				decimal		cellMargins;
+				double		pageWidth;
+				double		pageHeight;
+				double		leftMargin;
+				double		rightMargin;
+				double		topMargin;
+				double		bottomMargin;
+				double		fontSize;
+				double		cellMargins;
 				bool		evenOddGrey;
 				string		indent;
 				string		watermark;
@@ -124,49 +125,49 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (0) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					pageWidth = controller.Value.GetValueOrDefault ();
+					pageWidth = (double) controller.Value.GetValueOrDefault ();
 				}
 
 				{
 					var controller = this.GetController (1) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					pageHeight = controller.Value.GetValueOrDefault ();
+					pageHeight = (double) controller.Value.GetValueOrDefault ();
 				}
 
 				{
 					var controller = this.GetController (2) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					leftMargin = controller.Value.GetValueOrDefault ();
+					leftMargin = (double) controller.Value.GetValueOrDefault ();
 				}
 
 				{
 					var controller = this.GetController (3) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					rightMargin = controller.Value.GetValueOrDefault ();
+					rightMargin = (double) controller.Value.GetValueOrDefault ();
 				}
 
 				{
 					var controller = this.GetController (4) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					topMargin = controller.Value.GetValueOrDefault ();
+					topMargin = (double) controller.Value.GetValueOrDefault ();
 				}
 
 				{
 					var controller = this.GetController (5) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					bottomMargin = controller.Value.GetValueOrDefault ();
+					bottomMargin = (double) controller.Value.GetValueOrDefault ();
 				}
 
 				{
 					var controller = this.GetController (6) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					fontSize = controller.Value.GetValueOrDefault ();
+					fontSize = (double) controller.Value.GetValueOrDefault ();
 				}
 
 				{
 					var controller = this.GetController (7) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					cellMargins = controller.Value.GetValueOrDefault ();
+					cellMargins = (double) controller.Value.GetValueOrDefault ();
 				}
 
 				{
@@ -187,56 +188,56 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					watermark = controller.Value;
 				}
 
-				return new PdfExportProfile (pageWidth, pageHeight, leftMargin, rightMargin, topMargin, bottomMargin, fontSize, cellMargins, evenOddGrey, indent, watermark);
+				return new PdfExportProfile (new Size (pageWidth, pageHeight), new Margins (leftMargin, rightMargin, topMargin, bottomMargin), new Margins(cellMargins), fontSize, evenOddGrey, indent, watermark);
 			}
 			set
 			{
 				{
 					var controller = this.GetController (0) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.PageWidth;
+					controller.Value = (decimal) value.PageSize.Width;
 				}
 
 				{
 					var controller = this.GetController (1) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.PageHeight;
+					controller.Value = (decimal) value.PageSize.Height;
 				}
 
 				{
 					var controller = this.GetController (2) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.LeftMargin;
+					controller.Value = (decimal) value.PageMargins.Left;
 				}
 
 				{
 					var controller = this.GetController (3) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.RightMargin;
+					controller.Value = (decimal) value.PageMargins.Right;
 				}
 
 				{
 					var controller = this.GetController (4) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.TopMargin;
+					controller.Value = (decimal) value.PageMargins.Top;
 				}
 
 				{
 					var controller = this.GetController (5) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.BottomMargin;
+					controller.Value = (decimal) value.PageMargins.Bottom;
 				}
 
 				{
 					var controller = this.GetController (6) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.FontSize;
+					controller.Value = (decimal) value.FontSize;
 				}
 
 				{
 					var controller = this.GetController (7) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.CellMargins;
+					controller.Value = (decimal) value.CellMargins.Left;
 				}
 
 				{
