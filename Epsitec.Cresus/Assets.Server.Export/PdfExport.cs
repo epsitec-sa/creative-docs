@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				PageMargins          = this.PageMargins,
 				CellMargins          = this.CellMargins,
+				BorderThickness      = this.BorderThickness,
 				LabelBackgroundColor = Color.FromBrightness (0.9),
 				EvenBackgroundColor  = this.EvenBackgroundColor, 
 				OddBackgroundColor   = this.OddBackgroundColor,
@@ -211,18 +212,48 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 		}
 
+		private double BorderThickness
+		{
+			//	Retourne la largeur des traits.
+			get
+			{
+				switch (this.Profile.Style)
+				{
+					case PdfStyle.Default:
+						return 1.0;
+
+					case PdfStyle.Light:
+						return 0.0;
+
+					case PdfStyle.Bold:
+						return 5.0;
+
+					case PdfStyle.GreyEvenOdd:
+					case PdfStyle.BlueEvenOdd:
+					case PdfStyle.YellowEvenOdd:
+					case PdfStyle.RedEvenOdd:
+					case PdfStyle.GreenEvenOdd:
+					case PdfStyle.Colored:
+						return 0.0;
+
+					default:
+						return 1.0;
+				}
+			}
+		}
+
 		private Color EvenBackgroundColor
 		{
 			//	Retourne la couleur pour les lignes paires.
 			get
 			{
-				if (this.Profile.EvenOddGrey)
+				switch (this.Profile.Style)
 				{
-					return Color.FromBrightness (0.95);
-				}
-				else
-				{
-					return Color.Empty;
+					case PdfStyle.Colored:
+						return Color.FromHexa ("fffdd4");
+
+					default:
+						return Color.Empty;
 				}
 			}
 		}
@@ -232,13 +263,26 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			//	Retourne la couleur pour les lignes impaires.
 			get
 			{
-				if (this.Profile.EvenOddGrey)
+				switch (this.Profile.Style)
 				{
-					return Color.Empty;
-				}
-				else
-				{
-					return Color.Empty;
+					case PdfStyle.GreyEvenOdd:
+						return Color.FromBrightness (0.95);
+
+					case PdfStyle.BlueEvenOdd:
+					case PdfStyle.Colored:
+						return Color.FromHexa ("d4e8ff");
+
+					case PdfStyle.YellowEvenOdd:
+						return Color.FromHexa ("fffdd4");
+
+					case PdfStyle.RedEvenOdd:
+						return Color.FromHexa ("ffd4d4");
+
+					case PdfStyle.GreenEvenOdd:
+						return Color.FromHexa ("d7ffd4");
+
+					default:
+						return Color.Empty;
 				}
 			}
 		}

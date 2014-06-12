@@ -52,6 +52,7 @@
     <Compile Include="ExportInstructions.cs" />
     <Compile Include="Helpers\String.cs" />
     <Compile Include="JsonExport.cs" />
+    <Compile Include="PdfStyle.cs" />
     <Compile Include="PdfExportProfile.cs" />
     <Compile Include="PdfExport.cs" />
     <Compile Include="YamlExportProfile.cs" />

@@ -25,26 +25,35 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 0
 			{
+				StackedControllerType = StackedControllerType.Combo,
+				Label                 = "Style",
+				MultiLabels           = PdfStyleHelpers.Labels,
+				Width                 = 240,
+				BottomMargin          = 10,
+			});
+
+			list.Add (new StackedControllerDescription  // 1
+			{
 				StackedControllerType = StackedControllerType.PageSize,
 				DecimalFormat         = DecimalFormat.Millimeters,
 				Label                 = "Format des pages",
 			});
 
-			list.Add (new StackedControllerDescription  // 1
+			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Margins,
 				DecimalFormat         = DecimalFormat.Millimeters,
 				Label                 = "Marges des pages",
 			});
 
-			list.Add (new StackedControllerDescription  // 2
+			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Real,
 				Label                 = "Taille de police",
 			});
 
-			list.Add (new StackedControllerDescription  // 3
+			list.Add (new StackedControllerDescription  // 4
 			{
 				StackedControllerType = StackedControllerType.Margins,
 				DecimalFormat         = DecimalFormat.Millimeters,
@@ -52,16 +61,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				BottomMargin          = 10,
 			});
 
-			list.Add (new StackedControllerDescription  // 4
-			{
-				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Largeurs des colonnes selon le contenu",
-			});
-
 			list.Add (new StackedControllerDescription  // 5
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Une ligne sur deux en gris",
+				Label                 = "Largeurs des colonnes selon le contenu",
 				BottomMargin          = 10,
 			});
 
@@ -101,51 +104,51 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
+				PdfStyle	style;
 				Size		pageSize;
 				Margins		pageMargins;
 				double		fontSize;
 				Margins		cellMargins;
 				bool		automaticColumnWidths;
-				bool		evenOddGrey;
 				string		header;
 				string		footer;
 				string		indent;
 				string		watermark;
 
 				{
-					var controller = this.GetController (0) as PageSizeStackedController;
+					var controller = this.GetController (0) as ComboStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					style = PdfStyleHelpers.IntToStyle (controller.Value);
+				}
+
+				{
+					var controller = this.GetController (1) as PageSizeStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					pageSize = controller.Value;
 				}
 
 				{
-					var controller = this.GetController (1) as MarginsStackedController;
+					var controller = this.GetController (2) as MarginsStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					pageMargins = controller.Value;
 				}
 
 				{
-					var controller = this.GetController (2) as DecimalStackedController;
+					var controller = this.GetController (3) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					fontSize = (double) controller.Value.GetValueOrDefault ();
 				}
 
 				{
-					var controller = this.GetController (3) as MarginsStackedController;
+					var controller = this.GetController (4) as MarginsStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					cellMargins = controller.Value;
 				}
 
 				{
-					var controller = this.GetController (4) as BoolStackedController;
-					System.Diagnostics.Debug.Assert (controller != null);
-					automaticColumnWidths = controller.Value;
-				}
-
-				{
 					var controller = this.GetController (5) as BoolStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					evenOddGrey = controller.Value;
+					automaticColumnWidths = controller.Value;
 				}
 
 				{
@@ -172,44 +175,44 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					watermark = controller.Value;
 				}
 
-				return new PdfExportProfile (pageSize, pageMargins, cellMargins, fontSize, automaticColumnWidths, evenOddGrey, header, footer, indent, watermark);
+				return new PdfExportProfile (style, pageSize, pageMargins, cellMargins, fontSize, automaticColumnWidths, header, footer, indent, watermark);
 			}
 			set
 			{
 				{
-					var controller = this.GetController (0) as PageSizeStackedController;
+					var controller = this.GetController (0) as ComboStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = PdfStyleHelpers.StyleToInt (value.Style);
+				}
+
+				{
+					var controller = this.GetController (1) as PageSizeStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.PageSize;
 				}
 
 				{
-					var controller = this.GetController (1) as MarginsStackedController;
+					var controller = this.GetController (2) as MarginsStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.PageMargins;
 				}
 
 				{
-					var controller = this.GetController (2) as DecimalStackedController;
+					var controller = this.GetController (3) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = (decimal) value.FontSize;
 				}
 
 				{
-					var controller = this.GetController (3) as MarginsStackedController;
+					var controller = this.GetController (4) as MarginsStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.CellMargins;
 				}
 
 				{
-					var controller = this.GetController (4) as BoolStackedController;
-					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.AutomaticColumnWidths;
-				}
-
-				{
 					var controller = this.GetController (5) as BoolStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.EvenOddGrey;
+					controller.Value = value.AutomaticColumnWidths;
 				}
 
 				{

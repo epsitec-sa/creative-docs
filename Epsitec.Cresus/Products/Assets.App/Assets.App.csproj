@@ -74,6 +74,7 @@
     <Compile Include="AssetsUI.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
     <Compile Include="Export\Converters.cs" />
+    <Compile Include="Export\PdfStyleHelpers.cs" />
     <Compile Include="Export\ExportEngine.cs" />
     <Compile Include="Export\EncodingHelpers.cs" />
     <Compile Include="Export\ExportHelpers.cs" />
