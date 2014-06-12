@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			int value = 0;
 
-			foreach (var e in PdfPredefinedStyleHelpers.Predefined)
+			foreach (var predefined in PdfPredefinedStyleHelpers.Predefined)
 			{
-				if (style == PdfStyle.Factory (e))
+				if (style == PdfStyle.Factory (predefined))
 				{
 					return value;
 				}
@@ -41,15 +41,16 @@ namespace Epsitec.Cresus.Assets.App.Export
 			}
 		}
 
+
 		private static PdfPredefinedStyle StyleToPredefined(PdfStyle style)
 		{
 			int value = 0;
 
-			foreach (var e in PdfPredefinedStyleHelpers.Predefined)
+			foreach (var predefined in PdfPredefinedStyleHelpers.Predefined)
 			{
-				if (style == PdfStyle.Factory (e))
+				if (style == PdfStyle.Factory (predefined))
 				{
-					return e;
+					return predefined;
 				}
 
 				value++;

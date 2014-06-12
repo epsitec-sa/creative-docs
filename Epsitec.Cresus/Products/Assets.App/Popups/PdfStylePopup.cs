@@ -3,9 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Export;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -163,13 +161,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			int rank = this.GetRank (description);
 
-			if (rank == 0)  // modification du style ?
+			if (rank == 0)  // modification du style prédéfini ?
 			{
 				var controller = this.GetController (0) as ComboStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 
-				var style = PdfPredefinedStyleHelpers.IntToPredefined (controller.Value);
-				this.Value = PdfStyle.Factory (style);
+				var predefined = PdfPredefinedStyleHelpers.IntToPredefined (controller.Value);
+				this.Value = PdfStyle.Factory (predefined);
 			}
 			else  // autre modification ?
 			{

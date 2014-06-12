@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			if (this.Profile.Font != ExportFont.Unknown)
 			{
-				var font = ExportFontHelpers.GetFontName (this.Profile.Font);
+				var font = this.Profile.Font.GetFontName ();
 				text = PdfExport<T>.GetFontText (text, font);
 			}
 

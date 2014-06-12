@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Constructeur statique, qui peuple une fois pour toutes le dictionnaire.
 			Converters.dict = new Dictionary<string, string> ();
 
+			Converters.dict.Add ("•",  "&lt;BULLET&gt;");	// édite <BULLET> (unicode 2022)
 			Converters.dict.Add ("\t", "&lt;TAB&gt;");		// édite <TAB>
 			Converters.dict.Add ("\r", "&lt;CR&gt;");		// édite <CR>
 			Converters.dict.Add ("\n", "&lt;LF&gt;");		// édite <LF>
