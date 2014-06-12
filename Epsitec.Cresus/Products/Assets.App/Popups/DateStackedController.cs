@@ -17,7 +17,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public System.DateTime?					Value;
+		public System.DateTime?					Value
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if (this.value != value)
+				{
+					this.value = value;
+
+					if (this.controller != null)
+					{
+						this.controller.Date = this.Value;
+					}
+				}
+			}
+		}
 
 		public override bool					HasError
 		{
@@ -57,6 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public const int width  = DateController.controllerWidth;
 		public const int height = DateController.controllerHeight;
 
+		private System.DateTime?				value;
 		private DateController					controller;
 	}
 }

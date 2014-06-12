@@ -17,7 +17,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public int?								Value;
+		public int?								Value
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if (this.value != value)
+				{
+					this.value = value;
+
+					if (this.controller != null)
+					{
+						this.controller.Value = this.Value;
+					}
+				}
+			}
+		}
 
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
@@ -43,11 +61,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		public void Update()
-		{
-			this.controller.Value = this.Value;
-		}
-
 		public override void SetFocus()
 		{
 			this.controller.SetFocus ();
@@ -68,6 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private int?							value;
 		private EnumFieldController				controller;
 	}
 }

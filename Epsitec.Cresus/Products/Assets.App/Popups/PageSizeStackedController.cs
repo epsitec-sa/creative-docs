@@ -19,7 +19,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public Size							Value;
+		public Size							Value
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if (this.value != value)
+				{
+					this.value = value;
+
+					if (this.button != null)
+					{
+						this.UpdateButton ();
+					}
+				}
+			}
+		}
 
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
@@ -59,7 +77,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				if (name == "ok")
 				{
 					this.Value = popup.Value;
-					this.UpdateButton ();
 				}
 			};
 		}
@@ -72,6 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public const int height = AbstractFieldController.lineHeight + 4;
 
+		private Size							value;
 		private ColoredButton					button;
 	}
 }

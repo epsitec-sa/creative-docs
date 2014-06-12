@@ -18,7 +18,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public int?								Value;
+		public int?								Value
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if (this.value != value)
+				{
+					this.value = value;
+
+					this.UpdateRadios ();
+				}
+			}
+		}
 
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
@@ -65,11 +80,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.radios[index].Enable = enable;
 		}
 
-		public void Update()
-		{
-			this.UpdateRadios ();
-		}
-
 
 		private void UpdateRadios()
 		{
@@ -84,6 +94,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public const int radioHeight = 17;
 
+		private int?							value;
 		private readonly List<RadioButton>		radios;
 	}
 }

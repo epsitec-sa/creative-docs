@@ -139,9 +139,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			int rank = this.GetRankDescription (description);
+			int rank = this.GetRank (description);
 
 			if (rank == 0)  // modification de la marge unifiée ?
 			{
@@ -154,38 +155,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				this.Value = this.Value;
 			}
-
-			//	Met à jour tous les contrôleurs.
-			{
-				var controller = this.GetController (0) as DecimalStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Update ();
-			}
-
-			{
-				var controller = this.GetController (1) as DecimalStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Update ();
-			}
-
-			{
-				var controller = this.GetController (2) as DecimalStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Update ();
-			}
-
-			{
-				var controller = this.GetController (3) as DecimalStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Update ();
-			}
-
-			{
-				var controller = this.GetController (4) as DecimalStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Update ();
-			}
 		}
+
 
 		public static string GetDescription(Margins margins)
 		{

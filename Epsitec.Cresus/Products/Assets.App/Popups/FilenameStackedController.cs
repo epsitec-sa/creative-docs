@@ -20,7 +20,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public string							Value;
+		public string							Value
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if (this.value != value)
+				{
+					this.value = value;
+
+					if (this.controller != null)
+					{
+						this.controller.Value = this.Value;
+					}
+				}
+			}
+		}
+
 		public ExportFormat						Format;
 
 
@@ -120,6 +139,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private const int browseWidth = 75;
 
+		private string							value;
 		private Widget							parent;
 		private StackedControllerDescription	description;
 		private StringFieldController			controller;

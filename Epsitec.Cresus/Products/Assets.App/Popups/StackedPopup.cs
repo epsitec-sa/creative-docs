@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Met à jour les contrôleurs, après le changement d'une valeur.
 		}
 
-		protected int GetRankDescription(StackedControllerDescription description)
+		protected int GetRank(StackedControllerDescription description)
 		{
 			return this.descriptions.IndexOf (description);
 		}
@@ -220,14 +220,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int verticalGap  = 4;
 		private const int footerHeight = 30;
 
-		private readonly DataAccessor			accessor;
-		protected readonly List<StackedControllerDescription> descriptions;
-		private readonly List<AbstractStackedController> controllers;
-		private readonly List<FrameBox>			controllerVisibleFrames;
-		private readonly List<FrameBox>			controllerHiddenFrames;
+		private readonly DataAccessor						accessor;
+		private readonly List<StackedControllerDescription>	descriptions;
+		private readonly List<AbstractStackedController>	controllers;
+		private readonly List<FrameBox>						controllerVisibleFrames;
+		private readonly List<FrameBox>						controllerHiddenFrames;
 
-		protected string						title;
-		protected Button						okButton;
-		protected Button						cancelButton;
+		protected string									title;
+		protected Button									okButton;
+		protected Button									cancelButton;
 	}
 }
