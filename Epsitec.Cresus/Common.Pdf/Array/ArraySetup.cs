@@ -21,6 +21,7 @@ namespace Epsitec.Common.Pdf.Array
 			this.LabelBackgroundColor = Color.FromBrightness (0.9);  // gris très clair
 			this.EvenBackgroundColor  = Color.Empty;
 			this.OddBackgroundColor   = Color.Empty;
+			this.BorderColor          = Color.FromBrightness (0.0);  // noir
 		}
 
 		public Margins CellMargins
@@ -85,6 +86,13 @@ namespace Epsitec.Common.Pdf.Array
 		public Color OddBackgroundColor
 		{
 			//	Couleur de fond pour les lignes impaires du tableau.
+			set;
+			get;
+		}
+
+		public Color BorderColor
+		{
+			//	Couleur des traits d'encadrement du tableau.
 			set;
 			get;
 		}

@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Pdf.Array;
 using Epsitec.Common.Pdf.Engine;
+using Epsitec.Cresus.Assets.Export.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
@@ -39,9 +40,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				PageMargins          = this.PageMargins,
 				CellMargins          = this.CellMargins,
 				BorderThickness      = this.BorderThickness,
-				LabelBackgroundColor = Color.FromBrightness (0.9),
+				LabelBackgroundColor = this.LabelBackgroundColor,
 				EvenBackgroundColor  = this.EvenBackgroundColor, 
 				OddBackgroundColor   = this.OddBackgroundColor,
+				BorderColor          = this.BorderColor,
 			};
 
 			if (!string.IsNullOrEmpty (this.Profile.Header))
@@ -217,28 +219,16 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			//	Retourne la largeur des traits.
 			get
 			{
-				switch (this.Profile.Style)
-				{
-					case PdfStyle.Default:
-						return 1.0;
+				return this.Profile.Style.BorderThickness * 10.0;
+			}
+		}
 
-					case PdfStyle.Light:
-						return 0.0;
-
-					case PdfStyle.Bold:
-						return 5.0;
-
-					case PdfStyle.GreyEvenOdd:
-					case PdfStyle.BlueEvenOdd:
-					case PdfStyle.YellowEvenOdd:
-					case PdfStyle.RedEvenOdd:
-					case PdfStyle.GreenEvenOdd:
-					case PdfStyle.Colored:
-						return 0.0;
-
-					default:
-						return 1.0;
-				}
+		private Color LabelBackgroundColor
+		{
+			//	Retourne la couleur pour les en-têtes.
+			get
+			{
+				return this.Profile.Style.LabelColor.GetColor ();
 			}
 		}
 
@@ -247,14 +237,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			//	Retourne la couleur pour les lignes paires.
 			get
 			{
-				switch (this.Profile.Style)
-				{
-					case PdfStyle.Colored:
-						return Color.FromHexa ("fffdd4");
-
-					default:
-						return Color.Empty;
-				}
+				return this.Profile.Style.EvenColor.GetColor ();
 			}
 		}
 
@@ -263,27 +246,16 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			//	Retourne la couleur pour les lignes impaires.
 			get
 			{
-				switch (this.Profile.Style)
-				{
-					case PdfStyle.GreyEvenOdd:
-						return Color.FromBrightness (0.95);
+				return this.Profile.Style.OddColor.GetColor ();
+			}
+		}
 
-					case PdfStyle.BlueEvenOdd:
-					case PdfStyle.Colored:
-						return Color.FromHexa ("d4e8ff");
-
-					case PdfStyle.YellowEvenOdd:
-						return Color.FromHexa ("fffdd4");
-
-					case PdfStyle.RedEvenOdd:
-						return Color.FromHexa ("ffd4d4");
-
-					case PdfStyle.GreenEvenOdd:
-						return Color.FromHexa ("d7ffd4");
-
-					default:
-						return Color.Empty;
-				}
+		private Color BorderColor
+		{
+			//	Retourne la couleur pour les traits.
+			get
+			{
+				return this.Profile.Style.BorderColor.GetColor ();
 			}
 		}
 

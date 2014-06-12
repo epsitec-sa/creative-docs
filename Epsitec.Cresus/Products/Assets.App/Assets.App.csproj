@@ -74,7 +74,9 @@
     <Compile Include="AssetsUI.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
     <Compile Include="Export\Converters.cs" />
+    <Compile Include="Export\ExportColorHelpers.cs" />
     <Compile Include="Export\PdfStyleHelpers.cs" />
+    <Compile Include="Export\PdfPredefinedStyleHelpers.cs" />
     <Compile Include="Export\ExportEngine.cs" />
     <Compile Include="Export\EncodingHelpers.cs" />
     <Compile Include="Export\ExportHelpers.cs" />
@@ -95,6 +97,8 @@
     <Compile Include="Popups\BoolStackedController.cs" />
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\AssetCopyPopup.cs" />
+    <Compile Include="Popups\PdfStyleStackedController.cs" />
+    <Compile Include="Popups\PdfStylePopup.cs" />
     <Compile Include="Popups\PageSizeStackedController.cs" />
     <Compile Include="Popups\PageSizePopup.cs" />
     <Compile Include="Popups\MarginsStackedController.cs" />

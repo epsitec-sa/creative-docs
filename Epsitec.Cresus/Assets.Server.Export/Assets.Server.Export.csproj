@@ -49,10 +49,13 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="AbstractExport.cs" />
+    <Compile Include="ExportColor.cs" />
     <Compile Include="ExportInstructions.cs" />
-    <Compile Include="Helpers\String.cs" />
+    <Compile Include="Helpers\ExportColorHelpers.cs" />
+    <Compile Include="Helpers\StringHelpers.cs" />
     <Compile Include="JsonExport.cs" />
     <Compile Include="PdfStyle.cs" />
+    <Compile Include="PdfPredefinedStyle.cs" />
     <Compile Include="PdfExportProfile.cs" />
     <Compile Include="PdfExport.cs" />
     <Compile Include="YamlExportProfile.cs" />

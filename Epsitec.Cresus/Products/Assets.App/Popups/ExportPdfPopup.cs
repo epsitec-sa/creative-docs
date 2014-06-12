@@ -25,10 +25,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 0
 			{
-				StackedControllerType = StackedControllerType.Combo,
+				StackedControllerType = StackedControllerType.PdfStyle,
 				Label                 = "Style",
-				MultiLabels           = PdfStyleHelpers.Labels,
-				Width                 = 240,
 				BottomMargin          = 10,
 			});
 
@@ -116,9 +114,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				string		watermark;
 
 				{
-					var controller = this.GetController (0) as ComboStackedController;
+					var controller = this.GetController (0) as PdfStyleStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					style = PdfStyleHelpers.IntToStyle (controller.Value);
+					style = controller.Value;
 				}
 
 				{
@@ -180,9 +178,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			set
 			{
 				{
-					var controller = this.GetController (0) as ComboStackedController;
+					var controller = this.GetController (0) as PdfStyleStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = PdfStyleHelpers.StyleToInt (value.Style);
+					controller.Value = value.Style;
 				}
 
 				{

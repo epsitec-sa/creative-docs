@@ -21,5 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		Filename,
 		Margins,
 		PageSize,
+		PdfStyle,
 	}
 }

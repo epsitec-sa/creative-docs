@@ -148,7 +148,7 @@ namespace Epsitec.Common.Pdf.Array
 			if (this.Setup.BorderThickness > 0)
 			{
 				port.LineWidth = this.Setup.BorderThickness;
-				port.Color = Color.FromBrightness (0);  // noir
+				port.Color = this.Setup.BorderColor;
 				port.PaintOutline (path);
 			}
 

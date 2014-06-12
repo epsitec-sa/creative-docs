@@ -91,6 +91,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.PageSize:
 						return PageSizeStackedController.height;
 
+					case StackedControllerType.PdfStyle:
+						return PdfStyleStackedController.height;
+
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", this.StackedControllerType));
 				}
@@ -111,6 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Combo:
 					case StackedControllerType.Margins:
 					case StackedControllerType.PageSize:
+					case StackedControllerType.PdfStyle:
 						return this.Width + 4;
 
 					case StackedControllerType.Int:
@@ -151,6 +155,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.Combo:
 					case StackedControllerType.Margins:
 					case StackedControllerType.PageSize:
+					case StackedControllerType.PdfStyle:
 						return this.Label.GetTextWidth ();
 
 					case StackedControllerType.Radio:
@@ -214,6 +219,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				case StackedControllerType.PageSize:
 					return new PageSizeStackedController (accessor);
+
+				case StackedControllerType.PdfStyle:
+					return new PdfStyleStackedController (accessor);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", description.StackedControllerType));

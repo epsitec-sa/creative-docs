@@ -32,6 +32,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			if (!this.objectEditor.HasError && this.accessor.EditionAccessor.SaveObjectEdition ())
+			{
+				this.DataChanged ();
+			}
+
 			var topBox = new FrameBox
 			{
 				Parent  = parent,

@@ -1,0 +1,26 @@
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Epsitec.Cresus.Assets.Server.Export
+{
+	public enum ExportColor
+	{
+		Unknown,
+		Transparent,
+
+		White,
+		LightGrey,
+		Grey,
+		DarkGrey,
+		Black,
+
+		LightRed,
+		LightGreen,
+		LightBlue,
+		LightYellow,
+		LightPurple,
+	}
+}

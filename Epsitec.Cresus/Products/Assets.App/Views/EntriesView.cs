@@ -30,6 +30,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			if (this.accessor.EditionAccessor.SaveObjectEdition ())
+			{
+				this.DataChanged ();
+			}
+
 			this.listFrameBox = new FrameBox
 			{
 				Parent = parent,
