@@ -46,12 +46,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 3
 			{
+				StackedControllerType = StackedControllerType.Combo,
+				Label                 = "Police",
+				MultiLabels           = ExportFontHelpers.Labels,
+				Width                 = 240,
+			});
+
+			list.Add (new StackedControllerDescription  // 4
+			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Real,
 				Label                 = "Taille de police",
 			});
 
-			list.Add (new StackedControllerDescription  // 4
+			list.Add (new StackedControllerDescription  // 5
 			{
 				StackedControllerType = StackedControllerType.Margins,
 				DecimalFormat         = DecimalFormat.Millimeters,
@@ -59,35 +67,35 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				BottomMargin          = 10,
 			});
 
-			list.Add (new StackedControllerDescription  // 5
+			list.Add (new StackedControllerDescription  // 6
 			{
 				StackedControllerType = StackedControllerType.Bool,
 				Label                 = "Largeurs des colonnes selon le contenu",
 				BottomMargin          = 10,
 			});
 
-			list.Add (new StackedControllerDescription  // 6
+			list.Add (new StackedControllerDescription  // 7
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "En-tête",
 				Width                 = 240,
 			});
 
-			list.Add (new StackedControllerDescription  // 7
+			list.Add (new StackedControllerDescription  // 8
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "Pied de page",
 				Width                 = 240,
 			});
 
-			list.Add (new StackedControllerDescription  // 8
+			list.Add (new StackedControllerDescription  // 9
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "Indentation",
 				Width                 = 240,
 			});
 
-			list.Add (new StackedControllerDescription  // 9
+			list.Add (new StackedControllerDescription  // 10
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "Filigrane",
@@ -105,6 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				PdfStyle	style;
 				Size		pageSize;
 				Margins		pageMargins;
+				ExportFont	font;
 				double		fontSize;
 				Margins		cellMargins;
 				bool		automaticColumnWidths;
@@ -132,48 +141,54 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 
 				{
-					var controller = this.GetController (3) as DecimalStackedController;
+					var controller = this.GetController (3) as ComboStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					font = ExportFontHelpers.IntToFont (controller.Value.GetValueOrDefault (-1));
+				}
+
+				{
+					var controller = this.GetController (4) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					fontSize = (double) controller.Value.GetValueOrDefault ();
 				}
 
 				{
-					var controller = this.GetController (4) as MarginsStackedController;
+					var controller = this.GetController (5) as MarginsStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					cellMargins = controller.Value;
 				}
 
 				{
-					var controller = this.GetController (5) as BoolStackedController;
+					var controller = this.GetController (6) as BoolStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					automaticColumnWidths = controller.Value;
 				}
 
 				{
-					var controller = this.GetController (6) as TextStackedController;
+					var controller = this.GetController (7) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					header = controller.Value;
 				}
 
 				{
-					var controller = this.GetController (7) as TextStackedController;
+					var controller = this.GetController (8) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					footer = controller.Value;
 				}
 
 				{
-					var controller = this.GetController (8) as TextStackedController;
+					var controller = this.GetController (9) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					indent = Converters.EditableToInternal (controller.Value);
 				}
 
 				{
-					var controller = this.GetController (9) as TextStackedController;
+					var controller = this.GetController (10) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					watermark = controller.Value;
 				}
 
-				return new PdfExportProfile (style, pageSize, pageMargins, cellMargins, fontSize, automaticColumnWidths, header, footer, indent, watermark);
+				return new PdfExportProfile (style, pageSize, pageMargins, cellMargins, font, fontSize, automaticColumnWidths, header, footer, indent, watermark);
 			}
 			set
 			{
@@ -196,43 +211,49 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 
 				{
-					var controller = this.GetController (3) as DecimalStackedController;
+					var controller = this.GetController (3) as ComboStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					controller.Value = ExportFontHelpers.FontToInt (value.Font);
+				}
+
+				{
+					var controller = this.GetController (4) as DecimalStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = (decimal) value.FontSize;
 				}
 
 				{
-					var controller = this.GetController (4) as MarginsStackedController;
+					var controller = this.GetController (5) as MarginsStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.CellMargins;
 				}
 
 				{
-					var controller = this.GetController (5) as BoolStackedController;
+					var controller = this.GetController (6) as BoolStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.AutomaticColumnWidths;
 				}
 
 				{
-					var controller = this.GetController (6) as TextStackedController;
+					var controller = this.GetController (7) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.Header;
 				}
 
 				{
-					var controller = this.GetController (7) as TextStackedController;
+					var controller = this.GetController (8) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.Footer;
 				}
 
 				{
-					var controller = this.GetController (8) as TextStackedController;
+					var controller = this.GetController (9) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = Converters.InternalToEditable (value.Indent);
 				}
 
 				{
-					var controller = this.GetController (9) as TextStackedController;
+					var controller = this.GetController (10) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.Watermark;
 				}

@@ -49,8 +49,10 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="AbstractExport.cs" />
+    <Compile Include="ExportFont.cs" />
     <Compile Include="ExportColor.cs" />
     <Compile Include="ExportInstructions.cs" />
+    <Compile Include="Helpers\ExportFontHelpers.cs" />
     <Compile Include="Helpers\ExportColorHelpers.cs" />
     <Compile Include="Helpers\StringHelpers.cs" />
     <Compile Include="JsonExport.cs" />

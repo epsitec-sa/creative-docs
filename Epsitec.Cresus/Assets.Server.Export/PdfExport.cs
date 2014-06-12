@@ -48,13 +48,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			if (!string.IsNullOrEmpty (this.Profile.Header))
 			{
-				setup.HeaderText    = this.GetSizedText (this.Profile.Header, 1.5);
+				setup.HeaderText    = this.GetFormattedText (this.Profile.Header, 1.5);
 				setup.HeaderMargins = this.HeaderMargins;
 			}
 
 			if (!string.IsNullOrEmpty (this.Profile.Footer))
 			{
-				setup.FooterText    = this.GetSizedText (this.Profile.Footer, 1.5);
+				setup.FooterText    = this.GetFormattedText (this.Profile.Footer, 1.5);
 				setup.FooterMargins = this.FooterMargins;
 			}
 
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				}
 			}
 
-			return new CellContent (this.GetSizedText (content));
+			return new CellContent (this.GetFormattedText (content));
 		}
 
 		private int TotalColumnWidths
@@ -132,14 +132,14 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			if (this.Profile.AutomaticColumnWidths)
 			{
 				var columnType = this.GetColumnType (description);
-				return new ColumnDefinition (this.GetSizedText (description.Header), columnType, alignment: alignment);
+				return new ColumnDefinition (this.GetFormattedText (description.Header), columnType, alignment: alignment);
 			}
 			else
 			{
 				double pageWidth = this.Profile.PageSize.Width - this.Profile.PageMargins.Width;
 
 				double absoluteWidth = width * 10.0 * pageWidth / this.totalColumnWidths;
-				return new ColumnDefinition (this.GetSizedText (description.Header), ColumnType.Absolute, absoluteWidth, alignment: alignment);
+				return new ColumnDefinition (this.GetFormattedText (description.Header), ColumnType.Absolute, absoluteWidth, alignment: alignment);
 			}
 		}
 
@@ -288,12 +288,46 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			return builder.ToString ();
 		}
 
-		private string GetSizedText(string text, double scale = 1.0)
+		private string GetFormattedText(string text, double scale = 1.0)
+		{
+			//	Retourne un texte enrichi de tags pour déterminer la police.
+			var size = this.Profile.FontSize * scale * 3.2;  // 3.2 -> facteur empyrique, pour matcher sur les tailles usuelles dans Word
+			text = PdfExport<T>.GetSizedText (text, size);
+
+			if (this.Profile.Font != ExportFont.Unknown)
+			{
+				var font = ExportFontHelpers.GetFontName (this.Profile.Font);
+				text = PdfExport<T>.GetFontText (text, font);
+			}
+
+			return text;
+		}
+
+		private static string GetSizedText(string text, double size)
 		{
 			//	Retourne un texte enrichi de tags pour déterminer la taille de la police.
-			var fontSize = this.Profile.FontSize * scale * 3.2;  // 3.2 -> facteur empyrique, pour matcher sur les tailles usuelles dans Word
-			var size = fontSize.ToString (System.Globalization.CultureInfo.InvariantCulture);
-			return string.Format ("<font size=\"{0}\">{1}</font>", size, text);
+			if (size == 0.0)
+			{
+				return text;
+			}
+			else
+			{
+				var s = size.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				return string.Format ("<font size=\"{0}\">{1}</font>", s, text);
+			}
+		}
+
+		private static string GetFontText(string text, string font)
+		{
+			//	Retourne un texte enrichi de tags pour déterminer le nom de la police.
+			if (string.IsNullOrEmpty (font))
+			{
+				return text;
+			}
+			else
+			{
+				return string.Format ("<font face=\"{0}\">{1}</font>", font, text);
+			}
 		}
 
 
