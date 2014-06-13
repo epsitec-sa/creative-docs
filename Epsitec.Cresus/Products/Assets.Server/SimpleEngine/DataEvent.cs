@@ -9,6 +9,11 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
+	/**
+	 **
+	 **	ATTENTION: cette classe n'est pas thread safe
+	 **
+	 **/
 	public class DataEvent : IGuid
 	{
 		public DataEvent(Timestamp timestamp, EventType type)
