@@ -40,6 +40,26 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				
 		}
 
+		public static string GenerateFileNameForUser(string username, string fileExt)
+		{
+			var path = CoreContext.GetFileDepotPath ("downloads");
+			var filesInfo = System.IO.Directory.EnumerateFiles (path).Select (f => new System.IO.FileInfo (f));
+
+
+
+			var todayUserFilesMarker =	System.DateTime.Now.ToShortDateString ().Replace ('.', '-')
+										+ "-" + username.Replace ('.', '_') + "-";
+			var todayUserFilesCounter = filesInfo
+											.Where(f => f.FullName.Contains(todayUserFilesMarker))
+											.Count ();
+
+			var filename	= "AIDER-"
+							+ todayUserFilesMarker
+							+ todayUserFilesCounter.ToString()
+							+ fileExt;
+			return filename;
+		}
+
 		private Response DownloadFile(WorkerApp app, dynamic parameters)
 		{
 			var filePath = CoreContext.GetFileDepotPath ("downloads",parameters.filename);

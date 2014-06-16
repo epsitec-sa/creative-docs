@@ -274,7 +274,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var user		= LoginModule.GetUserName (this);
 			var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
-			var filename	= job.Id + fileExt;
+			var filename    = DownloadsModule.GenerateFileNameForUser (user, fileExt);
+		
 			var finishMetaData = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
 			var caches		= this.CoreServer.Caches;
 			
