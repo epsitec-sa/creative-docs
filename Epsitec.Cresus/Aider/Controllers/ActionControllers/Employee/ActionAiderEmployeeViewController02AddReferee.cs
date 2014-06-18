@@ -40,15 +40,35 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected override void GetForm(ActionBrick<AiderEmployeeEntity, SimpleBrick<AiderEmployeeEntity>> form)
 		{
-			form
-				.Title ("Ajouter une répondance")
-				.Field<AiderGroupEntity> ()
-					.Title ("Région")
-				.End ()
-				.Field<EmployeeReferenceType> ()
-					.Title ("Répondance")
-				.End ()
-			.End ();
+			var user = AiderUserManager.Current.AuthenticatedUser;
+			if(user.IsAdmin ())
+			{
+				form
+					.Title ("Ajouter une répondance")
+					.Field<AiderGroupEntity> ()
+						.Title ("Région")
+					.End ()
+					.Field<EmployeeReferenceType> ()
+						.Title ("Répondance")
+					.End ()
+				.End ();
+			}
+			else
+			{
+				var region = user.Office.ParishGroup.GetRootGroup ();
+				form
+					.Title ("Ajouter une répondance")
+					.Field<AiderGroupEntity> ()
+						.Title ("Région")
+						.InitialValue (this.BusinessContext.GetLocalEntity (region))
+						.ReadOnly ()
+					.End ()
+					.Field<EmployeeReferenceType> ()
+						.Title ("Répondance")
+					.End ()
+				.End ();			
+			}
+			
 		}
 
 		private void Execute(AiderGroupEntity group, EmployeeReferenceType referenceType)

@@ -64,6 +64,27 @@ namespace Epsitec.Aider.Entities
 			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);
 		}
 
+		public bool CanEditEmployee()
+		{
+			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);
+		}
+
+		public bool CanEditReferee()
+		{
+			return ((this.Role.Name == AiderUserRoleEntity.RegionRole) || this.HasPowerLevel (UserPowerLevel.Administrator))
+					&& this.IsOfficeDefined ();
+		}
+
+		public bool IsOfficeDefined()
+		{
+			return this.Office.IsNotNull ();
+		}
+
+		public bool IsAdmin()
+		{
+			return this.HasPowerLevel (UserPowerLevel.Administrator);
+		}
+
 		public void SetPassword(string password, string confirmation)
 		{
 			if (password == null)

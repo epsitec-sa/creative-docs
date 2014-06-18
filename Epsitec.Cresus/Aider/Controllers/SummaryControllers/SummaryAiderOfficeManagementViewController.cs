@@ -36,17 +36,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				this.CreateBricksGuestUser (wall);
 			}
 
-			wall.AddBrick (p => p.Employees)
-				.Attribute (BrickMode.HideAddButton)
-				.Attribute (BrickMode.HideRemoveButton)
-				.Attribute (BrickMode.AutoGroup)
-				.Attribute (BrickMode.DefaultToSummarySubView)
-				.WithSpecialController (typeof (SummaryAiderEmployeeViewController1WithPersonDetails))
-				.Template ()
-					.Title ("Employés et ministres")
-					.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
-				.End ();
-
 			if ((this.Entity.ParishGroup.IsNotNull ()) &&
 				(this.Entity.ParishGroup.IsRegion ()))
 			{
@@ -82,6 +71,17 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Attribute (BrickMode.DefaultToSetSubView)
 						.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
 			}
+
+			wall.AddBrick (p => p.Employees)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.WithSpecialController (typeof (SummaryAiderEmployeeViewController1WithPersonDetails))
+					.Template ()
+						.Title ("Employés et ministres")
+						.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
+					.End ();
 		}
 
 		private void CreateBricksTrustedUser(BrickWall<AiderOfficeManagementEntity> wall)
@@ -128,6 +128,17 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				
 			}
 
+			wall.AddBrick (p => p.Employees)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.WithSpecialController (typeof (SummaryAiderEmployeeViewController2OfficeManagement))
+					.Template ()
+						.Title ("Employés et ministres")
+						.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
+					.End ();
+
 			wall.AddBrick (p => p.AssociatedGroups)
 						.Icon ("Data.AiderGroup.People")
 						.Title ("Groupes associés")
@@ -135,6 +146,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Attribute (BrickMode.AutoGroup)
 						.Attribute (BrickMode.HideAddButton)
 						.Attribute (BrickMode.HideRemoveButton)
+						.WithSpecialController (typeof (SummaryAiderGroupViewController1OfficeManagement))
 						.Template ()
 							.Text (x => x.GetNameWithRegion ())
 						.End ();

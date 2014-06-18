@@ -106,6 +106,11 @@ namespace Epsitec.Aider.Entities
 			return this.Parents.First ().Name;
 		}
 
+		public AiderGroupEntity GetRootGroup()
+		{
+			return this.Parents.First ();
+		}
+
 		public bool CanHaveSubgroups()
 		{
 			var definition = this.GroupDef;

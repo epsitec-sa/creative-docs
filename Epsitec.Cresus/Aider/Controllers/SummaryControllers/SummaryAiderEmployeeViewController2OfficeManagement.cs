@@ -13,20 +13,23 @@ using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
-	public sealed class SummaryAiderEmployeeViewController : SummaryViewController<AiderEmployeeEntity>
+	[ControllerSubType (2)]
+	public sealed class SummaryAiderEmployeeViewController2OfficeManagement : SummaryViewController<AiderEmployeeEntity>
 	{
 		protected override void CreateBricks(BrickWall<AiderEmployeeEntity> wall)
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
 
 			wall.AddBrick ()
-				.Attribute (BrickMode.DefaultToNoSubView).IfFalse (user.CanEditEmployee ());
+				.Attribute (BrickMode.DefaultToNoSubView);
+
+			wall.AddBrick (x => x.PersonContact)
+				.Attribute (BrickMode.DefaultToSummarySubView);
 
 			wall.AddBrick (x => x.EmployeeJobs)
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.AutoGroup)
-				.Attribute (BrickMode.DefaultToNoSubView).IfFalse (user.CanEditEmployee ())
 				.EnableActionMenu<ActionAiderEmployeeViewController01AddJob> ().IfTrue (user.CanEditEmployee ())
 				.EnableActionMenu<ActionAiderEmployeeViewController03RemoveJob> ().IfTrue (user.CanEditEmployee ())
 				.Template ()

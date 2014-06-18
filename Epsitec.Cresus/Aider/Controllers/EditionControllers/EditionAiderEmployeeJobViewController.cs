@@ -16,12 +16,14 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderEmployeeJobEntity> wall)
 		{
+			var user = AiderUserManager.Current.AuthenticatedUser;
+
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.Office)
 					.Field (x => x.Description)
-					.Field (x => x.EmployeeJobFunction)
-					.Field (x => x.Employer)
+					.Field (x => x.EmployeeJobFunction).ReadOnly ().IfFalse (user.CanEditEmployee ())
+					.Field (x => x.Employer).ReadOnly ().IfFalse (user.CanEditEmployee ())
 				.End ();
 		}
 	}

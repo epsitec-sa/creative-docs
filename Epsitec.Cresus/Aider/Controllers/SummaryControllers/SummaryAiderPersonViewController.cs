@@ -33,8 +33,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var user = AiderUserManager.Current.AuthenticatedUser;
 
 			bool showEmployeeTile   = this.Entity.Employee.IsNotNull ();
-			bool showEmployeeAction = (showEmployeeTile == false) && this.HasUserPowerLevel (UserPowerLevel.Administrator);
-
+			bool showEmployeeAction = (showEmployeeTile == false) && user.CanEditEmployee ();
+			bool canEditEmployee	= user.CanEditEmployee () || user.CanEditReferee ();
 
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
@@ -53,8 +53,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Title ("Emploi")
 					.Text (x => x.GetEmployeeSummary ())
 					.Attribute (BrickMode.DefaultToSummarySubView)
-					.WithSpecialController (typeof (SummaryAiderEmployeeViewController1WithPersonDetails)).IfFalse (this.HasUserPowerLevel (UserPowerLevel.Administrator))
-					;
+					.WithSpecialController (typeof (SummaryAiderEmployeeViewController1WithPersonDetails)).IfFalse (canEditEmployee);
 			}
 
 			wall.AddBrick ()
