@@ -199,7 +199,7 @@ function() {
     },
 
     // Overrides the method defined in EntityTile.
-    showAction: function(viewId, callback) {
+    showAction: function(viewId, inQueue, callback) {
       var entityId = this.selectedItem === null ?
           null : this.selectedItem.entityId;
 

@@ -27,11 +27,11 @@ function() {
     /* Static methods */
 
     statics: {
-      showDialog: function(viewId, typeId, callback) {
+      showDialog: function(viewId, typeId, inQueue, callback) {
         var url = 'proxy/layout/type/' + Epsitec.ViewMode.brickCreation + '/' +
             viewId + '/' + typeId;
 
-        Epsitec.Action.showDialog(url, 'Epsitec.TypeAction', callback);
+        Epsitec.Action.showDialog(url, 'Epsitec.TypeAction', inQueue, callback);
       }
     }
   });

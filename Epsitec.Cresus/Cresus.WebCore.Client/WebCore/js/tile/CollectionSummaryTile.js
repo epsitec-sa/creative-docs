@@ -122,7 +122,7 @@ function() {
     },
 
     // Overrides the method defined in EntityTile.
-    showAction: function(viewId, callback) {
+    showAction: function(viewId,inQueue, callback) {
       this.column.showTemplateAction(viewId, this.entityId, callback);
     },
 

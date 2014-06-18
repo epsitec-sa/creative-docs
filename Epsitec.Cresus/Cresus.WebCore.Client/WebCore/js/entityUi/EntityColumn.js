@@ -81,7 +81,7 @@ function() {
 
     showTemplateAction: function(viewId, aEntityId, callback) {
       this.columnManager.showAction(
-          Epsitec.ViewMode.action, viewId, this.entityId, aEntityId, callback
+          Epsitec.ViewMode.action, viewId, this.entityId, aEntityId, null, callback
       );
     }
   });

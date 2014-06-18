@@ -74,7 +74,7 @@ function() {
           this.createEntityWithViewCallback, this);
 
       Epsitec.TypeAction.showDialog(
-          this.creationViewId, this.entityTypeId, callback
+          this.creationViewId, this.entityTypeId, null, callback
       );
     },
 
@@ -177,7 +177,7 @@ function() {
     reload: function(columnManager) {
       columnManager.removeAllColumns();
       this.setLoading(false,true);
-      this.resetStore(false);  
+      this.resetStore(false);
       this.store.load();
     },
 
@@ -188,8 +188,8 @@ function() {
       this.resetStore(false);
       this.setLoading(false,true);
       columnManager.removeAllColumns();
-    
-      
+
+
       result = this.store.data.findBy(function(record) {
           return record.getId() === entityId;
       });
@@ -216,14 +216,14 @@ function() {
               false,
               function() {
                 this.setLoading(false);
-                this.getSelectionModel().select(entityIndex);           
+                this.getSelectionModel().select(entityIndex);
               },
               this
           );
         },
         scope: this
       });
-      
+
     },
 
     selectEntity: function(entityId, suppressEvent) {
