@@ -678,8 +678,8 @@
   <data name="Fld.AiderGroupDef.RoleCacheDisabled" id="OR33">&lt;s:data id="_0" f:Name="RoleCacheDisabled" /&gt;</data>
   <data name="Fld.AiderMailingParticipant.GroupParticipation" id="OS33">&lt;s:data id="_0" f:Name="GroupParticipation" /&gt;</data>
   <data name="Fld.AiderMailing.IsGroupedByHousehold" id="OT33">&lt;s:data id="_0" f:Name="IsGroupedByHousehold" /&gt;</data>
-  <data name="Fld.AiderGroupDef.GloballyVisibleToParishes" id="OU33">&lt;s:data id="_0" f:Name="GloballyVisibleToParishes" f:Labels="{Collection {Text 'Visible en gestion de type paroisse'}}" /&gt;</data>
-  <data name="Fld.AiderGroupDef.GloballyVisibleToRegions" id="OV33">&lt;s:data id="_0" f:Name="GloballyVisibleToRegions" f:Labels="{Collection {Text 'Visible en gestion de type cantonal'}}" /&gt;</data>
+  <data name="Fld.AiderGroupDef.GloballyVisibleToParishes" id="OU33">&lt;s:data id="_0" f:Name="GloballyVisibleToParishes" f:Labels="{Collection {Text 'Visible en gestion de type \&amp;quot;paroisse\&amp;quot;'}}" /&gt;</data>
+  <data name="Fld.AiderGroupDef.GloballyVisibleToRegions" id="OV33">&lt;s:data id="_0" f:Name="GloballyVisibleToRegions" f:Labels="{Collection {Text 'Visible en gestion de type \&amp;quot;région\&amp;quot;'}}" /&gt;</data>
   <data name="Fld.AiderOfficeManagement.AssociatedGroups" id="O043">&lt;s:data id="_0" f:Name="AssociatedGroups" f:Labels="{Collection {Text 'Groupes associés'}}" /&gt;</data>
   <data name="Fld.AiderContact.DebugIds" id="A6L">&lt;s:data id="_0" f:Name="DebugIds" f:Labels="{Collection {Text 'Clés internes (technique)'}}" /&gt;</data>
 </bundle>
