@@ -102,6 +102,21 @@ namespace Epsitec.Aider.Override
 		}
 
 
+		public static void NotifyBusinessRuleOverride(string messageText)
+		{
+			var user  = UserManager.Current.AuthenticatedUser;
+			var notif = NotificationManager.GetCurrentNotificationManager ();
+			
+			var message = new NotificationMessage ()
+			{
+				Title = Resources.Text ("Avertissement – Règle métier non respectée"),
+				Body = messageText
+			};
+
+			notif.WarnUser (user.LoginName, message, When.Now);
+		}
+
+
 		private void NotifyUserLogin(AiderUserEntity user, NotificationManager notif)
 		{
 			if (user.Office.IsNotNull ())

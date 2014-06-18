@@ -19,6 +19,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Rules
 {
@@ -157,6 +158,15 @@ namespace Epsitec.Aider.Rules
 				{
 					if (string.IsNullOrEmpty (postBox))
 					{
+						if (UserManager.HasUserPowerLevel (UserPowerLevel.Administrator))
+						{
+							//	Never mind if the administrator assigns an address without a street.
+							//	Let him do so, but send him a warning, nevertheless.
+
+							AiderUserManager.NotifyBusinessRuleOverride ("L'adresse saisie ne comporte pas de nom de rue.");
+							return;
+						}
+
 						Logic.BusinessRuleException (address, Resources.Text ("Le nom de rue est obligatoire."));
 					}
 					
@@ -189,16 +199,7 @@ namespace Epsitec.Aider.Rules
 						//	Never mind if the administrator assigns invalid street addresses...
 						//	Let him do so, but send him a warning, nevertheless.
 
-						var user  = UserManager.Current.AuthenticatedUser;
-						var notif = NotificationManager.GetCurrentNotificationManager ();
-						var message = new NotificationMessage ()
-						{
-							Title = Resources.Text ("Avertissement – Règle métier non respectée"),
-							Body = FormattedText.FromSimpleText (string.Format (Resources.Text ("La rue \"{0}\" n'a pas été trouvée pour \"{1}\"."), street, townName))
-						};
-
-						notif.WarnUser (user.LoginName, message, When.Now);
-
+						AiderUserManager.NotifyBusinessRuleOverride (string.Format (Resources.Text ("La rue \"{0}\" n'a pas été trouvée pour \"{1}\"."), street, townName));
 						return;
 					}
 

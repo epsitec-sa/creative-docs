@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
@@ -206,7 +206,7 @@ namespace Epsitec.Aider.Data.Subscription
 				if (line.DistrictNumber == null)
 				{
 					if ((this.skipLinesWithDistrictNumberError) ||
-						(string.IsNullOrEmpty (line.Street)) ||
+						(string.IsNullOrEmpty (line.Street) && string.IsNullOrEmpty (line.AddressComplement)) ||
 						(string.IsNullOrEmpty (line.Town)) ||
 						(string.IsNullOrEmpty (line.Firstname)) ||
 						(string.IsNullOrEmpty (line.Lastname)))
