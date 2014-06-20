@@ -24,12 +24,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			this.lines = AccountsImport.ReadLines (filename);
 
-			if (this.lines != null)
-			{
-				this.accountNumber = 1;
-				this.AddAccount ("0", "Plan comptable", AccountCategory.Unknown, AccountType.Groupe);
-				this.Import ();
-			}
+			this.accountNumber = 1;
+			this.AddAccount ("0", "Plan comptable", AccountCategory.Unknown, AccountType.Groupe);
+			this.Import ();
 		}
 
 
@@ -281,14 +278,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static string[] ReadLines(string filename)
 		{
-			try
-			{
-				return System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
-			}
-			catch
-			{
-				return null;
-			}
+			return System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
 		}
 
 
