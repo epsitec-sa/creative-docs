@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	TODO: Hack à supprimer dès que possible !
 
 			var exeRootPath = Globals.Directories.ExecutableRoot;
-			var filename = System.IO.Path.Combine (exeRootPath, "External", "Data", "pme 2011.crpx");
+			var filename = System.IO.Path.Combine (exeRootPath, "External", "Data", "pme 2011.crp");
 
 			using (var importEngine = new AccountsImport ())
 			{

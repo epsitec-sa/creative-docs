@@ -22,17 +22,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.accounts = accounts;
 			this.accounts.Clear ();
 
-			this.lines = AccountsImport.ReadLines (filename);
-
-			this.accountNumber = 1;
-			this.AddAccount ("0", "Plan comptable", AccountCategory.Unknown, AccountType.Groupe);
-			this.Import ();
+			this.ReadLines (filename);
+			this.AddAccounts ();
 		}
 
 
-		private void Import()
+		private void AddAccounts()
 		{
 			//	Importe tous les comptes.
+			this.accountNumber = 1;
+			this.AddAccount ("0", "Plan comptable", AccountCategory.Unknown, AccountType.Groupe);
+
 			int indexCompte = this.IndexOfLine ("BEGIN=COMPTES");
 
 			var groups  = new Dictionary<string, string> ();
@@ -276,9 +276,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return -1;
 		}
 
-		private static string[] ReadLines(string filename)
+		private void ReadLines(string filename)
 		{
-			return System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
+			this.lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
 		}
 
 
