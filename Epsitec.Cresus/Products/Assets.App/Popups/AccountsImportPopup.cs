@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = AccountsImportHelpers.MultiLabels,
+				MultiLabels           = AccountsMergeModeHelpers.MultiLabels,
 				BottomMargin          = 10,
 			});
 
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (0) as RadioStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					mode = AccountsImportHelpers.GetMode (controller.Value.GetValueOrDefault ());
+					mode = AccountsMergeModeHelpers.GetMode (controller.Value.GetValueOrDefault ());
 				}
 
 				{
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (0) as RadioStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = AccountsImportHelpers.GetRank (value.Mode);
+					controller.Value = AccountsMergeModeHelpers.GetRank (value.Mode);
 				}
 
 				{

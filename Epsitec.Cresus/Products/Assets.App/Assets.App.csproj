@@ -90,7 +90,7 @@
     <Compile Include="Helpers\TreeTableFiller.cs" />
     <Compile Include="EventHandler.cs" />
     <Compile Include="Helpers\Text.cs" />
-    <Compile Include="Import\AccountsImportHelpers.cs" />
+    <Compile Include="Import\AccountsMergeModeHelpers.cs" />
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />

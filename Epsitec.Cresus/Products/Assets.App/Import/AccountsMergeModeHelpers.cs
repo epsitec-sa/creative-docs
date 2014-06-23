@@ -7,12 +7,12 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public static class AccountsImportHelpers
+	public static class AccountsMergeModeHelpers
 	{
 		public static AccountsMergeMode GetMode(int rank)
 		{
 			//	Retourne un format d'après son rang.
-			var list = AccountsImportHelpers.AccountsMergeModes.ToArray ();
+			var list = AccountsMergeModeHelpers.AccountsMergeModes.ToArray ();
 
 			if (rank >= 0 && rank < list.Length)
 			{
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public static int GetRank(AccountsMergeMode mode)
 		{
 			//	Retourne le rang d'un format, ou -1.
-			var list = AccountsImportHelpers.AccountsMergeModes.ToList ();
+			var list = AccountsMergeModeHelpers.AccountsMergeModes.ToList ();
 			return list.IndexOf (mode);
 		}
 
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Retourne le texte permettant de créer des boutons radios.
 			get
 			{
-				return string.Join ("<br/>", AccountsImportHelpers.AccountsMergeModes.Select (x => AccountsImportHelpers.GetModeName (x)));
+				return string.Join ("<br/>", AccountsMergeModeHelpers.AccountsMergeModes.Select (x => AccountsMergeModeHelpers.GetModeName (x)));
 			}
 		}
 
