@@ -67,7 +67,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private int GetDeep(GroupTreeNodeGetter nodeGetter)
 		{
-			return nodeGetter.GetNodes ().Max (x => x.Level) + 1;
+			if (nodeGetter.GetNodes ().Any ())
+			{
+				return nodeGetter.GetNodes ().Max (x => x.Level) + 1;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 	}
 }
