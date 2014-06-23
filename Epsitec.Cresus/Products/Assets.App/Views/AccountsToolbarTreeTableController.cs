@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CopyCustomization     = new CommandCustomization (null, "Copier le compte");
 			this.PasteCustomization    = new CommandCustomization (null, "Coller le compte");
 			this.ExportCustomization   = new CommandCustomization (null, "Exporter les comptes");
+			this.ImportCustomization   = new CommandCustomization (null, "Importer un plan comptable de Crésus Comptabilité (fichier .crp)");
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AccountsSettings);
 
@@ -135,6 +136,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
 			});
+		}
+
+		protected override void OnImport()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
+			MessagePopup.ShowMessage (target, "coucou");
 		}
 
 

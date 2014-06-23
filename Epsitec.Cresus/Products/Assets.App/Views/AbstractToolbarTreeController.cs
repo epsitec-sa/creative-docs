@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public CommandCustomization				CopyCustomization;
 		public CommandCustomization				PasteCustomization;
 		public CommandCustomization				ExportCustomization;
+		public CommandCustomization				ImportCustomization;
 
 		public bool								ShowGraphic
 		{
@@ -90,6 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				CopyCustomization     = this.CopyCustomization,
 				PasteCustomization    = this.PasteCustomization,
 				ExportCustomization   = this.ExportCustomization,
+				ImportCustomization   = this.ImportCustomization,
 			};
 
 			this.toolbar.CreateUI (parent);
@@ -183,6 +185,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case ToolbarCommand.Export:
 						this.OnExport ();
+						break;
+
+					case ToolbarCommand.Import:
+						this.OnImport ();
 						break;
 				}
 			};
@@ -414,6 +420,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			MessagePopup.ShowTodo (target);
 		}
 
+		protected virtual void OnImport()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
+			MessagePopup.ShowTodo (target);
+		}
+
 
 		protected virtual void UpdateToolbar()
 		{
@@ -439,6 +451,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,   this.IsCopyEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
 			this.toolbar.SetCommandEnable (ToolbarCommand.Export, true);
+			this.toolbar.SetCommandEnable (ToolbarCommand.Import, true);
 		}
 
 		protected virtual bool IsCopyEnable

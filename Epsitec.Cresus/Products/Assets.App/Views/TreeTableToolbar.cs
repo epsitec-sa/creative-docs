@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public CommandCustomization				CopyCustomization;
 		public CommandCustomization				PasteCustomization;
 		public CommandCustomization				ExportCustomization;
+		public CommandCustomization				ImportCustomization;
 
 		public bool								HasGraphic
 		{
@@ -142,9 +143,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.separator4       = this.CreateSeparator     (DockStyle.None);
 
-			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy,       this.CopyCustomization.Icon     ?? "TreeTable.Copy",     this.CopyCustomization.Tooltip   ?? "Copier");
-			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste,      this.PasteCustomization.Icon    ?? "TreeTable.Paste",    this.PasteCustomization.Tooltip  ?? "Coller");
-			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export,     this.ExportCustomization.Icon   ?? "TreeTable.Export",   this.ExportCustomization.Tooltip ?? "Exporter");
+			if (!this.CopyCustomization.IsEmpty)
+			{
+				this.buttonCopy = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy, this.CopyCustomization.Icon ?? "TreeTable.Copy", this.CopyCustomization.Tooltip ?? "Copier");
+			}
+
+			if (!this.PasteCustomization.IsEmpty)
+			{
+				this.buttonPaste = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste, this.PasteCustomization.Icon ?? "TreeTable.Paste", this.PasteCustomization.Tooltip ?? "Coller");
+			}
+
+			if (!this.ExportCustomization.IsEmpty)
+			{
+				this.buttonExport = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export, this.ExportCustomization.Icon ?? "TreeTable.Export", this.ExportCustomization.Tooltip ?? "Exporter");
+			}
+
+			if (!this.ImportCustomization.IsEmpty)
+			{
+				this.buttonImport = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Import, this.ImportCustomization.Icon ?? "TreeTable.Import", this.ImportCustomization.Tooltip ?? "Importer");
+			}
 
 			this.buttonGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -259,7 +276,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (width > used + size*3 + AbstractCommandToolbar.separatorWidth)
 			{
-				used += size*3 + AbstractCommandToolbar.separatorWidth;
+				used += size*this.CopyPasteGroupCount + AbstractCommandToolbar.separatorWidth;
 				copyPaste = true;
 				sep4 = true;
 			}
@@ -295,9 +312,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			yield return new ButtonState (this.separator4, sep4);
 
-			yield return new ButtonState (this.buttonCopy,   copyPaste);
-			yield return new ButtonState (this.buttonPaste,  copyPaste);
-			yield return new ButtonState (this.buttonExport, copyPaste);
+			if (!this.CopyCustomization.IsEmpty)
+			{
+				yield return new ButtonState (this.buttonCopy, copyPaste);
+			}
+
+			if (!this.PasteCustomization.IsEmpty)
+			{
+				yield return new ButtonState (this.buttonPaste, copyPaste);
+			}
+
+			if (!this.ExportCustomization.IsEmpty)
+			{
+				yield return new ButtonState (this.buttonExport, copyPaste);
+			}
+
+			if (!this.ImportCustomization.IsEmpty)
+			{
+				yield return new ButtonState (this.buttonImport, copyPaste);
+			}
+		}
+
+		private int CopyPasteGroupCount
+		{
+			get
+			{
+				return this.CopyPasteGroup.Where (x => !x.IsEmpty).Count ();
+			}
+		}
+
+		private IEnumerable<CommandCustomization> CopyPasteGroup
+		{
+			get
+			{
+				yield return this.CopyCustomization;
+				yield return this.PasteCustomization;
+				yield return this.ExportCustomization;
+				yield return this.ImportCustomization;
+			}
 		}
 
 		private struct ButtonState
@@ -346,6 +398,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						buttonCopy;
 		private IconButton						buttonPaste;
 		private IconButton						buttonExport;
+		private IconButton						buttonImport;
 
 		private bool							hasGraphic;
 		private bool							hasFilter;

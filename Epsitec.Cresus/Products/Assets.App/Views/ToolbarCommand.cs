@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Copy,
 		Paste,
 		Export,
+		Import,
 		ReportSelect,
 		ReportParams,
 		ReportExport,
