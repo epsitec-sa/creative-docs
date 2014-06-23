@@ -21,7 +21,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.importData  = import;
 			this.mode        = mode;
 
-			if (this.mode == AccountsMergeMode.XferAll)
+			if (this.mode == AccountsMergeMode.XferAll ||
+				current.Any () == false)
 			{
 				this.XferAll ();
 			}
@@ -43,6 +44,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private void Merge()
 		{
+			// TODO...
 		}
 
 

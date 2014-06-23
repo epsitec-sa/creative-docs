@@ -12,9 +12,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class FilenameStackedController : AbstractStackedController
+	public class ExportFilenameStackedController : AbstractStackedController
 	{
-		public FilenameStackedController(DataAccessor accessor)
+		public ExportFilenameStackedController(DataAccessor accessor)
 			: base (accessor)
 		{
 		}
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Value      = this.Value,
 				LabelWidth = 0,
-				EditWidth  = description.Width - FilenameStackedController.browseWidth,
+				EditWidth  = description.Width - ExportFilenameStackedController.browseWidth,
 				TabIndex   = tabIndex,
 			};
 
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock             = DockStyle.Right,
 				ButtonStyle      = ButtonStyle.Icon,
 				AutoFocus        = false,
-				PreferredWidth   = FilenameStackedController.browseWidth - 2,
+				PreferredWidth   = ExportFilenameStackedController.browseWidth - 2,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (2, 0, 0, 0),
 			};
@@ -104,8 +104,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			//	Affiche le dialogue permettant de choisir un fichier à exporter.
 			const string title      = "Nom du fichier à exporter";
-			string initialDirectory = System.IO.Path.GetDirectoryName (this.Value);
-			string filename         = System.IO.Path.GetFileName (this.Value);
+			string initialDirectory = string.IsNullOrEmpty (this.Value) ? null : System.IO.Path.GetDirectoryName (this.Value);
+			string filename         = string.IsNullOrEmpty (this.Value) ? null : System.IO.Path.GetFileName (this.Value);
 			string ext              = ExportInstructionsPopup.GetFormatExt  (this.Format);
 			string formatName       = ExportInstructionsPopup.GetFormatName (this.Format);
 

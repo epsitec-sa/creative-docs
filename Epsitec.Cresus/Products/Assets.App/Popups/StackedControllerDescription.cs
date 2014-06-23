@@ -61,7 +61,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				switch (this.StackedControllerType)
 				{
 					case StackedControllerType.Text:
-					case StackedControllerType.Filename:
+					case StackedControllerType.ExportFilename:
+					case StackedControllerType.ImportAccountsFilename:
 					case StackedControllerType.Combo:
 						return TextStackedController.height;
 
@@ -107,7 +108,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				switch (this.StackedControllerType)
 				{
 					case StackedControllerType.Text:
-					case StackedControllerType.Filename:
+					case StackedControllerType.ExportFilename:
+					case StackedControllerType.ImportAccountsFilename:
 					case StackedControllerType.GroupGuid:
 					case StackedControllerType.CategoryGuid:
 					case StackedControllerType.PersonGuid:
@@ -145,7 +147,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				switch (this.StackedControllerType)
 				{
 					case StackedControllerType.Text:
-					case StackedControllerType.Filename:
+					case StackedControllerType.ExportFilename:
+					case StackedControllerType.ImportAccountsFilename:
 					case StackedControllerType.Int:
 					case StackedControllerType.Decimal:
 					case StackedControllerType.Date:
@@ -211,8 +214,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				case StackedControllerType.PersonGuid:
 					return new PersonGuidStackedController (accessor);
 
-				case StackedControllerType.Filename:
-					return new FilenameStackedController (accessor);
+				case StackedControllerType.ExportFilename:
+					return new ExportFilenameStackedController (accessor);
+
+				case StackedControllerType.ImportAccountsFilename:
+					return new ImportAccountsFilenameStackedController (accessor);
 
 				case StackedControllerType.Margins:
 					return new MarginsStackedController (accessor);

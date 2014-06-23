@@ -56,6 +56,7 @@
     <Compile Include="BusinessLogic\AccountsMergeMode.cs" />
     <Compile Include="BusinessLogic\CategoriesLogic.cs" />
     <Compile Include="BusinessLogic\AccountsMerge.cs" />
+    <Compile Include="BusinessLogic\AccountsImportInstructions.cs" />
     <Compile Include="BusinessLogic\GroupsLogic.cs" />
     <Compile Include="BusinessLogic\LogicDescriptions.cs" />
     <Compile Include="BusinessLogic\AccountsLogic.cs" />

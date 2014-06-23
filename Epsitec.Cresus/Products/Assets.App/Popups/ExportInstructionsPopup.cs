@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 1
 			{
-				StackedControllerType = StackedControllerType.Filename,
+				StackedControllerType = StackedControllerType.ExportFilename,
 				Label                 = "Fichier",
 				Width                 = 300,
 			});
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 
 				{
-					var controller = this.GetController (1) as FilenameStackedController;
+					var controller = this.GetController (1) as ExportFilenameStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					filename = controller.Value;
 				}
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 
 				{
-					var controller = this.GetController (1) as FilenameStackedController;
+					var controller = this.GetController (1) as ExportFilenameStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.Filename;
 				}
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			var controller = this.GetController (1) as FilenameStackedController;
+			var controller = this.GetController (1) as ExportFilenameStackedController;
 			System.Diagnostics.Debug.Assert (controller != null);
 			controller.Format = this.ExportInstructions.Format;
 			controller.Value = ExportInstructionsPopup.ForceExt (controller.Value, ExportInstructionsPopup.GetFormatExt (this.ExportInstructions.Format));
@@ -100,9 +100,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private static string ForceExt(string filename, string ext)
 		{
 			//	Retourne un nom de fichier complet (avec chemin d'accès) dont on a forcé l'extension.
-			return System.IO.Path.Combine (
-				System.IO.Path.GetDirectoryName (filename),
-				System.IO.Path.GetFileNameWithoutExtension (filename) + ext);
+			if (string.IsNullOrEmpty (filename))
+			{
+				return null;
+			}
+			else
+			{
+				return System.IO.Path.Combine (
+					System.IO.Path.GetDirectoryName (filename),
+					System.IO.Path.GetFileNameWithoutExtension (filename) + ext);
+			}
 		}
 
 

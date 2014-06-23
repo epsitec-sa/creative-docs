@@ -45,6 +45,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.ExportYamlProfile = YamlExportProfile.Default;
 			LocalSettings.ExportJsonProfile = JsonExportProfile.Default;
 			LocalSettings.ExportPdfProfile  = PdfExportProfile.Default;
+
+			LocalSettings.AccountsImportInstructions = AccountsImportInstructions.Default;
 		}
 
 
@@ -78,21 +80,22 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		}
 
 
-		public static System.DateTime			CreateMandatDate;
-		public static System.DateTime			CreateAssetDate;
-		public static System.DateTime			AmortizationDateFrom;
-		public static System.DateTime			AmortizationDateTo;
-		public static System.DateTime			LockedDate;
-		public static System.DateTime			DefaultMandatDate;
-		public static System.DateTime			DefaultFreeDate;
+		public static System.DateTime				CreateMandatDate;
+		public static System.DateTime				CreateAssetDate;
+		public static System.DateTime				AmortizationDateFrom;
+		public static System.DateTime				AmortizationDateTo;
+		public static System.DateTime				LockedDate;
+		public static System.DateTime				DefaultMandatDate;
+		public static System.DateTime				DefaultFreeDate;
 
-		public static ExportInstructions		ExportInstructions;
-		public static TextExportProfile			ExportTxtProfile;
-		public static TextExportProfile			ExportCsvProfile;
-		public static XmlExportProfile			ExportXmlProfile;
-		public static YamlExportProfile			ExportYamlProfile;
-		public static JsonExportProfile			ExportJsonProfile;
-		public static PdfExportProfile			ExportPdfProfile;
+		public static ExportInstructions			ExportInstructions;
+		public static TextExportProfile				ExportTxtProfile;
+		public static TextExportProfile				ExportCsvProfile;
+		public static XmlExportProfile				ExportXmlProfile;
+		public static YamlExportProfile				ExportYamlProfile;
+		public static JsonExportProfile				ExportJsonProfile;
+		public static PdfExportProfile				ExportPdfProfile;
+		public static AccountsImportInstructions	AccountsImportInstructions;
 
 		private static readonly Dictionary<string, ColumnsState> columnsStates;
 	}

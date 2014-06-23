@@ -8,6 +8,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public enum AccountsMergeMode
 	{
+		Unknown,
 		XferAll,
 		PriorityNumber,
 		PriorityTitle,

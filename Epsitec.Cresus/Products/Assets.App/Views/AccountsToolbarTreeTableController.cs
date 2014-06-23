@@ -8,9 +8,11 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
+using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -144,7 +146,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void OnImport()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
-			this.ShowImportDialog (target);
+			this.ShowImportPopup (target);
 		}
 
 
@@ -180,25 +182,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void ShowImportDialog(Widget target)
+		private void ShowImportPopup(Widget target)
 		{
-			//	Affiche le dialogue permettant de choisir un plan comptable à importer.
-			const string title      = "Nom du plan comptable à importer";
-			string initialDirectory = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "External", "Data");
-			const string filename   = "";
-			const string ext        = ".crp";
-			const string formatName = "Plan comptable Crésus";
-
-			var f = FileOpenDialog.ShowDialog (target.Window, title, initialDirectory, filename, ext, formatName);
-
-			if (!string.IsNullOrEmpty (f))
+			//	Affiche le popup permettant de choisir un plan comptable à importer.
+			var popup = new AccountsImportPopup (this.accessor)
 			{
-				this.AccountsImport (f);
-				this.UpdateData ();
-			}
+				ImportInstructions = LocalSettings.AccountsImportInstructions,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					LocalSettings.AccountsImportInstructions = popup.ImportInstructions;  // enregistre dans les réglages
+					this.AccountsImport (popup.ImportInstructions);
+					this.UpdateData ();
+				}
+			};
 		}
 
-		private void AccountsImport(string filename)
+		private void AccountsImport(AccountsImportInstructions instructions)
 		{
 			using (var importEngine = new AccountsImport ())
 			{
@@ -207,22 +212,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				try
 				{
-					importEngine.Import (newData, filename);
+					importEngine.Import (newData, instructions.Filename);
 				}
 				catch
 				{
 				}
 
-				this.Merge (currentData, newData);
+				this.Merge (currentData, newData, instructions.Mode);
 
 			}
 		}
 
-		private void Merge(GuidList<DataObject> current, GuidList<DataObject> import)
+		private void Merge(GuidList<DataObject> current, GuidList<DataObject> import, AccountsMergeMode mode)
 		{
-			using (var am = new AccountsMerge ())
+			using (var engine = new AccountsMerge ())
 			{
-				am.Merge (current, import, AccountsMergeMode.XferAll);
+				engine.Merge (current, import, mode);
 			}
 		}
 
