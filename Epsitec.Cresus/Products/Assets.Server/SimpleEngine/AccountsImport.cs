@@ -24,8 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.accounts.Clear ();
 
 			this.ReadLines (filename);
-			this.beginDate = this.GetBeginDate ();
-
+			this.InitBeginDate ();
 			this.AddAccounts ();
 
 			return this.beginDate;
@@ -134,24 +133,24 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		private System.DateTime GetBeginDate()
+		private void InitBeginDate()
 		{
+			//	Cherche la date de début du plan comptable. On se fiche de celle de fin.
 			int index = this.IndexOfLine ("DATEBEG=");
-
-			if (index != -1)
+			if (index == -1)
 			{
-				var text = this.lines[index].Substring (8);
-				var date = AccountsImport.ParseDate (text);
+				throw new System.InvalidOperationException ("File does not contain \"DATEBEG\" line");
+			}
 
-				if (date.HasValue)
-				{
-					return date.Value;
-				}
+			var text = this.lines[index].Substring (8);
+			var date = AccountsImport.ParseDate (text);
 
+			if (!date.HasValue)
+			{
 				throw new System.InvalidOperationException (string.Format ("Incorrect date {0}", text));
 			}
 
-			throw new System.InvalidOperationException ("File does not contain \"DATEBEG\" line");
+			this.beginDate = date.Value;
 		}
 
 		private DataObject AddAccount(string number, string name, AccountCategory category, AccountType type)
