@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = AccountsImportPopup.MultiLabels,
+				MultiLabels           = AccountsImportHelpers.MultiLabels,
 				BottomMargin          = 10,
 			});
 
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (0) as RadioStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					mode = AccountsImportPopup.GetMode (controller.Value.GetValueOrDefault ());
+					mode = AccountsImportHelpers.GetMode (controller.Value.GetValueOrDefault ());
 				}
 
 				{
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (0) as RadioStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = AccountsImportPopup.GetRank (value.Mode);
+					controller.Value = AccountsImportHelpers.GetRank (value.Mode);
 				}
 
 				{
@@ -94,68 +94,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.okButton.Text = "Importer";
 			this.okButton.Enable = !string.IsNullOrEmpty (this.ImportInstructions.Filename);
-		}
-
-
-		private static AccountsMergeMode GetMode(int rank)
-		{
-			//	Retourne un format d'après son rang.
-			var list = AccountsImportPopup.AccountsMergeModes.ToArray ();
-
-			if (rank >= 0 && rank < list.Length)
-			{
-				return list[rank];
-			}
-			else
-			{
-				return AccountsMergeMode.Unknown;
-			}
-		}
-
-		private static int GetRank(AccountsMergeMode mode)
-		{
-			//	Retourne le rang d'un format, ou -1.
-			var list = AccountsImportPopup.AccountsMergeModes.ToList ();
-			return list.IndexOf (mode);
-		}
-
-		private static string MultiLabels
-		{
-			//	Retourne le texte permettant de créer des boutons radios.
-			get
-			{
-				return string.Join ("<br/>", AccountsImportPopup.AccountsMergeModes.Select (x => AccountsImportPopup.GetModeName (x)));
-			}
-		}
-
-		public static string GetModeName(AccountsMergeMode mode)
-		{
-			//	Retourne le nom en clair d'un format.
-			switch (mode)
-			{
-				case AccountsMergeMode.XferAll:
-					return "Remplace le plan comptable actuel par le nouveau";
-
-				case AccountsMergeMode.PriorityNumber:
-					return "Priorité aux numéros des comptes";
-
-				case AccountsMergeMode.PriorityTitle:
-					return "Priorité aux titres des comptes";
-
-				default:
-					throw new System.InvalidOperationException (string.Format ("Invalid mode", mode));
-			}
-		}
-
-		private static IEnumerable<AccountsMergeMode> AccountsMergeModes
-		{
-			//	Enumère tous les formats disponibles, par ordre d'importance.
-			get
-			{
-				yield return AccountsMergeMode.XferAll;
-				yield return AccountsMergeMode.PriorityNumber;
-				yield return AccountsMergeMode.PriorityTitle;
-			}
 		}
 	}
 }
