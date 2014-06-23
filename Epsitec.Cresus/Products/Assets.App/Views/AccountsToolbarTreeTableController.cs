@@ -9,6 +9,7 @@ using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -31,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CopyCustomization     = new CommandCustomization (null, "Copier le compte");
 			this.PasteCustomization    = new CommandCustomization (null, "Coller le compte");
 			this.ExportCustomization   = new CommandCustomization (null, "Exporter les comptes");
-			this.ImportCustomization   = new CommandCustomization (null, "Importer un plan comptable de Crésus Comptabilité (fichier .crp)");
+			this.ImportCustomization   = new CommandCustomization (null, "Importer un plan comptable Crésus (fichier .crp)");
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AccountsSettings);
 
@@ -143,7 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void OnImport()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
-			this.ShowFilenameDialog (target);
+			this.ShowImportDialog (target);
 		}
 
 
@@ -179,7 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void ShowFilenameDialog(Widget target)
+		private void ShowImportDialog(Widget target)
 		{
 			//	Affiche le dialogue permettant de choisir un plan comptable à importer.
 			const string title      = "Nom du plan comptable à importer";
@@ -199,18 +200,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void AccountsImport(string filename)
 		{
-			// TODO: Il faudra savoir faire un merge !!!
 			using (var importEngine = new AccountsImport ())
 			{
-				var accounts = this.accessor.Mandat.GetData (BaseType.Accounts);
+				var newData = new GuidList<DataObject> ();
+				var currentData = this.accessor.Mandat.GetData (BaseType.Accounts);
 
 				try
 				{
-					importEngine.Import (accounts, filename);
+					importEngine.Import (newData, filename);
 				}
 				catch
 				{
 				}
+
+				this.Merge (currentData, newData);
+
+			}
+		}
+
+		private void Merge(GuidList<DataObject> current, GuidList<DataObject> import)
+		{
+			using (var am = new AccountsMerge ())
+			{
+				am.Merge (current, import, AccountsMergeMode.XferAll);
 			}
 		}
 
