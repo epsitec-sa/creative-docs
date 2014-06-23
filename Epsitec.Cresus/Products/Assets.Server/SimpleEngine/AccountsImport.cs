@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public System.DateTime? Import(GuidList<DataObject> accounts, string filename)
+		public System.DateTime Import(GuidList<DataObject> accounts, string filename)
 		{
 			//	Importe un plan comptable de Crésus Comptabilité (fichier .crp) et
 			//	peuple la liste des comptes sous forme d'objets avec des propriétés.
@@ -24,9 +24,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.accounts.Clear ();
 
 			this.ReadLines (filename);
+			this.beginDate = this.GetBeginDate ();
+
 			this.AddAccounts ();
 
-			return this.GetBeginDate ();
+			return this.beginDate;
 		}
 
 
@@ -132,17 +134,24 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		private System.DateTime? GetBeginDate()
+		private System.DateTime GetBeginDate()
 		{
 			int index = this.IndexOfLine ("DATEBEG=");
 
 			if (index != -1)
 			{
 				var text = this.lines[index].Substring (8);
-				return AccountsImport.ParseDate (text);
+				var date = AccountsImport.ParseDate (text);
+
+				if (date.HasValue)
+				{
+					return date.Value;
+				}
+
+				throw new System.InvalidOperationException (string.Format ("Incorrect date {0}", text));
 			}
 
-			return null;
+			throw new System.InvalidOperationException ("File does not contain \"DATEBEG\" line");
 		}
 
 		private DataObject AddAccount(string number, string name, AccountCategory category, AccountType type)
@@ -150,7 +159,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var o = new DataObject ();
 			this.accounts.Add (o);
 			{
-				var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
+				var start  = new Timestamp (this.beginDate, 0);
 				var e = new DataEvent (start, EventType.Input);
 				o.AddEvent (e);
 
@@ -328,6 +337,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private string[]						lines;
 		private GuidList<DataObject>			accounts;
 		private int								accountNumber;
+		private System.DateTime					beginDate;
 	}
 
 }
