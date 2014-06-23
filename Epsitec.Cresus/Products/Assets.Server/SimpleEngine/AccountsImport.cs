@@ -15,15 +15,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public void Import(GuidList<DataObject> accounts, string filename)
+		public System.DateTime? Import(GuidList<DataObject> accounts, string filename)
 		{
 			//	Importe un plan comptable de Crésus Comptabilité (fichier .crp) et
-			//	retourne la liste des comptes sous forme d'objets avec des propriétés.
+			//	peuple la liste des comptes sous forme d'objets avec des propriétés.
+			//	Retourne la date de début du plan comptable.
 			this.accounts = accounts;
 			this.accounts.Clear ();
 
 			this.ReadLines (filename);
 			this.AddAccounts ();
+
+			return this.GetBeginDate ();
 		}
 
 
@@ -127,6 +130,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				//-	c1.CompteOuvBoucl = c2;
 				//-}
 			}
+		}
+
+		private System.DateTime? GetBeginDate()
+		{
+			int index = this.IndexOfLine ("DATEBEG=");
+
+			if (index != -1)
+			{
+				var text = this.lines[index].Substring (8);
+				return AccountsImport.ParseDate (text);
+			}
+
+			return null;
 		}
 
 		private DataObject AddAccount(string number, string name, AccountCategory category, AccountType type)
@@ -244,7 +260,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private string GetEntryContentText(int index, string key)
 		{
-			key = key+"=";
+			key += "=";
 
 			while (++index < this.lines.Length)
 			{
@@ -279,6 +295,33 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private void ReadLines(string filename)
 		{
 			this.lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
+		}
+
+
+		private static System.DateTime? ParseDate(string text)
+		{
+			//	Parse une date au format propre aux fichiers .crp, à savoir "jj.mm.aaaa".
+			if (!string.IsNullOrEmpty (text))
+			{
+				var parts = text.Split ('.');
+				if (parts.Length == 3)
+				{
+					int day, month, year;
+
+					if (int.TryParse (parts[0], out day))
+					{
+						if (int.TryParse (parts[1], out month))
+						{
+							if (int.TryParse (parts[2], out year))
+							{
+								return new System.DateTime (year, month, day);
+							}
+						}
+					}
+				}
+			}
+
+			return null;
 		}
 
 
