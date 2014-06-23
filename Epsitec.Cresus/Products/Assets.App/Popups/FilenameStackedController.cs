@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -102,29 +102,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void ShowFilenameDialog()
 		{
-			//	Affiche le dialogue Windows standard permettant de choisir un fichier à enregistrer.
-			var ext  = ExportInstructionsPopup.GetFormatExt  (this.Format);
-			var name = ExportInstructionsPopup.GetFormatName (this.Format);
+			//	Affiche le dialogue permettant de choisir un fichier à exporter.
+			const string title      = "Nom du fichier à exporter";
+			string initialDirectory = System.IO.Path.GetDirectoryName (this.Value);
+			string filename         = System.IO.Path.GetFileName (this.Value);
+			string ext              = ExportInstructionsPopup.GetFormatExt  (this.Format);
+			string formatName       = ExportInstructionsPopup.GetFormatName (this.Format);
 
-			var dialog = new FileSaveDialog
+			var f = FileSaveDialog.ShowDialog (this.parent.Window, title, initialDirectory, filename, ext, formatName);
+
+			if (!string.IsNullOrEmpty (f))
 			{
-				InitialDirectory     = System.IO.Path.GetDirectoryName (this.Value),
-				FileName             = System.IO.Path.GetFileName (this.Value),
-				DefaultExt           = ext,
-				Title                = "Nom du fichier à exporter",
-				PromptForOverwriting = true,
-				OwnerWindow          = this.parent.Window,
-			};
-
-			var filter = new FilterItem (ext, name, ext);
-			dialog.Filters.Add (filter);
-			dialog.FilterIndex = 0;
-
-			dialog.OpenDialog ();
-
-			if (dialog.Result == DialogResult.Accept)
-			{
-				this.SetValue (dialog.FileName);
+				this.SetValue (f);
 			}
 		}
 

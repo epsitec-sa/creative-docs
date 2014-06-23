@@ -3,7 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Data;
@@ -141,7 +143,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void OnImport()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
-			MessagePopup.ShowMessage (target, "coucou");
+			this.ShowFilenameDialog (target);
 		}
 
 
@@ -176,7 +178,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnUpdateAfterCreate (guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
 		}
 
-	
+
+		private void ShowFilenameDialog(Widget target)
+		{
+			//	Affiche le dialogue permettant de choisir un plan comptable à importer.
+			const string title      = "Nom du plan comptable à importer";
+			string initialDirectory = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "External", "Data");
+			const string filename   = "";
+			const string ext        = ".crp";
+			const string formatName = "Plan comptable Crésus";
+
+			var f = FileOpenDialog.ShowDialog (target.Window, title, initialDirectory, filename, ext, formatName);
+
+			if (!string.IsNullOrEmpty (f))
+			{
+				this.AccountsImport (f);
+			}
+		}
+
+		private void AccountsImport(string filename)
+		{
+			// TODO: Il faudra savoir faire un merge !!!
+			using (var importEngine = new AccountsImport ())
+			{
+				var accounts = this.accessor.Mandat.GetData (BaseType.Accounts);
+
+				try
+				{
+					importEngine.Import (accounts, filename);
+				}
+				catch
+				{
+				}
+			}
+		}
+
+
 		protected override void UpdateToolbar()
 		{
 			base.UpdateToolbar ();
