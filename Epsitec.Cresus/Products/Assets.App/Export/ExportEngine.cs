@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 					break;
 
 				default:
-					var ext = ExportInstructionsPopup.GetFormatExt (instructions.Format).Replace (".", "").ToUpper ();
+					var ext = ExportInstructionsHelpers.GetFormatExt (instructions.Format).Replace (".", "").ToUpper ();
 					var message = string.Format ("L'extension \"{0}\" n'est pas supportée.", ext);
 					this.ShowErrorPopup (message);
 					break;

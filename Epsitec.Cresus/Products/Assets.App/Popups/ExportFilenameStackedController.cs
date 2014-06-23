@@ -106,8 +106,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			const string title      = "Nom du fichier à exporter";
 			string initialDirectory = string.IsNullOrEmpty (this.Value) ? null : System.IO.Path.GetDirectoryName (this.Value);
 			string filename         = string.IsNullOrEmpty (this.Value) ? null : System.IO.Path.GetFileName (this.Value);
-			string ext              = ExportInstructionsPopup.GetFormatExt  (this.Format);
-			string formatName       = ExportInstructionsPopup.GetFormatName (this.Format);
+			string ext              = ExportInstructionsHelpers.GetFormatExt  (this.Format);
+			string formatName       = ExportInstructionsHelpers.GetFormatName (this.Format);
 
 			var f = FileSaveDialog.ShowDialog (this.parent.Window, title, initialDirectory, filename, ext, formatName);
 

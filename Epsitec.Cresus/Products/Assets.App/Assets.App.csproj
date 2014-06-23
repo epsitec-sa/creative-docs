@@ -78,6 +78,7 @@
     <Compile Include="Export\Converters.cs" />
     <Compile Include="Export\ExportFontHelpers.cs" />
     <Compile Include="Export\ExportColorHelpers.cs" />
+    <Compile Include="Export\ExportInstructionsHelpers.cs" />
     <Compile Include="Export\PdfStyleHelpers.cs" />
     <Compile Include="Export\PdfPredefinedStyleHelpers.cs" />
     <Compile Include="Export\ExportEngine.cs" />
