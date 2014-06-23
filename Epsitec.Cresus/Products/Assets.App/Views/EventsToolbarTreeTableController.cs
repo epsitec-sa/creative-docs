@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
-			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Event", "Nouvel événement");
+			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Event",   "Nouvel événement");
 			this.DeleteCustomization   = new CommandCustomization (null,                    "Supprimer l'événement");
 			this.DeselectCustomization = new CommandCustomization (null,                    "Désélectionner l'événement");
 			this.CopyCustomization     = new CommandCustomization ("TreeTable.Copy.Event",  "Copier l'événement");

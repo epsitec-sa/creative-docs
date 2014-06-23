@@ -209,10 +209,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var newData = new GuidList<DataObject> ();
 				var currentData = this.accessor.Mandat.GetData (BaseType.Accounts);
+				System.DateTime beginDate;
 
 				try
 				{
-					importEngine.Import (newData, instructions.Filename);
+					beginDate = importEngine.Import (newData, instructions.Filename);
 				}
 				catch (System.Exception ex)
 				{
@@ -220,7 +221,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return;
 				}
 
-				this.Merge (currentData, newData, instructions.Mode);
+				this.Merge (currentData, newData, beginDate, instructions.Mode);
 
 			}
 		}
@@ -231,11 +232,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			MessagePopup.ShowMessage (this.target, "Importation impossible", message);
 		}
 
-		private void Merge(GuidList<DataObject> current, GuidList<DataObject> import, AccountsMergeMode mode)
+		private void Merge(GuidList<DataObject> current, GuidList<DataObject> import, System.DateTime beginDate, AccountsMergeMode mode)
 		{
 			using (var engine = new AccountsMerge ())
 			{
-				engine.Merge (current, import, mode);
+				engine.Merge (current, import, beginDate, mode);
 			}
 		}
 
