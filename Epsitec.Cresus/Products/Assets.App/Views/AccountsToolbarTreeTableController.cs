@@ -193,6 +193,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (!string.IsNullOrEmpty (f))
 			{
 				this.AccountsImport (f);
+				this.UpdateData ();
 			}
 		}
 
