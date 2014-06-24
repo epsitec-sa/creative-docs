@@ -80,7 +80,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Choix du groupe");
+			string title;
+
+			switch (this.baseType)
+			{
+				case BaseType.Accounts:
+					title = "Choix du compte";
+					break;
+
+				default:
+					title = "Choix du groupe";
+					break;
+			}
+
+			this.CreateTitle (title);
 			this.CreateCloseButton ();
 
 			var frame = new FrameBox

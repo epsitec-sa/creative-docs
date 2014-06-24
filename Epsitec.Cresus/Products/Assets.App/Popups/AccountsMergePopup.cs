@@ -9,7 +9,6 @@ using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.NodeGetters;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -44,11 +43,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				//-this.OnNavigate (node.Guid);
 				//-this.ClosePopup ();
 			};
-
-			//-this.controller.TreeButtonClicked += delegate (object sender, int row, NodeType type)
-			//-{
-			//-	this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
-			//-};
 		}
 
 
@@ -56,41 +50,41 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new Size (500, 300);
+				int w = AccountsMergeTreeTableFiller.TotalWidth + (int) AbstractScroller.DefaultBreadth;
+				return new Size (w, 400);
 			}
 		}
 
 		public override void CreateUI()
 		{
 			this.CreateTitle ("Fusion des comptes importés dans le plan comptable");
-			this.CreateCloseButton ();
 
 			var frame = new FrameBox
 			{
-				Parent = this.mainFrameBox,
-				Dock   = DockStyle.Fill,
+				Parent  = this.mainFrameBox,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 10),
 			};
 
 			this.controller.CreateUI (frame, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 
+			this.CreateButtons ();
+
 			TreeTableFiller<AccountsMergeNode>.FillColumns (this.controller, this.dataFiller, "Popup.Groups");
-			//?this.nodeGetter.SetParams (null, TreeTableFiller<TreeNode>.GetSortingInstructions (this.controller));
 
 			this.UpdateController ();
 		}
 
+		private void CreateButtons()
+		{
+			//	Crée les boutons tout en bas du Popup.
+			var footer = this.CreateFooter ();
 
-		//-private void OnCompactOrExpand(int row)
-		//-{
-		//-	//	Etend ou compacte une ligne (inverse son mode actuel).
-		//-	var guid = this.SelectedGuid;
-		//-
-		//-	this.nodeGetter.CompactOrExpand (row);
-		//-	this.UpdateController ();
-		//-
-		//-	this.SelectedGuid = guid;
-		//-}
+			this.CreateFooterButton (footer, DockStyle.Left,  "ok",     "Importer et fusionner");
+			this.CreateFooterButton (footer, DockStyle.Right, "cancel", "Annuler");
+		}
+
 
 		//-private Guid SelectedGuid
 		//-{
@@ -123,18 +117,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			TreeTableFiller<AccountsMergeNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
-
-		#region Events handler
-		private void OnNavigate(Guid guid)
-		{
-			this.Navigate.Raise (this, guid);
-		}
-
-		public event EventHandler<Guid> Navigate;
-		#endregion
-
-
-		private const int rowHeight        = 18;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;

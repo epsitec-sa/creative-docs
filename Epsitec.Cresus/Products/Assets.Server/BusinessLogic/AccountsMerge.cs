@@ -11,10 +11,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public class AccountsMerge : System.IDisposable
 	{
-		public AccountsMerge()
+		public AccountsMerge(GuidList<DataObject> currentAccounts, GuidList<DataObject> importedAccounts, AccountsMergeMode mode)
 		{
-			this.todo  = new List<DataObject> ();
+			this.currentAccounts  = currentAccounts;
+			this.importedAccounts = importedAccounts;
+			this.mode             = mode;
+
+			this.todo  = new Dictionary<DataObject, DataObject> ();
 			this.links = new Dictionary<DataObject, DataObject> ();
+
+			this.UpdateLinks ();
 		}
 
 		public void Dispose()
@@ -22,98 +28,98 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public Dictionary<DataObject, DataObject> Todo(GuidList<DataObject> currentData, GuidList<DataObject> importedData, AccountsMergeMode mode)
+		public Dictionary<DataObject, DataObject> Todo
 		{
-			this.currentData  = currentData;
-			this.importedData = importedData;
-			this.mode         = mode;
-
-			this.UpdateLinks ();
-
-			var dict = new Dictionary<DataObject, DataObject> ();
-
-			foreach (var imported in this.todo)
+			get
 			{
-				DataObject current;
-				if (this.links.TryGetValue (imported, out current))
-				{
-					dict.Add (imported, current);  // compte à fusionner
-				}
-				else
-				{
-					dict.Add (imported, null);  // compte à ajouter
-				}
+				return this.todo;
 			}
-
-			return dict;
 		}
 
-		public void Merge(GuidList<DataObject> currentData, GuidList<DataObject> importedData, AccountsMergeMode mode)
+		public void Merge()
 		{
-			this.currentData  = currentData;
-			this.importedData = importedData;
-			this.mode         = mode;
-
 			if (this.mode == AccountsMergeMode.Replace ||
-				currentData.Any () == false)
+				this.currentAccounts.Any () == false)
 			{
-				this.Replace ();
+				this.DoReplace ();
 			}
 			else
 			{
-				this.Merge ();
+				this.DoMerge ();
 			}
 		}
 
-		private void Replace()
+
+		private void DoReplace()
 		{
-			this.currentData.Clear ();
+			this.currentAccounts.Clear ();
 
-			foreach (var account in this.importedData)
+			foreach (var account in this.importedAccounts)
 			{
-				this.currentData.Add (account);
+				this.currentAccounts.Add (account);
 			}
 		}
 
-		private void Merge()
+		private void DoMerge()
 		{
 			this.UpdateLinks ();
 
 			//	On s'occupe d'abord des données brutes.
 			foreach (var imported in this.todo)
 			{
-				DataObject current;
-				if (this.links.TryGetValue (imported, out current))
+				if (imported.Value == null)
 				{
-					this.MergeAccount (current, imported);
+					this.AddAccount (imported.Key);
 				}
 				else
 				{
-					this.AddAccount (imported);
+					this.MergeAccount (imported.Value, imported.Key);
 				}
+
+				//-DataObject current;
+				//-if (this.links.TryGetValue (imported, out current))
+				//-{
+				//-	this.MergeAccount (current, imported);
+				//-}
+				//-else
+				//-{
+				//-	this.AddAccount (imported);
+				//-}
 			}
 
 			//	On s'occupe ensuite de la parenté.
 			foreach (var imported in this.todo)
 			{
-				var guid = ObjectProperties.GetObjectPropertyGuid (imported, null, ObjectField.GroupParent);
+				var guid = ObjectProperties.GetObjectPropertyGuid (imported.Key, null, ObjectField.GroupParent);
 				if (guid.IsEmpty)
 				{
 					continue;
 				}
 
-				var importedParent = this.importedData[guid];
+				var importedParent = this.importedAccounts[guid];
 				var currentParent = this.links[importedParent];
-				var current = this.links[imported];
+				var current = this.links[imported.Key];
 				var e = current.GetEvent (0);
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, currentParent.Guid));
+
+				//-var guid = ObjectProperties.GetObjectPropertyGuid (imported, null, ObjectField.GroupParent);
+				//-if (guid.IsEmpty)
+				//-{
+				//-	continue;
+				//-}
+				//-
+				//-var importedParent = this.importedAccounts[guid];
+				//-var currentParent = this.links[importedParent];
+				//-var current = this.links[imported];
+				//-var e = current.GetEvent (0);
+				//-e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, currentParent.Guid));
 			}
 		}
 
 		private void AddAccount(DataObject imported)
 		{
 			var o = new DataObject ();
-			this.currentData.Add (o);
+			this.currentAccounts.Add (o);
 			{
 				var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
 				var e = new DataEvent (start, EventType.Input);
@@ -153,19 +159,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.todo.Clear ();
 			this.links.Clear ();
 
-			foreach (var imported in this.importedData)
+			foreach (var imported in this.importedAccounts)
 			{
 				var current = this.SearchAccordingCriterion (imported);
 
 				if (current == null)
 				{
-					this.todo.Add (imported);  // compte à ajouter
+					this.todo.Add (imported, null);  // compte à ajouter
 				}
 				else
 				{
 					if (!this.IsEqual (current, imported))
 					{
-						this.todo.Add (imported);  // compte à fusionner
+						this.todo.Add (imported, current);  // compte à fusionner
 					}
 
 					this.links.Add (imported, current);
@@ -176,7 +182,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private DataObject SearchAccordingCriterion(DataObject imported)
 		{
 			var s = this.GetCriterion (imported);
-			return this.currentData.Where (x => this.GetCriterion (x) == s).FirstOrDefault ();
+			return this.currentAccounts.Where (x => this.GetCriterion (x) == s).FirstOrDefault ();
 		}
 
 		private string GetCriterion(DataObject account)
@@ -198,10 +204,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Vérifie si les comptes parents ont le même numéro.
 			var currentGuid = ObjectProperties.GetObjectPropertyGuid (current, null, ObjectField.GroupParent);
-			var currentParent = currentGuid.IsEmpty ? null : this.currentData[currentGuid];
+			var currentParent = currentGuid.IsEmpty ? null : this.currentAccounts[currentGuid];
 
 			var importedGuid = ObjectProperties.GetObjectPropertyGuid (imported, null, ObjectField.GroupParent);
-			var importedParent = importedGuid.IsEmpty ? null : this.importedData[importedGuid];
+			var importedParent = importedGuid.IsEmpty ? null : this.importedAccounts[importedGuid];
 
 			return this.IsEqualString (currentParent, importedParent, ObjectField.Number);
 		}
@@ -221,11 +227,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private readonly List<DataObject>		todo;
+		private readonly GuidList<DataObject>				currentAccounts;
+		private readonly GuidList<DataObject>				importedAccounts;
+		private readonly AccountsMergeMode					mode;
+		private readonly Dictionary<DataObject, DataObject>	todo;
 		private readonly Dictionary<DataObject, DataObject>	links;
-
-		private GuidList<DataObject>			currentData;
-		private GuidList<DataObject>			importedData;
-		private AccountsMergeMode				mode;
 	}
 }

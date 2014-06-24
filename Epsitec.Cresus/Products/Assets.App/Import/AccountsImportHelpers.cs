@@ -15,20 +15,26 @@ namespace Epsitec.Cresus.Assets.App.Export
 {
 	public class AccountsImportHelpers : System.IDisposable
 	{
-		public AccountsImportHelpers(DataAccessor accessor, Widget target)
+		public AccountsImportHelpers(DataAccessor accessor, Widget target, System.Action updateAction)
 		{
-			this.accessor = accessor;
-			this.target   = target;
+			this.accessor     = accessor;
+			this.target       = target;
+			this.updateAction = updateAction;
 		}
 
 		public void Dispose()
 		{
+			if (this.accountsMerge != null)
+			{
+				this.accountsMerge.Dispose ();
+			}
 		}
 
 
 		public void ShowImportPopup()
 		{
-			//	Affiche le popup permettant de choisir un plan comptable à importer.
+			//	Affiche le popup permettant de choisir un plan comptable à importer, ainsi
+			//	que le mode.
 			var popup = new AccountsImportPopup (this.accessor)
 			{
 				ImportInstructions = LocalSettings.AccountsImportInstructions,
@@ -41,92 +47,67 @@ namespace Epsitec.Cresus.Assets.App.Export
 				if (name == "ok")
 				{
 					LocalSettings.AccountsImportInstructions = popup.ImportInstructions;  // enregistre dans les réglages
-					this.Toto (popup.ImportInstructions);
+					this.Import (popup.ImportInstructions);
 				}
 			};
 		}
 
-		private void Toto(AccountsImportInstructions instructions)
+		private void Import(AccountsImportInstructions instructions)
 		{
+			if (!this.ReadFile (instructions))
+			{
+				return;
+			}
+
 			if (instructions.Mode == AccountsMergeMode.Merge)
 			{
-				this.ShowMergePopup (instructions);
+				this.ShowMergePopup ();
 			}
 			else
 			{
-				this.AccountsImport (instructions);
+				this.accountsMerge.Merge ();
+				this.updateAction ();
 			}
 		}
 
-		private void ShowMergePopup(AccountsImportInstructions instructions)
+		private void ShowMergePopup()
 		{
-			var todo = this.Todo (instructions);
-			var popup = new AccountsMergePopup (this.accessor, todo);
+			//	Affiche le popup permettant de choisir comment effectuer la fusion.
+			var popup = new AccountsMergePopup (this.accessor, this.accountsMerge.Todo);
 
 			popup.Create (this.target, leftOrRight: false);
 
 			popup.ButtonClicked += delegate (object sender, string name)
 			{
-				//?if (name == "ok")
-				//?{
-				//?	LocalSettings.AccountsImportInstructions = popup.ImportInstructions;  // enregistre dans les réglages
-				//?	this.AccountsImport (popup.ImportInstructions);
-				//?	this.UpdateData ();
-				//?}
+				if (name == "ok")
+				{
+					this.accountsMerge.Merge ();
+					this.updateAction ();
+				}
 			};
 		}
 
-		private Dictionary<DataObject, DataObject> Todo(AccountsImportInstructions instructions)
+
+		private bool ReadFile(AccountsImportInstructions instructions)
 		{
+			var currentAccounts = this.accessor.Mandat.GetData (BaseType.Accounts);
+
 			using (var importEngine = new AccountsImport ())
 			{
-				var importedData = new GuidList<DataObject> ();
-				var currentData = this.accessor.Mandat.GetData (BaseType.Accounts);
+				var importedAccounts = new GuidList<DataObject> ();
 
 				try
 				{
-					importEngine.Import (importedData, instructions.Filename);
+					importEngine.Import (importedAccounts, instructions.Filename);
 				}
 				catch (System.Exception ex)
 				{
 					this.ShowErrorPopup (ex.Message);
-					return null;
+					return false;
 				}
 
-				using (var mergeEngine = new AccountsMerge ())
-				{
-					return mergeEngine.Todo (currentData, importedData, instructions.Mode);
-				}
-			}
-		}
-
-		private void AccountsImport(AccountsImportInstructions instructions)
-		{
-			using (var importEngine = new AccountsImport ())
-			{
-				var importedData = new GuidList<DataObject> ();
-				var currentData = this.accessor.Mandat.GetData (BaseType.Accounts);
-
-				try
-				{
-					importEngine.Import (importedData, instructions.Filename);
-				}
-				catch (System.Exception ex)
-				{
-					this.ShowErrorPopup (ex.Message);
-					return;
-				}
-
-				this.Merge (currentData, importedData, instructions.Mode);
-
-			}
-		}
-
-		private void Merge(GuidList<DataObject> current, GuidList<DataObject> import, AccountsMergeMode mode)
-		{
-			using (var mergeEngine = new AccountsMerge ())
-			{
-				mergeEngine.Merge (current, import, mode);
+				this.accountsMerge = new AccountsMerge (currentAccounts, importedAccounts, instructions.Mode);
+				return true;
 			}
 		}
 
@@ -140,5 +121,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private readonly DataAccessor			accessor;
 		private readonly Widget					target;
+		private readonly System.Action			updateAction;
+
+		private AccountsMerge					accountsMerge;
 	}
 }

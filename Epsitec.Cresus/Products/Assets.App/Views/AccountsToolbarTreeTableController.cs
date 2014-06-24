@@ -143,10 +143,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
 
-			using (var h = new AccountsImportHelpers (this.accessor, target))
+			using (var h = new AccountsImportHelpers (this.accessor, target, this.UpdateData))
 			{
 				h.ShowImportPopup ();
-				this.UpdateData ();
 			}
 		}
 
