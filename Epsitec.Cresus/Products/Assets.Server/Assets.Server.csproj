@@ -94,7 +94,7 @@
     <Compile Include="SimpleEngine\AccountCategory.cs" />
     <Compile Include="SimpleEngine\AccountType.cs" />
     <Compile Include="SimpleEngine\DataClipboard.cs" />
-    <Compile Include="SimpleEngine\AccountsImport.cs" />
+    <Compile Include="BusinessLogic\AccountsImport.cs" />
     <Compile Include="SimpleEngine\DummyAccounts.cs" />
     <Compile Include="SimpleEngine\GlobalSettings.cs" />
     <Compile Include="SimpleEngine\UserField.cs" />
