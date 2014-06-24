@@ -45,14 +45,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Retourne le nom en clair d'un format.
 			switch (mode)
 			{
-				case AccountsMergeMode.XferAll:
-					return "Remplace le plan comptable actuel par le nouveau";
+				case AccountsMergeMode.Xfer:
+					return "Remplacer";
 
-				case AccountsMergeMode.PriorityNumber:
-					return "Priorité aux numéros des comptes";
-
-				case AccountsMergeMode.PriorityTitle:
-					return "Priorité aux titres des comptes";
+				case AccountsMergeMode.Merge:
+					return "Fusionner";
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Invalid mode", mode));
@@ -64,9 +61,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Enumère tous les formats disponibles, par ordre d'importance.
 			get
 			{
-				yield return AccountsMergeMode.XferAll;
-				yield return AccountsMergeMode.PriorityNumber;
-				yield return AccountsMergeMode.PriorityTitle;
+				yield return AccountsMergeMode.Xfer;
+				yield return AccountsMergeMode.Merge;
 			}
 		}
 	}

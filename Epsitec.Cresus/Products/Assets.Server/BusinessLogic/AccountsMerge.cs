@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.importData  = import;
 			this.mode        = mode;
 
-			if (this.mode == AccountsMergeMode.XferAll ||
+			if (this.mode == AccountsMergeMode.Xfer ||
 				current.Any () == false)
 			{
 				this.XferAll ();
@@ -145,25 +145,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private string GetCriterion(DataObject account)
 		{
-			return ObjectProperties.GetObjectPropertyString (account, null, this.CriterionField);
-		}
-
-		private ObjectField CriterionField
-		{
-			get
-			{
-				switch (this.mode)
-				{
-					case AccountsMergeMode.PriorityNumber:
-						return ObjectField.Number;
-
-					case AccountsMergeMode.PriorityTitle:
-						return ObjectField.Name;
-
-					default:
-						throw new System.InvalidOperationException (string.Format ("Unsupported mode {0}", this.mode));
-				}
-			}
+			return ObjectProperties.GetObjectPropertyString (account, null, ObjectField.Number);
 		}
 
 

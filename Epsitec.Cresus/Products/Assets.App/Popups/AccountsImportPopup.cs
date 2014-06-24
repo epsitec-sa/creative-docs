@@ -23,16 +23,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 0
 			{
-				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = AccountsMergeModeHelpers.MultiLabels,
+				StackedControllerType = StackedControllerType.ImportAccountsFilename,
+				Label                 = "Fichier",
+				Width                 = 300,
 				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 1
 			{
-				StackedControllerType = StackedControllerType.ImportAccountsFilename,
-				Label                 = "Fichier",
-				Width                 = 300,
+				StackedControllerType = StackedControllerType.Radio,
+				MultiLabels           = AccountsMergeModeHelpers.MultiLabels,
 			});
 
 			this.SetDescriptions (list);
@@ -47,15 +47,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				string				filename;
 
 				{
-					var controller = this.GetController (0) as RadioStackedController;
+					var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					mode = AccountsMergeModeHelpers.GetMode (controller.Value.GetValueOrDefault ());
+					filename = controller.Value;
 				}
 
 				{
-					var controller = this.GetController (1) as ImportAccountsFilenameStackedController;
+					var controller = this.GetController (1) as RadioStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					filename = controller.Value;
+					mode = AccountsMergeModeHelpers.GetMode (controller.Value.GetValueOrDefault ());
 				}
 
 				return new AccountsImportInstructions (mode, filename);
@@ -63,15 +63,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			set
 			{
 				{
-					var controller = this.GetController (0) as RadioStackedController;
+					var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = AccountsMergeModeHelpers.GetRank (value.Mode);
+					controller.Value = value.Filename;
 				}
 
 				{
-					var controller = this.GetController (1) as ImportAccountsFilenameStackedController;
+					var controller = this.GetController (1) as RadioStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.Filename;
+					controller.Value = AccountsMergeModeHelpers.GetRank (value.Mode);
 				}
 			}
 		}
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			var controller = this.GetController (1) as ImportAccountsFilenameStackedController;
+			var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
 			System.Diagnostics.Debug.Assert (controller != null);
 			controller.Value = this.ImportInstructions.Filename;
 			controller.Update ();

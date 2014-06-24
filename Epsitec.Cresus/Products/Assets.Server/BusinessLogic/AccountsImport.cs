@@ -35,7 +35,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private void AddAccounts()
 		{
 			//	Importe tous les comptes.
-			this.accountNumber = 1;
 			this.AddAccount ("0", "Plan comptable", AccountCategory.Unknown, AccountType.Groupe);
 
 			int indexCompte = this.IndexOfLine ("BEGIN=COMPTES");
@@ -163,7 +162,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var e = new DataEvent (start, EventType.Input);
 				o.AddEvent (e);
 
-				e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (this.accountNumber++).ToString ()));
 				e.AddProperty (new DataStringProperty (ObjectField.Number, number));
 				e.AddProperty (new DataStringProperty (ObjectField.Name, name));
 				e.AddProperty (new DataIntProperty    (ObjectField.AccountCategory, (int) category));
@@ -336,7 +334,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private string[]						lines;
 		private GuidList<DataObject>			accounts;
-		private int								accountNumber;
 		private System.DateTime					beginDate;
 	}
 
