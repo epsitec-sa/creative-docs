@@ -108,6 +108,7 @@
     <Compile Include="Popups\AssetCopyPopup.cs" />
     <Compile Include="Popups\AccountsImportPopup.cs" />
     <Compile Include="Popups\AccountsMergePopup.cs" />
+    <Compile Include="Popups\AccountMergePopup.cs" />
     <Compile Include="Popups\ImportAccountsFilenameStackedController .cs" />
     <Compile Include="Popups\PdfStyleStackedController.cs" />
     <Compile Include="Popups\PdfStylePopup.cs" />
