@@ -21,14 +21,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void Merge(GuidList<DataObject> current, GuidList<DataObject> import, System.DateTime beginDate, AccountsMergeMode mode)
+		public void Merge(GuidList<DataObject> current, GuidList<DataObject> import, AccountsMergeMode mode)
 		{
 			this.currentData = current;
 			this.importData  = import;
-			this.beginDate   = beginDate;
 			this.mode        = mode;
-
-			this.beginTimestamp = new Timestamp (this.beginDate, 0);
 
 			if (this.mode == AccountsMergeMode.XferAll ||
 				current.Any () == false)
@@ -148,7 +145,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private string GetCriterion(DataObject account)
 		{
-			return ObjectProperties.GetObjectPropertyString (account, this.beginTimestamp, this.CriterionField);
+			return ObjectProperties.GetObjectPropertyString (account, null, this.CriterionField);
 		}
 
 		private ObjectField CriterionField
@@ -174,8 +171,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private GuidList<DataObject>			currentData;
 		private GuidList<DataObject>			importData;
-		private System.DateTime					beginDate;
-		private Timestamp						beginTimestamp;
 		private AccountsMergeMode				mode;
 	}
 }
