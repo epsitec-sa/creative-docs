@@ -55,51 +55,60 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			this.UpdateLinks ();
 
+			//	On s'occupe d'abord des données brutes.
 			foreach (var imported in this.importData)
 			{
 				DataObject current;
 				if (this.links.TryGetValue (imported, out current))
 				{
-					this.Merge (current, imported);
+					this.MergeAccount (current, imported);
 				}
 				else
 				{
-					// TODO: adapter ObjectField.GroupParent !
-					this.currentData.Add (imported);
+					this.AddAccount (imported);
 				}
+			}
+
+			//	On s'occupe ensuite de la parenté.
+			foreach (var imported in this.importData)
+			{
+				var guid = ObjectProperties.GetObjectPropertyGuid (imported, null, ObjectField.GroupParent);
+				if (guid.IsEmpty)
+				{
+					continue;
+				}
+
+				var importedParent = this.importData[guid];
+				var currentParent = this.links[importedParent];
+				var current = this.links[imported];
+				var e = current.GetEvent (0);
+				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, currentParent.Guid));
 			}
 		}
 
-		private void Merge(DataObject current, DataObject imported)
+		private void AddAccount(DataObject imported)
+		{
+			var o = new DataObject ();
+			this.currentData.Add (o);
+			{
+				var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
+				var e = new DataEvent (start, EventType.Input);
+				o.AddEvent (e);
+
+				this.MergeAccount (o, imported);
+			}
+
+			this.links.Add (imported, o);
+		}
+
+		private void MergeAccount(DataObject current, DataObject imported)
 		{
 			var e = current.GetEvent (0);
 
-			//?e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (this.accountNumber++).ToString ()));
 			this.MergeString (e, imported, ObjectField.Number);
 			this.MergeString (e, imported, ObjectField.Name);
 			this.MergeInt    (e, imported, ObjectField.AccountCategory);
 			this.MergeInt    (e, imported, ObjectField.AccountType);
-
-			var importedParent = imported;
-			while (true)
-			{
-				var importedParentGuid = ObjectProperties.GetObjectPropertyGuid (importedParent, null, ObjectField.GroupParent);
-				if (importedParentGuid.IsEmpty)
-				{
-					break;
-				}
-
-				importedParent = this.importData[importedParentGuid];
-
-				DataObject currentParent;
-				if (this.links.TryGetValue (importedParent, out currentParent))
-				{
-					e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, currentParent.Guid));
-					break;
-				}
-			}
-
-			// TODO: adapter ObjectField.GroupParent !
 		}
 
 		private void MergeString(DataEvent e, DataObject imported, ObjectField field)
