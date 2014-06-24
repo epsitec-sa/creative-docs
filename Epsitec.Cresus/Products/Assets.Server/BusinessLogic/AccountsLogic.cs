@@ -15,6 +15,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Retourne le résumé d'un compte, du genre:
 			//	"1000 Caisse"
 			var obj = accessor.GetObject (BaseType.Accounts, guid);
+			return AccountsLogic.GetSummary (obj);
+		}
+
+		public static string GetSummary(DataObject obj)
+		{
+			//	Retourne le résumé d'un compte, du genre:
+			//	"1000 Caisse"
 			if (obj == null)
 			{
 				return null;

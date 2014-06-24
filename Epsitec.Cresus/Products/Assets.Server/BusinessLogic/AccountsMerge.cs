@@ -22,14 +22,40 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void Merge(GuidList<DataObject> current, GuidList<DataObject> import, AccountsMergeMode mode)
+		public Dictionary<DataObject, DataObject> Todo(GuidList<DataObject> currentData, GuidList<DataObject> importedData, AccountsMergeMode mode)
 		{
-			this.currentData = current;
-			this.importedData  = import;
-			this.mode        = mode;
+			this.currentData  = currentData;
+			this.importedData = importedData;
+			this.mode         = mode;
+
+			this.UpdateLinks ();
+
+			var dict = new Dictionary<DataObject, DataObject> ();
+
+			foreach (var imported in this.todo)
+			{
+				DataObject current;
+				if (this.links.TryGetValue (imported, out current))
+				{
+					dict.Add (imported, current);  // compte à fusionner
+				}
+				else
+				{
+					dict.Add (imported, null);  // compte à ajouter
+				}
+			}
+
+			return dict;
+		}
+
+		public void Merge(GuidList<DataObject> currentData, GuidList<DataObject> importedData, AccountsMergeMode mode)
+		{
+			this.currentData  = currentData;
+			this.importedData = importedData;
+			this.mode         = mode;
 
 			if (this.mode == AccountsMergeMode.Replace ||
-				current.Any () == false)
+				currentData.Any () == false)
 			{
 				this.Replace ();
 			}
@@ -133,13 +159,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (current == null)
 				{
-					this.todo.Add (imported);
+					this.todo.Add (imported);  // compte à ajouter
 				}
 				else
 				{
 					if (!this.IsEqual (current, imported))
 					{
-						this.todo.Add (imported);
+						this.todo.Add (imported);  // compte à fusionner
 					}
 
 					this.links.Add (imported, current);
@@ -170,6 +196,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private bool IsEqualParent(DataObject current, DataObject imported)
 		{
+			//	Vérifie si les comptes parents ont le même numéro.
 			var currentGuid = ObjectProperties.GetObjectPropertyGuid (current, null, ObjectField.GroupParent);
 			var currentParent = currentGuid.IsEmpty ? null : this.currentData[currentGuid];
 

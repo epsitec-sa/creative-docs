@@ -3,16 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Dialogs;
+using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
-using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
-using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -145,8 +141,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void OnImport()
 		{
-			this.target = this.toolbar.GetTarget (ToolbarCommand.Import);
-			this.ShowImportPopup ();
+			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
+
+			using (var h = new AccountsImportHelpers (this.accessor, target))
+			{
+				h.ShowImportPopup ();
+				this.UpdateData ();
+			}
 		}
 
 
@@ -182,62 +183,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void ShowImportPopup()
-		{
-			//	Affiche le popup permettant de choisir un plan comptable à importer.
-			var popup = new AccountsImportPopup (this.accessor)
-			{
-				ImportInstructions = LocalSettings.AccountsImportInstructions,
-			};
-
-			popup.Create (this.target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					LocalSettings.AccountsImportInstructions = popup.ImportInstructions;  // enregistre dans les réglages
-					this.AccountsImport (popup.ImportInstructions);
-					this.UpdateData ();
-				}
-			};
-		}
-
-		private void AccountsImport(AccountsImportInstructions instructions)
-		{
-			using (var importEngine = new AccountsImport ())
-			{
-				var newData = new GuidList<DataObject> ();
-				var currentData = this.accessor.Mandat.GetData (BaseType.Accounts);
-
-				try
-				{
-					importEngine.Import (newData, instructions.Filename);
-				}
-				catch (System.Exception ex)
-				{
-					this.ShowErrorPopup (ex.Message);
-					return;
-				}
-
-				this.Merge (currentData, newData, instructions.Mode);
-
-			}
-		}
-
-		private void ShowErrorPopup(string message)
-		{
-			//	Affiche une erreur.
-			MessagePopup.ShowMessage (this.target, "Importation impossible", message);
-		}
-
-		private void Merge(GuidList<DataObject> current, GuidList<DataObject> import, AccountsMergeMode mode)
-		{
-			using (var engine = new AccountsMerge ())
-			{
-				engine.Merge (current, import, mode);
-			}
-		}
 
 
 		protected override void UpdateToolbar()
@@ -261,8 +206,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return this.nodeGetter as GroupTreeNodeGetter;
 			}
 		}
-
-
-		private Widget							target;
 	}
 }

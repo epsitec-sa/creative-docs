@@ -75,6 +75,9 @@ namespace Epsitec.Cresus.Assets.Data
 		LastViewsDate,
 		LastViewsDescription,
 
+		MergeImport,
+		MergeCurrent,
+
 		UserFieldType,
 		UserFieldColumnWidth,
 		UserFieldLineWidth,
