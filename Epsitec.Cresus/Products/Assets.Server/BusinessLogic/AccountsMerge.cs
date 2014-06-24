@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		public AccountsMerge()
 		{
+			this.todo  = new List<DataObject> ();
 			this.links = new Dictionary<DataObject, DataObject> ();
 		}
 
@@ -24,7 +25,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public void Merge(GuidList<DataObject> current, GuidList<DataObject> import, AccountsMergeMode mode)
 		{
 			this.currentData = current;
-			this.importData  = import;
+			this.importedData  = import;
 			this.mode        = mode;
 
 			if (this.mode == AccountsMergeMode.Replace ||
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			this.currentData.Clear ();
 
-			foreach (var account in this.importData)
+			foreach (var account in this.importedData)
 			{
 				this.currentData.Add (account);
 			}
@@ -53,7 +54,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.UpdateLinks ();
 
 			//	On s'occupe d'abord des données brutes.
-			foreach (var imported in this.importData)
+			foreach (var imported in this.todo)
 			{
 				DataObject current;
 				if (this.links.TryGetValue (imported, out current))
@@ -67,7 +68,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			//	On s'occupe ensuite de la parenté.
-			foreach (var imported in this.importData)
+			foreach (var imported in this.todo)
 			{
 				var guid = ObjectProperties.GetObjectPropertyGuid (imported, null, ObjectField.GroupParent);
 				if (guid.IsEmpty)
@@ -75,7 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					continue;
 				}
 
-				var importedParent = this.importData[guid];
+				var importedParent = this.importedData[guid];
 				var currentParent = this.links[importedParent];
 				var current = this.links[imported];
 				var e = current.GetEvent (0);
@@ -123,14 +124,24 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private void UpdateLinks()
 		{
+			this.todo.Clear ();
 			this.links.Clear ();
 
-			foreach (var imported in this.importData)
+			foreach (var imported in this.importedData)
 			{
 				var current = this.SearchAccordingCriterion (imported);
 
-				if (current != null)
+				if (current == null)
 				{
+					this.todo.Add (imported);
+				}
+				else
+				{
+					if (!this.IsEqual (current, imported))
+					{
+						this.todo.Add (imported);
+					}
+
 					this.links.Add (imported, current);
 				}
 			}
@@ -148,10 +159,46 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		private bool IsEqual(DataObject current, DataObject imported)
+		{
+			return this.IsEqualParent (current, imported)
+				&& this.IsEqualString (current, imported, ObjectField.Number)
+				&& this.IsEqualString (current, imported, ObjectField.Name)
+				&& this.IsEqualInt    (current, imported, ObjectField.AccountCategory)
+				&& this.IsEqualInt    (current, imported, ObjectField.AccountType);
+		}
+
+		private bool IsEqualParent(DataObject current, DataObject imported)
+		{
+			var currentGuid = ObjectProperties.GetObjectPropertyGuid (current, null, ObjectField.GroupParent);
+			var currentParent = currentGuid.IsEmpty ? null : this.currentData[currentGuid];
+
+			var importedGuid = ObjectProperties.GetObjectPropertyGuid (imported, null, ObjectField.GroupParent);
+			var importedParent = importedGuid.IsEmpty ? null : this.importedData[importedGuid];
+
+			return this.IsEqualString (currentParent, importedParent, ObjectField.Number);
+		}
+
+		private bool IsEqualString(DataObject current, DataObject imported, ObjectField field)
+		{
+			var value1 = ObjectProperties.GetObjectPropertyString (current,  null, field);
+			var value2 = ObjectProperties.GetObjectPropertyString (imported, null, field);
+			return value1 == value2;
+		}
+
+		private bool IsEqualInt(DataObject current, DataObject imported, ObjectField field)
+		{
+			var value1 = ObjectProperties.GetObjectPropertyInt (current,  null, field);
+			var value2 = ObjectProperties.GetObjectPropertyInt (imported, null, field);
+			return value1 == value2;
+		}
+
+
+		private readonly List<DataObject>		todo;
 		private readonly Dictionary<DataObject, DataObject>	links;
 
 		private GuidList<DataObject>			currentData;
-		private GuidList<DataObject>			importData;
+		private GuidList<DataObject>			importedData;
 		private AccountsMergeMode				mode;
 	}
 }

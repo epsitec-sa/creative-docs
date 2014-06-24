@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 		public static AccountsImportInstructions Empty   = new AccountsImportInstructions (AccountsMergeMode.Unknown, null);
-		public static AccountsImportInstructions Default = new AccountsImportInstructions (AccountsMergeMode.Replace, null);
+		public static AccountsImportInstructions Default = new AccountsImportInstructions (AccountsMergeMode.Merge, null);
 
 		public readonly AccountsMergeMode		Mode;
 		public readonly string					Filename;
