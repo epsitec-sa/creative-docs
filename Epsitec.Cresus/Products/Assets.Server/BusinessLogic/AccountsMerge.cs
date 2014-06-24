@@ -27,10 +27,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.importData  = import;
 			this.mode        = mode;
 
-			if (this.mode == AccountsMergeMode.Xfer ||
+			if (this.mode == AccountsMergeMode.Replace ||
 				current.Any () == false)
 			{
-				this.XferAll ();
+				this.Replace ();
 			}
 			else
 			{
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private void XferAll()
+		private void Replace()
 		{
 			this.currentData.Clear ();
 
@@ -135,7 +135,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 		}
-
 
 		private DataObject SearchAccordingCriterion(DataObject imported)
 		{

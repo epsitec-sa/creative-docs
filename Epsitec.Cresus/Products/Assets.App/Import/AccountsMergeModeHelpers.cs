@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	{
 		public static AccountsMergeMode GetMode(int rank)
 		{
-			//	Retourne un format d'après son rang.
+			//	Retourne un mode d'après son rang.
 			var list = AccountsMergeModeHelpers.AccountsMergeModes.ToArray ();
 
 			if (rank >= 0 && rank < list.Length)
@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public static int GetRank(AccountsMergeMode mode)
 		{
-			//	Retourne le rang d'un format, ou -1.
+			//	Retourne le rang d'un mode, ou -1.
 			var list = AccountsMergeModeHelpers.AccountsMergeModes.ToList ();
 			return list.IndexOf (mode);
 		}
@@ -42,10 +42,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public static string GetModeName(AccountsMergeMode mode)
 		{
-			//	Retourne le nom en clair d'un format.
+			//	Retourne le nom en clair d'un mode.
 			switch (mode)
 			{
-				case AccountsMergeMode.Xfer:
+				case AccountsMergeMode.Replace:
 					return "Remplacer";
 
 				case AccountsMergeMode.Merge:
@@ -58,10 +58,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static IEnumerable<AccountsMergeMode> AccountsMergeModes
 		{
-			//	Enumère tous les formats disponibles, par ordre d'importance.
+			//	Enumère tous les modes disponibles, tels qu'ils apparaîtront dans la UI.
 			get
 			{
-				yield return AccountsMergeMode.Xfer;
+				yield return AccountsMergeMode.Replace;
 				yield return AccountsMergeMode.Merge;
 			}
 		}

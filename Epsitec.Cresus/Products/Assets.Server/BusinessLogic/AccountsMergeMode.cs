@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	public enum AccountsMergeMode
 	{
 		Unknown,
-		Xfer,
+		Replace,
 		Merge,
 	}
 }
