@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Data.Subscription;
 using Epsitec.Aider.Entities;
@@ -110,10 +113,7 @@ namespace Epsitec.Aider.Data.Normalization
 		}
 
 
-		public static Dictionary<NormalizedPerson, SubscriptionData> Normalize
-		(
-			IEnumerable<SubscriptionData> subscriptions
-		)
+		public static Dictionary<NormalizedPerson, SubscriptionData> Normalize(IEnumerable<SubscriptionData> subscriptions)
 		{
 			var result = new Dictionary<NormalizedPerson, SubscriptionData> ();
 
@@ -131,10 +131,7 @@ namespace Epsitec.Aider.Data.Normalization
 		}
 
 
-		public static NormalizedHousehold Normalize
-		(
-			SubscriptionData subscription
-		)
+		public static NormalizedHousehold Normalize(SubscriptionData subscription)
 		{
 			var normalizedHousehold = new NormalizedHousehold ()
 			{

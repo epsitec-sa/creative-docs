@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.Normalization;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
@@ -23,63 +26,82 @@ using System.Linq;
 
 namespace Epsitec.Aider.Data.Subscription
 {
-
-
 	internal static class SubscriptionDataImporter
 	{
-
-
-		public static void Import
-		(
-			CoreData coreData,
-			ParishAddressRepository parishRepository,
-			IEnumerable<SubscriptionData> subscriptions
-		)
+		public static void Import (CoreData coreData, ParishAddressRepository parishRepository, IEnumerable<SubscriptionData> subscriptions)
 		{
 			var split = subscriptions.Split (s => s.IsLegalPerson);
-			var personSubscriptions = split.Item1.ToList ();
+			var personSubscriptionsSplit = split.Item1.ToList ().Split (s => s.IsRichData);
+			var personSubscriptions = personSubscriptionsSplit.Item1.ToList ();
+			var richSubscriptions = personSubscriptionsSplit.Item2.ToList ();
 			var legalPersonSubscriptions = split.Item2.ToList ();
+
+			
 
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
 				var townRepository = new AiderTownRepository (businessContext);
 
+				Debug.WriteLine ("[" + DateTime.Now + "] Importing rich subscriptions");
+
+				SubscriptionDataImporter.ImportRichSubscriptions (coreData, businessContext, parishRepository, townRepository, richSubscriptions);
+
 				Debug.WriteLine ("[" + DateTime.Now + "] Importing person subscriptions");
 
-				SubscriptionDataImporter.ImportPersonSubscriptions
-				(
-					coreData, businessContext, parishRepository, townRepository,
-					personSubscriptions
-				);
+				SubscriptionDataImporter.ImportPersonSubscriptions (coreData, businessContext, parishRepository, townRepository, personSubscriptions);
 
 				Debug.WriteLine ("[" + DateTime.Now + "] Importing legal person subscriptions");
 
-				SubscriptionDataImporter.ImportLegalPersonSubscriptions
-				(
-					businessContext, parishRepository, townRepository, legalPersonSubscriptions
-				);
+				SubscriptionDataImporter.ImportLegalPersonSubscriptions (businessContext, parishRepository, townRepository, legalPersonSubscriptions);
 
 				Debug.WriteLine ("[" + DateTime.Now + "] Saving changes");
 
-				businessContext.SaveChanges
-				(
-					LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors
-				);
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 
 				Debug.WriteLine ("[" + DateTime.Now + "] Done");
 			}
 		}
 
 
-		private static void ImportPersonSubscriptions
-		(
-			CoreData coreData,
-			BusinessContext businessContext,
-			ParishAddressRepository parishRepository,
-			AiderTownRepository townRepository,
-			IEnumerable<SubscriptionData> subscriptions
-		)
+		private static void ImportRichSubscriptions(CoreData coreData, BusinessContext businessContext, ParishAddressRepository parishRepository, AiderTownRepository townRepository, IList<SubscriptionData> subscriptions)
 		{
+			if (subscriptions.Count == 0)
+			{
+				return;
+			}
+
+			Dictionary<string, List<SubscriptionData>> dict = new Dictionary<string, List<SubscriptionData>> ();
+
+			foreach (var sub in subscriptions)
+			{
+				List<SubscriptionData> list;
+
+				if (dict.TryGetValue (sub.HouseholdToken, out list) == false)
+				{
+					list = new List<SubscriptionData> ();
+					dict[sub.HouseholdToken] = list;
+				}
+
+				list.Add (sub);
+			}
+
+			Debug.WriteLine (string.Format ("Found {0} persons, {1} households", subscriptions.Count (), dict.Count));
+
+			//	TODO: import, really...
+
+			foreach (var item in dict)
+			{
+				SubscriptionDataImporter.ImportHouseholdAndSubscriptions (businessContext, parishRepository, townRepository, item.Value);
+			}
+		}
+
+		private static void ImportPersonSubscriptions(CoreData coreData, BusinessContext businessContext, ParishAddressRepository parishRepository, AiderTownRepository townRepository, IList<SubscriptionData> subscriptions)
+		{
+			if (subscriptions.Count == 0)
+			{
+				return;
+			}
+
 			var normalizedSubscriptionPersons = Normalizer.Normalize (subscriptions);
 			var normalizedAiderPersons = Normalizer.Normalize (coreData);
 
@@ -305,6 +327,83 @@ namespace Epsitec.Aider.Data.Subscription
 			var region = SubscriptionDataImporter.GetRegion (businessContext, parish, regionId);
 
 			AiderSubscriptionEntity.Create (businessContext, household, region, count);
+		}
+
+
+		private static void ImportHouseholdAndSubscriptions(BusinessContext businessContext,
+															ParishAddressRepository parishRepository,
+															AiderTownRepository townRepository,
+															IList<SubscriptionData> subscriptions)
+		{
+			var household = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+			var address = household.Address;
+
+			var subscription = subscriptions.First ();
+
+			address.AddressLine1          = subscription.FirstAddressLine;
+			address.Street                = subscription.StreetName;
+			address.HouseNumber           = subscription.HouseNumber;
+			address.HouseNumberComplement = subscription.HouseNumberComplement;
+			address.PostBox               = subscription.PostBox;
+			address.Town                  = townRepository.GetTown (subscription.ZipCode, subscription.Town, subscription.CountryCode);
+
+			address.Phone1 = subscription.Phone;
+			address.Mobile = subscription.Mobile;
+			address.Email = subscription.Email;
+
+			foreach (var sub in subscriptions)
+			{
+				var person = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+				var eChPerson = person.eCH_Person;
+
+				eChPerson.PersonFirstNames = sub.Firstname;
+				eChPerson.PersonOfficialName = sub.Lastname;
+
+				var title = sub.Title;
+				person.MrMrs = TextParser.ParsePersonMrMrs (title);
+
+				eChPerson.PersonSex = sub.Sex == PersonSex.Unknown ? EnumUtils.GuessSex (title) : sub.Sex;
+				eChPerson.DataSource = Enumerations.DataSource.Undefined;
+				eChPerson.DeclarationStatus = PersonDeclarationStatus.NotDeclared;
+				eChPerson.RemovalReason = RemovalReason.None;
+				eChPerson.AdultMaritalStatus = sub.MaritalStatus;
+				eChPerson.PersonDateOfBirth = sub.BirthDate;
+
+				person.Confession = sub.Confession;
+				person.Profession = sub.Profession;
+
+				if (string.IsNullOrEmpty (sub.Comment) == false)
+				{
+					AiderCommentEntity.CombineComments (person, sub.Comment);
+				}
+
+
+				person.RefreshCache ();
+
+				bool isHead = subscriptions.Count == 1 || (sub.BirthDate.HasValue && person.Age >= 18);
+
+				AiderContactEntity.Create (businessContext, person, household, isHead);
+			}
+
+			bool hasProtestantInHousehold = false;
+
+			foreach (var member in household.Members)
+			{
+				ParishAssigner.AssignToParish (parishRepository, businessContext, member);
+
+				hasProtestantInHousehold |= member.Confession == PersonConfession.Protestant;
+			}
+
+			if (hasProtestantInHousehold)
+			{
+				var count = subscription.NbCopies ?? 1;
+
+				var parish = household.Members.First ().ParishGroup;
+				var regionId = subscription.RegionalEdition;
+				var region = SubscriptionDataImporter.GetRegion (businessContext, parish, regionId);
+
+				AiderSubscriptionEntity.Create (businessContext, household, region, count);
+			}
 		}
 
 

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -52,6 +52,52 @@ namespace Epsitec.Aider.Data.Subscription
 			this.isLegalPerson         = isLegalPerson;
 		}
 
+		public SubscriptionData
+		(
+			string title,
+			string firstname,
+			string lastname,
+			string streetName,
+			int? houseNumber,
+			string houseNumberComplement,
+			string zipCode,
+			string town,
+			string countryCode,
+			PersonSex sex,
+			PersonMaritalStatus maritalStatus,
+			PersonConfession confession,
+			Epsitec.Common.Types.Date? birthDate,
+			string phone,
+			string mobile,
+			string email,
+			string householdToken,
+			string comment,
+			string profession
+		)
+		{
+			this.isRichData = true;
+
+			this.Title                 = title;
+			this.Firstname             = firstname;
+			this.Lastname              = lastname;
+			this.StreetName            = streetName;
+			this.HouseNumber           = houseNumber;
+			this.HouseNumberComplement = houseNumberComplement;
+			this.ZipCode               = zipCode;
+			this.Town                  = town;
+			this.CountryCode           = countryCode;
+			this.Sex                   = sex;
+			this.MaritalStatus         = maritalStatus;
+			this.Confession            = confession;
+			this.BirthDate             = birthDate;
+			this.Phone                 = phone;
+			this.Mobile                = mobile;
+			this.Email                 = email;
+			this.HouseholdToken        = householdToken;
+			this.Comment               = comment;
+			this.Profession            = profession;
+		}
+
 
 		/// <summary>
 		/// This indicates whether the subscription represents a legal person or a physical person.
@@ -64,6 +110,13 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 		}
 
+		public bool IsRichData
+		{
+			get
+			{
+				return this.isRichData;
+			}
+		}
 
 		/// <summary>
 		/// Sometimes, for the physical persons, we have two persons in one subscription. Their
@@ -137,5 +190,15 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly int? RegionalEdition;
 		public readonly int? NbCopies;
 		private readonly bool? isLegalPerson;
+		private readonly bool isRichData;
+		public readonly Epsitec.Common.Types.Date? BirthDate;
+		public readonly PersonSex Sex;
+		public readonly PersonMaritalStatus MaritalStatus;
+		public readonly PersonConfession Confession;
+		public readonly string Phone;
+		public readonly string Mobile;
+		public readonly string Email;
+		public readonly string HouseholdToken;
+		public readonly string Profession;
 	}
 }

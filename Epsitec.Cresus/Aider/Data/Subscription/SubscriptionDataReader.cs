@@ -31,6 +31,33 @@ namespace Epsitec.Aider.Data.Subscription
 			return DataReader.GetRecords (input, SubscriptionDataReader.genericSubscriptionHeaders);
 		}
 
+		public static IEnumerable<Dictionary<ExcelSubscriptionHeader, string>> ReadExcelSubscriptions(FileInfo input)
+		{
+			return DataReader.GetRecords (input, SubscriptionDataReader.excelSubscriptionHeaders);
+		}
+
+		private static readonly Dictionary<ExcelSubscriptionHeader, string> excelSubscriptionHeaders =
+			new Dictionary<ExcelSubscriptionHeader, string> ()
+			{
+				{ ExcelSubscriptionHeader.HouseholdId, "ID Ménage" },
+				{ ExcelSubscriptionHeader.Title, "Appellation" },
+				{ ExcelSubscriptionHeader.Lastname, "Nom de famille" },
+				{ ExcelSubscriptionHeader.Firstname, "Prénoms" },
+				{ ExcelSubscriptionHeader.Street, "Adresse" },
+				{ ExcelSubscriptionHeader.HouseNumber, "Numéro" },
+				{ ExcelSubscriptionHeader.ZipCode, "NPA" },
+				{ ExcelSubscriptionHeader.Town, "Localité" },
+				{ ExcelSubscriptionHeader.Confession, "Confession" },
+				{ ExcelSubscriptionHeader.Sex, "Sexe" },
+				{ ExcelSubscriptionHeader.MaritalStatus, "Etat civil" },
+				{ ExcelSubscriptionHeader.Comment, "Commentaire" },
+				{ ExcelSubscriptionHeader.Phone1, "Tel 1" },
+				{ ExcelSubscriptionHeader.Mobile, "Tel mobile" },
+				{ ExcelSubscriptionHeader.EMail, "E-mail" },
+				{ ExcelSubscriptionHeader.Profession, "Profession" },
+				{ ExcelSubscriptionHeader.BirthDate, "Date de naissance" }
+			};
+
 
 		private static readonly Dictionary<WebSubscriptionHeader, string> genericSubscriptionHeaders =
 			new Dictionary<WebSubscriptionHeader, string> ()
@@ -93,6 +120,29 @@ namespace Epsitec.Aider.Data.Subscription
 
 	}
 
+
+	internal enum ExcelSubscriptionHeader
+	{
+		HouseholdId,
+		Title,
+		Lastname,
+		Firstname,
+		BirthDate,
+		Profession,
+		Street,
+		HouseNumber,
+		ZipCode,
+		Town,
+		Confession,
+		Sex,
+		Origin,
+		MaritalStatus,
+		Comment,
+		Phone1,
+		Mobile,
+		EMail
+		
+	}
 
 	internal enum WebSubscriptionHeader
 	{

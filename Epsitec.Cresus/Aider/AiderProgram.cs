@@ -135,6 +135,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-importsubscriptions2"))				//	-importsubscriptions2 -file:xxx
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.RunSubscriptionImportation2 (args));
+					return;
+				}
+
 				if (args.Contains ("-exportcontacts"))					//	-exportcontacts -output-rch:xxx -output-custom:xxx
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.RunContactExportation (args));
@@ -555,6 +561,20 @@ namespace Epsitec.Aider
 			var fileGeneric = AiderProgram.GetFile (args, "-generic:");
 
 			var subscriptions = SubscriptionDataLoader.LoadSubscriptions (fileWeb, fileDoctor, filePro, fileGeneric);
+
+			var parishRepository = ParishAddressRepository.Current;
+
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				SubscriptionDataImporter.Import (coreData, parishRepository, subscriptions);
+			});
+		}
+
+		private static void RunSubscriptionImportation2(string[] args)
+		{
+			var filePath = AiderProgram.GetFile (args, "-file:");
+
+			var subscriptions = SubscriptionDataLoader.LoadSubscriptions (filePath);
 
 			var parishRepository = ParishAddressRepository.Current;
 

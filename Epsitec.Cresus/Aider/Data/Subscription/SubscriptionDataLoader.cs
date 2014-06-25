@@ -2,11 +2,10 @@
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
+using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
-
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,6 +42,190 @@ namespace Epsitec.Aider.Data.Subscription
 			addressChecker.DisplayWarnings ();
 
 			return subscriptions;
+		}
+
+
+		public static IEnumerable<SubscriptionData> LoadSubscriptions(FileInfo filePath)
+		{
+			var addressChecker = new AddressChecker ();
+
+			var subscriptions = SubscriptionDataReader.ReadExcelSubscriptions (filePath)
+				.Select (r => SubscriptionDataLoader.LoadExcelSubscription (r, addressChecker))
+				.ToList ();
+				
+			addressChecker.DisplayWarnings ();
+
+			return subscriptions.Distinct (SubscriptionDataLoader.GetSubscriptionComparer ()).ToList ();
+;
+		}
+
+		private static SubscriptionData LoadExcelSubscription(Dictionary<ExcelSubscriptionHeader, string> record, AddressChecker addressChecker)
+		{
+			var rawHouseholdId = record.GetValueOrDefault (ExcelSubscriptionHeader.HouseholdId, "");
+			var rawTitle = record.GetValueOrDefault (ExcelSubscriptionHeader.Title, "");
+			var rawLastname = record.GetValueOrDefault (ExcelSubscriptionHeader.Lastname, "");
+			var rawFirstname = record.GetValueOrDefault (ExcelSubscriptionHeader.Firstname, "");
+			var rawStreet = record.GetValueOrDefault (ExcelSubscriptionHeader.Street, "");
+			var rawHouseNumber = record.GetValueOrDefault (ExcelSubscriptionHeader.HouseNumber, "");
+			var rawZipCode = record.GetValueOrDefault (ExcelSubscriptionHeader.ZipCode, "");
+			var rawTown = record.GetValueOrDefault (ExcelSubscriptionHeader.Town, "");
+			var rawConfession = record.GetValueOrDefault (ExcelSubscriptionHeader.Confession, "");
+			var rawSex = record.GetValueOrDefault (ExcelSubscriptionHeader.Sex, "");
+			var rawMaritalStatus = record.GetValueOrDefault (ExcelSubscriptionHeader.MaritalStatus, "");
+			var rawComment = record.GetValueOrDefault (ExcelSubscriptionHeader.Comment, "");
+			var rawPhone1 = record.GetValueOrDefault (ExcelSubscriptionHeader.Phone1, "");
+			var rawMobile = record.GetValueOrDefault (ExcelSubscriptionHeader.Mobile, "");
+			var rawEMail = record.GetValueOrDefault (ExcelSubscriptionHeader.EMail, "");
+			var rawBirthDate = record.GetValueOrDefault (ExcelSubscriptionHeader.BirthDate, "");
+			var rawProfession = record.GetValueOrDefault (ExcelSubscriptionHeader.Profession, "");
+
+			var countryCode = "CH";
+
+			string zipCode = rawZipCode;
+			string town    = rawTown;
+
+			addressChecker.FixZipCodeAndTown (ref zipCode, ref town);
+
+			int? houseNumber;
+			string houseNumberComplement;
+
+			SubscriptionDataLoader.ParseHouseNumberAndComplement (rawHouseNumber, out houseNumber, out houseNumberComplement);
+
+			string addressLine1 = "";
+			string streetName = rawStreet;
+			string postBox = "";
+
+			addressChecker.FixStreetName (ref addressLine1, ref streetName, houseNumber, ref zipCode, ref town, postBox);
+
+			Epsitec.Common.Types.Date? birthDate = SubscriptionDataLoader.GetDate (rawBirthDate);
+			PersonSex sex;
+			PersonMaritalStatus maritalStatus;
+			PersonConfession confession;
+
+			switch (rawSex.ToUpperInvariant ())
+			{
+				case "M":
+					sex = PersonSex.Male;
+					break;
+				case "F":
+					sex = PersonSex.Female;
+					break;
+				default:
+					sex = PersonSex.Unknown;
+					break;
+			}
+
+			switch (rawMaritalStatus.ToLowerInvariant ())
+			{
+				case "marié":
+					maritalStatus = PersonMaritalStatus.Married;
+					break;
+				case "veuf":
+					maritalStatus = PersonMaritalStatus.Widowed;
+					break;
+				case "célibataire":
+					maritalStatus = PersonMaritalStatus.Single;
+					break;
+				case "divorcé":
+					maritalStatus = PersonMaritalStatus.Divorced;
+					break;
+				case "":
+					maritalStatus = PersonMaritalStatus.None;
+					break;
+				default:
+					maritalStatus = PersonMaritalStatus.None;
+					break;
+			}
+
+			switch (rawConfession.ToLowerInvariant ())
+			{
+				case "protestant":
+					confession = PersonConfession.Protestant;
+					break;
+				case "catholique":
+					confession = PersonConfession.Catholic;
+					break;
+				case "musulman":
+					confession = PersonConfession.Muslim;
+					break;
+				case "inconnu":
+					confession = PersonConfession.Unknown;
+					break;
+				case "":
+					confession = PersonConfession.None;
+					break;
+				default:
+					confession = PersonConfession.Unknown;
+					break;
+			}
+
+			return new SubscriptionData
+			(
+				rawTitle, rawFirstname, rawLastname, streetName,	houseNumber, houseNumberComplement, zipCode, town, countryCode,
+				sex, maritalStatus, confession, birthDate, rawPhone1, rawMobile, rawEMail, rawHouseholdId,
+				rawComment, rawProfession
+			);
+		}
+
+		private static Epsitec.Common.Types.Date? GetDate(string rawBirthDate)
+		{
+			if (string.IsNullOrEmpty (rawBirthDate))
+			{
+				return null;
+			}
+
+			var split = rawBirthDate.Split ('.', '/', ':', ' ');
+
+			if (split.Length != 3)
+			{
+				return null;
+			}
+
+			int day   = int.Parse (split[0], System.Globalization.CultureInfo.InvariantCulture);
+			int month = int.Parse (split[1], System.Globalization.CultureInfo.InvariantCulture);
+			int year  = int.Parse (split[2], System.Globalization.CultureInfo.InvariantCulture);
+
+			return new Epsitec.Common.Types.Date (year, month, day);
+		}
+
+		private static void ParseHouseNumberAndComplement(string rawHouseNumber, out int? houseNumber, out string houseNumberComplement)
+		{
+			var number = new System.Text.StringBuilder ();
+			var suffix = new System.Text.StringBuilder ();
+
+			int pos = 0;
+
+			while (pos < rawHouseNumber.Length)
+			{
+				char c = rawHouseNumber[pos];
+
+				if (char.IsDigit (c))
+				{
+					number.Append (c);
+					pos++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			while (pos < rawHouseNumber.Length)
+			{
+				suffix.Append (rawHouseNumber[pos]);
+				pos++;
+			}
+
+			if (number.Length > 0)
+			{
+				houseNumber = int.Parse (number.ToString (), System.Globalization.CultureInfo.InvariantCulture);
+			}
+			else
+			{
+				houseNumber = null;
+			}
+
+			houseNumberComplement = suffix.ToString ();
 		}
 
 
