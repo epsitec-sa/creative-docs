@@ -14,8 +14,8 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Export
 {
 	/// <summary>
-	/// C'est ici que se trouve toute la logique pour l'importation d'un plan comptable,
-	/// avec la succession de popups jusqu'à l'importation elle-même.
+	/// C'est ici que se trouve toute la logique interactive pour l'importation d'un plan
+	/// comptable, avec la succession de popups jusqu'à l'importation elle-même.
 	/// </summary>
 	public class AccountsImportHelpers : System.IDisposable
 	{
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 		public void ShowImportPopup()
 		{
 			//	Affiche le popup permettant de choisir un plan comptable à importer, ainsi
-			//	que le mode.
+			//	que le mode (Replace ou Merge).
 			var popup = new AccountsImportPopup (this.accessor)
 			{
 				ImportInstructions = LocalSettings.AccountsImportInstructions,
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 				return;
 			}
 
-			if (instructions.Mode == AccountsMergeMode.Merge)
+			if (instructions.Mode == AccountsMergeMode.Merge && this.accountsMerge.HasCurrentAccounts)
 			{
 				if (this.accountsMerge.Todo.Any ())
 				{
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			}
 			else
 			{
-				this.accountsMerge.Merge ();
+				this.accountsMerge.Do ();  // effectue l'importation en mode Replace
 				this.updateAction ();
 			}
 		}
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			{
 				if (name == "ok")
 				{
-					this.accountsMerge.Merge ();
+					this.accountsMerge.Do ();  // effectue l'importation en mode Merge
 					this.updateAction ();
 				}
 			};
@@ -101,6 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private bool ReadFile(AccountsImportInstructions instructions)
 		{
+			//	Lit le fichier .crp et crée le moteur d'importation AccountsMerge.
 			var currentAccounts = this.accessor.Mandat.GetData (BaseType.Accounts);
 
 			using (var importEngine = new AccountsImport ())
@@ -126,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 		private void ShowErrorPopup(string message)
 		{
 			//	Affiche une erreur.
-			MessagePopup.ShowMessage (this.target, "Importation impossible", message);
+			MessagePopup.ShowMessage (this.target, "Importation", message);
 		}
 
 

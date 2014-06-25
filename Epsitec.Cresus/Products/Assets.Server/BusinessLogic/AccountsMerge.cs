@@ -10,7 +10,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	/// <summary>
-	/// Importation non interractive d'un plan comptable, supportant les modes Replace et Merge.
+	/// Importation non interactive d'un plan comptable, supportant les modes Replace et Merge.
 	/// </summary>
 	public class AccountsMerge : System.IDisposable
 	{
@@ -31,7 +31,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public List<AccountMergeTodo> Todo
+		public bool								HasCurrentAccounts
+		{
+			//	Retourne false s'il n'y a actuellement aucun compte dans le plan comptable.
+			get
+			{
+				return this.currentAccounts.Any ();
+			}
+		}
+
+		public List<AccountMergeTodo>			Todo
 		{
 			//	Retourne la liste des comptes à fusionner.
 			get
@@ -40,7 +49,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public void Merge()
+		public void Do()
 		{
 			//	Effectue l'importation, selon la liste Todo.
 			if (this.mode == AccountsMergeMode.Replace ||
@@ -67,8 +76,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private void DoMerge()
 		{
-			this.UpdateLinks ();
-
 			//	On s'occupe d'abord des données brutes.
 			foreach (var todo in this.todo)
 			{
@@ -110,27 +117,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				this.MergeAccount (o, imported);
 			}
-
-			this.links.Add (imported, o);
 		}
 
 		private void MergeAccount(DataObject current, DataObject imported)
 		{
 			var e = current.GetEvent (0);
 
-			this.MergeString (e, imported, ObjectField.Number);
-			this.MergeString (e, imported, ObjectField.Name);
-			this.MergeInt    (e, imported, ObjectField.AccountCategory);
-			this.MergeInt    (e, imported, ObjectField.AccountType);
+			this.SetString (e, imported, ObjectField.Number);
+			this.SetString (e, imported, ObjectField.Name);
+			this.SetInt    (e, imported, ObjectField.AccountCategory);
+			this.SetInt    (e, imported, ObjectField.AccountType);
+
+			this.links[imported] = current;
 		}
 
-		private void MergeString(DataEvent e, DataObject imported, ObjectField field)
+		private void SetString(DataEvent e, DataObject imported, ObjectField field)
 		{
 			var value = ObjectProperties.GetObjectPropertyString (imported, null, field);
 			e.AddProperty (new DataStringProperty (field, value));
 		}
 
-		private void MergeInt(DataEvent e, DataObject imported, ObjectField field)
+		private void SetInt(DataEvent e, DataObject imported, ObjectField field)
 		{
 			var value = ObjectProperties.GetObjectPropertyInt (imported, null, field);
 			e.AddProperty (new DataIntProperty (field, value.Value));
@@ -154,7 +161,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					if (!this.IsEqual (current, imported))
 					{
-						this.todo.Add (AccountMergeTodo.NewMerge (imported, current));  // compte à fusionner
+						this.todo.Add (AccountMergeTodo.NewMerge (imported, current, true));  // compte à fusionner
 					}
 
 					this.links.Add (imported, current);

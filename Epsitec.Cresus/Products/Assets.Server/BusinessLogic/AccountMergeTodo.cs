@@ -14,18 +14,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		public static AccountMergeTodo NewAdd(DataObject addAccount)
 		{
-			return new AccountMergeTodo (addAccount, null);
+			return new AccountMergeTodo (addAccount, null, false);
 		}
 
-		public static AccountMergeTodo NewMerge(DataObject importedAccount, DataObject mergeWithAccount)
+		public static AccountMergeTodo NewMerge(DataObject importedAccount, DataObject mergeWithAccount, bool requiredMerge)
 		{
-			return new AccountMergeTodo (importedAccount, mergeWithAccount);
+			return new AccountMergeTodo (importedAccount, mergeWithAccount, requiredMerge);
 		}
 
-		private AccountMergeTodo(DataObject importedAccount, DataObject mergeWith)
+		private AccountMergeTodo(DataObject importedAccount, DataObject mergeWith, bool requiredMerge)
 		{
-			this.ImportedAccount = importedAccount;
-			this.MergeWithAccount       = mergeWith;
+			this.ImportedAccount  = importedAccount;
+			this.MergeWithAccount = mergeWith;
+			this.RequiredMerge    = requiredMerge;
 		}
 
 		public bool IsAdd
@@ -53,9 +54,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static AccountMergeTodo Empty = new AccountMergeTodo (null, null);
+		public static AccountMergeTodo Empty = new AccountMergeTodo (null, null, false);
 
 		public readonly DataObject				ImportedAccount;
 		public readonly DataObject				MergeWithAccount;
+		public readonly bool					RequiredMerge;
 	}
 }

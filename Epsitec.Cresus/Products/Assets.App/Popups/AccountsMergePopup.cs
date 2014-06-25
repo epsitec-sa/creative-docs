@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock                = DockStyle.Bottom,
 				PreferredHeight     = 30,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Margins             = new Margins (10),
+				Margins             = new Margins (10, 0, 0, 10),
 			};
 
 			{
@@ -117,10 +117,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.modifyButton = new Button
 			{
-				Parent      = frame,
-				ButtonStyle = ButtonStyle.Icon,
-				AutoFocus   = false,
-				Dock        = DockStyle.Fill,
+				Parent           = frame,
+				ButtonStyle      = ButtonStyle.Icon,
+				AutoFocus        = false,
+				Dock             = DockStyle.Fill,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+			};
+
+			this.info = new StaticText
+			{
+				Parent = frame,
+				Dock   = DockStyle.Fill,
 			};
 
 			this.radioAdd.Clicked += delegate
@@ -156,29 +163,38 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.radioAdd    .Visibility = false;
 				this.radioMerge  .Visibility = false;
 				this.modifyButton.Visibility = false;
+				this.info        .Visibility = false;
 			}
 			else
 			{
-				this.radioAdd    .Visibility = true;
-				this.radioMerge  .Visibility = true;
-				this.modifyButton.Visibility = true;
-
 				var node = this.nodeGetter[this.visibleSelectedRow];
 
-				if (node.IsAdd)
-				{
-					this.radioAdd  .ActiveState = ActiveState.Yes;
-					this.radioMerge.ActiveState = ActiveState.No;
+				this.radioAdd    .Visibility = !node.RequiredMerge;
+				this.radioMerge  .Visibility = !node.RequiredMerge;
+				this.modifyButton.Visibility = !node.RequiredMerge;
+				this.info        .Visibility =  node.RequiredMerge;
 
-					this.modifyButton.Visibility = false;
+				if (node.RequiredMerge)
+				{
+					this.info.Text = "La fusion est obligatoire, car les comptes ont les mêmes numéros.";
 				}
 				else
 				{
-					this.radioAdd  .ActiveState = ActiveState.No;
-					this.radioMerge.ActiveState = ActiveState.Yes;
+					if (node.IsAdd)
+					{
+						this.radioAdd.ActiveState = ActiveState.Yes;
+						this.radioMerge.ActiveState = ActiveState.No;
 
-					this.modifyButton.Visibility = true;
-					this.modifyButton.Text = AccountsLogic.GetSummary (node.MergeWithAccount);
+						this.modifyButton.Visibility = false;
+					}
+					else
+					{
+						this.radioAdd.ActiveState = ActiveState.No;
+						this.radioMerge.ActiveState = ActiveState.Yes;
+
+						this.modifyButton.Visibility = true;
+						this.modifyButton.Text = "   " + AccountsLogic.GetSummary (node.MergeWithAccount);
+					}
 				}
 			}
 		}
@@ -195,7 +211,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private void ActionMerge()
 		{
 			var todo = this.SelectedTodo;
-			this.SelectedTodo = AccountMergeTodo.NewMerge (todo.ImportedAccount, this.GetDefaultAccount (todo.ImportedAccount));
+			this.SelectedTodo = AccountMergeTodo.NewMerge (todo.ImportedAccount, this.GetDefaultAccount (todo.ImportedAccount), todo.RequiredMerge);
 
 			this.UpdateAfterModify ();
 		}
@@ -209,7 +225,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
-				this.SelectedTodo = AccountMergeTodo.NewMerge (todo.ImportedAccount, this.GetCurrentAccount (guid));
+				this.SelectedTodo = AccountMergeTodo.NewMerge (todo.ImportedAccount, this.GetCurrentAccount (guid), todo.RequiredMerge);
 
 				this.UpdateAfterModify ();
 			};
@@ -217,8 +233,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private DataObject GetDefaultAccount(DataObject account)
 		{
-			// TODO: faire mieux !
-			return this.accessor.Mandat.GetData (BaseType.Accounts)[0];
+			var accounts = this.accessor.Mandat.GetData (BaseType.Accounts);
+
+			var best = AccountsSearching.ApproximativeTitleSearch (accounts, account);
+			if (best != null)
+			{
+				return best;
+			}
+
+			return this.accessor.Mandat.GetData (BaseType.Accounts).Last ();
 		}
 
 		private DataObject GetCurrentAccount(Guid guid)
@@ -262,5 +285,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private RadioButton								radioAdd;
 		private RadioButton								radioMerge;
 		private Button									modifyButton;
+		private StaticText								info;
 	}
 }
