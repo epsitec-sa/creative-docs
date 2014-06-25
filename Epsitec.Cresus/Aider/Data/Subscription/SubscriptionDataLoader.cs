@@ -61,23 +61,25 @@ namespace Epsitec.Aider.Data.Subscription
 
 		private static SubscriptionData LoadExcelSubscription(Dictionary<ExcelSubscriptionHeader, string> record, AddressChecker addressChecker)
 		{
-			var rawHouseholdId = record.GetValueOrDefault (ExcelSubscriptionHeader.HouseholdId, "");
-			var rawTitle = record.GetValueOrDefault (ExcelSubscriptionHeader.Title, "");
-			var rawLastname = record.GetValueOrDefault (ExcelSubscriptionHeader.Lastname, "");
-			var rawFirstname = record.GetValueOrDefault (ExcelSubscriptionHeader.Firstname, "");
-			var rawStreet = record.GetValueOrDefault (ExcelSubscriptionHeader.Street, "");
-			var rawHouseNumber = record.GetValueOrDefault (ExcelSubscriptionHeader.HouseNumber, "");
-			var rawZipCode = record.GetValueOrDefault (ExcelSubscriptionHeader.ZipCode, "");
-			var rawTown = record.GetValueOrDefault (ExcelSubscriptionHeader.Town, "");
-			var rawConfession = record.GetValueOrDefault (ExcelSubscriptionHeader.Confession, "");
-			var rawSex = record.GetValueOrDefault (ExcelSubscriptionHeader.Sex, "");
+			var rawHouseholdId   = record.GetValueOrDefault (ExcelSubscriptionHeader.HouseholdId, "");
+			var rawTitle         = record.GetValueOrDefault (ExcelSubscriptionHeader.Title, "");
+			var rawLastname      = record.GetValueOrDefault (ExcelSubscriptionHeader.Lastname, "");
+			var rawFirstname     = record.GetValueOrDefault (ExcelSubscriptionHeader.Firstname, "");
+			var rawStreet        = record.GetValueOrDefault (ExcelSubscriptionHeader.Street, "");
+			var rawHouseNumber   = record.GetValueOrDefault (ExcelSubscriptionHeader.HouseNumber, "");
+			var rawZipCode       = record.GetValueOrDefault (ExcelSubscriptionHeader.ZipCode, "");
+			var rawTown          = record.GetValueOrDefault (ExcelSubscriptionHeader.Town, "");
+			var rawConfession    = record.GetValueOrDefault (ExcelSubscriptionHeader.Confession, "");
+			var rawSex           = record.GetValueOrDefault (ExcelSubscriptionHeader.Sex, "");
 			var rawMaritalStatus = record.GetValueOrDefault (ExcelSubscriptionHeader.MaritalStatus, "");
-			var rawComment = record.GetValueOrDefault (ExcelSubscriptionHeader.Comment, "");
-			var rawPhone1 = record.GetValueOrDefault (ExcelSubscriptionHeader.Phone1, "");
-			var rawMobile = record.GetValueOrDefault (ExcelSubscriptionHeader.Mobile, "");
-			var rawEMail = record.GetValueOrDefault (ExcelSubscriptionHeader.EMail, "");
-			var rawBirthDate = record.GetValueOrDefault (ExcelSubscriptionHeader.BirthDate, "");
-			var rawProfession = record.GetValueOrDefault (ExcelSubscriptionHeader.Profession, "");
+			var rawComment       = record.GetValueOrDefault (ExcelSubscriptionHeader.Comment, "");
+			var rawPhone1        = record.GetValueOrDefault (ExcelSubscriptionHeader.Phone1, "");
+			var rawMobile        = record.GetValueOrDefault (ExcelSubscriptionHeader.Mobile, "");
+			var rawEMail         = record.GetValueOrDefault (ExcelSubscriptionHeader.EMail, "");
+			var rawBirthDate     = record.GetValueOrDefault (ExcelSubscriptionHeader.BirthDate, "");
+			var rawProfession    = record.GetValueOrDefault (ExcelSubscriptionHeader.Profession, "");
+			var rawNationality   = record.GetValueOrDefault (ExcelSubscriptionHeader.Nationality, "");
+			var rawOrigin        = record.GetValueOrDefault (ExcelSubscriptionHeader.Origin, "");
 
 			var countryCode = "CH";
 
@@ -159,12 +161,9 @@ namespace Epsitec.Aider.Data.Subscription
 					break;
 			}
 
-			return new SubscriptionData
-			(
-				rawTitle, rawFirstname, rawLastname, streetName,	houseNumber, houseNumberComplement, zipCode, town, countryCode,
-				sex, maritalStatus, confession, birthDate, rawPhone1, rawMobile, rawEMail, rawHouseholdId,
-				rawComment, rawProfession
-			);
+			return new SubscriptionData	(rawTitle, rawFirstname, rawLastname, streetName, houseNumber, houseNumberComplement, zipCode, town, countryCode,
+										 sex, maritalStatus, confession, birthDate, rawPhone1, rawMobile, rawEMail, rawHouseholdId,
+										 rawComment, rawProfession, rawNationality, rawOrigin);
 		}
 
 		private static Epsitec.Common.Types.Date? GetDate(string rawBirthDate)
@@ -176,7 +175,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			var split = rawBirthDate.Split ('.', '/', ':', ' ');
 
-			if (split.Length != 3)
+			if (split.Length < 3)
 			{
 				return null;
 			}

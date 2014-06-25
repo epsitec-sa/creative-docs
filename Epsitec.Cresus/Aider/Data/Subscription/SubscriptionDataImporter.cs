@@ -368,6 +368,14 @@ namespace Epsitec.Aider.Data.Subscription
 				eChPerson.RemovalReason = RemovalReason.None;
 				eChPerson.AdultMaritalStatus = sub.MaritalStatus;
 				eChPerson.PersonDateOfBirth = sub.BirthDate;
+				eChPerson.Origins = string.Join ("\n", sub.Origin.Split (',').Select (x => x.Trim ()));
+
+				if ((string.IsNullOrEmpty (sub.Nationality) == false) &&
+					(sub.Nationality.Length == 2))
+				{
+					eChPerson.NationalityStatus = PersonNationalityStatus.Defined;
+					eChPerson.NationalityCountryCode = sub.Nationality;
+				}
 
 				person.Confession = sub.Confession;
 				person.Profession = sub.Profession;

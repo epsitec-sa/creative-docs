@@ -72,7 +72,9 @@ namespace Epsitec.Aider.Data.Subscription
 			string email,
 			string householdToken,
 			string comment,
-			string profession
+			string profession,
+			string nationality,
+			string origin
 		)
 		{
 			this.isRichData = true;
@@ -96,6 +98,8 @@ namespace Epsitec.Aider.Data.Subscription
 			this.HouseholdToken        = householdToken;
 			this.Comment               = comment;
 			this.Profession            = profession;
+			this.Nationality = nationality;
+			this.Origin = origin;
 		}
 
 
@@ -200,5 +204,7 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly string Email;
 		public readonly string HouseholdToken;
 		public readonly string Profession;
+		public readonly string Nationality;
+		public readonly string Origin;
 	}
 }

@@ -55,7 +55,9 @@ namespace Epsitec.Aider.Data.Subscription
 				{ ExcelSubscriptionHeader.Mobile, "Tel mobile" },
 				{ ExcelSubscriptionHeader.EMail, "E-mail" },
 				{ ExcelSubscriptionHeader.Profession, "Profession" },
-				{ ExcelSubscriptionHeader.BirthDate, "Date de naissance" }
+				{ ExcelSubscriptionHeader.BirthDate, "Date de naissance" },
+				{ ExcelSubscriptionHeader.Nationality, "Nationalité" },
+				{ ExcelSubscriptionHeader.Origin, "Origine" }
 			};
 
 
@@ -140,8 +142,8 @@ namespace Epsitec.Aider.Data.Subscription
 		Comment,
 		Phone1,
 		Mobile,
-		EMail
-		
+		EMail,
+		Nationality,
 	}
 
 	internal enum WebSubscriptionHeader
