@@ -13,6 +13,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Export
 {
+	/// <summary>
+	/// C'est ici que se trouve toute la logique pour l'importation d'un plan comptable,
+	/// avec la succession de popups jusqu'à l'importation elle-même.
+	/// </summary>
 	public class AccountsImportHelpers : System.IDisposable
 	{
 		public AccountsImportHelpers(DataAccessor accessor, Widget target, System.Action updateAction)
@@ -61,7 +65,14 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 			if (instructions.Mode == AccountsMergeMode.Merge)
 			{
-				this.ShowMergePopup ();
+				if (this.accountsMerge.Todo.Any ())
+				{
+					this.ShowMergePopup ();
+				}
+				else
+				{
+					this.ShowErrorPopup ("Il n'y a aucun compte à fusionner.<br/>Le plan comptable est à jour.");
+				}
 			}
 			else
 			{

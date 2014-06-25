@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class AccountsMergePopup : AbstractPopup
 	{
-		public AccountsMergePopup(DataAccessor accessor, Dictionary<DataObject, DataObject> todo)
+		public AccountsMergePopup(DataAccessor accessor, List<AccountMergeTodo> todo)
 		{
 			this.accessor = accessor;
 			this.todo     = todo;
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateButtons ();
 			this.CreateModify ();
 
-			TreeTableFiller<AccountsMergeNode>.FillColumns (this.controller, this.dataFiller, "Popup.Groups");
+			TreeTableFiller<AccountMergeTodo>.FillColumns (this.controller, this.dataFiller, "Popup.Groups");
 
 			this.UpdateController ();
 			this.UpdateModify ();
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				var node = this.nodeGetter[this.visibleSelectedRow];
 
-				if (node.CurrentAccount == null)
+				if (node.IsAdd)
 				{
 					this.radioAdd  .ActiveState = ActiveState.Yes;
 					this.radioMerge.ActiveState = ActiveState.No;
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					this.radioMerge.ActiveState = ActiveState.Yes;
 
 					this.modifyButton.Visibility = true;
-					this.modifyButton.Text = AccountsLogic.GetSummary (node.CurrentAccount);
+					this.modifyButton.Text = AccountsLogic.GetSummary (node.MergeWithAccount);
 				}
 			}
 		}
@@ -186,51 +186,56 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void ActionAdd()
 		{
-			var node = this.nodeGetter[this.visibleSelectedRow];
-
-			this.todo.Remove (node.ImportedAccount);
-			this.todo.Add (node.ImportedAccount, null);
+			var todo = this.SelectedTodo;
+			this.SelectedTodo = AccountMergeTodo.NewAdd (todo.ImportedAccount);
 
 			this.UpdateAfterModify ();
 		}
 
 		private void ActionMerge()
 		{
-			var node = this.nodeGetter[this.visibleSelectedRow];
-
-			this.todo.Remove (node.ImportedAccount);
-			this.todo.Add (node.ImportedAccount, this.DefaultAccount);
+			var todo = this.SelectedTodo;
+			this.SelectedTodo = AccountMergeTodo.NewMerge (todo.ImportedAccount, this.GetDefaultAccount (todo.ImportedAccount));
 
 			this.UpdateAfterModify ();
 		}
 
 		private void ShowAccountPopup()
 		{
-			var node = this.nodeGetter[this.visibleSelectedRow];
-			var popup = new GroupsPopup (this.accessor, BaseType.Accounts, node.CurrentAccount.Guid);
+			var todo = this.SelectedTodo;
+			var popup = new GroupsPopup (this.accessor, BaseType.Accounts, todo.MergeWithAccount.Guid);
 			
 			popup.Create (this.modifyButton, leftOrRight: false);
 			
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
-				this.todo.Remove (node.ImportedAccount);
-				this.todo.Add (node.ImportedAccount, this.GetCurrentAccount (guid));
+				this.SelectedTodo = AccountMergeTodo.NewMerge (todo.ImportedAccount, this.GetCurrentAccount (guid));
 
 				this.UpdateAfterModify ();
 			};
 		}
 
-		private DataObject DefaultAccount
+		private DataObject GetDefaultAccount(DataObject account)
 		{
-			get
-			{
-				return this.accessor.Mandat.GetData (BaseType.Accounts)[0];
-			}
+			// TODO: faire mieux !
+			return this.accessor.Mandat.GetData (BaseType.Accounts)[0];
 		}
 
 		private DataObject GetCurrentAccount(Guid guid)
 		{
 			return this.accessor.GetObject (BaseType.Accounts, guid);
+		}
+
+		private AccountMergeTodo SelectedTodo
+		{
+			get
+			{
+				return this.todo[this.visibleSelectedRow];
+			}
+			set
+			{
+				this.todo[this.visibleSelectedRow] = value;
+			}
 		}
 
 
@@ -243,7 +248,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private void UpdateController(bool crop = true)
 		{
 			this.nodeGetter.SetParams (this.todo);
-			TreeTableFiller<AccountsMergeNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
+			TreeTableFiller<AccountMergeTodo>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
 
@@ -252,7 +257,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly AccountsMergeNodeGetter		nodeGetter;
 		private readonly AccountsMergeTreeTableFiller	dataFiller;
 
-		private Dictionary<DataObject, DataObject>		todo;
+		private List<AccountMergeTodo>					todo;
 		private int										visibleSelectedRow;
 		private RadioButton								radioAdd;
 		private RadioButton								radioMerge;

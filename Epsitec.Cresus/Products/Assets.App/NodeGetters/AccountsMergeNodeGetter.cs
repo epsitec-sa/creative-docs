@@ -4,21 +4,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.NodeGetters
 {
-	public class AccountsMergeNodeGetter : INodeGetter<AccountsMergeNode>  // outputNodes
+	public class AccountsMergeNodeGetter : INodeGetter<AccountMergeTodo>  // outputNodes
 	{
-		public void SetParams(Dictionary<DataObject, DataObject> todo)
+		public void SetParams(List<AccountMergeTodo> todo)
 		{
-			this.nodes = new List<AccountsMergeNode> ();
-
-			foreach (var x in todo)
-			{
-				var node = new AccountsMergeNode (x.Key, x.Value);
-				this.nodes.Add (node);
-			}
+			this.nodes = todo;
 		}
 
 
@@ -30,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 			}
 		}
 
-		public AccountsMergeNode this[int index]
+		public AccountMergeTodo this[int index]
 		{
 			get
 			{
@@ -40,12 +34,12 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 				}
 				else
 				{
-					return AccountsMergeNode.Empty;
+					return AccountMergeTodo.Empty;
 				}
 			}
 		}
 
 
-		private List<AccountsMergeNode>			nodes;
+		private List<AccountMergeTodo>			nodes;
 	}
 }

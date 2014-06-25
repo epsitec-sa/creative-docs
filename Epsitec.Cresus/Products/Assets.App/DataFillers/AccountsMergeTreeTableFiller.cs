@@ -11,9 +11,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
-	public class AccountsMergeTreeTableFiller : AbstractTreeTableFiller<AccountsMergeNode>
+	public class AccountsMergeTreeTableFiller : AbstractTreeTableFiller<AccountMergeTodo>
 	{
-		public AccountsMergeTreeTableFiller(DataAccessor accessor, INodeGetter<AccountsMergeNode> nodeGetter)
+		public AccountsMergeTreeTableFiller(DataAccessor accessor, INodeGetter<AccountMergeTodo> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}
@@ -50,8 +50,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 		public override TreeTableContentItem GetContent(int firstRow, int count, int selection)
 		{
-			var c1 = new TreeTableColumnItem ();
-			var c2 = new TreeTableColumnItem ();
+			var importColumn = new TreeTableColumnItem ();
+			var mergeColumn  = new TreeTableColumnItem ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -62,40 +62,40 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var node = this.nodeGetter[firstRow+i];
 
-				var d1 = AccountsMergeTreeTableFiller.GetImportDescription  (node.ImportedAccount);
-				var d2 = AccountsMergeTreeTableFiller.GetCurrentDescription (node.CurrentAccount);
+				var importText = AccountsMergeTreeTableFiller.GetImportDescription  (node);
+				var mergeText  = AccountsMergeTreeTableFiller.GetCurrentDescription (node);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var s1 = new TreeTableCellString (d1, cellState);
-				var s2 = new TreeTableCellString (d2, cellState);
+				var importCell = new TreeTableCellString (importText, cellState);
+				var mergeCell  = new TreeTableCellString (mergeText,  cellState);
 
-				c1.AddRow (s1);
-				c2.AddRow (s2);
+				importColumn.AddRow (importCell);
+				mergeColumn .AddRow (mergeCell);
 			}
 
 			var content = new TreeTableContentItem ();
 
-			content.Columns.Add (c1);
-			content.Columns.Add (c2);
+			content.Columns.Add (importColumn);
+			content.Columns.Add (mergeColumn);
 
 			return content;
 		}
 
-		private static string GetImportDescription(DataObject account)
+		private static string GetImportDescription(AccountMergeTodo todo)
 		{
-			return AccountsLogic.GetSummary (account);
+			return AccountsLogic.GetSummary (todo.ImportedAccount);
 		}
 
-		private static string GetCurrentDescription(DataObject account)
+		private static string GetCurrentDescription(AccountMergeTodo todo)
 		{
-			if (account == null)
+			if (todo.IsAdd)
 			{
 				return "Ajouter";
 			}
 			else
 			{
-				return "Fusionner avec " + AccountsLogic.GetSummary (account);
+				return "Fusionner avec " + AccountsLogic.GetSummary (todo.MergeWithAccount);
 			}
 		}
 

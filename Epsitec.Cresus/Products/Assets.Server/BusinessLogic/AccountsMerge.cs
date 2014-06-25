@@ -9,6 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
+	/// <summary>
+	/// Importation non interractive d'un plan comptable, supportant les modes Replace et Merge.
+	/// </summary>
 	public class AccountsMerge : System.IDisposable
 	{
 		public AccountsMerge(GuidList<DataObject> currentAccounts, GuidList<DataObject> importedAccounts, AccountsMergeMode mode)
@@ -17,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.importedAccounts = importedAccounts;
 			this.mode             = mode;
 
-			this.todo  = new Dictionary<DataObject, DataObject> ();
+			this.todo  = new List<AccountMergeTodo> ();
 			this.links = new Dictionary<DataObject, DataObject> ();
 
 			this.UpdateLinks ();
@@ -28,8 +31,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public Dictionary<DataObject, DataObject> Todo
+		public List<AccountMergeTodo> Todo
 		{
+			//	Retourne la liste des comptes à fusionner.
 			get
 			{
 				return this.todo;
@@ -38,6 +42,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public void Merge()
 		{
+			//	Effectue l'importation, selon la liste Todo.
 			if (this.mode == AccountsMergeMode.Replace ||
 				this.currentAccounts.Any () == false)
 			{
@@ -65,32 +70,22 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.UpdateLinks ();
 
 			//	On s'occupe d'abord des données brutes.
-			foreach (var imported in this.todo)
+			foreach (var todo in this.todo)
 			{
-				if (imported.Value == null)
+				if (todo.IsAdd)
 				{
-					this.AddAccount (imported.Key);
+					this.AddAccount (todo.ImportedAccount);
 				}
 				else
 				{
-					this.MergeAccount (imported.Value, imported.Key);
+					this.MergeAccount (todo.MergeWithAccount, todo.ImportedAccount);
 				}
-
-				//-DataObject current;
-				//-if (this.links.TryGetValue (imported, out current))
-				//-{
-				//-	this.MergeAccount (current, imported);
-				//-}
-				//-else
-				//-{
-				//-	this.AddAccount (imported);
-				//-}
 			}
 
 			//	On s'occupe ensuite de la parenté.
-			foreach (var imported in this.todo)
+			foreach (var todo in this.todo)
 			{
-				var guid = ObjectProperties.GetObjectPropertyGuid (imported.Key, null, ObjectField.GroupParent);
+				var guid = ObjectProperties.GetObjectPropertyGuid (todo.ImportedAccount, null, ObjectField.GroupParent);
 				if (guid.IsEmpty)
 				{
 					continue;
@@ -98,21 +93,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				var importedParent = this.importedAccounts[guid];
 				var currentParent = this.links[importedParent];
-				var current = this.links[imported.Key];
+				var current = this.links[todo.ImportedAccount];
 				var e = current.GetEvent (0);
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, currentParent.Guid));
-
-				//-var guid = ObjectProperties.GetObjectPropertyGuid (imported, null, ObjectField.GroupParent);
-				//-if (guid.IsEmpty)
-				//-{
-				//-	continue;
-				//-}
-				//-
-				//-var importedParent = this.importedAccounts[guid];
-				//-var currentParent = this.links[importedParent];
-				//-var current = this.links[imported];
-				//-var e = current.GetEvent (0);
-				//-e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, currentParent.Guid));
 			}
 		}
 
@@ -165,13 +148,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (current == null)
 				{
-					this.todo.Add (imported, null);  // compte à ajouter
+					this.todo.Add (AccountMergeTodo.NewAdd (imported));  // compte à ajouter
 				}
 				else
 				{
 					if (!this.IsEqual (current, imported))
 					{
-						this.todo.Add (imported, current);  // compte à fusionner
+						this.todo.Add (AccountMergeTodo.NewMerge (imported, current));  // compte à fusionner
 					}
 
 					this.links.Add (imported, current);
@@ -230,7 +213,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private readonly GuidList<DataObject>				currentAccounts;
 		private readonly GuidList<DataObject>				importedAccounts;
 		private readonly AccountsMergeMode					mode;
-		private readonly Dictionary<DataObject, DataObject>	todo;
+		private readonly List<AccountMergeTodo>				todo;
 		private readonly Dictionary<DataObject, DataObject>	links;
 	}
 }
