@@ -45,7 +45,14 @@ namespace Epsitec.Aider.Data.Subscription
 
 		private static string GetCleanText(string text)
 		{
-			return text.Replace ('\t', ' ');
+			if (text == null)
+			{
+				return "";
+			}
+			else
+			{
+				return text.Replace ('\t', ' ');
+			}
 		}
 
 

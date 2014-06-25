@@ -87,8 +87,6 @@ namespace Epsitec.Aider.Data.Subscription
 
 			Debug.WriteLine (string.Format ("Found {0} persons, {1} households", subscriptions.Count (), dict.Count));
 
-			//	TODO: import, really...
-
 			foreach (var item in dict)
 			{
 				SubscriptionDataImporter.ImportHouseholdAndSubscriptions (businessContext, parishRepository, townRepository, item.Value);
@@ -335,21 +333,32 @@ namespace Epsitec.Aider.Data.Subscription
 															AiderTownRepository townRepository,
 															IList<SubscriptionData> subscriptions)
 		{
-			var household = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-			var address = household.Address;
-
 			var subscription = subscriptions.First ();
+			AiderHouseholdEntity household;
+
+			var token = subscription.HouseholdToken;
+
+			if (token.StartsWith ("[LVAI2]/"))
+			{
+				household = businessContext.ResolveEntity<AiderHouseholdEntity> (EntityKey.Parse (token));
+			}
+			else
+			{
+				household = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+			}
+
+			var address = household.Address;
 
 			address.AddressLine1          = subscription.FirstAddressLine;
 			address.Street                = subscription.StreetName;
 			address.HouseNumber           = subscription.HouseNumber;
 			address.HouseNumberComplement = subscription.HouseNumberComplement;
-			address.PostBox               = subscription.PostBox;
+			address.PostBox               = address.PostBox ?? subscription.PostBox;
 			address.Town                  = townRepository.GetTown (subscription.ZipCode, subscription.Town, subscription.CountryCode);
 
-			address.Phone1 = subscription.Phone;
-			address.Mobile = subscription.Mobile;
-			address.Email = subscription.Email;
+			address.Phone1 = address.Phone1 ?? subscription.Phone;
+			address.Mobile = address.Mobile ?? subscription.Mobile;
+			address.Email = address.Email ?? subscription.Email;
 
 			foreach (var sub in subscriptions)
 			{
@@ -368,7 +377,7 @@ namespace Epsitec.Aider.Data.Subscription
 				eChPerson.RemovalReason = RemovalReason.None;
 				eChPerson.AdultMaritalStatus = sub.MaritalStatus;
 				eChPerson.PersonDateOfBirth = sub.BirthDate;
-				eChPerson.Origins = string.Join ("\n", sub.Origin.Split (',').Select (x => x.Trim ()));
+				eChPerson.Origins = string.Join ("\n", sub.Origin.Split (',', ';', '+').Select (x => x.Trim ()));
 
 				if ((string.IsNullOrEmpty (sub.Nationality) == false) &&
 					(sub.Nationality.Length == 2))
@@ -397,12 +406,16 @@ namespace Epsitec.Aider.Data.Subscription
 
 			foreach (var member in household.Members)
 			{
-				ParishAssigner.AssignToParish (parishRepository, businessContext, member);
+				if (businessContext.DataContext.IsPersistent (member) == false)
+				{
+					ParishAssigner.AssignToParish (parishRepository, businessContext, member);
+				}
 
 				hasProtestantInHousehold |= member.Confession == PersonConfession.Protestant;
 			}
 
-			if (hasProtestantInHousehold)
+			if ((hasProtestantInHousehold) &&
+				(AiderSubscriptionEntity.FindSubscription (businessContext, household) == null))
 			{
 				var count = subscription.NbCopies ?? 1;
 
