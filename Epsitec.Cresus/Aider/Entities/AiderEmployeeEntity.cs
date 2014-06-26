@@ -59,6 +59,24 @@ namespace Epsitec.Aider.Entities
 			return employee;
 		}
 
+		public static void Delete(BusinessContext businessContext, AiderEmployeeEntity employee)
+		{
+			//Delete each jobs
+			foreach(var job in employee.EmployeeJobs)
+			{
+				businessContext.DeleteEntity (job);
+			}
+
+			//Delete each referee
+			foreach (var referee in employee.RefereeEntries)
+			{
+				businessContext.DeleteEntity (referee);
+			}
+			
+			//Finally delete entity
+			businessContext.DeleteEntity (employee);
+		}
+
 		private IList<AiderEmployeeJobEntity>		jobs;
 		private IList<AiderRefereeEntity>			refereeEntries;
 	}

@@ -35,6 +35,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			bool showEmployeeTile   = this.Entity.Employee.IsNotNull ();
 			bool showEmployeeAction = (showEmployeeTile == false) && user.CanEditEmployee ();
 			bool canEditEmployee	= user.CanEditEmployee () || user.CanEditReferee ();
+			bool canRemoveEmployee	= showEmployeeTile && user.CanEditEmployee ();
 
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
@@ -42,6 +43,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionMenu<ActionAiderPersonViewController12Relocate> ()
 				.EnableActionMenu<ActionAiderPersonViewController13DeleteContact> ()
 				.EnableActionMenu<ActionAiderPersonViewController14DefineEmployee> ().IfTrue (showEmployeeAction)
+				.EnableActionMenu<ActionAiderPersonViewController15DeleteEmployee> ().IfTrue (canRemoveEmployee)
 				.EnableActionOnDrop<ActionAiderPersonViewController8FusionOnDrop> ()
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))

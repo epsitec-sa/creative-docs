@@ -107,6 +107,7 @@
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController13RemoveGroupExtraction.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController17ToggleHouseholdGrouping.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController2RemoveSettings.cs" />
+    <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController15DeleteEmployee.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController14DefineEmployee.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController6RemoveAlternateAddress.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController3RemoveFromGroup.cs" />
