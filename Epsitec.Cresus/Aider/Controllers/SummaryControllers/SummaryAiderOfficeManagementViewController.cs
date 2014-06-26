@@ -134,6 +134,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.AutoGroup)
 					.Attribute (BrickMode.DefaultToSummarySubView)
 					.WithSpecialController (typeof (SummaryAiderEmployeeViewController2OfficeManagement))
+					.EnableActionMenu<ActionAiderOfficeManagementViewController3AddEmployeeAndJob> ()
+					.EnableActionMenu<ActionAiderOfficeManagementViewController4DeleteEmployee> ()
 					.Template ()
 						.Title ("Employés et ministres")
 						.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
