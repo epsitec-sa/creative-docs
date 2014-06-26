@@ -72,6 +72,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 
+				this.objectEditor.Goto += delegate (object sender, AbstractViewState viewState)
+				{
+					this.OnGoto (viewState);
+				};
+
 				this.listController.RowDoubleClicked += delegate
 				{
 					this.OnListDoubleClicked ();
