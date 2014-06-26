@@ -156,8 +156,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (p => p.GetSettingsTitleSummary ())
 				.Text (p => p.GetSettingsSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
-				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController1Settings))
-				.EnableActionMenu<ActionAiderOfficeManagementViewController0CreateSettings> ();
+				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController1Settings));
 
 			wall.AddBrick ()
 				.Icon ("Base.AiderGoup.Parish")
