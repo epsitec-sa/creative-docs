@@ -66,7 +66,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Title ("Participants")
 						.Text (p => p.GetGroupAndSubGroupParticipantSummary ())
 						.Attribute (BrickMode.DefaultToSetSubView)
-						.WithSpecialController (typeof (SetAiderGroupViewController1Contact));
+						.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
 				}
 
 				wall.AddBrick (x => x.Comment)

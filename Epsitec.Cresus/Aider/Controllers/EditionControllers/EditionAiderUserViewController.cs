@@ -39,6 +39,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.EnableActionMenu<ActionAiderUserViewController1SetAdministrator> ()
 				.EnableActionMenu<ActionAiderUserViewController2SetOffice> ().IfTrue (contactDefined)
 				.EnableActionMenu<ActionAiderUserViewController4SetParishOrRegion> ()
+				.EnableActionMenu<ActionAiderUserViewController5UnsetOffice> ().IfTrue (senderDefined)
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
 					.Field (x => x.Contact)

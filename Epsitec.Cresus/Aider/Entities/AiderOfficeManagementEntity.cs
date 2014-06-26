@@ -114,6 +114,30 @@ namespace Epsitec.Aider.Entities
 			user.Parish = office.ParishGroup;
 		}
 
+		public static void LeaveOfficeManagement(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
+		{
+			var currentOffice = user.Office;
+			var currentSender = user.OfficeSender;
+			var contact		  = user.Contact;
+
+			if (currentOffice.IsNotNull ())
+			{
+				//Stop old usergroup participation
+				var currentUserGroup = currentOffice.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
+				AiderGroupEntity.RemoveParticipations (businessContext, currentUserGroup.FindParticipationsByGroup (businessContext, contact, currentUserGroup));	
+			}
+			
+			if(currentSender.IsNotNull ())
+			{
+				//Remove sender
+				office.RemoveSenderInternal (currentSender);
+				AiderOfficeSenderEntity.Delete (businessContext, currentSender);
+			}
+	
+			//Leave parish
+			user.Office = null;
+		}
+
 		public static AiderOfficeManagementEntity Find(BusinessContext businessContext, AiderGroupEntity group)
 		{
 			var officeExample = new AiderOfficeManagementEntity

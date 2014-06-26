@@ -180,6 +180,7 @@
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController9GenerateOfficialReport.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController1JoinParish.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeReport\ActionAiderOfficeReportViewController0DeleteReport.cs" />
+    <Compile Include="Controllers\ActionControllers\User\ActionAiderUserViewController5UnsetOffice.cs" />
     <Compile Include="Controllers\ActionControllers\User\ActionAiderUserViewController3SetMyOffice.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController1AssignFunctions.cs" />
     <Compile Include="Controllers\ActionControllers\User\ActionAiderUserViewController4SetParishOrRegion.cs" />
