@@ -6,7 +6,6 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -23,6 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			int h = description.Label.GetTextHeight (description.Width);
 
+			//	On laisse un espace libre à gauche, dans la zone des labels.
 			new StaticText
 			{
 				Parent           = parent,
@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Margins          = new Margins (0, 10, 3, 0),
 			};
 
+			//	On affiche le texte multiligne à droite, dans la zone des contrôles.
 			new StaticText
 			{
 				Parent           = parent,
@@ -42,8 +43,5 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				PreferredHeight  = h,
 			};
 		}
-
-
-		public const int height = AbstractFieldController.lineHeight + 4;
 	}
 }
