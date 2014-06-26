@@ -65,23 +65,28 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 			if (instructions.Mode == AccountsMergeMode.Merge && this.accountsMerge.HasCurrentAccounts)
 			{
+				//	Importation en mode Merge.
 				if (this.accountsMerge.Todo.Any ())
 				{
 					this.ShowMergePopup ();
 				}
 				else
 				{
-					this.ShowErrorPopup ("Il n'y a aucun compte à fusionner.<br/>Le plan comptable est à jour.");
+					this.ShowMessagePopup ("Il n'y a aucun compte à fusionner.<br/>Le plan comptable est à jour.");
 				}
 			}
 			else
 			{
+				//	Importation en mode Replace.
 				if (CategoriesLogic.HasAccounts (this.accessor))
 				{
+					//	S'il y a des comptes définis dans les caégories d'immobilisation, il faut
+					//	en avertir l'utilisateur.
 					this.ShowReplacePopup ();
 				}
 				else
 				{
+					//	Sinon, on peut importer directement.
 					this.ReplaceImport ();
 				}
 			}
@@ -89,6 +94,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private void ShowReplacePopup()
 		{
+			//	Affiche le popup d'avertissement, avant d'effectuer une importation
+			//	en mode Remplace.
 			const string question = "L'importation effacera tous les comptes dans les catégories d'immobilisation. Etes-vous certain de vouloir continuer ?";
 			YesNoPopup.Show (this.target, question, this.ReplaceImport);
 		}
@@ -106,6 +113,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 				{
 					this.accountsMerge.Do ();  // effectue l'importation en mode Merge
 					this.updateAction ();
+
+					this.ShowMessagePopup ("La fusion s'est effectuée avec succès.<br/>Vous pouvez éventuellement modifier les comptes à utiliser dans les catégories d'immobilisation.");
 				}
 			};
 		}
@@ -126,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 				}
 				catch (System.Exception ex)
 				{
-					this.ShowErrorPopup (ex.Message);
+					this.ShowMessagePopup (ex.Message);
 					return false;
 				}
 
@@ -137,13 +146,16 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private void ReplaceImport()
 		{
-			this.accountsMerge.Do ();  // effectue l'importation en mode Replace
+			//	Effectue l'importation en mode Remplace.
+			this.accountsMerge.Do ();
 			CategoriesLogic.ClearAccounts (this.accessor);
 			this.updateAction ();
+
+			this.ShowMessagePopup ("L'importation s'est effectuée avec succès.<br/>Vous n'avez plus qu'à définir les comptes à utiliser dans les catégories d'immobilisation.");
 		}
 
 
-		private void ShowErrorPopup(string message)
+		private void ShowMessagePopup(string message)
 		{
 			//	Affiche une erreur.
 			MessagePopup.ShowMessage (this.target, "Importation", message);

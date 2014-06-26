@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private const int popupWidth  = 250;
-		private const int popupHeight = 100;
+		private const int popupHeight = 130;
 
 		private readonly string					title;
 		private readonly string					message;
