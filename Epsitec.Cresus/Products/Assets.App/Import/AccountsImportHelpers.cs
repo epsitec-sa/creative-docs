@@ -76,9 +76,21 @@ namespace Epsitec.Cresus.Assets.App.Export
 			}
 			else
 			{
-				this.accountsMerge.Do ();  // effectue l'importation en mode Replace
-				this.updateAction ();
+				if (CategoriesLogic.HasAccounts (this.accessor))
+				{
+					this.ShowReplacePopup ();
+				}
+				else
+				{
+					this.ReplaceImport ();
+				}
 			}
+		}
+
+		private void ShowReplacePopup()
+		{
+			const string question = "L'importation effacera tous les comptes dans les catégories d'immobilisation. Etes-vous certain de vouloir continuer ?";
+			YesNoPopup.Show (this.target, question, this.ReplaceImport);
 		}
 
 		private void ShowMergePopup()
@@ -121,6 +133,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 				this.accountsMerge = new AccountsMerge (currentAccounts, importedAccounts, instructions.Mode);
 				return true;
 			}
+		}
+
+		private void ReplaceImport()
+		{
+			this.accountsMerge.Do ();  // effectue l'importation en mode Replace
+			CategoriesLogic.ClearAccounts (this.accessor);
+			this.updateAction ();
 		}
 
 

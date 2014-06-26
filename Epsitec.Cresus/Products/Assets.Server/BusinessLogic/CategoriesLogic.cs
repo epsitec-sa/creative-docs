@@ -11,6 +11,63 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class CategoriesLogic
 	{
+		public static bool HasAccounts(DataAccessor accessor)
+		{
+			//	Indique s'il existe une catégorie d'immobilisation qui fait référence à un compte.
+			foreach (var cat in accessor.Mandat.GetData (BaseType.Categories))
+			{
+				if (CategoriesLogic.HasAccounts (cat))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		private static bool HasAccounts(DataObject cat)
+		{
+			return CategoriesLogic.HasAccounts (cat, ObjectField.Account1)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account2)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account3)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account4)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account5)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account6)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account7)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account8);
+		}
+
+		private static bool HasAccounts(DataObject cat, ObjectField field)
+		{
+			var guid = ObjectProperties.GetObjectPropertyGuid (cat, null, field);
+			return !guid.IsEmpty;
+		}
+
+
+		public static void ClearAccounts(DataAccessor accessor)
+		{
+			//	Efface toutes les références aux comptes dans toutes les catégories d'immobilisation.
+			foreach (var cat in accessor.Mandat.GetData (BaseType.Categories))
+			{
+				CategoriesLogic.ClearAccounts (cat);
+			}
+		}
+
+		private static void ClearAccounts(DataObject cat)
+		{
+			var e = cat.GetEvent (0);
+
+			e.RemoveProperty (ObjectField.Account1);
+			e.RemoveProperty (ObjectField.Account2);
+			e.RemoveProperty (ObjectField.Account3);
+			e.RemoveProperty (ObjectField.Account4);
+			e.RemoveProperty (ObjectField.Account5);
+			e.RemoveProperty (ObjectField.Account6);
+			e.RemoveProperty (ObjectField.Account7);
+			e.RemoveProperty (ObjectField.Account8);
+		}
+
+
 		public static string GetSummary(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le nom court d'une catégorie, du genre:
