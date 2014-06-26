@@ -21,7 +21,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var user = AiderUserManager.Current.AuthenticatedUser;
 
 			wall.AddBrick ()
-				.Attribute (BrickMode.DefaultToNoSubView);
+				.Attribute (BrickMode.DefaultToNoSubView).IfTrue(!user.CanEditEmployee ())
+				.Attribute (BrickMode.DefaultToCreationOrEditionSubView).IfTrue(user.CanEditEmployee ());
 
 			wall.AddBrick (x => x.PersonContact)
 				.Attribute (BrickMode.DefaultToSummarySubView);
