@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			//	Affiche le popup d'avertissement, avant d'effectuer une importation
 			//	en mode Remplace.
-			const string question = "L'importation effacera tous les comptes dans les catégories d'immobilisation. Etes-vous certain de vouloir continuer ?";
+			const string question = "L'importation effacera tous les comptes dans les catégories d'immobilisation.<br/><br/>Etes-vous certain de vouloir continuer ?";
 			YesNoPopup.Show (this.target, question, this.ReplaceImport);
 		}
 

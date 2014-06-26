@@ -66,6 +66,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Label = "Avec des exemples",
 			});
 
+			list.Add (new StackedControllerDescription
+			{
+				StackedControllerType = StackedControllerType.Label,
+				Width = 200,
+				Label = "Message quelconque assez long, pour tester le comportement sur plusieurs lignes.<br/>Début d'un deuxième groupe de texte...",
+			});
+
 			this.SetDescriptions (list);
 		}
 

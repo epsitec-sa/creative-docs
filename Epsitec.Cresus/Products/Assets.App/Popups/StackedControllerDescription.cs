@@ -60,6 +60,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				switch (this.StackedControllerType)
 				{
+					case StackedControllerType.Label:
+						return this.Label.GetTextHeight (this.Width);
+
 					case StackedControllerType.Text:
 					case StackedControllerType.ExportFilename:
 					case StackedControllerType.ImportAccountsFilename:
@@ -107,6 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				switch (this.StackedControllerType)
 				{
+					case StackedControllerType.Label:
 					case StackedControllerType.Text:
 					case StackedControllerType.ExportFilename:
 					case StackedControllerType.ImportAccountsFilename:
@@ -161,6 +165,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					case StackedControllerType.PdfStyle:
 						return this.Label.GetTextWidth ();
 
+					case StackedControllerType.Label:
 					case StackedControllerType.Radio:
 					case StackedControllerType.Bool:
 						return 0;
@@ -184,6 +189,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			switch (description.StackedControllerType)
 			{
+				case StackedControllerType.Label:
+					return new LabelStackedController (accessor);
+
 				case StackedControllerType.Text:
 					return new TextStackedController (accessor);
 

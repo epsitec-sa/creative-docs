@@ -3,114 +3,36 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Affiche un dialogue oui/non avec une question suivie d'éventuels boutons radio.
+	/// Affiche un dialogue oui/non avec une question.
 	/// </summary>
-	public class YesNoPopup : AbstractPopup
+	public class YesNoPopup : StackedPopup
 	{
-		public YesNoPopup()
+		public YesNoPopup(string question)
+			: base (null)
 		{
-			this.radios = new List<Radio> ();
+			this.title = "Question";
+
+			var list = new List<StackedControllerDescription> ();
+
+			list.Add (new StackedControllerDescription
+			{
+				StackedControllerType = StackedControllerType.Label,
+				Width                 = 200,
+				Label                 = question,
+			});
+
+			this.SetDescriptions (list);
 		}
 
-
-		public string							Question;
-
-		public List<Radio>						Radios
+		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			get
-			{
-				return this.radios;
-			}
-		}
-
-		public string							RadioSelected
-		{
-			get
-			{
-				return this.radioSelected;
-			}
-		}
-
-		protected override Size					DialogSize
-		{
-			get
-			{
-				int dx = YesNoPopup.dialogWidth;
-				int dy = YesNoPopup.dialogHeight + YesNoPopup.radioHeight * this.radios.Count;
-
-				return new Size (dx, dy);
-			}
-		}
-
-		public override void CreateUI()
-		{
-			new StaticText
-			{
-				Parent           = this.mainFrameBox,
-				Text             = this.Question,
-				ContentAlignment = ContentAlignment.MiddleCenter,
-				Dock             = DockStyle.Top,
-				PreferredHeight  = 60,
-			};
-
-			{
-				int y = (int) this.DialogSize.Height - YesNoPopup.titleHeight - YesNoPopup.radioHeight - 12;
-
-				foreach (var radio in this.radios)
-				{
-					var button = this.CreateRadio
-					(
-						YesNoPopup.margins,
-						y,
-						YesNoPopup.dialogWidth - YesNoPopup.margins*2,
-						YesNoPopup.radioHeight,
-						radio.Name,
-						radio.Text,
-						radio.Tooltip,
-						radio.Activate
-					);
-
-					if (radio.Activate)
-					{
-						this.radioSelected = radio.Name;
-					}
-
-					button.Clicked += delegate
-					{
-						this.radioSelected = button.Name;
-					};
-
-					y -= YesNoPopup.radioHeight;
-				}
-			}
-
-			var footer = this.CreateFooter ();
-			this.CreateFooterButton (footer, DockStyle.Left,  "yes", "Oui");
-			this.CreateFooterButton (footer, DockStyle.Right, "no",  "Non");
-		}
-
-
-		public struct Radio
-		{
-			public Radio(string name, string text, string tooltip = null, bool activate = false)
-			{
-				this.Name     = name;
-				this.Text     = text;
-				this.Tooltip  = tooltip;
-				this.Activate = activate;
-			}
-
-			public readonly string		Name;
-			public readonly string		Text;
-			public readonly string		Tooltip;
-			public readonly bool		Activate;
+			this.okButton    .Text = "Oui";
+			this.cancelButton.Text = "Non";
 		}
 
 
@@ -124,16 +46,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (target != null)
 			{
-				var popup = new YesNoPopup
-				{
-					Question = question,
-				};
+				var popup = new YesNoPopup (question);
 
 				popup.Create (target, leftOrRight: true);
 
 				popup.ButtonClicked += delegate (object sender, string name)
 				{
-					if (name == "yes")
+					if (name == "ok")
 					{
 						action ();
 					}
@@ -141,14 +60,5 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 		#endregion
-
-
-		private const int margins      = 20;
-		private const int dialogWidth  = 260;
-		private const int dialogHeight = 100;
-		private const int radioHeight  = 20;
-
-		private readonly List<Radio> radios;
-		private string radioSelected;
 	}
 }
