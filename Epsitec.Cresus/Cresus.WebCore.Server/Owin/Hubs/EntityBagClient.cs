@@ -15,6 +15,7 @@ using System.Linq;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+using Nancy.Helpers;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 {
@@ -70,22 +71,25 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		void IEntityBagHub.AddToBag(string userName, string title, FormattedText summary, string entityId, When when)
 		{
+			string content = HttpUtility.HtmlEncode (summary.ToString ());
+			
 			if (when == When.OnConnect)
 			{
 				using (this.cacheLock.LockWrite ())
 				{
-					this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, summary, entityId));
+					this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, content, entityId));
 				}
 
 			}
 			else
 			{
-
 				var context = GlobalHost.ConnectionManager.GetHubContext<EntityBagHub> ();
-				context.Clients.Group (userName).AddToBag (title, summary, entityId);
+
+				context.Clients.Group (userName).AddToBag (title, content, entityId);
+
 				using (this.cacheLock.LockWrite ())
 				{
-					this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, summary, entityId));
+					this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, content, entityId));
 				}
 			}
 		}
@@ -96,7 +100,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			{
 				using (this.cacheLock.LockWrite ())
 				{
-					this.bagEntityCache.Add (new BagEntity (userName, "REMOVE", null, FormattedText.Null, entityId));
+					this.bagEntityCache.Add (new BagEntity (userName, "REMOVE", null, null, entityId));
 				}
 
 			}
@@ -161,10 +165,13 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 									switch (bagEntity.Action)
 									{
 										case "ADD":
-											context.Clients.Client (connectionId).AddToBag (bagEntity.Title,bagEntity.Summary,bagEntity.EntityId);
+											context.Clients.Client (connectionId)
+												.AddToBag (bagEntity.Title, bagEntity.Content, bagEntity.EntityId);
 											break;
+										
 										case "REMOVE":
-											context.Clients.Client (connectionId).RemoveFromBag (bagEntity.EntityId);
+											context.Clients.Client (connectionId)
+												.RemoveFromBag (bagEntity.EntityId);
 											break;
 									}
 								}
@@ -196,7 +203,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			context.Clients.Group (userName).RemoveFromBag (entityId);
 		}
 
-		private void AddToMyBag(string userName, string title,string clientSummary, string entityId)
+		private void AddToMyBag(string userName, string title, string clientSummary, string entityId)
 		{
 			var entity = this.server.CoreWorkerPool.Execute (userName, null, (b) => EntityIO.ResolveEntity (b, entityId));
 			if (entity.IsNotNull ())
@@ -206,16 +213,18 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 				try //with GetSummary() on from AbstractEntity
 				{
 					var summary = entity.GetSummary ();
+					var content = summary.ToString ();
 
-					context.Clients.Group (userName).AddToBag (title, summary, entityId);
+					context.Clients.Group (userName).AddToBag (title, content, entityId);
 					using (this.cacheLock.LockWrite ())
 					{
-						this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, summary, entityId));
+						this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, content, entityId));
 					}
 				}
 				catch //use client summary instead
 				{
 					context.Clients.Group (userName).AddToBag (title, clientSummary, entityId);
+
 					using (this.cacheLock.LockWrite ())
 					{
 						this.bagEntityCache.Add (new BagEntity (userName, "ADD", title, clientSummary, entityId));
@@ -241,20 +250,20 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		private sealed class BagEntity
 		{
-			public BagEntity(string userName, string action, string title, FormattedText summary,string entityId)
+			public BagEntity(string userName, string action, string title, string content, string entityId)
 			{
 				this.Action = action;
 				this.Title = title;
-				this.Summary = summary;
+				this.Content = content;
 				this.EntityId = entityId;
 				this.DestinationUserName = userName;
 			}
 
-			public string						Action;
-			public string						Title;
-			public FormattedText				Summary;
-			public string						EntityId;
-			public string						DestinationUserName;
+			public readonly string				Action;
+			public readonly string				Title;
+			public readonly string				Content;
+			public readonly string				EntityId;
+			public readonly string				DestinationUserName;
 		}
 
 		
@@ -266,12 +275,12 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 				this.UserName = userName;
 			}
 
-			public string						Id;
-			public string						UserName;
+			public readonly string				Id;
+			public readonly string				UserName;
 		}
 
 		
-		private static EntityBagClient		instance;
+		private static EntityBagClient			instance;
 
 		private readonly ReaderWriterLockWrapper setupLock;
 		private readonly ReaderWriterLockWrapper cacheLock;

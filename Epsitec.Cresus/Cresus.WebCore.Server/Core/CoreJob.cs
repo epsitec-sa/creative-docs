@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using System.Collections.Generic;
@@ -6,11 +6,29 @@ using System.Linq;
 using System.Text;
 using Epsitec.Cresus.Core.Library;
 using Nancy.Helpers;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
 	public sealed class CoreJob
 	{
+		public CoreJob(string username, string sessionId, string taskId, string title, EntityBagManager bag, StatusBarManager bar, bool enableCancelation)
+		{
+			var now = System.DateTime.Now;
+			
+			this.Username  = username;
+			this.SessionId = sessionId;
+			this.rawTitle  = title;
+			this.Status    = CoreJobStatus.Ordered;
+			this.taskId    = taskId;
+			this.createdAt = now;
+			this.entityBag = bag;
+			this.statusBar = bar;
+			
+			this.cancellationEnabled = enableCancelation;
+		}
+
+		
 		public string Id
 		{
 			get 
@@ -19,7 +37,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public string SummaryView
+		public FormattedText SummaryView
 		{
 			get
 			{
@@ -33,14 +51,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				{
 					desc = desc + string.Format("<br>Durée: {0}",this.GetRunningTime());
 				}
-				if (this.Status == CoreJobStatus.Canceled)
+				if (this.Status == CoreJobStatus.Cancelled)
 				{
 					desc = desc + string.Format ("<br><b>Annulée</b><br>Durée: {0}", this.GetRunningTime ());
 				}
 
 				desc = desc + "<br>" + this.Metadata;
 
-				return HttpUtility.HtmlEncode(desc);
+				return new FormattedText (desc);
 			}
 		}
 
@@ -48,7 +66,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{
 			get
 			{
-				return this.title + " (" + this.Status.Value + ")";
+				return this.rawTitle + " (" + this.Status.Value + ")";
 			}
 		}
 
@@ -93,26 +111,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		public CoreJob(string username, string sessionId, string taskId, string title,EntityBagManager bag, StatusBarManager bar, bool enableCancelation)
-		{
-			var now = System.DateTime.Now;
-			this.Username = username;
-			this.SessionId = sessionId;
-			this.title = title;
-			this.Status = CoreJobStatus.Ordered;
-			this.taskId = taskId;
-			this.createdAt = now;
-			this.entityBag = bag;
-			this.statusBar = bar;
-			this.cancelationEnabled = enableCancelation;
-		}
-
 		public void Enqueue()
 		{
 			this.queuedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Waiting;
 			this.AddTaskStatus ();
-			if (this.cancelationEnabled)
+			if (this.cancellationEnabled)
 			{
 				this.AddTaskStatusInBag ();
 			}
@@ -123,7 +127,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{		
 			this.startedAt = System.DateTime.Now;
 			this.Status = CoreJobStatus.Running;
-			if (this.cancelationEnabled)
+			if (this.cancellationEnabled)
 			{
 				this.RemoveTaskInStatusInBag ();
 			}			
@@ -167,7 +171,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		public void Cancel()
 		{
 			this.finishedAt = System.DateTime.Now;
-			this.Status = CoreJobStatus.Canceled;
+			this.Status = CoreJobStatus.Cancelled;
 			this.RemoveTaskStatus ();
 			this.RemoveTaskInStatusInBag ();
 		}
@@ -216,30 +220,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		private System.DateTime startedAt;
 		private System.DateTime finishedAt;
 
-		private string title;
+		private string rawTitle;
 		private StatusBarManager statusBar;
 		private EntityBagManager entityBag;
 
-		private bool cancelationEnabled;
-	}
-
-	public sealed class CoreJobStatus
-	{
-		public static readonly CoreJobStatus Ordered = new CoreJobStatus ("En attente");
-		public static readonly CoreJobStatus Waiting = new CoreJobStatus ("En attente");
-		public static readonly CoreJobStatus Running = new CoreJobStatus ("En cours");
-		public static readonly CoreJobStatus Ended = new CoreJobStatus ("Terminée");
-		public static readonly CoreJobStatus Canceled = new CoreJobStatus ("Annulée");
-
-		private CoreJobStatus(string value)
-		{
-			Value = value;
-		}
-
-		public string Value
-		{
-			get;
-			private set;
-		}
+		private bool cancellationEnabled;
 	}
 }
