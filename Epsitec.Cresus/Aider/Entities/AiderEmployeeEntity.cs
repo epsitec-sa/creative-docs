@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Linq;
 using System.Collections.Generic;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Entities
 {
@@ -44,6 +45,19 @@ namespace Epsitec.Aider.Entities
 			value = this.GetVirtualCollection (ref this.refereeEntries, x => x.Employee = this).AsReadOnlyCollection ();
 		}
 
+		public static AiderEmployeeEntity Create(BusinessContext businessContext, AiderPersonEntity person, EmployeeType employeeType, string function, EmployeeActivity employeeActivity, string navs13)
+		{
+			var employee    = businessContext.CreateAndRegisterEntity<AiderEmployeeEntity> ();
+
+			employee.Person           = person;
+			employee.PersonContact    = person.MainContact;
+			employee.EmployeeType     = employeeType;
+			employee.EmployeeActivity = employeeActivity;
+			employee.Description      = function;
+			employee.Navs13           = navs13;
+
+			return employee;
+		}
 
 		private IList<AiderEmployeeJobEntity>		jobs;
 		private IList<AiderRefereeEntity>			refereeEntries;

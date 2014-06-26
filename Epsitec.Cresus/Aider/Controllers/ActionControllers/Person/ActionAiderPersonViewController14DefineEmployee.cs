@@ -62,15 +62,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(EmployeeType employeeType, string function, EmployeeActivity employeeActivity, string navs13)
 		{
-			var mainContact = this.Entity.MainContact;
-			var employee    = this.BusinessContext.CreateAndRegisterEntity<AiderEmployeeEntity> ();
-
-			employee.Person           = this.Entity;
-			employee.PersonContact    = mainContact;
-			employee.EmployeeType     = employeeType;
-			employee.EmployeeActivity = employeeActivity;
-			employee.Description      = function;
-			employee.Navs13           = navs13;
+			AiderEmployeeEntity.Create (this.BusinessContext, this.Entity, employeeType, function, employeeActivity, navs13);
 		}
 	}
 }
