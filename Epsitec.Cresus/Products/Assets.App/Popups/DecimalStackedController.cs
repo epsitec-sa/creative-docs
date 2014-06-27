@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class DecimalStackedController : AbstractStackedController
 	{
-		public DecimalStackedController(DataAccessor accessor)
-			: base (accessor)
+		public DecimalStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 		}
 
@@ -34,6 +34,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						this.controller.Value = this.Value;
 					}
 				}
+			}
+		}
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return DecimalStackedController.height;
+			}
+		}
+
+		public override int						RequiredControllerWidth
+		{
+			get
+			{
+				return DecimalStackedController.width + 10 + 50 + 4;  // place pour les unités
 			}
 		}
 
@@ -67,8 +84,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int width  = 90;
-		public const int height = AbstractFieldController.lineHeight + 4;
+		private const int width  = 90;
+		private const int height = AbstractFieldController.lineHeight + 4;
 
 		private decimal?						value;
 		private DecimalFieldController			controller;

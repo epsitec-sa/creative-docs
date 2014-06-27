@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class ExportFilenameStackedController : AbstractStackedController
 	{
-		public ExportFilenameStackedController(DataAccessor accessor)
-			: base (accessor)
+		public ExportFilenameStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 		}
 
@@ -41,6 +41,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 		public ExportFormat						Format;
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return ExportFilenameStackedController.height;
+			}
+		}
 
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
@@ -126,6 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private const int height = AbstractFieldController.lineHeight + 4;
 		private const int browseWidth = 75;
 
 		private string							value;

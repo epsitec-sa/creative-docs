@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class GroupGuidStackedController : AbstractStackedController
 	{
-		public GroupGuidStackedController(DataAccessor accessor)
-			: base (accessor)
+		public GroupGuidStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
@@ -61,6 +61,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			set
 			{
 				this.nodeGetter.SetLevel (value);
+			}
+		}
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return this.description.Height;
 			}
 		}
 

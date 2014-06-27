@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class IntStackedController : AbstractStackedController
 	{
-		public IntStackedController(DataAccessor accessor)
-			: base (accessor)
+		public IntStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 		}
 
@@ -34,6 +34,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						this.controller.Value = this.Value;
 					}
 				}
+			}
+		}
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return IntStackedController.height;
+			}
+		}
+
+		public override int						RequiredControllerWidth
+		{
+			get
+			{
+				return IntStackedController.width + 38;  // 38 -> place pour les boutons -/+
 			}
 		}
 
@@ -66,8 +83,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int width  = 50;
-		public const int height = AbstractFieldController.lineHeight + 4;
+		private const int width  = 50;
+		private const int height = AbstractFieldController.lineHeight + 4;
 
 		private int?							value;
 		private IntFieldController				controller;

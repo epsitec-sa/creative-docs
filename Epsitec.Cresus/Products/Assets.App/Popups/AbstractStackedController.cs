@@ -14,9 +14,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public abstract class AbstractStackedController
 	{
-		public AbstractStackedController(DataAccessor accessor)
+		public AbstractStackedController(DataAccessor accessor, StackedControllerDescription description)
 		{
-			this.accessor = accessor;
+			this.accessor    = accessor;
+			this.description = description;
 		}
 
 
@@ -25,6 +26,37 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			get
 			{
 				return false;
+			}
+		}
+
+
+		public abstract int						RequiredHeight
+		{
+			get;
+		}
+
+		public virtual int						RequiredControllerWidth
+		{
+			get
+			{
+				return this.description.Width + 4;
+			}
+		}
+		
+		public virtual int						RequiredLabelsWidth
+		{
+			get
+			{
+				return this.description.Label.GetTextWidth ();
+			}
+		}
+
+
+		public StackedControllerDescription		Description
+		{
+			get
+			{
+				return this.description;
 			}
 		}
 
@@ -74,6 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		protected DataAccessor					accessor;
+		protected readonly DataAccessor					accessor;
+		protected readonly StackedControllerDescription	description;
 	}
 }

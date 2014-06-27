@@ -12,9 +12,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class LabelStackedController : AbstractStackedController
 	{
-		public LabelStackedController(DataAccessor accessor)
-			: base (accessor)
+		public LabelStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
+		}
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return this.description.Label.GetTextHeight (this.description.Width);
+			}
+		}
+
+		public override int						RequiredLabelsWidth
+		{
+			get
+			{
+				return 0;
+			}
 		}
 
 

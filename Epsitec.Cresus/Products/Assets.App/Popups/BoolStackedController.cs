@@ -5,19 +5,45 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class BoolStackedController : AbstractStackedController
 	{
-		public BoolStackedController(DataAccessor accessor)
-			: base (accessor)
+		public BoolStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 		}
 
 
 		public bool								Value;
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return BoolStackedController.checkHeight;
+			}
+		}
+
+		public override int						RequiredControllerWidth
+		{
+			get
+			{
+				return 30 + this.description.Label.GetTextWidth ();
+			}
+		}
+
+		public override int						RequiredLabelsWidth
+		{
+			get
+			{
+				return 0;
+			}
+		}
 
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
@@ -41,6 +67,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int checkHeight = 17;
+		private const int checkHeight = 17;
 	}
 }

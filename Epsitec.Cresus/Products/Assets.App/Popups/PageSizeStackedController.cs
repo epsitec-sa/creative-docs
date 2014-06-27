@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class PageSizeStackedController : AbstractStackedController
 	{
-		public PageSizeStackedController(DataAccessor accessor)
-			: base (accessor)
+		public PageSizeStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 		}
 
@@ -36,6 +36,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						this.UpdateButton ();
 					}
 				}
+			}
+		}
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return PageSizeStackedController.height;
 			}
 		}
 
@@ -87,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int height = AbstractFieldController.lineHeight + 4;
+		private const int height = AbstractFieldController.lineHeight + 4;
 
 		private Size							value;
 		private ColoredButton					button;

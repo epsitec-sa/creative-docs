@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class MarginsStackedController : AbstractStackedController
 	{
-		public MarginsStackedController(DataAccessor accessor)
-			: base (accessor)
+		public MarginsStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 		}
 
@@ -36,6 +36,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						this.UpdateButton ();
 					}
 				}
+			}
+		}
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return MarginsStackedController.height;
 			}
 		}
 
@@ -87,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int height = AbstractFieldController.lineHeight + 4;
+		private const int height = AbstractFieldController.lineHeight + 4;
 
 		private Margins							value;
 		private ColoredButton					button;

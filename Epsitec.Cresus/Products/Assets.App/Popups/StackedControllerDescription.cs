@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -54,7 +53,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public int								RequiredHeight
+#if false
+		public int								RequiredHeight2
 		{
 			get
 			{
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public int								RequiredControllerWidth
+		public int								RequiredControllerWidth2
 		{
 			get
 			{
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public int								RequiredLabelsWidth
+		public int								RequiredLabelsWidth2
 		{
 			get
 			{
@@ -183,6 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				return this.labels.Select (x => x.GetTextWidth ()).Max ();
 			}
 		}
+#endif
 
 
 		public static AbstractStackedController CreateController(DataAccessor accessor, StackedControllerDescription description)
@@ -190,52 +191,52 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			switch (description.StackedControllerType)
 			{
 				case StackedControllerType.Label:
-					return new LabelStackedController (accessor);
+					return new LabelStackedController (accessor, description);
 
 				case StackedControllerType.Text:
-					return new TextStackedController (accessor);
+					return new TextStackedController (accessor, description);
 
 				case StackedControllerType.Int:
-					return new IntStackedController (accessor);
+					return new IntStackedController (accessor, description);
 
 				case StackedControllerType.Decimal:
-					return new DecimalStackedController (accessor);
+					return new DecimalStackedController (accessor, description);
 
 				case StackedControllerType.Date:
-					return new DateStackedController (accessor);
+					return new DateStackedController (accessor, description);
 
 				case StackedControllerType.Radio:
-					return new RadioStackedController (accessor);
+					return new RadioStackedController (accessor, description);
 
 				case StackedControllerType.Combo:
-					return new ComboStackedController (accessor);
+					return new ComboStackedController (accessor, description);
 
 				case StackedControllerType.Bool:
-					return new BoolStackedController (accessor);
+					return new BoolStackedController (accessor, description);
 
 				case StackedControllerType.GroupGuid:
-					return new GroupGuidStackedController (accessor);
+					return new GroupGuidStackedController (accessor, description);
 
 				case StackedControllerType.CategoryGuid:
-					return new CategoryGuidStackedController (accessor);
+					return new CategoryGuidStackedController (accessor, description);
 
 				case StackedControllerType.PersonGuid:
-					return new PersonGuidStackedController (accessor);
+					return new PersonGuidStackedController (accessor, description);
 
 				case StackedControllerType.ExportFilename:
-					return new ExportFilenameStackedController (accessor);
+					return new ExportFilenameStackedController (accessor, description);
 
 				case StackedControllerType.ImportAccountsFilename:
-					return new ImportAccountsFilenameStackedController (accessor);
+					return new ImportAccountsFilenameStackedController (accessor, description);
 
 				case StackedControllerType.Margins:
-					return new MarginsStackedController (accessor);
+					return new MarginsStackedController (accessor, description);
 
 				case StackedControllerType.PageSize:
-					return new PageSizeStackedController (accessor);
+					return new PageSizeStackedController (accessor, description);
 
 				case StackedControllerType.PdfStyle:
-					return new PdfStyleStackedController (accessor);
+					return new PdfStyleStackedController (accessor, description);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported StackedControllerType {0}", description.StackedControllerType));

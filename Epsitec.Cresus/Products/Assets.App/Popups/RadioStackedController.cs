@@ -5,14 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class RadioStackedController : AbstractStackedController
 	{
-		public RadioStackedController(DataAccessor accessor)
-			: base (accessor)
+		public RadioStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 			this.radios = new List<RadioButton> ();
 		}
@@ -32,6 +33,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 					this.UpdateRadios ();
 				}
+			}
+		}
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return this.description.Labels.Count * RadioStackedController.radioHeight;
+			}
+		}
+
+		public override int						RequiredControllerWidth
+		{
+			get
+			{
+				return 30 + this.description.Labels.Select (x => x.GetTextWidth ()).Max ();
+			}
+		}
+
+		public override int						RequiredLabelsWidth
+		{
+			get
+			{
+				return 0;
 			}
 		}
 
@@ -92,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int radioHeight = 17;
+		private const int radioHeight = 17;
 
 		private int?							value;
 		private readonly List<RadioButton>		radios;

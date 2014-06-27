@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class PersonGuidStackedController : AbstractStackedController
 	{
-		public PersonGuidStackedController(DataAccessor accessor)
-			: base (accessor)
+		public PersonGuidStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 			var primary      = this.accessor.GetNodeGetter (BaseType.Persons);
 			var secondary    = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
@@ -51,6 +51,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				this.visibleSelectedRow = this.nodeGetter.GetNodes ().Select (x => x.Guid).ToList ().IndexOf (value);
 				this.UpdateController ();
+			}
+		}
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return this.description.Height;
 			}
 		}
 

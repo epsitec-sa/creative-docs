@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class DateStackedController : AbstractStackedController
 	{
-		public DateStackedController(DataAccessor accessor)
-			: base (accessor)
+		public DateStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 		}
 
@@ -46,6 +46,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return DateStackedController.height;
+			}
+		}
+
+		public override int						RequiredControllerWidth
+		{
+			get
+			{
+				return DateStackedController.width;
+			}
+		}
+
+
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
 		{
 			this.controller = new DateController (this.accessor)
@@ -72,8 +89,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int width  = DateController.controllerWidth;
-		public const int height = DateController.controllerHeight;
+		private const int width  = DateController.controllerWidth;
+		private const int height = DateController.controllerHeight;
 
 		private System.DateTime?				value;
 		private DateController					controller;

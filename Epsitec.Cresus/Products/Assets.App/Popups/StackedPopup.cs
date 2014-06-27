@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var visibleFrame = new FrameBox
 				{
 					Parent          = globalFrame,
-					PreferredHeight = description.RequiredHeight,
+					PreferredHeight = controller.RequiredHeight,
 					Dock            = DockStyle.Top,
 					Margins         = new Margins (0, 0, 0, description.BottomMargin + StackedPopup.verticalGap),
 				};
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var hiddenFrame = new FrameBox
 				{
 					Parent          = globalFrame,
-					PreferredHeight = description.RequiredHeight,
+					PreferredHeight = controller.RequiredHeight,
 					Dock            = DockStyle.Top,
 					Margins         = new Margins (0, 0, 0, description.BottomMargin + StackedPopup.verticalGap),
 					Visibility      = false,
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Retourne la hauteur totale nécessaire pour les contrôleurs inclus.
 			get
 			{
-				return this.descriptions.Select (x => x.RequiredHeight + x.BottomMargin + StackedPopup.verticalGap).Sum ();
+				return this.controllers.Select (x => x.RequiredHeight + x.Description.BottomMargin + StackedPopup.verticalGap).Sum ();
 			}
 		}
 
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	C'est le plus large qui fait sa loi.
 			get
 			{
-				return this.descriptions.Select (x => x.RequiredControllerWidth).Max ();
+				return this.controllers.Select (x => x.RequiredControllerWidth).Max ();
 			}
 		}
 
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	C'est le plus large qui fait sa loi.
 			get
 			{
-				return this.descriptions.Select (x => x.RequiredLabelsWidth).Max ();
+				return this.controllers.Select (x => x.RequiredLabelsWidth).Max ();
 			}
 		}
 

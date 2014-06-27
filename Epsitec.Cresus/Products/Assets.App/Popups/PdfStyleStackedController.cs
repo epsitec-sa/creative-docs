@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class PdfStyleStackedController : AbstractStackedController
 	{
-		public PdfStyleStackedController(DataAccessor accessor)
-			: base (accessor)
+		public PdfStyleStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 		}
 
@@ -38,6 +38,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						this.UpdateButton ();
 					}
 				}
+			}
+		}
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return PdfStyleStackedController.height;
 			}
 		}
 
@@ -89,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int height = AbstractFieldController.lineHeight + 4;
+		private const int height = AbstractFieldController.lineHeight + 4;
 
 		private PdfStyle						value;
 		private ColoredButton					button;

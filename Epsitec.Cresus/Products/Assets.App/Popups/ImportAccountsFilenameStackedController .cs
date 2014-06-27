@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class ImportAccountsFilenameStackedController  : AbstractStackedController
 	{
-		public ImportAccountsFilenameStackedController (DataAccessor accessor)
-			: base (accessor)
+		public ImportAccountsFilenameStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 		}
 
@@ -40,6 +40,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return ImportAccountsFilenameStackedController.height;
+			}
+		}
+
+
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
 		{
 			this.parent = parent;
@@ -52,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Value      = this.Value,
 				LabelWidth = 0,
-				EditWidth  = description.Width - ImportAccountsFilenameStackedController .browseWidth,
+				EditWidth  = description.Width - ImportAccountsFilenameStackedController.browseWidth,
 				TabIndex   = tabIndex,
 			};
 
@@ -123,6 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private const int height = AbstractFieldController.lineHeight + 4;
 		private const int browseWidth = 75;
 
 		private string							value;

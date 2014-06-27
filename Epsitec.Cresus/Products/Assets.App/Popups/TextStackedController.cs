@@ -11,13 +11,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class TextStackedController : AbstractStackedController
 	{
-		public TextStackedController(DataAccessor accessor)
-			: base (accessor)
+		public TextStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 		}
 
 
 		public string							Value;
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return TextStackedController.height;
+			}
+		}
 
 
 		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
@@ -48,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public const int height = AbstractFieldController.lineHeight + 4;
+		private const int height = AbstractFieldController.lineHeight + 4;
 
 		private StringFieldController			controller;
 	}

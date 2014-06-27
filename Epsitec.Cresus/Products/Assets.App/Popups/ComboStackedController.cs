@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class ComboStackedController : AbstractStackedController
 	{
-		public ComboStackedController(DataAccessor accessor)
-			: base (accessor)
+		public ComboStackedController(DataAccessor accessor, StackedControllerDescription description)
+			: base (accessor, description)
 		{
 		}
 
@@ -34,6 +34,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						this.controller.Value = this.Value;
 					}
 				}
+			}
+		}
+
+
+		public override int						RequiredHeight
+		{
+			get
+			{
+				return ComboStackedController.height;
 			}
 		}
 
@@ -80,6 +89,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.Enums = enums;
 		}
 
+
+		private const int height = AbstractFieldController.lineHeight + 4;
 
 		private int?							value;
 		private EnumFieldController				controller;
