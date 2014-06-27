@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Epsitec.Cresus.Assets.App.Export;
+using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 

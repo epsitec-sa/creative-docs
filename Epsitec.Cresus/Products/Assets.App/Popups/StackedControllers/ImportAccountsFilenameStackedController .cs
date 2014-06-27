@@ -7,14 +7,13 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Views;
-using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Popups
+namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 {
-	public class ExportFilenameStackedController : AbstractStackedController
+	public class ImportAccountsFilenameStackedController  : AbstractStackedController
 	{
-		public ExportFilenameStackedController(DataAccessor accessor, StackedControllerDescription description)
+		public ImportAccountsFilenameStackedController(DataAccessor accessor, StackedControllerDescription description)
 			: base (accessor, description)
 		{
 		}
@@ -40,14 +39,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public ExportFormat						Format;
-
 
 		public override int						RequiredHeight
 		{
 			get
 			{
-				return ExportFilenameStackedController.height;
+				return ImportAccountsFilenameStackedController.height;
 			}
 		}
 
@@ -64,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Value      = this.Value,
 				LabelWidth = 0,
-				EditWidth  = description.Width - ExportFilenameStackedController.browseWidth,
+				EditWidth  = description.Width - ImportAccountsFilenameStackedController.browseWidth,
 				TabIndex   = tabIndex,
 			};
 
@@ -98,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock             = DockStyle.Right,
 				ButtonStyle      = ButtonStyle.Icon,
 				AutoFocus        = false,
-				PreferredWidth   = ExportFilenameStackedController.browseWidth - 2,
+				PreferredWidth   = ImportAccountsFilenameStackedController .browseWidth - 2,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (2, 0, 0, 0),
 			};
@@ -112,13 +109,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private void ShowFilenameDialog()
 		{
 			//	Affiche le dialogue permettant de choisir un fichier à exporter.
-			const string title      = "Nom du fichier à exporter";
+			const string title      = "Nom du plan comptable Crésus à importer";
 			string initialDirectory = string.IsNullOrEmpty (this.Value) ? null : System.IO.Path.GetDirectoryName (this.Value);
 			string filename         = string.IsNullOrEmpty (this.Value) ? null : System.IO.Path.GetFileName (this.Value);
-			string ext              = ExportInstructionsHelpers.GetFormatExt  (this.Format);
-			string formatName       = ExportInstructionsHelpers.GetFormatName (this.Format);
+			const string ext        = ".crp";
+			const string formatName = "Plan comptable Crésus";
 
-			var f = FileSaveDialog.ShowDialog (this.parent.Window, title, initialDirectory, filename, ext, formatName);
+			var f = FileOpenDialog.ShowDialog (this.parent.Window, title, initialDirectory, filename, ext, formatName);
 
 			if (!string.IsNullOrEmpty (f))
 			{

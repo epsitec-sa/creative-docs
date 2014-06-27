@@ -11,7 +11,7 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Popups
+namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 {
 	public class CategoryGuidStackedController : AbstractStackedController
 	{

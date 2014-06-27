@@ -7,17 +7,17 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Popups
+namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 {
-	public class ComboStackedController : AbstractStackedController
+	public class DecimalStackedController : AbstractStackedController
 	{
-		public ComboStackedController(DataAccessor accessor, StackedControllerDescription description)
+		public DecimalStackedController(DataAccessor accessor, StackedControllerDescription description)
 			: base (accessor, description)
 		{
 		}
 
 
-		public int?								Value
+		public decimal?							Value
 		{
 			get
 			{
@@ -42,7 +42,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return ComboStackedController.height;
+				return DecimalStackedController.height;
+			}
+		}
+
+		public override int						RequiredControllerWidth
+		{
+			get
+			{
+				return DecimalStackedController.width + 10 + 50 + 4;  // place pour les unités
 			}
 		}
 
@@ -52,15 +60,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateLabel (parent, labelWidth, description);
 			var controllerFrame = this.CreateControllerFrame (parent);
 
-			this.controller = new EnumFieldController (this.accessor)
+			this.controller = new DecimalFieldController (this.accessor)
 			{
-				Value      = this.Value,
-				LabelWidth = 0,
-				EditWidth  = description.Width,
-				TabIndex   = tabIndex,
+				Value         = this.Value,
+				DecimalFormat = description.DecimalFormat,
+				LabelWidth    = 0,
+				EditWidth     = DecimalStackedController.width,
+				TabIndex      = tabIndex,
 			};
 
-			this.InitializeEnums (description);
 			this.controller.CreateUI (controllerFrame);
 
 			this.controller.ValueEdited += delegate
@@ -76,23 +84,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private void InitializeEnums(StackedControllerDescription description)
-		{
-			var enums = new Dictionary<int, string> ();
-			int index = 0;
-
-			foreach (var label in description.Labels)
-			{
-				enums.Add (index++, label);
-			}
-
-			this.controller.Enums = enums;
-		}
-
-
+		private const int width  = 90;
 		private const int height = AbstractFieldController.lineHeight + 4;
 
-		private int?							value;
-		private EnumFieldController				controller;
+		private decimal?						value;
+		private DecimalFieldController			controller;
 	}
 }

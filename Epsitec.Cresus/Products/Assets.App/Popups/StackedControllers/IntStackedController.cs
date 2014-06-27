@@ -7,24 +7,50 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Popups
+namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 {
-	public class TextStackedController : AbstractStackedController
+	public class IntStackedController : AbstractStackedController
 	{
-		public TextStackedController(DataAccessor accessor, StackedControllerDescription description)
+		public IntStackedController(DataAccessor accessor, StackedControllerDescription description)
 			: base (accessor, description)
 		{
 		}
 
 
-		public string							Value;
+		public int?								Value
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if (this.value != value)
+				{
+					this.value = value;
+
+					if (this.controller != null)
+					{
+						this.controller.Value = this.Value;
+					}
+				}
+			}
+		}
 
 
 		public override int						RequiredHeight
 		{
 			get
 			{
-				return TextStackedController.height;
+				return IntStackedController.height;
+			}
+		}
+
+		public override int						RequiredControllerWidth
+		{
+			get
+			{
+				return IntStackedController.width + 38;  // 38 -> place pour les boutons -/+
 			}
 		}
 
@@ -34,11 +60,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateLabel (parent, labelWidth, description);
 			var controllerFrame = this.CreateControllerFrame (parent);
 
-			this.controller = new StringFieldController (this.accessor)
+			this.controller = new IntFieldController (this.accessor)
 			{
 				Value      = this.Value,
 				LabelWidth = 0,
-				EditWidth  = description.Width,
+				EditWidth  = IntStackedController.width,
 				TabIndex   = tabIndex,
 			};
 
@@ -57,8 +83,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private const int width  = 50;
 		private const int height = AbstractFieldController.lineHeight + 4;
 
-		private StringFieldController			controller;
+		private int?							value;
+		private IntFieldController				controller;
 	}
 }

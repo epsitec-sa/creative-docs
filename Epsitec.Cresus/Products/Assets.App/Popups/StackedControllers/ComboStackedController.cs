@@ -7,11 +7,11 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Popups
+namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 {
-	public class IntStackedController : AbstractStackedController
+	public class ComboStackedController : AbstractStackedController
 	{
-		public IntStackedController(DataAccessor accessor, StackedControllerDescription description)
+		public ComboStackedController(DataAccessor accessor, StackedControllerDescription description)
 			: base (accessor, description)
 		{
 		}
@@ -42,15 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return IntStackedController.height;
-			}
-		}
-
-		public override int						RequiredControllerWidth
-		{
-			get
-			{
-				return IntStackedController.width + 38;  // 38 -> place pour les boutons -/+
+				return ComboStackedController.height;
 			}
 		}
 
@@ -60,14 +52,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateLabel (parent, labelWidth, description);
 			var controllerFrame = this.CreateControllerFrame (parent);
 
-			this.controller = new IntFieldController (this.accessor)
+			this.controller = new EnumFieldController (this.accessor)
 			{
 				Value      = this.Value,
 				LabelWidth = 0,
-				EditWidth  = IntStackedController.width,
+				EditWidth  = description.Width,
 				TabIndex   = tabIndex,
 			};
 
+			this.InitializeEnums (description);
 			this.controller.CreateUI (controllerFrame);
 
 			this.controller.ValueEdited += delegate
@@ -83,10 +76,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private const int width  = 50;
+		private void InitializeEnums(StackedControllerDescription description)
+		{
+			var enums = new Dictionary<int, string> ();
+			int index = 0;
+
+			foreach (var label in description.Labels)
+			{
+				enums.Add (index++, label);
+			}
+
+			this.controller.Enums = enums;
+		}
+
+
 		private const int height = AbstractFieldController.lineHeight + 4;
 
 		private int?							value;
-		private IntFieldController				controller;
+		private EnumFieldController				controller;
 	}
 }

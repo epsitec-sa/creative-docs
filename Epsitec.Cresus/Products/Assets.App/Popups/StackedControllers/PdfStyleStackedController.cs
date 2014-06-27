@@ -5,21 +5,23 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Popups
+namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 {
-	public class PageSizeStackedController : AbstractStackedController
+	public class PdfStyleStackedController : AbstractStackedController
 	{
-		public PageSizeStackedController(DataAccessor accessor, StackedControllerDescription description)
+		public PdfStyleStackedController(DataAccessor accessor, StackedControllerDescription description)
 			: base (accessor, description)
 		{
 		}
 
 
-		public Size							Value
+		public PdfStyle							Value
 		{
 			get
 			{
@@ -44,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return PageSizeStackedController.height;
+				return PdfStyleStackedController.height;
 			}
 		}
 
@@ -67,14 +69,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.button.Clicked += delegate
 			{
-				this.ShowMarginsPopup ();
+				this.ShowStylePopup ();
 			};
 		}
 
 
-		private void ShowMarginsPopup()
+		private void ShowStylePopup()
 		{
-			var popup = new PageSizePopup (this.accessor)
+			var popup = new PdfStylePopup (this.accessor)
 			{
 				Value = this.Value,
 			};
@@ -92,13 +94,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateButton()
 		{
-			this.button.Text = " " + PageSizePopup.GetDescription (this.Value);
+			this.button.Text = " " + PdfStyleHelpers.GetDescription (this.Value);
 		}
 
 
 		private const int height = AbstractFieldController.lineHeight + 4;
 
-		private Size							value;
+		private PdfStyle						value;
 		private ColoredButton					button;
 	}
 }
