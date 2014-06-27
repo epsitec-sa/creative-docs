@@ -14,6 +14,9 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
+					.Field (x => x.OfficeType)
+				.End ().IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
+				.Input ()
 					.Field (x => x.OfficeMainContact)
 				.End ()
 				.Input ()

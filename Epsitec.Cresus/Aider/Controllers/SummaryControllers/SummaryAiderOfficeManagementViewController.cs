@@ -141,17 +141,22 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
 					.End ();
 
-			wall.AddBrick (p => p.AssociatedGroups)
-						.Icon ("Data.AiderGroup.People")
-						.Title ("Groupes associés")
-						.Attribute (BrickMode.DefaultToSummarySubView)
-						.Attribute (BrickMode.AutoGroup)
-						.Attribute (BrickMode.HideAddButton)
-						.Attribute (BrickMode.HideRemoveButton)
-						.WithSpecialController (typeof (SummaryAiderGroupViewController1OfficeManagement))
-						.Template ()
-							.Text (x => x.GetNameWithRegion ())
-						.End ();
+			var associatedGroups = this.Entity.AssociatedGroups;
+
+			if (associatedGroups.Any ())
+			{
+				wall.AddBrick (p => p.AssociatedGroups)
+							.Icon ("Data.AiderGroup.People")
+							.Title ("Groupes associés")
+							.Attribute (BrickMode.DefaultToSummarySubView)
+							.Attribute (BrickMode.AutoGroup)
+							.Attribute (BrickMode.HideAddButton)
+							.Attribute (BrickMode.HideRemoveButton)
+							.WithSpecialController (typeof (SummaryAiderGroupViewController1OfficeManagement))
+							.Template ()
+								.Text (x => x.GetNameParishNameWithRegion ())
+							.End ();
+			}
 
 			wall.AddBrick ()
 				.Icon ("Base.AiderGoup.Parish")

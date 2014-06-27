@@ -147,7 +147,26 @@ namespace Epsitec.Aider.Data.Common
 			return string.Join (".", tokens);
 		}
 
+		public static string GetShortName(string longName)
+		{
+			if (longName == null)
+			{
+				return "";
+			}
 
+			foreach (var item in AiderGroupIds.longToShort)
+			{
+				if (longName.StartsWith (item.LongName))
+				{
+					return item.ShortName + longName.Substring (item.LongName.Length);
+				}
+			}
+			
+			return longName;
+		}
+
+		
+		
 		public static bool IsWithinRegion(string path)
 		{
 			return AiderGroupIds.IsWithinGroup (path, AiderGroupIds.RegionLevel, AiderGroupIds.RegionPrefix);
@@ -374,5 +393,43 @@ namespace Epsitec.Aider.Data.Common
 
 			return path;
 		}
+
+
+
+		private class LongToShort
+		{
+			public LongToShort(string longName, string shortName)
+			{
+				this.LongName  = longName;
+				this.ShortName = shortName;
+			}
+
+			public string LongName
+			{
+				get;
+				private set;
+			}
+
+			public string ShortName
+			{
+				get;
+				private set;
+			}
+		}
+
+		private static readonly List<LongToShort> longToShort = new List<LongToShort>
+		{
+			new LongToShort ("Région ", "R"),
+			new LongToShort ("Paroisse de ", ""),
+			new LongToShort ("Paroisse de la ", ""),
+			new LongToShort ("Paroisse du ", ""),
+			new LongToShort ("Paroisse d'", ""),
+			new LongToShort ("Paroisse des ", "Les "),
+			new LongToShort ("Conseil paroissial", "CP"),
+			new LongToShort ("Conseil synodal", "CS"),
+			new LongToShort ("Conseil régional", "CR"),
+			new LongToShort ("Conseil SC", "CSC "),
+		};
+
 	}
 }

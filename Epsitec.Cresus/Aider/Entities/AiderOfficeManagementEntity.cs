@@ -262,16 +262,12 @@ namespace Epsitec.Aider.Entities
 			value = this.ExecuteWithDataContext (c => this.GetAssociatedGroups (c), null);
 		}
 
-		public IList<AiderGroupEntity> GetAssociatedGroups(DataContext context = null)
+		private IList<AiderGroupEntity> GetAssociatedGroups(DataContext context)
 		{
 			if (this.associatedGroups == null)
 			{
-				if (context == null)
-				{
-					context = DataContextPool.GetDataContext (this);
-				}
-
 				var groups = new HashSet<AiderGroupEntity> ();
+
 				if (this.OfficeType == Enumerations.OfficeType.Parish)
 				{
 					groups.UnionWith (AiderGroupEntity.FindRegionalGroupsGloballyVisibleToParishes (context, this.ParishGroupPathCache));
@@ -279,7 +275,8 @@ namespace Epsitec.Aider.Entities
 				}
 				if (this.OfficeType == Enumerations.OfficeType.Region)
 				{
-					groups.UnionWith (AiderGroupEntity.FindAllGroupsGloballyVisibleToRegions (context));	
+					string path = this.ParishGroupPathCache;
+					groups.UnionWith (AiderGroupEntity.FindAllGroupsGloballyVisibleToRegions (context, path));	
 				}
 
 				this.associatedGroups = groups.ToList();

@@ -312,7 +312,24 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetNameWithRegion()
 		{
-			return TextFormatter.FormatText (this.Name + " (" + this.GetRootName() + ")");
+			return TextFormatter.FormatText (this.Name, "–", AiderGroupIds.GetShortName (this.GetRootName ()));
+		}
+
+		public FormattedText GetNameParishNameWithRegion()
+		{
+			var parishGroup = this.Parents.Skip (1).FirstOrDefault ();
+			
+			var groupName  = AiderGroupIds.GetShortName (this.Name);
+			var regionName = AiderGroupIds.GetShortName (this.GetRootName ());
+
+			if (parishGroup == null)
+			{
+				return TextFormatter.FormatText (groupName, "–", regionName);
+			}
+
+			var parishName = AiderGroupIds.GetShortName (parishGroup.Name);
+
+			return TextFormatter.FormatText (groupName, "–", parishName, "–", regionName);
 		}
 
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
@@ -543,7 +560,7 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByRequest (request);
 		}
 
-		public static IList<AiderGroupEntity> FindAllGroupsGloballyVisibleToRegions(DataContext dataContext)
+		public static IList<AiderGroupEntity> FindAllGroupsGloballyVisibleToRegions(DataContext dataContext, string pathPrefix)
 		{
 			var defExample = new AiderGroupDefEntity ()
 			{
@@ -556,7 +573,10 @@ namespace Epsitec.Aider.Entities
 			};
 
 			var request = Request.Create (example);
+			var path    = pathPrefix + "%";
+
 			request.AddSortClause (ValueField.Create (example, x => x.Name));
+			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, path));
 
 			return dataContext.GetByRequest (request);
 		}

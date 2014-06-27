@@ -5,7 +5,7 @@
 # to configure the loading of the modules needed by the application.
 #
 
-DefineBuildDate ("2014-06-25 06:00");
+DefineBuildDate ("2014-06-27 06:00");
 DefineBuildVersion ("1.4.1426.0");
 
 DefineDatabase ("aider", "localhost");
