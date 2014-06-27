@@ -187,30 +187,44 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		protected Button CreateFooterAcceptButton(FrameBox parent, DockStyle style, string name, string text, string tooltip = null)
+		protected Button CreateFooterAcceptButton(FrameBox parent, string name, string text, string tooltip = null)
 		{
-			return this.CreateFooterButton (parent, style, name, text, tooltip, Epsitec.Common.Widgets.Feel.Factory.Active.AcceptShortcut);
+			return this.CreateFooterButton (parent, name, text, tooltip, true);
 		}
 
-		protected Button CreateFooterCancelButton(FrameBox parent, DockStyle style, string name, string text, string tooltip = null)
+		protected Button CreateFooterCancelButton(FrameBox parent, string name, string text, string tooltip = null)
 		{
-			return this.CreateFooterButton (parent, style, name, text, tooltip, Epsitec.Common.Widgets.Feel.Factory.Active.CancelShortcut);
+			return this.CreateFooterButton (parent, name, text, tooltip, false);
 		}
 
-		private Button CreateFooterButton(FrameBox parent, DockStyle style, string name, string text, string tooltip, Shortcut shortcut)
+		private Button CreateFooterButton(FrameBox parent, string name, string text, string tooltip, bool accept)
 		{
-			int lm = (style == DockStyle.Left ) ? 0 : 5;
-			int rm = (style == DockStyle.Right) ? 0 : 5;
+			AnchorStyles	anchor;
+			int				width;
+			Shortcut		shortcut;
+
+			if (accept)  // bouton principal à gauche ?
+			{
+				anchor   = AnchorStyles.TopAndBottom | AnchorStyles.Left;
+				width    = (int) (this.DialogSize.Width*0.65) - 5;
+				shortcut = Epsitec.Common.Widgets.Feel.Factory.Active.AcceptShortcut;
+			}
+			else  // bouton d'annulation à droite ?
+			{
+				anchor   = AnchorStyles.TopAndBottom | AnchorStyles.Right;
+				width    = (int) (this.DialogSize.Width*0.35) - 5;
+				shortcut = Epsitec.Common.Widgets.Feel.Factory.Active.CancelShortcut;
+			}
 
 			var button = new Button
 			{
-				Parent      = parent,
-				Name        = name,
-				Text        = text,
-				ButtonStyle = ButtonStyle.Icon,
-				AutoFocus   = false,
-				Dock        = DockStyle.Fill,
-				Margins     = new Margins (lm, rm, 0, 0),
+				Parent         = parent,
+				Name           = name,
+				Text           = text,
+				ButtonStyle    = ButtonStyle.Icon,
+				AutoFocus      = false,
+				Anchor         = anchor,
+				PreferredWidth = width,
 			};
 
 			button.Shortcuts.Add (shortcut);
@@ -312,6 +326,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					break;
 
 				case MessageType.KeyPress:
+					//	Ce code est nécessaire pour les popups qui ont un TextField. Dans
+					//	ce cas, les touches Return/Esc sont "mangées" par le widget, et la
+					//	simulation du clic ne fonctionne pas !
 					if (message.KeyCode == KeyCode.Return)
 					{
 						this.ClosePopup ();
