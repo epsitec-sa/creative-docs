@@ -43,7 +43,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.InitializeDialogRect (leftOrRight);
 			this.CreateUI ();
+
+			AssetsApplication.Popups.Push (this);
 		}
+
 
 		private void InitializeDialogRect(bool leftOrRight)
 		{
@@ -236,8 +239,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			button.Clicked += delegate
 			{
-				this.ClosePopup ();
-				this.OnButtonClicked (button.Name);
+				if (this.IsOnTop)
+				{
+					this.ClosePopup ();
+					this.OnButtonClicked (button.Name);
+				}
 			};
 
 			return button;
@@ -311,39 +317,45 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			switch (message.MessageType)
+			if (AssetsApplication.Popups.Any ())
 			{
-				case MessageType.MouseDown:
-					this.PopupMouseDown (pos);
-					break;
+				//	On traite le message pour le popup qui est par-dessus tous les autres.
+				var that = AssetsApplication.Popups.Peek ();
 
-				case MessageType.MouseMove:
-					this.PopupMouseMove (pos);
-					break;
+				switch (message.MessageType)
+				{
+					case MessageType.MouseDown:
+						that.PopupMouseDown (pos);
+						break;
 
-				case MessageType.MouseUp:
-					this.PopupMouseUp (pos);
-					break;
+					case MessageType.MouseMove:
+						that.PopupMouseMove (pos);
+						break;
 
-				case MessageType.KeyPress:
-					//	Ce code est nécessaire pour les popups qui ont un TextField. Dans
-					//	ce cas, les touches Return/Esc sont "mangées" par le widget, et la
-					//	simulation du clic ne fonctionne pas !
-					if (message.KeyCode == KeyCode.Return)
-					{
-						this.ClosePopup ();
-						this.ButtonClicked (null, "ok");
-					}
-					else if (message.KeyCode == KeyCode.Escape)
-					{
-						this.ClosePopup ();
-						this.ButtonClicked (null, "cancel");
-					}
-					break;
+					case MessageType.MouseUp:
+						that.PopupMouseUp (pos);
+						break;
+
+					case MessageType.KeyPress:
+						//	Ce code est nécessaire pour les popups qui ont un TextField. Dans
+						//	ce cas, les touches Return/Esc sont "mangées" par le widget, et la
+						//	simulation du clic ne fonctionne pas !
+						if (message.KeyCode == KeyCode.Return)
+						{
+							that.ClosePopup ();
+							that.ButtonClicked (null, "ok");
+						}
+						else if (message.KeyCode == KeyCode.Escape)
+						{
+							that.ClosePopup ();
+							that.ButtonClicked (null, "cancel");
+						}
+						break;
+				}
+
+				message.Captured = true;
+				message.Consumer = that;
 			}
-
-			message.Captured = true;
-			message.Consumer = this;
 
 			base.ProcessMessage (message, pos);
 		}
@@ -409,12 +421,24 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private bool IsOnTop
+		{
+			get
+			{
+				return AssetsApplication.Popups.Any () && this == AssetsApplication.Popups.Peek ();
+			}
+		}
+
+
 		protected void ClosePopup()
 		{
-			var parent = this.GetParent ();
-			parent.Children.Remove (this);
+			//	Ferme le popup qui est par-dessus tous les autres.
+			var that = AssetsApplication.Popups.Pop ();
 
-			this.OnClosed ();
+			var parent = that.GetParent ();
+			parent.Children.Remove (that);
+
+			that.OnClosed ();
 		}
 
 

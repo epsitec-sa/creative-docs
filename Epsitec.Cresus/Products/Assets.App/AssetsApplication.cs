@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Cresus.Assets.Server.Engine;
+using Epsitec.Cresus.Assets.App.Popups;
 
 namespace Epsitec.Cresus.Assets.App
 {
@@ -121,6 +122,8 @@ namespace Epsitec.Cresus.Assets.App
 			ui.CreateUI (frame);
 		}
 
+
+		public static Stack<AbstractPopup>		Popups = new Stack<AbstractPopup> ();
 
 		private BusinessContext					businessContext;
 	}
