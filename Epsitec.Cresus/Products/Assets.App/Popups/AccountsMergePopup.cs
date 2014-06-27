@@ -151,8 +151,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Crée les boutons tout en bas du Popup.
 			var footer = this.CreateFooter ();
 
-			this.CreateFooterButton (footer, DockStyle.Left,  "ok",     "Importer avec fusion");
-			this.CreateFooterButton (footer, DockStyle.Right, "cancel", "Annuler");
+			this.CreateFooterAcceptButton (footer, DockStyle.Left,  "ok",     "Importer avec fusion");
+			this.CreateFooterCancelButton (footer, DockStyle.Right, "cancel", "Annuler");
 		}
 
 

@@ -187,7 +187,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		protected Button CreateFooterButton(FrameBox parent, DockStyle style, string name, string text, string tooltip = null)
+		protected Button CreateFooterAcceptButton(FrameBox parent, DockStyle style, string name, string text, string tooltip = null)
+		{
+			return this.CreateFooterButton (parent, style, name, text, tooltip, Epsitec.Common.Widgets.Feel.Factory.Active.AcceptShortcut);
+		}
+
+		protected Button CreateFooterCancelButton(FrameBox parent, DockStyle style, string name, string text, string tooltip = null)
+		{
+			return this.CreateFooterButton (parent, style, name, text, tooltip, Epsitec.Common.Widgets.Feel.Factory.Active.CancelShortcut);
+		}
+
+		private Button CreateFooterButton(FrameBox parent, DockStyle style, string name, string text, string tooltip, Shortcut shortcut)
 		{
 			int lm = (style == DockStyle.Left ) ? 0 : 5;
 			int rm = (style == DockStyle.Right) ? 0 : 5;
@@ -202,6 +212,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock        = DockStyle.Fill,
 				Margins     = new Margins (lm, rm, 0, 0),
 			};
+
+			button.Shortcuts.Add (shortcut);
 
 			if (!string.IsNullOrEmpty (tooltip))
 			{
@@ -285,24 +297,32 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if (message.MessageType == MessageType.MouseDown)
+			switch (message.MessageType)
 			{
-				this.PopupMouseDown (pos);
-			}
-			else if (message.MessageType == MessageType.MouseMove)
-			{
-				this.PopupMouseMove (pos);
-			}
-			else if (message.MessageType == MessageType.MouseUp)
-			{
-				this.PopupMouseUp (pos);
-			}
-			else if (message.MessageType == MessageType.KeyPress)  // TODO: ne fonctionne pas toujours !
-			{
-				if (message.KeyCode == KeyCode.Escape)
-				{
-					this.ClosePopup ();
-				}
+				case MessageType.MouseDown:
+					this.PopupMouseDown (pos);
+					break;
+
+				case MessageType.MouseMove:
+					this.PopupMouseMove (pos);
+					break;
+
+				case MessageType.MouseUp:
+					this.PopupMouseUp (pos);
+					break;
+
+				case MessageType.KeyPress:
+					if (message.KeyCode == KeyCode.Return)
+					{
+						this.ClosePopup ();
+						this.ButtonClicked (null, "ok");
+					}
+					else if (message.KeyCode == KeyCode.Escape)
+					{
+						this.ClosePopup ();
+						this.ButtonClicked (null, "cancel");
+					}
+					break;
 			}
 
 			message.Captured = true;
