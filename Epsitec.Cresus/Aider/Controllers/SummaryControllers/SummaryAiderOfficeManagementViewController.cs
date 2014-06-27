@@ -21,6 +21,25 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 {
 	public sealed class SummaryAiderOfficeManagementViewController : SummaryViewController<AiderOfficeManagementEntity>
 	{
+		private bool							IsParish
+		{
+			get
+			{
+				return (this.Entity.ParishGroup.IsNotNull ())
+					&& (this.Entity.ParishGroup.IsParish ());
+			}
+		}
+
+		private bool							IsRegion
+		{
+			get
+			{
+				return (this.Entity.ParishGroup.IsNotNull ())
+					&& (this.Entity.ParishGroup.IsRegion ());
+			}
+		}
+
+		
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
 			var currentUser	  = AiderUserManager.Current.AuthenticatedUser;
@@ -29,62 +48,32 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			if ((currentOffice.IsNotNull ()) ||
 				(currentUser.CanViewOfficeDetails ()))
 			{
-				this.CreateBricksTrustedUser (wall);
+				this.CreateBricksTrustedUser (wall, currentUser);
 			}
 			else
 			{
 				this.CreateBricksGuestUser (wall);
 			}
 
-			if ((this.Entity.ParishGroup.IsNotNull ()) &&
-				(this.Entity.ParishGroup.IsRegion ()))
+			if (this.IsRegion)
 			{
-				wall.AddBrick (p => p.RegionalReferees)
-					.Attribute (BrickMode.HideAddButton)
-					.Attribute (BrickMode.HideRemoveButton)
-					.Attribute (BrickMode.AutoGroup)
-					.Attribute (BrickMode.DefaultToSummarySubView)
-				.WithSpecialController (typeof (SummaryAiderRefereeViewController1WithPersonDetails))
-					.Template ()
-						.Title ("Répondants régionaux")
-						.Text (x => TextFormatter.FormatText (x.Employee.Person.DisplayName, ":", x.ReferenceType))
-					.End ();
+				SummaryAiderOfficeManagementViewController.CreateBricksReferees (wall);
 			}
 		}
 
+		
 		private void CreateBricksGuestUser(BrickWall<AiderOfficeManagementEntity> wall)
 		{
-			if ((this.Entity.ParishGroup.IsNotNull ()) &&
-				(this.Entity.ParishGroup.IsParish ()))
+			if (this.IsParish)
 			{
-				wall.AddBrick (p => p.ParishGroup)
-						.Icon ("Data.AiderGroup.People")
-						.Title ("Membres de la paroisse")
-						.Text ("Voir tous les paroissiens")
-						.Attribute (BrickMode.DefaultToSetSubView)
-						.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
-
-				wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users))
-						.Icon ("Data.AiderGroup.People")
-						.Title ("Gestionnaires AIDER")
-						.Text (p => p.GetParticipantsSummary ())
-						.Attribute (BrickMode.DefaultToSetSubView)
-						.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+				SummaryAiderOfficeManagementViewController.CreateBricksParishMembers (wall);
+				SummaryAiderOfficeManagementViewController.CreateBricksAiderManagers (wall);
 			}
 
-			wall.AddBrick (p => p.Employees)
-					.Attribute (BrickMode.HideAddButton)
-					.Attribute (BrickMode.HideRemoveButton)
-					.Attribute (BrickMode.AutoGroup)
-					.Attribute (BrickMode.DefaultToSummarySubView)
-					.WithSpecialController (typeof (SummaryAiderEmployeeViewController1WithPersonDetails))
-					.Template ()
-						.Title ("Employés et ministres")
-						.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
-					.End ();
+			SummaryAiderOfficeManagementViewController.CreateBricksEmployeesReadOnly (wall);
 		}
 
-		private void CreateBricksTrustedUser(BrickWall<AiderOfficeManagementEntity> wall)
+		private void CreateBricksTrustedUser(BrickWall<AiderOfficeManagementEntity> wall, AiderUserEntity user)
 		{
 			wall.AddBrick ()
 					.Icon ("Base.AiderGoup.Parish")
@@ -92,72 +81,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (p => p.GetSummary ())
 					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 
-			if ((this.Entity.ParishGroup.IsNotNull ()) &&
-				(this.Entity.ParishGroup.IsParish ()))
+			if (this.IsParish)
 			{
-				wall.AddBrick (p => p.ParishGroup)
-						.Icon ("Data.AiderGroup.People")
-						.Title ("Membres de la paroisse")
-							.Text ("Voir tous les paroissiens")
-						.Attribute (BrickMode.DefaultToSetSubView)
-						.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
-
-				wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn))
-						.Icon ("Data.AiderGroup.People")
-						.Title ("Dérogations entrantes")
-						.Text (p => p.GetParticipantsSummary ())
-						.Attribute (BrickMode.DefaultToSetSubView)
-						.EnableActionButton<ActionAiderGroupViewController9GenerateOfficialReport> ()
-						.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
-
-				wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut))
-						.Icon ("Data.AiderGroup.People")
-						.Title ("Dérogations sortantes")
-						.Text (p => p.GetParticipantsSummary ())
-						.Attribute (BrickMode.DefaultToSetSubView)
-						.EnableActionButton<ActionAiderGroupViewController9GenerateOfficialReport> ()
-						.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
-
-
-				wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users))
-						.Icon ("Data.AiderGroup.People")
-						.Title ("Gestionnaires AIDER")
-						.Text (p => p.GetParticipantsSummary ())
-						.Attribute (BrickMode.DefaultToSetSubView)
-						.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
-				
+				SummaryAiderOfficeManagementViewController.CreateBricksParishMembers (wall);
+				SummaryAiderOfficeManagementViewController.CreateBricksDerogations (wall);
+				SummaryAiderOfficeManagementViewController.CreateBricksAiderManagers (wall);
 			}
 
-			wall.AddBrick (p => p.Employees)
-					.Attribute (BrickMode.HideAddButton)
-					.Attribute (BrickMode.HideRemoveButton)
-					.Attribute (BrickMode.AutoGroup)
-					.Attribute (BrickMode.DefaultToSummarySubView)
-					.WithSpecialController (typeof (SummaryAiderEmployeeViewController2OfficeManagement))
-					.EnableActionMenu<ActionAiderOfficeManagementViewController3AddEmployeeAndJob> ()
-					.EnableActionMenu<ActionAiderOfficeManagementViewController4DeleteEmployee> ()
-					.Template ()
-						.Title ("Employés et ministres")
-						.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
-					.End ();
-
-			var associatedGroups = this.Entity.AssociatedGroups;
-
-			if (associatedGroups.Any ())
-			{
-				wall.AddBrick (p => p.AssociatedGroups)
-							.Icon ("Data.AiderGroup.People")
-							.Title ("Groupes associés")
-							.Attribute (BrickMode.DefaultToSummarySubView)
-							.Attribute (BrickMode.AutoGroup)
-							.Attribute (BrickMode.HideAddButton)
-							.Attribute (BrickMode.HideRemoveButton)
-							.WithSpecialController (typeof (SummaryAiderGroupViewController1OfficeManagement))
-							.Template ()
-								.Text (x => x.GetNameParishNameWithRegion ())
-							.End ();
-			}
-
+			SummaryAiderOfficeManagementViewController.CreateBricksEmployees (wall, user);
+			SummaryAiderOfficeManagementViewController.CreateBricksAssociatedGroups (wall, this.Entity);
+			
 			wall.AddBrick ()
 				.Icon ("Base.AiderGoup.Parish")
 				.Title (p => p.GetSettingsTitleSummary ())
@@ -171,6 +104,113 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Text (p => p.GetDocumentsSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController2Documents));
+		}
+		
+		
+		private static void CreateBricksParishMembers(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			wall.AddBrick (p => p.ParishGroup)
+				.Icon ("Data.AiderGroup.People")
+				.Title ("Membres de la paroisse")
+				.Text ("Voir tous les paroissiens")
+				.Attribute (BrickMode.DefaultToSetSubView)
+				.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+		}
+		
+		private static void CreateBricksAiderManagers(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users))
+				.Icon ("Data.AiderGroup.People")
+				.Title ("Gestionnaires AIDER")
+				.Text (p => p.GetParticipantsSummary ())
+				.Attribute (BrickMode.DefaultToSetSubView)
+				.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
+		}
+		
+		private static void CreateBricksDerogations(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn))
+				.Icon ("Data.AiderGroup.People")
+				.Title ("Dérogations entrantes")
+				.Text (p => p.GetParticipantsSummary ())
+				.Attribute (BrickMode.DefaultToSetSubView)
+				.EnableActionButton<ActionAiderGroupViewController9GenerateOfficialReport> ()
+				.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
+
+			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationOut))
+				.Icon ("Data.AiderGroup.People")
+				.Title ("Dérogations sortantes")
+				.Text (p => p.GetParticipantsSummary ())
+				.Attribute (BrickMode.DefaultToSetSubView)
+				.EnableActionButton<ActionAiderGroupViewController9GenerateOfficialReport> ()
+				.WithSpecialController (typeof (SetAiderGroupViewController2DerogationsContact));
+		}
+		
+		private static void CreateBricksEmployees(BrickWall<AiderOfficeManagementEntity> wall, AiderUserEntity user)
+		{
+			bool canAddEmployee	   = user.CanEditEmployee ();
+			bool canRemoveEmployee = user.CanEditEmployee ();
+
+			wall.AddBrick (p => p.Employees)
+				.Attribute (BrickMode.HideAddButton)
+				.Attribute (BrickMode.HideRemoveButton)
+				.Attribute (BrickMode.AutoGroup)
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.WithSpecialController (typeof (SummaryAiderEmployeeViewController2OfficeManagement))
+				.EnableActionMenu<ActionAiderOfficeManagementViewController3AddEmployeeAndJob> ().IfTrue (canAddEmployee)
+				.EnableActionMenu<ActionAiderOfficeManagementViewController4DeleteEmployee> ().IfTrue (canRemoveEmployee)
+				.Template ()
+					.Title ("Employés et ministres")
+					.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
+				.End ();
+		}
+
+		private static void CreateBricksEmployeesReadOnly(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			wall.AddBrick (p => p.Employees)
+				.Attribute (BrickMode.HideAddButton)
+				.Attribute (BrickMode.HideRemoveButton)
+				.Attribute (BrickMode.AutoGroup)
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.WithSpecialController (typeof (SummaryAiderEmployeeViewController1WithPersonDetails))
+				.Template ()
+					.Title ("Employés et ministres")
+					.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
+				.End ();
+		}
+		
+		private static void CreateBricksReferees(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			wall.AddBrick (p => p.RegionalReferees)
+				.Attribute (BrickMode.HideAddButton)
+				.Attribute (BrickMode.HideRemoveButton)
+				.Attribute (BrickMode.AutoGroup)
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.WithSpecialController (typeof (SummaryAiderRefereeViewController1WithPersonDetails))
+				.Template ()
+					.Title ("Répondants régionaux")
+					.Text (x => TextFormatter.FormatText (x.Employee.Person.DisplayName, ":", x.ReferenceType))
+				.End ();
+		}
+
+		private static void CreateBricksAssociatedGroups(BrickWall<AiderOfficeManagementEntity> wall, AiderOfficeManagementEntity entity)
+		{
+			var associatedGroups = entity.AssociatedGroups;
+
+			if (associatedGroups.Any ())
+			{
+				wall.AddBrick (p => p.AssociatedGroups)
+					.Icon ("Data.AiderGroup.People")
+					.Title ("Groupes associés")
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.WithSpecialController (typeof (SummaryAiderGroupViewController1OfficeManagement))
+					.Template ()
+						.Text (x => x.GetNameParishNameWithRegion ())
+					.End ();
+			}
 		}
 	}
 }
