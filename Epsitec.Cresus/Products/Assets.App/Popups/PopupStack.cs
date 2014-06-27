@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Lorsque plusieurs popups sont empilés, il faut en garder la trace, surtout
+	/// Lorsque plusieurs popups sont empilés, il faut en garder la trace, essentiellement
 	/// pour savoir celui qui est actif à l'avant-plan.
 	/// </summary>
 	public static class PopupStack

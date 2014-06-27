@@ -317,47 +317,54 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			//	Cette méthode est appelée pour le FrameBox du premier popup créé
-			//	(le plus à l'arrière-plan). Il ne faut donc pas s'occuper de this,
-			//	mais du popup à l'avant-plan.
+			//	Cette méthode est appelée pour le FrameBox du premier popup créé (le plus
+			//	à l'arrière-plan), ce qui n'est pas approprié. Ce que je ne comprends pas,
+			//	c'est qu'elle n'est pas appelée pour les autres popups. Il ne faut donc
+			//	pas s'occuper de this (le popup à l'arrière-plan), mais du popup à
+			//	l'avant-plan (top).
+
 			var top = PopupStack.Top ();
 			if (top != null)
 			{
-				//	On traite le message pour le popup qui est par-dessus tous les autres.
-				switch (message.MessageType)
-				{
-					case MessageType.MouseDown:
-						top.PopupMouseDown (pos);
-						break;
-
-					case MessageType.MouseMove:
-						top.PopupMouseMove (pos);
-						break;
-
-					case MessageType.MouseUp:
-						top.PopupMouseUp (pos);
-						break;
-
-					case MessageType.KeyPress:
-						//	Ce code est nécessaire pour les popups qui ont un TextField. Dans
-						//	ce cas, les touches Return/Esc sont "mangées" par le widget, et la
-						//	simulation du clic ne fonctionne pas !
-						if (message.KeyCode == KeyCode.Return)
-						{
-							top.ClosePopup ();
-							top.ButtonClicked (null, "ok");
-						}
-						else if (message.KeyCode == KeyCode.Escape)
-						{
-							top.ClosePopup ();
-							top.ButtonClicked (null, "cancel");
-						}
-						break;
-				}
-
-				message.Captured = true;
-				message.Consumer = top;
+				//	Si le popup vient d'être fermé, on traite encore les messages, pour
+				//	éviter qu'un clic n'agisse sous le popup !
+				top = this;
 			}
+
+			//	On traite le message pour le popup qui est par-dessus tous les autres.
+			switch (message.MessageType)
+			{
+				case MessageType.MouseDown:
+					top.PopupMouseDown (pos);
+					break;
+
+				case MessageType.MouseMove:
+					top.PopupMouseMove (pos);
+					break;
+
+				case MessageType.MouseUp:
+					top.PopupMouseUp (pos);
+					break;
+
+				case MessageType.KeyPress:
+					//	Ce code est nécessaire pour les popups qui ont un TextField. Dans
+					//	ce cas, les touches Return/Esc sont "mangées" par le widget, et la
+					//	simulation du clic ne fonctionne pas !
+					if (message.KeyCode == KeyCode.Return)
+					{
+						top.ClosePopup ();
+						top.ButtonClicked (null, "ok");
+					}
+					else if (message.KeyCode == KeyCode.Escape)
+					{
+						top.ClosePopup ();
+						top.ButtonClicked (null, "cancel");
+					}
+					break;
+			}
+
+			message.Captured = true;
+			message.Consumer = top;
 
 			base.ProcessMessage (message, pos);
 		}
