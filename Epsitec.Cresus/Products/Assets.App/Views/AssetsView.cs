@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.DataChanged ();
 
-				if (curTimestamp != newTimestamp)  // événement déplacé dans le temps ?
+				if (newTimestamp.HasValue && curTimestamp != newTimestamp)  // événement déplacé dans le temps ?
 				{
 					this.selectedTimestamp = newTimestamp;  // sélectionne l'événement à sa nouvelle position
 				}
