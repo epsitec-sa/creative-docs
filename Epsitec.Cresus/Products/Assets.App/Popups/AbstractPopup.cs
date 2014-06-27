@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.InitializeDialogRect (leftOrRight);
 			this.CreateUI ();
 
-			AssetsApplication.Popups.Push (this);
+			PopupStack.Push (this);
 		}
 
 
@@ -317,23 +317,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if (AssetsApplication.Popups.Any ())
+			//	Cette méthode est appelée pour le FrameBox du premier popup créé
+			//	(le plus à l'arrière-plan). Il ne faut donc pas s'occuper de this,
+			//	mais du popup à l'avant-plan.
+			var top = PopupStack.Top ();
+			if (top != null)
 			{
 				//	On traite le message pour le popup qui est par-dessus tous les autres.
-				var that = AssetsApplication.Popups.Peek ();
-
 				switch (message.MessageType)
 				{
 					case MessageType.MouseDown:
-						that.PopupMouseDown (pos);
+						top.PopupMouseDown (pos);
 						break;
 
 					case MessageType.MouseMove:
-						that.PopupMouseMove (pos);
+						top.PopupMouseMove (pos);
 						break;
 
 					case MessageType.MouseUp:
-						that.PopupMouseUp (pos);
+						top.PopupMouseUp (pos);
 						break;
 
 					case MessageType.KeyPress:
@@ -342,19 +344,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						//	simulation du clic ne fonctionne pas !
 						if (message.KeyCode == KeyCode.Return)
 						{
-							that.ClosePopup ();
-							that.ButtonClicked (null, "ok");
+							top.ClosePopup ();
+							top.ButtonClicked (null, "ok");
 						}
 						else if (message.KeyCode == KeyCode.Escape)
 						{
-							that.ClosePopup ();
-							that.ButtonClicked (null, "cancel");
+							top.ClosePopup ();
+							top.ButtonClicked (null, "cancel");
 						}
 						break;
 				}
 
 				message.Captured = true;
-				message.Consumer = that;
+				message.Consumer = top;
 			}
 
 			base.ProcessMessage (message, pos);
@@ -425,7 +427,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return AssetsApplication.Popups.Any () && this == AssetsApplication.Popups.Peek ();
+				return PopupStack.IsOnTop (this);
 			}
 		}
 
@@ -433,12 +435,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected void ClosePopup()
 		{
 			//	Ferme le popup qui est par-dessus tous les autres.
-			var that = AssetsApplication.Popups.Pop ();
+			var top = PopupStack.Pop ();
 
-			var parent = that.GetParent ();
-			parent.Children.Remove (that);
+			var parent = top.GetParent ();
+			parent.Children.Remove (top);
 
-			that.OnClosed ();
+			top.OnClosed ();
 		}
 
 

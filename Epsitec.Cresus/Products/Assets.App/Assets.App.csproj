@@ -96,6 +96,7 @@
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\AccountsMergeNodeGetter.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
+    <Compile Include="Popups\PopupStack.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
     <Compile Include="Popups\AssetPastePopup.cs" />
     <Compile Include="Popups\BalloonPath.cs" />

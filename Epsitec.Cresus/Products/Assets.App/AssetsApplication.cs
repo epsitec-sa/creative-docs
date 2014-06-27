@@ -123,8 +123,6 @@ namespace Epsitec.Cresus.Assets.App
 		}
 
 
-		public static Stack<AbstractPopup>		Popups = new Stack<AbstractPopup> ();
-
 		private BusinessContext					businessContext;
 	}
 }
