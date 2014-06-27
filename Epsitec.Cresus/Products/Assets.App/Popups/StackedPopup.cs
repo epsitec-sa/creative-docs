@@ -29,8 +29,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public int								MininalWidth;
-
 		protected bool							HasError
 		{
 			get
@@ -65,14 +63,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected override Size DialogSize
+		protected override Size					DialogSize
 		{
+			//	Retourne les dimensions du popup, en prenant en compte l'ensemble des
+			//	*StackedController contenus. La largeur est celle du contrôleur le plus
+			//	large, et la hauteur est la somme des hauteurs des contrôleurs.
 			get
 			{
 				int labelsWidth = this.LabelsWidth;
 
 				if (labelsWidth > 0)
 				{
+					//	Si la partie droite pour les labels existe, on ajoute une petite
+					//	marge de séparation entre les parties droite et gauche.
 					labelsWidth += 10;
 				}
 
@@ -95,6 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateControllers()
 		{
+			//	Crée l'ensemble des *StackedController requis, sans créer les UI correspondantes.
 			this.controllers.Clear ();
 
 			foreach (var description in this.descriptions)
@@ -106,6 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateControllersUI(Widget parent)
 		{
+			//	Crée toutes les UI des contrôleurs.
 			this.controllerVisibleFrames.Clear ();
 			this.controllerHiddenFrames.Clear ();
 

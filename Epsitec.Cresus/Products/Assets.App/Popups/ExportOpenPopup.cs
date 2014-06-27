@@ -18,7 +18,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			: base (accessor)
 		{
 			this.title = "Exportation effectée avec succès";
-			this.MininalWidth = this.title.GetTextWidth ();
 
 			var list = new List<StackedControllerDescription> ();
 

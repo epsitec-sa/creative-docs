@@ -32,11 +32,13 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 
 		public abstract int						RequiredHeight
 		{
+			//	Retourne la hauteur requise pour le contrôleur.
 			get;
 		}
 
 		public virtual int						RequiredControllerWidth
 		{
+			//	Retourne la largeur de la partie droite requise pour le contrôleur.
 			get
 			{
 				return this.description.Width + 4;
@@ -45,6 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		
 		public virtual int						RequiredLabelsWidth
 		{
+			//	Retourne la largeur de la partie gauche requise pour le contrôleur.
 			get
 			{
 				return this.description.Label.GetTextWidth ();
