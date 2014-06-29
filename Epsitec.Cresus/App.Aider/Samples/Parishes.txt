@@ -1,0 +1,5 @@
+The ParishProcessor which links the street addresses to the parishes is located in the
+'epsitec' repository, specfically:
+
+S:\epsitec\dot.net\Aider.ParishPreprocessor
+
