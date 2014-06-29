@@ -18,13 +18,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			var group = this.Entity;
 
-			bool canSubgroupsBeEdited					= group.CanSubgroupsBeEdited ();
-			bool canGroupBeEditedByCurrentUser			= group.CanBeEditedByCurrentUser ();
-			bool canGroupBeSeenByCurrentUser			= group.CanBeSeenByCurrentUser ();
-			bool canSubgroupsBeEditedByCurrentUser		= canSubgroupsBeEdited && canGroupBeEditedByCurrentUser;
+			bool canGroupBeSeenByCurrentUser = group.CanBeSeenByCurrentUser ();
 
 			if (canGroupBeSeenByCurrentUser)
 			{
+				bool canSubgroupsBeEdited			   = group.CanSubgroupsBeEdited ();
+				bool canGroupBeEditedByCurrentUser	   = group.CanBeEditedByCurrentUser ();
+				bool canSubgroupsBeEditedByCurrentUser = canSubgroupsBeEdited && canGroupBeEditedByCurrentUser;
+				
 				wall.AddBrick ()
 					.EnableActionMenu<ActionAiderGroupViewController6AddToBag> ()
 					.EnableActionMenu<ActionAiderGroupViewController2MoveGroup> ().IfTrue (canGroupBeEditedByCurrentUser)
