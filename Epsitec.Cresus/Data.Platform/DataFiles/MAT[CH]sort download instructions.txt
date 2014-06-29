@@ -1,10 +1,24 @@
+
 Manually download MAT[CH]sort.csv ZIP archive from the Swiss Post servers:
 
 http://www.post.ch/post-startseite/post-adress-services-match/post-direct-marketing-datengrundlage/post-direct-marketing-login-downloadcenter.htm
 
-arnaud@epsitec.ch
-TADF8%PYC
+  arnaud@epsitec.ch
+  TADF8%PYC
 
 
+Three files have to be downloaded:
+
+- MAT[CH]street > MAT[CH]street Schweiz light | Bestand (~4 MB) --> sth...zip
+- MAT[CH]zip > PLZ Plus 1 --> plz_p1_...zip
+- MAT[CH]sort > Stammdaten | Bestand (~25 MB) --> MAT[CH]news...zip
 
 
+Extract the contents and update:
+
+- MatchStreetLight.zip with the latest sth___.txt
+- MatchStreetZip.zip with the latest plz_p1____.txt
+
+and copy the MAT[CH]news___.csv to S:\Epsitec.Cresus\Tool.Data.Platform\bin\Debug\MAT[CH]sort.csv
+
+Finally, execute project "Tool.Data.Platform".
