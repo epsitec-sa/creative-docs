@@ -46,6 +46,7 @@
     </Compile>
     <Compile Include="BypassNodeGetter.cs" />
     <Compile Include="CumulNode.cs" />
+    <Compile Include="MCH2SummaryNodeGetter.cs" />
     <Compile Include="CumulNodeGetter.cs" />
     <Compile Include="EntriesNodeGetter.cs" />
     <Compile Include="EntryNode.cs" />
