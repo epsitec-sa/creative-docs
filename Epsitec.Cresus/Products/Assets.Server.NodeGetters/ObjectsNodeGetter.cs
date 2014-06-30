@@ -13,18 +13,19 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// On part des groupes, qui sont ensuite fusionnés avec les objets.
 	/// En fait, c'est la mise en série de plusieurs getters:
 	/// 
-	///     |
-	///     o  GuidNode (BaseType.Groups)
-	///     V
-	/// GroupParentNodeGetter
-	///     |
-	///     o  ParentNode
-	///     V
-	/// GroupLevelNodeGetter
-	///     |
-	///     o  LevelNode                     SortableNode              GuidNode (BaseType.Objects)
-	///     V
-	/// MergeNodeGetter <-o- SorterNodeGetter <-o- SortableNodeGetter <-o-
+	/// (BaseType.Groups)        (BaseType.Assets)
+	///     |                         |
+	///     o  GuidNode               o  GuidNode
+	///     V                         V
+	/// GroupParentNodeGetter    SortableNodeGetter
+	///     |                         |
+	///     o  ParentNode             o  SortableNode
+	///     V                         V
+	/// GroupLevelNodeGetter     SorterNodeGetter
+	///     |                         |
+	///     o  LevelNode              o  SortableNode
+	///     V                         |
+	/// MergeNodeGetter <-------------|
 	///     |
 	///     o  LevelNode
 	///     V
