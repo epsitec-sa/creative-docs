@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	l'avant-plan (top).
 
 			var top = PopupStack.Top ();
-			if (top != null)
+			if (top == null)
 			{
 				//	Si le popup vient d'être fermé, on traite encore les messages, pour
 				//	éviter qu'un clic n'agisse sous le popup !

@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			base.CreateUI ();
 
 			var controller = this.GetController (1);
-			controller.SetFocus ();
+			controller.SetFocus ();  // met le focus dans le champ "nom"
 		}
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
