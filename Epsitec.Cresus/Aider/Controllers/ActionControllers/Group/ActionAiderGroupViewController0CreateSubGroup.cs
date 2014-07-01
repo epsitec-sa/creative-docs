@@ -16,15 +16,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (0)]
 	public sealed class ActionAiderGroupViewController0CreateSubGroup : TemplateActionViewController<AiderGroupEntity, AiderGroupEntity>
 	{
-		public override bool					RequiresAdditionalEntity
+		public override bool RequiresAdditionalEntity
 		{
 			get
 			{
 				return false;
 			}
 		}
-		
-		
+
+
 		public override FormattedText GetTitle()
 		{
 			return "Créer un sous groupe";

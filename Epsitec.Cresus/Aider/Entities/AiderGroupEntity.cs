@@ -278,7 +278,10 @@ namespace Epsitec.Aider.Entities
 
 			if (this.IsParish ())
 			{
-				return false;
+				if (this.IsParishOfGermanLanguage == false)
+				{
+					return false;
+				}
 			}
 
 			var user = AiderUserManager.Current.AuthenticatedUser;
@@ -291,6 +294,14 @@ namespace Epsitec.Aider.Entities
 			}
 
 			return false;
+		}
+
+		public bool IsParishOfGermanLanguage
+		{
+			get
+			{
+				return this.Name.StartsWith ("PLA ");
+			}
 		}
 
 		
@@ -941,6 +952,11 @@ namespace Epsitec.Aider.Entities
 			value = this.GetSubgroups ().AsReadOnlyCollection ();
 		}
 
+		partial void GetPlaParishGroups(ref IList<AiderGroupEntity> value)
+		{
+			value = this.GetPlaParishGroups ().AsReadOnlyCollection ();
+		}
+
 
 		private string GetNextSubgroupPath(bool isCustom)
 		{
@@ -1037,6 +1053,17 @@ namespace Epsitec.Aider.Entities
 			return this.subgroups;
 		}
 
+		private IList<AiderGroupEntity> GetPlaParishGroups()
+		{
+			if (this.plaParishGroups == null)
+			{
+				this.plaParishGroups = this.ExecuteWithDataContext (c => this.FindPlaParishGroups (c),
+																	() => new List<AiderGroupEntity> ());
+			}
+
+			return this.plaParishGroups;
+		}
+
 		private IList<AiderGroupEntity> GetParents()
 		{
 			if (this.parents == null)
@@ -1119,6 +1146,67 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public void AddPlaParishGroup(BusinessContext context, AiderGroupEntity parishGroup)
+		{
+			if (!this.IsParishOfGermanLanguage)
+			{
+				throw new System.ArgumentException ("Ceci n'est pas un groupe PLA.");
+			}
+			if (parishGroup.IsNull ())
+			{
+				throw new System.ArgumentException ("Le groupe n'est pas défini.");
+			}
+			if (parishGroup.IsParish () == false)
+			{
+				throw new System.ArgumentException ("Le groupe n'est pas une paroisse.");
+			}
+
+			var list = this.PlaParishGroups;
+
+			if (list.Contains (parishGroup))
+			{
+				return;
+			}
+
+			var item = context.CreateAndRegisterEntity<AiderPlaParishGroupEntity> ();
+
+			item.Pla = this;
+			item.ParishGroup = parishGroup;
+
+			this.plaParishGroups.Add (parishGroup);
+		}
+
+		public void RemovePlaParishGroup(BusinessContext context, AiderGroupEntity parishGroup)
+		{
+			if (!this.IsParishOfGermanLanguage)
+			{
+				throw new System.ArgumentException ("Ceci n'est pas un groupe PLA.");
+			}
+			if (parishGroup.IsNull ())
+			{
+				throw new System.ArgumentException ("Le groupe n'est pas défini.");
+			}
+			
+			var example = new AiderPlaParishGroupEntity
+			{
+				Pla = this,
+				ParishGroup = parishGroup,
+			};
+
+			var list  = this.PlaParishGroups;
+
+			if (list.Contains (parishGroup))
+			{
+				var items = context.GetByExample (example);
+
+				items.ForEach (item => context.DeleteEntity (item));
+
+				this.plaParishGroups.Remove (parishGroup);
+			}
+		}
+
+
+
 		public IList<AiderGroupParticipantEntity> FindParticipationsByGroup(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity group)
 		{
 			var example = new AiderGroupParticipantEntity ()
@@ -1177,6 +1265,21 @@ namespace Epsitec.Aider.Entities
 			request.AddSortClause (ValueField.Create (example, x => x.Name));
 
 			return dataContext.GetByRequest (request);
+		}
+
+		private IList<AiderGroupEntity> FindPlaParishGroups(DataContext dataContext)
+		{
+			if (!this.IsParishOfGermanLanguage)
+			{
+				return new List<AiderGroupEntity> ();
+			}
+
+			var example = new AiderPlaParishGroupEntity ()
+			{
+				Pla = this,
+			};
+
+			return dataContext.GetByExample (example).Select (x => x.ParishGroup).ToList ();
 		}
 
 		private IList<AiderGroupEntity> FindParents(DataContext dataContext)
@@ -1318,6 +1421,7 @@ namespace Epsitec.Aider.Entities
 
 
 		private IList<AiderGroupEntity>			subgroups;
+		private IList<AiderGroupEntity>			plaParishGroups;
 		private IList<AiderGroupEntity>			parents;
 	}
 }

@@ -50,6 +50,7 @@ namespace Epsitec.Aider.Data.Common
 		public const int NoParishLevel				= 0;
 		public const int TopLevel					= 0;
 		public const int ParishOfGermanLanguageLevel = 0;
+		public const string ParishTemplatePath		= "R___.P___.";
 
 		
 		public static string DefaultToNoParish(string path)
@@ -323,12 +324,23 @@ namespace Epsitec.Aider.Data.Common
 			return parentPath + childPath;
 		}
 
+		public static int? GetRegionNumber(string path)
+		{
+			if ((string.IsNullOrEmpty (path)) ||
+				(path.StartsWith (AiderGroupIds.RegionPrefix) == false))
+			{
+				return null;
+			}
+
+			return int.Parse (path.Substring (AiderGroupIds.MiddleStart, AiderGroupIds.MiddleLength), System.Globalization.CultureInfo.InvariantCulture);
+		}
+
 		public static int GetGroupNumber(string path)
 		{
 			var part = AiderGroupIds.GetGroupPathPart (path);
 			var number = part.Substring (AiderGroupIds.MiddleStart, AiderGroupIds.MiddleLength);
 
-			return int.Parse (number);
+			return int.Parse (number, System.Globalization.CultureInfo.InvariantCulture);
 		}
 
 		public static int FindNextSubGroupDefNumber(IEnumerable<string> subGroupsPath,char prefixChar)

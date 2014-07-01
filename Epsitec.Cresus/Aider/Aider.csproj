@@ -99,10 +99,12 @@
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController4CreateFunction.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController0CreateSubGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController10CreateOfficeManagement.cs" />
+    <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController12RemovePlaGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController2MoveGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController3ImportGroupMembers.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController4ExportGroupMembers.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController5MergeGroup.cs" />
+    <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController11AddPlaGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController12AddGroupExtraction.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController13RemoveGroupExtraction.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController17ToggleHouseholdGrouping.cs" />
@@ -321,6 +323,7 @@
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity1.cs" />
+    <Compile Include="Entities\AiderPlaParishGroupEntity.cs" />
     <Compile Include="Entities\AiderRefereeEntity.cs" />
     <Compile Include="Entities\AiderSubscriptionEntity.cs" />
     <Compile Include="Entities\AiderSubscriptionRefusalEntity.cs" />

@@ -50,6 +50,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA2J]", typeof (Epsitec.Aider.Entities.AiderEmployeeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA7J]", typeof (Epsitec.Aider.Entities.AiderEmployeeJobEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVADJ]", typeof (Epsitec.Aider.Entities.AiderRefereeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVA7L]", typeof (Epsitec.Aider.Entities.AiderPlaParishGroupEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -3865,6 +3866,20 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>PlaParishGroups</c> field.
+		///	designer:fld/LVA54/LVAAL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAAL]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity> PlaParishGroups
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity>);
+				this.GetPlaParishGroups (ref value);
+				return value;
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -3878,6 +3893,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnPathChanged(string oldValue, string newValue);
 		
 		partial void GetSubgroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity> value);
+		partial void GetPlaParishGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -10642,6 +10658,89 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderRefereeEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderPlaParishGroup Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderPlaParishGroup</c> entity.
+	///	designer:cap/LVA7L
+	///	</summary>
+	public partial class AiderPlaParishGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Pla</c> field.
+		///	designer:fld/LVA7L/LVA8L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA8L]")]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity Pla
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVA8L]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.Pla;
+				if (oldValue != value || !this.IsFieldDefined("[LVA8L]"))
+				{
+					this.OnPlaChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVA8L]", oldValue, value);
+					this.OnPlaChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ParishGroup</c> field.
+		///	designer:fld/LVA7L/LVA9L
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA9L]")]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity ParishGroup
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVA9L]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.ParishGroup;
+				if (oldValue != value || !this.IsFieldDefined("[LVA9L]"))
+				{
+					this.OnParishGroupChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVA9L]", oldValue, value);
+					this.OnParishGroupChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnPlaChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnPlaChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderPlaParishGroupEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderPlaParishGroupEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 679);	// [LVA7L]
+		public static readonly string EntityStructuredTypeKey = "[LVA7L]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderPlaParishGroupEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

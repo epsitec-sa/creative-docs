@@ -59,6 +59,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				wall.AddBrick (x => x.GroupDef)
 					.IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator));
 
+				this.CreateBricksParishOfGermanLanguage (wall);
+
 				if (group.GroupDef.Function.IsNotNull ())
 				{
 					wall.AddBrick ()
@@ -78,6 +80,26 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				wall.AddBrick ()
 						.Title ("Groupe hors d'accès")
 						.Text ("Vos droits ne vous permettent pas de consulter ce groupe");
+			}
+		}
+		
+		private void CreateBricksParishOfGermanLanguage(BrickWall<AiderGroupEntity> wall)
+		{
+			var isPla = this.Entity.IsParishOfGermanLanguage;
+
+			if (isPla)
+			{
+				wall.AddBrick (x => x.PlaParishGroups)
+					.EnableActionMenu<ActionAiderGroupViewController11AddPlaGroup> ().IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
+					.EnableActionMenu<ActionAiderGroupViewController12RemovePlaGroup> ().IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Title ("Territoire de la PLA")
+					.Template ()
+						.Text (x => x.GetCompactSummary ())
+					.End ();
 			}
 		}
 	}

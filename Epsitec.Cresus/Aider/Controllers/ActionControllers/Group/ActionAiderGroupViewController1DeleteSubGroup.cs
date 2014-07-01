@@ -33,7 +33,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create (this.Execute);
 		}
 
-		
+
 		protected override void GetForm(ActionBrick<AiderGroupEntity, SimpleBrick<AiderGroupEntity>> form)
 		{
 			form
@@ -42,7 +42,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			.End ();
 		}
 
-		
+
 		private void Execute()
 		{
 			var group = this.Entity;

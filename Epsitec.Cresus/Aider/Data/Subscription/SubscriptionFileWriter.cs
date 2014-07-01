@@ -4,17 +4,13 @@
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
-
 using Epsitec.Common.Support.Extensions;
-
 using Epsitec.Common.Text;
 using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
-
 using Epsitec.Data.Platform.MatchSort;
-
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -37,9 +33,32 @@ namespace Epsitec.Aider.Data.Subscription
 			this.districtNumberErrors = new List<System.Tuple<string, string>> ();
 			this.editionStats         = new int[16];
 			this.countries            = new HashSet<string> ();
+
+			using (var bc = new BusinessContext (this.coreData, enableReload: false))
+			{
+				var parishExample  = new AiderGroupEntity
+				{
+					GroupDef = SubscriptionFileWriter.GetParishGroupDef (bc)
+				};
+
+				this.parishes = bc.GetByExample (parishExample)
+					.ToDictionary (x => x.Path, x => x.Name);
+
+				this.parishes["NOPA."] = "Sans paroisse";
+			}
 		}
 
 
+		private static AiderGroupDefEntity GetParishGroupDef(BusinessContext context)
+		{
+			var ex = new AiderGroupDefEntity
+						{
+							Level = 1,
+							PathTemplate = AiderGroupIds.ParishTemplatePath,
+						};
+
+			return context.GetByExample (ex).Single ();
+		}
 		public void Write()
 		{
 			this.errors.Clear ();
@@ -194,7 +213,7 @@ namespace Epsitec.Aider.Data.Subscription
 				}
 				catch (System.Exception e)
 				{
-					this.errors.Add (System.Tuple.Create (subscription.Id, e.Message));
+					this.RecordError (subscription, e.Message);
 					continue;
 				}
 
@@ -211,7 +230,7 @@ namespace Epsitec.Aider.Data.Subscription
 						(string.IsNullOrEmpty (line.Firstname)) ||
 						(string.IsNullOrEmpty (line.Lastname)))
 					{
-						this.errors.Add (System.Tuple.Create (subscription.Id, "Address not found in MAT[CH]sort"));
+						this.RecordError (subscription, "Address not found in MAT[CH]sort");
 						continue;
 					}
 				}
@@ -220,6 +239,16 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 		}
 
+		private void RecordError(AiderSubscriptionEntity subscription, string error)
+		{
+			var parishPath   = subscription.ParishGroupPathCache;
+			var regionNumber = AiderGroupIds.GetRegionNumber (parishPath);
+			var parishName   = parishPath == null ? "<null>" : this.parishes[parishPath];
+			var message      = string.Format ("{0}\t{1}\t{2}", error, regionNumber.GetValueOrDefault (0), parishName);
+
+			this.errors.Add (System.Tuple.Create (subscription.Id, message));
+		}
+		
 		private void ComputeStats(IEnumerable<SubscriptionFileLine> lines)
 		{
 			foreach (var line in lines)
@@ -1100,6 +1129,7 @@ namespace Epsitec.Aider.Data.Subscription
 		private readonly bool					skipLinesWithDistrictNumberError;
 		private readonly List<System.Tuple<string, string>> errors;
 		private readonly List<System.Tuple<string, string>> districtNumberErrors;
+		private readonly Dictionary<string, string> parishes;
 
 		private readonly int[]					editionStats;
 		private readonly System.DateTime		startTime;
