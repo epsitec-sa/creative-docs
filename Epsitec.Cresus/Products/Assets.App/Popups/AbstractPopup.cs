@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// A la création, un popup s'attache à la fenêtre parent nommée "PopupParentFrame",
 	/// qui doit remplir toute la fenêtre. Le popup lui-même occupe toute la surface.
 	/// </summary>
-	public abstract class AbstractPopup : Widget
+	public abstract class AbstractPopup : FrameBox
 	{
 		public void Create(Widget target, bool leftOrRight = false)
 		{
@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	l'avant-plan (top).
 
 			var top = PopupStack.Top ();
-			if (top == null)
+//			if (top == null)
 			{
 				//	Si le popup vient d'être fermé, on traite encore les messages, pour
 				//	éviter qu'un clic n'agisse sous le popup !
@@ -359,6 +359,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					{
 						top.ClosePopup ();
 						top.ButtonClicked (null, "cancel");
+					}
+					else
+					{
+						base.ProcessMessage (message, pos);
+						return;
 					}
 					break;
 			}
