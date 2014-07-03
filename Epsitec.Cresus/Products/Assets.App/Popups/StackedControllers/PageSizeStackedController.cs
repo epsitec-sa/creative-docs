@@ -58,8 +58,6 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			{
 				Parent           = controllerFrame,
 				ContentAlignment = ContentAlignment.MiddleLeft,
-				NormalColor      = ColorManager.ToolbarBackgroundColor,
-				HoverColor       = ColorManager.HoverColor,
 				Dock             = DockStyle.Fill,
 				TabIndex         = ++tabIndex,
 			};

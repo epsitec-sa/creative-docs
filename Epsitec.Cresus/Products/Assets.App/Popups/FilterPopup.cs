@@ -98,8 +98,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					Parent          = this.mainFrameBox,
 					Text            = "Annuler le groupement",
-					NormalColor     = ColorManager.ToolbarBackgroundColor,
-					HoverColor      = ColorManager.HoverColor,
 					PreferredHeight = 30,
 					Dock            = DockStyle.Bottom,
 				};

@@ -121,8 +121,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Parent        = this.buttonsFrame,
 				Name          = name,
 				Text          = text,
-				NormalColor   = ColorManager.ToolbarBackgroundColor,
-				HoverColor    = ColorManager.HoverColor,
 				Enable        = enable,
 				Dock          = DockStyle.Bottom,
 				PreferredSize = new Size (dx, dy),

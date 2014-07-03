@@ -224,8 +224,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Parent         = parent,
 				Name           = name,
 				Text           = text,
-				NormalColor    = ColorManager.ToolbarBackgroundColor,
-				HoverColor     = ColorManager.HoverColor,
 				AutoFocus      = false,
 				Anchor         = anchor,
 				PreferredWidth = width,

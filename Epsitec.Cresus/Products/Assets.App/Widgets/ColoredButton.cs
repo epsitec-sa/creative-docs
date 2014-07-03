@@ -14,6 +14,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public ColoredButton()
 		{
 			this.textLayout = new TextLayout ();
+
+			this.NormalColor = ColorManager.ToolbarBackgroundColor;
+			this.HoverColor  = ColorManager.HoverColor;
 		}
 
 
@@ -118,7 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				if (!this.Enable)
 				{
-					color = color.Delta (0.1);
+					color = color.Delta (0.1);  // plus clair si disable
 				}
 
 				graphics.AddFilledRectangle (rect);
@@ -140,7 +143,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.textLayout.BreakMode       = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			this.textLayout.Alignment       = this.ContentAlignment;
 
-			double brightness = this.Enable ? 0.0 : 0.7;
+			double brightness = this.Enable ? 0.0 : 0.7;  // gris clair si disable
 			this.textLayout.Paint (rect.BottomLeft, graphics, rect, Color.FromBrightness (brightness), GlyphPaintStyle.Normal);
 		}
 

@@ -96,8 +96,6 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			{
 				Parent           = parent,
 				Text             = "Parcourir...",
-				NormalColor      = ColorManager.ToolbarBackgroundColor,
-				HoverColor       = ColorManager.HoverColor,
 				Dock             = DockStyle.Right,
 				TabIndex         = tabIndex,
 				PreferredWidth   = ExportFilenameStackedController.browseWidth - 2,
