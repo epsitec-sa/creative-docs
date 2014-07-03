@@ -272,6 +272,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (index.HasValue)
 			{
 				this.VisibleSelectedRow = index.Value;
+				this.SetFocus ();
 			}
 		}
 
@@ -282,6 +283,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (index.HasValue)
 			{
 				this.VisibleSelectedRow = index.Value;
+				this.SetFocus ();
 			}
 		}
 
@@ -292,6 +294,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (index.HasValue)
 			{
 				this.VisibleSelectedRow = index.Value;
+				this.SetFocus ();
 			}
 		}
 
@@ -302,6 +305,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (index.HasValue)
 			{
 				this.VisibleSelectedRow = index.Value;
+				this.SetFocus ();
 			}
 		}
 
@@ -424,6 +428,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
 			MessagePopup.ShowTodo (target);
+		}
+
+
+		protected virtual void SetFocus()
+		{
 		}
 
 

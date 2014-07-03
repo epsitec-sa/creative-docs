@@ -179,6 +179,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected override void SetFocus()
+		{
+			this.treeTableController.SetFocus ();
+		}
+
+
 		protected override void OnExport()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Export);

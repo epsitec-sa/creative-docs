@@ -118,6 +118,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return sel;
 		}
 
+		public void SetFocus()
+		{
+			//	Met le focus sur le TreeTable. Cela est nécessaire pour que les touches
+			//	flèches fonctionnent. Sinon, ProcessMessage n'est pas appelé !
+			this.treeTable.Focus ();
+		}
+
 
 		#region TreeTable Facade
 		public bool								AllowsMovement

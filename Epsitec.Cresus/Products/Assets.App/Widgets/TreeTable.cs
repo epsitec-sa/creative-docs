@@ -25,21 +25,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public TreeTable(int rowHeight, int headerHeight, int footerHeight)
 		{
-			//	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			//	Je fais tout comme AbstractTextField, et pourtant il n'y a rien à faire
-			//	pour que ce widget réagisse aux touches flèches. ProcessMessage avec
-			//	MessageType.KeyDown ne vient jamais.
-			//	Si TreeTable hérite de AbstractTextField (TreeTable : AbstractTextField),
-			//	c'est ok, mais alors le widget n'a pas le bon curseur pour la souris (IBeam).
-			//	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-			this.AutoEngage = false;
-			this.AutoFocus  = true;
-			//-this.AutoRepeat = true;
-			//-this.AutoDoubleClick = true;
-			//-
+			//	Permet de mettre le focus sur le TreeTable. Cela est nécessaire pour que les
+			//	touches flèches fonctionnent. Sinon, ProcessMessage n'est pas appelé !
+			this.AutoFocus = true;
 			this.InternalState |= WidgetInternalState.Focusable;
-			this.InternalState |= WidgetInternalState.Engageable;
 
 			this.rowHeight    = rowHeight;
 			this.headerHeight = headerHeight;
@@ -505,6 +494,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (row != -1)
 			{
 				this.OnRowDoubleClicked (row);
+				this.Focus ();  // pour que les touches flèches fonctionnent
 			}
 
 			base.OnDoubleClicked (e);
@@ -598,6 +588,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (row != -1)
 			{
 				this.OnRowClicked (row, this.DetectColumn (pos));
+				this.Focus ();  // pour que les touches flèches fonctionnent
 			}
 		}
 
