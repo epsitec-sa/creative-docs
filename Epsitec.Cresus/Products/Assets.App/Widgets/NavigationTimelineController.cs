@@ -44,6 +44,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.OnCellDoubleClicked (row, rank);
 			};
 
+			this.timeline.DokeySelect += delegate (object sender, KeyCode key)
+			{
+				this.OnDokeySelect (key);
+			};
+
 			this.scroller.ValueChanged += delegate
 			{
 				this.OnContentChanged (false);
@@ -86,6 +91,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			sel = System.Math.Max (sel - count+1, 0);
 
 			return sel;
+		}
+
+
+		public void SetFocus()
+		{
+			//	Met le focus sur la Timeline. Cela est nécessaire pour que les touches
+			//	flèches fonctionnent. Sinon, ProcessMessage n'est pas appelé !
+			this.timeline.Focus ();
 		}
 
 
@@ -269,6 +282,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public event EventHandler<bool> ContentChanged;
+
+
+		private void OnDokeySelect(KeyCode key)
+		{
+			this.DokeySelect.Raise (this, key);
+		}
+
+		public event EventHandler<KeyCode> DokeySelect;
 		#endregion
 
 

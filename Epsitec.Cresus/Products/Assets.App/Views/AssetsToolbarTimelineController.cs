@@ -245,6 +245,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (index.HasValue)
 			{
 				this.SelectedCell = index.Value;
+				this.controller.SetFocus ();
 			}
 		}
 
@@ -255,6 +256,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (index.HasValue)
 			{
 				this.SelectedCell = index.Value;
+				this.controller.SetFocus ();
 			}
 		}
 
@@ -265,6 +267,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (index.HasValue)
 			{
 				this.SelectedCell = index.Value;
+				this.controller.SetFocus ();
 			}
 		}
 
@@ -275,6 +278,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (index.HasValue)
 			{
 				this.SelectedCell = index.Value;
+				this.controller.SetFocus ();
 			}
 		}
 
@@ -285,6 +289,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (index.HasValue)
 			{
 				this.SelectedCell = index.Value;
+				this.controller.SetFocus ();
 			}
 		}
 
@@ -304,6 +309,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.UpdateData (popup.Date);
 					this.SelectedTimestamp = new Timestamp (popup.Date.Value, 0);
+					this.controller.SetFocus ();
 				}
 			};
 		}
@@ -484,6 +490,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					int sel = this.controller.LeftVisibleCell + rank;
 					this.OnCellDoubleClicked (sel);
 				}
+			};
+
+			this.controller.DokeySelect += delegate (object sender, KeyCode key)
+			{
+				this.OnDokeySelect (key);
 			};
 		}
 
@@ -682,6 +693,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				this.controller.SetRowYearCells (line++, dates.ToArray ());
+			}
+		}
+
+
+		private void OnDokeySelect(KeyCode key)
+		{
+			switch (key)
+			{
+				case KeyCode.Home:
+					this.OnFirst ();
+					break;
+
+				case KeyCode.ArrowLeft:
+				case KeyCode.PageUp:
+					this.OnPrev ();
+					break;
+
+				case KeyCode.ArrowRight:
+				case KeyCode.PageDown:
+					this.OnNext ();
+					break;
+
+				case KeyCode.End:
+					this.OnLast ();
+					break;
 			}
 		}
 

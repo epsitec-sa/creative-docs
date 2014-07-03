@@ -19,6 +19,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public Timeline()
 		{
+			//	Permet de mettre le focus sur le TreeTable. Cela est nécessaire pour que les
+			//	touches flèches fonctionnent. Sinon, ProcessMessage n'est pas appelé !
+			this.AutoFocus = true;
+			this.InternalState |= WidgetInternalState.Focusable;
+
 			this.timelineRows = new List<AbstractTimelineRow> ();
 			this.RelativeWidth = 1.0;
 		}
@@ -151,11 +156,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				row.CellClicked += delegate (object sender, int rank)
 				{
 					this.OnCellClicked (row.Index, rank);
+					this.Focus ();  // pour que les touches flèches fonctionnent
 				};
 
 				row.CellDoubleClicked += delegate (object sender, int rank)
 				{
 					this.OnCellDoubleClicked (row.Index, rank);
+					this.Focus ();  // pour que les touches flèches fonctionnent
 				};
 			}
 
@@ -242,6 +249,40 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			base.UpdateClientGeometry ();
 			this.UpdateChildrensGeometry ();
+		}
+
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			switch (message.MessageType)
+			{
+				case MessageType.KeyDown:
+					if (this.ProcessKey (message.KeyCode))
+					{
+						message.Captured = true;
+						message.Consumer = this;
+					}
+					break;
+			}
+
+			base.ProcessMessage (message, pos);
+		}
+
+		private bool ProcessKey(KeyCode keyCode)
+		{
+			switch (keyCode)
+			{
+				case KeyCode.ArrowLeft:
+				case KeyCode.ArrowRight:
+				case KeyCode.PageUp:
+				case KeyCode.PageDown:
+				case KeyCode.Home:
+				case KeyCode.End:
+					this.OnDokeySelect (keyCode);
+					return true;
+
+				default:
+					return false;
+			}
 		}
 
 
@@ -366,6 +407,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public event EventHandler<int, int> CellDoubleClicked;
+
+
+		private void OnDokeySelect(KeyCode key)
+		{
+			this.DokeySelect.Raise (this, key);
+		}
+
+		public event EventHandler<KeyCode> DokeySelect;
 		#endregion
 
 
