@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.Data;
+using System;
 
 namespace Epsitec.Cresus.Assets.Core.Helpers
 {
@@ -227,11 +228,11 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 				{
 					if (TypeConverters.numberFormatNegative == SettingsEnum.NegativeParentheses)
 					{
-						s = "(" + s + ")";
+						s = String.Format ("({0})", s);  // (123)
 					}
 					else
 					{
-						s = "-" + s;
+						s = String.Format ("-{0}", s);  // -123
 					}
 				}
 
