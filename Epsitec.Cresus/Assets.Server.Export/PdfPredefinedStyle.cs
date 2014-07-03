@@ -9,10 +9,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	public enum PdfPredefinedStyle
 	{
 		Unknown,
-		Default,
-		Light,
-		Discreet,
-		Bold,
+		Frameless,
+		LightFrame,
+		StandardFrame,
+		BoldFrame,
 		GreyEvenOdd,
 		BlueEvenOdd,
 		YellowEvenOdd,

@@ -49,13 +49,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			switch (predefined)
 			{
-				case PdfPredefinedStyle.Light:
+				case PdfPredefinedStyle.Frameless:
 					return new PdfStyle (ExportColor.Grey, ExportColor.Transparent, ExportColor.Transparent, ExportColor.Black, 0.0);
 
-				case PdfPredefinedStyle.Discreet:
+				case PdfPredefinedStyle.LightFrame:
 					return new PdfStyle (ExportColor.Grey, ExportColor.Transparent, ExportColor.Transparent, ExportColor.Grey, 0.1);
 
-				case PdfPredefinedStyle.Bold:
+				case PdfPredefinedStyle.BoldFrame:
 					return new PdfStyle (ExportColor.Grey, ExportColor.Transparent, ExportColor.Transparent, ExportColor.Black, 0.5);
 
 				case PdfPredefinedStyle.GreyEvenOdd:

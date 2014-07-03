@@ -55,16 +55,16 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			switch (predefined)
 			{
-				case PdfPredefinedStyle.Default:
-					return "Normal";
-
-				case PdfPredefinedStyle.Light:
+				case PdfPredefinedStyle.Frameless:
 					return "Sans cadres";
 
-				case PdfPredefinedStyle.Discreet:
-					return "Discret";
+				case PdfPredefinedStyle.LightFrame:
+					return "Cadres discrets";
 
-				case PdfPredefinedStyle.Bold:
+				case PdfPredefinedStyle.StandardFrame:
+					return "Cadres standards";
+
+				case PdfPredefinedStyle.BoldFrame:
 					return "Cadres gras";
 
 				case PdfPredefinedStyle.GreyEvenOdd:
@@ -102,10 +102,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	dans la UI.
 			get
 			{
-				yield return PdfPredefinedStyle.Default;
-				yield return PdfPredefinedStyle.Light;
-				yield return PdfPredefinedStyle.Discreet;
-				yield return PdfPredefinedStyle.Bold;
+				yield return PdfPredefinedStyle.Frameless;
+				yield return PdfPredefinedStyle.LightFrame;
+				yield return PdfPredefinedStyle.StandardFrame;
+				yield return PdfPredefinedStyle.BoldFrame;
 				yield return PdfPredefinedStyle.Contrast;
 				yield return PdfPredefinedStyle.GreyEvenOdd;
 				yield return PdfPredefinedStyle.BlueEvenOdd;

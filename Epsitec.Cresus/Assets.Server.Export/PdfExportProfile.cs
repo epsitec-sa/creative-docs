@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.Watermark             = watermark;
 		}
 
-		public static PdfExportProfile Default = new PdfExportProfile (PdfStyle.Factory (PdfPredefinedStyle.Default), new Size (297.0, 210.0), new Margins (10.0), new Margins (1.0), ExportFont.Arial, 10.0, false, "Crésus Immobilisations", "Epsitec SA", "•   ", "SPECIMEN");
+		public static PdfExportProfile Default = new PdfExportProfile (PdfStyle.Factory (PdfPredefinedStyle.Frameless), new Size (297.0, 210.0), new Margins (10.0), new Margins (1.0), ExportFont.Arial, 10.0, false, "Crésus Immobilisations", "Epsitec SA", "•   ", "SPECIMEN");
 
 		public readonly PdfStyle				Style;
 		public readonly Size					PageSize;
