@@ -94,11 +94,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (this.hasFilter)
 			{
-				var button = new Button
+				var button = new ColoredButton
 				{
 					Parent          = this.mainFrameBox,
 					Text            = "Annuler le groupement",
-					ButtonStyle     = ButtonStyle.Icon,
+					NormalColor     = ColorManager.ToolbarBackgroundColor,
+					HoverColor      = ColorManager.HoverColor,
 					PreferredHeight = 30,
 					Dock            = DockStyle.Bottom,
 				};
