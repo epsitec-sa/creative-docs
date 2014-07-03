@@ -69,6 +69,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public bool								IsMouseInsideParent
+		{
+			get
+			{
+				return this.isMouseInsideParent;
+			}
+			set
+			{
+				this.isMouseInsideParent = value;
+				this.UpdateButtons ();
+			}
+		}
+
 		private void UpdateValue()
 		{
 			using (this.ignoreChanges.Enter ())
@@ -128,6 +141,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdatePropertyState ();
 
 			//	Connexion des événements.
+			this.frameBox.Entered += delegate
+			{
+				this.isMouseInside = true;
+				this.UpdateButtons ();
+				this.OnMouseEnteredOrExited (this.isMouseInside || this.hasFocus);
+			};
+
+			this.frameBox.Exited += delegate
+			{
+				this.isMouseInside = false;
+				this.UpdateButtons ();
+				this.OnMouseEnteredOrExited (this.isMouseInside || this.hasFocus);
+			};
+
 			this.textField.PreProcessing += delegate (object sender, MessageEventArgs e)
 			{
 				if (e.Message.MessageType == MessageType.KeyDown)
@@ -183,12 +210,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.hasFocus = true;
 					this.SetFocus ();
 					this.AdjustHint ();
+					this.OnMouseEnteredOrExited (this.isMouseInside || this.hasFocus);
 				}
 				else  // perdu le focus ?
 				{
 					this.hasFocus = false;
 					this.UpdateValue ();
 					this.ClearHint ();
+					this.OnMouseEnteredOrExited (this.isMouseInside || this.hasFocus);
 				}
 			};
 
@@ -274,6 +303,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
+			this.minusButton     .Visibility = this.AreButtonsVisible;
+			this.plusButton      .Visibility = this.AreButtonsVisible;
+			this.beginButton     .Visibility = this.AreButtonsVisible;
+			this.nowButton       .Visibility = this.AreButtonsVisible;
+			this.endButton       .Visibility = this.AreButtonsVisible;
+			this.predefinedButton.Visibility = this.AreButtonsVisible;
+			this.calendarButton  .Visibility = this.AreButtonsVisible;
+			this.deleteButton    .Visibility = this.AreButtonsVisible;
+
 			var part = this.SelectedPart;
 
 			this.minusButton.Enable = !this.IsReadOnly && part != Part.Unknown;
@@ -320,6 +358,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				button.ButtonStyle = ButtonStyle.ToolItem;
 				button.ActiveState = ActiveState.No;
+			}
+		}
+
+		private bool AreButtonsVisible
+		{
+			get
+			{
+				return this.isMouseInside || this.hasFocus;
 			}
 		}
 
@@ -1000,6 +1046,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler CursorChanged;
+
+
+		protected void OnMouseEnteredOrExited(bool isInside)
+		{
+			this.MouseEnteredOrExited.Raise (this, isInside);
+		}
+
+		public event EventHandler<bool> MouseEnteredOrExited;
 		#endregion
 
 
@@ -1018,5 +1072,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton						deleteButton;
 		private System.DateTime?				value;
 		private bool							hasFocus;
+		private bool							isMouseInside;
+		private bool							isMouseInsideParent;
 	}
 }

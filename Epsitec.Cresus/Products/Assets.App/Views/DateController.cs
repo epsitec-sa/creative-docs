@@ -105,7 +105,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins         = new Margins (this.DateLabelWidth+(this.DateLabelWidth == 0 ? 0 : 10), 0, 0, 0),
 			};
 
-			this.dayButton   = this.CreatePartButton (line,  5, 13);
+			line.Entered += delegate
+			{
+				this.isMouseInside = true;
+				this.dateFieldController.IsMouseInsideParent = this.isMouseInside;
+				this.UpdateButtons ();
+			};
+
+			line.Exited += delegate
+			{
+				this.isMouseInside = false;
+				this.dateFieldController.IsMouseInsideParent = this.isMouseInside;
+				this.UpdateButtons ();
+			};
+
+			this.dayButton   = this.CreatePartButton (line, 5, 13);
 			this.monthButton = this.CreatePartButton (line, 19, 13);
 			this.yearButton  = this.CreatePartButton (line, 33, 23);
 
@@ -211,6 +225,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.UpdateButtons ();
 			};
+
+			this.dateFieldController.MouseEnteredOrExited += delegate (object sender, bool isInside)
+			{
+				this.isMouseInsideChildren = isInside;
+				this.UpdateButtons ();
+			};
 		}
 
 
@@ -223,6 +243,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.dayButton != null)
 			{
+				this.dayButton  .Visibility = this.AreButtonsVisible;
+				this.monthButton.Visibility = this.AreButtonsVisible;
+				this.yearButton .Visibility = this.AreButtonsVisible;
+
 				var part = this.dateFieldController.SelectedPart;
 
 				this.dayButton.Enable   = this.Date != null;
@@ -246,6 +270,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				button.IconUri = Misc.GetResourceIconUri ("Date.UnselectedPart");
+			}
+		}
+
+		private bool AreButtonsVisible
+		{
+			get
+			{
+				return this.isMouseInside || this.isMouseInsideChildren;
 			}
 		}
 
@@ -285,5 +317,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private StaticText									info;
 
 		private System.DateTime?							date;
+		private bool										isMouseInside;
+		private bool										isMouseInsideChildren;
 	}
 }
