@@ -193,12 +193,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Partie gauche.
 			this.objectsToolbar = new TreeTableToolbar
 			{
-				NewCustomization      = new CommandCustomization ("TreeTable.New.Asset", "Nouvel objet d'immobilisation"),
-				DeleteCustomization   = new CommandCustomization (null, "Supprimer l'objet d'immobilisation"),
-				DeselectCustomization = new CommandCustomization (null, "Désélectionner l'objet d'immobilisation"),
-				CopyCustomization     = new CommandCustomization ("TreeTable.Copy.Asset", "Copier l'objet d'immobilisation"),
+				NewCustomization      = new CommandCustomization ("TreeTable.New.Asset",   "Nouvel objet d'immobilisation"),
+				DeleteCustomization   = new CommandCustomization (null,                    "Supprimer l'objet d'immobilisation"),
+				DeselectCustomization = new CommandCustomization (null,                    "Désélectionner l'objet d'immobilisation"),
+				CopyCustomization     = new CommandCustomization ("TreeTable.Copy.Asset",  "Copier l'objet d'immobilisation"),
 				PasteCustomization    = new CommandCustomization ("TreeTable.Paste.Asset", "Coller l'objet d'immobilisation"),
-				ExportCustomization   = new CommandCustomization (null, "Exporter les objets d'immobilisations"),
+				ExportCustomization   = new CommandCustomization (null,                    "Exporter les objets d'immobilisations"),
 			};
 
 			this.objectsToolbar.CreateUI (leftBox);
@@ -290,6 +290,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						this.OnCellDoubleClicked ();
 					}
+				};
+
+				this.controller.DokeySelect += delegate (object sender, KeyCode key)
+				{
+					this.OnDokeySelect (key);
 				};
 			}
 
@@ -460,6 +465,39 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.UpdateController ();
 					this.UpdateToolbar ();
 				}
+			}
+		}
+
+
+		private void OnDokeySelect(KeyCode key)
+		{
+			switch (key)
+			{
+				case KeyCode.Home:
+					this.OnObjectFirst ();
+					this.OnTimelineFirst ();
+					break;
+
+				case KeyCode.End:
+					this.OnObjectLast ();
+					this.OnTimelineLast ();
+					break;
+
+				case KeyCode.ArrowUp:
+					this.OnObjectPrev ();
+					break;
+
+				case KeyCode.ArrowDown:
+					this.OnObjectNext ();
+					break;
+
+				case KeyCode.ArrowLeft:
+					this.OnTimelinePrev ();
+					break;
+
+				case KeyCode.ArrowRight:
+					this.OnTimelineNext ();
+					break;
 			}
 		}
 

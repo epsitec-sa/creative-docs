@@ -273,6 +273,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				case KeyCode.ArrowLeft:
 				case KeyCode.ArrowRight:
+				case KeyCode.ArrowUp:
+				case KeyCode.ArrowDown:
 				case KeyCode.PageUp:
 				case KeyCode.PageDown:
 				case KeyCode.Home:
