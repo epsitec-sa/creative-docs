@@ -59,8 +59,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			if (this.withSamples)
 			{
-				this.fieldAssetValue1 = this.AddSettings (BaseType.Assets, "Valeur remplacement", FieldType.ComputedAmount, 150, null, null, null, 10);
-				this.fieldAssetValue2 = this.AddSettings (BaseType.Assets, "Valeur fiscale",      FieldType.ComputedAmount, 150, null, null, null,  0);
+				this.fieldAssetValue1 = this.AddSettings (BaseType.Assets, "Valeur remplacement", FieldType.ComputedAmount, 120, null, null, null, 10);
+				this.fieldAssetValue2 = this.AddSettings (BaseType.Assets, "Valeur fiscale",      FieldType.ComputedAmount, 120, null, null, null,  0);
 				this.fieldAssetOwner1 = this.AddSettings (BaseType.Assets, "Responsable",         FieldType.GuidPerson,     150, null, null, null, 10);
 				this.fieldAssetOwner2 = this.AddSettings (BaseType.Assets, "Remplaçant",          FieldType.GuidPerson,     150, null, null, null,  0);
 				this.fieldAssetDesc   = this.AddSettings (BaseType.Assets, "Description",         FieldType.String,         120,  380,    5, null, 10);
