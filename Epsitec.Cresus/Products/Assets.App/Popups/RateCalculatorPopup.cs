@@ -24,6 +24,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			});
 
 			this.SetDescriptions (list);
+
+			this.defaultAcceptButtonName = "Calculer";
+			this.defaultControllerRankFocus = 0;
 		}
 
 
@@ -71,16 +74,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-
-		public override void CreateUI()
-		{
-			base.CreateUI ();
-
-			var controller = this.GetController (0);
-			controller.SetFocus ();
-
-			this.okButton.Text = "Calculer";
-		}
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{

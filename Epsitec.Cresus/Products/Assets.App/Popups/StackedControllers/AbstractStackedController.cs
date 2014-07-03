@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public virtual void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
+		public virtual void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
 		{
 		}
 

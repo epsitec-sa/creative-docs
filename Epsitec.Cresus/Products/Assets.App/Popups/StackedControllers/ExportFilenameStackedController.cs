@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -52,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
 		{
 			this.parent = parent;
 			this.description = description;
@@ -65,11 +66,11 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				Value      = this.Value,
 				LabelWidth = 0,
 				EditWidth  = description.Width - ExportFilenameStackedController.browseWidth,
-				TabIndex   = tabIndex,
+				TabIndex   = ++tabIndex,
 			};
 
 			this.controller.CreateUI (controllerFrame);
-			this.CreateBrowser (parent);
+			this.CreateBrowser (parent, ++tabIndex);
 
 			this.controller.ValueEdited += delegate
 			{
@@ -89,15 +90,16 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		private void CreateBrowser(Widget parent)
+		private void CreateBrowser(Widget parent, int tabIndex)
 		{
-			var button = new Button
+			var button = new ColoredButton
 			{
 				Parent           = parent,
 				Text             = "Parcourir...",
+				NormalColor      = ColorManager.ToolbarBackgroundColor,
+				HoverColor       = ColorManager.HoverColor,
 				Dock             = DockStyle.Right,
-				ButtonStyle      = ButtonStyle.Icon,
-				AutoFocus        = false,
+				TabIndex         = tabIndex,
 				PreferredWidth   = ExportFilenameStackedController.browseWidth - 2,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (2, 0, 0, 0),

@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
 		{
 			this.CreateLabel (parent, labelWidth, description);
 			var controllerFrame = this.CreateControllerFrame (parent);
@@ -63,6 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				NormalColor      = ColorManager.ToolbarBackgroundColor,
 				HoverColor       = ColorManager.HoverColor,
 				Dock             = DockStyle.Fill,
+				TabIndex         = ++tabIndex,
 			};
 
 			this.UpdateButton ();
@@ -71,6 +72,11 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			{
 				this.ShowStylePopup ();
 			};
+		}
+
+		public override void SetFocus()
+		{
+			this.button.Focus ();
 		}
 
 
@@ -88,6 +94,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				if (name == "ok")
 				{
 					this.Value = popup.Value;
+					this.SetFocus ();
 				}
 			};
 		}

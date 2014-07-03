@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
 		{
 			this.controller = new DateController (this.accessor)
 			{
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				Date              = this.Value,
 				DateLabelWidth    = labelWidth,
 				DateDescription   = description.Label,
-				TabIndex          = tabIndex,
+				TabIndex          = ++tabIndex,
 			};
 
 			this.controller.CreateUI (parent);

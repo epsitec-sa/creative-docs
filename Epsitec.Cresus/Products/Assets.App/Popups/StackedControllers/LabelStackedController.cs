@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
 		{
 			int h = description.Label.GetTextHeight (description.Width);
 

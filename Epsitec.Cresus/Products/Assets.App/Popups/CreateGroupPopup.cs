@@ -40,6 +40,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			});
 
 			this.SetDescriptions (list);
+
+			this.defaultAcceptButtonName = "Créer";
+			this.defaultControllerRankFocus = 0;
 		}
 
 
@@ -76,18 +79,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public override void CreateUI()
-		{
-			base.CreateUI ();
-
-			var controller = this.GetController (0);
-			controller.SetFocus ();
-		}
-
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			this.okButton.Text = "Créer";
-
 			this.okButton.Enable = !string.IsNullOrEmpty (this.ObjectName) &&
 								   !this.ObjectParent.IsEmpty;
 		}

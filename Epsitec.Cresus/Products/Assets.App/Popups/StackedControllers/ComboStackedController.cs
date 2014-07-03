@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
 		{
 			this.CreateLabel (parent, labelWidth, description);
 			var controllerFrame = this.CreateControllerFrame (parent);
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				Value      = this.Value,
 				LabelWidth = 0,
 				EditWidth  = description.Width,
-				TabIndex   = tabIndex,
+				TabIndex   = ++tabIndex,
 			};
 
 			this.InitializeEnums (description);

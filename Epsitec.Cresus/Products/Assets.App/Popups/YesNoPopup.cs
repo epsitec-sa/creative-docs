@@ -29,12 +29,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			});
 
 			this.SetDescriptions (list);
-		}
 
-		protected override void UpdateWidgets(StackedControllerDescription description)
-		{
-			this.okButton    .Text = "Oui";
-			this.cancelButton.Text = "Non";
+			this.defaultAcceptButtonName = "Oui";
+			this.defaultCancelButtonName = "Non";
+			this.defaultControllerRankFocus = 0;
 		}
 
 

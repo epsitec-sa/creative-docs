@@ -118,6 +118,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.RenderSolid (this.BackColor);
 			}
 
+			if ((this.GetPaintState ()&WidgetPaintState.Focused) != 0)
+			{
+				ColoredButton.DrawFocusedRectangle (graphics, rect);
+			}
+
 			//	Dessine le texte.
 			rect.Deflate (this.HorizontalMargins, 0);  // en cas d'alignement à gauche, comme un TextField !
 
@@ -129,6 +134,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.textLayout.Alignment       = this.ContentAlignment;
 
 			this.textLayout.Paint (rect.BottomLeft, graphics, rect, Color.FromBrightness (0), GlyphPaintStyle.Normal);
+		}
+
+		private static void DrawFocusedRectangle(Graphics graphics, Rectangle rect)
+		{
+			//	Dessine un rectangle pointillé pour indiquer qu'on a le focus.
+			rect.Deflate (2.5);
+			using (var path = new Path (rect))
+			{
+				graphics.PaintDashedOutline (path, 1, 0, 2, CapStyle.Square, Color.FromBrightness (0.4));
+			}
 		}
 
 

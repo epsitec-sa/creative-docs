@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
 		{
 			this.radios.Clear ();
 
@@ -80,7 +80,8 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 					Text            = label,
 					Name            = rank.ToString (System.Globalization.CultureInfo.InvariantCulture),
 					AutoToggle      = false,
-					AutoFocus       = false,
+					TabIndex        = ++tabIndex,
+					Group           = tabIndex.ToString (System.Globalization.CultureInfo.InvariantCulture),
 					PreferredHeight = RadioStackedController.radioHeight,
 					Dock            = DockStyle.Top,
 					Margins         = new Margins (labelWidth, 0, 0, 0),

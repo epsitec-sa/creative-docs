@@ -36,6 +36,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			});
 
 			this.SetDescriptions (list);
+
+			this.defaultAcceptButtonName = "Exporter";
+			this.defaultControllerRankFocus = 1;
 		}
 
 
@@ -77,14 +80,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public override void CreateUI()
-		{
-			base.CreateUI ();
-
-			var controller = this.GetController (1);
-			controller.SetFocus ();
-		}
-
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
 			var controller = this.GetController (1) as ExportFilenameStackedController;
@@ -93,7 +88,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			controller.Value = ExportInstructionsHelpers.ForceExt (controller.Value, ExportInstructionsHelpers.GetFormatExt (this.ExportInstructions.Format));
 			controller.Update ();
 
-			this.okButton.Text = "Exporter";
 			this.okButton.Enable = !string.IsNullOrEmpty (this.ExportInstructions.Filename);
 		}
 	}

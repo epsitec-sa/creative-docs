@@ -40,6 +40,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			});
 
 			this.SetDescriptions (list);
+
+			this.defaultAcceptButtonName = "Copier";
+			this.defaultControllerRankFocus = 0;
 		}
 
 
@@ -76,19 +79,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public override void CreateUI()
-		{
-			base.CreateUI ();
-
-			var controller = this.GetController (0);
-			controller.SetFocus ();
-		}
-
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
 			this.SetVisibility (1, !this.InputState);
 
-			this.okButton.Text = "Copier";
 			this.okButton.Enable = this.IsEnable;
 		}
 

@@ -48,6 +48,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			});
 
 			this.SetDescriptions (list);
+
+			this.defaultAcceptButtonName = "Voir";
+			this.defaultControllerRankFocus = 0;
 		}
 
 
@@ -132,8 +135,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var controller = this.GetController (2) as GroupGuidStackedController;
 				controller.Level = 1;
 			}
-
-			this.okButton.Text = "Voir";
 		}
 
 		protected override void UpdateWidgets(StackedControllerDescription description)

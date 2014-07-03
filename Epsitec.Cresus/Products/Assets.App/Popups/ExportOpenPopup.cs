@@ -28,6 +28,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			});
 
 			this.SetDescriptions (list);
+
+			this.defaultAcceptButtonName = "Ouvrir";
+			this.defaultCancelButtonName = "Fermer";
+			this.defaultControllerRankFocus = 0;
 		}
 
 
@@ -45,13 +49,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value ? 1 : 0;
 			}
-		}
-
-
-		protected override void UpdateWidgets(StackedControllerDescription description)
-		{
-			this.okButton.Text = "Ouvrir";
-			this.cancelButton.Text = "Fermer";
 		}
 	}
 }

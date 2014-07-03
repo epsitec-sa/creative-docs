@@ -104,6 +104,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			});
 
 			this.SetDescriptions (list);
+
+			this.defaultAcceptButtonName = "Exporter";
+			this.defaultControllerRankFocus = 0;
 		}
 
 
@@ -259,12 +262,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					controller.Value = value.Watermark;
 				}
 			}
-		}
-
-
-		protected override void UpdateWidgets(StackedControllerDescription description)
-		{
-			this.okButton.Text = "Exporter";
 		}
 	}
 }

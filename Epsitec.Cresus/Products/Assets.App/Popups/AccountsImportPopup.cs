@@ -37,6 +37,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			});
 
 			this.SetDescriptions (list);
+
+			this.defaultAcceptButtonName = "Importer";
+			this.defaultControllerRankFocus = 1;
 		}
 
 
@@ -78,14 +81,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public override void CreateUI()
-		{
-			base.CreateUI ();
-
-			var controller = this.GetController (1);
-			controller.SetFocus ();
-		}
-
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
 			var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
@@ -93,7 +88,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			controller.Value = this.ImportInstructions.Filename;
 			controller.Update ();
 
-			this.okButton.Text = "Importer";
 			this.okButton.Enable = !string.IsNullOrEmpty (this.ImportInstructions.Filename);
 		}
 	}

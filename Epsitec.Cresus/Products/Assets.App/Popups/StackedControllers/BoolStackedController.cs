@@ -46,14 +46,14 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
 		{
 			var button = new CheckButton
 			{
 				Parent          = parent,
 				Text            = description.Label,
 				ActiveState     = this.Value ? ActiveState.Yes : ActiveState.No,
-				AutoFocus       = false,
+				TabIndex        = ++tabIndex,
 				PreferredHeight = BoolStackedController.checkHeight,
 				Dock            = DockStyle.Top,
 				Margins         = new Margins (labelWidth+10, 0, 0, 0),

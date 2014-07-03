@@ -26,6 +26,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controllers = new List<AbstractStackedController> ();
 			this.controllerVisibleFrames = new List<FrameBox> ();
 			this.controllerHiddenFrames = new List<FrameBox> ();
+
+			this.defaultAcceptButtonName = "D'accord";
+			this.defaultCancelButtonName = "Annuler";
+			this.defaultControllerRankFocus = 0;
 		}
 
 
@@ -94,6 +98,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateButtons ();
 
 			this.UpdateWidgets (null);
+
+			var controller = this.GetController (this.defaultControllerRankFocus);
+			controller.SetFocus ();  // met le focus dans le champ requis
 		}
 
 		private void CreateControllers()
@@ -147,7 +154,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					Visibility      = false,
 				};
 
-				controller.CreateUI (visibleFrame, labelsWidth, ++tabIndex, description);
+				controller.CreateUI (visibleFrame, labelsWidth, ref tabIndex, description);
 
 				controller.ValueChanged += delegate (object sender, StackedControllerDescription d)
 				{
@@ -195,8 +202,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Crée les boutons tout en bas du Popup.
 			var footer = this.CreateFooter ();
 
-			this.okButton     = this.CreateFooterAcceptButton (footer, "ok",     "D'accord");
-			this.cancelButton = this.CreateFooterCancelButton (footer, "cancel", "Annuler");
+			this.okButton     = this.CreateFooterAcceptButton (footer, "ok",     this.defaultAcceptButtonName);
+			this.cancelButton = this.CreateFooterCancelButton (footer, "cancel", this.defaultCancelButtonName);
 		}
 
 
@@ -232,6 +239,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly List<FrameBox>						controllerVisibleFrames;
 		private readonly List<FrameBox>						controllerHiddenFrames;
 
+		protected string									defaultAcceptButtonName;
+		protected string									defaultCancelButtonName;
+		protected int										defaultControllerRankFocus;
 		protected string									title;
 		protected Button									okButton;
 		protected Button									cancelButton;
