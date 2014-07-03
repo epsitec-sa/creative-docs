@@ -103,6 +103,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.OnCompactOrExpand (this.treeTableController.TopVisibleRow + row);
 			};
+
+			this.treeTableController.DokeySelect += delegate (object sender, KeyCode key)
+			{
+				this.OnDokeySelect (key);
+			};
 		}
 
 		private void CreateGraphicControllerUI(Widget parent)
@@ -178,6 +183,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Export);
 			ExportHelpers<T>.StartExportProcess (target, this.accessor, this.dataFiller, this.treeTableController.ColumnsState);
+		}
+
+
+		private void OnDokeySelect(KeyCode key)
+		{
+			switch (key)
+			{
+				case KeyCode.Home:
+					this.OnFirst ();
+					break;
+
+				case KeyCode.ArrowUp:
+				case KeyCode.PageUp:
+					this.OnPrev ();
+					break;
+
+				case KeyCode.ArrowDown:
+				case KeyCode.PageDown:
+					this.OnNext ();
+					break;
+
+				case KeyCode.End:
+					this.OnLast ();
+					break;
+			}
 		}
 
 

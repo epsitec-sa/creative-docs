@@ -25,6 +25,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public TreeTable(int rowHeight, int headerHeight, int footerHeight)
 		{
+			//	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			//	Je fais tout comme AbstractTextField, et pourtant il n'y a rien à faire
+			//	pour que ce widget réagisse aux touches flèches. ProcessMessage avec
+			//	MessageType.KeyDown ne vient jamais.
+			//	Si TreeTable hérite de AbstractTextField (TreeTable : AbstractTextField),
+			//	c'est ok, mais alors le widget n'a pas le bon curseur pour la souris (IBeam).
+			//	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+			this.AutoEngage = false;
+			this.AutoFocus  = true;
+			//-this.AutoRepeat = true;
+			//-this.AutoDoubleClick = true;
+			//-
+			this.InternalState |= WidgetInternalState.Focusable;
+			this.InternalState |= WidgetInternalState.Engageable;
+
 			this.rowHeight    = rowHeight;
 			this.headerHeight = headerHeight;
 			this.footerHeight = footerHeight;
@@ -451,26 +467,33 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if (message.IsMouseType)
+			switch (message.MessageType)
 			{
-				if (message.MessageType == MessageType.MouseDown)
-				{
+				case MessageType.MouseDown:
 					this.ProcessMouseDown (pos);
 					this.ProcessMouseClick (pos);
-				}
-				else if (message.MessageType == MessageType.MouseMove)
-				{
+					break;
+
+				case MessageType.MouseMove:
 					this.ProcessMouseMove (pos);
-				}
-				else if (message.MessageType == MessageType.MouseUp)
-				{
+					break;
+
+				case MessageType.MouseUp:
 					this.ProcessMouseUp (pos);
 					this.ProcessMouseMove (pos);
-				}
-				else if (message.MessageType == MessageType.MouseLeave)
-				{
+					break;
+
+				case MessageType.MouseLeave:
 					this.ProcessMouseLeave (pos);
-				}
+					break;
+
+				case MessageType.KeyDown:
+					if (this.ProcessKey (message.KeyCode))
+					{
+						message.Captured = true;
+						message.Consumer = this;
+					}
+					break;
 			}
 		
 			base.ProcessMessage (message, pos);
@@ -592,6 +615,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.SetHilitedHoverRow (-1);
 
 			MouseCursorManager.Clear ();
+		}
+
+		private bool ProcessKey(KeyCode keyCode)
+		{
+			switch (keyCode)
+			{
+				case KeyCode.ArrowUp:
+				case KeyCode.ArrowDown:
+				case KeyCode.PageUp:
+				case KeyCode.PageDown:
+				case KeyCode.Home:
+				case KeyCode.End:
+					this.OnDokeySelect (keyCode);
+					return true;
+
+				default:
+					return false;
+			}
 		}
 
 
@@ -777,6 +818,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 		
 		public event EventHandler<int, NodeType> TreeButtonClicked;
+
+
+		private void OnDokeySelect(KeyCode key)
+		{
+			this.DokeySelect.Raise (this, key);
+		}
+
+		public event EventHandler<KeyCode> DokeySelect;
 		#endregion
 
 

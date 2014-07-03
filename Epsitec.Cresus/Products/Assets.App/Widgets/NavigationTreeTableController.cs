@@ -67,6 +67,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.OnTreeButtonClicked (row, type);
 			};
 
+			this.treeTable.DokeySelect += delegate (object sender, KeyCode key)
+			{
+				this.OnDokeySelect (key);
+			};
+
 			this.scroller.ValueChanged += delegate
 			{
 				this.OnContentChanged (false);
@@ -243,6 +248,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public event EventHandler<int, NodeType> TreeButtonClicked;
+
+
+		private void OnDokeySelect(KeyCode key)
+		{
+			this.DokeySelect.Raise (this, key);
+		}
+
+		public event EventHandler<KeyCode> DokeySelect;
 		#endregion
 
 

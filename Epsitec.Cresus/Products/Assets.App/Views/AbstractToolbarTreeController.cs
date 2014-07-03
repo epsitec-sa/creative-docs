@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-		private void OnFirst()
+		protected void OnFirst()
 		{
 			var index = this.FirstRowIndex;
 
@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnPrev()
+		protected void OnPrev()
 		{
 			var index = this.PrevRowIndex;
 
@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnNext()
+		protected void OnNext()
 		{
 			var index = this.NextRowIndex;
 
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnLast()
+		protected void OnLast()
 		{
 			var index = this.LastRowIndex;
 
