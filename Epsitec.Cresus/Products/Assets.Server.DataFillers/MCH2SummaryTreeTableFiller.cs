@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
@@ -214,13 +215,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private int GetColumnWidth(Column column)
 		{
-			if (column == MCH2SummaryTreeTableFiller.Column.Name)
+			switch (column)
 			{
-				return 200;
-			}
-			else
-			{
-				return 100;
+				case Column.Name:
+					return 200;
+
+				case Column.InitialState:
+				case Column.FinalState:
+					return 150;
+
+				default:
+					return 100;
 			}
 		}
 
@@ -244,7 +249,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return "Catégorie";  // nom de l'objet d'immobilisation, selon MCH2
 
 				case Column.InitialState:
-					return "Etat initial";
+					var id = TypeConverters.DateToString (this.InitialTimestamp.Date);
+					return string.Format ("Etat initial au {0}", id);
 
 				case Column.Inputs:
 					return "Entrées";
@@ -256,7 +262,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return "Sorties";
 
 				case Column.FinalState:
-					return "Etat final";
+					var fd = TypeConverters.DateToString (this.FinalTimestamp.Date);
+					return string.Format ("Etat final au {0}", fd);
 
 				case Column.AmortizationsAuto:
 					return "Amort. ord.";

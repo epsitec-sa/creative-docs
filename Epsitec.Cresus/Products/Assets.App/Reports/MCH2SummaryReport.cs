@@ -85,6 +85,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.DataFiller.InitialTimestamp = this.Params.InitialTimestamp;
 			this.DataFiller.FinalTimestamp   = this.Params.FinalTimestamp;
 
+			//	On réinitialise ici les colonnes, car les dates InitialTimestamp et FinalTimestamp
+			//	peuvent avoir changé, et les colonnes doivent afficher "Etat initial au 01.01.2014"
+			//	et "Etat final au 31.12.2014".
+			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
+
 			var e = this.DataFiller.UsedExtractionInstructions.ToList ();
 			this.NodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
 
