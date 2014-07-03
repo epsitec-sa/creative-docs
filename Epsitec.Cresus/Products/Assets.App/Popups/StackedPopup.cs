@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -243,7 +244,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected string									defaultCancelButtonName;
 		protected int										defaultControllerRankFocus;
 		protected string									title;
-		protected Button									okButton;
-		protected Button									cancelButton;
+		protected ColoredButton								okButton;
+		protected ColoredButton								cancelButton;
 	}
 }

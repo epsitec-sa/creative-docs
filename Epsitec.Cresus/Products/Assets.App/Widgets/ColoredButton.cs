@@ -114,11 +114,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else
 			{
+				var color = this.BackColor;
+
+				if (!this.Enable)
+				{
+					color = color.Delta (0.1);
+				}
+
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.BackColor);
+				graphics.RenderSolid (color);
 			}
 
-			if ((this.GetPaintState ()&WidgetPaintState.Focused) != 0)
+			if ((this.GetPaintState () & WidgetPaintState.Focused) != 0)
 			{
 				ColoredButton.DrawFocusedRectangle (graphics, rect);
 			}
@@ -133,7 +140,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.textLayout.BreakMode       = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 			this.textLayout.Alignment       = this.ContentAlignment;
 
-			this.textLayout.Paint (rect.BottomLeft, graphics, rect, Color.FromBrightness (0), GlyphPaintStyle.Normal);
+			double brightness = this.Enable ? 0.0 : 0.7;
+			this.textLayout.Paint (rect.BottomLeft, graphics, rect, Color.FromBrightness (brightness), GlyphPaintStyle.Normal);
 		}
 
 		private static void DrawFocusedRectangle(Graphics graphics, Rectangle rect)

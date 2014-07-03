@@ -190,17 +190,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		protected Button CreateFooterAcceptButton(FrameBox parent, string name, string text, string tooltip = null)
+		protected ColoredButton CreateFooterAcceptButton(FrameBox parent, string name, string text, string tooltip = null)
 		{
 			return this.CreateFooterButton (parent, name, text, tooltip, true);
 		}
 
-		protected Button CreateFooterCancelButton(FrameBox parent, string name, string text, string tooltip = null)
+		protected ColoredButton CreateFooterCancelButton(FrameBox parent, string name, string text, string tooltip = null)
 		{
 			return this.CreateFooterButton (parent, name, text, tooltip, false);
 		}
 
-		private Button CreateFooterButton(FrameBox parent, string name, string text, string tooltip, bool accept)
+		private ColoredButton CreateFooterButton(FrameBox parent, string name, string text, string tooltip, bool accept)
 		{
 			AnchorStyles	anchor;
 			int				width;
@@ -219,12 +219,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				shortcut = Epsitec.Common.Widgets.Feel.Factory.Active.CancelShortcut;
 			}
 
-			var button = new Button
+			var button = new ColoredButton
 			{
 				Parent         = parent,
 				Name           = name,
 				Text           = text,
-				ButtonStyle    = ButtonStyle.Icon,
+				NormalColor    = ColorManager.ToolbarBackgroundColor,
+				HoverColor     = ColorManager.HoverColor,
 				AutoFocus      = false,
 				Anchor         = anchor,
 				PreferredWidth = width,
