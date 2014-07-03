@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -96,34 +97,37 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void CreateButtons()
 		{
+			//	Crée les boutons de bas en haut.
 			this.buttonsFrame.Children.Clear ();
 
 			int dx = NewEventPopup.buttonWidth;
 			int dy = NewEventPopup.buttonHeight;
 			int y = 0;
 
+			int tabIndex = 100;
 			foreach (var desc in this.ButtonDescriptions.Reverse ())
 			{
-				this.CreateButton (dx, dy, desc.Type, desc.Text, desc.Tooltip, desc.Enable);
+				this.CreateButton (dx, dy, desc.Type, desc.Text, desc.Tooltip, desc.Enable, tabIndex--);
 				y += dy + NewEventPopup.buttonGap;
 			}
 		}
 
-		private Button CreateButton(int dx, int dy, EventType type, string text, string tooltip, bool enable)
+		private ColoredButton CreateButton(int dx, int dy, EventType type, string text, string tooltip, bool enable, int tabIndex)
 		{
 			string name = type.ToString();
 
-			var button = new Button
+			var button = new ColoredButton
 			{
 				Parent        = this.buttonsFrame,
 				Name          = name,
 				Text          = text,
-				ButtonStyle   = ButtonStyle.Icon,
-				AutoFocus     = false,
+				NormalColor   = ColorManager.ToolbarBackgroundColor,
+				HoverColor    = ColorManager.HoverColor,
 				Enable        = enable,
 				Dock          = DockStyle.Bottom,
 				PreferredSize = new Size (dx, dy),
 				Margins       = new Margins (0, 0, NewEventPopup.buttonGap, 0),
+				TabIndex      = tabIndex,
 			};
 
 			if (!string.IsNullOrEmpty (tooltip))
