@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 							break;
 					}
 
-					s = (rate.Value*100).ToString (format);
+					s = (rate.Value*100).ToString (format, System.Globalization.CultureInfo.InvariantCulture);
 				}
 
 				while (s.Length > 1 && s.EndsWith ("0"))
@@ -275,12 +275,12 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 			{
 				if (fracCount.HasValue)
 				{
-					string format = string.Format ("F{0}", fracCount.Value.ToString ());
+					string format = string.Format ("F{0}", fracCount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
 					return value.Value.ToString (format);
 				}
 				else
 				{
-					return value.Value.ToString ();
+					return value.Value.ToString (System.Globalization.CultureInfo.InvariantCulture);
 				}
 			}
 			else
@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 		{
 			if (value.HasValue)
 			{
-				return value.Value.ToString ();
+				return value.Value.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			}
 			else
 			{
