@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
@@ -25,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasMoveOperations = false;
 
 			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Asset",   "Nouvel objet d'immobilisation");
-			this.DeleteCustomization   = new CommandCustomization (null,                    "Supprimer l'objet d'immobilisation");
+			this.DeleteCustomization   = new CommandCustomization ("TreeTable.Delete",      "Supprimer l'objet d'immobilisation");
 			this.DeselectCustomization = new CommandCustomization (null,                    "Désélectionner l'objet d'immobilisation");
 			this.CopyCustomization     = new CommandCustomization ("TreeTable.Copy.Asset",  "Copier l'objet d'immobilisation");
 			this.PasteCustomization    = new CommandCustomization ("TreeTable.Paste.Asset", "Coller l'objet d'immobilisation");
@@ -288,7 +289,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnUpdateAfterCreate (guid, EventType.Input, this.selectedTimestamp.GetValueOrDefault ());
 		}
 
-	
+
+		protected override void ShowContextMenu(Point pos)
+		{
+			//	Affiche le menu contextuel.
+			var popup = new MenuPopup ();
+
+			int n = popup.AddItem (this.NewCustomization,    this.toolbar.GetCommandState (ToolbarCommand.New));
+			int d = popup.AddItem (this.DeleteCustomization, this.toolbar.GetCommandState (ToolbarCommand.Delete));
+			        popup.AddItem (CommandCustomization.Empty);
+			int c = popup.AddItem (this.CopyCustomization,   this.toolbar.GetCommandState (ToolbarCommand.Copy));
+			int p = popup.AddItem (this.PasteCustomization,  this.toolbar.GetCommandState (ToolbarCommand.Paste));
+
+			popup.Create (this.treeTableFrame, pos, leftOrRight: true);
+
+			popup.ItemClicked += delegate (object sender, int rank)
+			{
+				if (rank == n)
+				{
+					this.OnNew ();
+				}
+				else if (rank == d)
+				{
+					this.OnDelete ();
+				}
+				else if (rank == c)
+				{
+					this.OnCopy ();
+				}
+				else if (rank == p)
+				{
+					this.OnPaste ();
+				}
+			};
+		}
+
+
 		protected override void UpdateToolbar()
 		{
 			base.UpdateToolbar ();

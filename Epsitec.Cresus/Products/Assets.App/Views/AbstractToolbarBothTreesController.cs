@@ -7,7 +7,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -200,20 +199,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void ShowContextMenu(Point pos)
+		protected virtual void ShowContextMenu(Point pos)
 		{
-			//	Affiche le menu contextuel.
-			var popup = new SimplePopup ();
-
-			popup.Items.Add ("Rouge");
-			popup.Items.Add ("Vert");
-			popup.Items.Add ("Bleu");
-
-			popup.Create (this.treeTableFrame, pos, leftOrRight: true);
-
-			popup.ItemClicked += delegate (object sender, int rank)
-			{
-			};
 		}
 
 		private void OnDokeySelect(KeyCode key)
