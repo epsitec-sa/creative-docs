@@ -52,6 +52,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.OnRowDoubleClicked (row);
 			};
 
+			this.treeTable.RowRightClicked += delegate (object sender, int row, int column, Point pos)
+			{
+				this.OnRowRightClicked (row, column, pos);
+			};
+
 			this.treeTable.ContentChanged += delegate (object sender, bool crop)
 			{
 				this.OnContentChanged (crop);
@@ -231,6 +236,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public event EventHandler<int> RowDoubleClicked;
+
+
+		private void OnRowRightClicked(int row, int column, Point pos)
+		{
+			this.RowRightClicked.Raise (this, row, column, pos);
+		}
+
+		public event EventHandler<int, int, Point> RowRightClicked;
 
 
 		private void OnContentChanged(bool crop)

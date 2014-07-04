@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
@@ -97,6 +98,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.VisibleSelectedRow = this.treeTableController.TopVisibleRow + row;
 				this.OnRowDoubleClicked (this.VisibleSelectedRow);
+			};
+
+			this.treeTableController.RowRightClicked += delegate (object sender, int row, int column, Point pos)
+			{
+				this.VisibleSelectedRow = this.treeTableController.TopVisibleRow + row;
 			};
 
 			this.treeTableController.TreeButtonClicked += delegate (object sender, int row, NodeType type)

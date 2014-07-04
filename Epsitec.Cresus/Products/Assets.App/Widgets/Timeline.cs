@@ -164,6 +164,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.OnCellDoubleClicked (row.Index, rank);
 					this.Focus ();  // pour que les touches flèches fonctionnent
 				};
+
+				row.CellRightClicked += delegate (object sender, int rank, Point pos)
+				{
+					this.OnCellRightClicked (row.Index, rank, pos);
+					this.Focus ();  // pour que les touches flèches fonctionnent
+				};
 			}
 
 			this.UpdateChildrensGeometry ();
@@ -409,6 +415,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public event EventHandler<int, int> CellDoubleClicked;
+
+
+		private void OnCellRightClicked(int row, int rank, Point pos)
+		{
+			this.CellRightClicked.Raise (this, row, rank, pos);
+		}
+
+		public event EventHandler<int, int, Point> CellRightClicked;
 
 
 		private void OnDokeySelect(KeyCode key)

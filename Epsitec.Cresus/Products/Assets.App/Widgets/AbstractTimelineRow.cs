@@ -117,7 +117,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void OnClicked(MessageEventArgs e)
 		{
-			this.OnCellClicked (this.detectedHoverRank);
+			if ((e.Message.Button & MouseButtons.Right) == 0)
+			{
+				this.OnCellClicked (this.detectedHoverRank);
+			}
+			else
+			{
+				this.OnCellRightClicked (this.detectedHoverRank, e.Point);
+			}
 			base.OnClicked (e);
 		}
 
@@ -295,6 +302,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public event EventHandler<int> CellDoubleClicked;
+
+
+		private void OnCellRightClicked(int rank, Point pos)
+		{
+			this.CellRightClicked.Raise (this, rank, pos);
+		}
+
+		public event EventHandler<int, Point> CellRightClicked;
 
 
 		private void OnCellHovered(int rank)

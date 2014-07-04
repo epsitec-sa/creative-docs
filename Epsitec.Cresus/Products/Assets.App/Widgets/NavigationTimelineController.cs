@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 
@@ -42,6 +43,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.timeline.CellDoubleClicked += delegate (object sender, int row, int rank)
 			{
 				this.OnCellDoubleClicked (row, rank);
+			};
+
+			this.timeline.CellRightClicked += delegate (object sender, int row, int rank, Point pos)
+			{
+				this.OnCellRightClicked (row, rank, pos);
 			};
 
 			this.timeline.DokeySelect += delegate (object sender, KeyCode key)
@@ -274,6 +280,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public event EventHandler<int, int> CellDoubleClicked;
+
+
+		private void OnCellRightClicked(int row, int rank, Point pos)
+		{
+			this.CellRightClicked.Raise (this, row, rank, pos);
+		}
+
+		public event EventHandler<int, int, Point> CellRightClicked;
 
 
 		private void OnContentChanged(bool crop)

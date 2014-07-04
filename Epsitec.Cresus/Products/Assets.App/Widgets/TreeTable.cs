@@ -459,17 +459,30 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
-					this.ProcessMouseDown (pos);
-					this.ProcessMouseClick (pos);
+					if ((message.Button & MouseButtons.Right) == 0)
+					{
+						this.ProcessMouseDown (pos);
+						this.ProcessMouseClick (pos);
+					}
+					else
+					{
+						this.ProcessMouseRightClick (pos);
+					}
 					break;
 
 				case MessageType.MouseMove:
-					this.ProcessMouseMove (pos);
+					if ((message.Button & MouseButtons.Right) == 0)
+					{
+						this.ProcessMouseMove (pos);
+					}
 					break;
 
 				case MessageType.MouseUp:
-					this.ProcessMouseUp (pos);
-					this.ProcessMouseMove (pos);
+					if ((message.Button & MouseButtons.Right) == 0)
+					{
+						this.ProcessMouseUp (pos);
+						this.ProcessMouseMove (pos);
+					}
 					break;
 
 				case MessageType.MouseLeave:
@@ -588,6 +601,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (row != -1)
 			{
 				this.OnRowClicked (row, this.DetectColumn (pos));
+				this.Focus ();  // pour que les touches flèches fonctionnent
+			}
+		}
+
+		private void ProcessMouseRightClick(Point pos)
+		{
+			int row = this.DetectRow (pos);
+			if (row != -1)
+			{
+				this.OnRowRightClicked (row, this.DetectColumn (pos), pos);
 				this.Focus ();  // pour que les touches flèches fonctionnent
 			}
 		}
@@ -785,6 +808,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public event EventHandler<int> RowDoubleClicked;
+
+
+		private void OnRowRightClicked(int row, int column, Point pos)
+		{
+			this.RowRightClicked.Raise (this, row, column, pos);
+		}
+
+		public event EventHandler<int, int, Point> RowRightClicked;
 
 
 		private void OnContentChanged(bool crop)

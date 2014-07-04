@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
@@ -489,6 +490,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					int sel = this.controller.LeftVisibleCell + rank;
 					this.OnCellDoubleClicked (sel);
+				}
+			};
+
+			this.controller.CellRightClicked += delegate (object sender, int row, int rank, Point pos)
+			{
+				if (row == this.GlyphRow)
+				{
+					this.SelectedCell = this.controller.LeftVisibleCell + rank;
 				}
 			};
 
