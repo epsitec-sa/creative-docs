@@ -16,23 +16,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		protected override void CreateCommands()
 		{
-			this.SetCommand (ToolbarCommand.Labels,      "Timeline.Labels",       "Afficher les noms des lignes");
-			this.SetCommand (ToolbarCommand.CompactAll,  "Timeline.Compacted",    "Affichage compact");
-			this.SetCommand (ToolbarCommand.ExpandAll,   "Timeline.Expanded",     "Affichage étendu");
-			this.SetCommand (ToolbarCommand.WeeksOfYear, "Timeline.WeeksOfYear",  "Afficher les numéros des semaines");
-			this.SetCommand (ToolbarCommand.DaysOfWeek,  "Timeline.DaysOfWeek",   "Afficher les jours de la semaine");
-			this.SetCommand (ToolbarCommand.Graph,       "Timeline.Graph",        "Afficher les graphique des valeurs");
-			this.SetCommand (ToolbarCommand.First,       "Timeline.First",        "Retourner sur le premier événement");
-			this.SetCommand (ToolbarCommand.Prev,        "Timeline.Prev",         "Reculer sur l'événement précédent");
-			this.SetCommand (ToolbarCommand.Next,        "Timeline.Next",         "Avancer sur l'événement suivant");
-			this.SetCommand (ToolbarCommand.Last,        "Timeline.Last",         "Avancer sur le dernier événement");
-			this.SetCommand (ToolbarCommand.Now,         "Timeline.Now",          "Aller à la date du jour");
-			this.SetCommand (ToolbarCommand.Date,        "Timeline.Date",         "Aller à une date à choix");
-			this.SetCommand (ToolbarCommand.New,         "TreeTable.New.Event",   "Nouvel événement");
-			this.SetCommand (ToolbarCommand.Delete ,     "Timeline.Delete",       "Supprimer l'événement");
-			this.SetCommand (ToolbarCommand.Deselect,    "Timeline.Deselect",     "Désélectionner l'événement");
-			this.SetCommand (ToolbarCommand.Copy,        "TreeTable.Copy.Event",  "Copier l'événement");
-			this.SetCommand (ToolbarCommand.Paste,       "TreeTable.Paste.Event", "Coller l'événement");
+			this.SetCommandDescription (ToolbarCommand.Labels,      "Timeline.Labels",       "Afficher les noms des lignes");
+			this.SetCommandDescription (ToolbarCommand.CompactAll,  "Timeline.Compacted",    "Affichage compact");
+			this.SetCommandDescription (ToolbarCommand.ExpandAll,   "Timeline.Expanded",     "Affichage étendu");
+			this.SetCommandDescription (ToolbarCommand.WeeksOfYear, "Timeline.WeeksOfYear",  "Afficher les numéros des semaines");
+			this.SetCommandDescription (ToolbarCommand.DaysOfWeek,  "Timeline.DaysOfWeek",   "Afficher les jours de la semaine");
+			this.SetCommandDescription (ToolbarCommand.Graph,       "Timeline.Graph",        "Afficher les graphique des valeurs");
+			this.SetCommandDescription (ToolbarCommand.First,       "Timeline.First",        "Retourner sur le premier événement");
+			this.SetCommandDescription (ToolbarCommand.Prev,        "Timeline.Prev",         "Reculer sur l'événement précédent");
+			this.SetCommandDescription (ToolbarCommand.Next,        "Timeline.Next",         "Avancer sur l'événement suivant");
+			this.SetCommandDescription (ToolbarCommand.Last,        "Timeline.Last",         "Avancer sur le dernier événement");
+			this.SetCommandDescription (ToolbarCommand.Now,         "Timeline.Now",          "Aller à la date du jour");
+			this.SetCommandDescription (ToolbarCommand.Date,        "Timeline.Date",         "Aller à une date à choix");
+			this.SetCommandDescription (ToolbarCommand.New,         "TreeTable.New.Event",   "Nouvel événement");
+			this.SetCommandDescription (ToolbarCommand.Delete ,     "Timeline.Delete",       "Supprimer l'événement");
+			this.SetCommandDescription (ToolbarCommand.Deselect,    "Timeline.Deselect",     "Désélectionner l'événement");
+			this.SetCommandDescription (ToolbarCommand.Copy,        "TreeTable.Copy.Event",  "Copier l'événement");
+			this.SetCommandDescription (ToolbarCommand.Paste,       "TreeTable.Paste.Event", "Coller l'événement");
 		}
 
 

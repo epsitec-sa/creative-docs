@@ -80,13 +80,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommand (ToolbarCommand.New,      "TreeTable.New.Category", "Nouvelle catégorie d'immobilisation");
-			this.toolbar.SetCommand (ToolbarCommand.Delete,   "TreeTable.Delete",       "Supprimer la catégorie d'immobilisation");
-			this.toolbar.SetCommand (ToolbarCommand.Deselect, null,                     "Désélectionner la catégorie d'immobilisation");
-			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy",         "Copier la catégorie d'immobilisation");
-			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste",        "Coller la catégorie d'immobilisation");
-			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                     "Exporter les catégories d'immobilisations");
-			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandDescription.Empty);
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Category", "Nouvelle catégorie d'immobilisation");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",       "Supprimer la catégorie d'immobilisation");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                     "Désélectionner la catégorie d'immobilisation");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",         "Copier la catégorie d'immobilisation");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",        "Coller la catégorie d'immobilisation");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                     "Exporter les catégories d'immobilisations");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()

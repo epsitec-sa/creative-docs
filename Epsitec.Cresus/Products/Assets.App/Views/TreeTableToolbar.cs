@@ -14,27 +14,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		protected override void CreateCommands()
 		{
-			this.SetCommand (ToolbarCommand.Filter,     "TreeTable.Filter",     "Grouper les objets selon");
-			this.SetCommand (ToolbarCommand.Graphic,    "TreeTable.Graphic",    "Représentation graphique");
-			this.SetCommand (ToolbarCommand.First,      "TreeTable.First",      "Retourner sur la première ligne");
-			this.SetCommand (ToolbarCommand.Prev,       "TreeTable.Prev",       "Reculer sur la ligne précédente");
-			this.SetCommand (ToolbarCommand.Next,       "TreeTable.Next",       "Avancer sur la ligne suivante");
-			this.SetCommand (ToolbarCommand.Last,       "TreeTable.Last",       "Avancer sur la dernière ligne");
-			this.SetCommand (ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacter tout");
-			this.SetCommand (ToolbarCommand.CompactOne, "TreeTable.CompactOne", "Compacter un niveau");
-			this.SetCommand (ToolbarCommand.ExpandOne,  "TreeTable.ExpandOne",  "Etendre un niveau");
-			this.SetCommand (ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etendre tout");
-			this.SetCommand (ToolbarCommand.MoveTop,    "TreeTable.MoveTop",    "Déplacer la ligne au sommet");
-			this.SetCommand (ToolbarCommand.MoveUp,     "TreeTable.MoveUp",     "Monter la ligne");
-			this.SetCommand (ToolbarCommand.MoveDown,   "TreeTable.MoveDown",   "Descendre la ligne");
-			this.SetCommand (ToolbarCommand.MoveBottom, "TreeTable.MoveBottom", "Déplacer la ligne à la fin");
-			this.SetCommand (ToolbarCommand.New,        "TreeTable.New",        "Nouvelle ligne");
-			this.SetCommand (ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
-			this.SetCommand (ToolbarCommand.Deselect,   "TreeTable.Deselect",   "Désélectionner la ligne");
-			this.SetCommand (ToolbarCommand.Copy,       "TreeTable.Copy",       "Copier");
-			this.SetCommand (ToolbarCommand.Paste,      "TreeTable.Paste",      "Coller");
-			this.SetCommand (ToolbarCommand.Export,     "TreeTable.Export",     "Exporter");
-			this.SetCommand (ToolbarCommand.Import,     "TreeTable.Import",     "Importer");
+			this.SetCommandDescription (ToolbarCommand.Filter,     "TreeTable.Filter",     "Grouper les objets selon");
+			this.SetCommandDescription (ToolbarCommand.Graphic,    "TreeTable.Graphic",    "Représentation graphique");
+			this.SetCommandDescription (ToolbarCommand.First,      "TreeTable.First",      "Retourner sur la première ligne");
+			this.SetCommandDescription (ToolbarCommand.Prev,       "TreeTable.Prev",       "Reculer sur la ligne précédente");
+			this.SetCommandDescription (ToolbarCommand.Next,       "TreeTable.Next",       "Avancer sur la ligne suivante");
+			this.SetCommandDescription (ToolbarCommand.Last,       "TreeTable.Last",       "Avancer sur la dernière ligne");
+			this.SetCommandDescription (ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacter tout");
+			this.SetCommandDescription (ToolbarCommand.CompactOne, "TreeTable.CompactOne", "Compacter un niveau");
+			this.SetCommandDescription (ToolbarCommand.ExpandOne,  "TreeTable.ExpandOne",  "Etendre un niveau");
+			this.SetCommandDescription (ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etendre tout");
+			this.SetCommandDescription (ToolbarCommand.MoveTop,    "TreeTable.MoveTop",    "Déplacer la ligne au sommet");
+			this.SetCommandDescription (ToolbarCommand.MoveUp,     "TreeTable.MoveUp",     "Monter la ligne");
+			this.SetCommandDescription (ToolbarCommand.MoveDown,   "TreeTable.MoveDown",   "Descendre la ligne");
+			this.SetCommandDescription (ToolbarCommand.MoveBottom, "TreeTable.MoveBottom", "Déplacer la ligne à la fin");
+			this.SetCommandDescription (ToolbarCommand.New,        "TreeTable.New",        "Nouvelle ligne");
+			this.SetCommandDescription (ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
+			this.SetCommandDescription (ToolbarCommand.Deselect,   "TreeTable.Deselect",   "Désélectionner la ligne");
+			this.SetCommandDescription (ToolbarCommand.Copy,       "TreeTable.Copy",       "Copier");
+			this.SetCommandDescription (ToolbarCommand.Paste,      "TreeTable.Paste",      "Coller");
+			this.SetCommandDescription (ToolbarCommand.Export,     "TreeTable.Export",     "Exporter");
+			this.SetCommandDescription (ToolbarCommand.Import,     "TreeTable.Import",     "Importer");
 		}
 
 
@@ -315,22 +315,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			yield return new ButtonState (this.separator4, sep4);
 
-			if (!this.GetCommand (ToolbarCommand.Copy).IsEmpty)
+			if (!this.GetCommandDescription (ToolbarCommand.Copy).IsEmpty)
 			{
 				yield return new ButtonState (this.buttonCopy, copyPaste);
 			}
 
-			if (!this.GetCommand (ToolbarCommand.Paste).IsEmpty)
+			if (!this.GetCommandDescription (ToolbarCommand.Paste).IsEmpty)
 			{
 				yield return new ButtonState (this.buttonPaste, copyPaste);
 			}
 
-			if (!this.GetCommand (ToolbarCommand.Export).IsEmpty)
+			if (!this.GetCommandDescription (ToolbarCommand.Export).IsEmpty)
 			{
 				yield return new ButtonState (this.buttonExport, copyPaste);
 			}
 
-			if (!this.GetCommand (ToolbarCommand.Import).IsEmpty)
+			if (!this.GetCommandDescription (ToolbarCommand.Import).IsEmpty)
 			{
 				yield return new ButtonState (this.buttonImport, copyPaste);
 			}
@@ -340,7 +340,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.CopyPasteGroup.Where (x => !this.GetCommand (x).IsEmpty).Count ();
+				return this.CopyPasteGroup.Where (x => !this.GetCommandDescription (x).IsEmpty).Count ();
 			}
 		}
 

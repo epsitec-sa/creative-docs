@@ -27,12 +27,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public abstract FrameBox CreateUI(Widget parent);
 
 
-		public void SetCommand(ToolbarCommand command, string icon, string tooltip)
+		public void SetCommandDescription(ToolbarCommand command, string icon, string tooltip)
 		{
 			//	Modifie la description d'une commande. On peut modifier ainsi une
 			//	commande déjà définie. Si 'icon' ou 'tooltip' sont null, cela
 			//	signifie qu'on conserve les anciennes valeurs.
-			var current = this.GetCommand (command);
+			var current = this.GetCommandDescription (command);
 
 			if (string.IsNullOrEmpty (icon) && !current.IsEmpty)
 			{
@@ -44,15 +44,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 				tooltip = current.Tooltip;
 			}
 
-			this.SetCommand (command, new CommandDescription (icon, tooltip));
+			this.SetCommandDescription (command, new CommandDescription (icon, tooltip));
 		}
 
-		public void SetCommand(ToolbarCommand command, CommandDescription desc)
+		public void SetCommandDescription(ToolbarCommand command, CommandDescription desc)
 		{
 			this.commandDescriptions[command] = desc;
 		}
 
-		public CommandDescription GetCommand(ToolbarCommand command)
+		public CommandDescription GetCommandDescription(ToolbarCommand command)
 		{
 			//	Retourne la description d'une commande.
 			CommandDescription desc;
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected IconButton CreateCommandButton(DockStyle dock, ToolbarCommand command)
 		{
-			var desc = this.GetCommand (command);
+			var desc = this.GetCommandDescription (command);
 
 			if (desc.IsEmpty)
 			{

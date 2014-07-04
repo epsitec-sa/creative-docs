@@ -205,31 +205,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Affiche le menu contextuel.
 			var popup = new MenuPopup (this.toolbar);
 
-			int n = popup.AddItem (ToolbarCommand.New);
-			int d = popup.AddItem (ToolbarCommand.Delete);
-			        popup.AddSeparator ();
-			int c = popup.AddItem (ToolbarCommand.Copy);
-			int p = popup.AddItem (ToolbarCommand.Paste);
+			popup.AddItem (ToolbarCommand.New);
+			popup.AddItem (ToolbarCommand.Delete);
+			popup.AddSeparator ();
+			popup.AddItem (ToolbarCommand.Copy);
+			popup.AddItem (ToolbarCommand.Paste);
 
 			popup.Create (this.treeTableFrame, pos, leftOrRight: true);
 
-			popup.ItemClicked += delegate (object sender, int rank)
+			popup.ItemClicked += delegate (object sender, ToolbarCommand command)
 			{
-				if (rank == n)
+				switch (command)
 				{
-					this.OnNew ();
-				}
-				else if (rank == d)
-				{
-					this.OnDelete ();
-				}
-				else if (rank == c)
-				{
-					this.OnCopy ();
-				}
-				else if (rank == p)
-				{
-					this.OnPaste ();
+					case ToolbarCommand.New:
+						this.OnNew ();
+						break;
+
+					case ToolbarCommand.Delete:
+						this.OnDelete ();
+						break;
+
+					case ToolbarCommand.Copy:
+						this.OnCopy ();
+						break;
+
+					case ToolbarCommand.Paste:
+						this.OnPaste ();
+						break;
 				}
 			};
 		}

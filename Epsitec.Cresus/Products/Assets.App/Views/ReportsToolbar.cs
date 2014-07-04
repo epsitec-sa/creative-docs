@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		protected override void CreateCommands()
 		{
-			this.SetCommand (ToolbarCommand.ReportSelect, "Report.Select", "Choix d'un rapport");
-			this.SetCommand (ToolbarCommand.ReportParams, "Report.Params", "Paramètres du rapport");
-			this.SetCommand (ToolbarCommand.ReportExport, "Report.Export", "Exporter le rapport");
+			this.SetCommandDescription (ToolbarCommand.ReportSelect, "Report.Select", "Choix d'un rapport");
+			this.SetCommandDescription (ToolbarCommand.ReportParams, "Report.Params", "Paramètres du rapport");
+			this.SetCommandDescription (ToolbarCommand.ReportExport, "Report.Export", "Exporter le rapport");
 		}
 
 

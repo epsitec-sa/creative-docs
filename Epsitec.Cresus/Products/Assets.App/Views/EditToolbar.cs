@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		protected override void CreateCommands()
 		{
-			this.SetCommand (ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
-			this.SetCommand (ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
+			this.SetCommandDescription (ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
+			this.SetCommandDescription (ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
 		}
 
 

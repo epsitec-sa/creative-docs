@@ -15,22 +15,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		protected override void CreateCommands()
 		{
-			this.SetCommand (ToolbarCommand.Narrow,                 "Timeline.Narrow",         "Affichage étroit");
-			this.SetCommand (ToolbarCommand.Wide,                   "Timeline.Wide",           "Affichage large");
-			this.SetCommand (ToolbarCommand.First,                  "Timeline.First",          "Retourner sur le premier événement");
-			this.SetCommand (ToolbarCommand.Prev,                   "Timeline.Prev",           "Reculer sur l'événement précédent");
-			this.SetCommand (ToolbarCommand.Next,                   "Timeline.Next",           "Avancer sur l'événement suivant");
-			this.SetCommand (ToolbarCommand.Last,                   "Timeline.Last",           "Avancer sur le dernier événement");
-			this.SetCommand (ToolbarCommand.New,                    "TreeTable.New.Event",     "Nouvel événement");
-			this.SetCommand (ToolbarCommand.Delete,                 "Timeline.Delete",         "Supprimer l'événement");
-			this.SetCommand (ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   "Générer les préamortissements");
-			this.SetCommand (ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       "Fixer les préamortissements");
-			this.SetCommand (ToolbarCommand.AmortizationsToExtra,   "Amortizations.ToExtra",   "Transformer en amortissement extraordinaire");
-			this.SetCommand (ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer les préamortissements");
-			this.SetCommand (ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements ordinaires");
-			this.SetCommand (ToolbarCommand.Deselect,               "Timeline.Deselect",       "Désélectionner l'événement");
-			this.SetCommand (ToolbarCommand.Copy,                   "TreeTable.Copy.Event",    "Copier l'événement");
-			this.SetCommand (ToolbarCommand.Paste,                  "TreeTable.Paste.Event",   "Coller l'événement");
+			this.SetCommandDescription (ToolbarCommand.Narrow,                 "Timeline.Narrow",         "Affichage étroit");
+			this.SetCommandDescription (ToolbarCommand.Wide,                   "Timeline.Wide",           "Affichage large");
+			this.SetCommandDescription (ToolbarCommand.First,                  "Timeline.First",          "Retourner sur le premier événement");
+			this.SetCommandDescription (ToolbarCommand.Prev,                   "Timeline.Prev",           "Reculer sur l'événement précédent");
+			this.SetCommandDescription (ToolbarCommand.Next,                   "Timeline.Next",           "Avancer sur l'événement suivant");
+			this.SetCommandDescription (ToolbarCommand.Last,                   "Timeline.Last",           "Avancer sur le dernier événement");
+			this.SetCommandDescription (ToolbarCommand.New,                    "TreeTable.New.Event",     "Nouvel événement");
+			this.SetCommandDescription (ToolbarCommand.Delete,                 "Timeline.Delete",         "Supprimer l'événement");
+			this.SetCommandDescription (ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   "Générer les préamortissements");
+			this.SetCommandDescription (ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       "Fixer les préamortissements");
+			this.SetCommandDescription (ToolbarCommand.AmortizationsToExtra,   "Amortizations.ToExtra",   "Transformer en amortissement extraordinaire");
+			this.SetCommandDescription (ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer les préamortissements");
+			this.SetCommandDescription (ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements ordinaires");
+			this.SetCommandDescription (ToolbarCommand.Deselect,               "Timeline.Deselect",       "Désélectionner l'événement");
+			this.SetCommandDescription (ToolbarCommand.Copy,                   "TreeTable.Copy.Event",    "Copier l'événement");
+			this.SetCommandDescription (ToolbarCommand.Paste,                  "TreeTable.Paste.Event",   "Coller l'événement");
 		}
 
 

@@ -13,12 +13,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		protected override void CreateCommands()
 		{
-			this.SetCommand (ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   "Générer les préamortissements");
-			this.SetCommand (ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       "Fixer les préamortissements");
-			this.SetCommand (ToolbarCommand.AmortizationsToExtra,   "Amortizations.ToExtra",   "Transformer l'amortissement ordinaire en extraordinaire");
-			this.SetCommand (ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer les préamortissements");
-			this.SetCommand (ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements ordinaires");
-			this.SetCommand (ToolbarCommand.AmortizationsInfo,      "Amortizations.Info",      "Montrer le résultat de la dernière opération d'amortissement");
+			this.SetCommandDescription (ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   "Générer les préamortissements");
+			this.SetCommandDescription (ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       "Fixer les préamortissements");
+			this.SetCommandDescription (ToolbarCommand.AmortizationsToExtra,   "Amortizations.ToExtra",   "Transformer l'amortissement ordinaire en extraordinaire");
+			this.SetCommandDescription (ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer les préamortissements");
+			this.SetCommandDescription (ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements ordinaires");
+			this.SetCommandDescription (ToolbarCommand.AmortizationsInfo,      "Amortizations.Info",      "Montrer le résultat de la dernière opération d'amortissement");
 		}
 
 

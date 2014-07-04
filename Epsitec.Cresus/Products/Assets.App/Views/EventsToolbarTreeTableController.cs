@@ -89,13 +89,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommand (ToolbarCommand.New,      "TreeTable.New.Event",   "Nouvel événement");
-			this.toolbar.SetCommand (ToolbarCommand.Delete,   "TreeTable.Delete",      "Supprimer l'événement");
-			this.toolbar.SetCommand (ToolbarCommand.Deselect, null,                    "Désélectionner l'événement");
-			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy.Event",  "Copier l'événement");
-			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste.Event", "Coller l'événement");
-			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                    "Exporter les événements");
-			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandDescription.Empty);
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Event",   "Nouvel événement");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      "Supprimer l'événement");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    "Désélectionner l'événement");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Event",  "Copier l'événement");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Event", "Coller l'événement");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    "Exporter les événements");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()

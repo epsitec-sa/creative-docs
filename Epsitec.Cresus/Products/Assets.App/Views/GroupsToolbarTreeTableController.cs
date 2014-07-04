@@ -100,13 +100,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommand (ToolbarCommand.New,      "TreeTable.New.Group", "Nouveau groupe");
-			this.toolbar.SetCommand (ToolbarCommand.Delete,   "TreeTable.Delete",    "Supprimer le groupe");
-			this.toolbar.SetCommand (ToolbarCommand.Deselect, null,                  "Désélectionner le groupe");
-			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy",      "Copier le groupe");
-			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste",     "Coller le groupe");
-			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                  "Exporter les groupes");
-			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandDescription.Empty);
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Group", "Nouveau groupe");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",    "Supprimer le groupe");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                  "Désélectionner le groupe");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",      "Copier le groupe");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",     "Coller le groupe");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                  "Exporter les groupes");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()

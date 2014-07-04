@@ -20,29 +20,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public MenuPopup(AbstractCommandToolbar toolbar)
 		{
 			this.toolbar = toolbar;
-			this.items = new List<CommandDescription> ();
+
+			this.commands = new List<ToolbarCommand> ();
 		}
 
 
 		public void AddSeparator()
 		{
-			this.items.Add (CommandDescription.Empty);
+			this.commands.Add (ToolbarCommand.Unknown);
 		}
 
-		public int AddItem(ToolbarCommand command)
+		public void AddItem(ToolbarCommand command)
 		{
-			var desc  = this.toolbar.GetCommand (command);
 			var state = this.toolbar.GetCommandState (command);
 
 			if (state == ToolbarCommandState.Enable)
 			{
-				int rank = this.items.Count;
-				this.items.Add (desc);
-				return rank;
-			}
-			else
-			{
-				return -1;
+				this.commands.Add (command);
 			}
 		}
 
@@ -66,9 +60,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			foreach (int y in this.PosY)
 			{
-				var item = this.items[i];
+				var command = this.commands[i];
 
-				if (item.IsEmpty)
+				if (command == ToolbarCommand.Unknown)
 				{
 					this.CreateSeparator (h+y, w);
 				}
@@ -109,10 +103,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Margins       = new Margins (x, 0, 0, y),
 			};
 
+			var desc = this.toolbar.GetCommandDescription (this.commands[rank]);
+
 			var icon = new IconButton
 			{
 				Parent        = frame,
-				IconUri       = Misc.GetResourceIconUri (this.items[rank].Icon),
+				IconUri       = Misc.GetResourceIconUri (desc.Icon),
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (dy, dy),
@@ -132,19 +128,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			frame.Clicked += delegate
 			{
 				this.ClosePopup ();
-				this.OnItemClicked (rank);
+				this.OnItemClicked (this.commands[rank]);
 			};
 
 			icon.Clicked += delegate
 			{
 				this.ClosePopup ();
-				this.OnItemClicked (rank);
+				this.OnItemClicked (this.commands[rank]);
 			};
 
 			text.Clicked += delegate
 			{
 				this.ClosePopup ();
-				this.OnItemClicked (rank);
+				this.OnItemClicked (this.commands[rank]);
 			};
 		}
 
@@ -153,9 +149,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Calcule la largeur nécessaire en fonction de l'ensemble des textes.
 			get
 			{
-				return this.items.Max
+				return this.commands.Max
 				(
-					item => MenuPopup.GetTextWithGaps (item.Tooltip).GetTextWidth ()
+					command => MenuPopup.GetTextWithGaps (this.toolbar.GetCommandDescription (command).Tooltip).GetTextWidth ()
 				)
 				+ MenuPopup.itemHeight
 				+ ColoredButton.horizontalMargins * 2
@@ -165,7 +161,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private string GetTextWithGaps(int rank)
 		{
-			return MenuPopup.GetTextWithGaps (this.items[rank].Tooltip);
+			var desc = this.toolbar.GetCommandDescription (this.commands[rank]);
+			return MenuPopup.GetTextWithGaps (desc.Tooltip);
 		}
 
 		private static string GetTextWithGaps(string text)
@@ -189,11 +186,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				int y = 0;
 				bool separator = false;
 
-				for (int i=0; i<this.items.Count; i++)
+				for (int i=0; i<this.commands.Count; i++)
 				{
-					var item = this.items[i];
+					var command = this.commands[i];
 
-					if (item.IsEmpty)
+					if (command == ToolbarCommand.Unknown)
 					{
 						if (separator)  // compact ?
 						{
@@ -221,23 +218,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-
 		#region Events handler
-		private void OnItemClicked(int rank)
+		private void OnItemClicked(ToolbarCommand command)
 		{
-			this.ItemClicked.Raise (this, rank);
+			this.ItemClicked.Raise (this, command);
 		}
 
-		public event EventHandler<int> ItemClicked;
+		public event EventHandler<ToolbarCommand> ItemClicked;
 		#endregion
 
 
-		private const int						margins		= 5;
-		private const int						itemHeight	= 26;
-		private const int						sepHeight	= 8;
-		private const string					textGap		= "  ";
+		private const int							margins		= 5;
+		private const int							itemHeight	= 26;
+		private const int							sepHeight	= 8;
+		private const string						textGap		= "  ";
 
 		private readonly AbstractCommandToolbar		toolbar;
-		private readonly List<CommandDescription> items;
+		private readonly List<ToolbarCommand>		commands;
 	}
 }

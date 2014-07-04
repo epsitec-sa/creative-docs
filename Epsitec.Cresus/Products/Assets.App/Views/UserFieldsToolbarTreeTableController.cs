@@ -97,13 +97,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommand (ToolbarCommand.New,      null, "Nouveau champ");
-			this.toolbar.SetCommand (ToolbarCommand.Delete,   null, "Supprimer le champ");
-			this.toolbar.SetCommand (ToolbarCommand.Deselect, null, "Désélectionner le champ");
-			this.toolbar.SetCommand (ToolbarCommand.Copy,     null, "Copier le champ");
-			this.toolbar.SetCommand (ToolbarCommand.Paste,    null, "Coller le champ");
-			this.toolbar.SetCommand (ToolbarCommand.Export,   null, "Exporter les champs");
-			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandDescription.Empty);
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      null, "Nouveau champ");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   null, "Supprimer le champ");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, "Désélectionner le champ");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     null, "Copier le champ");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    null, "Coller le champ");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, "Exporter les champs");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()

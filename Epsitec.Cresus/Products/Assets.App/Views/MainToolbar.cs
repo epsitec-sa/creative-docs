@@ -16,25 +16,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		protected override void CreateCommands()
 		{
-			this.SetCommand (ToolbarCommand.NewMandat,        "Main.New",              "Nouveau mandat");
-			this.SetCommand (ToolbarCommand.OpenMandat,       "Main.Open",             "Ouvrir un mandat");
-			this.SetCommand (ToolbarCommand.SaveMandat,       "Main.Save",             "Enregistrer le mandat");
-			this.SetCommand (ToolbarCommand.NavigateBack,     "Navigate.Back",         "Retourner à la vue précédente");
-			this.SetCommand (ToolbarCommand.NavigateForward,  "Navigate.Forward",      "Avancer à la vue suivante");
-			this.SetCommand (ToolbarCommand.NavigateMenu,     "Navigate.Menu",         "Dernières vues");
-			this.SetCommand (ToolbarCommand.ViewModeSingle,   "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
-			this.SetCommand (ToolbarCommand.ViewModeEvent,    "Show.TimelineEvent",    "Tableau des événements");
-			this.SetCommand (ToolbarCommand.ViewModeMultiple, "Show.TimelineMultiple", "Axe du temps pour tous les objets");
-			this.SetCommand (ToolbarCommand.Edit,             "Main.Edit",             "Edition");
-			this.SetCommand (ToolbarCommand.Locked,           "Main.Locked",           "Gestion des verrous");
-			this.SetCommand (ToolbarCommand.Simulation,       "Main.Simulation",       "Simulation");
-			this.SetCommand (ToolbarCommand.Cancel,           "Edit.Cancel",           "Annuler les modifications");
-			this.SetCommand (ToolbarCommand.Accept,           "Edit.Accept",           "Accepter les modifications");
+			this.SetCommandDescription (ToolbarCommand.NewMandat,        "Main.New",              "Nouveau mandat");
+			this.SetCommandDescription (ToolbarCommand.OpenMandat,       "Main.Open",             "Ouvrir un mandat");
+			this.SetCommandDescription (ToolbarCommand.SaveMandat,       "Main.Save",             "Enregistrer le mandat");
+			this.SetCommandDescription (ToolbarCommand.NavigateBack,     "Navigate.Back",         "Retourner à la vue précédente");
+			this.SetCommandDescription (ToolbarCommand.NavigateForward,  "Navigate.Forward",      "Avancer à la vue suivante");
+			this.SetCommandDescription (ToolbarCommand.NavigateMenu,     "Navigate.Menu",         "Dernières vues");
+			this.SetCommandDescription (ToolbarCommand.ViewModeSingle,   "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
+			this.SetCommandDescription (ToolbarCommand.ViewModeEvent,    "Show.TimelineEvent",    "Tableau des événements");
+			this.SetCommandDescription (ToolbarCommand.ViewModeMultiple, "Show.TimelineMultiple", "Axe du temps pour tous les objets");
+			this.SetCommandDescription (ToolbarCommand.Edit,             "Main.Edit",             "Edition");
+			this.SetCommandDescription (ToolbarCommand.Locked,           "Main.Locked",           "Gestion des verrous");
+			this.SetCommandDescription (ToolbarCommand.Simulation,       "Main.Simulation",       "Simulation");
+			this.SetCommandDescription (ToolbarCommand.Cancel,           "Edit.Cancel",           "Annuler les modifications");
+			this.SetCommandDescription (ToolbarCommand.Accept,           "Edit.Accept",           "Accepter les modifications");
 
 			foreach (var viewType in MainToolbar.ViewTypes)
 			{
 				var command = MainToolbar.GetViewCommand (viewType);
-				this.SetCommand (command, StaticDescriptions.GetViewTypeIcon (viewType), StaticDescriptions.GetViewTypeDescription (viewType));
+				this.SetCommandDescription (command, StaticDescriptions.GetViewTypeIcon (viewType), StaticDescriptions.GetViewTypeDescription (viewType));
 			}
 		}
 

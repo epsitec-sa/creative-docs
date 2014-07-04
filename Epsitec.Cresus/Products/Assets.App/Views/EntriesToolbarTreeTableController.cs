@@ -97,13 +97,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommand (ToolbarCommand.New,      CommandDescription.Empty);
-			this.toolbar.SetCommand (ToolbarCommand.Delete,   CommandDescription.Empty);
-			this.toolbar.SetCommand (ToolbarCommand.Deselect, null, "Désélectionner l'écriture comptable");
-			this.toolbar.SetCommand (ToolbarCommand.Copy,     CommandDescription.Empty);
-			this.toolbar.SetCommand (ToolbarCommand.Paste,    CommandDescription.Empty);
-			this.toolbar.SetCommand (ToolbarCommand.Export,   null, "Exporter les écritures comptables");
-			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandDescription.Empty);
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      CommandDescription.Empty);
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   CommandDescription.Empty);
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, "Désélectionner l'écriture comptable");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     CommandDescription.Empty);
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    CommandDescription.Empty);
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, "Exporter les écritures comptables");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()

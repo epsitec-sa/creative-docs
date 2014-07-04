@@ -102,13 +102,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommand (ToolbarCommand.New,      null, "Nouveau compte");
-			this.toolbar.SetCommand (ToolbarCommand.Delete,   null, "Supprimer le compte");
-			this.toolbar.SetCommand (ToolbarCommand.Deselect, null, "Désélectionner le compte");
-			this.toolbar.SetCommand (ToolbarCommand.Copy,     null, "Copier le compte");
-			this.toolbar.SetCommand (ToolbarCommand.Paste,    null, "Coller le compte");
-			this.toolbar.SetCommand (ToolbarCommand.Export,   null, "Exporter le plan comptable");
-			this.toolbar.SetCommand (ToolbarCommand.Import,   null, "Importer un plan comptable Crésus (fichier .crp)");
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      null, "Nouveau compte");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   null, "Supprimer le compte");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, "Désélectionner le compte");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     null, "Copier le compte");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    null, "Coller le compte");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, "Exporter le plan comptable");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   null, "Importer un plan comptable Crésus (fichier .crp)");
 		}
 
 		protected override void CreateNodeFiller()
