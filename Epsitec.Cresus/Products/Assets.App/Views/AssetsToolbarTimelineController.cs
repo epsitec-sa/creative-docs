@@ -762,7 +762,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandEnable (ToolbarCommand.Delete, this.HasSelectedEvent);
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.Deselect, sel != -1);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,     sel != -1);
+			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,     this.HasSelectedEvent);
 			this.toolbar.SetCommandEnable (ToolbarCommand.Paste,    this.accessor.Clipboard.HasEvent);
 		}
 
