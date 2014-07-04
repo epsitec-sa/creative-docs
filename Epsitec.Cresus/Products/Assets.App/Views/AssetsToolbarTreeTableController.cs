@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy.Asset",  "Copier l'objet d'immobilisation");
 			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste.Asset", "Coller l'objet d'immobilisation");
 			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                    "Exporter les objets d'immobilisations");
-			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()

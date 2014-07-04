@@ -15,9 +15,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public AbstractCommandToolbar()
 		{
-			this.commandCustoms = new Dictionary<ToolbarCommand, CommandCustomization> ();
-			this.commandStates  = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
-			this.commandWidgets = new Dictionary<ToolbarCommand, Widget> ();
+			this.commandDescriptions = new Dictionary<ToolbarCommand, CommandDescription> ();
+			this.commandStates       = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
+			this.commandWidgets      = new Dictionary<ToolbarCommand, Widget> ();
 
 			this.CreateCommands ();
 		}
@@ -29,6 +29,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void SetCommand(ToolbarCommand command, string icon, string tooltip)
 		{
+			//	Modifie la description d'une commande. On peut modifier ainsi une
+			//	commande déjà définie. Si 'icon' ou 'tooltip' sont null, cela
+			//	signifie qu'on conserve les anciennes valeurs.
 			var current = this.GetCommand (command);
 
 			if (string.IsNullOrEmpty (icon) && !current.IsEmpty)
@@ -41,24 +44,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 				tooltip = current.Tooltip;
 			}
 
-			this.SetCommand (command, new CommandCustomization (icon, tooltip));
+			this.SetCommand (command, new CommandDescription (icon, tooltip));
 		}
 
-		public void SetCommand(ToolbarCommand command, CommandCustomization custom)
+		public void SetCommand(ToolbarCommand command, CommandDescription desc)
 		{
-			this.commandCustoms[command] = custom;
+			this.commandDescriptions[command] = desc;
 		}
 
-		public CommandCustomization GetCommand(ToolbarCommand command)
+		public CommandDescription GetCommand(ToolbarCommand command)
 		{
-			CommandCustomization custom;
-			if (this.commandCustoms.TryGetValue (command, out custom))
+			//	Retourne la description d'une commande.
+			CommandDescription desc;
+			if (this.commandDescriptions.TryGetValue (command, out desc))
 			{
-				return custom;
+				return desc;
 			}
 			else
 			{
-				return CommandCustomization.Empty;
+				return CommandDescription.Empty;
 			}
 		}
 
@@ -130,9 +134,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected IconButton CreateCommandButton(DockStyle dock, ToolbarCommand command)
 		{
-			var custom = this.GetCommand (command);
+			var desc = this.GetCommand (command);
 
-			if (custom.IsEmpty)
+			if (desc.IsEmpty)
 			{
 				return null;
 			}
@@ -144,11 +148,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent        = this.toolbar,
 				AutoFocus     = false,
 				Dock          = dock,
-				IconUri       = Misc.GetResourceIconUri (custom.Icon),
+				IconUri       = Misc.GetResourceIconUri (desc.Icon),
 				PreferredSize = new Size (size, size),
 			};
 
-			ToolTip.Default.SetToolTip (button, custom.Tooltip);
+			ToolTip.Default.SetToolTip (button, desc.Tooltip);
 
 			button.Clicked += delegate
 			{
@@ -239,7 +243,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public const int separatorWidth         = 11;
 
 
-		private readonly Dictionary<ToolbarCommand, CommandCustomization>	commandCustoms;
+		private readonly Dictionary<ToolbarCommand, CommandDescription>		commandDescriptions;
 		private readonly Dictionary<ToolbarCommand, ToolbarCommandState>	commandStates;
 		private readonly Dictionary<ToolbarCommand, Widget>					commandWidgets;
 

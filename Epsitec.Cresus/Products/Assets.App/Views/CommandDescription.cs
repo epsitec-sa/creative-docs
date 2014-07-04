@@ -6,9 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public struct CommandCustomization
+	/// <summary>
+	/// Décrit complètement une commande d'une toolbar.
+	/// </summary>
+	public struct CommandDescription
 	{
-		public CommandCustomization(string icon, string tooltip)
+		public CommandDescription(string icon, string tooltip)
 		{
 			this.Icon    = icon;
 			this.Tooltip = tooltip;
@@ -23,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public static CommandCustomization Empty = new CommandCustomization (null, null);
+		public static CommandDescription Empty = new CommandDescription (null, null);
 
 		public readonly string					Icon;
 		public readonly string					Tooltip;

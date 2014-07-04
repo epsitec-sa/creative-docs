@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy.Event",  "Copier l'événement");
 			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste.Event", "Coller l'événement");
 			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                    "Exporter les événements");
-			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()

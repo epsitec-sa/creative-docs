@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy",      "Copier le groupe");
 			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste",     "Coller le groupe");
 			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                  "Exporter les groupes");
-			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()

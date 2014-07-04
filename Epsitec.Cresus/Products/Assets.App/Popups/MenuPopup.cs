@@ -20,24 +20,24 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public MenuPopup(AbstractCommandToolbar toolbar)
 		{
 			this.toolbar = toolbar;
-			this.items = new List<CommandCustomization> ();
+			this.items = new List<CommandDescription> ();
 		}
 
 
 		public void AddSeparator()
 		{
-			this.items.Add (CommandCustomization.Empty);
+			this.items.Add (CommandDescription.Empty);
 		}
 
 		public int AddItem(ToolbarCommand command)
 		{
-			var custom = this.toolbar.GetCommand (command);
-			var state  = this.toolbar.GetCommandState (command);
+			var desc  = this.toolbar.GetCommand (command);
+			var state = this.toolbar.GetCommandState (command);
 
 			if (state == ToolbarCommandState.Enable)
 			{
 				int rank = this.items.Count;
-				this.items.Add (custom);
+				this.items.Add (desc);
 				return rank;
 			}
 			else
@@ -238,6 +238,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const string					textGap		= "  ";
 
 		private readonly AbstractCommandToolbar		toolbar;
-		private readonly List<CommandCustomization> items;
+		private readonly List<CommandDescription> items;
 	}
 }

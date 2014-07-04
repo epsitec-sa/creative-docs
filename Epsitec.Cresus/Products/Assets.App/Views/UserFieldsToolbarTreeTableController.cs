@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommand (ToolbarCommand.Copy,     null, "Copier le champ");
 			this.toolbar.SetCommand (ToolbarCommand.Paste,    null, "Coller le champ");
 			this.toolbar.SetCommand (ToolbarCommand.Export,   null, "Exporter les champs");
-			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()

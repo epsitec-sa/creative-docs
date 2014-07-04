@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy",       "Copier le contact");
 			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste",      "Coller le contact");
 			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                   "Exporter les contacts");
-			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()
