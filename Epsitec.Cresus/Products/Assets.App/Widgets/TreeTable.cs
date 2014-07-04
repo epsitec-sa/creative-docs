@@ -459,29 +459,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
-					if ((message.Button & MouseButtons.Right) == 0)
-					{
-						this.ProcessMouseDown (pos);
-						this.ProcessMouseClick (pos);
-					}
-					else
-					{
-						this.ProcessMouseRightClick (pos);
-					}
+					this.ProcessMouseDown (pos);
+					this.ProcessMouseClick (pos);
 					break;
 
 				case MessageType.MouseMove:
-					if ((message.Button & MouseButtons.Right) == 0)
-					{
-						this.ProcessMouseMove (pos);
-					}
+					this.ProcessMouseMove (pos);
 					break;
 
 				case MessageType.MouseUp:
-					if ((message.Button & MouseButtons.Right) == 0)
+					this.ProcessMouseUp (pos);
+					this.ProcessMouseMove (pos);
+					if ((message.Button & MouseButtons.Right) != 0)
 					{
-						this.ProcessMouseUp (pos);
-						this.ProcessMouseMove (pos);
+						this.ProcessMouseRightClick (pos);
 					}
 					break;
 

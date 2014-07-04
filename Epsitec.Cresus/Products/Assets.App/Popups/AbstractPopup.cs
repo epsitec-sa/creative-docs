@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	{
 		public void Create(Widget target, bool leftOrRight = false)
 		{
-			//	Crée le popup, dont la queue pointera vers le widget target.
+			//	Crée le popup "dialogue", dont la queue pointera vers le widget target.
 			this.target = target;
 
 			var parent = this.GetParent ();
@@ -40,6 +40,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.targetRect = this.targetReal;
 			this.targetRect.Deflate ((int) (System.Math.Min (this.targetRect.Width, this.targetRect.Height) * 0.2));
+
+			this.InitializeDialogRect (leftOrRight);
+			this.CreateUI ();
+
+			PopupStack.Push (this);
+		}
+
+		public void Create(Widget widget, Point targetPos, bool leftOrRight = false)
+		{
+			//	Crée le popup "menu contextuel", dont la queue pointera vers la position.
+			this.target = widget;
+
+			var parent = this.GetParent ();
+
+			this.Parent = parent;
+			this.Anchor = AnchorStyles.All;
+			this.Name   = "PopupWidget";
+
+			var p1 = parent.MapClientToScreen (Point.Zero);
+			var p2 = target.MapClientToScreen (targetPos);
+			var p = p2-p1;
+
+			const int d = 1;
+			this.targetReal = new Rectangle (p.X-d, p.Y-d, d*2, d*2);
+			this.targetRect = this.targetReal;
 
 			this.InitializeDialogRect (leftOrRight);
 			this.CreateUI ();

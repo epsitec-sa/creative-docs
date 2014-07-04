@@ -498,6 +498,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (row == this.GlyphRow)
 				{
 					this.SelectedCell = this.controller.LeftVisibleCell + rank;
+					this.ShowContextMenu (pos);
 				}
 			};
 
@@ -705,6 +706,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		private void ShowContextMenu(Point pos)
+		{
+			//	Affiche le menu contextuel.
+			var popup = new SimplePopup ();
+
+			popup.Items.Add ("Rouge");
+			popup.Items.Add ("Vert");
+			popup.Items.Add ("Bleu");
+
+			popup.Create (this.frameBox, pos, leftOrRight: true);
+
+			popup.ItemClicked += delegate (object sender, int rank)
+			{
+			};
+		}
 
 		private void OnDokeySelect(KeyCode key)
 		{
