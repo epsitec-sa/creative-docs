@@ -710,17 +710,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void ShowContextMenu(Point pos)
 		{
 			//	Affiche le menu contextuel.
-			var popup = new SimplePopup ();
+			var popup = new MenuPopup (this.toolbar);
 
-			popup.Items.Add ("Rouge");
-			popup.Items.Add ("Vert");
-			popup.Items.Add ("Bleu");
+			popup.AddItem (ToolbarCommand.New,    this.OnNew);
+			popup.AddItem (ToolbarCommand.Delete, this.OnDelete);
+			popup.AddSeparator ();
+			popup.AddItem (ToolbarCommand.Copy,   this.OnCopy);
+			popup.AddItem (ToolbarCommand.Paste,  this.OnPaste);
 
 			popup.Create (this.frameBox, pos, leftOrRight: true);
-
-			popup.ItemClicked += delegate (object sender, int rank)
-			{
-			};
 		}
 
 		private void OnDokeySelect(KeyCode key)
