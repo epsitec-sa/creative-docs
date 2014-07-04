@@ -19,6 +19,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public int AddItem()
+		{
+			//	Ajoute un séparateur horizontal.
+			return this.AddItem (CommandCustomization.Empty);
+		}
+
 		public int AddItem(CommandCustomization command, ToolbarCommandState state = ToolbarCommandState.Enable)
 		{
 			if (state == ToolbarCommandState.Enable)
@@ -32,14 +38,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				return -1;
 			}
 		}
-
-		//-public List<CommandCustomization> Items
-		//-{
-		//-	get
-		//-	{
-		//-		return this.items;
-		//-	}
-		//-}
 
 
 		protected override Size DialogSize

@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			int n = popup.AddItem (this.NewCustomization,    this.toolbar.GetCommandState (ToolbarCommand.New));
 			int d = popup.AddItem (this.DeleteCustomization, this.toolbar.GetCommandState (ToolbarCommand.Delete));
-			        popup.AddItem (CommandCustomization.Empty);
+			        popup.AddItem ();
 			int c = popup.AddItem (this.CopyCustomization,   this.toolbar.GetCommandState (ToolbarCommand.Copy));
 			int p = popup.AddItem (this.PasteCustomization,  this.toolbar.GetCommandState (ToolbarCommand.Paste));
 
