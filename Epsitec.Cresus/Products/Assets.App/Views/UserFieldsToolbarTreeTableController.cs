@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
@@ -93,6 +94,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateToolbar ();
 		}
 
+
+		protected override void AdaptToolbarCommand()
+		{
+			this.toolbar.SetCommand (ToolbarCommand.New,      null, "Nouveau champ");
+			this.toolbar.SetCommand (ToolbarCommand.Delete,   null, "Supprimer le champ");
+			this.toolbar.SetCommand (ToolbarCommand.Deselect, null, "Désélectionner le champ");
+			this.toolbar.SetCommand (ToolbarCommand.Copy,     null, "Copier le champ");
+			this.toolbar.SetCommand (ToolbarCommand.Paste,    null, "Coller le champ");
+			this.toolbar.SetCommand (ToolbarCommand.Export,   null, "Exporter les champs");
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+		}
 
 		protected override void CreateNodeFiller()
 		{

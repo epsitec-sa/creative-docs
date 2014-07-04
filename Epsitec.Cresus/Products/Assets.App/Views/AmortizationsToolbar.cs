@@ -11,6 +11,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AmortizationsToolbar : AbstractCommandToolbar
 	{
+		protected override void CreateCommands()
+		{
+			this.SetCommand (ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   "Générer les préamortissements");
+			this.SetCommand (ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       "Fixer les préamortissements");
+			this.SetCommand (ToolbarCommand.AmortizationsToExtra,   "Amortizations.ToExtra",   "Transformer l'amortissement ordinaire en extraordinaire");
+			this.SetCommand (ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer les préamortissements");
+			this.SetCommand (ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements ordinaires");
+			this.SetCommand (ToolbarCommand.AmortizationsInfo,      "Amortizations.Info",      "Montrer le résultat de la dernière opération d'amortissement");
+		}
+
+
 		public override FrameBox CreateUI(Widget parent)
 		{
 			this.toolbar = new FrameBox
@@ -21,12 +32,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-				this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   "Générer les préamortissements");
-				this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       "Fixer les préamortissements");
-				this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsToExtra,   "Amortizations.ToExtra",   "Transformer l'amortissement ordinaire en extraordinaire");
-				this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer les préamortissements");
-				this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements ordinaires");
-				this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsInfo,      "Amortizations.Info",      "Montrer le résultat de la dernière opération d'amortissement");
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsPreview);
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsFix);
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsToExtra);
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsUnpreview);
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsDelete);
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.AmortizationsInfo);
 
 			return this.toolbar;
 		}

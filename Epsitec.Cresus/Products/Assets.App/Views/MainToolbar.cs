@@ -14,6 +14,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MainToolbar : AbstractCommandToolbar
 	{
+		protected override void CreateCommands()
+		{
+			this.SetCommand (ToolbarCommand.NewMandat,        "Main.New",              "Nouveau mandat");
+			this.SetCommand (ToolbarCommand.OpenMandat,       "Main.Open",             "Ouvrir un mandat");
+			this.SetCommand (ToolbarCommand.SaveMandat,       "Main.Save",             "Enregistrer le mandat");
+			this.SetCommand (ToolbarCommand.NavigateBack,     "Navigate.Back",         "Retourner à la vue précédente");
+			this.SetCommand (ToolbarCommand.NavigateForward,  "Navigate.Forward",      "Avancer à la vue suivante");
+			this.SetCommand (ToolbarCommand.NavigateMenu,     "Navigate.Menu",         "Dernières vues");
+			this.SetCommand (ToolbarCommand.ViewModeSingle,   "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
+			this.SetCommand (ToolbarCommand.ViewModeEvent,    "Show.TimelineEvent",    "Tableau des événements");
+			this.SetCommand (ToolbarCommand.ViewModeMultiple, "Show.TimelineMultiple", "Axe du temps pour tous les objets");
+			this.SetCommand (ToolbarCommand.Edit,             "Main.Edit",             "Edition");
+			this.SetCommand (ToolbarCommand.Locked,           "Main.Locked",           "Gestion des verrous");
+			this.SetCommand (ToolbarCommand.Simulation,       "Main.Simulation",       "Simulation");
+			this.SetCommand (ToolbarCommand.Cancel,           "Edit.Cancel",           "Annuler les modifications");
+			this.SetCommand (ToolbarCommand.Accept,           "Edit.Accept",           "Accepter les modifications");
+
+			foreach (var viewType in MainToolbar.ViewTypes)
+			{
+				var command = MainToolbar.GetViewCommand (viewType);
+				this.SetCommand (command, StaticDescriptions.GetViewTypeIcon (viewType), StaticDescriptions.GetViewTypeDescription (viewType));
+			}
+		}
+
+
 		public ViewType							ViewType
 		{
 			get
@@ -78,26 +103,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonNew             = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NewMandat,       "Main.New",         "Nouveau mandat");
-			this.buttonOpen            = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.OpenMandat,      "Main.Open",        "Ouvrir un mandat");
-			this.buttonSave            = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.SaveMandat,      "Main.Save",        "Enregistrer le mandat");
-			this.buttonNavigateBack    = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateBack,    "Navigate.Back",    "Retourner à la vue précédente");
-			this.buttonNavigateForward = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateForward, "Navigate.Forward", "Avancer à la vue suivante");
-			this.buttonNavigateMenu    = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateMenu,    "Navigate.Menu",    "Dernières vues");
+			this.buttonNew             = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NewMandat);
+			this.buttonOpen            = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.OpenMandat);
+			this.buttonSave            = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.SaveMandat);
+			this.buttonNavigateBack    = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateBack);
+			this.buttonNavigateForward = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateForward);
+			this.buttonNavigateMenu    = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateMenu);
 
 			this.CreateViewTypeButtons ();							   									     
 			this.buttonPopup           = this.CreatePopupButton ();
 								       													   									     
-			this.buttonSingle          = this.CreateViewModeButton (ViewMode.Single,   ToolbarCommand.ViewModeSingle,   "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
-			this.buttonEvent           = this.CreateViewModeButton (ViewMode.Event,    ToolbarCommand.ViewModeEvent,    "Show.TimelineEvent",    "Tableau des événements");
-			this.buttonMultiple        = this.CreateViewModeButton (ViewMode.Multiple, ToolbarCommand.ViewModeMultiple, "Show.TimelineMultiple", "Axe du temps pour tous les objets");
+			this.buttonSingle          = this.CreateViewModeButton (ViewMode.Single,   ToolbarCommand.ViewModeSingle);
+			this.buttonEvent           = this.CreateViewModeButton (ViewMode.Event,    ToolbarCommand.ViewModeEvent);
+			this.buttonMultiple        = this.CreateViewModeButton (ViewMode.Multiple, ToolbarCommand.ViewModeMultiple);
 									   											   				     
-			this.buttonEdit            = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Edit,             "Main.Edit",             "Edition");
-			this.buttonLocked          = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Locked,           "Main.Locked",           "Gestion des verrous");
-			this.buttonSimulation      = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Simulation,       "Main.Simulation",       "Simulation");
+			this.buttonEdit            = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Edit);
+			this.buttonLocked          = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Locked);
+			this.buttonSimulation      = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Simulation);
 									  				 							   				     
-			this.buttonCancel          = this.CreateCommandButton  (DockStyle.Right,   ToolbarCommand.Cancel,           "Edit.Cancel",           "Annuler les modifications");
-			this.buttonAccept          = this.CreateCommandButton  (DockStyle.Right,   ToolbarCommand.Accept,           "Edit.Accept",           "Accepter les modifications");
+			this.buttonCancel          = this.CreateCommandButton  (DockStyle.Right,   ToolbarCommand.Cancel);
+			this.buttonAccept          = this.CreateCommandButton  (DockStyle.Right,   ToolbarCommand.Accept);
 
 			this.buttonSave    .Margins = new Margins (0, 10, 0, 0);
 			this.buttonPopup   .Margins = new Margins (0, 10, 0, 0);
@@ -125,12 +150,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private IconButton CreateViewTypeButton(ViewType viewType)
 		{
 			var command = MainToolbar.GetViewCommand (viewType);
-			return this.CreateViewTypeButton (viewType, command, StaticDescriptions.GetViewTypeIcon (viewType), StaticDescriptions.GetViewTypeDescription (viewType));
+			return this.CreateViewTypeButton (viewType, command);
 		}
 
-		private IconButton CreateViewTypeButton(ViewType view, ToolbarCommand command, string icon, string tooltip)
+		private IconButton CreateViewTypeButton(ViewType view, ToolbarCommand command)
 		{
-			var button = this.CreateCommandButton (DockStyle.Left, command, icon, tooltip);
+			var button = this.CreateCommandButton (DockStyle.Left, command);
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
 
 			button.Clicked += delegate
@@ -168,12 +193,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private IconButton CreateViewModeButton(ViewMode view, ToolbarCommand command, string icon, string tooltip)
+		private IconButton CreateViewModeButton(ViewMode view, ToolbarCommand command)
 		{
-			var button = this.CreateCommandButton (DockStyle.Left, command, icon, tooltip);
+			var button = this.CreateCommandButton (DockStyle.Left, command);
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
-
-			ToolTip.Default.SetToolTip (button, tooltip);
 
 			button.Clicked += delegate
 			{

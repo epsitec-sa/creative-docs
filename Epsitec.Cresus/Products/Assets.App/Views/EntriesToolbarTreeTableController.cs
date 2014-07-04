@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -20,13 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasFilter         = false;
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
-
-			this.NewCustomization      = new CommandCustomization ("TreeTable.New", "Nouvelle écriture comptable");
-			this.DeleteCustomization   = new CommandCustomization (null,            "Supprimer l'écriture comptable");
-			this.DeselectCustomization = new CommandCustomization (null,            "Désélectionner l'écriture comptable");
-			this.CopyCustomization     = new CommandCustomization (null,            "Copier l'écriture comptable");
-			this.PasteCustomization    = new CommandCustomization (null,            "Coller l'écriture comptable");
-			this.ExportCustomization   = new CommandCustomization (null,            "Exporter les écriture comptables");
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Entries);
 
@@ -101,6 +95,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected override void AdaptToolbarCommand()
+		{
+			this.toolbar.SetCommand (ToolbarCommand.New,      CommandCustomization.Empty);
+			this.toolbar.SetCommand (ToolbarCommand.Delete,   CommandCustomization.Empty);
+			this.toolbar.SetCommand (ToolbarCommand.Deselect, null, "Désélectionner l'écriture comptable");
+			this.toolbar.SetCommand (ToolbarCommand.Copy,     CommandCustomization.Empty);
+			this.toolbar.SetCommand (ToolbarCommand.Paste,    CommandCustomization.Empty);
+			this.toolbar.SetCommand (ToolbarCommand.Export,   null, "Exporter les écritures comptables");
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+		}
+
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new EntriesTreeTableFiller (this.accessor, this.nodeGetter);
@@ -115,7 +120,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.VisibleSelectedRow = -1;
 		}
 
-	
+
+		protected override void ShowContextMenu(Point pos)
+		{
+			//	Pas de menu contextuel.
+		}
+
+
 		protected override void UpdateToolbar()
 		{
 			base.UpdateToolbar ();

@@ -11,26 +11,33 @@ using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Menu composé d'une icône suivie d'un texte. Ce composant est utilisé pour les
+	/// menus contextuels actionnés avec le bouton de droite de la souris.
+	/// </summary>
 	public class MenuPopup : AbstractPopup
 	{
-		public MenuPopup()
+		public MenuPopup(AbstractCommandToolbar toolbar)
 		{
+			this.toolbar = toolbar;
 			this.items = new List<CommandCustomization> ();
 		}
 
 
-		public int AddItem()
+		public void AddSeparator()
 		{
-			//	Ajoute un séparateur horizontal.
-			return this.AddItem (CommandCustomization.Empty);
+			this.items.Add (CommandCustomization.Empty);
 		}
 
-		public int AddItem(CommandCustomization command, ToolbarCommandState state = ToolbarCommandState.Enable)
+		public int AddItem(ToolbarCommand command)
 		{
+			var custom = this.toolbar.GetCommand (command);
+			var state  = this.toolbar.GetCommandState (command);
+
 			if (state == ToolbarCommandState.Enable)
 			{
 				int rank = this.items.Count;
-				this.items.Add (command);
+				this.items.Add (custom);
 				return rank;
 			}
 			else
@@ -230,6 +237,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int						sepHeight	= 8;
 		private const string					textGap		= "  ";
 
+		private readonly AbstractCommandToolbar		toolbar;
 		private readonly List<CommandCustomization> items;
 	}
 }

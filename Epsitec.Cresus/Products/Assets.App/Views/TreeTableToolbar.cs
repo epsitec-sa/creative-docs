@@ -12,13 +12,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TreeTableToolbar : AbstractCommandToolbar
 	{
-		public CommandCustomization				NewCustomization;
-		public CommandCustomization				DeleteCustomization;
-		public CommandCustomization				DeselectCustomization;
-		public CommandCustomization				CopyCustomization;
-		public CommandCustomization				PasteCustomization;
-		public CommandCustomization				ExportCustomization;
-		public CommandCustomization				ImportCustomization;
+		protected override void CreateCommands()
+		{
+			this.SetCommand (ToolbarCommand.Filter,     "TreeTable.Filter",     "Grouper les objets selon");
+			this.SetCommand (ToolbarCommand.Graphic,    "TreeTable.Graphic",    "Représentation graphique");
+			this.SetCommand (ToolbarCommand.First,      "TreeTable.First",      "Retourner sur la première ligne");
+			this.SetCommand (ToolbarCommand.Prev,       "TreeTable.Prev",       "Reculer sur la ligne précédente");
+			this.SetCommand (ToolbarCommand.Next,       "TreeTable.Next",       "Avancer sur la ligne suivante");
+			this.SetCommand (ToolbarCommand.Last,       "TreeTable.Last",       "Avancer sur la dernière ligne");
+			this.SetCommand (ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacter tout");
+			this.SetCommand (ToolbarCommand.CompactOne, "TreeTable.CompactOne", "Compacter un niveau");
+			this.SetCommand (ToolbarCommand.ExpandOne,  "TreeTable.ExpandOne",  "Etendre un niveau");
+			this.SetCommand (ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etendre tout");
+			this.SetCommand (ToolbarCommand.MoveTop,    "TreeTable.MoveTop",    "Déplacer la ligne au sommet");
+			this.SetCommand (ToolbarCommand.MoveUp,     "TreeTable.MoveUp",     "Monter la ligne");
+			this.SetCommand (ToolbarCommand.MoveDown,   "TreeTable.MoveDown",   "Descendre la ligne");
+			this.SetCommand (ToolbarCommand.MoveBottom, "TreeTable.MoveBottom", "Déplacer la ligne à la fin");
+			this.SetCommand (ToolbarCommand.New,        "TreeTable.New",        "Nouvelle ligne");
+			this.SetCommand (ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
+			this.SetCommand (ToolbarCommand.Deselect,   "TreeTable.Deselect",   "Désélectionner la ligne");
+			this.SetCommand (ToolbarCommand.Copy,       "TreeTable.Copy",       "Copier");
+			this.SetCommand (ToolbarCommand.Paste,      "TreeTable.Paste",      "Coller");
+			this.SetCommand (ToolbarCommand.Export,     "TreeTable.Export",     "Exporter");
+			this.SetCommand (ToolbarCommand.Import,     "TreeTable.Import",     "Importer");
+		}
+
 
 		public bool								HasGraphic
 		{
@@ -113,55 +131,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Filter,     "TreeTable.Filter",     "Grouper les objets selon");
-			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Graphic,    "TreeTable.Graphic",    "Représentation graphique");
+			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Filter);
+			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Graphic);
 
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First,      "TreeTable.First",      "Retourner sur la première ligne");
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Prev,       "TreeTable.Prev",       "Reculer sur la ligne précédente");
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Next,       "TreeTable.Next",       "Avancer sur la ligne suivante");
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Last,       "TreeTable.Last",       "Avancer sur la dernière ligne");
+			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First);
+			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Prev);
+			this.buttonNext       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Next);
+			this.buttonLast       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Last);
 
 			this.separator1       = this.CreateSeparator     (DockStyle.None);
 			
-			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacter tout");
-			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactOne, "TreeTable.CompactOne", "Compacter un niveau");
-			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandOne,  "TreeTable.ExpandOne",  "Etendre un niveau");
-			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etendre tout");
+			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactAll);
+			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, ToolbarCommand.CompactOne);
+			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandOne);
+			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.ExpandAll);
 			
 			this.separator2       = this.CreateSeparator     (DockStyle.None);
 			
-			this.buttonMoveTop    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveTop,    "TreeTable.MoveTop",    "Déplacer la ligne au sommet");
-			this.buttonMoveUp     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveUp,     "TreeTable.MoveUp",     "Monter la ligne");
-			this.buttonMoveDown   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveDown,   "TreeTable.MoveDown",   "Descendre la ligne");
-			this.buttonMoveBottom = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveBottom, "TreeTable.MoveBottom", "Déplacer la ligne à la fin");
+			this.buttonMoveTop    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveTop);
+			this.buttonMoveUp     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveUp);
+			this.buttonMoveDown   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveDown);
+			this.buttonMoveBottom = this.CreateCommandButton (DockStyle.None, ToolbarCommand.MoveBottom);
 
 			this.separator3       = this.CreateSeparator     (DockStyle.None);
 			
-			this.buttonNew        = this.CreateCommandButton (DockStyle.None, ToolbarCommand.New,        this.NewCustomization.Icon      ?? "TreeTable.New",      this.NewCustomization.Tooltip      ?? "Nouvelle ligne");
-			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete,     this.DeleteCustomization.Icon   ?? "TreeTable.Delete",   this.DeleteCustomization.Tooltip   ?? "Supprimer la ligne");
-			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect,   this.DeselectCustomization.Icon ?? "TreeTable.Deselect", this.DeselectCustomization.Tooltip ?? "Désélectionner la ligne");
+			this.buttonNew        = this.CreateCommandButton (DockStyle.None, ToolbarCommand.New);
+			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Delete);
+			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Deselect);
 
 			this.separator4       = this.CreateSeparator     (DockStyle.None);
 
-			if (!this.CopyCustomization.IsEmpty)
-			{
-				this.buttonCopy = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy, this.CopyCustomization.Icon ?? "TreeTable.Copy", this.CopyCustomization.Tooltip ?? "Copier");
-			}
-
-			if (!this.PasteCustomization.IsEmpty)
-			{
-				this.buttonPaste = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste, this.PasteCustomization.Icon ?? "TreeTable.Paste", this.PasteCustomization.Tooltip ?? "Coller");
-			}
-
-			if (!this.ExportCustomization.IsEmpty)
-			{
-				this.buttonExport = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export, this.ExportCustomization.Icon ?? "TreeTable.Export", this.ExportCustomization.Tooltip ?? "Exporter");
-			}
-
-			if (!this.ImportCustomization.IsEmpty)
-			{
-				this.buttonImport = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Import, this.ImportCustomization.Icon ?? "TreeTable.Import", this.ImportCustomization.Tooltip ?? "Importer");
-			}
+			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy);
+			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste);
+			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export);
+			this.buttonImport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Import);
 
 			this.buttonGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
@@ -312,22 +315,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			yield return new ButtonState (this.separator4, sep4);
 
-			if (!this.CopyCustomization.IsEmpty)
+			if (!this.GetCommand (ToolbarCommand.Copy).IsEmpty)
 			{
 				yield return new ButtonState (this.buttonCopy, copyPaste);
 			}
 
-			if (!this.PasteCustomization.IsEmpty)
+			if (!this.GetCommand (ToolbarCommand.Paste).IsEmpty)
 			{
 				yield return new ButtonState (this.buttonPaste, copyPaste);
 			}
 
-			if (!this.ExportCustomization.IsEmpty)
+			if (!this.GetCommand (ToolbarCommand.Export).IsEmpty)
 			{
 				yield return new ButtonState (this.buttonExport, copyPaste);
 			}
 
-			if (!this.ImportCustomization.IsEmpty)
+			if (!this.GetCommand (ToolbarCommand.Import).IsEmpty)
 			{
 				yield return new ButtonState (this.buttonImport, copyPaste);
 			}
@@ -337,18 +340,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.CopyPasteGroup.Where (x => !x.IsEmpty).Count ();
+				return this.CopyPasteGroup.Where (x => !this.GetCommand (x).IsEmpty).Count ();
 			}
 		}
 
-		private IEnumerable<CommandCustomization> CopyPasteGroup
+		private IEnumerable<ToolbarCommand> CopyPasteGroup
 		{
 			get
 			{
-				yield return this.CopyCustomization;
-				yield return this.PasteCustomization;
-				yield return this.ExportCustomization;
-				yield return this.ImportCustomization;
+				yield return ToolbarCommand.Copy;
+				yield return ToolbarCommand.Paste;
+				yield return ToolbarCommand.Export;
+				yield return ToolbarCommand.Import;
 			}
 		}
 

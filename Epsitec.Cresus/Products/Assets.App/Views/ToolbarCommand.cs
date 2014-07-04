@@ -8,6 +8,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public enum ToolbarCommand
 	{
+		Unknown,
+
 		NewMandat,
 		OpenMandat,
 		SaveMandat,

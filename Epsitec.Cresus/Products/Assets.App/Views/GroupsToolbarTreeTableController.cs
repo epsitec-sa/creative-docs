@@ -23,13 +23,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
-			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Group", "Nouveau groupe");
-			this.DeleteCustomization   = new CommandCustomization (null,                  "Supprimer le groupe");
-			this.DeselectCustomization = new CommandCustomization (null,                  "Désélectionner le groupe");
-			this.CopyCustomization     = new CommandCustomization (null,                  "Copier le groupe");
-			this.PasteCustomization    = new CommandCustomization (null,                  "Coller le groupe");
-			this.ExportCustomization   = new CommandCustomization (null,                  "Exporter les groupe");
-
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Groups);
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
@@ -104,6 +97,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		protected override void AdaptToolbarCommand()
+		{
+			this.toolbar.SetCommand (ToolbarCommand.New,      "TreeTable.New.Group", "Nouveau groupe");
+			this.toolbar.SetCommand (ToolbarCommand.Delete,   "TreeTable.Delete",    "Supprimer le groupe");
+			this.toolbar.SetCommand (ToolbarCommand.Deselect, null,                  "Désélectionner le groupe");
+			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy",      "Copier le groupe");
+			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste",     "Coller le groupe");
+			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                  "Exporter les groupes");
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+		}
 
 		protected override void CreateNodeFiller()
 		{

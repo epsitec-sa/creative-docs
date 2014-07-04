@@ -22,13 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
-			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Person", "Nouveau contact");
-			this.DeleteCustomization   = new CommandCustomization (null,                   "Supprimer le contact");
-			this.DeselectCustomization = new CommandCustomization (null,                   "Désélectionner le contact");
-			this.CopyCustomization     = new CommandCustomization (null,                   "Copier le contact");
-			this.PasteCustomization    = new CommandCustomization (null,                   "Coller le contact");
-			this.ExportCustomization   = new CommandCustomization (null,                   "Exporter les contact");
-
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Persons);
 
 			var primary = this.accessor.GetNodeGetter (BaseType.Persons);
@@ -84,6 +77,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		protected override void AdaptToolbarCommand()
+		{
+			this.toolbar.SetCommand (ToolbarCommand.New,      "TreeTable.New.Person", "Nouveau contact");
+			this.toolbar.SetCommand (ToolbarCommand.Delete,   "TreeTable.Delete",     "Supprimer le contact");
+			this.toolbar.SetCommand (ToolbarCommand.Deselect, null,                   "Désélectionner le contact");
+			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy",       "Copier le contact");
+			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste",      "Coller le contact");
+			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                   "Exporter les contacts");
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+		}
 
 		protected override void CreateNodeFiller()
 		{

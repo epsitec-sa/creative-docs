@@ -22,13 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
-			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Event",   "Nouvel événement");
-			this.DeleteCustomization   = new CommandCustomization (null,                    "Supprimer l'événement");
-			this.DeselectCustomization = new CommandCustomization (null,                    "Désélectionner l'événement");
-			this.CopyCustomization     = new CommandCustomization ("TreeTable.Copy.Event",  "Copier l'événement");
-			this.PasteCustomization    = new CommandCustomization ("TreeTable.Paste.Event", "Coller l'événement");
-			this.ExportCustomization   = new CommandCustomization (null,                    "Exporter les événements");
-
 			this.eventsNodeGetter = new ObjectEventsNodeGetter ();
 			this.nodeGetter = new SorterNodeGetter (this.eventsNodeGetter);
 
@@ -93,6 +86,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		protected override void AdaptToolbarCommand()
+		{
+			this.toolbar.SetCommand (ToolbarCommand.New,      "TreeTable.New.Event",   "Nouvel événement");
+			this.toolbar.SetCommand (ToolbarCommand.Delete,   "TreeTable.Delete",      "Supprimer l'événement");
+			this.toolbar.SetCommand (ToolbarCommand.Deselect, null,                    "Désélectionner l'événement");
+			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy.Event",  "Copier l'événement");
+			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste.Event", "Coller l'événement");
+			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                    "Exporter les événements");
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+		}
 
 		protected override void CreateNodeFiller()
 		{

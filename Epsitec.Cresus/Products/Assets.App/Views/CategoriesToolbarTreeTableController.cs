@@ -22,13 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
-			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Category", "Nouvelle catégorie d'immobilisation");
-			this.DeleteCustomization   = new CommandCustomization (null,                     "Supprimer la catégorie d'immobilisation");
-			this.DeselectCustomization = new CommandCustomization (null,                     "Désélectionner la catégorie d'immobilisation");
-			this.CopyCustomization     = new CommandCustomization (null,                     "Copier la catégorie d'immobilisation");
-			this.PasteCustomization    = new CommandCustomization (null,                     "Coller la catégorie d'immobilisation");
-			this.ExportCustomization   = new CommandCustomization (null,                     "Exporter les catégories d'immobilisations");
-
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Categories);
 
 			var primary = this.accessor.GetNodeGetter (BaseType.Categories);
@@ -84,6 +77,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		protected override void AdaptToolbarCommand()
+		{
+			this.toolbar.SetCommand (ToolbarCommand.New,      "TreeTable.New.Category", "Nouvelle catégorie d'immobilisation");
+			this.toolbar.SetCommand (ToolbarCommand.Delete,   "TreeTable.Delete",       "Supprimer la catégorie d'immobilisation");
+			this.toolbar.SetCommand (ToolbarCommand.Deselect, null,                     "Désélectionner la catégorie d'immobilisation");
+			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy",         "Copier la catégorie d'immobilisation");
+			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste",        "Coller la catégorie d'immobilisation");
+			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                     "Exporter les catégories d'immobilisations");
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+		}
 
 		protected override void CreateNodeFiller()
 		{

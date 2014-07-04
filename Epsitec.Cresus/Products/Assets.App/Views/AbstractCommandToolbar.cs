@@ -15,11 +15,52 @@ namespace Epsitec.Cresus.Assets.App.Views
 	{
 		public AbstractCommandToolbar()
 		{
+			this.commandCustoms = new Dictionary<ToolbarCommand, CommandCustomization> ();
 			this.commandStates  = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
 			this.commandWidgets = new Dictionary<ToolbarCommand, Widget> ();
+
+			this.CreateCommands ();
 		}
 
+		protected abstract void CreateCommands();
+
 		public abstract FrameBox CreateUI(Widget parent);
+
+
+		public void SetCommand(ToolbarCommand command, string icon, string tooltip)
+		{
+			var current = this.GetCommand (command);
+
+			if (string.IsNullOrEmpty (icon) && !current.IsEmpty)
+			{
+				icon = current.Icon;
+			}
+
+			if (string.IsNullOrEmpty (tooltip) && !current.IsEmpty)
+			{
+				tooltip = current.Tooltip;
+			}
+
+			this.SetCommand (command, new CommandCustomization (icon, tooltip));
+		}
+
+		public void SetCommand(ToolbarCommand command, CommandCustomization custom)
+		{
+			this.commandCustoms[command] = custom;
+		}
+
+		public CommandCustomization GetCommand(ToolbarCommand command)
+		{
+			CommandCustomization custom;
+			if (this.commandCustoms.TryGetValue (command, out custom))
+			{
+				return custom;
+			}
+			else
+			{
+				return CommandCustomization.Empty;
+			}
+		}
 
 
 		public void SetCommandEnable(ToolbarCommand command, bool enable)
@@ -87,8 +128,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected IconButton CreateCommandButton(DockStyle dock, ToolbarCommand command, string icon, string tooltip)
+		protected IconButton CreateCommandButton(DockStyle dock, ToolbarCommand command)
 		{
+			var custom = this.GetCommand (command);
+
+			if (custom.IsEmpty)
+			{
+				return null;
+			}
+
 			var size = this.toolbar.PreferredHeight;
 
 			var button = new IconButton
@@ -96,11 +144,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent        = this.toolbar,
 				AutoFocus     = false,
 				Dock          = dock,
-				IconUri       = Misc.GetResourceIconUri (icon),
+				IconUri       = Misc.GetResourceIconUri (custom.Icon),
 				PreferredSize = new Size (size, size),
 			};
 
-			ToolTip.Default.SetToolTip (button, tooltip);
+			ToolTip.Default.SetToolTip (button, custom.Tooltip);
 
 			button.Clicked += delegate
 			{
@@ -191,6 +239,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public const int separatorWidth         = 11;
 
 
+		private readonly Dictionary<ToolbarCommand, CommandCustomization>	commandCustoms;
 		private readonly Dictionary<ToolbarCommand, ToolbarCommandState>	commandStates;
 		private readonly Dictionary<ToolbarCommand, Widget>					commandWidgets;
 

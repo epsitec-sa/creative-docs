@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
@@ -23,14 +24,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasFilter         = false;
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
-
-			this.NewCustomization      = new CommandCustomization (null, "Nouveau compte");
-			this.DeleteCustomization   = new CommandCustomization (null, "Supprimer le compte");
-			this.DeselectCustomization = new CommandCustomization (null, "Désélectionner le compte");
-			this.CopyCustomization     = new CommandCustomization (null, "Copier le compte");
-			this.PasteCustomization    = new CommandCustomization (null, "Coller le compte");
-			this.ExportCustomization   = new CommandCustomization (null, "Exporter les comptes");
-			this.ImportCustomization   = new CommandCustomization (null, "Importer un plan comptable Crésus (fichier .crp)");
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AccountsSettings);
 
@@ -107,6 +100,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected override void AdaptToolbarCommand()
+		{
+			this.toolbar.SetCommand (ToolbarCommand.New,      null, "Nouveau compte");
+			this.toolbar.SetCommand (ToolbarCommand.Delete,   null, "Supprimer le compte");
+			this.toolbar.SetCommand (ToolbarCommand.Deselect, null, "Désélectionner le compte");
+			this.toolbar.SetCommand (ToolbarCommand.Copy,     null, "Copier le compte");
+			this.toolbar.SetCommand (ToolbarCommand.Paste,    null, "Coller le compte");
+			this.toolbar.SetCommand (ToolbarCommand.Export,   null, "Exporter le plan comptable");
+			this.toolbar.SetCommand (ToolbarCommand.Import,   null, "Importer un plan comptable Crésus (fichier .crp)");
+		}
+
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new AccountsTreeTableFiller (this.accessor, this.nodeGetter);
@@ -182,6 +186,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+
+
+		protected override void ShowContextMenu(Point pos)
+		{
+			//	Pas de menu contextuel.
+		}
 
 
 		protected override void UpdateToolbar()

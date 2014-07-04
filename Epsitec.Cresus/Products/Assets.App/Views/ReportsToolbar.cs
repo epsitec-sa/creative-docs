@@ -11,6 +11,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ReportsToolbar : AbstractCommandToolbar
 	{
+		protected override void CreateCommands()
+		{
+			this.SetCommand (ToolbarCommand.ReportSelect, "Report.Select", "Choix d'un rapport");
+			this.SetCommand (ToolbarCommand.ReportParams, "Report.Params", "Paramètres du rapport");
+			this.SetCommand (ToolbarCommand.ReportExport, "Report.Export", "Exporter le rapport");
+		}
+
+
 		public override FrameBox CreateUI(Widget parent)
 		{
 			this.toolbar = new FrameBox
@@ -21,9 +29,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportSelect, "Report.Select", "Choix d'un rapport");
-			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportParams, "Report.Params", "Paramètres du rapport");
-			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportExport, "Report.Export", "Exporter le rapport");
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportSelect);
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportParams);
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportExport);
 
 			return this.toolbar;
 		}

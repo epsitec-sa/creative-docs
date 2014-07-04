@@ -27,14 +27,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public CommandCustomization				NewCustomization;
-		public CommandCustomization				DeleteCustomization;
-		public CommandCustomization				DeselectCustomization;
-		public CommandCustomization				CopyCustomization;
-		public CommandCustomization				PasteCustomization;
-		public CommandCustomization				ExportCustomization;
-		public CommandCustomization				ImportCustomization;
-
 		public bool								ShowGraphic
 		{
 			get
@@ -83,16 +75,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.topTitle.SetTitle (this.title);
 
-			this.toolbar = new TreeTableToolbar
-			{
-				NewCustomization      = this.NewCustomization,
-				DeleteCustomization   = this.DeleteCustomization,
-				DeselectCustomization = this.DeselectCustomization,
-				CopyCustomization     = this.CopyCustomization,
-				PasteCustomization    = this.PasteCustomization,
-				ExportCustomization   = this.ExportCustomization,
-				ImportCustomization   = this.ImportCustomization,
-			};
+			this.toolbar = new TreeTableToolbar ();
+			this.AdaptToolbarCommand();
 
 			this.toolbar.CreateUI (parent);
 
@@ -192,6 +176,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 						break;
 				}
 			};
+		}
+
+		protected virtual void AdaptToolbarCommand()
+		{
 		}
 
 		protected virtual void CreateControllerUI(Widget parent)

@@ -25,13 +25,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
-			this.NewCustomization      = new CommandCustomization ("TreeTable.New.Asset",   "Nouvel objet d'immobilisation");
-			this.DeleteCustomization   = new CommandCustomization ("TreeTable.Delete",      "Supprimer l'objet d'immobilisation");
-			this.DeselectCustomization = new CommandCustomization (null,                    "Désélectionner l'objet d'immobilisation");
-			this.CopyCustomization     = new CommandCustomization ("TreeTable.Copy.Asset",  "Copier l'objet d'immobilisation");
-			this.PasteCustomization    = new CommandCustomization ("TreeTable.Paste.Asset", "Coller l'objet d'immobilisation");
-			this.ExportCustomization   = new CommandCustomization (null,                    "Exporter les objets d'immobilisations");
-
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Assets);
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
@@ -180,6 +173,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected override void AdaptToolbarCommand()
+		{
+			this.toolbar.SetCommand (ToolbarCommand.New,      "TreeTable.New.Asset",   "Nouvel objet d'immobilisation");
+			this.toolbar.SetCommand (ToolbarCommand.Delete,   "TreeTable.Delete",      "Supprimer l'objet d'immobilisation");
+			this.toolbar.SetCommand (ToolbarCommand.Deselect, null,                    "Désélectionner l'objet d'immobilisation");
+			this.toolbar.SetCommand (ToolbarCommand.Copy,     "TreeTable.Copy.Asset",  "Copier l'objet d'immobilisation");
+			this.toolbar.SetCommand (ToolbarCommand.Paste,    "TreeTable.Paste.Asset", "Coller l'objet d'immobilisation");
+			this.toolbar.SetCommand (ToolbarCommand.Export,   null,                    "Exporter les objets d'immobilisations");
+			this.toolbar.SetCommand (ToolbarCommand.Import,   CommandCustomization.Empty);
+		}
+
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter);
@@ -287,41 +291,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedTimestamp = AssetCalculator.GetLastTimestamp (obj);
 			
 			this.OnUpdateAfterCreate (guid, EventType.Input, this.selectedTimestamp.GetValueOrDefault ());
-		}
-
-
-		protected override void ShowContextMenu(Point pos)
-		{
-			//	Affiche le menu contextuel.
-			var popup = new MenuPopup ();
-
-			int n = popup.AddItem (this.NewCustomization,    this.toolbar.GetCommandState (ToolbarCommand.New));
-			int d = popup.AddItem (this.DeleteCustomization, this.toolbar.GetCommandState (ToolbarCommand.Delete));
-			        popup.AddItem ();
-			int c = popup.AddItem (this.CopyCustomization,   this.toolbar.GetCommandState (ToolbarCommand.Copy));
-			int p = popup.AddItem (this.PasteCustomization,  this.toolbar.GetCommandState (ToolbarCommand.Paste));
-
-			popup.Create (this.treeTableFrame, pos, leftOrRight: true);
-
-			popup.ItemClicked += delegate (object sender, int rank)
-			{
-				if (rank == n)
-				{
-					this.OnNew ();
-				}
-				else if (rank == d)
-				{
-					this.OnDelete ();
-				}
-				else if (rank == c)
-				{
-					this.OnCopy ();
-				}
-				else if (rank == p)
-				{
-					this.OnPaste ();
-				}
-			};
 		}
 
 

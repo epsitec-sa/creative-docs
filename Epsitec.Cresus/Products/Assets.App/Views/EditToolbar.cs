@@ -11,6 +11,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class EditToolbar : AbstractCommandToolbar
 	{
+		protected override void CreateCommands()
+		{
+			this.SetCommand (ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
+			this.SetCommand (ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
+		}
+
+
 		public override FrameBox CreateUI(Widget parent)
 		{
 			this.toolbar = new FrameBox
@@ -21,8 +28,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonAccept = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
-			this.buttonCancel = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
+			this.buttonAccept = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Accept);
+			this.buttonCancel = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Cancel);
 
 			return this.toolbar;
 		}
