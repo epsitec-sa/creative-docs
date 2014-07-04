@@ -167,7 +167,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				row.CellRightClicked += delegate (object sender, int rank, Point pos)
 				{
-					pos = this.MapClientToParent (pos);
 					this.OnCellRightClicked (row.Index, rank, pos);
 					this.Focus ();  // pour que les touches flèches fonctionnent
 				};

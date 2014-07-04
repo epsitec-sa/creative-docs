@@ -292,6 +292,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 
+				this.controller.CellRightClicked += delegate (object sender, int row, int rank, Point pos)
+				{
+					int sel = this.LineToRow (row);
+					if (sel != -1)
+					{
+						this.SetSelection (sel, this.controller.LeftVisibleCell + rank);
+						this.ShowContextMenu (pos);
+					}
+				};
+
 				this.controller.DokeySelect += delegate (object sender, KeyCode key)
 				{
 					this.OnDokeySelect (key);
@@ -468,6 +478,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		private void ShowContextMenu(Point pos)
+		{
+			//	Affiche le menu contextuel.
+			var popup = new SimplePopup ();
+
+			popup.Items.Add ("Rouge");
+			popup.Items.Add ("Vert");
+			popup.Items.Add ("Bleu");
+
+			popup.Create (this.scroller, pos, leftOrRight: true);
+
+			popup.ItemClicked += delegate (object sender, int rank)
+			{
+			};
+		}
 
 		private void OnDokeySelect(KeyCode key)
 		{

@@ -123,26 +123,36 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else
 			{
-				this.OnCellRightClicked (this.detectedHoverRank, e.Point);
+				var pos = this.MapClientToScreen (e.Point);
+				this.OnCellRightClicked (this.detectedHoverRank, pos);
 			}
 			base.OnClicked (e);
 		}
 
 		protected override void OnDoubleClicked(MessageEventArgs e)
 		{
-			this.OnCellDoubleClicked (this.detectedHoverRank);
+			if ((e.Message.Button & MouseButtons.Right) == 0)
+			{
+				this.OnCellDoubleClicked (this.detectedHoverRank);
+			}
 			base.OnDoubleClicked (e);
 		}
 
 		protected override void OnMouseMove(MessageEventArgs e)
 		{
-			this.SetDetectedHoverRank (this.Detect (e.Point));
+			if ((e.Message.Button & MouseButtons.Right) == 0)
+			{
+				this.SetDetectedHoverRank (this.Detect (e.Point));
+			}
 			base.OnMouseMove (e);
 		}
 
 		protected override void OnExited(MessageEventArgs e)
 		{
-			this.SetDetectedHoverRank (-1);
+			if ((e.Message.Button & MouseButtons.Right) == 0)
+			{
+				this.SetDetectedHoverRank (-1);
+			}
 			base.OnExited (e);
 		}
 

@@ -601,7 +601,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			int row = this.DetectRow (pos);
 			if (row != -1)
 			{
-				this.OnRowRightClicked (row, this.DetectColumn (pos), pos);
+				var p = this.MapClientToScreen (pos);
+				this.OnRowRightClicked (row, this.DetectColumn (pos), p);
 				this.Focus ();  // pour que les touches flèches fonctionnent
 			}
 		}

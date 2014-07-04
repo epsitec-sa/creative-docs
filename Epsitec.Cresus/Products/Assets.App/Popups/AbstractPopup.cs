@@ -23,7 +23,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			//	Crée le popup "dialogue", dont la queue pointera vers le widget target.
 			this.target = target;
-
 			var parent = this.GetParent ();
 
 			this.Parent = parent;
@@ -50,17 +49,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public void Create(Widget widget, Point targetPos, bool leftOrRight = false)
 		{
 			//	Crée le popup "menu contextuel", dont la queue pointera vers la position.
+			//	Le widget est quelconque. Il sert uniquement à retrouver le parent.
+			//	La position est dans l'espace "screen".
 			this.target = widget;
-
 			var parent = this.GetParent ();
 
 			this.Parent = parent;
 			this.Anchor = AnchorStyles.All;
 			this.Name   = "PopupWidget";
 
-			var p1 = parent.MapClientToScreen (Point.Zero);
-			var p2 = target.MapClientToScreen (targetPos);
-			var p = p2-p1;
+			var p = targetPos - parent.MapClientToScreen (Point.Zero);
 
 			const int d = 1;
 			this.targetReal = new Rectangle (p.X-d, p.Y-d, d*2, d*2);
@@ -528,8 +526,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void PaintTarget(Graphics graphics)
 		{
-			graphics.AddFilledRectangle (this.targetReal);
-			graphics.RenderSolid (Color.FromAlphaColor (0.4, ColorManager.SelectionColor));
+			if (this.targetReal.Width > 2)
+			{
+				graphics.AddFilledRectangle (this.targetReal);
+				graphics.RenderSolid (Color.FromAlphaColor (0.4, ColorManager.SelectionColor));
+			}
 		}
 
 
