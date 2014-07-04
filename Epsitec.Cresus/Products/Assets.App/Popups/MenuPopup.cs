@@ -43,6 +43,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public void Simplify()
+		{
+			//	Si le menu commence par un séparateur, supprime-le.
+			if (this.commands.Any ())
+			{
+				if (this.commands.First () == ToolbarCommand.Unknown)  // séparateur ?
+				{
+					this.commands.RemoveAt (0);
+				}
+			}
+
+			//	Si le menu se termine par un séparateur, supprime-le.
+			if (this.commands.Any ())
+			{
+				if (this.commands.Last () == ToolbarCommand.Unknown)  // séparateur ?
+				{
+					this.commands.RemoveAt (this.commands.Count-1);
+				}
+			}
+		}
+
+
 		protected override Size DialogSize
 		{
 			get
@@ -64,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var command = this.commands[i];
 
-				if (command == ToolbarCommand.Unknown)
+				if (command == ToolbarCommand.Unknown)  // séparateur ?
 				{
 					this.CreateSeparator (h+y, w);
 				}
@@ -151,6 +173,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.actions[command] ();  // effectue l'action
 		}
 
+
 		private int RequiredWidth
 		{
 			//	Calcule la largeur nécessaire en fonction de l'ensemble des textes.
@@ -197,7 +220,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var command = this.commands[i];
 
-					if (command == ToolbarCommand.Unknown)
+					if (command == ToolbarCommand.Unknown)  // séparateur ?
 					{
 						if (separator)  // compact ?
 						{

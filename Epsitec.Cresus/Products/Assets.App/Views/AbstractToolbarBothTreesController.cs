@@ -210,8 +210,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			popup.AddSeparator ();
 			popup.AddItem (ToolbarCommand.Copy,   this.OnCopy);
 			popup.AddItem (ToolbarCommand.Paste,  this.OnPaste);
+			popup.Simplify ();
 
-			popup.Create (this.treeTableFrame, pos, leftOrRight: true);
+			popup.Create (this.treeTableFrame, pos, leftOrRight: false);
 		}
 
 		private void OnDokeySelect(KeyCode key)
