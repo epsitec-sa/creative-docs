@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.toolbar = toolbar;
 
 			this.commands = new List<ToolbarCommand> ();
+			this.actions = new Dictionary<ToolbarCommand, System.Action> ();
 		}
 
 
@@ -30,13 +31,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.commands.Add (ToolbarCommand.Unknown);
 		}
 
-		public void AddItem(ToolbarCommand command)
+		public void AddItem(ToolbarCommand command, System.Action action)
 		{
 			var state = this.toolbar.GetCommandState (command);
 
 			if (state == ToolbarCommandState.Enable)
 			{
 				this.commands.Add (command);
+				this.actions.Add (command, action);
 			}
 		}
 
@@ -127,21 +129,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			frame.Clicked += delegate
 			{
-				this.ClosePopup ();
-				this.OnItemClicked (this.commands[rank]);
+				this.DoAction (rank);
 			};
 
 			icon.Clicked += delegate
 			{
-				this.ClosePopup ();
-				this.OnItemClicked (this.commands[rank]);
+				this.DoAction (rank);
 			};
 
 			text.Clicked += delegate
 			{
-				this.ClosePopup ();
-				this.OnItemClicked (this.commands[rank]);
+				this.DoAction (rank);
 			};
+		}
+
+		private void DoAction(int rank)
+		{
+			this.ClosePopup ();
+
+			var command = this.commands[rank];
+			this.actions[command] ();  // effectue l'action
 		}
 
 		private int RequiredWidth
@@ -218,16 +225,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		#region Events handler
-		private void OnItemClicked(ToolbarCommand command)
-		{
-			this.ItemClicked.Raise (this, command);
-		}
-
-		public event EventHandler<ToolbarCommand> ItemClicked;
-		#endregion
-
-
 		private const int							margins		= 5;
 		private const int							itemHeight	= 26;
 		private const int							sepHeight	= 8;
@@ -235,5 +232,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly AbstractCommandToolbar		toolbar;
 		private readonly List<ToolbarCommand>		commands;
+		private readonly Dictionary<ToolbarCommand, System.Action> actions;
 	}
 }

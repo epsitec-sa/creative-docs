@@ -205,35 +205,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Affiche le menu contextuel.
 			var popup = new MenuPopup (this.toolbar);
 
-			popup.AddItem (ToolbarCommand.New);
-			popup.AddItem (ToolbarCommand.Delete);
+			popup.AddItem (ToolbarCommand.New,    this.OnNew);
+			popup.AddItem (ToolbarCommand.Delete, this.OnDelete);
 			popup.AddSeparator ();
-			popup.AddItem (ToolbarCommand.Copy);
-			popup.AddItem (ToolbarCommand.Paste);
+			popup.AddItem (ToolbarCommand.Copy,   this.OnCopy);
+			popup.AddItem (ToolbarCommand.Paste,  this.OnPaste);
 
 			popup.Create (this.treeTableFrame, pos, leftOrRight: true);
-
-			popup.ItemClicked += delegate (object sender, ToolbarCommand command)
-			{
-				switch (command)
-				{
-					case ToolbarCommand.New:
-						this.OnNew ();
-						break;
-
-					case ToolbarCommand.Delete:
-						this.OnDelete ();
-						break;
-
-					case ToolbarCommand.Copy:
-						this.OnCopy ();
-						break;
-
-					case ToolbarCommand.Paste:
-						this.OnPaste ();
-						break;
-				}
-			};
 		}
 
 		private void OnDokeySelect(KeyCode key)
