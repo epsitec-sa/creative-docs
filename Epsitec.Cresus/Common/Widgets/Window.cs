@@ -601,6 +601,10 @@ namespace Epsitec.Common.Widgets
 		{
 			set
 			{
+				if (this.window == null)
+				{
+					return;
+				}
 				this.window.Cursor = (value == null) ? null : value.GetPlatformCursor ();
 				this.windowCursor = value;
 			}

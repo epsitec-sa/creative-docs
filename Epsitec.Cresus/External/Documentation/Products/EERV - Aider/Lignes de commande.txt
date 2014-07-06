@@ -344,8 +344,6 @@ SVN Update > r23292
 
 -echupdate -newechfile:S:\eerv\eerv-2014-06-19.xml -oldechfile:S:\eerv\eerv-2014-06-12.xml -output:s:\eerv\ech-diff-2014-06-19.md
 
-
-
 Lancé le 25.06.2014
 -------------------
 
@@ -356,10 +354,17 @@ SVN Update > r23323
 -exportsubscriptions -output:export-2014-07-03.txt -error:error-2014-07-03.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2014-07-03.txt -publicationdate:2014-07-03 -response:tamedia-2014-07-03.log
 
-
 Lancé le 26.06.2014
 -------------------
 
 SVN Update > r23339
 
 -echupdate -newechfile:S:\eerv\eerv-2014-06-26.xml -oldechfile:S:\eerv\eerv-2014-06-19.xml -output:s:\eerv\ech-diff-2014-06-26.md
+
+Lancé le 05.07.2014
+-------------------
+
+SVN Update > r23389
+
+-echupdate -newechfile:S:\eerv\eerv-2014-07-03.xml -oldechfile:S:\eerv\eerv-2014-06-26.xml -output:s:\eerv\ech-diff-2014-07-03.md
+
