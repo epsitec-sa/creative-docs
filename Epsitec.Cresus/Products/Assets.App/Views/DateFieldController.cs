@@ -736,7 +736,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private static void Filter(TextField textField)
 		{
-			//	On filtre les caractères stupides qui viennent d'être insésés, tels que
+			//	On filtre les caractères stupides qui viennent d'être insérés, tels que
 			//	les lettres.
 			if (!string.IsNullOrEmpty (textField.Text))
 			{

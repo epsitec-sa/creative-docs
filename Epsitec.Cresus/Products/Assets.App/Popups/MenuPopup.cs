@@ -78,6 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public override void CreateUI()
 		{
 			this.commands.ForEach (command => this.CreateLine (command));
+			this.CreateInvisibleCloseButton ();
 		}
 
 		private void CreateLine(ToolbarCommand command)
@@ -125,6 +126,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			item.Clicked += delegate
 			{
 				this.DoAction (command);
+			};
+		}
+
+		private void CreateInvisibleCloseButton()
+		{
+			//	Crée un bouton de fermeture invisible. Il permet de permer le menu lorsque
+			//	les touches Esc ou Return sont pressées.
+			var button = new IconButton
+			{
+				Parent        = this.mainFrameBox,
+				AutoFocus     = false,
+				Anchor        = AnchorStyles.TopRight,
+				PreferredSize = new Size (0, 0),
+				Margins       = new Margins (0, 0, 0, 0),
+			};
+
+			button.Shortcuts.Add (Epsitec.Common.Widgets.Feel.Factory.Active.CancelShortcut);
+			button.Shortcuts.Add (Epsitec.Common.Widgets.Feel.Factory.Active.AcceptShortcut);
+
+			button.Focus ();
+
+			button.Clicked += delegate
+			{
+				this.ClosePopup ();
 			};
 		}
 

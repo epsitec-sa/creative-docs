@@ -456,7 +456,7 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 
 		private static System.DateTime? GetPlausibleDate(int year, int month, int day)
 		{
-			//	Retourne une date la plus proche de celle souhaitée. Exemples:
+			//	Retourne la date la plus proche possible de celle souhaitée. Exemples:
 			//	"00.00.2014" retourne "01.01.2014"
 			//	"99.99.2014" retourne "31.12.2014"
 			//	"31.02.2014" retourne "28.02.2014"

@@ -161,6 +161,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Margins       = new Margins (0, 0, 0, 0),
 			};
 
+			button.Shortcuts.Add (Epsitec.Common.Widgets.Feel.Factory.Active.CancelShortcut);
+			button.Shortcuts.Add (Epsitec.Common.Widgets.Feel.Factory.Active.AcceptShortcut);
+
 			ToolTip.Default.SetToolTip (button, "Fermer la fenêtre");
 
 			button.Clicked += delegate
