@@ -332,7 +332,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private bool IsHilited(ObjectField field)
 		{
 			if (field != ObjectField.Unknown &&
-				!DataAccessor.IsOneShotField(field))
+				!DataObject.IsOneShotField(field))
 			{
 				return this.GetPropertyState (field) == PropertyState.Single;
 			}

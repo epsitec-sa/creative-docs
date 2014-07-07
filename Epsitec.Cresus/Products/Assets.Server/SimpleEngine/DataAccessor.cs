@@ -337,23 +337,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
-		public static bool IsOneShotField(ObjectField objectField)
-		{
-			switch (objectField)
-			{
-				case ObjectField.OneShotNumber:
-				case ObjectField.OneShotDateEvent:
-				case ObjectField.OneShotDateOperation:
-				case ObjectField.OneShotComment:
-				case ObjectField.OneShotDocuments:
-					return true;
-
-				default:
-					return false;
-			}
-		}
-
-
 		public ObjectField GetMainStringField(BaseType baseType)
 		{
 			if (baseType == BaseType.Assets ||

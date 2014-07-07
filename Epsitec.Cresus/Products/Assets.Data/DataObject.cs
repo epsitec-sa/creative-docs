@@ -3,10 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
 
-namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+namespace Epsitec.Cresus.Assets.Data
 {
 	public class DataObject : IGuid
 	{
@@ -201,7 +200,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			// On cherche depuis la date donnée en remontant dans le passé.
-			if (!DataAccessor.IsOneShotField (field))
+			if (!DataObject.IsOneShotField (field))
 			{
 				var e = this.events
 					.Where (x => x.Timestamp <= timestamp && x.GetProperty (field) != null)
@@ -219,6 +218,22 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			return null;
+		}
+
+		public static bool IsOneShotField(ObjectField objectField)
+		{
+			switch (objectField)
+			{
+				case ObjectField.OneShotNumber:
+				case ObjectField.OneShotDateEvent:
+				case ObjectField.OneShotDateOperation:
+				case ObjectField.OneShotComment:
+				case ObjectField.OneShotDocuments:
+					return true;
+
+				default:
+					return false;
+			}
 		}
 
 

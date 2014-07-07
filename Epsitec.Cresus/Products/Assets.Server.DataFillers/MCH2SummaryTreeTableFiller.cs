@@ -163,19 +163,19 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Filtered,
-						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
 						EventType.Input);
 
 				case Column.Reorganizations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Filtered,
-						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
 						EventType.Modification);
 
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Filtered,
-						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
 						EventType.Output);
 
 				case Column.FinalState:
@@ -187,25 +187,25 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.AmortizationsAuto:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Amortizations,
-						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
 						EventType.AmortizationAuto);
 
 				case Column.AmortizationsExtra:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Amortizations,
-						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
 						EventType.AmortizationExtra);
 
 				case Column.Revaluations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Filtered,
-						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
 						EventType.Revaluation);
 
 				case Column.Revalorizations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Filtered,
-						new DateRange (this.InitialTimestamp.Date, this.FinalTimestamp.Date.AddDays (1)),
+						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
 						EventType.Revalorization);
 
 				default:

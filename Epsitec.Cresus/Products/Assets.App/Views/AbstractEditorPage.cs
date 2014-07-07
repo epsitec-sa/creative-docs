@@ -754,7 +754,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return PropertyState.Timeless;
 			}
-			else if (DataAccessor.IsOneShotField (field))
+			else if (DataObject.IsOneShotField (field))
 			{
 				return PropertyState.OneShot;
 			}

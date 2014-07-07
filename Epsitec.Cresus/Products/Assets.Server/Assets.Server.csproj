@@ -69,7 +69,6 @@
     <Compile Include="BusinessLogic\AssetCalculator.cs" />
     <Compile Include="BusinessLogic\AssetsLogic.cs" />
     <Compile Include="BusinessLogic\DataCellFlags.cs" />
-    <Compile Include="BusinessLogic\DataDescriptions.cs" />
     <Compile Include="BusinessLogic\DateRange.cs" />
     <Compile Include="BusinessLogic\DecimalFormat.cs" />
     <Compile Include="BusinessLogic\Entries.cs" />
@@ -92,24 +91,15 @@
     <Compile Include="BusinessLogic\TimelineMode.cs" />
     <Compile Include="BusinessLogic\TimelinesMode.cs" />
     <Compile Include="BusinessLogic\UserFieldsLogic.cs" />
-    <Compile Include="SimpleEngine\CopyNameStrategy.cs" />
-    <Compile Include="SimpleEngine\BaseType.cs" />
     <Compile Include="SimpleEngine\AccountCategory.cs" />
     <Compile Include="SimpleEngine\AccountType.cs" />
     <Compile Include="SimpleEngine\DataClipboard.cs" />
     <Compile Include="BusinessLogic\AccountsImport.cs" />
     <Compile Include="SimpleEngine\DummyAccounts.cs" />
-    <Compile Include="SimpleEngine\GlobalSettings.cs" />
-    <Compile Include="SimpleEngine\UserField.cs" />
     <Compile Include="SimpleEngine\DataAccessor.NodeGetter.cs" />
     <Compile Include="SimpleEngine\EmptyMandat.cs" />
     <Compile Include="SimpleEngine\EditionAccessor.cs" />
-    <Compile Include="SimpleEngine\FieldType.cs" />
-    <Compile Include="SimpleEngine\EventType.cs" />
     <Compile Include="SimpleEngine\DataAccessor.cs" />
-    <Compile Include="SimpleEngine\DataEvent.cs" />
-    <Compile Include="SimpleEngine\DataMandat.cs" />
-    <Compile Include="SimpleEngine\DataObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

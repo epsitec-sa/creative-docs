@@ -56,7 +56,13 @@
     </Compile>
     <Compile Include="AmortizationType.cs" />
     <Compile Include="AmortizedAmount.cs" />
+    <Compile Include="BaseType.cs" />
     <Compile Include="ComparableData.cs" />
+    <Compile Include="CopyNameStrategy.cs" />
+    <Compile Include="DataDescriptions.cs" />
+    <Compile Include="DataEvent.cs" />
+    <Compile Include="DataMandat.cs" />
+    <Compile Include="DataObject.cs" />
     <Compile Include="DataProperties\AbstractDataProperty.cs" />
     <Compile Include="ComputedAmount.cs" />
     <Compile Include="DataProperties\DataAmortizedAmountProperty.cs" />
@@ -68,6 +74,9 @@
     <Compile Include="DataProperties\DataIntProperty.cs" />
     <Compile Include="DataProperties\DataStringProperty.cs" />
     <Compile Include="EntryScenario.cs" />
+    <Compile Include="EventType.cs" />
+    <Compile Include="FieldType.cs" />
+    <Compile Include="GlobalSettings.cs" />
     <Compile Include="Guid.cs" />
     <Compile Include="GuidList.cs" />
     <Compile Include="GuidNode.cs" />
@@ -84,6 +93,7 @@
     <Compile Include="SortedType.cs" />
     <Compile Include="SortingInstructions.cs" />
     <Compile Include="Timestamp.cs" />
+    <Compile Include="UserField.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Solution Items\Epsitec.Cresus.snk">
