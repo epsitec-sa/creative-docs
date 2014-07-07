@@ -743,6 +743,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (text.Length          == 3 &&  // "123|" ?
 					textField.CursorFrom == 3 &&
 					textField.CursorTo   == 3 &&
+					DateFieldController.IsDigit (text[0]) &&
 					DateFieldController.IsDigit (text[1]) &&
 					DateFieldController.IsDigit (text[2]))
 				{
@@ -753,6 +754,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (text.Length          == 6 &&  // "25.012|" ?
 					textField.CursorFrom == 6 &&
 					textField.CursorTo   == 6 &&
+					DateFieldController.IsDigit (text[0]) &&
+					DateFieldController.IsDigit (text[1]) &&
+					text[2] == '.' &&
+					DateFieldController.IsDigit (text[3]) &&
 					DateFieldController.IsDigit (text[4]) &&
 					DateFieldController.IsDigit (text[5]))
 				{
