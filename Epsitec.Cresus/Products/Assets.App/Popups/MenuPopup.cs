@@ -219,7 +219,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 
 			popup.Simplify ();  // supprime les séparateurs superflus
-			popup.Create (widget, pos, leftOrRight: false);
+
+			if (popup.commands.Any ())
+			{
+				popup.Create (widget, pos, leftOrRight: false);
+			}
 		}
 
 		public struct Item
