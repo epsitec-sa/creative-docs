@@ -52,6 +52,7 @@
     <Compile Include="Factories\CompanyMandatFactory.cs" />
     <Compile Include="Factories\EmptyMandatFactory.cs" />
     <Compile Include="Factories\MandatFactory.cs" />
+    <Compile Include="Factories\TestMandatFactory.cs" />
     <Compile Include="Factories\MCH2MandatFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
