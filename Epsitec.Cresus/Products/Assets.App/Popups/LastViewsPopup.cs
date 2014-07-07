@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.accessor   = accessor;
 			this.viewStates = viewStates;
 
-			this.controller = new NavigationTreeTableController();
+			this.controller = new NavigationTreeTableController ();
 
 			this.nodeGetter = new LastViewsNodeGetter ();
 			this.nodeGetter.SetParams (this.ViewStatesToNavigationNodes (this.viewStates));
@@ -81,6 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.controller.CreateUI (frame, rowHeight: LastViewsPopup.rowHeight, headerHeight: LastViewsPopup.headerHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
+			this.controller.AllowsSorting  = false;
 
 			TreeTableFiller<LastViewNode>.FillColumns (this.controller, this.dataFiller, "Popup.LastViews");
 		}
@@ -115,7 +116,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			rows = System.Math.Max (rows, 3);
 
 			int dx = LastViewsTreeTableFiller.TotalWidth
-				   + (int) AbstractScroller.DefaultBreadth;
+				   + (int) AbstractScroller.DefaultBreadth
+				   + 3;
 
 			int dy = AbstractPopup.titleHeight
 				   + LastViewsPopup.headerHeight
