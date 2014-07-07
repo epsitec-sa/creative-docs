@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.Data;
-using System;
 
 namespace Epsitec.Cresus.Assets.Core.Helpers
 {
@@ -228,11 +227,11 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 				{
 					if (TypeConverters.numberFormatNegative == SettingsEnum.NegativeParentheses)
 					{
-						s = String.Format ("({0})", s);  // (123)
+						s = System.String.Format ("({0})", s);  // (123)
 					}
 					else
 					{
-						s = String.Format ("-{0}", s);  // -123
+						s = System.String.Format ("-{0}", s);  // -123
 					}
 				}
 
@@ -437,27 +436,7 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 				}
 			}
 
-			if (y < 1000)
-			{
-				y += 2000;
-			}
-
-			if (d < 1 || d > 31 || m < 1 || m > 12)
-			{
-				date = null;
-				return true;
-			}
-
-			try
-			{
-				date = new System.DateTime (y, m, d);
-			}
-			catch
-			{
-				date = null;
-				return true;
-			}
-
+			date = TypeConverters.GetPlausibleDate (y, m, d);
 			bool ok = true;
 
 			if (minDate.HasValue && date < minDate.Value)
@@ -473,6 +452,41 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 			}
 
 			return ok;
+		}
+
+		private static System.DateTime? GetPlausibleDate(int year, int month, int day)
+		{
+			//	Retourne une date la plus proche de celle souhaitée. Exemples:
+			//	"00.00.2014" retourne "01.01.2014"
+			//	"99.99.2014" retourne "31.12.2014"
+			//	"31.02.2014" retourne "28.02.2014"
+			//	"99.99.99"   retourne "31.12.2099"
+			//	"01.01.14"   retourne "01.01.2014"
+
+			day = System.Math.Max (day, 1);
+			day = System.Math.Min (day, 31);  // day <- 1..31
+
+			month = System.Math.Max (month, 1);
+			month = System.Math.Min (month, 12);  // month <- 1..12
+
+			if (year < 1000)
+			{
+				year += 2000;
+			}
+
+			while (day > 0)
+			{
+				try
+				{
+					return new System.DateTime (year, month, day);
+				}
+				catch
+				{
+					day--;
+				}
+			}
+
+			return null;
 		}
 
 		public static string DateToString(System.DateTime? date)
