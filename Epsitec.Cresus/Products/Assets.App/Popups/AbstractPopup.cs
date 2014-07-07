@@ -579,19 +579,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected Widget GetParent()
 		{
-			//	Retourne un widget parent quelconque, dont la seule caractéristique
-			//	importante est qu'il doit occuper toute la fenêtre.
-			Widget parent = this.target;
-
-			while (true)
-			{
-				if (parent.Name == "PopupParentFrame")
-				{
-					return parent;
-				}
-
-				parent = parent.Parent;
-			}
+			//	Retourne le widget FrameBox qui occupe toute la fenêtre.
+			var parent = this.target.Window.Root.Children[0] as FrameBox;
+			System.Diagnostics.Debug.Assert (parent != null);
+			System.Diagnostics.Debug.Assert (parent.Name == "PopupParentFrame");
+			return parent;
 		}
 
 
