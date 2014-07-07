@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class EventPastePopup : StackedPopup
 	{
-		public EventPastePopup(DataAccessor accessor, DataObject obj, EventType eventType)
+		private EventPastePopup(DataAccessor accessor, DataObject obj, EventType eventType)
 			: base (accessor)
 		{
 			this.obj       = obj;
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public System.DateTime?					Date
+		private System.DateTime?					Date
 		{
 			get
 			{

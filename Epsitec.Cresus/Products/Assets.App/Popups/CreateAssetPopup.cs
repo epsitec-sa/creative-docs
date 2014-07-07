@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class CreateAssetPopup : StackedPopup
 	{
-		public CreateAssetPopup(DataAccessor accessor)
+		private CreateAssetPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = "Création d'un nouvel objet";
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public string							ObjectName
+		private string							ObjectName
 		{
 			get
 			{

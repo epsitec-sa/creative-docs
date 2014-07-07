@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class MenuPopup : AbstractPopup
 	{
-		public MenuPopup(AbstractCommandToolbar toolbar)
+		private MenuPopup(AbstractCommandToolbar toolbar)
 		{
 			this.toolbar = toolbar;
 
@@ -26,24 +26,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public void AddSeparator()
+		private void AddItem(ToolbarCommand command, System.Action action)
 		{
-			this.commands.Add (ToolbarCommand.Unknown);
-		}
-
-		public void AddItem(ToolbarCommand command, System.Action action)
-		{
-			var state = this.toolbar.GetCommandState (command);
-
-			if (state == ToolbarCommandState.Enable)
+			if (action == null)  // séparateur ?
 			{
-				this.commands.Add (command);
-				this.actions.Add (command, action);
+				this.commands.Add (ToolbarCommand.Unknown);
+			}
+			else
+			{
+				var state = this.toolbar.GetCommandState (command);
+
+				if (state == ToolbarCommandState.Enable)
+				{
+					this.commands.Add (command);
+					this.actions.Add (command, action);
+				}
 			}
 		}
 
 
-		public void Simplify()
+		private void Simplify()
 		{
 			//	Si le menu commence par un séparateur, supprime-le.
 			if (this.commands.Any ())
@@ -69,189 +71,151 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				int dx = MenuPopup.margins*2 + this.RequiredWidth;
-				int dy = MenuPopup.margins*2 + this.RequiredHeight;
-
-				return new Size (dx, dy);
+				return new Size (this.RequiredWidth, this.RequiredHeight);
 			}
 		}
 
 		public override void CreateUI()
 		{
-			int h = MenuPopup.margins + this.RequiredHeight;
-			int w = this.RequiredWidth;
-			int i = 0;
+			this.commands.ForEach (command => this.CreateLine (command));
+		}
 
-			foreach (int y in this.PosY)
+		private void CreateLine(ToolbarCommand command)
+		{
+			//	Crée une ligne du menu, de haut en bas.
+			if (command == ToolbarCommand.Unknown)  // séparateur ?
 			{
-				var command = this.commands[i];
-
-				if (command == ToolbarCommand.Unknown)  // séparateur ?
-				{
-					this.CreateSeparator (h+y, w);
-				}
-				else
-				{
-					this.CreateItem (i, h+y, w);
-				}
-
-				i++;
+				this.CreateSeparator ();
+			}
+			else
+			{
+				this.CreateItem (command);
 			}
 		}
 
-		private void CreateSeparator(int y, int width)
+		private void CreateSeparator()
 		{
-			int dx = width + MenuPopup.margins*2;
-
+			//	Crée une ligne contenant un trait horizontal de séparation.
 			new FrameBox
 			{
-				Parent        = this.mainFrameBox,
-				Anchor        = AnchorStyles.BottomLeft,
-				PreferredSize = new Size (dx, 1),
-				Margins       = new Margins (0, 0, 0, y),
-				BackColor     = ColorManager.PopupBorderColor,
+				Parent          = this.mainFrameBox,
+				Dock            = DockStyle.Top,
+				PreferredHeight = 1,  // trait horizontal d'un pixel d'épaisseur
+				BackColor       = ColorManager.PopupBorderColor,
+				Margins         = new Margins (0, 0, MenuPopup.margins, MenuPopup.margins),
 			};
 		}
 
-		private void CreateItem(int rank, int y, int width)
+		private void CreateItem(ToolbarCommand command)
 		{
-			int x = MenuPopup.margins;
-			int dx = width;
-			int dy = MenuPopup.itemHeight;
+			//	Crée une ligne contenant un item (icône suivie d'un texte).
+			bool top = this.mainFrameBox.Children.Count == 0;  // première ligne ?
+			var desc = this.toolbar.GetCommandDescription (command);
 
-			var frame = new FrameBox
+			var item = new MenuPopupItem
 			{
-				Parent        = this.mainFrameBox,
-				Anchor        = AnchorStyles.BottomLeft,
-				PreferredSize = new Size (dx, dy),
-				Margins       = new Margins (x, 0, 0, y),
+				Parent          = this.mainFrameBox,
+				IconUri         = Misc.GetResourceIconUri (desc.Icon),
+				Text            = desc.Tooltip,
+				Dock            = DockStyle.Top,
+				PreferredHeight = MenuPopup.itemHeight,
+				Margins         = new Margins (MenuPopup.margins, MenuPopup.margins, top ? MenuPopup.margins : 0, 0),
 			};
 
-			var desc = this.toolbar.GetCommandDescription (this.commands[rank]);
-
-			var icon = new IconButton
+			item.Clicked += delegate
 			{
-				Parent        = frame,
-				IconUri       = Misc.GetResourceIconUri (desc.Icon),
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (dy, dy),
-			};
-
-			var text = new ColoredButton
-			{
-				Parent           = frame,
-				Text             = this.GetTextWithGaps (rank),
-				ContentAlignment = ContentAlignment.MiddleLeft,
-				AutoFocus        = false,
-				NormalColor      = Color.Empty,
-				Dock             = DockStyle.Fill,
-				PreferredHeight  = dy,
-			};
-
-			frame.Clicked += delegate
-			{
-				this.DoAction (rank);
-			};
-
-			icon.Clicked += delegate
-			{
-				this.DoAction (rank);
-			};
-
-			text.Clicked += delegate
-			{
-				this.DoAction (rank);
+				this.DoAction (command);
 			};
 		}
 
-		private void DoAction(int rank)
+		private void DoAction(ToolbarCommand command)
 		{
+			//	Effectue l'action correspondant à une commande.
 			this.ClosePopup ();
-
-			var command = this.commands[rank];
 			this.actions[command] ();  // effectue l'action
 		}
 
 
 		private int RequiredWidth
 		{
-			//	Calcule la largeur nécessaire en fonction de l'ensemble des textes.
+			//	Calcule la largeur nécessaire en fonction de l'ensemble des cases du menu.
 			get
 			{
 				return this.commands.Max
 				(
-					command => MenuPopup.GetTextWithGaps (this.toolbar.GetCommandDescription (command).Tooltip).GetTextWidth ()
+					command => MenuPopupItem.GetRequiredWidth
+					(
+						MenuPopup.itemHeight, this.toolbar.GetCommandDescription (command).Tooltip
+					)
 				)
-				+ MenuPopup.itemHeight
-				+ ColoredButton.horizontalMargins * 2
-				+ 3;  // visuellement, il est bon d'avoir un chouia d'espace en plus à droite
+				+ MenuPopup.margins*2;
 			}
 		}
-
-		private string GetTextWithGaps(int rank)
-		{
-			var desc = this.toolbar.GetCommandDescription (this.commands[rank]);
-			return MenuPopup.GetTextWithGaps (desc.Tooltip);
-		}
-
-		private static string GetTextWithGaps(string text)
-		{
-			return string.Concat (MenuPopup.textGap, text, MenuPopup.textGap);
-		}
-
 
 		private int RequiredHeight
 		{
+			//	Calcule la hauteur nécessaire en fonction de l'ensemble des cases du menu.
 			get
 			{
-				return -this.PosY.Last ();
+				return this.commands.Sum
+				(
+					command => MenuPopup.GetRequiredHeight (command)
+				)
+				+ MenuPopup.margins*2;
 			}
 		}
 
-		private IEnumerable<int> PosY
+		private static int GetRequiredHeight(ToolbarCommand command)
 		{
-			get
+			if (command == ToolbarCommand.Unknown)  // séparateur ?
 			{
-				int y = 0;
-				bool separator = false;
-
-				for (int i=0; i<this.commands.Count; i++)
-				{
-					var command = this.commands[i];
-
-					if (command == ToolbarCommand.Unknown)  // séparateur ?
-					{
-						if (separator)  // compact ?
-						{
-							y += MenuPopup.sepHeight/2 - 2;
-							yield return y;
-							y -= MenuPopup.sepHeight/2;
-						}
-						else
-						{
-							y -= MenuPopup.sepHeight/2;
-							yield return y;
-							y -= MenuPopup.sepHeight/2;
-						}
-
-						separator = true;
-					}
-					else
-					{
-						y -= MenuPopup.itemHeight;
-						yield return y;
-						separator = false;
-					}
-				}
+				return MenuPopup.margins + 1 + MenuPopup.margins;
+			}
+			else
+			{
+				return MenuPopup.itemHeight;
 			}
 		}
 
 
-		private const int							margins		= 5;
+		#region Helpers
+		public static void Show(AbstractCommandToolbar toolbar, Widget widget, Point pos, params Item[] items)
+		{
+			//	Affiche le menu contextuel.
+			//	- La toolbar permet d'obtenir les commandes.
+			//	- Le widget est quelconque; il sert juste à retrouver la fenêtre.
+			//	- La position indique le point cliqué avec le bouton de droite de la souris,
+			//	  dans l'espace 'Screen'.
+			//	- La liste d'items décrit le contenu du menu.
+
+			var popup = new MenuPopup (toolbar);
+
+			foreach (var item in items)
+			{
+
+				popup.AddItem (item.Command, item.Action);
+			}
+
+			popup.Simplify ();  // supprime les séparateurs superflus
+			popup.Create (widget, pos, leftOrRight: false);
+		}
+
+		public struct Item
+		{
+			public Item(ToolbarCommand command, System.Action action)
+			{
+				this.Command = command;
+				this.Action  = action;
+			}
+
+			public readonly ToolbarCommand		Command;
+			public readonly System.Action		Action;
+		}
+		#endregion
+
+
+		private const int							margins		= 2;
 		private const int							itemHeight	= 26;
-		private const int							sepHeight	= 8;
-		private const string						textGap		= "  ";
 
 		private readonly AbstractCommandToolbar		toolbar;
 		private readonly List<ToolbarCommand>		commands;

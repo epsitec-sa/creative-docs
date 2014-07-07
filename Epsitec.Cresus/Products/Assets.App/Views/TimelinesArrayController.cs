@@ -481,16 +481,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void ShowContextMenu(Point pos)
 		{
 			//	Affiche le menu contextuel.
-			var popup = new MenuPopup (this.timelinesToolbar);
-
-			popup.AddItem (ToolbarCommand.New,    this.OnTimelineNew);
-			popup.AddItem (ToolbarCommand.Delete, this.OnTimelineDelete);
-			popup.AddSeparator ();
-			popup.AddItem (ToolbarCommand.Copy,   this.OnTimelineCopy);
-			popup.AddItem (ToolbarCommand.Paste,  this.OnTimelinePaste);
-			popup.Simplify ();
-
-			popup.Create (this.scroller, pos, leftOrRight: false);
+			MenuPopup.Show (this.timelinesToolbar, this.scroller, pos,
+				new MenuPopup.Item (ToolbarCommand.New,    this.OnTimelineNew),
+				new MenuPopup.Item (ToolbarCommand.Delete, this.OnTimelineDelete),
+				new MenuPopup.Item (),
+				new MenuPopup.Item (ToolbarCommand.Copy,   this.OnTimelineCopy),
+				new MenuPopup.Item (ToolbarCommand.Paste,  this.OnTimelinePaste));
 		}
 
 		private void OnDokeySelect(KeyCode key)

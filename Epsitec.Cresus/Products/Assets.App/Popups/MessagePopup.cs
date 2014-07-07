@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class MessagePopup : AbstractPopup
 	{
-		public MessagePopup(string title, string message)
+		private MessagePopup(string title, string message)
 		{
 			this.title   = title;
 			this.message = message;

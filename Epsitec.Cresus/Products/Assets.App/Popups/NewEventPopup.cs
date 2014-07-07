@@ -19,15 +19,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class NewEventPopup : AbstractPopup
 	{
-		public NewEventPopup(DataAccessor accessor)
+		private NewEventPopup(DataAccessor accessor)
 		{
 			this.accessor = accessor;
 		}
 
 
-		public BaseType							BaseType;
-		public DataObject						DataObject;
-		public Timestamp						Timestamp;
+		private BaseType						BaseType;
+		private DataObject						DataObject;
+		private Timestamp						Timestamp;
 
 		protected override Size					DialogSize
 		{

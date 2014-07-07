@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class YesNoPopup : StackedPopup
 	{
-		public YesNoPopup(string question)
+		private YesNoPopup(string question)
 			: base (null)
 		{
 			this.title = "Question";

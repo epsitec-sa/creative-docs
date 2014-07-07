@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class AssetCopyPopup : StackedPopup
 	{
-		public AssetCopyPopup(DataAccessor accessor, DataObject obj)
+		private AssetCopyPopup(DataAccessor accessor, DataObject obj)
 			: base (accessor)
 		{
 			this.obj = obj;
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public bool								InputState
+		private bool								InputState
 		{
 			get
 			{
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public System.DateTime?					Date
+		private System.DateTime?					Date
 		{
 			get
 			{

@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class AssetPastePopup : StackedPopup
 	{
-		public AssetPastePopup(DataAccessor accessor, string summary)
+		private AssetPastePopup(DataAccessor accessor, string summary)
 			: base (accessor)
 		{
 			this.title = string.Format ("Coller l'objet d'immobilisation \"{0}\"", summary);
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public System.DateTime?					Date
+		private System.DateTime?					Date
 		{
 			get
 			{
