@@ -181,6 +181,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					using (this.ignoreChanges.Enter ())
 					{
+						DateFieldController.Filter (this.textField);
 						DateFieldController.AutoDots (this.textField);
 						this.Value = this.ConvStringToDate (this.textField.Text);
 						this.UpdateButtons ();
@@ -733,6 +734,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private static void Filter(TextField textField)
+		{
+			//	On filtre les caractères stupides qui viennent d'être insésés, tels que
+			//	les lettres.
+			if (!string.IsNullOrEmpty (textField.Text))
+			{
+				var text = textField.Text;
+				int cursor = System.Math.Max (textField.CursorFrom, textField.CursorTo);
+				bool changed = false;
+
+				while (cursor > 0)
+				{
+					var c = textField.Text[cursor-1];
+
+					if (DateFieldController.IsStupidChar (c))
+					{
+						text = text.Substring (0, cursor-1) + text.Substring (cursor);
+						cursor--;
+						changed = true;
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				if (changed)
+				{
+					textField.Text = text;
+					textField.Cursor = cursor;
+				}
+			}		
+		}
+
 		private static void AutoDots(TextField textField)
 		{
 			//	Insère automatiquement les points lors de la frappe de "01022014".
@@ -846,6 +881,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			return list;
+		}
+
+		private static bool IsStupidChar(char c)
+		{
+			return !DateFieldController.IsPartSeparator (c)
+				&& !DateFieldController.IsDigit (c);
 		}
 
 		private static bool IsPartSeparator(char c)

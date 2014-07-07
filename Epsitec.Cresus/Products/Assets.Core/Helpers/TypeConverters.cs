@@ -460,8 +460,10 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 			//	"00.00.2014" retourne "01.01.2014"
 			//	"99.99.2014" retourne "31.12.2014"
 			//	"31.02.2014" retourne "28.02.2014"
+			//	"00.00.00"   retourne "01.01.2000"
 			//	"99.99.99"   retourne "31.12.2099"
 			//	"01.01.14"   retourne "01.01.2014"
+			//	Il me semble qu'on ne devrait jamais retourner null !?
 
 			day = System.Math.Max (day, 1);
 			day = System.Math.Min (day, 31);  // day <- 1..31
@@ -469,9 +471,12 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 			month = System.Math.Max (month, 1);
 			month = System.Math.Min (month, 12);  // month <- 1..12
 
+			year = System.Math.Max (year, 0);
+			year = System.Math.Min (year, 9999);  // year <- 0..9999
+
 			if (year < 1000)
 			{
-				year += 2000;
+				year += 2000;  // pour que 14 corresponde à 2014
 			}
 
 			while (day > 0)
