@@ -746,10 +746,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				while (cursor > 0)
 				{
-					var c = textField.Text[cursor-1];
+					var c = textField.Text[cursor-1];  // dernier caractère inséré
 
 					if (DateFieldController.IsStupidChar (c))
 					{
+						//	Supprime le dernier caractère inséré et recule le curseur.
 						text = text.Substring (0, cursor-1) + text.Substring (cursor);
 						cursor--;
 						changed = true;
@@ -760,7 +761,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				}
 
-				if (changed)
+				if (changed)  // y a-t-il eu des changements ?
 				{
 					textField.Text = text;
 					textField.Cursor = cursor;

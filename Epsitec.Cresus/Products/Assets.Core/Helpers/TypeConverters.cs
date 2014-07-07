@@ -487,7 +487,7 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 				}
 				catch
 				{
-					day--;
+					day--;  // par exemple 31 -> 30
 				}
 			}
 

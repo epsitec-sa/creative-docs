@@ -310,7 +310,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.UpdateData (popup.Date);
 					this.SelectedTimestamp = new Timestamp (popup.Date.Value, 0);
-					this.controller.SetFocus ();
 				}
 			};
 		}
