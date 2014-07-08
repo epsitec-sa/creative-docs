@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.hasGraphic        = true;
 			this.hasFilter         = false;
+			this.hasDateRange      = true;
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
@@ -124,6 +125,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected override void OnDateRange()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.DateRange);
+			this.ShowDateRangePopup (target);
+		}
+
 		protected override void OnDeselect()
 		{
 			this.VisibleSelectedRow = -1;
@@ -157,6 +164,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		private void ShowDateRangePopup(Widget target)
+		{
+			var popup = new SimplePopup ();
+
+			int i = 0;
+			foreach (var range in this.accessor.Mandat.AccountsDateRanges)
+			{
+				popup.Items.Add ("Période " + range.ToNiceString ());
+
+				if (range == this.accessor.Mandat.CurrentAccountsDateRange)
+				{
+					popup.SelectedItem = i;
+				}
+
+				i++;
+			}
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ItemClicked += delegate (object sender, int rank)
+			{
+				var range = this.accessor.Mandat.AccountsDateRanges.ToArray()[rank];
+				this.accessor.Mandat.CurrentAccountsDateRange = range;
+				this.UpdateData ();
+			};
+		}
 
 		private void ShowCreatePopup(Widget target)
 		{
@@ -205,6 +239,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool compactEnable = !this.NodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.NodeGetter.IsAllExpanded;
 
+			this.toolbar.SetCommandEnable (ToolbarCommand.DateRange,  true);
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, compactEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne, compactEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  expandEnable);

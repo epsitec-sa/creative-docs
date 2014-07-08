@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int						margins		= 5;
+		private const int						margins		= 2;
 		private const int						itemHeight	= 20;
 		private const int						sepHeight	= 8;
 		private const string					textGap		= "  ";

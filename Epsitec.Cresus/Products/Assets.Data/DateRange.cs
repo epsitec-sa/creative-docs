@@ -55,6 +55,19 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public static bool operator ==(DateRange r1, DateRange r2)
+		{
+			return r1.IncludeFrom == r2.IncludeFrom
+				&& r1.ExcludeTo   == r2.ExcludeTo;
+		}
+
+		public static bool operator !=(DateRange r1, DateRange r2)
+		{
+			return r1.IncludeFrom != r2.IncludeFrom
+				|| r1.ExcludeTo   != r2.ExcludeTo;
+		}
+
+
 		public static DateRange Empty = new DateRange (System.DateTime.MaxValue, System.DateTime.MinValue);
 		public static DateRange Full  = new DateRange (System.DateTime.MinValue, System.DateTime.MaxValue);
 

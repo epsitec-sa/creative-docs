@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void CreateCommands()
 		{
 			this.SetCommandDescription (ToolbarCommand.Filter,     "TreeTable.Filter",     "Grouper les objets selon");
+			this.SetCommandDescription (ToolbarCommand.DateRange,  "TreeTable.DateRange",  "Choix de la période");
 			this.SetCommandDescription (ToolbarCommand.Graphic,    "TreeTable.Graphic",    "Représentation graphique");
 			this.SetCommandDescription (ToolbarCommand.First,      "TreeTable.First",      "Retourner sur la première ligne");
 			this.SetCommandDescription (ToolbarCommand.Prev,       "TreeTable.Prev",       "Reculer sur la ligne précédente");
@@ -65,6 +66,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.hasFilter != value)
 				{
 					this.hasFilter = value;
+					this.Adjust ();
+				}
+			}
+		}
+
+		public bool								HasDateRange
+		{
+			get
+			{
+				return this.hasDateRange;
+			}
+			set
+			{
+				if (this.hasDateRange != value)
+				{
+					this.hasDateRange = value;
 					this.Adjust ();
 				}
 			}
@@ -132,6 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Filter);
+			this.buttonDateRange  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.DateRange);
 			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Graphic);
 
 			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.First);
@@ -166,8 +184,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export);
 			this.buttonImport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Import);
 
-			this.buttonGraphic.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonGraphic  .ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonFilter   .ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonDateRange.ButtonStyle = ButtonStyle.ActivableIcon;
 
 			this.toolbar.SizeChanged += delegate
 			{
@@ -229,10 +248,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			double used = size*3;  // place pour New/Delete/Deselect
 
-			if (this.hasGraphic || this.hasFilter)
+			if (this.hasGraphic || this.hasFilter || this.hasDateRange)
 			{
-				used += this.hasGraphic ? size : 0;  // place pour Graphic
-				used += this.hasFilter  ? size : 0;  // place pour Filter
+				used += this.hasGraphic   ? size : 0;  // place pour Graphic
+				used += this.hasFilter    ? size : 0;  // place pour Filter
+				used += this.hasDateRange ? size : 0;  // place pour DateRange
 				used += AbstractCommandToolbar.separatorWidth;
 			}
 
@@ -284,9 +304,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				sep4 = true;
 			}
 
-			yield return new ButtonState (this.buttonFilter,  this.hasFilter);
-			yield return new ButtonState (this.buttonGraphic, this.hasGraphic);
-			yield return new ButtonState (this.separator1,    this.hasGraphic | this.hasFilter);
+			yield return new ButtonState (this.buttonFilter,    this.hasFilter);
+			yield return new ButtonState (this.buttonDateRange, this.hasDateRange);
+			yield return new ButtonState (this.buttonGraphic,   this.hasGraphic);
+			yield return new ButtonState (this.separator1,      this.hasGraphic | this.hasFilter | this.hasDateRange);
 
 			yield return new ButtonState (this.buttonFirst, firstLast);
 			yield return new ButtonState (this.buttonPrev,  prevNext);
@@ -369,6 +390,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private IconButton						buttonFilter;
+		private IconButton						buttonDateRange;
 		private IconButton						buttonGraphic;
 
 		private IconButton						buttonFirst;
@@ -405,6 +427,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private bool							hasGraphic;
 		private bool							hasFilter;
+		private bool							hasDateRange;
 		private bool							hasGraphicOperations;
 		private bool							hasTreeOperations;
 		private bool							hasMoveOperations;

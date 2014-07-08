@@ -82,6 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.toolbar.HasGraphic        = this.hasGraphic;
 			this.toolbar.HasFilter         = this.hasFilter;
+			this.toolbar.HasDateRange      = this.hasDateRange;
 			this.toolbar.HasTreeOperations = this.hasTreeOperations;
 			this.toolbar.HasMoveOperations = this.hasMoveOperations;
 
@@ -97,6 +98,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case ToolbarCommand.Filter:
 						this.OnFilter ();
+						break;
+
+					case ToolbarCommand.DateRange:
+						this.OnDateRange ();
 						break;
 
 					case ToolbarCommand.First:
@@ -250,6 +255,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		protected virtual void OnFilter()
+		{
+		}
+
+		protected virtual void OnDateRange()
 		{
 		}
 
@@ -592,6 +601,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected string						title;
 		protected bool							hasGraphic;
 		protected bool							hasFilter;
+		protected bool							hasDateRange;
 		protected bool							hasTreeOperations;
 		protected bool							hasMoveOperations;
 

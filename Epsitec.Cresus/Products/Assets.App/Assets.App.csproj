@@ -462,6 +462,7 @@
     <EmbeddedResource Include="Images\TreeTable.Paste.Asset.icon" />
     <EmbeddedResource Include="Images\TreeTable.Paste.Event.icon" />
     <EmbeddedResource Include="Images\TreeTable.Import.icon" />
+    <EmbeddedResource Include="Images\TreeTable.DateRange.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

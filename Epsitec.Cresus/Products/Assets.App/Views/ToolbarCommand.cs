@@ -44,6 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Cancel,
 		Graphic,
 		Filter,
+		DateRange,
 		Copy,
 		Paste,
 		Export,
