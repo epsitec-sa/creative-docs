@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int verticalGap  = 4;
 		private const int footerHeight = 30;
 
-		private readonly DataAccessor						accessor;
+		protected readonly DataAccessor						accessor;
 		private readonly List<StackedControllerDescription>	descriptions;
 		private readonly List<AbstractStackedController>	controllers;
 		private readonly List<FrameBox>						controllerVisibleFrames;

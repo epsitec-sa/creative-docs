@@ -75,8 +75,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var category = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.AccountCategory);
 				var accType  = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.AccountType);
 
-				var c = EnumDictionaries.GetAccountCategoryName ((AccountCategory) category);
-				var t = EnumDictionaries.GetAccountTypeName     ((AccountType)     accType);
+				string c = category.HasValue ? EnumDictionaries.GetAccountCategoryName ((AccountCategory) category) : null;
+				string t = accType .HasValue ? EnumDictionaries.GetAccountTypeName     ((AccountType)     accType ) : null;
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 

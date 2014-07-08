@@ -80,6 +80,20 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
+		public GuidList<DataObject> GetAccounts(DateRange range)
+		{
+			GuidList<DataObject> accounts;
+			if (this.rangeAccounts.TryGetValue (range, out accounts))
+			{
+				return accounts;
+			}
+			else
+			{
+				// Il vaut mieux retourner une liste vide, plutôt que null.
+				return new GuidList<DataObject> ();
+			}
+		}
+
 		public void AddAccounts(DateRange dateRange, GuidList<DataObject> accounts)
 		{
 			this.rangeAccounts[dateRange] = accounts;
@@ -89,16 +103,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			get
 			{
-				GuidList<DataObject> accounts;
-				if (this.rangeAccounts.TryGetValue (this.CurrentAccountsDateRange, out accounts))
-				{
-					return accounts;
-				}
-				else
-				{
-					// Il vaut mieux retourner une liste vide, plutôt que null.
-					return new GuidList<DataObject> ();
-				}
+				return this.GetAccounts (this.CurrentAccountsDateRange);
 			}
 		}
 		#endregion

@@ -181,8 +181,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Copy);
 			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste);
-			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export);
 			this.buttonImport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Import);
+			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export);
 
 			this.buttonGraphic  .ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFilter   .ButtonStyle = ButtonStyle.ActivableIcon;
@@ -346,14 +346,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				yield return new ButtonState (this.buttonPaste, copyPaste);
 			}
 
-			if (!this.GetCommandDescription (ToolbarCommand.Export).IsEmpty)
-			{
-				yield return new ButtonState (this.buttonExport, copyPaste);
-			}
-
 			if (!this.GetCommandDescription (ToolbarCommand.Import).IsEmpty)
 			{
 				yield return new ButtonState (this.buttonImport, copyPaste);
+			}
+
+			if (!this.GetCommandDescription (ToolbarCommand.Export).IsEmpty)
+			{
+				yield return new ButtonState (this.buttonExport, copyPaste);
 			}
 		}
 

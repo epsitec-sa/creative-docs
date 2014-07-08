@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Core.Helpers;
@@ -73,7 +74,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			var accountsDescription = this.AccountsDescription;
+			string accountsDescription;
+			bool ok = this.GetReport (out accountsDescription);
 
 			{
 				var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
@@ -88,45 +90,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				controller.SetLabel (accountsDescription);
 			}
 
-			this.okButton.Enable = !string.IsNullOrEmpty (accountsDescription);
+			this.okButton.Enable = ok;
 		}
 
 
-		private string AccountsDescription
+		private bool GetReport(out string report)
 		{
-			//	Retourne la description du plan comptable à importer.
-			get
+			//	Retourne le rapport sur le plan comptable à importer.
+			using (var h = new AccountsImportHelpers (this.accessor, null, null))
 			{
-				var filename = this.Filename;
-
-				if (string.IsNullOrEmpty (filename))
-				{
-					return null;
-				}
-				else
-				{
-					return AccountsImportPopup.GetAccountsDescription (filename);
-				}
-			}
-		}
-
-		private static string GetAccountsDescription(string filename)
-		{
-			//	Retourne la description d'un plan comptable.
-			using (var importEngine = new AccountsImport ())
-			{
-				var importedAccounts = new GuidList<DataObject> ();
-
-				try
-				{
-					var range = importEngine.Import (importedAccounts, filename);
-
-					return string.Format ("Période {0}<br/>{1} comptes à importer", range.ToNiceString (), importedAccounts.Count);
-				}
-				catch
-				{
-					return null;
-				}
+				return h.GetReport (this.Filename, out report);
 			}
 		}
 	}

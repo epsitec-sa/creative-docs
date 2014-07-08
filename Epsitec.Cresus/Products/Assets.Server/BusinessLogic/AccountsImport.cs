@@ -312,8 +312,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Habituellement, l'utilisateur choisit le fichier .cre qui représente sa
 			//	comptabilité. Mais c'est le fichier .crp qui sera lu par Assets.
 
-			filename = System.IO.Path.ChangeExtension (filename, ".crp");  // remplace .cre par .crp
-			this.lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
+			if (string.IsNullOrEmpty (filename))
+			{
+				throw new System.Exception ("Donnez un nom de plan comptable (fichier .cre)");
+			}
+			else
+			{
+				filename = System.IO.Path.ChangeExtension (filename, ".crp");  // remplace .cre par .crp
+				this.lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
+			}
 		}
 
 

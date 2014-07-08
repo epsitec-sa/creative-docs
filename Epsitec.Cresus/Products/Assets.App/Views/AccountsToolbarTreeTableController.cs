@@ -107,13 +107,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      null, "Nouveau compte");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   null, "Supprimer le compte");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, "Désélectionner le compte");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     null, "Copier le compte");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    null, "Coller le compte");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, "Exporter le plan comptable");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   null, "Importer un plan comptable Crésus (fichier .crp)");
+			this.toolbar.SetCommandDescription (ToolbarCommand.DateRange, null, "Choix du plan comptable");
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,       null, "Nouveau compte");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,    null, "Supprimer le compte");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect,  null, "Désélectionner le compte");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,      null, "Copier le compte");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,     null, "Coller le compte");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,    null, "Exporter le plan comptable");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Import,    null, "Importer un plan comptable Crésus (fichier .cre)");
 		}
 
 		protected override void CreateNodeFiller()
@@ -158,10 +159,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
 
-			using (var h = new AccountsImportHelpers (this.accessor, target, this.UpdateData))
+			using (var h = new AccountsImportHelpers (this.accessor, target, this.UpdateAfterImport))
 			{
 				h.ShowImportPopup ();
 			}
+		}
+
+		private void UpdateAfterImport()
+		{
+			this.SelectedRow = -1;
+			this.UpdateData ();
 		}
 
 
@@ -188,7 +195,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var range = this.accessor.Mandat.AccountsDateRanges.ToArray()[rank];
 				this.accessor.Mandat.CurrentAccountsDateRange = range;
-				this.UpdateData ();
+				this.UpdateAfterImport ();
 			};
 		}
 
@@ -239,7 +246,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool compactEnable = !this.NodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.NodeGetter.IsAllExpanded;
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.DateRange,  true);
+			this.toolbar.SetCommandEnable (ToolbarCommand.DateRange,  this.accessor.Mandat.AccountsDateRanges.Count () > 1);
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, compactEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne, compactEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  expandEnable);
